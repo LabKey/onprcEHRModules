@@ -4,6 +4,10 @@ onprc_ehr/build.xml -text
 onprc_ehr/module.properties -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRController.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/etl/ETL.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditViewFactory.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/view/EtlAdmin.jsp -text
 onprc_ehr/tools/sqlserver_extract/README.txt -text
 onprc_ehr/tools/sqlserver_extract/batchtsv.sh -text
 onprc_ehr/tools/sqlserver_extract/col_dump.sql -text

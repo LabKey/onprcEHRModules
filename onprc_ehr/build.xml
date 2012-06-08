@@ -27,7 +27,6 @@
              inheritall="false">
             <property name="moduleDir" value="${basedir}"/>
             <property name="moduleName" value="${module.name}"/>
-            <property name="moduleTemplate" value="simplemodule.template.xml" />
         </ant>
     </target>
 

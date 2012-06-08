@@ -15,6 +15,9 @@
  */
 package org.labkey.onprc_ehr;
 
+import org.labkey.onprc_ehr.etl.ETL;
+import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
+import org.labkey.api.audit.AuditLogService;
 import org.labkey.api.module.DefaultModule;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.view.WebPartFactory;
@@ -61,6 +64,14 @@ public class ONPRC_EHRModule extends DefaultModule
     @Override
     public void startup(ModuleContext moduleContext)
     {
+        ETL.start();
+        AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
+    }
 
+    @Override
+    public void destroy()
+    {
+        ETL.stop();
+        super.destroy();
     }
 }
