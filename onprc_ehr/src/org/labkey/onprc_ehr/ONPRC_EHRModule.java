@@ -48,7 +48,7 @@ public class ONPRC_EHRModule extends DefaultModule
 
     public boolean hasScripts()
     {
-        return true;
+        return false;
     }
 
     protected Collection<WebPartFactory> createWebPartFactories()
