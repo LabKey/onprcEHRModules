@@ -62,7 +62,7 @@ public class ONPRC_EHRModule extends DefaultModule
     }
 
     @Override
-    public void startup(ModuleContext moduleContext)
+    public void doStartup(ModuleContext moduleContext)
     {
         ETL.start();
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
