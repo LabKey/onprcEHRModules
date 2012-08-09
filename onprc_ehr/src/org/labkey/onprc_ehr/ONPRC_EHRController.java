@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr;
 
+import org.apache.commons.codec.binary.Base64;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLRunnable;
 import org.labkey.api.action.FormViewAction;
@@ -55,7 +56,7 @@ public class ONPRC_EHRController extends SpringActionController
     public class EtlAdminAction extends FormViewAction<Object>
     {
 
-        String[] configKeys = {"labkeyUser", "labkeyContainer", "jdbcUrl", "jdbcDriver", "runIntervalInMinutes", "defaultLastTimestamp"};
+        String[] configKeys = {"labkeyUser", "labkeyContainer", "jdbcUrl", "jdbcDriver", "runIntervalInMinutes"};
 
 
         @Override
@@ -69,6 +70,7 @@ public class ONPRC_EHRController extends SpringActionController
         {
             EtlAdminBean bean = new EtlAdminBean();
             bean.setConfig(PropertyManager.getProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN));
+            bean.setRowversions(PropertyManager.getProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN));
             bean.setTimestamps(PropertyManager.getProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN));
             bean.setConfigKeys(configKeys);
 
@@ -80,7 +82,6 @@ public class ONPRC_EHRController extends SpringActionController
         {
             HttpServletRequest request = getViewContext().getRequest();
             PropertyManager.PropertyMap configMap = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
-            DateFormat df = getDateTimeInstance(SHORT, SHORT);
 
             for (String key : configKeys)
             {
@@ -95,24 +96,25 @@ public class ONPRC_EHRController extends SpringActionController
 
             PropertyManager.saveProperties(configMap);
 
-            PropertyManager.PropertyMap timestampMap = PropertyManager.getWritableProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN, true);
+            PropertyManager.PropertyMap rowVersionMap = PropertyManager.getWritableProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN, true);
 
-            for (String key : PropertyManager.getProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN).keySet())
+            for (String key : PropertyManager.getProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN).keySet())
             {
                 if (request.getParameter(key) != null)
                 {
-                    Date newTimestamp = df.parse(request.getParameter(key));
-                    timestampMap.put(key, new Long(newTimestamp.getTime()).toString());
+                    byte[] bytes = Base64.decodeBase64(request.getParameter(key));
+                    String encoded = new String(bytes, "US-ASCII");
+                    rowVersionMap.put(key, encoded);
                 }
             }
-            PropertyManager.saveProperties(timestampMap);
+            PropertyManager.saveProperties(rowVersionMap);
 
 
 
             String status = request.getParameter("etlStatus");
-            if (status.equals("Run"))
-                ETL.start();
-            else if (status.equals("Stop"))
+            if (status.equals("true"))
+                ETL.start(0);
+            else if (status.equals("false"))
                 ETL.stop();
 
             return true;
@@ -135,6 +137,7 @@ public class ONPRC_EHRController extends SpringActionController
     {
         String[] configKeys;
         Map<String, String> config;
+        Map<String, String> rowversions;
         Map<String, String> timestamps;
 
         public Map<String, String> getConfig()
@@ -155,6 +158,16 @@ public class ONPRC_EHRController extends SpringActionController
         public void setTimestamps(Map<String, String> timestamps)
         {
             this.timestamps = timestamps;
+        }
+
+        public Map<String, String> getRowversions()
+        {
+            return rowversions;
+        }
+
+        public void setRowversions(Map<String, String> rowversions)
+        {
+            this.rowversions = rowversions;
         }
 
         public String[] getConfigKeys()

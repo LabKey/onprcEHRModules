@@ -35,19 +35,32 @@
 %>
 <form method="post">
 
-<b>Status:</b>
-<select name="etlStatus">
-<option
-<% if (ETL.isRunning()) { %>selected<% } %>
->Run</option>
-<option
-<% if (!ETL.isRunning()) { %>selected<% } %>
->Stop</option>
-</select>
+    This page allows configuration of the EHR ETL.  There can only be one instance of the ETL active per site at any time.  Below are explanations for the config properties:
+    <p></p>
 
-<input type="submit" value="Save All"/>
-
-<%=textLink("refresh", new ActionURL(ONPRC_EHRController.EtlAdminAction.class, context.getContainer()))%>
+    <ul>
+        <li>
+            labkeyUser: A valid LabKey user, which should have admin permission in the EHR folder
+        </li>
+        <li>
+            labkeyContainer: The containerPath to the EHR study
+        </li>
+        <li>
+            jdbcUrl: An example connection string for SQL Server is: jdbc:jtds:sqlserver://localhost:1433;databaseName=DATABASE;user=USERNAME;password=PASSWORD
+        </li>
+        <li>
+            jdbcDriver: The driver name.  For SQLServer, it should be: net.sourceforge.jtds.jdbc.Driver
+        </li>
+        <li>
+            runIntervalInMinutes: The frequency with which the ETL should run
+        </li>
+        <li>
+            defaultLastTimestamp: If the sync has never been performed for a table, this will be used as the last timestamp value
+        </li>
+        <li>
+            shouldAnalyze: If true, an ANALYZE will be performed after the sync. This is useful if a large amount of records will be transferred
+        </li>
+    </ul>
 
 <table>
 <tr>
@@ -55,13 +68,27 @@
 <h2>Settings</h2>
 
 <table>
+<tr>
+    <td>ETL Enabled</td>
+    <td>
+        <select name="etlStatus" style="width: 300px">
+        <option value="true"
+        <% if (ETL.isEnabled()) { %>selected<% } %>
+        >Enabled</option>
+        <option value="false"
+        <% if (!ETL.isEnabled()) { %>selected<% } %>
+        >Disabled</option>
+        </select>
+
+    </td>
+</tr>
 <%
     for (String configKey : bean.getConfigKeys())
     {
 %>
     <tr>
     <td><%= configKey %></td>
-    <td><input size=50 name="<%= configKey %>" value="<%= bean.getConfig().get(configKey) %>"/></td>
+    <td><input style="width: 300px" name="<%= configKey %>" value="<%= bean.getConfig().get(configKey) %>"/></td>
     </tr>
 <%
     }
@@ -77,8 +104,7 @@
 </table>
 </td>
 <td valign="top">
-<h2>Timestamps</h2>
-Expected format: "8/4/10 9:22 AM"
+<h2>Last Sync</h2>
 <table>
 <%
     for (Map.Entry entry : bean.getTimestamps().entrySet())
@@ -86,7 +112,7 @@ Expected format: "8/4/10 9:22 AM"
 %>
     <tr>
     <td><%= entry.getKey() %></td>
-    <td><input size=20 name="<%=entry.getKey()%>" value="<%= df.format(new Date(Long.parseLong(entry.getValue().toString()))) %>"/></td>
+    <td><%= df.format(new Date(Long.parseLong(entry.getValue().toString()))) %></td>
     </tr>
 <%
     }
@@ -95,5 +121,7 @@ Expected format: "8/4/10 9:22 AM"
 </td>
 </tr>
 </table>
+
 <input type="submit" value="Save All"/>
+<%=textLink("refresh", new ActionURL(ONPRC_EHRController.EtlAdminAction.class, context.getContainer()))%>
 </form>

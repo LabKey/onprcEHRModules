@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.etl;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.ColumnInfo;
@@ -36,6 +37,7 @@ import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
 import org.labkey.api.security.ValidEmail;
+import org.labkey.api.util.ResultSetUtil;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HttpView;
 import org.labkey.api.view.ViewContext;
@@ -43,6 +45,7 @@ import org.labkey.api.view.ViewContext;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -65,8 +68,9 @@ public class ETLRunnable implements Runnable
 {
 
     public final static String TIMESTAMP_PROPERTY_DOMAIN = "onprc.ehr.org.labkey.onprc_ehr.etl.timestamp";
+    public final static String ROWVERSION_PROPERTY_DOMAIN = "onprc.ehr.org.labkey.onprc_ehr.etl.rowversion";
     public final static String CONFIG_PROPERTY_DOMAIN = "onprc.ehr.org.labkey.onprc_ehr.etl.config";
-    //net.sourceforge.jtds.jdbc.Driver
+    public final static byte[] DEFAULT_VERSION = Base64.decodeBase64("00000000");  //TODO
 
     private final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
     private final Map<String, String> ehrQueries;
@@ -131,21 +135,29 @@ public class ETLRunnable implements Runnable
                 log.info(String.format("dataset %s last synced %s", datasetName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
             }
 
-            for (String listName : ehrQueries.keySet())
+            for (String tableName : ehrQueries.keySet())
             {
-                long lastTs = getLastTimestamp(listName);
-                log.info(String.format("list %s last synced %s", listName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                long lastTs = getLastTimestamp(tableName);
+                log.info(String.format("list %s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
             }
 
-            UserSchema listSchema = QueryService.get().getUserSchema(user, container, "lists");
+            UserSchema ehrSchema = QueryService.get().getUserSchema(user, container, "ehr");
             UserSchema studySchema = QueryService.get().getUserSchema(user, container, "study");
 
-            int listErrors = merge(user, container, ehrQueries, listSchema);
-            int datasetErrors = merge(user, container, studyQueries, studySchema);
+            try
+            {
+                int ehrErrors = merge(user, container, ehrQueries, ehrSchema);
+                int datasetErrors = merge(user, container, studyQueries, studySchema);
 
-            log.info("End incremental sync run.");
+                log.info("End incremental sync run.");
 
-            ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", listErrors, datasetErrors);
+                ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, datasetErrors);
+            }
+            catch (BatchValidationException e)
+            {
+                log.error(e.getMessage());
+                throw e;
+            }
         }
         catch (Throwable x)
         {
@@ -167,7 +179,7 @@ public class ETLRunnable implements Runnable
     }
 
     /** @return count of collections that encountered errors */
-    int merge(User user, Container container, Map<String, String> queries, UserSchema schema) throws BadConfigException
+    int merge(User user, Container container, Map<String, String> queries, UserSchema schema) throws BadConfigException, BatchValidationException
     {
         // run postgres ANALYZE if enabled.
         doDbAnalyze(schema.getDbSchema());
@@ -192,6 +204,8 @@ public class ETLRunnable implements Runnable
             {
                 targetTableName = kv.getKey();
                 sql = kv.getValue();
+                //TODO: debug purposes
+                sql = "SELECT TOP 10 * FROM (" + sql + ") t";
                 TableInfo targetTable = schema.getTable(targetTableName);
 
                 if (targetTable == null)
@@ -209,24 +223,24 @@ public class ETLRunnable implements Runnable
 
                 log.info("Preparing query " + targetTableName);
                 ps = originConnection.prepareStatement(sql);
-                // Hack for MySQL. If setFetchSize is not set, or is set to any value other than Integer.MIN_VALUE,
-                // mysql driver will read the whole resultset into memory, potentially running out of heap.
-                ps.setFetchSize(Integer.MIN_VALUE);
+
                 // Each statement will have zero or more bind variables in it. Set them all to
                 // the baseline timestamp date.
                 int paramCount = ps.getParameterMetaData().getParameterCount();
                 Timestamp fromDate = new Timestamp(getLastTimestamp(targetTableName));
+                byte[] fromVersion = getLastVersion(targetTableName);
                 for (int i = 1; i <= paramCount; i++)
                 {
-                    ps.setTimestamp(i, fromDate);
+                    ps.setBytes(i, fromVersion);
                 }
 
                 // get deletes from the origin.
-                Set<String> deletedIds = getDeletes(originConnection, targetTableName, getLastTimestamp(targetTableName));
+                Set<String> deletedIds = getDeletes(originConnection, targetTableName, getLastVersion(targetTableName));
 
                 log.info("querying for " + targetTableName + " since " + new Date(fromDate.getTime()));
 
                 int updates = 0;
+                byte[] newBaselineVersion = getOriginDataSourceCurrentVersion();
                 Long newBaselineTimestamp = getOriginDataSourceCurrentTime();
                 boolean rollback = false;
 
@@ -245,6 +259,8 @@ public class ETLRunnable implements Runnable
                     if (!deletedIds.isEmpty())
                     {
 
+                        //TODO: alternate keyfields??
+                        List<ColumnInfo> pks = targetTable.getPkColumns();
                         ColumnInfo objid = targetTable.getColumn("objectid");
                         List<ColumnInfo> keys = targetTable.getPkColumns();
                         Map<String, SQLFragment> joins = new HashMap<String, SQLFragment>();
@@ -360,6 +376,7 @@ public class ETLRunnable implements Runnable
                     else
                     {
                         scope.commitTransaction();
+                        setLastVersion(targetTableName, newBaselineVersion);
                         setLastTimestamp(targetTableName, newBaselineTimestamp);
                         log.info(MessageFormat.format("Committed updates for {0} records in {1}", updates, targetTableName));
 
@@ -389,12 +406,12 @@ public class ETLRunnable implements Runnable
     /**
      *
      * @param tableName for which to get deletes
-     * @param fromTime return deletes performed after this timestamp
+     * @param fromVersion return deletes performed after this version
      * @return
      * @throws SQLException
      * @throws BadConfigException
      */
-    Set<String> getDeletes(Connection originConnection, String tableName, long fromTime) throws SQLException, BadConfigException
+    Set<String> getDeletes(Connection originConnection, String tableName, byte[] fromVersion) throws SQLException, BadConfigException
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -405,7 +422,7 @@ public class ETLRunnable implements Runnable
             originConnection = getOriginConnection();
             ps = originConnection.prepareStatement("SELECT uuid FROM deleted_records WHERE labkeyTable = ? AND ts > ?");
             ps.setString(1, tableName);
-            ps.setTimestamp(2, new Timestamp(fromTime));
+            ps.setBytes(2, fromVersion);
             rs = ps.executeQuery();
             while (rs.next())
             {
@@ -415,9 +432,13 @@ public class ETLRunnable implements Runnable
             if (!deletes.isEmpty())
                 log.info(deletes.size() + " deletes pending for " + tableName);
         }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
         finally
         {
-            close(rs);
+            ResultSetUtil.close(rs);
             close(ps);
         }
 
@@ -425,7 +446,8 @@ public class ETLRunnable implements Runnable
     }
 
     /**
-     * @return the timestamp last stored by @setLastTimestamp, or 0 time if not present
+     * @return the timestamp last stored by the ETL, or 0 time if not present.  this
+     * is for display only.  rowVersion is used by the DB
      */
     private long getLastTimestamp(String tableName)
     {
@@ -436,17 +458,24 @@ public class ETLRunnable implements Runnable
             return Long.parseLong(value);
         }
 
-        // If we haven't already synced, look in the properties file for a default timestamp
-        try
-        {
-            return dateFormat.parse(getConfigProperty("defaultTimestamp")).getTime();
+        return 0;
+    }
 
-        }
-        catch (Throwable t)
+    /**
+     * @return the rowverion last stored by @setLastVersion
+     */
+    private byte[] getLastVersion(String tableName)
+    {
+        Map<String, String> m = PropertyManager.getProperties(ROWVERSION_PROPERTY_DOMAIN);
+        String value = m.get(tableName);
+        if (value != null)
         {
-            return 0;
+            return Base64.decodeBase64(value);
         }
-
+        else
+        {
+            return new byte[0];
+        }
     }
 
     boolean isEmpty(TableInfo tinfo) throws SQLException
@@ -478,7 +507,7 @@ public class ETLRunnable implements Runnable
         try
         {
             con = getOriginConnection();
-            PreparedStatement ps = con.prepareStatement("select now()");
+            PreparedStatement ps = con.prepareStatement("select GETDATE()");
             ResultSet rs = ps.executeQuery();
             if (rs.next())
             {
@@ -490,6 +519,53 @@ public class ETLRunnable implements Runnable
             close(con);
         }
         return ts;
+    }
+
+    /**
+     * Persist the baseline timestamp to use next time we sync this table. It should be the origin db's idea of what time it is.
+     *
+     * @param version the timestamp we want returned by the next call to @getLastTimestamp
+     */
+    private void setLastVersion(String tableName, byte[] version)
+    {
+        PropertyManager.PropertyMap pm = PropertyManager.getWritableProperties(ROWVERSION_PROPERTY_DOMAIN, true);
+        byte[] encoded = Base64.encodeBase64(version);
+        try
+        {
+            String toStore = new String(encoded, "US-ASCII");
+            pm.put(tableName, toStore);
+            PropertyManager.saveProperties(pm);
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @return the current version according to the origin db.
+     */
+    private byte[] getOriginDataSourceCurrentVersion() throws SQLException, BadConfigException
+    {
+        Connection con = null;
+        byte[] version = null;
+        ResultSet rs = null;
+        try
+        {
+            con = getOriginConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT @@DBTS;");
+            rs = ps.executeQuery();
+            if (rs.next())
+            {
+                version = rs.getBytes(1);
+            }
+        }
+        finally
+        {
+            close(con);
+            ResultSetUtil.close(rs);
+        }
+        return version;
     }
 
     private Connection getOriginConnection() throws SQLException, BadConfigException

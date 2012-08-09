@@ -16,7 +16,9 @@
 package org.labkey.onprc_ehr.etl;
 
 import org.apache.log4j.Logger;
+import org.labkey.api.data.PropertyManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
+import org.springframework.scripting.support.StaticScriptSource;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,11 +35,18 @@ public class ETL
     private final static Logger log = Logger.getLogger(ONPRC_EHRModule.class);
     private static ScheduledExecutorService executor;
     private static ETLRunnable runnable;
-    private static Status status = Status.Stop;
-    
-    static public synchronized void start()
+    private static boolean isRunning = false;
+    public static final String ENABLED_PROP_NAME = "etlStatus";
+
+    static public synchronized void init(int delay)
     {
-        if (ETL.status != Status.Run)
+        if (isEnabled())
+            start(delay);
+    }
+
+    static public synchronized void start(int delay)
+    {
+        if (!isRunning)
         {
             executor = Executors.newSingleThreadScheduledExecutor();
 
@@ -48,8 +57,9 @@ public class ETL
                 if (interval != 0)
                 {
                     log.info("Scheduling db sync at " + interval + " minute interval.");
-                    executor.scheduleWithFixedDelay(runnable, 0, interval, TimeUnit.MINUTES);
-                    ETL.status = Status.Run;
+                    executor.scheduleWithFixedDelay(runnable, delay, interval, TimeUnit.MINUTES);
+                    setEnabled(true);
+                    isRunning = true;
                 }
             }
             catch (Exception e)
@@ -57,27 +67,43 @@ public class ETL
                 log.error("Could not start incremental db sync", e);
             }
         }
+        else
+        {
+            log.info("ETL is already running");
+        }
     }
 
     static public synchronized void stop()
     {
-        if (ETL.status != Status.Stop)
+        if (isRunning)
         {
             log.info("Stopping ETL");
             executor.shutdownNow();
             runnable.shutdown();
-            ETL.status = Status.Stop;
+            setEnabled(false);
+            isRunning = false;
         }
     }
 
-    /// etlAdmin.jsp uses this.
-    public static boolean isRunning()
+    public static boolean isEnabled()
     {
-        return Status.Run == status;
+        String prop = PropertyManager.getProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN).get(ENABLED_PROP_NAME);
+        if (prop == null)
+            return false;
+
+        Boolean value = Boolean.parseBoolean(prop);
+        if (value == null)
+        {
+            return false;
+        }
+
+        return value;
     }
 
-    public enum Status
+    private static void setEnabled(Boolean enabled)
     {
-        Run, Stop;
+        PropertyManager.PropertyMap pm = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
+        pm.put(ENABLED_PROP_NAME, enabled.toString());
+        PropertyManager.saveProperties(pm);
     }
 }
