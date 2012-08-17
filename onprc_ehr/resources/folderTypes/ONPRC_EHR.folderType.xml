@@ -1,0 +1,30 @@
+<folderType xmlns="http://labkey.org/data/xml/folderType">
+    <name>ONPRC EHR</name>
+    <description>Folder type used for ONPRC's EHR</description>
+    <requiredWebParts>
+
+    </requiredWebParts>
+    <preferredWebParts>
+        <webPart>
+            <name>ONPRC Electronic Health Record</name>
+            <location>body</location>
+        </webPart>
+        <webPart>
+            <name>ONPRC Electronic Health Record</name>
+            <location>menu</location>
+            <property name="title" value="Electronic Health Record" />
+        </webPart>
+        <webPart>
+            <name>Quick Search</name>
+            <location>menu</location>
+        </webPart>
+    </preferredWebParts>
+    <modules>
+        <moduleName>Study</moduleName>
+        <moduleName>EHR</moduleName>
+        <moduleName>ONPRC_EHR</moduleName>
+    </modules>
+    <defaultModule>Portal</defaultModule>
+    <workbookType>false</workbookType>
+    <forceAssayUploadIntoWorkbooks>false</forceAssayUploadIntoWorkbooks>
+</folderType>

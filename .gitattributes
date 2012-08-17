@@ -2,6 +2,7 @@
 onprc_ehr/ONPRC_EHR.iml -text
 onprc_ehr/build.xml -text
 onprc_ehr/module.properties -text
+onprc_ehr/resources/folderTypes/ONPRC_EHR.folderType.xml -text
 onprc_ehr/resources/views/begin.html -text
 onprc_ehr/resources/views/begin.view.xml -text
 onprc_ehr/resources/views/begin.webpart.xml -text
