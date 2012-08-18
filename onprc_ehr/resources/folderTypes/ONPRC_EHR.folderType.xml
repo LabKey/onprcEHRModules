@@ -1,6 +1,6 @@
 <folderType xmlns="http://labkey.org/data/xml/folderType">
     <name>ONPRC EHR</name>
-    <description>Folder type used for ONPRC's EHR</description>
+    <description>Folder type used for the Oregon National Primate Center's EHR</description>
     <requiredWebParts>
 
     </requiredWebParts>
