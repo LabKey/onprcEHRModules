@@ -13,11 +13,10 @@ function createNavMenu()
         return;
     }
 
-    var ctx = EHR.Utils.getEHRContext();
+    var webpart = <%=webpartContext%>;
+    var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
     if(!ctx)
         return;
-
-    var webpart = <%=webpartContext%>;
 
     Ext.get(webpart.wrapperDivId).update(
         '<div style="max-width:920px">' +
