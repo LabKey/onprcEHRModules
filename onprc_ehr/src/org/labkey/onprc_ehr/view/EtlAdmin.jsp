@@ -16,14 +16,14 @@
  */
 %>
 
-<%@ page import="org.labkey.api.view.HttpView" %>
-<%@ page import="org.labkey.api.view.ViewContext"%>
 <%@ page import="org.labkey.api.view.ActionURL" %>
+<%@ page import="org.labkey.api.view.HttpView"%>
+<%@ page import="org.labkey.api.view.ViewContext" %>
 <%@ page import="org.labkey.onprc_ehr.ONPRC_EHRController" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="java.text.DateFormat" %>
 <%@ page import="org.labkey.onprc_ehr.etl.ETL" %>
+<%@ page import="java.text.DateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.Map" %>
 <%@ page extends="org.labkey.api.jsp.JspBase" %>
 
 <%
@@ -57,9 +57,6 @@
         <li>
             defaultLastTimestamp: If the sync has never been performed for a table, this will be used as the last timestamp value
         </li>
-        <li>
-            shouldAnalyze: If true, an ANALYZE will be performed after the sync. This is useful if a large amount of records will be transferred
-        </li>
     </ul>
 
 <table>
@@ -87,19 +84,12 @@
     {
 %>
     <tr>
-    <td><%= configKey %></td>
-    <td><input style="width: 300px" name="<%= configKey %>" value="<%= bean.getConfig().get(configKey) %>"/></td>
+    <td><%=text(configKey)%></td>
+    <td><input style="width: 300px" name="<%=h(configKey)%>" value="<%=text(bean.getConfig().get(configKey))%>"/></td>
     </tr>
 <%
     }
 %>
-
-<tr>
-<td>shouldAnalyze</td>
-<td>
-<input type="checkbox" name="shouldAnalyze" <%= bean.shouldAnalyze() ? "checked" : "" %> />
-</td>
-</tr>
 
 </table>
 </td>
@@ -112,7 +102,7 @@
 %>
     <tr>
     <td><%= entry.getKey() %></td>
-    <td><%= df.format(new Date(Long.parseLong(entry.getValue().toString()))) %></td>
+    <td><%=text(df.format(new Date(Long.parseLong(entry.getValue().toString()))))%></td>
     </tr>
 <%
     }
@@ -124,4 +114,8 @@
 
 <input type="submit" value="Save All"/>
 <%=textLink("refresh", new ActionURL(ONPRC_EHRController.EtlAdminAction.class, context.getContainer()))%>
+
+<% if (ETL.isEnabled()) {
+    out.print(textLink("Run ETL Now", new ActionURL(ONPRC_EHRController.RunEtlAction.class, context.getContainer())));
+}%>
 </form>

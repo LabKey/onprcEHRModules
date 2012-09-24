@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+DROP table deleted_records;
 CREATE TABLE deleted_records (
 	id varchar(255) DEFAULT NULL,
-	uuid varchar(255) DEFAULT NULL,
+	objectid varchar(255) DEFAULT NULL,
+	ts varbinary,
 	tableName varchar(255) DEFAULT NULL,
-	labkeyTable varchar(255) DEFAULT NULL,
-	ts datetime,
 	created timestamp
-)
+);

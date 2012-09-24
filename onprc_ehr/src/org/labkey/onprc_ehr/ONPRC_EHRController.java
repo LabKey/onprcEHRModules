@@ -16,26 +16,24 @@
 package org.labkey.onprc_ehr;
 
 import org.apache.commons.codec.binary.Base64;
-import org.labkey.onprc_ehr.etl.ETL;
-import org.labkey.onprc_ehr.etl.ETLRunnable;
 import org.labkey.api.action.FormViewAction;
+import org.labkey.api.action.RedirectAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.security.RequiresPermissionClass;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.util.URLHelper;
+import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.JspView;
 import org.labkey.api.view.NavTree;
+import org.labkey.onprc_ehr.etl.ETL;
+import org.labkey.onprc_ehr.etl.ETLRunnable;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Map;
-
-import static java.text.DateFormat.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -52,7 +50,7 @@ public class ONPRC_EHRController extends SpringActionController
         setActionResolver(_actionResolver);
     }
 
-@RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermissionClass(AdminPermission.class)
     public class EtlAdminAction extends FormViewAction<Object>
     {
 
@@ -91,9 +89,6 @@ public class ONPRC_EHRController extends SpringActionController
                 }
             }
 
-            String shouldAnalyze = request.getParameter("shouldAnalyze");
-            configMap.put("shouldAnalyze", shouldAnalyze != null && shouldAnalyze.equals("on") ? "true" : "false");
-
             PropertyManager.saveProperties(configMap);
 
             PropertyManager.PropertyMap rowVersionMap = PropertyManager.getWritableProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN, true);
@@ -113,7 +108,7 @@ public class ONPRC_EHRController extends SpringActionController
 
             String status = request.getParameter("etlStatus");
             if (status.equals("true"))
-                ETL.start(0);
+                ETL.start(100);
             else if (status.equals("false"))
                 ETL.stop();
 
@@ -179,12 +174,25 @@ public class ONPRC_EHRController extends SpringActionController
         {
             this.configKeys = configKeys;
         }
+    }
 
-        public boolean shouldAnalyze()
+    @RequiresPermissionClass(AdminPermission.class)
+    public class RunEtlAction extends RedirectAction<Object>
+    {
+        public boolean doAction(Object form, BindException errors) throws Exception
         {
-            String shouldAnalyze = config.get("shouldAnalyze");
-            return shouldAnalyze != null && shouldAnalyze.equals("true") ? true : false;
+            ETL.run();
+            return true;
         }
 
+        public void validateCommand(Object form, Errors errors)
+        {
+
+        }
+
+        public ActionURL getSuccessURL(Object form)
+        {
+            return new ActionURL(EtlAdminAction.class, getContainer());
+        }
     }
 }

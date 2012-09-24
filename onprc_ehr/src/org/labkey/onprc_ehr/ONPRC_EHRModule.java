@@ -15,12 +15,14 @@
  */
 package org.labkey.onprc_ehr;
 
-import org.labkey.onprc_ehr.etl.ETL;
-import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
 import org.labkey.api.audit.AuditLogService;
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.module.DefaultModule;
 import org.labkey.api.module.ModuleContext;
+import org.labkey.api.resource.Resource;
 import org.labkey.api.view.WebPartFactory;
+import org.labkey.onprc_ehr.etl.ETL;
+import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -64,8 +66,14 @@ public class ONPRC_EHRModule extends DefaultModule
     @Override
     public void doStartup(ModuleContext moduleContext)
     {
-        ETL.init(0);
+        ETL.init(5000);
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
+
+        EHRService.get().registerModule(this);
+
+        Resource r = getModuleResource("/scripts/onprc_ehr/triggers.js");
+        assert r != null;
+        EHRService.get().registerTriggerScript(r);
     }
 
     @Override

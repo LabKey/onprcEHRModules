@@ -21,29 +21,40 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.ColumnInfo;
+import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.SQLFragment;
+import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
+import org.labkey.api.data.TableSelector;
+import org.labkey.api.exp.property.Domain;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.query.BatchValidationException;
+import org.labkey.api.query.FieldKey;
+import org.labkey.api.query.FilteredTable;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.QueryUpdateService;
 import org.labkey.api.query.UserSchema;
+import org.labkey.api.query.ValidationException;
+import org.labkey.api.resource.FileResource;
+import org.labkey.api.resource.MergedDirectoryResource;
+import org.labkey.api.resource.Resource;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
 import org.labkey.api.security.ValidEmail;
+import org.labkey.api.settings.AppProps;
+import org.labkey.api.study.DataSetTable;
 import org.labkey.api.util.ResultSetUtil;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HttpView;
 import org.labkey.api.view.ViewContext;
 
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
@@ -57,6 +68,7 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -70,20 +82,25 @@ public class ETLRunnable implements Runnable
     public final static String TIMESTAMP_PROPERTY_DOMAIN = "onprc.ehr.org.labkey.onprc_ehr.etl.timestamp";
     public final static String ROWVERSION_PROPERTY_DOMAIN = "onprc.ehr.org.labkey.onprc_ehr.etl.rowversion";
     public final static String CONFIG_PROPERTY_DOMAIN = "onprc.ehr.org.labkey.onprc_ehr.etl.config";
-    public final static byte[] DEFAULT_VERSION = Base64.decodeBase64("00000000");  //TODO
+    public final static byte[] DEFAULT_VERSION = new byte[0];
 
     private final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-    private final Map<String, String> ehrQueries;
-    private final Map<String, String> studyQueries;
+    private Map<String, String> ehrQueries;
+    private Map<String, String> studyQueries;
 
     private final static Logger log = Logger.getLogger(ETLRunnable.class);
-    private static final int UPSERT_BATCH_SIZE = 5000;
+    private static final int UPSERT_BATCH_SIZE = 2500;
     private boolean shutdown;
 
     public ETLRunnable() throws IOException, SQLException, ValidEmail.InvalidEmailException
     {
-        this.ehrQueries = loadQueries(getResource("ehr").listFiles());
-        this.studyQueries = loadQueries(getResource("study").listFiles());
+        refreshQueries();
+    }
+
+    private void refreshQueries() throws IOException
+    {
+        this.ehrQueries = loadQueries(getResource("ehr").list());
+        this.studyQueries = loadQueries(getResource("study").list());
     }
 
     @Override
@@ -95,6 +112,10 @@ public class ETLRunnable implements Runnable
 
         try
         {
+            //always reload the queries if we're in devmode
+            if (AppProps.getInstance().isDevMode())
+                refreshQueries();
+
             user = UserManager.getUser(new ValidEmail(getConfigProperty("labkeyUser")));
             container = ContainerManager.getForPath(getConfigProperty("labkeyContainer"));
             if (null == user)
@@ -116,6 +137,11 @@ public class ETLRunnable implements Runnable
            log.error(e.getMessage(), e);
            return;
         }
+        catch (IOException e)
+        {
+            log.error(e.getMessage(), e);
+            return;
+        }
 
 
         int stackSize = -1;
@@ -132,13 +158,20 @@ public class ETLRunnable implements Runnable
             for (String datasetName : studyQueries.keySet())
             {
                 long lastTs = getLastTimestamp(datasetName);
-                log.info(String.format("dataset %s last synced %s", datasetName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                byte[] lastRow = getLastVersion(datasetName);
+                String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+
+                log.info(String.format("table study.%s last synced %s", datasetName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                log.info(String.format("table study.%s rowversion was %s", datasetName, version));
             }
 
             for (String tableName : ehrQueries.keySet())
             {
                 long lastTs = getLastTimestamp(tableName);
-                log.info(String.format("list %s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                byte[] lastRow = getLastVersion(tableName);
+                String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                log.info(String.format("table ehr.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                log.info(String.format("table study.%s rowversion was %s", tableName, version));
             }
 
             UserSchema ehrSchema = QueryService.get().getUserSchema(user, container, "ehr");
@@ -151,7 +184,7 @@ public class ETLRunnable implements Runnable
 
                 log.info("End incremental sync run.");
 
-                ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, datasetErrors);
+//                ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, datasetErrors);
             }
             catch (BatchValidationException e)
             {
@@ -179,11 +212,8 @@ public class ETLRunnable implements Runnable
     }
 
     /** @return count of collections that encountered errors */
-    int merge(User user, Container container, Map<String, String> queries, UserSchema schema) throws BadConfigException, BatchValidationException
+    private int merge(User user, Container container, Map<String, String> queries, UserSchema schema) throws BadConfigException, BatchValidationException
     {
-        // run postgres ANALYZE if enabled.
-        doDbAnalyze(schema.getDbSchema());
-
         DbScope scope = schema.getDbSchema().getScope();
         int errorCount = 0;
 
@@ -204,15 +234,39 @@ public class ETLRunnable implements Runnable
             {
                 targetTableName = kv.getKey();
                 sql = kv.getValue();
-                //TODO: debug purposes
-                sql = "SELECT TOP 10 * FROM (" + sql + ") t";
-                TableInfo targetTable = schema.getTable(targetTableName);
 
+                //TODO: debug purposes only
+//                sql = "SELECT TOP 100 * FROM (\n" + sql + "\n) t";
+
+                TableInfo targetTable = schema.getTable(targetTableName);
                 if (targetTable == null)
                 {
                     log.warn(targetTableName + " is not a known labkey study name, skipping the so-named sql query");
                     errorCount++;
                     continue;
+                }
+
+                //find the physical table for deletes
+                TableInfo realTable = null;
+                if (targetTable instanceof FilteredTable)
+                {
+                    String name;
+                    DbSchema dbSchema;
+                    if (targetTable instanceof DataSetTable)
+                    {
+                        Domain domain = ((FilteredTable)targetTable).getDomain();
+                        if (domain != null)
+                        {
+                            String tableName = domain.getStorageTableName();
+                            dbSchema = DbSchema.get("studydataset");
+                            realTable = dbSchema.getTable(tableName);
+                        }
+
+//                        DataSetTable ds = (DataSetTable)targetTable;
+//                        name = "c" + container.getRowId() + "d" + ds.getDataSet().getDataSetId() + "_" + targetTable.getName().toLowerCase();
+//                        dbSchema = DbSchema.get("studydataset");
+//                        realTable = dbSchema.getTable(name);
+                    }
                 }
 
                 // Are we starting with an empty collection?
@@ -240,6 +294,7 @@ public class ETLRunnable implements Runnable
                 log.info("querying for " + targetTableName + " since " + new Date(fromDate.getTime()));
 
                 int updates = 0;
+                int currentBatch = 0;
                 byte[] newBaselineVersion = getOriginDataSourceCurrentVersion();
                 Long newBaselineTimestamp = getOriginDataSourceCurrentTime();
                 boolean rollback = false;
@@ -252,19 +307,25 @@ public class ETLRunnable implements Runnable
                 Map<String, Object> extraContext = new HashMap<String, Object>();
                 extraContext.put("dataSource", "etl");
 
+                //NOTE: the purpose of this switch is to allow alternate keyfields, such as
+                ColumnInfo filterColumn = targetTable.getColumn("objectid");
+                ColumnInfo pkColumn = targetTable.getPkColumns().get(0);
+                if(filterColumn == null)
+                {
+                    filterColumn = pkColumn;
+                }
+
                 try
                 {
                     scope.ensureTransaction();
                     // perform any deletes
                     if (!deletedIds.isEmpty())
                     {
-
-                        //TODO: alternate keyfields??
-                        List<ColumnInfo> pks = targetTable.getPkColumns();
-                        ColumnInfo objid = targetTable.getColumn("objectid");
                         List<ColumnInfo> keys = targetTable.getPkColumns();
+
                         Map<String, SQLFragment> joins = new HashMap<String, SQLFragment>();
-                        objid.declareJoins("t", joins);
+                        filterColumn.declareJoins("t", joins);
+
                         // Some ehr records are transformed into multiple records en route to labkey. the multiple records have objectids that
                         // are constructed from the original objectid plus a suffix. If one of those original records gets deleted we only know the
                         // original objectid. So we need to find the child ones with a LIKE objectid% query. Which is really complicated.
@@ -295,7 +356,7 @@ public class ETLRunnable implements Runnable
                             {
                                 likeWithIds.append(" OR ");
                             }
-                            likeWithIds.append(objid.getValueSql("t") + " LIKE ? || '%' ");
+                            likeWithIds.append(filterColumn.getValueSql("t") + " LIKE ? || '%' ");
                             if (count++ > 100)
                             {
                                 deleteSelectors.addAll(Arrays.asList((Map<String, Object>[])Table.executeQuery(schema.getDbSchema(), likeWithIds, Map.class)));
@@ -310,14 +371,22 @@ public class ETLRunnable implements Runnable
                             deleteSelectors.addAll(Arrays.asList((Map<String, Object>[])Table.executeQuery(schema.getDbSchema(), likeWithIds, Map.class)));
                         }
 
-                        updater.deleteRows(user, container, deleteSelectors, extraContext);
-                        log.info("deleted objectids " + deletedIds.toString());
+                        if (realTable != null)
+                        {
+                            Table.delete(realTable, new SimpleFilter(filterColumn.getFieldKey(), likeWithIds, CompareType.IN));
+                        }
+                        else
+                        {
+                            updater.deleteRows(user, container, deleteSelectors, extraContext);
+                        }
+                        log.info("deleted objectids " + deletedIds.size());
                     }
 
                     List<Map<String, Object>> sourceRows = new ArrayList<Map<String, Object>>();
                     // accumulating batches of rows. would employ ResultSet.isDone to manage the last remainder
                     // batch but the MySQL jdbc driver doesn't support that method if it is a streaming result set.
                     boolean isDone = false;
+                    List<Object> searchParams = new ArrayList<Object>();
                     while (!isDone)
                     {
 
@@ -328,33 +397,112 @@ public class ETLRunnable implements Runnable
                         }
 
                         isDone = !rs.next();
-
                         if (!isDone)
                         {
                             sourceRows.add(mapResultSetRow(rs));
+                            try
+                            {
+
+                                searchParams.add(rs.getObject(filterColumn.getColumnName()));
+                            }
+                            catch (SQLException e)
+                            {
+                                log.error("Unable to find column objectId in ETL script for " + targetTableName);
+                                throw e;
+                            }
                         }
                         else
                         {
-                            // avoid leaving the mysql statement open while
-                            // we process the results.
+                            // avoid leaving the statement open while we process the results.
                             close(rs);
                             rs = null;
                             close(ps);
                             close(originConnection);
                         }
 
+                        //this is performed in batches.  first we select any existing rows, then delete these.
+                        //once complete, then we do an insert
                         if (sourceRows.size() == UPSERT_BATCH_SIZE || isDone)
                         {
-                            if (!isTargetEmpty) {
-                                updater.deleteRows(user, container, sourceRows, extraContext);
+                            if (!isTargetEmpty && searchParams.size() > 0) {
+                                long start = new Date().getTime();
+
+                                //use objectId to obtain LSIDs
+                                SimpleFilter filter = new SimpleFilter(FieldKey.fromString(filterColumn.getColumnName()), searchParams, CompareType.IN);
+                                Set<String> cols = new HashSet(targetTable.getPkColumnNames());
+                                TableSelector ts = new TableSelector(targetTable, cols, filter, null);
+                                Map<String, Object>[] rows = ts.getArray(Map.class);
+
+                                long duration = ((new Date()).getTime() - start) / 1000;
+                                log.info("Pre-selecting " + searchParams.size() + " rows for table: " + targetTable.getName() + " took: " + duration + "s");
+
+                                if (rows.length > 0)
+                                {
+                                    log.info("Preparing for insert by deleting " + rows.length + " rows for table: " + targetTable.getName());
+                                    start = new Date().getTime();
+                                    int totalDeleted;
+                                    if (realTable != null)
+                                    {
+                                        List<Object> pks = new ArrayList<Object>();
+                                        for (Map<String, Object> r : rows)
+                                        {
+                                            pks.add(r.get(pkColumn.getName()));
+                                        }
+                                        totalDeleted = Table.delete(realTable, new SimpleFilter(pkColumn.getFieldKey(), pks, CompareType.IN));
+                                    }
+                                    else
+                                    {
+                                        List<Map<String, Object>> deleted = updater.deleteRows(user, container, Arrays.asList(rows), extraContext);
+                                        totalDeleted = deleted.size();
+                                    }
+
+                                    if (totalDeleted != rows.length)
+                                    {
+                                        log.warn("Table: " + targetTable.getName() + " delete abnormality.  searchParams: " + searchParams.size() + ", rows: " + rows.length + ", deleted: " + totalDeleted);
+                                        TableSelector ts1 = new TableSelector(targetTable, cols, filter, null);
+                                        Map<String, Object>[] rows2 = ts1.getArray(Map.class);
+                                        log.info("rows: " + rows2.length);
+                                    }
+                                    duration = ((new Date()).getTime() - start) / 1000;
+                                    log.info("Finished deleting " + totalDeleted + " rows for table: " + targetTable.getName() + ", which took: " + duration + "s");
+                                }
+                                else
+                                    log.info("No existing rows found for table: " + targetTable.getName() + ", delete not necessary");
                             }
+                            long start = new Date().getTime();
                             BatchValidationException errors = new BatchValidationException();
                             updater.insertRows(user, container, sourceRows, errors, extraContext);
                             if (errors.hasErrors())
+                            {
+                                log.error("There were errors during the sync for: " + targetTableName);
+                                for (ValidationException e : errors.getRowErrors())
+                                {
+                                    log.error(e.getMessage());
+                                }
                                 throw errors;
+                            }
                             updates += sourceRows.size();
-                            log.info("Updated " + updates + " records in " + targetTableName);
+                            currentBatch += sourceRows.size();
+                            long duration = ((new Date()).getTime() - start) / 1000;
+                            log.info("Insert took: " + duration + "s");
+                            log.info("Updated " + updates + " records for " + targetTableName);
                             sourceRows.clear();
+                            searchParams.clear();
+
+                            if (currentBatch >= 20000)
+                            {
+                                if (realTable != null)
+                                {
+                                    log.info("Performing Analyze");
+                                    String analyze = realTable.getSchema().getSqlDialect().getAnalyzeCommandForTable(realTable.getSchema().getName() + "." + realTable.getName());
+                                    Table.execute(realTable.getSchema(), analyze);
+                                }
+                                else
+                                {
+                                    log.info("No table, wont analyze");
+                                }
+                                currentBatch = 0;
+                            }
                         }
 
                     } // each record
@@ -379,9 +527,6 @@ public class ETLRunnable implements Runnable
                         setLastVersion(targetTableName, newBaselineVersion);
                         setLastTimestamp(targetTableName, newBaselineTimestamp);
                         log.info(MessageFormat.format("Committed updates for {0} records in {1}", updates, targetTableName));
-
-                        // run postgres ANALYZE if enabled and if any updates were performed.
-                        if (updates > 0) doDbAnalyze(schema.getDbSchema());
                     }
 
                 }
@@ -420,9 +565,9 @@ public class ETLRunnable implements Runnable
         try
         {
             originConnection = getOriginConnection();
-            ps = originConnection.prepareStatement("SELECT uuid FROM deleted_records WHERE labkeyTable = ? AND ts > ?");
-            ps.setString(1, tableName);
-            ps.setBytes(2, fromVersion);
+            ps = originConnection.prepareStatement("SELECT objectid FROM dbo.deleted_records WHERE ts > ?");
+            ps.setBytes(1, fromVersion);
+            //ps.setString(1, tableName);
             rs = ps.executeQuery();
             while (rs.next())
             {
@@ -474,7 +619,7 @@ public class ETLRunnable implements Runnable
         }
         else
         {
-            return new byte[0];
+            return DEFAULT_VERSION;
         }
     }
 
@@ -582,14 +727,16 @@ public class ETLRunnable implements Runnable
         return DriverManager.getConnection(getConfigProperty("jdbcUrl"));
     }
 
-    private Map<String, String> loadQueries(File[] sqlFiles) throws IOException
+    private Map<String, String> loadQueries(Collection<Resource> sqlFiles) throws IOException
     {
         Map<String, String> qMap = new HashMap<String, String>();
 
-        for (File f : sqlFiles)
+        for (Resource sqlFile : sqlFiles)
         {
+            FileResource f = (FileResource)sqlFile;
+
             if (!f.getName().endsWith("sql")) continue;
-            String sql = Files.toString(f, Charsets.UTF_8);
+            String sql = Files.toString(f.getFile(), Charsets.UTF_8);
             String key = f.getName().substring(0, f.getName().indexOf('.'));
             qMap.put(key, sql);
         }
@@ -613,11 +760,11 @@ public class ETLRunnable implements Runnable
 
     /**
      * @param path relative to onprc_ehr/resources/org.labkey.onprc_ehr.etl dir
-     * @return File object for the specified file or directory
+     * @return MergedDirectoryResource object for the specified file or directory
      */
-    private File getResource(String path)
+    private MergedDirectoryResource getResource(String path)
     {
-        return new File(ModuleLoader.getInstance().getModule("ONPRC_EHR").getExplodedPath() + "/etl/" + path);
+        return ((MergedDirectoryResource)ModuleLoader.getInstance().getModule("ONPRC_EHR").getModuleResource("/etl/" + path));
     }
 
     private static void close(Closeable o)
@@ -664,12 +811,6 @@ public class ETLRunnable implements Runnable
         }
     }
 
-    public boolean shouldAnalyze()
-    {
-        String prop = PropertyManager.getProperties(CONFIG_PROPERTY_DOMAIN).get("shouldAnalyze");
-        return prop != null && prop.equals("true");
-    }
-
     public int getRunIntervalInMinutes()
     {
         String prop = PropertyManager.getProperties(CONFIG_PROPERTY_DOMAIN).get("runIntervalInMinutes");
@@ -686,28 +827,25 @@ public class ETLRunnable implements Runnable
 
     }
 
-    /**
-     * run db ANALYZE if configured and if db is postgres.
-     *
-     * This is really important for postgres performance when a table goes from no rows to millions of rows,
-     * which studydata does when first syncing from EHR's legacy database.
-     * @param dbSchema
-     */
-    private void doDbAnalyze(DbSchema dbSchema)
-    {
-        if (shouldAnalyze() && dbSchema.getSqlDialect().isPostgreSQL()) {
-            log.info("ANALYZE");
-            try
-            {
-                Table.execute(dbSchema, dbSchema.getSqlDialect().getAnalyzeCommandForTable(""));
-            }
-            catch (SQLException e)
-            {
-                log.warn("error running db ANALYZE: " + e.getMessage(), e);
-            }
-        }
-
-    }
+//    /**
+//     * run db ANALYZE if configured and if db is postgres.
+//     *
+//     * This is really important for postgres performance when a table goes from no rows to millions of rows,
+//     * which studydata does when first syncing from EHR's legacy database.
+//     * @param dbSchema
+//     */
+//    private void doDbAnalyze(DbSchema dbSchema)
+//    {
+//        log.info("ANALYZE");
+//        try
+//        {
+//            Table.execute(dbSchema, dbSchema.getSqlDialect().getAnalyzeCommandForTable(""));
+//        }
+//        catch (SQLException e)
+//        {
+//            log.warn("error running db ANALYZE: " + e.getMessage(), e);
+//        }
+//    }
 
     public boolean isShutdown()
     {

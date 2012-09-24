@@ -18,7 +18,6 @@ package org.labkey.onprc_ehr.etl;
 import org.apache.log4j.Logger;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
-import org.springframework.scripting.support.StaticScriptSource;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -83,6 +82,12 @@ public class ETL
             setEnabled(false);
             isRunning = false;
         }
+    }
+
+    static public void run()
+    {
+        if (isRunning && runnable != null)
+            runnable.run();
     }
 
     public static boolean isEnabled()
