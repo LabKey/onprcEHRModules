@@ -16,10 +16,12 @@
 package org.labkey.onprc_ehr;
 
 import org.apache.commons.codec.binary.Base64;
+import org.labkey.api.action.ExportAction;
 import org.labkey.api.action.FormViewAction;
 import org.labkey.api.action.RedirectAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.RequiresPermissionClass;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.util.URLHelper;
@@ -33,6 +35,10 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 /**
@@ -173,6 +179,59 @@ public class ONPRC_EHRController extends SpringActionController
         public void setConfigKeys(String[] configKeys)
         {
             this.configKeys = configKeys;
+        }
+    }
+
+    @AdminConsoleAction
+    public class ShowEtlErrorsAction extends ExportAction
+    {
+        public void export(Object o, HttpServletResponse response, BindException errors) throws Exception
+        {
+            showLogFile(response, 0, getLogFile("ehr-etl-errors.log"));
+        }
+    }
+
+    @AdminConsoleAction
+    public class ShowEtlLogAction extends ExportAction
+    {
+        public void export(Object o, HttpServletResponse response, BindException errors) throws Exception
+        {
+            showLogFile(response, 0, getLogFile("ehr-etl.log"));
+        }
+    }
+
+    private File getLogFile(String name)
+    {
+        File tomcatHome = new File(System.getProperty("catalina.home"));
+        return new File(tomcatHome, "logs/" + name);
+    }
+
+    public void showLogFile(HttpServletResponse response, long startingOffset, File logFile) throws Exception
+    {
+        if (logFile.exists())
+        {
+            FileInputStream fIn = null;
+            try
+            {
+                fIn = new FileInputStream(logFile);
+                //noinspection ResultOfMethodCallIgnored
+                fIn.skip(startingOffset);
+                OutputStream out = response.getOutputStream();
+                response.setContentType("text/plain");
+                byte[] b = new byte[4096];
+                int i;
+                while ((i = fIn.read(b)) != -1)
+                {
+                    out.write(b, 0, i);
+                }
+            }
+            finally
+            {
+                if (fIn != null)
+                {
+                    fIn.close();
+                }
+            }
         }
     }
 
