@@ -135,4 +135,5 @@ onprc_ehr/tools/studyExports/Study/datasets/PrimateElectronicHealthRecord.datase
 onprc_ehr/tools/studyExports/Study/datasets/datasets_manifest.xml -text
 onprc_ehr/tools/studyExports/Study/datasets/datasets_metadata.xml -text
 onprc_ehr/tools/studyExports/Study/study.xml -text
+onprc_ehr/tools/testserver_db_script.sql -text
 onprc_ehr/webapp/onprc_ehr/docs.jsdoc -text
