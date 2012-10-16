@@ -24,7 +24,7 @@
         <moduleName>EHR</moduleName>
         <moduleName>ONPRC_EHR</moduleName>
     </modules>
-    <defaultModule>Portal</defaultModule>
+    <defaultModule>Core</defaultModule>
     <workbookType>false</workbookType>
     <forceAssayUploadIntoWorkbooks>false</forceAssayUploadIntoWorkbooks>
 </folderType>
