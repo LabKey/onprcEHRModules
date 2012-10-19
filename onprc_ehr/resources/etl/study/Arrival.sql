@@ -17,6 +17,7 @@ Select
 	cast(AnimalID as varchar) as Id,
 	Date as Date,	
     s1.Value as AcquisitionType,
+    --(select newValue FROM ehr.sys_params WHERE cateogry = 'xxxx' and name = s1.Value)
     s2.Value as RearingType,
     Afc.ISISInstitute as source,
     Remarks as Remark,
@@ -40,9 +41,13 @@ Select
 	--OLDIdNumber as OLDIdNumber,
 	--InitialLocID as InitialLocIDInt ,
 	--Technician as TechnicianInt,
-	--Ref.LastName as TechLastName,
-	--Ref.FirstName as TechFirstName,
-	--Ref.Initials as TechInitials,
+	case
+	  WHEN Ref.LastName IS NOT NULL THEN
+        Ref.Initials + Ref.LastName + Ref.FirstName
+	  else
+	   Ref.Initials
+    END as performedBy,
+
 	--DeptCode as DepartmentInt,
 	--s4.Value as Department,
 
