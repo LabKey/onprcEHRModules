@@ -21,94 +21,94 @@ Sections below can be commented/uncommented depending on your needs
 -- ;
 
 -- update the server's URL
-UPDATE    prop.Properties p
+UPDATE    prop.Properties
 SET       Value = 'http://prc-labkey3.ohsu.edu'
-WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'SiteConfig'
-          AND p.Name = 'baseServerURL'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'SiteConfig'
+          AND Name = 'baseServerURL'
 ;
 
 -- update the server's name
-UPDATE    prop.Properties p
+UPDATE    prop.Properties
 SET       Value = 'TestServer'
-WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'LookAndFeel'
-          AND p.Name = 'systemShortName'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'LookAndFeel'
+          AND Name = 'systemShortName'
 ;
 
 -- update the server's description
-UPDATE    prop.Properties p
+UPDATE    prop.Properties
 SET       Value = 'EHR Test Server'
-WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'LookAndFeel'
-          AND p.Name = 'systemDescription'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'LookAndFeel'
+          AND Name = 'systemDescription'
 ;
 
 -- change a site theme
-UPDATE    prop.Properties p
+UPDATE    prop.Properties
 SET       Value = 'Seattle'
-WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'LookAndFeel'
-          AND p.Name = 'themeName'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'LookAndFeel'
+          AND Name = 'themeName'
 ;
 
 -- this can be used to update the google analytics ID.
---UPDATE    prop.Properties p
+--UPDATE    prop.Properties
 --SET       Value = 'UA-XXXXXXXXX'
---WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'analytics'
---          AND p.Name = 'accountId'
+--WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'analytics'
+--          AND Name = 'accountId'
 --;
 
 -- If used, update the ETL config.  This script assumes there is an existing value and uses replace so we dont save the password here
---UPDATE    prop.Properties p
+--UPDATE    prop.Properties
 --SET       Value = replace(Value, 'primatetest', 'primatedev')
---WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'onprc.ehr.etl.config'
---	      AND p.Name = 'jdbcUrl'
+--WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'onprc.ehr.etl.config'
+--	      AND Name = 'jdbcUrl'
 --;
 
 -- turn off the ETL
-UPDATE    prop.Properties p
+UPDATE    prop.Properties
 SET       Value = 0
-WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'onprc.ehr.etl.config'
-	      AND p.Name = 'runIntervalInMinutes'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'onprc.ehr.etl.config'
+	      AND Name = 'runIntervalInMinutes'
 ;
 
 -- if R or other script paths differ
 
 --set the R program path
--- UPDATE    prop.Properties p
+-- UPDATE    prop.Properties
 -- SET       Value = 'C:\\Program Files\\R\\R-2.11.1-x64\\bin\\R.exe'
--- WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'UserPreferencesMap'
--- 	      AND p.Name = 'RReport.RExe'
+-- WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'UserPreferencesMap'
+-- 	      AND Name = 'RReport.RExe'
 -- ;
--- UPDATE    prop.Properties p
+-- UPDATE    prop.Properties
 -- SET       Value = 'C:\\Program Files\\R\\R-2.11.1-x64\\bin\\R.exe'
--- WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'ScriptEngineDefinition_R,r'
--- 	      AND p.Name = 'exePath'
+-- WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'ScriptEngineDefinition_R,r'
+-- 	      AND Name = 'exePath'
 -- ;
 
 
 -- not used, but might be of interest
--- UPDATE    prop.Properties p
+-- UPDATE    prop.Properties
 -- SET       Value = FALSE
--- WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'SiteConfig'
---             AND p.Name = 'sslRequired'
+-- WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'SiteConfig'
+--             AND Name = 'sslRequired'
 -- ;
 --
---UPDATE    prop.Properties p
+--UPDATE    prop.Properties
 --SET       Value = '8443'
---WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'SiteConfig'
---            AND p.Name = 'sslPort'
+--WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'SiteConfig'
+--            AND Name = 'sslPort'
 --;
 
 -- can change the site file root
--- UPDATE    prop.Properties p
+-- UPDATE    prop.Properties
 -- SET       Value = 'c:\labkey_data'
--- WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'SiteConfig'
---             AND p.Name = 'webRoot'
+-- WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'SiteConfig'
+--             AND Name = 'webRoot'
 -- ;
 
 -- probably not used, but could put the site in admin mode
--- UPDATE    prop.Properties p
+-- UPDATE    prop.Properties
 -- SET       Value = TRUE
--- WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s.Set = p.Set) = 'SiteConfig'
---             AND p.Name = 'adminOnlyMode'
+-- WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'SiteConfig'
+--             AND Name = 'adminOnlyMode'
 -- ;
 
 -- this allows you to promote select users to site admins.  can be useful if giving a local dev a copy of the DB
