@@ -84,10 +84,16 @@ public class ETL
         }
     }
 
+    /**
+     * This allows an admin to manually kick off one ETL sync.  It is primarily used for development
+     * and not recommended on production servers
+     */
     static public void run()
     {
-        if (isRunning && runnable != null)
+        if (runnable != null)
             runnable.run();
+        else
+            log.error("ETL is either disabled to inactive.  Will not start");
     }
 
     public static boolean isEnabled()

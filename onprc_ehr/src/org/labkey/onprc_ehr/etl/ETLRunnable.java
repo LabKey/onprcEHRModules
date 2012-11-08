@@ -90,6 +90,7 @@ public class ETLRunnable implements Runnable
 
     private final static Logger log = Logger.getLogger(ETLRunnable.class);
     private static final int UPSERT_BATCH_SIZE = 2500;
+    private boolean isRunning = false;
     private boolean shutdown;
 
     public ETLRunnable() throws IOException, SQLException, ValidEmail.InvalidEmailException
@@ -110,103 +111,116 @@ public class ETLRunnable implements Runnable
         Container container;
         shutdown = false;
 
-        try
+        if (isRunning)
         {
-            //always reload the queries if we're in devmode
-            if (AppProps.getInstance().isDevMode())
-                refreshQueries();
-
-            user = UserManager.getUser(new ValidEmail(getConfigProperty("labkeyUser")));
-            container = ContainerManager.getForPath(getConfigProperty("labkeyContainer"));
-            if (null == user)
-            {
-                throw new BadConfigException("bad configuration: invalid labkey user");
-            }
-            if (null == container)
-            {
-                throw new BadConfigException("bad configuration: invalid labkey container");
-            }
-        }
-        catch (ValidEmail.InvalidEmailException e)
-        {
-            log.error(e.getMessage(), e);
+            log.error("EHR ETL is already running, aborting");
             return;
         }
-        catch (BadConfigException e)
-        {
-           log.error(e.getMessage(), e);
-           return;
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage(), e);
-            return;
-        }
+        isRunning = true;
 
-
-        int stackSize = -1;
         try
         {
-            log.info("Begin incremental sync from external datasource.");
-
-            // Push a fake ViewContext onto the HttpView stack
-            stackSize = HttpView.getStackSize();
-            ViewContext.getMockViewContext(user, container, new ActionURL("onprc_ehr", "fake.view", container), true);
-
-            ETLAuditViewFactory.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0);
-
-            for (String datasetName : studyQueries.keySet())
-            {
-                long lastTs = getLastTimestamp(datasetName);
-                byte[] lastRow = getLastVersion(datasetName);
-                String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
-
-                log.info(String.format("table study.%s last synced %s", datasetName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
-                log.info(String.format("table study.%s rowversion was %s", datasetName, version));
-            }
-
-            for (String tableName : ehrQueries.keySet())
-            {
-                long lastTs = getLastTimestamp(tableName);
-                byte[] lastRow = getLastVersion(tableName);
-                String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
-                log.info(String.format("table ehr.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
-                log.info(String.format("table study.%s rowversion was %s", tableName, version));
-            }
-
-            UserSchema ehrSchema = QueryService.get().getUserSchema(user, container, "ehr");
-            UserSchema studySchema = QueryService.get().getUserSchema(user, container, "study");
-
             try
             {
-                int ehrErrors = merge(user, container, ehrQueries, ehrSchema);
-                int datasetErrors = merge(user, container, studyQueries, studySchema);
+                //always reload the queries if we're in devmode
+                if (AppProps.getInstance().isDevMode())
+                    refreshQueries();
 
-                log.info("End incremental sync run.");
-
-//                ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, datasetErrors);
+                user = UserManager.getUser(new ValidEmail(getConfigProperty("labkeyUser")));
+                container = ContainerManager.getForPath(getConfigProperty("labkeyContainer"));
+                if (null == user)
+                {
+                    throw new BadConfigException("bad configuration: invalid labkey user");
+                }
+                if (null == container)
+                {
+                    throw new BadConfigException("bad configuration: invalid labkey container");
+                }
             }
-            catch (BatchValidationException e)
+            catch (ValidEmail.InvalidEmailException e)
             {
-                log.error(e.getMessage());
-                throw e;
+                log.error(e.getMessage(), e);
+                return;
             }
-        }
-        catch (Throwable x)
-        {
-            // Depending on the configuration of the executor,
-            // if run() throws anything future executions may all canceled.
-            // But we'd rather catch unexpected exceptions and continue trying,
-            // to smooth over any transient issues like the remote datasource
-            // being temporarily unavailable.
-            log.error("Fatal incremental sync error", x);
-            ETLAuditViewFactory.addAuditEntry(container, user, "FATAL ERROR", "Fatal error during EHR synchronization", 0, 0);
+            catch (BadConfigException e)
+            {
+               log.error(e.getMessage(), e);
+               return;
+            }
+            catch (IOException e)
+            {
+                log.error(e.getMessage(), e);
+                return;
+            }
 
+            int stackSize = -1;
+            try
+            {
+                log.info("Begin incremental sync from external datasource.");
+
+                // Push a fake ViewContext onto the HttpView stack
+                stackSize = HttpView.getStackSize();
+                ViewContext.getMockViewContext(user, container, new ActionURL("onprc_ehr", "fake.view", container), true);
+
+                ETLAuditViewFactory.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0);
+
+                for (String datasetName : studyQueries.keySet())
+                {
+                    long lastTs = getLastTimestamp(datasetName);
+                    byte[] lastRow = getLastVersion(datasetName);
+                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+
+                    log.info(String.format("table study.%s last synced %s", datasetName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                    log.info(String.format("table study.%s rowversion was %s", datasetName, version));
+                }
+
+                for (String tableName : ehrQueries.keySet())
+                {
+                    long lastTs = getLastTimestamp(tableName);
+                    byte[] lastRow = getLastVersion(tableName);
+                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    log.info(String.format("table ehr.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                    log.info(String.format("table study.%s rowversion was %s", tableName, version));
+                }
+
+                UserSchema ehrSchema = QueryService.get().getUserSchema(user, container, "ehr");
+                UserSchema studySchema = QueryService.get().getUserSchema(user, container, "study");
+
+                try
+                {
+                    int ehrErrors = merge(user, container, ehrQueries, ehrSchema);
+                    int datasetErrors = merge(user, container, studyQueries, studySchema);
+
+                    log.info("End incremental sync run.");
+
+    //                ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, datasetErrors);
+                }
+                catch (BatchValidationException e)
+                {
+                    log.error(e.getMessage());
+                    throw e;
+                }
+            }
+            catch (Throwable x)
+            {
+                // Depending on the configuration of the executor,
+                // if run() throws anything future executions may all canceled.
+                // But we'd rather catch unexpected exceptions and continue trying,
+                // to smooth over any transient issues like the remote datasource
+                // being temporarily unavailable.
+                log.error("Fatal incremental sync error", x);
+                ETLAuditViewFactory.addAuditEntry(container, user, "FATAL ERROR", "Fatal error during EHR synchronization", 0, 0);
+
+            }
+            finally
+            {
+                if (stackSize > -1)
+                    HttpView.resetStackSize(stackSize);
+            }
         }
         finally
         {
-            if (stackSize > -1)
-                HttpView.resetStackSize(stackSize);
+            isRunning = false;
         }
 
     }
@@ -356,7 +370,9 @@ public class ETLRunnable implements Runnable
                             {
                                 likeWithIds.append(" OR ");
                             }
-                            likeWithIds.append(filterColumn.getValueSql("t") + " LIKE ? || '%' ");
+
+                            String delim = targetTable.getSqlDialect().isPostgreSQL() ? "||" : "+";
+                            likeWithIds.append(filterColumn.getValueSql("t") + " LIKE ? " + delim + " '%' ");
                             if (count++ > 100)
                             {
                                 deleteSelectors.addAll(Arrays.asList((Map<String, Object>[])Table.executeQuery(schema.getDbSchema(), likeWithIds, Map.class)));
@@ -489,10 +505,11 @@ public class ETLRunnable implements Runnable
                             sourceRows.clear();
                             searchParams.clear();
 
-                            if (currentBatch >= 20000)
+                            if (currentBatch >= 40000)
                             {
                                 if (realTable != null)
                                 {
+                                    //NOTE: this may be less important on SQLServer
                                     log.info("Performing Analyze");
                                     String analyze = realTable.getSchema().getSqlDialect().getAnalyzeCommandForTable(realTable.getSchema().getName() + "." + realTable.getName());
                                     Table.execute(realTable.getSchema(), analyze);
@@ -542,6 +559,7 @@ public class ETLRunnable implements Runnable
                 close(rs);
                 close(ps);
                 close(originConnection);
+                scope.closeConnection();
             }
 
         } // each target collection
