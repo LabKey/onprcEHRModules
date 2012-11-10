@@ -19,12 +19,19 @@ Select
 	afd.ISISDestination as desintationId,
 	isis.InstitutionName as desintation,	
 	
-	afd.Technician as TechnicianInt ,						----- Ref_Technicians
-	rt.LastName as TechLastName,
-	rt.FirstName as TechFirstName,
-	rt.Initials as TechInitials,
-	rt.DeptCode as DepartmentInt,
-	s1.Value as Department,
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy,
+
 	afd.IDKey as IDKey,
 	
 	afd.Remarks as Remark,

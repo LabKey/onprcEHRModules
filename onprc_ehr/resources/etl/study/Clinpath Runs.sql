@@ -46,6 +46,19 @@ SELECT
 	--Sedated as Sedated ,    	 ------ If selected Flag = 1 Else 0
     --ClinicalKey,
 
+	case
+	  WHEN TechLastName = 'Unassigned' or TechFirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(TechLastName) > 0 AND datalength(TechFirstName) > 0 AND datalength(TechInitials) > 0 THEN
+        TechLastName + ', ' + TechFirstName + ' (' + TechInitials + ')'
+	  WHEN datalength(TechLastName) > 0 AND datalength(TechFirstName) > 0 THEN
+        TechLastName + ', ' + TechFirstName
+	  WHEN datalength(TechLastName) > 0 AND datalength(TechInitials) > 0 THEN
+        TechLastName + ' (' + TechInitials + ')'
+	  else
+	   TechInitials
+    END as performedBy,
+
 	t.rowversion,
 	t.objectid
 

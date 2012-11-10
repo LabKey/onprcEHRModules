@@ -17,18 +17,25 @@ SELECT
 	pm.MeasurementID,
 	cast(pm.Id as varchar) as Id,
 	pm.date,
-	pm.TechnicianInt,
+
 	pm.objectid as parentid,
 	(cast(pm.objectid as varchar(38)) + pm.tissue) as objectid,
 	pm.rowversion,
 	pm.tissue,
 	pm.measurement,
 
-	LastName as TechLastName,
-	FirstName as TechFirstName,
-	Initials as TechInitials,
-        s1.Value as Department
-	
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy
 FROM (	
 
 Select

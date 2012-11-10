@@ -89,7 +89,7 @@ public class ETLRunnable implements Runnable
     private Map<String, String> studyQueries;
 
     private final static Logger log = Logger.getLogger(ETLRunnable.class);
-    private static final int UPSERT_BATCH_SIZE = 2500;
+    private static final int UPSERT_BATCH_SIZE = 1000;
     private boolean isRunning = false;
     private boolean shutdown;
 
@@ -250,7 +250,7 @@ public class ETLRunnable implements Runnable
                 sql = kv.getValue();
 
                 //TODO: debug purposes only
-//                sql = "SELECT TOP 100 * FROM (\n" + sql + "\n) t";
+//                sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t";
 
                 TableInfo targetTable = schema.getTable(targetTableName);
                 if (targetTable == null)

@@ -20,14 +20,21 @@ Select
 	--CauseOfDeath as CauseOfDeathInt,
     s1.Value as Cause,
     Remarks as Remark,
-  
-	Technician as TechnicianInt ,      ----- Ref_Technicians
-	rt.LastName as TechLastName,
-    rt.FirstName as TechFirstName,
-    rt.Initials as TechInitials,
-    rt.DeptCode as DepartmentInt,
-    s2.Value as Department,
-	
+
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy,
+
+    --TODO
 	afd.DeathLocation as CageId,
 	loc.Location as DeathLocation,
 	row.row + '-' + convert(char(2), row.Cage) As DeathCage,
@@ -39,7 +46,7 @@ From Af_Death AfD
 left join Sys_Parameters s1 ON (Afd.CauseOfDeath = s1.Flag And s1.Field =  'Deathcause')
 left join Ref_Location loc ON (loc.LocationId = afd.DeathLocation)
 left join Ref_RowCage row on (afd.DeathLocation = row.CageID AND loc.LocationId = row.LocationID)
-left join Ref_Technicians Rt ON (afd.Technician = rt.ID)
-left join Sys_Parameters s2 ON (s2.Field = 'DepartmentCode' And s2.Flag = Rt.Deptcode)
+left join Ref_Technicians rt ON (afd.Technician = rt.ID)
+left join Sys_Parameters s2 ON (s2.Field = 'DepartmentCode' And s2.Flag = rt.Deptcode)
 
 WHERE afd.ts > ?

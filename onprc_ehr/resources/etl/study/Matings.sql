@@ -17,14 +17,24 @@ SELECT
 	cast(AnimalID as varchar) as Id,
 	Date as Date  ,
 	MaleId as Male,
+
+	--TODO
 	--MatingType as MatingTypeInt  ,
 	s1.Value as MatingType,
-	--Technician As PerformedByInt,
-	--LastName as TechLastName,
-	--FirstName as TechFirstName,
-	--Initials as TechInitials,
-	--DeptCode as DepartmentCodeInt,
-	--s2.Value as DepartmentCode,
+
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy,
+
 	--IDKey as IDKey,
 	bm.ts as rowversion,
 	bm.objectid AS objectid

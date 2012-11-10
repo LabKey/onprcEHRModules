@@ -17,19 +17,24 @@ Select
 
 	BiopsyId as  BiopsyId  ,
 	AnimalID as Id,
-	Date as Date ,
-	BiopsyYear as BiopsyYear ,
-	BiopsyFlag as BiopsyFlag  ,
-	BiopsyCode as BiopsyCode ,
+	Date,
+    cast(BiopsyYear as varchar) + BiopsyFlag + BiopsyCode as caseno,
 
+    --the pathologist
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy,
 
-	Pathologist as Pathologist,
-	rt.LastName as TechLastName1,
-        rt.FirstName as TechFirstName1,
-        rt.Initials as TechInitials1,
-        rt.DeptCode as DepartmentInt1,
-        s3.Value as Department,
-
+    --TODO
 	Prosector1 as Prosector1 ,
 	rt2.LastName as TechLastName2,
         rt2.FirstName as TechFirstName2,

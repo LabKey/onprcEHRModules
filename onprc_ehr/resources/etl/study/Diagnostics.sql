@@ -27,6 +27,19 @@ SELECT
   t.result as resultString,
   t.qualResult,
 
+	case
+	  WHEN tech.LastName = 'Unassigned' or tech.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(tech.LastName) > 0 AND datalength(tech.FirstName) > 0 AND datalength(tech.Initials) > 0 THEN
+        tech.LastName + ', ' + tech.FirstName + ' (' + tech.Initials + ')'
+	  WHEN datalength(tech.LastName) > 0 AND datalength(tech.FirstName) > 0 THEN
+        tech.LastName + ', ' + tech.FirstName
+	  WHEN datalength(tech.LastName) > 0 AND datalength(tech.Initials) > 0 THEN
+        tech.LastName + ' (' + tech.Initials + ')'
+	  else
+	   tech.Initials
+    END as performedBy,
+
   t.objectid as parentid,
   t.objectid,
   t.rowversion
@@ -63,7 +76,6 @@ SELECT
 	cln.objectid
 
 FROM Cln_OccultBlood cln
-     left join Ref_Technicians rt on (Cln.Technician = rt.ID)
      left join Sys_Parameters s1 on (s1.Flag = Cln.Category And s1.Field = 'RequestCategory')
      left join Sys_Parameters s2 on (s2.Flag = Cln.Method And s2.Field = 'AnalysisMethod')
      left join Specimen sp on (sp.Value = cln.Specimen)
@@ -99,11 +111,13 @@ SELECT
 FROM Cln_RareTestData cln
 left join Ref_RareTests rt on (rt.RareTestID = cln.RareTestID)
 left join Cln_RareTestHeader h on (h.ClinicalKey = cln.ClinicalKey)
-left join Ref_Technicians tech on (h.Technician = tech.ID)
 left join Sys_Parameters s1 on (s1.Flag = h.Category And s1.Field = 'RequestCategory')
 left join Sys_Parameters s2 on (s2.Flag = h.Method And s2.Field = 'AnalysisMethod')
 left join Specimen sp on (sp.Value = h.Specimen)
 
-t)
+) t
+
+left join Ref_Technicians tech on (t.TechnicianId = tech.ID)
+
 
 where t.rowversion > ?

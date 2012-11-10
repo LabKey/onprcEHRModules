@@ -29,7 +29,9 @@ Select
 -- 	p1.ShortDescription as desc2,
 -- 	ActualReleasePool,			--
 -- 	p1.ShortDescription as desc3,
---NOTE: according to raymond replacementFlag is not in use and can be ignored
+
+
+--  --  --NOTE: according to raymond replacementFlag is not in use and can be ignored
 -- 	ReplacementFlag as ReplacementFlagRaw,
 -- 	s1.Value as ReplacementFlag,
 

@@ -30,14 +30,24 @@ SELECT
 	EndDate as EndDate,
 	--Reason as ReasonInt  ,
 	s5.Value as Reason,
+
+	--TODO
 	--RenewalFlag as RenewalFlag ,
-	--Technician As TechnicianID,
-	--LastName as TechLastName,
-	--FirstName as TechFirstName,
-	--Initials as TechInitials,
-	--DeptCode as DepartmentCodeInt,
-	--s6.Value as DepartmentCode,
-	Remarks as Remark,
+
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy,
+
+    Remarks as Remark,
 	--cln.SearchKey as SearchKey,
 
 	cln.ts as rowversion,

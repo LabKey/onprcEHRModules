@@ -1,0 +1,9 @@
+<ns:tables xmlns:ns="http://labkey.org/data/xml">
+    <ns:table tableDbType="TABLE" tableName="etl_runs">
+        <ns:columns>
+            <ns:column columnName="rowid"/>
+            <ns:column columnName="date"/>
+            <ns:column columnName="container"/>
+        </ns:columns>
+    </ns:table>
+</ns:tables>

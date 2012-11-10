@@ -39,19 +39,19 @@ Select
 	--Afc.AcquisitionAge as AcquisitionAgeInt,
 	--Afc.GeographicOrigin as GeographicOriginInt  ,
 	--OLDIdNumber as OLDIdNumber,
-	--InitialLocID as InitialLocIDInt ,
-	--Technician as TechnicianInt,
 	case
-	  WHEN Ref.LastName IS NOT NULL THEN
-        Ref.Initials + Ref.LastName + Ref.FirstName
+	  WHEN rt.LastName = ''Unassigned'' or rt.FirstName = ''Unassigned'' THEN
+        ''Unassigned''
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + '', '' + rt.FirstName + '' ('' + rt.Initials + '')''
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + '', '' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + '' ('' + rt.Initials + '')''
 	  else
-	   Ref.Initials
+	   rt.Initials
     END as performedBy,
 
-	--DeptCode as DepartmentInt,
-	--s4.Value as Department,
-
-	--IDKey as IDKey,
 	Afc.objectid
 	--Afc.ts as rowversion
 
@@ -59,8 +59,8 @@ From Af_Acquisition Afc
 LEFT JOIN Sys_parameters s1 ON (s1.Field = 'AcquistionType' AND s1.Flag = Afc.AcquisitionType)
 LEFT JOIN Sys_parameters s2 ON (s2.Flag = afc.RearingType and s2.Field = 'RearingType') 
 LEFT JOIN Sys_parameters s3 ON (s3.Flag = afc.AcquisitionAge and s3.Field = 'AcquisitionAge') 
-LEFT JOIN Ref_Technicians Ref ON (Ref.ID = Afc.Technician) 
-LEFT JOIN Sys_parameters s4 ON (s4.Field = 'DepartmentCode' and s4.Flag = Ref.DeptCode) 
+LEFT JOIN Ref_Technicians rt ON (rt.ID = Afc.Technician)
+LEFT JOIN Sys_parameters s4 ON (s4.Field = 'DepartmentCode' and s4.Flag = rt.DeptCode)
 LEFT JOIN Ref_RowCage RefRow ON (RefRow.CageID = Afc.InitialLocID) 
 LEFT JOIN Ref_Location RefLoc ON (RefRow.LocationID = RefLoc.LocationID) 
 LEFT JOIN Ref_IsisGeographic RefIs ON (Afc.GeographicOrigin = RefIs.GeographicCode)

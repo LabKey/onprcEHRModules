@@ -17,13 +17,19 @@ SELECT
 	cast(AnimalID as varchar) as Id,
 	Date as Date,
 	'Menses' as category,
-	--Technician As TechnicianID,
-	--LastName as TechLastName,
-	--FirstName as TechFirstName,
-	--Initials as TechInitials,
-	--DeptCode as DepartmentCodeInt,
-	--s1.Value as DepartmentCode,
-	--IDKey As IDKey,
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy,
+
     bm.ts as rowversion,
     bm.objectid
 

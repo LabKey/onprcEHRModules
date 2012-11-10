@@ -7,7 +7,6 @@ onprc_ehr/resources/etl/ehr/fees.sql -text
 onprc_ehr/resources/etl/ehr/project.sql -text
 onprc_ehr/resources/etl/ehr/protocol.sql -text
 onprc_ehr/resources/etl/ehr/tissue_recipients.sql -text
-onprc_ehr/resources/etl/pending/Biopsies.sql -text
 onprc_ehr/resources/etl/pending/Clinical[!!-~]Encounters.sql -text
 onprc_ehr/resources/etl/pending/Delivery.sql -text
 onprc_ehr/resources/etl/pending/Enrichment.sql -text
@@ -21,6 +20,7 @@ onprc_ehr/resources/etl/pending/Tissue[!!-~]Samples.sql -text
 onprc_ehr/resources/etl/study/AntibioticSensitivity.sql -text
 onprc_ehr/resources/etl/study/Arrival.sql -text
 onprc_ehr/resources/etl/study/Assignment.sql -text
+onprc_ehr/resources/etl/study/Biopsies.sql -text
 onprc_ehr/resources/etl/study/Birth.sql -text
 onprc_ehr/resources/etl/study/Blood[!!-~]Draws.sql -text
 onprc_ehr/resources/etl/study/Cases.sql -text
@@ -45,6 +45,9 @@ onprc_ehr/resources/etl/study/Urinalysis[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Virology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Weights.sql -text
 onprc_ehr/resources/folderTypes/ONPRC_EHR.folderType.xml -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.21.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.21.sql -text
+onprc_ehr/resources/schemas/onprc_ehr.xml -text
 onprc_ehr/resources/scripts/onprc_ehr/etl.js -text
 onprc_ehr/resources/scripts/onprc_ehr/triggers.js -text
 onprc_ehr/resources/views/begin.html -text
@@ -54,6 +57,7 @@ onprc_ehr/resources/views/ehrAdmin.html -text
 onprc_ehr/resources/views/ehrAdmin.view.xml -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRController.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETL.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditViewFactory.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
