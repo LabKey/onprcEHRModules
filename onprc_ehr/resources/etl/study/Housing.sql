@@ -39,8 +39,8 @@ Select
 
 	--Latest as Latest,               ---- Flag = 1 Current Transfer Record, Flag = 0 Historical Transfer information
 
-	aft.objectid,
-	aft.ts as rowversion
+	aft.objectid
+	--aft.ts as rowversion
 
 From Af_Transfer  Aft
 left join  Ref_Technicians Rt on (Aft.Technician = Rt.ID)

@@ -17,17 +17,19 @@ Select
 	cast(AnimalID as varchar) as Id,
 	Date as Date,
 
-	--TODO: add these fields?
-    s1.Value as AcquisitionType,
-    --(select newValue FROM ehr.sys_params WHERE cateogry = 'xxxx' and name = s1.Value)
-    --s2.Value as RearingType,
-    s3.Value as AcquisitionAge,
-	NonISISSource as NonISISSource ,
+	afc.AcquisitionType,
+    s1.Value as AcquisitionTypeMeaning,
 
+    afc.RearingType,
+    s2.Value as RearingTypeMeaning,
 
     Afc.ISISInstitute as source,
     Remarks as Remark,
     Refis.GeographicName as geoOrigin,
+
+    --TODO: add these fields??
+    s3.Value as AcquisitionAge,
+	NonISISSource as NonISISSource ,
 
     CASE
       WHEN (RefLoc.Location = 'No Location') then null

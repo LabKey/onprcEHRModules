@@ -19,14 +19,10 @@ SELECT
 	category as type,
 	--CategoryInt ,
 	Category2,
-	--Technician As TechnicianID,
-	--LastName as TechLastName,
-	--FirstName as TechFirstName,
-	--Initials as TechInitials,
-    --    s4.Value as Department,
-	Specimen as SpecimenId,            ---- information not required
+
+	--Specimen as SpecimenId,            ---- information not required
 	sp.Name as sampleType,
-	sp.SNOMEDCODE as sampleSnomed,
+	sp.SNOMEDCODE as sampleTypeSnomed,
 	--MethodInt,
 	Method,
 	--ConditionInt,
@@ -36,14 +32,14 @@ SELECT
 	remarks,
 
 
-	Experimental ,     -------If selected Flag = 1 Else 0
-	--PreAssignment as PreAssignment ,   -------If selected Flag = 1 Else 0
-	--Quarantine as Quarantine ,       -------If selected Flag = 1 Else 0
-	--Pregnant as Pregnant ,   	-------If selected Flag = 1 Else 0
-	--Followup as Followup ,   	-------If selected Flag = 1 Else 0
-	--Presale as Presale ,    	 -------If selected Flag = 1 Else 0
-	--Fasting as Fasting ,     	 -------If selected Flag = 1 Else 0
-	--Sedated as Sedated ,    	 ------ If selected Flag = 1 Else 0
+	cast(Experimental as varchar) + '/' +     -------If selected Flag = 1 Else 0
+	cast(PreAssignment as varchar) + '/' +   -------If selected Flag = 1 Else 0
+	cast(Quarantine as varchar) + '/' +       -------If selected Flag = 1 Else 0
+	cast(Pregnant as varchar) + '/' +   	-------If selected Flag = 1 Else 0
+	cast(Followup as varchar) + '/' +   	-------If selected Flag = 1 Else 0
+	cast(Presale as varchar) + '/' +    	 -------If selected Flag = 1 Else 0
+	cast(Fasting as varchar) + '/' +     	 -------If selected Flag = 1 Else 0
+	cast(Sedated as varchar) as flags,    	 ------ If selected Flag = 1 Else 0
     --ClinicalKey,
 
 	case
@@ -59,7 +55,7 @@ SELECT
 	   TechInitials
     END as performedBy,
 
-	t.rowversion,
+	--t.rowversion,
 	t.objectid
 
 FROM (

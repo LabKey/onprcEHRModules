@@ -22,7 +22,7 @@ SELECT
 	--t.Specimen ,     --      Speciment database table
 	--sp.Name,
 	--sp.SNOMEDCODE as snomed,
-	t.MethodInt  ,
+	--t.MethodInt  ,
 	s2.Value as Method,
 	CASE
 	  WHEN t.result = -1 THEN null

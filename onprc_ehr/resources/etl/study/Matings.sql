@@ -36,7 +36,7 @@ SELECT
     END as performedBy,
 
 	--IDKey as IDKey,
-	bm.ts as rowversion,
+	--bm.ts as rowversion,
 	bm.objectid AS objectid
 
 FROM Brd_Matings bm

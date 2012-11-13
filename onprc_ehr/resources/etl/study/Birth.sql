@@ -16,11 +16,10 @@
 SELECT
 	cast(AnimalID as varchar) as Id,
 	Date as Date,
-		s1.Value as BirthType,	
-		s2.Value as BirthCondition,
+		s1.Value as type,
+		s2.Value as cond,
 	Birth_Weight As Weight,
-	l1.Location as DeliveryLocationRoom,
-	r1.row + '-' + convert(char(2), r1.Cage) As DeliveryLocationCage,
+
 	case
 	  WHEN MotherID = 0 THEN null
 	  ELSE MotherID
@@ -31,19 +30,26 @@ SELECT
     END As Sire,
 	Remarks As Remark,	
 	
+	--TODO: add these?
+	l1.Location as DeliveryLocationRoom,
+	r1.row + '-' + convert(char(2), r1.Cage) As DeliveryLocationCage,
+
 	l2.Location as room,
 	r2.row + '-' + convert(char(2), r2.Cage) As cage,
+
+
 	ConceptualAge as ConceptualAge,
 	s3.Value as ConceptualAgeDeterm,
 	
-	  BirthType as BirthTypeInt,
-	  BirthCondition As BirthConditionInt,
-	ConceptualAgeDeterm as ConceptualAgeDetermInt,
-	BirthWtDescription as BirthWtDescriptionInt,
+    --BirthType as BirthTypeInt,
+    --BirthCondition As BirthConditionInt,
+	--ConceptualAgeDeterm as ConceptualAgeDetermInt,
+	--BirthWtDescription as BirthWtDescriptionInt,
 	s4.Value as BirthWtDescription,
-	DeliveryLocation As DeliveryLocationInt,
-	AssignedLocation As AssignedLocationInt,
---	?? As Conception,							-- what is column 'conception'
+	--DeliveryLocation As DeliveryLocationInt,
+	--AssignedLocation As AssignedLocationInt,
+
+--  --	?? As Conception,							-- what is column 'conception'
 
 
 	case
@@ -59,7 +65,7 @@ SELECT
 	   rt.Initials
     END as performedBy,
 
-	afb.ts as rowversion,
+	--afb.ts as rowversion,
 	afb.objectid
 
 FROM Af_Birth afb 

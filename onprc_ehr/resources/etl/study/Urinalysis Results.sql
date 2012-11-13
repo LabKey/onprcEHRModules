@@ -16,21 +16,22 @@
 --Please note:  All lab values = -1 is should be substitued with a Null value
 
 SELECT
-	t.ClinicalKey ,
+	--t.ClinicalKey ,
 	cast(t.Id as varchar) as Id,
 	t.DATE ,
 	--t.Specimen ,     --      Speciment database table
 	--sp.Name,
 	--sp.SNOMEDCODE as snomed,
 	t.MethodInt  ,
-	s2.Value as PerformedBy,
+	s2.Value as method,
+
 	t.CollectionInt  ,
-	s5.Value as method,
+	s5.Value as collectionMethod,
 	
 	t.QualResult,
 	t.TestId,
 
-	t.rowversion,
+	--t.rowversion,
 	(cast(t.objectid as varchar(38)) + '_' + t.TestId) as objectid,
 	 t.objectid as parentId
 

@@ -16,7 +16,7 @@
 --Please note:  All lab values = -1 is should be substitued with a Null value
 
 SELECT
-	t.ClinicalKey ,
+	--t.ClinicalKey ,
 	cast(t.Id as varchar) as Id,
 	t.DATE ,
 	--t.Specimen ,     --      Speciment database table

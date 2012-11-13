@@ -16,7 +16,10 @@
 Select 
 	cast(AnimalID as varchar) as Id,
 	Date as Date,
+
+	--TODO
 	--WeightAtDeath as WeightAtDeath,
+
 	--CauseOfDeath as CauseOfDeathInt,
     s1.Value as Cause,
     Remarks as Remark,
@@ -34,13 +37,12 @@ Select
 	   rt.Initials
     END as performedBy,
 
-    --TODO
-	afd.DeathLocation as CageId,
-	loc.Location as DeathLocation,
-	row.row + '-' + convert(char(2), row.Cage) As DeathCage,
+	--afd.DeathLocation as CageId,
+	loc.Location as roomattime,
+	row.row + '-' + convert(char(2), row.Cage) As cageattime,
 
-	afd.objectid,
-	afd.ts as rowversion
+	afd.objectid
+	--afd.ts as rowversion
  
 From Af_Death AfD
 left join Sys_Parameters s1 ON (Afd.CauseOfDeath = s1.Flag And s1.Field =  'Deathcause')

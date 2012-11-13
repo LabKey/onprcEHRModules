@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 Select
-	AnimalID as Id,
-	Species as Species,		----- Ref_Species
-	sp.CommonName as SpeciesName,
-	Sex as SexCode  ,			---- Ref_Sex
+	cast(AnimalID as varchar) as Id,
+	--Species as Species,		----- Ref_Species
+	sp.CommonName as Species,
+
+	--Sex as SexCode  ,			---- Ref_Sex
 	rs.Value AS Gender,
+
 	--afq.CageID as CageID ,		----- Ref_RowCage
 	--l2.Location as CurrentLocation,
 	--rtrim(r2.row) + '-' + convert(char(2), r2.Cage) As CurrentCage,
 	--TransferDate as TransferDate ,
+
 	BirthDate as Birth,
 	DeathDate as Death,
+
 	--TODO: what are these?
 	BirthFlag as BirthFlagInt  ,
 	s2.Value as BirthFlag  ,

@@ -16,7 +16,7 @@
 Select
 	cast(afd.AnimalID as varchar) as Id,
 	afd.Date as Date,
-	afd.ISISDestination as desintationId,
+	--afd.ISISDestination as desintationId,
 	isis.InstitutionName as desintation,	
 	
 	case
@@ -32,11 +32,11 @@ Select
 	   rt.Initials
     END as performedBy,
 
-	afd.IDKey as IDKey,
+	--afd.IDKey as IDKey,
 	
 	afd.Remarks as Remark,
-	afd.objectid,
-	afd.ts as rowversion
+	afd.objectid
+	--afd.ts as rowversion
 
 From AF_Departure afd
 LEFT JOIN Ref_Technicians rt ON (afd.Technician = rt.ID)

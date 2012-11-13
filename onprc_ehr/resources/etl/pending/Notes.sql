@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 Select
-	RemarksID as RemarksID ,
+	--RemarksID as RemarksID ,
 	cast(AnimalID as varchar) as Id,
-	RemarksDate as RemarksDate ,
-	--TechnicianID as TechnicianID ,
-	--rt.LastName as TechLastName,
-    --    rt.FirstName as TechFirstName,
-    --    rt.Initials as TechInitials,
-    --    rt.DeptCode as TechDepartmentInt,
-    --    s3.value as TechDepartment,
-	--Afr.Department as DepartmentInt ,
-	--s2.Value as Department,
-	Afr.Topic as TopicInt  ,
-	s1.value as Topic,
-	Remarks as Remarks ,
+	RemarksDate as date,
+
+	--Afr.Topic as TopicInt  ,
+	s1.value as Category,
+	Remarks as Remark,
+
 	ActionDate as ActionDate ,
 	afr.PoolCode as PoolCode ,        ----- Ref_Pool
 	rp.ShortDescription,
@@ -35,6 +29,18 @@ Select
 	afr.DateCreated as DateCreated ,
 	afr.DateDisabled as DateDisabled,
 
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy,
 
 	afr.objectid,
 	afr.ts as rowversion

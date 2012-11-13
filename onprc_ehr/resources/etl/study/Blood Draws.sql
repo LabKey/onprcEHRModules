@@ -16,15 +16,15 @@
 Select 
 	cast(AnimalID as varchar) as Id,
 	Date as Date,
-	--Reason as ReasonInt,
 	Amount as quantity,
 	DrawCount as needlesticks,
+
 --	Investigator as Investigator  ,  ----- Ref_Investigator(InvestigatorID)
 --		Ref.LastName as LastName,
 --	IDKey as  IDKey, 
 
-    --TODO
     s1.Value as Reason,
+	--Reason as ReasonInt,
 
 	CASE
 		WHEN (afb.ts > bd.ts) THEN afb.ts

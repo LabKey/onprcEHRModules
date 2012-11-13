@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 Select
-	pat.AutopsyID as AutopsyID ,
+	cast(pa.AnimalID as varchar) as Id,
+	pa.Date as Date ,
 	pat.Organ as tissue,                 ----- Ref_SnomedLists
 	sno.Description as tissueMeaning,
 	--pat.Preparation as PreparationInt,
@@ -27,8 +28,8 @@ Select
 	--Pat.Displayorder as Displayorder,
 	pa.objectid as parentid,
 
-	pat.objectid,
-	pat.ts as rowversion
+	pat.objectid
+	--pat.ts as rowversion
 
 From  Path_AutopsyWtsMaterials Pat
   left join Sys_Parameters s1 on (Pat.Preparation = s1.Flag And  s1.Field = 'AutopsyPreparation')
@@ -41,8 +42,8 @@ where Weight > 0 and pat.ts > ?
 union all
 
 Select
-
-	pat.BiopsyID as BiopsyID  ,
+	cast(pa.AnimalID as varchar) as Id,
+	pa.Date as Date ,
 	Organ as Organ,				----- Ref_SnomedLists
 	sno.Description as meaning,
 	--Preparation as PreparationInt,
@@ -55,8 +56,8 @@ Select
     --null as displayorder,
     pa.objectid as parentid,
 
-	pat.objectid,
-	pat.ts as rowversion
+	pat.objectid
+	--pat.ts as rowversion
 
 From Path_BiopsyWtsMaterials Pat
 	left join Sys_Parameters s1 on (Pat.Preparation = s1.Flag And  s1.Field = 'AutopsyPreparation')

@@ -22,7 +22,7 @@ SELECT
 	--Method as MethodInt ,
 	s1.value as Method,
 	--Negative as NegativeInt ,
-        s2.Value as Result,
+      s2.Value as Result,
         
         
         

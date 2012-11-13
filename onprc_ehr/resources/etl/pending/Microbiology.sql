@@ -16,11 +16,11 @@
 SELECT
 	m.ClinicalKey as ClinicalKey  ,
 	m.Bacteria  ,      ----- Ref_Snomedlists
-	s.Description,
+	s.Description as bacteriaMeaning,
 	m.Quantity ,
-	m.Searchkey ,
+	--m.Searchkey ,
 
-	m.ts as rowversion,
+	--m.ts as rowversion,
 	m.objectid
 
 FROM Cln_MicrobiologyData m

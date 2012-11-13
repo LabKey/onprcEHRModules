@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 Select
-	IDKey as IDKey  ,
+	--IDKey as IDKey  ,
 	cast(AnimalID as varchar) as Id,
 	GivenDate as date,
 	RemoveDate as enddate,
 	t.ToyCode as ToyCode,      ------ Ref_Snomed
+	s.description as toyCodeMeaning,
+
 	toy.ToyType as type,
-	s.SnomedCode as SNOMED,
-	Reason as Reason,
+	Reason,
 	Remarks as Remarks,
 	t.objectid,
 	t.ts as rowversion
@@ -30,3 +31,5 @@ From Af_Toys t
 left join ref_snomed121311 s ON (s.SnomedCode = t.ToyCode)
 
 left join ref_toys toy ON (toy.ToyCode = t.ToyCode)
+
+where t.ts > ?

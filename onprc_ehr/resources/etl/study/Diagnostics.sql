@@ -17,10 +17,10 @@ SELECT
   cast(t.id as varchar) as Id,
   t.date,
   t.category,
-  t.specimen,
 
-  t.name,
-  t.SNOMEDCODE,
+  t.specimen,
+  t.name as specimenName,
+  t.SNOMEDCODE as code,
   t.Method,
 
   t.TestId,

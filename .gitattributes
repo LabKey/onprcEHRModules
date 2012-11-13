@@ -3,6 +3,7 @@ onprc_ehr/ONPRC_EHR.iml -text
 onprc_ehr/build.xml -text
 onprc_ehr/module.properties -text
 onprc_ehr/resources/etl/ehr/charged_items.sql -text
+onprc_ehr/resources/etl/ehr/encounter_participants.sql -text
 onprc_ehr/resources/etl/ehr/fees.sql -text
 onprc_ehr/resources/etl/ehr/project.sql -text
 onprc_ehr/resources/etl/ehr/protocol.sql -text
@@ -10,7 +11,6 @@ onprc_ehr/resources/etl/ehr/tissue_recipients.sql -text
 onprc_ehr/resources/etl/ehr_lookups/lookups.sql -text
 onprc_ehr/resources/etl/pending/Clinical[!!-~]Encounters.sql -text
 onprc_ehr/resources/etl/pending/Delivery.sql -text
-onprc_ehr/resources/etl/pending/Enrichment.sql -text
 onprc_ehr/resources/etl/pending/Flags.sql -text
 onprc_ehr/resources/etl/pending/Microbiology.sql -text
 onprc_ehr/resources/etl/pending/Morphologic[!!-~]Diagnoses.sql -text
@@ -35,6 +35,7 @@ onprc_ehr/resources/etl/study/Departure.sql -text
 onprc_ehr/resources/etl/study/Diagnostics.sql -text
 onprc_ehr/resources/etl/study/Diet.sql -text
 onprc_ehr/resources/etl/study/Drug[!!-~]Administration.sql -text
+onprc_ehr/resources/etl/study/Enrichment.sql -text
 onprc_ehr/resources/etl/study/Hematology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Housing.sql -text
 onprc_ehr/resources/etl/study/Matings.sql -text
@@ -46,6 +47,13 @@ onprc_ehr/resources/etl/study/Urinalysis[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Virology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Weights.sql -text
 onprc_ehr/resources/folderTypes/ONPRC_EHR.folderType.xml -text
+onprc_ehr/resources/queries/study/AntibioticSensitivity.js -text
+onprc_ehr/resources/queries/study/Cases.js -text
+onprc_ehr/resources/queries/study/Diagnostics.js -text
+onprc_ehr/resources/queries/study/Diet.js -text
+onprc_ehr/resources/queries/study/Enrichment.js -text
+onprc_ehr/resources/queries/study/Matings.js -text
+onprc_ehr/resources/queries/study/Measurements.js -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.21.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.21.sql -text

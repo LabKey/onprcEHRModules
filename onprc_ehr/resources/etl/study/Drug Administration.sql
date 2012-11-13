@@ -15,8 +15,11 @@
  */
 SELECT
     cast(m.AnimalId as varchar) as Id,
+
+    --TODO: revisit
 	m.Date,
 	convert(datetime, CONVERT(varchar, m.date, 111) + ' ' + left(cln.MedicationTime, 2) + ':' + RIGHT(cln.medicationtime, 2)) as datetime,
+
 	Medication as code,
 	sno.Description as meaning,
 	Dose as Dose,
@@ -26,7 +29,8 @@ SELECT
 	s3.Value as Route,
 	--cln.IDKey,
 	--cln.SearchKey as SearchKey ,
-	cln.MedicationTime as MedicationTime,
+
+	--cln.MedicationTime as MedicationTime,
 
 	--cln.ts as rowversion,
 	cln.objectid

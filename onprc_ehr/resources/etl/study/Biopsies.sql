@@ -33,27 +33,27 @@ Select
 	   rt.Initials
     END as performedBy,
 
-    --TODO: add to encounter_participants?
-	Prosector1 as Prosector1 ,
-	rt2.LastName as TechLastName2,
-        rt2.FirstName as TechFirstName2,
-        rt2.Initials as TechInitials2,
-        rt2.DeptCode as DepartmentInt2,
-        s4.Value as Department2,
-
-	Prosector2 as Prosector2 ,
-	rt3.LastName as TechLastName3,
-        rt3.FirstName as TechFirstName3,
-        rt3.Initials as TechInitials3,
-        rt3.DeptCode as DepartmentInt3,
-        s5.Value as Department3,
-
-	Prosector3 as Prosector3 ,
-	rt4.LastName as TechLastName4,
-        rt4.FirstName as TechFirstName4,
-        rt4.Initials as TechInitials4,
-        rt4.DeptCode as DepartmentInt4,
-        s6.Value as Department4  ,
+--     --TODO: add to encounter_participants?
+-- 	Prosector1 as Prosector1 ,
+-- 	rt2.LastName as TechLastName2,
+--         rt2.FirstName as TechFirstName2,
+--         rt2.Initials as TechInitials2,
+--         rt2.DeptCode as DepartmentInt2,
+--         s4.Value as Department2,
+--
+-- 	Prosector2 as Prosector2 ,
+-- 	rt3.LastName as TechLastName3,
+--         rt3.FirstName as TechFirstName3,
+--         rt3.Initials as TechInitials3,
+--         rt3.DeptCode as DepartmentInt3,
+--         s5.Value as Department3,
+--
+-- 	Prosector3 as Prosector3 ,
+-- 	rt4.LastName as TechLastName4,
+--         rt4.FirstName as TechFirstName4,
+--         rt4.Initials as TechInitials4,
+--         rt4.DeptCode as DepartmentInt4,
+--         s6.Value as Department4  ,
 
 
 	pat.objectid ,

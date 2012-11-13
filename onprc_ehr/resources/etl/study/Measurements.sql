@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 SELECT
-	pm.MeasurementID,
 	cast(pm.Id as varchar) as Id,
 	pm.date,
 
 	pm.objectid as parentid,
 	(cast(pm.objectid as varchar(38)) + pm.tissue) as objectid,
-	pm.rowversion,
+	--pm.rowversion,
+
+	--pm.MeasurementID,
 	pm.tissue,
 	pm.measurement,
 
