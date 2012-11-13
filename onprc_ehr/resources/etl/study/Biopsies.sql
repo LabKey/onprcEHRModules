@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 Select
-
-	BiopsyId as  BiopsyId  ,
-	AnimalID as Id,
+    cast(AnimalID as varchar) as Id,
+	BiopsyId as  BiopsyId,
 	Date,
     cast(BiopsyYear as varchar) + BiopsyFlag + BiopsyCode as caseno,
 
@@ -34,7 +33,7 @@ Select
 	   rt.Initials
     END as performedBy,
 
-    --TODO
+    --TODO: add to encounter_participants?
 	Prosector1 as Prosector1 ,
 	rt2.LastName as TechLastName2,
         rt2.FirstName as TechFirstName2,

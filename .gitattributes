@@ -7,6 +7,7 @@ onprc_ehr/resources/etl/ehr/fees.sql -text
 onprc_ehr/resources/etl/ehr/project.sql -text
 onprc_ehr/resources/etl/ehr/protocol.sql -text
 onprc_ehr/resources/etl/ehr/tissue_recipients.sql -text
+onprc_ehr/resources/etl/ehr_lookups/lookups.sql -text
 onprc_ehr/resources/etl/pending/Clinical[!!-~]Encounters.sql -text
 onprc_ehr/resources/etl/pending/Delivery.sql -text
 onprc_ehr/resources/etl/pending/Enrichment.sql -text
@@ -46,7 +47,9 @@ onprc_ehr/resources/etl/study/Virology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Weights.sql -text
 onprc_ehr/resources/folderTypes/ONPRC_EHR.folderType.xml -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.21.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.21.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/onprc_ehr.xml -text
 onprc_ehr/resources/scripts/onprc_ehr/etl.js -text
 onprc_ehr/resources/scripts/onprc_ehr/triggers.js -text
@@ -55,13 +58,14 @@ onprc_ehr/resources/views/begin.view.xml -text
 onprc_ehr/resources/views/begin.webpart.xml -text
 onprc_ehr/resources/views/ehrAdmin.html -text
 onprc_ehr/resources/views/ehrAdmin.view.xml -text
+onprc_ehr/resources/views/etlAdmin.html -text
+onprc_ehr/resources/views/etlAdmin.view.xml -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRController.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETL.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditViewFactory.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/view/EtlAdmin.jsp -text
 onprc_ehr/tools/deletedRecords.sql -text
 onprc_ehr/tools/miscTable.sql -text
 onprc_ehr/tools/monit/activeMQ-monit.pl -text

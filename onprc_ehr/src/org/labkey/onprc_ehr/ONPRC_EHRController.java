@@ -15,30 +15,35 @@
  */
 package org.labkey.onprc_ehr;
 
-import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
+import org.labkey.api.action.ApiAction;
+import org.labkey.api.action.ApiResponse;
+import org.labkey.api.action.ApiSimpleResponse;
 import org.labkey.api.action.ExportAction;
-import org.labkey.api.action.FormViewAction;
 import org.labkey.api.action.RedirectAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.SimpleFilter;
+import org.labkey.api.data.Table;
+import org.labkey.api.data.TableInfo;
+import org.labkey.api.data.TableSelector;
+import org.labkey.api.query.DetailsURL;
+import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.RequiresPermissionClass;
 import org.labkey.api.security.permissions.AdminPermission;
-import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
-import org.labkey.api.view.JspView;
-import org.labkey.api.view.NavTree;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLRunnable;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -57,128 +62,198 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermissionClass(AdminPermission.class)
-    public class EtlAdminAction extends FormViewAction<Object>
+    public class GetEtlDetailsAction extends ApiAction<Object>
     {
-
-        String[] configKeys = {"labkeyUser", "labkeyContainer", "jdbcUrl", "jdbcDriver", "runIntervalInMinutes"};
-
-
-        @Override
-        public void validateCommand(Object o, Errors errors)
+        public ApiResponse execute(Object form, BindException errors)
         {
-            //To change body of implemented methods use File | Settings | File Templates.
+            ApiResponse resp = new ApiSimpleResponse();
+            resp.getProperties().put("enabled", ETL.isEnabled());
+            resp.getProperties().put("active", ETL.isRunning());
+
+            //"etlStatus",
+            String[] etlConfigKeys = {"labkeyUser", "labkeyContainer", "jdbcUrl", "jdbcDriver", "runIntervalInMinutes"};
+
+            resp.getProperties().put("configKeys", etlConfigKeys);
+            resp.getProperties().put("config", PropertyManager.getProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN));
+            resp.getProperties().put("rowversions", PropertyManager.getProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN));
+            Map<String, String> map = PropertyManager.getProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN);
+            Map<String, Date> timestamps = new HashMap<String, Date>();
+            for (String key : map.keySet())
+            {
+                timestamps.put(key, new Date(Long.parseLong(map.get(key))));
+            }
+            resp.getProperties().put("timestamps", timestamps);
+
+            return resp;
         }
+    }
 
-        @Override
-        public ModelAndView getView(Object o, boolean reshow, BindException errors) throws Exception
+    @RequiresPermissionClass(AdminPermission.class)
+    public class SetEtlDetailsAction extends ApiAction<EtlAdminForm>
+    {
+        public ApiResponse execute(EtlAdminForm form, BindException errors)
         {
-            EtlAdminBean bean = new EtlAdminBean();
-            bean.setConfig(PropertyManager.getProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN));
-            bean.setRowversions(PropertyManager.getProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN));
-            bean.setTimestamps(PropertyManager.getProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN));
-            bean.setConfigKeys(configKeys);
+            ApiResponse resp = new ApiSimpleResponse();
 
-            return new JspView<EtlAdminBean>("/org/labkey/onprc_ehr/view/EtlAdmin.jsp", bean, errors);
-        }
-
-        @Override
-        public boolean handlePost(Object o, BindException errors) throws Exception
-        {
-            HttpServletRequest request = getViewContext().getRequest();
             PropertyManager.PropertyMap configMap = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
 
-            for (String key : configKeys)
-            {
-                if (request.getParameter(key) != null)
-                {
-                    configMap.put(key, request.getParameter(key));
-                }
-            }
+            if (form.getLabkeyUser() != null)
+                configMap.put("labkeyUser", form.getLabkeyUser());
+
+            if (form.getLabkeyContainer() != null)
+                configMap.put("labkeyContainer", form.getLabkeyContainer());
+
+            if (form.getJdbcUrl() != null)
+                configMap.put("jdbcUrl", form.getJdbcUrl());
+
+            if (form.getJdbcDriver() != null)
+                configMap.put("jdbcDriver", form.getJdbcDriver());
+
+            if (form.getRunIntervalInMinutes() != null)
+                configMap.put("runIntervalInMinutes", form.getRunIntervalInMinutes().toString());
+
+            if (form.getEtlStatus() != null)
+                configMap.put("etlStatus", form.getEtlStatus().toString());
 
             PropertyManager.saveProperties(configMap);
 
             PropertyManager.PropertyMap rowVersionMap = PropertyManager.getWritableProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN, true);
+            PropertyManager.PropertyMap timestampMap = PropertyManager.getWritableProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN, true);
 
-            for (String key : PropertyManager.getProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN).keySet())
+            if (form.getTimestamps() != null)
             {
-                if (request.getParameter(key) != null)
+                JSONObject json = new JSONObject(form.getTimestamps());
+                for (String key : rowVersionMap.keySet())
                 {
-                    byte[] bytes = Base64.decodeBase64(request.getParameter(key));
-                    String encoded = new String(bytes, "US-ASCII");
-                    rowVersionMap.put(key, encoded);
+                    if (json.get(key) != null)
+                    {
+                        //this key corresponds to the rowId of the row in the etl_runs table
+                        Integer value = json.getInt(key);
+                        if (value == -1)
+                        {
+                            rowVersionMap.put(key, null);
+                            timestampMap.put(key, null);
+                        }
+                        else
+                        {
+                            TableInfo ti = ONPRC_EHRSchema.getInstance().getSchema().getTable(ONPRC_EHRSchema.TABLE_ETL_RUNS);
+                            TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, new SimpleFilter(FieldKey.fromString("rowid"), value), null);
+                            Map<String, Object>[] rows = ts.getArray(Map.class);
+                            if (rows.length != 1)
+                                continue;
+
+                            rowVersionMap.put(key, (String)rows[0].get("rowversion"));
+                            Long date = ((Date)rows[0].get("date")).getTime();
+                            timestampMap.put(key, date.toString());
+                        }
+                    }
                 }
+                PropertyManager.saveProperties(rowVersionMap);
+                PropertyManager.saveProperties(timestampMap);
             }
-            PropertyManager.saveProperties(rowVersionMap);
 
-
-
-            String status = request.getParameter("etlStatus");
-            if (status.equals("true"))
+            if (form.getEtlStatus() && !ETL.isEnabled())
+            {
                 ETL.start(100);
-            else if (status.equals("false"))
+            }
+            else if (!form.getEtlStatus() && ETL.isEnabled())
                 ETL.stop();
 
-            return true;
-        }
+            resp.getProperties().put("success", true);
 
-        @Override
-        public URLHelper getSuccessURL(Object o)
-        {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        @Override
-        public NavTree appendNavTrail(NavTree root)
-        {
-            return root.addChild("ETL Admin");
+            return resp;
         }
     }
 
-    public class EtlAdminBean
+    public static class EtlAdminForm
     {
-        String[] configKeys;
-        Map<String, String> config;
-        Map<String, String> rowversions;
-        Map<String, String> timestamps;
+        private Boolean etlStatus;
+        private String config;
+        private String timestamps;
+        private String labkeyUser;
+        private String labkeyContainer;
+        private String jdbcUrl;
+        private String jdbcDriver;
+        private Integer runIntervalInMinutes;
 
-        public Map<String, String> getConfig()
+        public Boolean getEtlStatus()
+        {
+            return etlStatus;
+        }
+
+        public void setEtlStatus(Boolean etlStatus)
+        {
+            this.etlStatus = etlStatus;
+        }
+
+        public String getConfig()
         {
             return config;
         }
 
-        public void setConfig(Map<String, String> config)
+        public void setConfig(String config)
         {
             this.config = config;
         }
 
-        public Map<String, String> getTimestamps()
+        public String getTimestamps()
         {
             return timestamps;
         }
 
-        public void setTimestamps(Map<String, String> timestamps)
+        public void setTimestamps(String timestamps)
         {
             this.timestamps = timestamps;
         }
 
-        public Map<String, String> getRowversions()
+        public String getLabkeyUser()
         {
-            return rowversions;
+            return labkeyUser;
         }
 
-        public void setRowversions(Map<String, String> rowversions)
+        public void setLabkeyUser(String labkeyUser)
         {
-            this.rowversions = rowversions;
+            this.labkeyUser = labkeyUser;
         }
 
-        public String[] getConfigKeys()
+        public String getLabkeyContainer()
         {
-            return configKeys;
+            return labkeyContainer;
         }
 
-        public void setConfigKeys(String[] configKeys)
+        public void setLabkeyContainer(String labkeyContainer)
         {
-            this.configKeys = configKeys;
+            this.labkeyContainer = labkeyContainer;
+        }
+
+        public String getJdbcUrl()
+        {
+            return jdbcUrl;
+        }
+
+        public void setJdbcUrl(String jdbcUrl)
+        {
+            this.jdbcUrl = jdbcUrl;
+        }
+
+        public String getJdbcDriver()
+        {
+            return jdbcDriver;
+        }
+
+        public void setJdbcDriver(String jdbcDriver)
+        {
+            this.jdbcDriver = jdbcDriver;
+        }
+
+        public Integer getRunIntervalInMinutes()
+        {
+            return runIntervalInMinutes;
+        }
+
+        public void setRunIntervalInMinutes(int runIntervalInMinutes)
+        {
+            this.runIntervalInMinutes = runIntervalInMinutes;
         }
     }
 
@@ -251,7 +326,7 @@ public class ONPRC_EHRController extends SpringActionController
 
         public ActionURL getSuccessURL(Object form)
         {
-            return new ActionURL(EtlAdminAction.class, getContainer());
+            return DetailsURL.fromString(getContainer(), "/onprc_ehr/etlAdmin.view").getActionURL();
         }
     }
 }

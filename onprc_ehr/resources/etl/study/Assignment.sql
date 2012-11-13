@@ -22,7 +22,7 @@ Select
 	AssignDate as Date,
 	ReleaseDate as Enddate,
 
-	--TODO
+	--TODO: handle pools
 -- 	AssignPool as AssignPool  ,							--Ref_Pool
 -- 	p1.ShortDescription as desc1,
 -- 	EstimatedReleasePool,		--Ref_Pool

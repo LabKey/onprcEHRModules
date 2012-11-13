@@ -15,10 +15,16 @@
  */
 Select
 	cast(AnimalID as varchar) as Id,
-	Date as Date,	
+	Date as Date,
+
+	--TODO: add these fields?
     s1.Value as AcquisitionType,
     --(select newValue FROM ehr.sys_params WHERE cateogry = 'xxxx' and name = s1.Value)
-    s2.Value as RearingType,
+    --s2.Value as RearingType,
+    s3.Value as AcquisitionAge,
+	NonISISSource as NonISISSource ,
+
+
     Afc.ISISInstitute as source,
     Remarks as Remark,
     Refis.GeographicName as geoOrigin,
@@ -29,25 +35,15 @@ Select
     END as initialRoom,
 	rtrim(Refrow.row) + '-' + convert(char(2), RefRow.Cage) As initialCage,
 
-    --TODO
-    s3.Value as AcquisitionAge,
-    RefTT.InstitutionName as ISISInstitute,
-	NonISISSource as NonISISSource ,
-
-	--Afc.AcquisitionType as AcquisitionInt ,
-	--Afc.RearingType as RearingTypeInt ,
-	--Afc.AcquisitionAge as AcquisitionAgeInt,
-	--Afc.GeographicOrigin as GeographicOriginInt  ,
-	--OLDIdNumber as OLDIdNumber,
 	case
-	  WHEN rt.LastName = ''Unassigned'' or rt.FirstName = ''Unassigned'' THEN
-        ''Unassigned''
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
-        rt.LastName + '', '' + rt.FirstName + '' ('' + rt.Initials + '')''
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
-        rt.LastName + '', '' + rt.FirstName
+        rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
-        rt.LastName + '' ('' + rt.Initials + '')''
+        rt.LastName + ' (' + rt.Initials + ')'
 	  else
 	   rt.Initials
     END as performedBy,

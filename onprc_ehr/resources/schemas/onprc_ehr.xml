@@ -2,7 +2,15 @@
     <ns:table tableDbType="TABLE" tableName="etl_runs">
         <ns:columns>
             <ns:column columnName="rowid"/>
-            <ns:column columnName="date"/>
+            <ns:column columnName="date">
+                <ns:formatString>yyyy-MM-dd HH:mm</ns:formatString>
+            </ns:column>
+            <ns:column columnName="queryname">
+                <ns:columnTitle>queryName</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="rowversion">
+                <ns:columnTitle>Row Version</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="container"/>
         </ns:columns>
     </ns:table>

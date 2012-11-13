@@ -21,7 +21,6 @@ import org.labkey.api.audit.AuditLogService;
 import org.labkey.api.audit.SimpleAuditViewFactory;
 import org.labkey.api.audit.query.AuditLogQueryView;
 import org.labkey.api.data.Container;
-import org.labkey.api.data.DataRegion;
 import org.labkey.api.data.Sort;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
@@ -101,7 +100,7 @@ public class ETLAuditViewFactory extends SimpleAuditViewFactory
         table.getColumn("IntKey2").setLabel("DatasetErrors");
     }
 
-    public static void addAuditEntry(Container container, User user, String type, String comment, int listErrors, int datasetErrors)
+    public static void addAuditEntry(Container container, User user, String type, String comment, int ehrErrors, int ehrLookupsErrors, int datasetErrors)
     {
         AuditLogEvent event = new AuditLogEvent();
         event.setContainerId(container.getId());
@@ -109,8 +108,9 @@ public class ETLAuditViewFactory extends SimpleAuditViewFactory
         event.setCreatedBy(user);
         event.setComment(comment);
         event.setKey1(type);
-        event.setIntKey1(listErrors);
+        event.setIntKey1(ehrErrors);
         event.setIntKey2(datasetErrors);
+        event.setIntKey3(ehrLookupsErrors);
         event.setCreated(new Date());
         AuditLogService.get().addEvent(event);
     }

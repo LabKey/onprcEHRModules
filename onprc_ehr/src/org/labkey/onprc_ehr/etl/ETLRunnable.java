@@ -53,6 +53,7 @@ import org.labkey.api.util.ResultSetUtil;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HttpView;
 import org.labkey.api.view.ViewContext;
+import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -86,6 +87,7 @@ public class ETLRunnable implements Runnable
 
     private final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
     private Map<String, String> ehrQueries;
+    private Map<String, String> ehrLookupsQueries;
     private Map<String, String> studyQueries;
 
     private final static Logger log = Logger.getLogger(ETLRunnable.class);
@@ -101,6 +103,7 @@ public class ETLRunnable implements Runnable
     private void refreshQueries() throws IOException
     {
         this.ehrQueries = loadQueries(getResource("ehr").list());
+        this.ehrLookupsQueries = loadQueries(getResource("ehr_lookups").list());
         this.studyQueries = loadQueries(getResource("study").list());
     }
 
@@ -162,7 +165,7 @@ public class ETLRunnable implements Runnable
                 stackSize = HttpView.getStackSize();
                 ViewContext.getMockViewContext(user, container, new ActionURL("onprc_ehr", "fake.view", container), true);
 
-                ETLAuditViewFactory.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0);
+                ETLAuditViewFactory.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0, 0);
 
                 for (String datasetName : studyQueries.keySet())
                 {
@@ -180,20 +183,31 @@ public class ETLRunnable implements Runnable
                     byte[] lastRow = getLastVersion(tableName);
                     String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
                     log.info(String.format("table ehr.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
-                    log.info(String.format("table study.%s rowversion was %s", tableName, version));
+                    log.info(String.format("table ehr.%s rowversion was %s", tableName, version));
+                }
+
+                for (String tableName : ehrLookupsQueries.keySet())
+                {
+                    long lastTs = getLastTimestamp(tableName);
+                    byte[] lastRow = getLastVersion(tableName);
+                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    log.info(String.format("table ehr_lookups.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                    log.info(String.format("table ehr_lookups.%s rowversion was %s", tableName, version));
                 }
 
                 UserSchema ehrSchema = QueryService.get().getUserSchema(user, container, "ehr");
+                UserSchema ehrLookupsSchema = QueryService.get().getUserSchema(user, container, "ehr_lookups");
                 UserSchema studySchema = QueryService.get().getUserSchema(user, container, "study");
 
                 try
                 {
                     int ehrErrors = merge(user, container, ehrQueries, ehrSchema);
+                    int ehrLookupsErrors = merge(user, container, ehrLookupsQueries, ehrLookupsSchema);
                     int datasetErrors = merge(user, container, studyQueries, studySchema);
 
                     log.info("End incremental sync run.");
 
-    //                ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, datasetErrors);
+                    ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, ehrLookupsErrors, datasetErrors);
                 }
                 catch (BatchValidationException e)
                 {
@@ -209,7 +223,7 @@ public class ETLRunnable implements Runnable
                 // to smooth over any transient issues like the remote datasource
                 // being temporarily unavailable.
                 log.error("Fatal incremental sync error", x);
-                ETLAuditViewFactory.addAuditEntry(container, user, "FATAL ERROR", "Fatal error during EHR synchronization", 0, 0);
+                ETLAuditViewFactory.addAuditEntry(container, user, "FATAL ERROR", "Fatal error during EHR synchronization", 0, 0, 0);
 
             }
             finally
@@ -250,7 +264,7 @@ public class ETLRunnable implements Runnable
                 sql = kv.getValue();
 
                 //TODO: debug purposes only
-//                sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t";
+                //sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t";
 
                 TableInfo targetTable = schema.getTable(targetTableName);
                 if (targetTable == null)
@@ -264,7 +278,6 @@ public class ETLRunnable implements Runnable
                 TableInfo realTable = null;
                 if (targetTable instanceof FilteredTable)
                 {
-                    String name;
                     DbSchema dbSchema;
                     if (targetTable instanceof DataSetTable)
                     {
@@ -281,6 +294,10 @@ public class ETLRunnable implements Runnable
 //                        dbSchema = DbSchema.get("studydataset");
 //                        realTable = dbSchema.getTable(name);
                     }
+                }
+                else
+                {
+                    log.error("Unable to find real table for: " + targetTable.getSelectName());
                 }
 
                 // Are we starting with an empty collection?
@@ -300,6 +317,16 @@ public class ETLRunnable implements Runnable
                 for (int i = 1; i <= paramCount; i++)
                 {
                     ps.setBytes(i, fromVersion);
+                }
+
+                if (fromVersion == DEFAULT_VERSION)
+                {
+                    if (realTable != null)
+                    {
+                        log.info("Truncating target table, since last rowversion is null");
+                        SQLFragment truncateSql = new SQLFragment("TRUNCATE TABLE " + realTable.getSelectName());
+                        Table.execute(realTable.getSchema(), truncateSql);
+                    }
                 }
 
                 // get deletes from the origin.
@@ -389,10 +416,12 @@ public class ETLRunnable implements Runnable
 
                         if (realTable != null)
                         {
+                            log.info("Using real table: " + realTable.getSelectName());
                             Table.delete(realTable, new SimpleFilter(filterColumn.getFieldKey(), likeWithIds, CompareType.IN));
                         }
                         else
                         {
+                            log.info("Using update service: " + targetTable.getSelectName());
                             updater.deleteRows(user, container, deleteSelectors, extraContext);
                         }
                         log.info("deleted objectids " + deletedIds.size());
@@ -544,6 +573,21 @@ public class ETLRunnable implements Runnable
                         setLastVersion(targetTableName, newBaselineVersion);
                         setLastTimestamp(targetTableName, newBaselineTimestamp);
                         log.info(MessageFormat.format("Committed updates for {0} records in {1}", updates, targetTableName));
+
+                        try
+                        {
+                            TableInfo ti = ONPRC_EHRSchema.getInstance().getSchema().getTable(ONPRC_EHRSchema.TABLE_ETL_RUNS);
+                            Map<String, Object> row = new HashMap<String, Object>();
+                            row.put("date", new Date(newBaselineTimestamp));
+                            row.put("queryname", targetTableName);
+                            row.put("rowversion", new String(newBaselineVersion, "US-ASCII"));
+                            row.put("container", container.getEntityId());
+                            Table.insert(user, ti, row);
+                        }
+                        catch (UnsupportedEncodingException e)
+                        {
+                            log.error(e.getMessage());
+                        }
                     }
 
                 }
@@ -815,6 +859,7 @@ public class ETLRunnable implements Runnable
         }
         catch (Exception ignored)
         {
+            log.error("There was an error closing a result set in the ETL: " + ignored.getMessage());
         }
     }
 
@@ -826,6 +871,7 @@ public class ETLRunnable implements Runnable
         }
         catch (Exception ignored)
         {
+            log.error("There was an error closing a result set in the ETL: " + ignored.getMessage());
         }
     }
 
@@ -845,26 +891,6 @@ public class ETLRunnable implements Runnable
 
     }
 
-//    /**
-//     * run db ANALYZE if configured and if db is postgres.
-//     *
-//     * This is really important for postgres performance when a table goes from no rows to millions of rows,
-//     * which studydata does when first syncing from EHR's legacy database.
-//     * @param dbSchema
-//     */
-//    private void doDbAnalyze(DbSchema dbSchema)
-//    {
-//        log.info("ANALYZE");
-//        try
-//        {
-//            Table.execute(dbSchema, dbSchema.getSqlDialect().getAnalyzeCommandForTable(""));
-//        }
-//        catch (SQLException e)
-//        {
-//            log.warn("error running db ANALYZE: " + e.getMessage(), e);
-//        }
-//    }
-
     public boolean isShutdown()
     {
         return shutdown;
@@ -875,6 +901,10 @@ public class ETLRunnable implements Runnable
         this.shutdown = true;
     }
 
+    public boolean isRunning()
+    {
+        return isRunning;
+    }
 
     class BadConfigException extends Throwable
     {

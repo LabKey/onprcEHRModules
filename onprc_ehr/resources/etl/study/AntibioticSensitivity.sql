@@ -24,13 +24,13 @@ SELECT
 	--d.ClinicalKey  as ClinicalKey,
 	d.Antibiotic as Antibiotic ,
 	
-	--convert to a true/false signifying 'is resistant?'????
-	----- Flag = 0 Resistant to Antibiotics, Flag = 1 not Resistant to Antibiotics
-	--CASE 
-	--	when d.ResistanceFlag = 1 then 0
-	--	when d.ResistanceFlag = 0 then 1
-	--end as ResistanceFlag,     
-	d.ResistanceFlag as ResistanceFlag,     
+	-- original usage: Flag = 0 Resistant to Antibiotics, Flag = 1 not Resistant to Antibiotics
+	-- converted to the reverse
+	CASE
+	when d.ResistanceFlag = 1 then 0
+	when d.ResistanceFlag = 0 then 1
+	end as Resistant,
+	--d.ResistanceFlag as Resistant,
 
 	d.ts as rowversion,
 	d.objectid

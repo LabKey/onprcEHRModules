@@ -111,6 +111,14 @@ public class ETL
         return value;
     }
 
+    public static boolean isRunning()
+    {
+        if (runnable == null)
+            return false;
+
+        return runnable.isRunning();
+    }
+
     private static void setEnabled(Boolean enabled)
     {
         PropertyManager.PropertyMap pm = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
