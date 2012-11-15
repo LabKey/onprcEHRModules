@@ -178,7 +178,8 @@ Ext4.onReady(function (){
                 var json = {};
 
                 fields.each(function(field){
-                    json[field.itemId] = field.getValue();
+                    if (field.itemId)
+                        json[field.itemId] = field.getValue();
                 }, this);
 
                 var resets = {};
@@ -189,7 +190,6 @@ Ext4.onReady(function (){
                 }, this);
 
                 json.timestamps = Ext4.encode(resets);
-                console.log(json);
 
                 LABKEY.Ajax.request({
                     url: LABKEY.ActionURL.buildURL('onprc_ehr', 'setEtlDetails', null),

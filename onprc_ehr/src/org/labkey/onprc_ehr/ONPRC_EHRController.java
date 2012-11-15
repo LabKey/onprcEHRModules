@@ -110,7 +110,7 @@ public class ONPRC_EHRController extends SpringActionController
                 configMap.put("jdbcDriver", form.getJdbcDriver());
 
             if (form.getRunIntervalInMinutes() != null)
-                configMap.put("runIntervalInMinutes", form.getRunIntervalInMinutes().toString());
+                configMap.put("runIntervalInMinutes", form.getRunIntervalInMinutes());
 
             if (form.getEtlStatus() != null)
                 configMap.put("etlStatus", form.getEtlStatus().toString());
@@ -174,7 +174,7 @@ public class ONPRC_EHRController extends SpringActionController
         private String labkeyContainer;
         private String jdbcUrl;
         private String jdbcDriver;
-        private Integer runIntervalInMinutes;
+        private String runIntervalInMinutes;
 
         public Boolean getEtlStatus()
         {
@@ -246,12 +246,12 @@ public class ONPRC_EHRController extends SpringActionController
             this.jdbcDriver = jdbcDriver;
         }
 
-        public Integer getRunIntervalInMinutes()
+        public String getRunIntervalInMinutes()
         {
             return runIntervalInMinutes;
         }
 
-        public void setRunIntervalInMinutes(int runIntervalInMinutes)
+        public void setRunIntervalInMinutes(String runIntervalInMinutes)
         {
             this.runIntervalInMinutes = runIntervalInMinutes;
         }

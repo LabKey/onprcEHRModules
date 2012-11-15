@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -90,8 +91,24 @@ public class ETL
      */
     static public void run()
     {
-        if (runnable != null)
-            runnable.run();
+        if (isEnabled())
+        {
+            if (runnable == null)
+            {
+                try
+                {
+                   runnable = new ETLRunnable();
+                }
+                catch (IOException e)
+                {
+                    log.error("Error running ETL: " + e.getMessage());
+                }
+            }
+
+            if (runnable != null)
+                runnable.run();
+
+        }
         else
             log.error("ETL is either disabled to inactive.  Will not start");
     }

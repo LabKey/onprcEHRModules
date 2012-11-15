@@ -95,7 +95,7 @@ public class ETLRunnable implements Runnable
     private boolean isRunning = false;
     private boolean shutdown;
 
-    public ETLRunnable() throws IOException, SQLException, ValidEmail.InvalidEmailException
+    public ETLRunnable() throws IOException
     {
         refreshQueries();
     }
