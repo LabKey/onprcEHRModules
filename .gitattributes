@@ -75,6 +75,8 @@ onprc_ehr/src/org/labkey/onprc_ehr/etl/ETL.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditViewFactory.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
 onprc_ehr/tools/deletedRecords.sql -text
+onprc_ehr/tools/installLabKey.sh -text
+onprc_ehr/tools/installLabKeyPipeline.sh -text
 onprc_ehr/tools/miscTable.sql -text
 onprc_ehr/tools/monit/activeMQ-monit.pl -text
 onprc_ehr/tools/monit/munin-monitor.pl -text
