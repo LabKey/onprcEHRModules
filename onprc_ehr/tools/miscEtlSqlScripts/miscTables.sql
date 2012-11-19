@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-DROP table deleted_records;
-CREATE TABLE deleted_records (
-	id varchar(255) DEFAULT NULL,
-	objectid varchar(255) DEFAULT NULL,
-	ts varbinary,
-	tableName varchar(255) DEFAULT NULL,
-	created timestamp
-);
+TRUNCATE TABLE labkey.ehr_lookups.source;
+INSERT into labkey.ehr_lookups.source (code, meaning, SourceCity, SourceState, SourceCountry)
+	select InstitutionCode, InstitutionName, InstitutionCity, InstitutionState, InstitutionCountry  from Ref_ISISInstitution;
+
+
+

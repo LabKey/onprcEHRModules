@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+--NOTE: this script can be used to created the initial QCStates expected by the EHR study.  The containerId can be updated as needed
 INSERT INTO study.qcstate (label,description,publicdata,container) VALUES ('Abnormal', 'Value is abnormal', TRUE, (SELECT entityid FROM core.containers WHERE name='EHR' AND parent = (SELECT entityid FROM core.containers WHERE name='ONPRC')));
 INSERT INTO study.qcstate (label,description,publicdata,container) VALUES ('Completed', 'Record has been completed and is public', FALSE, (SELECT entityid FROM core.containers WHERE name='EHR' AND parent = (SELECT entityid FROM core.containers WHERE name='ONPRC')));
 INSERT INTO study.qcstate (label,description,publicdata,container) VALUES ('Delete Requested', 'Records are requested to be deleted', FALSE, (SELECT entityid FROM core.containers WHERE name='EHR' AND parent = (SELECT entityid FROM core.containers WHERE name='ONPRC')));
