@@ -18,7 +18,7 @@ SELECT
 	pm.date,
 
 	pm.objectid as parentid,
-	(cast(pm.objectid as varchar(38)) + pm.tissue) as objectid,
+	(cast(pm.objectid as varchar(38)) + pm.tissue + CAST(pm.measurement as varchar)) as objectid,
 	--pm.rowversion,
 
 	--pm.MeasurementID,
