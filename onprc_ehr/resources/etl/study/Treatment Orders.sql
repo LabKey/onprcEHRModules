@@ -62,4 +62,4 @@ FROM Cln_Medications cln
      left join Sys_parameters s6 on (s6.Field = 'DepartmentCode' and s6.Flag = rt.DeptCode)
      left join ref_snomed121311 sno on (sno.SnomedCode = cln.Medication)
 
-where cln.ts > ?
+where cln.ts > ? and code is not null
