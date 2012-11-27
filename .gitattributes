@@ -55,8 +55,10 @@ onprc_ehr/resources/queries/study/Enrichment.js -text
 onprc_ehr/resources/queries/study/Matings.js -text
 onprc_ehr/resources/queries/study/Measurements.js -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.21.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.21.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/onprc_ehr.xml -text
 onprc_ehr/resources/scripts/onprc_ehr/etl.js -text
