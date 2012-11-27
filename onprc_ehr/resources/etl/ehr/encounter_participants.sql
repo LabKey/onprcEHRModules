@@ -17,6 +17,7 @@ SELECT
     null as userid,
     t.role,
     t.procedure_id,
+    (cast(t.procedure_id as varchar(38)) + '_' + t.role) as objectid,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN

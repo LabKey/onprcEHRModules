@@ -353,6 +353,7 @@ public class ETLRunnable implements Runnable
                 ColumnInfo pkColumn = targetTable.getPkColumns().get(0);
                 if(filterColumn == null)
                 {
+                    log.info("objectid column not found for table: " + targetTable.getName() + ", using " + pkColumn.getName() + " + instead");
                     filterColumn = pkColumn;
                 }
 

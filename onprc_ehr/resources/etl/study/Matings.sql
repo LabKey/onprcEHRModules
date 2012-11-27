@@ -18,9 +18,9 @@ SELECT
 	Date as Date  ,
 	MaleId as Male,
 
-	--TODO
-	--MatingType as MatingTypeInt  ,
-	s1.Value as MatingType,
+	--TODO: translate
+	MatingType as MatingType,
+	--s1.Value as MatingType,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
