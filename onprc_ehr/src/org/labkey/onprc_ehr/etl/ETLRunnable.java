@@ -453,7 +453,7 @@ public class ETLRunnable implements Runnable
                             }
                             catch (SQLException e)
                             {
-                                log.error("Unable to find column objectId in ETL script for " + targetTableName);
+                                log.error("Unable to find column " + filterColumn.getColumnName() + " in ETL script for " + targetTableName);
                                 throw e;
                             }
                         }
