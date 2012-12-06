@@ -18,11 +18,14 @@ function createNavMenu()
     if(!ctx)
         return;
 
+
+    var issueHTML = '';
+    if (ctx['EHRIssuesContainer']){
+        issueHTML = '<div style="max-width:920px">Below are the sections of the Electronic Health Record.  If there are additional reports you would like, please submit a request <a href=="' + LABKEY.ActionURL.buildURL('issues', 'list', ctx['EHRIssuesContainer']) + '" target="_blank">here</a>.<br><br></div>'
+    }
+
     Ext.get(webpart.wrapperDivId).update(
-        '<div style="max-width:920px">' +
-        '    Below are the sections of the Electronic Health Record.  If there are additional reports you would like, please submit a request <a href="<%=contextPath%>/issues' + ctx['EHRStudyContainer'] + '/Issue_Tracker/list.view?" target="_blank">here</a>.' +
-        '   <br><br>' +
-        '</div>' +
+        issueHTML +
         '<table>' +
         '<tr style="vertical-align:top">' +
         '    <td style="width:300px">' +
@@ -59,8 +62,15 @@ function createNavMenu()
                 {name: 'Search By Room, Floor or Cage', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage'},
                 {name: 'Irregular Obs By Location', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:obs'},
                 {name: 'Clinical Remarks By Location', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:clinremarks'}
-            ]},
-            {header: 'Today At Center',
+            ]}
+        ]
+    });
+
+    new EHR.ext.NavMenu({
+        width: 270,
+        renderTo: 'ehrMenu2_'+webpart.wrapperDivId,
+        sections: [{
+            header: 'Today At The Center',
             items: [
                 {name: 'Blood Draw Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderColony&_showReport:1&combineSubj:true&activeReport:todaysBlood'},
                 {name: 'Irregular Observations', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:obs'},
@@ -69,46 +79,18 @@ function createNavMenu()
                 {name: 'Treatment Schedule - Night', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:treatmentScheduleNight'},
                 {name: 'Treatment Schedule - All', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:treatmentSchedule'},
                 {name: 'Forms Completed Today', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=TasksByLocation&query.viewName=Completion Times&query.taskid/Created~dateeq='+(new Date()).format('Y-m-d')}
-            ]}
-        ]
-    });
-
-
-    new EHR.ext.NavMenu({
-        width: 270,
-        renderTo: 'ehrMenu2_'+webpart.wrapperDivId,
-        sections: [
-            {header: 'Entire Colony',
+            ]
+        },{
+            header: 'Entire Colony',
             items: [
                 {name: 'Animal Utilization By Category', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=colonyAssignmentSummary'},
-                {name: 'Blood Draw Summary', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=ScheduledBlood'},
                 {name: 'Colony Population By Age', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=Colony Population By Age'},
-                {name: 'MHC Genotype Summary', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=alleleFrequencies'},
                 {name: 'Population Summary', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/populationOverview.view?'},
                 {name: 'Room Utilization', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=RoomUtilization'},
                 //{name: 'Time Chart', url: '<%=contextPath%>/visualization' + ctx['EHRStudyContainer'] + '/timeChartWizard.view?edit=true'},
-                {name: 'Viral Challenges', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=ViralChallenges'},
-                //{name: 'Weight: 10% Drop In Last 30 Days', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=weightRelChange&query.viewName=10 Pct Drop In Last 30 Days'},
-                //{name: 'Weight: 10% Drop In Last 90 Days', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=weightRelChange&query.viewName=10 Pct Drop In Last 90 Days'},
-                //{name: 'Weight: 10% Drop In Last 6 Months', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=weightRelChange&query.viewName=10 Pct Drop In Last 6 Months'},
                 {name: 'More Reports', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/moreReports.view?'}
-            ]},
-            {header: 'Validation and Alerts',
-             items: [
-                 {name: 'Animals Without Assignments', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=No Active Assignments'},
-                 {name: 'Cage Review', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=CageReview&query.viewName=Problem%20Cages'},
-                 {name: 'Cages Lacking Dimensions', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=missingCages'},
-
-                 {name: 'Housing: Condition Problems', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=housingConditionProblems&query.viewName=Problems'},
-                 {name: 'Housing: Double Entries', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=housingProblems'},
-                 {name: 'Loners', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=demographicsDaysAlone&query.viewName=Alone 30 Days Without Exemptions'},
-
-                 {name: 'Rooms Without Obs Today', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=RoomsWithoutObsToday'},
-                 {name: 'TB: Untested In >4 Months', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=TB Older Than 4 Months'},
-                 {name: 'Unweighed In Past 45 Days', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Unweighed%20Over%2045%20Days'}
-             ]}
-
-        ]
+            ]
+        }]
     });
 
     var menuCfg = {
@@ -117,11 +99,10 @@ function createNavMenu()
         sections: [
             {header: 'Misc',
             items: [
-                {name: 'About the EHR Project', url: '<%=contextPath%>/project' + ctx['EHRStudyContainer'] + '/About The EHR/begin.view?'},
+                //{name: 'About the EHR Project', url: '<%=contextPath%>/project' + ctx['EHRStudyContainer'] + '/About The EHR/begin.view?'},
                 {name: 'Compare Lists of Animals', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/utilities.view?'},
-                {name: 'Run SQL Directly', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/executeSql.view?'},
-                {name: 'Search Center SNOMED Codes', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=snomed'},
-                {name: 'Search ALL SNOMED Codes', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=full_snomed'}
+                //{name: 'Run SQL Directly', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/executeSql.view?'},
+                {name: 'Search Center SNOMED Codes', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=snomed'}
             ]},
             {header: 'Data Entry',
             items: [

@@ -13,6 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
---path_autopsy
---path_biopsy
+--TODO: split this table between flags, notes and animal groups
 
+Select
+	cast(AnimalID as varchar) as Id,
+	--p.PoolCode as PoolCode,    ----- Ref_Pool
+	rp.ShortDescription AS category,
+	rp.Description as flag,
+
+	DateAssigned as date,
+	DateReleased as enddate,
+	--NOTE: redundant w/ enddate?
+	--Status as  Status,            ---- flag = 1 Active pools, Flag = 0 Inactive Pools
+
+	--p.ts as rowversion,
+	p.objectid
+
+From Af_Pool p
+left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
+
+where p.ts > ?

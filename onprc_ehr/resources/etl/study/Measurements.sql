@@ -520,3 +520,161 @@ left join Sys_Parameters s1 on (s1.Flag = rt.DeptCode And s1.Field = 'Department
 
 where measurement > 0
 and pm.rowversion > ?
+
+UNION ALL
+
+SELECT
+	cast(t.AnimalID as varchar) as Id,
+	t.date,
+	null as parentId,
+	(cast(t.objectid as varchar(38)) + t.tissue + CAST(t.measurement as varchar)) as objectid,
+	t.tissue,
+	t.measurement,
+
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy
+
+FROM (
+
+Select
+
+	AnimalID,
+	MeasurementDate as date,
+	'CrownRump' as tissue,
+	CrownRump as measurement,
+
+	Technician,
+	path.objectid,
+	path.ts
+
+From Path_FetalMeasurements Path
+where CrownRump > 0
+
+UNION ALL
+
+Select
+
+	AnimalID,
+	MeasurementDate as date,
+	'Transtemporal' as tissue,
+	Transtemporal as measurement,
+
+	Technician,
+	path.objectid,
+	path.ts
+
+From Path_FetalMeasurements Path
+where Transtemporal > 0
+
+UNION ALL
+
+Select
+
+	AnimalID,
+	MeasurementDate as date,
+	'RightHand' as tissue,
+	RightHand as measurement,
+
+	Technician,
+	path.objectid,
+	path.ts
+
+From Path_FetalMeasurements Path
+where RightHand > 0
+
+UNION ALL
+
+Select
+
+	AnimalID,
+	MeasurementDate as date,
+	'RightFoot' as tissue,
+	RightFoot as measurement,
+
+	Technician,
+	path.objectid,
+	path.ts
+
+From Path_FetalMeasurements Path
+where RightFoot > 0
+
+UNION ALL
+
+Select
+
+	AnimalID,
+	MeasurementDate as date,
+	'PrimaryPlacentalDisc1' as tissue,
+	PrimaryPlacentalDisc1 as measurement,
+
+	Technician,
+	path.objectid,
+	path.ts
+
+From Path_FetalMeasurements Path
+where PrimaryPlacentalDisc1 > 0
+
+UNION ALL
+
+Select
+
+	AnimalID,
+	MeasurementDate as date,
+	'PrimaryPlacentalDisc2' as tissue,
+	PrimaryPlacentalDisc2 as measurement,
+
+	Technician,
+	path.objectid,
+	path.ts
+
+From Path_FetalMeasurements Path
+where PrimaryPlacentalDisc2 > 0
+
+UNION ALL
+
+Select
+
+	AnimalID,
+	MeasurementDate as date,
+	'SecondaryPlacentalDisc1' as tissue,
+	SecondaryPlacentalDisc1 as measurement,
+
+	Technician,
+	path.objectid,
+	path.ts
+
+From Path_FetalMeasurements Path
+where SecondaryPlacentalDisc1 > 0
+
+UNION ALL
+
+Select
+
+	AnimalID,
+	MeasurementDate as date,
+	'SecondaryPlacentalDisc2' as tissue,
+	SecondaryPlacentalDisc2 as measurement,
+
+	Technician,
+	path.objectid,
+	path.ts
+
+From Path_FetalMeasurements Path
+where SecondaryPlacentalDisc2 > 0
+
+) t
+
+left join Ref_Technicians rt on (t.Technician = rt.ID)
+left join Sys_Parameters s1 on (s1.Flag = rt.DeptCode And s1.Field = 'DepartmentCode')
+
+where t.ts > ?

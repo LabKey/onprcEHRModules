@@ -21,7 +21,7 @@ Select
 	max(Afc.ts) as rowversion,
 	afc.DiagnosisID,
 
-	labkey.core.GROUP_CONCAT_D(Remarks, ', ') as remark
+	substring(labkey.core.GROUP_CONCAT_D(Remarks, ', '), 0, 3999) as remark
 FROM (
 SELECT
   --note: this is necessary for SQLServer to allow ORDER BY in the subquery

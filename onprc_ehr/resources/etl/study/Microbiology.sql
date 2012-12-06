@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
---TODO: many of these should not be stored here, like geographic origin
-Select
-	IDKey as IDKey ,
-	cast(AnimalID as varchar) as Id,
-	p.PoolCode as PoolCode,    ----- Ref_Pool
-	rp.ShortDescription AS category,
-	rp.Description,
-	DateAssigned as DateAssigned  ,
-	DateReleased as DateReleased ,
-	Status as  Status,            ---- flag = 1 Active pools, Flag = 0 Inactive Pools
+SELECT
+	--m.ClinicalKey as ClinicalKey  ,
+	m.Bacteria as organism,      ----- Ref_Snomedlists
+	s.Description as organismMeaning,
+	m.Quantity,
+	--m.Searchkey ,
 
-	p.objectid,
-	p.ts as rowversion
+	--m.ts as rowversion,
+	m.objectid
 
-From Af_Pool p
-left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
+FROM Cln_MicrobiologyData m
+left join ref_snomed121311 s ON (m.Bacteria = s.SnomedCode)
+
+where m.ts > ?

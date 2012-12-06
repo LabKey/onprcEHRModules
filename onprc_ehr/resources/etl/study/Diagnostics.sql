@@ -80,6 +80,39 @@ FROM Cln_OccultBlood cln
      left join Sys_Parameters s2 on (s2.Flag = Cln.Method And s2.Field = 'AnalysisMethod')
      left join Specimen sp on (sp.Value = cln.Specimen)
 
+--occult blood from parasitology table
+UNION ALL
+
+select 
+null as clinicalKey,
+cp.AnimalID,
+cp.DATE,
+cp.Category as categoryInt,
+null as category,
+cp.Technician as technicianId,
+
+cp.Specimen,
+sp.name,
+sp.SNOMEDCODE,
+cp.Method as methodInt,
+s2.Value as Method,
+
+'Occult Blood' as TestId,
+null as result,
+s5.Value as qualResult,
+--cp.OccultBlood,
+null as remark,
+cp.ts as rowversion,
+cp.objectid
+ 
+from Cln_Parasitology cp
+left join Sys_Parameters s5 on (s5.Flag = cp.OccultBlood And s5.Field = 'occultblood')
+left join Sys_Parameters s1 on (s1.Flag = cp.Category And s1.Field = 'RequestCategory')
+left join Sys_Parameters s2 on (s2.Flag = cp.Method And s2.Field = 'AnalysisMethod')
+left join Specimen sp on (sp.Value = cp.Specimen)
+
+where OccultBlood != -1
+
 UNION ALL
 
 --misc tests:

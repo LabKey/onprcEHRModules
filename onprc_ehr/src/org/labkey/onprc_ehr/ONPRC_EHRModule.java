@@ -52,7 +52,7 @@ public class ONPRC_EHRModule extends DefaultModule
 
     public double getVersion()
     {
-        return 12.30;
+        return 12.301;
     }
 
     public boolean hasScripts()
@@ -95,9 +95,9 @@ public class ONPRC_EHRModule extends DefaultModule
 
         EHRService.get().registerModule(this);
 
-        Resource r = getModuleResource("/scripts/onprc_ehr/triggers.js");
+        Resource r = getModuleResource("/scripts/onprc_ehr/onprc_triggers.js");
         assert r != null;
-        EHRService.get().registerTriggerScript(r);
+        EHRService.get().registerTriggerScript(this, r);
     }
 
     @Override
@@ -111,14 +111,14 @@ public class ONPRC_EHRModule extends DefaultModule
     @NotNull
     public Set<String> getSchemaNames()
     {
-        return PageFlowUtil.set(ONPRC_EHRSchema.SCHEMA_NAME);
+        return PageFlowUtil.set(ONPRC_EHRSchema.SCHEMA_NAME, ONPRC_EHRSchema.BILLING_SCHEMA_NAME);
     }
 
     @Override
     @NotNull
     public Set<DbSchema> getSchemasToTest()
     {
-        return PageFlowUtil.set(ONPRC_EHRSchema.getInstance().getSchema());
+        return PageFlowUtil.set(ONPRC_EHRSchema.getInstance().getSchema(), DbSchema.get(ONPRC_EHRSchema.BILLING_SCHEMA_NAME));
     }
 
 }

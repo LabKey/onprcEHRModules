@@ -29,9 +29,6 @@ SELECT
 	s3.Value as Route,
 	--cln.IDKey,
 	--cln.SearchKey as SearchKey ,
-
-	--cln.MedicationTime as MedicationTime,
-
 	--cln.ts as rowversion,
 	cln.objectid
 

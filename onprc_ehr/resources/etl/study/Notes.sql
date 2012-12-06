@@ -22,12 +22,13 @@ Select
 	s1.value as Category,
 	Remarks as Remark,
 
+    --TODO
 	ActionDate as ActionDate ,
-	afr.PoolCode as PoolCode ,        ----- Ref_Pool
-	rp.ShortDescription,
-	rp.Description,
-	afr.DateCreated as DateCreated ,
-	afr.DateDisabled as DateDisabled,
+	--afr.PoolCode as PoolCode ,        ----- Ref_Pool
+	--rp.ShortDescription,
+	--rp.Description,
+	--afr.DateCreated as DateCreated ,
+	--afr.DateDisabled as DateDisabled,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
@@ -42,8 +43,8 @@ Select
 	   rt.Initials
     END as performedBy,
 
-	afr.objectid,
-	afr.ts as rowversion
+	afr.objectid
+	--afr.ts as rowversion
 
 From Af_Remarks Afr
 left join Sys_Parameters s1 on (Afr.Topic = s1.Flag And s1.Field = 'Remarks Topic')
@@ -51,3 +52,5 @@ left join Sys_Parameters s2 on (s2.Field = 'DepartmentCode' And Afr.Department =
 left join Ref_Technicians Rt on (Afr.TechnicianID = Rt.ID)
 left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'DepartmentCode')
 left join Ref_pool rp on (rp.PoolCode = afr.PoolCode)
+
+WHERE afr.datedisabled is null AND afr.ts > ?

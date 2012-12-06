@@ -14,10 +14,10 @@ if (LABKEY.Security.currentUser.isAdmin){
                     {name: 'EHR Backups', url: '<%=contextPath%>/project<%=containerPath%>/Backups/begin.view?'},
                     {name: 'ETL Admin', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/etlAdmin.view?'},
                     {name: 'Update Property Descriptors', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureDatasetProperties.view?'},
-                    //{name: 'ETL History', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=core&query.queryName=Sync History'},
                     {name: 'Junit Tests', url: '<%=contextPath%>/junit/begin.view?'},
                     {name: 'Manage EHR Study', url: '<%=contextPath%>/study<%=containerPath%>/manageStudy.view?'},
-                    {name: 'Populate Initial Data', url: '<%=contextPath%>/EHR<%=containerPath%>/_initEHR.view?'},
+                    {name: 'Populate Initial Data (Generic)', url: '<%=contextPath%>/EHR<%=containerPath%>/populateInitialData.view?'},
+                    {name: 'Populate Initial Data (ONPRC)', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/populateData.view?'},
                     {name: 'Set EHR Properties', url: '<%=contextPath%>/core<%=containerPath%>/modulePropertyAdmin.view?moduleName=EHR'}
                 ]
             },
@@ -33,7 +33,7 @@ if (LABKEY.Security.currentUser.isAdmin){
 //                    {name: 'All Logs', url: '<%=contextPath%>/project<%=containerPath%>/Logs/begin.view?'},
                     {name: 'Labkey.log', url: '<%=contextPath%>/admin/showPrimaryLog.view'},
                     {name: 'Labkey-errors.log', url: '<%=contextPath%>/admin/showAllErrors.view'},
-                    {name: 'ETL Log', url: '<%=contextPath%>/onprc_ehr/showEtlLog.view'},
+                    {name: 'ETL Log', url: '<%=contextPath%>/onprc_ehr/showEtlLog.view'}
 //                    {name: 'ActiveMQ.log', url: '<%=contextPath%>/files<%=containerPath%>/Logs/%40filesets/ActiveMQ/activemq.log'},
 //                    {name: 'Monit.log', url: '<%=contextPath%>/files<%=containerPath%>/Logs/%40filesets/Monit/monit.log'},
 //                    {name: 'Munin.log', url: '<%=contextPath%>/files<%=containerPath%>/Logs/%40filesets/Munin/munin.log'},
@@ -47,20 +47,22 @@ if (LABKEY.Security.currentUser.isAdmin){
                     {name: 'Notification Admin', url: '<%=contextPath%>/EHR<%=containerPath%>/notificationAdmin.view?'}
                 ]
             },
-//            {header: 'Monit',
-//                items: [
-//                    {name: 'EHR', url: 'http://ehr.primate.wisc.edu:2812/'},
-//                    {name: 'Test-EHR', url: 'http://test-ehr.primate.wisc.edu:2812/'},
-//                    {name: 'Gems', url: 'http://gems.primate.wisc.edu:2812/'}
-//                ]
-//            },
-//            {header: 'Munin',
-//                items: [
-//                    {name: 'EHR', url: 'http://ehr.primate.wisc.edu:8449/'},
-//                    {name: 'Test-EHR', url: 'http://test-ehr.primate.wisc.edu/munin/'},
-//                    {name: 'Gems', url: 'http://gems.primate.wisc.edu/munin/'}
-//                ]
-//            },
+            {header: 'Associated Servers',
+                items: [
+                    {name: 'ActiveMQ Queue: Production App Server', url: 'http://prc-labkey1.ohsu.edu:8161/admin/queues.jsp'},
+                    {name: 'ActiveMQ Queue: Test/Training App Server', url: 'http://prc-labkey3.ohsu.edu:8161/admin/queues.jsp'},
+
+                    {name: 'Monit: Production App Server', url: 'http://prc-labkey1.ohsu.edu:2812/'},
+                    {name: 'Monit: Production Pipeline Server', url: 'http://prc-labkey2.ohsu.edu:2812/'},
+                    {name: 'Monit: Test/Training App Server', url: 'http://prc-labkey3.ohsu.edu:2812/'},
+                    {name: 'Monit: Test/Training Pipeline Server', url: 'http://prc-labkey4.ohsu.edu:2812/'},
+
+                    {name: 'Munin: Production App Server', url: 'http://prc-labkey1.ohsu.edu:8449/'},
+                    {name: 'Munin: Production Pipeline Server', url: 'http://prc-labkey2.ohsu.edu:8449/'},
+                    {name: 'Munin: Test/Training App Server', url: 'http://prc-labkey3.ohsu.edu:8449/'},
+                    {name: 'Munin: Test/Training Pipeline Server', url: 'http://prc-labkey4.ohsu.edu:8449/'}
+                ]
+            },
             {header: 'Other Tables',
                 items: [
                     {name: 'Manage Animal History Reports', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=reports'},

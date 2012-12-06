@@ -63,7 +63,8 @@ Select
         s1.value as CauseofDeath,
 
 	PTT.objectid,
-	PTT.ts as rowversion
+	l.logtext as remark
+	--PTT.ts as rowversion
 
 From Path_Autopsy PTT
 left join Sys_Parameters s1 on (PTT.CauseofDeath = s1.flag And s1.Field = 'Deathcause')
@@ -77,4 +78,5 @@ left join Sys_Parameters s5 on (Rt3.Deptcode = s5.Flag And s5.Field = 'Departmen
 left join Ref_Technicians Rt4 on (PTT.Prosector3 = Rt4.ID)
 left join Sys_Parameters s6 on (Rt4.Deptcode = s6.Flag And s6.Field = 'DepartmentCode')
 
+left join Path_AutopsyLog l ON (l.AutopsyID = ptt.AutopsyId AND len(l.LogText) > 0 AND l.LogText != '' and l.LogText not like 'Testing testing testing%')
 WHERE ptt.ts > ?

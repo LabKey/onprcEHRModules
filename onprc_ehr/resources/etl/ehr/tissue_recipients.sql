@@ -32,3 +32,4 @@ From Path_TissueDetails ptd
 	left join ref_snomed121311 sno on (sno.SnomedCode = ptd.organ)
 
 
+AND ptd .ts > ?

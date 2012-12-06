@@ -89,6 +89,7 @@ public class ETLRunnable implements Runnable
     private Map<String, String> ehrQueries;
     private Map<String, String> ehrLookupsQueries;
     private Map<String, String> studyQueries;
+    private Map<String, String> billingQueries;
 
     private final static Logger log = Logger.getLogger(ETLRunnable.class);
     private static final int UPSERT_BATCH_SIZE = 1000;
@@ -105,6 +106,7 @@ public class ETLRunnable implements Runnable
         this.ehrQueries = loadQueries(getResource("ehr").list());
         this.ehrLookupsQueries = loadQueries(getResource("ehr_lookups").list());
         this.studyQueries = loadQueries(getResource("study").list());
+        this.billingQueries = loadQueries(getResource("onprc_billing").list());
     }
 
     @Override
@@ -195,8 +197,18 @@ public class ETLRunnable implements Runnable
                     log.info(String.format("table ehr_lookups.%s rowversion was %s", tableName, version));
                 }
 
+                for (String tableName : billingQueries.keySet())
+                {
+                    long lastTs = getLastTimestamp(tableName);
+                    byte[] lastRow = getLastVersion(tableName);
+                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    log.info(String.format("table onprc_billing.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                    log.info(String.format("table onprc_billing.%s rowversion was %s", tableName, version));
+                }
+
                 UserSchema ehrSchema = QueryService.get().getUserSchema(user, container, "ehr");
                 UserSchema ehrLookupsSchema = QueryService.get().getUserSchema(user, container, "ehr_lookups");
+                UserSchema billingSchema = QueryService.get().getUserSchema(user, container, "onprc_billing");
                 UserSchema studySchema = QueryService.get().getUserSchema(user, container, "study");
 
                 try
@@ -204,6 +216,7 @@ public class ETLRunnable implements Runnable
                     int ehrErrors = merge(user, container, ehrQueries, ehrSchema);
                     int ehrLookupsErrors = merge(user, container, ehrLookupsQueries, ehrLookupsSchema);
                     int datasetErrors = merge(user, container, studyQueries, studySchema);
+                    int billingErrors = merge(user, container, billingQueries, billingSchema);
 
                     log.info("End incremental sync run.");
 

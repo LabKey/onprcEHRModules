@@ -12,9 +12,8 @@ var ETL = require("onprc_ehr/etl").EHR.ETL;
 exports.init = function(EHR){
     EHR.ETL = ETL;
 
-//    EHR.Server.Triggers.rowInit = EHR.Server.Utils.createSequence(EHR.Server.Triggers.rowInit, function(errors, row, oldRow){
-//
-//        console.log('called!!!!');
-//        console.log(this.scriptContext);
-//    });
+    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, function(errors, row, oldRow){
+        console.log('called!!!!');
+        console.log(this.scriptContext);
+    });
 }

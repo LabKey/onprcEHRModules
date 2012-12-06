@@ -561,6 +561,51 @@ FROM Cln_Urinalysis cln
 --    left join Sys_parameters s14 on (s14.Field = 'Casts' and s14.Flag = CastsType2)
    left join Sys_parameters s15 on (s15.Field = 'DepartmentCode' and s15.Flag = rt.DeptCode)
 
+--parasitology
+UNION all
+
+Select
+	ClinicalKey,
+	AnimalID,
+	date,
+	'Parasitology' as category,
+	Category as CategoryInt,
+	s1.Value as category2,
+	Technician as TechnicianId,
+	LastName as LastName,
+	FirstName as FirstName,
+	Initials as Initials,
+        s4.Value as Department,
+
+	Specimen ,               ----- Specimen database table
+	Method as methodInt,
+	s2.Value as method,
+	Condition as conditionInt,
+	s3.value as condition,
+
+	Experimental,       ----- If selected Flag = 1, Else Flag = 0
+	PreAssignment as PreAssignment ,   ----- If selected Flag = 1, Else Flag = 0
+	Quarantine as Quarantine ,         ----- If selected Flag = 1, Else Flag = 0
+	Pregnant as Pregnant ,             ----- If selected Flag = 1, Else Flag = 0
+	Followup  as Followup,             ----- If selected Flag = 1, Else Flag = 0
+	Presale as Presale ,               ----- If selected Flag = 1, Else Flag = 0
+	Fasting as Fasting ,		   ----- If selected Flag = 1, Else Flag = 0
+	Sedated as Sedated ,		   ----- If selected Flag = 1, Else Flag = 0
+	null as tissue,
+	null as remarks,
+
+	cp.ts as rowversion,
+	cp.objectid
+
+-- 	OccultBlood
+
+From Cln_Parasitology cp
+left join Sys_Parameters s1 on (s1.Flag = cp.Category And s1.Field = 'RequestCategory')
+left join Sys_Parameters s2 on (s2.Flag = cp.Method And s2.Field = 'AnalysisMethodParasitol')
+left join Sys_Parameters s3 on (s3.Flag = cp.Condition And s3.Field = 'AnimalConditionLab')
+left join Ref_Technicians rt on (cp.Technician = rt.ID)
+left join Sys_Parameters s4 on (s4.Flag = rt.DeptCode And s4.Field = 'DepartmentCode')
+left join Sys_Parameters s5 on (s5.Flag = cp.OccultBlood And s5.Field = 'occultblood')
 
 ) t
 

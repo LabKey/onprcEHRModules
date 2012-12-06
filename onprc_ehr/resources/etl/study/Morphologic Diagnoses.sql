@@ -14,35 +14,42 @@
  * limitations under the License.
  */
 Select
-	d.AutopsyID as procedureId,
+	cast(pa.AnimalID as varchar) as Id,
+	pa.Date as date,
 	pa.objectid as parentid,
 	TCode as code,                               ----- Ref_Snomed
-	sno.Description as meaning,
-	d.SnomedCodes,			----- Ref_Snomed
-	sno2.Description as codeMeaing,
-	SequenceNo,
-	d.objectid ,
-	d.ts as rowversion
+	sno.Description as codeMeaning,
+	d.SnomedCodes as codes2,			----- Ref_Snomed
+	sno2.Description as code2Meaing,
+	--SequenceNo,
+	d.objectid 
+	--d.ts as rowversion
 
 From Path_AutopsyDiagnosis d
 left join ref_snomed121311 sno on (sno.SnomedCode = TCode)
 left join ref_snomed121311 sno2 on (sno2.SnomedCode = d.SnomedCodes)
 left join Path_Autopsy pa on (d.AutopsyID = pa.AutopsyId)
 
+WHERE d.rowversion > ?
+
 UNION ALL
 
 Select
-	d.BiopsyId,
+	cast(pa.AnimalID as varchar) as Id,
+	pa.Date as date,
 	pa.objectid as parentid,
 	TCode as code,                               ----- Ref_Snomed
-	sno.Description as meaning,
-	d.SnomedCodes,			----- Ref_Snomed
-	sno2.Description as codeMeaing,
-	SequenceNo,
-	d.objectid ,
-	d.ts as rowversion
+	sno.Description as codeMeaning,
+	--TODO: handle multiple SNOMEDs
+	d.SnomedCodes as code2,			----- Ref_Snomed
+	sno2.Description as code2Meaing,
+	--SequenceNo,
+	d.objectid 
+	--d.ts as rowversion
 
 From Path_biopsyDiagnosis d
 left join ref_snomed121311 sno on (sno.SnomedCode = TCode)
 left join ref_snomed121311 sno2 on (sno2.SnomedCode = d.SnomedCodes)
 left join Path_Biopsy pa on (d.BiopsyID = pa.BiopsyId)
+
+WHERE d.rowversion > ?

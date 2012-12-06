@@ -15,22 +15,33 @@
  */
 SELECT
  	cast(AnimalID as varchar) as Id,
-	MaleId as MaleID ,
-	ConfirmationDate as ConfirmationDate ,
+	ConfirmationDate as date,
+
+	cast(MaleId as varchar) as sire,
 	EstDeliveryDate as EstDeliveryDate,
-	ConfirmationType as ConfirmationTypeInt  ,
-	s1.Value as ConfirmationType,
-	Technician As TechnicianID,
-	LastName as TechLastName,
-	FirstName as TechFirstName,
-	Initials as TechInitials,
-	DeptCode as DepartmentCodeInt,
-	s2.Value as DepartmentCode,
-	IDKey as IDKey,
-	bm.ts as rowversion,
+	ConfirmationType as ConfirmationType,
+	--s1.Value as ConfirmationType,
+
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy,
+
+
+	--bm.ts as rowversion,
 	bm.objectid
 
 FROM Brd_PregnancyConfirm bm
 LEFT JOIN Sys_parameters s1 ON (s1.Field = 'PregnancyConfirm' and s1.Flag = ConfirmationType)
 LEFT JOIN Ref_Technicians rt ON (bm.Technician = rt.ID)
 LEFT JOIN Sys_parameters s2 ON (s2.Field = 'DepartmentCode' and s2.Flag = rt.DeptCode)
+
+WHERE bm.ts > ?

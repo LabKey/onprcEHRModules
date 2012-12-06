@@ -70,5 +70,5 @@ From Ref_ProjectsIACUC rpi
 	WHERE (pc.ProjectChildID is null or pc.ProjectChildID = pc.ProjectParentID)
     AND rpi.ts > ?
 
-  --TODO: this is a hack
+  --TODO: this is a hack, but it's a duplicate PK.  we should delete one from the source table
   AND rpi.IACUCCode != '0579'

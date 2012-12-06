@@ -18,6 +18,10 @@
             <name>Quick Search</name>
             <location>menu</location>
         </webPart>
+        <webPart>
+            <name>EHR Help</name>
+            <location>menu</location>
+        </webPart>
     </preferredWebParts>
     <modules>
         <moduleName>Study</moduleName>

@@ -4,13 +4,34 @@
         <category>ClinPath</category>
         <category>Clinical</category>
         <category>Pathology</category>
-        <category>ColonyManagement</category>
+        <category>Colony Management</category>
     </categories>
     <datasets>
-        <dataset name="AntibioticSensitivity" id="5011" category="ClinPath" type="Standard">
+        <dataset name="antibioticSensitivity" id="5011" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="Diagnostics" id="5013" category="ClinPath" type="Standard">
+        <dataset name="microbiology" id="5018" category="ClinPath" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="flags" id="5019" category="Colony Management" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="delivery" id="5020" category="Clinical" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="serology" id="5021" category="ClinPath" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="pregnancyConfirmation" id="5022" category="Clinical" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="fosterParents" id="5023" category="Colony Management" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="diagnoses" id="5024" category="Clinical" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="diagnostics" id="5013" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
         <dataset name="alopecia" id="1061" category="Clinical" type="Standard">
@@ -19,16 +40,16 @@
         <dataset name="measurements" id="5016" category="Pathology" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="cases" id="5012" type="Standard">
+        <dataset name="cases" id="5012" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="diet" id="5014" type="Standard">
+        <dataset name="diet" id="5014" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="matings" id="5015" type="Standard">
+        <dataset name="matings" id="5015" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="enrichment" id="5017" type="Standard">
+        <dataset name="enrichment" id="5017" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
         <dataset name="birth" id="1007" category="Clinical" demographicData="true" type="Standard">
@@ -64,9 +85,6 @@
         <dataset name="obs" id="1023" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="procedures" id="1033" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="problem" id="1030" category="Clinical" type="Standard">
             <tags/>
         </dataset>
@@ -100,9 +118,6 @@
         <dataset name="clinpathRuns" id="1073" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="hematologyMorphology" id="1058" category="ClinPath" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="hematologyResults" id="1059" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
@@ -118,40 +133,37 @@
         <dataset name="virologyResults" id="1054" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="arrival" id="1001" category="ColonyManagement" type="Standard">
+        <dataset name="arrival" id="1001" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="assignment" id="1002" category="ColonyManagement" type="Standard">
+        <dataset name="assignment" id="1002" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="behavetrem" id="1004" category="ColonyManagement" type="Standard">
+        <dataset name="behaviorRemarks" id="1004" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="charges" id="5005" category="ColonyManagement" type="Standard">
+        <dataset name="charges" id="5005" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
         <dataset name="deaths" id="1048" category="Pathology" demographicData="true" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="demographics" id="1012" category="ColonyManagement" demographicData="true" type="Standard">
+        <dataset name="demographics" id="1012" category="Colony Management" demographicData="true" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="departure" id="1013" category="ColonyManagement" type="Standard">
+        <dataset name="departure" id="1013" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="housing" id="1018" category="ColonyManagement" type="Standard">
+        <dataset name="housing" id="1018" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="inbreeding" id="5001" category="ColonyManagement" type="Standard">
+        <dataset name="inbreeding" id="5001" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="menses" id="1060" showByDefault="false" category="ColonyManagement" type="Standard">
+        <dataset name="menses" id="1060" showByDefault="false" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="notes" id="1068" showByDefault="false" category="ColonyManagement" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="Pregnancies" id="5007" showByDefault="false" category="ColonyManagement" type="Standard">
+        <dataset name="notes" id="1068" showByDefault="false" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
         <dataset name="prenatal" id="1029" category="Pathology" demographicData="true" type="Standard">
@@ -172,10 +184,16 @@
         <dataset name="organ_weights" id="1072" showByDefault="false" category="Pathology" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="tissue_requests" id="1036" showByDefault="false" category="Pathology" type="Standard">
+        <dataset name="tissue_samples" id="1071" showByDefault="false" category="Pathology" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="tissue_samples" id="1071" showByDefault="false" category="Pathology" type="Standard">
+        <dataset name="ActiveHousing" id="5010" showByDefault="false" category="Colony Management" demographicData="true" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="feeding" id="1078" category="Clinical" demographicData="true" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="pairtest" id="1079" showByDefault="false" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
     </datasets>

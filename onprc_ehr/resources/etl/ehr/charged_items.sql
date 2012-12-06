@@ -62,8 +62,7 @@ Select
 --	ts
 
 
-	afc.objectid,
-	afc.ts as rowversion
+	afc.objectid
 
 From Af_Charges afc
 
@@ -72,6 +71,7 @@ left join Ref_ProjectsIACUC ref1 on (ref1.ProjectID = afc.projectid)
 left join Ref_Fees ref2 on (ref2.FeeCode = afc.FeeCode)
 left join AF_ChargesIBS ibs on (ibs.ChargesIDKey = afc.IDKEY)
 	
+where afc.ts > ?
 
 --TODO: add perdiem, rodent
 
