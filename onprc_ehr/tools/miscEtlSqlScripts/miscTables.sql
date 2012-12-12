@@ -16,25 +16,6 @@
 
 USE IRIS_PRODUCTION;
 
---
-CREATE FUNCTION dbo.fn_splitter(@text nvarchar(max), @separator nvarchar(100))
-RETURNS @result TABLE (i int, value nvarchar(max))
-AS
-BEGIN
-    DECLARE @i int
-    DECLARE @offset int
-    SET @i = 0
-
-    WHILE @text IS NOT NULL
-    BEGIN
-        SET @i = @i + 1
-        SET @offset = charindex(@separator, @text)
-        INSERT @result SELECT @i, CASE WHEN @offset > 0 THEN LEFT(@text, @offset - 1) ELSE @text END
-        SET @text = CASE WHEN @offset > 0 THEN SUBSTRING(@text, @offset + LEN(@separator), LEN(@text)) END
-    END
-    RETURN
-END
-
 --source
 TRUNCATE TABLE labkey.ehr_lookups.source;
 INSERT into labkey.ehr_lookups.source (code, meaning, SourceCity, SourceState, SourceCountry)
@@ -49,7 +30,7 @@ INSERT INTO labkey.ehr_lookups.snomed_subset_codes (primaryCategory, code, conta
 Select
 'Antibiotic' as primaryCategory,
 AntibioticCode as code,
-(SELECT entityid from labkey.core.containers WHERE name = 'EHR') as container,
+(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
 getdate() as modified,
 getdate() as created,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
@@ -64,7 +45,7 @@ SELECT buildingname, description FROM ref_building WHERE datedisabled IS NULL;
 --species
 TRUNCATE TABLE labkey.ehr_lookups.species;
 INSERT INTO labkey.ehr_lookups.species (common, scientific_name)
-Select commonname, latinname From ref_species WHERE Active = 1;
+Select max(commonname), max(latinname) From ref_species WHERE Active = 1 GROUP BY CommonName;
 
 --snomed
 TRUNCATE TABLE labkey.ehr_lookups.full_snomed;
@@ -95,18 +76,19 @@ INSERT INTO labkey.ehr_lookups.snomed_subset_codes (primaryCategory, code, conta
 Select
 'Toys' as primaryCategory,
 ToyCode as code,
-(SELECT entityid from labkey.core.containers WHERE name = 'EHR') as container,
+(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
 getdate() as modified,
 getdate() as created,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby
-From Ref_Toyss WHERE ToyType = 1; --active only
+From Ref_Toys WHERE ToyType = 1; --active only
 
 --procedures
 TRUNCATE TABLE labkey.ehr_lookups.procedures;
-INSERT INTO labkey.ehr_lookups.procedures (procedure, active, major)
+INSERT INTO labkey.ehr_lookups.procedures (name, category, active, major)
 Select
 	ProcedureName as name,
+	'Surgery' as category,
 	CASE
 	  WHEN Status = 1 THEN 1
       ELSE 0
@@ -122,7 +104,7 @@ From Ref_SurgProcedure rsp
 
 --procedure comments
 TRUNCATE TABLE labkey.ehr_lookups.procedure_default_comments;
-INSERT INTO labkey.ehr_lookups.procedure_default_comments (procedureid, comment)
+INSERT INTO labkey.ehr_lookups."procedure_default_comments" (procedureid, comment)
 Select
 	--p0.ProcedureID,		--Ref_SurgProcedure
 	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
@@ -142,7 +124,7 @@ WHERE p0.LogPage = 0
 
 --procedure flags
 TRUNCATE TABLE labkey.ehr_lookups.procedure_default_flags;
-INSERT INTO labkey.ehr_lookups.procedures (procedure, active, major)
+INSERT INTO labkey.ehr_lookups.procedure_default_flags (procedureId, flag, value)
 Select
   (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
   'BreedImpair' as flag,
@@ -151,7 +133,7 @@ Select
 FROM Ref_SurgProcedure r
 WHERE BreedImpairFlag = 1;
 
-INSERT INTO labkey.ehr_lookups.procedures (procedure, active, major)
+INSERT INTO labkey.ehr_lookups.procedure_default_flags (procedureId, flag, value)
 Select
   (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
   'USDASurvival' as flag,
@@ -160,7 +142,7 @@ Select
 FROM Ref_SurgProcedure r
 WHERE USDASurvivalFlag = 1;
 
-INSERT INTO labkey.ehr_lookups.procedures (procedure, active, major)
+INSERT INTO labkey.ehr_lookups.procedure_default_flags (procedureId, flag, value)
 Select
   (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
   'Vessel Surgery' as flag,
@@ -175,7 +157,7 @@ TRUNCATE TABLE labkey.ehr_lookups.procedure_default_charges;
 INSERT INTO labkey.ehr_lookups.procedure_default_charges (procedureid, chargeid, quantity)
 SELECT
 (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = procedurename) as procedureid,
-'PersonHours' as chargeid,
+--'PersonHours' as chargeid,
 PersonHours as quantity
 FROM Ref_SurgProcedure
 WHERE PersonHours > 0;
@@ -184,7 +166,7 @@ TRUNCATE TABLE labkey.ehr_lookups.procedure_default_charges;
 INSERT INTO labkey.ehr_lookups.procedure_default_charges (procedureid, chargeid, quantity)
 SELECT
 (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = procedurename) as procedureid,
-'Comsumables' as chargeid,
+--'Comsumables' as chargeid,
 Comsumables as quantity
 FROM Ref_SurgProcedure
 WHERE PersonHours > 0;
@@ -221,7 +203,7 @@ SELECT upper(GeographicName) as meaning From Ref_ISISGeographic;
 
 --diet
 DELETE FROM labkey.ehr_lookups.lookups WHERE set_name = 'Diet';
-INSERT INTO labkey.ehr_lookups.lookups (set_name, value, datedisabled)
+INSERT INTO labkey.ehr_lookups.lookups (set_name, value, created, date_disabled)
 SELECT
    'Diet' as set_name,
 	Description as value,
@@ -235,9 +217,9 @@ INSERT INTO labkey.ehr_lookups.procedure_default_treatments (procedureid, code, 
 Select
 	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedurename) as procedureid,
 	Medication as code,
-	Dosage,
+	rsm.Dose as dosage,
 	s1.Value as dosage_units,
-	Route as RouteInt,
+	--Route as RouteInt,
 	s2.Value as Route,
 	s3.Value as Frequency
 
@@ -248,3 +230,59 @@ From Ref_SurgMedications rsm
 	LEFT JOIN Ref_SurgProcedure r on (rsm.procedureid = r.procedureid);
 
 
+
+--procedure medications
+TRUNCATE TABLE labkey.ehr_lookups.procedure_default_codes;
+INSERT INTO labkey.ehr_lookups.procedure_default_codes (procedureid, sort_order, code)
+Select
+	(SELECT max(rowid) as rowid from labkey.ehr_lookups.procedures p WHERE p.name = p.name) as procedureid,
+	s2.i as sort,
+	s2.value as code
+
+From Ref_SurgSnomed r
+left join Ref_SurgProcedure p on (r.ProcedureID = p.ProcedureID)
+cross apply dbo.fn_splitter(r.SnomedCodes, ',') s2
+where s2.value is not null and s2.value != '';
+
+TRUNCATE TABLE labkey.ehr_lookups.locations
+INSERT INTO labkey.ehr_lookups.locations (location, area, buildingId, size, active, locationtype, housingcategory)
+Select
+	Location,
+	null as area,
+	BuildingID,
+	Size,
+	Status as active,
+	LocationType as LocationTypeInt,
+	--s1.Value as LocationType,
+	LocationDefinition as LocationDefinitionInt,
+	--s2.Value as LocationDefinition,
+	--loc.DateCreated,
+	--loc.DateDisabled,
+	--loc.DisplayOrder,
+	--LockDownDate
+
+From Ref_Location loc,
+	Sys_Parameters s1, Sys_Parameters s2
+Where s1.Field = 'LocationType'
+	and s1.Flag = loc.LocationType
+	and s2.Field = 'LocationDefinition'
+	and s2.Flag = loc.LocationDefinition;
+
+INSERT INTO labkey.ehr_lookups.locations (location, area, buildingId, size, active, locationtype, housingcategory)
+Select
+	Location,
+	null as area,
+	BuildingID,				--Ref_Building
+	Size,
+	Status,
+	LocationType as LocationTypeInt,
+	--s1.Value as LocationType,
+	LocationDefinition as LocationDefinitionInt,
+	--s2.Value as LocationDefinition,
+
+From Ref_LocationSPF rls,
+	Sys_Parameters s1, Sys_Parameters s2
+Where s1.Field = 'LocationType'
+	and s1.Flag = rls.LocationType
+	and s2.Field = 'LocationDefinition'
+	and s2.Flag = rls.LocationDefinition;

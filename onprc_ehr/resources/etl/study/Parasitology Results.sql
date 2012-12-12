@@ -177,4 +177,4 @@ left join Sys_Parameters s4 on (s4.Flag = rt.DeptCode And s4.Field = 'Department
 left join Sys_Parameters s6 on (s6.Flag = cp.analysis and s6.Field = 'AnalysisParasitology')
 left join Sys_Parameters s7 on (s7.Flag = cp.quantity and s7.Field = 'ParasitologyQuantity')
 
-where cp.rowversion > ?
+where cp.ts > ?

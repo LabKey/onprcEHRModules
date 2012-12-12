@@ -29,6 +29,7 @@ import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
+import org.labkey.onprc_ehr.table.DefaultEHRCustomizer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -94,6 +95,7 @@ public class ONPRC_EHRModule extends DefaultModule
         }
 
         EHRService.get().registerModule(this);
+        EHRService.get().registerTableCustomizer(new DefaultEHRCustomizer());
 
         Resource r = getModuleResource("/scripts/onprc_ehr/onprc_triggers.js");
         assert r != null;

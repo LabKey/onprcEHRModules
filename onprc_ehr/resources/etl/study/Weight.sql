@@ -28,7 +28,7 @@ Select
 	af.ts as rowversion
 
 From Af_Weights af
-WHERE af.rowversion > ?
+WHERE af.ts > ?
 
 --see death for final weights
 UNION ALL
@@ -41,4 +41,15 @@ Select
 	afd.ts as rowversion
 
 From Af_Death AfD
-WHERE afd.rowversion > ?
+WHERE afd.ts > ?
+
+UNION ALL
+  select
+	cast(sg.AnimalID as varchar) as Id,
+	sg.Date,
+	sg.weight,
+	sg.objectid,
+	sg.ts as rowversion
+
+From Sur_general sg
+WHERE sg.ts > ? and sg.weight is not null

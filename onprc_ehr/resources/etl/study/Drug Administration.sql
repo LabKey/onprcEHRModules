@@ -38,5 +38,34 @@ left join ref_snomed121311 sno on (sno.SnomedCode = m.Medication)
 left join Sys_parameters s2 on (s2.Field = 'MedicationUnits' and s2.Flag = m.Units)
 left join Sys_parameters s3 on (s3.Field = 'MedicationRoute' and s3.Flag = m.Route)
 where m.AnimalId is not null
-
 and cln.ts > ?
+
+UNION ALL
+
+SELECT
+    cast(g.AnimalId as varchar) as Id,
+	g.Date,
+    null as datetime,
+
+	AnesthesiaGas as code,
+    sno.Description as meaning,
+
+--     TODO
+--     [IVLocation]
+--       ,[IVSide]
+--       ,[Ventilator]   --boolean
+--       ,[TubeSize]
+
+	null as Dose,
+	null as Units,
+	'IV' as Route,
+	m.objectid
+
+FROM Sur_AnesthesiaLogHeader m
+LEFT JOIN sur_general g ON (g.surgeryid = m.surgeryid)
+left join ref_snomed121311 sno on (sno.SnomedCode = m.AnesthesiaGas)
+LEFT JOIN Sys_parameters s1 ON (s1.Field = 'IVLocation' AND s1.Flag = v.IVLocation)
+LEFT JOIN Sys_parameters s2 ON (s1.Field = 'IVSide' AND s2.Flag = v.IVSide)
+LEFT JOIN Sys_parameters s3 ON (s3.Field = 'GasTubeSize' AND s3.Flag = v.TubeSize)
+
+WHERE m.ts > ?

@@ -120,6 +120,61 @@ SELECT
 From Path_Biopsy p
 WHERE datalength(p.prosector3) > 0
 
+UNION ALL
+
+SELECT
+    s.surgeon as userId,
+    'Surgeon' as role,
+    objectid as procedure_id,
+    ts as rowversion
+
+From Sur_General s
+WHERE datalength(s.surgeon) > 0
+
+UNION ALL
+
+SELECT
+    s.Assistant as userId,
+    'Assistant' as role,
+    objectid as procedure_id,
+    ts as rowversion
+
+From Sur_General s
+WHERE datalength(s.Assistant) > 0
+
+UNION ALL
+
+SELECT
+    s.Anesthetist as userId,
+    'Anesthetist' as role,
+    objectid as procedure_id,
+    ts as rowversion
+
+From Sur_General s
+WHERE datalength(s.Anesthetist) > 0
+
+UNION ALL
+
+SELECT
+    s.InstrumentTech as userId,
+    'Instrument Tech' as role,
+    objectid as procedure_id,
+    ts as rowversion
+
+From Sur_General s
+WHERE datalength(s.InstrumentTech) > 0
+
+UNION ALL
+
+SELECT
+    s.Circulator as userId,
+    'Circulator' as role,
+    objectid as procedure_id,
+    ts as rowversion
+
+From Sur_General s
+WHERE datalength(s.Circulator) > 0
+
 ) t
 
 left join Ref_Technicians Rt on (t.userId = Rt.ID)

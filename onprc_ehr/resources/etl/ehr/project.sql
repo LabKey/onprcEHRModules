@@ -18,12 +18,10 @@ Select
 	rtrim(ltrim(lower(cast(Rpi.IACUCCode as varchar)))) as protocol,
 	Rpi.Title,
 
-
-
-	Rpi.ProjectId as projectId,
-	rp.IACUCCode as protocolId,
-	pc.ProjectParentId,
-	pc.ProjectChildID,
+	--Rpi.ProjectId as projectId,
+	--rp.IACUCCode as protocolId,
+	--pc.ProjectParentId,
+	--pc.ProjectChildID,
 	Rpi.IACUCCode as projectCode,
 	Rpi.StartDate,
 	Rpi.EndDate,
@@ -36,13 +34,13 @@ Select
 	S2.Value as ProjectType,
 	Rpi.Funded as FundedInt,
 	S3.Value as Funded,
-	Rpi.eIACUCNum,
+	--Rpi.eIACUCNum,
 	Rpi.IBCApprovalNum,
 	Rpi.IBCApprovalRequired,
-	Rpi.DateCreated,
-	Rpi.DateDisabled,
-	rpi.objectid,
-	rpi.ts as rowversion
+	--Rpi.DateCreated,
+	--Rpi.DateDisabled,
+	rpi.objectid
+	--rpi.ts as rowversion
 
 From Ref_ProjectsIACUC rpi
 	left join Sys_Parameters s1 on (s1.Field = 'USDALevel' and s1.Flag = rpi.USDALevel)
@@ -54,7 +52,8 @@ From Ref_ProjectsIACUC rpi
         from Ref_IACUCParentChildren rp
         JOIN (select 
             rp.ProjectChildID,
-            MAX(ISNULL(DateDisabled, '2020-01-01')) As DateDisabled
+            MAX(ISNULL(DateDisabled, '2020-01-01')) As DateDisabled,
+            max(ts) as ts2
             FROM Ref_IACUCParentChildren rp
             GROUP BY rp.ProjectChildID
         ) t ON (rp.ProjectChildId = t.ProjectChildID AND ISNULL(rp.DateDisabled, '2020-01-01') = t.DateDisabled)		
@@ -62,4 +61,4 @@ From Ref_ProjectsIACUC rpi
 	left join Ref_ProjectsIACUC rp on (pc.ProjectParentID = rp.ProjectID)
 	WHERE (pc.ProjectChildID is null or pc.ProjectChildID!=pc.ProjectParentID)
 
-	AND rpi.ts > ?
+	AND (rpi.ts > ? or ts2 > ?)

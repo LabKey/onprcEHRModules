@@ -3113,6 +3113,10 @@
                     <fkColumnName>category</fkColumnName>
                 </fk>
             </column>
+            <column columnName="lot">
+                <datatype>varchar</datatype>
+                <columnTitle>Lot</columnTitle>
+            </column>
             <column columnName="description">
                 <datatype>varchar</datatype>
                 <inputType>textarea</inputType>

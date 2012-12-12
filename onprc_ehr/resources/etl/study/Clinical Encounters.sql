@@ -36,8 +36,6 @@ Select
 	pat.objectid ,
 	l.logtext as remark
 
-
-
 From Path_Biopsy Pat
      left join Ref_Technicians Rt on (Pat.Pathologist = Rt.ID)
      left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
@@ -49,7 +47,6 @@ From Path_Biopsy Pat
      left join Sys_Parameters s6 on (Rt4.Deptcode = s6.Flag And s6.Field = 'DepartmentCode')
 
 left join Path_BiopsyLog l ON (l.BiopsyID = Pat.BiopsyId AND len(l.LogText) > 0 AND l.LogText != '' and l.LogText not like 'Testing testing testing%')
-
 WHERE Pat.ts > ?
 
 UNION ALL
@@ -88,10 +85,37 @@ left join Ref_Technicians Rt3 on (PTT.Prosector2 = Rt3.ID)
 left join Sys_Parameters s5 on (Rt3.Deptcode = s5.Flag And s5.Field = 'DepartmentCode')
 left join Ref_Technicians Rt4 on (PTT.Prosector3 = Rt4.ID)
 left join Sys_Parameters s6 on (Rt4.Deptcode = s6.Flag And s6.Field = 'DepartmentCode')
-
 left join Path_AutopsyLog l ON (l.AutopsyID = ptt.AutopsyId AND len(l.LogText) > 0 AND l.LogText != '' and l.LogText not like 'Testing testing testing%')
 WHERE ptt.ts > ?
 
+UNION ALL
 
 --surgeries
+Select
+	cast(sg.AnimalID as varchar) as Id,
+	sg.Date as Date ,
+	'Surgery' as type,
+	null as caseno,
 
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy,
+
+	sg.objectid,
+	l.logtext as remark
+
+From Sur_General sg
+left join Ref_Technicians Rt on (sg.Surgeon = Rt.ID)
+left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
+
+left join Sur_Log l ON (l.SurgeryID = sg.SurgeryID AND len(l.LogText) > 0 AND l.LogText != '' and l.LogText not like 'Testing testing testing%')
+WHERE sg.ts > ?

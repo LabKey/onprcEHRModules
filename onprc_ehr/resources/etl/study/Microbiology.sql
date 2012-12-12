@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 SELECT
+	cast(mh.AnimalID as varchar) as Id,
+	mh.DATE,
 	--m.ClinicalKey as ClinicalKey  ,
 	m.Bacteria as organism,      ----- Ref_Snomedlists
 	s.Description as organismMeaning,
@@ -24,6 +26,7 @@ SELECT
 	m.objectid
 
 FROM Cln_MicrobiologyData m
+left join Cln_MicrobiologyHeader mh ON (m.ClinicalKey = mh.ClinicalKey)
 left join ref_snomed121311 s ON (m.Bacteria = s.SnomedCode)
 
 where m.ts > ?
