@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 SELECT
-	cast(h.AnimalID as varchar) as Id,
+	cast(h.AnimalID as nvarchar(4000)) as Id,
 	h.date,
 	h.Tissue,
 	s1.Description as TissueMeaning,

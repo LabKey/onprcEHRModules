@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 Select
-	cast(afd.AnimalID as varchar) as Id,
+	cast(afd.AnimalID as nvarchar(4000)) as Id,
 	afd.Date as Date,
 	--afd.ISISDestination as desintationId,
 	isis.InstitutionName as desintation,	

@@ -15,9 +15,9 @@
  */
 Select
 	--PTT.AutopsyId as AutopsyId ,
-	cast(PTT.AnimalID as varchar) as Id,
+	cast(PTT.AnimalID as nvarchar(4000)) as Id,
 	PTT.Date as Date ,
-	cast(PTT.PathYear as varchar) + PTT.PathFlag + PTT.PathCode as caseno,
+	cast(PTT.PathYear as nvarchar(4000)) + PTT.PathFlag + PTT.PathCode as caseno,
 
     --the pathologist
 	case

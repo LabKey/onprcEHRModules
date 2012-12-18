@@ -15,7 +15,7 @@
  */
 Select
 	--RemarksID as RemarksID ,
-	cast(AnimalID as varchar) as Id,
+	cast(AnimalID as nvarchar(4000)) as Id,
 	RemarksDate as date,
 
 	--Afr.Topic as TopicInt  ,

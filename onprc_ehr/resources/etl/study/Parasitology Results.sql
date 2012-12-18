@@ -1,5 +1,5 @@
 Select
-	cast(AnimalID as varchar) as Id,
+	cast(AnimalID as nvarchar(4000)) as Id,
 	date,
 
 	tissue,

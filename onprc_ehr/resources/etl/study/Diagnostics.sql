@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 SELECT
-  cast(t.id as varchar) as Id,
+  cast(t.id as nvarchar(4000)) as Id,
   t.date,
   t.category,
 

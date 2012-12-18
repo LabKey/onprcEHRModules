@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Select 	
-	cast(rtrim(ltrim(lower(Rpi.ProjectId))) as integer) as project,
-	rtrim(ltrim(lower(cast(Rpi.IACUCCode as varchar)))) as protocol,
+Select
+    Rpi.ProjectId as project,
+	cast(rtrim(ltrim(lower(Rpi.ProjectId))) as integer) as name,
+	rtrim(ltrim(lower(cast(Rpi.IACUCCode as nvarchar(4000))))) as protocol,
 	Rpi.Title,
 
 	--Rpi.ProjectId as projectId,
@@ -25,12 +26,12 @@ Select
 	Rpi.IACUCCode as projectCode,
 	Rpi.StartDate,
 	Rpi.EndDate,
-	Rpi.IACUCApprovalDate,
-	Rpi.OriginalApprovalDate,
-	Rpi.USDALevel as USDALevelInt,
-	s1.Value as USDALevel,
-	Rpi.MultipleSurvivalSurg,
-	Rpi.ProjectType as ProjectTypeInt,
+	--Rpi.IACUCApprovalDate,
+	--Rpi.OriginalApprovalDate,
+	--Rpi.USDALevel as USDALevelInt,
+	--s1.Value as USDALevel,
+	--Rpi.MultipleSurvivalSurg,
+	--Rpi.ProjectType as ProjectTypeInt,
 	S2.Value as ProjectType,
 	Rpi.Funded as FundedInt,
 	S3.Value as Funded,

@@ -1,6 +1,6 @@
  SELECT
 	--iacuc.ProjectID as ProjectID , --Ref_ProjectsIACUC
-	cast(rtrim(ltrim(lower(iacuc.ProjectId))) as integer) as projectid,
+	rtrim(ltrim(lower(Rpi.IACUCCode))) as protocol,
 	
 	--iacuc.ProcedureID as ProcedureID  , --Ref_SurgProcedure
 	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = s.procedureName) as procedureid,

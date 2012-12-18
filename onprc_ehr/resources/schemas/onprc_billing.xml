@@ -1,3 +1,241 @@
 <ns:tables xmlns:ns="http://labkey.org/data/xml">
-
+    <ns:table tableName="chargeRates" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="chargeId"/>
+            <ns:column columnName="unitcost"/>
+            <ns:column columnName="startDate"/>
+            <ns:column columnName="endDate"/>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="clinicalFeeDefinition" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="procedureId"/>
+            <ns:column columnName="snomed"/>
+            <ns:column columnName="active"/>
+            <ns:column columnName="objectid"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="chargeRateExemptions" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="project"/>
+            <ns:column columnName="chargeId"/>
+            <ns:column columnName="unitcost"/>
+            <ns:column columnName="startDate"/>
+            <ns:column columnName="endDate"/>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="chargableItems" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="name"/>
+            <ns:column columnName="shortName"/>
+            <ns:column columnName="category"/>
+            <ns:column columnName="comment"/>
+            <ns:column columnName="active"/>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="invoicedItems" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="id"/>
+            <ns:column columnName="date"/>
+            <ns:column columnName="debitedaccount"/>
+            <ns:column columnName="creditedaccount"/>
+            <ns:column columnName="category"/>
+            <ns:column columnName="item"/>
+            <ns:column columnName="quantity"/>
+            <ns:column columnName="unitcost"/>
+            <ns:column columnName="totalcost"/>
+            <ns:column columnName="chargeId"/>
+            <ns:column columnName="rateId"/>
+            <ns:column columnName="exemptionId"/>
+            <ns:column columnName="comment"/>
+            <ns:column columnName="flag"/>
+            <ns:column columnName="sourceRecord"/>
+            <ns:column columnName="billingId"/>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="creditAccount" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="chargeId"/>
+            <ns:column columnName="account"/>
+            <ns:column columnName="startDate"/>
+            <ns:column columnName="endDate"/>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="miscCharges" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="id"/>
+            <ns:column columnName="date"/>
+            <ns:column columnName="project"/>
+            <ns:column columnName="account"/>
+            <ns:column columnName="category"/>
+            <ns:column columnName="chargeId"/>
+            <ns:column columnName="descrption"/>
+            <ns:column columnName="quantity"/>
+            <ns:column columnName="unitcost"/>
+            <ns:column columnName="totalcost"/>
+            <ns:column columnName="comment"/>
+            <ns:column columnName="taskid"/>
+            <ns:column columnName="requestid"/>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="perDiemFeeDefinition" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="chargeId"/>
+            <ns:column columnName="housingType"/>
+            <ns:column columnName="housingDefinition"/>
+            <ns:column columnName="startdate"/>
+            <ns:column columnName="releaseCondition"/>
+            <ns:column columnName="active"/>
+            <ns:column columnName="objectid"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="invoiceRuns" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="date"/>
+            <ns:column columnName="dataSources"/>
+            <ns:column columnName="runBy"/>
+            <ns:column columnName="comment"/>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="leaseFeeDefinition" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="project"/>
+            <ns:column columnName="minAge"/>
+            <ns:column columnName="maxAge"/>
+            <ns:column columnName="assignCondition"/>
+            <ns:column columnName="releaseCondition"/>
+            <ns:column columnName="chargeId"/>
+            <ns:column columnName="active"/>
+            <ns:column columnName="objectid"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="accounts" tableDbType="TABLE">
+        <ns:auditLogging>DETAILED</ns:auditLogging>
+        <ns:importUrl></ns:importUrl>
+        <ns:insertUrl></ns:insertUrl>
+        <ns:updateUrl></ns:updateUrl>
+        <ns:deleteUrl></ns:deleteUrl>
+        <ns:columns>
+            <ns:column columnName="account"/>
+            <ns:column columnName="grant"/>
+            <ns:column columnName="investigator"/>
+            <ns:column columnName="startdate"/>
+            <ns:column columnName="enddate"/>
+            <ns:column columnName="active"/>
+            <ns:column columnName="fiscalAuthority"/>
+            <ns:column columnName="externalid"/>
+            <ns:column columnName="comment"/>
+            <ns:column columnName="tier"/>
+            <ns:column columnName="objectid"/>
+            <ns:column columnName="createdby"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedby"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="financialContacts" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowid"/>
+            <ns:column columnName="firstName"/>
+            <ns:column columnName="lastName"/>
+            <ns:column columnName="position"/>
+            <ns:column columnName="address"/>
+            <ns:column columnName="city"/>
+            <ns:column columnName="state"/>
+            <ns:column columnName="country"/>
+            <ns:column columnName="zip"/>
+            <ns:column columnName="phoneNumber"/>
+            <ns:column columnName="active"/>
+            <ns:column columnName="objectid"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="grants" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="grant"/>
+            <ns:column columnName="investigatorId"/>
+            <ns:column columnName="title"/>
+            <ns:column columnName="startDate"/>
+            <ns:column columnName="endDate"/>
+            <ns:column columnName="fiscalAuthority"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="procedureFeeDefinition" tableDbType="TABLE">
+        <ns:columns>
+            <ns:column columnName="rowid"/>
+            <ns:column columnName="procedureId"/>
+            <ns:column columnName="chargeType"/>
+            <ns:column columnName="chargeId"/>
+            <ns:column columnName="active"/>
+            <ns:column columnName="objectid"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
 </ns:tables>

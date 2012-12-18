@@ -366,7 +366,7 @@ public class ETLRunnable implements Runnable
                 ColumnInfo pkColumn = targetTable.getPkColumns().get(0);
                 if(filterColumn == null)
                 {
-                    log.info("objectid column not found for table: " + targetTable.getName() + ", using " + pkColumn.getName() + " + instead");
+                    log.info("objectid column not found for table: " + targetTable.getName() + ", using " + pkColumn.getName() + " instead");
                     filterColumn = pkColumn;
                 }
 
@@ -412,8 +412,17 @@ public class ETLRunnable implements Runnable
                                 likeWithIds.append(" OR ");
                             }
 
-                            String delim = targetTable.getSqlDialect().isPostgreSQL() ? "||" : "+";
-                            likeWithIds.append(filterColumn.getValueSql("t") + " LIKE ? " + delim + " '%' ");
+                            if (targetTable.getSqlDialect().isPostgreSQL())
+                            {
+                                String delim = "||";
+                                likeWithIds.append(filterColumn.getValueSql("t") + " LIKE ? " + delim + " '%' ");
+                            }
+                            else
+                            {
+                                String delim = "+";
+                                likeWithIds.append(filterColumn.getValueSql("t") + " LIKE CAST(? " + delim + " '%') as nvarchar(4000)) ");
+                            }
+
                             if (count++ > 100)
                             {
                                 deleteSelectors.addAll(Arrays.asList((Map<String, Object>[])Table.executeQuery(schema.getDbSchema(), likeWithIds, Map.class)));
@@ -430,8 +439,12 @@ public class ETLRunnable implements Runnable
 
                         if (realTable != null)
                         {
-                            log.info("Using real table: " + realTable.getSelectName());
-                            Table.delete(realTable, new SimpleFilter(filterColumn.getFieldKey(), likeWithIds, CompareType.IN));
+                            log.debug("Using real table: " + realTable.getSelectName());
+                            SimpleFilter filter = new SimpleFilter();
+                            filter.addClause(new SimpleFilter.SQLClause(like.getSQL(), like.getParams().toArray(), filterColumn.getFieldKey()));
+
+                            //Table.delete(realTable, new SimpleFilter(filterColumn.getFieldKey(), likeWithIds, CompareType.IN));
+                            Table.delete(realTable, filter);
                         }
                         else
                         {

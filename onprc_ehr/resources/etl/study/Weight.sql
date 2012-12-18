@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 Select
-	cast(AnimalID as varchar) as Id,
+	cast(AnimalID as nvarchar(4000)) as Id,
 	Date as Date,
 	WeightAmount as Weight,
 	--TODO: why is this stored in weights?
@@ -34,7 +34,7 @@ WHERE af.ts > ?
 UNION ALL
 
 Select
-	cast(AnimalID as varchar) as Id,
+	cast(AnimalID as nvarchar(4000)) as Id,
 	Date as Date,
 	WeightAtDeath as weight,
 	afd.objectid,
@@ -45,7 +45,7 @@ WHERE afd.ts > ?
 
 UNION ALL
   select
-	cast(sg.AnimalID as varchar) as Id,
+	cast(sg.AnimalID as nvarchar(4000)) as Id,
 	sg.Date,
 	sg.weight,
 	sg.objectid,

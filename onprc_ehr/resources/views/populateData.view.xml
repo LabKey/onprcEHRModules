@@ -1,4 +1,4 @@
-<view xmlns="http://labkey.org/data/xml/view" title="Electronic Health Record">
+<view xmlns="http://labkey.org/data/xml/view" title="Populate ONPRC Initial Data">
     <dependencies>
         <dependency path="ehr.context" />
     </dependencies>

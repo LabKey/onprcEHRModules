@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 SELECT
-    cast(m.AnimalId as varchar) as Id,
+    cast(m.AnimalId as nvarchar(4000)) as Id,
 
     --TODO: revisit
 	m.Date,
@@ -43,7 +43,7 @@ and cln.ts > ?
 UNION ALL
 
 SELECT
-    cast(g.AnimalId as varchar) as Id,
+    cast(g.AnimalId as nvarchar(4000)) as Id,
 	g.Date,
     null as datetime,
 
@@ -64,8 +64,8 @@ SELECT
 FROM Sur_AnesthesiaLogHeader m
 LEFT JOIN sur_general g ON (g.surgeryid = m.surgeryid)
 left join ref_snomed121311 sno on (sno.SnomedCode = m.AnesthesiaGas)
-LEFT JOIN Sys_parameters s1 ON (s1.Field = 'IVLocation' AND s1.Flag = v.IVLocation)
-LEFT JOIN Sys_parameters s2 ON (s1.Field = 'IVSide' AND s2.Flag = v.IVSide)
-LEFT JOIN Sys_parameters s3 ON (s3.Field = 'GasTubeSize' AND s3.Flag = v.TubeSize)
+--LEFT JOIN Sys_parameters s1 ON (s1.Field = 'IVLocation' AND s1.Flag = v.IVLocation)
+--LEFT JOIN Sys_parameters s2 ON (s1.Field = 'IVSide' AND s2.Flag = m.IVSide)
+--LEFT JOIN Sys_parameters s3 ON (s3.Field = 'GasTubeSize' AND s3.Flag = m.TubeSize)
 
 WHERE m.ts > ?

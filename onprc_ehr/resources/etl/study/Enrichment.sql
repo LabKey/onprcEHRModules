@@ -15,7 +15,7 @@
  */
 Select
 	--IDKey as IDKey  ,
-	cast(AnimalID as varchar) as Id,
+	cast(AnimalID as nvarchar(4000)) as Id,
 	GivenDate as date,
 	RemoveDate as enddate,
 	t.ToyCode as ToyCode,      ------ Ref_Snomed

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 Select
-	cast(AnimalID as varchar) as Id,
+	cast(AnimalID as nvarchar(4000)) as Id,
 	af.ProjectID as Project,
 	--RefProj.Title,
 
@@ -22,20 +22,13 @@ Select
 	AssignDate as Date,
 	ReleaseDate as Enddate,
 
-	--TODO: handle pools
--- 	AssignPool as AssignPool  ,							--Ref_Pool
--- 	p1.ShortDescription as desc1,
--- 	EstimatedReleasePool,		--Ref_Pool
--- 	p1.ShortDescription as desc2,
--- 	ActualReleasePool,			--
--- 	p1.ShortDescription as desc3,
-
+	AssignPool as assignCondition,							--Ref_Pool
+	EstimatedReleasePool as projectedReleaseCondition,		--Ref_Pool
+	ActualReleasePool as releaseCondition,			--
 
 --  --  --NOTE: according to raymond replacementFlag is not in use and can be ignored
 -- 	ReplacementFlag as ReplacementFlagRaw,
 -- 	s1.Value as ReplacementFlag,
-
-	IDKey as IDKey,
 
 	af.objectid
 	--af.ts as rowversion

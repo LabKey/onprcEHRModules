@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 Select
-	cast(AnimalID as varchar) as Id,
+	cast(AnimalID as nvarchar(4000)) as Id,
 	TransferDate as Date,
 	RemovalDate as  enddate ,
 	--Aft.CageID as  TransferCageID ,

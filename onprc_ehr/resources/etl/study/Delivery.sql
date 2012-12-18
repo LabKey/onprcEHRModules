@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 Select
-    cast(MotherID as varchar) as Id,
+    cast(MotherID as nvarchar(4000)) as Id,
 	Date,
 	DeliveryType as DeliveryType,
     --s1.Value as DeliveryType,
 
-    cast(InfantID as varchar) as Infant,
-    cast(FatherID as varchar) as Sire,
+    cast(InfantID as nvarchar(4000)) as Infant,
+    cast(FatherID as nvarchar(4000)) as Sire,
 
-	cast(NaturalMother as varchar) as NaturalMother,
+	cast(NaturalMother as nvarchar(4000)) as NaturalMother,
 	MultipleBirthsFlag ,
 
 	case

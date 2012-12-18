@@ -1,7 +1,4 @@
 <script type="text/javascript">
-    LABKEY.requiresScript("/ehr/ehrAPI.js");
-</script>
-<script type="text/javascript">
 
 Ext.onReady(function(){
 
@@ -251,19 +248,19 @@ Ext.onReady(function(){
         var data = [
             ['activeAssignments' ,'Assignments' ,'query' ,'Active Assignments' ,'true' ,'' ,'study' ,'ActiveAssignments', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the active assignments for each animal'],
             ['assignmentHistory' ,'Assignments' ,'query' ,'Assignment History' ,'true' ,'' ,'study' ,'Assignment', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows all assignments records for the animals'],
-            ['bacteriology' ,'Clin Path' ,'query' ,'Bacteriology' ,'true' ,'' ,'study' ,'Bacteriology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains results of cultures'],
-            ['bloodChemistry' ,'Clin Path' ,'js' ,'Chemistry' ,'true' ,'' ,'study' ,'bloodChemistry', '', '', 'date', 'false', 'false', '', '', 'Contains results of chemistry panels.  Can be displayed either by panel, or showing reference ranges'],
-            ['clinPathRuns' ,'Clin Path' ,'query' ,'Clinpath Runs' ,'true' ,'' ,'study' ,'Clinpath Runs', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains all clinpath requests'],
-            ['hematology' ,'Clin Path' ,'js' ,'Hematology' ,'true' ,'' ,'study' ,'hematology', '', '', 'date', 'false', 'false', '', '', 'Contains hematology data showing cell subsets'],
-            ['Immunology' ,'Clin Path' ,'js' ,'Immunology' ,'true' ,'' ,'study' ,'immunology', '', '', 'date', 'false', 'false', '', '', 'Immunology results showing lymphocyte subsets'],
-            ['parasitology' ,'Clin Path' ,'query' ,'Parasitology' ,'true' ,'' ,'study' ,'Parasitology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains results of parasitology testing'],
-            ['urinalysis' ,'Clin Path' ,'js' ,'Urinalysis' ,'true' ,'' ,'study' ,'urinalysisResults', '', '', 'date', 'false', 'false', '', '', 'Contains urinalysis results'],
-            ['viralChallenges' ,'Clin Path' ,'query' ,'Viral Challenges' ,'true' ,'' ,'study' ,'ViralChallenges', '', '', 'date', 'false', 'false', '', '', 'This report contains a list of all viral challenges, determined by comparing against known SNOMED codes'],
-            ['virology' ,'Clin Path' ,'query' ,'Virology' ,'true' ,'' ,'study' ,'Virology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of serology and isolation virology tests for pathogens such as HBV'],
+            ['bacteriology' ,'Lab Results' ,'query' ,'Bacteriology' ,'true' ,'' ,'study' ,'Bacteriology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains results of cultures'],
+            ['biochemistry' ,'Lab Results' ,'js' ,'Biochemistry' ,'true' ,'' ,'study' ,'bloodChemistry', '', '', 'date', 'false', 'false', '', '', 'Contains results of chemistry panels.  Can be displayed either by panel, or showing reference ranges'],
+            ['clinPathRuns' ,'Lab Results' ,'query' ,'Clinpath Runs' ,'true' ,'' ,'study' ,'Clinpath Runs', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains all clinpath requests'],
+            ['hematology' ,'Lab Results' ,'js' ,'Hematology' ,'true' ,'' ,'study' ,'hematology', '', '', 'date', 'false', 'false', '', '', 'Contains hematology data showing cell subsets'],
+            ['Immunology' ,'Lab Results' ,'js' ,'Immunology' ,'true' ,'' ,'study' ,'immunology', '', '', 'date', 'false', 'false', '', '', 'Immunology results showing lymphocyte subsets'],
+            ['parasitology' ,'Lab Results' ,'query' ,'Parasitology' ,'true' ,'' ,'study' ,'Parasitology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains results of parasitology testing'],
+            ['urinalysis' ,'Lab Results' ,'js' ,'Urinalysis' ,'true' ,'' ,'study' ,'urinalysisResults', '', '', 'date', 'false', 'false', '', '', 'Contains urinalysis results'],
+            //['viralChallenges' ,'Lab Results' ,'query' ,'Viral Challenges' ,'true' ,'' ,'study' ,'ViralChallenges', '', '', 'date', 'false', 'false', '', '', 'This report contains a list of all viral challenges, determined by comparing against known SNOMED codes'],
+            ['virology' ,'Lab Results' ,'query' ,'Virology' ,'true' ,'' ,'study' ,'Virology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of serology and isolation virology tests for pathogens such as HBV'],
             ['encounters' ,'Clinical' ,'query' ,'Clinical Encounters' ,'true' ,'' ,'study' ,'Clinical Encounters', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.'],
             ['clinremarks' ,'Clinical' ,'query' ,'Clinical Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the clinical remarks entered about each animal'],
             ['fullHistory' ,'Clinical' ,'query' ,'Full History' ,'true' ,'' ,'study' ,'StudyData', 'Full History', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains all clinical data on the animal'],
-            ['fullHistoryPlusObs' ,'Clinical' ,'query' ,'Full History Plus Obs' ,'true' ,'' ,'study' ,'StudyData', 'Full History Plus Obs', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Similar to Full History, but also contains irregular observations'],
+            //['fullHistoryPlusObs' ,'Clinical' ,'query' ,'Full History Plus Obs' ,'true' ,'' ,'study' ,'StudyData', 'Full History Plus Obs', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Similar to Full History, but also contains irregular observations'],
             //['tasksById' ,'Clinical' ,'query' ,'Tasks' ,'true' ,'' ,'ehr' ,'TasksById', '', '', 'date', 'false', 'false', '', 'taskid/qcstate/publicdata', 'This report displays and forms that have been completed about each animal'],
             ['treatments' ,'Clinical' ,'query' ,'Treatment Orders' ,'true' ,'' ,'study' ,'Treatment Orders', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains a list of all orders for treatments'],
             ['Treatment Schedule' ,'Clinical' ,'query' ,'Treatment Schedule' ,'true' ,'' ,'study' ,'treatmentSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the schedule for current and future treatments'],
@@ -281,15 +278,15 @@ Ext.onReady(function(){
             ['pedigree' ,'Colony Management' ,'js' ,'Pedigree' ,'true' ,'' ,'study' ,'pedigree', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report displays pedigree data for animals, including parents, grandparents, siblings and offspring'],
             ['pedigreePlot' ,'Colony Management' ,'report' ,'Pedigree Plot' ,'true' ,'' ,'study' ,'pedigree', '', 'module:EHR/schemas/study/Pedigree/Pedigree.r', '', 'false', 'false', '', 'qcstate/publicdata', 'This report will generate a pedigree plot for the selected animal'],
             //['pregnancies' ,'Colony Management' ,'query' ,'Pregnancies' ,'true' ,'' ,'study' ,'Pregnancies', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of known pregnancies, including conception dates and sire, where available'],
-            ['TB' ,'Colony Management' ,'query' ,'TB Tests' ,'true' ,'' ,'study' ,'TB Tests', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'TB Test results'],
-            ['abstract' ,'General' ,'js' ,'Abstract' ,'true' ,'' ,'study' ,'abstract', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
+            //['TB' ,'Colony Management' ,'query' ,'TB Tests' ,'true' ,'' ,'study' ,'TB Tests', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'TB Test results'],
+            ['abstract' ,'General' ,'js' ,'Snapshot' ,'true' ,'' ,'study' ,'abstract', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
             ['arrivalDeparture' ,'General' ,'js' ,'Arrival/Departure' ,'true' ,'' ,'study' ,'arrivalDeparture', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Displays arrival and departure dates'],
             ['bloodDraws' ,'General' ,'query' ,'Blood Draw History' ,'true' ,'' ,'study' ,'Blood Draws', '', '', 'date', 'false', 'false', '', '', 'Contains records of blood draws.  '],
-            ['charges' ,'General' ,'query' ,'Charges' ,'true' ,'' ,'study' ,'Charges', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of charges attached to the animal\'s record'],
+            //['charges' ,'General' ,'query' ,'Charges' ,'true' ,'' ,'study' ,'Charges', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of charges attached to the animal\'s record'],
             ['currentBlood' ,'General' ,'query' ,'Current Blood' ,'true' ,'' ,'study' ,'Current Blood', '', '', 'date', 'false', 'false', '', '', 'This report contains a summary of the current available blood for each animal'],
             ['deaths' ,'General' ,'query' ,'Deaths' ,'true' ,'' ,'study' ,'Deaths', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains a list of animal deaths'],
             ['demographics' ,'General' ,'query' ,'Demographics' ,'true' ,'' ,'study' ,'demographics', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report displays the demographics data about each animal including species, gender and birth'],
-            ['extendedAbstract' ,'General' ,'query' ,'Extended Abstract' ,'false' ,'' ,'study' ,'animal', 'Extended Abstract', '', '', 'false', 'false', '', 'qcstate/publicdata', ''],
+            //['extendedAbstract' ,'General' ,'query' ,'Extended Abstract' ,'false' ,'' ,'study' ,'animal', 'Extended Abstract', '', '', 'false', 'false', '', 'qcstate/publicdata', ''],
             ['majorEvents' ,'General' ,'query' ,'Major Events' ,'true' ,'' ,'study' ,'majorEvents', '', '', 'date', 'false', 'false', '', '', 'This report attempts to identify major events in the history of the animal, including births and major surgeries'],
             ['notes' ,'General' ,'query' ,'Notes' ,'true' ,'' ,'study' ,'notes', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains non-clinical notes entered into the animal\'s record'],
             ['pathology' ,'Pathology' ,'query' ,'Biopsies' ,'true' ,'' ,'study' ,'Biopsies', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains information about biopsies'],
@@ -307,16 +304,15 @@ Ext.onReady(function(){
             //['obs' ,'Today At Center' ,'js' ,'Irregular Observations' ,'true' ,'' ,'study' ,'irregularObs', '', '', 'date', 'true', 'true', '1', '', 'Displays irregular observations from today only'],
             //['obsTreatment' ,'Today At Center' ,'js' ,'Obs/Treatment' ,'true' ,'' ,'study' ,'irregularObsTreatment', '', '', 'date', 'true', 'true', '2', '', 'Displays irregular observations and treatments for today'],
             ['todaysHistory' ,'Today At Center' ,'query' ,'Today\'s History' ,'true' ,'' ,'study' ,'StudyData', 'Full History', '', 'Date', 'true', 'false', '3', 'qcstate/publicdata', 'This report contains the full history, filtered to show events that happened today only'],
-            ['treatmentScheduleAM' ,'Today At Center' ,'query' ,'Treatments - Morning' ,'true' ,'' ,'study' ,'treatmentSchedule', 'AM Treatments', '', 'date', 'true', 'false', '4', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
-            ['treatmentSchedulePM' ,'Today At Center' ,'query' ,'Treatments - Afternoon' ,'true' ,'' ,'study' ,'treatmentSchedule', 'PM Treatments', '', 'date', 'true', 'false', '5', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
-            ['treatmentScheduleNight' ,'Today At Center' ,'query' ,'Treatments - Evening' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Night Treatments', '', 'date', 'true', 'false', '6', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
+            //['treatmentScheduleAM' ,'Today At Center' ,'query' ,'Treatments - Morning' ,'true' ,'' ,'study' ,'treatmentSchedule', 'AM Treatments', '', 'date', 'true', 'false', '4', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
+            //['treatmentSchedulePM' ,'Today At Center' ,'query' ,'Treatments - Afternoon' ,'true' ,'' ,'study' ,'treatmentSchedule', 'PM Treatments', '', 'date', 'true', 'false', '5', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
+            //['treatmentScheduleNight' ,'Today At Center' ,'query' ,'Treatments - Evening' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Night Treatments', '', 'date', 'true', 'false', '6', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
             ['treatmentSchedule' ,'Today At Center' ,'query' ,'Treatments - Master' ,'true' ,'' ,'study' ,'treatmentSchedule', '', '', 'date', 'true', 'false', '7', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
             ['problemList' ,'Today At Center' ,'query' ,'Unresolved Problem List' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '8', 'qcstate/publicdata', 'This displays the clinical problem list'],
             ['todaysBlood' ,'Today At Center' ,'query' ,'Blood Draw Schedule' ,'true' ,'' ,'study' ,'BloodSchedule', 'Blood Schedule', '', 'date', 'TRUE', 'false', '9', 'qcstate/publicdata', 'Contains records of blood draws scheduled for today'],
             ['treatmentsIncomplete' ,'Today At Center' ,'query' ,'Treatments - Incomplete' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Incomplete Treatments', '', 'date', 'true', 'false', '7', 'qcstate/publicdata', 'The report displays all incomplete treatments scheduled for today'],
-            ['diagnostics' ,'Clin Path' ,'js' ,'Diagnostics' ,'TRUE' ,'' ,'study' ,'diagnostics', '', '', 'date', 'FALSE', 'FALSE', '', 'qcstate/publicdata', 'This report contains summaries of the clinical pathology types'],
+            ['diagnostics' ,'Lab Results' ,'js' ,'Diagnostics' ,'TRUE' ,'' ,'study' ,'diagnostics', '', '', 'date', 'FALSE', 'FALSE', '', 'qcstate/publicdata', 'This report contains summaries of the clinical pathology types']
             //['feeding' ,'Colony Management' ,'query' ,'Feeding' ,'true' ,'' ,'study' ,'Feeding', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the amount and type of food ordered for each animal'],
-            ['activeResearchAssignments' ,'Assignments' ,'query' ,'Active Research Assignments' ,'true' ,'' ,'study' ,'ActiveAssignments', 'Research Assignments', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the active research assignments for each animal']
         ];
 
         LABKEY.Query.insertRows(makeObject(config, data, fields));

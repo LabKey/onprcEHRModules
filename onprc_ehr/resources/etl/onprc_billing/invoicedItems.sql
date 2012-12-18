@@ -73,6 +73,6 @@ left join Ref_Fees ref2 on (ref2.FeeCode = afc.FeeCode)
 	
 where afc.ts > ?
 
---TODO: add perdiem, rodent
+--TODO: add perdiem, rodent?
 
 

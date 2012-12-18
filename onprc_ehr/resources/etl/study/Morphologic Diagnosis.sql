@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 Select
-	cast(pa.AnimalID as varchar) as Id,
+	cast(pa.AnimalID as nvarchar(4000)) as Id,
 	pa.Date as date,
 	pa.objectid as parentid,
 	TCode as code,                               ----- Ref_Snomed
@@ -30,12 +30,12 @@ left join ref_snomed121311 sno on (sno.SnomedCode = TCode)
 left join ref_snomed121311 sno2 on (sno2.SnomedCode = d.SnomedCodes)
 left join Path_Autopsy pa on (d.AutopsyID = pa.AutopsyId)
 
-WHERE d.rowversion > ?
+WHERE d.ts > ?
 
 UNION ALL
 
 Select
-	cast(pa.AnimalID as varchar) as Id,
+	cast(pa.AnimalID as nvarchar(4000)) as Id,
 	pa.Date as date,
 	pa.objectid as parentid,
 	TCode as code,                               ----- Ref_Snomed
@@ -52,4 +52,4 @@ left join ref_snomed121311 sno on (sno.SnomedCode = TCode)
 left join ref_snomed121311 sno2 on (sno2.SnomedCode = d.SnomedCodes)
 left join Path_Biopsy pa on (d.BiopsyID = pa.BiopsyId)
 
-WHERE d.rowversion > ?
+WHERE d.ts > ?

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 SELECT
-	cast(Id as varchar) as Id,
+	cast(Id as varchar(4000)) as Id,
 	Date ,
 	category as type,
 	--CategoryInt ,
@@ -32,14 +32,14 @@ SELECT
 	remarks,
 
 
-	cast(Experimental as varchar) + '/' +     -------If selected Flag = 1 Else 0
-	cast(PreAssignment as varchar) + '/' +   -------If selected Flag = 1 Else 0
-	cast(Quarantine as varchar) + '/' +       -------If selected Flag = 1 Else 0
-	cast(Pregnant as varchar) + '/' +   	-------If selected Flag = 1 Else 0
-	cast(Followup as varchar) + '/' +   	-------If selected Flag = 1 Else 0
-	cast(Presale as varchar) + '/' +    	 -------If selected Flag = 1 Else 0
-	cast(Fasting as varchar) + '/' +     	 -------If selected Flag = 1 Else 0
-	cast(Sedated as varchar) as flags,    	 ------ If selected Flag = 1 Else 0
+	cast(Experimental as nvarchar(4000)) + '/' +     -------If selected Flag = 1 Else 0
+	cast(PreAssignment as nvarchar(4000)) + '/' +   -------If selected Flag = 1 Else 0
+	cast(Quarantine as nvarchar(4000)) + '/' +       -------If selected Flag = 1 Else 0
+	cast(Pregnant as nvarchar(4000)) + '/' +   	-------If selected Flag = 1 Else 0
+	cast(Followup as nvarchar(4000)) + '/' +   	-------If selected Flag = 1 Else 0
+	cast(Presale as nvarchar(4000)) + '/' +    	 -------If selected Flag = 1 Else 0
+	cast(Fasting as nvarchar(4000)) + '/' +     	 -------If selected Flag = 1 Else 0
+	cast(Sedated as nvarchar(4000)) as flags,    	 ------ If selected Flag = 1 Else 0
     --ClinicalKey,
 
 	case

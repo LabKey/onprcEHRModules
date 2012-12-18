@@ -158,6 +158,7 @@ INSERT INTO labkey.ehr_lookups.procedure_default_charges (procedureid, chargeid,
 SELECT
 (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = procedurename) as procedureid,
 --'PersonHours' as chargeid,
+null as chargeId,
 PersonHours as quantity
 FROM Ref_SurgProcedure
 WHERE PersonHours > 0;
@@ -167,35 +168,13 @@ INSERT INTO labkey.ehr_lookups.procedure_default_charges (procedureid, chargeid,
 SELECT
 (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = procedurename) as procedureid,
 --'Comsumables' as chargeid,
+null as chargeId,
 Comsumables as quantity
 FROM Ref_SurgProcedure
 WHERE PersonHours > 0;
 
 
 --investigators
-TRUNCATE TABLE labkey.ehr.investigators;
-INSERT INTO labkey.ehr.investigators (firstname, lastname, position, address, city, state, country, zip, phonenumber, investigatortype, emailaddress, datecreated, datedisabled, division)
-Select
-	FirstName,
-	LastName,
-	Position,
-	Address,
-	City,
-	State,
-	Country,
-	ZIP,
-	PhoneNumber,
-	--InvestigatorType as InvestigatorTypeInt,
-	s1.Value as InvestigatorType,
-	EmailAddress,
-	rinv.DateCreated,
-	rinv.DateDisabled,
-	--Division as DivisionInt,
-	s2.Value as Division
-From Ref_Investigator rinv
-     left join Sys_Parameters s1 on (s1.Field = 'InvestigatorType'and s1.Flag = rinv.InvestigatorType)
-     left join  Sys_Parameters s2 on (s2.Field = 'Division' and s2.Flag = rinv.Division);
-
 --geographic origins
 TRUNCATE TABLE labkey.ehr_lookups.geographic_origins;
 INSERT INTO labkey.ehr_lookups.geographic_origins (meaning)
@@ -254,7 +233,7 @@ Select
 	Status as active,
 	LocationType as LocationTypeInt,
 	--s1.Value as LocationType,
-	LocationDefinition as LocationDefinitionInt,
+	LocationDefinition as LocationDefinitionInt
 	--s2.Value as LocationDefinition,
 	--loc.DateCreated,
 	--loc.DateDisabled,
@@ -277,7 +256,7 @@ Select
 	Status,
 	LocationType as LocationTypeInt,
 	--s1.Value as LocationType,
-	LocationDefinition as LocationDefinitionInt,
+	LocationDefinition as LocationDefinitionInt
 	--s2.Value as LocationDefinition,
 
 From Ref_LocationSPF rls,
@@ -286,3 +265,18 @@ Where s1.Field = 'LocationType'
 	and s1.Flag = rls.LocationType
 	and s2.Field = 'LocationDefinition'
 	and s2.Flag = rls.LocationDefinition;
+
+
+--snomed
+TRUNCATE TABLE labkey.ehr_lookups.snomed;
+INSERT INTO labkey.ehr_lookups.snomed (code, meaning, modified, created, modifiedby, createdby)
+SELECT
+	r.SnomedCode,
+	max(r.Description) as description,
+	getdate() as modified,
+	getdate() as created,
+	(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
+	(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby
+
+FROM ref_snomed121311 r
+group by r.SnomedCode;

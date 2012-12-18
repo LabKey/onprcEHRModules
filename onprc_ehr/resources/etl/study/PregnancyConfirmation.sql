@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 SELECT
- 	cast(AnimalID as varchar) as Id,
+ 	cast(AnimalID as nvarchar(4000)) as Id,
 	ConfirmationDate as date,
 
-	cast(MaleId as varchar) as sire,
+	cast(MaleId as nvarchar(4000)) as sire,
 	EstDeliveryDate as EstDeliveryDate,
 	ConfirmationType as ConfirmationType,
 	--s1.Value as ConfirmationType,

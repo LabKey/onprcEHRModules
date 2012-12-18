@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 Select
-    cast(AnimalID as varchar) as Id,
+    cast(AnimalID as nvarchar(4000)) as Id,
 	pat.BiopsyId as  BiopsyId,
 	Date,
-    cast(BiopsyYear as varchar) + BiopsyFlag + BiopsyCode as caseno,
+    cast(BiopsyYear as nvarchar(4000)) + BiopsyFlag + BiopsyCode as caseno,
 
     --the pathologist
 	case

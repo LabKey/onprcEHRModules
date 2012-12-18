@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 SELECT
-	cast(AnimalID as varchar) as Id,
+	cast(AnimalID as nvarchar(4000)) as Id,
 	Date as Date,
 	'Menses' as category,
 	case

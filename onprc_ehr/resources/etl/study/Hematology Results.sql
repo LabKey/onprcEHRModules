@@ -17,7 +17,7 @@
 
 SELECT
 	t.ClinicalKey ,
-	cast(t.Id as varchar) as Id,
+	cast(t.Id as nvarchar(4000)) as Id,
 	t.DATE ,
 	--t.Specimen ,     --      Speciment database table
 	--sp.Name,

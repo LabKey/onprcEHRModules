@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 Select
-	cast(pa.AnimalID as varchar) as Id,
+	cast(pa.AnimalID as nvarchar(4000)) as Id,
 	pa.date as date,
     'Necropsy' as type,
 	pat.objectid as parentId,
@@ -45,7 +45,7 @@ where Weight = 0 and pat.ts > ?
 union all
 
 Select
-   	cast(pa.AnimalID as varchar) as Id,
+   	cast(pa.AnimalID as nvarchar(4000)) as Id,
 	pa.date as date,
    'Biopsy' as type,
    pa.objectid as parentid,

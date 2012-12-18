@@ -26,7 +26,7 @@ FROM (
 
 --Cln_AntibioticSensHeader
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -38,7 +38,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -49,7 +49,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -60,7 +60,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -71,7 +71,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -82,7 +82,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -93,7 +93,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -104,7 +104,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -117,7 +117,7 @@ UNION ALL
 
 --Cln_Biochemistry
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -128,7 +128,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -139,7 +139,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -150,7 +150,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -161,7 +161,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -172,7 +172,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -183,7 +183,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -194,7 +194,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -207,7 +207,7 @@ UNION ALL
 
 --Cln_IStat
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -218,7 +218,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -229,7 +229,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -240,7 +240,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -251,7 +251,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -262,7 +262,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -273,7 +273,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -284,7 +284,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -297,7 +297,7 @@ UNION ALL
 
 --Cln_OccultBlood
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -308,7 +308,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -319,7 +319,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -330,7 +330,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -341,7 +341,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -352,7 +352,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -363,7 +363,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -374,7 +374,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -387,7 +387,7 @@ UNION ALL
 
 --Cln_Hematology
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -398,7 +398,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -409,7 +409,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -420,7 +420,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -431,7 +431,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -442,7 +442,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -453,7 +453,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -464,7 +464,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -477,7 +477,7 @@ UNION ALL
 
 --Cln_CerebralspinalFluid
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -488,7 +488,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -499,7 +499,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -510,7 +510,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -521,7 +521,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -532,7 +532,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -543,7 +543,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -554,7 +554,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -567,7 +567,7 @@ UNION ALL
 
 --Cln_MicrobiologyHeader
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -578,7 +578,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -589,7 +589,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -600,7 +600,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -611,7 +611,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -622,7 +622,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -633,7 +633,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -644,7 +644,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -657,7 +657,7 @@ UNION ALL
 
 --Cln_RareTestHeader
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -668,7 +668,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -679,7 +679,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -690,7 +690,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -701,7 +701,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -712,7 +712,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -723,7 +723,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -734,7 +734,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -747,7 +747,7 @@ UNION ALL
 
 --Cln_VirologyHeader
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -758,7 +758,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -769,7 +769,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -780,7 +780,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -791,7 +791,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -802,7 +802,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -813,7 +813,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -824,7 +824,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -837,7 +837,7 @@ UNION ALL
 
 --Cln_SerologyHeader
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -848,7 +848,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -859,7 +859,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -870,7 +870,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -881,7 +881,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -892,7 +892,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -903,7 +903,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -914,7 +914,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -927,7 +927,7 @@ UNION ALL
 
 --Cln_Urinalysis
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -938,7 +938,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -949,7 +949,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -960,7 +960,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -971,7 +971,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -982,7 +982,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -993,7 +993,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -1004,7 +1004,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,
@@ -1017,7 +1017,7 @@ UNION ALL
 
 --Cln_Parasitology
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Experimental' as flag,
 	'Y' as value,
@@ -1028,7 +1028,7 @@ WHERE experimental = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'PreAssignment' as flag,
 	'Y' as value,
@@ -1039,7 +1039,7 @@ WHERE PreAssignment = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Quarantine' as flag,
 	'Y' as value,
@@ -1050,7 +1050,7 @@ WHERE Quarantine = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Pregnant' as flag,
 	'Y' as value,
@@ -1061,7 +1061,7 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Followup' as flag,
 	'Y' as value,
@@ -1072,7 +1072,7 @@ WHERE Followup = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Presale' as flag,
 	'Y' as value,
@@ -1083,7 +1083,7 @@ WHERE Presale = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Fasting' as flag,
 	'Y' as value,
@@ -1094,7 +1094,7 @@ WHERE Fasting = 1 AND cln.ts  > ?
 UNION ALL
 
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,
 	'Sedated' as flag,
 	'Y' as value,

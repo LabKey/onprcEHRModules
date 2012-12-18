@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 SELECT
-	cast(sh.AnimalID as varchar) as Id,
+	cast(sh.AnimalID as nvarchar(4000)) as Id,
 	sh.DATE,
 	Tissue as Tissue ,		----- Ref_SnomedLists
 	sno.Description as tissueMeaning,

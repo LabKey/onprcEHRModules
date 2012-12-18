@@ -14,4 +14,33 @@
             <ns:column columnName="container"/>
         </ns:columns>
     </ns:table>
+    <ns:table tableName="investigators" tableDbType="TABLE">
+        <ns:auditLogging>DETAILED</ns:auditLogging>
+        <ns:importUrl></ns:importUrl>
+        <ns:insertUrl></ns:insertUrl>
+        <ns:updateUrl></ns:updateUrl>
+        <ns:deleteUrl></ns:deleteUrl>
+        <ns:columns>
+            <ns:column columnName="rowid"/>
+            <ns:column columnName="firstname"/>
+            <ns:column columnName="lastname"/>
+            <ns:column columnName="position"/>
+            <ns:column columnName="address"/>
+            <ns:column columnName="city"/>
+            <ns:column columnName="state"/>
+            <ns:column columnName="country"/>
+            <ns:column columnName="zip"/>
+            <ns:column columnName="phonenumber"/>
+            <ns:column columnName="investigatortype"/>
+            <ns:column columnName="financialanalyst"/>
+            <ns:column columnName="emailaddress"/>
+            <ns:column columnName="datecreated"/>
+            <ns:column columnName="datedisabled"/>
+            <ns:column columnName="division"/>
+            <ns:column columnName="createdby"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedby"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
 </ns:tables>

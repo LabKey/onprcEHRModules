@@ -18,7 +18,7 @@ Tested by: 			Date:
 
 SELECT
 	--DiagnosisID  as DiagnosisID ,
-	cln.AnimalID as Id ,
+	cast(cln.AnimalId as varchar(4000)) as Id,
 	cln.Date ,
 	--cln.CaseID,       ---- Af_Case
 	c.objectid as caseId,

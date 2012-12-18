@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 SELECT
-	cast(AnimalId as varchar) as Id,
+	cast(AnimalId as nvarchar(4000)) as Id,
 	Date,
 	Medication as code,
 	sno.Description as snomedMeaning,

@@ -1,5 +1,5 @@
 SELECT
-	--cast(dx.AnimalID as varchar) as Id,
+	--cast(dx.AnimalID as nvarchar(4000)) as Id,
 	--s.DiagnosisID ,
 	dx.objectid as recordid,
 
@@ -16,7 +16,7 @@ and s.ts > ?
 UNION ALL
 
 SELECT
-	--cast(dx.AnimalID as varchar) as Id,
+	--cast(dx.AnimalID as nvarchar(4000)) as Id,
 	--s.DiagnosisID ,
 	dx.objectid as recordid,
 

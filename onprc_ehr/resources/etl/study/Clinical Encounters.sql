@@ -15,10 +15,10 @@
  */
 
 Select
-    cast(AnimalID as varchar) as Id,
+    cast(AnimalID as nvarchar(4000)) as Id,
 	Date,
 	'Biopsy' as type,
-    cast(BiopsyYear as varchar) + BiopsyFlag + BiopsyCode as caseno,
+    cast(BiopsyYear as nvarchar(4000)) + BiopsyFlag + BiopsyCode as caseno,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
@@ -33,8 +33,7 @@ Select
 	   rt.Initials
     END as performedBy,
 
-	pat.objectid ,
-	l.logtext as remark
+	pat.objectid 
 
 From Path_Biopsy Pat
      left join Ref_Technicians Rt on (Pat.Pathologist = Rt.ID)
@@ -46,16 +45,15 @@ From Path_Biopsy Pat
      left join Ref_Technicians Rt4 on (Pat.Prosector3 = Rt4.ID)
      left join Sys_Parameters s6 on (Rt4.Deptcode = s6.Flag And s6.Field = 'DepartmentCode')
 
-left join Path_BiopsyLog l ON (l.BiopsyID = Pat.BiopsyId AND len(l.LogText) > 0 AND l.LogText != '' and l.LogText not like 'Testing testing testing%')
 WHERE Pat.ts > ?
 
 UNION ALL
 
 Select
-	cast(PTT.AnimalID as varchar) as Id,
+	cast(PTT.AnimalID as nvarchar(4000)) as Id,
 	PTT.Date as Date ,
 	'Necropsy' as type,
-	cast(PTT.PathYear as varchar) + PTT.PathFlag + PTT.PathCode as caseno,
+	cast(PTT.PathYear as nvarchar(4000)) + PTT.PathFlag + PTT.PathCode as caseno,
 
     --the pathologist
 	case
@@ -71,8 +69,7 @@ Select
 	   rt.Initials
     END as performedBy,
 
-	PTT.objectid,
-	l.logtext as remark
+	PTT.objectid
 
 From Path_Autopsy PTT
 left join Sys_Parameters s1 on (PTT.CauseofDeath = s1.flag And s1.Field = 'Deathcause')
@@ -85,14 +82,13 @@ left join Ref_Technicians Rt3 on (PTT.Prosector2 = Rt3.ID)
 left join Sys_Parameters s5 on (Rt3.Deptcode = s5.Flag And s5.Field = 'DepartmentCode')
 left join Ref_Technicians Rt4 on (PTT.Prosector3 = Rt4.ID)
 left join Sys_Parameters s6 on (Rt4.Deptcode = s6.Flag And s6.Field = 'DepartmentCode')
-left join Path_AutopsyLog l ON (l.AutopsyID = ptt.AutopsyId AND len(l.LogText) > 0 AND l.LogText != '' and l.LogText not like 'Testing testing testing%')
 WHERE ptt.ts > ?
 
 UNION ALL
 
 --surgeries
 Select
-	cast(sg.AnimalID as varchar) as Id,
+	cast(sg.AnimalID as nvarchar(4000)) as Id,
 	sg.Date as Date ,
 	'Surgery' as type,
 	null as caseno,
@@ -110,12 +106,10 @@ Select
 	   rt.Initials
     END as performedBy,
 
-	sg.objectid,
-	l.logtext as remark
+	sg.objectid
 
 From Sur_General sg
 left join Ref_Technicians Rt on (sg.Surgeon = Rt.ID)
 left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
 
-left join Sur_Log l ON (l.SurgeryID = sg.SurgeryID AND len(l.LogText) > 0 AND l.LogText != '' and l.LogText not like 'Testing testing testing%')
 WHERE sg.ts > ?

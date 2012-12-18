@@ -27,6 +27,7 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.resource.Resource;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.WebPartFactory;
+import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
 import org.labkey.onprc_ehr.table.DefaultEHRCustomizer;
@@ -53,7 +54,7 @@ public class ONPRC_EHRModule extends DefaultModule
 
     public double getVersion()
     {
-        return 12.301;
+        return 12.303;
     }
 
     public boolean hasScripts()
@@ -100,6 +101,7 @@ public class ONPRC_EHRModule extends DefaultModule
         Resource r = getModuleResource("/scripts/onprc_ehr/onprc_triggers.js");
         assert r != null;
         EHRService.get().registerTriggerScript(this, r);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/onprcReports.js"), this);
     }
 
     @Override

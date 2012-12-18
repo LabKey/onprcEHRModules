@@ -7,10 +7,6 @@
     <preferredWebParts>
         <webPart>
             <name>ONPRC Electronic Health Record</name>
-            <location>body</location>
-        </webPart>
-        <webPart>
-            <name>ONPRC Electronic Health Record</name>
             <location>menu</location>
             <property name="title" value="Electronic Health Record" />
         </webPart>
@@ -23,12 +19,55 @@
             <location>menu</location>
         </webPart>
     </preferredWebParts>
+    <folderTabs>
+        <folderTab>
+            <name>overview</name>
+            <caption>Overview</caption>
+            <preferredWebParts>
+                <webPart>
+                    <name>ONPRC Electronic Health Record</name>
+                    <location>body</location>
+                </webPart>
+            </preferredWebParts>
+        </folderTab>
+        <folderTab>
+            <name>animalHistory</name>
+            <caption>Animal History</caption>
+            <selectors>
+                <selector>
+                    <view>animalHistory</view>
+                </selector>
+            </selectors>
+            <preferredWebParts>
+                <webPart>
+                    <name>Animal History</name>
+                    <location>body</location>
+                </webPart>
+            </preferredWebParts>
+        </folderTab>
+        <folderTab>
+            <name>animalSearch</name>
+            <caption>Search Animals</caption>
+            <selectors>
+                <selector>
+                    <view>animalSearch</view>
+                </selector>
+            </selectors>
+            <preferredWebParts>
+                <webPart>
+                    <name>Animal Search</name>
+                    <location>body</location>
+                </webPart>
+            </preferredWebParts>
+        </folderTab>
+    </folderTabs>
     <modules>
+        <moduleName>Core</moduleName>
         <moduleName>Study</moduleName>
         <moduleName>EHR</moduleName>
         <moduleName>ONPRC_EHR</moduleName>
     </modules>
     <defaultModule>Core</defaultModule>
     <workbookType>false</workbookType>
-    <forceAssayUploadIntoWorkbooks>false</forceAssayUploadIntoWorkbooks>
+    <menubarEnabled>true</menubarEnabled>
 </folderType>

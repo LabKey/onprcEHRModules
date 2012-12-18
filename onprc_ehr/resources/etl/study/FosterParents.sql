@@ -9,8 +9,8 @@ Tested by: 			Date:
 */
 SELECT
 	--Searchkey as SearchKey,
-	cast(Infant_ID as varchar) as Id,
-	cast(Foster_Mom as varchar) as Dam,
+	cast(Infant_ID as nvarchar(4000)) as Id,
+	cast(Foster_Mom as nvarchar(4000)) as Dam,
 	Foster_Start_Date as date,
 	Foster_End_Date as enddate,
 	objectid

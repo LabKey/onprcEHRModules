@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 SELECT
-	cast(pm.Id as varchar) as Id,
+	cast(pm.Id as nvarchar(4000)) as Id,
 	pm.date,
 
 	pm.objectid as parentid,
-	(cast(pm.objectid as varchar(38)) + pm.tissue + CAST(pm.measurement as varchar)) as objectid,
+	(cast(pm.objectid as varchar(38)) + pm.tissue + CAST(pm.measurement as nvarchar(4000))) as objectid,
 	--pm.rowversion,
 
 	--pm.MeasurementID,
@@ -524,10 +524,10 @@ and pm.rowversion > ?
 UNION ALL
 
 SELECT
-	cast(t.AnimalID as varchar) as Id,
+	cast(t.AnimalID as nvarchar(4000)) as Id,
 	t.date,
 	null as parentId,
-	(cast(t.objectid as varchar(38)) + t.tissue + CAST(t.measurement as varchar)) as objectid,
+	(cast(t.objectid as varchar(38)) + t.tissue + CAST(t.measurement as nvarchar(4000))) as objectid,
 	t.tissue,
 	t.measurement,
 

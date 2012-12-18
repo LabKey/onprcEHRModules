@@ -14,6 +14,5 @@ exports.init = function(EHR){
 
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, function(errors, row, oldRow){
         console.log('called!!!!');
-        console.log(this.scriptContext);
     });
 }

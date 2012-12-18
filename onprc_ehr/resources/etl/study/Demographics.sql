@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 Select
-	cast(AnimalID as varchar) as Id,
+	cast(AnimalID as nvarchar(4000)) as Id,
 	--Species as Species,		----- Ref_Species
 	sp.CommonName as Species,
 
 	--Sex as SexCode  ,			---- Ref_Sex
-	rs.Value AS Gender,
+	CASE
+	  WHEN rs.Value = 'Male' THEN 'm'
+	  WHEN rs.Value = 'Female' THEN 'f'
+	  WHEN rs.Value = 'Hermaphrodite' THEN 'h'
+	  WHEN rs.Value = 'Unknown' THEN 'u'
+	  ELSE rs.Value
+    END AS Gender,
 
 	--afq.CageID as CageID ,		----- Ref_RowCage
 	--l2.Location as CurrentLocation,

@@ -60,8 +60,7 @@ function createNavMenu()
             {header: 'By Location',
             items: [
                 {name: 'Search By Room, Floor or Cage', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage'},
-                {name: 'Irregular Obs By Location', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:obs'},
-                {name: 'Clinical Remarks By Location', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:clinremarks'}
+                {name: 'Irregular Obs By Location', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:obs'}
             ]}
         ]
     });
@@ -73,12 +72,12 @@ function createNavMenu()
             header: 'Today At The Center',
             items: [
                 {name: 'Blood Draw Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderColony&_showReport:1&combineSubj:true&activeReport:todaysBlood'},
-                {name: 'Irregular Observations', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:obs'},
+                {name: 'Clinical TODO', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:obs'},
                 {name: 'Treatment Schedule - AM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:treatmentScheduleAM'},
                 {name: 'Treatment Schedule - PM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:treatmentSchedulePM'},
-                {name: 'Treatment Schedule - Night', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:treatmentScheduleNight'},
-                {name: 'Treatment Schedule - All', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:treatmentSchedule'},
-                {name: 'Forms Completed Today', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=TasksByLocation&query.viewName=Completion Times&query.taskid/Created~dateeq='+(new Date()).format('Y-m-d')}
+                {name: 'Treatment Schedule - Night', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:treatmentScheduleNight'}
+                //{name: 'Treatment Schedule - All', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#_inputType:renderRoomCage&activeReport:treatmentSchedule'},
+                //{name: 'Forms Completed Today', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=TasksByLocation&query.viewName=Completion Times&query.taskid/Created~dateeq='+(new Date()).format('Y-m-d')}
             ]
         },{
             header: 'Entire Colony',
@@ -122,8 +121,8 @@ function createNavMenu()
             header: 'Admin',
             items: [
                 {name: 'EHR Admin Page', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/ehrAdmin.view'},
-                {name: 'Manage EHR Study', url: '<%=contextPath%>/study' + ctx['EHRStudyContainer'] + '/manageStudy.view?'},
-                {name: 'Manage Lookup Tables', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataAdmin.view'}
+                {name: 'Manage EHR Study', url: '<%=contextPath%>/study' + ctx['EHRStudyContainer'] + '/manageStudy.view?'}
+                //{name: 'Manage Lookup Tables', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataAdmin.view'}
             ]
         })
 

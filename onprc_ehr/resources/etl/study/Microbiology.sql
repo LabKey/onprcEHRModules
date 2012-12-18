@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 SELECT
-	cast(mh.AnimalID as varchar) as Id,
+	cast(mh.AnimalID as nvarchar(4000)) as Id,
 	mh.DATE,
 	--m.ClinicalKey as ClinicalKey  ,
 	m.Bacteria as organism,      ----- Ref_Snomedlists

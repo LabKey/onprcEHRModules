@@ -9,7 +9,7 @@ Tested by: 			Date:
 */
 
  SELECT
-	cast(ml.AnimalID as varchar) as Id,
+	cast(ml.AnimalID as nvarchar(4000)) as Id,
 	ML.DateCreated as date,
 	ML.DateDisabled as enddate,
 
