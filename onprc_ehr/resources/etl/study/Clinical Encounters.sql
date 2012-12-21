@@ -113,3 +113,33 @@ left join Ref_Technicians Rt on (sg.Surgeon = Rt.ID)
 left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
 
 WHERE sg.ts > ?
+
+UNION ALL
+
+--diagnosis
+Select
+	cast(cln.AnimalId as varchar(4000)) as Id,
+	cln.Date ,
+	'Diagnosis' as type,
+	c.objectid as caseId,
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+	  else
+	   rt.Initials
+    END as performedBy,
+
+	cln.objectid
+
+FROM Cln_Dx cln
+     left join  Ref_Technicians rt on (cln.Technician = rt.ID)
+     left join  Sys_parameters s4 on (s4.Field = 'DepartmentCode' And s4.Flag = rt.DeptCode)
+     left join Af_Case c ON (c.CaseID = cln.CaseID)
+
+WHERE cln.ts > ?

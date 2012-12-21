@@ -9,6 +9,7 @@ Select
 From Path_Autopsy Pat
 left join Path_AutopsyLog l ON (l.AutopsyID = pat.AutopsyId)
 where l.LogText is not null and DATALENGTH(l.LogText) > 0 and l.LogText != '' and l.LogText not like 'Testing testing%'
+and pat.ts > ?
 
 UNION ALL
 
@@ -23,9 +24,11 @@ Select
 From Path_Biopsy Pat
 left join Path_BiopsyLog l ON (l.BiopsyID = pat.BiopsyId)
 where l.LogText is not null and DATALENGTH(l.LogText) > 0 and l.LogText != '' and l.LogText not like 'Testing testing%'
+and pat.ts > ?
 
 UNION ALL
 
+select * FROM (
 Select
     cast(pat.AnimalID as nvarchar(4000)) as Id,
 	pat.Date,
@@ -39,7 +42,7 @@ Select
 	cast(coalesce(log6.logtext, '') as nvarchar(4000)) +
 	cast(coalesce(log7.logtext, '') as nvarchar(4000)) +
 	cast(coalesce(log8.logtext, '') as nvarchar(4000))
-	, '', '') AS remark,
+	, '', '\n') AS remark,
 
 	pat.objectid as parentid,
 	log0.objectid
@@ -53,6 +56,6 @@ left join Sur_Log log5 ON (log5.SurgeryID = pat.SurgeryID and log5.SequenceNo = 
 left join Sur_Log log6 ON (log6.SurgeryID = pat.SurgeryID and log6.SequenceNo = 6)
 left join Sur_Log log7 ON (log7.SurgeryID = pat.SurgeryID and log7.SequenceNo = 7)
 left join Sur_Log log8 ON (log8.SurgeryID = pat.SurgeryID and log8.SequenceNo = 8)
-where remark is not null and DATALENGTH(remark) > 0 and l.LogText != '' and l.LogText not like 'Testing testing%'
-
-and (pat.ts > ? OR log0.ts > ? OR log1.ts > ? OR log2.ts > ? OR log3.ts > ? OR log4.ts > ? OR log5.ts > ? OR log6.ts > ? OR log7.ts > ? OR log8.ts > ?)
+WHERE (pat.ts > ? OR log0.ts > ? OR log1.ts > ? OR log2.ts > ? OR log3.ts > ? OR log4.ts > ? OR log5.ts > ? OR log6.ts > ? OR log7.ts > ? OR log8.ts > ?)
+) t
+WHERE t.remark not like '%Testing testing%' and datalength(t.remark) > 0

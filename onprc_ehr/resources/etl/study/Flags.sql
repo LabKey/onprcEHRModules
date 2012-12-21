@@ -33,3 +33,19 @@ From Af_Pool p
 left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
 
 where p.ts > ?
+
+UNION ALL
+
+Select
+	cast(q.AnimalID as nvarchar(4000)) as Id,
+	'Reproduction' as category,
+	'Reproduction' as flag,
+
+	q.reproimpairdate as date,
+	null as enddate,
+
+	q.objectid
+
+FROM af_qrf q
+WHERE q.ReproImpair = 1
+AND q.ts > ?

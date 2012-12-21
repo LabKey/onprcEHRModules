@@ -112,7 +112,10 @@ Ext4.onReady(function (){
                 };
 
                 if (json.timestamps){
-                    for (var query in json.timestamps){
+                    var queries = Ext4.Object.getKeys(json.timestamps);
+                    queries = queries.sort();
+
+                    Ext4.each(queries, function(query){
                         tableConfig.items.push({
                             html: query,
                             width: labelWidth
@@ -153,7 +156,7 @@ Ext4.onReady(function (){
                                 }
                             }
                         });
-                    }
+                    }, this);
                 }
 
                 this.removeAll();

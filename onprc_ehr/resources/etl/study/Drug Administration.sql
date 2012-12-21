@@ -18,7 +18,7 @@ SELECT
 
     --TODO: revisit
 	m.Date,
-	convert(datetime, CONVERT(varchar, m.date, 111) + ' ' + left(cln.MedicationTime, 2) + ':' + RIGHT(cln.medicationtime, 2)) as datetime,
+	--convert(datetime, CONVERT(varchar(100), m.date, 111) + ' ' + left(cln.MedicationTime, 2) + ':' + RIGHT(cln.medicationtime, 2)) as datetime,
 
 	Medication as code,
 	sno.Description as meaning,
@@ -45,7 +45,7 @@ UNION ALL
 SELECT
     cast(g.AnimalId as nvarchar(4000)) as Id,
 	g.Date,
-    null as datetime,
+    --null as datetime,
 
 	AnesthesiaGas as code,
     sno.Description as meaning,

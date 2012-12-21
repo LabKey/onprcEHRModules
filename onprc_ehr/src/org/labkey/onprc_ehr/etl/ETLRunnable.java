@@ -277,12 +277,12 @@ public class ETLRunnable implements Runnable
                 sql = kv.getValue();
 
                 //TODO: debug purposes only
-                //sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t";
+                sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t";
 
                 TableInfo targetTable = schema.getTable(targetTableName);
                 if (targetTable == null)
                 {
-                    log.warn(targetTableName + " is not a known labkey study name, skipping the so-named sql query");
+                    log.error(targetTableName + " is not a known labkey study name, skipping the so-named sql query");
                     errorCount++;
                     continue;
                 }
@@ -420,7 +420,7 @@ public class ETLRunnable implements Runnable
                             else
                             {
                                 String delim = "+";
-                                likeWithIds.append(filterColumn.getValueSql("t") + " LIKE CAST(? " + delim + " '%') as nvarchar(4000)) ");
+                                likeWithIds.append(filterColumn.getValueSql("t") + " LIKE CAST((? " + delim + " '%') as nvarchar(4000)) ");
                             }
 
                             if (count++ > 100)
@@ -439,16 +439,14 @@ public class ETLRunnable implements Runnable
 
                         if (realTable != null)
                         {
-                            log.debug("Using real table: " + realTable.getSelectName());
+                            log.debug("deleting using real table for: " + realTable.getSelectName());
                             SimpleFilter filter = new SimpleFilter();
-                            filter.addClause(new SimpleFilter.SQLClause(like.getSQL(), like.getParams().toArray(), filterColumn.getFieldKey()));
-
-                            //Table.delete(realTable, new SimpleFilter(filterColumn.getFieldKey(), likeWithIds, CompareType.IN));
+                            filter.addWhereClause(filterColumn.getFieldKey() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
                             Table.delete(realTable, filter);
                         }
                         else
                         {
-                            log.info("Using update service: " + targetTable.getSelectName());
+                            log.info("deleting using update service for: " + targetTable.getName());
                             updater.deleteRows(user, container, deleteSelectors, extraContext);
                         }
                         log.info("deleted objectids " + deletedIds.size());
@@ -459,6 +457,14 @@ public class ETLRunnable implements Runnable
                     // batch but the MySQL jdbc driver doesn't support that method if it is a streaming result set.
                     boolean isDone = false;
                     List<Object> searchParams = new ArrayList<Object>();
+                    if (targetTable instanceof DataSetTable)
+                    {
+                        if(((DataSetTable)targetTable).getDataSet().isDemographicData())
+                        {
+                            log.info("table is demographics, filtering on Id");
+                            filterColumn = targetTable.getColumn("Id");
+                        }
+                    }
                     while (!isDone)
                     {
 

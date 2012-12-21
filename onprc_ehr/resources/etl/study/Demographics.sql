@@ -28,9 +28,8 @@ Select
     END AS Gender,
 
 	--afq.CageID as CageID ,		----- Ref_RowCage
-	--l2.Location as CurrentLocation,
-	--rtrim(r2.row) + '-' + convert(char(2), r2.Cage) As CurrentCage,
-	--TransferDate as TransferDate ,
+	l2.Location as room,
+	rtrim(r2.row) + convert(char(2), r2.Cage) As cage,
 
 	BirthDate as Birth,
 	DeathDate as Death,

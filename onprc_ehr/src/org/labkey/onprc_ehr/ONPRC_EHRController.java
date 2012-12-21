@@ -45,6 +45,7 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -77,7 +78,7 @@ public class ONPRC_EHRController extends SpringActionController
             resp.getProperties().put("config", PropertyManager.getProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN));
             resp.getProperties().put("rowversions", PropertyManager.getProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN));
             Map<String, String> map = PropertyManager.getProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN);
-            Map<String, Date> timestamps = new HashMap<String, Date>();
+            Map<String, Date> timestamps = new TreeMap<String, Date>();
             for (String key : map.keySet())
             {
                 timestamps.put(key, new Date(Long.parseLong(map.get(key))));

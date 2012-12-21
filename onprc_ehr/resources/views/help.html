@@ -8,12 +8,9 @@
 
         Ext4.get(webpart.wrapperDivId).update(
             '<div style="max-width:350px;">' +
-                'There are several options for help:<p></p>' +
-                '<li><a href="' + LABKEY.ActionURL.buildURL('project', 'begin', ctx['EHRDocumentationContainer']) + '">Click here for documentation</a> on how to use the EHR, including videos</li>' +
+                '<li>Click <a href="' + LABKEY.ActionURL.buildURL('project', 'begin', ctx['EHRDocumentationContainer']) + '">here</a> for general information on how to use the EHR</li>' +
                     '<p></p>' +
                 '<li>If you have any comments, questions or feature requests, please submit them through the <a href="' + LABKEY.ActionURL.buildURL('issues', 'list', ctx['EHRIssuesContainer']) + '" target="new">EHR Issue Tracker</a></li>' +
-                    '<p></p>' +
-                '<li>For more general inquries, you can also try the <a href="https://www.labkey.org/announcements/home/Server/Forum/list.view?">LabKey Help Forum</a></li>' +
             '</div>'
         );
     });

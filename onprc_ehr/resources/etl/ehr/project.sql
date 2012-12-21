@@ -49,7 +49,7 @@ From Ref_ProjectsIACUC rpi
 	left join Sys_Parameters s3 on (s3.Field = 'IACUCFunding' and s3.Flag = rpi.Funded)
 	--NOTE: this is designed to weed out inactive relationships
 	left join (
-        SELECT rp.* 
+        SELECT rp.*, ts2
         from Ref_IACUCParentChildren rp
         JOIN (select 
             rp.ProjectChildID,
@@ -62,4 +62,4 @@ From Ref_ProjectsIACUC rpi
 	left join Ref_ProjectsIACUC rp on (pc.ProjectParentID = rp.ProjectID)
 	WHERE (pc.ProjectChildID is null or pc.ProjectChildID!=pc.ProjectParentID)
 
-	AND (rpi.ts > ? or ts2 > ?)
+	AND (rpi.ts > ? or pc.ts2 > ?)
