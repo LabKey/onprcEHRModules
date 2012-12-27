@@ -28,7 +28,7 @@ Select
 	t.ts as rowversion
 
 From Af_Toys t
-left join ref_snomed121311 s ON (s.SnomedCode = t.ToyCode)
+left join ref_snomed s ON (s.SnomedCode = t.ToyCode)
 
 left join ref_toys toy ON (toy.ToyCode = t.ToyCode)
 

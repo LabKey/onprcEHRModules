@@ -1,3 +1,6 @@
+If Exists (SELECT * FROM sysobjects WHERE id = object_id('fn_splitter') and type = 'TF')
+      DROP FUNCTION fn_splitter
+GO
 CREATE FUNCTION dbo.fn_splitter(@text nvarchar(max), @separator nvarchar(100))
 RETURNS @result TABLE (i int, value nvarchar(max))
 AS

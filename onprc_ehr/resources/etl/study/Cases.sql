@@ -41,7 +41,7 @@ Select
 	
 From Af_Case afc
 LEFT JOIN Sys_Parameters s1 ON (afc.Status = s1.Flag and s1.field = 'CaseStatus')
-left join Cln_DX dx on (dx.CaseID = afc.CaseID and dx.Date = afc.OpenDate)
+--left join Cln_DX dx on (dx.CaseID = afc.CaseID and dx.Date = afc.OpenDate)
 
 WHERE afc.ts > ?
 

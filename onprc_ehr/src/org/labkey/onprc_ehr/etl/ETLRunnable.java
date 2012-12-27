@@ -277,7 +277,7 @@ public class ETLRunnable implements Runnable
                 sql = kv.getValue();
 
                 //TODO: debug purposes only
-                sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t";
+//                sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t";
 
                 TableInfo targetTable = schema.getTable(targetTableName);
                 if (targetTable == null)
@@ -301,14 +301,14 @@ public class ETLRunnable implements Runnable
                             dbSchema = DbSchema.get("studydataset");
                             realTable = dbSchema.getTable(tableName);
                         }
-
-//                        DataSetTable ds = (DataSetTable)targetTable;
-//                        name = "c" + container.getRowId() + "d" + ds.getDataSet().getDataSetId() + "_" + targetTable.getName().toLowerCase();
-//                        dbSchema = DbSchema.get("studydataset");
-//                        realTable = dbSchema.getTable(name);
+                    }
+                    else if (targetTable.getSchema() != null)
+                    {
+                        realTable = targetTable.getSchema().getTable(targetTable.getName());
                     }
                 }
-                else
+
+                if (realTable == null)
                 {
                     log.error("Unable to find real table for: " + targetTable.getSelectName());
                 }
@@ -325,6 +325,9 @@ public class ETLRunnable implements Runnable
                 // Each statement will have zero or more bind variables in it. Set them all to
                 // the baseline timestamp date.
                 int paramCount = ps.getParameterMetaData().getParameterCount();
+                if (paramCount == 0)
+                    log.warn("Table lacks any parameters: " + targetTableName);
+
                 Timestamp fromDate = new Timestamp(getLastTimestamp(targetTableName));
                 byte[] fromVersion = getLastVersion(targetTableName);
                 for (int i = 1; i <= paramCount; i++)
@@ -336,9 +339,13 @@ public class ETLRunnable implements Runnable
                 {
                     if (realTable != null)
                     {
-                        log.info("Truncating target table, since last rowversion is null");
+                        log.info("Truncating target table, since last rowversion is null: " + targetTableName);
                         SQLFragment truncateSql = new SQLFragment("TRUNCATE TABLE " + realTable.getSelectName());
                         Table.execute(realTable.getSchema(), truncateSql);
+                    }
+                    else
+                    {
+                        log.error("unable to truncate targetTable, since realTable is null: " + targetTableName);
                     }
                 }
 
@@ -372,6 +379,7 @@ public class ETLRunnable implements Runnable
 
                 try
                 {
+                    log.info("ensure transaction for: " + schema.getSchemaName());
                     scope.ensureTransaction();
                     // perform any deletes
                     if (!deletedIds.isEmpty())
@@ -385,14 +393,15 @@ public class ETLRunnable implements Runnable
                         // are constructed from the original objectid plus a suffix. If one of those original records gets deleted we only know the
                         // original objectid. So we need to find the child ones with a LIKE objectid% query. Which is really complicated.
                         SQLFragment like = new SQLFragment("SELECT ");
-                        String comma = "";
-                        for (ColumnInfo key : keys)
-                        {
-                            like.append(comma + " ");
-                            like.append(key.getValueSql("t"));
-                            like.append(" AS \"" + key.getName() + "\"");
-                            comma = ",";
-                        }
+//                        String comma = "";
+//                        for (ColumnInfo key : keys)
+//                        {
+//                            like.append(comma + " ");
+//                            like.append(key.getValueSql("t"));
+//                            like.append(" AS \"" + key.getName() + "\"");
+//                            comma = ",";
+//                        }
+                        like.append(filterColumn.getSelectName());
                         like.append(" FROM ");
                         like.append(targetTable.getFromSQL("t"));
                         if (!joins.isEmpty())
@@ -439,7 +448,7 @@ public class ETLRunnable implements Runnable
 
                         if (realTable != null)
                         {
-                            log.debug("deleting using real table for: " + realTable.getSelectName());
+                            log.debug("deleting using real table for: " + realTable.getSelectName() + ", filtering on " + filterColumn.getColumnName());
                             SimpleFilter filter = new SimpleFilter();
                             filter.addWhereClause(filterColumn.getFieldKey() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
                             Table.delete(realTable, filter);
@@ -465,6 +474,7 @@ public class ETLRunnable implements Runnable
                             filterColumn = targetTable.getColumn("Id");
                         }
                     }
+
                     while (!isDone)
                     {
 
@@ -578,7 +588,7 @@ public class ETLRunnable implements Runnable
                                 }
                                 else
                                 {
-                                    log.info("No table, wont analyze");
+                                    log.warn("realTable is null, wont analyze");
                                 }
                                 currentBatch = 0;
                             }

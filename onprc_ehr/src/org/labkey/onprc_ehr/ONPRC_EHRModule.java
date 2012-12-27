@@ -54,7 +54,7 @@ public class ONPRC_EHRModule extends DefaultModule
 
     public double getVersion()
     {
-        return 12.304;
+        return 12.305;
     }
 
     public boolean hasScripts()

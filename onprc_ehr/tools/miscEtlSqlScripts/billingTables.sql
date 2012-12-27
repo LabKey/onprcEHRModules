@@ -65,13 +65,23 @@ where rfl.DateDisabled is null
 ) t
 GROUP BY name;
 
+-- INSERT INTO labkey.onprc_billing.chargableItems
+-- (name, category, active, container)
+-- select
+-- ProcedureName as name,
+-- 'Per Diems' as category,
+-- 1 as active,
+-- (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
+-- from ref_feesProcedures r
+-- where HousingDefinition is not null and DateDisabled is null;
+
 --chargeableExemptions
 TRUNCATE TABLE labkey.onprc_billing.chargeRateExemptions;
 INSERT INTO labkey.onprc_billing.chargeRateExemptions
 (project, chargeId, unitcost, startDate, enddate, container)
 SELECT
   projectId,
-  (SELECT rowid FROM labkey.onprc_billing.chargableItems ci WHERE ci.name = r.ProcedureName) as chargeId,
+  (SELECT max(rowid) FROM labkey.onprc_billing.chargableItems ci WHERE ci.name = r.ProcedureName) as chargeId,
   ChargeAmount as unitcost,
   rf.DateCreated as startDate,
   rf.DateDisabled as enddate,
@@ -236,3 +246,16 @@ From Ref_FeesLease rfl
 where rfl.DateDisabled is null
 ) t
 left join labkey.onprc_billing.chargableItems lk ON (lk.name = t.name);
+
+--per diem definition
+INSERT INTO labkey.onprc_billing.perDiemFeeDefinition (chargeId, housingDefinition, housingType)
+select
+(SELECT rowid FROM labkey.onprc_billing.chargableItems ci WHERE ci.name = r.ProcedureName) as chargeId,
+HousingDefinition,
+HousingType
+
+from ref_feesProcedures r
+where HousingDefinition is not null and DateDisabled is null;
+
+--procedure fee definition
+--TODO

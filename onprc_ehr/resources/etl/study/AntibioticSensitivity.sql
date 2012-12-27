@@ -37,7 +37,7 @@ SELECT
 
 FROM Cln_AntibioticSensData d
 left join Cln_AntibioticSensHeader h on (d.ClinicalKey = h.ClinicalKey)
-left join ref_snomed121311 s1 on (s1.SnomedCode = h.Tissue)
-left join ref_snomed121311 s2 on (s2.SnomedCode = h.microbe)
+left join ref_snomed s1 on (s1.SnomedCode = h.Tissue)
+left join ref_snomed s2 on (s2.SnomedCode = h.microbe)
 
 where d.ts > ?

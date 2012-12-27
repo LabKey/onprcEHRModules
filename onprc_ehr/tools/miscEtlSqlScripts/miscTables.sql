@@ -278,5 +278,5 @@ SELECT
 	(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
 	(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby
 
-FROM ref_snomed121311 r
+FROM ref_snomed r
 group by r.SnomedCode;

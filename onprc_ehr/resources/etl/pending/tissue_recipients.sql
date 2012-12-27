@@ -29,7 +29,7 @@ Select
 From Path_TissueDetails ptd
 	left join Sys_Parameters s1 on (s1.Field = 'TissueAffiliation' and ptd.Affiliation = s1.Flag)
 	left join Sys_Parameters s2 on (s2.Field = 'TissueSample' and ptd.Sample = s2.Flag)
-	left join ref_snomed121311 sno on (sno.SnomedCode = ptd.organ)
+	left join ref_snomed sno on (sno.SnomedCode = ptd.organ)
 
 
 AND ptd .ts > ?

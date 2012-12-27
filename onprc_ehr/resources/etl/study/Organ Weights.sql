@@ -35,7 +35,7 @@ From  Path_AutopsyWtsMaterials Pat
   left join Sys_Parameters s1 on (Pat.Preparation = s1.Flag And  s1.Field = 'AutopsyPreparation')
   left join Sys_Parameters s2 on (Pat.WeightModifier = s2.Flag And s2.Field = 'AutopsyWeightModifier')
   left join  Sys_Parameters s3 on (Pat.Appearance = s3.Flag And s3.Field = 'TissueAppearance')
-  left join ref_snomed121311 sno ON (sno.SnomedCode = pat.Organ)
+  left join ref_snomed sno ON (sno.SnomedCode = pat.Organ)
   left join Path_Autopsy pa ON (pa.AutopsyId = pat.AutopsyID)
 where Weight > 0 and pat.ts > ?
 
@@ -63,7 +63,7 @@ From Path_BiopsyWtsMaterials Pat
 	left join Sys_Parameters s1 on (Pat.Preparation = s1.Flag And  s1.Field = 'AutopsyPreparation')
 	left join Sys_Parameters s2 on (Pat.Appearance = s2.Flag And s2.Field = 'TissueAppearance')
 	left join sys_Parameters s3 on (Pat.WeightModifier = s3.Flag And s3.Field = 'AutopsyWeightModifier')
-	left join ref_snomed121311 sno ON (sno.SnomedCode = pat.Organ)
+	left join ref_snomed sno ON (sno.SnomedCode = pat.Organ)
 	left join Path_biopsy pa ON (pa.BiopsyID = pat.BiopsyID)
 
 where Weight > 0 and pat.ts > ?

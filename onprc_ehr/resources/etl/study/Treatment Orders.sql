@@ -60,6 +60,6 @@ FROM Cln_Medications cln
      left join Sys_parameters s4 on (s4.Field = 'MedicationFrequency' and s4.Flag = Frequency)
      left join Sys_parameters s5 on (s5.Field = 'MedicationReason' and s5.Flag = Reason)
      left join Sys_parameters s6 on (s6.Field = 'DepartmentCode' and s6.Flag = rt.DeptCode)
-     left join ref_snomed121311 sno on (sno.SnomedCode = cln.Medication)
+     left join ref_snomed sno on (sno.SnomedCode = cln.Medication)
 
 where cln.ts > ? and Medication is not null and Medication != ''

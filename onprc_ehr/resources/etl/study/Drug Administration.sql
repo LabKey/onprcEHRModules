@@ -34,7 +34,7 @@ SELECT
 
 FROM Cln_MedicationTimes cln
 left join Cln_Medications m on (m.SearchKey = cln.SearchKey)
-left join ref_snomed121311 sno on (sno.SnomedCode = m.Medication)
+left join ref_snomed sno on (sno.SnomedCode = m.Medication)
 left join Sys_parameters s2 on (s2.Field = 'MedicationUnits' and s2.Flag = m.Units)
 left join Sys_parameters s3 on (s3.Field = 'MedicationRoute' and s3.Flag = m.Route)
 where m.AnimalId is not null
@@ -63,7 +63,7 @@ SELECT
 
 FROM Sur_AnesthesiaLogHeader m
 LEFT JOIN sur_general g ON (g.surgeryid = m.surgeryid)
-left join ref_snomed121311 sno on (sno.SnomedCode = m.AnesthesiaGas)
+left join ref_snomed sno on (sno.SnomedCode = m.AnesthesiaGas)
 --LEFT JOIN Sys_parameters s1 ON (s1.Field = 'IVLocation' AND s1.Flag = v.IVLocation)
 --LEFT JOIN Sys_parameters s2 ON (s1.Field = 'IVSide' AND s2.Flag = m.IVSide)
 --LEFT JOIN Sys_parameters s3 ON (s3.Field = 'GasTubeSize' AND s3.Flag = m.TubeSize)

@@ -40,7 +40,7 @@ SELECT
 FROM Cln_SerologyData cln
 left join Cln_SerologyHeader sh on (cln.ClinicalKey = sh.ClinicalKey)
 left join Sys_parameters s2 on (s2.Field = 'SerologyMethod' and s2.Flag = cln.Method)
-left join ref_snomed121311 sno ON (sno.SnomedCode = cln.Tissue)
-left join ref_snomed121311 sno2 ON (sno2.SnomedCode = cln.Agent)
+left join ref_snomed sno ON (sno.SnomedCode = cln.Tissue)
+left join ref_snomed sno2 ON (sno2.SnomedCode = cln.Agent)
 
 WHERE cln.ts > ?

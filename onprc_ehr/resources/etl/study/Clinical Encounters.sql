@@ -19,6 +19,7 @@ Select
 	Date,
 	'Biopsy' as type,
     cast(BiopsyYear as nvarchar(4000)) + BiopsyFlag + BiopsyCode as caseno,
+    null as caseid,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
@@ -32,6 +33,7 @@ Select
 	  else
 	   rt.Initials
     END as performedBy,
+    null as procedureId,
 
 	pat.objectid 
 
@@ -54,6 +56,7 @@ Select
 	PTT.Date as Date ,
 	'Necropsy' as type,
 	cast(PTT.PathYear as nvarchar(4000)) + PTT.PathFlag + PTT.PathCode as caseno,
+    null as caseid,
 
     --the pathologist
 	case
@@ -68,6 +71,7 @@ Select
 	  else
 	   rt.Initials
     END as performedBy,
+    null as procedureId,
 
 	PTT.objectid
 
@@ -92,6 +96,7 @@ Select
 	sg.Date as Date ,
 	'Surgery' as type,
 	null as caseno,
+    null as caseid,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
@@ -105,10 +110,12 @@ Select
 	  else
 	   rt.Initials
     END as performedBy,
+    (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
 
 	sg.objectid
 
 From Sur_General sg
+LEFT JOIN Ref_SurgProcedure r on (sg.procedureid = r.procedureid)
 left join Ref_Technicians Rt on (sg.Surgeon = Rt.ID)
 left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
 
@@ -121,7 +128,9 @@ Select
 	cast(cln.AnimalId as varchar(4000)) as Id,
 	cln.Date ,
 	'Diagnosis' as type,
+	null as caseno,
 	c.objectid as caseId,
+
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
         'Unassigned'
@@ -134,6 +143,7 @@ Select
 	  else
 	   rt.Initials
     END as performedBy,
+    null as procedureId,
 
 	cln.objectid
 

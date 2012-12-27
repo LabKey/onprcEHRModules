@@ -106,8 +106,16 @@ Ext4.onReady(function (){
                         html: 'Last Sync',
                         height: 20
                     },{
-                        html: 'Reset Sync',
-                        height: 20
+                        xtype: 'labkey-linkbutton',
+                        text: 'Reset Sync',
+                        height: 20,
+                        handler: function(btn){
+                            btn.up('panel').cascade(function(item){
+                                if (item.xtype == 'combo'){
+                                    item.setValue(-1);
+                                }
+                            })
+                        }
                     }]
                 };
 
@@ -127,6 +135,7 @@ Ext4.onReady(function (){
                         tableConfig.items.push({
                             xtype: 'combo',
                             width: 300,
+                            editable: false,
                             displayField: 'date',
                             valueField: 'rowid',
                             queryName: query,

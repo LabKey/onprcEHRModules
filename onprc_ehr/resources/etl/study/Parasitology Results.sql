@@ -1,4 +1,5 @@
 Select
+	category,
 	cast(AnimalID as nvarchar(4000)) as Id,
 	date,
 
@@ -24,11 +25,12 @@ Select
 
 	cp.ts as rowversion,
 	cp.objectid as parentid,
-	(cast(cp.objectid as varchar(38)) + '_' + cp.tissue) as objectid
+	(cast(cp.objectid as varchar(38)) + '_' + cp.tissue + '_' + category) as objectid
 
 FROM (
 
 Select
+	'wetMount1' as category,
 	AnimalID,
 	date,
 	Technician,
@@ -45,6 +47,7 @@ where WetMount1 is not null and WetMount1 != ''
 UNION ALL
 
 Select
+	'wetMount2' as category,
 	AnimalID,
 	date,
 	Technician,
@@ -61,6 +64,7 @@ where WetMount2 is not null and WetMount2 != ''
 UNION ALL
 
 Select
+	'wetMount3' as category,
 	AnimalID,
 	date,
 	Technician,
@@ -77,6 +81,7 @@ where WetMount3 is not null and WetMount3 != ''
 UNION ALL
 
 Select
+	'float1' as category,
 	AnimalID,
 	date,
 	Technician,
@@ -93,6 +98,7 @@ where Floatation1 is not null and Floatation1 != ''
 UNION ALL
 
 Select
+	'float2' as category,
 	AnimalID,
 	date,
 	Technician,
@@ -109,6 +115,7 @@ where Floatation2 is not null and Floatation2 != ''
 UNION ALL
 
 Select
+	'float3' as category,
 	AnimalID,
 	date,
 	Technician,
@@ -125,6 +132,7 @@ where Floatation3 is not null and Floatation3 != ''
 UNION ALL
 
 Select
+	'misc1' as category,
 	AnimalID,
 	date,
 	Technician,
@@ -141,6 +149,7 @@ where Misc1 is not null and Misc1 != ''
 UNION ALL
 
 Select
+	'misc2' as category,
 	AnimalID,
 	date,
 	Technician,
@@ -157,6 +166,7 @@ where Misc2 is not null and Misc2 != ''
 UNION ALL
 
 Select
+	'misc3' as category,
 	AnimalID,
 	date,
 	Technician,

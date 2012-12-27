@@ -17,7 +17,7 @@ EHR.Server.Validation = require("ehr/validation").EHR.Server.Validation;
 EHR.Server.Utils = require("ehr/utils").EHR.Server.Utils;
 
 /**
- * @depreciated
+ * @deprecated
  * This was originally used to transform data being imported from the legacy mySQL system.
  * It should be written out of the validation script at some point.
  */
@@ -28,9 +28,6 @@ EHR.ETL = {
 
         EHR.ETL.fixParticipantId(row, errors);
 
-        if (row.project)
-            EHR.ETL.fixProject(row, errors);
-
         //allows dataset-specific code
         if(EHR.ETL.byQuery[scriptContext.queryName])
             EHR.ETL.byQuery[scriptContext.queryName](row, errors, scriptContext);
@@ -38,27 +35,14 @@ EHR.ETL = {
         if(scriptContext.verbosity > 0)
             console.log('Repaired: '+row);
     },
-    fixProject: function(row, errors){
-        //sort of a hack.  since mySQL doesnt directly store project for these records, we need to calculate this in the ETL using group_concat
-        // 00300901 is a generic WNPRC project.  if it's present with other projects, it shouldnt be.
-        if(row.project && row.project.match && (row.project.match(/,/))){
-            row.project = row.project.replace(/,00300901/, '');
-            row.project = row.project.replace(/00300901,/, '');
-        }
 
-        //i think the ETL can return project as a string
-        if (row.project && !/^\d*$/.test(row.project)){
-            EHR.Server.Validation.addError(errors, 'project', 'Bad Project#: '+row.project, 'ERROR');
-            row.project = null;
-            //row.QCStateLabel = errorQC;
-        }
-    },
     fixParticipantId: function (row, errors){
         if (row.hasOwnProperty('Id') && !row.Id){
             row.id = 'MISSING';
             EHR.Server.Validation.addError(errors, 'Id', 'Missing Id', 'ERROR');
         }
     },
+
     addDate: function (row, errors){
         if (row.hasOwnProperty('date') && !row.Date){
             //row will fail unless we add something in this field
@@ -67,6 +51,7 @@ EHR.ETL = {
             EHR.Server.Validation.addError(errors, 'date', 'Missing Date', 'ERROR');
         }
     },
+
     fixPathCaseNo: function(row, errors, code){
         //we try to clean up the biopsy ID
         var re = new RegExp('([0-9]+)('+code+')([0-9]+)', 'i');
@@ -105,7 +90,8 @@ EHR.ETL = {
         }
 
     },
-    fixChemValue: function(row, errors){
+
+    fixResults: function(row, errors){
         //we try to remove non-numeric characters from this field
         if (row.stringResults && !row.stringResults.match(/^[0-9]*$/)){
             //we need to manually split these into multiple rows
@@ -157,6 +143,7 @@ EHR.ETL = {
             delete row.stringResults;
         }
     },
+
     fixSampleQuantity: function(row, errors, fieldName){
         fieldName = fieldName || 'quantity';
 
@@ -186,54 +173,7 @@ EHR.ETL = {
             }
         }
     },
-//    fixDrugUnits: function(row, errors){
 
-//    },
-    fixHemaMiscMorphology: function(row, errors){
-        var c = row.morphology.split('_');
-        //changes by request of molly
-        //reverted.  will handle during data entry
-//        if(c[0]=='TOXIC GRANULES')
-//            c[0] = 'TOXIC CHANGE';
-
-        row.morphology = c[0];
-        if (c[1])
-            row.score = c[1];
-    },
-//    fixNecropsyCase: function(row, errors){
-//        //we try to clean up the caseno
-//        var re = /([0-9]+)(a|c)([0-9]+)/i;
-//        var match = row.caseno.match(re);
-//        if (!match){
-//            EHR.Server.Validation.addError(errors, 'caseno', 'Malformed CaseNo: '+row.caseno, 'WARN');
-//        }
-//        else {
-//            //fix the year
-//            if (match[1].length == 2){
-//                //kind of a hack. we just assume records wont be that old
-//                if (match[1] < 20)
-//                    match[1] = '20' + match[1];
-//                else
-//                    match[1] = '19' + match[1];
-//            }
-//            else if (match[1].length == 4){
-//                //these values are ok
-//            }
-//            else {
-//                EHR.Server.Validation.addError(errors, 'caseno', 'Unsure how to correct year in CaseNo: '+match[1], 'WARN');
-//            }
-//
-//            //standardize number to 3 digits
-//            if (match[3].length != 3){
-//                var tmp = match[3];
-//                for (var i=0;i<(3-match[3].length);i++){
-//                    tmp = '0' + tmp;
-//                }
-//                match[3] = tmp;
-//            }
-//            row.caseno = match[1] + match[2] + match[3];
-//        }
-//    },
     fixSurgMajor: function(row, errors){
         switch (row.major){
             case true:
@@ -250,329 +190,134 @@ EHR.ETL = {
                 row.major = null;
         }
     },
+
     remarkToSoap: function(row, errors){
-        //convert existing SOAP remarks into 3 cols
+        //convert existing SOAP remarks into separate cols
         var origRemark = row.remark;
-        if(row.remark && row.remark.match(/(^s\/o: )/)){
-            var so = row.remark.match(/(^s\/o: )(.*?)( a:| p:| a\/p:)/);
-            if(!so){
-                //this is a remark beginning with s/o:, but without a or p
-                row.so = row.remark;
-                row.remark = null;
+        if(row.remark){
+            row.remark = row.remark.replace(/<>/g, '\n');
+
+            //find Hx
+            var hx = row.remark.match(/hx:(.*);\|/i);
+            if (hx){
+                row.hx = hx[1];
+                row.hx = row.hx.replace(/(^\s+|\s+$)/g, '');
+                row.remark = row.remark.replace(hx[0], '');
             }
-            else {
-                row.so = so[2];
-                row.so = row.so.replace(/^\s+|\s+$/g,"");
 
-                row.remark = row.remark.replace(/^s\/o: /, '');
-                row.remark = row.remark.replace(so[2], '');
+            var s = row.remark.match(/(^s:)(.*)o:/i);
+            if(s){
+                row.s = s[1];
+                row.s = row.s.replace(/(^\s+|\s+$)/g, '');
 
-                var a = row.remark.match(/^( a:| a\/p:)(.*?)( p:|$)/);
-                if(a){
-                    if(a[2]){
-                        row.a = a[2];
-                        row.a = row.a.replace(/^\s+|\s+$/g,"");
+                row.remark = row.remark.replace(s[0], '');
+                row.remark = s[2] + row.remark;
+            }
 
-                        row.remark = row.remark.replace(/^( a:| a\/p:)/, '');
-                        row.remark = row.remark.replace(a[2], '');
-                    }
-//                    else {
-//                        console.log('a not found')
-//                        console.log(origRemark);
-//                    }
-                }
-//                else {
-//                    console.log('a not found')
-//                    console.log(origRemark);
-//                }
+            var o = row.remark.match(/(^o:)(.*)a:/i);
+            if(o){
+                row.o = o[1];
+                row.o = row.o.replace(/(^\s+|\s+$)/g, '');
 
-                //apparently some rows can lack an assessment
-                var p = row.remark.match(/^( p: )(.*)$/);
-                if(p){
-                    if(p[2]){
-                        row.p = p[2];
-                        row.p = row.p.replace(/^\s+|\s+$/g,"");
+                row.remark = row.remark.replace(o[0], '');
+                row.remark = o[2] + row.remark;
+            }
 
-                        row.remark = row.remark.replace(/^( p: )/, '');
-                        row.remark = row.remark.replace(p[2], '');
-                        row.remark = row.remark.replace(/^\s+|\s+$/g,"");
-                    }
-//                    else {
-//                        console.log('p not found')
-//                        console.log(origRemark);
-//                    }
-                }
+            var a = row.remark.match(/(^a:)(.*)p1:/i);
+            if(a){
+                row.a = a[1];
+                row.a = row.a.replace(/(^\s+|\s+$)/g, '');
 
+                row.remark = row.remark.replace(a[0], '');
+                row.remark = a[2] + row.remark;
+            }
+
+            var p1 = row.remark.match(/(^p1:)(.*)p2:/);
+            if(p1){
+                row.p1 = p1[1];
+                row.p1 = row.p1.replace(/(^\s+|\s+$)/g, '');
+
+                row.remark = row.remark.replace(p1[0], '');
+                row.remark = p1[2] + row.remark;
+            }
+
+            var p2 = row.remark.match(/(^p2:)(.*)$/);
+            if(p2){
+                row.p2 = p2[1];
+                row.p2 = row.p2.replace(/(^\s+|\s+$)/g, '');
+
+                row.remark = row.remark.replace(p2[0], '');
+                row.remark = p2[2] + row.remark;
             }
 
             if(row.remark){
                 console.log('REMARK REMAINING:');
-                console.log(row.remark)
+                console.log(row.remark);
             }
         }
     },
 
     byQuery: {
-        'Bacteriology Results': function(row, errors){
-            //this is a hack so mySQL records go in.
-            EHR.Server.Validation.antibioticSens(row, errors);
+//        'Behavior Remarks': function(row, errors){
+//            EHR.ETL.remarkToSoap(row, errors);
+//        },
+//
+        'Clinical Remarks': function(row, errors){
+            EHR.ETL.remarkToSoap(row, errors);
+        },
+
+        'Chemistry Results': function(row, errors){
+            EHR.ETL.fixResults(row, errors);
+        },
+
+        Biopsies: function(row, errors){
+            if(row.caseno)
+                EHR.ETL.fixPathCaseNo(row, errors, 'b');
+        },
+
+        'Chemistry Results': function(row, errors){
+            if(row.stringResults){
+                EHR.ETL.fixResults(row, errors);
+            }
+        },
+
+        'Clinical Remarks': function(row, errors){
+            EHR.ETL.remarkToSoap(row, errors);
+        },
+
+        Demographics: function(row, errors){
+
+            //the ETL code is going to error if the row is missing a date.
+            //since demographics can have a blank date, we remove that:
+            if(errors['date']){
+                var obj = [];
+                LABKEY.ExtAdapter.each(errors['date'], function(e){
+                    if(e.message!='Missing Date')
+                        obj.push(e);
+                }, this);
+                errors.date = obj;
+            }
 
         },
 
-        'Behavior Remarks': function(row, errors){
-            EHR.ETL.remarkToSoap(row, errors);
-        }
-    },
-
-    Biopsies: function(row, errors){
-        if(row.caseno)
-            EHR.ETL.fixPathCaseNo(row, errors, 'b');
-    },
-
-    'Chemistry Results': function(row, errors){
-        if(row.stringResults){
-            EHR.ETL.fixChemValue(row, errors);
-        }
-    },
-
-    'Clinical Encounters': function(row, errors){
-        //we grab the first sentence as title
-        if(row.type == 'Surgery' && !row.title && row.remark && row.remark.length > 200){
-            var match = row.remark.match(/^(.*?)\./);
-            if(match && match[1] && match[1].length < 35){
-                var title = match[1];
-
-                if(!title.match(/^\(con/) && !title.match(/^cont/)){
-                    row.title = title;
-                }
+        'Hematology Results': function(row, errors){
+            if(row.stringResults){
+                EHR.ETL.fixResults(row, errors);
             }
+        },
+
+//        'Necropsies': function(row, errors){
+//            if(row.caseno)
+//                EHR.ETL.fixPathCaseNo(row, errors, 'a|c|e');
+//        },
+
+        'Urinalysis Results': function onETL(row, errors){
+            if(row.stringResults){
+                EHR.ETL.fixResults(row, errors);
+            }
+
+            if(row.quantity)
+                EHR.ETL.fixSampleQuantity(row, errors);
         }
-
-        EHR.ETL.fixSurgMajor(row, errors);
-
-        //applies to biopsy / necropsy
-        if(row.caseno){
-            var code;
-            if(row.type=='Necropsy')
-                code='a|c|e';
-            else if (row.type == 'Biopsy')
-                code = 'b';
-
-            if(code)
-                EHR.ETL.fixPathCaseNo(row, errors, code);
-        }
-
-    },
-
-    'Clinical Remarks': function(row, errors){
-        EHR.ETL.remarkToSoap(row, errors);
-    },
-
-    'Clinpath Runs': function(row, errors){
-        if(row.sampleQuantity)
-            EHR.ETL.fixSampleQuantity(row, errors, 'sampleQuantity');
-    },
-
-    Demographics: function(row, errors){
-        var species = EHR.Server.Validation.getSpecies(row, errors);
-        row.species = row.species || species;
-
-        //the ETL code is going to error if the row is missing a date.
-        //since demographics can have a blank date, we remove that:
-        if(errors['date']){
-            var obj = [];
-            Ext.each(errors['date'], function(e){
-                if(e.message!='Missing Date')
-                    obj.push(e);
-            }, this);
-            errors.date = obj;
-        }
-
-    },
-
-    'Hematology Morphology': function(row, errors){
-        EHR.ETL.fixHemaMiscMorphology(row, errors);
-    },
-
-    'Hematology Results': function(row, errors){
-        if(row.stringResults){
-            EHR.ETL.fixChemValue(row, errors);
-        }
-    },
-
-    'Necropsies': function(row, errors){
-        if(row.caseno)
-            EHR.ETL.fixPathCaseNo(row, errors, 'a|c|e');
-    },
-
-    Surgeries: function onETL(row, errors){
-        EHR.ETL.fixSurgMajor(row, errors);
-    },
-
-    'TB Tests': function(row, errors){
-        //NOTE: hyphen means 'not going to perform'
-        //    if (row.result1 == '-') row.result1 = 0;
-        //    if (row.result2 == '-') row.result2 = 0;
-        //    if (row.result3 == '-') row.result3 = 0;
-
-        if (row.result1 == '+') row.result1 = 5;
-        if (row.result2 == '+') row.result2 = 5;
-        if (row.result3 == '+') row.result3 = 5;
-    },
-
-    'Treatment Orders': function onETL(row, errors){
-        if(row.code == '00000000'){
-            row.code = null;
-            row.qualifier = row.meaning;
-        }
-
-        //transform non-SNOMED into true SNOMED
-        switch (row.code){
-            case 'c-f0000a':
-                row.qualifier = 'Soak chow in water';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f0000b':
-                row.qualifier = 'Soak chow in ensure';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f0000c':
-                row.qualifier = 'Zupreem';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f0000d':
-                row.qualifier = 'softies';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f0000e':
-                row.qualifier = 'softies';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f0000f':
-                row.qualifier = 'PB Sand / Fig Newton / Fruit';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f0000g':
-                row.qualifier = 'PB Sand / Fig Newton';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f0000h':
-                row.qualifier = 'PB Sand';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f0000i':
-                row.qualifier = 'PB Sand / Yogurt Sand';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f0000j':
-                row.qualifier = 'yogurt';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f0000k':
-                row.qualifier = 'Fruit';
-                row.code = 'c-f0000';
-                break;
-            case 'c-f2300a':
-                row.qualifier = 'Ensure';
-                row.code = 'c-f2300';
-                break;
-            case 'c-f2300-':
-                //row.qualifier = '';
-                row.code = 'c-f2300';
-                break;
-            case 'w-10068a':
-                row.qualifier = 'Animal Parade Gummi';
-                row.code = 'w-10068';
-                break;
-            case 'w-10068b':
-                row.qualifier = 'Solaray Chewable';
-                row.code = 'w-10068';
-                break;
-            case 'f-61e1fa':
-                row.qualifier = 'Primadophilus chewable tablet';
-                row.code = 'f-61e1f';
-                break;
-            case 'f-61e1fb':
-                row.qualifier = 'Primadophilus powder';
-                row.code = 'f-61e1f';
-                break;
-            case 'f-61e1f-':
-                row.qualifier = 'Yakult';
-                row.code = 'f-61e1f';
-                break;
-
-
-            case 'c-60187':
-                row.qualifier = 'Rimadyl';
-                break;
-            case 'c-d1467':
-                row.qualifier = 'Flunixin Meglumine (Banamine)';
-                break;
-            case 'c-60111':
-                row.qualifier = 'Tramadol';
-                break;
-            case 'c-54221':
-                row.qualifier = 'Penicillin';
-                break;
-            case 'c-52340':
-                row.qualifier = 'Tylosin tartrate (Tylan)';
-                break;
-            case 'c-84540':
-                row.qualifier = 'Immodium';
-                break;
-            case 'c-a1210':
-                row.qualifier = 'Progesterone preparation';
-                break;
-            case 'c-622b0':
-                row.qualifier = 'Clomicalm';
-                break;
-            case 'c-680d0':
-                row.qualifier = 'Epinephrine';
-                break;
-            case 'c-71064':
-                row.qualifier = 'tumil-K';
-                break;
-            case 'w-10192':
-                row.qualifier = 'Supplemental Enrichment';
-                break;
-        }
-
-        if(row.vol_units == 'ml')
-            row.vol_units = 'mL';
-        if(row.vol_units == 'capsules')
-            row.vol_units = 'capsule(s)';
-        if(row.vol_units == 'pieces')
-            row.vol_units = 'piece(s)';
-        if(row.vol_units == 'tablets')
-            row.vol_units = 'tablet(s)';
-
-        if(row.conc_units == 'mg/ml')
-            row.conc_units = 'mg/mL';
-        if(row.conc_units == 'IU/ml')
-            row.conc_units = 'IU/mL';
-        if(row.conc_units == 'units/ml')
-            row.conc_units = 'units/mL';
-        if(row.conc_units == 'mEq/ml')
-            row.conc_units = 'mEq/mL';
-
-        if(row.amount_units == 'ml')
-            row.amount_units = 'mL';
-        if(row.amount_units == 'NULL')
-            row.amount_units = null;
-
-
-        row.meaning = row.meaning || row.snomedMeaning || null;
-
-        row.performedby = row.performedby || row.userid || null;
-
-    },
-
-    'Urinalysis Results': function onETL(row, errors){
-        if(row.stringResults){
-            EHR.ETL.fixChemValue(row, errors);
-        }
-
-        if(row.quantity)
-            EHR.ETL.fixSampleQuantity(row, errors);
     }
 };

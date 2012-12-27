@@ -39,7 +39,7 @@ SELECT
 FROM Cln_VirologyData cln
      left join Sys_parameters s1 on (s1.Flag = Method and s1.Field = 'VirologyMethod')
      left join Sys_Parameters s2 on (s2.Field = 'VirologyNegative' And s2.Flag = cln.Negative)
-     left join ref_snomed121311 sno1 on (sno1.SnomedCode = cln.Tissue)
-     left join ref_snomed121311 sno2 on (sno2.SnomedCode = cln.Agent)
+     left join ref_snomed sno1 on (sno1.SnomedCode = cln.Tissue)
+     left join ref_snomed sno2 on (sno2.SnomedCode = cln.Agent)
 
 where cln.ts > ?

@@ -13,39 +13,26 @@ if (LABKEY.Security.currentUser.isAdmin){
                 items: [
                     {name: 'EHR Backups', url: '<%=contextPath%>/project<%=containerPath%>/Backups/begin.view?'},
                     {name: 'ETL Admin', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/etlAdmin.view?'},
-                    {name: 'Update Property Descriptors', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureDatasetProperties.view?'},
                     {name: 'Junit Tests', url: '<%=contextPath%>/junit/begin.view?'},
                     {name: 'Kinship Calculation', url: '<%=contextPath%>/ehr<%=containerPath%>/kinship.view?'},
                     {name: 'Manage EHR Study', url: '<%=contextPath%>/study<%=containerPath%>/manageStudy.view?'},
                     {name: 'Populate Initial Data (Generic)', url: '<%=contextPath%>/EHR<%=containerPath%>/populateInitialData.view?'},
                     {name: 'Populate Initial Data (ONPRC)', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/populateData.view?'},
-                    {name: 'Set EHR Properties', url: '<%=contextPath%>/core<%=containerPath%>/modulePropertyAdmin.view?moduleName=EHR'}
+                    {name: 'Set EHR Properties', url: '<%=contextPath%>/core<%=containerPath%>/modulePropertyAdmin.view?moduleName=EHR'},
+                    {name: 'Updat Dataset Properties', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureDatasetProperties.view?'}
                 ]
             },
-//            {header: 'Documentation',
-//                items: [
-//                    {name: 'Admin/Operations Documentation', url: '<%=contextPath%>/project<%=containerPath%>/Documentation/Admin/begin.view?'},
-//                    {name: 'Data Management Documentation', url: '<%=contextPath%>/project<%=containerPath%>/Documentation/Data Management/begin.view?'},
-//                    {name: 'Training and Operations Material', url: '<%=contextPath%>/project<%=containerPath%>/Development Notes/begin.view?'}
-//                ]
-//            },
             {header: 'Logs',
                 items: [
-//                    {name: 'All Logs', url: '<%=contextPath%>/project<%=containerPath%>/Logs/begin.view?'},
                     {name: 'Labkey.log', url: '<%=contextPath%>/admin/showPrimaryLog.view'},
                     {name: 'Labkey-errors.log', url: '<%=contextPath%>/admin/showAllErrors.view'},
                     {name: 'ETL Log', url: '<%=contextPath%>/onprc_ehr/showEtlLog.view'}
-//                    {name: 'ActiveMQ.log', url: '<%=contextPath%>/files<%=containerPath%>/Logs/%40filesets/ActiveMQ/activemq.log'},
-//                    {name: 'Monit.log', url: '<%=contextPath%>/files<%=containerPath%>/Logs/%40filesets/Monit/monit.log'},
-//                    {name: 'Munin.log', url: '<%=contextPath%>/files<%=containerPath%>/Logs/%40filesets/Munin/munin.log'},
-//                    {name: 'Inbreeding Coefficients Reload Cron Job Log', url: '<%=contextPath%>/files<%=containerPath%>/Logs/%40filesets/Kinship/kinshipOut.txt'},
-//                    {name: 'Kinship Reload Cron Job Log', url: '<%=contextPath%>/files<%=containerPath%>/Logs/%40filesets/Kinship/inbreedingOut.txt'}
                 ]
             },
             {header: 'Notifications',
                 items: [
                     {name: 'Manage Notification Recipients', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=NotificationRecipients'},
-                    {name: 'Notification Admin', url: '<%=contextPath%>/EHR<%=containerPath%>/notificationAdmin.view?'}
+                    {name: 'Notification Admin', url: '<%=contextPath%>/ldk<%=containerPath%>/notificationAdmin.view?'}
                 ]
             },
             {header: 'Associated Servers',
