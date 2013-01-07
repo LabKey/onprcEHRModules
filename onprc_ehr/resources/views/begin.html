@@ -83,11 +83,11 @@ function createNavMenu()
             header: 'Entire Colony',
             items: [
                 //{name: 'Animal Utilization By Category', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=colonyAssignmentSummary'},
-                {name: 'Colony Population By Age', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=Colony Population By Age'},
+                {name: 'Colony Population By Age', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=colonyPopulationByAge'},
                 {name: 'Population Summary', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/populationOverview.view?'},
                 {name: 'Room Utilization', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=RoomUtilization'},
                 //{name: 'Time Chart', url: '<%=contextPath%>/visualization' + ctx['EHRStudyContainer'] + '/timeChartWizard.view?edit=true'},
-                {name: 'More Reports', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/moreReports.view?'}
+                {name: 'More Reports', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/moreReports.view?'}
             ]
         }]
     });

@@ -18,7 +18,8 @@ Select
 	cast(AnimalID as nvarchar(4000)) as Id,
 	date,
 
-	tissue,
+	tissue as organism,
+	sno.Description as organismMeaning,
 	quantity as quantityInt,
 	s7.Value as quantity,
 
@@ -201,5 +202,6 @@ left join Ref_Technicians rt on (cp.Technician = rt.ID)
 left join Sys_Parameters s4 on (s4.Flag = rt.DeptCode And s4.Field = 'DepartmentCode')
 left join Sys_Parameters s6 on (s6.Flag = cp.analysis and s6.Field = 'AnalysisParasitology')
 left join Sys_Parameters s7 on (s7.Flag = cp.quantity and s7.Field = 'ParasitologyQuantity')
+left join ref_snomed sno ON (sno.SnomedCode = cp.tissue)
 
 where cp.ts > ?

@@ -100,7 +100,7 @@ public class ETLAuditViewFactory extends SimpleAuditViewFactory
         table.getColumn("IntKey2").setLabel("DatasetErrors");
     }
 
-    public static void addAuditEntry(Container container, User user, String type, String comment, int ehrErrors, int ehrLookupsErrors, int datasetErrors)
+    public static void addAuditEntry(Container container, User user, String type, String comment, int ehrErrors, int ehrLookupsErrors, int datasetErrors, int billingErrors)
     {
         AuditLogEvent event = new AuditLogEvent();
         event.setContainerId(container.getId());

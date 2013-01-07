@@ -19,7 +19,7 @@ Select
 	OpenDate as date ,
 	--Status as StatusInt ,
     --    s1.Value as Status,
-	CloseDate as  CloseDate ,
+	CloseDate as  enddate ,
 	ReviewDate as ReviewDate ,
 	--GroupCode as GroupCode,        ---- gCaseTypeConst: Clinical = 1, Surgery = 2, BehaviorCase = 3
 	Case

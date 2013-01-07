@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 
-var {EHR, LABKEY, Ext, console, init, beforeInsert, afterInsert, beforeUpdate, afterUpdate, beforeDelete, afterDelete, complete} = require("ehr/triggers");
+require("ehr/triggers").initScript(this);
 
 function setDescription(row, errors){
     //we need to set description for every field
@@ -17,7 +17,7 @@ function setDescription(row, errors){
     if(row.antibiotic || row.antibioticMeaning)
         description.push('Code: '+EHR.Server.Validation.snomedToString(row.antibiotic,  row.antibioticMeaning));
     if(!LABKEY.ExtAdapter.isEmpty(row.resistant))
-        description.push('Resistant to antibiotics?: '+EHR.Server.Validation.nullToString(row.resistant);
+        description.push('Resistant to antibiotics?: '+EHR.Server.Validation.nullToString(row.resistant));
 
     return description;
 }

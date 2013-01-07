@@ -27,6 +27,7 @@ EHR.ETL = {
         EHR.ETL.addDate(row, errors);
 
         EHR.ETL.fixParticipantId(row, errors);
+        EHR.ETL.fixSurgMajor(row, errors);
 
         //allows dataset-specific code
         if(EHR.ETL.byQuery[scriptContext.queryName])
@@ -175,19 +176,21 @@ EHR.ETL = {
     },
 
     fixSurgMajor: function(row, errors){
-        switch (row.major){
-            case true:
-            case 'y':
-            case 'Y':
-                row.major = 'Yes';
-                break;
-            case false:
-            case 'n':
-            case 'N':
-                row.major = 'No';
-                break;
-            default:
-                row.major = null;
+        if (row.major){
+            switch (row.major){
+                case true:
+                case 'y':
+                case 'Y':
+                    row.major = 'Yes';
+                    break;
+                case false:
+                case 'n':
+                case 'N':
+                    row.major = 'No';
+                    break;
+                default:
+                    row.major = null;
+            }
         }
     },
 

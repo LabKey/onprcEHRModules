@@ -22,15 +22,16 @@ SELECT
 
 	Medication as code,
 	sno.Description as meaning,
-	Dose as Dose,
+
+	null as remark,
+	Dose as dosage,
+
 	--Units as UnitsInt ,
-	s2.Value as Units,
+	s2.Value as dosage_units,
 	--Route as RouteInt ,
-	s3.Value as Route,
-	--cln.IDKey,
-	--cln.SearchKey as SearchKey ,
-	--cln.ts as rowversion,
-	cln.objectid
+	s3.Value as route,
+	cln.objectid,
+	null as parentId
 
 FROM Cln_MedicationTimes cln
 left join Cln_Medications m on (m.SearchKey = cln.SearchKey)
@@ -50,22 +51,24 @@ SELECT
 	AnesthesiaGas as code,
     sno.Description as meaning,
 
---     TODO
---     [IVLocation]
---       ,[IVSide]
+	'IV Location: ' + coalesce(s1.Value, '') + '\n' +
+	'IV Side: ' + coalesce(s2.Value, '') + '\n' +
+	'IV Tube Size: ' + coalesce(s3.Value, '') + '\n'
+	as remark,
 --       ,[Ventilator]   --boolean
---       ,[TubeSize]
 
 	null as Dose,
 	null as Units,
 	'IV' as Route,
-	m.objectid
+	h.objectid,
+	g.objectid as parentId
 
-FROM Sur_AnesthesiaLogHeader m
-LEFT JOIN sur_general g ON (g.surgeryid = m.surgeryid)
-left join ref_snomed sno on (sno.SnomedCode = m.AnesthesiaGas)
---LEFT JOIN Sys_parameters s1 ON (s1.Field = 'IVLocation' AND s1.Flag = v.IVLocation)
---LEFT JOIN Sys_parameters s2 ON (s1.Field = 'IVSide' AND s2.Flag = m.IVSide)
---LEFT JOIN Sys_parameters s3 ON (s3.Field = 'GasTubeSize' AND s3.Flag = m.TubeSize)
+FROM Sur_AnesthesiaLogHeader h
+LEFT JOIN sur_general g ON (g.surgeryid = h.surgeryid)
+left join ref_snomed sno on (sno.SnomedCode = h.AnesthesiaGas)
+LEFT JOIN Sys_parameters s1 ON (s1.Field = 'IVLocation' AND s1.Flag = h.IVLocation)
+LEFT JOIN Sys_parameters s2 ON (s1.Field = 'IVSide' AND s2.Flag = h.IVSide)
+LEFT JOIN Sys_parameters s3 ON (s3.Field = 'GasTubeSize' AND s3.Flag = h.TubeSize)
 
-WHERE m.ts > ?
+
+WHERE h.ts > ?

@@ -1,34 +1,20 @@
-/*
- * Copyright (c) 2012 LabKey Corporation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
---chargeableItems
-TRUNCATE TABLE labkey.onprc_billing.chargableItems;
+--chargableItems, only importing new items
 INSERT INTO labkey.onprc_billing.chargableItems
-(name, category, comment, active, container)
+(name, category, active, container)
+
+SELECT t.name, t.category, t.active, t.container FROM (
+
 SELECT
   rfp.ProcedureName as name,
   s3.value as category,
-  null as comment,
   CASE WHEN rfp.DateDisabled IS NULL THEN 1 ELSE 0 END as active,
   (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
-FROM Ref_FeesProcedures rfp
-left join Sys_Parameters s3 on (s3.Field = 'ChargeType'and s3.Flag = rfp.ChargeType)
+FROM IRIS_Production.dbo.Ref_FeesProcedures rfp
+left join IRIS_Production.dbo.Sys_Parameters s3 on (s3.Field = 'ChargeType'and s3.Flag = rfp.ChargeType)
+
+UNION ALL
 
 --add ref_feesSurgical to chargableItems
-INSERT INTO labkey.onprc_billing.chargableItems
-(name, category, active, container)
 select
 	t.name,
 	'Surgery' as category,
@@ -37,28 +23,27 @@ select
 FROM (
 
 Select
-	s.ProcedureName + ' - No Staff' as name,	
+	s.ProcedureName + ' - No Staff' as name,
 	CASE WHEN fs.DateDisabled is null THEN 1 else 0 END as active
 
-From Ref_FeesSurgical fs
-LEFT JOIN Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
-
+From IRIS_Production.dbo.Ref_FeesSurgical fs
+LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
+WHERE s.procedureName IS NOT NULL
 UNION ALL
 
 Select
 	s.ProcedureName + ' - Staff' as name,
 	CASE WHEN fs.DateDisabled is null THEN 1 else 0 END as active
 
-From Ref_FeesSurgical fs
-LEFT JOIN Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
-
+From IRIS_Production.dbo.Ref_FeesSurgical fs
+LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
+WHERE s.procedureName IS NOT NULL
 ) t
 
-GROUP BY name;
+GROUP BY name
 
+UNION ALL
 --add lease fees to chargableItems
-INSERT INTO labkey.onprc_billing.chargableItems
-(name, category, active, container)
 SELECT
 	name,
 	'Lease Fee' as category,
@@ -72,23 +57,22 @@ Select
 		ELSE rf.ProcedureName + ' - ' + s1.Value + ': ' +  cast(rfl.AssignPool AS nvarchar) + '->' + cast(rfl.ReleasePool AS nvarchar)
 	END as name
 
-From Ref_FeesLease rfl
-      left join Sys_Parameters s1 on (s1.Flag = rfl.AgeCategory and s1.Field = 'AgeCategory')
-      left join Ref_FeesProcedures rf ON (rf.ProcedureID = rfl.procedureId)
+From IRIS_Production.dbo.Ref_FeesLease rfl
+      left join IRIS_Production.dbo.Sys_Parameters s1 on (s1.Flag = rfl.AgeCategory and s1.Field = 'AgeCategory')
+      left join IRIS_Production.dbo.Ref_FeesProcedures rf ON (rf.ProcedureID = rfl.procedureId)
       left join labkey.onprc_billing.chargableItems lk ON (lk.name = rf.procedureName)
 where rfl.DateDisabled is null
 ) t
-GROUP BY name;
+GROUP BY name
 
--- INSERT INTO labkey.onprc_billing.chargableItems
--- (name, category, active, container)
--- select
--- ProcedureName as name,
--- 'Per Diems' as category,
--- 1 as active,
--- (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
--- from ref_feesProcedures r
--- where HousingDefinition is not null and DateDisabled is null;
+--TODO: procedure fee definition
+
+) t
+LEFT JOIN labkey.onprc_billing.chargableItems ci ON (ci.name = t.name)
+WHERE ci.name IS NULL;
+
+
+
 
 --chargeableExemptions
 TRUNCATE TABLE labkey.onprc_billing.chargeRateExemptions;
@@ -101,8 +85,8 @@ SELECT
   rf.DateCreated as startDate,
   rf.DateDisabled as enddate,
   (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
-FROM Ref_FeesSpecial rf
-left join Ref_FeesProcedures r ON (rf.ProcedureID = r.ProcedureID);
+FROM IRIS_Production.dbo.Ref_FeesSpecial rf
+left join IRIS_Production.dbo.Ref_FeesProcedures r ON (rf.ProcedureID = r.ProcedureID);
 
 INSERT INTO labkey.onprc_billing.chargeRateExemptions
 (project, chargeId, unitcost, startDate, enddate, container)
@@ -117,8 +101,8 @@ Select
 	fs.DateDisabled as enddate,
 	(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
 
-From Ref_FeesSpecialSurg fs
-LEFT JOIN Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
+From IRIS_Production.dbo.Ref_FeesSpecialSurg fs
+LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
 left join labkey.onprc_billing.chargableItems lk ON (lk.name = s.procedureName + ' - No Staff' AND lk.category = 'Surgery')
 
 INSERT INTO labkey.onprc_billing.chargeRateExemptions
@@ -134,11 +118,9 @@ Select
 	fs.DateDisabled as enddate,
 	(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
 
-From Ref_FeesSpecialSurg fs
-LEFT JOIN Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
+From IRIS_Production.dbo.Ref_FeesSpecialSurg fs
+LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
 left join labkey.onprc_billing.chargableItems lk ON (lk.name = s.procedureName + ' - Staff' AND lk.category = 'Surgery')
-
-
 
 --creditAccount
 TRUNCATE TABLE labkey.onprc_billing.creditAccount;
@@ -152,8 +134,8 @@ Select
 	f.DateDisabled as enddate,
 	(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
 
-From Ref_FeesCreditAlias f
-left join Ref_FeesProcedures fp ON (f.ItemCode = cast(fp.ProcedureID as nvarchar) + 'C')
+From IRIS_Production.dbo.Ref_FeesCreditAlias f
+left join IRIS_Production.dbo.Ref_FeesProcedures fp ON (f.ItemCode = cast(fp.ProcedureID as nvarchar) + 'C')
 left join labkey.onprc_billing.chargableItems lk ON (lk.name = fp.procedureName);
 
 --charge rates
@@ -167,21 +149,21 @@ Select
 	c.DateDisabled as enddate,
 	(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
 
-From Ref_FeesClinical c
-left join Ref_FeesProcedures r ON (c.ProcedureID = r.ProcedureID)
+From IRIS_Production.dbo.Ref_FeesClinical c
+left join IRIS_Production.dbo.Ref_FeesProcedures r ON (c.ProcedureID = r.ProcedureID)
 left join labkey.onprc_billing.chargableItems lk ON (lk.name = r.procedureName);
 
 INSERT INTO labkey.onprc_billing.chargeRates
 (chargeId, unitcost, startDate, enddate, container)
-Select 
+Select
 	lk.rowid as chargeId,
 	c.BaseCharge as unitcost,
 	c.DateCreated as startdate,
 	c.DateDisabled as enddate,
 	(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
 
-From Ref_FeesMiscellaneous c
-left join Ref_FeesProcedures r ON (c.ProcedureID = r.ProcedureID)
+From IRIS_Production.dbo.Ref_FeesMiscellaneous c
+left join IRIS_Production.dbo.Ref_FeesProcedures r ON (c.ProcedureID = r.ProcedureID)
 left join labkey.onprc_billing.chargableItems lk ON (lk.name = r.procedureName);
 
 --add lease records to charge rates
@@ -207,9 +189,9 @@ Select
 	rfl.DateDisabled as enddate,
 	rfl.objectid
 
-From Ref_FeesLease rfl
-      left join Sys_Parameters s1 on (s1.Flag = rfl.AgeCategory and s1.Field = 'AgeCategory')
-      left join Ref_FeesProcedures rf ON (rf.ProcedureID = rfl.procedureId)
+From IRIS_Production.dbo.Ref_FeesLease rfl
+      left join IRIS_Production.dbo.Sys_Parameters s1 on (s1.Flag = rfl.AgeCategory and s1.Field = 'AgeCategory')
+      left join IRIS_Production.dbo.Ref_FeesProcedures rf ON (rf.ProcedureID = rfl.procedureId)
 
 ) t
 left join labkey.onprc_billing.chargableItems lk ON (lk.name = t.name);
@@ -230,11 +212,11 @@ SELECT
 
 FROM (
 Select
-	CASE 
+	CASE
 		WHEN s1.Value IS null THEN rf.ProcedureName + ' - General: ' + cast(rfl.AssignPool AS nvarchar) + '->' + cast(rfl.ReleasePool AS nvarchar)
 		ELSE rf.ProcedureName + ' - ' + s1.Value + ': ' +  cast(rfl.AssignPool AS nvarchar) + '->' + cast(rfl.ReleasePool AS nvarchar)
 	END as name,
-	
+
 	CASE
 		WHEN rfl.AgeCategory = 1 THEN 0
 		WHEN rfl.AgeCategory = 2 THEN 1
@@ -255,9 +237,9 @@ Select
 	1 as active,
 	rfl.objectid
 
-From Ref_FeesLease rfl
-      left join Sys_Parameters s1 on (s1.Flag = rfl.AgeCategory and s1.Field = 'AgeCategory')
-      left join Ref_FeesProcedures rf ON (rf.ProcedureID = rfl.procedureId)      
+From IRIS_Production.dbo.Ref_FeesLease rfl
+      left join IRIS_Production.dbo.Sys_Parameters s1 on (s1.Flag = rfl.AgeCategory and s1.Field = 'AgeCategory')
+      left join IRIS_Production.dbo.Ref_FeesProcedures rf ON (rf.ProcedureID = rfl.procedureId)
 where rfl.DateDisabled is null
 ) t
 left join labkey.onprc_billing.chargableItems lk ON (lk.name = t.name);
@@ -269,8 +251,5 @@ select
 HousingDefinition,
 HousingType
 
-from ref_feesProcedures r
+from IRIS_Production.dbo.ref_feesProcedures r
 where HousingDefinition is not null and DateDisabled is null;
-
---procedure fee definition
---TODO

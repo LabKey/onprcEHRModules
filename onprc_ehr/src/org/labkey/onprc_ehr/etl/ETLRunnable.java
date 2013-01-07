@@ -29,9 +29,11 @@ import org.labkey.api.data.DbScope;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.SimpleFilter;
+import org.labkey.api.data.SqlExecutor;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.exp.api.ExperimentService;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.query.BatchValidationException;
@@ -58,6 +60,7 @@ import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -88,6 +91,7 @@ public class ETLRunnable implements Runnable
     private final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
     private Map<String, String> ehrQueries;
     private Map<String, String> ehrLookupsQueries;
+    private Map<String, String> staticQueries;
     private Map<String, String> studyQueries;
     private Map<String, String> billingQueries;
 
@@ -103,6 +107,7 @@ public class ETLRunnable implements Runnable
 
     private void refreshQueries() throws IOException
     {
+        this.staticQueries = loadQueries(getResource("static").list());
         this.ehrQueries = loadQueries(getResource("ehr").list());
         this.ehrLookupsQueries = loadQueries(getResource("ehr_lookups").list());
         this.studyQueries = loadQueries(getResource("study").list());
@@ -167,7 +172,7 @@ public class ETLRunnable implements Runnable
                 stackSize = HttpView.getStackSize();
                 ViewContext.getMockViewContext(user, container, new ActionURL("onprc_ehr", "fake.view", container), true);
 
-                ETLAuditViewFactory.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0, 0);
+                ETLAuditViewFactory.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0, 0, 0);
 
                 for (String datasetName : studyQueries.keySet())
                 {
@@ -213,6 +218,7 @@ public class ETLRunnable implements Runnable
 
                 try
                 {
+                    runQueries(user, container, staticQueries);
                     int ehrErrors = merge(user, container, ehrQueries, ehrSchema);
                     int ehrLookupsErrors = merge(user, container, ehrLookupsQueries, ehrLookupsSchema);
                     int datasetErrors = merge(user, container, studyQueries, studySchema);
@@ -220,7 +226,7 @@ public class ETLRunnable implements Runnable
 
                     log.info("End incremental sync run.");
 
-                    ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, ehrLookupsErrors, datasetErrors);
+                    ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, ehrLookupsErrors, datasetErrors, billingErrors);
                 }
                 catch (BatchValidationException e)
                 {
@@ -236,7 +242,7 @@ public class ETLRunnable implements Runnable
                 // to smooth over any transient issues like the remote datasource
                 // being temporarily unavailable.
                 log.error("Fatal incremental sync error", x);
-                ETLAuditViewFactory.addAuditEntry(container, user, "FATAL ERROR", "Fatal error during EHR synchronization", 0, 0, 0);
+                ETLAuditViewFactory.addAuditEntry(container, user, "FATAL ERROR", "Fatal error during EHR synchronization", 0, 0, 0, 0);
 
             }
             finally
@@ -251,6 +257,51 @@ public class ETLRunnable implements Runnable
         }
 
     }
+
+    private void runQueries(User user, Container container, Map<String, String> queries) throws BadConfigException, BatchValidationException
+    {
+        for (Map.Entry<String, String> kv : queries.entrySet())
+        {
+            if (isShutdown())
+            {
+                return;
+            }
+
+            String fileName = null;
+            String sql;
+            PreparedStatement s = null;
+
+            ExperimentService.get().ensureTransaction();
+            try
+            {
+                fileName = kv.getKey();
+                sql = kv.getValue();
+
+
+                log.info("Running script " + fileName);
+                String[] sqls = sql.split("GO");
+
+                for (String script : sqls)
+                {
+                    s = DbScope.getLabkeyScope().getConnection().prepareStatement(script);
+                    s.execute();
+                }
+                ExperimentService.get().commitTransaction();
+            }
+            catch (SQLException e)
+            {
+                log.error("Unable to run script " + fileName);
+                log.error(e.getMessage());
+                continue;
+            }
+            finally
+            {
+                close(s);
+                ExperimentService.get().closeTransaction();
+            }
+        }
+    }
+
 
     /** @return count of collections that encountered errors */
     private int merge(User user, Container container, Map<String, String> queries, UserSchema schema) throws BadConfigException, BatchValidationException
@@ -615,6 +666,12 @@ public class ETLRunnable implements Runnable
                         scope.commitTransaction();
                         setLastVersion(targetTableName, newBaselineVersion);
                         setLastTimestamp(targetTableName, newBaselineTimestamp);
+
+                        if (updates > 100000)
+                        {
+                            shrinkDB(scope);
+                        }
+
                         log.info(MessageFormat.format("Committed updates for {0} records in {1}", updates, targetTableName));
 
                         try
@@ -693,6 +750,24 @@ public class ETLRunnable implements Runnable
         }
 
         return deletes;
+    }
+
+    private void shrinkDB(DbScope scope) throws SQLException
+    {
+        if (scope.getSqlDialect().isSqlServer())
+        {
+            log.info("Shrinking TempDB");
+
+            DbSchema tempDb = DbSchema.get("tempdb");
+
+            SQLFragment sql1 = new SQLFragment("use tempdb; dbcc shrinkfile (tempdev, 100); use labkey; ");
+            SqlExecutor se = new SqlExecutor(tempDb.getScope());
+            se.execute(sql1);
+
+            SQLFragment sql2 = new SQLFragment("use tempdb; dbcc shrinkfile (templog, 100); use labkey; ");
+            SqlExecutor se2 = new SqlExecutor(tempDb.getScope());
+            se2.execute(sql2);
+        }
     }
 
     /**

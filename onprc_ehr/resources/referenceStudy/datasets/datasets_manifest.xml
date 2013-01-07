@@ -2,9 +2,9 @@
 <datasets metaDataFile="datasets_metadata.xml" xmlns="http://labkey.org/study/xml">
     <categories>
         <category>ClinPath</category>
+        <category>Colony Management</category>
         <category>Clinical</category>
         <category>Pathology</category>
-        <category>Colony Management</category>
     </categories>
     <datasets>
         <dataset name="antibioticSensitivity" id="5011" category="ClinPath" type="Standard">
@@ -34,7 +34,7 @@
         <dataset name="diagnostics" id="5013" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="alopecia" id="1061" category="Clinical" type="Standard">
+        <dataset name="alopecia" id="1061" showByDefault="false" category="Clinical" type="Standard">
             <tags/>
         </dataset>
         <dataset name="measurements" id="5016" category="Pathology" type="Standard">
@@ -67,7 +67,7 @@
         <dataset name="encounters" id="1067" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="clinical_observations" id="5006" category="Clinical" type="Standard">
+        <dataset name="clinical_observations" id="5006" showByDefault="false" category="Clinical" type="Standard">
             <tags/>
         </dataset>
         <dataset name="clinremarks" id="1047" category="Clinical" type="Standard">
@@ -79,22 +79,13 @@
         <dataset name="drug" id="1014" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="final_reports" id="5009" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="obs" id="1023" category="Clinical" type="Standard">
             <tags/>
         </dataset>
         <dataset name="problem" id="1030" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="surgery" id="1031" showByDefault="false" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="treatments" id="1075" showByDefault="false" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="tb" id="1035" category="Clinical" type="Standard">
+        <dataset name="tb" id="1035" showByDefault="false" category="Clinical" type="Standard">
             <tags/>
         </dataset>
         <dataset name="teeth" id="1062" showByDefault="false" category="Clinical" type="Standard">
@@ -142,9 +133,6 @@
         <dataset name="behaviorRemarks" id="1004" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="charges" id="5005" category="Colony Management" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="deaths" id="1048" category="Pathology" demographicData="true" type="Standard">
             <tags/>
         </dataset>
@@ -188,12 +176,6 @@
             <tags/>
         </dataset>
         <dataset name="ActiveHousing" id="5010" showByDefault="false" category="Colony Management" demographicData="true" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="feeding" id="1078" category="Clinical" demographicData="true" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="pairtest" id="1079" showByDefault="false" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
     </datasets>
