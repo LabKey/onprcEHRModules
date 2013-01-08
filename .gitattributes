@@ -88,12 +88,12 @@ onprc_ehr/resources/referenceStudy/datasets/PrimateElectronicHealthRecord.datase
 onprc_ehr/resources/referenceStudy/datasets/datasets_manifest.xml -text
 onprc_ehr/resources/referenceStudy/datasets/datasets_metadata.xml -text
 onprc_ehr/resources/referenceStudy/study.xml -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/obsolete/onprc_ehr-12.20-12.21.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.30-12.301.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.301-12.302.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.302-12.303.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.303-12.304.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.304-12.305.sql -text
-onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.21.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.302-12.303.sql -text
@@ -102,7 +102,6 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.301-12.302.sql 
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.302-12.303.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.303-12.304.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.304-12.305.sql -text
-onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.21.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text
