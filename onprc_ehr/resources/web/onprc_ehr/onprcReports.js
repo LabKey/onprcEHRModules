@@ -64,6 +64,26 @@ EHR.reports.hematology = function(panel, tab, subject){
 }
 
 EHR.reports.currentBlood = function(panel, tab, subject){
-    //https://bridge.ohsu.edu/research/onprc/dcm/DCM%20Standard%20Operatiing%20Procedures/Blood%20Collection%20Volume%20Guidelines.pdf
+    var filterArray = panel.getFilterArray(tab, subject);
+
+    tab.add({
+        html: 'This report summarizes the blood available for the animals below.  For more detail on this calculation, please see the PDF <a href=="https://bridge.ohsu.edu/research/onprc/dcm/DCM%20Standard%20Operatiing%20Procedures/Blood%20Collection%20Volume%20Guidelines.pdf" target="_blank">here</a>.',
+        style: 'padding-bottom: 20px;'
+    });
+
+    var config = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'currentBloodSummary',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable,
+        sort: '-date'
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: config
+    });
+
 
 }

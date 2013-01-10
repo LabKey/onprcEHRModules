@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="leaseFees" tableDbType="TABLE">
+                <tableTitle>Lease Fees Calculation</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>

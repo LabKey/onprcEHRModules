@@ -16,8 +16,8 @@
 SELECT
 	cast(AnimalID as nvarchar(4000)) as Id,
 	Date as Date,
-		s1.Value as type,
-		s2.Value as cond,
+    s1.Value as type,
+    s2.Value as cond,
 	Birth_Weight As Weight,
 
 	case

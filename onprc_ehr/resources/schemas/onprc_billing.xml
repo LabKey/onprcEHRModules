@@ -1,5 +1,7 @@
 <ns:tables xmlns:ns="http://labkey.org/data/xml">
     <ns:table tableName="chargeRates" tableDbType="TABLE">
+        <ns:tableTitle>Charge Rates</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="chargeId"/>
@@ -14,6 +16,8 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="clinicalFeeDefinition" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Clinical Fee Structure</ns:tableTitle>
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="procedureId"/>
@@ -27,6 +31,8 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="chargeRateExemptions" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Exemptions to Default Rates</ns:tableTitle>
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="project"/>
@@ -41,7 +47,9 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="chargableItems" tableDbType="TABLE">
+    <ns:table tableName="chargeableItems" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Chargeable Items</ns:tableTitle>
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="name"/>
@@ -57,6 +65,8 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="invoicedItems" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Invoiced Items</ns:tableTitle>
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="id"/>
@@ -81,8 +91,18 @@
             <ns:column columnName="modifiedBy"/>
             <ns:column columnName="modified"/>
         </ns:columns>
+        <ns:buttonBarOptions includeStandardButtons="true">
+            <ns:includeScript>/onprc_ehr/billingButtons.js</ns:includeScript>
+            <ns:item insertPosition="end" text="More Actions">
+                <ns:item text="Reverse Charges">
+                    <ns:onClick>ONPRC.Billing.buttons.reverseChangesHandler(dataRegionName, arguments[0].ownerCt.floatParent);</ns:onClick>
+                </ns:item>
+            </ns:item>
+        </ns:buttonBarOptions>
     </ns:table>
     <ns:table tableName="creditAccount" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Credit Account</ns:tableTitle>
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="chargeId"/>
@@ -97,6 +117,8 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="miscCharges" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Misc Charges</ns:tableTitle>
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="id"/>
@@ -120,6 +142,8 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="perDiemFeeDefinition" tableDbType="TABLE">
+        <ns:tableTitle>Per Diem Fee Structure</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="chargeId"/>
@@ -136,6 +160,8 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="invoiceRuns" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Invoice Runs</ns:tableTitle>
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="date"/>
@@ -150,9 +176,18 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="leaseFeeDefinition" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Lease Fee Definition</ns:tableTitle>
         <ns:columns>
             <ns:column columnName="rowId"/>
-            <ns:column columnName="project"/>
+            <ns:column columnName="project">
+                <ns:fk>
+                    <ns:fkDbSchema>ehr</ns:fkDbSchema>
+                    <ns:fkTable>projects</ns:fkTable>
+                    <ns:fkColumnName>project</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>name</ns:fkDisplayColumnName>
+                </ns:fk>
+            </ns:column>
             <ns:column columnName="minAge"/>
             <ns:column columnName="maxAge"/>
             <ns:column columnName="assignCondition"/>
@@ -167,19 +202,35 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="accounts" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Aliases</ns:tableTitle>
         <ns:auditLogging>DETAILED</ns:auditLogging>
-        <ns:importUrl></ns:importUrl>
-        <ns:insertUrl></ns:insertUrl>
-        <ns:updateUrl></ns:updateUrl>
-        <ns:deleteUrl></ns:deleteUrl>
         <ns:columns>
-            <ns:column columnName="account"/>
-            <ns:column columnName="grant"/>
+            <ns:column columnName="account">
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>accounts</ns:fkTable>
+                    <ns:fkColumnName>account</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="grant">
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>grants</ns:fkTable>
+                    <ns:fkColumnName>grant</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
             <ns:column columnName="investigator"/>
             <ns:column columnName="startdate"/>
             <ns:column columnName="enddate"/>
             <ns:column columnName="active"/>
-            <ns:column columnName="fiscalAuthority"/>
+            <ns:column columnName="fiscalAuthority">
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>fiscalAuthorities</ns:fkTable>
+                    <ns:fkColumnName>rowid</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
             <ns:column columnName="externalid"/>
             <ns:column columnName="comment"/>
             <ns:column columnName="tier"/>
@@ -191,6 +242,8 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="fiscalAuthorities" tableDbType="TABLE">
+        <ns:tableTitle>Fiscal Authorities</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
             <ns:column columnName="rowid"/>
             <ns:column columnName="faid"/>
@@ -212,8 +265,16 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="grants" tableDbType="TABLE">
+        <ns:tableTitle>Grants</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
-            <ns:column columnName="grant"/>
+            <ns:column columnName="grant">
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>grants</ns:fkTable>
+                    <ns:fkColumnName>grant</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
             <ns:column columnName="investigatorId"/>
             <ns:column columnName="title"/>
             <ns:column columnName="startDate"/>
@@ -226,6 +287,8 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="procedureFeeDefinition" tableDbType="TABLE">
+        <ns:tableTitle>Procedure Fee Structure</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
             <ns:column columnName="rowid"/>
             <ns:column columnName="procedureId"/>
@@ -240,10 +303,25 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="projectAccountHistory" tableDbType="TABLE">
+        <ns:tableTitle>Project Account History</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
             <ns:column columnName="rowid"/>
-            <ns:column columnName="project"/>
-            <ns:column columnName="account"/>
+            <ns:column columnName="project">
+                <ns:fk>
+                    <ns:fkDbSchema>ehr</ns:fkDbSchema>
+                    <ns:fkTable>projects</ns:fkTable>
+                    <ns:fkColumnName>project</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>name</ns:fkDisplayColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="account">
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>accounts</ns:fkTable>
+                    <ns:fkColumnName>account</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
             <ns:column columnName="startdate"/>
             <ns:column columnName="enddate"/>
             <ns:column columnName="objectid"/>

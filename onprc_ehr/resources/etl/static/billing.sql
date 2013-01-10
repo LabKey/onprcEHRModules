@@ -29,7 +29,7 @@ left join IRIS_Production.dbo.Sys_Parameters s3 on (s3.Field = 'ChargeType'and s
 
 UNION ALL
 
---add ref_feesSurgical to chargableItems
+--add ref_feesSurgical to chargeableItems
 select
 	t.name,
 	'Surgery' as category,
@@ -58,7 +58,7 @@ WHERE s.procedureName IS NOT NULL
 GROUP BY name
 
 UNION ALL
---add lease fees to chargableItems
+--add lease fees to chargeableItems
 SELECT
 	name,
 	'Lease Fee' as category,
@@ -75,7 +75,7 @@ Select
 From IRIS_Production.dbo.Ref_FeesLease rfl
       left join IRIS_Production.dbo.Sys_Parameters s1 on (s1.Flag = rfl.AgeCategory and s1.Field = 'AgeCategory')
       left join IRIS_Production.dbo.Ref_FeesProcedures rf ON (rf.ProcedureID = rfl.procedureId)
-      left join labkey.onprc_billing.chargableItems lk ON (lk.name = rf.procedureName)
+      left join labkey.onprc_billing.chargeableItems lk ON (lk.name = rf.procedureName)
 where rfl.DateDisabled is null
 ) t
 GROUP BY name
@@ -83,7 +83,7 @@ GROUP BY name
 --TODO: procedure fee definition
 
 ) t
-LEFT JOIN labkey.onprc_billing.chargableItems ci ON (ci.name = t.name)
+LEFT JOIN labkey.onprc_billing.chargeableItems ci ON (ci.name = t.name)
 WHERE ci.name IS NULL;
 
 
@@ -95,7 +95,7 @@ INSERT INTO labkey.onprc_billing.chargeRateExemptions
 (project, chargeId, unitcost, startDate, enddate, container)
 SELECT
   projectId,
-  (SELECT max(rowid) FROM labkey.onprc_billing.chargableItems ci WHERE ci.name = r.ProcedureName) as chargeId,
+  (SELECT max(rowid) FROM labkey.onprc_billing.chargeableItems ci WHERE ci.name = r.ProcedureName) as chargeId,
   ChargeAmount as unitcost,
   rf.DateCreated as startDate,
   rf.DateDisabled as enddate,
@@ -118,7 +118,7 @@ Select
 
 From IRIS_Production.dbo.Ref_FeesSpecialSurg fs
 LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
-left join labkey.onprc_billing.chargableItems lk ON (lk.name = s.procedureName + ' - No Staff' AND lk.category = 'Surgery')
+left join labkey.onprc_billing.chargeableItems lk ON (lk.name = s.procedureName + ' - No Staff' AND lk.category = 'Surgery')
 
 INSERT INTO labkey.onprc_billing.chargeRateExemptions
 (project, chargeId, unitcost, startDate, enddate, container)
@@ -135,7 +135,7 @@ Select
 
 From IRIS_Production.dbo.Ref_FeesSpecialSurg fs
 LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
-left join labkey.onprc_billing.chargableItems lk ON (lk.name = s.procedureName + ' - Staff' AND lk.category = 'Surgery')
+left join labkey.onprc_billing.chargeableItems lk ON (lk.name = s.procedureName + ' - Staff' AND lk.category = 'Surgery')
 
 --creditAccount
 TRUNCATE TABLE labkey.onprc_billing.creditAccount;
@@ -151,7 +151,7 @@ Select
 
 From IRIS_Production.dbo.Ref_FeesCreditAlias f
 left join IRIS_Production.dbo.Ref_FeesProcedures fp ON (f.ItemCode = cast(fp.ProcedureID as nvarchar) + 'C')
-left join labkey.onprc_billing.chargableItems lk ON (lk.name = fp.procedureName);
+left join labkey.onprc_billing.chargeableItems lk ON (lk.name = fp.procedureName);
 
 --charge rates
 TRUNCATE TABLE labkey.onprc_billing.chargeRates;
@@ -166,7 +166,7 @@ Select
 
 From IRIS_Production.dbo.Ref_FeesClinical c
 left join IRIS_Production.dbo.Ref_FeesProcedures r ON (c.ProcedureID = r.ProcedureID)
-left join labkey.onprc_billing.chargableItems lk ON (lk.name = r.procedureName);
+left join labkey.onprc_billing.chargeableItems lk ON (lk.name = r.procedureName);
 
 INSERT INTO labkey.onprc_billing.chargeRates
 (chargeId, unitcost, startDate, enddate, container)
@@ -179,7 +179,7 @@ Select
 
 From IRIS_Production.dbo.Ref_FeesMiscellaneous c
 left join IRIS_Production.dbo.Ref_FeesProcedures r ON (c.ProcedureID = r.ProcedureID)
-left join labkey.onprc_billing.chargableItems lk ON (lk.name = r.procedureName);
+left join labkey.onprc_billing.chargeableItems lk ON (lk.name = r.procedureName);
 
 --add lease records to charge rates
 INSERT INTO labkey.onprc_billing.chargeRates
@@ -209,7 +209,7 @@ From IRIS_Production.dbo.Ref_FeesLease rfl
       left join IRIS_Production.dbo.Ref_FeesProcedures rf ON (rf.ProcedureID = rfl.procedureId)
 
 ) t
-left join labkey.onprc_billing.chargableItems lk ON (lk.name = t.name);
+left join labkey.onprc_billing.chargeableItems lk ON (lk.name = t.name);
 
 --lease fee definition
 TRUNCATE TABLE labkey.onprc_billing.leaseFeeDefinition;
@@ -257,12 +257,12 @@ From IRIS_Production.dbo.Ref_FeesLease rfl
       left join IRIS_Production.dbo.Ref_FeesProcedures rf ON (rf.ProcedureID = rfl.procedureId)
 where rfl.DateDisabled is null
 ) t
-left join labkey.onprc_billing.chargableItems lk ON (lk.name = t.name);
+left join labkey.onprc_billing.chargeableItems lk ON (lk.name = t.name);
 
 --per diem definition
 INSERT INTO labkey.onprc_billing.perDiemFeeDefinition (chargeId, housingDefinition, housingType)
 select
-(SELECT rowid FROM labkey.onprc_billing.chargableItems ci WHERE ci.name = r.ProcedureName) as chargeId,
+(SELECT rowid FROM labkey.onprc_billing.chargeableItems ci WHERE ci.name = r.ProcedureName) as chargeId,
 HousingDefinition,
 HousingType
 

@@ -20,10 +20,10 @@ Select
 
 	--Afr.Topic as TopicInt  ,
 	s1.value as Category,
-	Remarks as Remark,
+	Remarks as value,
 
     --TODO
-	ActionDate as ActionDate ,
+	--ActionDate as ActionDate ,
 	--afr.PoolCode as PoolCode ,        ----- Ref_Pool
 	--rp.ShortDescription,
 	--rp.Description,
@@ -53,4 +53,35 @@ left join Ref_Technicians Rt on (Afr.TechnicianID = Rt.ID)
 left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'DepartmentCode')
 left join Ref_pool rp on (rp.PoolCode = afr.PoolCode)
 
-WHERE afr.datedisabled is null AND afr.ts > ?
+WHERE afr.datedisabled is null 
+AND afr.ts > ?
+
+UNION ALL
+
+SELECT 
+	cast(AnimalID as nvarchar(4000)) as Id,
+	ReproImpairDate as date,	
+	
+	'ReproImpair' as category,
+	'ReproImpair' as value ,
+	null as performedBy,
+	afq.objectid
+
+From Af_Qrf afq
+WHERE ReproImpair = 1
+AND afq.ts > ?
+
+UNION ALL
+
+SELECT 
+	cast(AnimalID as nvarchar(4000)) as Id,
+	BirthDate as Birth,	
+	
+	'BreedingFlag' as category,
+	'BreedingFlag' as value,
+	null as performedBy,
+	afq.objectid
+
+From Af_Qrf afq
+WHERE BreedingFlag = 1
+AND afq.ts > ?

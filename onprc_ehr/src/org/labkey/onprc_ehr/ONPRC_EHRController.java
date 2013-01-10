@@ -21,29 +21,42 @@ import org.labkey.api.action.ApiResponse;
 import org.labkey.api.action.ApiSimpleResponse;
 import org.labkey.api.action.ExportAction;
 import org.labkey.api.action.RedirectAction;
+import org.labkey.api.action.SimpleViewAction;
 import org.labkey.api.action.SpringActionController;
+import org.labkey.api.data.Container;
+import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.ldk.NavItem;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.RequiresPermissionClass;
+import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.AdminPermission;
+import org.labkey.api.security.permissions.ReadPermission;
+import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
+import org.labkey.api.view.HtmlView;
+import org.labkey.api.view.NavTree;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLRunnable;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -84,6 +97,97 @@ public class ONPRC_EHRController extends SpringActionController
                 timestamps.put(key, new Date(Long.parseLong(map.get(key))));
             }
             resp.getProperties().put("timestamps", timestamps);
+
+            return resp;
+        }
+    }
+
+    @RequiresPermissionClass(ReadPermission.class)
+    public class GetNavItemsAction extends ApiAction<Object>
+    {
+        public ApiResponse execute(Object form, BindException errors)
+        {
+            ApiResponse resp = new ApiSimpleResponse();
+
+            //first add labs
+            List<JSONObject> labs = new ArrayList<JSONObject>();
+            Container labContainer = ContainerManager.getForPath("/ONPRC/Labs");
+            if (labContainer != null)
+            {
+                for (Container c : labContainer.getChildren())
+                {
+                    JSONObject json = new JSONObject();
+                    json.put("name", c.getName());
+                    json.put("path", c.getPath());
+                    json.put("url", c.getStartURL(getUser()));
+                    json.put("canRead", c.hasPermission(getUser(), ReadPermission.class));
+                    labs.add(json);
+                }
+            }
+            resp.getProperties().put("labs", labs);
+
+            //then admin
+            List<JSONObject> admin = new ArrayList<JSONObject>();
+            Container adminContainer = ContainerManager.getForPath("/ONPRC/Admin");
+            if (adminContainer != null)
+            {
+                for (Container c : adminContainer.getChildren())
+                {
+                    JSONObject json = new JSONObject();
+                    json.put("name", c.getName());
+                    json.put("path", c.getPath());
+                    json.put("url", c.getStartURL(getUser()));
+                    json.put("canRead", c.hasPermission(getUser(), ReadPermission.class));
+                    admin.add(json);
+                }
+            }
+            resp.getProperties().put("admin", admin);
+
+            //then cores
+            List<JSONObject> cores = new ArrayList<JSONObject>();
+            Container coresContainer = ContainerManager.getForPath("/ONPRC/Core Facilities");
+            if (coresContainer != null)
+            {
+                for (Container c : coresContainer.getChildren())
+                {
+                    JSONObject json = new JSONObject();
+                    json.put("name", c.getName());
+                    json.put("path", c.getPath());
+                    json.put("url", c.getStartURL(getUser()));
+                    json.put("canRead", c.hasPermission(getUser(), ReadPermission.class));
+                    cores.add(json);
+                }
+            }
+            resp.getProperties().put("cores", cores);
+
+            //for now, EHR is hard coded
+            List<JSONObject> ehr = new ArrayList<JSONObject>();
+            Container ehrContainer = ContainerManager.getForPath("/ONPRC/EHR");
+
+            JSONObject json = new JSONObject();
+            json.put("name", "Animal Health Record");
+            json.put("path", ehrContainer.getPath());
+            json.put("url", ehrContainer.getStartURL(getUser()).toString());
+            json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
+            ehr.add(json);
+
+            json = new JSONObject();
+            json.put("name", "Animal History");
+            json.put("path", ehrContainer.getPath());
+            json.put("url", new ActionURL("ehr", "animalHistory", ehrContainer).toString());
+            json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
+            ehr.add(json);
+
+            json = new JSONObject();
+            json.put("name", "Animal Search");
+            json.put("path", ehrContainer.getPath());
+            json.put("url", new ActionURL("ehr", "animalSearch", ehrContainer).toString());
+            json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
+            ehr.add(json);
+
+            resp.getProperties().put("ehr", ehr);
+
+            resp.getProperties().put("success", true);
 
             return resp;
         }
@@ -308,6 +412,63 @@ public class ONPRC_EHRController extends SpringActionController
                     fIn.close();
                 }
             }
+        }
+    }
+
+    @RequiresPermissionClass(AdminPermission.class)
+    public class RunEHRTestsAction extends SimpleViewAction<RunEHRTestsForm>
+    {
+        public void validateCommand(RunEHRTestsForm form, Errors errors)
+        {
+
+        }
+
+        public URLHelper getSuccessURL(RunEHRTestsForm form)
+        {
+            return getContainer().getStartURL(getUser());
+        }
+
+        public ModelAndView getView(RunEHRTestsForm form, BindException errors) throws Exception
+        {
+            StringBuilder msg = new StringBuilder();
+
+            ONPRC_EHRTestHelper helper = new ONPRC_EHRTestHelper();
+            Method method = helper.getClass().getMethod("testBloodCalculation", Container.class, User.class);
+            method.invoke(helper, getContainer(), getUser());
+
+
+
+//            List<String> messages = EHRManager.get().verifyDatasetResources(getContainer(),  getUser());
+//            for (String message : messages)
+//            {
+//                msg.append("\t").append(message).append("<br>");
+//            }
+//
+//            if (messages.size() == 0)
+//                msg.append("There are no missing files");
+
+            return new HtmlView(msg.toString());
+        }
+
+        public NavTree appendNavTrail(NavTree tree)
+        {
+            return tree.addChild("ONPRC EHR Tests");
+
+        }
+    }
+
+    public static class RunEHRTestsForm
+    {
+        String[] _tests;
+
+        public String[] getTests()
+        {
+            return _tests;
+        }
+
+        public void setTests(String[] tests)
+        {
+            _tests = tests;
         }
     }
 

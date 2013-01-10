@@ -689,7 +689,6 @@ public class ETLRunnable implements Runnable
                             log.error(e.getMessage());
                         }
                     }
-
                 }
             }
             catch (SQLException e)
@@ -767,6 +766,11 @@ public class ETLRunnable implements Runnable
             SQLFragment sql2 = new SQLFragment("use tempdb; dbcc shrinkfile (templog, 100); use labkey; ");
             SqlExecutor se2 = new SqlExecutor(tempDb.getScope());
             se2.execute(sql2);
+
+            log.info("Checkpoint and shrinking Logfile");
+            SQLFragment sql3 = new SQLFragment("CHECKPOINT;DBCC SHRINKFILE ( labkey_log, 1);");
+            SqlExecutor se3 = new SqlExecutor(scope);
+            se3.execute(sql3);
         }
     }
 

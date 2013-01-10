@@ -1,85 +1,74 @@
 <script type="text/javascript">
 
 Ext4.onReady(function (){
-
-if (LABKEY.Security.currentUser.isAdmin){
     var webpart = <%=webpartContext%>;
 
     Ext4.create('LDK.ext.NavPanel', {
         renderTo: webpart.wrapperDivId,
         width: '100%',
-        sections: [
-            {header: 'Admin',
-                items: [
-                    //{name: 'EHR Backups', url: '<%=contextPath%>/project<%=containerPath%>/Backups/begin.view?'},
-                    {name: 'ETL Admin', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/etlAdmin.view?'},
-                    {name: 'Junit Tests', url: '<%=contextPath%>/junit/begin.view?'},
-                    {name: 'Kinship Calculation', url: '<%=contextPath%>/ehr<%=containerPath%>/kinship.view?'},
-                    {name: 'Manage EHR Study', url: '<%=contextPath%>/study<%=containerPath%>/manageStudy.view?'},
-                    {name: 'Populate Initial Data (Generic)', url: '<%=contextPath%>/EHR<%=containerPath%>/populateInitialData.view?'},
-                    {name: 'Populate Initial Data (ONPRC)', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/populateData.view?'},
-                    {name: 'Set EHR Properties', url: '<%=contextPath%>/core<%=containerPath%>/modulePropertyAdmin.view?moduleName=EHR'},
-                    {name: 'Update Dataset Properties', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureDatasetProperties.view?'},
-                    {name: 'Update Study QCStates', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureQCStates.view?'},
-                    {name: 'Verify Dataset Resources', url: '<%=contextPath%>/ehr<%=containerPath%>/verifyDatasetResources.view?'}
-                ]
-            },
-            {header: 'Logs',
-                items: [
-                    {name: 'Labkey.log', url: '<%=contextPath%>/admin/showPrimaryLog.view'},
-                    {name: 'Labkey-errors.log', url: '<%=contextPath%>/admin/showAllErrors.view'},
-                    {name: 'ETL Log', url: '<%=contextPath%>/onprc_ehr/showEtlLog.view'}
-                ]
-            },
-            {header: 'Notifications',
-                items: [
-                    {name: 'Manage Notification Recipients', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=NotificationRecipients'},
-                    {name: 'Notification Admin', url: '<%=contextPath%>/ldk<%=containerPath%>/notificationAdmin.view?'}
-                ]
-            },
-            {header: 'Associated Servers',
-                items: [
-                    {name: 'ActiveMQ Queue: Production App Server', url: 'http://prc-labkey1.ohsu.edu:8161/admin/queues.jsp'},
-                    {name: 'ActiveMQ Queue: Test/Training App Server', url: 'http://prc-labkey3.ohsu.edu:8161/admin/queues.jsp'},
+        sections: [{
+            header: 'Admin',
+            items: [
+                //{name: 'EHR Backups', url: '<%=contextPath%>/project<%=containerPath%>/Backups/begin.view?'},
+                {name: 'ETL Admin', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/etlAdmin.view?'},
+                {name: 'Junit Tests', url: '<%=contextPath%>/junit/begin.view?'},
+                {name: 'Kinship Calculation', url: '<%=contextPath%>/ehr<%=containerPath%>/kinship.view?'},
+                {name: 'Manage EHR Study', url: '<%=contextPath%>/study<%=containerPath%>/manageStudy.view?'},
+                {name: 'Populate Initial Data (Generic)', url: '<%=contextPath%>/EHR<%=containerPath%>/populateInitialData.view?'},
+                {name: 'Populate Initial Data (ONPRC)', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/populateData.view?'},
+                {name: 'Set EHR Properties', url: '<%=contextPath%>/core<%=containerPath%>/modulePropertyAdmin.view?moduleName=EHR'},
+                {name: 'Update Dataset Properties', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureDatasetProperties.view?'},
+                {name: 'Update Study QCStates', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureQCStates.view?'},
+                {name: 'Verify Dataset Resources', url: '<%=contextPath%>/ehr<%=containerPath%>/verifyDatasetResources.view?'}
+            ]
+        },{
+            header: 'Logs',
+            items: [
+                {name: 'Labkey.log', url: '<%=contextPath%>/admin/showPrimaryLog.view'},
+                {name: 'Labkey-errors.log', url: '<%=contextPath%>/admin/showAllErrors.view'},
+                {name: 'ETL Log', url: '<%=contextPath%>/onprc_ehr/showEtlLog.view'}
+            ]
+        },{
+            header: 'Notifications',
+            items: [
+                {name: 'Manage Notification Recipients', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=NotificationRecipients'},
+                {name: 'Notification Admin', url: '<%=contextPath%>/ldk<%=containerPath%>/notificationAdmin.view?'}
+            ]
+        },{
+            header: 'Associated Servers',
+            items: [
+                {name: 'ActiveMQ Queue: Production App Server', url: 'http://prc-labkey1.ohsu.edu:8161/admin/queues.jsp'},
+                {name: 'ActiveMQ Queue: Test/Training App Server', url: 'http://prc-labkey3.ohsu.edu:8161/admin/queues.jsp'},
 
-                    {name: 'Monit: Production App Server', url: 'http://prc-labkey1.ohsu.edu:2812/'},
-                    {name: 'Monit: Production Pipeline Server', url: 'http://prc-labkey2.ohsu.edu:2812/'},
-                    {name: 'Monit: Test/Training App Server', url: 'http://prc-labkey3.ohsu.edu:2812/'},
-                    {name: 'Monit: Test/Training Pipeline Server', url: 'http://prc-labkey4.ohsu.edu:2812/'},
+                {name: 'Monit: Production App Server', url: 'http://prc-labkey1.ohsu.edu:2812/'},
+                {name: 'Monit: Production Pipeline Server', url: 'http://prc-labkey2.ohsu.edu:2812/'},
+                {name: 'Monit: Test/Training App Server', url: 'http://prc-labkey3.ohsu.edu:2812/'},
+                {name: 'Monit: Test/Training Pipeline Server', url: 'http://prc-labkey4.ohsu.edu:2812/'},
 
-                    {name: 'Munin: Production App Server', url: 'http://prc-labkey1.ohsu.edu:8449/'},
-                    {name: 'Munin: Production Pipeline Server', url: 'http://prc-labkey2.ohsu.edu:8449/'},
-                    {name: 'Munin: Test/Training App Server', url: 'http://prc-labkey3.ohsu.edu:8449/'},
-                    {name: 'Munin: Test/Training Pipeline Server', url: 'http://prc-labkey4.ohsu.edu:8449/'}
-                ]
-            },
-            {header: 'Other Tables',
-                items: [
-                    {name: 'Manage Animal History Reports', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=reports'},
-                    {name: 'Manage Notification Types', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=NotificationTypes'},
-                    {name: 'Manage Form Types', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=formtypes'},
-                    {name: 'Manage Form Sections', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=FormPanelSections'},
-                    {name: 'Manage Templates', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=formtemplates'},
-                    {name: 'Manage Template Records', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=formtemplaterecords'}
-                ]
-            },
-            {header: 'Usage',
-                items: [
-                    {name: 'Site Logins By Day', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=core&query.queryName=SiteUsageByDay'},
-                    {name: 'Site Logins By Month', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=core&query.queryName=SiteUsageByMonth'},
-                    {name: 'Site Logins By Group', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=core&query.queryName=SiteUsageByGroup'}
-                ]
-//            },
-//            {header: 'Validation',
-//                items: [
-//                    {name: 'Postgres/mySQL Comparison', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=col_dump&query.queryName=mysql_check'},
-//                    {name: 'Postgres/mySQL Comparison - To Excel', url: '<%=contextPath%>/query<%=containerPath%>/exportRowsExcel.view?schemaName=col_dump&query.queryName=mysql_check'},
-//                    {name: 'Update Housing Snapshot', url: '<%=contextPath%>/study<%=containerPath%>/editSnapshot.view?schemaName=study&snapshotName=ActiveHousing&query.queryName=ActiveHousing'},
-//                ]
-            }
-        ]
+                {name: 'Munin: Production App Server', url: 'http://prc-labkey1.ohsu.edu:8449/'},
+                {name: 'Munin: Production Pipeline Server', url: 'http://prc-labkey2.ohsu.edu:8449/'},
+                {name: 'Munin: Test/Training App Server', url: 'http://prc-labkey3.ohsu.edu:8449/'},
+                {name: 'Munin: Test/Training Pipeline Server', url: 'http://prc-labkey4.ohsu.edu:8449/'}
+            ]
+        },{
+            header: 'Other Tables',
+            items: [
+                {name: 'Manage Animal History Reports', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=reports'},
+                {name: 'Manage Notification Types', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=NotificationTypes'},
+                {name: 'Manage Form Types', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=formtypes'},
+                {name: 'Manage Form Sections', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=FormPanelSections'},
+                {name: 'Manage Templates', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=formtemplates'},
+                {name: 'Manage Template Records', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=formtemplaterecords'}
+            ]
+        },{
+            header: 'Usage',
+            items: [
+                {name: 'Site Logins By Day', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=core&query.queryName=SiteUsageByDay'},
+                {name: 'Site Logins By Month', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=core&query.queryName=SiteUsageByMonth'},
+                {name: 'Site Logins By Group', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=core&query.queryName=SiteUsageByGroup'}
+            ]
+        }]
     });
-}
 });
 
 </script>

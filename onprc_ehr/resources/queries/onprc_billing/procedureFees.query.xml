@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="procedureFees" tableDbType="TABLE">
+                <tableTitle>Procedure Fees</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>

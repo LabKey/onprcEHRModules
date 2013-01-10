@@ -28,6 +28,7 @@ import org.labkey.api.data.SimpleDisplayColumn;
 import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.query.ExprColumn;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
@@ -56,65 +57,59 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     public void customize(TableInfo table)
     {
-        for (ColumnInfo col : table.getColumns())
+        if (table instanceof AbstractTableInfo)
         {
-            COL_ENUM.processColumn(col);
-        }
+            customizeColumns((AbstractTableInfo)table);
 
-        if (table instanceof AbstractTableInfo && matches(table, "study", "Animal"))
-        {
-            customizeAnimalTable((AbstractTableInfo)table);
-        }
-        else if (table instanceof AbstractTableInfo && matches(table, "study", "Clinical Encounters"))
-        {
-            customizeEncounters((AbstractTableInfo) table);
-        }
-        else if (table instanceof AbstractTableInfo && matches(table, "ehr", "projects"))
-        {
-            customizeProjects((AbstractTableInfo) table);
+            if (matches(table, "study", "Animal"))
+            {
+                customizeAnimalTable((AbstractTableInfo)table);
+            }
+            else if (matches(table, "study", "Clinical Encounters"))
+            {
+                customizeEncounters((AbstractTableInfo) table);
+            }
+            else if (matches(table, "ehr", "project"))
+            {
+                customizeProjects((AbstractTableInfo) table);
+            }
         }
     }
 
-    private enum COL_ENUM
+    private void customizeColumns(AbstractTableInfo ti)
     {
-        project(Integer.class){
-            public void customizeColumn(ColumnInfo col)
+        ColumnInfo project = ti.getColumn("project");
+        if (project != null && !ti.getName().equalsIgnoreCase("project"))
+        {
+            if (project.getFk() == null)
             {
-
+                UserSchema us = getUserSchema(ti, "ehr");
+                if (us != null)
+                    project.setFk(new QueryForeignKey(us, "project", "project", "name"));
             }
-        };
-
-        private Class dataType;
-
-        COL_ENUM(Class dataType){
-            this.dataType = dataType;
         }
 
-        abstract public void customizeColumn(ColumnInfo col);
-
-        public static void processColumn(ColumnInfo col)
+        ColumnInfo account = ti.getColumn("account");
+        if (account != null && !ti.getName().equalsIgnoreCase("accounts"))
         {
-            try
+            account.setLabel("Alias");
+            if (account.getFk() == null)
             {
-                COL_ENUM colEnum = COL_ENUM.valueOf(col.getName().toLowerCase());
-                if (colEnum != null)
-                {
-                    if (col.getJdbcType().getJavaClass() == colEnum.dataType)
-                    {
-                        colEnum.customizeColumn(col);
-                    }
-
-                    if (col.isAutoIncrement())
-                    {
-                        col.setUserEditable(false);
-                        col.setShownInInsertView(false);
-                        col.setShownInUpdateView(false);
-                    }
-                }
+                UserSchema us = getUserSchema(ti, "onprc_billing");
+                if (us != null)
+                    account.setFk(new QueryForeignKey(us, "accounts", "account", "account"));
             }
-            catch (IllegalArgumentException e)
+        }
+
+        ColumnInfo grant = ti.getColumn("grant");
+        if (grant!= null && !ti.getName().equalsIgnoreCase("grants"))
+        {
+            grant.setLabel("Grant");
+            if (grant.getFk() == null)
             {
-                //ignore, unknown column name
+                UserSchema us = getUserSchema(ti, "onprc_billing");
+                if (us != null)
+                    grant.setFk(new QueryForeignKey(us, "grants", "grant", "grant"));
             }
         }
     }
@@ -145,29 +140,29 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             @Override
             public DisplayColumn createRenderer(final ColumnInfo colInfo)
             {
-                return new DataColumn(colInfo){
+            return new DataColumn(colInfo){
 
-                    public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
-                    {
-                        String lsid = (String)ctx.get("objectid");
-                        out.write("<a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showEncounterHistory('" + lsid + "', this);\">Display History</a>");
-                    }
+                public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+                {
+                    String lsid = (String)ctx.get("objectid");
+                    out.write("<a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showEncounterHistory('" + lsid + "', this);\">Display History</a>");
+                }
 
-                    public boolean isSortable()
-                    {
-                        return false;
-                    }
+                public boolean isSortable()
+                {
+                    return false;
+                }
 
-                    public boolean isFilterable()
-                    {
-                        return false;
-                    }
+                public boolean isFilterable()
+                {
+                    return false;
+                }
 
-                    public boolean isEditable()
-                    {
-                        return false;
-                    }
-                };
+                public boolean isEditable()
+                {
+                    return false;
+                }
+            };
             }
         });
         ci.setIsUnselectable(false);
@@ -179,6 +174,18 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
     private void customizeProjects(AbstractTableInfo ti)
     {
         ti.setTitleColumn("name");
+
+        ti.getColumn("inves").setHidden(true);
+        ti.getColumn("inves2").setHidden(true);
+        ti.getColumn("reqname").setHidden(true);
+        ti.getColumn("research").setHidden(true);
+        ti.getColumn("avail").setHidden(true);
+
+        ColumnInfo invest = ti.getColumn("investigatorId");
+        invest.setHidden(false);
+        UserSchema us = getUserSchema(ti, "onprc_ehr");
+        if (us != null)
+            invest.setFk(new QueryForeignKey(us, "investigators", "key", "lastName"));
     }
 
     private ColumnInfo getWrappedIdCol(UserSchema us, AbstractTableInfo ds, String name, String queryName)
@@ -195,12 +202,25 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private UserSchema getStudyUserSchema(AbstractTableInfo ds)
     {
-        if (!HttpView.hasCurrentView())
+        return getUserSchema(ds, "study");
+    }
+
+    public static UserSchema getUserSchema(AbstractTableInfo ds, String name)
+    {
+        User u;
+        if (!HttpView.hasCurrentView()){
+            u = EHRService.get().getEHRUser();
+        }
+        else
+        {
+            u = HttpView.currentContext().getUser();
+        }
+
+        if (u == null)
             return null;
 
-        User u = HttpView.currentContext().getUser();
         Container c = ((FilteredTable)ds).getContainer();
-        return QueryService.get().getUserSchema(u, c, "study");
+        return QueryService.get().getUserSchema(u, c, name);
     }
 
     private boolean matches(TableInfo ti, String schema, String query)

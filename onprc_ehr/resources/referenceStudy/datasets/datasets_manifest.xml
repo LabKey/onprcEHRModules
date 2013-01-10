@@ -28,9 +28,6 @@
         <dataset name="fosterParents" id="5023" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="diagnoses" id="5024" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="diagnostics" id="5013" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
@@ -59,9 +56,6 @@
             <tags/>
         </dataset>
         <dataset name="bcs" id="1065" showByDefault="false" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="cageObs" id="5003" showByDefault="false" category="Clinical" type="Standard">
             <tags/>
         </dataset>
         <dataset name="encounters" id="1067" category="Clinical" type="Standard">
@@ -148,25 +142,13 @@
         <dataset name="inbreeding" id="5001" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="menses" id="1060" showByDefault="false" category="Colony Management" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="notes" id="1068" showByDefault="false" category="Colony Management" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="prenatal" id="1029" category="Pathology" demographicData="true" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="biopsy" id="1006" category="Pathology" type="Standard">
             <tags/>
         </dataset>
         <dataset name="morphologicDiagnosis" id="1005" category="Pathology" type="Standard">
             <tags/>
         </dataset>
         <dataset name="histology" id="1070" category="Pathology" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="necropsy" id="1022" category="Pathology" type="Standard">
             <tags/>
         </dataset>
         <dataset name="organ_weights" id="1072" showByDefault="false" category="Pathology" type="Standard">

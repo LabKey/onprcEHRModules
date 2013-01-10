@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- SELECT
-	--iacuc.ProjectID as ProjectID , --Ref_ProjectsIACUC
-	coalesce(rtrim(ltrim(lower(ri.IACUCCode))), 'None') as protocol,
-	
-	--iacuc.ProcedureID as ProcedureID  , --Ref_SurgProcedure
-	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = s.procedureName) as procedureid,
-	
-	iacuc.ProcedureCount as allowed,
-	iacuc.DateCreated as startdate,
-	iacuc.objectid 
 
-FROM IACUC_NHPSurgeries IACUC
-left join Ref_SurgProcedure s on (iacuc.ProcedureID = s.ProcedureID)
-left join Ref_ProjectsIACUC ri on (IACUC.ProjectID = ri.ProjectID) 
-where IACUC.DateDisabled is null
-and iacuc.ts > ?
+select rpi.IACUCCode as project,
+		rpa.ohsuaccountnumber as account,
+		rpa.aliasstartdate,
+		rpa.AliasExpirationDate,
+		rpa.objectid
+	from Ref_ProjectsIACUC rpi join Ref_ProjectAccounts rpa on rpi.ProjectID = rpa.ProjectID
+
+ AND rpi.ts > ?
+

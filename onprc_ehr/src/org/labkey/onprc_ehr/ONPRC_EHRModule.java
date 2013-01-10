@@ -25,11 +25,13 @@ import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.QuerySchema;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.resource.Resource;
+import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
+import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
 import java.util.Collection;
@@ -54,7 +56,7 @@ public class ONPRC_EHRModule extends DefaultModule
 
     public double getVersion()
     {
-        return 12.305;
+        return 12.306;
     }
 
     public boolean hasScripts()
@@ -95,6 +97,8 @@ public class ONPRC_EHRModule extends DefaultModule
             });
         }
 
+        RoleManager.registerRole(new ONPRCBillingAdminRole());
+
         EHRService.get().registerModule(this);
         EHRService.get().registerTableCustomizer(this, new ONPRC_EHRCustomizer());
 
@@ -102,6 +106,7 @@ public class ONPRC_EHRModule extends DefaultModule
         assert r != null;
         EHRService.get().registerTriggerScript(this, r);
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/onprcReports.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/Utils.js"), this);
     }
 
     @Override

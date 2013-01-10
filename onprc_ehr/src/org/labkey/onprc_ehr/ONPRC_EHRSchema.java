@@ -33,23 +33,23 @@ public class ONPRC_EHRSchema
 
     public static final String TABLE_ETL_RUNS = "etl_runs";
 
-        public static ONPRC_EHRSchema getInstance()
-        {
-            return _instance;
-        }
+    public static ONPRC_EHRSchema getInstance()
+    {
+        return _instance;
+    }
 
-        private ONPRC_EHRSchema()
-        {
+    private ONPRC_EHRSchema()
+    {
 
-        }
+    }
 
-        public DbSchema getSchema()
-        {
-            return DbSchema.get(SCHEMA_NAME);
-        }
+    public DbSchema getSchema()
+    {
+        return DbSchema.get(SCHEMA_NAME);
+    }
 
-        public SqlDialect getSqlDialect()
-        {
-            return getSchema().getSqlDialect();
-        }
+    public SqlDialect getSqlDialect()
+    {
+        return getSchema().getSqlDialect();
+    }
 }

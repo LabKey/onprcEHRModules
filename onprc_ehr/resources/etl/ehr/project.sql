@@ -13,53 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 Select
     Rpi.ProjectId as project,
-	cast(rtrim(ltrim(lower(Rpi.ProjectId))) as integer) as name,
-	rtrim(ltrim(lower(cast(Rpi.IACUCCode as nvarchar(4000))))) as protocol,
+	coalesce ((select top 1 rpi2.IacucCode
+				from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on rpi2.ProjectID = ipc.ProjectParentID
+				where ipc.projectchildid = rpi.projectid order by ipc.datecreated desc), rpi.iacuccode) as protocol,
+	coalesce((select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa
+				where rpi.projectid = rpa.ProjectID order by datecreated desc), 'None') as account,
+	(ri.LastName + ', ' + ri.FirstName) as inves,
+	-- avail
 	Rpi.Title,
-
-	--Rpi.ProjectId as projectId,
-	--rp.IACUCCode as protocolId,
-	--pc.ProjectParentId,
-	--pc.ProjectChildID,
-	Rpi.IACUCCode as projectCode,
+	-- research
+	-- reqname
+	-- contact_emails		todo
 	Rpi.StartDate,
 	Rpi.EndDate,
-	--Rpi.IACUCApprovalDate,
-	--Rpi.OriginalApprovalDate,
-	--Rpi.USDALevel as USDALevelInt,
-	--s1.Value as USDALevel,
-	--Rpi.MultipleSurvivalSurg,
-	--Rpi.ProjectType as ProjectTypeInt,
-	S2.Value as ProjectType,
-	Rpi.Funded as FundedInt,
-	S3.Value as Funded,
-	--Rpi.eIACUCNum,
-	Rpi.IBCApprovalNum,
-	Rpi.IBCApprovalRequired,
-	--Rpi.DateCreated,
-	--Rpi.DateDisabled,
+	-- inves2
+	Rpi.IACUCCode as name,
+	pc.InvestigatorID,
 	rpi.objectid
-	--rpi.ts as rowversion
 
 From Ref_ProjectsIACUC rpi
-	left join Sys_Parameters s1 on (s1.Field = 'USDALevel' and s1.Flag = rpi.USDALevel)
-	left join Sys_Parameters s2 on (s2.Field = 'ProjectType' and s2.Flag = rpi.ProjectType)
-	left join Sys_Parameters s3 on (s3.Field = 'IACUCFunding' and s3.Flag = rpi.Funded)
-	--NOTE: this is designed to weed out inactive relationships
-	left join (
-        SELECT rp.*, ts2
-        from Ref_IACUCParentChildren rp
-        JOIN (select 
-            rp.ProjectChildID,
-            MAX(ISNULL(DateDisabled, '2020-01-01')) As DateDisabled,
-            max(ts) as ts2
-            FROM Ref_IACUCParentChildren rp
-            GROUP BY rp.ProjectChildID
-        ) t ON (rp.ProjectChildId = t.ProjectChildID AND ISNULL(rp.DateDisabled, '2020-01-01') = t.DateDisabled)		
-	) pc on (pc.ProjectChildID = rpi.ProjectID)
-	left join Ref_ProjectsIACUC rp on (pc.ProjectParentID = rp.ProjectID)
-	WHERE (pc.ProjectChildID is null or pc.ProjectChildID!=pc.ProjectParentID)
+	left join Ref_ProjInvest pc on (pc.ProjectID = rpi.ProjectID AND pc.DateDisabled is null and pc.PIFlag = 1)
+	left join Ref_Investigator ri on ri.InvestigatorID = pc.investigatorid
 
-	AND (rpi.ts > ? or pc.ts2 > ?)
+AND (rpi.ts > ? or pc.ts2 > ?)

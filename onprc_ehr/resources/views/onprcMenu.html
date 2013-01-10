@@ -4,16 +4,43 @@
         var webpart = <%=webpartContext%>;
 
         var div = Ext4.get(webpart.wrapperDivId).parent('div');
-        div.setStyle('padding', '0px');
-        Ext4.create('Ext.panel.Panel', {
+        if (div)
+            div.setStyle('padding', '0px');
+
+        Ext4.QuickTips.init();
+
+        var panel = Ext4.create('Ext.panel.Panel', {
+            cls: 'labkey-iconpanel',
             width: 300,
             border: true,
             itemId: 'menuPanel',
             defaults: {
-                bodyStyle: 'padding: 5px;',
+                //bodyStyle: 'padding: 5px;',
+                items: [{
+                    xtype: 'dataview',
+                    overItemCls: 'x4-item-over',
+                    trackOver: true,
+                    itemSelector: 'div.thumb-wrap',
+                    cls: 'labkey-iconpanel',
+                    tpl: [
+                        '<tpl for=".">',
+                            '<div ',
+                            '<tpl if="!canRead">data-qtip="You do not have permission to view this page"</tpl>',
+                            'style="width: 300px;" class="thumb-wrap thumb-wrap-side">',
+                            '<tpl if="url"><a href="{url}"></tpl>',
+                                '<span style="font-weight: bold" class="thumb-label-side">{name:htmlEncode}</span>',
+                            '<tpl if="url"></a></tpl>',
+                            '</div>',
+                        '</tpl>',
+                        '<div class="x-clear"></div>'
+                    ],
+                    store: {
+                        proxy: 'memory',
+                        fields: ['name', 'url', 'canRead']
+                    }
+                }],
                 border: true,
-                minHeight: 200,
-                //collapsible: true,
+                minHeight: 50,
                 collapsed: true,
                 header: {
                     listeners: {
@@ -41,22 +68,41 @@
             },
             items: [{
                 title: 'EHR',
-                html: 'EHR'
+                itemId: 'ehr'
             },{
-                minHeight: 200,
-                title: 'Admin',
-                html: 'Admin'
+                itemId: 'admin',
+                title: 'Admin'
             },{
-                minHeight: 200,
                 title: 'Research',
-                html: 'Research'
+                itemId: 'labs'
             },{
-                minHeight: 200,
                 title: 'Core Facilities',
-                html: 'Cores'
+                itemId: 'cores'
             }]
-        }).render(div.id);
+        });
+        panel.render(div.id);
 
+        ONPRC.Utils.getNavItems({
+            scope: this,
+            success: function(results){
+                Ext4.each(['labs', 'admin', 'cores', 'ehr'], function(name){
+                    if (results[name] && results[name].length){
+                        var section = panel.down('#' + name).items.get(0);
+                        var toAdd = [];
+                        Ext4.each(results[name], function(item){
+                            toAdd.push(LDK.StoreUtils.createModelInstance(section.store, {
+                                name: item.name,
+                                url: item.canRead ? item.url : null,
+                                canRead: item.canRead
+                            }));
+                        }, this);
+
+                        if (toAdd.length)
+                            section.store.add(toAdd);
+                    }
+                }, this);
+            }
+        });
     });
 
 </script>

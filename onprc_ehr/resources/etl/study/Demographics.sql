@@ -34,16 +34,21 @@ Select
 	BirthDate as Birth,
 	DeathDate as Death,
 
-	--TODO: what are these?
-	BirthFlag as BirthFlagInt  ,
-	s2.Value as BirthFlag  ,
-	DeathFlag as DeathFlagInt,
-	s1.Value as DeathFlag,
+-- 	CASE
+-- 	  WHEN s1.Value IS NULL THEN null
+-- 	  WHEN s1.value = 'Dead' THEN 'Dead'
+-- 	  WHEN s1.value = 'Live' THEN 'Alive'
+--       WHEN s1.value = 'Sold' THEN 'Shipped'
+--     END as status,
+
+	CASE
+	  WHEN s1.Value IS NULL THEN null
+	  WHEN s1.value = 'Dead' THEN 'Dead'
+	  WHEN s1.value = 'Live' THEN 'Alive'
+      WHEN s1.value = 'Sold' THEN 'Shipped'
+    END as calculated_status,
 
 	--TODO: most of these should get moved into study.notes
-	ReproImpair as ReproImpair ,
-	ReproImpairDate as ReproImpairDate ,
-	BreedingFlag as BreedingFlag  ,
 	PregnancyDate as PregnancyDate ,
 	Toys as Toys  ,
 

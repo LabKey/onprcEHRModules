@@ -1,0 +1,5 @@
+<view xmlns="http://labkey.org/data/xml/view" title="Finance Management">
+    <dependencies>
+        <dependency path="ehr.context" />
+    </dependencies>
+</view>

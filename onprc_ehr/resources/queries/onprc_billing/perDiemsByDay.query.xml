@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="perDiemsByDay" tableDbType="TABLE">
+                <tableTitle>Per Diems, Raw Data</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>

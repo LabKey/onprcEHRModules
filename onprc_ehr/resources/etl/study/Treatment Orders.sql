@@ -24,8 +24,8 @@ SELECT
 	--Route as RouteInt ,
 	s3.Value as Route,
 	--Frequency as FrequencyInt ,
-	--TODO: convert this
-	--s4.Value as Frequency,
+	(select rowid FROM labkey.ehr_lookups.treatment_frequency tf WHERe tf.meaning = s4.value) as frequency,
+	
 	Duration as Duration,
 	EndDate as EndDate,
 	--Reason as ReasonInt  ,
@@ -62,4 +62,5 @@ FROM Cln_Medications cln
      left join Sys_parameters s6 on (s6.Field = 'DepartmentCode' and s6.Flag = rt.DeptCode)
      left join ref_snomed sno on (sno.SnomedCode = cln.Medication)
 
-where cln.ts > ? and Medication is not null and Medication != ''
+where Medication is not null and Medication != ''
+AND cln.ts > ?
