@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2013 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /**
  * Used to display the results of ONPRC.Utils.getNavItems using an IconPanel.
  * @cfg category The category of icons to display
