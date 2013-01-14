@@ -16,10 +16,10 @@
 
 select rpi.IACUCCode as project,
 		rpa.ohsuaccountnumber as account,
-		rpa.aliasstartdate,
-		rpa.AliasExpirationDate,
+		rpa.aliasstartdate as startdate,
+		rpa.AliasExpirationDate as enddate,
 		rpa.objectid
 	from Ref_ProjectsIACUC rpi join Ref_ProjectAccounts rpa on rpi.ProjectID = rpa.ProjectID
 
- AND rpi.ts > ?
+AND rpi.ts > ?
 

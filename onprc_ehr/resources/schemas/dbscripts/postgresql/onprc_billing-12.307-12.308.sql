@@ -1,0 +1,1 @@
+ALTER TABLE onprc_billing.projectAccountHistory ADD CONSTRAINT PK_projectAccountHistory PRIMARY KEY  (rowid);

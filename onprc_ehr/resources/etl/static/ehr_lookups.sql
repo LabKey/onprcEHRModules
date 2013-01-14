@@ -180,7 +180,7 @@ INSERT INTO labkey.ehr_lookups.cage_type (cagetype,sqft,cageslots,MaxAnimalWeigh
 
 Select
 	CASE
-		WHEN row.CageTypeID = 19 THEN ct.CageDescription
+		WHEN ct.CageTypeID = 19 THEN ct.CageDescription
 		ELSE CONVERT(VARCHAR, ct.CageDescription + ' - ') + CONVERT(VARCHAR, ct.CageSize)
 	END as cagetype,
 	--ugly
@@ -188,5 +188,5 @@ Select
 	CageSlots,
 	--CageCapacity,
 	MaxAnimalSize
-From  Ref_CageTypes
+From IRIS_Production.dbo.Ref_CageTypes ct
 WHERE DateDisabled is null;

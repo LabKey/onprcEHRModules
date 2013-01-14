@@ -21,16 +21,11 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.DisplayColumnFactory;
-import org.labkey.api.data.JdbcType;
 import org.labkey.api.data.RenderContext;
-import org.labkey.api.data.SQLFragment;
-import org.labkey.api.data.SimpleDisplayColumn;
 import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
 import org.labkey.api.ehr.EHRService;
-import org.labkey.api.query.ExprColumn;
-import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
 import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
@@ -40,7 +35,6 @@ import org.labkey.api.view.HttpView;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.sql.Timestamp;
 
 /**
  * Created with IntelliJ IDEA.
@@ -207,19 +201,25 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     public static UserSchema getUserSchema(AbstractTableInfo ds, String name)
     {
+        if (!(ds instanceof FilteredTable))
+        {
+            return null;
+        }
+
         User u;
-        if (!HttpView.hasCurrentView()){
-            u = EHRService.get().getEHRUser();
+        Container c = ((FilteredTable)ds).getContainer();
+
+        if (HttpView.hasCurrentView()){
+            u = HttpView.currentContext().getUser();
         }
         else
         {
-            u = HttpView.currentContext().getUser();
+            u = EHRService.get().getEHRUser(c);
         }
 
         if (u == null)
             return null;
 
-        Container c = ((FilteredTable)ds).getContainer();
         return QueryService.get().getUserSchema(u, c, name);
     }
 

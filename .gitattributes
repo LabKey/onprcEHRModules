@@ -11,14 +11,12 @@ onprc_ehr/resources/etl/ehr/protocolProcedures.sql -text
 onprc_ehr/resources/etl/ehr/snomed_tags.sql -text
 onprc_ehr/resources/etl/ehr_lookups/cage.sql -text
 onprc_ehr/resources/etl/ehr_lookups/lookups.sql -text
+onprc_ehr/resources/etl/onprc_billing/accounts.sql -text
+onprc_ehr/resources/etl/onprc_billing/grants.sql -text
 onprc_ehr/resources/etl/onprc_billing/projectAccountHistory.sql -text
 onprc_ehr/resources/etl/pending/Sur_AnesthesiaLogData.sql -text
 onprc_ehr/resources/etl/pending/Sur_implants.sql -text
-onprc_ehr/resources/etl/pending/accounts.sql -text
-onprc_ehr/resources/etl/pending/cage_type.sql -text
 onprc_ehr/resources/etl/pending/invoicedItems.sql -text
-onprc_ehr/resources/etl/pending/pairings.sql -text
-onprc_ehr/resources/etl/pending/projectAccountHistory.sql -text
 onprc_ehr/resources/etl/pending/sur_vessels.sql -text
 onprc_ehr/resources/etl/pending/tissue_recipients.sql -text
 onprc_ehr/resources/etl/static/billing.sql -text
@@ -65,6 +63,7 @@ onprc_ehr/resources/etl/study/Treatment[!!-~]Orders.sql -text
 onprc_ehr/resources/etl/study/Urinalysis[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Virology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Weight.sql -text
+onprc_ehr/resources/etl/study/pairings.sql -text
 onprc_ehr/resources/folderTypes/ONPRC_EHR.folderType.xml -text
 onprc_ehr/resources/queries/ehr/project.js -text
 onprc_ehr/resources/queries/ehr_lookups/location_types.sql -text
@@ -87,6 +86,7 @@ onprc_ehr/resources/queries/study/Foster[!!-~]Parents.js -text
 onprc_ehr/resources/queries/study/Matings.js -text
 onprc_ehr/resources/queries/study/Measurements.js -text
 onprc_ehr/resources/queries/study/Microbiology[!!-~]Results.js -text
+onprc_ehr/resources/queries/study/Morphologic[!!-~]Diagnosis.js -text
 onprc_ehr/resources/queries/study/Pregnancy[!!-~]Confirmations.js -text
 onprc_ehr/resources/queries/study/Serology[!!-~]Results.js -text
 onprc_ehr/resources/queries/study/Tissue[!!-~]Measurements.js -text
@@ -107,6 +107,7 @@ onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.302-12.303.sql
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.303-12.304.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.304-12.305.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.305-12.306.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.307-12.308.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.302-12.303.sql -text
@@ -116,6 +117,7 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.302-12.303.sql 
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.303-12.304.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.304-12.305.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.305-12.306.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.307-12.308.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text

@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-select 	distinct
+select
 		rpi.ProjectID,
 		rtrim(ltrim(lower(Rpi.IACUCCode))) as protocol,
 		rtrim(ltrim(Rpi.Title)) as title,
-	--	ipc.ProjectParentId,
-	--	ipc.ProjectChildID,
 		pi.InvestigatorID,
 		(ri.LastName + ', ' + ri.FirstName) as inves,
 		Rpi.StartDate as approve,

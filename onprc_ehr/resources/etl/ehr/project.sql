@@ -35,7 +35,7 @@ Select
 	rpi.objectid
 
 From Ref_ProjectsIACUC rpi
-	left join Ref_ProjInvest pc on (pc.ProjectID = rpi.ProjectID AND pc.DateDisabled is null and pc.PIFlag = 1)
+	left join Ref_ProjInvest pc on (pc.ProjectID = rpi.ProjectID AND pc.DateDisabled is null and pc.PIFlag = 1 and pc.investigatorid != 0)
 	left join Ref_Investigator ri on ri.InvestigatorID = pc.investigatorid
 
-AND (rpi.ts > ? or pc.ts2 > ?)
+AND (rpi.ts > ? or pc.ts > ?)

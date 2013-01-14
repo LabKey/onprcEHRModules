@@ -13,6 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+select 
+
+t.location,
+t.room,
+t.cage,
+MAX(t.cagedivider) as divider,
+MAX(t.cagetype) as cagetype,
+MAX(CONVERT(VARCHAR(38), t.objectid)) as objectid
+
+FROM (
 Select
 	CASE
 		WHEN row.row IS NULL THEN rl.Location
@@ -39,3 +49,9 @@ From Ref_RowCage row
 WHERE row.DateDisabled IS NULL
 and row.status = 1
 AND row.ts > ?
+
+) t
+
+GROUP BY location, room, cage
+
+--WHERE location IN ('AN RM 21', 'AN RM 33', 'AN RM 34')

@@ -1,19 +1,4 @@
 /*
- * Copyright (c) 2012 LabKey Corporation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/*
 Psych_Pairings
 
 Created by: Lakshmi Kolli	Date: 8/16/2012
@@ -27,26 +12,27 @@ Tested by:
 
  SELECT
 	--PairingId as PairingId ,
-	Animalid1 as Id1 ,
-	Animalid2 as Id2 ,
-	Pairingdate as date,
+	cast(pp.Animalid1 as nvarchar(4000)) as Id
+	cast(pp.Animalid2 as nvarchar(4000)) as Id2,
+	pp.Pairingdate as date,
+	pp.SeparationDate as enddate,
 	--CageId1 as CageId1 ,
 	L1.Location as room1,
 	rtrim(r1.row) + convert(char(2), r1.Cage) As Cage1,
 	--CageId2 as CageId2 ,
 	L2.Location as room2,
 	rtrim(r2.row) + convert(char(2), r2.Cage) As Cage2,
-	PairingType as PairingTypeInt ,
-	s2.Value AS PairingType,
-	PairingOutcome as PairingOutcomeInt  ,
-	s3.Value as PairingOutcome,
-	SeparationReason as SeparationReasonInt ,
-	s4.Value AS SeparationReason,
-	SeparationDate as SeparationDate ,
-	Aggressor as Aggressor ,
-	Remarks as Remarks ,
-	PairingOrigin as PairingOriginInt ,
-	s5.Value AS PairingOrigin,
+	pp.PairingType as PairingType,
+	--s2.Value AS PairingType,
+	pp.PairingOutcome as PairingOutcome,
+	--s3.Value as PairingOutcome,
+	pp.SeparationReason as SeparationReason,
+	--s4.Value AS SeparationReason,
+		
+	pp.Aggressor as Aggressor ,
+	pp.Remarks as Remark,
+	pp.PairingOrigin as PairingOrigin,
+	--s5.Value AS PairingOrigin,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
@@ -76,4 +62,4 @@ FROM Psych_Pairings PP
      left join Ref_RowCage r2 on  (r2.CageID = PP.CageID2)
      left join Ref_Location L2 on (r2.LocationID = L2.LocationId)
 
---where pp.ts > ?
+where pp.ts > ?
