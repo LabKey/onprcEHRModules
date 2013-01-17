@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 --chargableItems, only importing new items
-INSERT INTO labkey.onprc_billing.chargableItems
+INSERT INTO labkey.onprc_billing.chargeableItems
 (name, category, active, container)
 
 SELECT t.name, t.category, t.active, t.container FROM (
