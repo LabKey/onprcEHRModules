@@ -1,6 +1,6 @@
 package org.labkey.onprc_ehr.query;
 
-import org.labkey.api.data.SchemaTableInfo;
+import org.labkey.api.data.TableInfo;
 import org.labkey.api.query.SimpleUserSchema;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.UserPrincipal;
@@ -15,11 +15,11 @@ import java.util.Map;
  * You are able to map an addition permission to any of these, which the user must also have.  Because InsertPermission and UpdatePermission are checked upstream anyway,
  * the user must also have these permissions.  This is just a way of enforcing more refined security, but not completely changing security.
  */
-public class CustomPermissionsTable extends SimpleUserSchema.SimpleTable<UserSchema>
+public class CustomPermissionsTable<SchemaType extends UserSchema> extends SimpleUserSchema.SimpleTable<SchemaType>
 {
     private Map<Class<? extends Permission>, Class<? extends Permission>> _permMap = new HashMap<Class<? extends Permission>, Class<? extends Permission>>();
 
-    public CustomPermissionsTable(UserSchema schema, SchemaTableInfo table)
+    public CustomPermissionsTable(SchemaType schema, TableInfo table)
     {
         super(schema, table);
     }
