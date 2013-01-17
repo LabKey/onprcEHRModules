@@ -56,7 +56,7 @@ public class ONPRC_EHRModule extends DefaultModule
 
     public double getVersion()
     {
-        return 12.308;
+        return 12.310;
     }
 
     public boolean hasScripts()
@@ -90,7 +90,14 @@ public class ONPRC_EHRModule extends DefaultModule
                 {
                     if (schema.getContainer().getActiveModules().contains(ONPRC_EHRModule.this))
                     {
-                        return QueryService.get().createSimpleUserSchema(schemaName, null, schema.getUser(), schema.getContainer(), dbschema);
+                        if (ONPRC_EHRSchema.BILLING_SCHEMA_NAME.equals(schemaName))
+                        {
+                            return new ONPRC_EHRBillingUserSchema(schema.getUser(), schema.getContainer());
+                        }
+                        else
+                        {
+                            return QueryService.get().createSimpleUserSchema(schemaName, null, schema.getUser(), schema.getContainer(), dbschema);
+                        }
                     }
                     return null;
                 }

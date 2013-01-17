@@ -12,7 +12,7 @@ Tested by:
 
  SELECT
 	--PairingId as PairingId ,
-	cast(pp.Animalid1 as nvarchar(4000)) as Id
+	cast(pp.Animalid1 as nvarchar(4000)) as Id,
 	cast(pp.Animalid2 as nvarchar(4000)) as Id2,
 	pp.Pairingdate as date,
 	pp.SeparationDate as enddate,

@@ -190,3 +190,20 @@ Select
 	MaxAnimalSize
 From IRIS_Production.dbo.Ref_CageTypes ct
 WHERE DateDisabled is null;
+
+--areas
+DELETE FROM labkey.ehr_lookups.areas;
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('ASA');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('ASB');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('NSI');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Research');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Harem');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Colony');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Colony Annex - South');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Colony Annex - North');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Shelters');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Corrals');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Kroc');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 2');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 5');
+INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 8');

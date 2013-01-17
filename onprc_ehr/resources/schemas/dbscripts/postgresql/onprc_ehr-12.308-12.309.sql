@@ -1,0 +1,1 @@
+ALTER TABLE onprc_ehr.investigators ADD objectid ENTITYID;

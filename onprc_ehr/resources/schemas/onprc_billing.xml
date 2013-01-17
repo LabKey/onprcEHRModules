@@ -1,5 +1,5 @@
 <ns:tables xmlns:ns="http://labkey.org/data/xml">
-    <ns:table tableName="chargeRates" tableDbType="TABLE">
+    <ns:table tableName="chargeRates" tableDbType="TABLE" useColumnOrder="true">
         <ns:tableTitle>Charge Rates</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
@@ -15,7 +15,7 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="clinicalFeeDefinition" tableDbType="TABLE">
+    <ns:table tableName="clinicalFeeDefinition" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Clinical Fee Structure</ns:tableTitle>
         <ns:columns>
@@ -30,7 +30,7 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="chargeRateExemptions" tableDbType="TABLE">
+    <ns:table tableName="chargeRateExemptions" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Exemptions to Default Rates</ns:tableTitle>
         <ns:columns>
@@ -47,7 +47,7 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="chargeableItems" tableDbType="TABLE">
+    <ns:table tableName="chargeableItems" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Chargeable Items</ns:tableTitle>
         <ns:columns>
@@ -100,7 +100,7 @@
             </ns:item>
         </ns:buttonBarOptions>
     </ns:table>
-    <ns:table tableName="creditAccount" tableDbType="TABLE">
+    <ns:table tableName="creditAccount" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Credit Account</ns:tableTitle>
         <ns:columns>
@@ -116,7 +116,7 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="miscCharges" tableDbType="TABLE">
+    <ns:table tableName="miscCharges" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Misc Charges</ns:tableTitle>
         <ns:columns>
@@ -141,7 +141,7 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="perDiemFeeDefinition" tableDbType="TABLE">
+    <ns:table tableName="perDiemFeeDefinition" tableDbType="TABLE" useColumnOrder="true">
         <ns:tableTitle>Per Diem Fee Structure</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
@@ -159,7 +159,7 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="invoiceRuns" tableDbType="TABLE">
+    <ns:table tableName="invoiceRuns" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Invoice Runs</ns:tableTitle>
         <ns:columns>
@@ -175,7 +175,7 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="leaseFeeDefinition" tableDbType="TABLE">
+    <ns:table tableName="leaseFeeDefinition" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Lease Fee Definition</ns:tableTitle>
         <ns:columns>
@@ -201,47 +201,7 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="accounts" tableDbType="TABLE">
-        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
-        <ns:tableTitle>Aliases</ns:tableTitle>
-        <ns:auditLogging>DETAILED</ns:auditLogging>
-        <ns:columns>
-            <ns:column columnName="account">
-                <ns:fk>
-                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
-                    <ns:fkTable>accounts</ns:fkTable>
-                    <ns:fkColumnName>account</ns:fkColumnName>
-                </ns:fk>
-            </ns:column>
-            <ns:column columnName="grant">
-                <ns:fk>
-                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
-                    <ns:fkTable>grants</ns:fkTable>
-                    <ns:fkColumnName>grant</ns:fkColumnName>
-                </ns:fk>
-            </ns:column>
-            <ns:column columnName="investigator"/>
-            <ns:column columnName="startdate"/>
-            <ns:column columnName="enddate"/>
-            <ns:column columnName="active"/>
-            <ns:column columnName="fiscalAuthority">
-                <ns:fk>
-                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
-                    <ns:fkTable>fiscalAuthorities</ns:fkTable>
-                    <ns:fkColumnName>rowid</ns:fkColumnName>
-                </ns:fk>
-            </ns:column>
-            <ns:column columnName="externalid"/>
-            <ns:column columnName="comment"/>
-            <ns:column columnName="tier"/>
-            <ns:column columnName="objectid"/>
-            <ns:column columnName="createdby"/>
-            <ns:column columnName="created"/>
-            <ns:column columnName="modifiedby"/>
-            <ns:column columnName="modified"/>
-        </ns:columns>
-    </ns:table>
-    <ns:table tableName="fiscalAuthorities" tableDbType="TABLE">
+    <ns:table tableName="fiscalAuthorities" tableDbType="TABLE" useColumnOrder="true">
         <ns:tableTitle>Fiscal Authorities</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
@@ -264,29 +224,61 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="grants" tableDbType="TABLE">
+    <ns:table tableName="grants" tableDbType="TABLE" useColumnOrder="true">
         <ns:tableTitle>Grants</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
-            <ns:column columnName="grant">
-                <ns:fk>
-                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
-                    <ns:fkTable>grants</ns:fkTable>
-                    <ns:fkColumnName>grant</ns:fkColumnName>
-                </ns:fk>
+            <ns:column columnName="grantNumber">
+                <ns:columnTitle>Grant</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="investigatorId"/>
-            <ns:column columnName="title"/>
-            <ns:column columnName="startDate"/>
-            <ns:column columnName="endDate"/>
-            <ns:column columnName="fiscalAuthority"/>
+            <ns:column columnName="investigatorId">
+                <ns:columnTitle>Investigator</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="title">
+                <ns:columnTitle>Title</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="startDate">
+                <ns:columnTitle>Start Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="endDate">
+                <ns:columnTitle>End Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="fiscalAuthority">
+                <ns:columnTitle>Fiscal Authority</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="grantType">
+                <ns:columnTitle>Grant Type</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="fundingAgency">
+                <ns:columnTitle>Funding Agency</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="agencyAwardNumber">
+                <ns:columnTitle>Agency Award Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="totalDCBudget">
+                <ns:columnTitle>Total DC Budget</ns:columnTitle>
+                <ns:formatString>'$'0.##</ns:formatString>
+            </ns:column>
+            <ns:column columnName="totalFABudget">
+                <ns:columnTitle>Total FA Budget</ns:columnTitle>
+                <ns:formatString>'$'0.##</ns:formatString>
+            </ns:column>
+            <ns:column columnName="budgetStartDate">
+                <ns:columnTitle>Current Budget Start Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="budgetEndDate">
+                <ns:columnTitle>Current Budget End Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="comment">
+                <ns:columnTitle>Comment</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
             <ns:column columnName="modifiedBy"/>
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="procedureFeeDefinition" tableDbType="TABLE">
+    <ns:table tableName="procedureFeeDefinition" tableDbType="TABLE" useColumnOrder="true">
         <ns:tableTitle>Procedure Fee Structure</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
@@ -302,7 +294,7 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
-    <ns:table tableName="projectAccountHistory" tableDbType="TABLE">
+    <ns:table tableName="projectAccountHistory" tableDbType="TABLE" useColumnOrder="true">
         <ns:tableTitle>Project Account History</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
@@ -328,6 +320,121 @@
             <ns:column columnName="createdby"/>
             <ns:column columnName="created"/>
             <ns:column columnName="modifiedby"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="grantProjects" tableDbType="TABLE" useColumnOrder="true">
+        <ns:tableTitle>Grant Projects</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:columns>
+            <ns:column columnName="rowid"/>
+            <ns:column columnName="projectNumber">
+                <ns:columnTitle>OGA Project Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="grantNumber">
+                <ns:columnTitle>OGA Grant Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="fundingAgency">
+                <ns:columnTitle>Funding Agency</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="grantType">
+                <ns:columnTitle>Grant Type</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="agencyAwardNumber">
+                <ns:columnTitle>Agency Award Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="investigatorId">
+                <ns:columnTitle>Investigator</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="alias">
+                <ns:columnTitle>Alias</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="projectTitle">
+                <ns:columnTitle>Project Title</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="projectDescription">
+                <ns:columnTitle>Project Description</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="currentYear">
+                <ns:columnTitle>Current Year</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="totalYears">
+                <ns:columnTitle>Total Years</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="awardSuffix">
+                <ns:columnTitle>Award Suffix</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="organization">
+                <ns:columnTitle>Organization</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="awardStartDate">
+                <ns:columnTitle>Award State Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="awardEndDate">
+                <ns:columnTitle>Award End Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="budgetStartDate">
+                <ns:columnTitle>Current Budget Start Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="budgetEndDate">
+                <ns:columnTitle>Current Budget End Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="currentDCBudget">
+                <ns:columnTitle>Current DC Budget</ns:columnTitle>
+                <ns:formatString>'$'0.##</ns:formatString>
+            </ns:column>
+            <ns:column columnName="currentFABudget">
+                <ns:columnTitle>Current FA Budget</ns:columnTitle>
+                <ns:formatString>'$'0.##</ns:formatString>
+            </ns:column>
+            <ns:column columnName="totalDCBudget">
+                <ns:columnTitle>Total DC Budget</ns:columnTitle>
+                <ns:formatString>'$'0.##</ns:formatString>
+            </ns:column>
+            <ns:column columnName="totalFABudget">
+                <ns:columnTitle>Total FA Budget</ns:columnTitle>
+                <ns:formatString>'$'0.##</ns:formatString>
+            </ns:column>
+            <ns:column columnName="spid">
+                <ns:columnTitle>SPID</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="fiscalAuthority">
+                <ns:columnTitle>Fiscal Authority</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="comment">
+                <ns:columnTitle>Comment</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="iacucFundingSources" tableDbType="TABLE" useColumnOrder="true">
+        <ns:tableTitle>Approved IACUC Funding Sources</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:columns>
+            <ns:column columnName="rowid"/>
+            <ns:column columnName="protocol">
+                <ns:columnTitle>IACUC Protocol</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="grantNumber">
+                <ns:columnTitle>OGA Grant Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="projectNumber">
+                <ns:columnTitle>OGA Project Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="startDate">
+                <ns:columnTitle>Start Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="endDate">
+                <ns:columnTitle>End Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>

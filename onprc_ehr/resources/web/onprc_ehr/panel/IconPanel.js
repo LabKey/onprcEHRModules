@@ -10,9 +10,10 @@
 Ext4.define('ONPRC.panel.IconPanel', {
     extend: 'LABKEY.ext.IconPanel',
     initComponent: function(){
+        Ext4.QuickTips.init();
         this.store = Ext4.create('Ext.data.Store', {
             proxy: 'memory',
-            fields: ['name', 'url', 'iconurl']
+            fields: ['name', 'url', 'iconurl', 'tooltip']
         });
 
         Ext4.apply(this, {
@@ -21,6 +22,7 @@ Ext4.define('ONPRC.panel.IconPanel', {
             labelField: 'name',
             urlField: 'url',
             iconSize: 'large',
+            tooltipField: 'tooltip',
             labelPosition: 'bottom'
         });
 
@@ -33,7 +35,8 @@ Ext4.define('ONPRC.panel.IconPanel', {
                         var rec = LDK.StoreUtils.createModelInstance(this.store, {
                             name: result.name,
                             url: result.canRead ? result.url : null,
-                            iconurl: LABKEY.ActionURL.buildURL('project', 'downloadProjectIcon', result.path)
+                            tooltip: !result.canRead ? 'You do not have permission to view this page' : null,
+                            iconurl: LABKEY.ActionURL.buildURL('project', 'downloadProjectIcon')
                         });
 
                         toAdd.push(rec);

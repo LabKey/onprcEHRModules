@@ -35,6 +35,8 @@ import org.labkey.api.view.HttpView;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,6 +46,8 @@ import java.io.Writer;
  */
 public class ONPRC_EHRCustomizer implements TableCustomizer
 {
+    private Map<String, UserSchema> _userSchemas;
+
     public ONPRC_EHRCustomizer()
     {
 
@@ -51,9 +55,11 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     public void customize(TableInfo table)
     {
+        _userSchemas = new HashMap<String, UserSchema>();
+
         if (table instanceof AbstractTableInfo)
         {
-            customizeColumns((AbstractTableInfo)table);
+            customizeColumns((AbstractTableInfo) table);
 
             if (matches(table, "study", "Animal"))
             {
@@ -95,21 +101,105 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             }
         }
 
-        ColumnInfo grant = ti.getColumn("grant");
-        if (grant!= null && !ti.getName().equalsIgnoreCase("grants"))
+        boolean found = false;
+        for (String field : new String[]{"grant", "grantNumber"})
         {
-            grant.setLabel("Grant");
-            if (grant.getFk() == null)
+            if (found)
+                continue; //a table should never contain both of these anyway
+
+            ColumnInfo grant = ti.getColumn(field);
+            if (grant!= null)
             {
-                UserSchema us = getUserSchema(ti, "onprc_billing");
-                if (us != null)
-                    grant.setFk(new QueryForeignKey(us, "grants", "grant", "grant"));
+                found = true;
+                if (!ti.getName().equalsIgnoreCase("grants") && grant.getFk() == null)
+                {
+                    UserSchema us = getUserSchema(ti, "onprc_billing");
+                    if (us != null)
+                        grant.setFk(new QueryForeignKey(us, "grants", "grantNumber", "grantNumber"));
+                }
             }
+        }
+
+        ColumnInfo room = ti.getColumn("room");
+        if (room != null)
+        {
+            UserSchema us = getUserSchema(ti, "ehr_lookups");
+            if (us != null){
+                room.setFk(new QueryForeignKey(us, "rooms", "room", "room"));
+            }
+
+            room.setLabel("Room");
+        }
+
+        ColumnInfo chargeId = ti.getColumn("chargeId");
+        if (chargeId != null)
+        {
+            UserSchema us = getUserSchema(ti, "onprc_billing");
+            if (us != null){
+                chargeId.setFk(new QueryForeignKey(us, "chargeableItems", "rowid", "name"));
+            }
+            chargeId.setLabel("Charge Name");
+        }
+
+        ColumnInfo snomed = ti.getColumn("snomed");
+        if (snomed != null)
+        {
+            UserSchema us = getUserSchema(ti, "ehr_lookups");
+            if (us != null){
+                snomed.setFk(new QueryForeignKey(us, "snomed", "code", "meaning"));
+            }
+            snomed.setLabel("SNOMED");
+        }
+
+        ColumnInfo procedureId = ti.getColumn("procedureId");
+        if (procedureId != null)
+        {
+            UserSchema us = getUserSchema(ti, "ehr_lookups");
+            if (us != null){
+                procedureId.setFk(new QueryForeignKey(us, "procedures", "rowid", "name"));
+            }
+            procedureId.setLabel("Procedure");
+        }
+
+        found = false;
+        for (String field : new String[]{"investigator", "investigatorId"})
+        {
+            if (found)
+                continue; //a table should never contain both of these anyway
+
+            ColumnInfo investigator = ti.getColumn(field);
+            if (investigator != null)
+            {
+                found = true;
+                investigator.setLabel("Investigator");
+
+                if (!ti.getName().equalsIgnoreCase("investigators") && investigator.getJavaClass().equals(Integer.class))
+                {
+                    UserSchema us = getUserSchema(ti, "onprc_ehr");
+                    if (us != null){
+                        investigator.setFk(new QueryForeignKey(us, "investigators", "rowid", "lastname"));
+                    }
+                }
+                investigator.setLabel("Investigator");
+            }
+        }
+
+        ColumnInfo fiscalAuthority = ti.getColumn("fiscalAuthority");
+        if (fiscalAuthority != null)
+        {
+            UserSchema us = getUserSchema(ti, "onprc_billing");
+            if (us != null){
+                fiscalAuthority.setFk(new QueryForeignKey(us, "fiscalAuthorities", "rowid", "lastName"));
+            }
+            fiscalAuthority.setLabel("Fiscal Authority");
         }
     }
 
     private void customizeAnimalTable(AbstractTableInfo ds)
     {
+        if (ds.getColumn("activeFlags") != null)
+            return;
+
         UserSchema us = getStudyUserSchema(ds);
         if (us == null){
             return;
@@ -128,6 +218,9 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void customizeEncounters(AbstractTableInfo ti)
     {
+        if (ti.getColumn("history") != null)
+            return;
+
         ColumnInfo ci = new WrappedColumn(ti.getColumn("objectid"), "history");
         ci.setDisplayColumnFactory(new DisplayColumnFactory()
         {
@@ -179,7 +272,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         invest.setHidden(false);
         UserSchema us = getUserSchema(ti, "onprc_ehr");
         if (us != null)
-            invest.setFk(new QueryForeignKey(us, "investigators", "key", "lastName"));
+            invest.setFk(new QueryForeignKey(us, "investigators", "rowid", "lastname"));
     }
 
     private ColumnInfo getWrappedIdCol(UserSchema us, AbstractTableInfo ds, String name, String queryName)
@@ -199,12 +292,15 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         return getUserSchema(ds, "study");
     }
 
-    public static UserSchema getUserSchema(AbstractTableInfo ds, String name)
+    public UserSchema getUserSchema(AbstractTableInfo ds, String name)
     {
         if (!(ds instanceof FilteredTable))
         {
             return null;
         }
+
+        if (_userSchemas.containsKey(name))
+            return _userSchemas.get(name);
 
         User u;
         Container c = ((FilteredTable)ds).getContainer();
@@ -220,7 +316,11 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (u == null)
             return null;
 
-        return QueryService.get().getUserSchema(u, c, name);
+        UserSchema us = QueryService.get().getUserSchema(u, c, name);
+        if (us != null)
+            _userSchemas.put(name, us);
+
+        return us;
     }
 
     private boolean matches(TableInfo ti, String schema, String query)

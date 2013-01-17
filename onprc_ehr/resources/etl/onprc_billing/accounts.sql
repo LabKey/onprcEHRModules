@@ -1,5 +1,6 @@
 SELECT
 p.ohsuaccountnumber as account,
+MAX(CONVERT(varchar(38), p.objectid)) as objectid,
 
 count(*) as total
 

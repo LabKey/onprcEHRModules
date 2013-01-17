@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-select rpi.IACUCCode as project,
+select
+        rpi.projectid as project,
+        --rpi.IACUCCode as project,
 		rpa.ohsuaccountnumber as account,
 		rpa.aliasstartdate as startdate,
 		rpa.AliasExpirationDate as enddate,

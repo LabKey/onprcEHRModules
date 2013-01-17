@@ -17,32 +17,76 @@
     </ns:table>
     <ns:table tableName="investigators" tableDbType="TABLE">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Investigators</ns:tableTitle>
         <ns:auditLogging>DETAILED</ns:auditLogging>
         <ns:importUrl></ns:importUrl>
         <ns:insertUrl></ns:insertUrl>
         <ns:updateUrl></ns:updateUrl>
         <ns:deleteUrl></ns:deleteUrl>
         <ns:columns>
-            <ns:column columnName="rowid"/>
-            <ns:column columnName="firstname"/>
-            <ns:column columnName="lastname"/>
-            <ns:column columnName="position"/>
-            <ns:column columnName="address"/>
-            <ns:column columnName="city"/>
-            <ns:column columnName="state"/>
-            <ns:column columnName="country"/>
-            <ns:column columnName="zip"/>
-            <ns:column columnName="phonenumber"/>
-            <ns:column columnName="investigatortype"/>
-            <ns:column columnName="financialanalyst"/>
-            <ns:column columnName="emailaddress"/>
-            <ns:column columnName="datecreated"/>
-            <ns:column columnName="datedisabled"/>
-            <ns:column columnName="division"/>
-            <ns:column columnName="createdby"/>
-            <ns:column columnName="created"/>
-            <ns:column columnName="modifiedby"/>
-            <ns:column columnName="modified"/>
+            <ns:column columnName="rowid">
+                <ns:columnTitle>Investigator Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="firstname">
+                <ns:columnTitle>First Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="lastname">
+                <ns:columnTitle>Last Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="position">
+                <ns:columnTitle>Position</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="address">
+                <ns:columnTitle>Address</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="city">
+                <ns:columnTitle>City</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="state">
+                <ns:columnTitle>State</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="country">
+                <ns:columnTitle>Country</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="zip">
+                <ns:columnTitle>ZIP</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="phonenumber">
+                <ns:columnTitle>Phone Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="investigatortype">
+                <ns:columnTitle>Investigator Type</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="financialanalyst">
+                <ns:columnTitle>Financial Analyst</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="emailaddress">
+                <ns:columnTitle>Email Address</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="datecreated">
+                <ns:columnTitle>Date Created</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="datedisabled">
+                <ns:columnTitle>Date Disabled</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="division">
+                <ns:columnTitle>Division</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="createdby">
+
+            </ns:column>
+            <ns:column columnName="created">
+
+            </ns:column>
+            <ns:column columnName="modifiedby">
+
+            </ns:column>
+            <ns:column columnName="modified">
+
+            </ns:column>
+            <ns:column columnName="objectid">
+
+            </ns:column>
         </ns:columns>
     </ns:table>
 </ns:tables>

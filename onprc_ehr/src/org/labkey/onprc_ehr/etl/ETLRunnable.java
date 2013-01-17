@@ -60,7 +60,6 @@ import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -501,7 +500,7 @@ public class ETLRunnable implements Runnable
                         {
                             log.debug("deleting using real table for: " + realTable.getSelectName() + ", filtering on " + filterColumn.getColumnName());
                             SimpleFilter filter = new SimpleFilter();
-                            filter.addWhereClause(filterColumn.getFieldKey() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
+                            filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
                             Table.delete(realTable, filter);
                         }
                         else

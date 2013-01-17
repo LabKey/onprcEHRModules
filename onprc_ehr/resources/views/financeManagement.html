@@ -12,8 +12,8 @@
             border: false,
             items: [{
                 html: 'This page is a very primitive version of a portal for billing/finance management in the system.  there are two main components:<br><br>' +
-                    '<li>There are reference tables for IACUC protocols, projects, aliases, etc.  These tables can be edited using the links below</li>' +
-                    '<li>There are reports that will summarize charges over a given date range.  These can be run on-demand.  </li>',
+                        '<li>There are reference tables for IACUC protocols, projects, aliases, etc.  These tables can be edited using the links below</li>' +
+                        '<li>There are reports that will summarize charges over a given date range.  These can be run on-demand.  </li>',
                 border: false,
                 style: 'padding-bottom: 10px;'
             },{
@@ -24,35 +24,39 @@
                 sections: [{
                     header: 'Reference Tables',
                     items: [
-                        {name: 'IACUC Protocols', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'ehr', 'query.queryName': 'protocol'})},
-                        {name: 'ONPRC Projects', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'ehr', 'query.queryName': 'projects'})},
-                        {name: 'Aliases', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'onprc_billing', 'query.queryName': 'accounts'})},
-                        {name: 'Grants', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'onprc_billing', 'query.queryName': 'grants'})},
-                        {name: 'Investigators', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'onprc_ehr', 'query.queryName': 'investigators'})},
-                        {name: 'Fiscal Authorities', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'onprc_billing', 'query.queryName': 'fiscalAuthorities'})}
+                        {name: 'IACUC Protocols', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'ehr', 'query.queryName': 'protocol'})},
+                        //{name: 'ONPRC Projects', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'ehr', 'query.queryName': 'projects'})},
 
-                        //{name: 'Fiscal Authorities', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'onprc_billing', 'query.queryName': 'fiscalAuthorities'})}
+                        {name: 'Grants', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'grants'})},
+                        {name: 'Grant Projects', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'grantProjects'})},
+
+                        {name: 'Approved IACUC Funding Sources', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'iacucFundingSources'})},
+
+                        {name: 'Investigators', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_ehr', 'query.queryName': 'investigators'})},
+                        {name: 'Fiscal Authorities', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'fiscalAuthorities'})}
+
+                        //{name: 'Fiscal Authorities', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'fiscalAuthorities'})}
                     ]
                 },{
                     header: 'Rates and Fee Structure',
                     items: [
-                        {name: 'Chargeable Items', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargeableItems'})},
-                        {name: 'Standard Rates', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargeRates'})},
-                        {name: 'Rate Exemptions', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargeRateExemptions'})},
+                        {name: 'Chargeable Items', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'chargeableItems'})},
+                        {name: 'Standard Rates', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'chargeRates'})},
+                        {name: 'Rate Exemptions', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'chargeRateExemptions'})},
 
-                        {name: 'Lease Fees Structure', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'onprc_billing', 'query.queryName': 'leaseFeeDefinition'})},
-                        {name: 'Per Diem Fees Structure', url: LABKEY.ActionURL.buildURL('ehr', 'updateTable', null, {schemaName: 'onprc_billing', 'query.queryName': 'perDiemFeeDefinition'})}
+                        {name: 'Lease Fees Structure', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'leaseFeeDefinition'})},
+                        {name: 'Per Diem Fees Structure', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'perDiemFeeDefinition'})}
 
 
                     ]
                 },{
-                        header: 'Billing Reports',
+                    header: 'Billing Reports',
                     items: [
-                        {name: 'Lease Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'leaseFees'})},
-                        {name: 'Per Diems', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'perDiems'})},
-                        {name: 'Procedure Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'procedureFees'})},
+                        {name: 'Lease Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'leaseFees'})},
+                        {name: 'Per Diems', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'perDiems'})},
+                        {name: 'Procedure Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'procedureFees'})},
 
-                        {name: 'Invoiced Items', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'invoicedItems'})}
+                        {name: 'Invoiced Items', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'invoicedItems'})}
                     ]
                 }]
             }]

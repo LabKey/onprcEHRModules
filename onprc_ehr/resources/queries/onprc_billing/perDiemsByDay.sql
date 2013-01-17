@@ -17,7 +17,10 @@ SELECT
     group_concat(DISTINCT h2.project) as overlappingProjects,
     group_concat(DISTINCT h2.project.protocol) as overlappingProtcols,
     group_concat(DISTINCT h3.room) as rooms,
-    group_concat(DISTINCT h3.cage) as cages
+    group_concat(DISTINCT h3.cage) as cages,
+    group_concat(DISTINCT h3.room.housingCondition) as housingConditions,
+    group_concat(DISTINCT h3.room.housingType) as housingTypes,
+    group_concat(DISTINCT pdf.chargeId) as chargeIds,
 FROM (
   --generate one row per day over the selected range
   SELECT
@@ -34,6 +37,9 @@ LEFT JOIN (
     h.project,
     h.project.account,
     h.date,
+    h.assignCondition,
+    h.releaseCondition,
+    h.projectedReleaseCondition,
     h.ENDDATE
   FROM study.assignment h
 
@@ -70,6 +76,13 @@ LEFT JOIN (
 --find housing at the time
 LEFT JOIN study.housing h3 ON (
   h.id = h3.id AND h3.qcstate.publicdata = true AND CONVERT(h3.date, DATE) <= i.date AND CONVERT(h3.enddateCoalesced, DATE) >= i.date
+)
+
+LEFT JOIN onprc_billing.perDiemFeeDefinition pdf
+ON (
+  pdf.housingType = h3.room.housingType AND
+  pdf.housingDefinition = h3.room.housingCondition AND
+  pdf.releaseCondition = h.releaseCondition
 )
 
 GROUP BY i.date, h.id, h.project, h.project.account, h.project.protocol

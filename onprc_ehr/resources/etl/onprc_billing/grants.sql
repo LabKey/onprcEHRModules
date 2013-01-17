@@ -2,6 +2,7 @@
 SELECT
 p.grantNumber as "grant",
 max(p.grantTitle) as title,
+MAX(CONVERT(varchar(38), p.objectid)) as objectid,
 count(*) as total
 
 FROM Ref_ProjectGrants p

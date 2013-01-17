@@ -31,7 +31,7 @@ Ext4.onReady(function (){
         },{
             header: 'Notifications',
             items: [
-                {name: 'Manage Notification Recipients', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ldk&query.queryName=NotificationRecipients'},
+                {name: 'Manage Notification Recipients', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ldk&query.queryName=NotificationRecipients'},
                 {name: 'Notification Admin', url: '<%=contextPath%>/ldk<%=containerPath%>/notificationAdmin.view?'}
             ]
         },{
@@ -53,12 +53,12 @@ Ext4.onReady(function (){
         },{
             header: 'Other Tables',
             items: [
-                {name: 'Manage Animal History Reports', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=reports'},
-                {name: 'Manage Notification Types', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ldk&query.queryName=NotificationTypes'},
-                {name: 'Manage Form Types', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=formtypes'},
-                {name: 'Manage Form Sections', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=FormPanelSections'},
-                {name: 'Manage Templates', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=formtemplates'},
-                {name: 'Manage Template Records', url: '<%=contextPath%>/ehr<%=containerPath%>/updateTable.view?schemaName=ehr&query.queryName=formtemplaterecords'}
+                {name: 'Manage Animal History Reports', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ehr&query.queryName=reports'},
+                {name: 'Manage Notification Types', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ldk&query.queryName=NotificationTypes'},
+                {name: 'Manage Form Types', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ehr&query.queryName=formtypes'},
+                {name: 'Manage Form Sections', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ehr&query.queryName=FormPanelSections'},
+                {name: 'Manage Templates', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ehr&query.queryName=formtemplates'},
+                {name: 'Manage Template Records', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ehr&query.queryName=formtemplaterecords'}
             ]
         },{
             header: 'Usage',
