@@ -391,7 +391,7 @@ public class ETLRunnable implements Runnable
                     {
                         log.info("Truncating target table, since last rowversion is null: " + targetTableName);
                         SQLFragment truncateSql = new SQLFragment("TRUNCATE TABLE " + realTable.getSelectName());
-                        Table.execute(realTable.getSchema(), truncateSql);
+                        new SqlExecutor(realTable.getSchema()).execute(truncateSql);
                     }
                     else
                     {
@@ -634,7 +634,7 @@ public class ETLRunnable implements Runnable
                                     //NOTE: this may be less important on SQLServer
                                     log.info("Performing Analyze");
                                     String analyze = realTable.getSchema().getSqlDialect().getAnalyzeCommandForTable(realTable.getSchema().getName() + "." + realTable.getName());
-                                    Table.execute(realTable.getSchema(), analyze);
+                                    new SqlExecutor(realTable.getSchema()).execute(analyze);
                                 }
                                 else
                                 {
