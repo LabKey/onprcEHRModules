@@ -51,6 +51,8 @@ SELECT
         TechLastName + ', ' + TechFirstName
 	  WHEN datalength(TechLastName) > 0 AND datalength(TechInitials) > 0 THEN
         TechLastName + ' (' + TechInitials + ')'
+      WHEN datalength(TechInitials) = 0 OR Techinitials = ' ' OR TechLastName = ' none' THEN
+        null
 	  else
 	   TechInitials
     END as performedBy,

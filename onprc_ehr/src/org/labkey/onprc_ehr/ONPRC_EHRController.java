@@ -83,8 +83,9 @@ public class ONPRC_EHRController extends SpringActionController
             ApiResponse resp = new ApiSimpleResponse();
             resp.getProperties().put("enabled", ETL.isEnabled());
             resp.getProperties().put("active", ETL.isRunning());
+            resp.getProperties().put("scheduled", ETL.isScheduled());
+            resp.getProperties().put("nextSync", ETL.nextSync());
 
-            //"etlStatus",
             String[] etlConfigKeys = {"labkeyUser", "labkeyContainer", "jdbcUrl", "jdbcDriver", "runIntervalInMinutes"};
 
             resp.getProperties().put("configKeys", etlConfigKeys);
@@ -202,6 +203,7 @@ public class ONPRC_EHRController extends SpringActionController
 
             PropertyManager.PropertyMap configMap = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
 
+            boolean shouldReschedule = false;
             if (form.getLabkeyUser() != null)
                 configMap.put("labkeyUser", form.getLabkeyUser());
 
@@ -215,7 +217,13 @@ public class ONPRC_EHRController extends SpringActionController
                 configMap.put("jdbcDriver", form.getJdbcDriver());
 
             if (form.getRunIntervalInMinutes() != null)
+            {
+                String oldValue = configMap.get("runIntervalInMinutes");
+                if (!form.getRunIntervalInMinutes().equals(oldValue))
+                    shouldReschedule = true;
+
                 configMap.put("runIntervalInMinutes", form.getRunIntervalInMinutes());
+            }
 
             if (form.getEtlStatus() != null)
                 configMap.put("etlStatus", form.getEtlStatus().toString());
@@ -257,12 +265,21 @@ public class ONPRC_EHRController extends SpringActionController
                 PropertyManager.saveProperties(timestampMap);
             }
 
-            if (form.getEtlStatus() && !ETL.isEnabled())
+            //if config was changed and the ETL is current scheduled to run, we need to restart it
+            if (form.getEtlStatus() && shouldReschedule)
             {
-                ETL.start(100);
-            }
-            else if (!form.getEtlStatus() && ETL.isEnabled())
                 ETL.stop();
+                ETL.start(0);
+            }
+            else
+            {
+                if (form.getEtlStatus() && !ETL.isEnabled())
+                {
+                    ETL.start(0);
+                }
+                else if (!form.getEtlStatus())
+                    ETL.stop();
+            }
 
             resp.getProperties().put("success", true);
 

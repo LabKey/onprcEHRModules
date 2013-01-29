@@ -5,9 +5,15 @@
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="chargeId"/>
-            <ns:column columnName="unitcost"/>
-            <ns:column columnName="startDate"/>
-            <ns:column columnName="endDate"/>
+            <ns:column columnName="unitcost">
+                <ns:columnTitle>Unit Cost</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="startDate">
+                <ns:columnTitle>Start Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="endDate">
+                <ns:columnTitle>End Date</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="container"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -20,9 +26,15 @@
         <ns:tableTitle>Clinical Fee Structure</ns:tableTitle>
         <ns:columns>
             <ns:column columnName="rowId"/>
-            <ns:column columnName="procedureId"/>
-            <ns:column columnName="snomed"/>
-            <ns:column columnName="active"/>
+            <ns:column columnName="procedureId">
+                <ns:columnTitle>Procedure Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="snomed">
+                <ns:columnTitle>SNOMED</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="active">
+                <ns:columnTitle>Is Active?</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="objectid"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -37,9 +49,15 @@
             <ns:column columnName="rowId"/>
             <ns:column columnName="project"/>
             <ns:column columnName="chargeId"/>
-            <ns:column columnName="unitcost"/>
-            <ns:column columnName="startDate"/>
-            <ns:column columnName="endDate"/>
+            <ns:column columnName="unitcost">
+                <ns:columnTitle>Unit Cost</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="startDate">
+                <ns:columnTitle>Start Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="endDate">
+                <ns:columnTitle>End Date</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="container"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -51,12 +69,24 @@
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Chargeable Items</ns:tableTitle>
         <ns:columns>
-            <ns:column columnName="rowId"/>
-            <ns:column columnName="name"/>
-            <ns:column columnName="shortName"/>
-            <ns:column columnName="category"/>
-            <ns:column columnName="comment"/>
-            <ns:column columnName="active"/>
+            <ns:column columnName="rowId">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="name">
+                <ns:columnTitle>Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="shortName">
+                <ns:columnTitle>Short Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="category">
+                <ns:columnTitle>Category</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="comment">
+                <ns:columnTitle>Comment</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="active">
+                <ns:columnTitle>Is Active?</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="container"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -68,23 +98,55 @@
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Invoiced Items</ns:tableTitle>
         <ns:columns>
-            <ns:column columnName="rowId"/>
-            <ns:column columnName="id"/>
-            <ns:column columnName="date"/>
-            <ns:column columnName="debitedaccount"/>
-            <ns:column columnName="creditedaccount"/>
-            <ns:column columnName="category"/>
-            <ns:column columnName="item"/>
-            <ns:column columnName="quantity"/>
-            <ns:column columnName="unitcost"/>
-            <ns:column columnName="totalcost"/>
+            <ns:column columnName="rowId">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="id">
+                <ns:columnTitle>ID</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="date">
+                <ns:columnTitle>Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="debitedaccount">
+                <ns:columnTitle>Debited Alias</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="creditedaccount">
+                <ns:columnTitle>Credited Alias</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="category">
+                <ns:columnTitle>Category</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="item">
+                <ns:columnTitle>Item</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="quantity">
+                <ns:columnTitle>Quantity</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="unitcost">
+                <ns:columnTitle>Unit Cost</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="totalcost">
+                <ns:columnTitle>Total Cost</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="chargeId"/>
-            <ns:column columnName="rateId"/>
-            <ns:column columnName="exemptionId"/>
-            <ns:column columnName="comment"/>
-            <ns:column columnName="flag"/>
-            <ns:column columnName="sourceRecord"/>
-            <ns:column columnName="billingId"/>
+            <ns:column columnName="rateId">
+                <ns:columnTitle>Rate Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="exemptionId">
+                <ns:columnTitle>Exception Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="comment">
+                <ns:columnTitle>Comment</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="flag">
+                <ns:columnTitle>Flag</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="sourceRecord">
+                <ns:columnTitle>Source Record</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="billingId">
+                <ns:columnTitle>Billing Id</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="container"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -104,11 +166,17 @@
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Credit Account</ns:tableTitle>
         <ns:columns>
-            <ns:column columnName="rowId"/>
+            <ns:column columnName="rowId">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="chargeId"/>
             <ns:column columnName="account"/>
-            <ns:column columnName="startDate"/>
-            <ns:column columnName="endDate"/>
+            <ns:column columnName="startDate">
+                <ns:columnTitle>Start Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="endDate">
+                <ns:columnTitle>End Date</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="container"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -120,20 +188,42 @@
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Misc Charges</ns:tableTitle>
         <ns:columns>
-            <ns:column columnName="rowId"/>
-            <ns:column columnName="id"/>
-            <ns:column columnName="date"/>
+            <ns:column columnName="rowId">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="id">
+                <ns:columnTitle>Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="date">
+                <ns:columnTitle>Date</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="project"/>
             <ns:column columnName="account"/>
-            <ns:column columnName="category"/>
+            <ns:column columnName="category">
+                <ns:columnTitle>Category</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="chargeId"/>
-            <ns:column columnName="descrption"/>
-            <ns:column columnName="quantity"/>
-            <ns:column columnName="unitcost"/>
-            <ns:column columnName="totalcost"/>
-            <ns:column columnName="comment"/>
-            <ns:column columnName="taskid"/>
-            <ns:column columnName="requestid"/>
+            <ns:column columnName="descrption">
+                <ns:columnTitle>Description</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="quantity">
+                <ns:columnTitle>Quantity</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="unitcost">
+                <ns:columnTitle>Unit Cost</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="totalcost">
+                <ns:columnTitle>Total Cost</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="comment">
+                <ns:columnTitle>Comment</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="taskid">
+                <ns:columnTitle>Task Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="requestid">
+                <ns:columnTitle>Request Id</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="container"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -145,13 +235,37 @@
         <ns:tableTitle>Per Diem Fee Structure</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
-            <ns:column columnName="rowId"/>
+            <ns:column columnName="rowId">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="chargeId"/>
-            <ns:column columnName="housingType"/>
-            <ns:column columnName="housingDefinition"/>
-            <ns:column columnName="startdate"/>
-            <ns:column columnName="releaseCondition"/>
-            <ns:column columnName="active"/>
+            <ns:column columnName="housingType">
+                <ns:columnTitle>Housing Type</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>ehr_lookups</ns:fkDbSchema>
+                    <ns:fkTable>housingTypes</ns:fkTable>
+                    <ns:fkColumnName>rowid</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>value</ns:fkDisplayColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="housingDefinition">
+                <ns:columnTitle>Housing Definition</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>ehr_lookups</ns:fkDbSchema>
+                    <ns:fkTable>housingDefinition</ns:fkTable>
+                    <ns:fkColumnName>rowid</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>value</ns:fkDisplayColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="startdate">
+                <ns:columnTitle>Start Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="releaseCondition">
+                <ns:columnTitle>Release Condition</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="active">
+                <ns:columnTitle>Is Active?</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="objectid"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -163,11 +277,21 @@
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Invoice Runs</ns:tableTitle>
         <ns:columns>
-            <ns:column columnName="rowId"/>
-            <ns:column columnName="date"/>
-            <ns:column columnName="dataSources"/>
-            <ns:column columnName="runBy"/>
-            <ns:column columnName="comment"/>
+            <ns:column columnName="rowId">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="date">
+                <ns:columnTitle>Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="dataSources">
+                <ns:columnTitle>Data Sources</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="runBy">
+                <ns:columnTitle>Run By</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="comment">
+                <ns:columnTitle>Comment</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="container"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -179,21 +303,25 @@
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Lease Fee Definition</ns:tableTitle>
         <ns:columns>
-            <ns:column columnName="rowId"/>
-            <ns:column columnName="project">
-                <ns:fk>
-                    <ns:fkDbSchema>ehr</ns:fkDbSchema>
-                    <ns:fkTable>projects</ns:fkTable>
-                    <ns:fkColumnName>project</ns:fkColumnName>
-                    <ns:fkDisplayColumnName>name</ns:fkDisplayColumnName>
-                </ns:fk>
+            <ns:column columnName="rowId">
+                <ns:columnTitle>Row Id</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="minAge"/>
-            <ns:column columnName="maxAge"/>
-            <ns:column columnName="assignCondition"/>
-            <ns:column columnName="releaseCondition"/>
+            <ns:column columnName="minAge">
+                <ns:columnTitle>Min Age</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="maxAge">
+                <ns:columnTitle>Max Age</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="assignCondition">
+                <ns:columnTitle>Assign Condition</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="releaseCondition">
+                <ns:columnTitle>Release Condition</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="chargeId"/>
-            <ns:column columnName="active"/>
+            <ns:column columnName="active">
+                <ns:columnTitle>Is Active?</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="objectid"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -205,18 +333,42 @@
         <ns:tableTitle>Fiscal Authorities</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
-            <ns:column columnName="rowid"/>
-            <ns:column columnName="faid"/>
-            <ns:column columnName="firstName"/>
-            <ns:column columnName="lastName"/>
-            <ns:column columnName="position"/>
-            <ns:column columnName="address"/>
-            <ns:column columnName="city"/>
-            <ns:column columnName="state"/>
-            <ns:column columnName="country"/>
-            <ns:column columnName="zip"/>
-            <ns:column columnName="phoneNumber"/>
-            <ns:column columnName="active"/>
+            <ns:column columnName="rowid">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="faid">
+                <ns:columnTitle>FAID</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="firstName">
+                <ns:columnTitle>First Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="lastName">
+                <ns:columnTitle>Last Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="position">
+                <ns:columnTitle>Position</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="address">
+                <ns:columnTitle>Address</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="city">
+                <ns:columnTitle>City</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="state">
+                <ns:columnTitle>State</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="country">
+                <ns:columnTitle>County</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="zip">
+                <ns:columnTitle>ZIP</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="phoneNumber">
+                <ns:columnTitle>Phone Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="active">
+                <ns:columnTitle>Is Active?</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="objectid"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -264,10 +416,10 @@
                 <ns:formatString>'$'0.##</ns:formatString>
             </ns:column>
             <ns:column columnName="budgetStartDate">
-                <ns:columnTitle>Current Budget Start Date</ns:columnTitle>
+                <ns:columnTitle>Budget Start Date</ns:columnTitle>
             </ns:column>
             <ns:column columnName="budgetEndDate">
-                <ns:columnTitle>Current Budget End Date</ns:columnTitle>
+                <ns:columnTitle>Budget End Date</ns:columnTitle>
             </ns:column>
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>
@@ -282,11 +434,21 @@
         <ns:tableTitle>Procedure Fee Structure</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
-            <ns:column columnName="rowid"/>
-            <ns:column columnName="procedureId"/>
-            <ns:column columnName="chargeType"/>
-            <ns:column columnName="chargeId"/>
-            <ns:column columnName="active"/>
+            <ns:column columnName="rowid">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="procedureId">
+                <ns:columnTitle>Procedure Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="chargeType">
+                <ns:columnTitle>Charge Type</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="chargeId">
+                <ns:columnTitle>Charge Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="active">
+                <ns:columnTitle>Is Active?</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="objectid"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -298,24 +460,17 @@
         <ns:tableTitle>Project Account History</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
-            <ns:column columnName="rowid"/>
-            <ns:column columnName="project">
-                <ns:fk>
-                    <ns:fkDbSchema>ehr</ns:fkDbSchema>
-                    <ns:fkTable>projects</ns:fkTable>
-                    <ns:fkColumnName>project</ns:fkColumnName>
-                    <ns:fkDisplayColumnName>name</ns:fkDisplayColumnName>
-                </ns:fk>
+            <ns:column columnName="rowid">
+                <ns:columnTitle>Row Id</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="account">
-                <ns:fk>
-                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
-                    <ns:fkTable>accounts</ns:fkTable>
-                    <ns:fkColumnName>account</ns:fkColumnName>
-                </ns:fk>
+            <ns:column columnName="project"/>
+            <ns:column columnName="account"/>
+            <ns:column columnName="startdate">
+                <ns:columnTitle>Start Date</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="startdate"/>
-            <ns:column columnName="enddate"/>
+            <ns:column columnName="enddate">
+                <ns:columnTitle>End Date</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="objectid"/>
             <ns:column columnName="createdby"/>
             <ns:column columnName="created"/>

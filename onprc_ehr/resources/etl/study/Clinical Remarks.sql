@@ -29,10 +29,26 @@ SELECT
 	, char(25), '<>'), Char(21), Char(39)) AS remark,
 	
 	cln0.objectid,
-	dx.objectid as parentid	
+	dx.objectid as parentid	,
+
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
+	  else
+	   rt.Initials
+    END as performedBy
 
 FROM Cln_Dx dx
 left join Af_Case c ON (dx.CaseID = c.CaseID)
+left join  Ref_Technicians rt on (dx.Technician = rt.ID)
 JOIN Cln_DxRemarks cln0 ON (dx.DiagnosisID = cln0.DiagnosisID AND cln0.SequenceNo = 0)
 LEFT JOIN Cln_DxRemarks cln1 ON (dx.DiagnosisID = cln1.DiagnosisID AND cln1.SequenceNo = 1)
 LEFT JOIN Cln_DxRemarks cln2 ON (dx.DiagnosisID = cln2.DiagnosisID AND cln2.SequenceNo = 2)

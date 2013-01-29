@@ -1,0 +1,227 @@
+<script type="text/javascript">
+
+Ext4.onReady(makePanel)
+
+function makePanel(){
+    if (!window.EHR || !window.EHR.ext || !window.EHR.Utils){
+        makePanel.defer(10);
+        return;
+    }
+
+    var webpart = <%=webpartContext%>;
+    var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+    if (!ctx)
+        return;
+
+    Ext4.define('ONPRC.panel.QuickSearchPanel', {
+        extend: 'Ext.panel.Panel',
+        FIELD_WIDTH: 180,
+        BUTTON_WIDTH: 125,
+        BUTTON_STYLE: 'margin-left: 4px;',
+        FIELD_STYLE: 'margin-top: 4px;',
+
+        initComponent: function (){
+            Ext4.apply(this, {
+                style: 'padding: 5px;',
+                layout: {
+                    type: 'table',
+                    columns: 2
+                },
+                width: 325,
+                border: false,
+                defaults: {
+                    border: false
+                },
+                items: [{
+                    html: 'Animal:',
+                    colspan: 2
+                },{
+                    xtype: 'textfield',
+                    name: 'animal',
+                    itemId: 'animalField',
+                    style: this.FIELD_STYLE,
+                    width: this.FIELD_WIDTH
+                },{
+                    xtype: 'button',
+                    border: true,
+                    text: 'Show Animal',
+                    style: this.BUTTON_STYLE,
+                    width: this.BUTTON_WIDTH,
+                    handler: function (btn){
+                        var field = btn.up('panel').down('#animalField');
+                        var value = field.getValue();
+                        if (!value)
+                            return;
+
+                        window.location = LABKEY.ActionURL.buildURL('ehr', 'participantView', ctx['EHRStudyContainer'], {participantId: value});
+                    }
+                },{
+                    html: '<a href="' + (LABKEY.ActionURL.buildURL('onprc_ehr', 'animalSearch', ctx['EHRStudyContainer'])) + '">Advanced Animal Search</a>',
+                    colspan: 2
+//                },{
+//                    html: 'Animal Groups:',
+//                    style: 'padding-top: 10px;',
+//                    colspan: 2
+//                },{
+//                    emptyText:'',
+//                    name: 'animalGroup',
+//                    itemId: 'animalGroup',
+//                    xtype: 'combo',
+//                    displayField:'name',
+//                    valueField: 'name',
+//                    width: this.FIELD_WIDTH,
+//                    editable: true,
+//                    triggerAction: 'all',
+//                    store: new LABKEY.ext.Store({
+//                        containerPath: ctx['EHRStudyContainer'],
+//                        schemaName: 'ehr',
+//                        queryName: 'animal_groups',
+//                        sort: 'name',
+//                        autoLoad: true
+//                    })
+//                },{
+//                    xtype: 'button',
+//                    border: true,
+//                    text: 'Show Group',
+//                    width: this.BUTTON_WIDTH,
+//                    handler: function(btn){
+//                        var field = btn.ownerCt.find('itemId', 'animalGroup')[0];
+//                        var value = field.getValue();
+//                        if (!value)
+//                            return;
+//
+//                        window.location = LABKEY.ActionURL.buildURL(
+//                            'query'
+//                            ,'executeQuery'
+//                            ,ctx['EHRStudyContainer']
+//                            ,{schemaName: 'study', 'query.queryName': 'Demographics', 'query.viewName': value}
+//                        );
+//                    },
+//                    scope: this
+//                },{
+//                    html: '<a href="'+(LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {
+//                        schemaName: 'study',
+//                        'query.queryName': 'Demographics',
+//                        'query.viewName': 'Alive, at Center'
+//                    }))+'">View All Living Animals</a>',
+//                    colspan: 2
+                },{
+                    html: 'Project:',
+                    style: 'padding-top: 10px;',
+                    colspan: 2
+                },{
+                    itemId: 'projectField',
+                    emptyText: '',
+                    name: 'projectField',
+                    xtype: 'combo',
+                    displayField: 'project',
+                    valueField: 'project',
+                    width: this.FIELD_WIDTH,
+                    style: this.FIELD_STYLE,
+                    queryMode: 'local',
+                    editable: true,
+                    store: {
+                        type: 'labkey-store',
+                        containerPath: ctx['EHRStudyContainer'],
+                        schemaName: 'ehr',
+                        queryName: 'project',
+                        sort: 'project',
+                        autoLoad: true
+                    }
+                },{
+                    xtype: 'button',
+                    border: true,
+                    text: 'Show Project',
+                    width: this.BUTTON_WIDTH,
+                    style: this.BUTTON_STYLE,
+                    handler: function (btn){
+                        var field = btn.up('panel').down('#projectField');
+                        var value = field.getValue();
+                        if (!value)
+                            return false;
+
+                        window.location = LABKEY.ActionURL.buildURL('ehr', 'projectDetails', ctx['EHRStudyContainer'], {key:value});
+                    }
+                },{
+                    html: '<a href="' + (LABKEY.ActionURL.buildURL('ehr', 'projectQueries', ctx['EHRStudyContainer'])) + '">Advanced Project Search</a>',
+                    colspan: 2
+                },{
+                    html: 'Protocol:',
+                    style: 'padding-top: 10px;',
+                    colspan: 2
+                },{
+                    itemId: 'protocolField',
+                    emptyText: '',
+                    name: 'protocolField',
+                    xtype: 'combo',
+                    displayField: 'protocol',
+                    valueField: 'protocol',
+                    width: this.FIELD_WIDTH,
+                    style: this.FIELD_STYLE,
+                    queryMode: 'local',
+                    editable: true,
+                    store: {
+                        type: 'labkey-store',
+                        containerPath: ctx['EHRStudyContainer'],
+                        schemaName: 'ehr',
+                        queryName: 'protocol',
+                        sort: 'protocol',
+                        autoLoad: true
+                    }
+                },{
+                    xtype: 'button',
+                    border: true,
+                    text: 'Show Protocol',
+                    width: this.BUTTON_WIDTH,
+                    style: this.BUTTON_STYLE,
+                    handler: function(btn){
+                        var field = btn.up('panel').down('#protocolField');
+                        var value = field.getValue();
+
+                        if (!value)
+                            return;
+
+                        window.location = LABKEY.ActionURL.buildURL('ehr', 'protocolDetails', ctx['EHRStudyContainer'], {key:value});
+                    }
+                },{
+                    html: '<a href="' + (LABKEY.ActionURL.buildURL('ehr', 'projectQueries', ctx['EHRStudyContainer'])) + '">Advanced Protocol Search</a>',
+                    colspan: 2
+                },{
+                    html: 'Room:',
+                    style: 'padding-top: 10px;',
+                    colspan: 2
+                },{
+                    xtype: 'textfield',
+                    itemId: 'roomField',
+                    name: 'room',
+                    width: this.FIELD_WIDTH,
+                    style: this.FIELD_STYLE
+                },{
+                    xtype: 'button',
+                    border: true,
+                    text: 'Show Room',
+                    width: this.BUTTON_WIDTH,
+                    style: this.BUTTON_STYLE,
+                    handler: function(btn){
+                        var field = btn.up('panel').down('#roomField');
+                        var value = field.getValue();
+                        if (!value)
+                            return;
+
+                        window.location = LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {'schemaName':'study', 'query.queryName':'Demographics', 'query.Id/curLocation/Room/room~eq':value, 'query.viewName':'Alive, at Center'});
+                    }
+                },{
+                    html: '<a href="' + (LABKEY.ActionURL.buildURL('ehr', 'housingQueries', ctx['EHRStudyContainer'])) + '">Advanced Housing Search</a>',
+                    height: 20,
+                    colspan: 2
+                }]
+            });
+
+            this.callParent(arguments);
+        }
+    });
+
+    Ext4.create('ONPRC.panel.QuickSearchPanel').render(webpart.wrapperDivId);
+}
+
+</script>

@@ -17,7 +17,7 @@ Select
 	cast(afd.AnimalID as nvarchar(4000)) as Id,
 	afd.Date as Date,
 	--afd.ISISDestination as desintationId,
-	isis.InstitutionName as desintation,	
+	isis.InstitutionName as destination,
 	
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
@@ -28,6 +28,8 @@ Select
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
 	  else
 	   rt.Initials
     END as performedBy,

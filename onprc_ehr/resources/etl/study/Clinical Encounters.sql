@@ -30,6 +30,8 @@ Select
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
 	  else
 	   rt.Initials
     END as performedBy,
@@ -68,6 +70,8 @@ Select
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
 	  else
 	   rt.Initials
     END as performedBy,
@@ -107,6 +111,8 @@ Select
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
 	  else
 	   rt.Initials
     END as performedBy,
@@ -140,6 +146,8 @@ Select
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
 	  else
 	   rt.Initials
     END as performedBy,

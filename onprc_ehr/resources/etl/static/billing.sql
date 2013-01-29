@@ -260,6 +260,7 @@ where rfl.DateDisabled is null
 left join labkey.onprc_billing.chargeableItems lk ON (lk.name = t.name);
 
 --per diem definition
+truncate table labkey.onprc_billing.perDiemFeeDefinition;
 INSERT INTO labkey.onprc_billing.perDiemFeeDefinition (chargeId, housingDefinition, housingType)
 select
 (SELECT rowid FROM labkey.onprc_billing.chargeableItems ci WHERE ci.name = r.ProcedureName) as chargeId,
@@ -268,28 +269,3 @@ HousingType
 
 from IRIS_Production.dbo.ref_feesProcedures r
 where HousingDefinition is not null and DateDisabled is null;
-
-
---this is a hack, but at least it populates something
-insert into labkey.onprc_billing.fiscalAuthorities (faid, lastName, firstName)
-select
-	rpf.faid,
-	rt.LastName as TechLastName,
-	rt.FirstName as TechFirstName
-
-FROM (
-
-Select
-	labkey.core.group_concat(DISTINCT rpf.FAID) as faid,
-	rpf.FANameID
-
-From Ref_ProjectFaid rpf
-where rpf.DateDisabled is null
-group by rpf.FANameID
-
-) rpf
-
-left join Ref_Technicians rt on (rpf.FANameID = rt.ID)
-where FAID is not null and FAID != ' ' and FAID not like '0000%';
-
-

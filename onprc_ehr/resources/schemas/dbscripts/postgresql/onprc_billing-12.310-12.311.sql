@@ -1,0 +1,1 @@
+alter table onprc_billing.leaseFeeDefinition drop column project;

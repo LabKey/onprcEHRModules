@@ -1,0 +1,1 @@
+SELECT * FROM ehr_lookups.lookups l WHERE l.set_name = 'LocationType';

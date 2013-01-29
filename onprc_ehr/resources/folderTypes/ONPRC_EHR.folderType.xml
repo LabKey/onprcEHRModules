@@ -11,7 +11,7 @@
             <property name="title" value="Electronic Health Record" />
         </webPart>
         <webPart>
-            <name>Quick Search</name>
+            <name>ONPRC Quick Search</name>
             <location>menu</location>
         </webPart>
         <webPart>
@@ -24,6 +24,10 @@
             <name>overview</name>
             <caption>Overview</caption>
             <preferredWebParts>
+                <webPart>
+                    <name>EHR Front Page</name>
+                    <location>body</location>
+                </webPart>
                 <webPart>
                     <name>ONPRC Electronic Health Record</name>
                     <location>body</location>
@@ -55,7 +59,7 @@
             </selectors>
             <preferredWebParts>
                 <webPart>
-                    <name>Animal Search</name>
+                    <name>ONPRC Animal Search</name>
                     <location>body</location>
                 </webPart>
             </preferredWebParts>

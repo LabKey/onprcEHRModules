@@ -19,6 +19,7 @@ Select
 	afd.ProjectID as Project,   ---- Ref_ProjectsIacuc
 	afd.StartDate as Date  ,
 	ReleaseDate as enddate ,
+
 	--afd.DietCode as DietCode,     ----- Ref_Diet
 	d.Description as Diet,
 	Frequency as  FrequencyInt,

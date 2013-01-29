@@ -39,11 +39,13 @@ Select
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
 	  else
 	   rt.Initials
     END as performedBy,
 
-	afr.objectid
+    cast(afr.objectid as varchar(38)) as objectid
 	--afr.ts as rowversion
 
 From Af_Remarks Afr
@@ -65,7 +67,7 @@ SELECT
 	'ReproImpair' as category,
 	'ReproImpair' as value ,
 	null as performedBy,
-	afq.objectid
+	(cast(afq.objectid as varchar(38)) + '_reproImpair') as objectid
 
 From Af_Qrf afq
 WHERE ReproImpair = 1
@@ -80,7 +82,7 @@ SELECT
 	'BreedingFlag' as category,
 	'BreedingFlag' as value,
 	null as performedBy,
-	afq.objectid
+	(cast(afq.objectid as varchar(38)) + '_breeding') as objectid
 
 From Af_Qrf afq
 WHERE BreedingFlag = 1

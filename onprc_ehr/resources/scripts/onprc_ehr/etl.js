@@ -198,66 +198,87 @@ EHR.ETL = {
         //convert existing SOAP remarks into separate cols
         var origRemark = row.remark;
         if(row.remark){
-            row.remark = row.remark.replace(/<>/g, '\n');
+            row.remark = EHR.Server.Utils.trim(row.remark);
 
             //find Hx
             var hx = row.remark.match(/hx:(.*);\|/i);
             if (hx){
                 row.hx = hx[1];
-                row.hx = row.hx.replace(/(^\s+|\s+$)/g, '');
+                row.hx= EHR.Server.Utils.trim(row.hx);
+                row.hx= EHR.ETL.cleanLine(row.hx);
+
                 row.remark = row.remark.replace(hx[0], '');
+                row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            var s = row.remark.match(/(^s:)(.*)o:/i);
+            var s = row.remark.match(/^s:(.*)(o:)/i);
             if(s){
                 row.s = s[1];
-                row.s = row.s.replace(/(^\s+|\s+$)/g, '');
+                row.s = EHR.Server.Utils.trim(row.s);
+                row.s = EHR.ETL.cleanLine(row.s);
 
                 row.remark = row.remark.replace(s[0], '');
-                row.remark = s[2] + row.remark;
+                if (s[2])
+                    row.remark = s[2] + row.remark;
+                row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            var o = row.remark.match(/(^o:)(.*)a:/i);
+            var o = row.remark.match(/^o:(.*)(a:)/i);
             if(o){
                 row.o = o[1];
-                row.o = row.o.replace(/(^\s+|\s+$)/g, '');
+                row.o = EHR.Server.Utils.trim(row.o);
+                row.o = EHR.ETL.cleanLine(row.o);
 
                 row.remark = row.remark.replace(o[0], '');
-                row.remark = o[2] + row.remark;
+                if (o[2])
+                    row.remark = o[2] + row.remark;
+                row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            var a = row.remark.match(/(^a:)(.*)p1:/i);
+            var a = row.remark.match(/^a:(.*?)(p1:|p2:)/i);
             if(a){
                 row.a = a[1];
-                row.a = row.a.replace(/(^\s+|\s+$)/g, '');
+                row.a = EHR.Server.Utils.trim(row.a);
+                row.a = EHR.ETL.cleanLine(row.a);
 
                 row.remark = row.remark.replace(a[0], '');
-                row.remark = a[2] + row.remark;
+                if (a[2])
+                    row.remark = a[2] + row.remark;
+                row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            var p1 = row.remark.match(/(^p1:)(.*)p2:/);
+            var p1 = row.remark.match(/^p1:(.*)(p2:)/i);
             if(p1){
-                row.p1 = p1[1];
-                row.p1 = row.p1.replace(/(^\s+|\s+$)/g, '');
+                row.p = p1[1];
+                row.p = EHR.Server.Utils.trim(row.p);
+                row.p = EHR.ETL.cleanLine(row.p);
 
                 row.remark = row.remark.replace(p1[0], '');
                 row.remark = p1[2] + row.remark;
+                row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            var p2 = row.remark.match(/(^p2:)(.*)$/);
+            var p2 = row.remark.match(/p2:(.*)$/i);
             if(p2){
                 row.p2 = p2[1];
-                row.p2 = row.p2.replace(/(^\s+|\s+$)/g, '');
+                if (row.p2){
+                    row.p2 = EHR.Server.Utils.trim(row.p2);
+                    row.p2 = EHR.ETL.cleanLine(row.p2);
+                }
 
                 row.remark = row.remark.replace(p2[0], '');
-                row.remark = p2[2] + row.remark;
+                row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            if(row.remark){
-                console.log('REMARK REMAINING:');
-                console.log(row.remark);
-            }
+            row.remark = EHR.ETL.cleanLine(row.remark);
         }
+    },
+
+    cleanLine: function(line){
+        line = line.replace(/<>/g, '\n');
+        line = line.replace(/\n+/g, '\n');
+        line = EHR.Server.Utils.trim(line);
+        return line;
     },
 
     byQuery: {

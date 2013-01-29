@@ -32,6 +32,9 @@ Ext4.onReady(function (){
                             });
                             Ext4.Msg.alert('Request Sent', 'A request has been sent to start the ETL');
                         }
+                    },{
+                        text: 'View ETL Log',
+                        href: LABKEY.ActionURL.buildURL('onprc_ehr', 'showEtlLog', '/')
                     }]
                 });
 
@@ -61,6 +64,22 @@ Ext4.onReady(function (){
                     labelWidth: labelWidth,
                     width: width,
                     fieldLabel: 'Is Running'
+                });
+
+                toAdd.push({
+                    xtype: 'displayfield',
+                    value: json.scheduled,
+                    labelWidth: labelWidth,
+                    width: width,
+                    fieldLabel: 'Is Scheduled'
+                });
+
+                toAdd.push({
+                    xtype: 'displayfield',
+                    value: json.nextSync,
+                    labelWidth: labelWidth,
+                    width: width,
+                    fieldLabel: 'Time Until Next Sync (seconds)'
                 });
 
                 toAdd.push({

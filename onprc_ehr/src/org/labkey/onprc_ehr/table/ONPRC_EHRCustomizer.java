@@ -21,16 +21,20 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.DisplayColumnFactory;
+import org.labkey.api.data.JdbcType;
 import org.labkey.api.data.RenderContext;
+import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.query.ExprColumn;
 import org.labkey.api.query.FilteredTable;
 import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
+import org.labkey.api.study.DataSetTable;
 import org.labkey.api.view.HttpView;
 
 import java.io.IOException;
@@ -98,6 +102,11 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 UserSchema us = getUserSchema(ti, "onprc_billing");
                 if (us != null)
                     account.setFk(new QueryForeignKey(us, "accounts", "account", "account"));
+            }
+
+            if (ti instanceof DataSetTable)
+            {
+                account.setHidden(true);
             }
         }
 
@@ -193,6 +202,29 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             }
             fiscalAuthority.setLabel("Fiscal Authority");
         }
+
+        for (String field : new String[]{"awardEndDate", "budgetEndDate"})
+        {
+            ColumnInfo endDate = ti.getColumn(field);
+            if (endDate != null)
+            {
+                String label = endDate.getLabel();
+                appendEnddate(ti, endDate, label);
+            }
+        }
+
+        ColumnInfo caseId = ti.getColumn("caseid");
+        if (caseId != null && !ti.getName().equalsIgnoreCase("cases"))
+        {
+            caseId.setLabel("Case");
+            if (caseId.getFk() == null)
+            {
+                UserSchema us = getUserSchema(ti, "study");
+                if (us != null)
+                    caseId.setFk(new QueryForeignKey(us, "cases", "objectid", "caseid"));
+            }
+        }
+
     }
 
     private void customizeAnimalTable(AbstractTableInfo ds)
@@ -326,5 +358,20 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
     private boolean matches(TableInfo ti, String schema, String query)
     {
         return ti.getSchema().getName().equalsIgnoreCase(schema) && ti.getName().equalsIgnoreCase(query);
+    }
+
+    private void appendEnddate(AbstractTableInfo ti, ColumnInfo sourceCol, String label)
+    {
+        String sourceColName = sourceCol.getName();
+        if (ti.getColumn(sourceColName + "Coalesced") == null)
+        {
+            SQLFragment sql = new SQLFragment("COALESCE(" + ExprColumn.STR_TABLE_ALIAS + "." + sourceColName + ", {fn curdate()})");
+            ExprColumn col = new ExprColumn(ti, sourceColName + "Coalesced", sql, JdbcType.TIMESTAMP);
+            col.setCalculated(true);
+            col.setUserEditable(false);
+            col.setHidden(true);
+            col.setLabel(label);
+            ti.addColumn(col);
+        }
     }
 }

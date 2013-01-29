@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.labkey.api.audit.AuditLogService;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.DefaultModule;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.query.DefaultSchema;
@@ -31,6 +32,15 @@ import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
+import org.labkey.onprc_ehr.notification.AdminAlertsNotification;
+import org.labkey.onprc_ehr.notification.BloodAdminAlertsNotification;
+import org.labkey.onprc_ehr.notification.BloodAlertsNotification;
+import org.labkey.onprc_ehr.notification.ColonyAlertsLiteNotification;
+import org.labkey.onprc_ehr.notification.ColonyAlertsNotification;
+import org.labkey.onprc_ehr.notification.ColonyMgmtNotification;
+import org.labkey.onprc_ehr.notification.LabResultSummaryNotification;
+import org.labkey.onprc_ehr.notification.LabTestScheduleNotifications;
+import org.labkey.onprc_ehr.notification.TreatmentAlerts;
 import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -56,7 +66,7 @@ public class ONPRC_EHRModule extends DefaultModule
 
     public double getVersion()
     {
-        return 12.310;
+        return 12.311;
     }
 
     public boolean hasScripts()
@@ -77,7 +87,7 @@ public class ONPRC_EHRModule extends DefaultModule
     @Override
     public void doStartup(ModuleContext moduleContext)
     {
-        ETL.init(5000);
+        ETL.init(1);
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
 
         for (final String schemaName : getSchemaNames())
@@ -114,6 +124,18 @@ public class ONPRC_EHRModule extends DefaultModule
         EHRService.get().registerTriggerScript(this, r);
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/onprcReports.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/Utils.js"), this);
+
+        NotificationService ns = NotificationService.get();
+        //ns.registerNotification(new AbnormalLabResultsNotification());
+        ns.registerNotification(new AdminAlertsNotification());
+        ns.registerNotification(new BloodAdminAlertsNotification());
+        ns.registerNotification(new BloodAlertsNotification());
+        ns.registerNotification(new ColonyAlertsLiteNotification());
+        ns.registerNotification(new ColonyAlertsNotification());
+        ns.registerNotification(new ColonyMgmtNotification());
+        ns.registerNotification(new LabTestScheduleNotifications());
+        ns.registerNotification(new LabResultSummaryNotification());
+        //ns.registerNotification(new TreatmentAlerts());
     }
 
     @Override

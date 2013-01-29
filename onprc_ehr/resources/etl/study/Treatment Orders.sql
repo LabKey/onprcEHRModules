@@ -18,16 +18,16 @@ SELECT
 	Date,
 	Medication as code,
 	sno.Description as snomedMeaning,
-	Dose as Dose,
-	--Units as UnitsInt ,
-	s2.Value as Units,
+	Dose as amount,
+
+	s2.Value as amount_units,
 	--Route as RouteInt ,
 	s3.Value as Route,
 	--Frequency as FrequencyInt ,
 	(select rowid FROM labkey.ehr_lookups.treatment_frequency tf WHERe tf.meaning = s4.value) as frequency,
 	
-	Duration as Duration,
-	EndDate as EndDate,
+	--Duration as Duration,
+	EndDate,
 	--Reason as ReasonInt  ,
 	s5.Value as Reason,
 
@@ -43,6 +43,8 @@ SELECT
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
 	  else
 	   rt.Initials
     END as performedBy,
@@ -50,7 +52,7 @@ SELECT
     Remarks as Remark,
 	--cln.SearchKey as SearchKey,
 
-	cln.ts as rowversion,
+	--cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Medications cln

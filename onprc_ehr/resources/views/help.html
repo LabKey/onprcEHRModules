@@ -7,10 +7,10 @@
             return;
 
         Ext4.get(webpart.wrapperDivId).update(
-            '<div style="max-width:350px;">' +
-                '<li>Click <a href="' + LABKEY.ActionURL.buildURL('project', 'begin', ctx['EHRDocumentationContainer']) + '">here</a> for general information on how to use the EHR</li>' +
-                    '<p></p>' +
-                '<li>If you have any comments, questions or feature requests, please submit them through the <a href="' + LABKEY.ActionURL.buildURL('issues', 'list', ctx['EHRIssuesContainer']) + '" target="new">EHR Issue Tracker</a></li>' +
+            '<div style="max-width:300px;">' +
+                '<a href="' + LABKEY.ActionURL.buildURL('project', 'begin', ctx['EHRDocumentationContainer']) + '">Click here for general information on how to use the EHR</a></li>' +
+                '<p></p>' +
+                '<a href="' + LABKEY.ActionURL.buildURL('issues', 'insert', ctx['EHRIssuesContainer']) + '" target="new">Click here to submit a support request, feature requests, or report bugs</a>' +
             '</div>'
         );
     });

@@ -37,6 +37,8 @@ Tested by:
 	--CageId2 as CageId2 ,
 	L2.Location as room2,
 	rtrim(r2.row) + convert(char(2), r2.Cage) As Cage2,
+
+	--TODO: translate these 3
 	pp.PairingType as PairingType,
 	--s2.Value AS PairingType,
 	pp.PairingOutcome as PairingOutcome,
@@ -44,7 +46,7 @@ Tested by:
 	pp.SeparationReason as SeparationReason,
 	--s4.Value AS SeparationReason,
 		
-	pp.Aggressor as Aggressor ,
+	cast(pp.aggressor as nvarchar(4000)) as Aggressor ,
 	pp.Remarks as Remark,
 	pp.PairingOrigin as PairingOrigin,
 	--s5.Value AS PairingOrigin,
@@ -58,6 +60,8 @@ Tested by:
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
 	  else
 	   rt.Initials
     END as performedBy,

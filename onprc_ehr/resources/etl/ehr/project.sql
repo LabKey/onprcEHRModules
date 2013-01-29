@@ -19,8 +19,8 @@ Select
 	coalesce ((select top 1 rpi2.IacucCode
 				from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on rpi2.ProjectID = ipc.ProjectParentID
 				where ipc.projectchildid = rpi.projectid order by ipc.datecreated desc), rpi.iacuccode) as protocol,
-	coalesce((select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa
-				where rpi.projectid = rpa.ProjectID order by datecreated desc), 'None') as account,
+	(select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa
+				where rpi.projectid = rpa.ProjectID order by datecreated desc) as account,
 	(ri.LastName + ', ' + ri.FirstName) as inves,
 	-- avail
 	Rpi.Title,
@@ -36,6 +36,6 @@ Select
 
 From Ref_ProjectsIACUC rpi
 	left join Ref_ProjInvest pc on (pc.ProjectID = rpi.ProjectID AND pc.DateDisabled is null and pc.PIFlag = 1 and pc.investigatorid != 0)
-	left join Ref_Investigator ri on ri.InvestigatorID = pc.investigatorid
+	left join Ref_Investigator ri on (ri.InvestigatorID = pc.investigatorid)
 
-AND (rpi.ts > ? or pc.ts > ?)
+WHERE (rpi.ts > ? or pc.ts > ?)

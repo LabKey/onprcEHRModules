@@ -18,7 +18,7 @@ SELECT
 	Date as Date,
 	'Menses' as category,
 	case
-	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' or rt.LastName = ' none' THEN
         'Unassigned'
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
@@ -26,6 +26,8 @@ SELECT
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
 	  else
 	   rt.Initials
     END as performedBy,

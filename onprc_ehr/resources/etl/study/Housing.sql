@@ -33,6 +33,8 @@ Select
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
 	  else
 	   rt.Initials
     END as performedBy,
@@ -49,4 +51,4 @@ left join  Sys_Parameters s1 on ( AfT.Reason = s1.Flag And s1.Field = 'TransferR
 left join  Ref_RowCage r2 on  (r2.CageID = aft.CageID)
 left join  Ref_Location l2 on (r2.LocationID = l2.LocationId)
 
-WHERE aft.ts > ?
+WHERE aft.ts > ? and s1.Value != 'Final Transfer' and s1.value != 'InitialTransfer'

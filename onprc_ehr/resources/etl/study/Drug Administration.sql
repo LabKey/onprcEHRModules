@@ -24,20 +24,36 @@ SELECT
 	sno.Description as meaning,
 
 	null as remark,
-	Dose as dosage,
+	Dose as amount,
 
 	--Units as UnitsInt ,
-	s2.Value as dosage_units,
+	s2.Value as amount_units,
 	--Route as RouteInt ,
 	s3.Value as route,
 	cln.objectid,
-	null as parentId
-
+	null as parentId,
+	
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
+	  else
+	   rt.Initials
+    END as performedBy
+    
 FROM Cln_MedicationTimes cln
 left join Cln_Medications m on (m.SearchKey = cln.SearchKey)
 left join ref_snomed sno on (sno.SnomedCode = m.Medication)
 left join Sys_parameters s2 on (s2.Field = 'MedicationUnits' and s2.Flag = m.Units)
 left join Sys_parameters s3 on (s3.Field = 'MedicationRoute' and s3.Flag = m.Route)
+left join Ref_Technicians rt ON (rt.ID = m.Technician)
 where m.AnimalId is not null
 and cln.ts > ?
 
@@ -61,7 +77,9 @@ SELECT
 	null as Units,
 	'IV' as Route,
 	h.objectid,
-	g.objectid as parentId
+	g.objectid as parentId,
+	
+	null as performedby
 
 FROM Sur_AnesthesiaLogHeader h
 LEFT JOIN sur_general g ON (g.surgeryid = h.surgeryid)

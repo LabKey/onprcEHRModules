@@ -36,6 +36,8 @@ SELECT
         tech.LastName + ', ' + tech.FirstName
 	  WHEN datalength(tech.LastName) > 0 AND datalength(tech.Initials) > 0 THEN
         tech.LastName + ' (' + tech.Initials + ')'
+      WHEN datalength(tech.Initials) = 0 OR tech.initials = ' ' OR tech.lastname = ' none' THEN
+        null
 	  else
 	   tech.Initials
     END as performedBy,

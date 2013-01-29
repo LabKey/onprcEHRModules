@@ -73,7 +73,7 @@
         <dataset name="drug" id="1014" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="obs" id="1023" category="Clinical" type="Standard">
+        <dataset name="obs" id="1023" category="Clinical" type="Standard" showByDefault="false">
             <tags/>
         </dataset>
         <dataset name="problem" id="1030" category="Clinical" type="Standard">
@@ -94,7 +94,7 @@
         <dataset name="vitals" id="1063" showByDefault="false" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="bacteriologyResults" id="1049" category="ClinPath" type="Standard">
+        <dataset name="bacteriologyResults" id="1049" category="ClinPath" type="Standard" showByDefault="false">
             <tags/>
         </dataset>
         <dataset name="chemistryResults" id="1056" category="ClinPath" type="Standard">
@@ -104,9 +104,6 @@
             <tags/>
         </dataset>
         <dataset name="hematologyResults" id="1059" category="ClinPath" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="immunologyResults" id="1083" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
         <dataset name="parasitologyResults" id="1052" category="ClinPath" type="Standard">
@@ -139,7 +136,7 @@
         <dataset name="housing" id="1018" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="inbreeding" id="5001" category="Colony Management" type="Standard">
+        <dataset name="inbreeding" id="5001" category="Colony Management" type="Standard" showByDefault="false">
             <tags/>
         </dataset>
         <dataset name="notes" id="1068" showByDefault="false" category="Colony Management" type="Standard">
@@ -158,6 +155,9 @@
             <tags/>
         </dataset>
         <dataset name="ActiveHousing" id="5010" showByDefault="false" category="Colony Management" demographicData="true" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="pairings" id="5024" showByDefault="false" category="Colony Management" demographicData="false" type="Standard">
             <tags/>
         </dataset>
     </datasets>

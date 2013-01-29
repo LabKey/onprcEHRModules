@@ -22,6 +22,7 @@ import org.labkey.onprc_ehr.ONPRC_EHRModule;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,7 +36,8 @@ public class ETL
     private final static Logger log = Logger.getLogger(ONPRC_EHRModule.class);
     private static ScheduledExecutorService executor;
     private static ETLRunnable runnable;
-    private static boolean isRunning = false;
+    private static boolean isScheduled = false;
+    private static ScheduledFuture future = null;
     public static final String ENABLED_PROP_NAME = "etlStatus";
 
     static public synchronized void init(int delay)
@@ -46,9 +48,9 @@ public class ETL
 
     static public synchronized void start(int delay)
     {
-        if (!isRunning)
+        if (!isScheduled)
         {
-            executor = Executors.newSingleThreadScheduledExecutor();
+            executor = (executor == null ? Executors.newSingleThreadScheduledExecutor() : executor);
 
             try
             {
@@ -56,10 +58,10 @@ public class ETL
                 int interval = runnable.getRunIntervalInMinutes();
                 if (interval != 0)
                 {
-                    log.info("Scheduling db sync at " + interval + " minute interval.");
-                    executor.scheduleWithFixedDelay(runnable, delay, interval, TimeUnit.MINUTES);
+                    log.info("Scheduling db sync at " + interval + " minute interval and delay: " + delay);
+                    future = executor.scheduleWithFixedDelay(runnable, delay, interval, TimeUnit.MINUTES);
                     setEnabled(true);
-                    isRunning = true;
+                    isScheduled = true;
                 }
             }
             catch (Exception e)
@@ -75,14 +77,31 @@ public class ETL
 
     static public synchronized void stop()
     {
-        if (isRunning)
+        log.info("Attempting to stop ETL");
+
+        if (isScheduled)
         {
-            log.info("Stopping ETL");
-            executor.shutdownNow();
             runnable.shutdown();
-            setEnabled(false);
-            isRunning = false;
+            isScheduled = false;
+            executor.shutdownNow();
         }
+        else
+        {
+            log.info("ETL is not scheduled, no action needed");
+        }
+    }
+
+    static public boolean isScheduled()
+    {
+        return isScheduled;
+    }
+
+    static public long nextSync()
+    {
+        if (future == null)
+            return -1;
+        else
+            return future.getDelay(TimeUnit.SECONDS);
     }
 
     /**

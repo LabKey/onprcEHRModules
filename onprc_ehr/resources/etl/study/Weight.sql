@@ -28,7 +28,7 @@ Select
 	af.ts as rowversion
 
 From Af_Weights af
-WHERE af.ts > ?
+WHERE af.ts > ? and af.weightAmount != 0 and af.weightAmount is not null
 
 --see death for final weights
 UNION ALL
@@ -41,7 +41,7 @@ Select
 	afd.ts as rowversion
 
 From Af_Death AfD
-WHERE afd.ts > ?
+WHERE afd.ts > ? and afd.WeightAtDeath > 0 AND afd.WeightAtDeath is not null
 
 UNION ALL
   select
@@ -52,4 +52,4 @@ UNION ALL
 	sg.ts as rowversion
 
 From Sur_general sg
-WHERE sg.ts > ? and sg.weight is not null
+WHERE sg.ts > ? and sg.weight is not null and sg.weight > 0

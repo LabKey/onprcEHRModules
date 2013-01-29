@@ -326,13 +326,13 @@ public class ETLRunnable implements Runnable
                 targetTableName = kv.getKey();
                 sql = kv.getValue();
 
-                //TODO: debug purposes only
-//                sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t";
+                //debug purposes only
+                //sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t";
 
                 TableInfo targetTable = schema.getTable(targetTableName);
                 if (targetTable == null)
                 {
-                    log.error(targetTableName + " is not a known labkey study name, skipping the so-named sql query");
+                    log.error(targetTableName + " is not a known labkey table name, skipping the so-named sql query");
                     errorCount++;
                     continue;
                 }
@@ -434,8 +434,6 @@ public class ETLRunnable implements Runnable
                     // perform any deletes
                     if (!deletedIds.isEmpty())
                     {
-                        List<ColumnInfo> keys = targetTable.getPkColumns();
-
                         Map<String, SQLFragment> joins = new HashMap<String, SQLFragment>();
                         filterColumn.declareJoins("t", joins);
 
@@ -443,14 +441,6 @@ public class ETLRunnable implements Runnable
                         // are constructed from the original objectid plus a suffix. If one of those original records gets deleted we only know the
                         // original objectid. So we need to find the child ones with a LIKE objectid% query. Which is really complicated.
                         SQLFragment like = new SQLFragment("SELECT ");
-//                        String comma = "";
-//                        for (ColumnInfo key : keys)
-//                        {
-//                            like.append(comma + " ");
-//                            like.append(key.getValueSql("t"));
-//                            like.append(" AS \"" + key.getName() + "\"");
-//                            comma = ",";
-//                        }
                         like.append(filterColumn.getSelectName());
                         like.append(" FROM ");
                         like.append(targetTable.getFromSQL("t"));
@@ -496,31 +486,34 @@ public class ETLRunnable implements Runnable
                             deleteSelectors.addAll(Arrays.asList((Map<String, Object>[])Table.executeQuery(schema.getDbSchema(), likeWithIds, Map.class)));
                         }
 
+                        int rowsDeleted = 0;
                         if (realTable != null)
                         {
                             log.debug("deleting using real table for: " + realTable.getSelectName() + ", filtering on " + filterColumn.getColumnName());
                             SimpleFilter filter = new SimpleFilter();
                             filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
-                            Table.delete(realTable, filter);
+                            rowsDeleted = Table.delete(realTable, filter);
                         }
                         else
                         {
                             log.info("deleting using update service for: " + targetTable.getName());
-                            updater.deleteRows(user, container, deleteSelectors, extraContext);
+                            rowsDeleted = updater.deleteRows(user, container, deleteSelectors, extraContext).size();
                         }
-                        log.info("deleted objectids " + deletedIds.size());
+                        log.info("total rows deleted: " + rowsDeleted);
                     }
 
                     List<Map<String, Object>> sourceRows = new ArrayList<Map<String, Object>>();
                     // accumulating batches of rows. would employ ResultSet.isDone to manage the last remainder
                     // batch but the MySQL jdbc driver doesn't support that method if it is a streaming result set.
                     boolean isDone = false;
+                    boolean isDemographics = false;
                     List<Object> searchParams = new ArrayList<Object>();
                     if (targetTable instanceof DataSetTable)
                     {
                         if(((DataSetTable)targetTable).getDataSet().isDemographicData())
                         {
                             log.info("table is demographics, filtering on Id");
+                            isDemographics = true;
                             filterColumn = targetTable.getColumn("Id");
                         }
                     }
@@ -541,6 +534,7 @@ public class ETLRunnable implements Runnable
                             try
                             {
 
+                                assert filterColumn != null;
                                 searchParams.add(rs.getObject(filterColumn.getColumnName()));
                             }
                             catch (SQLException e)
@@ -552,6 +546,7 @@ public class ETLRunnable implements Runnable
                         else
                         {
                             // avoid leaving the statement open while we process the results.
+                            log.info("closing connection and ResultSets");
                             close(rs);
                             rs = null;
                             close(ps);
@@ -586,7 +581,13 @@ public class ETLRunnable implements Runnable
                                         {
                                             pks.add(r.get(pkColumn.getName()));
                                         }
-                                        totalDeleted = Table.delete(realTable, new SimpleFilter(pkColumn.getFieldKey(), pks, CompareType.IN));
+
+                                        ColumnInfo deleteCol = pkColumn;
+                                        if (isDemographics && realTable.getColumn(deleteCol.getName()) == null)
+                                        {
+                                            deleteCol = realTable.getColumn("participantId");
+                                        }
+                                        totalDeleted = Table.delete(realTable, new SimpleFilter(deleteCol.getFieldKey(), pks, CompareType.IN));
                                     }
                                     else
                                     {
@@ -629,17 +630,22 @@ public class ETLRunnable implements Runnable
 
                             if (currentBatch >= 40000)
                             {
+                                log.info("committing transaction: " + targetTableName);
+                                scope.commitTransaction();
+
                                 if (realTable != null)
                                 {
                                     //NOTE: this may be less important on SQLServer
                                     log.info("Performing Analyze");
                                     String analyze = realTable.getSchema().getSqlDialect().getAnalyzeCommandForTable(realTable.getSchema().getName() + "." + realTable.getName());
-                                    new SqlExecutor(realTable.getSchema()).execute(analyze);
+                                    new SqlExecutor(realTable.getSchema()).execute(new SQLFragment(analyze));
                                 }
                                 else
                                 {
                                     log.warn("realTable is null, wont analyze");
                                 }
+
+                                scope.ensureTransaction();
                                 currentBatch = 0;
                             }
                         }
@@ -658,10 +664,15 @@ public class ETLRunnable implements Runnable
                     if (rollback)
                     {
                         scope.closeConnection();
-                        log.warn("Rolled back update of " + targetTableName);
+
+                        if (originConnection != null && !originConnection.isClosed())
+                            originConnection.close();
+
+                        log.warn("closed connection and rolled back update of " + targetTableName);
                     }
                     else
                     {
+                        log.info("committing transaction: " + targetTableName);
                         scope.commitTransaction();
                         setLastVersion(targetTableName, newBaselineVersion);
                         setLastTimestamp(targetTableName, newBaselineTimestamp);
@@ -698,6 +709,7 @@ public class ETLRunnable implements Runnable
             }
             finally
             {
+                log.info("closing connections and ResultSets");
                 close(rs);
                 close(ps);
                 close(originConnection);
@@ -724,7 +736,6 @@ public class ETLRunnable implements Runnable
 
         try
         {
-            originConnection = getOriginConnection();
             ps = originConnection.prepareStatement("SELECT objectid FROM dbo.deleted_records WHERE ts > ?");
             ps.setBytes(1, fromVersion);
             //ps.setString(1, tableName);
@@ -743,6 +754,7 @@ public class ETLRunnable implements Runnable
         }
         finally
         {
+            log.info("closing connections and ResultSets");
             ResultSetUtil.close(rs);
             close(ps);
         }
@@ -831,12 +843,13 @@ public class ETLRunnable implements Runnable
     private Long getOriginDataSourceCurrentTime() throws SQLException, BadConfigException
     {
         Connection con = null;
+        ResultSet rs = null;
         Long ts = null;
         try
         {
             con = getOriginConnection();
             PreparedStatement ps = con.prepareStatement("select GETDATE()");
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             if (rs.next())
             {
                 ts = new Long(rs.getTimestamp(1).getTime());
@@ -844,6 +857,8 @@ public class ETLRunnable implements Runnable
         }
         finally
         {
+            log.info("closing connection");
+            ResultSetUtil.close(rs);
             close(con);
         }
         return ts;
