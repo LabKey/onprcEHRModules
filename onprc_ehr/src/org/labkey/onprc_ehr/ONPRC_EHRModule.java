@@ -117,7 +117,7 @@ public class ONPRC_EHRModule extends DefaultModule
         RoleManager.registerRole(new ONPRCBillingAdminRole());
 
         EHRService.get().registerModule(this);
-        EHRService.get().registerTableCustomizer(this, new ONPRC_EHRCustomizer());
+        EHRService.get().registerTableCustomizer(this, ONPRC_EHRCustomizer.class);
 
         Resource r = getModuleResource("/scripts/onprc_ehr/onprc_triggers.js");
         assert r != null;
