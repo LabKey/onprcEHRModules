@@ -7,7 +7,7 @@
                     <column columnName="mostRecentWeight">
                         <formatString>0.##</formatString>
                     </column>
-                    <column columnName="allowableBlood">
+                    <column columnName="maxAllowableBlood">
                         <formatString>0.##</formatString>
                         <columnTitle>Maximum allowable blood</columnTitle>
                     </column>
@@ -27,7 +27,10 @@
                         <formatString>0.##</formatString>
                         <columnTitle>Max allowable blood, accounting for future draws only</columnTitle>
                     </column>
-                </columns>
+                    <column columnName="allowableBlood">
+                        <formatString>0.##</formatString>
+                        <columnTitle>Max allowable blood on this date</columnTitle>
+                    </column>                </columns>
             </table>
         </tables>
     </metadata>

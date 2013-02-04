@@ -32,10 +32,10 @@ SELECT
 	
 	--TODO: add these?
 	l1.Location as DeliveryLocationRoom,
-	r1.row + '-' + convert(char(2), r1.Cage) As DeliveryLocationCage,
+	ltrim(rtrim(r1.row) + convert(char(2), r1.Cage)) As DeliveryLocationCage,
 
 	l2.Location as room,
-	r2.row + '-' + convert(char(2), r2.Cage) As cage,
+	ltrim(rtrim(r2.row) + convert(char(2), r2.Cage)) As cage,
 
 
 	ConceptualAge as ConceptualAge,

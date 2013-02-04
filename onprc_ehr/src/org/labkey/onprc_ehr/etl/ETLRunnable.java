@@ -327,7 +327,7 @@ public class ETLRunnable implements Runnable
                 sql = kv.getValue();
 
                 //debug purposes only
-                //sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t";
+                //sql = "SELECT TOP 200 * FROM (\n" + sql + "\n) t order by t.date desc";
 
                 TableInfo targetTable = schema.getTable(targetTableName);
                 if (targetTable == null)
@@ -385,6 +385,7 @@ public class ETLRunnable implements Runnable
                     ps.setBytes(i, fromVersion);
                 }
 
+                boolean hadResultsOnStart = true;
                 if (fromVersion == DEFAULT_VERSION)
                 {
                     if (realTable != null)
@@ -392,6 +393,7 @@ public class ETLRunnable implements Runnable
                         log.info("Truncating target table, since last rowversion is null: " + targetTableName);
                         SQLFragment truncateSql = new SQLFragment("TRUNCATE TABLE " + realTable.getSelectName());
                         new SqlExecutor(realTable.getSchema()).execute(truncateSql);
+                        hadResultsOnStart = false;
                     }
                     else
                     {
@@ -486,20 +488,27 @@ public class ETLRunnable implements Runnable
                             deleteSelectors.addAll(Arrays.asList((Map<String, Object>[])Table.executeQuery(schema.getDbSchema(), likeWithIds, Map.class)));
                         }
 
-                        int rowsDeleted = 0;
-                        if (realTable != null)
+                        if (hadResultsOnStart)
                         {
-                            log.debug("deleting using real table for: " + realTable.getSelectName() + ", filtering on " + filterColumn.getColumnName());
-                            SimpleFilter filter = new SimpleFilter();
-                            filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
-                            rowsDeleted = Table.delete(realTable, filter);
+                            int rowsDeleted = 0;
+                            if (realTable != null)
+                            {
+                                log.debug("deleting using real table for: " + realTable.getSelectName() + ", filtering on " + filterColumn.getColumnName());
+                                SimpleFilter filter = new SimpleFilter();
+                                filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
+                                rowsDeleted = Table.delete(realTable, filter);
+                            }
+                            else
+                            {
+                                log.info("deleting using update service for: " + targetTable.getName());
+                                rowsDeleted = updater.deleteRows(user, container, deleteSelectors, extraContext).size();
+                            }
+                            log.info("total rows deleted: " + rowsDeleted);
                         }
                         else
                         {
-                            log.info("deleting using update service for: " + targetTable.getName());
-                            rowsDeleted = updater.deleteRows(user, container, deleteSelectors, extraContext).size();
+                            log.info("table had no previous rows, skipping pre-delete");
                         }
-                        log.info("total rows deleted: " + rowsDeleted);
                     }
 
                     List<Map<String, Object>> sourceRows = new ArrayList<Map<String, Object>>();

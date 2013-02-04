@@ -19,14 +19,17 @@ Select
 	OpenDate as date ,
 	--Status as StatusInt ,
     --    s1.Value as Status,
-	CloseDate as  enddate ,
+--	CloseDate as  enddate ,
+
+	coalesce(CloseDate, q.deathdate, q.departuredate) as enddate ,
+
 	ReviewDate as ReviewDate ,
 	--GroupCode as GroupCode,        ---- gCaseTypeConst: Clinical = 1, Surgery = 2, BehaviorCase = 3
 	Case
 		When GroupCode = 1 Then 'Clinical'
 		When GroupCode = 2 Then 'Surgery'
 		When GroupCode = 3 Then 'Behavior'
-		When GroupCode = 4 Then 'Unknown'
+		When GroupCode = 4 Then 'Weight'
 	End AS Category,
 
 	--TODO: what is this second table for (Af_CaseReviewData)?
@@ -42,6 +45,6 @@ Select
 From Af_Case afc
 LEFT JOIN Sys_Parameters s1 ON (afc.Status = s1.Flag and s1.field = 'CaseStatus')
 --left join Cln_DX dx on (dx.CaseID = afc.CaseID and dx.Date = afc.OpenDate)
+left join Af_Qrf q on (q.animalid = afc.animalid)
 
 WHERE afc.ts > ?
-

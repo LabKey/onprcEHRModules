@@ -38,12 +38,14 @@ Tested by:
 	L2.Location as room2,
 	rtrim(r2.row) + convert(char(2), r2.Cage) As Cage2,
 
-	--TODO: translate these 3
-	pp.PairingType as PairingType,
+	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'PairingType' and l.value = s1.value) as PairingType,
+	--pp.PairingType as PairingType,
 	--s2.Value AS PairingType,
-	pp.PairingOutcome as PairingOutcome,
+	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'PairingOutcome' and l.value = s1.value) as PairingOutcome,
+	--pp.PairingOutcome as PairingOutcome,
 	--s3.Value as PairingOutcome,
-	pp.SeparationReason as SeparationReason,
+	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'SeparationReason' and l.value = s1.value) as SeparationReason,
+	--pp.SeparationReason as SeparationReason,
 	--s4.Value AS SeparationReason,
 		
 	cast(pp.aggressor as nvarchar(4000)) as Aggressor ,

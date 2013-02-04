@@ -33,10 +33,27 @@ SELECT
 	--d.ResistanceFlag as Resistant,
 
 	d.ts as rowversion,
-	d.objectid
+	d.objectid,
+	
+	case
+	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+        'Unassigned'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+        rt.LastName + ', ' + rt.FirstName
+	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+        rt.LastName + ' (' + rt.Initials + ')'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+        null
+	  else
+	   rt.Initials
+    END as performedBy	,
+    h.objectid as runid
 
 FROM Cln_AntibioticSensData d
 left join Cln_AntibioticSensHeader h on (d.ClinicalKey = h.ClinicalKey)
+LEFT JOIN Ref_Technicians rt ON (rt.ID = h.Technician)
 left join ref_snomed s1 on (s1.SnomedCode = h.Tissue)
 left join ref_snomed s2 on (s2.SnomedCode = h.microbe)
 

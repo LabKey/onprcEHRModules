@@ -121,21 +121,24 @@ INSERT INTO labkey.ehr_lookups.rooms (room, area, building, maxCages, housingtyp
 SELECT
 	t.Location as room,
 	t.area,
-	t.BuildingID,
+	t.buildingName,
 	t.Size,
-	max(t.LocationTypeInt) as locationtype,
-	max(t.LocationDefinitionInt) as housingcategory
+	max(t.LocationType) as locationtype,
+	max(t.LocationDefinition) as housingcategory
 
 FROM (
 Select
 	Location,
-	null as area,
-	BuildingID,
+	BuildingName as area,
+	BuildingName,
 	Size,
 	Status as active,
-	LocationType as LocationTypeInt,
+	--s1.SearchKey as LocationTypeInt,
+	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s1.Field and l.value = s1.Value) as locationType,
 	--s1.Value as LocationType,
-	LocationDefinition as LocationDefinitionInt
+	--s2.searchkey as LocationDefinitionInt
+
+	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s2.Field and l.value = s2.Value) as locationDefinition
 	--s2.Value as LocationDefinition,
 	--loc.DateCreated,
 	--loc.DateDisabled,
@@ -143,36 +146,40 @@ Select
 	--LockDownDate
 
 From IRIS_Production.dbo.Ref_Location loc,
-	IRIS_Production.dbo.Sys_Parameters s1, IRIS_Production.dbo.Sys_Parameters s2
+	IRIS_Production.dbo.Sys_Parameters s1, IRIS_Production.dbo.Sys_Parameters s2, IRIS_Production.dbo.Ref_Building rb
 Where s1.Field = 'LocationType'
 	and s1.Flag = loc.LocationType
 	and s2.Field = 'LocationDefinition'
 	and s2.Flag = loc.LocationDefinition
 	and loc.Status = 1
+	and rb.BuildingId = loc.BuildingID
 
 UNION ALL
 
 Select
 	Location,
-	null as area,
-	BuildingID,				--Ref_Building
+	BuildingName as area,
+	BuildingName,				--Ref_Building
 	Size,
 	Status,
-	LocationType as LocationTypeInt,
+	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s1.Field and l.value = s1.Value) as locationType,
 	--s1.Value as LocationType,
-	LocationDefinition as LocationDefinitionInt
+	--s2.searchkey as LocationDefinitionInt
+
+	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s2.Field and l.value = s2.Value) as locationDefinition
 	--s2.Value as LocationDefinition,
 
 From IRIS_Production.dbo.Ref_LocationSPF rls,
-	IRIS_Production.dbo.Sys_Parameters s1, IRIS_Production.dbo.Sys_Parameters s2
+	IRIS_Production.dbo.Sys_Parameters s1, IRIS_Production.dbo.Sys_Parameters s2, IRIS_Production.dbo.Ref_Building rb
 Where s1.Field = 'LocationType'
 	and s1.Flag = rls.LocationType
 	and s2.Field = 'LocationDefinition'
 	and s2.Flag = rls.LocationDefinition
 	and rls.Status = 1
-	
-) t 
-GROUP BY t.location, t.area, t.buildingId, t.size;
+	and rb.BuildingId = rls.BuildingID
+
+) t
+GROUP BY t.location, t.area, t.buildingName, t.size;
 
 --cage types
 TRUNCATE TABLE labkey.ehr_lookups.cage_type;
@@ -192,18 +199,32 @@ From IRIS_Production.dbo.Ref_CageTypes ct
 WHERE DateDisabled is null;
 
 --areas
-DELETE FROM labkey.ehr_lookups.areas;
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('ASA');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('ASB');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('NSI');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Research');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Harem');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Colony');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Colony Annex - South');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Colony Annex - North');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Shelters');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Corrals');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Kroc');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 2');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 5');
-INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 8');
+-- DELETE FROM labkey.ehr_lookups.areas;
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('ASA');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('ASB');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('NSI');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Research');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Harem');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Colony');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Colony Annex - South');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Colony Annex - North');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Shelters');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Corrals');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Kroc');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 2');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 5');
+-- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 8');
+
+TRUNCATE TABLE labkey.ehr_lookups.areas;
+INSERT INTO labkey.ehr_lookups.areas (area, description)
+SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE datedisabled IS NULL;
+
+
+INSERT INTO labkey.ehr_lookups.divider_types (divider)
+SELECT
+  s2.value
+  from IRIS_Production.dbo.sys_parameters s2
+  left join labkey.ehr_lookups.divider_types d ON (s2.value = d.divider)
+  where s2.field = 'CageDivider' and s2.DateDisabled IS NULL and d.divider is null;
+
+

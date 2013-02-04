@@ -17,10 +17,10 @@ Select
 	cast(AnimalID as nvarchar(4000)) as Id,
 	Date as Date,
 
-	afc.AcquisitionType,
+	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'AcquistionType' and l.value = s1.value) as AcquisitionType,
     s1.Value as AcquisitionTypeMeaning,
 
-    afc.RearingType,
+    (SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'RearingType' and l.value = s2.value) as RearingType,
     s2.Value as RearingTypeMeaning,
 
     Afc.ISISInstitute as source,
@@ -35,7 +35,7 @@ Select
       WHEN (RefLoc.Location = 'No Location') then null
       else RefLoc.Location
     END as initialRoom,
-	rtrim(Refrow.row) + '-' + convert(char(2), RefRow.Cage) As initialCage,
+	ltrim(rtrim(Refrow.row) + convert(char(2), RefRow.Cage)) As initialCage,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN

@@ -1,7 +1,4 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
-    <filters>
-        <filter column="enddate" operator="isblank"/>
-    </filters>
     <sorts>
         <sort column="date" descending="true"/>
     </sorts>

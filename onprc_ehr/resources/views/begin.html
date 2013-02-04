@@ -69,21 +69,21 @@ Ext4.onReady(function(){
         width: 270,
         renderTo: 'ehrMenu2_'+webpart.wrapperDivId,
         sections: [{
-            header: 'Today At The Center',
-            itemDefaults: {
-                linkCls: 'none',
-                style: 'font-weight: bold;'
-            },
-            items: [
-                {name: 'Blood Draw Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:todaysBlood'},
-                {name: 'Clinical TODO List', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:obs'}
-                //{name: 'Treatment Schedule - AM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleAM'},
-                //{name: 'Treatment Schedule - PM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentSchedulePM'},
-                //{name: 'Treatment Schedule - Night', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleNight'}
-                //{name: 'Treatment Schedule - All', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentSchedule'},
-                //{name: 'Forms Completed Today', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=TasksByLocation&query.viewName=Completion Times&query.taskid/Created~dateeq='+(new Date()).format('Y-m-d')}
-            ]
-        },{
+//            header: 'Today At The Center',
+//            itemDefaults: {
+//                linkCls: 'none',
+//                style: 'font-weight: bold;'
+//            },
+//            items: [
+////                {name: 'Blood Draw Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:todaysBlood'},
+////                {name: 'Clinical TODO List', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:obs'}
+////                //{name: 'Treatment Schedule - AM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleAM'},
+////                //{name: 'Treatment Schedule - PM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentSchedulePM'},
+////                //{name: 'Treatment Schedule - Night', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleNight'}
+////                //{name: 'Treatment Schedule - All', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentSchedule'},
+////                //{name: 'Forms Completed Today', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=TasksByLocation&query.viewName=Completion Times&query.taskid/Created~dateeq='+(new Date()).format('Y-m-d')}
+////            ]
+//        },{
             header: 'Entire Colony',
             itemDefaults: {
                 linkCls: 'none',
@@ -131,8 +131,8 @@ Ext4.onReady(function(){
                 style: 'font-weight: bold;'
             },
             items: [
-                {name: 'Manage Requests'},//, url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/requestServices.view'},
-                {name: 'Request Blood Draws'} //url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/manageRequest.view?formtype=Blood%20Draw%20Request'}
+                {name: 'Manage Requests', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/serviceRequests.view'},
+                {name: 'Request Blood Draws', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/serviceRequests.view?formtype=Blood%20Draw%20Request'}
                 //{name: 'Request Clinpath Services', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/manageRequest.view?formtype=Clinpath%20Request'}
             ]
         }]

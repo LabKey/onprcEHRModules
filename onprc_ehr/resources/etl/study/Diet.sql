@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Select
+Select					--top 1000
 	--IDKey as IDKey ,
-	cast(AnimalID as nvarchar(4000)) as Id,
+	cast(afd.AnimalID as nvarchar(4000)) as Id,
 	afd.ProjectID as Project,   ---- Ref_ProjectsIacuc
 	afd.StartDate as Date  ,
-	ReleaseDate as enddate ,
+--	ReleaseDate as enddate ,
+
+	coalesce(ReleaseDate, q.deathdate, q.departuredate) as enddate ,
+
 
 	--afd.DietCode as DietCode,     ----- Ref_Diet
 	d.Description as Diet,
@@ -36,5 +39,6 @@ From Af_Diet afd
 left join Sys_Parameters s1 on (s1.Field = 'Frequency' and afd.Frequency = s1.Flag)
 left join Ref_ProjectsIacuc proj on (proj.ProjectID = afd.ProjectID)
 left join Ref_Diet d on (d.DietCode = afd.DietCode)
+left join Af_Qrf q on (q.animalid = afd.animalid)
 
 where afd.ts > ?

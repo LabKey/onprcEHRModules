@@ -17,11 +17,13 @@ package org.labkey.onprc_ehr;
 
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.audit.AuditLogService;
+import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.DefaultModule;
 import org.labkey.api.module.ModuleContext;
+import org.labkey.api.module.SimpleModule;
 import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.QuerySchema;
 import org.labkey.api.query.QueryService;
@@ -54,7 +56,7 @@ import java.util.Set;
  * Date: 5/16/12
  * Time: 1:52 PM
  */
-public class ONPRC_EHRModule extends DefaultModule
+public class ONPRC_EHRModule extends SimpleModule
 {
     public static final String NAME = "ONPRC_EHR";
     public static final String CONTROLLER_NAME = "onprc_ehr";
@@ -85,8 +87,9 @@ public class ONPRC_EHRModule extends DefaultModule
     }
 
     @Override
-    public void doStartup(ModuleContext moduleContext)
+    public void startupAfterSpringConfig(ModuleContext moduleContext)
     {
+        ContainerManager.addContainerListener(this);
         ETL.init(1);
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
 

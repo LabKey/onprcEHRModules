@@ -17,8 +17,6 @@ Select
 	cast(AnimalID as nvarchar(4000)) as Id,
 	Date as Date,
 
-	--TODO
-	--WeightAtDeath as WeightAtDeath,
 
 	--CauseOfDeath as CauseOfDeathInt,
     s1.Value as Cause,
@@ -41,7 +39,7 @@ Select
 
 	--afd.DeathLocation as CageId,
 	loc.Location as roomattime,
-	row.row + '-' + convert(char(2), row.Cage) As cageattime,
+	row.row + convert(char(2), row.Cage) As cageattime,
 
 	afd.objectid
 	--afd.ts as rowversion

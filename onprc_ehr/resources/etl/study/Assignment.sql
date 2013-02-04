@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 Select
-	cast(AnimalID as nvarchar(4000)) as Id,
+	cast(af.AnimalID as nvarchar(4000)) as Id,
 	af.ProjectID as Project,
 	--RefProj.Title,
 
 		-----    Ref_ProjectsIacuc (ProjectID)		
 	AssignDate as Date,
-	ReleaseDate as Enddate,
+--	ReleaseDate as Enddate,
+
+	coalesce(ReleaseDate, q.deathdate, q.departuredate) as enddate ,
 
 	AssignPool as assignCondition,							--Ref_Pool
 	EstimatedReleasePool as projectedReleaseCondition,		--Ref_Pool
@@ -40,5 +42,6 @@ LEFT JOIN Ref_Pool p1 ON (p1.PoolCode = AssignPool)
 LEFT JOIN Ref_Pool p2 ON (p2.PoolCode = EstimatedReleasePool)
 LEFT JOIN Ref_Pool p3 ON (p3.PoolCode = ActualReleasePool)
 LEFT JOIN Sys_Parameters s1 ON (field = 'ReplacementFlag' and Flag = ReplacementFlag)
+left join Af_Qrf q on (q.animalid = af.animalid)
 
 WHERE af.ts > ?

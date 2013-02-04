@@ -42,7 +42,7 @@ SELECT
 	   tech.Initials
     END as performedBy,
 
-  t.objectid as parentid,
+  t.objectid as runid,
   t.objectid,
   t.rowversion
 

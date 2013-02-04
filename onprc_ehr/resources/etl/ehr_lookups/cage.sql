@@ -18,8 +18,9 @@ select
 t.location,
 t.room,
 t.cage,
+--TODO: int
 MAX(t.cagedivider) as divider,
-MAX(t.cagetype) as cagetype,
+MAX(t.cagetype) as cage_type,
 MAX(CONVERT(VARCHAR(38), t.objectid)) as objectid
 
 FROM (
@@ -29,14 +30,15 @@ Select
 		ELSE rl.Location + '-' + rtrim(row.Row) + CONVERT(varchar, row.Cage)
 	END as location,
 	rl.Location as room,
-	rtrim(row.Row) + CONVERT(varchar, row.Cage) as cage,
-	--row.CageTypeID,			--Ref_CageTypes
-	--row.CageDivider as CageDividerInt,
+	ltrim(rtrim(row.Row) + CONVERT(varchar, row.Cage)) as cage,
+
 	CASE
 		WHEN row.CageTypeID = 19 THEN ct.CageDescription
 		ELSE CONVERT(VARCHAR, ct.CageDescription + ' - ') + CONVERT(VARCHAR, ct.CageSize)
 	END as cagetype,
-	s2.Value as CageDivider,
+
+	--s2.Value as CageDivider,
+	(select cd.rowid from labkey.ehr_lookups.divider_types cd where cd.divider = s2.value) as cageDivider,
 	--row.CagePosition,
 	row.objectid
 

@@ -69,7 +69,7 @@ public class ColonyAlertsLiteNotification extends ColonyAlertsNotification
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);
         livingAnimalsWithoutHousing(c, u, msg);
-        animalsLackingAssignments(c, u, msg);
+        //animalsLackingAssignments(c, u, msg);
         deadAnimalsWithActiveAssignments(c, u, msg);
         assignmentsWithoutValidProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);

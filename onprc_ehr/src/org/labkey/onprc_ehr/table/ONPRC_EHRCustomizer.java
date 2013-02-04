@@ -77,6 +77,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeProjects((AbstractTableInfo) table);
             }
+            else if (matches(table, "ehr_lookups", "room"))
+            {
+                customizeRooms((AbstractTableInfo) table);
+            }
         }
     }
 
@@ -85,12 +89,9 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ColumnInfo project = ti.getColumn("project");
         if (project != null && !ti.getName().equalsIgnoreCase("project"))
         {
-            if (project.getFk() == null)
-            {
-                UserSchema us = getUserSchema(ti, "ehr");
-                if (us != null)
-                    project.setFk(new QueryForeignKey(us, "project", "project", "name"));
-            }
+            UserSchema us = getUserSchema(ti, "ehr");
+            if (us != null)
+                project.setFk(new QueryForeignKey(us, "project", "project", "name"));
         }
 
         ColumnInfo account = ti.getColumn("account");
@@ -229,23 +230,42 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void customizeAnimalTable(AbstractTableInfo ds)
     {
-        if (ds.getColumn("activeFlags") != null)
-            return;
-
         UserSchema us = getStudyUserSchema(ds);
         if (us == null){
             return;
         }
 
-        ColumnInfo col = getWrappedIdCol(us, ds, "activeFlags", "flagsPivoted");
-        col.setLabel("Active Flags");
-        //col.setDescription("");
-        ds.addColumn(col);
+        if (ds.getColumn("activeFlags") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "activeFlags", "flagsPivoted");
+            col.setLabel("Active Flags");
+            //col.setDescription("");
+            ds.addColumn(col);
+        }
 
-        ColumnInfo col2 = getWrappedIdCol(us, ds, "activeNotes", "notesPivoted");
-        col2.setLabel("Active Notes");
-        //col.setDescription("");
-        ds.addColumn(col2);
+        if (ds.getColumn("activeNotes") == null)
+        {
+            ColumnInfo col2 = getWrappedIdCol(us, ds, "activeNotes", "notesPivoted");
+            col2.setLabel("Active Notes");
+            //col.setDescription("");
+            ds.addColumn(col2);
+        }
+
+        if (ds.getColumn("demographicsActiveAssignment") == null)
+        {
+            ColumnInfo col21 = getWrappedIdCol(us, ds, "activeAssignments", "demographicsActiveAssignment");
+            col21.setLabel("Assignments - Active");
+            col21.setDescription("Shows all projects to which the animal is actively assigned on the current date");
+            ds.addColumn(col21);
+        }
+
+        if (ds.getColumn("demographicsAssignmentHistory") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "assignmentHistory", "demographicsAssignmentHistory");
+            col.setLabel("Assignments - Total");
+            col.setDescription("Shows all projects to which the animal has ever been assigned, including active projects");
+            ds.addColumn(col);
+        }
     }
 
     private void customizeEncounters(AbstractTableInfo ti)
@@ -300,11 +320,23 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ti.getColumn("research").setHidden(true);
         ti.getColumn("avail").setHidden(true);
 
+        ti.getColumn("project").setLabel("Project Id");
+
         ColumnInfo invest = ti.getColumn("investigatorId");
         invest.setHidden(false);
         UserSchema us = getUserSchema(ti, "onprc_ehr");
         if (us != null)
             invest.setFk(new QueryForeignKey(us, "investigators", "rowid", "lastname"));
+
+        ColumnInfo nameCol = ti.getColumn("name");
+        nameCol.setHidden(false);
+        nameCol.setLabel("Project");
+    }
+
+    private void customizeRooms(AbstractTableInfo ti)
+    {
+
+
     }
 
     private ColumnInfo getWrappedIdCol(UserSchema us, AbstractTableInfo ds, String name, String queryName)

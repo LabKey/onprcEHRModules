@@ -34,7 +34,8 @@ SELECT
     END as Remark,
 
 	cln.ts as rowversion,
-	cln.objectid
+	cln.objectid,
+	h.objectid as runid
 
 FROM Cln_VirologyData cln
      left join Sys_parameters s1 on (s1.Flag = Method and s1.Field = 'VirologyMethod')

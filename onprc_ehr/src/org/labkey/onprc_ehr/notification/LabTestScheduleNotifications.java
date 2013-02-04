@@ -239,7 +239,7 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
             if (total > 0)
             {
                 msg.append("<b>WARNING: There are " + total + " requests that were requested for today or earlier, but have not been marked complete.</b><br>");
-                msg.append("<p><a href='" +  _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=Clinpath Runs&query.qcstate/label~neq=Completed&query.date~datelte=" + AbstractEHRNotification._dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
+                msg.append("<p><a href='" +  getBaseUrl(c) + "schemaName=study&query.queryName=Clinpath Runs&query.qcstate/label~neq=Completed&query.date~datelte=" + AbstractEHRNotification._dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
                 msg.append("<hr>\n");
             }
             else

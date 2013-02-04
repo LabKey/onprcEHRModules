@@ -19,7 +19,7 @@ Select
 	RemovalDate as  enddate ,
 	--Aft.CageID as  TransferCageID ,
 	l2.Location as room,
-	rtrim(r2.row) + '-' + convert(char(2), r2.Cage) As cage,
+	ltrim(rtrim(r2.row) + convert(char(2), r2.Cage)) As cage,
 
 	--Reason as ReasonInt,
         s1.Value as Reason,
@@ -51,4 +51,4 @@ left join  Sys_Parameters s1 on ( AfT.Reason = s1.Flag And s1.Field = 'TransferR
 left join  Ref_RowCage r2 on  (r2.CageID = aft.CageID)
 left join  Ref_Location l2 on (r2.LocationID = l2.LocationId)
 
-WHERE aft.ts > ? and s1.Value != 'Final Transfer' and s1.value != 'InitialTransfer'
+WHERE aft.ts > ? and l2.Location != 'No Location'

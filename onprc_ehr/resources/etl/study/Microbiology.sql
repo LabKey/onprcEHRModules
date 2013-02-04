@@ -23,7 +23,8 @@ SELECT
 	--m.Searchkey ,
 
 	--m.ts as rowversion,
-	m.objectid
+	m.objectid,
+	mh.objectid as runId
 
 FROM Cln_MicrobiologyData m
 left join Cln_MicrobiologyHeader mh ON (m.ClinicalKey = mh.ClinicalKey)

@@ -127,7 +127,7 @@ public class BloodAdminAlertsNotification extends AbstractEHRNotification
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: There are " + ts.getRowCount() + " current or scheduled blood draws for animals not currently at WNPRC.</b><br>");
-            msg.append("<p><a href='" + _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=Blood Draws&query.date~dategte=$datestr&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Blood Draws&query.date~dategte=$datestr&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
@@ -153,7 +153,7 @@ public class BloodAdminAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=Blood Draws&query.viewName=Blood Summary&query.date~dategte=$datestr&query.Id/Dataset/Demographics/calculated_status~eq=Alive&query.BloodRemaining/AvailBlood~lt=0'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Blood Draws&query.viewName=Blood Summary&query.date~dategte=$datestr&query.Id/Dataset/Demographics/calculated_status~eq=Alive&query.BloodRemaining/AvailBlood~lt=0'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
         else {
@@ -203,7 +203,7 @@ public class BloodAdminAlertsNotification extends AbstractEHRNotification
                 }
                 while (rs.next());
 
-                msg.append("<p><a href='" + _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=BloodSchedule&query.projectStatus~isnonblank&query.Id/DataSet/Demographics/calculated_status~eq=Alive&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
+                msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=BloodSchedule&query.projectStatus~isnonblank&query.Id/DataSet/Demographics/calculated_status~eq=Alive&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
                 msg.append("<hr>\n");
             }
             else
@@ -281,7 +281,7 @@ public class BloodAdminAlertsNotification extends AbstractEHRNotification
 //        if (ts.getRowCount() > 0)
 //        {
 //            msg.append("<b>WARNING: There are " + ts.getRowCount() + " blood draws scheduled today that request clinpath services, but lack a corresponding clinpath request.</b><br>");
-//            msg.append("<p><a href='" + _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=ValidateBloodDrawClinpath&query.viewName=Lacking Clinpath Request&query.date~dateeq=" + _dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
+//            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=ValidateBloodDrawClinpath&query.viewName=Lacking Clinpath Request&query.date~dateeq=" + _dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
 //            msg.append("<hr>\n");
 //        }
 //    }
@@ -355,7 +355,7 @@ public class BloodAdminAlertsNotification extends AbstractEHRNotification
                 }
                 while (rs.next());
 
-                String url = "<a href='" + _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=BloodSchedule&query.date~dateeq=$datestr&query.Id/DataSet/Demographics/calculated_status~eq=Alive'>Click here to view them</a></p>\n";
+                String url = "<a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=BloodSchedule&query.date~dateeq=$datestr&query.Id/DataSet/Demographics/calculated_status~eq=Alive'>Click here to view them</a></p>\n";
                 msg.append("There are " + (incomplete + complete) + " scheduled blood draws for $datestr.  " + complete + " have been completed.  " + url + "<p>\n");
 
                 if(incomplete == 0)

@@ -34,7 +34,8 @@ SELECT
 
 	t.rowversion,
 	(cast(t.objectid as varchar(38)) + '_' + t.TestId) as objectid,
-	 t.objectid as parentId
+	 null as parentId,
+	 t.objectid as runId
 
 FROM (
 

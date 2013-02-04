@@ -42,7 +42,7 @@ Select
     END as performedBy,
 
 	cp.ts as rowversion,
-	cp.objectid as parentid,
+	cp.objectid as runid,
 	(cast(cp.objectid as varchar(38)) + '_' + cp.tissue + '_' + category) as objectid
 
 FROM (

@@ -42,7 +42,7 @@ EHR.reports.hematology = function(panel, tab){
     tab.add({
         xtype: 'ldk-querypanel',
         style: 'margin-bottom:20px;',
-        queryConfig: config
+        queryConfig: miscConfig
     });
 
     var resultsConfig = panel.getQWPConfig({
@@ -68,7 +68,8 @@ EHR.reports.currentBlood = function(panel, tab){
     var title = panel.getTitleSuffix();
 
     tab.add({
-        html: 'This report summarizes the blood available for the animals below.  For more detail on this calculation, please see the PDF <a href="https://bridge.ohsu.edu/research/onprc/dcm/DCM%20Standard%20Operatiing%20Procedures/Blood%20Collection%20Volume%20Guidelines.pdf" target="_blank">here</a>.',
+        html: 'This report summarizes the blood available for the animals below.  For more detail on this calculation, please see the PDF <a href="https://bridge.ohsu.edu/research/onprc/dcm/DCM%20Standard%20Operatiing%20Procedures/Blood%20Collection%20Volume%20Guidelines.pdf" target="_blank">here</a>.' +
+                '<br><br>If there have been recent blood draws for the animal, a graph will show the available blood over time.  On the graph, dots indicate dates when either blood was drawn or a previous blood draw fell off.  The horizontal lines indicate the maximum allowable blood that can be drawn on that date.',
         border: false,
         style: 'padding-bottom: 20px;'
     });
@@ -86,6 +87,15 @@ EHR.reports.currentBlood = function(panel, tab){
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
             success: function(result){
+                if (!result.rows || !result.rows.length){
+                    tab.add({
+                        html: 'Either species or weight information is missing from the selected animals',
+                        border: false
+                    });
+
+                    return;
+                }
+
                 Ext4.each(result.rows, function(row, idx){
                     var tabId = Ext4.id();
                     var subject = row.Id;
@@ -99,15 +109,6 @@ EHR.reports.currentBlood = function(panel, tab){
                             html: '<b>Id: ' + row.Id + '</b>'
                         },{
                             html: '<hr>'
-//                        },{
-//                            html: [
-//                                'Species: ' + row.species,
-//                                'Allowable Blood Per Kg: ' + row['species/blood_per_kg'] + 'mL',
-//                                'Percent of Body Weight: ' + row['species/max_draw_pct'] * 100,
-//                                'Interval: ' + row['species/blood_draw_interval'] + ' days',
-//                                'Last Weight: ' + row['id/MostRecentWeight/mostRecentWeight'] + ' kg (' + (new Date((row['id/MostRecentWeight/mostRecentWeightDate']))).format('Y-m-d') + ')'
-//                            ].join('<br>'),
-//                            style: 'padding-bottom: 10px;'
                         },{
                             itemId: tabId,
                             style: 'padding-bottom: 20px;',
@@ -131,31 +132,65 @@ EHR.reports.currentBlood = function(panel, tab){
                         requiredVersion: 9.1,
                         scope: this,
                         failure: LDK.Utils.getErrorCallback(),
-                        success: Ext4.Function.pass(function(subj, tabId, results){
+                        success: Ext4.Function.pass(function(subj, idRow, tabId, results){
                             var target = tab.down('#' + tabId);
                             target.removeAll();
-                            results.metaData.fields.push({
-                                name: 'allowablePreviousDisplay',
-                                jsonType: 'string'
 
+                            if (!results.rows || results.rows.length <= 1){
+                                var maxDraw = idRow['species/blood_per_kg'] * idRow['species/max_draw_pct'] * idRow['id/MostRecentWeight/mostRecentWeight']
+                                target.add({
+                                    html: 'There are no previous or future blood draws with the relevant timeframe.  The maximum amount of ' + maxDraw + ' mL can be drawn.',
+                                    border: false
+                                });
+                                return;
+                            }
+
+                            results.metaData.fields.push({
+                                name: 'allowableDisplay',
+                                jsonType: 'string'
+                            });
+                            results.metaData.fields.push({
+                                name: 'seriesId',
+                                jsonType: 'string'
+                            });
+                            results.metaData.fields.push({
+                                name: 'isHidden',
+                                jsonType: 'boolean'
                             });
 
                             //this assumes we sorted on date
                             var newRows = [];
                             var rowPrevious;
+                            var seriesIds = [];
                             Ext4.each(results.rows, function(row, idx){
-                                row.allowablePreviousDisplay = row.allowablePrevious;
+                                row.allowableDisplay = row.allowableBlood;
+                                row.seriesId = {
+                                    value: row.id.value + '/' + row.date.value
+                                };
+                                seriesIds.push(row.seriesId.value);
 
                                 //in order to mimick a stepped graph, add one new point per row using the date of the next draw
                                 if (rowPrevious){
                                     var newRow = Ext4.apply({}, row);
-                                    newRow.allowablePrevious = rowPrevious.allowablePrevious;
+                                    newRow.allowableBlood = rowPrevious.allowableBlood;
+                                     newRow.seriesId = rowPrevious.seriesId;
+                                    newRow.isHidden = {value: true};
                                     newRows.push(newRow);
                                 }
                                 rowPrevious = row;
-
                                 newRows.push(row);
+
+                                //always append one additional datapoint in order to emphasize the ending
+                                if (idx == (results.rows.length - 1)){
+                                    var newRow = Ext4.Object.merge({}, row);
+                                    newRow.isHidden = {value: true};
+                                    var date = new Date(Date.parse(row.date.value));
+                                    date = Ext4.Date.add(date, Ext4.Date.DAY, 1);
+                                    newRow.date.value = date.format('Y-m-d');
+                                    newRows.push(newRow);
+                                }
                             }, this);
+
                             results.rows = newRows;
 
                             target.add({
@@ -164,64 +199,77 @@ EHR.reports.currentBlood = function(panel, tab){
                                 title: 'Available Blood: ' + subj,
                                 plotConfig: {
                                     results: results,
-                                    title: 'Available Blood: ' + subj,
+                                    title: 'Blood Available To Be Drawn: ' + subj,
                                     height: 400,
                                     width: 800,
                                     yLabel: 'Available Blood (mL)',
                                     xLabel: 'Date',
                                     xField: 'date',
-                                    grouping: ['id'],
+                                    grouping: ['seriesId'],
                                     layers: [{
-                                        y: 'allowablePrevious',
+                                        y: 'allowableBlood',
                                         hoverText: function(row){
                                             var lines = [];
 
-                                            lines.push('Draw Date: ' + row.date.format('Y-m-d'));
-                                            lines.push('Weight: ' + row.mostRecentWeight + ' kg');
-                                            lines.push('Weight Date: ' + row.mostRecentWeightDate.format('Y-m-d'));
-                                            lines.push('Max Allowable: ' + LABKEY.Utils.roundNumber(row.allowableBlood, 1) + ' mL');
-                                            lines.push('Draw on this Date: ' + row.quantity);
+                                            lines.push('Date: ' + row.date.format('Y-m-d'));
+                                            lines.push('Drawn on this Date: ' + row.quantity);
+                                            lines.push('Volume Available on this Date: ' + LABKEY.Utils.roundNumber(row.allowableDisplay, 1) + ' mL');
+
+                                            lines.push('Weight: ' + row.mostRecentWeight + ' kg (' + row.mostRecentWeightDate.format('Y-m-d') + ')');
+                                            //lines.push('Max Allowable: ' + LABKEY.Utils.roundNumber(row.maxAllowableBlood, 1) + ' mL');
+
                                             lines.push('Drawn in Previous ' + row.DATE_INTERVAL + ' days: ' + LABKEY.Utils.roundNumber(row.bloodPrevious, 1));
                                             lines.push('Drawn in Next ' + row.DATE_INTERVAL + ' days: ' + LABKEY.Utils.roundNumber(row.bloodFuture, 1));
-                                            lines.push('Available on this Date: ' + LABKEY.Utils.roundNumber(row.allowablePreviousDisplay, 1) + ' mL');
+
 
                                             return lines.join('\n');
                                         },
                                         name: 'Volume'
                                     }]
                                 },
+                                getPlotConfig: function(){
+                                    var cfg = LDK.panel.GraphPanel.prototype.getPlotConfig.call(this);
+                                    cfg.legendPos = 'none';
+                                    cfg.aes.color = null;
+                                    cfg.aes.shape = null;
+
+                                    return cfg;
+                                },
+
                                 //@Override
                                 appendLayer: function(plot, layerConfig){
                                     var meta = this.findMetadata(layerConfig.y);
-                                    var cfg = {
+                                    plot.addLayer(new LABKEY.vis.Layer({
                                         geom: new LABKEY.vis.Geom.Point({size: 5}),
                                         name: layerConfig.name || meta.caption,
                                         aes: {
                                             y: function(row){
+                                                if (row.isHidden)
+                                                    return null;
+
                                                 return row[layerConfig.y]
                                             },
                                             hoverText: layerConfig.hoverText
                                         }
-                                    }
-
-                                    plot.addLayer(new LABKEY.vis.Layer(cfg));
-
-                                    //now add segments
-                                    plot.addLayer(new LABKEY.vis.Layer({
-                                        geom: new LABKEY.vis.Geom.Path({size: 5, opacity: 2}),
-                                        name: layerConfig.name || meta.caption,
-                                        aes: {
-                                            y: function(row){
-                                                return row[layerConfig.y];
-                                            },
-                                            scales: {
-                                                y: {
-                                                    min: 0
-                                                }
-                                            },
-                                            hoverText: layerConfig.hoverText
-                                        }
                                     }));
+
+                                    //now add segments.  this is an odd way to accomplish grouping, but
+                                    //otherwise Vis will give each segment a different color
+                                    Ext4.each(seriesIds, function(seriesId){
+                                        plot.addLayer(new LABKEY.vis.Layer({
+                                            geom: new LABKEY.vis.Geom.Path({size: 5, opacity: 2}),
+                                            name: layerConfig.name || meta.caption,
+                                            aes: {
+                                                y: function(row){
+                                                    if (row.seriesId != seriesId)
+                                                        return null;
+
+                                                    return row[layerConfig.y];
+                                                },
+                                                group: 'none'
+                                            }
+                                        }));
+                                    }, this);
                                 }
                             });
 
@@ -256,13 +304,20 @@ EHR.reports.currentBlood = function(panel, tab){
                                     sort: '-date'
                                 })
                             });
-                        }, [subject, tabId])
+                        }, [subject, row, tabId])
                     });
 
                     tab.add(cfg);
                 }, this);
             }
         });
+    }
+    else
+    {
+        tab.add({
+            border: false,
+            html: 'This report cannot be loaded using the selected filter type.  Please choose either a single subject or multiple subjects'
+        })
     }
 };
 

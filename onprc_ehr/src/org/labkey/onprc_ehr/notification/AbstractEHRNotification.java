@@ -21,6 +21,7 @@ import org.labkey.api.data.Results;
 import org.labkey.api.ldk.notification.Notification;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.ModuleLoader;
+import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
@@ -48,7 +49,6 @@ abstract public class AbstractEHRNotification implements Notification
     protected final static SimpleDateFormat _timeFormat = new SimpleDateFormat("kk:mm");
 
     protected NotificationService _ns = NotificationService.get();
-    protected String _baseUrl;
 
     public boolean isAvailable(Container c)
     {
@@ -94,5 +94,12 @@ abstract public class AbstractEHRNotification implements Notification
     public Set<String> getNotificationTypes()
     {
         return Collections.singleton(getName());
+    }
+
+    protected String getBaseUrl(Container c)
+    {
+        DetailsURL url = DetailsURL.fromString("/query/executeQuery.view");
+        url.setContainerContext(c);
+        return url.getActionURL().toString();
     }
 }

@@ -16,7 +16,8 @@
 Select
     cast(MotherID as nvarchar(4000)) as Id,
 	Date,
-	DeliveryType as DeliveryType,
+	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'DeliveryType' and l.value = s1.value) as DeliveryType,
+	--DeliveryType as DeliveryType,
     --s1.Value as DeliveryType,
 
     cast(InfantID as nvarchar(4000)) as Infant,

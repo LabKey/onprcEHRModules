@@ -14,48 +14,73 @@
  * limitations under the License.
  */
 SELECT
-    cast(m.AnimalId as nvarchar(4000)) as Id,
+	t.Id,
+	DATEADD (DAY , i.value, t.date) as date,
+	--t.duration,
+	--i.value,
+	t.code,
+	t.meaning,
+	t.remark,
+	t.amount,
+	t.amount_units,
+	t.route,
+	(cast(t.objectid as varchar(38)) + '_' + cast(i.value as varchar(10))) as objectid,
+	t.parentId,
+	t.treatmentId,
+	t.performedBy
 
-    --TODO: revisit
-	m.Date,
-	--convert(datetime, CONVERT(varchar(100), m.date, 111) + ' ' + left(cln.MedicationTime, 2) + ':' + RIGHT(cln.medicationtime, 2)) as datetime,
+FROM (
+	SELECT
+		coalesce(m.duration, 0) as duration,
+		cast(m.AnimalId as nvarchar(4000)) as Id,
 
-	Medication as code,
-	sno.Description as meaning,
+		case
+		  when cln.MedicationTime is null or cln.MedicationTime = '' or LEN(medicationtime) = 0 then m.date
+		  when LEN(medicationtime) = 3 then convert(datetime, CONVERT(varchar(100), m.date, 111) + ' 0' + left(cln.MedicationTime, 1) + ':' + RIGHT(cln.medicationtime, 2))
+		  else convert(datetime, CONVERT(varchar(100), m.date, 111) + ' ' + left(cln.MedicationTime, 2) + ':' + RIGHT(cln.medicationtime, 2))
+		end as date,
 
-	null as remark,
-	Dose as amount,
+		Medication as code,
+		sno.Description as meaning,
 
-	--Units as UnitsInt ,
-	s2.Value as amount_units,
-	--Route as RouteInt ,
-	s3.Value as route,
-	cln.objectid,
-	null as parentId,
-	
-	case
-	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
-        'Unassigned'
-	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
-        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
-	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
-        rt.LastName + ', ' + rt.FirstName
-	  WHEN datalength(LastName) > 0 AND datalength(rt.Initials) > 0 THEN
-        rt.LastName + ' (' + rt.Initials + ')'
-      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
-        null
-	  else
-	   rt.Initials
-    END as performedBy
-    
-FROM Cln_MedicationTimes cln
-left join Cln_Medications m on (m.SearchKey = cln.SearchKey)
-left join ref_snomed sno on (sno.SnomedCode = m.Medication)
-left join Sys_parameters s2 on (s2.Field = 'MedicationUnits' and s2.Flag = m.Units)
-left join Sys_parameters s3 on (s3.Field = 'MedicationRoute' and s3.Flag = m.Route)
-left join Ref_Technicians rt ON (rt.ID = m.Technician)
-where m.AnimalId is not null
-and cln.ts > ?
+		null as remark,
+		Dose as amount,
+
+		--Units as UnitsInt ,
+		s2.Value as amount_units,
+		--Route as RouteInt ,
+		s3.Value as route,
+		coalesce(cln.objectid, m.objectid) as objectid,
+		null as parentId,
+		m.objectId as treatmentId,
+
+		case
+		  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+			'Unassigned'
+		  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+			rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+		  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+			rt.LastName + ', ' + rt.FirstName
+		  WHEN datalength(LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+			rt.LastName + ' (' + rt.Initials + ')'
+		  WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+			null
+		  else
+		   rt.Initials
+		END as performedBy
+
+	FROM Cln_Medications m
+	left join Cln_MedicationTimes cln on (m.SearchKey = cln.SearchKey)
+	left join ref_snomed sno on (sno.SnomedCode = m.Medication)
+	left join Sys_parameters s2 on (s2.Field = 'MedicationUnits' and s2.Flag = m.Units)
+	left join Sys_parameters s3 on (s3.Field = 'MedicationRoute' and s3.Flag = m.Route)
+	left join Ref_Technicians rt ON (rt.ID = m.Technician)
+	where m.AnimalId is not null
+	and (cln.ts > ? or m.ts > ?)
+) t
+
+LEFT JOIN labkey.ldk.integers i on (i.value < t.Duration)
+
 
 UNION ALL
 
@@ -73,11 +98,12 @@ SELECT
 	as remark,
 --       ,[Ventilator]   --boolean
 
-	null as Dose,
-	null as Units,
+	null as amount,
+	null as amount_Units,
 	'IV' as Route,
 	h.objectid,
 	g.objectid as parentId,
+	null as treatmentId,
 	
 	null as performedby
 
@@ -87,6 +113,5 @@ left join ref_snomed sno on (sno.SnomedCode = h.AnesthesiaGas)
 LEFT JOIN Sys_parameters s1 ON (s1.Field = 'IVLocation' AND s1.Flag = h.IVLocation)
 LEFT JOIN Sys_parameters s2 ON (s1.Field = 'IVSide' AND s2.Flag = h.IVSide)
 LEFT JOIN Sys_parameters s3 ON (s3.Field = 'GasTubeSize' AND s3.Flag = h.TubeSize)
-
 
 WHERE h.ts > ?

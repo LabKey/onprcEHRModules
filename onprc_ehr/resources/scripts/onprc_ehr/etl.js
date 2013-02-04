@@ -199,6 +199,8 @@ EHR.ETL = {
         var origRemark = row.remark;
         if(row.remark){
             row.remark = EHR.Server.Utils.trim(row.remark);
+            row.remark = row.remark.replace(/^(<>)*/, '');
+            row.remark = EHR.Server.Utils.trim(row.remark);
 
             //find Hx
             var hx = row.remark.match(/hx:(.*);\|/i);
@@ -209,21 +211,30 @@ EHR.ETL = {
 
                 row.remark = row.remark.replace(hx[0], '');
                 row.remark = EHR.Server.Utils.trim(row.remark);
-            }
-
-            var s = row.remark.match(/^s:(.*)(o:)/i);
-            if(s){
-                row.s = s[1];
-                row.s = EHR.Server.Utils.trim(row.s);
-                row.s = EHR.ETL.cleanLine(row.s);
-
-                row.remark = row.remark.replace(s[0], '');
-                if (s[2])
-                    row.remark = s[2] + row.remark;
+                row.remark = row.remark.replace(/^(<>)*/, '');
                 row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            var o = row.remark.match(/^o:(.*)(a:)/i);
+            var s = row.remark.match(/^(.*)(s:|s\/o:|so:)(.*?)(o:|a:|p1:|p2:)/i);
+            if(s){
+                row.s = s[3];
+                row.s = EHR.Server.Utils.trim(row.s);
+                row.s = EHR.ETL.cleanLine(row.s);
+
+                var prefix = s[1];
+                row.remark = row.remark.replace(s[0], '');
+                if (prefix){
+                    row.remark = prefix + row.remark;
+                }
+
+                if (s[4])
+                    row.remark = s[4] + row.remark;
+                row.remark = EHR.Server.Utils.trim(row.remark);
+                row.remark = row.remark.replace(/^(<>)*/, '');
+                row.remark = EHR.Server.Utils.trim(row.remark);
+            }
+
+            var o = row.remark.match(/^o:(.*?)(a:|p1:|p2:)/i);
             if(o){
                 row.o = o[1];
                 row.o = EHR.Server.Utils.trim(row.o);
@@ -233,9 +244,11 @@ EHR.ETL = {
                 if (o[2])
                     row.remark = o[2] + row.remark;
                 row.remark = EHR.Server.Utils.trim(row.remark);
+                row.remark = row.remark.replace(/^(<>)*/, '');
+                row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            var a = row.remark.match(/^a:(.*?)(p1:|p2:)/i);
+            var a = row.remark.match(/^a:(.*?)(p:|p1:|p2:|$)/i);
             if(a){
                 row.a = a[1];
                 row.a = EHR.Server.Utils.trim(row.a);
@@ -245,16 +258,20 @@ EHR.ETL = {
                 if (a[2])
                     row.remark = a[2] + row.remark;
                 row.remark = EHR.Server.Utils.trim(row.remark);
+                row.remark = row.remark.replace(/^(<>)*/, '');
+                row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            var p1 = row.remark.match(/^p1:(.*)(p2:)/i);
+            var p1 = row.remark.match(/(P:|P1:)(.*?)(P2:|$)/i);
             if(p1){
-                row.p = p1[1];
+                row.p = p1[2];
                 row.p = EHR.Server.Utils.trim(row.p);
                 row.p = EHR.ETL.cleanLine(row.p);
 
                 row.remark = row.remark.replace(p1[0], '');
-                row.remark = p1[2] + row.remark;
+                row.remark = p1[3] + row.remark;
+                row.remark = EHR.Server.Utils.trim(row.remark);
+                row.remark = row.remark.replace(/^(<>)*/, '');
                 row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
@@ -268,6 +285,7 @@ EHR.ETL = {
 
                 row.remark = row.remark.replace(p2[0], '');
                 row.remark = EHR.Server.Utils.trim(row.remark);
+                row.remark = row.remark.replace(/^(<>)*/, '');
             }
 
             row.remark = EHR.ETL.cleanLine(row.remark);

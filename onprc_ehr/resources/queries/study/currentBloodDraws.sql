@@ -25,12 +25,20 @@ DATE_INTERVAL,
 MAX_DRAW_PCT,
 t.mostRecentWeight,
 t.mostRecentWeightDate,
-cast(t.allowableBlood as double) as allowableBlood,
+cast(t.allowableBlood as double) as maxAllowableBlood,
 cast(t.bloodPrevious as double) as bloodPrevious,
 cast((t.allowableBlood - t.bloodPrevious) as double) as allowablePrevious,
 
 cast(t.bloodFuture as double) as bloodFuture,
 cast((t.allowableBlood - t.bloodFuture) as double) as allowableFuture,
+
+--if the draw is historic, always consider previous draws only.
+--otherwise, look both forward and backwards, then take the interval with the highest volume
+cast(case
+  WHEN t.date < curdate() THEN (t.allowableBlood - t.bloodPrevious)
+  WHEN t.bloodPrevious < t.bloodFuture THEN (t.allowableBlood - t.bloodFuture)
+  ELSE (t.allowableBlood - t.bloodPrevious)
+end  as double) as allowableBlood
 
 FROM (
 
@@ -71,6 +79,7 @@ FROM (
     sum(b.quantity) as quantity
 
   FROM (
+    --find all blood draws within the interval, looking backwards
     SELECT
       b.id,
       b.dateOnly,
@@ -90,6 +99,7 @@ FROM (
 
     UNION ALL
 
+    --add one row for each date when the draw drops off the record
     SELECT
       b.id,
       timestampadd('SQL_TSI_DAY', DATE_INTERVAL + 1, b.dateOnly),

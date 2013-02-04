@@ -123,7 +123,7 @@ public class TreatmentAlerts extends AbstractEHRNotification
             if (rs.next())
             {
                 msg.append("<b>WARNING: The following rooms do not have any obs for today as of " + AbstractEHRNotification._timeFormat.format(new Date()) + ".</b><p>\n");
-                msg.append("<a href='" + _baseUrl + "/executeQuery.view?schemaName=ehr&query.queryName=RoomsWithoutObsToday'>Click here to view them</a><p>\n");
+                msg.append("<a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=RoomsWithoutObsToday'>Click here to view them</a><p>\n");
 
                 do
                 {
@@ -177,7 +177,7 @@ public class TreatmentAlerts extends AbstractEHRNotification
             if (total > 0)
             {
                msg.append("<b>WARNING: There are " + total + " scheduled treatments where the animal is not assigned to the project.</b><br>");
-               msg.append("<p><a href='" + _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=treatmentSchedule&query.projectStatus~isnonblank&query.Id/DataSet/Demographics/calculated_status~eq=Alive&query.date~dateeq=$datestr'>Click here to view them</a><br>\n");
+               msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=treatmentSchedule&query.projectStatus~isnonblank&query.Id/DataSet/Demographics/calculated_status~eq=Alive&query.date~dateeq=$datestr'>Click here to view them</a><br>\n");
                msg.append("<hr>\n");
            }
         }
@@ -276,7 +276,7 @@ public class TreatmentAlerts extends AbstractEHRNotification
                 }
                 while (rs.next());
 
-                String url = "<a href='" + _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=treatmentSchedule&query.timeofday~eq=$timeofday&query.date~dateeq=$datestr&query.Id/DataSet/Demographics/calculated_status~eq=Alive'>Click here to view them</a></p>\n";
+                String url = "<a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=treatmentSchedule&query.timeofday~eq=$timeofday&query.date~dateeq=$datestr&query.Id/DataSet/Demographics/calculated_status~eq=Alive'>Click here to view them</a></p>\n";
                 msg.append("There are " + (complete + incomplete) + " scheduled $timeofday treatments.  $complete have been completed.  " + url + "<p>\n");
 
                 if(minTime.before(curTime))
@@ -371,7 +371,7 @@ public class TreatmentAlerts extends AbstractEHRNotification
             }
             else
             {
-                msg.append("<a href='" + _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=TreatmentsThatDiffer&query.date~dateeq=$datestr'>Click here to view them</a><p/>\n");
+                msg.append("<a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=TreatmentsThatDiffer&query.date~dateeq=$datestr'>Click here to view them</a><p/>\n");
 
                 Map<String, Map<String, Map<String, Object>>> summary = new HashMap<String, Map<String, Map<String, Object>>>();
                 do
@@ -480,7 +480,7 @@ public class TreatmentAlerts extends AbstractEHRNotification
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: There are " + ts.getRowCount() + " active treatments for animals not currently at WNPRC.</b>");
-            msg.append("<p><a href='" + _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=Treatment Orders&query.enddate~isblank&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view and update them</a><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Treatment Orders&query.enddate~isblank&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view and update them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
@@ -496,7 +496,7 @@ public class TreatmentAlerts extends AbstractEHRNotification
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: There are " + ts.getRowCount() + " unresolved problems for animals not currently at the center.</b>");
-            msg.append("<p><a href='" + _baseUrl + "/executeQuery.view?schemaName=study&query.queryName=Problem List&query.enddate~isblank&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view and update them</a><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Problem List&query.enddate~isblank&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view and update them</a><br>\n");
             msg.append("<hr>\n");
         }
     }

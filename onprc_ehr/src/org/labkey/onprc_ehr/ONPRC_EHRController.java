@@ -273,11 +273,9 @@ public class ONPRC_EHRController extends SpringActionController
             }
             else
             {
-                if (form.getEtlStatus() && !ETL.isEnabled())
-                {
+                if (form.getEtlStatus())
                     ETL.start(0);
-                }
-                else if (!form.getEtlStatus())
+                else
                     ETL.stop();
             }
 

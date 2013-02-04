@@ -35,7 +35,8 @@ SELECT
     END as remark,
 
     --cln.ts as rowversion,
-    cln.objectid
+    cln.objectid,
+    sh.objectid as runId
 
 FROM Cln_SerologyData cln
 left join Cln_SerologyHeader sh on (cln.ClinicalKey = sh.ClinicalKey)

@@ -18,8 +18,7 @@ SELECT
 	Date as Date  ,
 	MaleId as Male,
 
-	--TODO: translate
-	MatingType as MatingType,
+	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'MatingType' and l.value = s1.value) as MatingType,
 	--s1.Value as MatingType,
 
 	case

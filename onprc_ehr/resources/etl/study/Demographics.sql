@@ -53,6 +53,7 @@ Select
 	  WHEN s1.value = 'Dead' THEN 'Dead'
 	  WHEN s1.value = 'Live' THEN 'Alive'
       WHEN s1.value = 'Sold' THEN 'Shipped'
+      else s1.value
     END as calculated_status,
 
 	--TODO: most of these should get moved into study.notes
