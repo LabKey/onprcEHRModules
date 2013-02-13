@@ -18,6 +18,11 @@
                     </column>
                     <column columnName="matingtype">
                         <columnTitle>Mating Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>MatingType</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
                     </column>
                 </columns>
             </table>

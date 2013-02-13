@@ -37,4 +37,4 @@ Select
 From Path_biopsyDiagnosis d
 left join Path_Biopsy pa on (d.BiopsyID = pa.BiopsyId)
 
-WHERE d.ts > ?
+WHERE d.ts > ? or pa.ts > ?

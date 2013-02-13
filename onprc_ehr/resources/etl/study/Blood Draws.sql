@@ -50,4 +50,4 @@ LEFT JOIN Af_BloodData bd ON (bd.BloodIDKey = afb.IDKey)
 LEFT JOIN Ref_Projectsiacuc ref1 ON (ref1.ProjectID = bd.ProjectId)
 LEFT JOIN Ref_Investigator ref2 ON (ref2.InvestigatorId = bd.InvestigatorId)
 
-where afb.ts > ?
+where afb.ts > ? or bd.ts > ?

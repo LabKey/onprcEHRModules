@@ -42,6 +42,7 @@ SELECT
 	s3.Value as ConceptualAgeDeterm,
 	
     --BirthType as BirthTypeInt,
+    (SELECT rowid from labkey.ehr_lookups.lookups l WHERE l.set_name = 'birth_condition' AND l.value = s2.value) as birthCondition,
     --BirthCondition As BirthConditionInt,
 	--ConceptualAgeDeterm as ConceptualAgeDetermInt,
 	--BirthWtDescription as BirthWtDescriptionInt,

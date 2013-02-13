@@ -214,7 +214,7 @@ left join labkey.onprc_billing.chargeableItems lk ON (lk.name = t.name);
 --lease fee definition
 TRUNCATE TABLE labkey.onprc_billing.leaseFeeDefinition;
 INSERT INTO labkey.onprc_billing.leaseFeeDefinition
-(chargeId, minAge, maxAge, assignCondition, releaseCondition, active, objectid)
+(chargeId, minAge, maxAge, active, assignCondition, releaseCondition, objectid)
 SELECT
 	lk.rowid,
 	--t.name,
@@ -261,11 +261,13 @@ left join labkey.onprc_billing.chargeableItems lk ON (lk.name = t.name);
 
 --per diem definition
 truncate table labkey.onprc_billing.perDiemFeeDefinition;
-INSERT INTO labkey.onprc_billing.perDiemFeeDefinition (chargeId, housingDefinition, housingType)
+INSERT INTO labkey.onprc_billing.perDiemFeeDefinition (chargeId, housingType, housingDefinition)
 select
 (SELECT rowid FROM labkey.onprc_billing.chargeableItems ci WHERE ci.name = r.ProcedureName) as chargeId,
-HousingDefinition,
-HousingType
+(select rowid from labkey.ehr_lookups.lookups l WHERE l.value = s1.Value and l.set_name = 'LocationType') as HousingType,
+(select rowid from labkey.ehr_lookups.lookups l WHERE l.value = s2.Value and l.set_name = 'LocationDefinition') as HousingDefinition
 
 from IRIS_Production.dbo.ref_feesProcedures r
-where HousingDefinition is not null and DateDisabled is null;
+left join IRIS_Production.dbo.Sys_Parameters s1 ON (s1.Field = 'LocationType' and s1.Flag = HousingType)
+left join IRIS_Production.dbo.Sys_Parameters s2 ON (s2.Field = 'LocationDefinition' and s2.Flag = HousingDefinition)
+where r.HousingDefinition is not null and r.DateDisabled is null;

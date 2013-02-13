@@ -71,6 +71,11 @@ abstract public class AbstractEHRNotification implements Notification
         return QueryService.get().getUserSchema(u, c, "ehr");
     }
 
+    protected UserSchema getEHRLookupsSchema(Container c, User u)
+    {
+        return QueryService.get().getUserSchema(u, c, "ehr_lookups");
+    }
+
     protected Study getStudy(Container c)
     {
         return StudyService.get().getStudy(c);
@@ -89,11 +94,6 @@ abstract public class AbstractEHRNotification implements Notification
     public String getCronString()
     {
         return null;//"0 0/5 * * * ?";
-    }
-
-    public Set<String> getNotificationTypes()
-    {
-        return Collections.singleton(getName());
     }
 
     protected String getBaseUrl(Container c)

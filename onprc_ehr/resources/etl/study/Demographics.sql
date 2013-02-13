@@ -93,4 +93,4 @@ left join (
 left join Af_Birth b ON (b.AnimalID = afq.AnimalID)
 
 
-WHERE afq.ts > ?
+WHERE afq.ts > ? or b.ts > ?

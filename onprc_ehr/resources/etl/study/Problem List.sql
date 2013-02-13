@@ -40,4 +40,4 @@ left join Af_Case c on (c.CaseID = ml.CaseID)
 LEFT JOIN Sys_parameters s1 ON (s1.Field = 'MasterProblemList' and s1.Flag = MasterProblem)
 left join Af_Qrf q on (q.animalid = ml.animalid)
 
-WHERE ml.ts > ?
+WHERE ml.ts > ? or q.ts > ?

@@ -1,8 +1,8 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="diagnostics" tableDbType="TABLE" useColumnOrder="true">
-                <tableTitle>Diagnostics</tableTitle>
+            <table tableName="miscTests" tableDbType="TABLE" useColumnOrder="true">
+                <tableTitle>Misc Tests</tableTitle>
                 <columns>
                     <column columnName="lsid">
                         <isHidden>true</isHidden>
@@ -28,14 +28,14 @@
                     <column columnName="units">
                         <columnTitle>Units</columnTitle>
                     </column>
-                    <column columnName="qualResult">
+                    <column columnName="qualresult">
                         <columnTitle>Qualitative Result</columnTitle>
                     </column>
                     <column columnName="method">
                         <columnTitle>Method</columnTitle>
                     </column>
                     <column columnName="code">
-                        <columnTitle>Code</columnTitle>
+                        <columnTitle>Sample Type</columnTitle>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>snomed</fkTable>

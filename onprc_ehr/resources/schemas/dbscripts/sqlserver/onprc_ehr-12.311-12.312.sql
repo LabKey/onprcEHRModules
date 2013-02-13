@@ -1,0 +1,1 @@
+alter table onprc_ehr.investigators add assignedVet int;

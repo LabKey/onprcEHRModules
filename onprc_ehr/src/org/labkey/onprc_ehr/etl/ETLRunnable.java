@@ -686,12 +686,7 @@ public class ETLRunnable implements Runnable
                         setLastVersion(targetTableName, newBaselineVersion);
                         setLastTimestamp(targetTableName, newBaselineTimestamp);
 
-                        if (updates > 100000)
-                        {
-                            shrinkDB(scope);
-                        }
-
-                        log.info(MessageFormat.format("Committed updates for {0} records in {1}", updates, targetTableName));
+                       log.info(MessageFormat.format("Committed updates for {0} records in {1}", updates, targetTableName));
 
                         try
                         {
@@ -769,29 +764,6 @@ public class ETLRunnable implements Runnable
         }
 
         return deletes;
-    }
-
-    private void shrinkDB(DbScope scope) throws SQLException
-    {
-        if (scope.getSqlDialect().isSqlServer())
-        {
-            log.info("Shrinking TempDB");
-
-            DbSchema tempDb = DbSchema.get("tempdb");
-
-            SQLFragment sql1 = new SQLFragment("use tempdb; dbcc shrinkfile (tempdev, 100); use labkey; ");
-            SqlExecutor se = new SqlExecutor(tempDb.getScope());
-            se.execute(sql1);
-
-            SQLFragment sql2 = new SQLFragment("use tempdb; dbcc shrinkfile (templog, 100); use labkey; ");
-            SqlExecutor se2 = new SqlExecutor(tempDb.getScope());
-            se2.execute(sql2);
-
-            log.info("Checkpoint and shrinking Logfile");
-            SQLFragment sql3 = new SQLFragment("CHECKPOINT;DBCC SHRINKFILE ( labkey_log, 1);");
-            SqlExecutor se3 = new SqlExecutor(scope);
-            se3.execute(sql3);
-        }
     }
 
     /**

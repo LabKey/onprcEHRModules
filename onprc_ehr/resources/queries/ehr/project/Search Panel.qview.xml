@@ -2,9 +2,12 @@
    <columns>
        <column name="name"/>
        <column name="protocol"/>
+       <column name="title"/>
+       <column name="account"/>
+       <column name="investigatorId"/>
        <column name="activeAssignments/activeAssignments">
            <properties>
-               <property name="columnTitle" value="Animals Assigned"/>
+               <property name="columnTitle" value="# Animals Assigned"/>
            </properties>
        </column>
        <column name="lastAssignment/lastAssignmentDate">
@@ -12,8 +15,5 @@
                <property name="columnTitle" value="Last Assignment Date"/>
            </properties>
        </column>
-       <column name="account"/>
-       <column name="investigatorId"/>
-       <column name="title"/>
    </columns>
 </customView>

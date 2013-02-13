@@ -21,17 +21,17 @@ SELECT
 	agent,
 	sno2.description as agentMeaning,
 	s2.Value as method,
+	
+	--at least let this field show whether it's positive or not
 	CASE 
-		WHEN Negative = 1 THEN 'Positive'
-		WHEN Negative = 1 THEN 'Negative'
+		WHEN Negative = 0 THEN 'POS'
+		WHEN Negative = 1 THEN 'NEG'
 		else null
 	END as qualResult,
 	
     CASE 
-		WHEN NULLIF(cln.Positive, '') IS NULL AND NULLIF(Remarks, '') IS NOT NULL THEN Remarks
-		WHEN NULLIF(cln.Positive, '') IS NOT NULL AND NULLIF(Remarks, '') IS NULL THEN cln.Positive
-		WHEN NULLIF(cln.Positive, '') IS NOT NULL AND NULLIF(Remarks, '') IS NOT NULL THEN cln.positive + '; ' + Remarks
-		else null 
+      WHEN positive IS NOT NULL AND len(rtrim(positive)) > 0 THEN positive + '\n' + remarks
+      else Remarks 
     END as remark,
 
     --cln.ts as rowversion,
@@ -44,4 +44,4 @@ left join Sys_parameters s2 on (s2.Field = 'SerologyMethod' and s2.Flag = cln.Me
 left join ref_snomed sno ON (sno.SnomedCode = cln.Tissue)
 left join ref_snomed sno2 ON (sno2.SnomedCode = cln.Agent)
 
-WHERE cln.ts > ?
+WHERE cln.ts > ? or sh.ts > ?

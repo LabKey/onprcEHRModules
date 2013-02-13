@@ -69,11 +69,6 @@ public class AbnormalLabResultsNotification extends AbstractEHRNotification
         return "every day at 2PM";
     }
 
-    public Set<String> getNotificationTypes()
-    {
-        return Collections.singleton(getName());
-    }
-
     public String getDescription()
     {
         return "The report provides a daily summary of all lab tests finalized in the EHR.";

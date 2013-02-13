@@ -20,6 +20,7 @@ import org.labkey.api.audit.AuditLogService;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.DefaultModule;
 import org.labkey.api.module.ModuleContext;
@@ -56,7 +57,7 @@ import java.util.Set;
  * Date: 5/16/12
  * Time: 1:52 PM
  */
-public class ONPRC_EHRModule extends SimpleModule
+public class ONPRC_EHRModule extends ExtendedSimpleModule
 {
     public static final String NAME = "ONPRC_EHR";
     public static final String CONTROLLER_NAME = "onprc_ehr";
@@ -68,7 +69,7 @@ public class ONPRC_EHRModule extends SimpleModule
 
     public double getVersion()
     {
-        return 12.311;
+        return 12.312;
     }
 
     public boolean hasScripts()

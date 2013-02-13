@@ -58,7 +58,7 @@ public class ETL
                 int interval = runnable.getRunIntervalInMinutes();
                 if (interval != 0)
                 {
-                    log.info("Scheduling db sync at " + interval + " minute interval and delay: " + delay);
+                    log.info("Scheduling ONPRC ETL with " + interval + " minute interval and delay: " + delay);
                     future = executor.scheduleWithFixedDelay(runnable, delay, interval, TimeUnit.MINUTES);
                     setEnabled(true);
                     isScheduled = true;

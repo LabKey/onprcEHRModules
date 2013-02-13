@@ -20,7 +20,7 @@ SELECT
 	cast(MaleId as nvarchar(4000)) as sire,
 	EstDeliveryDate as EstDeliveryDate,
 
-	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'ConfirmationType' and l.value = s2.value) as ConfirmationType,
+	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'PregnancyConfirm' and l.value = s2.value) as ConfirmationType,
 	--ConfirmationType as ConfirmationType,
 	--s1.Value as ConfirmationType,
 

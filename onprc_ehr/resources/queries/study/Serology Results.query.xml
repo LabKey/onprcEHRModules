@@ -30,7 +30,7 @@
                     <column columnName="units">
                         <columnTitle>Units</columnTitle>
                     </column>
-                    <column columnName="qualResult">
+                    <column columnName="qualresult">
                         <columnTitle>Qualitative Result</columnTitle>
                     </column>
                     <column columnName="method">

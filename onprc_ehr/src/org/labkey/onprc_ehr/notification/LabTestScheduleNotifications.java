@@ -69,11 +69,6 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         return "every 60 mins, at 15 min past hour between 8AM and 5PM";
     }
 
-    public Set<String> getNotificationTypes()
-    {
-        return Collections.singleton(getName());
-    }
-
     public String getDescription()
     {
         return "The report provides alerts related to the lab test schedule.";

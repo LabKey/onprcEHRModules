@@ -16,19 +16,19 @@
         <dataset name="flags" id="5019" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="delivery" id="5020" category="Clinical" type="Standard">
+        <dataset name="delivery" id="5020" category="Reproductive Management" type="Standard">
             <tags/>
         </dataset>
         <dataset name="serology" id="5021" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="pregnancyConfirmation" id="5022" category="Clinical" type="Standard">
+        <dataset name="pregnancyConfirmation" id="5022" category="Reproductive Management" type="Standard">
             <tags/>
         </dataset>
         <dataset name="fosterParents" id="5023" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="diagnostics" id="5013" category="ClinPath" type="Standard">
+        <dataset name="miscTests" id="5013" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
         <dataset name="alopecia" id="1061" showByDefault="false" category="Clinical" type="Standard">
@@ -43,7 +43,7 @@
         <dataset name="diet" id="5014" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="matings" id="5015" category="Colony Management" type="Standard">
+        <dataset name="matings" id="5015" category="Reproductive Management" type="Standard">
             <tags/>
         </dataset>
         <dataset name="enrichment" id="5017" category="Colony Management" type="Standard">
@@ -92,9 +92,6 @@
             <tags/>
         </dataset>
         <dataset name="vitals" id="1063" showByDefault="false" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="bacteriologyResults" id="1049" category="ClinPath" type="Standard" showByDefault="false">
             <tags/>
         </dataset>
         <dataset name="chemistryResults" id="1056" category="ClinPath" type="Standard">

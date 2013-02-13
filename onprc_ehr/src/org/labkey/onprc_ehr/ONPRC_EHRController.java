@@ -166,7 +166,7 @@ public class ONPRC_EHRController extends SpringActionController
             Container ehrContainer = ContainerManager.getForPath("/ONPRC/EHR");
 
             JSONObject json = new JSONObject();
-            json.put("name", "Animal Health Record");
+            json.put("name", "Main Page");
             json.put("path", ehrContainer.getPath());
             json.put("url", ehrContainer.getStartURL(getUser()).toString());
             json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));

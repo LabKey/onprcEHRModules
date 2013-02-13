@@ -57,4 +57,4 @@ LEFT JOIN Ref_Technicians rt ON (rt.ID = h.Technician)
 left join ref_snomed s1 on (s1.SnomedCode = h.Tissue)
 left join ref_snomed s2 on (s2.SnomedCode = h.microbe)
 
-where d.ts > ?
+where d.ts > ? or h.ts > ?

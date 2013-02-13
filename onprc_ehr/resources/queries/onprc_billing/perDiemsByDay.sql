@@ -13,7 +13,7 @@ SELECT
     h.project.protocol as protocol,
     h.project.account as account,
     count(*) as totalAssignmentRecords,
-    1.0 / count(*) as effectiveDays,
+    1.0 / (count(h2.project) + 1) as effectiveDays,
     group_concat(DISTINCT h2.project) as overlappingProjects,
     group_concat(DISTINCT h2.project.protocol) as overlappingProtcols,
     group_concat(DISTINCT h3.room) as rooms,
@@ -26,10 +26,10 @@ FROM (
   SELECT
     timestampadd('SQL_TSI_DAY', i.value, CAST(COALESCE(STARTDATE, curdate()) AS TIMESTAMP)) as date
   FROM ldk.integers i
-  WHERE i.value <= TIMESTAMPDIFF('SQL_TSI_DAY', CAST(COALESCE(ENDDATE, curdate()) AS TIMESTAMP), CAST(COALESCE(STARTDATE, curdate()) AS TIMESTAMP))
-  ) i
+  WHERE i.value <= TIMESTAMPDIFF('SQL_TSI_DAY', CAST(COALESCE(STARTDATE, curdate()) AS TIMESTAMP), CAST(COALESCE(ENDDATE, curdate()) AS TIMESTAMP))
+) i
 
-LEFT JOIN (
+JOIN (
   --join to any assignment record overlapping each day
   SELECT
     h.lsid,
@@ -40,18 +40,21 @@ LEFT JOIN (
     h.assignCondition,
     h.releaseCondition,
     h.projectedReleaseCondition,
-    h.ENDDATE
+    h.ENDDATE,
+    h.dateOnly,
+    h.enddateCoalesced
   FROM study.assignment h
 
-  WHERE (
-    (cast(COALESCE(STARTDATE, '1900-01-01') AS TIMESTAMP) >= cast(h.date as date) AND cast(COALESCE(STARTDATE, '1900-01-01') AS TIMESTAMP) <= COALESCE(cast(h.enddate as date), curdate()))
-  OR
-    (COALESCE(ENDDATE, curdate()) >= cast(h.date as date) AND COALESCE(ENDDATE, curdate()) <= COALESCE(cast(h.enddate as date), curdate()))
-  OR
-    (cast(COALESCE(STARTDATE, '1900-01-01') AS TIMESTAMP) <= cast(h.date as date) AND COALESCE(ENDDATE, curdate()) >= COALESCE(cast(h.enddate as date), curdate()))
-  ) AND h.qcstate.publicdata = true
+  WHERE
+    --exclude 1-day assignments
+    (TIMESTAMPDIFF('SQL_TSI_DAY', h.date, h.enddateCoalesced) > 1)
+    AND h.qcstate.publicdata = true
 
-) h ON (i.date >= cast(h.date as date) AND i.date <= COALESCE(cast(h.enddate as date), curdate()))
+) h ON (
+    h.dateOnly <= i.date
+    --assignments end at midnight, so an assignment doesnt count on the current date if it ends on it
+    AND h.enddateCoalesced > i.date
+  )
 
 LEFT JOIN (
   --for each assignment, find co-assigned projects on that day
@@ -61,28 +64,36 @@ LEFT JOIN (
     h.enddate,
     h.id,
     h.project,
-    h.project.account
+    h.project.account,
+    h.dateOnly,
+    h.enddateCoalesced
   FROM study.assignment h
-
-  WHERE (
-    (cast(COALESCE(STARTDATE, '1900-01-01') AS TIMESTAMP) >= h.date AND cast(COALESCE(STARTDATE, '1900-01-01') AS TIMESTAMP) < COALESCE(h.enddate, curdate()))
-  OR
-    (COALESCE(ENDDATE, curdate()) > h.date AND COALESCE(ENDDATE, curdate()) <= COALESCE(h.enddate, curdate()))
-  OR
-    (cast(COALESCE(STARTDATE, '1900-01-01') AS TIMESTAMP) <= h.date AND COALESCE(ENDDATE, curdate()) >= COALESCE(h.enddate, curdate()))
-  ) AND h.qcstate.publicdata = true
-) h2 ON (h.id = h2.id AND h.date >= h2.date AND h.date < COALESCE(h2.enddate, curdate()) AND h.lsid != h2.lsid)
+  WHERE
+    --exclude 1-day assignments
+    (TIMESTAMPDIFF('SQL_TSI_DAY', h.date, h.enddateCoalesced) > 1)
+    AND h.qcstate.publicdata = true
+) h2 ON (
+  h.id = h2.id
+  AND h2.dateOnly <= i.date
+  --assignments end at midnight, so an assignment doesnt count on the current date if it ends on it
+  AND h2.enddateCoalesced > i.date
+  AND h.lsid != h2.lsid
+)
 
 --find housing at the time
 LEFT JOIN study.housing h3 ON (
-  h.id = h3.id AND h3.qcstate.publicdata = true AND CONVERT(h3.date, DATE) <= i.date AND CONVERT(h3.enddateCoalesced, DATE) >= i.date
+  h.id = h3.id
+  AND h3.qcstate.publicdata = true
+  --base on housing at midnight of that day
+  AND h3.date <= CONVERT(i.date, timestamp)
+  AND h3.enddatetimeCoalesced >= CONVERT(i.date, timestamp)
 )
 
 LEFT JOIN onprc_billing.perDiemFeeDefinition pdf
 ON (
   pdf.housingType = h3.room.housingType AND
   pdf.housingDefinition = h3.room.housingCondition AND
-  pdf.releaseCondition = h.releaseCondition
+  (pdf.releaseCondition = h.releaseCondition OR pdf.releaseCondition is null)
 )
 
 GROUP BY i.date, h.id, h.project, h.project.account, h.project.protocol

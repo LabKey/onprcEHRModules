@@ -28,7 +28,7 @@ SELECT
 	  when t.Result = -1 then null
 	  else t.Result
     end as Result,
-    t.resultString,
+    t.resultString as stringResults,
 
 	t.TestId,
 
@@ -47,7 +47,7 @@ SELECT
 	Method as MethodInt  ,
 	Glucose as Result,
 	null as resultString,
-	'Glucose' as TestId,
+	'GLUC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -79,7 +79,7 @@ SELECT
 	Method as MethodInt  ,
 	Creatinine as Result,
 	null as resultString,
-	'Creatinine' as TestId,
+	'CREAT' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -95,7 +95,7 @@ SELECT
 	Method as MethodInt  ,
 	Sodium as Result,
 	null as resultString,
-	'Sodium' as TestId,
+	'Na' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -111,7 +111,7 @@ SELECT
 	Method as MethodInt  ,
 	Potassium as Result,
 	null as resultString,
-	'Potassium' as TestId,
+	'K' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -127,7 +127,7 @@ SELECT
 	Method as MethodInt  ,
 	Chloride as Result,
 	null as resultString,
-	'Chloride' as TestId,
+	'Cl' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -143,7 +143,7 @@ SELECT
 	Method as MethodInt  ,
 	TotalProtein as Result ,
 	null as resultString,
-	'TotalProtein' as TestId,
+	'TP' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -159,7 +159,7 @@ SELECT
 	Method as MethodInt  ,
 	Albumin as Result,
 	null as resultString,
-	'Albumin' as TestId,
+	'ALB' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -175,7 +175,7 @@ SELECT
 	Method as MethodInt  ,
 	AGRatio as Result,
 	null as resultString,
-	'AGRatio' as TestId,
+	'A/G ratio' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -191,7 +191,7 @@ SELECT
 	Method as MethodInt  ,
 	Calcium as Result,
 	null as resultString,
-	'Calcium' as TestId,
+	'Ca' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -207,7 +207,7 @@ SELECT
 	Method as MethodInt  ,
 	Phosphorus as Result,
 	null as resultString,
-	'Phosphorus' as TestId,
+	'PHOS' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -223,7 +223,7 @@ SELECT
 	Method as MethodInt  ,
 	UricAcid as Reuslt,
 	null as resultString,
-	'UricAcid' as TestId,
+	'UricA' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -239,7 +239,7 @@ SELECT
 	Method as MethodInt  ,
 	Cholesterol as Result,
 	null as resultString,
-	'Cholesterol' as TestId,
+	'CHOL' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -255,7 +255,7 @@ SELECT
 	Method as MethodInt  ,
 	Triglycerides as Result,
 	null as resultString,
-	'Triglycerides' as TestId,
+	'TRIG' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -271,7 +271,7 @@ SELECT
 	Method as MethodInt  ,
 	AlkPhosphotase as Result,
 	null as resultString,
-	'AlkPhosphotase' as TestId,
+	'ALKP' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -335,7 +335,7 @@ SELECT
 	Method as MethodInt  ,
 	Iron as Result,
 	null as resultString,
-	'Iron' as TestId,
+	'Fe' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -367,7 +367,7 @@ SELECT
 	Method as MethodInt  ,
 	Globulin as Result,
 	null as resultString,
-	'Globulin' as TestId,
+	'Glob' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -383,7 +383,7 @@ SELECT
 	Method as MethodInt  ,
 	TotalBilirubin as Result,
 	null as resultString,
-	'TotalBilirubin' as TestId,
+	'TB' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -399,7 +399,7 @@ SELECT
 	Method as MethodInt  ,
 	DirectBilirubin as Result,
 	null as resultString,
-	'DirectBilirubin' as TestId,
+	'DBilli' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -415,7 +415,7 @@ SELECT
 	Method as MethodInt  ,
 	BunCreat as Result,
 	null as resultString,
-	'BunCreat' as TestId,
+	'B/C' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -431,7 +431,7 @@ SELECT
 	Method as MethodInt  ,
 	RefAmylase as Result,
 	null as resultString,
-	'RefAmylase' as TestId,
+	'Amyl' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -447,7 +447,7 @@ SELECT
 	Method as MethodInt  ,
 	RefLipase as Result,
 	null as resultString,
-	'RefLipase' as TestId,
+	'Lip' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -463,7 +463,7 @@ SELECT
 	Method as MethodInt  ,
 	RefCPK as Result,
 	null as resultString,
-	'RefCPK' as TestId,
+	'CPK' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -479,7 +479,7 @@ SELECT
 	Method as MethodInt  ,
 	HDL_CHOL as Result,
 	null as resultString,
-	'HDL_CHOL' as TestId,
+	'HDL/CHOL' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -511,7 +511,7 @@ SELECT
 	Method as MethodInt  ,
 	CHOL_HDL as Result,
 	null as resultString,
-	'CHOL_HDL' as TestId,
+	'CHOL/HDL' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -527,7 +527,7 @@ SELECT
 	Method as MethodInt  ,
 	LDL_HDL as Result,
 	null as resultString,
-	'LDL_HDL' as TestId,
+	'LDL/HDL' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -543,7 +543,7 @@ SELECT
 	Method as MethodInt  ,
 	CK as Result,
 	null as resultString,
-	'CK' as TestId,
+	'CPK' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -559,7 +559,7 @@ SELECT
 	Method as MethodInt  ,
 	MG as Result,
 	null as resultString,
-	'MG' as TestId,
+	'Mg' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -591,7 +591,8 @@ SELECT
 	Method as MethodInt  ,
 	LACT as Result,
 	null as resultString,
-	'LACT' as TestId,
+	--TODO: review w/ chris
+	'LDH' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -607,7 +608,7 @@ SELECT
 	Method as MethodInt  ,
 	VLDL_Cholesterol as Result,
 	null as resultString,
-	'VLDL_Cholesterol' as TestId,
+	'VLDL/CHOL' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -623,7 +624,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	Sodium as ResultString,
-	'Sodium' as TestId,
+	'Na' as TestId,
 
 	cln.ts as rowversion,
 	cln.objectid
@@ -640,7 +641,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	Potassium as ResultString,
-	'Potassium' as TestId,
+	'K' as TestId,
 
 	cln.ts as rowversion,
 	cln.objectid
@@ -657,7 +658,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	Chlorine as ResultString ,
-	'Chlorine' as TestId,
+	'Cl' as TestId,
 
 	cln.ts as rowversion,
 	cln.objectid
@@ -708,7 +709,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	Glu as ResultString,
-	'Glu' as TestId,
+	'GLUC' as TestId,
 
 	cln.ts as rowversion,
 	cln.objectid
@@ -725,7 +726,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	Hct as ResultString ,
-	'Hct' as TestId,
+	'HCT' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 

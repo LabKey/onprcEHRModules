@@ -27,7 +27,7 @@ SELECT
 
 	t.CollectionInt  ,
 	s5.Value as collectionMethod,
-	
+	t.result,
 	t.QualResult,
 	t.TestId,
 
@@ -118,7 +118,7 @@ SELECT
 	Collection as CollectionInt  ,
 	null as result,
 	s9.value as QualResult,
-	'Glucose' as TestId,
+	'GLUC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -345,7 +345,7 @@ SELECT
 	Collection as CollectionInt  ,
 	PHValue as result,
 	null as QualResult,
-	'PHValue' as TestId,
+	'PH' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 

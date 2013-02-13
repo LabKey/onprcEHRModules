@@ -69,11 +69,6 @@ public class AdminAlertsNotification extends AbstractEHRNotification
         return "Daily Admin Alerts: " + AbstractEHRNotification._dateTimeFormat.format(new Date());
     }
 
-    public Set<String> getNotificationTypes()
-    {
-        return Collections.singleton(getName());
-    }
-
     @Override
     public String getCronString()
     {

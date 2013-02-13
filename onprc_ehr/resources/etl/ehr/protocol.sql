@@ -15,11 +15,16 @@
  */
 
 select
-		rpi.ProjectID,
-		rtrim(ltrim(lower(Rpi.IACUCCode))) as protocol,
+		--rpi.ProjectID,
+-- 		case
+-- 			when Rpi.eIACUCNum is null OR datalength(rtrim(ltrim(Rpi.eIACUCNum))) = 0 then rtrim(ltrim(Rpi.IACUCCode))
+-- 			else rtrim(ltrim(Rpi.eIACUCNum))
+-- 		end as protocol,
+		rtrim(ltrim(Rpi.IACUCCode)) as protocol,
 		rtrim(ltrim(Rpi.Title)) as title,
-		pi.InvestigatorID,
-		(ri.LastName + ', ' + ri.FirstName) as inves,
+
+		(select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri.firstname and i.lastname = ri.lastname group by i.LastName, i.firstname having count(*) <= 1) as investigatorId,
+		--(ri.LastName + ', ' + ri.FirstName) as inves,
 		Rpi.StartDate as approve,
 		Rpi.EndDate,
 		s1.Value as USDA_Level,
@@ -40,6 +45,7 @@ select
 		and s1.Field = 'USDALevel'
 		and rpi.projecttype = s2.Flag
 		and s2.Field = 'ProjectType'
+		and rpi.projectid = ipc.ProjectParentID
 
 AND rpi.ts > ?
 

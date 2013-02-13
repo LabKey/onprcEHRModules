@@ -248,7 +248,7 @@ Ext.onReady(function(){
         var data = [
             ['activeAssignments' ,'Assignments' ,'query' ,'Active Assignments' ,'true' ,'' ,'study' ,'Assignment', 'Active Assignments', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the active assignments for each animal'],
             ['assignmentHistory' ,'Assignments' ,'query' ,'Assignment History' ,'true' ,'' ,'study' ,'Assignment', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows all assignments records for the animals'],
-            ['bacteriology' ,'Lab Results' ,'query' ,'Bacteriology' ,'true' ,'' ,'study' ,'Bacteriology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains results of cultures'],
+            ['microbiology' ,'Lab Results' ,'query' ,'Microbiology' ,'true' ,'' ,'study' ,'Microbiology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
             ['biochemistry' ,'Lab Results' ,'js' ,'Biochemistry' ,'true' ,'' ,'study' ,'bloodChemistry', '', '', 'date', 'false', 'false', '', '', 'Contains results of chemistry panels.  Can be displayed either by panel, or showing reference ranges'],
             ['clinPathRuns' ,'Lab Results' ,'query' ,'Clinpath Runs' ,'true' ,'' ,'study' ,'Clinpath Runs', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains all clinpath requests'],
             ['hematology' ,'Lab Results' ,'js' ,'Hematology' ,'true' ,'' ,'study' ,'hematology', '', '', 'date', 'false', 'false', '', '', 'Contains hematology data showing cell subsets'],
@@ -257,8 +257,8 @@ Ext.onReady(function(){
             ['urinalysis' ,'Lab Results' ,'js' ,'Urinalysis' ,'true' ,'' ,'study' ,'urinalysisResults', '', '', 'date', 'false', 'false', '', '', 'Contains urinalysis results'],
             //['viralChallenges' ,'Lab Results' ,'query' ,'Viral Challenges' ,'true' ,'' ,'study' ,'ViralChallenges', '', '', 'date', 'false', 'false', '', '', 'This report contains a list of all viral challenges, determined by comparing against known SNOMED codes'],
 
-            ['miscTests' ,'Lab Results' ,'query' ,'Misc Tests' ,'true' ,'' ,'study' ,'Diagnostics', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the misc lab results not represented in the other reports'],
-            ['antibioticSensitivity' ,'Lab Results' ,'query' ,'Antibiotic Sensitivity' ,'true' ,'' ,'study' ,'Antibiotic Sensitivity', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of tests of antibiotic resistance'],
+            ['miscTests' ,'Lab Results' ,'query' ,'Misc Tests' ,'true' ,'' ,'study' ,'Misc Tests', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the misc lab results not represented in the other reports'],
+            ['antibioticSensitivity' ,'Lab Results' ,'query' ,'Antibiotic Sensitivity' ,'true' ,'' ,'study' ,'antibioticSensitivityPivoted', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of tests of antibiotic resistance'],
             ['serology' ,'Lab Results' ,'query' ,'Serology' ,'true' ,'' ,'study' ,'Serology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of serology tests'],
             ['virology' ,'Lab Results' ,'query' ,'Virology' ,'true' ,'' ,'study' ,'Virology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of serology and isolation virology tests for pathogens such as HBV'],
             ['encounters' ,'Clinical' ,'query' ,'Clinical Encounters' ,'true' ,'' ,'study' ,'Clinical Encounters', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.'],
@@ -270,8 +270,12 @@ Ext.onReady(function(){
             //['tasksById' ,'Clinical' ,'query' ,'Tasks' ,'true' ,'' ,'ehr' ,'TasksById', '', '', 'date', 'false', 'false', '', 'taskid/qcstate/publicdata', 'This report displays and forms that have been completed about each animal'],
             ['treatments' ,'Clinical' ,'query' ,'Treatment Orders' ,'true' ,'' ,'study' ,'Treatment Orders', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains a list of all orders for treatments'],
             //['Treatment Schedule' ,'Clinical' ,'query' ,'Treatment Schedule' ,'true' ,'' ,'study' ,'treatmentSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the schedule for current and future treatments'],
-            ['drug' ,'Clinical' ,'query' ,'Medications' ,'true' ,'' ,'study' ,'Drug Administration', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains records of all medications administered to each animal'],
-            ['weight' ,'Clinical' ,'js' ,'Weights' ,'true' ,'' ,'study' ,'weightGraph', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal\'s weight, including a graph'],
+            ['drug' ,'Clinical' ,'query' ,'Medications Given' ,'true' ,'' ,'study' ,'Drug Administration', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains records of all medications administered to each animal'],
+            ['weight' ,'Colony Management' ,'js' ,'Weights' ,'true' ,'' ,'study' ,'weightGraph', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal\'s weight, including a graph'],
+            ['clinicalOverview' ,'Clinical' ,'js' ,'Clinical Overview' ,'true' ,'' ,'study' ,'clinicalOverview', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
+
+            ['treatmentSchedule' ,'Today At Center' ,'js' ,'Treatment Schedule' ,'true' ,'' ,'study' ,'treatmentSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
+            ['bloodSchedule' ,'Today At Center' ,'js' ,'Blood Schedule' ,'true' ,'' ,'study' ,'bloodSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
             //['behaviorRemarks' ,'Colony Management' ,'query' ,'Behavior Remarks' ,'true' ,'' ,'study' ,'Behavior Remarks', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains remarks entered by Behavioral Management'],
             ['birth' ,'Colony Management' ,'query' ,'Birth Records' ,'true' ,'' ,'study' ,'birth', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'Birth records'],
             ['roommateHistory' ,'Colony Management' ,'query' ,'Cagemate History' ,'true' ,'' ,'study' ,'housingRoommates', '', '', 'StartDate', 'false', 'false', '', 'qcstate/publicdata', 'This report displays all animals that shared a cage, including the start date, stop date and days co-housed'],
@@ -313,11 +317,16 @@ Ext.onReady(function(){
             //['treatmentSchedulePM' ,'Today At Center' ,'query' ,'Treatments - Afternoon' ,'true' ,'' ,'study' ,'treatmentSchedule', 'PM Treatments', '', 'date', 'true', 'false', '5', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
             //['treatmentScheduleNight' ,'Today At Center' ,'query' ,'Treatments - Evening' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Night Treatments', '', 'date', 'true', 'false', '6', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
             //['treatmentSchedule' ,'Today At Center' ,'query' ,'Treatments - Master' ,'true' ,'' ,'study' ,'treatmentSchedule', '', '', 'date', 'true', 'false', '7', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
-            ['cases' ,'Today At Center' ,'query' ,'Active Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Cases', '', 'date', 'false', 'false', '8', 'qcstate/publicdata', 'This displays active clinical cases'],
-            ['problemList' ,'Today At Center' ,'query' ,'Unresolved Problem List' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '8', 'qcstate/publicdata', 'This displays the clinical problem list']
+            ['cases' ,'Today At Center' ,'query' ,'Active Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active clinical cases'],
+            ['problemList' ,'Today At Center' ,'query' ,'Unresolved Problem List' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list'],
+            ['matings' ,'Reproductive Management' ,'query' ,'Matings' ,'true' ,'' ,'study' ,'Matings', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list'],
+
+            ['reproSummary' ,'Reproductive Management' ,'js' ,'Reproductive Summary' ,'true' ,'' ,'study' ,'underConstruction', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
+            ['menses' ,'Reproductive Management' ,'query' ,'Menses' ,'true' ,'' ,'study' ,'Clinical Observations', 'Menses', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
+            ['delivery' ,'Reproductive Management' ,'query' ,'Deliveries' ,'true' ,'' ,'study' ,'Delivery', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
+            ['pregnancy' ,'Reproductive Management' ,'query' ,'Pregnancies' ,'true' ,'' ,'study' ,'Pregnancy Confirmations', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', '']
             //['todaysBlood' ,'Today At Center' ,'query' ,'Blood Draw Schedule' ,'true' ,'' ,'study' ,'BloodSchedule', 'Blood Schedule', '', 'date', 'TRUE', 'false', '9', 'qcstate/publicdata', 'Contains records of blood draws scheduled for today']
             //['treatmentsIncomplete' ,'Today At Center' ,'query' ,'Treatments - Incomplete' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Incomplete Treatments', '', 'date', 'true', 'false', '7', 'qcstate/publicdata', 'The report displays all incomplete treatments scheduled for today']
-            //['diagnostics' ,'Lab Results' ,'js' ,'Diagnostics' ,'TRUE' ,'' ,'study' ,'diagnostics', '', '', 'date', 'FALSE', 'FALSE', '', 'qcstate/publicdata', 'This report contains summaries of the clinical pathology types'],
 
             //['sbt' ,'Genetics' ,'query' ,'MHC Genotype' ,'TRUE' ,'' ,'study' ,'demographics', '', '', 'date', 'FALSE', 'FALSE', '', 'qcstate/publicdata', 'This report contains summaries of MHC genetics, derived from many different techniques']
             //['feeding' ,'Colony Management' ,'query' ,'Feeding' ,'true' ,'' ,'study' ,'Feeding', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the amount and type of food ordered for each animal'],
@@ -355,6 +364,193 @@ Ext.onReady(function(){
         LABKEY.Query.insertRows(makeObject(config, data, fields));
     }
 
+    var lookupSetData = [
+        ['PregnancyConfirm', 'Pregnancy Confirmation Types', 'rowid', 'value'],
+        ['DeliveryMode', 'Delivery Types', 'rowid', 'value'],
+        ['AcquistionType', 'Acquistion Types', 'rowid', 'value'],
+        ['RearingType', 'Rearing Types', 'rowid', 'value'],
+        ['MatingType', 'Mating Types', 'rowid', 'value'],
+        ['PairingType', 'Pairing Types', 'rowid', 'value'],
+        ['PairingOutcome', 'Pairing Outcomes', 'rowid', 'value'],
+        ['PairingSeparationReason', 'Pairing Separation Reasons', 'rowid', 'value'],
+        ['TransferReason', 'Transfer Reasons', 'rowid', 'value']
+    ];
+
+    function populateLookupSets(){
+        pendingInserts++;
+
+        //records for reports:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'lookup_sets',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('setname,label').split(',');
+
+        LABKEY.Query.insertRows(makeObject(config, lookupSetData, fields));
+    }
+
+    function deleteLookupSets(){
+        var rows = [];
+        Ext.each(lookupSetData, function(item){
+            var obj = {};
+            obj['setname'] = item[0];
+
+            rows.push(obj);
+        }, this);
+
+        LABKEY.Query.deleteRows({
+            schemaName: 'ehr_lookups',
+            queryName: 'lookup_sets',
+            scope: this,
+            rows: rows,
+            success: function(data){
+                console.log('success deleting rows: setname');
+                pendingDeletes--;
+                if(pendingDeletes==0){
+                    document.getElementById('_init_ehr_success').innerHTML = 'Delete Complete';
+                }
+            },
+            failure: EHR.Utils.onError
+        });
+    }
+
+    function populateChemistryTests(){
+        pendingInserts++;
+
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'chemistry_tests',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('testid,name,units,aliases,alertOnAbnormal,alertOnAny,includeInPanel,sort_order').split(',');
+        var data = [
+            ['A/P', 'Albumin/Protein Ratio', null, null, true, false, false, null],
+            ['A/G ratio', 'Albumin Globulin Ratio', null, null, true, false, false, null],
+            ['ALB', 'Albumin', 'g/dL', null, true, false, true, null],
+            ['ALKP', 'Alkaline Phosphatase', 'IU/L', 'ALP', true, false, true, null],
+            ['B/C', 'BUN/Creatinine Ratio', 'ratio', null, true, false, false, null],
+            ['BUN', 'Blood urea nitrogen', 'mg/dL', null, true, false, true, null],
+            ['CA', 'Calcium', 'mg/dL', null, true, false, true, null],
+            ['CHOL', 'Cholesterol', 'mg/dl', 'CHO', true, false, true, null],
+            ['CHOL/HDL', 'Cholesterol/HDL Ratio', null, null, true, false, false, null],
+            ['CL', 'Chloride', 'mEq/L', null, true, false, false, null],
+            ['CPK', 'Creatine phosphokinase', 'U/L', null, true, false, false, null],
+            ['CRP', 'C reactive protein', null, null, true, false, false, null],
+            ['CREAT', 'Creatinine', 'mg/dL', 'CR', true, false, true, null],
+            ['DBili', 'Direct Bilirubin', null, null, true, false, false, null],
+            ['FE', 'Iron', '?g/dL', null, true, false, true, null],
+            ['FIBR', 'Fibrinogen', 'mg/dL', null, true, false, false, null],
+            ['GGT', 'Gamma-glutamyltransferase', 'IU/L', null, true, false, true, null],
+            ['Glob', 'Globulins', null, null, true, false, false, null],
+            ['GLUC', 'Glucose', 'mg/dL', 'GLU', true, false, true, null],
+            ['HDL/CHOL', 'HDL/Cholesterol Ratio', null, null, true, false, false, null],
+            ['HDL', 'High-Density Lipoprotein', 'mg/dL', null, true, false, false, null],
+            ['HGB', 'Hemoglobin', 'g/dL', null, true, false, false, null],
+            ['K', 'Potassium', 'mmol/L', null, true, false, true, null],
+            ['LDH', 'Lactate dehydrogenase', 'IU/L', null, true, false, true, null],
+            ['LDL/HDL', 'LDL/HDL Ratio', null, null, true, false, false, null],
+            ['LDL', 'Low-Density Lipoprotein', 'mg/dL', null, true, false, true, null],
+            ['PHOS', 'Phosphorus', 'mg/dL', 'PHO', true, false, true, null],
+            ['AST', 'Aspartate transaminase', 'IU/L', 'SGOT', true, false, true, null],
+            ['ALT', 'Alanine transaminase', 'IU/L', 'SGPT', true, false, true, null],
+            ['TB', 'Total Bilirubin', 'mg/dL', 'BIL', true, false, true, null],
+            ['TP', 'Total Protein', 'g/dL', null, true, false, true, null],
+            ['TRIG', 'Triglyceride', 'mg/dL', 'TRG', true, false, true, null],
+            ['UA', 'Uric Acid', 'mg/dL', null, true, false, true, null],
+            ['Mg', 'Magnesium', null, null, true, false, false, null],
+            ['Lip', 'Lipase', null, null, true, false, false, null],
+            ['Na', 'Sodium', null, null, true, false, true, null],
+            ['Amyl', 'Amylase', null, null, true, false, false, null],
+            ['UricA', 'Uric Acid', null, null, true, false, false, null],
+            ['VLDL/CHOL', 'VLDL/Cholesterol Ratio', null, null, true, false, false, null]
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
+
+    function populateHematologyTests(){
+        pendingInserts++;
+
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'hematology_tests',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('testid,name,units,alertOnAbnormal,alertOnAny,includeInPanel,sort_order').split(',');
+        var data = [
+            ['Anisocytosis', 'Anisocytosis', null, true, false, false, null],
+            ['BAS', 'Basophils', '%', true, false, true, null],
+            ['Bands', 'Bands', null, true, false, true, null],
+            ['EO', 'Eosinophils', '%', true, false, true, null],
+            ['GLOB', 'Globulin', 'g/dL', true, false, false, null],
+            ['GLUC', 'Glucose', null, true, false, false, null],
+            ['HbA1C', 'GLYCOSYLATED HGB', null, true, false, false, null],
+            ['HCT', 'Hematocrit', '%', true, false, true, null],
+            ['Hypochromic RBC', 'Hypochromic RBC', null, true, false, false, null],
+            ['LUC', 'Large unstained cells', null, true, false, false, null],
+            ['LY', 'Lymphocytes', '%', true, false, true, null],
+            ['Macrocytic RBC', 'Macrocytic RBC', null, true, false, false, null],
+            ['MCH', 'Mean corpuscular hemoglobin', 'picograms', true, false, true, null],
+            ['MCHC', 'Mean corpuscular hemoglobin concentration', 'g/dL', true, false, true, null],
+            ['MCV', 'Mean corpuscular volume', 'fL', true, false, true, null],
+            ['METAMYELO', 'Metamyelocytes', '%', true, false, true, null],
+            ['Microcytic RBC', 'Microcytic RBC', null, true, false, false, null],
+            ['Mono', 'Monocytes', '%', true, false, true, null],
+            ['MPV', 'Mean platelet volume', 'fl', true, false, true, null],
+            ['MYELO', 'Myelocytes', '%', true, false, true, null],
+            ['Neut', 'Neutrophils', '%', true, false, true, null],
+            ['NRBC', 'Nucleated red blood cells', null, true, false, false, null],
+            ['PCV', 'Packed cell volume', '%', true, false, true, null],
+            ['PLT', 'Platelets', 'ths/uL', true, false, true, null],
+            ['Polychromasia RBC', 'Polychromasia RBC', null, true, false, false, null],
+            ['RBC', 'Red Blood Cells', '10^6/uL', true, false, true, null],
+            ['RETICULO', 'Reticulocytes', '%', true, false, true, null],
+            ['WBC', 'White Blood Cells', 'ths/uL', true, false, true, null],
+            ['MPMN', 'Neutrophils', null, true, false, false, null],
+            ['SEDRate', 'Sedimentation rate', null, true, false, false, null],
+            ['TP', 'Total protein', null, true, false, false, null]
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
+    function populateUrinalysisTests(){
+        pendingInserts++;
+
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'urinalysis_tests',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('testid,name,units,alertOnAbnormal,alertOnAny,includeInPanel,sort_order').split(',');
+        var data = [
+            ['Appearance', 'Appearance', null, true, false, true, null],
+            ['Bacteria', 'Bacteria', null, true, false, false, null],
+            ['Bilirubin', 'Bilirubin', 'no units', true, false, true, null],
+            ['Blood', 'Blood', 'no units', true, false, true, null],
+            ['Color', 'Color', null, true, false, false, null],
+            ['GLUC', 'Glucose', 'mg/dL', true, false, false, null],
+            ['Ketone', 'Ketone', 'mg/dL', true, false, true, null],
+            ['PH', 'pH', 'no units', true, false, true, null],
+            ['Protein', 'Protein', 'mg/dL', true, false, true, null],
+            ['SpecificGravity', 'Specific Gravity', 'no units', true, false, true, null],
+            ['Urobilinogen', 'Urobilinogen', 'E.U./dL', true, false, true, null],
+            ['Other', 'Other', null, true, false, false, null]
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
     function makeObject(config, data, fields){
         Ext.each(data, function(row){
             var record = {};
@@ -363,6 +559,7 @@ Ext.onReady(function(){
             }, this);
             config.rows.push(record);
         }, this);
+
         return config;
     }
 
@@ -438,21 +635,82 @@ Ext.onReady(function(){
             }
         },{
             xtype: 'button',
+            text: 'Populate Chemistry Tests Table',
+            scope: this,
+            handler: populateChemistryTests
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Chemistry Tests',
+            scope: this,
+            handler: function(){
+                pendingDeletes++;
+                deleteAll('ehr_lookups', 'chemistry_tests', 'testid')
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Hematology Tests Table',
+            scope: this,
+            handler: populateHematologyTests
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Hematology Tests',
+            scope: this,
+            handler: function(){
+                pendingDeletes++;
+                deleteAll('ehr_lookups', 'hematology_tests', 'testid')
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Urinalysis Tests Table',
+            scope: this,
+            handler: populateUrinalysisTests
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Urinalysis Tests',
+            scope: this,
+            handler: function(){
+                pendingDeletes++;
+                deleteAll('ehr_lookups', 'urinalysis_tests', 'testid')
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Lookups Sets Table',
+            scope: this,
+            handler: populateLookupSets
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Lookup Sets',
+            scope: this,
+            handler: function(){
+                pendingDeletes++;
+                deleteLookupSets();
+            }
+        },{
+            xtype: 'button',
             text: 'Populate All',
             scope: this,
             handler: function(){
                 populateFormtypes();
                 populateFormPanelSections();
                 populateReports();
+                populateLookupSets();
+                populateChemistryTests();
+                populateHematologyTests();
+                populateUrinalysisTests();
             }
         },{
             xtype: 'button',
             text: 'Delete All',
             scope: this,
             handler: function(){
-                pendingDeletes = 2;
+                pendingDeletes = 6;
                 deleteAll('ehr', 'formtypes', 'rowid'); //note: formpanelsections will be deleted by trigger script
                 deleteAll('ehr', 'reports', 'rowid');
+                deleteLookupSets();
+                deleteAll('ehr_lookups', 'chemistry_tests', 'testid');
+                deleteAll('ehr_lookups', 'hematology_tests', 'testid');
+                deleteAll('ehr_lookups', 'urinalysis_tests', 'testid');
+
             }
         }]
     })

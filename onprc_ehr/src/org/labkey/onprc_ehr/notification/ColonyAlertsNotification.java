@@ -20,12 +20,17 @@ import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.RuntimeSQLException;
+import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
+import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.Table;
+import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.gwt.client.util.StringUtils;
 import org.labkey.api.query.FieldKey;
+import org.labkey.api.query.QueryDefinition;
+import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryHelper;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.QuerySettings;
@@ -45,6 +50,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -77,11 +84,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         return "every day at 6AM";
     }
 
-    public Set<String> getNotificationTypes()
-    {
-        return Collections.singleton(getName());
-    }
-
     public String getDescription()
     {
         return "The report is designed to identify potential problems with the colony, primarily related to weights, housing and assignments.";
@@ -101,8 +103,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);
         livingAnimalsWithoutHousing(c, u, msg);
-        //TODO
-        //animalsLackingAssignments(c, u, msg);
+
+        animalsLackingAssignments(c, u, msg);
         deadAnimalsWithActiveAssignments(c, u, msg);
         deadAnimalsWithActiveCases(c, u, msg);
         assignmentsWithoutValidProtocol(c, u, msg);
@@ -111,20 +113,21 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         activeProblemsForDeadAnimals(c, u, msg);
         activeAssignmentsForDeadAnimals(c, u, msg);
         nonContiguousHousing(c, u, msg);
-        birthWithoutGender(c, u, msg);
+        //NOTE: ONPRC doesnt capture gender here
+        //birthWithoutGender(c, u, msg);
         demographicsWithoutGender(c, u, msg);
         deathWeightCheck(c, u, msg);
         protocolsNearingLimit(c, u, msg);
-        protocolsExpiringSoon(c, u, msg);
+        //protocolsExpiringSoon(c, u, msg);
         birthRecordsWithoutDemographics(c, u, msg);
         deathRecordsWithoutDemographics(c, u, msg);
         assignmentsProjectedToday(c, u, msg);
         assignmentsProjectedTomorrow(c, u, msg);
+        roomsReportingNegativeCagesAvailable(c, u, msg);
 
         //summarize events in last 5 days:
-        msg.append("<b>Colony events in the past 5 days:</b><p>");
-        birthsInLast5Days(c, u, msg);
-        deathsInLast5Days(c, u, msg);
+        eventsInLast5Days(c, u, msg);
+
         finalizedRecordsWithFutureDates(c, u, msg);
 
         return msg.toString();
@@ -151,6 +154,39 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<hr>\n");
         }
 
+    }
+
+    /**
+     * Finds all rooms reporting a negative number for available cages
+     */
+    protected void roomsReportingNegativeCagesAvailable(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("CagesEmpty"), 0, CompareType.LT);
+        TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("roomUtilization"), Table.ALL_COLUMNS, filter, null);
+        if (ts.getRowCount() > 0)
+        {
+            msg.append("<b>WARNING: The following rooms reports a negative number for available cages.  This probably means there is a problem in the room/cage configuration:</b><br>\n");
+            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                public void exec(ResultSet rs) throws SQLException
+                {
+                    msg.append(rs.getString("room") + "<br>\n");
+                }
+            });
+
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=roomUtilization&query.CagesEmpty~lt=0'>Click here to view the problem rooms</a></p>\n");
+            msg.append("<hr>\n");
+        }
+
+    }
+
+
+    protected void eventsInLast5Days(Container c, User u, StringBuilder msg)
+    {
+        msg.append("<b>Colony events in the past 5 days:</b><p>");
+        birthsInLast5Days(c, u, msg);
+        msg.append("<br><br>\n");
+        deathsInLast5Days(c, u, msg);
+        msg.append("<hr>\n");
     }
 
     /**
@@ -273,7 +309,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void animalsLackingAssignments(final Container c, User u, final StringBuilder msg)
     {
-        //TODO: view does not exist for ONPRC
         QueryHelper qh = new QueryHelper(c, u, "study", "Demographics", "No Active Assignments");
         Results rs = null;
         try
@@ -282,16 +317,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             int count = 0;
             StringBuilder tmpHtml = new StringBuilder();
             Set<String> ids = new HashSet<String>();
-            if (rs.next())
+            //TODO
+            while (rs.next())
             {
-                while (rs.next())
-                {
-                    ids.add(rs.getString(getStudy(c).getSubjectColumnName()));
-                }
-                tmpHtml.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Demographics&query.viewName=No Active Assignments'>Click here to view these animals</a></p>\n");
-                tmpHtml.append("<hr>\n");
-                count++;
+                ids.add(rs.getString(getStudy(c).getSubjectColumnName()));
             }
+            tmpHtml.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Demographics&query.viewName=No Active Assignments'>Click here to view these animals</a></p>\n");
+            tmpHtml.append("<hr>\n");
+            count++;
 
             if (count > 0)
             {
@@ -395,7 +428,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Deaths"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
         if (ts.getRowCount() > 0)
         {
-            msg.append("Deaths since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + ":<br>\n");
+            msg.append("Deaths since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + ":<br><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
@@ -404,7 +437,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             });
 
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Deaths&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><p>\n");
-            msg.append("<hr>\n");
         }
     }
 
@@ -420,7 +452,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Birth"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
         if (ts.getRowCount() > 0)
         {
-            msg.append("Births since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + ":<br>\n");
+            msg.append("Births since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + ":<br><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
@@ -429,7 +461,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             });
 
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Birth&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><p>\n");
-            msg.append("<hr>\n");
         }
     }
 
@@ -548,47 +579,15 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -90);
 
-        //TODO
-        MutablePropertyValues mpv = new MutablePropertyValues();
-        mpv.addPropertyValue("schemaName", "study");
-        mpv.addPropertyValue("query.queryName", "validateFinalWeights");
-        mpv.addPropertyValue("query.param.MINDATE", AbstractEHRNotification._dateFormat.format(cal.getTime()));
-
-        BindException errors = new NullSafeBindException(new Object(), "command");
-        UserSchema us = QueryService.get().getUserSchema(u, c, "study");
-        QuerySettings qs = us.getSettings(mpv, "query");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("death"), cal.getTime(), CompareType.DATE_GTE);
-        qs.setBaseFilter(filter);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("validateFinalWeights"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        Long total = ts.getRowCount();
 
-        QueryView view = new QueryView(us, qs, errors);
-        Results rs = null;
-        try
+        if (total > 0)
         {
-            rs = view.getResults();
-            int total = 0;
-            while (rs.next())
-            {
-                total++;
-            }
-
-            if (total > 0)
-            {
-                msg.append("<b>WARNING: There are " + total + " animals that are dead, but do not have a weight within the previous 7 days:</b><br>\n");
-                msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=validateFinalWeights&query.death~dategte=-90d'>Click here to view them</a></p>\n");
-                msg.append("<hr>\n");
-            }
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeSQLException(e);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
+            msg.append("<b>WARNING: There are " + total + " animals that are dead, but do not have a weight within the previous 7 days:</b><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=validateFinalWeights&query.death~dategte=-90d'>Click here to view them</a></p>\n");
+            msg.append("<hr>\n");
         }
     }
 
@@ -609,7 +608,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 {
                     msg.append(rs.getString(getStudy(c).getSubjectColumnName()));
                     if (rs.getDate("birth") == null)
-                        msg.append("(" + AbstractEHRNotification._dateFormat.format(rs.getDate("birth")) + ")");
+                        msg.append(" (" + AbstractEHRNotification._dateFormat.format(rs.getDate("birth")) + ")");
 
                     msg.append("<br>\n");
                 }
@@ -633,7 +632,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "(" + AbstractEHRNotification._dateFormat.format(rs.getDate("date"))+ ")" + "<br>\n");
+                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + " (" + AbstractEHRNotification._dateFormat.format(rs.getDate("date"))+ ")" + "<br>\n");
                 }
             });
 
@@ -651,45 +650,21 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         cal.setTime(new Date());
         cal.add(Calendar.YEAR, -1);
 
-        //TODO
-        MutablePropertyValues mpv = new MutablePropertyValues();
-        mpv.addPropertyValue("schemaName", "study");
-        mpv.addPropertyValue("query.queryName", "HousingCheck");
-        mpv.addPropertyValue("query.param.MINDATE", AbstractEHRNotification._dateFormat.format(cal.getTime()));
+        //TODO: discuss w/ Josh
+        UserSchema us = getStudySchema(c, u);
+        QueryDefinition qd = us.getQueryDefForTable("HousingCheck");
+        List<QueryException> errors = new ArrayList<QueryException>();
+        TableInfo ti = qd.getTable(us, errors, true);
+        SQLFragment sql = ti.getFromSQL("t");
+        sql = new SQLFragment("SELECT * FROM " + sql.getSQL(), cal.getTime(), cal.getTime(), cal.getTime());
+        SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
+        long total = ss.getRowCount();
 
-        BindException errors = new NullSafeBindException(new Object(), "command");
-        UserSchema us = QueryService.get().getUserSchema(u, c, "study");
-        QuerySettings qs = us.getSettings(mpv, "query");
-
-        QueryView view = new QueryView(us, qs, errors);
-        Results rs = null;
-        try
+        if (total > 0)
         {
-            rs = view.getResults();
-            int total = 0;
-            while (rs.next())
-            {
-                total++;
-            }
-
-            if (total > 0)
-            {
-                msg.append("<b>WARNING: There are " + total + " housing records since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + " that do not have a contiguous previous or next record.</b><br>\n");
-                msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=HousingCheck&query.param.MINDATE=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view and update them</a><br>\n\n");
-                msg.append("<hr>\n\n");
-            }
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeSQLException(e);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
+            msg.append("<b>WARNING: There are " + total + " housing records since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + " that do not have a contiguous previous or next record.</b><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=HousingCheck&query.param.MINDATE=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view and update them</a><br>\n\n");
+            msg.append("<hr>\n\n");
         }
     }
 

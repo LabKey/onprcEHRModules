@@ -44,4 +44,4 @@ LEFT JOIN Ref_Pool p3 ON (p3.PoolCode = ActualReleasePool)
 LEFT JOIN Sys_Parameters s1 ON (field = 'ReplacementFlag' and Flag = ReplacementFlag)
 left join Af_Qrf q on (q.animalid = af.animalid)
 
-WHERE af.ts > ?
+WHERE (af.ts > ? or q.ts > ?)

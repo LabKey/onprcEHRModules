@@ -1,0 +1,10 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="housingPairs" tableDbType="TABLE">
+                <tableTitle>Animals Per Pairing</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

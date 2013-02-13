@@ -23,12 +23,17 @@ a.enddate,
 a.projectedReleaseCondition,
 a.releaseCondition,
 a.assignCondition,
+a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
 lf.chargeId,
 null as chargeId2
 
 FROM study.assignment a
 LEFT JOIN onprc_billing.leaseFeeDefinition lf
-  ON (lf.assignCondition = a.assignCondition AND lf.releaseCondition = a.releaseCondition AND (a.id.age.ageInYears >= lf.minAge AND lf.minAge IS NULL) AND (a.id.age.ageInYears < lf.maxAge OR lf.maxAge IS NULL))
+  ON (lf.assignCondition = a.assignCondition
+    AND lf.releaseCondition = a.projectedReleaseCondition
+    AND (a.ageAtTime.AgeAtTimeYearsRounded >= lf.minAge OR lf.minAge IS NULL)
+    AND (a.ageAtTime.AgeAtTimeYearsRounded < lf.maxAge OR lf.maxAge IS NULL)
+  )
 WHERE CONVERT(a.date, DATE) >= STARTDATE AND CONVERT(a.date, DATE) <= ENDDATE
 AND a.qcstate.publicdata = true AND lf.active = true
 
@@ -43,16 +48,24 @@ a.enddate,
 a.projectedReleaseCondition,
 a.releaseCondition,
 a.assignCondition,
+a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
 lf.chargeId,
 lf2.chargeId as chargeId2
 
 FROM study.assignment a
 LEFT JOIN onprc_billing.leaseFeeDefinition lf
-  ON (lf.assignCondition = a.assignCondition AND lf.releaseCondition = a.releaseCondition AND (a.id.age.ageInYears >= lf.minAge AND lf.minAge IS NULL) AND (a.id.age.ageInYears < lf.maxAge OR lf.maxAge IS NULL))
+  ON (lf.assignCondition = a.assignCondition
+    AND lf.releaseCondition = a.releaseCondition
+    AND (a.ageAtTime.AgeAtTimeYearsRounded >= lf.minAge OR lf.minAge IS NULL)
+    AND (a.ageAtTime.AgeAtTimeYearsRounded < lf.maxAge OR lf.maxAge IS NULL)
+  )
 
---TODO: should this be based on age at time of assignment?
 LEFT JOIN onprc_billing.leaseFeeDefinition lf2
-  ON (lf2.assignCondition = a.assignCondition AND lf2.releaseCondition = a.projectedReleaseCondition AND (a.id.age.ageInYears >= lf.minAge AND lf.minAge IS NULL) AND (a.id.age.ageInYears < lf2.maxAge OR lf2.maxAge IS NULL))
+  ON (lf2.assignCondition = a.assignCondition
+    AND lf2.releaseCondition = a.projectedReleaseCondition
+    AND (a.ageAtTime.AgeAtTimeYearsRounded >= lf.minAge OR lf.minAge IS NULL)
+    AND (a.ageAtTime.AgeAtTimeYearsRounded < lf2.maxAge OR lf2.maxAge IS NULL)
+  )
 
 WHERE a.releaseCondition != a.projectedReleaseCondition
 AND a.enddate is not null AND CONVERT(a.enddateCoalesced, DATE) >= STARTDATE AND CONVERT(a.enddateCoalesced, date) <= ENDDATE

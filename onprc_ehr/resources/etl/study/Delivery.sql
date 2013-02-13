@@ -16,12 +16,12 @@
 Select
     cast(MotherID as nvarchar(4000)) as Id,
 	Date,
-	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'DeliveryType' and l.value = s1.value) as DeliveryType,
+	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'DeliveryMode' and l.value = s1.value) as DeliveryType,
 	--DeliveryType as DeliveryType,
     --s1.Value as DeliveryType,
 
     cast(InfantID as nvarchar(4000)) as Infant,
-    cast(FatherID as nvarchar(4000)) as Sire,
+    case when fatherId = 0 then null else cast(FatherID as nvarchar(4000)) end as Sire,
 
 	cast(NaturalMother as nvarchar(4000)) as NaturalMother,
 	MultipleBirthsFlag ,

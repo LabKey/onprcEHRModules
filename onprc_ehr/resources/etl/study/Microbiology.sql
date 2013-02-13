@@ -30,4 +30,4 @@ FROM Cln_MicrobiologyData m
 left join Cln_MicrobiologyHeader mh ON (m.ClinicalKey = mh.ClinicalKey)
 left join ref_snomed s ON (m.Bacteria = s.SnomedCode)
 
-where m.ts > ?
+where m.ts > ? or mh.ts > ?

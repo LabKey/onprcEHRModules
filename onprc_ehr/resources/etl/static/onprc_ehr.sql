@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-TRUNCATE TABLE labkey.onprc_ehr.investigators;
 INSERT INTO labkey.onprc_ehr.investigators (firstname,lastName,position,address,city,state,country,zip,phoneNumber, investigatorType,emailAddress,dateCreated,dateDisabled,division,objectid)
 Select
 	FirstName,

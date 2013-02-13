@@ -8,9 +8,6 @@
                 <updateUrl />
                 <deleteUrl />
                 <columns>
-                    <column columnName="deliveryType">
-                        <columnTitle>Delivery Type</columnTitle>
-                    </column>
                     <column columnName="sire">
                         <columnTitle>Sire</columnTitle>
                         <fk>
@@ -24,6 +21,11 @@
                     </column>
                     <column columnName="confirmationType">
                         <columnTitle>Confirmation Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>PregnancyConfirm</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
                     </column>
                 </columns>
             </table>

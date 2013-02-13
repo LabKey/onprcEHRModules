@@ -9,7 +9,7 @@
         </column>
         <column name="dam"/>
         <column name="sire"/>
-        <column name="Id/currentAssignments/projects">
+        <column name="Id/activeAssignments/projects">
             <properties>
                 <property name="columnTitle" value="Active Assignments"/>
             </properties>
@@ -26,12 +26,7 @@
                 <property name="columnTitle" value="Most Recent Arrival"/>
             </properties>
         </column>
-        <column name="Id/MostRecentDeparture/MostRecentDeparture">
-            <properties>
-                <property name="columnTitle" value="Most Recent Departure"/>
-            </properties>
-        </column>
-        <column name="origin"/>
+        <!--<column name="origin"/>-->
         <column name="Id/curLocation/room">
             <properties>
                 <property name="columnTitle" value="Room"/>
@@ -59,7 +54,7 @@
         </column>
     </columns>
     <sorts>
-        <sort column="id" descending="false"/>
+        <sort column="Id" descending="false"/>
     </sorts>
     <!--<filters>-->
         <!--<filter column="qcstate/publicdata" operator="eq" value="true"/>-->

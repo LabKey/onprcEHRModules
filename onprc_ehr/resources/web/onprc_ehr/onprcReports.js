@@ -47,8 +47,8 @@ EHR.reports.hematology = function(panel, tab){
 
     var resultsConfig = panel.getQWPConfig({
         schemaName: 'study',
-        queryName: 'Hematology Results',
-        viewName: 'Plus Ref Range',
+        queryName: 'hematologyRefRange',
+        //viewName: 'Plus Ref Range',
         title: "Reference Ranges:",
         titleField: 'Id',
         sort: '-date',
@@ -324,30 +324,41 @@ EHR.reports.currentBlood = function(panel, tab){
 EHR.reports.snapshot = function(panel, tab){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
+    var subjects = tab.filters.subjects || [];
 
     var tb = tab.getDockedItems('toolbar[dock="top"]');
     if(tb)
         tab.remove(tb);
 
-    tab.add({
-        xtype: 'ldk-multirecorddetailspanel',
-        store: {
-            schemaName: 'study',
-            queryName: 'demographics',
-            viewName: 'Snapshot',
-            filterArray: filterArray.removable.concat(filterArray.nonRemovable)
-        },
-        detailsConfig: {
-            columns: 2,
-            DEFAULT_FIELD_WIDTH: 400
-        },
-        titleField: 'Id',
-        titlePrefix: 'Details',
-        multiToGrid: true,
-        qwpConfig: panel.getQWPConfig({
-            title: 'Snapshot'
-        })
-    });
+    if (subjects.length == 1){
+        tab.add({
+            xtype: 'ldk-detailspanel',
+            store: {
+                schemaName: 'study',
+                queryName: 'demographics',
+                viewName: 'Snapshot',
+                filterArray: filterArray.removable.concat(filterArray.nonRemovable)
+            },
+            detailsConfig: {
+                columns: 2,
+                DEFAULT_FIELD_WIDTH: 400
+            },
+            title: 'Overview' + title
+        });
+    }
+    else {
+        tab.add({
+            xtype: 'ldk-querypanel',
+            style: 'margin-bottom:20px;',
+            queryConfig: {
+                title: 'Overview' + title,
+                schemaName: 'study',
+                queryName: 'demographics',
+                viewName: 'Snapshot',
+                filterArray: filterArray.removable.concat(filterArray.nonRemovable)
+            }
+        });
+    }
 
     tab.add({
         border: false,
@@ -392,6 +403,7 @@ EHR.reports.snapshot = function(panel, tab){
         schemaName: 'study',
         allowChooseView: true,
         queryName: 'Problem List',
+        viewName: 'Unresolved Problems',
         //sort: '-date',
         filters: filterArray.nonRemovable,
         removeableFilters: filterArray.removable
@@ -405,3 +417,32 @@ EHR.reports.snapshot = function(panel, tab){
 
     EHR.reports.weightGraph(panel, tab);
 };
+
+EHR.reports.clinicalOverview = function(panel, tab){
+    tab.add({
+        html: 'This report will show a clinical history of the selected animal(s)',
+        border: false
+    });
+}
+
+//Temporary:
+EHR.reports.treatmentSchedule = function(panel, tab){
+    tab.add({
+        html: 'This report will show treatments that need to be given today',
+        border: false
+    });
+}
+
+EHR.reports.bloodSchedule = function(panel, tab){
+    tab.add({
+        html: 'This report will show a schedule of blood draws to be performed today',
+        border: false
+    });
+}
+
+EHR.reports.underConstruction = function(panel, tab){
+    tab.add({
+        html: 'This report is being developed and should be added soon',
+        border: false
+    });
+}

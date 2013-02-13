@@ -116,15 +116,16 @@ WHERE s3.Field = 'MedicationFrequency' AND f.meaning IS NULL;
 
 
 
-TRUNCATE TABLE labkey.ehr_lookups.rooms
-INSERT INTO labkey.ehr_lookups.rooms (room, area, building, maxCages, housingtype, housingCondition)
+TRUNCATE TABLE labkey.ehr_lookups.rooms;
+INSERT INTO labkey.ehr_lookups.rooms (room, area, building, maxCages, housingtype, housingCondition, dateDisabled)
 SELECT
 	t.Location as room,
 	t.area,
 	t.buildingName,
 	t.Size,
 	max(t.LocationType) as locationtype,
-	max(t.LocationDefinition) as housingcategory
+	max(t.LocationDefinition) as housingcategory,
+	min(t.datedisabled) as datedisabled
 
 FROM (
 Select
@@ -138,7 +139,8 @@ Select
 	--s1.Value as LocationType,
 	--s2.searchkey as LocationDefinitionInt
 
-	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s2.Field and l.value = s2.Value) as locationDefinition
+	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s2.Field and l.value = s2.Value) as locationDefinition,
+	loc.DateDisabled
 	--s2.Value as LocationDefinition,
 	--loc.DateCreated,
 	--loc.DateDisabled,
@@ -151,8 +153,8 @@ Where s1.Field = 'LocationType'
 	and s1.Flag = loc.LocationType
 	and s2.Field = 'LocationDefinition'
 	and s2.Flag = loc.LocationDefinition
-	and loc.Status = 1
 	and rb.BuildingId = loc.BuildingID
+	and loc.DateDisabled is null
 
 UNION ALL
 
@@ -166,8 +168,9 @@ Select
 	--s1.Value as LocationType,
 	--s2.searchkey as LocationDefinitionInt
 
-	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s2.Field and l.value = s2.Value) as locationDefinition
+	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s2.Field and l.value = s2.Value) as locationDefinition,
 	--s2.Value as LocationDefinition,
+	rls.datedisabled
 
 From IRIS_Production.dbo.Ref_LocationSPF rls,
 	IRIS_Production.dbo.Sys_Parameters s1, IRIS_Production.dbo.Sys_Parameters s2, IRIS_Production.dbo.Ref_Building rb
@@ -175,8 +178,8 @@ Where s1.Field = 'LocationType'
 	and s1.Flag = rls.LocationType
 	and s2.Field = 'LocationDefinition'
 	and s2.Flag = rls.LocationDefinition
-	and rls.Status = 1
 	and rb.BuildingId = rls.BuildingID
+	and rls.DateDisabled is null
 
 ) t
 GROUP BY t.location, t.area, t.buildingName, t.size;
@@ -220,11 +223,78 @@ INSERT INTO labkey.ehr_lookups.areas (area, description)
 SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE datedisabled IS NULL;
 
 
-INSERT INTO labkey.ehr_lookups.divider_types (divider)
-SELECT
-  s2.value
-  from IRIS_Production.dbo.sys_parameters s2
-  left join labkey.ehr_lookups.divider_types d ON (s2.value = d.divider)
-  where s2.field = 'CageDivider' and s2.DateDisabled IS NULL and d.divider is null;
+-- INSERT INTO labkey.ehr_lookups.divider_types (divider)
+-- SELECT
+--   s2.value
+--   from IRIS_Production.dbo.sys_parameters s2
+--   left join labkey.ehr_lookups.divider_types d ON (s2.value = d.divider)
+--   where s2.field = 'CageDivider' and s2.DateDisabled IS NULL and d.divider is null;
 
+
+DELETE FROM labkey.ehr_lookups.lookups where set_name = 'housing_reason'
+and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'TRANSFERREASON');
+
+INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
+select
+'housing_reason' as setname,
+s.Value as value,
+s.DisplayOrder as sort_order
+
+from iris_production.dbo.Sys_Parameters s
+where s.Field = 'TRANSFERREASON'
+and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'housing_reason');
+
+DELETE FROM labkey.ehr_lookups.lookups where set_name = 'birth_type'
+and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'BirthType');
+
+INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
+select
+'birth_type' as setname,
+s.Value as value,
+s.DisplayOrder as sort_order
+
+from iris_production.dbo.Sys_Parameters s
+where s.Field = 'BirthType'
+and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'birth_type');
+
+DELETE FROM labkey.ehr_lookups.lookups where set_name = 'birth_condition'
+and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'BirthCondition');
+
+INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
+select
+'birth_condition' as setname,
+s.Value as value,
+s.DisplayOrder as sort_order
+
+from iris_production.dbo.Sys_Parameters s
+where s.Field = 'BirthCondition'
+and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'birth_condition');
+
+
+DELETE FROM labkey.ehr_lookups.lookups where set_name = 'death_cause'
+and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'Deathcause');
+
+INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
+select
+'death_cause' as setname,
+s.Value as value,
+s.DisplayOrder as sort_order
+
+from iris_production.dbo.Sys_Parameters s
+where s.Field = 'Deathcause'
+and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'death_cause');
+
+
+DELETE FROM labkey.ehr_lookups.lookups where set_name = 'problem_list_category'
+and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'MasterProblemList');
+
+INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
+select
+'problem_list_category' as setname,
+s.Value as value,
+s.DisplayOrder as sort_order
+
+from iris_production.dbo.Sys_Parameters s
+where s.Field = 'MasterProblemList'
+and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'problem_list_category');
 

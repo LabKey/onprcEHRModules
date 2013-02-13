@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 SELECT
-	cast(AnimalId as nvarchar(4000)) as Id,
+	cast(cln.AnimalId as nvarchar(4000)) as Id,
 	Date,
 	Medication as code,
 	sno.Description as snomedMeaning,
@@ -27,7 +27,8 @@ SELECT
 	(select rowid FROM labkey.ehr_lookups.treatment_frequency tf WHERe tf.meaning = s4.value) as frequency,
 	
 	--Duration as Duration,
-	EndDate,
+	coalesce(EndDate, q.deathdate, q.departuredate) as enddate,
+
 	--Reason as ReasonInt  ,
 	s5.Value as Reason,
 
@@ -63,6 +64,7 @@ FROM Cln_Medications cln
      left join Sys_parameters s5 on (s5.Field = 'MedicationReason' and s5.Flag = Reason)
      left join Sys_parameters s6 on (s6.Field = 'DepartmentCode' and s6.Flag = rt.DeptCode)
      left join ref_snomed sno on (sno.SnomedCode = cln.Medication)
+     left join Af_Qrf q on (q.animalid = cln.animalid)
 
 where Medication is not null and Medication != ''
-AND cln.ts > ?
+AND cln.ts > ? or q.ts > ?

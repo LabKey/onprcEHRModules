@@ -49,12 +49,6 @@ public class BloodAlertsNotification extends BloodAdminAlertsNotification
     }
 
     @Override
-    public Set<String> getNotificationTypes()
-    {
-        return Collections.singleton(getName());
-    }
-
-    @Override
     public String getCronString()
     {
         return "0 0 10 * * ?";

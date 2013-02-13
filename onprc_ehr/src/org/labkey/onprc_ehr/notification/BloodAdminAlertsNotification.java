@@ -79,11 +79,6 @@ public class BloodAdminAlertsNotification extends AbstractEHRNotification
         return "Blood Admin Alerts: " + AbstractEHRNotification._dateTimeFormat.format(new Date());
     }
 
-    public Set<String> getNotificationTypes()
-    {
-        return Collections.singleton(getName());
-    }
-
     @Override
     public String getCronString()
     {

@@ -6,9 +6,9 @@
     </requiredWebParts>
     <preferredWebParts>
         <webPart>
-            <name>ONPRC Electronic Health Record</name>
+            <name>ONPRC Menu</name>
             <location>menu</location>
-            <property name="title" value="Electronic Health Record" />
+            <property name="title" value="Sections" />
         </webPart>
         <webPart>
             <name>ONPRC Quick Search</name>

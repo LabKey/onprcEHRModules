@@ -22,7 +22,7 @@ FROM study.flags f
 
 WHERE (f.enddate IS NULL OR COALESCE(f.enddate, curdate()) >= curdate()) and category is not null
 
-GROUP BY f.id, f.date, f.category
+GROUP BY f.id, f.category
 
 PIVOT valueField by category
 

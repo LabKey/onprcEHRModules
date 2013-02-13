@@ -1,0 +1,14 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="name"/>
+        <column name="protocol"/>
+        <column name="account"/>
+        <column name="investigatorId"/>
+        <column name="title"/>
+        <column name="startdate"/>
+        <column name="enddate"/>
+    </columns>
+    <sorts>
+        <sort column="name" />
+    </sorts>
+</customView>

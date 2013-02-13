@@ -278,7 +278,7 @@
             <column columnName="result">
                 <datatype>double</datatype>
             </column>
-            <column columnName="qualResult">
+            <column columnName="qualresult">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="project">
@@ -436,7 +436,7 @@
         </columns>
         <tableTitle>Foster Parents</tableTitle>
     </table>
-    <table tableName="diagnostics" tableDbType="TABLE">
+    <table tableName="miscTests" tableDbType="TABLE">
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
@@ -508,7 +508,7 @@
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
         </columns>
-        <tableTitle>Diagnostics</tableTitle>
+        <tableTitle>Misc Tests</tableTitle>
     </table>
     <table tableName="alopecia" tableDbType="TABLE">
         <columns>
@@ -1014,6 +1014,9 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
+            <column columnName="billedby">
+                <columnTitle>Billed By</columnTitle>
+            </column>
             <column columnName="project">
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
@@ -1171,6 +1174,9 @@
             <column columnName="performedby">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
+            </column>
+            <column columnName="billedby">
+                <columnTitle>Billed By</columnTitle>
             </column>
             <column columnName="requestid">
                 <datatype>varchar</datatype>
@@ -2030,87 +2036,6 @@
         </columns>
         <tableTitle>Vitals</tableTitle>
     </table>
-    <table tableName="bacteriologyResults" tableDbType="TABLE">
-        <columns>
-            <column columnName="Id">
-                <datatype>varchar</datatype>
-                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <importAliases>
-                    <importAlias>ptid</importAlias>
-                </importAliases>
-            </column>
-            <column columnName="date">
-                <datatype>timestamp</datatype>
-                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-            </column>
-            <column columnName="source">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="organism">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="remark">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
-            </column>
-            <column columnName="antibiotic">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="sensitivity">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="description">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#Description</propertyURI>
-            </column>
-            <column columnName="objectid">
-                <datatype>entityid</datatype>
-                <propertyURI>urn:ehr.labkey.org/#ObjectId</propertyURI>
-                <isKeyField>true</isKeyField>
-            </column>
-            <column columnName="parentid">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#ParentId</propertyURI>
-            </column>
-            <column columnName="taskid">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
-            </column>
-            <column columnName="runid">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="project">
-                <datatype>integer</datatype>
-                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
-            </column>
-			<column columnName="performedby">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
-            </column>
-            <column columnName="requestid">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
-            </column>
-            <column columnName="enddate">
-                <datatype>timestamp</datatype>
-                <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
-            </column>
-            <column columnName="result">
-                <datatype>double</datatype>
-            </column>
-            <column columnName="units">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="qualresult">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="method">
-                <datatype>varchar</datatype>
-            </column>
-        </columns>
-        <tableTitle>Bacteriology Results</tableTitle>
-    </table>
     <table tableName="chemistryResults" tableDbType="TABLE">
         <columns>
             <column columnName="Id">
@@ -2143,7 +2068,7 @@
             <column columnName="units">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="qualResult">
+            <column columnName="qualresult">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="remark">
@@ -2266,6 +2191,9 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
+            <column columnName="billedby">
+                <columnTitle>Billed By</columnTitle>
+            </column>
             <column columnName="requestid">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
@@ -2308,7 +2236,7 @@
             <column columnName="units">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="qualResult">
+            <column columnName="qualresult">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="remark">
@@ -2519,7 +2447,7 @@
             <column columnName="quantityInRange">
                 <datatype>double</datatype>
             </column>
-            <column columnName="runId">
+            <column columnName="runid">
                 <datatype>varchar</datatype>
             </column>
         </columns>

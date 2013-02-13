@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 Select
-	cast(AnimalID as nvarchar(4000)) as Id,
-	TransferDate as Date,
-	RemovalDate as  enddate ,
+	cast(aft.AnimalID as nvarchar(4000)) as Id,
+	aft.TransferDate as Date,
+	coalesce(aft.RemovalDate, q.deathdate, q.departuredate) as enddate,
+
 	--Aft.CageID as  TransferCageID ,
 	l2.Location as room,
 	ltrim(rtrim(r2.row) + convert(char(2), r2.Cage)) As cage,
@@ -50,5 +51,6 @@ left join  Sys_Parameters s2 on (s2.Flag = Rt.Deptcode And S2.Field = 'Departmen
 left join  Sys_Parameters s1 on ( AfT.Reason = s1.Flag And s1.Field = 'TransferReason')
 left join  Ref_RowCage r2 on  (r2.CageID = aft.CageID)
 left join  Ref_Location l2 on (r2.LocationID = l2.LocationId)
+left join Af_Qrf q on (q.animalid = aft.animalid)
 
-WHERE aft.ts > ? and l2.Location != 'No Location'
+WHERE (aft.ts > ? OR q.ts > ?) and l2.Location != 'No Location'

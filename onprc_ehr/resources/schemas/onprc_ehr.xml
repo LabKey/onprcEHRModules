@@ -72,6 +72,14 @@
             <ns:column columnName="division">
                 <ns:columnTitle>Division</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="assignedVet">
+                <ns:columnTitle>Assigned Vet</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>core</ns:fkDbSchema>
+                    <ns:fkTable>users</ns:fkTable>
+                    <ns:fkColumnName>UserId</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
             <ns:column columnName="createdby">
 
             </ns:column>

@@ -3,6 +3,24 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="leaseFees" tableDbType="TABLE">
                 <tableTitle>Lease Fees Calculation</tableTitle>
+                <columns>
+                    <column columnName="chargeId">
+                        <columnTitle>Charge 1</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>chargeableItems</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="chargeId2">
+                        <columnTitle>Charge 2</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>chargeableItems</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
+                    </column>
+                </columns>
             </table>
         </tables>
     </metadata>

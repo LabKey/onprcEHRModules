@@ -13,12 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+select 
 
-Select
+-- case
+-- 	when datalength(rtrim(ltrim(i2.eIACUCNum))) = 0 then rtrim(ltrim(lower(i2.IACUCCode)))
+-- 	when i2.eIACUCNum is not null then rtrim(ltrim(i2.eIACUCNum))
+-- 	else rtrim(ltrim(t.IACUCCode))
+-- end as protocol,
+rtrim(ltrim(lower(i2.IACUCCode))) as protocol,
+t.*
+
+FROM (
+ 
+select 
+
     Rpi.ProjectId as project,
-	coalesce ((select top 1 rpi2.IacucCode
+    rpi.IACUCCode,
+	coalesce ((select top 1 rpi2.projectId
 				from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on rpi2.ProjectID = ipc.ProjectParentID
-				where ipc.projectchildid = rpi.projectid order by ipc.datecreated desc), rpi.iacuccode) as protocol,
+				where ipc.projectchildid = rpi.projectid order by ipc.datecreated desc), rpi.projectid) as protocolId,
+				
 	(select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa
 				where rpi.projectid = rpa.ProjectID order by datecreated desc) as account,
 	(ri.LastName + ', ' + ri.FirstName) as inves,
@@ -26,12 +41,13 @@ Select
 	Rpi.Title,
 	-- research
 	-- reqname
-	-- contact_emails		todo
+	-- contact_emails
 	Rpi.StartDate,
 	Rpi.EndDate,
 	-- inves2
-	Rpi.IACUCCode as name,
-	pc.InvestigatorID,
+	rtrim(ltrim(Rpi.IACUCCode)) as name,
+	--pc.InvestigatorID,
+	(select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri.firstname and i.lastname = ri.lastname group by i.LastName, i.firstname having count(*) <= 1) as investigatorId,
 	rpi.objectid
 
 From Ref_ProjectsIACUC rpi
@@ -39,3 +55,8 @@ From Ref_ProjectsIACUC rpi
 	left join Ref_Investigator ri on (ri.InvestigatorID = pc.investigatorid)
 
 WHERE (rpi.ts > ? or pc.ts > ?)
+
+) t
+
+LEFT JOIN Ref_ProjectsIACUC i2 ON (i2.ProjectID = t.protocolId)
+

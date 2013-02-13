@@ -64,16 +64,26 @@ public class ColonyAlertsLiteNotification extends ColonyAlertsNotification
 
         //Find today's date
         Date now = new Date();
-        msg.append("This email contains a series of automatic alerts about the colony.  It was run on: " + AbstractEHRNotification._dateFormat.format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
 
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);
         livingAnimalsWithoutHousing(c, u, msg);
         //animalsLackingAssignments(c, u, msg);
         deadAnimalsWithActiveAssignments(c, u, msg);
+        deadAnimalsWithActiveCases(c, u, msg);
+        activeTreatmentsForDeadAnimals(c, u, msg);
+        activeProblemsForDeadAnimals(c, u, msg);
+
         assignmentsWithoutValidProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);
         nonContiguousHousing(c, u, msg);
+
+        //since we dont want to trigger an email if there's no alerts, conditionally append the title
+        //if msg.legnth == 0, notification service wont send the message
+        if (msg.length() > 0)
+        {
+            msg.insert(0, "This email contains a series of automatic alerts about the colony.  It was run on: " + AbstractEHRNotification._dateFormat.format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
+        }
 
         return msg.toString();
     }

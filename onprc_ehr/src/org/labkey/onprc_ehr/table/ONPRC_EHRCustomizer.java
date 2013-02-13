@@ -73,13 +73,25 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeEncounters((AbstractTableInfo) table);
             }
+            else if (matches(table, "study", "Birth"))
+            {
+                customizeBirthTable((AbstractTableInfo) table);
+            }
             else if (matches(table, "ehr", "project"))
             {
                 customizeProjects((AbstractTableInfo) table);
             }
+            else if (matches(table, "ehr", "protocol"))
+            {
+                customizeProtocol((AbstractTableInfo) table);
+            }
             else if (matches(table, "ehr_lookups", "room"))
             {
                 customizeRooms((AbstractTableInfo) table);
+            }
+            else if (matches(table, "ehr_lookups", "cage"))
+            {
+                customizeCageTable((AbstractTableInfo) table);
             }
         }
     }
@@ -139,6 +151,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             }
 
             room.setLabel("Room");
+            room.setDisplayWidth("120");
         }
 
         ColumnInfo chargeId = ti.getColumn("chargeId");
@@ -268,6 +281,21 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         }
     }
 
+    private void customizeBirthTable(AbstractTableInfo ti)
+    {
+        ColumnInfo cond = ti.getColumn("cond");
+        if (cond != null)
+        {
+            cond.setLabel("Birth Condition");
+            UserSchema us = getUserSchema(ti, "ehr_lookups");
+            if (us != null)
+            {
+                cond.setFk(new QueryForeignKey(us, "birth_condition", "value", "value"));
+            }
+        }
+
+    }
+
     private void customizeEncounters(AbstractTableInfo ti)
     {
         if (ti.getColumn("history") != null)
@@ -310,6 +338,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ti.addColumn(ci);
     }
 
+    private void customizeProtocol(AbstractTableInfo ti)
+    {
+        ti.getColumn("inves").setHidden(true);
+        ti.getColumn("investigatorId").setHidden(false);
+    }
+
     private void customizeProjects(AbstractTableInfo ti)
     {
         ti.setTitleColumn("name");
@@ -321,6 +355,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ti.getColumn("avail").setHidden(true);
 
         ti.getColumn("project").setLabel("Project Id");
+        ti.getColumn("project").setHidden(true);
 
         ColumnInfo invest = ti.getColumn("investigatorId");
         invest.setHidden(false);
@@ -404,6 +439,40 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             col.setHidden(true);
             col.setLabel(label);
             ti.addColumn(col);
+        }
+    }
+
+    private void customizeCageTable(AbstractTableInfo table)
+    {
+
+        if (table.getColumn("row") == null)
+        {
+            ColumnInfo cageCol = table.getColumn("cage");
+
+            SQLFragment sql = new SQLFragment(table.getSqlDialect().getSubstringFunction(ExprColumn.STR_TABLE_ALIAS + ".cage", "1", "1"));
+            ExprColumn rowCol = new ExprColumn(table, "row", sql, JdbcType.VARCHAR, cageCol);
+            rowCol.setLabel("Row");
+            table.addColumn(rowCol);
+
+            String colSql = table.getSqlDialect().getSubstringFunction(ExprColumn.STR_TABLE_ALIAS + ".cage", "2", "LEN(" + ExprColumn.STR_TABLE_ALIAS + ".cage)");
+            colSql = "(" + colSql + ")";
+            if (table.getSqlDialect().isSqlServer())
+            {
+                colSql = "CASE WHEN ISNUMERIC(" + colSql + ") = 1 THEN CAST(" + colSql + " AS INTEGER) ELSE null END";
+            }
+            else if (table.getSqlDialect().isPostgreSQL())
+            {
+                colSql = "CASE WHEN (" + colSql + ") ~ '^[0-9]+$' THEN CAST(" + colSql + " AS INTEGER) ELSE null END";
+            }
+            else
+            {
+                throw new UnsupportedOperationException("Unknown SQL Dialect: " + table.getSqlDialect().toString());
+            }
+
+            SQLFragment sql2 = new SQLFragment(colSql);
+            ExprColumn columnCol = new ExprColumn(table, "column", sql2, JdbcType.INTEGER, cageCol);
+            columnCol.setLabel("Column");
+            table.addColumn(columnCol);
         }
     }
 }

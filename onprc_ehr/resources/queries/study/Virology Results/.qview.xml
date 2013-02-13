@@ -6,7 +6,7 @@
        <column name="virusCode" />
        <column name="method" />
        <column name="result" />
-       <column name="qualResult" />
+       <column name="qualresult" />
        <column name="remark" />
        <column name="qcstate" />
        <column name="taskid" />

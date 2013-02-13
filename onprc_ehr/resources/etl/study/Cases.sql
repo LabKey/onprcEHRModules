@@ -47,4 +47,4 @@ LEFT JOIN Sys_Parameters s1 ON (afc.Status = s1.Flag and s1.field = 'CaseStatus'
 --left join Cln_DX dx on (dx.CaseID = afc.CaseID and dx.Date = afc.OpenDate)
 left join Af_Qrf q on (q.animalid = afc.animalid)
 
-WHERE afc.ts > ?
+WHERE afc.ts > ? or q.ts > ?

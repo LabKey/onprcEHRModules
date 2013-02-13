@@ -104,7 +104,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Hematocrit as Result,
-	'Hematocrit' as TestId,
+	'HCT' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -179,7 +179,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	TotalProtein as Result,
-	'TotalProtein' as TestId,
+	'TP' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -194,7 +194,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	MPMN as Result,
-	'MPMN' as TestId,
+	'Neut' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -209,7 +209,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	IPMN as Result,
-	'IPMN' as TestId,
+	'Bands' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -224,7 +224,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Lymphocyte as Result,
-	'Lymphocyte' as TestId,
+	'LY' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -239,7 +239,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Monocyte as Result,
-	'Monocyte' as TestId,
+	'Mono' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -254,7 +254,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Eosinophil as Result,
-	'Eosinophil' as TestId,
+	'EO' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -269,7 +269,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Basophil as Result,
-	'Basophil' as TestId,
+	'BAS' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -329,7 +329,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Reticulocyte as Result,
-	'Reticulocyte' as TestId,
+	'RETICULO' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -344,7 +344,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	RBCHypochromic as Result,
-	'RBCHypochromic' as TestId,
+	'Hypochromic RBC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -359,7 +359,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	RBCMicrocyte as Result,
-	'RBCMicrocyte' as TestId,
+	'Microcytic RBC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -374,7 +374,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	RBCPolychromasia as Result,
-	'RBCPolychromasia' as TestId,
+	'Polychromasia RBC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -389,7 +389,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	RBCMacrocyte as Result,
-	'RBCMacrocyte' as TestId,
+	'Macrocytic RBC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -404,7 +404,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	RBCAnisocytosis as Result,
-	'RBCAnisocytosis' as TestId,
+	'Anisocytosis' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -413,7 +413,7 @@ FROM Cln_Hematology cln
 UNION ALL
 
 
---TODO: does tihs belong here??
+--TODO: does this belong here??
 SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
@@ -421,7 +421,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	TotalWBC as Result,
-	'TotalWBC' as TestId,
+	'WBC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -436,7 +436,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	WBCNeurophils as Result,
-	'WBCNeurophils' as TestId,
+	'Neut' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -451,7 +451,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	WBCLymphocytes as Result,
-	'WBCLymphocytes' as TestId,
+	'LY' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -466,7 +466,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	TotalProtein as Result,
-	'TotalProtein' as TestId,
+	'TP' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -481,7 +481,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Glucose as Result,
-	'Glucose' as TestId,
+	'GLUC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 

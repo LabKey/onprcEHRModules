@@ -44,4 +44,4 @@ FROM Cln_VirologyData cln
      left join ref_snomed sno2 on (sno2.SnomedCode = cln.Agent)
 	 left join Cln_VirologyHeader h on (cln.ClinicalKey = h.ClinicalKey)
 	
-where cln.ts > ?
+where cln.ts > ? or h.ts > ?

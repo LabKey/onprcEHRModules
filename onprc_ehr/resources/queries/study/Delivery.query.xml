@@ -10,6 +10,11 @@
                 <columns>
                     <column columnName="deliveryType">
                         <columnTitle>Delivery Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>DeliveryMode</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="infant">
                         <columnTitle>Infant</columnTitle>
@@ -28,7 +33,7 @@
                         </fk>
                     </column>
                     <column columnName="naturalMother">
-                        <columnTitle>Natural Mother?</columnTitle>
+                        <columnTitle>Natural Mother</columnTitle>
                         <fk>
                             <fkDbSchema>study</fkDbSchema>
                             <fkTable>animal</fkTable>

@@ -64,11 +64,6 @@ public class TreatmentAlerts extends AbstractEHRNotification
         return "Daily Treatment Alerts: " + AbstractEHRNotification._dateTimeFormat.format(new Date());
     }
 
-    public Set<String> getNotificationTypes()
-    {
-        return Collections.singleton(getName());
-    }
-
     @Override
     public String getCronString()
     {

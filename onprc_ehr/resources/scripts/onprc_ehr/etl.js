@@ -308,10 +308,6 @@ EHR.ETL = {
             EHR.ETL.remarkToSoap(row, errors);
         },
 
-        'Chemistry Results': function(row, errors){
-            EHR.ETL.fixResults(row, errors);
-        },
-
         Biopsies: function(row, errors){
             if(row.caseno)
                 EHR.ETL.fixPathCaseNo(row, errors, 'b');
@@ -323,8 +319,10 @@ EHR.ETL = {
             }
         },
 
-        'Clinical Remarks': function(row, errors){
-            EHR.ETL.remarkToSoap(row, errors);
+        'Misc Tests': function(row, errors){
+            if(row.stringResults){
+                EHR.ETL.fixResults(row, errors);
+            }
         },
 
         Demographics: function(row, errors){
