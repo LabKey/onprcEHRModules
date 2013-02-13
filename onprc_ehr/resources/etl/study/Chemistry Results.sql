@@ -399,7 +399,7 @@ SELECT
 	Method as MethodInt  ,
 	DirectBilirubin as Result,
 	null as resultString,
-	'DBilli' as TestId,
+	'DBili' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 

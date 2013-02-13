@@ -394,8 +394,8 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
-	Crystals as result,
-	null as QualResult,
+	null as result,
+	Crystals as QualResult,
 	'Crystals' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
@@ -411,8 +411,8 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
-	Urobilinogen as result,
-	null as QualResult,
+	null as result,
+	Urobilinogen as QualResult,
 	'Urobilinogen' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
