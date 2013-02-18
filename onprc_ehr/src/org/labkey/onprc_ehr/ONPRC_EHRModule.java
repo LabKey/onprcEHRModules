@@ -22,9 +22,7 @@ import org.labkey.api.data.DbSchema;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.notification.NotificationService;
-import org.labkey.api.module.DefaultModule;
 import org.labkey.api.module.ModuleContext;
-import org.labkey.api.module.SimpleModule;
 import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.QuerySchema;
 import org.labkey.api.query.QueryService;
@@ -43,7 +41,6 @@ import org.labkey.onprc_ehr.notification.ColonyAlertsNotification;
 import org.labkey.onprc_ehr.notification.ColonyMgmtNotification;
 import org.labkey.onprc_ehr.notification.LabResultSummaryNotification;
 import org.labkey.onprc_ehr.notification.LabTestScheduleNotifications;
-import org.labkey.onprc_ehr.notification.TreatmentAlerts;
 import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -155,12 +152,4 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     {
         return PageFlowUtil.set(ONPRC_EHRSchema.SCHEMA_NAME, ONPRC_EHRSchema.BILLING_SCHEMA_NAME);
     }
-
-    @Override
-    @NotNull
-    public Set<DbSchema> getSchemasToTest()
-    {
-        return PageFlowUtil.set(ONPRC_EHRSchema.getInstance().getSchema(), DbSchema.get(ONPRC_EHRSchema.BILLING_SCHEMA_NAME));
-    }
-
 }
