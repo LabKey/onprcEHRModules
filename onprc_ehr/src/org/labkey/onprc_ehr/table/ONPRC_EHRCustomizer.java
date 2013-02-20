@@ -298,44 +298,44 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void customizeEncounters(AbstractTableInfo ti)
     {
-        if (ti.getColumn("history") != null)
-            return;
-
-        ColumnInfo ci = new WrappedColumn(ti.getColumn("objectid"), "history");
-        ci.setDisplayColumnFactory(new DisplayColumnFactory()
-        {
-            @Override
-            public DisplayColumn createRenderer(final ColumnInfo colInfo)
-            {
-            return new DataColumn(colInfo){
-
-                public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
-                {
-                    String lsid = (String)ctx.get("objectid");
-                    out.write("<a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showEncounterHistory('" + lsid + "', this);\">Display History</a>");
-                }
-
-                public boolean isSortable()
-                {
-                    return false;
-                }
-
-                public boolean isFilterable()
-                {
-                    return false;
-                }
-
-                public boolean isEditable()
-                {
-                    return false;
-                }
-            };
-            }
-        });
-        ci.setIsUnselectable(false);
-        ci.setLabel("History");
-
-        ti.addColumn(ci);
+//        if (ti.getColumn("history") != null)
+//            return;
+//
+//        ColumnInfo ci = new WrappedColumn(ti.getColumn("objectid"), "history");
+//        ci.setDisplayColumnFactory(new DisplayColumnFactory()
+//        {
+//            @Override
+//            public DisplayColumn createRenderer(final ColumnInfo colInfo)
+//            {
+//            return new DataColumn(colInfo){
+//
+//                public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+//                {
+//                    String lsid = (String)ctx.get("objectid");
+//                    out.write("<a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showEncounterHistory('" + lsid + "', this);\">Display History</a>");
+//                }
+//
+//                public boolean isSortable()
+//                {
+//                    return false;
+//                }
+//
+//                public boolean isFilterable()
+//                {
+//                    return false;
+//                }
+//
+//                public boolean isEditable()
+//                {
+//                    return false;
+//                }
+//            };
+//            }
+//        });
+//        ci.setIsUnselectable(false);
+//        ci.setLabel("History");
+//
+//        ti.addColumn(ci);
     }
 
     private void customizeProtocol(AbstractTableInfo ti)

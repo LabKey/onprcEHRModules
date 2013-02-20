@@ -162,14 +162,21 @@ EHR.reports.currentBlood = function(panel, tab){
                             var newRows = [];
                             var rowPrevious;
                             var seriesIds = [];
+                            var currentRow;
                             Ext4.each(results.rows, function(row, idx){
+                                //capture the current day's amount
+                                var rowDate = new Date(row.date.value);
+                                if (rowDate && rowDate.format('Y-m-d') == (new Date()).format('Y-m-d')){
+                                    currentRow = row;
+                                }
+
                                 row.allowableDisplay = row.allowableBlood;
                                 row.seriesId = {
                                     value: row.id.value + '/' + row.date.value
                                 };
                                 seriesIds.push(row.seriesId.value);
 
-                                //in order to mimick a stepped graph, add one new point per row using the date of the next draw
+                                //in order to mimic a stepped graph, add one new point per row using the date of the next draw
                                 if (rowPrevious){
                                     var newRow = Ext4.apply({}, row);
                                     newRow.allowableBlood = rowPrevious.allowableBlood;
@@ -192,6 +199,14 @@ EHR.reports.currentBlood = function(panel, tab){
                             }, this);
 
                             results.rows = newRows;
+
+                            if (currentRow){
+                                target.add({
+                                    html: 'The amount of blood available if drawn today is: ' + currentRow.allowableDisplay.value + ' mL.  The graph below shows how the amount of blood available will change over time.<br>',
+                                    border: false,
+                                    style: 'margin-bottom: 20px'
+                                });
+                            }
 
                             target.add({
                                 xtype: 'ldk-graphpanel',
@@ -419,10 +434,47 @@ EHR.reports.snapshot = function(panel, tab){
 };
 
 EHR.reports.clinicalOverview = function(panel, tab){
-    tab.add({
-        html: 'This report will show a clinical history of the selected animal(s)',
-        border: false
-    });
+//    tab.add({
+//        html: 'This report will show a clinical history of the selected animal(s)',
+//        border: false
+//    });
+
+    if (tab.filters.subjects){
+        renderSubjects(tab.filters.subjects, tab);
+    }
+    else
+    {
+        panel.resolveSubjectsFromHousing(tab, renderSubjects, this);
+    }
+
+    function renderSubjects(subjects, tab){
+        if (subjects.length > 50){
+            tab.add({
+                html: 'This report will not load well with more than 50 subjects selected.  Please filter to a smaller number.',
+                border: false
+            });
+
+            return;
+        }
+
+        tab.add({
+            html: 'This report is designed to give a chronological history of the animal.  still a work in progress; however, a rough draft has been enabled below.',
+            border: false,
+            style: 'padding-bottom: 20px;'
+        });
+
+        var minDate = Ext4.Date.add(new Date(), Ext4.Date.YEAR, -2);
+        Ext4.each(subjects, function(s){
+            tab.add({
+                xtype: 'ehr-clinicalhistorypanel',
+                border: true,
+                subjectId: s,
+                minDate: minDate,
+                //maxGridHeight: 1000,
+                style: 'margin-bottom: 20px;'
+            });
+        });
+    }
 }
 
 //Temporary:

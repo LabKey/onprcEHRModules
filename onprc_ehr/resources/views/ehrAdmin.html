@@ -9,18 +9,17 @@ Ext4.onReady(function (){
         sections: [{
             header: 'Admin',
             items: [
-                //{name: 'EHR Backups', url: '<%=contextPath%>/project<%=containerPath%>/Backups/begin.view?'},
                 {name: 'ETL Admin', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/etlAdmin.view?'},
-                {name: 'Junit Tests', url: '<%=contextPath%>/junit/begin.view?'},
                 {name: 'Kinship Calculation', url: '<%=contextPath%>/ehr<%=containerPath%>/kinship.view?'},
                 {name: 'Manage EHR Study', url: '<%=contextPath%>/study<%=containerPath%>/manageStudy.view?'},
                 {name: 'Populate Initial Data (Generic)', url: '<%=contextPath%>/EHR<%=containerPath%>/populateInitialData.view?'},
                 {name: 'Populate Initial Data (ONPRC)', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/populateData.view?'},
                 {name: 'Run Custom SQL', url: '<%=contextPath%>/ldk<%=containerPath%>/runCustomSql.view?schemaName=study'},
-                {name: 'Set EHR Properties', url: '<%=contextPath%>/core<%=containerPath%>/modulePropertyAdmin.view?moduleName=EHR'},
+                {name: 'Set EHR Module Properties', url: '<%=contextPath%>/core<%=containerPath%>/modulePropertyAdmin.view?moduleName=EHR'},
                 {name: 'Update Dataset Properties', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureDatasetProperties.view?'},
                 {name: 'Update Study QCStates', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureQCStates.view?'},
-                {name: 'Verify Dataset Resources', url: '<%=contextPath%>/ehr<%=containerPath%>/verifyDatasetResources.view?'}
+                {name: 'Verify Dataset Resources', url: '<%=contextPath%>/ehr<%=containerPath%>/verifyDatasetResources.view?'},
+                {name: 'Verify EHR Schema Indexes Are Compressed', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureEHRSchemaIndexes.view?'}
             ]
         },{
             header: 'Logs',

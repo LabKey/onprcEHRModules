@@ -18,7 +18,8 @@ SELECT
 	--s.DiagnosisID ,
 	dx.objectid as recordid,
 
-	s.objectid,
+	cast(s.objectid as varchar(38)) + '_clndx' as objectid,
+	coalesce(s.sequenceNo, 0) as set_number,
 	s2.i as sort,
 	cast(s2.value as nvarchar(100)) as code
 
@@ -35,7 +36,8 @@ SELECT
 	--s.DiagnosisID ,
 	dx.objectid as recordid,
 
-	s.objectid,
+	cast(s.objectid as varchar(38)) + '_surg' as objectid,
+	s.Idkey as set_number,
 	s2.i as sort,
 	cast(s2.value as nvarchar(100)) as code
 
@@ -50,6 +52,7 @@ UNION ALL
 Select
 	pa.objectid as recordid,
 	(cast(d.objectid as varchar(38)) + '_' + cast(s2.value as nvarchar(100))) as objectid,
+	coalesce(d.sequenceno, 0) as set_number,
 	s2.i as sort,
 	cast(s2.value as nvarchar(100)) as code
 
@@ -66,6 +69,7 @@ UNION ALL
 Select
 	d.objectid as recordid,
 	(cast(d.objectid as varchar(38)) + '_' + cast(s2.value as nvarchar(100))) as objectid,
+	coalesce(d.sequenceno, 0) as set_number,
 	s2.i as sort,
 	cast(s2.value as nvarchar(100)) as code	
 

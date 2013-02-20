@@ -57,33 +57,3 @@ left join Ref_pool rp on (rp.PoolCode = afr.PoolCode)
 
 WHERE afr.datedisabled is null 
 AND afr.ts > ?
-
-UNION ALL
-
-SELECT 
-	cast(AnimalID as nvarchar(4000)) as Id,
-	ReproImpairDate as date,	
-	
-	'ReproImpair' as category,
-	'ReproImpair' as value ,
-	null as performedBy,
-	(cast(afq.objectid as varchar(38)) + '_reproImpair') as objectid
-
-From Af_Qrf afq
-WHERE ReproImpair = 1
-AND afq.ts > ?
-
-UNION ALL
-
-SELECT 
-	cast(AnimalID as nvarchar(4000)) as Id,
-	BirthDate as Birth,	
-	
-	'BreedingFlag' as category,
-	'BreedingFlag' as value,
-	null as performedBy,
-	(cast(afq.objectid as varchar(38)) + '_breeding') as objectid
-
-From Af_Qrf afq
-WHERE BreedingFlag = 1
-AND afq.ts > ?

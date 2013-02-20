@@ -317,14 +317,15 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             int count = 0;
             StringBuilder tmpHtml = new StringBuilder();
             Set<String> ids = new HashSet<String>();
-            //TODO
+
             while (rs.next())
             {
                 ids.add(rs.getString(getStudy(c).getSubjectColumnName()));
+                count++;
             }
+
             tmpHtml.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Demographics&query.viewName=No Active Assignments'>Click here to view these animals</a></p>\n");
             tmpHtml.append("<hr>\n");
-            count++;
 
             if (count > 0)
             {
@@ -722,7 +723,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void cageReview(final Container c, User u, final StringBuilder msg)
     {
-        //TODO
+        //TODO: switch to TableSelector
         MutablePropertyValues mpv = new MutablePropertyValues();
         mpv.addPropertyValue("schemaName", "study");
         mpv.addPropertyValue("query.queryName", "CageReview");

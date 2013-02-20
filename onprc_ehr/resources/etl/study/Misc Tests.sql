@@ -142,7 +142,6 @@ SELECT
 	--cln.RareTestID as RareTestID ,    ----- Ref_RareTests
 	rt.RareTest as TestId,
 
-	--TODO: parse units
 	null as result,
 	cln.Value as stringResults ,
 	null as qualResult,

@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.labkey.api.action.ApiAction;
 import org.labkey.api.action.ApiResponse;
 import org.labkey.api.action.ApiSimpleResponse;
+import org.labkey.api.action.ConfirmAction;
 import org.labkey.api.action.ExportAction;
 import org.labkey.api.action.RedirectAction;
 import org.labkey.api.action.SimpleViewAction;
@@ -42,6 +43,7 @@ import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HtmlView;
 import org.labkey.api.view.NavTree;
+import org.labkey.api.view.UnauthorizedException;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLRunnable;
 import org.springframework.validation.BindException;
@@ -504,6 +506,65 @@ public class ONPRC_EHRController extends SpringActionController
         public ActionURL getSuccessURL(Object form)
         {
             return DetailsURL.fromString(getContainer(), "/onprc_ehr/etlAdmin.view").getActionURL();
+        }
+    }
+
+    @RequiresPermissionClass(AdminPermission.class)
+    public class ValidateEtlAction extends ConfirmAction<ValidateEtlSyncForm>
+    {
+        public boolean handlePost(ValidateEtlSyncForm form, BindException errors) throws Exception
+        {
+            if (!getUser().isAdministrator())
+            {
+                throw new UnauthorizedException("Only site admins can view this page");
+            }
+
+            ETLRunnable runnable = new ETLRunnable();
+            runnable.validateEtlSync(form.isAttemptRepair());
+            return true;
+        }
+
+        public ModelAndView getConfirmView(ValidateEtlSyncForm form, BindException errors) throws Exception
+        {
+            if (!getUser().isAdministrator())
+            {
+                throw new UnauthorizedException("Only site admins can view this page");
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("The following text describes the results of comparing the EHR study with the MSSQL records from the production instance on the same server as this DB instance.  Clicking OK will cause the system to attempt to repair any differences.  Please do this very carefully<br>");
+            sb.append("<br><br>");
+
+            ETLRunnable runnable = new ETLRunnable();
+            String msg = runnable.validateEtlSync(false);
+            sb.append(msg);
+
+            return new HtmlView(sb.toString());
+        }
+
+        public void validateCommand(ValidateEtlSyncForm form, Errors errors)
+        {
+
+        }
+
+        public ActionURL getSuccessURL(ValidateEtlSyncForm form)
+        {
+            return getContainer().getStartURL(getUser());
+        }
+    }
+
+    public static class ValidateEtlSyncForm
+    {
+        private boolean _attemptRepair = false;
+
+        public boolean isAttemptRepair()
+        {
+            return _attemptRepair;
+        }
+
+        public void setAttemptRepair(boolean attemptRepair)
+        {
+            _attemptRepair = attemptRepair;
         }
     }
 }

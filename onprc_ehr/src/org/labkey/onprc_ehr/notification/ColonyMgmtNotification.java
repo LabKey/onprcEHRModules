@@ -64,7 +64,6 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
 
         //Find today's date
         Date now = new Date();
-        msg.append("This email contains a series of automatic alerts for colony management.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
 
         livingAnimalsWithoutWeight(c, u, msg);
         cagesWithoutDimensions(c, u, msg);
@@ -74,6 +73,12 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
         assignmentsWithoutValidProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);
         protocolsNearingLimit(c, u, msg);
+
+        //only send if there are alerts
+        if (msg.length() > 0)
+        {
+            msg.insert(0, "This email contains a series of automatic alerts for colony management.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
+        }
 
         return msg.toString();
     }

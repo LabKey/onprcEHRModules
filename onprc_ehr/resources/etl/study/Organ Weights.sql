@@ -37,7 +37,7 @@ From  Path_AutopsyWtsMaterials Pat
   left join  Sys_Parameters s3 on (Pat.Appearance = s3.Flag And s3.Field = 'TissueAppearance')
   left join ref_snomed sno ON (sno.SnomedCode = pat.Organ)
   left join Path_Autopsy pa ON (pa.AutopsyId = pat.AutopsyID)
-where Weight > 0 and pat.ts > ?
+where Weight > 0 and (pat.ts > ? or pa.ts > ?)
 
 union all
 
@@ -66,4 +66,4 @@ From Path_BiopsyWtsMaterials Pat
 	left join ref_snomed sno ON (sno.SnomedCode = pat.Organ)
 	left join Path_biopsy pa ON (pa.BiopsyID = pat.BiopsyID)
 
-where Weight > 0 and pat.ts > ?
+where Weight > 0 and (pat.ts > ? or pa.ts > ?)

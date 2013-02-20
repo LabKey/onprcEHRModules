@@ -41,4 +41,4 @@ left join Ref_ProjectsIacuc proj on (proj.ProjectID = afd.ProjectID)
 left join Ref_Diet d on (d.DietCode = afd.DietCode)
 left join Af_Qrf q on (q.animalid = afd.animalid)
 
-where afd.ts > ?
+where afd.ts > ? OR q.ts > ?

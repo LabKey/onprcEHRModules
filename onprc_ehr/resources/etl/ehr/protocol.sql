@@ -32,7 +32,8 @@ select
 		Rpi.IBCApprovalNum as ibc_approval_num,
 		Rpi.IBCApprovalRequired as ibc_approval_required,
 		Rpi.DateCreated as created,
-		S2.Value as Project_Type
+		S2.Value as Project_Type,
+		rpi.objectid
 	From Sys_Parameters s1, Sys_Parameters s2,
 		Ref_ProjectsIACUC rpi
 --			left join Ref_IACUCParentChildren ipc on rpi.ProjectID = ipc.ProjectChildID --ipc.ProjectParentID
@@ -47,6 +48,6 @@ select
 		and s2.Field = 'ProjectType'
 		and rpi.projectid = ipc.ProjectParentID
 
-AND rpi.ts > ?
+AND (rpi.ts > ? OR ipc.ts > ? or pi.ts > ? or ri.ts > ?)
 
 

@@ -16,7 +16,6 @@ onprc_ehr/resources/etl/onprc_billing/grants.sql -text
 onprc_ehr/resources/etl/onprc_billing/projectAccountHistory.sql -text
 onprc_ehr/resources/etl/pending/Sur_AnesthesiaLogData.sql -text
 onprc_ehr/resources/etl/pending/Sur_implants.sql -text
-onprc_ehr/resources/etl/pending/TB[!!-~]Tests.sql -text
 onprc_ehr/resources/etl/pending/accounts.sql -text
 onprc_ehr/resources/etl/pending/invoicedItems.sql -text
 onprc_ehr/resources/etl/pending/sur_vessels.sql -text
@@ -60,6 +59,7 @@ onprc_ehr/resources/etl/study/Parasitology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/PregnancyConfirmation.sql -text
 onprc_ehr/resources/etl/study/Problem[!!-~]List.sql -text
 onprc_ehr/resources/etl/study/Serology.sql -text
+onprc_ehr/resources/etl/study/TB[!!-~]Tests.sql -text
 onprc_ehr/resources/etl/study/Tissue[!!-~]Samples.sql -text
 onprc_ehr/resources/etl/study/Treatment[!!-~]Orders.sql -text
 onprc_ehr/resources/etl/study/Urinalysis[!!-~]Results.sql -text
@@ -114,7 +114,6 @@ onprc_ehr/resources/queries/study/Antibiotic[!!-~]Sensitivity.query.xml -text
 onprc_ehr/resources/queries/study/Antibiotic[!!-~]Sensitivity/.qview.xml -text
 onprc_ehr/resources/queries/study/AntibioticSensitivity.js -text
 onprc_ehr/resources/queries/study/Arrival/.qview.xml -text
-onprc_ehr/resources/queries/study/Cases.js -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Diagnoses.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Observations/Menses.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Remarks/SOAP[!!-~]Note.qview.xml -text
@@ -190,11 +189,15 @@ onprc_ehr/resources/queries/study/hematologyPivot.sql -text
 onprc_ehr/resources/queries/study/hematologyPivot/.qview.xml -text
 onprc_ehr/resources/queries/study/housingPairs.query.xml -text
 onprc_ehr/resources/queries/study/housingPairs.sql -text
+onprc_ehr/resources/queries/study/housingPairs/Cages[!!-~]With[!!-~]Animals.qview.xml -text
 onprc_ehr/resources/queries/study/housingPairs/Single[!!-~]Housed.qview.xml -text
 onprc_ehr/resources/queries/study/microbiologyPivoted.query.xml -text
 onprc_ehr/resources/queries/study/microbiologyPivoted.sql -text
 onprc_ehr/resources/queries/study/notesPivoted.query.xml -text
 onprc_ehr/resources/queries/study/notesPivoted.sql -text
+onprc_ehr/resources/queries/study/proceduresPerYear.query.xml -text
+onprc_ehr/resources/queries/study/proceduresPerYear.sql -text
+onprc_ehr/resources/queries/study/proceduresPerYear/.qview.xml -text
 onprc_ehr/resources/queries/study/reproSummary.query.xml -text
 onprc_ehr/resources/queries/study/reproSummary.sql -text
 onprc_ehr/resources/queries/study/reproSummary/.qview.xml -text
@@ -297,7 +300,6 @@ onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditViewFactory.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/AbnormalLabResultsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/AbstractEHRNotification.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/notification/AdminAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/BloodAdminAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/BloodAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsLiteNotification.java -text
@@ -319,4 +321,5 @@ onprc_ehr/tools/monit/activeMQ-monit.pl -text
 onprc_ehr/tools/monit/munin-monitor.pl -text
 onprc_ehr/tools/munin/http_load_ -text
 onprc_ehr/tools/munin/sqlserver_ -text
+onprc_ehr/tools/pipeline/ehrContext.xml -text
 onprc_ehr/tools/testserver_db_script.sql -text

@@ -23,5 +23,5 @@ select
 		rpa.objectid
 	from Ref_ProjectsIACUC rpi join Ref_ProjectAccounts rpa on rpi.ProjectID = rpa.ProjectID
 
-AND rpi.ts > ?
+AND (rpi.ts > ? or rpa.ts > ?)
 

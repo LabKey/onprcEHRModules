@@ -24,6 +24,7 @@ import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.query.DefaultSchema;
+import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.QuerySchema;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.resource.Resource;
@@ -33,7 +34,6 @@ import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
-import org.labkey.onprc_ehr.notification.AdminAlertsNotification;
 import org.labkey.onprc_ehr.notification.BloodAdminAlertsNotification;
 import org.labkey.onprc_ehr.notification.BloodAlertsNotification;
 import org.labkey.onprc_ehr.notification.ColonyAlertsLiteNotification;
@@ -126,9 +126,13 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/onprcReports.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/Utils.js"), this);
 
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single-housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=housingPairs&query.viewName=Single Housed"), null);
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "View Pairing Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=housingPairs&query.viewName=Cages With Animals"), null);
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "View Roommate History for Animals", this, DetailsURL.fromString("/ehr/animalHistory.view#inputType:singleSubject&activeReport:roommateHistory"), null);
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), null);
+
         NotificationService ns = NotificationService.get();
         //ns.registerNotification(new AbnormalLabResultsNotification());
-        ns.registerNotification(new AdminAlertsNotification());
         ns.registerNotification(new BloodAdminAlertsNotification());
         ns.registerNotification(new BloodAlertsNotification());
         ns.registerNotification(new ColonyAlertsLiteNotification());

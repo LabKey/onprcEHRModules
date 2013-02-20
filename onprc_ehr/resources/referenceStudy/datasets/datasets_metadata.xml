@@ -1019,6 +1019,7 @@
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
             <column columnName="billedby">
+                <datatype>varchar</datatype>
                 <columnTitle>Billed By</columnTitle>
             </column>
             <column columnName="project">
@@ -1180,6 +1181,7 @@
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
             <column columnName="billedby">
+                <datatype>varchar</datatype>
                 <columnTitle>Billed By</columnTitle>
             </column>
             <column columnName="requestid">
@@ -2196,6 +2198,7 @@
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
             <column columnName="billedby">
+                <datatype>varchar</datatype>
                 <columnTitle>Billed By</columnTitle>
             </column>
             <column columnName="requestid">

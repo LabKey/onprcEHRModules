@@ -16,7 +16,7 @@
 SELECT
     null as userid,
     t.role,
-    t.procedure_id,
+    t.procedure_id as parentid,
     (cast(t.procedure_id as varchar(38)) + '_' + t.role) as objectid,
 
 	case
@@ -181,4 +181,4 @@ WHERE datalength(s.Circulator) > 0
 
 left join Ref_Technicians Rt on (t.userId = Rt.ID)
 
-where t.rowversion > ?
+where t.rowversion > ? and rt.lastname != ' none'
