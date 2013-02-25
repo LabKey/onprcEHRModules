@@ -46,6 +46,7 @@ import org.labkey.api.view.NavTree;
 import org.labkey.api.view.UnauthorizedException;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLRunnable;
+import org.labkey.onprc_ehr.legacydata.LegacyDataManager;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -565,6 +566,77 @@ public class ONPRC_EHRController extends SpringActionController
         public void setAttemptRepair(boolean attemptRepair)
         {
             _attemptRepair = attemptRepair;
+        }
+    }
+
+    @RequiresPermissionClass(AdminPermission.class)
+    public class LegacyDataImportAction extends ConfirmAction<LegacyDataImportForm>
+    {
+        public void validateCommand(LegacyDataImportForm form, Errors errors)
+        {
+
+        }
+
+        @Override
+        public ModelAndView getConfirmView(LegacyDataImportForm form, BindException errors) throws Exception
+        {
+            StringBuilder sb = new StringBuilder();
+            File sourceFolder = null;
+            if (form.getSourceFolder() != null)
+            {
+                sourceFolder = new File(form.getSourceFolder());
+                if (!sourceFolder.exists())
+                {
+                    errors.reject(ERROR_MSG, "File does not exist: " + form.getSourceFolder());
+                    return null;
+                }
+            }
+
+            sb.append("This action is highly experimental and should be used at your own risk.  It is designed to bulk upload existing folders into workbooks. <br><br>");
+            String preview = LegacyDataManager.getInstance().importSachaExperiments(getUser(), getContainer(), sourceFolder, true);
+            sb.append(preview).append("<br>");
+
+            sb.append("<br>Do you want to continue?");
+
+            return new HtmlView(sb.toString());
+        }
+
+        public boolean handlePost(LegacyDataImportForm form, BindException errors) throws Exception
+        {
+            File sourceFolder = null;
+            if (form.getSourceFolder() != null)
+            {
+                sourceFolder = new File(form.getSourceFolder());
+                if (!sourceFolder.exists())
+                {
+                    errors.reject(ERROR_MSG, "File does not exist: " + form.getSourceFolder());
+                    return false;
+                }
+            }
+
+            LegacyDataManager.getInstance().importSachaExperiments(getUser(), getContainer(), sourceFolder, false);
+
+            return true;
+        }
+
+        public URLHelper getSuccessURL(LegacyDataImportForm form)
+        {
+            return ContainerManager.getHomeContainer().getStartURL(getUser());
+        }
+    }
+
+    public static class LegacyDataImportForm
+    {
+        private String _sourceFolder;
+
+        public String getSourceFolder()
+        {
+            return _sourceFolder;
+        }
+
+        public void setSourceFolder(String sourceFolder)
+        {
+            _sourceFolder = sourceFolder;
         }
     }
 }

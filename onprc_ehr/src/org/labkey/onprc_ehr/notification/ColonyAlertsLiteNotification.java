@@ -71,12 +71,19 @@ public class ColonyAlertsLiteNotification extends ColonyAlertsNotification
         //animalsLackingAssignments(c, u, msg);
         deadAnimalsWithActiveAssignments(c, u, msg);
         deadAnimalsWithActiveCases(c, u, msg);
+        deadAnimalsWithActiveDiet(c, u, msg);
+        deadAnimalsWithActiveFlags(c, u, msg);
+        deadAnimalsWithActiveNotes(c, u, msg);
+
         activeTreatmentsForDeadAnimals(c, u, msg);
         activeProblemsForDeadAnimals(c, u, msg);
 
         assignmentsWithoutValidProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);
+
         nonContiguousHousing(c, u, msg);
+        housedInUnavailableCages(c, u, msg);
+        roomsReportingNegativeCagesAvailable(c, u, msg);
 
         //since we dont want to trigger an email if there's no alerts, conditionally append the title
         //if msg.legnth == 0, notification service wont send the message

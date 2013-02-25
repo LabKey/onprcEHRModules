@@ -39,7 +39,7 @@ Ext4.onReady(function(){
             },
             items: [
                 {name: 'Animal History', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view?'},
-                {name: 'Animal Search', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/animalSearch.view?'}
+                {name: 'Animal Search', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalSearch.view?'}
             ]
         },{
             header: 'By Dataset',
@@ -94,7 +94,6 @@ Ext4.onReady(function(){
                 {name: 'Colony Population By Age', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=colonyPopulationByAge'},
                 {name: 'Population Summary', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/populationOverview.view?'},
                 {name: 'Room Utilization', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=roomUtilization'},
-                //{name: 'Time Chart', url: '<%=contextPath%>/visualization' + ctx['EHRStudyContainer'] + '/timeChartWizard.view?edit=true'},
                 {name: 'More Reports', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/moreReports.view?'}
             ]
         }]

@@ -145,12 +145,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ColumnInfo room = ti.getColumn("room");
         if (room != null)
         {
-            UserSchema us = getUserSchema(ti, "ehr_lookups");
-            if (us != null){
-                room.setFk(new QueryForeignKey(us, "rooms", "room", "room"));
-            }
-
-            room.setLabel("Room");
             room.setDisplayWidth("120");
         }
 
@@ -279,6 +273,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             col.setDescription("Shows all projects to which the animal has ever been assigned, including active projects");
             ds.addColumn(col);
         }
+
+        if (ds.getColumn("availBlood") == null)
+        {
+            ColumnInfo bloodCol = getWrappedIdCol(us, ds, "availBlood", "demographicsBloodSummary");
+            bloodCol.setLabel("Blood Remaining");
+            bloodCol.setDescription("Calculates the total blood draw and remaining, which is determined by weight and blood drawn.");
+            ds.addColumn(bloodCol);
+        }
     }
 
     private void customizeBirthTable(AbstractTableInfo ti)
@@ -342,6 +344,20 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
     {
         ti.getColumn("inves").setHidden(true);
         ti.getColumn("investigatorId").setHidden(false);
+
+        if (ti.getColumn("totalProjects") == null)
+        {
+            UserSchema us = getUserSchema(ti, "ehr");
+            if (us != null)
+            {
+                ColumnInfo protocolCol = ti.getColumn("protocol");
+                ColumnInfo col2 = ti.addColumn(new WrappedColumn(protocolCol, "totalProjects"));
+                col2.setLabel("Total Projects");
+                col2.setUserEditable(false);
+                col2.setIsUnselectable(true);
+                col2.setFk(new QueryForeignKey(us, "protocolTotalProjects", "protocol", "protocol"));
+            }
+        }
     }
 
     private void customizeProjects(AbstractTableInfo ti)
@@ -370,8 +386,19 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void customizeRooms(AbstractTableInfo ti)
     {
+        UserSchema us = getUserSchema(ti, "ehr_lookups");
 
-
+        ColumnInfo roomCol = ti.getColumn("room");
+        ColumnInfo assignments = ti.getColumn("assignments");
+        if (assignments == null)
+        {
+            WrappedColumn col = new WrappedColumn(roomCol, "assignments");
+            col.setReadOnly(true);
+            col.setIsUnselectable(true);
+            col.setUserEditable(false);
+            col.setFk(new QueryForeignKey(us, "roomsAssignment", "room", "room"));
+            ti.addColumn(col);
+        }
     }
 
     private ColumnInfo getWrappedIdCol(UserSchema us, AbstractTableInfo ds, String name, String queryName)

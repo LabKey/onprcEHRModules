@@ -27,7 +27,8 @@ SELECT
 	(cast(t.objectid as varchar(38)) + '_' + cast(i.value as varchar(10))) as objectid,
 	t.parentId,
 	t.treatmentId,
-	t.performedBy
+	t.performedBy,
+	'Clinical' as category
 
 FROM (
 	SELECT
@@ -105,7 +106,8 @@ SELECT
 	g.objectid as parentId,
 	null as treatmentId,
 	
-	null as performedby
+	null as performedby,
+	'Anesthesia' as category
 
 FROM Sur_AnesthesiaLogHeader h
 LEFT JOIN sur_general g ON (g.surgeryid = h.surgeryid)
@@ -115,3 +117,28 @@ LEFT JOIN Sys_parameters s2 ON (s1.Field = 'IVSide' AND s2.Flag = h.IVSide)
 LEFT JOIN Sys_parameters s3 ON (s3.Field = 'GasTubeSize' AND s3.Flag = h.TubeSize)
 
 WHERE h.ts > ? or g.ts > ?
+
+UNION ALL
+
+SELECT
+cast(g.AnimalId as nvarchar(4000)) as Id,
+g.Date,
+Medication as code,
+sno.Description as meaning,
+null as remark,
+Dose as amount,
+s2.value as amount_units,
+s3.value as Route,
+m.objectid,
+g.objectid as parentid,
+null as treatmentId,
+null as performedby,
+'Surgery' as category
+
+FROM Sur_Medications m
+	left join Sur_General g on (g.SurgeryID = m.SurgeryID)
+	left join Ref_SnoMed sno on (sno.SnomedCode = m.Medication)
+	left join Sys_parameters s2 on (s2.Field = 'MedicationUnits' and s2.Flag = m.Units)
+	left join Sys_parameters s3 on (s3.Field = 'MedicationRoute' and s3.Flag = m.Route)
+
+WHERE m.ts > ? or g.ts > ?

@@ -2,11 +2,16 @@
     <columns>
         <column name="name"/>
         <column name="protocol"/>
-        <column name="account"/>
-        <column name="investigatorId"/>
         <column name="title"/>
+        <column name="investigatorId"/>
+        <column name="account"/>
         <column name="startdate"/>
         <column name="enddate"/>
+        <column name="activeAssignments/activeAssignments">
+            <properties>
+                <property name="columnTitle" value="# Animals Assigned"/>
+            </properties>
+        </column>
     </columns>
     <sorts>
         <sort column="name" />

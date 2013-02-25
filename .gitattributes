@@ -69,13 +69,18 @@ onprc_ehr/resources/etl/study/pairings.sql -text
 onprc_ehr/resources/folderTypes/ONPRC_EHR.folderType.xml -text
 onprc_ehr/resources/queries/ehr/project.js -text
 onprc_ehr/resources/queries/ehr/project/.qview.xml -text
-onprc_ehr/resources/queries/ehr/project/Search[!!-~]Panel.qview.xml -text
 onprc_ehr/resources/queries/ehr/protocol/.qview.xml -text
+onprc_ehr/resources/queries/ehr/protocolTotalProjects.query.xml -text
+onprc_ehr/resources/queries/ehr/protocolTotalProjects.sql -text
 onprc_ehr/resources/queries/ehr_lookups/availableCages.query.xml -text
 onprc_ehr/resources/queries/ehr_lookups/availableCages.sql -text
 onprc_ehr/resources/queries/ehr_lookups/availableCages/.qview.xml -text
 onprc_ehr/resources/queries/ehr_lookups/availableCagesByRoom.query.xml -text
 onprc_ehr/resources/queries/ehr_lookups/availableCagesByRoom.sql -text
+onprc_ehr/resources/queries/ehr_lookups/cageTypeSummary.query.xml -text
+onprc_ehr/resources/queries/ehr_lookups/cageTypeSummary.sql -text
+onprc_ehr/resources/queries/ehr_lookups/cageTypeSummaryByRoom.query.xml -text
+onprc_ehr/resources/queries/ehr_lookups/cageTypeSummaryByRoom.sql -text
 onprc_ehr/resources/queries/ehr_lookups/housingDefinition.sql -text
 onprc_ehr/resources/queries/ehr_lookups/housingTypes.sql -text
 onprc_ehr/resources/queries/ehr_lookups/joinedCages.query.xml -text
@@ -89,6 +94,11 @@ onprc_ehr/resources/queries/ehr_lookups/roomUtilization.query.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomUtilization.sql -text
 onprc_ehr/resources/queries/ehr_lookups/roomUtilization/.qview.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomUtilization/Rooms[!!-~]with[!!-~]Animals.qview.xml -text
+onprc_ehr/resources/queries/ehr_lookups/roomsAssignment.query.xml -text
+onprc_ehr/resources/queries/ehr_lookups/roomsAssignment.sql -text
+onprc_ehr/resources/queries/ehr_lookups/roomsByInvestigator.query.xml -text
+onprc_ehr/resources/queries/ehr_lookups/roomsByInvestigator.sql -text
+onprc_ehr/resources/queries/ehr_lookups/roomsByInvestigator/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/chargeRateExemptions/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/chargeRates/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/chargeableItems/.qview.xml -text
@@ -177,6 +187,8 @@ onprc_ehr/resources/queries/study/currentBloodDraws.sql -text
 onprc_ehr/resources/queries/study/currentBloodSummary.sql -text
 onprc_ehr/resources/queries/study/demographicsActiveAssignment.query.xml -text
 onprc_ehr/resources/queries/study/demographicsActiveAssignment.sql -text
+onprc_ehr/resources/queries/study/demographicsBloodSummary.query.xml -text
+onprc_ehr/resources/queries/study/demographicsBloodSummary.sql -text
 onprc_ehr/resources/queries/study/demographicsHistoricAssignment.query.xml -text
 onprc_ehr/resources/queries/study/demographicsHistoricAssignment.sql -text
 onprc_ehr/resources/queries/study/flagsPivoted.query.xml -text
@@ -187,6 +199,8 @@ onprc_ehr/resources/queries/study/hematologyMisc/.qview.xml -text
 onprc_ehr/resources/queries/study/hematologyPivot.query.xml -text
 onprc_ehr/resources/queries/study/hematologyPivot.sql -text
 onprc_ehr/resources/queries/study/hematologyPivot/.qview.xml -text
+onprc_ehr/resources/queries/study/housedInUnavailableCages.query.xml -text
+onprc_ehr/resources/queries/study/housedInUnavailableCages.sql -text
 onprc_ehr/resources/queries/study/housingPairs.query.xml -text
 onprc_ehr/resources/queries/study/housingPairs.sql -text
 onprc_ehr/resources/queries/study/housingPairs/Cages[!!-~]With[!!-~]Animals.qview.xml -text
@@ -248,9 +262,6 @@ onprc_ehr/resources/scripts/onprc_ehr/onprc_triggers.js -text
 onprc_ehr/resources/views/adminPage.html -text
 onprc_ehr/resources/views/adminPage.view.xml -text
 onprc_ehr/resources/views/adminPage.webpart.xml -text
-onprc_ehr/resources/views/animalSearch.html -text
-onprc_ehr/resources/views/animalSearch.view.xml -text
-onprc_ehr/resources/views/animalSearch.webpart.xml -text
 onprc_ehr/resources/views/begin.html -text
 onprc_ehr/resources/views/begin.view.xml -text
 onprc_ehr/resources/views/begin.webpart.xml -text
@@ -282,9 +293,6 @@ onprc_ehr/resources/views/onprcMenu.view.xml -text
 onprc_ehr/resources/views/onprcMenu.webpart.xml -text
 onprc_ehr/resources/views/populateData.html -text
 onprc_ehr/resources/views/populateData.view.xml -text
-onprc_ehr/resources/views/quickSearch.html -text
-onprc_ehr/resources/views/quickSearch.view.xml -text
-onprc_ehr/resources/views/quickSearch.webpart.xml -text
 onprc_ehr/resources/views/serviceRequests.html -text
 onprc_ehr/resources/web/onprc_ehr/Utils.js -text
 onprc_ehr/resources/web/onprc_ehr/billingButtons.js -text
@@ -298,6 +306,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETL.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditViewFactory.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/legacydata/LegacyDataManager.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/AbnormalLabResultsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/AbstractEHRNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/BloodAdminAlertsNotification.java -text

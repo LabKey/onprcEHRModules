@@ -36,12 +36,11 @@ select
 		rpi.objectid
 	From Sys_Parameters s1, Sys_Parameters s2,
 		Ref_ProjectsIACUC rpi
---			left join Ref_IACUCParentChildren ipc on rpi.ProjectID = ipc.ProjectChildID --ipc.ProjectParentID
-			left join Ref_IACUCParentChildren ipc on (rpi.ProjectID = ipc.ProjectParentID
-				and ipc.ProjectChildID = ipc.ProjectParentID)
+			left join Ref_IACUCParentChildren ipc on (rpi.ProjectID = ipc.ProjectParentID and ipc.ProjectChildID = ipc.ProjectParentID and ipc.DateDisabled is null)
 			left join Ref_ProjInvest pi on (pi.ProjectID = rpi.ProjectID AND pi.DateDisabled is null and pi.PIFlag = 1)
 			left join Ref_Investigator ri on ri.InvestigatorID = pi.investigatorid
 	where ipc.DateDisabled is null
+	    and rpi.datedisabled is null
 		and rpi.USDALevel = s1.Flag
 		and s1.Field = 'USDALevel'
 		and rpi.projecttype = s2.Flag

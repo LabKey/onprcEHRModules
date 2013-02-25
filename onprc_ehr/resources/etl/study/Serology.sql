@@ -30,7 +30,7 @@ SELECT
 	END as qualResult,
 	
     CASE 
-      WHEN positive IS NOT NULL AND len(rtrim(positive)) > 0 THEN positive + '\n' + remarks
+      WHEN positive IS NOT NULL AND len(rtrim(positive)) > 0 THEN positive + char(10) + remarks
       else Remarks 
     END as remark,
 

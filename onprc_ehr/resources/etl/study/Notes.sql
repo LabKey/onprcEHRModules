@@ -15,8 +15,9 @@
  */
 Select
 	--RemarksID as RemarksID ,
-	cast(AnimalID as nvarchar(4000)) as Id,
+	cast(afr.AnimalID as nvarchar(4000)) as Id,
 	RemarksDate as date,
+	coalesce(q.deathdate, q.departuredate) as enddate ,
 
 	--Afr.Topic as TopicInt  ,
 	s1.value as Category,
@@ -54,6 +55,7 @@ left join Sys_Parameters s2 on (s2.Field = 'DepartmentCode' And Afr.Department =
 left join Ref_Technicians Rt on (Afr.TechnicianID = Rt.ID)
 left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'DepartmentCode')
 left join Ref_pool rp on (rp.PoolCode = afr.PoolCode)
+left join Af_Qrf q on (q.animalid = afr.animalid)
 
 WHERE afr.datedisabled is null 
-AND afr.ts > ?
+AND (afr.ts > ? or q.ts > ?)

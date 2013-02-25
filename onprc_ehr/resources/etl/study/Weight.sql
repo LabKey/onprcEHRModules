@@ -52,4 +52,6 @@ UNION ALL
 	sg.ts as rowversion
 
 From Sur_general sg
-WHERE sg.ts > ? and sg.weight is not null and sg.weight > 0
+left join Af_Weights w
+on (w.AnimalId = sg.AnimalID and w.Date = sg.Date and sg.Weight = w.WeightAmount)
+WHERE sg.ts > ? and w.objectid IS NULL and sg.weight is not null and sg.weight > 0

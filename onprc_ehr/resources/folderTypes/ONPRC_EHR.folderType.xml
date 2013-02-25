@@ -11,7 +11,7 @@
             <property name="title" value="Sections" />
         </webPart>
         <webPart>
-            <name>ONPRC Quick Search</name>
+            <name>Quick Search</name>
             <location>menu</location>
         </webPart>
         <webPart>
@@ -59,7 +59,7 @@
             </selectors>
             <preferredWebParts>
                 <webPart>
-                    <name>ONPRC Animal Search</name>
+                    <name>Animal Search</name>
                     <location>body</location>
                 </webPart>
             </preferredWebParts>

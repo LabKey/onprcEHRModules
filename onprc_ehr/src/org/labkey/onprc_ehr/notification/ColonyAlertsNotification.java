@@ -107,6 +107,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         animalsLackingAssignments(c, u, msg);
         deadAnimalsWithActiveAssignments(c, u, msg);
         deadAnimalsWithActiveCases(c, u, msg);
+        deadAnimalsWithActiveDiet(c, u, msg);
+        deadAnimalsWithActiveFlags(c, u, msg);
+        deadAnimalsWithActiveNotes(c, u, msg);
         assignmentsWithoutValidProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);
         activeTreatmentsForDeadAnimals(c, u, msg);
@@ -124,6 +127,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         assignmentsProjectedToday(c, u, msg);
         assignmentsProjectedTomorrow(c, u, msg);
         roomsReportingNegativeCagesAvailable(c, u, msg);
+        housedInUnavailableCages(c, u, msg);
 
         //summarize events in last 5 days:
         eventsInLast5Days(c, u, msg);
@@ -767,6 +771,58 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         finally
         {
             ResultSetUtil.close(rs);
+        }
+    }
+
+    protected void housedInUnavailableCages(final Container c, User u, final StringBuilder msg)
+    {
+        UserSchema us = QueryService.get().getUserSchema(u, c, "study");
+        TableInfo ti = us.getTable("housedInUnavailableCages");
+        TableSelector ts = new TableSelector(ti);
+        if (ts.getRowCount() > 0)
+        {
+            msg.append("<b>WARNING: There are " + ts.getRowCount() + " animals housed in cages that should not be available, based on the cage/divider configuration.</b><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=housedInUnavailableCages'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void deadAnimalsWithActiveDiet(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Diet"), Table.ALL_COLUMNS, filter, null);
+        if (ts.getRowCount() > 0)
+        {
+            msg.append("<b>WARNING: There are " + ts.getRowCount() + " active diets for animals not currently at the center.</b><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Diet&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view and update them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void deadAnimalsWithActiveFlags(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Flags"), Table.ALL_COLUMNS, filter, null);
+        if (ts.getRowCount() > 0)
+        {
+            msg.append("<b>WARNING: There are " + ts.getRowCount() + " active flags for animals not currently at the center.</b><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Flags&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view and update them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void deadAnimalsWithActiveNotes(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Notes"), Table.ALL_COLUMNS, filter, null);
+        if (ts.getRowCount() > 0)
+        {
+            msg.append("<b>WARNING: There are " + ts.getRowCount() + " active notes for animals not currently at the center.</b><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Notes&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view and update them</a><br>\n\n");
+            msg.append("<hr>\n\n");
         }
     }
 }

@@ -180,7 +180,7 @@ EHR.reports.currentBlood = function(panel, tab){
                                 if (rowPrevious){
                                     var newRow = Ext4.apply({}, row);
                                     newRow.allowableBlood = rowPrevious.allowableBlood;
-                                     newRow.seriesId = rowPrevious.seriesId;
+                                    newRow.seriesId = rowPrevious.seriesId;
                                     newRow.isHidden = {value: true};
                                     newRows.push(newRow);
                                 }
@@ -191,9 +191,9 @@ EHR.reports.currentBlood = function(panel, tab){
                                 if (idx == (results.rows.length - 1)){
                                     var newRow = Ext4.Object.merge({}, row);
                                     newRow.isHidden = {value: true};
-                                    var date = new Date(Date.parse(row.date.value));
+                                    var date = LDK.ConvertUtils.parseDate(row.date.value);
                                     date = Ext4.Date.add(date, Ext4.Date.DAY, 1);
-                                    newRow.date.value = date.format('Y-m-d');
+                                    newRow.date.value = date.format('Y/m/d H:i:s');
                                     newRows.push(newRow);
                                 }
                             }, this);
@@ -381,22 +381,6 @@ EHR.reports.snapshot = function(panel, tab){
     });
 
     var config = panel.getQWPConfig({
-        title: 'Other Notes' + title,
-        frame: true,
-        schemaName: 'study',
-        queryName: 'notes',
-        sort: '-date',
-        filters: filterArray.nonRemovable,
-        removeableFilters: filterArray.removable
-    });
-
-    tab.add({
-        xtype: 'ldk-querypanel',
-        style: 'margin-bottom:20px;',
-        queryConfig: config
-    });
-
-    config = panel.getQWPConfig({
         title: 'Active Assignments' + title,
         frame: true,
         schemaName: 'study',
@@ -434,11 +418,6 @@ EHR.reports.snapshot = function(panel, tab){
 };
 
 EHR.reports.clinicalOverview = function(panel, tab){
-//    tab.add({
-//        html: 'This report will show a clinical history of the selected animal(s)',
-//        border: false
-//    });
-
     if (tab.filters.subjects){
         renderSubjects(tab.filters.subjects, tab);
     }
