@@ -37,8 +37,6 @@ import org.labkey.api.security.User;
 import org.labkey.api.study.DataSetTable;
 import org.labkey.api.view.HttpView;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,10 +66,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             if (matches(table, "study", "Animal"))
             {
                 customizeAnimalTable((AbstractTableInfo)table);
-            }
-            else if (matches(table, "study", "Clinical Encounters"))
-            {
-                customizeEncounters((AbstractTableInfo) table);
             }
             else if (matches(table, "study", "Birth"))
             {
@@ -250,6 +244,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ds.addColumn(col);
         }
 
+        if (ds.getColumn("openProblems") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "openProblems", "demographicsActiveProblems");
+            col.setLabel("Open Problems");
+            //col.setDescription("");
+            ds.addColumn(col);
+        }
+
         if (ds.getColumn("activeNotes") == null)
         {
             ColumnInfo col2 = getWrappedIdCol(us, ds, "activeNotes", "notesPivoted");
@@ -281,6 +283,30 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             bloodCol.setDescription("Calculates the total blood draw and remaining, which is determined by weight and blood drawn.");
             ds.addColumn(bloodCol);
         }
+
+        if (ds.getColumn("numPaired") == null)
+        {
+            ColumnInfo col21 = getWrappedIdCol(us, ds, "numPaired", "demographicsPaired");
+            col21.setLabel("Pairing");
+            col21.setDescription("Shows all animals paired with the current animal");
+            ds.addColumn(col21);
+        }
+
+        if (ds.getColumn("physicalExamHistory") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "physicalExamHistory", "demographicsPE");
+            col.setLabel("Physical Exam History");
+            col.setDescription("Shows the date of last physical exam for each animal");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("labworkHistory") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "labworkHistory", "demographicsLabwork");
+            col.setLabel("Labwork History");
+            col.setDescription("Shows the date of last labwork for a subsets of tests");
+            ds.addColumn(col);
+        }
     }
 
     private void customizeBirthTable(AbstractTableInfo ti)
@@ -298,52 +324,13 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     }
 
-    private void customizeEncounters(AbstractTableInfo ti)
-    {
-//        if (ti.getColumn("history") != null)
-//            return;
-//
-//        ColumnInfo ci = new WrappedColumn(ti.getColumn("objectid"), "history");
-//        ci.setDisplayColumnFactory(new DisplayColumnFactory()
-//        {
-//            @Override
-//            public DisplayColumn createRenderer(final ColumnInfo colInfo)
-//            {
-//            return new DataColumn(colInfo){
-//
-//                public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
-//                {
-//                    String lsid = (String)ctx.get("objectid");
-//                    out.write("<a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showEncounterHistory('" + lsid + "', this);\">Display History</a>");
-//                }
-//
-//                public boolean isSortable()
-//                {
-//                    return false;
-//                }
-//
-//                public boolean isFilterable()
-//                {
-//                    return false;
-//                }
-//
-//                public boolean isEditable()
-//                {
-//                    return false;
-//                }
-//            };
-//            }
-//        });
-//        ci.setIsUnselectable(false);
-//        ci.setLabel("History");
-//
-//        ti.addColumn(ci);
-    }
-
     private void customizeProtocol(AbstractTableInfo ti)
     {
         ti.getColumn("inves").setHidden(true);
         ti.getColumn("investigatorId").setHidden(false);
+        ColumnInfo externalId = ti.getColumn("external_id");
+        externalId.setHidden(false);
+        externalId.setLabel("eIACUC #");
 
         if (ti.getColumn("totalProjects") == null)
         {
@@ -481,7 +468,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             rowCol.setLabel("Row");
             table.addColumn(rowCol);
 
-            String colSql = table.getSqlDialect().getSubstringFunction(ExprColumn.STR_TABLE_ALIAS + ".cage", "2", "LEN(" + ExprColumn.STR_TABLE_ALIAS + ".cage)");
+            String colSql = table.getSqlDialect().getSubstringFunction(ExprColumn.STR_TABLE_ALIAS + ".cage", "2", table.getSqlDialect().getVarcharLengthFunction() + "(" + ExprColumn.STR_TABLE_ALIAS + ".cage)");
             colSql = "(" + colSql + ")";
             if (table.getSqlDialect().isSqlServer())
             {

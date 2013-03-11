@@ -490,7 +490,11 @@ public class ETLRunnable implements Runnable
                             if (count++ > 100)
                             {
                                 //if we have the DB table, just do the delete directly.
-                                log.info("deleting " + count + " rows from table: " + targetTable);
+                                log.info("attempting to delete " + count + " rows from table: " + targetTableName + " based on deleted_records");
+                                //log.info(likeWithIds.getSQL());
+                                log.info(StringUtils.join(likeWithIds.getParams(), ", "));
+                                log.info(filterColumn.getFieldKey());
+
                                 SimpleFilter filter = new SimpleFilter();
                                 filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
                                 deleted += Table.delete(realTable, filter);
@@ -503,7 +507,11 @@ public class ETLRunnable implements Runnable
                         if (hadResultsOnStart && count > 0)
                         {
                             //if we have the DB table, just do the delete directly.
-                            log.info("deleting " + count + " rows from table: " + targetTable);
+                            log.info("attempting to delete " + count + " rows from table: " + targetTableName + " based on deleted_records");
+                            //log.info(likeWithIds.getSQL());
+                            log.info(StringUtils.join(likeWithIds.getParams(), ", "));
+                            log.info(filterColumn.getFieldKey());
+
                             SimpleFilter filter = new SimpleFilter();
                             filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
                             deleted += Table.delete(realTable, filter);
@@ -513,7 +521,10 @@ public class ETLRunnable implements Runnable
                             log.info("table had no previous rows, skipping pre-delete");
                         }
 
-                        log.info("total rows deleted: " + deleted);
+                        if (deleted > 0)
+                            log.info("total rows deleted: " + deleted);
+                        else
+                            log.info("no rows were deleted");
                     }
 
                     List<Map<String, Object>> sourceRows = new ArrayList<Map<String, Object>>();
@@ -583,7 +594,7 @@ public class ETLRunnable implements Runnable
 
                                 if (rows.length > 0)
                                 {
-                                    log.info("Preparing for insert by deleting " + rows.length + " rows for table: " + targetTable.getName());
+                                    log.info("Preparing for insert by pre-deleting " + rows.length + " rows for table: " + targetTable.getName());
                                     start = new Date().getTime();
                                     int totalDeleted;
                                     if (realTable != null)
@@ -600,9 +611,13 @@ public class ETLRunnable implements Runnable
                                             deleteCol = realTable.getColumn("participantId");
                                         }
                                         totalDeleted = Table.delete(realTable, new SimpleFilter(deleteCol.getFieldKey(), pks, CompareType.IN));
+
+                                        if (totalDeleted > 0 && pks.size() < 500)
+                                            log.info(StringUtils.join(pks, ","));
                                     }
                                     else
                                     {
+                                        log.error("Real table not found: " + targetTableName);
                                         List<Map<String, Object>> deleted = updater.deleteRows(user, container, Arrays.asList(rows), extraContext);
                                         totalDeleted = deleted.size();
                                     }
@@ -746,9 +761,9 @@ public class ETLRunnable implements Runnable
         try
         {
 
-            StringBuilder sql = new StringBuilder("SELECT objectid FROM dbo.deleted_records WHERE ts > ?");
+            StringBuilder sql = new StringBuilder("SELECT objectid FROM dbo.deleted_records WHERE ts2 > ?");
             String[] sources = LK_TO_IRIS.get(tableName);
-            if (sources.length > 0)
+            if (sources != null && sources.length > 0)
             {
                 sql.append(" AND tableName IN ('");
                 String delim = "";
@@ -1116,7 +1131,6 @@ public class ETLRunnable implements Runnable
             put("Drug Administration", new String[]{"Cln_Medications", "Cln_MedicationTimes", "Sur_AnesthesiaLogHeader", "sur_general"});
             put("Enrichment", new String[]{"Af_Toys"});
             put("Flags", new String[]{"Af_Pool"});
-            put("FosterParents", new String[]{"Birth_FosterMom"});
             put("Hematology Results", new String[]{"Cln_Hematology", "Cln_CerebralspinalFluid"});
             put("Housing", new String[]{"Af_Transfer", "Af_Qrf"});
             put("Matings", new String[]{"Brd_Matings"});
@@ -1127,6 +1141,7 @@ public class ETLRunnable implements Runnable
             put("Notes", new String[]{"Af_Remarks", "Af_Qrf"});
             put("Organ Weights", new String[]{"Path_AutopsyWtsMaterials", "Path_Autopsy", "Path_BiopsyWtsMaterials", "Path_biopsy"});
             put("pairings", new String[]{"Psych_Pairings"});
+            put("Parentage", new String[]{"Birth_FosterMom"});
             put("Parasitology Results", new String[]{"Cln_Parasitology"});
             put("PregnancyConfirmation", new String[]{"Brd_PregnancyConfirm"});
             put("Problem List", new String[]{"MasterProblemList", "Af_Qrf"});

@@ -20,7 +20,7 @@ SELECT
   t1.monthnum,
   t1.day,
 
-  group_concat(t1.value, ', ') as value,
+  group_concat(t1.value, chr(10)) as value,
 
 FROM (
 
@@ -44,7 +44,7 @@ SELECT
   t.id,
   t.date,
   'Delivery' as category,
-  'D' as value,
+  substring(t.deliveryType.value, 1, 1) as value,
 
   convert(year(t.date), integer) as year,
   monthname(t.date) AS monthname,
@@ -59,7 +59,7 @@ SELECT
   t.id,
   t.date,
   'Pregnancies' as category,
-  'P' as value,
+  'Pregnancy' as value,
 
   convert(year(t.date), integer) as year,
   monthname(t.date) AS monthname,

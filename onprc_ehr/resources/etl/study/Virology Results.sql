@@ -33,7 +33,7 @@ SELECT
     else null 
     END as Remark,
 
-	cln.ts as rowversion,
+	--cln.ts as rowversion,
 	cln.objectid,
 	h.objectid as runid
 
@@ -45,3 +45,38 @@ FROM Cln_VirologyData cln
 	 left join Cln_VirologyHeader h on (cln.ClinicalKey = h.ClinicalKey)
 	
 where cln.ts > ? or h.ts > ?
+
+UNION ALL
+
+SELECT
+	cast(sh.AnimalID as nvarchar(4000)) as Id,
+	sh.DATE,
+	Tissue as Tissue ,		----- Ref_SnomedLists
+	sno.Description as tissueMeaning,
+	agent,
+	sno2.description as agentMeaning,
+	s2.Value as method,
+
+	--at least let this field show whether it's positive or not
+	CASE
+		WHEN Negative = 0 THEN 'Positive'
+		WHEN Negative = 1 THEN 'Negative'
+		else null
+	END as result,
+
+    CASE
+      WHEN positive IS NOT NULL AND len(rtrim(positive)) > 0 THEN positive + char(10) + remarks
+      else Remarks
+    END as remark,
+
+    --cln.ts as rowversion,
+    cln.objectid,
+    sh.objectid as runId
+
+FROM Cln_SerologyData cln
+left join Cln_SerologyHeader sh on (cln.ClinicalKey = sh.ClinicalKey)
+left join Sys_parameters s2 on (s2.Field = 'SerologyMethod' and s2.Flag = cln.Method)
+left join ref_snomed sno ON (sno.SnomedCode = cln.Tissue)
+left join ref_snomed sno2 ON (sno2.SnomedCode = cln.Agent)
+
+WHERE cln.ts > ? or sh.ts > ?

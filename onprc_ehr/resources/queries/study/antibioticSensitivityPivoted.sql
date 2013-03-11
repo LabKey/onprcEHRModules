@@ -19,9 +19,14 @@ a.id,
 a.date,
 a.runId,
 a.tissue,
-a.microbe.meaning as microbode,
+a.microbe.meaning as microbe,
 a.antibiotic.meaning as antibiotic,
-group_concat(a.resistant) as resistant
+CASE
+  WHEN group_concat(a.resistant) = '1' THEN 'Resistant'
+  WHEN group_concat(a.resistant) = '0' THEN 'Not Resistant'
+  WHEN group_concat(a.resistant) IS NULL THEN NULL
+  ELSE 'Discordant Results'
+END as resistant
 
 from study."Antibiotic Sensitivity" a
 

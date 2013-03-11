@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 SELECT
-  a.id,
+  d.id,
   group_concat(DISTINCT a.project.name, chr(10)) as projects,
   group_concat(DISTINCT a.project.investigatorId.lastName, chr(10)) as investigators,
-  count(distinct a.project.name) as totalProjects,
-  count(*) as numActiveAssignments
+  COALESCE(count(distinct a.project.name), 0) as totalProjects,
+  COALESCE(count(a.lsid), 0) as numActiveAssignments
 
-FROM study.assignment a
-WHERE a.enddateCoalesced >= curdate()
-GROUP BY a.id
+FROM study.demographics d
+LEFT JOIN study.assignment a ON (a.id = d.id)
+WHERE (a.enddateCoalesced >= curdate() or a.lsid IS NULL) and d.calculated_status = 'Alive'
+GROUP BY d.id

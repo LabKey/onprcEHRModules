@@ -94,3 +94,18 @@ left join Af_Birth b ON (b.AnimalID = afq.AnimalID)
 
 
 WHERE afq.ts > ? or b.ts > ?
+
+
+
+-- select animalid, COUNT(*), MAX(Description), MIN(Description)
+--
+-- FROM (
+--
+-- select p.AnimalID, rp.Description
+-- From Af_Pool p
+-- left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
+-- where rp.ShortDescription = 'Origin' and DateReleased is null
+--
+-- ) p
+-- group by AnimalID
+-- having COUNT(*) > 1 AND MAX(Description) != MIN(Description)

@@ -1,9 +1,16 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="reproSummary" tableDbType="TABLE" useColumnOrder="true">
+            <table tableName="reproSummary" tableDbType="TABLE">
                 <tableTitle>Reproductive Summary</tableTitle>
                 <columns>
+                    <column columnName="Id">
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>Id</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="year">
                         <columnTitle>Year</columnTitle>
                     </column>

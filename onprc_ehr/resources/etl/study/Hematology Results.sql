@@ -49,6 +49,7 @@ SELECT
 	cln.objectid
 
 FROM Cln_Hematology cln
+WHERE ManualDiff != 0
 
 union all
 

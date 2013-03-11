@@ -1,0 +1,45 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="cageReview" tableDbType="NOT_IN_DB">
+                <tableTitle>Cage Review</tableTitle>
+                <columns>
+                    <column columnName="room">
+
+                    </column>
+                    <column columnName="cage">
+
+                    </column>
+                    <column columnName="numCages">
+                        <columnTitle># Joined Cages</columnTitle>
+                    </column>
+                    <column columnName="cages">
+                        <columnTitle>Cages</columnTitle>
+                    </column>
+                    <column columnName="totalWeight">
+                        <columnTitle>Total Weight of Animals</columnTitle>
+                        <formatString>0.##</formatString>
+                    </column>
+                    <column columnName="maxAllowable">
+                        <columnTitle>Max Allowable Weight</columnTitle>
+                    </column>
+                    <column columnName="totalAnimals">
+                        <columnTitle>Total Animals</columnTitle>
+                    </column>
+                    <column columnName="cageStatus">
+                        <columnTitle>Cage Status</columnTitle>
+                        <displayWidth>50</displayWidth>
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="eq" value="ERROR"/>
+                                </filters>
+                                <backgroundColor>FBEC5D</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

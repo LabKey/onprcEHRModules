@@ -1,21 +1,28 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="fosterParents" tableDbType="TABLE">
-                <tableUrl>/query/detailsQueryRow.view?schemaName=study&amp;query.queryName=Foster%20Parents&amp;lsid=${lsid}</tableUrl>
+            <table tableName="parentage" tableDbType="TABLE">
+                <tableUrl>/query/detailsQueryRow.view?schemaName=study&amp;query.queryName=parentage&amp;lsid=${lsid}</tableUrl>
                 <insertUrl />
                 <importUrl />
                 <updateUrl />
                 <deleteUrl />
                 <columns>
-                    <column columnName="dam">
-                        <columnTitle>Dam</columnTitle>
+                    <column columnName="parent">
+                        <columnTitle>Parent</columnTitle>
                         <fk>
                             <fkDbSchema>study</fkDbSchema>
                             <fkTable>animal</fkTable>
                             <fkColumnName>id</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="relationship">
+                        <columnTitle>Relationship</columnTitle>
+                    </column>
+                    <column columnName="method">
+                        <columnTitle>Method</columnTitle>
+                    </column>
+
                 </columns>
             </table>
         </tables>

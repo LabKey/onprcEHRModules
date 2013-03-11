@@ -6,6 +6,7 @@ Ext.onReady(function(){
     var pendingDeletes = 0;
 
     function deleteAll(schemaName, queryName, pk){
+        pendingDeletes++;
         LABKEY.Query.selectRows({
             schemaName: schemaName,
             queryName: queryName,
@@ -47,6 +48,194 @@ Ext.onReady(function(){
             },
             failure: EHR.Utils.onError
         });
+    }
+
+    function populateParasitologyMethods(){
+        pendingInserts++;
+        //records for task forms:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'parasitology_method',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('value').split(',');
+        var data = [
+            ['Elisa'],
+            ['Floatation'],
+            ['IFA'],
+            ['Other'],
+            ['Wet Mount']
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
+    function populateHematologyMethods(){
+        pendingInserts++;
+        //records for task forms:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'hematology_method',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('value').split(',');
+
+        var data = [
+            ['Cell Counter'],
+            ['Invest. Cell Counter'],
+            ['Other'],
+            ['Referred']
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
+    function populateUrinalysisMethods(){
+        pendingInserts++;
+        //records for task forms:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'urinalysis_method',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('value').split(',');
+
+        var data = [
+            ['DAR (in house)']
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
+    function populateChemistryMethods(){
+        pendingInserts++;
+        //records for task forms:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'chemistry_method',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('value').split(',');
+
+
+        var data = [
+            ['ISE'],
+            ['ORPRC Analysis'],
+            ['Photometer'],
+            ['Other']
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
+    function populateAgeClass(){
+        pendingInserts++;
+        //records for task forms:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'ageclass',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('label,ageclass,species,min,max').split(',');
+
+        var data = [
+            ['Infant',1,'ANUBIS BABOON',0,1],
+            ['Juvenile',2,'ANUBIS BABOON',1,9],
+            ['Adult',3,'ANUBIS BABOON',9,18],
+            ['Senior',4,'ANUBIS BABOON',18,],
+            ['Infant',1,'CYNOMOLGUS MACAQUE',0,1],
+            ['Juvenile',2,'CYNOMOLGUS MACAQUE',1,9],
+            ['Adult',3,'CYNOMOLGUS MACAQUE',9,18],
+            ['Senior',4,'CYNOMOLGUS MACAQUE',18,],
+            ['Infant',1,'HAMADRYAS BABOON',0,1],
+            ['Juvenile',2,'HAMADRYAS BABOON',1,9],
+            ['Adult',3,'HAMADRYAS BABOON',9,18],
+            ['Senior',4,'HAMADRYAS BABOON',18,],
+            ['Infant',1,'JAPANESE MACAQUE',0,1],
+            ['Juvenile',2,'JAPANESE MACAQUE',1,9],
+            ['Adult',3,'JAPANESE MACAQUE',9,18],
+            ['Senior',4,'JAPANESE MACAQUE',18,],
+            ['Infant',1,'RHESUS MACAQUE',0,1],
+            ['Juvenile',2,'RHESUS MACAQUE',1,9],
+            ['Adult',3,'RHESUS MACAQUE',9,18],
+            ['Senior',4,'RHESUS MACAQUE',18,]
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
+    function populateDrugCategories(){
+        pendingInserts++;
+        //records for task forms:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'drug_categories',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('value').split(',');
+
+        var data = [
+            ['Anesthesia'],
+            ['Clinical'],
+            ['Surgery']
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
+    function populateClinpathSampletype(){
+        pendingInserts++;
+        //records for task forms:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'clinpath_sampletype',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('value').split(',');
+
+
+        var data = [
+            ['Blood Leukocytes'],
+            ['Cecum'],
+            ['Cerebrospinal Fluid'],
+            ['Colon'],
+            ['Firm Stool'],
+            ['Hair'],
+            ['Hemolyzed Plasma'],
+            ['Hemolyzed Serum'],
+            ['JEJUNUM'],
+            ['Loose Stool'],
+            ['Mounding Stool'],
+            ['Nasal Swab'],
+            ['Peritoneal Swab'],
+            ['Plasma'],
+            ['Pleural Fluid'],
+            ['Serum'],
+            ['Skin'],
+            ['Small Intestine'],
+            ['Stomach'],
+            ['Stool'],
+            ['Tarry Stool'],
+            ['Throat Swab'],
+            ['Urine'],
+            ['Whole Blood']
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
     }
 
     function populateFormtypes(){
@@ -259,7 +448,7 @@ Ext.onReady(function(){
 
             ['miscTests' ,'Lab Results' ,'query' ,'Misc Tests' ,'true' ,'' ,'study' ,'Misc Tests', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the misc lab results not represented in the other reports'],
             ['antibioticSensitivity' ,'Lab Results' ,'query' ,'Antibiotic Sensitivity' ,'true' ,'' ,'study' ,'antibioticSensitivityPivoted', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of tests of antibiotic resistance'],
-            ['serology' ,'Lab Results' ,'query' ,'Serology' ,'true' ,'' ,'study' ,'Serology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of serology tests'],
+            //['serology' ,'Lab Results' ,'query' ,'Serology' ,'true' ,'' ,'study' ,'Serology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of serology tests'],
             ['virology' ,'Lab Results' ,'query' ,'Virology' ,'true' ,'' ,'study' ,'Virology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of serology and isolation virology tests for pathogens such as HBV'],
             ['encounters' ,'Clinical' ,'query' ,'Clinical Encounters' ,'true' ,'' ,'study' ,'Clinical Encounters', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.'],
             ['surgery' ,'Clinical' ,'query' ,'Surgeries' ,'true' ,'' ,'study' ,'Clinical Encounters', 'Surgeries', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surgeries, exams, procedures, etc.'],
@@ -298,7 +487,7 @@ Ext.onReady(function(){
             ['demographics' ,'General' ,'query' ,'Demographics' ,'true' ,'' ,'study' ,'demographics', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report displays the demographics data about each animal including species, gender and birth'],
             //['extendedAbstract' ,'General' ,'query' ,'Extended Abstract' ,'false' ,'' ,'study' ,'animal', 'Extended Abstract', '', '', 'false', 'false', '', 'qcstate/publicdata', ''],
             //['majorEvents' ,'General' ,'query' ,'Major Events' ,'true' ,'' ,'study' ,'majorEvents', '', '', 'date', 'false', 'false', '', '', 'This report attempts to identify major events in the history of the animal, including births and major surgeries'],
-            ['notes' ,'General' ,'query' ,'Notes' ,'true' ,'' ,'study' ,'notes', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains non-clinical notes entered into the animal\'s record'],
+            ['notes' ,'General' ,'query' ,'Notes' ,'true' ,'' ,'study' ,'notes', 'Active Notes', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains non-clinical notes entered into the animal\'s record'],
             ['pathology' ,'Pathology' ,'query' ,'Biopsies' ,'true' ,'' ,'study' ,'Clinical Encounters', 'Biopsies', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains information about biopsies'],
             ['histology' ,'Pathology' ,'query' ,'Histology' ,'true' ,'' ,'study' ,'Histology', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Histology records and associated diagnoses'],
             //['morphologicDiagnosis' ,'Pathology' ,'query' ,'Morphologic Diagnosis' ,'true' ,'' ,'study' ,'MorphologicDiagnosisGrouped', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains morphologic diagnoses from necropsies and biopsies'],
@@ -319,10 +508,13 @@ Ext.onReady(function(){
             //['treatmentScheduleNight' ,'Today At Center' ,'query' ,'Treatments - Evening' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Night Treatments', '', 'date', 'true', 'false', '6', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
             //['treatmentSchedule' ,'Today At Center' ,'query' ,'Treatments - Master' ,'true' ,'' ,'study' ,'treatmentSchedule', '', '', 'date', 'true', 'false', '7', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
             ['cases' ,'Today At Center' ,'query' ,'Active Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active clinical cases'],
+            ['hospitalAnimals' ,'Today At Center' ,'query' ,'Hospital Animals' ,'true' ,'' ,'study' ,'hospitalAnimals', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays animals currently housed in the hospital'],
+            ['surgicalCases' ,'Today At Center' ,'query' ,'Active Surgery Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Surgery Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active surgery clinical cases'],
+            ['diet' ,'Colony Management' ,'query' ,'Diet' ,'true' ,'' ,'study' ,'Diet', 'Active Diets', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active diets'],
             ['problemList' ,'Today At Center' ,'query' ,'Unresolved Problem List' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list'],
             ['matings' ,'Reproductive Management' ,'query' ,'Matings' ,'true' ,'' ,'study' ,'Matings', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list'],
 
-            ['reproSummary' ,'Reproductive Management' ,'js' ,'Reproductive Summary' ,'true' ,'' ,'study' ,'underConstruction', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
+            ['reproSummary' ,'Reproductive Management' ,'js' ,'Reproductive Summary' ,'true' ,'' ,'study' ,'reproSummary', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
             ['menses' ,'Reproductive Management' ,'query' ,'Menses' ,'true' ,'' ,'study' ,'Clinical Observations', 'Menses', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
             ['delivery' ,'Reproductive Management' ,'query' ,'Deliveries' ,'true' ,'' ,'study' ,'Delivery', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
             ['pregnancy' ,'Reproductive Management' ,'query' ,'Pregnancies' ,'true' ,'' ,'study' ,'Pregnancy Confirmations', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', '']
@@ -374,7 +566,9 @@ Ext.onReady(function(){
         ['PairingType', 'Pairing Types', 'rowid', 'value'],
         ['PairingOutcome', 'Pairing Outcomes', 'rowid', 'value'],
         ['PairingSeparationReason', 'Pairing Separation Reasons', 'rowid', 'value'],
-        ['TransferReason', 'Transfer Reasons', 'rowid', 'value']
+        ['TransferReason', 'Transfer Reasons', 'rowid', 'value'],
+        ['perDiemFeeType', 'Per Diem Fee Types', 'rowid', 'value'],
+        ['parentageMethods', 'Parentage Determination Methods', 'rowid', 'value']
     ];
 
     function populateLookupSets(){
@@ -394,6 +588,7 @@ Ext.onReady(function(){
     }
 
     function deleteLookupSets(){
+        pendingDeletes++;
         var rows = [];
         Ext.each(lookupSetData, function(item){
             var obj = {};
@@ -523,6 +718,257 @@ Ext.onReady(function(){
         LABKEY.Query.insertRows(makeObject(config, data, fields));
     }
 
+    function populateRefRange(){
+        pendingInserts++;
+
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'lab_test_range',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('test,gender,species,ref_range_min,ref_range_max,type').split(',');
+        var data = [
+            ["ALB", "f", "CYNOMOLGUS MACAQUE", 3.5, 4.8, "Chemistry"],
+            ["ALKP", "f", "CYNOMOLGUS MACAQUE", 82, 390, "Chemistry"],
+            ["ALT", "f", "CYNOMOLGUS MACAQUE", 20, 150, "Chemistry"],
+            ["Amyl", "f", "CYNOMOLGUS MACAQUE", 208, 790, "Chemistry"],
+            ["AST", "f", "CYNOMOLGUS MACAQUE", 20, 72, "Chemistry"],
+            ["TB", "f", "CYNOMOLGUS MACAQUE", 0.1, 0.4, "Chemistry"],
+            ["BUN", "f", "CYNOMOLGUS MACAQUE", 10, 21, "Chemistry"],
+            ["CL", "f", "CYNOMOLGUS MACAQUE", 102, 111, "Chemistry"],
+            ["CHOL", "f", "CYNOMOLGUS MACAQUE", 72, 177, "Chemistry"],
+            ["CREAT", "f", "CYNOMOLGUS MACAQUE", 0.6, 1.3, "Chemistry"],
+            ["GGT", "f", "CYNOMOLGUS MACAQUE", 28, 143, "Chemistry"],
+            ["GLUC", "f", "CYNOMOLGUS MACAQUE", 60, 121, "Chemistry"],
+            ["HDL", "f", "CYNOMOLGUS MACAQUE", 34, 89, "Chemistry"],
+            ["LDL", "f", "CYNOMOLGUS MACAQUE", 19, 96, "Chemistry"],
+            ["Mg", "f", "CYNOMOLGUS MACAQUE", 1.4, 1.9, "Chemistry"],
+            ["PHOS", "f", "CYNOMOLGUS MACAQUE", 1.8, 5.9, "Chemistry"],
+            ["K", "f", "CYNOMOLGUS MACAQUE", 3.1, 4.4, "Chemistry"],
+            ["Na", "f", "CYNOMOLGUS MACAQUE", 143, 151, "Chemistry"],
+            ["TP", "f", "CYNOMOLGUS MACAQUE", 6.2, 7.9, "Chemistry"],
+            ["TRIG", "f", "CYNOMOLGUS MACAQUE", 20, 113, "Chemistry"],
+            ["ALB", "m", "CYNOMOLGUS MACAQUE", 3.5, 4.8, "Chemistry"],
+            ["ALKP", "m", "CYNOMOLGUS MACAQUE", 82, 390, "Chemistry"],
+            ["ALT", "m", "CYNOMOLGUS MACAQUE", 20, 150, "Chemistry"],
+            ["Amyl", "m", "CYNOMOLGUS MACAQUE", 208, 790, "Chemistry"],
+            ["AST", "m", "CYNOMOLGUS MACAQUE", 20, 72, "Chemistry"],
+            ["TB", "m", "CYNOMOLGUS MACAQUE", 0.1, 0.4, "Chemistry"],
+            ["BUN", "m", "CYNOMOLGUS MACAQUE", 10, 21, "Chemistry"],
+            ["CL", "m", "CYNOMOLGUS MACAQUE", 102, 111, "Chemistry"],
+            ["CHOL", "m", "CYNOMOLGUS MACAQUE", 72, 177, "Chemistry"],
+            ["CREAT", "m", "CYNOMOLGUS MACAQUE", 0.6, 1.3, "Chemistry"],
+            ["GGT", "m", "CYNOMOLGUS MACAQUE", 28, 143, "Chemistry"],
+            ["GLUC", "m", "CYNOMOLGUS MACAQUE", 60, 121, "Chemistry"],
+            ["HDL", "m", "CYNOMOLGUS MACAQUE", 34, 89, "Chemistry"],
+            ["LDL", "m", "CYNOMOLGUS MACAQUE", 19, 96, "Chemistry"],
+            ["Mg", "m", "CYNOMOLGUS MACAQUE", 1.4, 1.9, "Chemistry"],
+            ["PHOS", "m", "CYNOMOLGUS MACAQUE", 1.8, 5.9, "Chemistry"],
+            ["K", "m", "CYNOMOLGUS MACAQUE", 3.1, 4.4, "Chemistry"],
+            ["Na", "m", "CYNOMOLGUS MACAQUE", 143, 151, "Chemistry"],
+            ["TP", "m", "CYNOMOLGUS MACAQUE", 6.2, 7.9, "Chemistry"],
+            ["TRIG", "m", "CYNOMOLGUS MACAQUE", 20, 113, "Chemistry"],
+            ["ALB", "f", "JAPANESE MACAQUE", 3.2, 4.5, "Chemistry"],
+            ["ALKP", "f", "JAPANESE MACAQUE", 122, 344, "Chemistry"],
+            ["ALT", "f", "JAPANESE MACAQUE", 27, 80, "Chemistry"],
+            ["Amyl", "f", "JAPANESE MACAQUE", 161, 478, "Chemistry"],
+            ["AST", "f", "JAPANESE MACAQUE", 15, 47, "Chemistry"],
+            ["TB", "f", "JAPANESE MACAQUE", 0.1, 0.3, "Chemistry"],
+            ["BUN", "f", "JAPANESE MACAQUE", 9, 22, "Chemistry"],
+            ["CL", "f", "JAPANESE MACAQUE", 103, 113, "Chemistry"],
+            ["CHOL", "f", "JAPANESE MACAQUE", 91, 171, "Chemistry"],
+            ["CREAT", "f", "JAPANESE MACAQUE", 0.6, 1, "Chemistry"],
+            ["GGT", "f", "JAPANESE MACAQUE", 38, 100, "Chemistry"],
+            ["GLUC", "f", "JAPANESE MACAQUE", 58, 91, "Chemistry"],
+            ["HDL", "f", "JAPANESE MACAQUE", 40, 94, "Chemistry"],
+            ["LDL", "f", "JAPANESE MACAQUE", 32, 85, "Chemistry"],
+            ["Mg", "f", "JAPANESE MACAQUE", 1.3, 2, "Chemistry"],
+            ["PHOS", "f", "JAPANESE MACAQUE", 3.5, 7.7, "Chemistry"],
+            ["K", "f", "JAPANESE MACAQUE", 3.3, 5.6, "Chemistry"],
+            ["Na", "f", "JAPANESE MACAQUE", 145, 152, "Chemistry"],
+            ["TP", "f", "JAPANESE MACAQUE", 6.3, 8, "Chemistry"],
+            ["TRIG", "f", "JAPANESE MACAQUE", 18.1, 72.3, "Chemistry"],
+            ["ALB", "m", "JAPANESE MACAQUE", 3.2, 4.5, "Chemistry"],
+            ["ALKP", "m", "JAPANESE MACAQUE", 86, 295, "Chemistry"],
+            ["ALT", "m", "JAPANESE MACAQUE", 30, 77, "Chemistry"],
+            ["Amyl", "m", "JAPANESE MACAQUE", 161, 478, "Chemistry"],
+            ["AST", "m", "JAPANESE MACAQUE", 18, 78, "Chemistry"],
+            ["TB", "m", "JAPANESE MACAQUE", 0.04, 0.3, "Chemistry"],
+            ["BUN", "m", "JAPANESE MACAQUE", 9, 22, "Chemistry"],
+            ["CL", "m", "JAPANESE MACAQUE", 103, 113, "Chemistry"],
+            ["CHOL", "m", "JAPANESE MACAQUE", 68, 127, "Chemistry"],
+            ["CREAT", "m", "JAPANESE MACAQUE", 0.9, 1.4, "Chemistry"],
+            ["GGT", "m", "JAPANESE MACAQUE", 46, 105, "Chemistry"],
+            ["GLUC", "m", "JAPANESE MACAQUE", 58, 91, "Chemistry"],
+            ["HDL", "m", "JAPANESE MACAQUE", 31, 64, "Chemistry"],
+            ["LDL", "m", "JAPANESE MACAQUE", 20, 56, "Chemistry"],
+            ["Mg", "m", "JAPANESE MACAQUE", 1.3, 2, "Chemistry"],
+            ["PHOS", "m", "JAPANESE MACAQUE", 3.5, 7.7, "Chemistry"],
+            ["K", "m", "JAPANESE MACAQUE", 3.6, 5.3, "Chemistry"],
+            ["Na", "m", "JAPANESE MACAQUE", 145, 152, "Chemistry"],
+            ["TP", "m", "JAPANESE MACAQUE", 6.3, 8, "Chemistry"],
+            ["TRIG", "m", "JAPANESE MACAQUE", 18.1, 59.8, "Chemistry"],
+            ["ALB", "f", "RHESUS MACAQUE", 3.3, 4.7, "Chemistry"],
+            ["ALKP", "f", "RHESUS MACAQUE", 114, 482, "Chemistry"],
+            ["ALT", "f", "RHESUS MACAQUE", 6, 27, "Chemistry"],
+            ["Amyl", "f", "RHESUS MACAQUE", 206, 844, "Chemistry"],
+            ["AST", "f", "RHESUS MACAQUE", 18, 58, "Chemistry"],
+            ["TB", "f", "RHESUS MACAQUE", 0, 0.4, "Chemistry"],
+            ["BUN", "f", "RHESUS MACAQUE", 10, 27, "Chemistry"],
+            ["CL", "f", "RHESUS MACAQUE", 102, 115, "Chemistry"],
+            ["CHOL", "f", "RHESUS MACAQUE", 82, 231, "Chemistry"],
+            ["CREAT", "f", "RHESUS MACAQUE", 0.6, 1, "Chemistry"],
+            ["GGT", "f", "RHESUS MACAQUE", 35, 72, "Chemistry"],
+            ["GLUC", "f", "RHESUS MACAQUE", 45, 93, "Chemistry"],
+            ["HDL", "f", "RHESUS MACAQUE", 42, 116, "Chemistry"],
+            ["LDL", "f", "RHESUS MACAQUE", 30, 115, "Chemistry"],
+            ["Mg", "f", "RHESUS MACAQUE", 1.6, 2.5, "Chemistry"],
+            ["PHOS", "f", "RHESUS MACAQUE", 4.1, 7.8, "Chemistry"],
+            ["K", "f", "RHESUS MACAQUE", 2.9, 4.6, "Chemistry"],
+            ["Na", "f", "RHESUS MACAQUE", 136, 153, "Chemistry"],
+            ["TP", "f", "RHESUS MACAQUE", 6, 7.9, "Chemistry"],
+            ["TRIG", "f", "RHESUS MACAQUE", 19, 76, "Chemistry"],
+            ["ALB", "m", "RHESUS MACAQUE", 3.3, 4.7, "Chemistry"],
+            ["ALKP", "m", "RHESUS MACAQUE", 114, 482, "Chemistry"],
+            ["ALT", "m", "RHESUS MACAQUE", 6, 27, "Chemistry"],
+            ["Amyl", "m", "RHESUS MACAQUE", 206, 844, "Chemistry"],
+            ["AST", "m", "RHESUS MACAQUE", 18, 58, "Chemistry"],
+            ["TB", "m", "RHESUS MACAQUE", 0, 0.4, "Chemistry"],
+            ["BUN", "m", "RHESUS MACAQUE", 10, 27, "Chemistry"],
+            ["CL", "m", "RHESUS MACAQUE", 102, 115, "Chemistry"],
+            ["CHOL", "m", "RHESUS MACAQUE", 82, 231, "Chemistry"],
+            ["CREAT", "m", "RHESUS MACAQUE", 0.6, 1, "Chemistry"],
+            ["GGT", "m", "RHESUS MACAQUE", 35, 72, "Chemistry"],
+            ["GLUC", "m", "RHESUS MACAQUE", 45, 93, "Chemistry"],
+            ["HDL", "m", "RHESUS MACAQUE", 42, 116, "Chemistry"],
+            ["LDL", "m", "RHESUS MACAQUE", 30, 115, "Chemistry"],
+            ["Mg", "m", "RHESUS MACAQUE", 1.6, 2.5, "Chemistry"],
+            ["PHOS", "m", "RHESUS MACAQUE", 4.1, 7.8, "Chemistry"],
+            ["K", "m", "RHESUS MACAQUE", 2.9, 4.6, "Chemistry"],
+            ["Na", "m", "RHESUS MACAQUE", 136, 153, "Chemistry"],
+            ["TP", "m", "RHESUS MACAQUE", 6, 7.9, "Chemistry"],
+            ["TRIG", "m", "RHESUS MACAQUE", 19, 76, "Chemistry"],
+            ["WBC", "f", "JAPANESE MACAQUE", 4.8, 12.9, "Hematology"],
+            ["RBC", "f", "JAPANESE MACAQUE", 3.44, 5.42, "Hematology"],
+            ["HGB", "f", "JAPANESE MACAQUE", 9.5, 14, "Hematology"],
+            ["HCT", "f", "JAPANESE MACAQUE", 29, 42.2, "Hematology"],
+            ["MCV", "f", "JAPANESE MACAQUE", 74, 84, "Hematology"],
+            ["MCH", "f", "JAPANESE MACAQUE", 24.6, 27.9, "Hematology"],
+            ["MCHC", "f", "JAPANESE MACAQUE", 32.7, 34.2, "Hematology"],
+            ["RDW", "f", "JAPANESE MACAQUE", 9.5, 11.8, "Hematology"],
+            ["PLT", "f", "JAPANESE MACAQUE", 133, 403, "Hematology"],
+            ["Neut-PCT", "f", "JAPANESE MACAQUE", 41.8, 74.6, "Hematology"],
+            ["LY-PCT", "f", "JAPANESE MACAQUE", 16.1, 45.4, "Hematology"],
+            ["Mono-PCT", "f", "JAPANESE MACAQUE", 3.2, 10.2, "Hematology"],
+            ["EO-PCT", "f", "JAPANESE MACAQUE", 1.5, 7, "Hematology"],
+            ["BAS-PCT", "f", "JAPANESE MACAQUE", 0.1, 1.5, "Hematology"],
+            ["Neut", "f", "JAPANESE MACAQUE", 2.44, 8.39, "Hematology"],
+            ["LY", "f", "JAPANESE MACAQUE", 1.15, 3.84, "Hematology"],
+            ["Mono", "f", "JAPANESE MACAQUE", 0.21, 1.02, "Hematology"],
+            ["EO", "f", "JAPANESE MACAQUE", 0.1, 0.48, "Hematology"],
+            ["BAS", "f", "JAPANESE MACAQUE", 0.01, 0.14, "Hematology"],
+            ["WBC", "m", "JAPANESE MACAQUE", 4.8, 12.9, "Hematology"],
+            ["RBC", "m", "JAPANESE MACAQUE", 3.9, 5.83, "Hematology"],
+            ["HGB", "m", "JAPANESE MACAQUE", 10.7, 15.3, "Hematology"],
+            ["HCT", "m", "JAPANESE MACAQUE", 32.5, 45.3, "Hematology"],
+            ["MCV", "m", "JAPANESE MACAQUE", 74, 84, "Hematology"],
+            ["MCH", "m", "JAPANESE MACAQUE", 24.6, 27.9, "Hematology"],
+            ["MCHC", "m", "JAPANESE MACAQUE", 32.7, 34.2, "Hematology"],
+            ["RDW", "m", "JAPANESE MACAQUE", 9.5, 11.8, "Hematology"],
+            ["PLT", "m", "JAPANESE MACAQUE", 133, 403, "Hematology"],
+            ["Neut-PCT", "m", "JAPANESE MACAQUE", 41.8, 74.6, "Hematology"],
+            ["LY-PCT", "m", "JAPANESE MACAQUE", 16.1, 45.4, "Hematology"],
+            ["Mono-PCT", "m", "JAPANESE MACAQUE", 3.2, 10.2, "Hematology"],
+            ["EO-PCT", "m", "JAPANESE MACAQUE", 1.5, 7, "Hematology"],
+            ["BAS-PCT", "m", "JAPANESE MACAQUE", 0.2, 0.7, "Hematology"],
+            ["Neut", "m", "JAPANESE MACAQUE", 2.44, 8.39, "Hematology"],
+            ["LY", "m", "JAPANESE MACAQUE", 1.15, 3.84, "Hematology"],
+            ["Mono", "m", "JAPANESE MACAQUE", 0.21, 1.02, "Hematology"],
+            ["EO", "m", "JAPANESE MACAQUE", 0.1, 0.48, "Hematology"],
+            ["BAS", "m", "JAPANESE MACAQUE", 0.01, 0.14, "Hematology"],
+            ["WBC", "f", "CYNOMOLGUS MACAQUE", 5.6, 18.4, "Hematology"],
+            ["RBC", "f", "CYNOMOLGUS MACAQUE", 4.25, 6.86, "Hematology"],
+            ["HGB", "f", "CYNOMOLGUS MACAQUE", 9.6, 13.5, "Hematology"],
+            ["HCT", "f", "CYNOMOLGUS MACAQUE", 30.3, 41.1, "Hematology"],
+            ["MCV", "f", "CYNOMOLGUS MACAQUE", 54.7, 80, "Hematology"],
+            ["MCH", "f", "CYNOMOLGUS MACAQUE", 16.5, 26.2, "Hematology"],
+            ["MCHC", "f", "CYNOMOLGUS MACAQUE", 29.4, 33.5, "Hematology"],
+            ["RDW", "f", "CYNOMOLGUS MACAQUE", 10.6, 14.5, "Hematology"],
+            ["PLT", "f", "CYNOMOLGUS MACAQUE", 134, 564, "Hematology"],
+            ["Neut-PCT", "f", "CYNOMOLGUS MACAQUE", 27, 76.7, "Hematology"],
+            ["LY-PCT", "f", "CYNOMOLGUS MACAQUE", 17.1, 66.3, "Hematology"],
+            ["Mono-PCT", "f", "CYNOMOLGUS MACAQUE", 2.4, 6.5, "Hematology"],
+            ["EO-PCT", "f", "CYNOMOLGUS MACAQUE", 0.5, 4.7, "Hematology"],
+            ["BAS-PCT", "f", "CYNOMOLGUS MACAQUE", 0.3, 0.9, "Hematology"],
+            ["Neut", "f", "CYNOMOLGUS MACAQUE", 1.98, 12.37, "Hematology"],
+            ["LY", "f", "CYNOMOLGUS MACAQUE", 1.74, 7.42, "Hematology"],
+            ["Mono", "f", "CYNOMOLGUS MACAQUE", 0.16, 0.83, "Hematology"],
+            ["EO", "f", "CYNOMOLGUS MACAQUE", 0.04, 0.53, "Hematology"],
+            ["BAS", "f", "CYNOMOLGUS MACAQUE", 0.02, 0.15, "Hematology"],
+            ["WBC", "m", "CYNOMOLGUS MACAQUE", 5.6, 18.4, "Hematology"],
+            ["RBC", "m", "CYNOMOLGUS MACAQUE", 4.25, 6.86, "Hematology"],
+            ["HGB", "m", "CYNOMOLGUS MACAQUE", 9.6, 13.5, "Hematology"],
+            ["HCT", "m", "CYNOMOLGUS MACAQUE", 30.3, 41.1, "Hematology"],
+            ["MCV", "m", "CYNOMOLGUS MACAQUE", 54.7, 80, "Hematology"],
+            ["MCH", "m", "CYNOMOLGUS MACAQUE", 16.5, 26.2, "Hematology"],
+            ["MCHC", "m", "CYNOMOLGUS MACAQUE", 29.4, 33.5, "Hematology"],
+            ["RDW", "m", "CYNOMOLGUS MACAQUE", 10.6, 14.5, "Hematology"],
+            ["PLT", "m", "CYNOMOLGUS MACAQUE", 134, 564, "Hematology"],
+            ["Neut-PCT", "m", "CYNOMOLGUS MACAQUE", 27, 76.7, "Hematology"],
+            ["LY-PCT", "m", "CYNOMOLGUS MACAQUE", 17.1, 66.3, "Hematology"],
+            ["Mono-PCT", "m", "CYNOMOLGUS MACAQUE", 2.4, 6.5, "Hematology"],
+            ["EO-PCT", "m", "CYNOMOLGUS MACAQUE", 0.5, 4.7, "Hematology"],
+            ["BAS-PCT", "m", "CYNOMOLGUS MACAQUE", 0.3, 0.9, "Hematology"],
+            ["Neut", "m", "CYNOMOLGUS MACAQUE", 1.98, 12.37, "Hematology"],
+            ["LY", "m", "CYNOMOLGUS MACAQUE", 1.74, 7.42, "Hematology"],
+            ["Mono", "m", "CYNOMOLGUS MACAQUE", 0.16, 0.83, "Hematology"],
+            ["EO", "m", "CYNOMOLGUS MACAQUE", 0.04, 0.53, "Hematology"],
+            ["BAS", "m", "CYNOMOLGUS MACAQUE", 0.02, 0.15, "Hematology"],
+            ["WBC", "f", "RHESUS MACAQUE", 4.2, 13.6, "Hematology"],
+            ["RBC", "f", "RHESUS MACAQUE", 4.5, 5.84, "Hematology"],
+            ["HGB", "f", "RHESUS MACAQUE", 10.7, 13.8, "Hematology"],
+            ["HCT", "f", "RHESUS MACAQUE", 32.9, 41.8, "Hematology"],
+            ["MCV", "f", "RHESUS MACAQUE", 65.6, 76.4, "Hematology"],
+            ["MCH", "f", "RHESUS MACAQUE", 21.2, 25.2, "Hematology"],
+            ["MCHC", "f", "RHESUS MACAQUE", 31.7, 33.7, "Hematology"],
+            ["RDW", "f", "RHESUS MACAQUE", 10.2, 13.3, "Hematology"],
+            ["PLT", "f", "RHESUS MACAQUE", 119, 471, "Hematology"],
+            ["Neut-PCT", "f", "RHESUS MACAQUE", 49.9, 79.7, "Hematology"],
+            ["LY-PCT", "f", "RHESUS MACAQUE", 14.9, 40.6, "Hematology"],
+            ["Mono-PCT", "f", "RHESUS MACAQUE", 2.7, 8.8, "Hematology"],
+            ["EO-PCT", "f", "RHESUS MACAQUE", 0.6, 11, "Hematology"],
+            ["BAS-PCT", "f", "RHESUS MACAQUE", 0.3, 0.9, "Hematology"],
+            ["Neut", "f", "RHESUS MACAQUE", 2.38, 9.61, "Hematology"],
+            ["LY", "f", "RHESUS MACAQUE", 1.13, 3.77, "Hematology"],
+            ["Mono", "f", "RHESUS MACAQUE", 0.19, 0.92, "Hematology"],
+            ["EO", "f", "RHESUS MACAQUE", 0.04, 0.83, "Hematology"],
+            ["BAS", "f", "RHESUS MACAQUE", 0.02, 0.1, "Hematology"],
+            ["WBC", "m", "RHESUS MACAQUE", 4.2, 13.6, "Hematology"],
+            ["RBC", "m", "RHESUS MACAQUE", 4.5, 5.84, "Hematology"],
+            ["HGB", "m", "RHESUS MACAQUE", 10.7, 13.8, "Hematology"],
+            ["HCT", "m", "RHESUS MACAQUE", 32.9, 41.8, "Hematology"],
+            ["MCV", "m", "RHESUS MACAQUE", 65.6, 76.4, "Hematology"],
+            ["MCH", "m", "RHESUS MACAQUE", 21.2, 25.2, "Hematology"],
+            ["MCHC", "m", "RHESUS MACAQUE", 31.7, 33.7, "Hematology"],
+            ["RDW", "m", "RHESUS MACAQUE", 10.2, 13.3, "Hematology"],
+            ["PLT", "m", "RHESUS MACAQUE", 119, 471, "Hematology"],
+            ["Neut-PCT", "m", "RHESUS MACAQUE", 49.9, 79.7, "Hematology"],
+            ["LY-PCT", "m", "RHESUS MACAQUE", 14.9, 40.6, "Hematology"],
+            ["Mono-PCT", "m", "RHESUS MACAQUE", 2.7, 8.8, "Hematology"],
+            ["EO-PCT", "m", "RHESUS MACAQUE", 0.6, 11, "Hematology"],
+            ["BAS-PCT", "m", "RHESUS MACAQUE", 0.3, 0.9, "Hematology"],
+            ["Neut", "m", "RHESUS MACAQUE", 2.38, 9.61, "Hematology"],
+            ["LY", "m", "RHESUS MACAQUE", 1.13, 3.77, "Hematology"],
+            ["Mono", "m", "RHESUS MACAQUE", 0.19, 0.92, "Hematology"],
+            ["EO", "m", "RHESUS MACAQUE", 0.04, 0.83, "Hematology"],
+            ["BAS", "m", "RHESUS MACAQUE", 0.02, 0.1, "Hematology"]
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
     function populateUrinalysisTests(){
         pendingInserts++;
 
@@ -605,7 +1051,6 @@ Ext.onReady(function(){
             text: 'Delete Data From Form Types',
             scope: this,
             handler: function(){
-                pendingDeletes++;
                 deleteAll('ehr', 'formtypes', 'rowid')
             }
         },{
@@ -618,7 +1063,6 @@ Ext.onReady(function(){
             text: 'Delete Data From Form Panel Sections',
             scope: this,
             handler: function(){
-                pendingDeletes++;
                 deleteAll('ehr', 'formpanelsections', 'rowid')
             }
         },{
@@ -631,7 +1075,6 @@ Ext.onReady(function(){
             text: 'Delete Data From Reports',
             scope: this,
             handler: function(){
-                pendingDeletes++;
                 deleteAll('ehr', 'reports', 'rowid')
             }
         },{
@@ -644,7 +1087,6 @@ Ext.onReady(function(){
             text: 'Delete Data From Chemistry Tests',
             scope: this,
             handler: function(){
-                pendingDeletes++;
                 deleteAll('ehr_lookups', 'chemistry_tests', 'testid')
             }
         },{
@@ -657,7 +1099,6 @@ Ext.onReady(function(){
             text: 'Delete Data From Hematology Tests',
             scope: this,
             handler: function(){
-                pendingDeletes++;
                 deleteAll('ehr_lookups', 'hematology_tests', 'testid')
             }
         },{
@@ -670,8 +1111,19 @@ Ext.onReady(function(){
             text: 'Delete Data From Urinalysis Tests',
             scope: this,
             handler: function(){
-                pendingDeletes++;
                 deleteAll('ehr_lookups', 'urinalysis_tests', 'testid')
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Ref Ranges Table',
+            scope: this,
+            handler: populateRefRange
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Ref Ranges',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'lab_test_range', 'rowid')
             }
         },{
             xtype: 'button',
@@ -683,8 +1135,91 @@ Ext.onReady(function(){
             text: 'Delete Data From Lookup Sets',
             scope: this,
             handler: function(){
-                pendingDeletes++;
                 deleteLookupSets();
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Parasitology Methods Table',
+            scope: this,
+            handler: populateParasitologyMethods
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Parasitology Methods',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'parasitology_method', 'rowid');
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Chemistry Methods Table',
+            scope: this,
+            handler: populateChemistryMethods
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Chemistry Methods',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'chemistry_method', 'rowid');
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Urinalysis Methods Table',
+            scope: this,
+            handler: populateUrinalysisMethods
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Urinalysis Methods',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'urinalysis_method', 'rowid');
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Hematology Methods Table',
+            scope: this,
+            handler: populateHematologyMethods
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Hematology Methods',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'hematology_method', 'rowid');
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Clinpath Sampletype Table',
+            scope: this,
+            handler: populateClinpathSampletype
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Clinpath Sampletype',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'clinpath_sampletype', 'rowid');
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Drug Category Table',
+            scope: this,
+            handler: populateDrugCategories
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Drug Category',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'drug_categories', 'rowid');
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Age Class Table',
+            scope: this,
+            handler: populateAgeClass
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Age Class',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'ageclass', 'rowid');
             }
         },{
             xtype: 'button',
@@ -696,22 +1231,42 @@ Ext.onReady(function(){
                 populateReports();
                 populateLookupSets();
                 populateChemistryTests();
+                populateRefRange();
                 populateHematologyTests();
                 populateUrinalysisTests();
+
+                populateParasitologyMethods();
+                populateChemistryMethods();
+                populateHematologyMethods();
+                populateClinpathSampletype();
+                populateUrinalysisMethods();
+
+                populateDrugCategories();
+
+                populateAgeClass();
             }
         },{
             xtype: 'button',
             text: 'Delete All',
             scope: this,
             handler: function(){
-                pendingDeletes = 6;
+                pendingDeletes = 0;
+
                 deleteAll('ehr', 'formtypes', 'rowid'); //note: formpanelsections will be deleted by trigger script
                 deleteAll('ehr', 'reports', 'rowid');
                 deleteLookupSets();
                 deleteAll('ehr_lookups', 'chemistry_tests', 'testid');
                 deleteAll('ehr_lookups', 'hematology_tests', 'testid');
                 deleteAll('ehr_lookups', 'urinalysis_tests', 'testid');
+                deleteAll('ehr_lookups', 'lab_test_range', 'testid');
+                deleteAll('ehr_lookups', 'parasitology_method', 'rowid');
+                deleteAll('ehr_lookups', 'chemistry_method', 'rowid');
+                deleteAll('ehr_lookups', 'hematology_method', 'rowid');
+                deleteAll('ehr_lookups', 'clinpath_sampletype', 'rowid');
+                deleteAll('ehr_lookups', 'urinalysis_method', 'rowid');
+                deleteAll('ehr_lookups', 'drug_categories', 'rowid');
 
+                deleteAll('ehr_lookups', 'ageclass', 'rowid');
             }
         }]
     })

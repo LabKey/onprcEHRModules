@@ -26,6 +26,7 @@ import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
+import org.labkey.api.settings.AppProps;
 import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
@@ -100,6 +101,6 @@ abstract public class AbstractEHRNotification implements Notification
     {
         DetailsURL url = DetailsURL.fromString("/query/executeQuery.view");
         url.setContainerContext(c);
-        return url.getActionURL().toString();
+        return AppProps.getInstance().getBaseServerUrl() + url.getActionURL().toString();
     }
 }

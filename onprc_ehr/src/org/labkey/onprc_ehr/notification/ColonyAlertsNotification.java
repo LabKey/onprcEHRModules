@@ -16,9 +16,11 @@
 package org.labkey.onprc_ehr.notification;
 
 import org.labkey.api.action.NullSafeBindException;
+import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
+import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.RuntimeSQLException;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.SimpleFilter;
@@ -99,12 +101,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         livingAnimalsWithoutWeight(c, u, msg);
         cagesWithoutDimensions(c, u, msg);
+        cageReview(c, u, msg);
         roomsWithoutInfo(c, u, msg);
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);
         livingAnimalsWithoutHousing(c, u, msg);
 
-        animalsLackingAssignments(c, u, msg);
         deadAnimalsWithActiveAssignments(c, u, msg);
         deadAnimalsWithActiveCases(c, u, msg);
         deadAnimalsWithActiveDiet(c, u, msg);
@@ -116,11 +118,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         activeProblemsForDeadAnimals(c, u, msg);
         activeAssignmentsForDeadAnimals(c, u, msg);
         nonContiguousHousing(c, u, msg);
-        //NOTE: ONPRC doesnt capture gender here
-        //birthWithoutGender(c, u, msg);
+
+        //birthWithoutGender(c, u, msg);  //NOTE: ONPRC doesnt capture gender here so we ignore this
         demographicsWithoutGender(c, u, msg);
         deathWeightCheck(c, u, msg);
         protocolsNearingLimit(c, u, msg);
+
+        //TODO
         //protocolsExpiringSoon(c, u, msg);
         birthRecordsWithoutDemographics(c, u, msg);
         deathRecordsWithoutDemographics(c, u, msg);
@@ -154,7 +158,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             });
 
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=missingCages'>Click here to view the problem cages</a></p>\n");
-            msg.append("<a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cage'>Click here to edit the cage list and fix the problem</a></p>\n");
+            //msg.append("<a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cage'>Click here to edit the cage list and fix the problem</a></p>\n");
             msg.append("<hr>\n");
         }
 
@@ -210,7 +214,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             });
 
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=missingRooms'>Click here to view the problem rooms</a></p>\n");
-            msg.append("<a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cage'>Click here to edit the room list and fix the problem</a></p>\n");
+            //msg.append("<a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cage'>Click here to edit the room list and fix the problem</a></p>\n");
             msg.append("<hr>\n");
         }
 
@@ -221,14 +225,27 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("Id/MostRecentWeight/MostRecentWeightDate"), null, CompareType.ISBLANK);
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), Collections.singleton(getStudy(c).getSubjectColumnName()), filter, sort);
+
+        TableInfo ti = getStudySchema(c, u).getTable("Demographics");
+        List<FieldKey> colKeys = new ArrayList<FieldKey>();
+        colKeys.add(FieldKey.fromString(getStudy(c).getSubjectColumnName()));
+        colKeys.add(FieldKey.fromString("Id/age/AgeFriendly"));
+        final Map<FieldKey, ColumnInfo> columns = QueryService.get().getColumns(ti, colKeys);
+
+        TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following animals do not have a weight:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
+                    Results results = new ResultsImpl(rs, columns);
+                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()));
+                    String age = results.getString(FieldKey.fromString("Id/age/AgeFriendly"));
+                    if (age != null)
+                        msg.append(" (Age: " + age + ")");
+
+                    msg.append("<br>\n");
                 }
             });
 
@@ -246,17 +263,17 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + ts.getRowCount() + " animals with multiple active housing records:</b><br>\n");
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=housingProblems'>Click here to view these animals</a></p>\n");
-            msg.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/updateQuery.view?schemaName=study&query.queryName=Housing&query.Id~in=");
-
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + ";");
-                }
-            });
-
-            msg.append("&query.enddate~isblank'>Click here to edit housing to fix the problems</a><p>");
-            msg.append("<hr>\n");
+//            msg.append("<a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Housing&query.Id~in=");
+//
+//            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+//                public void exec(ResultSet rs) throws SQLException
+//                {
+//                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + ";");
+//                }
+//            });
+//
+//            msg.append("&query.enddate~isblank'>Click here to view the problem records</a><p>");
+//            msg.append("<hr>\n");
         }
     }
 
@@ -727,50 +744,29 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void cageReview(final Container c, User u, final StringBuilder msg)
     {
-        //TODO: switch to TableSelector
-        MutablePropertyValues mpv = new MutablePropertyValues();
-        mpv.addPropertyValue("schemaName", "study");
-        mpv.addPropertyValue("query.queryName", "CageReview");
-        mpv.addPropertyValue("query.viewName", "Problem Cages");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("cageStatus"), "ERROR", CompareType.EQUAL);
+        TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), Table.ALL_COLUMNS, filter, null);
+        Map<String, Object>[] rows = ts.getArray(Map.class);
 
-        BindException errors = new NullSafeBindException(new Object(), "command");
-        UserSchema us = QueryService.get().getUserSchema(u, c, "study");
-        QuerySettings qs = us.getSettings(mpv, "query");
-        QueryView view = new QueryView(us, qs, errors);
-        Results rs = null;
-        try
+        if (rows.length > 0)
         {
-            rs = view.getResults();
-            int total = 0;
-            while (rs.next())
+            msg.append("<b>WARNING: The following cages are too small for the animals currently in them:</b><br>");
+            for (Map<String, Object> row : rows)
             {
-                total++;
+                String room = (String)row.get("room");
+                String cage = (String)row.get("cage");
+
+                if (room != null)
+                    msg.append("Room: ").append(room);
+
+                if (cage != null)
+                    msg.append(" ").append(cage);
+
+                msg.append("<br>");
             }
 
-            if (total > 0)
-            {
-                msg.append("<b>WARNING: The following cages are too small for the animals currently in them:</b><br>");
-                do
-                {
-                    msg.append(appendField("Location", rs) + "<br>");
-                }
-                while (rs.next());
-
-                msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=CageReview&query.viewName=Problem Cages'>Click here to view these cages</a></p>\n");
-                msg.append("<hr>\n");
-            }
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeSQLException(e);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cageReview&query.viewName=Problem Cages'>Click here to view these cages</a></p>\n");
+            msg.append("<hr>\n");
         }
     }
 

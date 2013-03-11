@@ -23,6 +23,7 @@ Select
 --	ReleaseDate as Enddate,
 
 	coalesce(ReleaseDate, q.deathdate, q.departuredate) as enddate ,
+	estimatedreleasedate as projectedRelease,
 
 	AssignPool as assignCondition,							--Ref_Pool
 	EstimatedReleasePool as projectedReleaseCondition,		--Ref_Pool

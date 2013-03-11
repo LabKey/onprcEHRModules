@@ -38,10 +38,10 @@ Select
 --	af.Date_Posted as  Date_Posted,
 
 	Afc.objectid
-	
+
 	--COUNT(dx.objectid) as dxCount,
 	--COUNT(cr.objectid) as clinCount,
-	
+
 From Af_Case afc
 LEFT JOIN Sys_Parameters s1 ON (afc.Status = s1.Flag and s1.field = 'CaseStatus')
 --left join Cln_DX dx on (dx.CaseID = afc.CaseID and dx.Date = afc.OpenDate)

@@ -3,6 +3,7 @@
         <filter column="enddate" operator="isblank"/>
     </filters>
     <sorts>
-        <sort column="date" descending="true"/>
+        <sort column="Id/curLocation/room" />
+        <sort column="Id/curLocation/cage" />
     </sorts>
 </customView>

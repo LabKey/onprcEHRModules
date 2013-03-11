@@ -3,6 +3,11 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="housingPairs" tableDbType="TABLE">
                 <tableTitle>Animals Per Pairing</tableTitle>
+                <columns>
+                    <column columnName="totalAnimals">
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Demographics&amp;query.id/numPaired/room~eq=${room}&amp;query.id/numPaired/effectiveCage~eq=${cage}</url>
+                    </column>
+                </columns>
             </table>
         </tables>
     </metadata>

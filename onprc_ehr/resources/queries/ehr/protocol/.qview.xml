@@ -1,6 +1,7 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
    <columns>
        <column name="protocol"/>
+       <column name="external_id"/>
        <column name="title"/>
        <column name="investigatorId"/>
        <column name="approve"/>

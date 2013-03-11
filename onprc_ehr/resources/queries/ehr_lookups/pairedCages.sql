@@ -19,6 +19,7 @@ c.cage,
 c.row,
 c.column,
 c.divider,
+c.cage_type,
 c.divider.countAsPaired,
 max(np.column) as highestNonPaired,
 max(paired.column) as highestPaired,
@@ -50,4 +51,4 @@ LEFT JOIN ehr_lookups.cage paired ON (paired.cage_type != 'No Cage' and c.room =
 
 WHERE c.cage_type != 'No Cage'
 
-GROUP BY c.room, c.row, c.cage, c.column, c.divider, c.divider.countAsPaired
+GROUP BY c.room, c.row, c.cage, c.column, c.divider, c.divider.countAsPaired, c.cage_type

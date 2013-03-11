@@ -25,7 +25,7 @@
         <dataset name="pregnancyConfirmation" id="5022" category="Reproductive Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="fosterParents" id="5023" category="Colony Management" type="Standard">
+        <dataset name="parentage" id="5025" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
         <dataset name="miscTests" id="5013" category="ClinPath" type="Standard">

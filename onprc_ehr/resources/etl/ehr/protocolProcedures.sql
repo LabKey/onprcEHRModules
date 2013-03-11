@@ -18,6 +18,7 @@
 	coalesce(rtrim(ltrim(lower(ri.IACUCCode))), 'None') as protocol,
 	
 	--iacuc.ProcedureID as ProcedureID  , --Ref_SurgProcedure
+	s.procedurename as procedurename,
 	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = s.procedureName) as procedureid,
 	
 	iacuc.ProcedureCount as allowed,

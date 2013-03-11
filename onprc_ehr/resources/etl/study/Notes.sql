@@ -17,7 +17,7 @@ Select
 	--RemarksID as RemarksID ,
 	cast(afr.AnimalID as nvarchar(4000)) as Id,
 	RemarksDate as date,
-	coalesce(q.deathdate, q.departuredate) as enddate ,
+	coalesce(q.deathdate, q.departuredate) as enddate,
 
 	--Afr.Topic as TopicInt  ,
 	s1.value as Category,

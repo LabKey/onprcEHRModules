@@ -85,12 +85,57 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     }
 
     @Override
-    public void startupAfterSpringConfig(ModuleContext moduleContext)
+    protected void doStartupAfterSpringConfig(ModuleContext moduleContext)
     {
-        ContainerManager.addContainerListener(this);
         ETL.init(1);
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
 
+        RoleManager.registerRole(new ONPRCBillingAdminRole());
+
+        registerEHRResources();
+
+        NotificationService ns = NotificationService.get();
+        //ns.registerNotification(new AbnormalLabResultsNotification());
+        ns.registerNotification(new BloodAdminAlertsNotification());
+        ns.registerNotification(new BloodAlertsNotification());
+        ns.registerNotification(new ColonyAlertsLiteNotification());
+        ns.registerNotification(new ColonyAlertsNotification());
+        ns.registerNotification(new ColonyMgmtNotification());
+        ns.registerNotification(new LabTestScheduleNotifications());
+        ns.registerNotification(new LabResultSummaryNotification());
+        //ns.registerNotification(new TreatmentAlerts());
+    }
+
+    private void registerEHRResources()
+    {
+        EHRService.get().registerModule(this);
+        EHRService.get().registerTableCustomizer(this, ONPRC_EHRCustomizer.class);
+
+        Resource r = getModuleResource("/scripts/onprc_ehr/onprc_triggers.js");
+        assert r != null;
+        EHRService.get().registerTriggerScript(this, r);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/onprcReports.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/Utils.js"), this);
+
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographics&query.viewName=Single Housed"), null);
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Physical Exam Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographics&query.viewName=Physical Exam History"), null);
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "View Pairing Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=housingPairs&query.viewName=Cages With Animals"), null);
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "View Roommate History for Animals", this, DetailsURL.fromString("/ehr/animalHistory.view#inputType:singleSubject&activeReport:roommateHistory"), null);
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), null);
+
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Living Center Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Alive%2C at Center"), "Browse Animals");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Center Animals (including dead and shipped)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics"), "Browse Animals");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Date of Last Physical Exam", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPE"), "Browse Animals");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Unassigned Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=No Active Assignments"), "Browse Animals");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Unweighed In Past 45 Days", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Unweighed%20Over%2045%20Days"), "Browse Animals");
+
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Population Summary By Species, Gender and Age", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=colonyPopulationByAge"), "Other Searches");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Find Animals Housed At The Center Over A Date Range", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Other Searches");
+    }
+
+    @Override
+    protected void registerSchemas()
+    {
         for (final String schemaName : getSchemaNames())
         {
             final DbSchema dbschema = DbSchema.get(schemaName);
@@ -114,40 +159,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
                 }
             });
         }
-
-        RoleManager.registerRole(new ONPRCBillingAdminRole());
-
-        EHRService.get().registerModule(this);
-        EHRService.get().registerTableCustomizer(this, ONPRC_EHRCustomizer.class);
-
-        Resource r = getModuleResource("/scripts/onprc_ehr/onprc_triggers.js");
-        assert r != null;
-        EHRService.get().registerTriggerScript(this, r);
-        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/onprcReports.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/Utils.js"), this);
-
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single-housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=housingPairs&query.viewName=Single Housed"), null);
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "View Pairing Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=housingPairs&query.viewName=Cages With Animals"), null);
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "View Roommate History for Animals", this, DetailsURL.fromString("/ehr/animalHistory.view#inputType:singleSubject&activeReport:roommateHistory"), null);
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), null);
-
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Living Center Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Alive%2C at Center"), "Browse Animals");
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Center Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics"), "Browse Animals");
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Unweighed In Past 45 Days", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Unweighed%20Over%2045%20Days"), "Browse Animals");
-
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Population Summary By Species, Gender and Age", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=colonyPopulationByAge"), "Other Searches");
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Find Animals Housed At The Center Over A Date Range", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Other Searches");
-
-        NotificationService ns = NotificationService.get();
-        //ns.registerNotification(new AbnormalLabResultsNotification());
-        ns.registerNotification(new BloodAdminAlertsNotification());
-        ns.registerNotification(new BloodAlertsNotification());
-        ns.registerNotification(new ColonyAlertsLiteNotification());
-        ns.registerNotification(new ColonyAlertsNotification());
-        ns.registerNotification(new ColonyMgmtNotification());
-        ns.registerNotification(new LabTestScheduleNotifications());
-        ns.registerNotification(new LabResultSummaryNotification());
-        //ns.registerNotification(new TreatmentAlerts());
     }
 
     @Override

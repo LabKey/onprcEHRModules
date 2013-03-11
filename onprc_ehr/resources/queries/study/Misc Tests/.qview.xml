@@ -3,6 +3,7 @@
         <column name="Id"/>
         <column name="date"/>
         <column name="category"/>
+        <column name="testId"/>
         <column name="code"/>
         <column name="result"/>
         <column name="units"/>

@@ -379,7 +379,7 @@
         </columns>
         <tableTitle>Pregnancy Confirmations</tableTitle>
     </table>
-    <table tableName="fosterParents" tableDbType="TABLE">
+    <table tableName="parentage" tableDbType="TABLE">
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
@@ -393,7 +393,13 @@
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
             </column>
-            <column columnName="dam">
+            <column columnName="parent">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="relationship">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="method">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="enddate">
@@ -434,7 +440,7 @@
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
         </columns>
-        <tableTitle>Foster Parents</tableTitle>
+        <tableTitle>Parentage</tableTitle>
     </table>
     <table tableName="miscTests" tableDbType="TABLE">
         <columns>
@@ -2686,6 +2692,9 @@
                 <datatype>integer</datatype>
             </column>
             <column columnName="projectedReleaseCondition">
+                <datatype>integer</datatype>
+            </column>
+            <column columnName="feeType">
                 <datatype>integer</datatype>
             </column>
         </columns>

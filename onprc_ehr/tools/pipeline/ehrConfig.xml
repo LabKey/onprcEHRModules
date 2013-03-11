@@ -4,12 +4,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <!--This is used to override the location of the 2nd of the 3 tasks in this pipeline-->
-    <bean id="kinshipPipelineRegistry" class="org.labkey.api.pipeline.TaskPipelineRegistrar">
+    <bean class="org.labkey.api.pipeline.TaskPipelineRegistrar">
         <property name="factoryImpls">
             <list>
                 <bean class="org.labkey.ehr.pipeline.KinshipRTask$Factory">
                     <property name="location" value="sequenceAnalysis" />
-                    <property name="join" value="false" />
                 </bean>
             </list>
         </property>

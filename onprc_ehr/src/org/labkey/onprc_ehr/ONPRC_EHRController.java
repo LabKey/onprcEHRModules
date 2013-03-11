@@ -57,6 +57,7 @@ import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -581,20 +582,25 @@ public class ONPRC_EHRController extends SpringActionController
         public ModelAndView getConfirmView(LegacyDataImportForm form, BindException errors) throws Exception
         {
             StringBuilder sb = new StringBuilder();
-            File sourceFolder = null;
-            if (form.getSourceFolder() != null)
+            if (form.getTypes() == null || form.getTypes().length == 0)
             {
-                sourceFolder = new File(form.getSourceFolder());
-                if (!sourceFolder.exists())
-                {
-                    errors.reject(ERROR_MSG, "File does not exist: " + form.getSourceFolder());
-                    return null;
-                }
+                errors.reject(ERROR_MSG, "No import types provided");
+                return new HtmlView("No import types provided");
             }
 
+            List<String> types = new ArrayList<String>();
+            types.addAll(Arrays.asList(form.getTypes()));
+
             sb.append("This action is highly experimental and should be used at your own risk.  It is designed to bulk upload existing folders into workbooks. <br><br>");
-            String preview = LegacyDataManager.getInstance().importSachaExperiments(getUser(), getContainer(), sourceFolder, true);
-            sb.append(preview).append("<br>");
+
+            if (types.contains("expt"))
+                sb.append(LegacyDataManager.getInstance().importSachaExperiments(getUser(), getContainer(), true)).append("<hr>");
+
+            if (types.contains("peptides"))
+                sb.append(LegacyDataManager.getInstance().importSachaPeptides(getUser(), getContainer(), true)).append("<hr>");
+
+            if (types.contains("elispot"))
+                sb.append(LegacyDataManager.getInstance().importElispotResults(getViewContext(), true)).append("<hr>");
 
             sb.append("<br>Do you want to continue?");
 
@@ -603,18 +609,23 @@ public class ONPRC_EHRController extends SpringActionController
 
         public boolean handlePost(LegacyDataImportForm form, BindException errors) throws Exception
         {
-            File sourceFolder = null;
-            if (form.getSourceFolder() != null)
+            if (form.getTypes() == null || form.getTypes().length == 0)
             {
-                sourceFolder = new File(form.getSourceFolder());
-                if (!sourceFolder.exists())
-                {
-                    errors.reject(ERROR_MSG, "File does not exist: " + form.getSourceFolder());
-                    return false;
-                }
+                errors.reject(ERROR_MSG, "No import types provided");
+                return false;
             }
 
-            LegacyDataManager.getInstance().importSachaExperiments(getUser(), getContainer(), sourceFolder, false);
+            List<String> types = new ArrayList<String>();
+            types.addAll(Arrays.asList(form.getTypes()));
+
+            if (types.contains("expt"))
+                LegacyDataManager.getInstance().importSachaExperiments(getUser(), getContainer(), false);
+
+            if (types.contains("peptides"))
+                LegacyDataManager.getInstance().importSachaPeptides(getUser(), getContainer(), false);
+
+            if (types.contains("elispot"))
+                LegacyDataManager.getInstance().importElispotResults(getViewContext(), false);
 
             return true;
         }
@@ -627,16 +638,16 @@ public class ONPRC_EHRController extends SpringActionController
 
     public static class LegacyDataImportForm
     {
-        private String _sourceFolder;
+        private String[] _types;
 
-        public String getSourceFolder()
+        public String[] getTypes()
         {
-            return _sourceFolder;
+            return _types;
         }
 
-        public void setSourceFolder(String sourceFolder)
+        public void setTypes(String[] types)
         {
-            _sourceFolder = sourceFolder;
+            _types = types;
         }
     }
 }

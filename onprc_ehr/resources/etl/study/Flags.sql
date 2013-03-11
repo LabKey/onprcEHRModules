@@ -18,13 +18,13 @@
 Select
 	cast(p.AnimalID as nvarchar(4000)) as Id,
 	--p.PoolCode as PoolCode,    ----- Ref_Pool
-	rp.ShortDescription AS category,
-	rp.Description as flag,
+	rp.ShortDescription AS flag,
+	rp.Description as value,
 
 	DateAssigned as date,
 --	DateReleased as enddate,
 
-	coalesce(DateReleased, q.deathdate, q.departuredate) as enddate ,
+	coalesce(DateReleased, q.deathdate, q.departuredate, rp.datedisabled) as enddate ,
 
 	--NOTE: redundant w/ enddate?
 	--Status as  Status,            ---- flag = 1 Active pools, Flag = 0 Inactive Pools
