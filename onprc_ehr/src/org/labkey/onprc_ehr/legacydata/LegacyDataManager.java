@@ -173,8 +173,8 @@ public class LegacyDataManager
                                 if (!validateOnly)
                                 {
                                     SQLFragment updateContainers = new SQLFragment("UPDATE core.containers set created = ? WHERE entityid = ?", created, workbook.getId());
-                                    SqlExecutor se = new SqlExecutor(containersTable.getSchema(), updateContainers);
-                                    se.execute();
+                                    SqlExecutor se = new SqlExecutor(containersTable.getSchema());
+                                    se.execute(updateContainers);
                                 }
                             }
 
@@ -191,8 +191,8 @@ public class LegacyDataManager
                                     if (exptUser != null)
                                     {
                                         SQLFragment updateContainers = new SQLFragment("UPDATE core.containers set createdby = ? WHERE entityid = ?", exptUser.getUserId(), workbook.getId());
-                                        SqlExecutor se = new SqlExecutor(containersTable.getSchema(), updateContainers);
-                                        se.execute();
+                                        SqlExecutor se = new SqlExecutor(containersTable.getSchema());
+                                        se.execute(updateContainers);
                                     }
 
                                     TableSelector wbs = new TableSelector(workbooksTable, Collections.singleton("workbookId"), null, null);
