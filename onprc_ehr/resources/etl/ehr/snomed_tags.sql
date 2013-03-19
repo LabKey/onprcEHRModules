@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 SELECT
-	--cast(dx.AnimalID as nvarchar(4000)) as Id,
-	--s.DiagnosisID ,
+	cast(dx.AnimalID as nvarchar(4000)) as Id,
+	c.objectid as caseid,
 	dx.objectid as recordid,
 
 	cast(s.objectid as varchar(38)) + '_clndx' as objectid,
@@ -25,6 +25,7 @@ SELECT
 
 FROM Cln_DxSnomed s
 left join cln_dx dx ON (dx.DiagnosisID = s.DiagnosisID)
+left join af_case c ON (dx.caseid = c.caseid)
 cross apply dbo.fn_splitter(s.snomed, ',') s2
 where s2.value is not null and s2.value != ''
 and s.ts > ?
@@ -32,8 +33,8 @@ and s.ts > ?
 UNION ALL
 
 SELECT
-	--cast(dx.AnimalID as nvarchar(4000)) as Id,
-	--s.DiagnosisID ,
+	cast(dx.AnimalID as nvarchar(4000)) as Id,
+	null as caseid,
 	dx.objectid as recordid,
 
 	cast(s.objectid as varchar(38)) + '_surg' as objectid,
@@ -50,6 +51,8 @@ and s.ts > ?
 UNION ALL
 
 Select
+	cast(pa.AnimalID as nvarchar(4000)) as Id,
+	null as caseid,
 	pa.objectid as recordid,
 	(cast(d.objectid as varchar(38)) + '_' + cast(s2.value as nvarchar(100))) as objectid,
 	coalesce(d.sequenceno, 0) as set_number,
@@ -67,6 +70,8 @@ and d.ts > ?
 UNION ALL
 
 Select
+	cast(pa.AnimalID as nvarchar(4000)) as Id,
+	null as caseid,
 	d.objectid as recordid,
 	(cast(d.objectid as varchar(38)) + '_' + cast(s2.value as nvarchar(100))) as objectid,
 	coalesce(d.sequenceno, 0) as set_number,

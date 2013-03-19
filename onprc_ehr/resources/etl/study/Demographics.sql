@@ -55,6 +55,7 @@ Select
       WHEN s1.value = 'Sold' THEN 'Shipped'
       else s1.value
     END as calculated_status,
+    t.geographic_origin,
 
 	--TODO: most of these should get moved into study.notes
 	PregnancyDate as PregnancyDate ,
@@ -92,20 +93,17 @@ left join (
 ) c ON (c.AnimalId = afq.AnimalID)
 left join Af_Birth b ON (b.AnimalID = afq.AnimalID)
 
+left JOIN (
+  select animalid, max(p.ts) as ts, MAX(Description) as geographic_origin
+  FROM (
+    select p.AnimalID, rp.Description, p.ts
+    From Af_Pool p
+    left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
+    where rp.ShortDescription = 'Origin' and DateReleased is null
 
-WHERE afq.ts > ? or b.ts > ?
+    ) p
+    group by AnimalID
+    having COUNT(*) = 1
+) t ON (t.animalid = afq.animalid)
 
-
-
--- select animalid, COUNT(*), MAX(Description), MIN(Description)
---
--- FROM (
---
--- select p.AnimalID, rp.Description
--- From Af_Pool p
--- left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
--- where rp.ShortDescription = 'Origin' and DateReleased is null
---
--- ) p
--- group by AnimalID
--- having COUNT(*) > 1 AND MAX(Description) != MIN(Description)
+WHERE afq.ts > ? or b.ts > ? or t.ts > ?

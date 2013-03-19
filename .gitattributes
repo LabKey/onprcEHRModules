@@ -18,6 +18,7 @@ onprc_ehr/resources/etl/pending/Sur_AnesthesiaLogData.sql -text
 onprc_ehr/resources/etl/pending/Sur_implants.sql -text
 onprc_ehr/resources/etl/pending/accounts.sql -text
 onprc_ehr/resources/etl/pending/invoicedItems.sql -text
+onprc_ehr/resources/etl/pending/protocol_counts.sql -text
 onprc_ehr/resources/etl/pending/sur_vessels.sql -text
 onprc_ehr/resources/etl/pending/tissue_recipients.sql -text
 onprc_ehr/resources/etl/static/billing.sql -text
@@ -58,13 +59,13 @@ onprc_ehr/resources/etl/study/Parasitology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Parentage.sql -text
 onprc_ehr/resources/etl/study/PregnancyConfirmation.sql -text
 onprc_ehr/resources/etl/study/Problem[!!-~]List.sql -text
-onprc_ehr/resources/etl/study/Serology.sql -text
 onprc_ehr/resources/etl/study/TB[!!-~]Tests.sql -text
 onprc_ehr/resources/etl/study/Tissue[!!-~]Samples.sql -text
 onprc_ehr/resources/etl/study/Treatment[!!-~]Orders.sql -text
 onprc_ehr/resources/etl/study/Urinalysis[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Virology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Weight.sql -text
+onprc_ehr/resources/etl/study/iStat.sql -text
 onprc_ehr/resources/etl/study/pairings.sql -text
 onprc_ehr/resources/folderTypes/ONPRC_EHR.folderType.xml -text
 onprc_ehr/resources/queries/ehr/project.js -text
@@ -182,7 +183,8 @@ onprc_ehr/resources/queries/study/Virology[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/antibioticSensitivityPivoted.query.xml -text
 onprc_ehr/resources/queries/study/antibioticSensitivityPivoted.sql -text
 onprc_ehr/resources/queries/study/cases/.qview.xml -text
-onprc_ehr/resources/queries/study/cases/Active[!!-~]Cases.qview.xml -text
+onprc_ehr/resources/queries/study/cases/Active[!!-~]Behavior[!!-~]Cases.qview.xml -text
+onprc_ehr/resources/queries/study/cases/Active[!!-~]Clinical[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Surgery[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/chemMisc.query.xml -text
 onprc_ehr/resources/queries/study/chemMisc.sql -text
@@ -238,6 +240,9 @@ onprc_ehr/resources/queries/study/housingPairs.query.xml -text
 onprc_ehr/resources/queries/study/housingPairs.sql -text
 onprc_ehr/resources/queries/study/housingPairs/Cages[!!-~]With[!!-~]Animals.qview.xml -text
 onprc_ehr/resources/queries/study/housingPairs/Single[!!-~]Housed.qview.xml -text
+onprc_ehr/resources/queries/study/iStat.js -text
+onprc_ehr/resources/queries/study/iStat.query.xml -text
+onprc_ehr/resources/queries/study/iStat/.qview.xml -text
 onprc_ehr/resources/queries/study/microbiologyPivoted.query.xml -text
 onprc_ehr/resources/queries/study/microbiologyPivoted.sql -text
 onprc_ehr/resources/queries/study/notesPivoted.query.xml -text

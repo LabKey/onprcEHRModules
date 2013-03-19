@@ -19,6 +19,7 @@ import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.DataColumn;
+import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.DisplayColumnFactory;
 import org.labkey.api.data.JdbcType;
@@ -28,7 +29,9 @@ import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.exp.property.Domain;
 import org.labkey.api.query.ExprColumn;
+import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
 import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
@@ -37,8 +40,12 @@ import org.labkey.api.security.User;
 import org.labkey.api.study.DataSetTable;
 import org.labkey.api.view.HttpView;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -70,6 +77,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             else if (matches(table, "study", "Birth"))
             {
                 customizeBirthTable((AbstractTableInfo) table);
+            }
+            else if (matches(table, "study", "Cases") || matches(table, "study", "Case"))
+            {
+                customizeCasesTable((AbstractTableInfo) table);
             }
             else if (matches(table, "ehr", "project"))
             {
@@ -140,6 +151,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (room != null)
         {
             room.setDisplayWidth("120");
+        }
+
+        ColumnInfo location = ti.getColumn("location");
+        if (location != null)
+        {
+            location.setDisplayWidth("120");
         }
 
         ColumnInfo chargeId = ti.getColumn("chargeId");
@@ -307,6 +324,37 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             col.setDescription("Shows the date of last labwork for a subsets of tests");
             ds.addColumn(col);
         }
+    }
+
+    private void customizeCasesTable(AbstractTableInfo ti)
+    {
+        TableInfo clinRemarks = getStudyUserSchema(ti).getTable("Clinical Remarks");
+        if (clinRemarks == null)
+            return;
+
+        TableInfo realTable = getRealTable(clinRemarks);
+        if (realTable != null)
+        {
+            ColumnInfo objectId = ti.getColumn("objectid");
+            String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
+            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'Hx: '", "r.hx")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+                " r WHERE r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 WHERE r2.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r2.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r2.hx is not null)" +
+                " AND r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)"
+            );
+            ExprColumn latestHx = new ExprColumn(ti, "latestHx", sql, JdbcType.VARCHAR, objectId);
+            latestHx.setLabel("Latest Hx");
+            latestHx.setDisplayWidth("300");
+            ti.addColumn(latestHx);
+
+            SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+                " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
+            ExprColumn todaysP2 = new ExprColumn(ti, "todaysP2", p2Sql, JdbcType.VARCHAR, objectId);
+            todaysP2.setLabel("P2s Entered Today");
+            todaysP2.setDisplayWidth("300");
+            ti.addColumn(todaysP2);
+        }
+
+        appendCaseHistoryCol(ti);
     }
 
     private void customizeBirthTable(AbstractTableInfo ti)
@@ -488,5 +536,80 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             columnCol.setLabel("Column");
             table.addColumn(columnCol);
         }
+    }
+
+    private TableInfo getRealTable(TableInfo targetTable)
+    {
+        TableInfo realTable = null;
+        if (targetTable instanceof FilteredTable)
+        {
+            DbSchema dbSchema;
+            if (targetTable instanceof DataSetTable)
+            {
+                Domain domain = ((FilteredTable)targetTable).getDomain();
+                if (domain != null)
+                {
+                    String tableName = domain.getStorageTableName();
+                    dbSchema = DbSchema.get("studydataset");
+                    realTable = dbSchema.getTable(tableName);
+                }
+            }
+            else if (targetTable.getSchema() != null)
+            {
+                realTable = targetTable.getSchema().getTable(targetTable.getName());
+            }
+        }
+        return realTable;
+    }
+
+    private void appendCaseHistoryCol(AbstractTableInfo ti)
+    {
+        if (ti.getColumn("caseHistory") != null)
+            return;
+
+        ColumnInfo ci = new WrappedColumn(ti.getColumn("Id"), "caseHistory");
+        ci.setDisplayColumnFactory(new DisplayColumnFactory()
+        {
+            @Override
+            public DisplayColumn createRenderer(final ColumnInfo colInfo)
+            {
+                return new DataColumn(colInfo){
+
+                    public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+                    {
+                        String objectid = (String)ctx.get("objectid");
+                        String id = (String)ctx.get("Id");
+
+                        out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showCaseHistory('" + objectid + "', '" + id + "', this);\">Show Case History</a></span>");
+                    }
+
+                    @Override
+                    public void addQueryFieldKeys(Set<FieldKey> keys)
+                    {
+                        super.addQueryFieldKeys(keys);
+                        keys.add(FieldKey.fromString("objectid"));
+                    }
+
+                    public boolean isSortable()
+                    {
+                        return false;
+                    }
+
+                    public boolean isFilterable()
+                    {
+                        return false;
+                    }
+
+                    public boolean isEditable()
+                    {
+                        return false;
+                    }
+                };
+            }
+        });
+        ci.setIsUnselectable(false);
+        ci.setLabel("Case History");
+
+        ti.addColumn(ci);
     }
 }

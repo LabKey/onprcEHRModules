@@ -12,7 +12,7 @@
         <column name="a"/>
         <column name="p"/>
         <column name="p2"/>
-        <column name="description"/>
+        <!--<column name="description"/>-->
         <column name="remark"/>
         <column name="qcstate" />
         <column name="taskid" />

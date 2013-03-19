@@ -115,3 +115,15 @@ WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties
 -- INSERT into    core.Members m
 -- (GroupId, UserId) VALUES (-1, (select userId from core.users WHERE email='yourEmail@wisc.edu')
 -- ;
+
+--disable notification service
+UPDATE  prop.Properties
+SET       Value = 0
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'org.labkey.ldk.notifications.config'
+	      AND Name = 'serviceEnabled';
+
+--change reply email for notification service
+UPDATE prop.Properties
+SET       Value = 'test-onprcitsupport@ohsu.edu'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'org.labkey.ldk.notifications.config'
+	      AND Name = 'returnEmail';

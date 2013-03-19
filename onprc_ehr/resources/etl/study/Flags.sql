@@ -36,6 +36,7 @@ From Af_Pool p
 left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
 left join Af_Qrf q on (q.animalid = p.animalid)
 
-where p.ts > ? or q.ts > ?
+where p.ts > ? or q.ts > ? or rp.ts > ?
+and rp.ShortDescription != 'Origin'
 
 

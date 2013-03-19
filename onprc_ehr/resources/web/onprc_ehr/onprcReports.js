@@ -360,7 +360,7 @@ EHR.reports.snapshot = function(panel, tab){
                 border: false
             });
         }
-        else if (subjects.length < 30) {
+        else if (subjects.length < 10) {
             for (var i=0;i<subjects.length;i++){
                 toAdd.push({
                     xtype: 'ldk-webpartpanel',
@@ -383,7 +383,7 @@ EHR.reports.snapshot = function(panel, tab){
         }
         else {
             toAdd.push({
-                html: 'Because more than 30 subjects were selected, the condensed report is being shown.  Note that you can click the animal ID to open this same report in a different tab, showing that animal in more detail or click the link labeled \'Display History\'.',
+                html: 'Because more than 10 subjects were selected, the condensed report is being shown.  Note that you can click the animal ID to open this same report in a different tab, showing that animal in more detail or click the link labeled \'Display History\'.',
                 style: 'padding-bottom: 20px;',
                 border: false
             });
@@ -409,7 +409,7 @@ EHR.reports.snapshot = function(panel, tab){
 
 };
 
-EHR.reports.clinicalOverview = function(panel, tab){
+EHR.reports.clinicalHistory = function(panel, tab){
     if (tab.filters.subjects){
         renderSubjects(tab.filters.subjects, tab);
     }
@@ -419,9 +419,9 @@ EHR.reports.clinicalOverview = function(panel, tab){
     }
 
     function renderSubjects(subjects, tab){
-        if (subjects.length > 30){
+        if (subjects.length > 10){
             tab.add({
-                html: 'Because more than 30 subjects were selected, the condensed report is being shown.  Note that you can click the animal ID to open this same report in a different tab, showing that animal in more detail or click the link labeled \'Display History\'.',
+                html: 'Because more than 10 subjects were selected, the condensed report is being shown.  Note that you can click the animal ID to open this same report in a different tab, showing that animal in more detail or click the link labeled \'Display History\'.',
                 style: 'padding-bottom: 20px;',
                 border: false
             });

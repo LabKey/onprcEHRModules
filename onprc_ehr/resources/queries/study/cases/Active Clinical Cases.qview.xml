@@ -1,0 +1,10 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <filters>
+        <filter column="enddate" operator="isblank"/>
+        <filter column="category" operator="eq" value="Clinical"/>
+    </filters>
+    <sorts>
+        <sort column="Id/curLocation/room" />
+        <sort column="Id/curLocation/cage" />
+    </sorts>
+</customView>

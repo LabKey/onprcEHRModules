@@ -15,6 +15,7 @@
  */
 SELECT
     null as userid,
+    cast(AnimalId as nvarchar(4000)) as Id,
     t.role,
     t.procedure_id as parentid,
     (cast(t.procedure_id as varchar(38)) + '_' + t.role) as objectid,
@@ -38,6 +39,7 @@ FROM (
 
 SELECT
     p.pathologist as userId,
+    p.animalid,
     'Pathologist' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -49,6 +51,7 @@ UNION ALL
 
 SELECT
     p.prosector1 as userId,
+    p.animalid,
     'Prosector1' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -60,6 +63,7 @@ UNION ALL
 
 SELECT
     p.prosector2 as userId,
+    p.animalid,
     'Prosector2' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -71,6 +75,7 @@ UNION ALL
 
 SELECT
     p.prosector3 as userId,
+    p.animalid,
     'Prosector3' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -82,6 +87,7 @@ UNION ALL
 
 SELECT
     p.pathologist as userId,
+    p.animalid,
     'Pathologist' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -93,6 +99,7 @@ UNION ALL
 
 SELECT
     p.prosector1 as userId,
+    p.animalid,
     'Prosector1' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -104,6 +111,7 @@ UNION ALL
 
 SELECT
     p.prosector2 as userId,
+    p.animalid,
     'Prosector2' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -115,6 +123,7 @@ UNION ALL
 
 SELECT
     p.prosector3 as userId,
+    p.animalid,
     'Prosector3' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -126,6 +135,7 @@ UNION ALL
 
 SELECT
     s.surgeon as userId,
+    s.animalid,
     'Surgeon' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -137,6 +147,7 @@ UNION ALL
 
 SELECT
     s.Assistant as userId,
+    s.animalid,
     'Assistant' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -148,6 +159,7 @@ UNION ALL
 
 SELECT
     s.Anesthetist as userId,
+    s.animalid,
     'Anesthetist' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -159,6 +171,7 @@ UNION ALL
 
 SELECT
     s.InstrumentTech as userId,
+    s.animalid,
     'Instrument Tech' as role,
     objectid as procedure_id,
     ts as rowversion
@@ -170,6 +183,7 @@ UNION ALL
 
 SELECT
     s.Circulator as userId,
+    s.animalid,
     'Circulator' as role,
     objectid as procedure_id,
     ts as rowversion

@@ -1,6 +1,7 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <filters>
         <filter column="enddate" operator="isblank"/>
+        <filter column="category" operator="eq" value="Behavior"/>
     </filters>
     <sorts>
         <sort column="Id/curLocation/room" />

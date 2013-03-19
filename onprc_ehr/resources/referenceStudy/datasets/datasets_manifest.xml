@@ -19,9 +19,6 @@
         <dataset name="delivery" id="5020" category="Reproductive Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="serology" id="5021" category="ClinPath" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="pregnancyConfirmation" id="5022" category="Reproductive Management" type="Standard">
             <tags/>
         </dataset>
@@ -95,6 +92,9 @@
             <tags/>
         </dataset>
         <dataset name="chemistryResults" id="1056" category="ClinPath" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="iStat" id="5026" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
         <dataset name="clinpathRuns" id="1073" category="ClinPath" type="Standard">

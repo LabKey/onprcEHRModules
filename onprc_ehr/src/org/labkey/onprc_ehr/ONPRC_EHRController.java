@@ -632,7 +632,7 @@ public class ONPRC_EHRController extends SpringActionController
 
         public URLHelper getSuccessURL(LegacyDataImportForm form)
         {
-            return ContainerManager.getHomeContainer().getStartURL(getUser());
+            return getContainer().getStartURL(getUser());
         }
     }
 

@@ -248,7 +248,7 @@ EHR.ETL = {
                 row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            var a = row.remark.match(/^a:(.*?)(p:|p1:|p2:|$)/i);
+            var a = row.remark.match(/^a:(.*?)(p:(?=\D)|p1:|p2:|$)/i);
             if(a){
                 row.a = a[1];
                 row.a = EHR.Server.Utils.trim(row.a);

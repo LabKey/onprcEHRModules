@@ -67,12 +67,17 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
 
         livingAnimalsWithoutWeight(c, u, msg);
         cagesWithoutDimensions(c, u, msg);
-        //cageReview(c, u, msg);
-        //animalsLackingAssignments(c, u, msg);
+        cageReview(c, u, msg);
+        roomsWithoutInfo(c, u, msg);
+        multipleHousingRecords(c, u, msg);
+        deadAnimalsWithActiveHousing(c, u, msg);
+        livingAnimalsWithoutHousing(c, u, msg);
+        housedInUnavailableCages(c, u, msg);
+        roomsReportingNegativeCagesAvailable(c, u, msg);
+
         activeAssignmentsForDeadAnimals(c, u, msg);
         assignmentsWithoutValidProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);
-        protocolsNearingLimit(c, u, msg);
 
         //only send if there are alerts
         if (msg.length() > 0)

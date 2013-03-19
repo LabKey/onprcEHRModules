@@ -27,7 +27,10 @@ SELECT
 	(select rowid FROM labkey.ehr_lookups.treatment_frequency tf WHERe tf.meaning = s4.value) as frequency,
 	
 	--Duration as Duration,
-	coalesce(EndDate, q.deathdate, q.departuredate) as enddate,
+	CASE
+	  WHEN enddate IS NULL THEN coalesce(cast(DATEADD(day, cln.duration - 1, cln.date) as DATE), q.deathdate, q.departuredate)
+	  ELSE coalesce(EndDate, q.deathdate, q.departuredate)
+    END as enddate,
 
 	--Reason as ReasonInt  ,
 	s5.Value as Reason,

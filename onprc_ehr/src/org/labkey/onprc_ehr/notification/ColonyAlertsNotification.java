@@ -47,6 +47,7 @@ import org.springframework.validation.BindException;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -106,6 +107,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);
         livingAnimalsWithoutHousing(c, u, msg);
+        housedInUnavailableCages(c, u, msg);
+        roomsReportingNegativeCagesAvailable(c, u, msg);
 
         deadAnimalsWithActiveAssignments(c, u, msg);
         deadAnimalsWithActiveCases(c, u, msg);
@@ -130,8 +133,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         deathRecordsWithoutDemographics(c, u, msg);
         assignmentsProjectedToday(c, u, msg);
         assignmentsProjectedTomorrow(c, u, msg);
-        roomsReportingNegativeCagesAvailable(c, u, msg);
-        housedInUnavailableCages(c, u, msg);
 
         //summarize events in last 5 days:
         eventsInLast5Days(c, u, msg);
@@ -173,7 +174,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("roomUtilization"), Table.ALL_COLUMNS, filter, null);
         if (ts.getRowCount() > 0)
         {
-            msg.append("<b>WARNING: The following rooms reports a negative number for available cages.  This probably means there is a problem in the room/cage configuration:</b><br>\n");
+            msg.append("<b>WARNING: The following rooms reports a negative number for available cages.  This probably means there is a problem in the cage divider configuration, or an animal is listed as being housed in the left-most cage of a joined pair:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
@@ -744,7 +745,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void cageReview(final Container c, User u, final StringBuilder msg)
     {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("cageStatus"), "ERROR", CompareType.EQUAL);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("cageStatus"), "ERROR", CompareType.STARTS_WITH);
         TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), Table.ALL_COLUMNS, filter, null);
         Map<String, Object>[] rows = ts.getArray(Map.class);
 
@@ -755,6 +756,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             {
                 String room = (String)row.get("room");
                 String cage = (String)row.get("cage");
+                String status = (String)row.get("cageStatus");
 
                 if (room != null)
                     msg.append("Room: ").append(room);
@@ -762,10 +764,47 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 if (cage != null)
                     msg.append(" ").append(cage);
 
+                if (status != null)
+                    msg.append(": ").append(status);
+
                 msg.append("<br>");
             }
 
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cageReview&query.viewName=Problem Cages'>Click here to view these cages</a></p>\n");
+            msg.append("<hr>\n");
+        }
+
+        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("sqftPct"), 97.0, CompareType.GTE);
+        TableSelector ts2 = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), Table.ALL_COLUMNS, filter2, null);
+        Map<String, Object>[] warningRows = ts2.getArray(Map.class);
+        DecimalFormat format = new DecimalFormat("0.#");
+
+        if (warningRows.length > 0)
+        {
+            msg.append("<b>WARNING: The following cages are approaching the size limit for the animals currently in them:</b><br>");
+
+            msg.append("<table border=1><tr><td>Room</td><td>Cage</td><td># Animals</td><td>Total Weight (kg)</td><td>Required Sq. Ft.</td><td>Available Sq. Ft.</td><td>% Used</td><td>Height Required</td><td>Height Available</td></tr>");
+            for (Map<String, Object> row : warningRows)
+            {
+                msg.append("<tr>");
+                msg.append("<td>" + ((String)row.get("room")) + "</td>");
+                msg.append("<td>" + ((String)row.get("cage")) + "</td>");
+
+                msg.append("<td>" + ((Integer)row.get("totalAnimals")) + "</td>");
+                msg.append("<td>" + DecimalFormat.getNumberInstance().format((Double) row.get("totalWeight")) + "</td>");
+
+                msg.append("<td>" + DecimalFormat.getNumberInstance().format((Double) row.get("requiredSqFt")) + "</td>");
+                msg.append("<td>" + ((Double)row.get("totalCageSqFt")) + "</td>");
+                msg.append("<td>" + DecimalFormat.getNumberInstance().format((Double) row.get("sqftPct")) + "</td>");
+
+                msg.append("<td>" + DecimalFormat.getNumberInstance().format((Double) row.get("requiredHeight")) + "</td>");
+                msg.append("<td>").append(row.get("minCageHeight") == null ? "" : ((Double)row.get("minCageHeight"))).append("</td>");
+
+                msg.append("</tr>");
+            }
+            msg.append("</table>");
+
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cageReview&query.sqftPct~gte=98.0'>Click here to view all problems and warnings</a></p>\n");
             msg.append("<hr>\n");
         }
     }

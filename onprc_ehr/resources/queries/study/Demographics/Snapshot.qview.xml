@@ -13,6 +13,7 @@
         </column>
         <column name="species"/>
         <column name="gender"/>
+        <column name="geographic_origin"/>
         <column name="calculated_status"/>
         <!--<column name="dam"/>-->
         <!--<column name="sire"/>-->

@@ -1121,7 +1121,7 @@ public class ETLRunnable implements Runnable
             put("Chemistry Results", new String[]{"Cln_Biochemistry", "Cln_IStat"});
             put("Clinical Encounters", new String[]{"Path_Biopsy", "Path_Autopsy", "Cln_Dx"});
             put("Clinical Observations", new String[]{"Brd_Menstruations"});
-            put("Clinical Remarks", new String[]{"Cln_Dx"});
+            put("Clinical Remarks", new String[]{"Af_Case", "Cln_Dx", "Cln_DXRemarks"});
             put("Clinpath Runs", new String[]{"Cln_AntibioticSensHeader", "Cln_Biochemistry", "Cln_IStat", "Cln_OccultBlood", "Cln_Hematology", "Cln_CerebralspinalFluid", "Cln_MicrobiologyHeader", "Cln_RareTestHeader", "Cln_VirologyHeader", "Cln_SerologyHeader", "Cln_Urinalysis", "Cln_Parasitology"});
             put("Deaths", new String[]{"Af_Death"});
             put("Delivery", new String[]{"Af_Delivery"});
@@ -1133,6 +1133,7 @@ public class ETLRunnable implements Runnable
             put("Flags", new String[]{"Af_Pool"});
             put("Hematology Results", new String[]{"Cln_Hematology", "Cln_CerebralspinalFluid"});
             put("Housing", new String[]{"Af_Transfer", "Af_Qrf"});
+            put("iStat", new String[]{"Cln_IStat"});
             put("Matings", new String[]{"Brd_Matings"});
             put("Measurements", new String[]{"Path_Measurements", "Path_FetalMeasurements"});
             put("Microbiology", new String[]{"Cln_MicrobiologyData", "Cln_MicrobiologyHeader"});
@@ -1221,8 +1222,8 @@ public class ETLRunnable implements Runnable
                 {
                     ps.setBytes(i, DEFAULT_VERSION);
                 }
-                sb.append("*************************\n");
-                sb.append("validating ETL for table: " + targetTableName + "\n\n");
+                sb.append("*************************<br>");
+                sb.append("validating ETL for table: " + targetTableName + "<br><br>");
                 rs = ps.executeQuery();
                 List<String> missingFromLK = new ArrayList<String>();
                 List<String> toDeleteFromLK = new ArrayList<String>();
@@ -1243,11 +1244,11 @@ public class ETLRunnable implements Runnable
                 missingFromLK.size();
                 if (missingFromLK.size() > 0 || toDeleteFromLK.size() > 0)
                 {
-                    sb.append("table: " + targetTableName + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete\n");
+                    sb.append("table: " + targetTableName + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete<br>");
                     if (missingFromLK.size() > 0)
                     {
-                        sb.append("missing:\n");
-                        sb.append("'" + StringUtils.join(missingFromLK, "',\n'") + "'\n");
+                        sb.append("missing:<br>");
+                        sb.append("'" + StringUtils.join(missingFromLK, "',<br>'") + "'<br>");
 
                         if (attemptRepair)
                         {
@@ -1276,8 +1277,8 @@ public class ETLRunnable implements Runnable
 
                     if (toDeleteFromLK.size() > 0)
                     {
-                        sb.append("to delete from LabKey:\n");
-                        sb.append("'" + StringUtils.join(toDeleteFromLK, "',\n'") + "'");
+                        sb.append("to delete from LabKey:<br>");
+                        sb.append("'" + StringUtils.join(toDeleteFromLK, "',<br>'") + "'");
                         if (attemptRepair)
                         {
                             //rather than delete directly, append record into deleted_records and let the next ETL handle it.

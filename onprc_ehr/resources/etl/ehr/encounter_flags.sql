@@ -430,6 +430,19 @@ WHERE Pregnant = 1 AND cln.ts  > ?
 
 UNION ALL
 
+--hematology manualDiff
+SELECT
+	cast(AnimalId as nvarchar(4000)) as Id,
+	Date ,
+	'Manual Diff' as flag,
+	'Y' as value,
+	objectid
+
+FROM Cln_Hematology cln
+WHERE manualDiff = 1 AND cln.ts  > ?
+
+UNION ALL
+
 SELECT
 	cast(AnimalId as nvarchar(4000)) as Id,
 	Date ,

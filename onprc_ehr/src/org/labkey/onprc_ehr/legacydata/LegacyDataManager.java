@@ -22,11 +22,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.labkey.api.action.AbstractFileUploadAction;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
+import org.labkey.api.collections.CaseInsensitiveHashSet;
+import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
+import org.labkey.api.data.Results;
+import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
@@ -74,8 +78,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -444,7 +450,7 @@ public class LegacyDataManager
                     {
                         if (r.getName().equals(runName))
                         {
-                            sb.append("Existing run found, skipping: " + runName);
+                            sb.append("Existing run found, skipping: " + runName).append("<br>");
                             return;
                         }
                     }
@@ -458,7 +464,7 @@ public class LegacyDataManager
                 row.put("spots", rs.getInt("spots"));
                 row.put("cell_number", rs.getObject("cell_number"));
                 row.put("comments", rs.getObject("comments"));
-                //row.put("concentration", rs.getObject("peptide_concentration"));
+                row.put("concentration", rs.getObject("peptide_concentration"));
 
                 if (rs.getObject("date") instanceof Date)
                 {
@@ -469,7 +475,7 @@ public class LegacyDataManager
                 if (peptide != null && peptide.matches(" (\\d+)\\DM$"))
                 {
                     String[] tokens = peptide.split(" ");
-                    peptide = tokens[0];
+                    peptide = StringUtils.trimToNull(tokens[0]);
                     Integer conc = Integer.parseInt(tokens[1].replaceAll("\\D", ""));
 
                     row.put("peptide", peptide);
@@ -481,13 +487,14 @@ public class LegacyDataManager
                     row.put("peptide", "No Stim");
                 }
 
-                if ("Con A".equalsIgnoreCase((String)row.get("peptide")))
+                if ("Con A".equalsIgnoreCase((String)row.get("peptide")) || "ConA".equalsIgnoreCase((String)row.get("peptide")))
                 {
+                    row.put("peptide", "Con A");
                     row.put("category", "Pos Control");
-
                 }
-                else if ("No Stim".equalsIgnoreCase((String)row.get("peptide")))
+                else if ("No Stim".equalsIgnoreCase((String)row.get("peptide")) || "No Peptide".equalsIgnoreCase((String)row.get("peptide")))
                 {
+                    row.put("peptide", "No Stim");
                     row.put("category", "Neg Control");
                 }
                 else
@@ -537,6 +544,8 @@ public class LegacyDataManager
             }
             json.put("ResultRows", jsonArray);
 
+            json.put("errorLevel", "ERROR");
+
             File root = svc.getFileRoot(workbook, FileContentService.ContentType.files);
             if (!root.exists())
                 root.mkdir();
@@ -565,7 +574,7 @@ public class LegacyDataManager
                 {
                     for (ValidationException ve : e.getRowErrors())
                     {
-                        _log.error(e.getMessage(), e);
+                        _log.error(ve.getMessage(), ve);
                     }
                     _log.error(e.getMessage(), e);
                 }
@@ -610,6 +619,7 @@ public class LegacyDataManager
 
             UserSchema elispotSchema = QueryService.get().getUserSchema(u, c, "elispot_assay");
             final TableInfo peptidePoolTable = elispotSchema.getTable("peptide_pools");
+            final TableInfo peptidePoolMembersTable = elispotSchema.getTable("peptide_pool_members");
 
             SimpleFilter filter = new SimpleFilter();
             filter.addClause(ContainerFilter.CURRENT.createFilterClause(labSchema.getDbSchema(), FieldKey.fromString("container"), c));
@@ -626,71 +636,86 @@ public class LegacyDataManager
 
             TableSelector ts2 = new TableSelector(mysqlPepTable);
             final List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
-            final List<Map<String, Object>> poolRows = new ArrayList<Map<String, Object>>();
-            ExperimentService.get().ensureTransaction();
+            final Map<String, String> poolsToCreate = new CaseInsensitiveHashMap();
+            final Map<String, Set<String>> poolMembers = new HashMap<String, Set<String>>();
 
             ts2.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
                 {
-                    if ("Yes".equalsIgnoreCase(object.getString("pool_status")))
+                    //attempt to create a pool record for any pool referenced in this field
+                    String pool_name = object.getString("pool_name");
+                    if (pool_name != null && StringUtils.trimToNull(pool_name) != null && !getPeptidePool(c, pool_name, peptidePoolTable))
                     {
-                        Map<String, Object> row = new HashMap<String, Object>();
-                        String name = object.getString("id_peptide");
-                        if (!getPeptidePool(name, peptidePoolTable))
-                        {
-                            row.put("pool_name", name);
-                            poolRows.add(row);
-                        }
-                        return;
+                        poolsToCreate.put(pool_name, pool_name);
                     }
 
                     Map<String, Object> row = new HashMap<String, Object>();
                     row.put("container", c.getId());
-                    row.put("name", object.getString("id_peptide"));
-                    String aaseq = StringUtils.trimToNull(object.getString("amino_acid_sequence"));
-                    aaseq = aaseq.replaceAll("-", "");
-                    if (aaseq != null && aaseq.contains("B"))
+                    row.put("name", StringUtils.trimToNull(object.getString("full_name")));
+                    row.put("peptideId", object.getInt("id_peptide"));
+                    //a flag to force UpdateService to accept this value for peptideId, rather than auto-populating
+                    row.put("_legacyDataImport", true);
+
+                    StringBuilder comments = new StringBuilder();
+                    String commentsDelim = "";
+                    if (object.getString("comments") != null)
                     {
-                        if (aaseq.toLowerCase().contains("biotin"))
+                        comments.append(commentsDelim).append(object.getString("comments"));
+                        commentsDelim = "\n";
+                    }
+
+                    if ("Yes".equalsIgnoreCase(object.getString("pool_status")))
+                    {
+                        String poolname = StringUtils.trimToNull(object.getString("amino_acid_sequence"));
+                        if (poolname != null)
                         {
-                            row.put("modification", "Biotin");
-                            aaseq = aaseq.replaceAll("Biotin", "");
+                            comments.append(commentsDelim).append("Pool: " + poolname);
+                            commentsDelim = "\n";
                         }
                     }
-                    row.put("sequence", aaseq);
+                    else
+                    {
+                        String aaseq = StringUtils.trimToNull(object.getString("amino_acid_sequence"));
+                        aaseq = aaseq.replaceAll("-", "");
+                        if (aaseq != null && aaseq.contains("B"))
+                        {
+                            if (aaseq.toLowerCase().contains("biotin"))
+                            {
+                                row.put("modification", "Biotin");
+                                aaseq = aaseq.replaceAll("Biotin", "");
+                            }
+                        }
+                        row.put("sequence", aaseq);
+                        ensurePeptideExists(u, sb, aaseq, object);
+
+                        appendPoolMember(u, c, aaseq, object, poolMembers, peptidePoolMembersTable);
+                    }
+
                     row.put("created", new Date());
                     row.put("modified", new Date());
                     row.put("createdby", u.getUserId());
                     row.put("modifiedby", u.getUserId());
 
-                    StringBuilder comments = new StringBuilder();
-                    if (object.getString("comments") != null)
-                    {
-                        comments.append(object.getString("comments"));
-                    }
-
                     if (object.getString("id_watco") != null)
                     {
-                        if (comments.length() > 0)
-                            comments.append("\n");
-
-                        comments.append("Watco ID: ").append(object.getString("id_watco"));
+                        comments.append(commentsDelim).append("Watco ID: ").append(object.getString("id_watco"));
+                        commentsDelim = "\n";
                     }
 
                     row.put("comment", comments.toString());
-
-                    ensurePeptideExists(u, sb, aaseq, object);
-
                     rows.add(row);
                 }
             });
 
             sb.append("Peptides to add: " + rows.size()).append("<br>");
-            sb.append("Peptide pools to add: " + poolRows.size()).append("<br>");
+            sb.append("Peptide pools to add: " + poolsToCreate.size()).append("<br>");
+            sb.append("Peptide pools with members to add: " + poolMembers.size()).append("<br>");
             if (!validateOnly)
             {
+                ExperimentService.get().ensureTransaction();
+
                 if (rows.size() > 0)
                 {
                     QueryUpdateService update = peptideTable.getUpdateService();
@@ -705,8 +730,17 @@ public class LegacyDataManager
                     sb.append("peptides created: " + inserted.size()).append("<br>");
                 }
 
-                if (poolRows.size() > 0)
+                if (poolsToCreate.size() > 0)
                 {
+                    List<Map<String, Object>> poolRows = new ArrayList<Map<String, Object>>();
+                    for (String name : poolsToCreate.values())
+                    {
+                        Map<String, Object> row = new HashMap<String, Object>();
+                        row.put("pool_name", StringUtils.trimToNull(name));
+                        row.put("container", c.getId());
+                        poolRows.add(row);
+                    }
+
                     QueryUpdateService update = peptidePoolTable.getUpdateService();
                     update.setBulkLoad(true);
                     BatchValidationException errors = new BatchValidationException();
@@ -718,9 +752,39 @@ public class LegacyDataManager
 
                     sb.append("peptide pools created: " + inserted.size()).append("<br>");
                 }
-            }
 
-            ExperimentService.get().commitTransaction();
+                ExperimentService.get().commitTransaction();
+
+                if (poolMembers.size() > 0)
+                {
+                    List<Map<String, Object>> toInsert = new ArrayList<Map<String, Object>>();
+                    for (String poolName : poolMembers.keySet())
+                    {
+                        Integer poolId = getPoolId(c, poolName, peptidePoolTable);
+                        if (poolId == null)
+                            throw new RuntimeException("Unable to find RowId for pool: " + poolName);
+
+                        for (String aaseq : poolMembers.get(poolName))
+                        {
+                            Map<String, Object> row = new HashMap<String, Object>();
+                            row.put("poolid", poolId);
+                            row.put("sequence", aaseq);
+                            toInsert.add(row);
+                        }
+                    }
+
+                    QueryUpdateService update = peptidePoolMembersTable.getUpdateService();
+                    update.setBulkLoad(true);
+                    BatchValidationException errors = new BatchValidationException();
+                    List<Map<String,Object>> inserted = update.insertRows(u, c, toInsert, errors, new HashMap<String, Object>());
+                    if (errors.hasErrors())
+                    {
+                        throw errors;
+                    }
+
+                    sb.append("peptide pools members added: " + inserted.size()).append("<br>");
+                }
+            }
 
             return sb.toString();
         }
@@ -746,9 +810,74 @@ public class LegacyDataManager
         }
     }
 
-    private boolean getPeptidePool(String name, TableInfo ti)
+    private Integer getPoolId(Container c, String poolName, TableInfo poolsTable)
     {
-        TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, new SimpleFilter("pool_name", name), null);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("container"), c.getId());
+        filter.addCondition(FieldKey.fromString("pool_name"), poolName);
+        TableSelector ts = new TableSelector(poolsTable, Collections.singleton("rowid"), filter, null);
+        Integer[] rows = ts.getArray(Integer.class);
+        return rows.length == 1 ? rows[0] : null;
+    }
+
+    private void appendPoolMember(User u, Container c, String aaseq, ResultSet object, Map<String, Set<String>> poolMembers, TableInfo peptidePoolMembersTable) throws SQLException
+    {
+        String pool_name = object.getString("pool_name");
+        if (pool_name != null && StringUtils.trimToNull(pool_name) != null && !getPeptidePoolMember(c, pool_name, aaseq, peptidePoolMembersTable))
+        {
+            Set<String> members = poolMembers.get(pool_name);
+            if (members == null)
+                members = new HashSet<String>();
+
+            if (!members.contains(aaseq))
+                members.add(aaseq);
+
+            poolMembers.put(pool_name, members);
+        }
+    }
+
+    private Map<String, Set<String>> _existingPeptides = new HashMap<String, Set<String>>();
+
+    private boolean getPeptidePoolMember(Container c, String pool_name, String aaseq, TableInfo peptidePoolMembersTable)
+    {
+        if (_existingPeptides.containsKey(pool_name))
+        {
+            return _existingPeptides.get(pool_name).contains(aaseq);
+        }
+        else
+        {
+            Set<FieldKey> fieldKeys = new HashSet<FieldKey>();
+            fieldKeys.add(FieldKey.fromString("poolid/pool_name"));
+            fieldKeys.add(FieldKey.fromString("sequence"));
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(peptidePoolMembersTable, fieldKeys);
+            TableSelector ts = new TableSelector(peptidePoolMembersTable, colMap.values(), new SimpleFilter("container", c.getId()), null);
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, colMap);
+                    String name = rs.getString(FieldKey.fromString("poolid/pool_name"));
+                    String aaseq = rs.getString(FieldKey.fromString("sequence"));
+                    Set<String> members = _existingPeptides.get(name);
+                    if (members == null)
+                        members = new HashSet<String>();
+
+                    if (!members.contains(aaseq))
+                        members.add(aaseq);
+
+                    _existingPeptides.put(name, members);
+                }
+            });
+
+            return _existingPeptides.containsKey(pool_name) ? _existingPeptides.get(pool_name).contains(aaseq) : false;
+        }
+    }
+
+    private boolean getPeptidePool(Container c, String name, TableInfo ti)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("pool_name"), name);
+        filter.addCondition(FieldKey.fromString("container"), c.getId());
+        TableSelector ts = new TableSelector(ti, Collections.singleton("rowid"), filter, null);
         return ts.getRowCount() > 0;
     }
 

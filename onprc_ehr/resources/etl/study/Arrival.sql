@@ -25,7 +25,7 @@ Select
 
     Afc.ISISInstitute as source,
     Remarks as Remark,
-    Refis.GeographicName as geoOrigin,
+    Refis.GeographicName as geographic_origin,
 
     --TODO: add these fields??
     s3.Value as AcquisitionAge,

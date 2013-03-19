@@ -4,6 +4,6 @@
        <sort column="cage" />
    </sorts>
     <filters>
-        <filter column="cageStatus" operator="eq" value="ERROR"/>
+        <filter column="cageStatus" operator="isnonblank" value=""/>
     </filters>
 </customView>

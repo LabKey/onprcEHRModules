@@ -37,21 +37,21 @@ SELECT
 
 FROM (
 
-SELECT
-	ClinicalKey ,
-	AnimalID as Id  ,
-	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
-	Method as MethodInt  ,
-	ManualDiff as Result,
-	'ManualDiff' as TestId,
-	cln.ts as rowversion,
-	cln.objectid
-
-FROM Cln_Hematology cln
-WHERE ManualDiff != 0
-
-union all
+-- SELECT
+-- 	ClinicalKey ,
+-- 	AnimalID as Id  ,
+-- 	DATE ,
+-- 	Specimen as Specimen ,     --      Speciment database table
+-- 	Method as MethodInt  ,
+-- 	ManualDiff as Result,
+-- 	'ManualDiff' as TestId,
+-- 	cln.ts as rowversion,
+-- 	cln.objectid
+--
+-- FROM Cln_Hematology cln
+-- WHERE ManualDiff != 0
+--
+-- union all
 
 SELECT
 	ClinicalKey ,
@@ -90,7 +90,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Hemoglobin as Result,
-	'Hemoglobin' as TestId,
+	'Hg' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -165,7 +165,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	PlateletCount as Result,
-	'PlateletCount' as TestId,
+	'PLT' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -225,7 +225,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Lymphocyte as Result,
-	'LY' as TestId,
+	'Lymph' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -330,7 +330,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Reticulocyte as Result,
-	'RETICULO' as TestId,
+	'RETIC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
