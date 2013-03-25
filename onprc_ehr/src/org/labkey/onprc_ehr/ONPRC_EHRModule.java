@@ -159,6 +159,17 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
                 }
             });
         }
+
+        RoleManager.registerRole(new ONPRCBillingAdminRole());
+
+        EHRService.get().registerModule(this);
+        EHRService.get().registerTableCustomizer(this, ONPRC_EHRCustomizer.class);
+
+        Resource r = getModuleResource("/scripts/onprc_ehr/onprc_triggers.js");
+        assert r != null;
+        EHRService.get().registerTriggerScript(this, r);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/onprcReports.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/Utils.js"), this);
     }
 
     @Override
