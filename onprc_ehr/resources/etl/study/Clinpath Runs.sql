@@ -25,6 +25,7 @@ SELECT
 	sp.SNOMEDCODE as sampleTypeSnomed,
 	--MethodInt,
 	Method,
+	collectionMethod,
 	--ConditionInt,
 	Condition,
 
@@ -78,6 +79,7 @@ SELECT
 	Specimen as Specimen ,            ---- information not required
 	Method as MethodInt  ,
 	s2.Value as Method,
+	null as collectionMethod,
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
 	Experimental as Experimental ,     -------If selected Flag = 1 Else 0
@@ -121,6 +123,7 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	s2.Value as Method,
+	null as collectionMethod,
 
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
@@ -168,6 +171,7 @@ SELECT
 	Specimen as Specimen ,       ------ Specimen  database table
 	Method as MethodInt  ,
 	s2.Value as Method,
+	null as collectionMethod,
 
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
@@ -215,6 +219,7 @@ SELECT
 	Specimen as Specimen ,			----- Specimen database table
 	Method as MethodInt  ,
 	s2.Value as Method,
+	null as collectionMethod,
 
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
@@ -261,6 +266,7 @@ SELECT
 	Specimen ,               ----- Specimen database table
 	Method as MethodInt  ,
 	s2.Value as Method,
+	null as collectionMethod,
 
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
@@ -305,6 +311,7 @@ SELECT
 	Specimen as Specimen ,             -------- Specimen database table
 	Method as MethodInt  ,
 	s2.Value as Method,
+	null as collectionMethod,
 
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
@@ -351,6 +358,7 @@ SELECT
 	Specimen as Specimen ,            ------ Specimen Database table
 	Method as MethodInt  ,
 	s2.Value as Method,
+	null as collectionMethod,
 
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
@@ -396,6 +404,7 @@ SELECT
 	Specimen as Specimen ,
 	Method as MethodInt  ,
 	s2.Value as Method,
+	null as collectionMethod,
 
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
@@ -442,6 +451,7 @@ SELECT
 	Specimen as Specimen ,           ----- database table called Specimen
 	Method as MethodInt  ,
 	s2.Value as Method,
+	null as collectionMethod,
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
 	Experimental as Experimental ,     ----- If selected Flag = 1 else Flag = 0
@@ -484,7 +494,8 @@ SELECT
 
 	Specimen as Specimen ,
 	Method as MethodInt  ,
-        s2.Value  as Method,
+      s2.Value  as Method,
+      null as collectionMethod,
 
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
@@ -529,6 +540,7 @@ SELECT
 	Specimen as Specimen ,					--database table called Specimen
 	Method as MethodInt  ,
 	s2.Value as Method,
+	s5.value as collectionMethod,
 	Condition as ConditionInt  ,
 	s3.Value as Condition,
 	Experimental as Experimental   ,
@@ -551,7 +563,7 @@ FROM Cln_Urinalysis cln
    left join Sys_parameters s2 on (s2.Field = 'AnalysisMethodUrinalysis' and s2.Flag = Method)
    left join Sys_parameters s3 on (s3.Field = 'AnimalConditionLab'and s3.Flag = Condition)
 --    left join Sys_parameters s4 on (s4.Field = 'UrineAppearance' and s4.Flag = Appearance)
---    left join Sys_parameters s5 on (s5.Field = 'UrineCollection' and s5.Flag = Collection)
+   left join Sys_parameters s5 on (s5.Field = 'UrineCollection' and s5.Flag = Collection)
 --    left join Sys_parameters s6 on (s6.Field = 'UrineColor'and s6.Flag = Color)
 --    left join Sys_parameters s7 on (s7.Field = 'BacteriaCount' and s7.Flag = Bacteria)
 --    left join Sys_parameters s8 on (s8.Field = 'UrineMeasurement' and s8.Flag = Protein)
@@ -582,6 +594,7 @@ Select
 	Specimen ,               ----- Specimen database table
 	Method as methodInt,
 	s2.Value as method,
+	null as collectionMethod,
 	Condition as conditionInt,
 	s3.value as condition,
 

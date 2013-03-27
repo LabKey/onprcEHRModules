@@ -772,6 +772,8 @@ public class ETLRunnable implements Runnable
                     sql.append(delim).append(source);
                     delim = "', '";
                 }
+
+                sql.append(delim).append(tableName);
                 sql.append("')");
             }
 
@@ -1077,10 +1079,38 @@ public class ETLRunnable implements Runnable
             UserSchema studySchema = QueryService.get().getUserSchema(user, container, "study");
 
             StringBuilder sb = new StringBuilder();
-            sb.append(validateEtlScript(ehrQueries, ehrSchema, attemptRepair));
-            sb.append(validateEtlScript(ehrLookupsQueries, ehrLookupsSchema, attemptRepair));
-            sb.append(validateEtlScript(studyQueries, studySchema, attemptRepair));
-            sb.append(validateEtlScript(billingQueries, billingSchema, attemptRepair));
+            String result = validateEtlScript(ehrQueries, ehrSchema, attemptRepair);
+            if (result != null)
+            {
+                sb.append("Validating EHR Schema:<br>");
+                sb.append(result);
+                sb.append("<hr>");
+            }
+
+            result = validateEtlScript(ehrLookupsQueries, ehrLookupsSchema, attemptRepair);
+            if (result != null)
+            {
+                sb.append("Validating EHR_Lookups Schema:<br>");
+                sb.append(result);
+                sb.append("<hr>");
+            }
+
+            result = validateEtlScript(studyQueries, studySchema, attemptRepair);
+            if (result != null)
+            {
+                sb.append("Validating Study Schema:<br>");
+                sb.append(result);
+                sb.append("<hr>");
+            }
+
+            result = validateEtlScript(billingQueries, billingSchema, attemptRepair);
+            if (result != null)
+            {
+                sb.append("Validating ONPRC_Billing Schema:<br>");
+                sb.append(result);
+                sb.append("<hr>");
+            }
+
             return sb.toString();
         }
         catch (Exception e)
@@ -1100,7 +1130,7 @@ public class ETLRunnable implements Runnable
         {
             put("encounter_flags", new String[]{"Cln_AntibioticSensHeader", "Cln_Biochemistry", "Cln_IStat", "Cln_OccultBlood", "Cln_Hematology", "Cln_CerebralspinalFluid", "Cln_MicrobiologyHeader", "Cln_RareTestHeader", "Cln_VirologyHeader", "Cln_SerologyHeader", "Cln_Urinalysis", "Cln_Parasitology"});
             put("encounter_participants", new String[]{"Path_Autopsy", "Path_Biopsy", "Sur_General"});
-            put("encounter_summaries", new String[]{"Path_Autopsy", "Path_Biopsy"});
+            put("encounter_summaries", new String[]{"Path_Autopsy", "Path_Biopsy", "Sur_Log"});
             put("project", new String[]{"Ref_ProjectsIACUC", "Ref_ProjInvest"});
             put("protocol", new String[]{"Ref_ProjectsIACUC", "Ref_IACUCParentChildren"});
             put("protocolProcedures", new String[]{"IACUC_NHPSurgeries"});
@@ -1119,7 +1149,7 @@ public class ETLRunnable implements Runnable
             put("Blood Draws", new String[]{"Af_Blood", "Af_BloodData"});
             put("Cases", new String[]{"Af_Case", "Af_Qrf"});
             put("Chemistry Results", new String[]{"Cln_Biochemistry", "Cln_IStat"});
-            put("Clinical Encounters", new String[]{"Path_Biopsy", "Path_Autopsy", "Cln_Dx"});
+            put("Clinical Encounters", new String[]{"Path_Biopsy", "Path_Autopsy", "Cln_Dx", "Sur_General"});
             put("Clinical Observations", new String[]{"Brd_Menstruations"});
             put("Clinical Remarks", new String[]{"Af_Case", "Cln_Dx", "Cln_DXRemarks"});
             put("Clinpath Runs", new String[]{"Cln_AntibioticSensHeader", "Cln_Biochemistry", "Cln_IStat", "Cln_OccultBlood", "Cln_Hematology", "Cln_CerebralspinalFluid", "Cln_MicrobiologyHeader", "Cln_RareTestHeader", "Cln_VirologyHeader", "Cln_SerologyHeader", "Cln_Urinalysis", "Cln_Parasitology"});
@@ -1128,7 +1158,7 @@ public class ETLRunnable implements Runnable
             put("Demographics", new String[]{"Af_Qrf", "Af_Birth"});
             put("Departure", new String[]{"AF_Departure"});
             put("Diet", new String[]{"Af_Diet", "Af_Qrf"});
-            put("Drug Administration", new String[]{"Cln_Medications", "Cln_MedicationTimes", "Sur_AnesthesiaLogHeader", "sur_general"});
+            put("Drug Administration", new String[]{"Cln_Medications", "Cln_MedicationTimes", "Sur_AnesthesiaLogHeader", "sur_general", "Sur_Medications", "Sur_AnesthesiaLogHeader"});
             put("Enrichment", new String[]{"Af_Toys"});
             put("Flags", new String[]{"Af_Pool"});
             put("Hematology Results", new String[]{"Cln_Hematology", "Cln_CerebralspinalFluid"});
@@ -1151,7 +1181,7 @@ public class ETLRunnable implements Runnable
             put("Tissue Samples", new String[]{"Path_AutopsyWtsMaterials", "Path_Autopsy", "Path_BiopsyWtsMaterials", "Path_biopsy"});
             put("Treatment Orders", new String[]{"Cln_Medications", "Af_Qrf"});
             put("Urinalysis Results", new String[]{"Cln_Urinalysis"});
-            put("Virology Results", new String[]{"Cln_VirologyData", "Cln_VirologyHeader"});
+            put("Virology Results", new String[]{"Cln_VirologyData", "Cln_VirologyHeader", "Cln_SerologyData", "Cln_SerologyHeader"});
             put("Weight", new String[]{"Af_Weights", "Sur_general", "Af_Death"});
         }
     };
@@ -1172,120 +1202,123 @@ public class ETLRunnable implements Runnable
 
         try
         {
-        for (Map.Entry<String, String> kv : queries.entrySet())
-        {
-            try
+            for (Map.Entry<String, String> kv : queries.entrySet())
             {
-                if (originConnection == null)
-                    originConnection = getOriginConnection();
-
-                targetTableName = kv.getKey();
-
-                if (targetTableName.equals("lookups"))
+                try
                 {
-                    continue;
-                }
+                    if (originConnection == null)
+                        originConnection = getOriginConnection();
 
-                TableInfo targetTable = schema.getTable(targetTableName);
-                if (targetTable == null)
-                {
-                    log.error(targetTableName + " is not a known labkey table name, skipping the so-named sql query");
-                    continue;
-                }
+                    targetTableName = kv.getKey();
 
-                //find the physical table for deletes
-                TableInfo realTable = getRealTable(targetTable);
-                if (realTable == null)
-                {
-                    log.error("Unable to find real table for: " + targetTable.getSelectName());
-                    continue;
-                }
-
-                ColumnInfo filterCol = realTable.getColumn("objectid");
-                ColumnInfo pkColumn = targetTable.getPkColumns().get(0);
-                if(filterCol == null)
-                {
-                    log.info("objectid column not found for table: " + targetTable.getName() + ", using " + pkColumn.getName() + " instead");
-                    filterCol = pkColumn;
-                }
-
-                sql = kv.getValue();
-                sql = "SELECT t." + filterCol.getSelectName() + " AS col1, t.objectid as objectid, t2." + filterCol.getSelectName() + " AS col2  " +
-                        "FROM (" + sql + "\n) t \n" +
-                        "FULL JOIN " + scope.getDatabaseName() + "." + realTable.getSelectName() + " t2 \n" +
-                        "ON (t." + filterCol.getSelectName() + " = t2." + filterCol.getSelectName() + ") \n" +
-                        "WHERE t." + filterCol.getSelectName() + " IS NULL OR t2." + filterCol.getSelectName() + " IS NULL" ;
-
-                ps = originConnection.prepareStatement(sql);
-                int paramCount = ps.getParameterMetaData().getParameterCount();
-                for (int i = 1; i <= paramCount; i++)
-                {
-                    ps.setBytes(i, DEFAULT_VERSION);
-                }
-                sb.append("*************************<br>");
-                sb.append("validating ETL for table: " + targetTableName + "<br><br>");
-                rs = ps.executeQuery();
-                List<String> missingFromLK = new ArrayList<String>();
-                List<String> toDeleteFromLK = new ArrayList<String>();
-                while (rs.next())
-                {
-                    String col1 = rs.getString("objectid");
-                    if (col1 != null)
-                        missingFromLK.add(col1);
-
-                    String col2 = rs.getString("col2");
-                    if (col2 != null)
-                        toDeleteFromLK.add(col2);
-                }
-
-                ps.close();
-                rs.close();
-
-                missingFromLK.size();
-                if (missingFromLK.size() > 0 || toDeleteFromLK.size() > 0)
-                {
-                    sb.append("table: " + targetTableName + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete<br>");
-                    if (missingFromLK.size() > 0)
+                    if (targetTableName.equals("lookups"))
                     {
-                        sb.append("missing:<br>");
-                        sb.append("'" + StringUtils.join(missingFromLK, "',<br>'") + "'<br>");
+                        continue;
+                    }
 
-                        if (attemptRepair)
+                    TableInfo targetTable = schema.getTable(targetTableName);
+                    if (targetTable == null)
+                    {
+                        log.error(targetTableName + " is not a known labkey table name, skipping the so-named sql query");
+                        continue;
+                    }
+
+                    //find the physical table for deletes
+                    TableInfo realTable = getRealTable(targetTable);
+                    if (realTable == null)
+                    {
+                        log.error("Unable to find real table for: " + targetTable.getSelectName());
+                        continue;
+                    }
+
+                    ColumnInfo filterCol = realTable.getColumn("objectid");
+                    ColumnInfo pkColumn = targetTable.getPkColumns().get(0);
+                    if(filterCol == null)
+                    {
+                        log.info("objectid column not found for table: " + targetTable.getName() + ", using " + pkColumn.getName() + " instead");
+                        filterCol = pkColumn;
+                    }
+
+                    sql = kv.getValue();
+                    sql = "SELECT t." + filterCol.getSelectName() + " AS col1, t.objectid as objectid, t2." + filterCol.getSelectName() + " AS col2  " +
+                            "FROM (" + sql + "\n) t \n" +
+                            "FULL JOIN " + scope.getDatabaseName() + "." + realTable.getSelectName() + " t2 \n" +
+                            "ON (t." + filterCol.getSelectName() + " = t2." + filterCol.getSelectName() + ") \n" +
+                            "WHERE t." + filterCol.getSelectName() + " IS NULL OR t2." + filterCol.getSelectName() + " IS NULL" ;
+
+                    ps = originConnection.prepareStatement(sql);
+                    int paramCount = ps.getParameterMetaData().getParameterCount();
+                    for (int i = 1; i <= paramCount; i++)
+                    {
+                        ps.setBytes(i, DEFAULT_VERSION);
+                    }
+                    sb.append("*************************<br>");
+                    sb.append("validating ETL for table: " + targetTableName + "<br><br>");
+                    rs = ps.executeQuery();
+                    Set<String> missingFromLK = new HashSet<String>();
+                    Set<String> toDeleteFromLK = new HashSet<String>();
+                    while (rs.next())
+                    {
+                        String col1 = rs.getString("objectid");
+                        if (col1 != null)
+                            missingFromLK.add(col1);
+
+                        String col2 = rs.getString("col2");
+                        if (col2 != null)
+                            toDeleteFromLK.add(col2);
+                    }
+
+                    ps.close();
+                    rs.close();
+
+                    if (missingFromLK.size() > 0 || toDeleteFromLK.size() > 0)
+                    {
+                        sb.append("table: " + targetTableName + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete<br>");
+                        if (missingFromLK.size() > 0)
                         {
-                            String[] tables = LK_TO_IRIS.get(targetTableName);
-                            if (tables != null)
+                            sb.append("records missing:<br>");
+                            List<String> toShow = new ArrayList<String>();
+                            toShow.addAll(missingFromLK);
+                            sb.append("'" + StringUtils.join(toShow, "','") + "'").append("<br><br>");
+
+                            if (attemptRepair)
                             {
-                                for (String table : tables)
+                                String[] tables = LK_TO_IRIS.get(targetTableName);
+                                if (tables != null)
                                 {
-                                    //although in LK objectIds can have other info appended, we need to truncate to the original objectid for IRIS
-                                    Set<String> objectIdsToAdd = new HashSet<String>();
-                                    for (String objectid : missingFromLK)
+                                    for (String table : tables)
                                     {
-                                        if (objectid.length() >= 36)
-                                            objectIdsToAdd.add(objectid.substring(0, 36));
-                                        else
-                                            objectIdsToAdd.add(objectid);
+                                        //although in LK objectIds can have other info appended, we need to truncate to the original objectid for IRIS
+                                        Set<String> objectIdsToAdd = new HashSet<String>();
+                                        for (String objectid : missingFromLK)
+                                        {
+                                            if (objectid.length() >= 36)
+                                                objectIdsToAdd.add(objectid.substring(0, 36));
+                                            else
+                                                objectIdsToAdd.add(objectid);
+                                        }
+                                        //SQLServer will automatically bump the rowversion for us
+                                        ps2 = originConnection.prepareStatement("UPDATE dbo." + table + " SET objectid = objectid WHERE objectid IN ('" + StringUtils.join(new ArrayList<String>(objectIdsToAdd), "','") + "')");
+                                        ps2.execute();
+                                        ps2.close();
                                     }
-                                    //SQLServer will automatically bump the rowversion for us
-                                    ps2 = originConnection.prepareStatement("UPDATE dbo." + table + " SET objectid = objectid WHERE objectid IN ('" + StringUtils.join(new ArrayList<String>(objectIdsToAdd), "','") + "')");
-                                    ps2.execute();
-                                    ps2.close();
                                 }
                             }
                         }
-                    }
 
-                    if (toDeleteFromLK.size() > 0)
-                    {
-                        sb.append("to delete from LabKey:<br>");
-                        sb.append("'" + StringUtils.join(toDeleteFromLK, "',<br>'") + "'");
-                        if (attemptRepair)
+                        if (toDeleteFromLK.size() > 0)
                         {
-                            //rather than delete directly, append record into deleted_records and let the next ETL handle it.
-                            //this provides additional validation that the ETL is operating correctly
-                            for (String key : toDeleteFromLK)
+                            sb.append("to delete from LabKey:<br>");
+                            List<String> toShow = new ArrayList<String>();
+                            toShow.addAll(toDeleteFromLK);
+                            sb.append("'" + StringUtils.join(toShow, "','") + "'").append("<br><br>");
+                            if (attemptRepair)
                             {
-                                key = key.substring(0, 36);
+                                //rather than delete directly, append record into deleted_records and let the next ETL handle it.
+                                //this provides additional validation that the ETL is operating correctly
+                                for (String key : toDeleteFromLK)
+                                {
+                                    key = key.substring(0, 36);
                                     ps3 = originConnection.prepareStatement("INSERT INTO dbo.deleted_records (objectid, ts, tableName) VALUES (?, ?, ?)");
                                     byte[] version = getOriginDataSourceCurrentVersion();
                                     ps3.setString(1, key);
@@ -1303,6 +1336,15 @@ public class ETLRunnable implements Runnable
                         close(ps);
                         close(ps2);
                         close(ps3);
+                    }
+
+                    //also make sure row count identical, which could catch different errors
+                    long rowCount1 = new TableSelector(realTable).getRowCount();
+                    long rowCount2 = new TableSelector(targetTable).getRowCount();
+                    if (rowCount1 != rowCount2)
+                    {
+                        sb.append("row count does not match.  real table has " + rowCount1 + ", but the labkey table has: " + rowCount2).append("<br>");
+                        hasErrors = true;
                     }
                 }
                 catch (Exception e)

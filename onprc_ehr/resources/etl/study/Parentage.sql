@@ -13,57 +13,61 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
--- SELECT
---   cast(AnimalID as nvarchar(4000)) as Id,
---   Observation_date as date,
---   null as enddate,
---   SireId as parent,
---   'Sire' as relationship,
---   'Observed' as method,
---   null as objectid
--- FROM grip_prd.dbo.ObservedRelationship
--- WHERE SireId != '0' and SireId is not null
---
--- UNION ALL
---
--- SELECT
---   cast(AnimalID as nvarchar(4000)) as Id,
---   Observation_date as date,
---   null as enddate,
---   DamId as parent,
---   'Dam' as relationship,
---   'Observed' as method,
---   null as objectid
--- FROM grip_prd.dbo.ObservedRelationship
--- WHERE damid != '0' and damid is not null
---
--- UNION ALL
---
--- SELECT
---   cast(AnimalID as nvarchar(4000)) as Id,
---   Calculation_date as date,
---   null as enddate,
---   DamId as parent,
---   'Dam' as relationship,
---   'Genetic' as method,
---   null as objectid
--- FROM grip_prd.dbo.Geneticrelationship
--- WHERE damid != '0' and damid is not null
---
--- UNION ALL
---
--- SELECT
---   cast(AnimalID as nvarchar(4000)) as Id,
---   Calculation_date as date,
---   null as enddate,
---   SireId as parent,
---   'Sire' as relationship,
---   'Genetic' as method,
---   null as objectid
--- FROM grip_prd.dbo.Geneticrelationship
--- WHERE SireId != '0' and SireId is not null
---
--- UNION ALL
+ SELECT
+  cast(AnimalID as nvarchar(4000)) as Id,
+  Observation_date as date,
+  null as enddate,
+  SireId as parent,
+  'Sire' as relationship,
+  'Observed' as method,
+  objectid 
+FROM grip_prd.dbo.ObservedRelationship o
+WHERE SireId != '0' and SireId is not null
+and o.ts > ?
+
+UNION ALL
+
+SELECT
+  cast(AnimalID as nvarchar(4000)) as Id,
+  Observation_date as date,
+  null as enddate,
+  DamId as parent,
+  'Dam' as relationship,
+  'Observed' as method,
+  objectid
+FROM grip_prd.dbo.ObservedRelationship
+WHERE damid != '0' and damid is not null
+and ts > ?
+
+UNION ALL
+
+SELECT
+  cast(AnimalID as nvarchar(4000)) as Id,
+  Calculation_date as date,
+  null as enddate,
+  DamId as parent,
+  'Dam' as relationship,
+  'Genetic' as method,
+  objectid
+FROM grip_prd.dbo.Geneticrelationship
+WHERE damid != '0' and damid is not null
+and ts > ?
+
+UNION ALL
+
+SELECT
+  cast(AnimalID as nvarchar(4000)) as Id,
+  Calculation_date as date,
+  null as enddate,
+  SireId as parent,
+  'Sire' as relationship,
+  'Genetic' as method,
+  objectid
+FROM grip_prd.dbo.Geneticrelationship
+WHERE SireId != '0' and SireId is not null
+and ts > ?
+
+UNION ALL
 
 SELECT
 	cast(Infant_ID as nvarchar(4000)) as Id,

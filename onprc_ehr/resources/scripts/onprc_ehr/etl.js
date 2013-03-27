@@ -116,8 +116,15 @@ EHR.ETL = {
                     row.resultOORIndicator = match[1];
 
                 //these should be ranges
-                if(match[3])
+                if(match[3]){
                     row.qualResult = match[2]+match[3];
+
+                    //verify this number isnt numeric
+                    if (!isNaN(row.qualResult)){
+                        row.result = row.qualResult;
+                        row.qualResult = null;
+                    }
+                }
                 else
                     row.result = match[2];
 
@@ -215,7 +222,7 @@ EHR.ETL = {
                 row.remark = EHR.Server.Utils.trim(row.remark);
             }
 
-            var s = row.remark.match(/^(.*)(s:|s\/o:|so:)(.*?)(o:|a:|p1:|p2:)/i);
+            var s = row.remark.match(/^(.*?)(s:|s\/o:|so:)(.*?)(o:|a:|p1:|p2:)/i);
             if(s){
                 row.s = s[3];
                 row.s = EHR.Server.Utils.trim(row.s);
@@ -346,7 +353,13 @@ EHR.ETL = {
             }
         },
 
-//        'Necropsies': function(row, errors){
+        'iStat': function(row, errors){
+            if(row.stringResults){
+                EHR.ETL.fixResults(row, errors);
+            }
+        },
+
+        //        'Necropsies': function(row, errors){
 //            if(row.caseno)
 //                EHR.ETL.fixPathCaseNo(row, errors, 'a|c|e');
 //        },

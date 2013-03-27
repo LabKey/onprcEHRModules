@@ -26,11 +26,7 @@ Select
     s1.Value as Reason,
 	--Reason as ReasonInt,
 
-	CASE
-		WHEN (afb.ts > bd.ts) THEN afb.ts
-		ELSE bd.ts
-	END as rowversion,
-	bd.objectid,
+	afb.objectid,
 
 	--blood data
 	--bd.BloodIDKey as BloodIDkey,

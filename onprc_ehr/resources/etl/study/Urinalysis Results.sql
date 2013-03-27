@@ -28,6 +28,7 @@ SELECT
 	t.CollectionInt  ,
 	s5.Value as collectionMethod,
 	t.result,
+	t.rangeMax,
 	t.QualResult,
 	t.TestId,
 
@@ -45,13 +46,15 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	s4.value as QualResult,
-	'Appearance' as TestId,
+	'App' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
 left join Sys_parameters s4 on (s4.Field = 'UrineAppearance' and s4.Flag = Appearance)
+where s4.value is not null
 
 UNION ALL
 
@@ -63,6 +66,7 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	s6.value as QualResult,
 	'Color' as TestId,
 	cln.ts as rowversion,
@@ -70,6 +74,7 @@ SELECT
 
 FROM Cln_Urinalysis cln
 left join Sys_parameters s6 on (s6.Field = 'UrineColor' and s6.Flag = Color)
+where s6.value is not null
 
 UNION ALL
 
@@ -81,13 +86,15 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	s7.value as QualResult,
-	'Bacteria' as TestId,
+	'Bact' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
 left join Sys_parameters s7 on (s7.Field = 'BacteriaCount' and s7.Flag = Bacteria)
+where s7.value is not null
 
 UNION ALL
 
@@ -99,13 +106,15 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	s8.value as QualResult,
-	'Protein' as TestId,
+	'Prot' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
 left join Sys_parameters s8 on (s8.Field = 'UrineMeasurement' and s8.Flag = Protein)
+where s8.value is not null
 
 UNION ALL
 
@@ -117,13 +126,15 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	s9.value as QualResult,
-	'GLUC' as TestId,
+	'Glu' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
 left join Sys_parameters s9 on (s9.Field = 'UrineMeasurement' and s9.Flag = Glucose)
+where s9.value is not null
 
 UNION ALL
 
@@ -135,13 +146,15 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	s10.value as QualResult,
-	'Ketone' as TestId,
+	'Ket' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
 left join Sys_parameters s10 on (s10.Field = 'UrineMeasurement' and s10.Flag = Ketone)
+where s10.value is not null
 
 UNION ALL
 
@@ -153,13 +166,15 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	s11.value as QualResult,
-	'Bilirubin' as TestId,
+	'Bili' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
 left join Sys_parameters s11 on (s11.Field = 'UrineMeasurement' and s11.Flag = Bilirubin)
+where s11.value is not null
 
 UNION ALL
 
@@ -171,6 +186,7 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	s12.value as QualResult,
 	'Blood' as TestId,
 	cln.ts as rowversion,
@@ -178,6 +194,7 @@ SELECT
 
 FROM Cln_Urinalysis cln
 left join Sys_parameters s12 on (s12.Field = 'UrineMeasurement' and s12.Flag = Blood)
+where s12.value is not null
 
 UNION ALL
 
@@ -189,13 +206,15 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	s13.value as QualResult,
-	'CastsType1' as TestId,
+	'Cast-1' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
 left join Sys_parameters s13 on (s13.Field = 'Casts' and s13.Flag = CastsType1)
+where s13.value is not null
 
 UNION ALL
 
@@ -207,13 +226,15 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	s14.value as QualResult,
-	'CastsType2' as TestId,
+	'Cast-2' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
 left join Sys_parameters s14 on (s14.Field = 'Casts' and s14.Flag = CastsType2)
+where s14.value is not null
 
 UNION ALL
 
@@ -225,29 +246,14 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	RBCMin as result,
+	RBCMax as rangeMax,
 	null as QualResult,
-	'RBCMin' as TestId,
+	'RBC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
-
-UNION ALL
-
-SELECT
-	ClinicalKey ,
-	AnimalID as Id  ,
-	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
-	Method as MethodInt  ,
-	Collection as CollectionInt  ,
-	RBCMax as result,
-	null as QualResult,
-	'RBCMax' as TestId,
-	cln.ts as rowversion,
-	cln.objectid
-
-FROM Cln_Urinalysis cln
+WHERE RBCMin != 0
 
 UNION ALL
 
@@ -259,29 +265,14 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	WBCMin as result,
+	WBCMax as rangeMax,
 	null as QualResult,
-	'WBCMin' as TestId,
+	'WBC' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
-
-UNION ALL
-
-SELECT
-	ClinicalKey ,
-	AnimalID as Id  ,
-	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
-	Method as MethodInt  ,
-	Collection as CollectionInt  ,
-	WBCMax as result,
-	null as QualResult,
-	'WBCMax' as TestId,
-	cln.ts as rowversion,
-	cln.objectid
-
-FROM Cln_Urinalysis cln
+WHERE WBCMin is not null
 
 UNION ALL
 
@@ -293,12 +284,14 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	SpecificGravity as result,
+	null as rangeMax,
 	null as QualResult,
-	'SpecificGravity' as TestId,
+	'SpecGrav' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
+WHERE SpecificGravity is not null
 
 UNION ALL
 
@@ -310,29 +303,14 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	EpitheliaMin as result,
+	EpitheliaMax as rangeMax,
 	null as QualResult,
-	'EpitheliaMin' as TestId,
+	'Epith' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
-
-UNION ALL
-
-SELECT
-	ClinicalKey ,
-	AnimalID as Id  ,
-	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
-	Method as MethodInt  ,
-	Collection as CollectionInt  ,
-	EpitheliaMax as result,
-	null as QualResult,
-	'EpitheliaMax' as TestId,
-	cln.ts as rowversion,
-	cln.objectid
-
-FROM Cln_Urinalysis cln
+WHERE EpitheliaMin is not null
 
 UNION ALL
 
@@ -344,8 +322,9 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	PHValue as result,
+	null as rangeMax,
 	null as QualResult,
-	'PH' as TestId,
+	'pH' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -361,29 +340,14 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	CastsMin as result,
+	CastsMax as rangeMax,
 	null as QualResult,
-	'CastsMin' as TestId,
+	'Casts' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
-
-UNION ALL
-
-SELECT
-	ClinicalKey ,
-	AnimalID as Id  ,
-	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
-	Method as MethodInt  ,
-	Collection as CollectionInt  ,
-	CastsMax as result,
-	null as QualResult,
-	'CastsMax' as TestId,
-	cln.ts as rowversion,
-	cln.objectid
-
-FROM Cln_Urinalysis cln
+WHERE CastsMin is not null
 
 UNION ALL
 
@@ -395,12 +359,14 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	Crystals as QualResult,
 	'Crystals' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
+WHERE Crystals is not null and Crystals != ''
 
 UNION ALL
 
@@ -412,12 +378,14 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	Urobilinogen as QualResult,
-	'Urobilinogen' as TestId,
+	'Urobili' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
+WHERE Urobilinogen is not null and Urobilinogen != ''
 
 UNION ALL
 
@@ -429,17 +397,18 @@ SELECT
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
+	null as rangeMax,
 	Other as QualResult,
 	'Other' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
 FROM Cln_Urinalysis cln
+WHERE Other is not null and Other != ''
 
 ) t
 
 left join Sys_parameters s2 on (s2.Field = 'AnalysisMethodUrinalysis' and s2.Flag = t.MethodInt)
 left join Sys_parameters s5 on (s5.Field = 'UrineCollection' and s5.Flag = t.CollectionInt)
---left join Specimen sp on (sp.Value = t.Specimen)
 
 where t.rowversion > ?

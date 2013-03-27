@@ -186,7 +186,7 @@ GROUP BY t.location, t.area, t.buildingName, t.size;
 
 --cage types
 TRUNCATE TABLE labkey.ehr_lookups.cage_type;
-INSERT INTO labkey.ehr_lookups.cage_type (cagetype,sqft,cageslots,MaxAnimalWeight)
+INSERT INTO labkey.ehr_lookups.cage_type (cagetype,sqft,cageslots)
 
 Select
 	CASE
@@ -195,9 +195,7 @@ Select
 	END as cagetype,
 	--ugly
 	convert(float, rtrim(replace(replace(replace(cagesize, 'T', ''), 'O', ''), 'U', ''))) as cagesize,
-	CageSlots,
-	--CageCapacity,
-	MaxAnimalSize
+	CageSlots
 From IRIS_Production.dbo.Ref_CageTypes ct
 WHERE DateDisabled is null;
 

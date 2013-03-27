@@ -30,6 +30,7 @@ import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.exp.property.Domain;
+import org.labkey.api.gwt.client.FacetingBehaviorType;
 import org.labkey.api.query.ExprColumn;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
@@ -78,6 +79,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeBirthTable((AbstractTableInfo) table);
             }
+            else if (matches(table, "study", "Urinalysis Results") || matches(table, "study", "urinalysisResults"))
+            {
+                customizeUrinalysisTable((AbstractTableInfo) table);
+            }
             else if (matches(table, "study", "Cases") || matches(table, "study", "Case"))
             {
                 customizeCasesTable((AbstractTableInfo) table);
@@ -90,7 +95,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeProtocol((AbstractTableInfo) table);
             }
-            else if (matches(table, "ehr_lookups", "room"))
+            else if (matches(table, "ehr_lookups", "room") || matches(table, "ehr_lookups", "rooms"))
             {
                 customizeRooms((AbstractTableInfo) table);
             }
@@ -126,6 +131,17 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 account.setHidden(true);
             }
+        }
+
+        ColumnInfo protocolCol = ti.getColumn("protocol");
+        if (protocolCol != null)
+        {
+            UserSchema us = getUserSchema(ti, "ehr");
+            if (us != null){
+                protocolCol.setFk(new QueryForeignKey(us, "protocol", "protocol", "displayName"));
+            }
+            protocolCol.setLabel("Protocol");
+            protocolCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
         }
 
         boolean found = false;
@@ -324,6 +340,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             col.setDescription("Shows the date of last labwork for a subsets of tests");
             ds.addColumn(col);
         }
+
+        if (ds.getColumn("MostRecentTB") == null)
+        {
+            ColumnInfo col17 = getWrappedIdCol(us, ds, "MostRecentTB", "demographicsMostRecentTBDate");
+            col17.setLabel("TB Tests");
+            col17.setDescription("Calculates the most recent TB date for this animal, time since TB and the last eye TB tested");
+            ds.addColumn(col17);
+        }
     }
 
     private void customizeCasesTable(AbstractTableInfo ti)
@@ -392,6 +416,17 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 col2.setIsUnselectable(true);
                 col2.setFk(new QueryForeignKey(us, "protocolTotalProjects", "protocol", "protocol"));
             }
+        }
+
+        String name = "displayName";
+        if (ti.getColumn(name) == null)
+        {
+            SQLFragment sql = new SQLFragment("COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".external_id, " + ExprColumn.STR_TABLE_ALIAS + ".protocol)");
+            ExprColumn displayCol = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("external_id"), ti.getColumn("protocol"));
+            displayCol.setLabel("Display Name");
+            ti.addColumn(displayCol);
+
+            ti.setTitleColumn(name);
         }
     }
 
@@ -536,6 +571,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             columnCol.setLabel("Column");
             table.addColumn(columnCol);
         }
+
+        String name = "availability";
+        if (table.getColumn(name) == null)
+        {
+
+        }
     }
 
     private TableInfo getRealTable(TableInfo targetTable)
@@ -611,5 +652,37 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ci.setLabel("Case History");
 
         ti.addColumn(ci);
+    }
+
+
+    private void customizeUrinalysisTable(AbstractTableInfo ti)
+    {
+        String name = "results";
+        if (ti.getColumn(name) == null)
+        {
+            //this provides a single column that rolls together the 3 possible sources of results into a single string
+            String resultSql = "CAST(" + ExprColumn.STR_TABLE_ALIAS + ".result AS VARCHAR)";
+            String resultOORSql = "COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".resultoorindicator, '')";
+            SQLFragment sql = new SQLFragment("CASE \n" +
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".rangeMax IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".result IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".qualResult IS NOT NULL THEN \n" +
+                        ti.getSqlDialect().concatenate(resultOORSql, resultSql, "'-'", "CAST(" + ExprColumn.STR_TABLE_ALIAS + ".rangeMax AS VARCHAR)", "', '", ExprColumn.STR_TABLE_ALIAS + ".qualResult") + "\n" +
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".rangeMax IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".result IS NOT NULL THEN \n" +
+                        ti.getSqlDialect().concatenate(resultOORSql, resultSql, "'-'", "CAST(" + ExprColumn.STR_TABLE_ALIAS + ".rangeMax AS VARCHAR)") + "\n" +
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".result IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".qualResult IS NOT NULL THEN \n" +
+                        ti.getSqlDialect().concatenate(resultOORSql, resultSql, "', '", ExprColumn.STR_TABLE_ALIAS + ".qualResult") + "\n" +
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".result IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".qualResult IS NULL THEN \n" +
+                        ti.getSqlDialect().concatenate(resultOORSql, resultSql) + "\n" +
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".qualResult IS NOT NULL THEN \n" +
+                        ExprColumn.STR_TABLE_ALIAS + ".qualResult \n" +
+                    " ELSE null \n" +
+                    " END"
+            );
+            ExprColumn newCol = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("result"), ti.getColumn("rangeMax"), ti.getColumn("qualResult"));
+            newCol.setLabel("Results");
+            newCol.setHidden(true);
+            newCol.setDisplayWidth("50");
+            newCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+            ti.addColumn(newCol);
+        }
     }
 }

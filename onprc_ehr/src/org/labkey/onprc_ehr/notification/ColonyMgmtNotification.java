@@ -55,7 +55,7 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
     @Override
     public String getDescription()
     {
-        return "The report is designed to identify potential problems with the colony, tailored toward colony managers.";
+        return "The report is designed to identify potential problems with the colony, focused on housing.";
     }
 
     public String getMessage(Container c, User u)
@@ -67,22 +67,19 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
 
         livingAnimalsWithoutWeight(c, u, msg);
         cagesWithoutDimensions(c, u, msg);
-        cageReview(c, u, msg);
+        cageReview(c, u, msg, true);
         roomsWithoutInfo(c, u, msg);
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);
         livingAnimalsWithoutHousing(c, u, msg);
         housedInUnavailableCages(c, u, msg);
         roomsReportingNegativeCagesAvailable(c, u, msg);
-
-        activeAssignmentsForDeadAnimals(c, u, msg);
-        assignmentsWithoutValidProtocol(c, u, msg);
-        duplicateAssignments(c, u, msg);
+        transfersYesterday(c, u, msg);
 
         //only send if there are alerts
         if (msg.length() > 0)
         {
-            msg.insert(0, "This email contains a series of automatic alerts for colony management.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
+            msg.insert(0, "This email contains a series of automatic alerts for colony management and housing.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
         }
 
         return msg.toString();

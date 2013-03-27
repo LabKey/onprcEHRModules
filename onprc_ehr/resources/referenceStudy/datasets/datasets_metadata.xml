@@ -1661,9 +1661,6 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
             </column>
-            <column columnName="missingResults">
-                <datatype>boolean</datatype>
-            </column>
             <column columnName="project">
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
@@ -1680,17 +1677,8 @@
                 <datatype>timestamp</datatype>
                 <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
             </column>
-            <column columnName="result1">
+            <column columnName="result">
                 <datatype>varchar</datatype>
-            </column>
-            <column columnName="result2">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="result3">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="notPerformedAtCenter">
-                <datatype>boolean</datatype>
             </column>
         </columns>
         <tableTitle>TB Tests</tableTitle>
@@ -2206,6 +2194,9 @@
             <column columnName="collectionMethod">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="method">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="sampleQuantity">
                 <datatype>double</datatype>
             </column>
@@ -2413,6 +2404,9 @@
                 <datatype>double</datatype>
             </column>
             <column columnName="resultInRange">
+                <datatype>double</datatype>
+            </column>
+            <column columnName="rangeMax">
                 <datatype>double</datatype>
             </column>
             <column columnName="units">

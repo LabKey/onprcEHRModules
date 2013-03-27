@@ -539,7 +539,8 @@ public class ONPRC_EHRController extends SpringActionController
 
             ETLRunnable runnable = new ETLRunnable();
             String msg = runnable.validateEtlSync(false);
-            sb.append(msg);
+            if (msg != null)
+                sb.append(msg);
 
             return new HtmlView(sb.toString());
         }

@@ -13,6 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+select
+t.id,
+t.date,
+t.code,
+t.snomedMeaning,
+t.amount,
+t.amount_units,
+t.route,
+t.frequency,
+CASE 
+  WHEN t.enddate is null THEN t.alternateEnd
+  WHEN t.alternateEnd is null then t.enddate
+  WHEN t.alternateEnd < t.enddate THEN t.alternateEnd
+  ELSE t.enddate
+END as enddate,
+t.Reason,
+t.performedBy,
+t.Remark,
+t.objectid
+ 
+ 
+from (
 SELECT
 	cast(cln.AnimalId as nvarchar(4000)) as Id,
 	Date,
@@ -28,9 +51,10 @@ SELECT
 	
 	--Duration as Duration,
 	CASE
-	  WHEN enddate IS NULL THEN coalesce(cast(DATEADD(day, cln.duration - 1, cln.date) as DATE), q.deathdate, q.departuredate)
+	  WHEN enddate IS NULL THEN cast(DATEADD(day, cln.duration - 1, cln.date) as DATE)
 	  ELSE coalesce(EndDate, q.deathdate, q.departuredate)
     END as enddate,
+    coalesce(q.deathdate, q.departuredate) as alternateEnd,
 
 	--Reason as ReasonInt  ,
 	s5.Value as Reason,
@@ -71,3 +95,4 @@ FROM Cln_Medications cln
 
 where Medication is not null and Medication != ''
 AND cln.ts > ? or q.ts > ?
+) t

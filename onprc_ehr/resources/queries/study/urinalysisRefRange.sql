@@ -47,7 +47,7 @@ FROM (
     c.date,
     ROUND(CONVERT(age_in_months(c.id.dataset.demographics.birth, c.date), DOUBLE) / 12.0, 1) as ageAtTime
     FROM "Urinalysis Results" c
-    WHERE c.qcstate.publicdata = true
+    WHERE c.qcstate.publicdata = true AND result is not null
 ) c
 
 JOIN ehr_lookups.ageclass ac ON (

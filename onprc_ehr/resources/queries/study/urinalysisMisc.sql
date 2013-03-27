@@ -10,9 +10,8 @@ SELECT
   b.testid,
 
   b.resultOORIndicator,
-  b.result,
+  b.results,
   b.units,
-  b.qualresult,
   b.remark,
   b.qcstate,
   b.runId,

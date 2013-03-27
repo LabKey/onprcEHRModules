@@ -15,7 +15,8 @@
  */
   
 select 
-	coalesce(i2.eIACUCNum, rtrim(ltrim(lower(i2.IACUCCode)))) as protocol,
+	--coalesce(i2.eIACUCNum, rtrim(ltrim(lower(i2.IACUCCode)))) as protocol,
+	rtrim(ltrim(i2.IACUCCode)) as protocol,
 	t.*
 
 FROM (
@@ -25,7 +26,7 @@ select
     Rpi.ProjectId as project,
     rpi.IACUCCode,
     rtrim(ltrim(Rpi.IACUCCode)) as name,
-	coalesce ((select top 1 
+	coalesce ((select top 1
 				ipc.projectparentid
 				from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on (rpi2.ProjectID = ipc.ProjectParentID and ipc.datedisabled is null)
 				where ipc.projectchildid = rpi.projectid order by ipc.datecreated desc), rpi.projectid) as protocolId,

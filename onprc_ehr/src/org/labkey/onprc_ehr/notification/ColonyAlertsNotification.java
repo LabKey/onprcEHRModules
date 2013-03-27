@@ -23,6 +23,7 @@ import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.RuntimeSQLException;
 import org.labkey.api.data.SQLFragment;
+import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
 import org.labkey.api.data.SqlSelector;
@@ -40,6 +41,7 @@ import org.labkey.api.query.QueryView;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.settings.AppProps;
+import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.ResultSetUtil;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.validation.BindException;
@@ -52,10 +54,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -102,7 +106,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         livingAnimalsWithoutWeight(c, u, msg);
         cagesWithoutDimensions(c, u, msg);
-        cageReview(c, u, msg);
+        cageReview(c, u, msg, true);
         roomsWithoutInfo(c, u, msg);
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);
@@ -743,7 +747,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      * then we find all animals with cage size problems
      * @param msg
      */
-    protected void cageReview(final Container c, User u, final StringBuilder msg)
+    protected void cageReview(final Container c, User u, final StringBuilder msg, boolean notifyOnNone)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("cageStatus"), "ERROR", CompareType.STARTS_WITH);
         TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), Table.ALL_COLUMNS, filter, null);
@@ -772,6 +776,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cageReview&query.viewName=Problem Cages'>Click here to view these cages</a></p>\n");
             msg.append("<hr>\n");
+        }
+        else if (notifyOnNone)
+        {
+            msg.append("<b>Cage Size Review:</b><br><br>All cages are within size limits<br><hr>");
         }
 
         SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("sqftPct"), 97.0, CompareType.GTE);
@@ -859,5 +867,47 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Notes&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view and update them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
+    }
+
+    protected void transfersYesterday(final Container c, User u, final StringBuilder msg)
+    {
+        msg.append("<b>Transfers yesterday:</b><br>");
+
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), "-1d", CompareType.DATE_EQUAL);
+        Sort sort = new Sort("room");
+        sort.appendSortColumn(FieldKey.fromString("cage"), Sort.SortDirection.ASC, false);
+
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Housing"), PageFlowUtil.set("Id", "room", "cage"), filter, sort);
+        Map<String, Object>[] rows = ts.getArray(Map.class);
+        if (rows.length > 0)
+        {
+            final Map<String, Integer> roomMap = new TreeMap<String, Integer>();
+            for (Map<String, Object> row : rows)
+            {
+                String room = (String)row.get("room");
+                String cage = (String)row.get("cage");
+
+                Integer count = roomMap.get(room);
+                if (count == null)
+                    count = 0;
+
+                count++;
+
+                roomMap.put(room, count);
+            }
+
+            msg.append("The following transfers took place yesterday.  <a href='" + (getBaseUrl(c) + "schemaName=study&query.queryName=Housing&query.date~dateeq=-1d") + "'>click here to view them</a><br>");
+            msg.append("<table><tr><td>Room</td><td>Total</td></tr>");
+            for (String room : roomMap.keySet())
+            {
+                msg.append("<tr><td>").append(room).append("</td><td>").append("<a href='" + (getBaseUrl(c) + "schemaName=study&query.queryName=Housing&query.date~dateeq=-1d&query.room~eq=" + room) + "'>" + roomMap.get(room) + "</a>").append("</td></tr>");
+            }
+            msg.append("</table><br>");
+        }
+        else
+        {
+            msg.append("No transfers took place yesterday");
+        }
+        msg.append("<hr>\n\n");
     }
 }

@@ -94,16 +94,9 @@ left join (
 left join Af_Birth b ON (b.AnimalID = afq.AnimalID)
 
 left JOIN (
-  select animalid, max(p.ts) as ts, MAX(Description) as geographic_origin
-  FROM (
-    select p.AnimalID, rp.Description, p.ts
-    From Af_Pool p
-    left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
-    where rp.ShortDescription = 'Origin' and DateReleased is null
-
-    ) p
-    group by AnimalID
-    having COUNT(*) = 1
-) t ON (t.animalid = afq.animalid)
+  select cast(p.AnimalID as nvarchar(4000)) as animalId, rp.Description as geographic_origin, p.ts
+  From grip_prd.dbo.animal p
+  left join grip_prd.dbo.Refs rp ON (rp.Code = p.Population and rp.Field = 'Population')    
+) t ON (t.animalid = cast(afq.animalid AS nvarchar(4000)))
 
 WHERE afq.ts > ? or b.ts > ? or t.ts > ?

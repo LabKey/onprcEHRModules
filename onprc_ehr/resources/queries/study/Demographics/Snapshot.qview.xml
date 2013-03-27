@@ -28,7 +28,7 @@
             </properties>
         </column>
         <column name="birth"/>
-        <column name="Id/age/AgeFriendly">
+        <column name="Id/age/yearAndDays">
             <properties>
                 <property name="columnTitle" value="Age"/>
             </properties>

@@ -16,8 +16,8 @@
 select
 
 a.id.curLocation.room,
-group_concat(distinct a.project.name, ', ') as projects,
-group_concat(distinct a.project.investigatorId.lastname, ', ') as investigators,
+group_concat(distinct a.project.name, chr(10)) as projects,
+group_concat(distinct a.project.investigatorId.lastname, chr(10)) as investigators,
 count(distinct a.id) as totalAnimals
 
 from study.assignment a

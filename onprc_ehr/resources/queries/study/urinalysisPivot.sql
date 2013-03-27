@@ -8,7 +8,7 @@ SELECT
   b.date,
   b.method,
   b.testId,
-  group_concat(b.result) as results
+  group_concat(b.results) as results
 
 FROM (
 
@@ -18,16 +18,12 @@ SELECT
   b.testId,
   coalesce(b.runId, b.objectid) as runId,
   b.method,
-  b.resultoorindicator,
-  CASE
-  WHEN b.result IS NULL THEN  b.qualresult
-    ELSE CAST(CAST(b.result AS float) AS VARCHAR)
-  END as result
+  b.results
 FROM study."Urinalysis Results" b
 
 WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 ) b
 
 GROUP BY b.id, b.date, b.runId, b.testId, b.method
-PIVOT results BY testId IN (select testid from ehr_lookups.urinalysis_tests t WHERE t.includeInPanel = true)
+PIVOT results BY testId IN ('Color', 'App', 'SpecGrav', 'pH', 'Bili', 'Glu', 'Ket', 'Prot', 'Urobili', 'Bact', 'Blood', ''WBC', 'RBC', 'Epith', 'Crystals', 'Casts', 'Cast-1', 'Cast-2')
 

@@ -84,6 +84,8 @@ public class ETL
             runnable.shutdown();
             isScheduled = false;
             executor.shutdownNow();
+
+            log.info("ETL has been stopped");
         }
         else
         {

@@ -38,6 +38,7 @@
                             schemaName=ehr_lookups&amp;
                             query.queryName=cage&amp;
                             query.room~eq=${room}&amp;
+                            query.totalAnimals/totalAnimals~gt=0&amp;
                             query.sort=cage&amp;
                         </url>
                     </column>
@@ -47,8 +48,12 @@
                             schemaName=ehr_lookups&amp;
                             query.queryName=cage&amp;
                             query.room~eq=${room}&amp;
+                            query.totalAnimals/totalAnimals~isblank&amp;
                             query.sort=cage&amp;
                         </url>
+                    </column>
+                    <column columnName="pctUsed">
+                        <columnTitle>% Used</columnTitle>
                     </column>
                     <column columnName="TotalAnimals">
                         <columnTitle>Total Animals</columnTitle>

@@ -39,6 +39,7 @@ import org.labkey.onprc_ehr.notification.BloodAlertsNotification;
 import org.labkey.onprc_ehr.notification.ColonyAlertsLiteNotification;
 import org.labkey.onprc_ehr.notification.ColonyAlertsNotification;
 import org.labkey.onprc_ehr.notification.ColonyMgmtNotification;
+import org.labkey.onprc_ehr.notification.ETLNotification;
 import org.labkey.onprc_ehr.notification.LabResultSummaryNotification;
 import org.labkey.onprc_ehr.notification.LabTestScheduleNotifications;
 import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
@@ -96,7 +97,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         NotificationService ns = NotificationService.get();
         //ns.registerNotification(new AbnormalLabResultsNotification());
-        ns.registerNotification(new BloodAdminAlertsNotification());
+        //ns.registerNotification(new BloodAdminAlertsNotification());
         ns.registerNotification(new BloodAlertsNotification());
         ns.registerNotification(new ColonyAlertsLiteNotification());
         ns.registerNotification(new ColonyAlertsNotification());
@@ -104,6 +105,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         ns.registerNotification(new LabTestScheduleNotifications());
         ns.registerNotification(new LabResultSummaryNotification());
         //ns.registerNotification(new TreatmentAlerts());
+
+        ns.registerNotification(new ETLNotification());
     }
 
     private void registerEHRResources()
@@ -125,9 +128,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Living Center Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Alive%2C at Center"), "Browse Animals");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Center Animals (including dead and shipped)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics"), "Browse Animals");
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Date of Last Physical Exam", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPE"), "Browse Animals");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Unassigned Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=No Active Assignments"), "Browse Animals");
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Unweighed In Past 45 Days", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Unweighed%20Over%2045%20Days"), "Browse Animals");
+        //EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Unweighed In Past 45 Days", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Unweighed%20Over%2045%20Days"), "Browse Animals");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Population Summary By Species, Gender and Age", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=colonyPopulationByAge"), "Other Searches");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Find Animals Housed At The Center Over A Date Range", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Other Searches");

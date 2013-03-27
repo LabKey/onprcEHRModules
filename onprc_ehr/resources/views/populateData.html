@@ -557,7 +557,7 @@ Ext.onReady(function(){
             ['pedigree' ,'Genetics' ,'js' ,'Pedigree' ,'true' ,'' ,'study' ,'pedigree', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report displays pedigree data for animals, including parents, grandparents, siblings and offspring'],
             ['pedigreePlot' ,'Genetics' ,'report' ,'Pedigree Plot' ,'true' ,'' ,'study' ,'pedigree', '', 'module:EHR/schemas/study/Pedigree/Pedigree.r', '', 'false', 'false', '', 'qcstate/publicdata', 'This report will generate a pedigree plot for the selected animal'],
             //['pregnancies' ,'Colony Management' ,'query' ,'Pregnancies' ,'true' ,'' ,'study' ,'Pregnancies', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of known pregnancies, including conception dates and sire, where available'],
-            //['TB' ,'Colony Management' ,'query' ,'TB Tests' ,'true' ,'' ,'study' ,'TB Tests', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'TB Test results'],
+            ['TB' ,'Lab Results' ,'query' ,'TB Tests' ,'true' ,'' ,'study' ,'TB Tests', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'TB Test results'],
             ['snapshot' ,'General' ,'js' ,'Snapshot' ,'true' ,'' ,'study' ,'snapshot', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
             ['clinSnapshot' ,'Clinical' ,'js' ,'Clinical Snapshot' ,'true' ,'' ,'study' ,'snapshot', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
             ['arrivalDeparture' ,'General' ,'js' ,'Arrival/Departure' ,'true' ,'' ,'study' ,'arrivalDeparture', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Displays arrival and departure dates'],
@@ -593,8 +593,8 @@ Ext.onReady(function(){
             ['surgicalCases' ,'Today At Center' ,'query' ,'Active Surgery Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Surgery Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active surgery clinical cases'],
             ['diet' ,'Colony Management' ,'query' ,'Diet' ,'true' ,'' ,'study' ,'Diet', 'Active Diets', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active diets'],
             ['problemList' ,'Today At Center' ,'query' ,'Unresolved Problem List' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list'],
-            ['openProblems' ,'Clinical' ,'query' ,'Problems - Active' ,'true' ,'' ,'study' ,'Problem List', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the unresolved clinical problem list'],
-            ['allProblems' ,'Clinical' ,'query' ,'Problems - History' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list, including closed problems'],
+            ['openProblems' ,'Clinical' ,'query' ,'Problems - Active' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the unresolved clinical problem list'],
+            ['allProblems' ,'Clinical' ,'query' ,'Problems - History' ,'true' ,'' ,'study' ,'Problem List', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list, including closed problems'],
             ['matings' ,'Reproductive Management' ,'query' ,'Matings' ,'true' ,'' ,'study' ,'Matings', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list'],
 
             ['reproSummary' ,'Reproductive Management' ,'js' ,'Reproductive Summary' ,'true' ,'' ,'study' ,'reproSummary', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
@@ -1064,18 +1064,25 @@ Ext.onReady(function(){
         };
         var fields = ('testid,name,units,alertOnAbnormal,alertOnAny,includeInPanel,sort_order').split(',');
         var data = [
-            ['Appearance', 'Appearance', null, true, false, true, null],
-            ['Bacteria', 'Bacteria', null, true, false, false, null],
-            ['Bilirubin', 'Bilirubin', 'no units', true, false, true, null],
-            ['Blood', 'Blood', 'no units', true, false, true, null],
-            ['Color', 'Color', null, true, false, false, null],
-            ['GLUC', 'Glucose', 'mg/dL', true, false, false, null],
-            ['Ketone', 'Ketone', 'mg/dL', true, false, true, null],
-            ['PH', 'pH', 'no units', true, false, true, null],
-            ['Protein', 'Protein', 'mg/dL', true, false, true, null],
-            ['SpecificGravity', 'Specific Gravity', 'no units', true, false, true, null],
-            ['Urobilinogen', 'Urobilinogen', 'E.U./dL', true, false, true, null],
-            ['Other', 'Other', null, true, false, false, null]
+            ['App', 'Appearance', null, true, false, true, 2],
+            ['Bact', 'Bacteria', null, true, false, true, 10],
+            ['Bili', 'Bilirubin', 'no units', true, false, true, 5],
+            ['Blood', 'Blood', 'no units', true, false, true, 11],
+            ['Color', 'Color', null, true, false, true, 1],
+            ['Glu', 'Glucose', 'mg/dL', true, false, true, 6],
+            ['Ket', 'Ketone', 'mg/dL', true, false, true, 7],
+            ['pH', 'pH', 'no units', true, false, true, 4],
+            ['Prot', 'Protein', 'mg/dL', true, false, true, 8],
+            ['SpecGrav', 'Specific Gravity', 'no units', true, false, true, 3],
+            ['Urobili', 'Urobilinogen', 'E.U./dL', true, false, true, 9],
+            ['Other', 'Other', null, true, false, false, null],
+            ['WBC', 'WBC', null, true, false, true, 12],
+            ['RBC', 'RBC', null, true, false, true, 13],
+            ['Epith', 'Epith', null, true, false, true, 14],
+            ['Crystals', 'Crystals', null, true, false, true, 15],
+            ['Casts', 'Casts', null, true, false, true, 16],
+            ['Cast-1', 'Cast Type 1', null, true, false, true, 17],
+            ['Cast-2', 'Cast Type 2', null, true, false, true, 18]
         ];
 
         LABKEY.Query.insertRows(makeObject(config, data, fields));

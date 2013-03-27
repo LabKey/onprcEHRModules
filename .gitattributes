@@ -99,6 +99,7 @@ onprc_ehr/resources/queries/ehr_lookups/roomUtilization.query.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomUtilization.sql -text
 onprc_ehr/resources/queries/ehr_lookups/roomUtilization/.qview.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomUtilization/Rooms[!!-~]with[!!-~]Animals.qview.xml -text
+onprc_ehr/resources/queries/ehr_lookups/roomUtilization/With[!!-~]Investigators.qview.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomsAssignment.query.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomsAssignment.sql -text
 onprc_ehr/resources/queries/ehr_lookups/roomsByInvestigator.query.xml -text
@@ -140,7 +141,6 @@ onprc_ehr/resources/queries/study/Demographics/Blood[!!-~]Draws.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/By[!!-~]Investigator.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/By[!!-~]Location.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/No[!!-~]Active[!!-~]Assignments.qview.xml -text
-onprc_ehr/resources/queries/study/Demographics/Physical[!!-~]Exam[!!-~]Summary.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Single[!!-~]Housed.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Snapshot.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Weight[!!-~]Detail.qview.xml -text
@@ -176,9 +176,13 @@ onprc_ehr/resources/queries/study/Pregnancy[!!-~]Confirmations/.qview.xml -text
 onprc_ehr/resources/queries/study/Serology[!!-~]Results.js -text
 onprc_ehr/resources/queries/study/Serology[!!-~]Results.query.xml -text
 onprc_ehr/resources/queries/study/Serology[!!-~]Results/.qview.xml -text
+onprc_ehr/resources/queries/study/TB[!!-~]Tests.js -text
+onprc_ehr/resources/queries/study/TB[!!-~]Tests.query.xml -text
+onprc_ehr/resources/queries/study/TB[!!-~]Tests/.qview.xml -text
 onprc_ehr/resources/queries/study/Tissue[!!-~]Measurements.js -text
 onprc_ehr/resources/queries/study/Tissue[!!-~]Measurements.query.xml -text
 onprc_ehr/resources/queries/study/Tissue[!!-~]Measurements/.qview.xml -text
+onprc_ehr/resources/queries/study/Urinalysis[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/Virology[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/antibioticSensitivityPivoted.query.xml -text
 onprc_ehr/resources/queries/study/antibioticSensitivityPivoted.sql -text
@@ -214,6 +218,8 @@ onprc_ehr/resources/queries/study/demographicsHistoricAssignment.query.xml -text
 onprc_ehr/resources/queries/study/demographicsHistoricAssignment.sql -text
 onprc_ehr/resources/queries/study/demographicsLabwork.query.xml -text
 onprc_ehr/resources/queries/study/demographicsLabwork.sql -text
+onprc_ehr/resources/queries/study/demographicsMostRecentTBDate.query.xml -text
+onprc_ehr/resources/queries/study/demographicsMostRecentTBDate.sql -text
 onprc_ehr/resources/queries/study/demographicsOpenProblems.query.xml -text
 onprc_ehr/resources/queries/study/demographicsPE.query.xml -text
 onprc_ehr/resources/queries/study/demographicsPE.sql -text
@@ -356,6 +362,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/BloodAlertsNotification.java -te
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsLiteNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyMgmtNotification.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/notification/ETLNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/LabResultSummaryNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/LabTestScheduleNotifications.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/TreatmentAlerts.java -text

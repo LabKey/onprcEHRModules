@@ -4,8 +4,10 @@
              <properties>
                  <property name="columnTitle" value="Area"/>
              </properties>
-         </column>
+        </column>
         <column name="room"/>
+        <column name="room/assignments/projects"/>
+        <column name="room/assignments/investigators"/>
         <column name="TotalCages" />
         <column name="AvailableCages" />
         <column name="CagesUsed"/>
