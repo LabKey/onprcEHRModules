@@ -63,6 +63,59 @@ EHR.reports.hematology = function(panel, tab){
     });
 }
 
+EHR.reports.iStat = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    var config = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'iStatPivot',
+        title: "By Panel" + title,
+        titleField: 'Id',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable,
+        sort: '-date'
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: config
+    });
+
+    var miscConfig = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'iStatMisc',
+        title: "Misc Tests" + title,
+        titleField: 'Id',
+        sort: '-date',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: miscConfig
+    });
+
+    var resultsConfig = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'iStatRefRange',
+        title: "Reference Ranges:",
+        titleField: 'Id',
+        sort: '-date',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: resultsConfig
+    });
+}
+
 EHR.reports.currentBlood = function(panel, tab){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
@@ -131,7 +184,7 @@ EHR.reports.currentBlood = function(panel, tab){
                             listeners: {
                                 single: true,
                                 scope: this,
-                                render: function(panel){
+                                render: function(thisPanel){
                                     LABKEY.Query.selectRows({
                                         schemaName: 'study',
                                         queryName: 'currentBloodDraws',
@@ -215,7 +268,7 @@ EHR.reports.currentBlood = function(panel, tab){
 
                                             if (currentRow){
                                                 target.add({
-                                                    html: 'The amount of blood available if drawn today is: ' + Ext4.util.Format.round(currentRow.allowableDisplay.value, 1) + ' mL.  The graph below shows how the amount of blood available will change over time.<br>',
+                                                    html: 'The amount of blood available if drawn today is: ' + Ext4.util.Format.round(currentRow.allowableDisplay.value, 1) + ' mL.  The graph below shows how the amount of blood available will change over time, including when previous draws will drop off.<br>',
                                                     border: false,
                                                     style: 'margin-bottom: 20px'
                                                 });
@@ -305,12 +358,18 @@ EHR.reports.currentBlood = function(panel, tab){
                                             });
 
                                             target.add({
+                                                html: '',
+                                                border: false,
+                                                style: 'padding-bottom: 10px;'
+                                            });
+
+                                            target.add({
                                                 xtype: 'ldk-querypanel',
                                                 style: 'margin-bottom: 10px;',
                                                 queryConfig: panel.getQWPConfig({
                                                     title: 'Recent Blood Draws: ' + subject,
                                                     schemaName: 'study',
-                                                    queryName: 'Blood Draws',
+                                                    queryName: 'bloodDrawsByDay',
                                                     filters: [
                                                         LABKEY.Filter.create('Id', subject, LABKEY.Filter.Types.EQUAL),
                                                         LABKEY.Filter.create('date', '-' + (row['species/blood_draw_interval'] * 2) + 'd', LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL)
@@ -515,23 +574,8 @@ EHR.reports.underConstruction = function(panel, tab){
 }
 
 EHR.reports.reproSummary = function(panel, tab){
-    tab.add({
-        html: 'Below is a rough draft of the repro report, not a finished product.  It currently only shows mens observations, and we realize in many cases the months are not sorting in the correct order.',
-        border: false,
-        style: 'padding-bottom: 20px;'
-    });
-
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
-
-    console.log(panel.getQWPConfig({
-        schemaName: 'study',
-        queryName: 'reproSummary',
-        title: "Repro Summary" + title,
-        filters: filterArray.nonRemovable,
-        removeableFilters: filterArray.removable,
-        sort: 'id,-year,monthnum'
-    }));
 
     tab.add({
         xtype: 'ldk-querypanel',

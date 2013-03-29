@@ -10,7 +10,13 @@
                     </column>
                     <column columnName="totalAnimals">
                         <columnTitle>Total Animals</columnTitle>
-                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=assignment&amp;query.enddateCoalesced~dategte=-0d&amp;query.id/curLocation/room~eq=${room}</url>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=demographics&amp;
+                            query.viewName=By Location&amp;
+                            query.id/curLocation/room~eq=${room}&amp;
+                            query.id/activeAssignments/investigators~contains=${investigatorId/lastname}
+                        </url>
                     </column>
                 </columns>
             </table>

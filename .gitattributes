@@ -130,6 +130,7 @@ onprc_ehr/resources/queries/study/Antibiotic[!!-~]Sensitivity.query.xml -text
 onprc_ehr/resources/queries/study/Antibiotic[!!-~]Sensitivity/.qview.xml -text
 onprc_ehr/resources/queries/study/AntibioticSensitivity.js -text
 onprc_ehr/resources/queries/study/Arrival/.qview.xml -text
+onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Diagnoses.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Observations/Menses.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Remarks/SOAP[!!-~]Note.qview.xml -text
@@ -186,6 +187,7 @@ onprc_ehr/resources/queries/study/Urinalysis[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/Virology[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/antibioticSensitivityPivoted.query.xml -text
 onprc_ehr/resources/queries/study/antibioticSensitivityPivoted.sql -text
+onprc_ehr/resources/queries/study/bloodDrawsByDay.sql -text
 onprc_ehr/resources/queries/study/cases/.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Behavior[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Clinical[!!-~]Cases.qview.xml -text
@@ -249,6 +251,12 @@ onprc_ehr/resources/queries/study/housingPairs/Single[!!-~]Housed.qview.xml -tex
 onprc_ehr/resources/queries/study/iStat.js -text
 onprc_ehr/resources/queries/study/iStat.query.xml -text
 onprc_ehr/resources/queries/study/iStat/.qview.xml -text
+onprc_ehr/resources/queries/study/iStatMisc.query.xml -text
+onprc_ehr/resources/queries/study/iStatMisc.sql -text
+onprc_ehr/resources/queries/study/iStatPivot.query.xml -text
+onprc_ehr/resources/queries/study/iStatPivot.sql -text
+onprc_ehr/resources/queries/study/iStatRefRange.query.xml -text
+onprc_ehr/resources/queries/study/iStatRefRange.sql -text
 onprc_ehr/resources/queries/study/microbiologyPivoted.query.xml -text
 onprc_ehr/resources/queries/study/microbiologyPivoted.sql -text
 onprc_ehr/resources/queries/study/notesPivoted.query.xml -text
@@ -366,6 +374,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/ETLNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/LabResultSummaryNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/LabTestScheduleNotifications.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/TreatmentAlerts.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/notification/WeightAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/query/CustomPermissionsTable.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/security/ONPRCBillingAdminRole.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/security/ONPRCBillingPermission.java -text

@@ -53,32 +53,32 @@ SELECT
 FROM study.deaths c
 WHERE c.cause = 'Sacrifice for Experiment'
 
-UNION ALL
-
-SELECT
-  c.id,
-  c.date,
-  'Birth' as eventType,
-  c.cond as value,
-  c.remark
-FROM study.birth c
-
-UNION ALL
-
-SELECT
-  c.id,
-  c.date,
-  'Acquisition' as eventType,
-  c.acquisitionType.value as value,
-  c.remark
-FROM study.arrival c
-
-UNION ALL
-
-SELECT
-  c.id,
-  c.date,
-  'Departure' as eventType,
-  c.destination as value,
-  c.remark
-FROM study.departure c
+-- UNION ALL
+--
+-- SELECT
+--   c.id,
+--   c.date,
+--   'Birth' as eventType,
+--   c.cond as value,
+--   c.remark
+-- FROM study.birth c
+--
+-- UNION ALL
+--
+-- SELECT
+--   c.id,
+--   c.date,
+--   'Acquisition' as eventType,
+--   c.acquisitionType.value as value,
+--   c.remark
+-- FROM study.arrival c
+--
+-- UNION ALL
+--
+-- SELECT
+--   c.id,
+--   c.date,
+--   'Departure' as eventType,
+--   c.destination as value,
+--   c.remark
+-- FROM study.departure c

@@ -63,7 +63,11 @@
                     </column>
                     <column columnName="gender">
                         <isHidden>true</isHidden>
-                    </column>                
+                    </column>
+                    <column columnName="range">
+                        <displayWidth>80</displayWidth>
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
                 <titleColumn>Status</titleColumn>
             </table>

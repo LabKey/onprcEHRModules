@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.table;
 
+import org.apache.log4j.Logger;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.Container;
@@ -57,6 +58,7 @@ import java.util.Set;
 public class ONPRC_EHRCustomizer implements TableCustomizer
 {
     private Map<String, UserSchema> _userSchemas;
+    private static final Logger _log = Logger.getLogger(ONPRC_EHRCustomizer.class);
 
     public ONPRC_EHRCustomizer()
     {
@@ -352,32 +354,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void customizeCasesTable(AbstractTableInfo ti)
     {
-        TableInfo clinRemarks = getStudyUserSchema(ti).getTable("Clinical Remarks");
-        if (clinRemarks == null)
-            return;
-
-        TableInfo realTable = getRealTable(clinRemarks);
-        if (realTable != null)
-        {
-            ColumnInfo objectId = ti.getColumn("objectid");
-            String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
-            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'Hx: '", "r.hx")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
-                " r WHERE r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 WHERE r2.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r2.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r2.hx is not null)" +
-                " AND r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)"
-            );
-            ExprColumn latestHx = new ExprColumn(ti, "latestHx", sql, JdbcType.VARCHAR, objectId);
-            latestHx.setLabel("Latest Hx");
-            latestHx.setDisplayWidth("300");
-            ti.addColumn(latestHx);
-
-            SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
-                " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
-            ExprColumn todaysP2 = new ExprColumn(ti, "todaysP2", p2Sql, JdbcType.VARCHAR, objectId);
-            todaysP2.setLabel("P2s Entered Today");
-            todaysP2.setDisplayWidth("300");
-            ti.addColumn(todaysP2);
-        }
-
+        appendLatestHxCol(ti);
         appendCaseHistoryCol(ti);
     }
 
@@ -394,6 +371,42 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             }
         }
 
+    }
+
+    private void appendLatestHxCol(AbstractTableInfo ti)
+    {
+        String hxName = "latestHx";
+        if (ti.getColumn(hxName) != null)
+            return;
+
+        TableInfo clinRemarks = getStudyUserSchema(ti).getTable("Clinical Remarks");
+        if (clinRemarks == null)
+            return;
+
+        TableInfo realTable = getRealTable(clinRemarks);
+        if (realTable == null)
+        {
+            _log.error("Unable to find read table for clin remarks");
+            return;
+        }
+
+        ColumnInfo objectId = ti.getColumn("objectid");
+        String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
+        SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'Hx: '", "r.hx")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+                " r WHERE r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 WHERE r2.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r2.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r2.hx is not null)" +
+                " AND r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)"
+        );
+        ExprColumn latestHx = new ExprColumn(ti, hxName, sql, JdbcType.VARCHAR, objectId);
+        latestHx.setLabel("Latest Hx");
+        latestHx.setDisplayWidth("300");
+        ti.addColumn(latestHx);
+
+        SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+                " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
+        ExprColumn todaysP2 = new ExprColumn(ti, "todaysP2", p2Sql, JdbcType.VARCHAR, objectId);
+        todaysP2.setLabel("P2s Entered Today");
+        todaysP2.setDisplayWidth("300");
+        ti.addColumn(todaysP2);
     }
 
     private void customizeProtocol(AbstractTableInfo ti)

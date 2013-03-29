@@ -1631,6 +1631,9 @@
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
             </column>
+            <column columnName="method">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="lot">
                 <datatype>varchar</datatype>
             </column>

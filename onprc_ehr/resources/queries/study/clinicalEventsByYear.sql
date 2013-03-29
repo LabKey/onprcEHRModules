@@ -16,7 +16,8 @@
 SELECT
   year(c.date) as year,
   c.eventType,
+  c.value,
   count(*) as total
 
 FROM study.clinicalEvents c
-GROUP BY year(c.date), c.eventType
+GROUP BY year(c.date), c.eventType, c.value

@@ -71,6 +71,7 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -223,6 +224,8 @@ public class ETLRunnable implements Runnable
                     int datasetErrors = merge(user, container, studyQueries, studySchema);
                     int billingErrors = merge(user, container, billingQueries, billingSchema);
 
+                    truncateEtlRuns();
+
                     log.info("End incremental sync run.");
 
                     ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, ehrLookupsErrors, datasetErrors, billingErrors);
@@ -255,6 +258,18 @@ public class ETLRunnable implements Runnable
             isRunning = false;
         }
 
+    }
+
+    private void truncateEtlRuns() throws SQLException
+    {
+        TableInfo ti = ONPRC_EHRSchema.getInstance().getSchema().getTable(ONPRC_EHRSchema.TABLE_ETL_RUNS);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -20);
+
+        SQLFragment sql = new SQLFragment("DELETE FROM " + ti.getSelectName() + " WHERE date < ?", cal.getTime());
+        SqlExecutor ex = new SqlExecutor(ti.getSchema(), sql);
+        ex.execute();
     }
 
     private void runQueries(User user, Container container, Map<String, String> queries) throws BadConfigException, BatchValidationException
@@ -406,6 +421,7 @@ public class ETLRunnable implements Runnable
                         SQLFragment truncateSql = new SQLFragment("TRUNCATE TABLE " + realTable.getSelectName());
                         new SqlExecutor(realTable.getSchema()).execute(truncateSql);
                         hadResultsOnStart = false;
+                        isTargetEmpty = true;
                     }
                     else
                     {
@@ -489,10 +505,8 @@ public class ETLRunnable implements Runnable
                             if (count++ > 100)
                             {
                                 //if we have the DB table, just do the delete directly.
-                                log.info("attempting to delete " + count + " rows from table: " + targetTableName + " based on deleted_records");
-                                //log.info(likeWithIds.getSQL());
-                                log.info(StringUtils.join(likeWithIds.getParams(), ", "));
-                                log.info(filterColumn.getFieldKey());
+                                log.info("attempting to delete " + count + " rows from table: " + targetTableName + " based on deleted_records, using: " + filterColumn.getFieldKey().toString());
+                                //log.info(StringUtils.join(likeWithIds.getParams(), ", "));
 
                                 SimpleFilter filter = new SimpleFilter();
                                 filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
@@ -506,10 +520,8 @@ public class ETLRunnable implements Runnable
                         if (hadResultsOnStart && count > 0)
                         {
                             //if we have the DB table, just do the delete directly.
-                            log.info("attempting to delete " + count + " rows from table: " + targetTableName + " based on deleted_records");
-                            //log.info(likeWithIds.getSQL());
+                            log.info("attempting to delete " + count + " rows from table: " + targetTableName + " based on deleted_records, using: " + filterColumn.getFieldKey().toString());
                             log.info(StringUtils.join(likeWithIds.getParams(), ", "));
-                            log.info(filterColumn.getFieldKey());
 
                             SimpleFilter filter = new SimpleFilter();
                             filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
@@ -589,7 +601,7 @@ public class ETLRunnable implements Runnable
                                 Map<String, Object>[] rows = ts.getArray(Map.class);
 
                                 long duration = ((new Date()).getTime() - start) / 1000;
-                                log.info("Pre-selecting " + searchParams.size() + " rows for table: " + targetTable.getName() + " took: " + duration + "s");
+                                log.info("Pre-selected " + searchParams.size() + " rows for table: " + targetTable.getName() + " using column: " + filterColumn.getColumnName() + ", which took: " + duration + "s");
 
                                 if (rows.length > 0)
                                 {
@@ -611,7 +623,7 @@ public class ETLRunnable implements Runnable
                                         }
                                         totalDeleted = Table.delete(realTable, new SimpleFilter(deleteCol.getFieldKey(), pks, CompareType.IN));
 
-                                        if (totalDeleted > 0 && pks.size() < 500)
+                                        if (totalDeleted > 0 && pks.size() < 100)
                                             log.info(StringUtils.join(pks, ","));
                                     }
                                     else
@@ -699,7 +711,6 @@ public class ETLRunnable implements Runnable
                     }
                     else
                     {
-                        log.info("committing transaction: " + targetTableName);
                         scope.commitTransaction();
                         setLastVersion(targetTableName, newBaselineVersion);
                         setLastTimestamp(targetTableName, newBaselineTimestamp);
@@ -732,7 +743,6 @@ public class ETLRunnable implements Runnable
             }
             finally
             {
-                log.info("closing connections and ResultSets");
                 close(rs);
                 close(ps);
                 close(originConnection);

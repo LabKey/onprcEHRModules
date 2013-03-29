@@ -16,6 +16,7 @@
             </properties>
         </column>
         <column name="Id"/>
+        <column name="Id/activeAssignments/investigators"/>
         <column name="species"/>
         <column name="gender"/>
         <column name="calculated_status">

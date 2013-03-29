@@ -17,6 +17,9 @@
                         <columnTitle># Active Assignments</columnTitle>
                         <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.enddateCoalesced~dategte=-0d</url>
                     </column>
+                    <column columnName="vets">
+                        <columnTitle>Assigned Vet</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>

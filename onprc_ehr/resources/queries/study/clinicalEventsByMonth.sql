@@ -18,7 +18,8 @@ SELECT
   month(c.date) as monthNum,
   monthname(c.date) as month,
   c.eventType,
+  c.value,
   count(*) as total
 
 FROM study.clinicalEvents c
-GROUP BY year(c.date), month(c.date), monthname(c.date), c.eventType
+GROUP BY year(c.date), month(c.date), monthname(c.date), c.eventType, c.value

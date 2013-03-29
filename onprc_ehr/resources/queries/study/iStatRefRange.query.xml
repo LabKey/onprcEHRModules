@@ -1,17 +1,12 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="urinalysisRefRange" tableDbType="NOT_IN_DB">
-                <tableTitle>Urinalysis Plus Reference Range</tableTitle>
+            <table tableName="iStatRefRange" tableDbType="NOT_IN_DB">
+                <tableTitle>iStat Results With Reference Range</tableTitle>
                 <columns>
                     <column columnName="Lsid">
                         <isKeyField>true</isKeyField>
                         <isHidden>true</isHidden>
-                        <fk>
-                            <fkDbSchema>study</fkDbSchema>
-                            <fkTable>urinalysisResults</fkTable>
-                            <fkColumnName>lsid</fkColumnName>
-                        </fk>
                     </column>
                     <column columnName="resultOORIndicator">
                         <isHidden>true</isHidden>
@@ -28,7 +23,7 @@
                     <column columnName="status">
                         <url>/query/executeQuery.view?schemaName=ehr_lookups&amp;
                             query.queryName=lab_test_range&amp;
-                            query.type~eq=Urinalysis&amp;
+                            query.type~eq=iStat&amp;
                             query.test~eq=${testid}&amp;
                             query.species~eq=${species}&amp;
                             query.age_class~eq=${ageClass}&amp;

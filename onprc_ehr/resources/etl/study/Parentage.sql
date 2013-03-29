@@ -15,40 +15,12 @@
  */
  SELECT
   cast(AnimalID as nvarchar(4000)) as Id,
-  Observation_date as date,
-  null as enddate,
-  SireId as parent,
-  'Sire' as relationship,
-  'Observed' as method,
-  objectid 
-FROM grip_prd.dbo.ObservedRelationship o
-WHERE SireId != '0' and SireId is not null
-and o.ts > ?
-
-UNION ALL
-
-SELECT
-  cast(AnimalID as nvarchar(4000)) as Id,
-  Observation_date as date,
-  null as enddate,
-  DamId as parent,
-  'Dam' as relationship,
-  'Observed' as method,
-  objectid
-FROM grip_prd.dbo.ObservedRelationship
-WHERE damid != '0' and damid is not null
-and ts > ?
-
-UNION ALL
-
-SELECT
-  cast(AnimalID as nvarchar(4000)) as Id,
-  Calculation_date as date,
+  coalesce(Calculation_date, CURRENT_TIMESTAMP) as date,
   null as enddate,
   DamId as parent,
   'Dam' as relationship,
   'Genetic' as method,
-  objectid
+  (cast(objectid as varchar(38)) + '_dam') as objectid
 FROM grip_prd.dbo.Geneticrelationship
 WHERE damid != '0' and damid is not null
 and ts > ?
@@ -57,12 +29,12 @@ UNION ALL
 
 SELECT
   cast(AnimalID as nvarchar(4000)) as Id,
-  Calculation_date as date,
+  coalesce(Calculation_date, CURRENT_TIMESTAMP) as date,
   null as enddate,
   SireId as parent,
   'Sire' as relationship,
   'Genetic' as method,
-  objectid
+  (cast(objectid as varchar(38)) + '_sire') as objectid
 FROM grip_prd.dbo.Geneticrelationship
 WHERE SireId != '0' and SireId is not null
 and ts > ?
@@ -77,6 +49,5 @@ SELECT
     'Foster Mother' as relationship,	
     'Observed' as method, 	
 	objectid
-
 From iris_production.dbo.Birth_FosterMom
 WHERE ts > ?

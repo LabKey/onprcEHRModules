@@ -22,7 +22,7 @@ Sections below can be commented/uncommented depending on your needs
 
 -- update the server's URL
 UPDATE    prop.Properties
-SET       Value = 'http://prc-labkey3.ohsu.edu'
+SET       Value = 'https://prime-test.ohsu.edu'
 WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'SiteConfig'
           AND Name = 'baseServerURL'
 ;
@@ -55,19 +55,34 @@ WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties
 --          AND Name = 'accountId'
 --;
 
+--disable google analytics
+UPDATE    prop.Properties
+SET       Value = 'disabled'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'analytics'
+          AND Name = 'trackingStatus'
+;
+
+
 -- If used, update the ETL config.  This script assumes there is an existing value and uses replace so we dont save the password here
 --UPDATE    prop.Properties
 --SET       Value = replace(Value, 'primatetest', 'primatedev')
---WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'onprc.ehr.etl.config'
+--WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'onprc.ehr.org.labkey.onprc_ehr.etl.config'
 --	      AND Name = 'jdbcUrl'
 --;
 
 -- turn off the ETL
 UPDATE    prop.Properties
 SET       Value = 0
-WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'onprc.ehr.etl.config'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'onprc.ehr.org.labkey.onprc_ehr.etl.config'
 	      AND Name = 'runIntervalInMinutes'
 ;
+
+UPDATE    prop.Properties
+SET       Value = 'false'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'onprc.ehr.org.labkey.onprc_ehr.etl.config'
+	      AND Name = 'etlStatus'
+;
+
 
 -- if R or other script paths differ
 
@@ -118,7 +133,7 @@ WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties
 
 --disable notification service
 UPDATE  prop.Properties
-SET       Value = 0
+SET       Value = 'false'
 WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'org.labkey.ldk.notifications.config'
 	      AND Name = 'serviceEnabled';
 

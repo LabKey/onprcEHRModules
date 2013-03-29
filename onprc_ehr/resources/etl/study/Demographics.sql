@@ -94,9 +94,22 @@ left join (
 left join Af_Birth b ON (b.AnimalID = afq.AnimalID)
 
 left JOIN (
-  select cast(p.AnimalID as nvarchar(4000)) as animalId, rp.Description as geographic_origin, p.ts
-  From grip_prd.dbo.animal p
-  left join grip_prd.dbo.Refs rp ON (rp.Code = p.Population and rp.Field = 'Population')    
+
+select
+    q.AnimalID,
+    --labkey.core.group_concat_d(a.PoolCode, ',') as codes,
+    CASE
+        WHEN q.Species = 291 THEN 'Japanese'
+        WHEN q.Species = 305 AND count(distinct a.PoolCode) = 1 AND max(a.PoolCode) = 1052 THEN 'Chinese'
+        WHEN q.Species = 305 AND count(distinct a.PoolCode) = 1 AND max(a.PoolCode) = 1053 THEN 'Chinese Indian Cross'
+        WHEN q.Species = 305 AND count(distinct a.PoolCode) = 1 AND max(a.PoolCode) = 1050 THEN 'Indian'
+        else null
+    END as geographic_origin,
+    MAX(a.ts) as ts
+from IRIS_Production.dbo.Af_QRF q
+LEFT JOIN IRIS_Production.dbo.af_pool a ON (q.AnimalID = a.AnimalID AND a.poolcode in (1050,1052,1053) AND q.Species = 305 AND coalesce(a.DateReleased, CURRENT_TIMESTAMP) >= CURRENT_TIMESTAMP)
+GROUP BY q.AnimalID, q.Species
+
 ) t ON (t.animalid = cast(afq.animalid AS nvarchar(4000)))
 
-WHERE afq.ts > ? or b.ts > ? or t.ts > ?
+WHERE (afq.ts > ? or b.ts > ? or t.ts > ?)

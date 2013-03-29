@@ -17,6 +17,16 @@
                         <isHidden>false</isHidden>
                         <shownInDetailsView>true</shownInDetailsView>
                     </column>
+                    <column columnName="testid">
+                        <!--<nullable>false</nullable>-->
+                        <columnTitle>Test Id</columnTitle>
+                        <displayWidth>120</displayWidth>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>istat_tests</fkTable>
+                            <fkColumnName>testid</fkColumnName>
+                        </fk>
+                    </column>
                 </columns>
             </table>
         </tables>

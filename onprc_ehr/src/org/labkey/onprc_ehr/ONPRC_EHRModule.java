@@ -42,6 +42,7 @@ import org.labkey.onprc_ehr.notification.ColonyMgmtNotification;
 import org.labkey.onprc_ehr.notification.ETLNotification;
 import org.labkey.onprc_ehr.notification.LabResultSummaryNotification;
 import org.labkey.onprc_ehr.notification.LabTestScheduleNotifications;
+import org.labkey.onprc_ehr.notification.WeightAlertsNotification;
 import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -104,6 +105,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         ns.registerNotification(new ColonyMgmtNotification());
         ns.registerNotification(new LabTestScheduleNotifications());
         ns.registerNotification(new LabResultSummaryNotification());
+        ns.registerNotification(new WeightAlertsNotification());
         //ns.registerNotification(new TreatmentAlerts());
 
         ns.registerNotification(new ETLNotification());

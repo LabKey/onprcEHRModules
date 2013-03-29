@@ -133,7 +133,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	Glu as ResultString,
-	'GLUC' as TestId,
+	'Gluc' as TestId,
 
 	cln.ts as rowversion,
 	cln.objectid
@@ -166,7 +166,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	PH as ResultString,
-	'PH' as TestId,
+	'pH' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -182,7 +182,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	PCO2 as ResultString,
-	'PCO2' as TestId,
+	'pCO2' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -232,7 +232,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	AnGap as ResultString ,
-	'AnGap' as TestId,
+	'An Gap' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -266,7 +266,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	PO2 as ResultString,
-	'PO2' as TestId,
+	'pO2' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -299,7 +299,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	LAC as ResultString,
-	'LAC' as TestId,
+	'Lact' as TestId,
 
 	cln.ts as rowversion,
 	cln.objectid

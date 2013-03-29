@@ -68,6 +68,8 @@ SELECT
 FROM (
 Select
 	CASE
+		WHEN rfl.AssignPool = 0 AND rf.ProcedureName = 'Lease Setup Fees' THEN rf.ProcedureName
+		WHEN rfl.AssignPool = 0 AND rf.ProcedureName = 'Animal Lease Fee' THEN rf.ProcedureName + ' - TMB'
 		WHEN s1.Value IS null THEN rf.ProcedureName + ' - General: ' + cast(rfl.AssignPool AS nvarchar) + '->' + cast(rfl.ReleasePool AS nvarchar)
 		ELSE rf.ProcedureName + ' - ' + s1.Value + ': ' +  cast(rfl.AssignPool AS nvarchar) + '->' + cast(rfl.ReleasePool AS nvarchar)
 	END as name

@@ -43,6 +43,9 @@
                     <column columnName="multipleBirths">
                         <columnTitle>Multiple Births?</columnTitle>
                     </column>
+                    <column columnName="performedby">
+                        <columnTitle>Entered By</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>
