@@ -268,8 +268,8 @@ public class ETLRunnable implements Runnable
         cal.add(Calendar.DATE, -20);
 
         SQLFragment sql = new SQLFragment("DELETE FROM " + ti.getSelectName() + " WHERE date < ?", cal.getTime());
-        SqlExecutor ex = new SqlExecutor(ti.getSchema(), sql);
-        ex.execute();
+        SqlExecutor ex = new SqlExecutor(ti.getSchema());
+        ex.execute(sql);
     }
 
     private void runQueries(User user, Container container, Map<String, String> queries) throws BadConfigException, BatchValidationException
