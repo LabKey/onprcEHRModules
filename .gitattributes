@@ -2,6 +2,8 @@
 onprc_ehr/ONPRC_EHR.iml -text
 onprc_ehr/build.xml -text
 onprc_ehr/module.properties -text
+onprc_ehr/resources/etl/ehr/animal_group_members.sql -text
+onprc_ehr/resources/etl/ehr/animal_groups.sql -text
 onprc_ehr/resources/etl/ehr/encounter_flags.sql -text
 onprc_ehr/resources/etl/ehr/encounter_participants.sql -text
 onprc_ehr/resources/etl/ehr/encounter_summaries.sql -text
@@ -76,6 +78,7 @@ onprc_ehr/resources/queries/ehr/protocolTotalProjects.sql -text
 onprc_ehr/resources/queries/ehr_lookups/availableCages.query.xml -text
 onprc_ehr/resources/queries/ehr_lookups/availableCages.sql -text
 onprc_ehr/resources/queries/ehr_lookups/availableCages/.qview.xml -text
+onprc_ehr/resources/queries/ehr_lookups/availableCages/Available[!!-~]Cages.qview.xml -text
 onprc_ehr/resources/queries/ehr_lookups/availableCagesByRoom.query.xml -text
 onprc_ehr/resources/queries/ehr_lookups/availableCagesByRoom.sql -text
 onprc_ehr/resources/queries/ehr_lookups/cageReview.query.xml -text
@@ -229,6 +232,8 @@ onprc_ehr/resources/queries/study/demographicsPE/.qview.xml -text
 onprc_ehr/resources/queries/study/demographicsPE/Due[!!-~]In[!!-~]Next[!!-~]30[!!-~]Days.qview.xml -text
 onprc_ehr/resources/queries/study/demographicsPaired.query.xml -text
 onprc_ehr/resources/queries/study/demographicsPaired.sql -text
+onprc_ehr/resources/queries/study/demographicsPaired/.qview.xml -text
+onprc_ehr/resources/queries/study/demographicsPaired/Single[!!-~]Housed.qview.xml -text
 onprc_ehr/resources/queries/study/flagsPivoted.query.xml -text
 onprc_ehr/resources/queries/study/flagsPivoted.sql -text
 onprc_ehr/resources/queries/study/hematologyMisc.query.xml -text

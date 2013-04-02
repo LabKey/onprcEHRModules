@@ -147,7 +147,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
     
     /**
-     * Finds all occupied cages without dimensions
+     * Finds all occupied cages without dimensions, or cages lacking row/col classification
      */
     protected void cagesWithoutDimensions(final Container c, User u, final StringBuilder msg)
     {
@@ -167,6 +167,20 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<hr>\n");
         }
 
+        TableSelector ts2 = new TableSelector(getEHRSchema(c, u).getTable("cagesMissingColumn"), Table.ALL_COLUMNS, null, null);
+        if (ts.getRowCount() > 0)
+        {
+            msg.append("<b>WARNING: The following cages do have have their row/column specified:</b><br>\n");
+            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                public void exec(ResultSet rs) throws SQLException
+                {
+                    msg.append(rs.getString("cage") + "<br>\n");
+                }
+            });
+
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=cagesMissingColumn'>Click here to view the problem cages</a></p>\n");
+            msg.append("<hr>\n");
+        }
     }
 
     /**

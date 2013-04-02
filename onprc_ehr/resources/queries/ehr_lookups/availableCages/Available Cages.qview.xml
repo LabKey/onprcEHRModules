@@ -1,4 +1,7 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <filters>
+        <filter column="isAvailable" operator="eq" value="true"/>
+    </filters>
     <sorts>
         <sort column="room"/>
         <sort column="row"/>

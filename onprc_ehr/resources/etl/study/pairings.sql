@@ -33,10 +33,10 @@ Tested by:
 	pp.SeparationDate as enddate,
 	--CageId1 as CageId1 ,
 	L1.Location as room1,
-	rtrim(r1.row) + convert(char(2), r1.Cage) As Cage1,
+	ltrim(rtrim(rtrim(r1.row) + convert(char(2), r1.Cage))) As Cage1,
 	--CageId2 as CageId2 ,
 	L2.Location as room2,
-	rtrim(r2.row) + convert(char(2), r2.Cage) As Cage2,
+	ltrim(rtrim(rtrim(r2.row) + convert(char(2), r2.Cage))) As Cage2,
 
 	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'PairingType' and l.value = s2.value) as PairingType,
 	--pp.PairingType as PairingType,

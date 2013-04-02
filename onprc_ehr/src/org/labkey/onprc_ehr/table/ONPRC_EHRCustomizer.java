@@ -35,6 +35,9 @@ import org.labkey.api.gwt.client.FacetingBehaviorType;
 import org.labkey.api.query.ExprColumn;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
+import org.labkey.api.query.LookupForeignKey;
+import org.labkey.api.query.QueryDefinition;
+import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
@@ -44,8 +47,10 @@ import org.labkey.api.view.HttpView;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,6 +77,11 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (table instanceof AbstractTableInfo)
         {
             customizeColumns((AbstractTableInfo) table);
+
+            if (table instanceof DataSetTable)
+            {
+                customizeDataset((AbstractTableInfo) table);
+            }
 
             if (matches(table, "study", "Animal"))
             {
@@ -105,6 +115,17 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeCageTable((AbstractTableInfo) table);
             }
+        }
+    }
+
+    private void customizeDataset(AbstractTableInfo ds)
+    {
+        UserSchema us = getStudyUserSchema(ds);
+        if (us != null)
+        {
+            appendAssignmentAtTimeCol(us, ds);
+            appendGroupsAtTimeCol(us, ds);
+            appendProblemsAtTimeCol(us, ds);
         }
     }
 
@@ -555,35 +576,35 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
     private void customizeCageTable(AbstractTableInfo table)
     {
 
-        if (table.getColumn("row") == null)
-        {
-            ColumnInfo cageCol = table.getColumn("cage");
-
-            SQLFragment sql = new SQLFragment(table.getSqlDialect().getSubstringFunction(ExprColumn.STR_TABLE_ALIAS + ".cage", "1", "1"));
-            ExprColumn rowCol = new ExprColumn(table, "row", sql, JdbcType.VARCHAR, cageCol);
-            rowCol.setLabel("Row");
-            table.addColumn(rowCol);
-
-            String colSql = table.getSqlDialect().getSubstringFunction(ExprColumn.STR_TABLE_ALIAS + ".cage", "2", table.getSqlDialect().getVarcharLengthFunction() + "(" + ExprColumn.STR_TABLE_ALIAS + ".cage)");
-            colSql = "(" + colSql + ")";
-            if (table.getSqlDialect().isSqlServer())
-            {
-                colSql = "CASE WHEN ISNUMERIC(" + colSql + ") = 1 THEN CAST(" + colSql + " AS INTEGER) ELSE null END";
-            }
-            else if (table.getSqlDialect().isPostgreSQL())
-            {
-                colSql = "CASE WHEN (" + colSql + ") ~ '^[0-9]+$' THEN CAST(" + colSql + " AS INTEGER) ELSE null END";
-            }
-            else
-            {
-                throw new UnsupportedOperationException("Unknown SQL Dialect: " + table.getSqlDialect().toString());
-            }
-
-            SQLFragment sql2 = new SQLFragment(colSql);
-            ExprColumn columnCol = new ExprColumn(table, "column", sql2, JdbcType.INTEGER, cageCol);
-            columnCol.setLabel("Column");
-            table.addColumn(columnCol);
-        }
+//        if (table.getColumn("row") == null)
+//        {
+//            ColumnInfo cageCol = table.getColumn("cage");
+//
+//            SQLFragment sql = new SQLFragment(table.getSqlDialect().getSubstringFunction(ExprColumn.STR_TABLE_ALIAS + ".cage", "1", "1"));
+//            ExprColumn rowCol = new ExprColumn(table, "row", sql, JdbcType.VARCHAR, cageCol);
+//            rowCol.setLabel("Row");
+//            table.addColumn(rowCol);
+//
+//            String colSql = table.getSqlDialect().getSubstringFunction(ExprColumn.STR_TABLE_ALIAS + ".cage", "2", table.getSqlDialect().getVarcharLengthFunction() + "(" + ExprColumn.STR_TABLE_ALIAS + ".cage)");
+//            colSql = "(" + colSql + ")";
+//            if (table.getSqlDialect().isSqlServer())
+//            {
+//                colSql = "CASE WHEN ISNUMERIC(" + colSql + ") = 1 THEN CAST(" + colSql + " AS INTEGER) ELSE null END";
+//            }
+//            else if (table.getSqlDialect().isPostgreSQL())
+//            {
+//                colSql = "CASE WHEN (" + colSql + ") ~ '^[0-9]+$' THEN CAST(" + colSql + " AS INTEGER) ELSE null END";
+//            }
+//            else
+//            {
+//                throw new UnsupportedOperationException("Unknown SQL Dialect: " + table.getSqlDialect().toString());
+//            }
+//
+//            SQLFragment sql2 = new SQLFragment(colSql);
+//            ExprColumn columnCol = new ExprColumn(table, "column", sql2, JdbcType.INTEGER, cageCol);
+//            columnCol.setLabel("Column");
+//            table.addColumn(columnCol);
+//        }
 
         String name = "availability";
         if (table.getColumn(name) == null)
@@ -697,5 +718,127 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             newCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
             ti.addColumn(newCol);
         }
+    }
+
+    private void appendAssignmentAtTimeCol(final UserSchema us, final AbstractTableInfo ds)
+    {
+        String name = "assignmentAtTime";
+        if (ds.getColumn(name) != null)
+            return;
+
+        WrappedColumn col = new WrappedColumn(ds.getColumn("lsid"), name);
+        col.setLabel("Assignments At Time");
+        col.setReadOnly(true);
+        col.setIsUnselectable(true);
+        col.setUserEditable(false);
+        col.setFk(new LookupForeignKey(){
+            public TableInfo getLookupTableInfo()
+            {
+                String name = ds.getName() + "_assignmentsAtTime";
+                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                qd.setSql("SELECT\n" +
+                        "sd.lsid,\n" +
+                        "group_concat(DISTINCT h.project.name) as AssignmentsAtTime\n" +
+                        "FROM study.\"" + ds.getName() + "\" sd\n" +
+                        "JOIN study.assignment h\n" +
+                        "  ON (sd.id = h.id AND h.date <= sd.date AND sd.date < COALESCE(h.enddate, now()) AND h.qcstate.publicdata = true)\n" +
+                        "group by sd.lsid");
+                qd.setIsTemporary(true);
+
+                List<QueryException> errors = new ArrayList<QueryException>();
+                TableInfo ti = qd.getTable(errors, true);
+
+                ti.getColumn("lsid").setHidden(true);
+                ti.getColumn("lsid").setKeyField(true);
+
+                return ti;
+            }
+        });
+
+        ds.addColumn(col);
+    }
+
+    private void appendProblemsAtTimeCol(final UserSchema us, final AbstractTableInfo ds)
+    {
+        final String colName = "problemsAtTime";
+        if (ds.getColumn(colName) != null)
+            return;
+
+        WrappedColumn col = new WrappedColumn(ds.getColumn("lsid"), colName);
+        col.setLabel("Problems At Time");
+        col.setReadOnly(true);
+        col.setIsUnselectable(true);
+        col.setUserEditable(false);
+        col.setFk(new LookupForeignKey(){
+            public TableInfo getLookupTableInfo()
+            {
+                String name = ds.getName() + "_" + colName;
+                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                qd.setSql("SELECT\n" +
+                        "sd.lsid,\n" +
+                        "group_concat(DISTINCT h.category) as ProblemsAtTime\n" +
+                        "FROM study.\"" + ds.getName() + "\" sd\n" +
+                        "JOIN study.\"Problem List\" h\n" +
+                        "  ON (sd.id = h.id AND h.date <= sd.date AND sd.date < COALESCE(h.enddate, now()) AND h.qcstate.publicdata = true)\n" +
+                        "group by sd.lsid");
+                qd.setIsTemporary(true);
+
+                List<QueryException> errors = new ArrayList<QueryException>();
+                TableInfo ti = qd.getTable(errors, true);
+
+                ti.getColumn("lsid").setHidden(true);
+                ti.getColumn("lsid").setKeyField(true);
+
+                return ti;
+            }
+        });
+
+        ds.addColumn(col);
+    }
+
+    private void appendGroupsAtTimeCol(final UserSchema us, final AbstractTableInfo ds)
+    {
+        final String colName = "groupsAtTime";
+        if (ds.getColumn(colName) != null)
+            return;
+
+        WrappedColumn col = new WrappedColumn(ds.getColumn("lsid"), colName);
+        col.setLabel("Groups At Time");
+        col.setReadOnly(true);
+        col.setIsUnselectable(true);
+        col.setUserEditable(false);
+        col.setFk(new LookupForeignKey(){
+            public TableInfo getLookupTableInfo()
+            {
+                String name = ds.getName() + "_" + colName;
+                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                qd.setSql("SELECT\n" +
+                        "sd.lsid,\n" +
+                        "group_concat(DISTINCT h.groupId.name) as GroupsAtTime\n" +
+                        "FROM study.\"" + ds.getName() + "\" sd\n" +
+                        "JOIN ehr.animal_group_members h\n" +
+                        "  ON (sd.id = h.id AND h.date <= sd.date AND sd.date < COALESCE(h.enddate, now()))\n" +
+                        "group by sd.lsid");
+                qd.setIsTemporary(true);
+
+                List<QueryException> errors = new ArrayList<QueryException>();
+                TableInfo ti = qd.getTable(errors, true);
+                if (errors.size() > 0)
+                {
+                    for (QueryException error : errors)
+                    {
+                        _log.error(error.getMessage(), error);
+                    }
+                    return null;
+                }
+
+                ti.getColumn("lsid").setHidden(true);
+                ti.getColumn("lsid").setKeyField(true);
+
+                return ti;
+            }
+        });
+
+        ds.addColumn(col);
     }
 }

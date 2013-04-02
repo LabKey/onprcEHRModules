@@ -534,13 +534,15 @@ public class ONPRC_EHRController extends SpringActionController
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.append("The following text describes the results of comparing the EHR study with the MSSQL records from the production instance on the same server as this DB instance.  Clicking OK will cause the system to attempt to repair any differences.  Please do this very carefully<br>");
+            sb.append("The following text describes the results of comparing the EHR study with the MSSQL records from the production instance on the same server as this DB instance.  Clicking OK will cause the system to attempt to repair any differences.  Please do this very carefully.<br>");
             sb.append("<br><br>");
 
             ETLRunnable runnable = new ETLRunnable();
             String msg = runnable.validateEtlSync(false);
             if (msg != null)
                 sb.append(msg);
+            else
+                sb.append("There are no discrepancies<br>");
 
             return new HtmlView(sb.toString());
         }

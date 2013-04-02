@@ -30,7 +30,7 @@ Select
 		ELSE rl.Location + '-' + rtrim(row.Row) + CONVERT(varchar, row.Cage)
 	END as location,
 	rl.Location as room,
-	ltrim(rtrim(row.Row) + CONVERT(varchar, row.Cage)) as cage,
+	rtrim(ltrim(rtrim(row.Row) + CONVERT(varchar, row.Cage))) as cage,
 
 	CASE
 		WHEN row.CageTypeID = 19 THEN ct.CageDescription

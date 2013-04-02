@@ -20,7 +20,7 @@ Select
 
 	--Aft.CageID as  TransferCageID ,
 	l2.Location as room,
-	ltrim(rtrim(r2.row) + convert(char(2), r2.Cage)) As cage,
+	rtrim(ltrim(rtrim(r2.row) + convert(char(2), r2.Cage))) As cage,
 
 	--Reason as ReasonInt,
         s1.Value as Reason,

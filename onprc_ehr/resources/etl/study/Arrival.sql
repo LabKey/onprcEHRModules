@@ -35,7 +35,7 @@ Select
       WHEN (RefLoc.Location = 'No Location') then null
       else RefLoc.Location
     END as initialRoom,
-	ltrim(rtrim(Refrow.row) + convert(char(2), RefRow.Cage)) As initialCage,
+	rtrim(ltrim(rtrim(Refrow.row) + convert(char(2), RefRow.Cage))) As initialCage,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN

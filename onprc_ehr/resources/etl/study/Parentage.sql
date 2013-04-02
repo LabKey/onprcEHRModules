@@ -48,6 +48,6 @@ SELECT
 	cast(Foster_Mom as nvarchar(4000)) as parent,
     'Foster Mother' as relationship,	
     'Observed' as method, 	
-	objectid
+	cast(objectid as varchar(38)) as objectid
 From iris_production.dbo.Birth_FosterMom
 WHERE ts > ?

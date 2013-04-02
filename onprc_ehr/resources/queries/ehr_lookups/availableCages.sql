@@ -16,8 +16,8 @@
 SELECT
 c.room,
 c.cage,
-c.row,
-c.column,
+c.cagePosition.row,
+c.cagePosition.columnIdx,
 c.cage_type,
 lc.cage as leftCage,
 lc.cage_type as left_cage_type,
@@ -33,6 +33,6 @@ END as isAvailable
 
 FROM ehr_lookups.cage c
 --find the cage located to the left
-LEFT JOIN ehr_lookups.cage lc ON (lc.cage_type != 'No Cage' and c.room = lc.room and c.row = lc.row and (c.column - 1) = lc.column)
+LEFT JOIN ehr_lookups.cage lc ON (lc.cage_type != 'No Cage' and c.room = lc.room and c.cagePosition.row = lc.cagePosition.row and (c.cagePosition.columnIdx - 1) = lc.cagePosition.columnIdx)
 
 WHERE c.cage_type != 'No Cage'

@@ -24,8 +24,13 @@ SELECT
 FROM study.housing h
 LEFT JOIN ehr_lookups.pairedCages pc ON (h.room = pc.room and h.cage = pc.cage)
 
-LEFT JOIN study.housing h2 ON (h.room = h2.room and (pc.effectiveCage = h2.cage OR (pc.effectiveCage IS NULL and h2.cage IS NULL)))
+LEFT JOIN (
+  SELECT h2.id, h2.room, pc2.effectiveCage, h2.cage, h2.enddateTimeCoalesced
+  FROM study.housing h2
+  LEFT JOIN ehr_lookups.pairedCages pc2 ON (h2.room = pc2.room and h2.cage = pc2.cage)
+) h2 ON (h.room = h2.room and (pc.effectiveCage = h2.effectiveCage OR (pc.effectiveCage IS NULL and h2.cage IS NULL)))
 
-WHERE h.enddateCoalesced >= curdate() and h2.enddateCoalesced >= curdate()
+--account for date/time
+WHERE h.enddateTimeCoalesced >= now() and h2.enddateTimeCoalesced >= now()
 
 GROUP BY h.id, h.room, pc.effectiveCage

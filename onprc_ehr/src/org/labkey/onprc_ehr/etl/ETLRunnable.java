@@ -1137,6 +1137,9 @@ public class ETLRunnable implements Runnable
     private final Map<String, String[]> LK_TO_IRIS = new HashMap<String, String[]>()
     {
         {
+            put("animal_groups", new String[]{"ref_pool"});
+            put("animal_group_members", new String[]{"ref_pool", "Af_Pool", "Af_Qrf"});
+
             put("encounter_flags", new String[]{"Cln_AntibioticSensHeader", "Cln_Biochemistry", "Cln_IStat", "Cln_OccultBlood", "Cln_Hematology", "Cln_CerebralspinalFluid", "Cln_MicrobiologyHeader", "Cln_RareTestHeader", "Cln_VirologyHeader", "Cln_SerologyHeader", "Cln_Urinalysis", "Cln_Parasitology"});
             put("encounter_participants", new String[]{"Path_Autopsy", "Path_Biopsy", "Sur_General"});
             put("encounter_summaries", new String[]{"Path_Autopsy", "Path_Biopsy", "Sur_Log"});
@@ -1311,6 +1314,10 @@ public class ETLRunnable implements Runnable
                                         ps2.execute();
                                         ps2.close();
                                     }
+                                }
+                                else
+                                {
+                                    log.error("Unable to find entry in LK_TO_IRIS for table: " + targetTableName);
                                 }
                             }
                         }

@@ -39,7 +39,7 @@ Select
 
 	--afd.DeathLocation as CageId,
 	loc.Location as roomattime,
-	row.row + convert(char(2), row.Cage) As cageattime,
+	ltrim(rtrim(row.row + convert(char(2), row.Cage))) As cageattime,
 
 	afd.objectid
 	--afd.ts as rowversion

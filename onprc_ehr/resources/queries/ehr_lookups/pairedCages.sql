@@ -16,39 +16,39 @@
 SELECT
 c.room,
 c.cage,
-c.row,
-c.column,
+c.cagePosition.row,
+c.cagePosition.columnIdx,
 c.divider,
 c.cage_type,
 c.divider.countAsPaired,
-max(np.column) as highestNonPaired,
-max(paired.column) as highestPaired,
+max(np.cagePosition.columnIdx) as highestNonPaired,
+max(paired.cagePosition.columnIdx) as highestPaired,
 
 CASE
   WHEN c.divider.countAsPaired = true then true
-  WHEN max(np.column) is null and max(paired.column) is null then false
-  WHEN max(np.column) is null and max(paired.column) is not null THEN true --is joined
-  WHEN max(np.column) is not null and max(paired.column) is null THEN false --not joined
-  WHEN max(np.column) > max(paired.column) THEN false
+  WHEN max(np.cagePosition.columnIdx) is null and max(paired.cagePosition.columnIdx) is null then false
+  WHEN max(np.cagePosition.columnIdx) is null and max(paired.cagePosition.columnIdx) is not null THEN true --is joined
+  WHEN max(np.cagePosition.columnIdx) is not null and max(paired.cagePosition.columnIdx) is null THEN false --not joined
+  WHEN max(np.cagePosition.columnIdx) > max(paired.cagePosition.columnIdx) THEN false
   ELSE true
 END as joined,
 
 CASE
-  WHEN max(np.column) is null and max(paired.column) is null then c.cage
-  WHEN max(np.column) is null and max(paired.column) is not null THEN (c.row || cast(max(paired.column) as varchar)) --is joined
-  WHEN max(np.column) is not null and max(paired.column) is null THEN c.cage --not joined
-  WHEN max(np.column) > max(paired.column) THEN c.cage --not joined
-  ELSE (c.row || cast(max(paired.column) as varchar))
+  WHEN max(np.cagePosition.columnIdx) is null and max(paired.cagePosition.columnIdx) is null then c.cage
+  WHEN max(np.cagePosition.columnIdx) is null and max(paired.cagePosition.columnIdx) is not null THEN (c.cagePosition.row || cast(max(paired.cagePosition.columnIdx) as varchar)) --is joined
+  WHEN max(np.cagePosition.columnIdx) is not null and max(paired.cagePosition.columnIdx) is null THEN c.cage --not joined
+  WHEN max(np.cagePosition.columnIdx) > max(paired.cagePosition.columnIdx) THEN c.cage --not joined
+  ELSE (c.cagePosition.row || cast(max(paired.cagePosition.columnIdx) as varchar))
 END as effectiveCage
 
 FROM ehr_lookups.cage c
 
 --find the highest cage with a non-paired divider
-LEFT JOIN ehr_lookups.cage np ON (np.cage_type != 'No Cage' and c.room = np.room and c.row = np.row and np.divider.countAsPaired = false and c.column > np.column)
+LEFT JOIN ehr_lookups.cage np ON (np.cage_type != 'No Cage' and c.room = np.room and c.cagePosition.row = np.cagePosition.row and np.divider.countAsPaired = false and c.cagePosition.columnIdx > np.cagePosition.columnIdx)
 
 --find the highest cage with a paired divider
-LEFT JOIN ehr_lookups.cage paired ON (paired.cage_type != 'No Cage' and c.room = paired.room and c.row = paired.row and paired.divider.countAsPaired = true and c.column > paired.column)
+LEFT JOIN ehr_lookups.cage paired ON (paired.cage_type != 'No Cage' and c.room = paired.room and c.cagePosition.row = paired.cagePosition.row and paired.divider.countAsPaired = true and c.cagePosition.columnIdx > paired.cagePosition.columnIdx)
 
 WHERE c.cage_type != 'No Cage'
 
-GROUP BY c.room, c.row, c.cage, c.column, c.divider, c.divider.countAsPaired, c.cage_type
+GROUP BY c.room, c.cagePosition.row, c.cage, c.cagePosition.columnIdx, c.divider, c.divider.countAsPaired, c.cage_type

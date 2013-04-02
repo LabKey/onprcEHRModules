@@ -41,8 +41,8 @@ Select
 	END as sire,
 	--b.FatherID,
 
-	l2.Location as room,
-	rtrim(r2.row) + convert(char(2), r2.Cage) As cage,
+	--l2.Location as room,
+	--rtrim(r2.row) + convert(char(2), r2.Cage) As cage,
 
 	afq.BirthDate as Birth,
 	
