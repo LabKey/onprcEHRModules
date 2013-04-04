@@ -69,6 +69,8 @@ public class ETLNotification extends AbstractEHRNotification
             String msg = runnable.validateEtlSync(false);
             if (msg != null)
                 sb.append(msg);
+            else
+                sb.append("No ETL problems found");
         }
         catch (Exception e)
         {

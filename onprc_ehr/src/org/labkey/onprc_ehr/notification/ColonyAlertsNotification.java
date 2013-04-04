@@ -167,11 +167,11 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<hr>\n");
         }
 
-        TableSelector ts2 = new TableSelector(getEHRSchema(c, u).getTable("cagesMissingColumn"), Table.ALL_COLUMNS, null, null);
-        if (ts.getRowCount() > 0)
+        TableSelector ts2 = new TableSelector(getEHRLookupsSchema(c, u).getTable("cagesMissingColumn"), Table.ALL_COLUMNS, null, null);
+        if (ts2.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following cages do have have their row/column specified:</b><br>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+            ts2.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString("cage") + "<br>\n");

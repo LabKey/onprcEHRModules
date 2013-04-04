@@ -13,24 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+--NOTE: this query has been modified to be based on demographics for perf reasons
+SELECT
+  d.id,
+  t.room,
+  t.effectiveCage,
+  t.total,
+  t.animals
+
+FROM study.demographics d
+LEFT JOIN (
 SELECT
   h.id,
   h.room,
-  pc.effectiveCage,
+  h.effectiveCage.effectiveCage,
 
   count(distinct h2.id) as total,
   group_concat(distinct h2.id, ', ') as animals,
 
 FROM study.housing h
-LEFT JOIN ehr_lookups.pairedCages pc ON (h.room = pc.room and h.cage = pc.cage)
 
-LEFT JOIN (
-  SELECT h2.id, h2.room, pc2.effectiveCage, h2.cage, h2.enddateTimeCoalesced
-  FROM study.housing h2
-  LEFT JOIN ehr_lookups.pairedCages pc2 ON (h2.room = pc2.room and h2.cage = pc2.cage)
-) h2 ON (h.room = h2.room and (pc.effectiveCage = h2.effectiveCage OR (pc.effectiveCage IS NULL and h2.cage IS NULL)))
+JOIN study.housing h2
+ON (h.room = h2.room and (h.effectiveCage.effectiveCage = h2.effectiveCage.effectiveCage OR (h.cage IS NULL and h2.cage IS NULL)))
 
 --account for date/time
 WHERE h.enddateTimeCoalesced >= now() and h2.enddateTimeCoalesced >= now()
 
-GROUP BY h.id, h.room, pc.effectiveCage
+GROUP BY h.id, h.room, h.effectiveCage.effectiveCage
+
+) t ON (t.id = d.id)
+
+WHERE d.calculated_status = 'Alive'

@@ -123,9 +123,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/Utils.js"), this);
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), null);
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Physical Exam Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographics&query.viewName=Physical Exam History"), null);
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "View Pairing Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=housingPairs&query.viewName=Cages With Animals"), null);
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "View Roommate History for Animals", this, DetailsURL.fromString("/ehr/animalHistory.view#inputType:singleSubject&activeReport:roommateHistory"), null);
+        //EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "View Roommate History for Animals", this, DetailsURL.fromString("/ehr/animalHistory.view#inputType:singleSubject&activeReport:roommateHistory"), null);
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), null);
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Living Center Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Alive%2C at Center"), "Browse Animals");

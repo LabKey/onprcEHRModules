@@ -249,6 +249,8 @@ onprc_ehr/resources/queries/study/hospitalAnimals.sql -text
 onprc_ehr/resources/queries/study/hospitalAnimals/.qview.xml -text
 onprc_ehr/resources/queries/study/housedInUnavailableCages.query.xml -text
 onprc_ehr/resources/queries/study/housedInUnavailableCages.sql -text
+onprc_ehr/resources/queries/study/housingEffectiveCage.query.xml -text
+onprc_ehr/resources/queries/study/housingEffectiveCage.sql -text
 onprc_ehr/resources/queries/study/housingPairs.query.xml -text
 onprc_ehr/resources/queries/study/housingPairs.sql -text
 onprc_ehr/resources/queries/study/housingPairs/Cages[!!-~]With[!!-~]Animals.qview.xml -text

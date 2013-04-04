@@ -91,6 +91,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeBirthTable((AbstractTableInfo) table);
             }
+            else if (matches(table, "study", "Housing"))
+            {
+                customizeHousingTable((AbstractTableInfo) table);
+            }
             else if (matches(table, "study", "Urinalysis Results") || matches(table, "study", "urinalysisResults"))
             {
                 customizeUrinalysisTable((AbstractTableInfo) table);
@@ -377,6 +381,23 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
     {
         appendLatestHxCol(ti);
         appendCaseHistoryCol(ti);
+    }
+
+    private void customizeHousingTable(AbstractTableInfo ti)
+    {
+        if (ti.getColumn("effectiveCage") == null)
+        {
+            UserSchema us = getStudyUserSchema(ti);
+            if (us != null)
+            {
+                ColumnInfo lsidCol = ti.getColumn("lsid");
+                ColumnInfo col = ti.addColumn(new WrappedColumn(lsidCol, "effectiveCage"));
+                col.setLabel("Lowest Joined Cage");
+                col.setUserEditable(false);
+                col.setIsUnselectable(true);
+                col.setFk(new QueryForeignKey(us, "housingEffectiveCage", "lsid", "effectiveCage"));
+            }
+        }
     }
 
     private void customizeBirthTable(AbstractTableInfo ti)
