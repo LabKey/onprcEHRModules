@@ -31,26 +31,24 @@ select
 				from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on (rpi2.ProjectID = ipc.ProjectParentID and ipc.datedisabled is null)
 				where ipc.projectchildid = rpi.projectid order by ipc.datecreated desc), rpi.projectid) as protocolId,
 				
-	(select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa
-				where rpi.projectid = rpa.ProjectID order by datecreated desc) as account,
-	(ri.LastName + ', ' + ri.FirstName) as inves,
-	-- avail
+	(select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa where rpi.projectid = rpa.ProjectID order by datecreated desc) as account,
 	Rpi.Title,
-	-- research
-	-- reqname
-	-- contact_emails
 	Rpi.StartDate,
 	Rpi.EndDate,
-	-- inves2	
-	--pc.InvestigatorID,
-	(select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri.firstname and i.lastname = ri.lastname group by i.LastName, i.firstname having count(*) <= 1) as investigatorId,
+	CASE
+	  WHEN pc2.InvestigatorID IS NULL THEN (select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri.firstname and i.lastname = ri.lastname group by i.LastName, i.firstname having count(*) <= 1)
+      ELSE (select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri2.firstname and i.lastname = ri2.lastname group by i.LastName, i.firstname having count(*) <= 1)
+    END as investigatorId,
 	rpi.objectid
 
 From Ref_ProjectsIACUC rpi
 	left join Ref_ProjInvest pc on (pc.ProjectID = rpi.ProjectID AND pc.DateDisabled is null and pc.PIFlag = 1 and pc.investigatorid != 0)
 	left join Ref_Investigator ri on (ri.InvestigatorID = pc.investigatorid)
 
-WHERE (rpi.ts > ? or pc.ts > ?)
+	left join Ref_ProjInvest pc2 on (pc2.ProjectID = rpi.ProjectID AND pc2.DateDisabled is null and pc2.PIFlag = 2 and pc2.investigatorid != 0)
+	left join Ref_Investigator ri2 on (ri2.InvestigatorID = pc2.investigatorid)
+
+WHERE (rpi.ts > ? or pc.ts > ? or ri.ts > ?)
 
 ) t
 

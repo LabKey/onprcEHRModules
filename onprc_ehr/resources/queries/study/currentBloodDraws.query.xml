@@ -30,7 +30,8 @@
                     <column columnName="allowableBlood">
                         <formatString>0.##</formatString>
                         <columnTitle>Max allowable blood on this date</columnTitle>
-                    </column>                </columns>
+                    </column>
+                </columns>
             </table>
         </tables>
     </metadata>

@@ -5,10 +5,11 @@
        <column name="title"/>
        <column name="investigatorId"/>
        <column name="approve"/>
+       <column name="renewalDate"/>
+       <column name="daysUntilRenewal"/>
        <column name="enddate"/>
        <column name="usda_level"/>
        <column name="project_type"/>
-       <column name="maxAnimals"/>
    </columns>
    <sorts>
        <sort column="protocol" />

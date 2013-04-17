@@ -20,7 +20,6 @@ onprc_ehr/resources/etl/pending/Sur_AnesthesiaLogData.sql -text
 onprc_ehr/resources/etl/pending/Sur_implants.sql -text
 onprc_ehr/resources/etl/pending/accounts.sql -text
 onprc_ehr/resources/etl/pending/invoicedItems.sql -text
-onprc_ehr/resources/etl/pending/protocol_counts.sql -text
 onprc_ehr/resources/etl/pending/sur_vessels.sql -text
 onprc_ehr/resources/etl/pending/tissue_recipients.sql -text
 onprc_ehr/resources/etl/static/billing.sql -text
@@ -190,7 +189,10 @@ onprc_ehr/resources/queries/study/Urinalysis[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/Virology[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/antibioticSensitivityPivoted.query.xml -text
 onprc_ehr/resources/queries/study/antibioticSensitivityPivoted.sql -text
+onprc_ehr/resources/queries/study/assignment/.qview.xml -text
+onprc_ehr/resources/queries/study/assignment/Search[!!-~]Panel.qview.xml -text
 onprc_ehr/resources/queries/study/bloodDrawsByDay.sql -text
+onprc_ehr/resources/queries/study/bloodDrawsByDay/.qview.xml -text
 onprc_ehr/resources/queries/study/cases/.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Behavior[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Clinical[!!-~]Cases.qview.xml -text
@@ -251,6 +253,7 @@ onprc_ehr/resources/queries/study/housedInUnavailableCages.query.xml -text
 onprc_ehr/resources/queries/study/housedInUnavailableCages.sql -text
 onprc_ehr/resources/queries/study/housingEffectiveCage.query.xml -text
 onprc_ehr/resources/queries/study/housingEffectiveCage.sql -text
+onprc_ehr/resources/queries/study/housingMixedViralStatus/Mixed[!!-~]Rooms.qview.xml -text
 onprc_ehr/resources/queries/study/housingPairs.query.xml -text
 onprc_ehr/resources/queries/study/housingPairs.sql -text
 onprc_ehr/resources/queries/study/housingPairs/Cages[!!-~]With[!!-~]Animals.qview.xml -text

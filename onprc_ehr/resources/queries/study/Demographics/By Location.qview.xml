@@ -16,7 +16,7 @@
             </properties>
         </column>
         <column name="Id"/>
-        <column name="Id/activeAssignments/investigators"/>
+        <column name="Id/utilization/use"/>
         <column name="species"/>
         <column name="gender"/>
         <column name="calculated_status">
@@ -35,6 +35,7 @@
                 <property name="columnTitle" value="Weight Date"/>
             </properties>
         </column>
+        <column name="history"/>
     </columns>
     <filters>
         <filter column="calculated_status" operator="eq" value="Alive"/>

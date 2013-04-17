@@ -13,6 +13,12 @@ select
     WHEN T2.lastDate IS NULL THEN 9999
     ELSE age_in_months(T2.lastDate, now())
   END AS MonthsSinceLastTB,
+  case
+    WHEN T2.lastDate IS NULL THEN 6
+    ELSE (6 - age_in_months(T2.lastDate, now()))
+  END AS MonthsUntilDue,
+
+  (SELECT group_concat(DISTINCT f.value) FROM study.flags f WHERE f.id = d.id AND f.flag = 'TB' AND f.enddateCoalesced >= now()) as flags
 
 from study.demographics d
 

@@ -17,6 +17,7 @@
 Select
     cast(AnimalID as nvarchar(4000)) as Id,
 	Date,
+	null as enddate,
 	'Biopsy' as type,
     cast(BiopsyYear as nvarchar(4000)) + BiopsyFlag + BiopsyCode as caseno,
     null as caseid,
@@ -56,6 +57,7 @@ UNION ALL
 Select
 	cast(PTT.AnimalID as nvarchar(4000)) as Id,
 	PTT.Date as Date ,
+	null as enddate,
 	'Necropsy' as type,
 	cast(PTT.PathYear as nvarchar(4000)) + PTT.PathFlag + PTT.PathCode as caseno,
     null as caseid,
@@ -98,34 +100,40 @@ UNION ALL
 Select
 	cast(sg.AnimalID as nvarchar(4000)) as Id,
 	sg.Date as Date ,
+	null as enddate,
 	'Surgery' as type,
 	null as caseno,
-    null as caseid,
+    c.objectid as caseid,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
         'Unassigned'
+      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' OR rt.lastname = 'none' THEN
+        null
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
         rt.LastName + ', ' + rt.FirstName
 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
         rt.LastName + ' (' + rt.Initials + ')'
-      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
-        null
 	  else
 	   rt.Initials
     END as performedBy,
     (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
 
 	sg.objectid
-
 From Sur_General sg
 LEFT JOIN Ref_SurgProcedure r on (sg.procedureid = r.procedureid)
 left join Ref_Technicians Rt on (sg.Surgeon = Rt.ID)
 left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
+left join (
+	select c.AnimalID, max(ts) as ts, count(c.CaseID) as count, max(CAST(c.objectid AS varchar(36))) as objectid, c.OpenDate as date
+	from af_case c
+	WHERE c.GroupCode = 2
+	GROUP BY c.AnimalID, c.OpenDate) c ON (c.AnimalID = sg.AnimalID AND c.date = sg.date
+)
 
-WHERE sg.ts > ?
+WHERE sg.ts > ? or c.ts > ?
 
 UNION ALL
 
@@ -133,6 +141,7 @@ UNION ALL
 Select
 	cast(cln.AnimalId as varchar(4000)) as Id,
 	cln.Date ,
+	null as enddate,
 	'Diagnosis' as type,
 	null as caseno,
 	c.objectid as caseId,
