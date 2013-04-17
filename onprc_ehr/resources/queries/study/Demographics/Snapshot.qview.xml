@@ -17,7 +17,16 @@
         <column name="calculated_status"/>
         <!--<column name="dam"/>-->
         <!--<column name="sire"/>-->
-        <column name="Id/utilization/use"/>
+        <column name="Id/activeAssignments/projects">
+            <properties>
+                <property name="columnTitle" value="Active Assignments"/>
+            </properties>
+        </column>
+        <column name="Id/activeAssignments/investigators">
+            <properties>
+                <property name="columnTitle" value="Investigators"/>
+            </properties>
+        </column>
         <column name="birth"/>
         <column name="Id/age/yearAndDays">
             <properties>

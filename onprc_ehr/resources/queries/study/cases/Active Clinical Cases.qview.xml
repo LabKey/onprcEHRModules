@@ -2,16 +2,18 @@
     <columns>
         <column name="Id"/>
         <column name="Id/curLocation/location"/>
-        <column name="todaysP2"/>
-        <column name="yesterdaysP2"/>
-        <column name="latestHx"/>
-        <column name="Id/utilization/use"/>
+        <column name="Id/activeAssignments/investigators"/>
         <column name="date"/>
         <column name="Id/openProblems/problems">
             <properties>
                 <property name="columnTitle" value="Open Problems"/>
             </properties>
         </column>
+        <column name="Id/demographics/species"/>
+        <column name="Id/demographics/gender"/>
+        <column name="performedby"/>
+        <column name="latestHx"/>
+        <column name="todaysP2"/>
         <column name="caseHistory"/>
     </columns>
     <filters>

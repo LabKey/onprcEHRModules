@@ -15,10 +15,8 @@
  */
 SELECT
   b.id,
-  sum(b.quantity) as quantity,
-  b.id.dataset.demographics.species.blood_draw_interval,
   cast(b.date as date) as date,
-  timestampadd('SQL_TSI_DAY', b.id.dataset.demographics.species.blood_draw_interval, cast(b.date as date)) as dropDate
+  sum(b.quantity) as quantity
 FROM study.blood b
 WHERE (b.qcstate.metadata.DraftData = true OR b.qcstate.publicdata = true)
-GROUP BY b.id, b.id.dataset.demographics.species.blood_draw_interval, cast(b.date as date)
+GROUP BY b.id, cast(b.date as date)

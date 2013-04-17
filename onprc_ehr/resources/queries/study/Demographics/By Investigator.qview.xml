@@ -34,7 +34,6 @@
                 <property name="columnTitle" value="Weight Date"/>
             </properties>
         </column>
-        <column name="history"/>
     </columns>
     <filters>
         <filter column="calculated_status" operator="eq" value="Alive"/>

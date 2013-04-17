@@ -46,7 +46,7 @@ Select
 	   rt.Initials
     END as performedBy,
 
-    afr.objectid
+    cast(afr.objectid as varchar(38)) as objectid
 	--afr.ts as rowversion
 
 From Af_Remarks Afr

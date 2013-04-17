@@ -13,10 +13,8 @@
                 <property name="columnTitle" value="Days In This Cage"/>
             </properties>
         </column>
-        <column name="daysInRoom"/>
         <column name="Id/demographics/species"/>
         <column name="Id/demographics/gender"/>
-        <column name="Id/utilization/use"/>
         <column name="Id/openProblems/problems">
             <properties>
                 <property name="columnTitle" value="Open Problems"/>

@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 SELECT
-CASE
-  WHEN c.cage IS NULL THEN c.room
-  ELSE (c.room || '-' || c.cage)
-END as location,
 c.room,
 c.cage,
 c.cagePosition.row,

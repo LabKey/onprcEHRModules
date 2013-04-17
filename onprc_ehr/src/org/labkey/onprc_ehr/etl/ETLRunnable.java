@@ -1145,7 +1145,6 @@ public class ETLRunnable implements Runnable
             put("encounter_summaries", new String[]{"Path_Autopsy", "Path_Biopsy", "Sur_Log"});
             put("project", new String[]{"Ref_ProjectsIACUC", "Ref_ProjInvest"});
             put("protocol", new String[]{"Ref_ProjectsIACUC", "Ref_IACUCParentChildren"});
-            put("protocol_counts", new String[]{"IACUC_NHPYearly", "IACUC_NHPAnimals", "ref_ProjectsIACUC"});
             put("protocolProcedures", new String[]{"IACUC_NHPSurgeries"});
             put("snomed_tags", new String[]{"Cln_DxSnomed", "sur_snomed", "Path_AutopsyDiagnosis", "Path_BiopsyDiagnosis"});
 

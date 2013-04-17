@@ -60,6 +60,7 @@ Ext4.onReady(function(){
             },
             items: [
                 {name: 'Search By Room, Floor or Cage', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage'}
+                //{name: 'Irregular Obs By Location', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:obs'}
             ]
         }]
     });
@@ -68,22 +69,21 @@ Ext4.onReady(function(){
         width: 270,
         renderTo: 'ehrMenu2_'+webpart.wrapperDivId,
         sections: [{
-            header: 'Today At The Center',
-            itemDefaults: {
-                linkCls: 'none',
-                style: 'font-weight: bold;'
-            },
-            items: [
-//                {name: 'Blood Draw Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:todaysBlood'},
-                //{name: 'Hospital Animals', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#area:Hospital&inputType:roomCage&showReport:1&activeReport:clinSnapshot'},
-                {name: 'Open Clinical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:cases'},
-                {name: 'Open Surgical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgicalCases'}
-//                //{name: 'Treatment Schedule - AM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleAM'},
-//                //{name: 'Treatment Schedule - PM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentSchedulePM'},
-//                //{name: 'Treatment Schedule - Night', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleNight'}
-//                //{name: 'Treatment Schedule - All', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentSchedule'}
-            ]
-        },{
+//            header: 'Today At The Center',
+//            itemDefaults: {
+//                linkCls: 'none',
+//                style: 'font-weight: bold;'
+//            },
+//            items: [
+////                {name: 'Blood Draw Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:todaysBlood'},
+////                {name: 'Clinical TODO List', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:obs'}
+////                //{name: 'Treatment Schedule - AM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleAM'},
+////                //{name: 'Treatment Schedule - PM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentSchedulePM'},
+////                //{name: 'Treatment Schedule - Night', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleNight'}
+////                //{name: 'Treatment Schedule - All', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentSchedule'},
+////                //{name: 'Forms Completed Today', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=TasksByLocation&query.viewName=Completion Times&query.taskid/Created~dateeq='+(new Date()).format('Y-m-d')}
+////            ]
+//        },{
             header: 'Entire Colony',
             itemDefaults: {
                 linkCls: 'none',
@@ -112,7 +112,6 @@ Ext4.onReady(function(){
                 //{name: 'About the EHR Project', url: '<%=contextPath%>/project' + ctx['EHRStudyContainer'] + '/About The EHR/begin.view?'},
                 {name: 'Compare Lists of Animals', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/utilities.view?'},
                 //{name: 'Run SQL Directly', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/executeSql.view?'},
-                {name: 'Procedure List', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=procedures&query.viewName=Active Procedures'},
                 {name: 'Search Center SNOMED Codes', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=snomed'}
             ]
         },{

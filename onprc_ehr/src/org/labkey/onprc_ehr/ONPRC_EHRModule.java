@@ -29,7 +29,6 @@ import org.labkey.api.query.QuerySchema;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.resource.Resource;
 import org.labkey.api.security.roles.RoleManager;
-import org.labkey.api.settings.AdminConsole;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
@@ -92,9 +91,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     {
         ETL.init(1);
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
-        DetailsURL details = DetailsURL.fromString("/onprc_ehr/etlAdmin.view");
-        details.setContainerContext(ContainerManager.getSharedContainer());
-        AdminConsole.addLink(AdminConsole.SettingsLinkType.Management, "ehr etl admin", details.getActionURL());
 
         RoleManager.registerRole(new ONPRCBillingAdminRole());
 
@@ -123,7 +119,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         Resource r = getModuleResource("/scripts/onprc_ehr/onprc_triggers.js");
         assert r != null;
         EHRService.get().registerTriggerScript(this, r);
-        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/BloodSummaryPanel.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/onprcReports.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/Utils.js"), this);
 
@@ -139,8 +134,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Population Summary By Species, Gender and Age", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=colonyPopulationByAge"), "Other Searches");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Find Animals Housed At The Center Over A Date Range", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Other Searches");
-
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.protocol, "View All Protocols With Active Assignments", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=ehr&query.queryName=Protocol&query.viewName=Protocols With Active Assignments"), null);
     }
 
     @Override

@@ -48,7 +48,6 @@ import org.labkey.api.view.HttpView;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -313,13 +312,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ds.addColumn(col);
         }
 
-        if (ds.getColumn("activeCases") == null)
-        {
-            ColumnInfo col = getWrappedIdCol(us, ds, "activeCases", "demographicsActiveCases");
-            col.setLabel("Active Cases");
-            ds.addColumn(col);
-        }
-
         if (ds.getColumn("activeNotes") == null)
         {
             ColumnInfo col2 = getWrappedIdCol(us, ds, "activeNotes", "notesPivoted");
@@ -334,22 +326,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             col21.setLabel("Assignments - Active");
             col21.setDescription("Shows all projects to which the animal is actively assigned on the current date");
             ds.addColumn(col21);
-        }
-
-        if (ds.getColumn("utilization") == null)
-        {
-            ColumnInfo col21 = getWrappedIdCol(us, ds, "utilization", "demographicsUtilization");
-            col21.setLabel("Utilization");
-            col21.setDescription("Shows all projects or animal groups to which the animal is actively assigned on the current date");
-            ds.addColumn(col21);
-        }
-
-        if (ds.getColumn("viral_status") == null)
-        {
-            ColumnInfo col = getWrappedIdCol(us, ds, "viral_status", "demographicsViralStatus");
-            col.setLabel("Viral Status");
-            col.setDescription("Shows the viral status of each animal");
-            ds.addColumn(col);
         }
 
         if (ds.getColumn("demographicsAssignmentHistory") == null)
@@ -404,7 +380,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
     private void customizeCasesTable(AbstractTableInfo ti)
     {
         appendLatestHxCol(ti);
-        appendSurgeryCol(ti);
         appendCaseHistoryCol(ti);
     }
 
@@ -421,19 +396,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 col.setUserEditable(false);
                 col.setIsUnselectable(true);
                 col.setFk(new QueryForeignKey(us, "housingEffectiveCage", "lsid", "effectiveCage"));
-            }
-        }
-
-        if (ti.getColumn("daysInRoom") == null)
-        {
-            TableInfo realTable = getRealTable(ti);
-            if (realTable != null)
-            {
-                SQLFragment roomSql = new SQLFragment(realTable.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "(SELECT max(h2.enddate) as d FROM " + realTable.getSelectName() + " h2 WHERE h2.enddate IS NOT NULL AND h2.enddate <= " + ExprColumn.STR_TABLE_ALIAS + ".date AND h2.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid and h2.room != " + ExprColumn.STR_TABLE_ALIAS + ".room)"));
-                ExprColumn roomCol = new ExprColumn(ti, "daysInRoom", roomSql, JdbcType.VARCHAR, realTable.getColumn("participantid"), realTable.getColumn("date"), realTable.getColumn("enddate"));
-                roomCol.setLabel("Days In Room");
-                ti.addColumn(roomCol);
-
             }
         }
     }
@@ -459,15 +421,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (ti.getColumn(hxName) != null)
             return;
 
-        UserSchema us = getStudyUserSchema(ti);
-        TableInfo clinRemarks = us.getTable("Clinical Remarks");
+        TableInfo clinRemarks = getStudyUserSchema(ti).getTable("Clinical Remarks");
         if (clinRemarks == null)
             return;
 
         TableInfo realTable = getRealTable(clinRemarks);
         if (realTable == null)
         {
-            _log.error("Unable to find real table for clin remarks");
+            _log.error("Unable to find read table for clin remarks");
             return;
         }
 
@@ -479,66 +440,15 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         );
         ExprColumn latestHx = new ExprColumn(ti, hxName, sql, JdbcType.VARCHAR, objectId);
         latestHx.setLabel("Latest Hx");
-        latestHx.setDisplayWidth("250");
+        latestHx.setDisplayWidth("300");
         ti.addColumn(latestHx);
 
         SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
         ExprColumn todaysP2 = new ExprColumn(ti, "todaysP2", p2Sql, JdbcType.VARCHAR, objectId);
         todaysP2.setLabel("P2s Entered Today");
-        todaysP2.setDisplayWidth("250");
+        todaysP2.setDisplayWidth("300");
         ti.addColumn(todaysP2);
-
-        Calendar yesterday = Calendar.getInstance();
-        yesterday.setTime(new Date());
-        yesterday.add(Calendar.DATE, -1);
-
-        SQLFragment p2Sql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
-                " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", yesterday.getTime());
-        ExprColumn yesterdaysP2 = new ExprColumn(ti, "yesterdaysP2", p2Sql2, JdbcType.VARCHAR, objectId);
-        yesterdaysP2.setLabel("P2s Entered Yesterday");
-        yesterdaysP2.setDisplayWidth("250");
-        ti.addColumn(yesterdaysP2);
-
-        SQLFragment rmSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
-                " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
-        ExprColumn todaysRemarks = new ExprColumn(ti, "todaysRemarks", rmSql, JdbcType.VARCHAR, objectId);
-        todaysRemarks.setLabel("Remarks Entered Today");
-        todaysRemarks.setDisplayWidth("250");
-        ti.addColumn(todaysRemarks);
-    }
-
-    private void appendSurgeryCol(AbstractTableInfo ti)
-    {
-        String name = "proceduresPerformed";
-        if (ti.getColumn(name) != null)
-            return;
-
-        UserSchema us = getStudyUserSchema(ti);
-        TableInfo clinRemarks = us.getTable("Clinical Encounters");
-        if (clinRemarks == null)
-            return;
-
-        TableInfo realTable = getRealTable(clinRemarks);
-        if (realTable == null)
-        {
-            _log.error("Unable to find real table for clin encounters");
-            return;
-        }
-
-        //find any surgical procedures from the same date as this case
-        String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
-        SQLFragment procedureSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("p.name"), false, false, chr + "(10)") +
-                " FROM " + realTable.getSelectName() + " r " +
-                " JOIN ehr_lookups.procedures p ON (p.rowid = r.procedureid) " +
-                //r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND
-                " WHERE r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId " +
-                " AND CAST(r.date AS date) = CAST(" + ExprColumn.STR_TABLE_ALIAS + ".date as date) " +
-                " AND r.type = 'Surgery')");
-        ExprColumn procedureCol = new ExprColumn(ti, name, procedureSql, JdbcType.VARCHAR, ti.getColumn("date"));
-        procedureCol.setLabel("Procedures Performed On This Date");
-        procedureCol.setDisplayWidth("300");
-        ti.addColumn(procedureCol);
     }
 
     private void customizeProtocol(AbstractTableInfo ti)
@@ -572,25 +482,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ti.addColumn(displayCol);
 
             ti.setTitleColumn(name);
-        }
-
-        String renewalDate = "renewalDate";
-        if (ti.getColumn(renewalDate) == null)
-        {
-            String sqlString = "DATEADD(year, 3, " + ExprColumn.STR_TABLE_ALIAS + ".approve)";
-            SQLFragment sql = new SQLFragment(sqlString);
-            ExprColumn renewalCol = new ExprColumn(ti, renewalDate, sql, JdbcType.DATE, ti.getColumn("approve"));
-            renewalCol.setLabel("Next Renewal Date");
-            ti.addColumn(renewalCol);
-
-            String daysUntil = "daysUntilRenewal";
-            SQLFragment sql2 = new SQLFragment("(CASE " +
-                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL " +
-                    " THEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, sqlString, "{fn curdate()}") + ") " +
-                    " ELSE NULL END)");
-            ExprColumn daysUntilCol = new ExprColumn(ti, daysUntil, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
-            daysUntilCol.setLabel("Days Until Renewal");
-            ti.addColumn(daysUntilCol);
         }
     }
 
@@ -705,26 +596,41 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void customizeCageTable(AbstractTableInfo table)
     {
-        ColumnInfo joinToCage = table.getColumn("joinToCage");
-        if (joinToCage != null)
-        {
-            joinToCage.setHidden(true);
-        }
+
+//        if (table.getColumn("row") == null)
+//        {
+//            ColumnInfo cageCol = table.getColumn("cage");
+//
+//            SQLFragment sql = new SQLFragment(table.getSqlDialect().getSubstringFunction(ExprColumn.STR_TABLE_ALIAS + ".cage", "1", "1"));
+//            ExprColumn rowCol = new ExprColumn(table, "row", sql, JdbcType.VARCHAR, cageCol);
+//            rowCol.setLabel("Row");
+//            table.addColumn(rowCol);
+//
+//            String colSql = table.getSqlDialect().getSubstringFunction(ExprColumn.STR_TABLE_ALIAS + ".cage", "2", table.getSqlDialect().getVarcharLengthFunction() + "(" + ExprColumn.STR_TABLE_ALIAS + ".cage)");
+//            colSql = "(" + colSql + ")";
+//            if (table.getSqlDialect().isSqlServer())
+//            {
+//                colSql = "CASE WHEN ISNUMERIC(" + colSql + ") = 1 THEN CAST(" + colSql + " AS INTEGER) ELSE null END";
+//            }
+//            else if (table.getSqlDialect().isPostgreSQL())
+//            {
+//                colSql = "CASE WHEN (" + colSql + ") ~ '^[0-9]+$' THEN CAST(" + colSql + " AS INTEGER) ELSE null END";
+//            }
+//            else
+//            {
+//                throw new UnsupportedOperationException("Unknown SQL Dialect: " + table.getSqlDialect().toString());
+//            }
+//
+//            SQLFragment sql2 = new SQLFragment(colSql);
+//            ExprColumn columnCol = new ExprColumn(table, "column", sql2, JdbcType.INTEGER, cageCol);
+//            columnCol.setLabel("Column");
+//            table.addColumn(columnCol);
+//        }
 
         String name = "availability";
         if (table.getColumn(name) == null)
         {
-            ColumnInfo locationCol = table.getColumn("location");
-            UserSchema us = getUserSchema(table, "ehr_lookups");
-            if (us != null)
-            {
-                WrappedColumn col = new WrappedColumn(locationCol, name);
-                col.setReadOnly(true);
-                col.setIsUnselectable(true);
-                col.setUserEditable(false);
-                col.setFk(new QueryForeignKey(us, "availableCages", "location", "location"));
-                table.addColumn(col);
-            }
+
         }
     }
 
@@ -770,7 +676,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         String objectid = (String)ctx.get("objectid");
                         String id = (String)ctx.get("Id");
 
-                        out.write("<span style=\"white-space:nowrap\">[<a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showCaseHistory('" + objectid + "', '" + id + "', this);\">Show Case Hx</a>]</span>");
+                        out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showCaseHistory('" + objectid + "', '" + id + "', this);\">Show Case History</a></span>");
                     }
 
                     @Override
