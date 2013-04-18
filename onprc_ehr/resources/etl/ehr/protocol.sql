@@ -24,8 +24,9 @@ select
 		rtrim(ltrim(Rpi.Title)) as title,
 
 		(select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri.firstname and i.lastname = ri.lastname group by i.LastName, i.firstname having count(*) <= 1) as investigatorId,
-		--(ri.LastName + ', ' + ri.FirstName) as inves,
-		Rpi.StartDate as approve,
+		--(ri.LastName + ', ' + ri.FirstName) as inves,		
+		rpi.IACUCApprovalDate as approve,
+		rpi.OriginalApprovalDate as first_approval,
 		Rpi.EndDate,
 		s1.Value as USDA_Level,
 		Rpi.eIACUCNum as external_id,
@@ -36,13 +37,46 @@ select
 		rpi.objectid
 	From Ref_ProjectsIACUC rpi
     left join Ref_IACUCParentChildren ipc on (rpi.ProjectID = ipc.ProjectParentID and ipc.ProjectChildID = ipc.ProjectParentID and ipc.DateDisabled is null)
-    left join Ref_ProjInvest pi on (pi.ProjectID = rpi.ProjectID AND pi.DateDisabled is null and pi.PIFlag = 1)
+    left join Ref_ProjInvest pi on (pi.ProjectID = rpi.ProjectID AND pi.DateDisabled is null and pi.PIFlag = 1 and pi.InvestigatorID != 0)
     left join Ref_Investigator ri on ri.InvestigatorID = pi.investigatorid
     left join Sys_Parameters s1 on (rpi.USDALevel = s1.Flag and s1.Field = 'USDALevel')
     left join Sys_Parameters s2 on (rpi.projecttype = s2.Flag and s2.Field = 'ProjectType')
-	where rpi.datedisabled is null
-	and rpi.projectid = ipc.ProjectParentID
+	where rpi.datedisabled is null and rpi.projectid = ipc.ProjectParentID
 
-AND (rpi.ts > ? OR ipc.ts > ? or pi.ts > ? or ri.ts > ?)
+    AND (rpi.ts > ? OR ipc.ts > ? or pi.ts > ? or ri.ts > ?)
 
+--also include any project missing from the parent/child table
+UNION ALL
 
+select
+		--rpi.ProjectID,
+-- 		case
+-- 			when Rpi.eIACUCNum is null OR datalength(rtrim(ltrim(Rpi.eIACUCNum))) = 0 then rtrim(ltrim(Rpi.IACUCCode))
+-- 			else rtrim(ltrim(Rpi.eIACUCNum))
+-- 		end as protocol,
+		rtrim(ltrim(Rpi.IACUCCode)) as protocol,
+		rtrim(ltrim(Rpi.Title)) as title,
+
+		(select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri.firstname and i.lastname = ri.lastname group by i.LastName, i.firstname having count(*) <= 1) as investigatorId,
+		--(ri.LastName + ', ' + ri.FirstName) as inves,
+		rpi.IACUCApprovalDate as approve,
+		rpi.OriginalApprovalDate as first_approval,
+		Rpi.EndDate,
+		s1.Value as USDA_Level,
+		Rpi.eIACUCNum as external_id,
+		Rpi.IBCApprovalNum as ibc_approval_num,
+		Rpi.IBCApprovalRequired as ibc_approval_required,
+		Rpi.DateCreated as created,
+		S2.Value as Project_Type,
+		rpi.objectid
+	From Ref_ProjectsIACUC rpi
+    left join Ref_IACUCParentChildren pc ON (rpi.ProjectID = pc.ProjectChildID)
+    left join Ref_IACUCParentChildren pc2 ON (rpi.ProjectID = pc.ProjectParentID)
+
+    left join Ref_ProjInvest pi on (pi.ProjectID = rpi.ProjectID AND pi.DateDisabled is null and pi.PIFlag = 1 and pi.InvestigatorID != 0)
+    left join Ref_Investigator ri on ri.InvestigatorID = pi.investigatorid
+    left join Sys_Parameters s1 on (rpi.USDALevel = s1.Flag and s1.Field = 'USDALevel')
+    left join Sys_Parameters s2 on (rpi.projecttype = s2.Flag and s2.Field = 'ProjectType')
+	where pc.IDKey is null and pc2.IDKey is null
+
+    AND (rpi.ts > ? OR pc.ts > ? OR pc2.ts > ? or pi.ts > ? or ri.ts > ?)

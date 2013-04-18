@@ -10,6 +10,7 @@ onprc_ehr/resources/etl/ehr/encounter_summaries.sql -text
 onprc_ehr/resources/etl/ehr/project.sql -text
 onprc_ehr/resources/etl/ehr/protocol.sql -text
 onprc_ehr/resources/etl/ehr/protocolProcedures.sql -text
+onprc_ehr/resources/etl/ehr/protocol_counts.sql -text
 onprc_ehr/resources/etl/ehr/snomed_tags.sql -text
 onprc_ehr/resources/etl/ehr_lookups/cage.sql -text
 onprc_ehr/resources/etl/ehr_lookups/lookups.sql -text
@@ -20,7 +21,6 @@ onprc_ehr/resources/etl/pending/Sur_AnesthesiaLogData.sql -text
 onprc_ehr/resources/etl/pending/Sur_implants.sql -text
 onprc_ehr/resources/etl/pending/accounts.sql -text
 onprc_ehr/resources/etl/pending/invoicedItems.sql -text
-onprc_ehr/resources/etl/pending/protocol_counts.sql -text
 onprc_ehr/resources/etl/pending/sur_vessels.sql -text
 onprc_ehr/resources/etl/pending/tissue_recipients.sql -text
 onprc_ehr/resources/etl/static/billing.sql -text
@@ -190,7 +190,12 @@ onprc_ehr/resources/queries/study/Urinalysis[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/Virology[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/antibioticSensitivityPivoted.query.xml -text
 onprc_ehr/resources/queries/study/antibioticSensitivityPivoted.sql -text
+onprc_ehr/resources/queries/study/assignment/.qview.xml -text
+onprc_ehr/resources/queries/study/assignment/Search[!!-~]Panel.qview.xml -text
+onprc_ehr/resources/queries/study/bloodDrawChanges.sql -text
+onprc_ehr/resources/queries/study/bloodDrawsByDay.query.xml -text
 onprc_ehr/resources/queries/study/bloodDrawsByDay.sql -text
+onprc_ehr/resources/queries/study/bloodDrawsByDay/.qview.xml -text
 onprc_ehr/resources/queries/study/cases/.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Behavior[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Clinical[!!-~]Cases.qview.xml -text
@@ -214,6 +219,9 @@ onprc_ehr/resources/queries/study/currentBloodDraws.sql -text
 onprc_ehr/resources/queries/study/currentBloodSummary.sql -text
 onprc_ehr/resources/queries/study/demographicsActiveAssignment.query.xml -text
 onprc_ehr/resources/queries/study/demographicsActiveAssignment.sql -text
+onprc_ehr/resources/queries/study/demographicsActiveCases.query.xml -text
+onprc_ehr/resources/queries/study/demographicsActiveCases.sql -text
+onprc_ehr/resources/queries/study/demographicsActiveProblems.query.xml -text
 onprc_ehr/resources/queries/study/demographicsActiveProblems.sql -text
 onprc_ehr/resources/queries/study/demographicsAssignmentHistory.query.xml -text
 onprc_ehr/resources/queries/study/demographicsAssignmentHistory.sql -text
@@ -234,6 +242,10 @@ onprc_ehr/resources/queries/study/demographicsPaired.query.xml -text
 onprc_ehr/resources/queries/study/demographicsPaired.sql -text
 onprc_ehr/resources/queries/study/demographicsPaired/.qview.xml -text
 onprc_ehr/resources/queries/study/demographicsPaired/Single[!!-~]Housed.qview.xml -text
+onprc_ehr/resources/queries/study/demographicsUtilization.query.xml -text
+onprc_ehr/resources/queries/study/demographicsUtilization.sql -text
+onprc_ehr/resources/queries/study/demographicsViralStatus.query.xml -text
+onprc_ehr/resources/queries/study/demographicsViralStatus.sql -text
 onprc_ehr/resources/queries/study/flagsPivoted.query.xml -text
 onprc_ehr/resources/queries/study/flagsPivoted.sql -text
 onprc_ehr/resources/queries/study/hematologyMisc.query.xml -text
@@ -251,6 +263,9 @@ onprc_ehr/resources/queries/study/housedInUnavailableCages.query.xml -text
 onprc_ehr/resources/queries/study/housedInUnavailableCages.sql -text
 onprc_ehr/resources/queries/study/housingEffectiveCage.query.xml -text
 onprc_ehr/resources/queries/study/housingEffectiveCage.sql -text
+onprc_ehr/resources/queries/study/housingMixedViralStatus.query.xml -text
+onprc_ehr/resources/queries/study/housingMixedViralStatus.sql -text
+onprc_ehr/resources/queries/study/housingMixedViralStatus/Mixed[!!-~]Rooms.qview.xml -text
 onprc_ehr/resources/queries/study/housingPairs.query.xml -text
 onprc_ehr/resources/queries/study/housingPairs.sql -text
 onprc_ehr/resources/queries/study/housingPairs/Cages[!!-~]With[!!-~]Animals.qview.xml -text
@@ -274,6 +289,7 @@ onprc_ehr/resources/queries/study/proceduresPerYear/.qview.xml -text
 onprc_ehr/resources/queries/study/reproSummary.query.xml -text
 onprc_ehr/resources/queries/study/reproSummary.sql -text
 onprc_ehr/resources/queries/study/reproSummary/.qview.xml -text
+onprc_ehr/resources/queries/study/surgeryChecklist.sql -text
 onprc_ehr/resources/queries/study/treatmentSchedule.query.xml -text
 onprc_ehr/resources/queries/study/treatmentSchedule.sql -text
 onprc_ehr/resources/queries/study/urinalysisMisc.query.xml -text
@@ -360,6 +376,7 @@ onprc_ehr/resources/views/serviceRequests.html -text
 onprc_ehr/resources/web/onprc_ehr/Utils.js -text
 onprc_ehr/resources/web/onprc_ehr/billingButtons.js -text
 onprc_ehr/resources/web/onprc_ehr/onprcReports.js -text
+onprc_ehr/resources/web/onprc_ehr/panel/BloodSummaryPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/IconPanel.js -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRBillingUserSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRController.java -text

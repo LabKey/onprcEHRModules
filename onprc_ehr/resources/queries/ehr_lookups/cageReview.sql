@@ -41,7 +41,7 @@ SELECT
     count(c1.sqft) as totalCageRows,
 FROM ehr_lookups.pairedCages pc
 
-LEFT JOIN study.housing h ON (h.room = pc.room AND pc.cage = h.cage AND h.enddateCoalesced >= CAST(now() as date))
+LEFT JOIN study.housing h ON (h.room = pc.room AND pc.cage = h.cage AND h.enddateTimeCoalesced >= now())
 LEFT JOIN ehr_lookups.cageclass c1 ON (c1.low <= h.Id.mostRecentWeight.mostRecentWeight AND h.Id.mostRecentWeight.mostRecentWeight < c1.high)
 
 GROUP BY pc.room, pc.effectiveCage

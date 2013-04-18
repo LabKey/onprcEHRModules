@@ -38,6 +38,7 @@
                             schemaName=ehr_lookups&amp;
                             query.queryName=cage&amp;
                             query.room~eq=${room}&amp;
+                            query.availability/isAvailable~eq=true&amp;
                             query.totalAnimals/totalAnimals~gt=0&amp;
                             query.sort=cage&amp;
                         </url>
@@ -48,6 +49,7 @@
                             schemaName=ehr_lookups&amp;
                             query.queryName=cage&amp;
                             query.room~eq=${room}&amp;
+                            query.availability/isAvailable~eq=true&amp;
                             query.totalAnimals/totalAnimals~isblank&amp;
                             query.sort=cage&amp;
                         </url>

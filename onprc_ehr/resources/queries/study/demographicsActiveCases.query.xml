@@ -1,0 +1,20 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsActiveCases" tableDbType="NOT_IN_DB">
+                <tableTitle>Open Cases</tableTitle>
+                <columns>
+                    <column columnName="Id">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="categories">
+                        <columnTitle>Categories</columnTitle>
+                    </column>
+                    <column columnName="total">
+                        <columnTitle># of Open Cases</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

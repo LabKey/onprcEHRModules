@@ -1,0 +1,18 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="housingMixedViralStatus" tableDbType="TABLE">
+                <tableTitle>Distinct Viral Status Per Room</tableTitle>
+                <columns>
+                    <column columnName="viralStatuses">
+                        <columnTitle>Viral Statuses Present</columnTitle>
+                    </column>
+                    <column columnName="distinctStatuses">
+                        <columnTitle>Distinct Viral Statuses Present</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+
