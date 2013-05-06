@@ -507,7 +507,7 @@ public class ONPRC_EHRController extends SpringActionController
 
         public ActionURL getSuccessURL(Object form)
         {
-            return DetailsURL.fromString(getContainer(), "/onprc_ehr/etlAdmin.view").getActionURL();
+            return DetailsURL.fromString("/onprc_ehr/etlAdmin.view", getContainer()).getActionURL();
         }
     }
 

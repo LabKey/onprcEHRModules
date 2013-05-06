@@ -92,8 +92,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     {
         ETL.init(1);
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
-        DetailsURL details = DetailsURL.fromString("/onprc_ehr/etlAdmin.view");
-        details.setContainerContext(ContainerManager.getSharedContainer());
+        DetailsURL details = DetailsURL.fromString("/onprc_ehr/etlAdmin.view", ContainerManager.getSharedContainer());
         AdminConsole.addLink(AdminConsole.SettingsLinkType.Management, "ehr etl admin", details.getActionURL());
 
         RoleManager.registerRole(new ONPRCBillingAdminRole());

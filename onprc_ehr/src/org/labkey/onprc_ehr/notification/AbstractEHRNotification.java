@@ -99,8 +99,7 @@ abstract public class AbstractEHRNotification implements Notification
 
     protected String getBaseUrl(Container c)
     {
-        DetailsURL url = DetailsURL.fromString("/query/executeQuery.view");
-        url.setContainerContext(c);
+        DetailsURL url = DetailsURL.fromString("/query/executeQuery.view", c);
         return AppProps.getInstance().getBaseServerUrl() + url.getActionURL().toString();
     }
 }
