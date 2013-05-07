@@ -5,6 +5,7 @@
        <column name="source" />
        <column name="rearingType" />
        <column name="acquisitionType" />
+       <column name="originalId" />
        <column name="remark" />
        <column name="qcstate" />
        <column name="taskid" />

@@ -97,4 +97,25 @@
             </ns:column>
         </ns:columns>
     </ns:table>
+    <ns:table tableDbType="TABLE" tableName="serology_test_schedule">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Serology Test Schedule</ns:tableTitle>
+        <ns:columns>
+            <ns:column columnName="rowid"/>
+            <ns:column columnName="code">
+                <ns:columnTitle>Agent</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>ehr_lookups</ns:fkDbSchema>
+                    <ns:fkTable>snomed</ns:fkTable>
+                    <ns:fkColumnName>code</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="flag">
+                <ns:columnTitle>Flag</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="interval">
+                <ns:columnTitle>Test Interval (Months)</ns:columnTitle>
+            </ns:column>
+        </ns:columns>
+    </ns:table>
 </ns:tables>

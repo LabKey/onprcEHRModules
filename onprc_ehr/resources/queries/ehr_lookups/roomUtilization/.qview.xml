@@ -15,6 +15,6 @@
    </columns>
    <sorts>
        <sort column="room/area"/>
-       <sort column="room"/>
+       <sort column="room/sort_order"/>
    </sorts>
 </customView>

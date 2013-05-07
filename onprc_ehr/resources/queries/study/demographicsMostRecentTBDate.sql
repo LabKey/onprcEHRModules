@@ -10,7 +10,7 @@ select
   d.Id,
   T2.lastDate as MostRecentTBDate,
   case
-    WHEN T2.lastDate IS NULL THEN 9999
+    WHEN T2.lastDate IS NULL THEN null
     ELSE age_in_months(T2.lastDate, now())
   END AS MonthsSinceLastTB,
   case
@@ -18,7 +18,7 @@ select
     ELSE (6 - age_in_months(T2.lastDate, now()))
   END AS MonthsUntilDue,
 
-  (SELECT group_concat(DISTINCT f.value) FROM study.flags f WHERE f.id = d.id AND f.flag = 'TB' AND f.enddateCoalesced >= now()) as flags
+  (SELECT group_concat(DISTINCT f.value) FROM study.flags f WHERE f.id = d.id AND (f.value IN ('Do Not TB Test', 'TB Serologic test only')) AND f.enddateCoalesced >= now()) as flags
 
 from study.demographics d
 

@@ -60,7 +60,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 {
     public String getName()
     {
-        return "Weight Alerts";
+        return "Weight Drop Alerts";
     }
 
     public String getDescription()
@@ -70,7 +70,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
     public String getEmailSubject()
     {
-        return "Weight Alerts: " + _dateTimeFormat.format(new Date());
+        return "Weight Drop Alerts: " + _dateTimeFormat.format(new Date());
     }
 
     @Override

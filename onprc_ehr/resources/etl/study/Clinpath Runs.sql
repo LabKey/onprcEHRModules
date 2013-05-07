@@ -26,22 +26,9 @@ SELECT
 	--MethodInt,
 	Method,
 	collectionMethod,
-	--ConditionInt,
-	Condition,
 
     Tissue,
 	remarks,
-
-
-	cast(Experimental as nvarchar(4000)) + '/' +     -------If selected Flag = 1 Else 0
-	cast(PreAssignment as nvarchar(4000)) + '/' +   -------If selected Flag = 1 Else 0
-	cast(Quarantine as nvarchar(4000)) + '/' +       -------If selected Flag = 1 Else 0
-	cast(Pregnant as nvarchar(4000)) + '/' +   	-------If selected Flag = 1 Else 0
-	cast(Followup as nvarchar(4000)) + '/' +   	-------If selected Flag = 1 Else 0
-	cast(Presale as nvarchar(4000)) + '/' +    	 -------If selected Flag = 1 Else 0
-	cast(Fasting as nvarchar(4000)) + '/' +     	 -------If selected Flag = 1 Else 0
-	cast(Sedated as nvarchar(4000)) as flags,    	 ------ If selected Flag = 1 Else 0
-    --ClinicalKey,
 
 	case
 	  WHEN TechLastName = 'Unassigned' or TechFirstName = 'Unassigned' THEN
@@ -80,17 +67,7 @@ SELECT
 	Method as MethodInt  ,
 	s2.Value as Method,
 	null as collectionMethod,
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-	Experimental as Experimental ,     -------If selected Flag = 1 Else 0
-	PreAssignment as PreAssignment ,   -------If selected Flag = 1 Else 0
-	Quarantine as Quarantine ,       -------If selected Flag = 1 Else 0
-	Pregnant as Pregnant ,   	-------If selected Flag = 1 Else 0
-	Followup as Followup ,   	-------If selected Flag = 1 Else 0
-	Presale as Presale ,    	 -------If selected Flag = 1 Else 0
-	Fasting as Fasting ,     	 -------If selected Flag = 1 Else 0
-	Sedated as Sedated ,    	 ------ If selected Flag = 1 Else 0
-	null as Tissue,
+	cln.tissue as Tissue,
 	null as remarks,
 
 	cln.ts as rowversion,
@@ -125,18 +102,6 @@ SELECT
 	s2.Value as Method,
 	null as collectionMethod,
 
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-
-	Experimental as Experimental  ,            	----- If selected Flag = 1, Else Flag = 0
-	PreAssignment as PreAssignment  ,	        ----- If selected Flag = 1, Else Flag = 0
-	Quarantine as Quarantine  ,			----- If selected Flag = 1, Else Flag = 0
-	Pregnant as Pregnant  ,				----- If selected Flag = 1, Else Flag = 0
-	Followup as Followup  ,				----- If selected Flag = 1, Else Flag = 0
-	Presale as Presale  ,				----- If selected Flag = 1, Else Flag = 0
-	Fasting as Fasting  ,				----- If selected Flag = 1, Else Flag = 0
-	Sedated as Sedated  ,				----- If selected Flag = 1, Else Flag = 0
-	--PanelFlag as PanelFlag ,
 	null as Tissue,
 	Remarks  as Remarks,
 
@@ -173,17 +138,6 @@ SELECT
 	s2.Value as Method,
 	null as collectionMethod,
 
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-
-	Experimental as Experimental ,		----- If selected Flag = 1, Else Flag = 0
-	PreAssignment as PreAssignment  ,	----- If selected Flag = 1, Else Flag = 0
-	Quarantine as Quarantine  ,		----- If selected Flag = 1, Else Flag = 0
-	Pregnant as Pregnant ,			----- If selected Flag = 1, Else Flag = 0
-	Followup as Followup ,			----- If selected Flag = 1, Else Flag = 0
-	Presale as Presale ,			----- If selected Flag = 1, Else Flag = 0
-	Fasting as Fasting ,			----- If selected Flag = 1, Else Flag = 0
-	Sedated  as Sedated,			----- If selected Flag = 1, Else Flag = 0
 	null as Tissue,
 	null as remarks,
 
@@ -221,18 +175,6 @@ SELECT
 	s2.Value as Method,
 	null as collectionMethod,
 
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-
-	Experimental as Experimental ,
-	PreAssignment as PreAssignment  ,
-	Quarantine as Quarantine ,
-	Pregnant as Pregnant ,
-	Followup  as Followup,
-	Presale as Presale ,
-	Fasting as Fasting ,
-	Sedated as Sedated ,
-	--OccultFlag as OccultFlag ,
 	null as Tissue,
 	Remarks as Remarks,
 	cln.ts as rowversion,
@@ -268,17 +210,6 @@ SELECT
 	s2.Value as Method,
 	null as collectionMethod,
 
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-
-	Experimental as Experimental  ,       ----- If selected Flag = 1, Else Flag = 0
-	PreAssignment as PreAssignment ,   ----- If selected Flag = 1, Else Flag = 0
-	Quarantine as Quarantine ,         ----- If selected Flag = 1, Else Flag = 0
-	Pregnant as Pregnant ,             ----- If selected Flag = 1, Else Flag = 0
-	Followup  as Followup,             ----- If selected Flag = 1, Else Flag = 0
-	Presale as Presale ,               ----- If selected Flag = 1, Else Flag = 0
-	Fasting as Fasting ,		   ----- If selected Flag = 1, Else Flag = 0
-	Sedated as Sedated ,		   ----- If selected Flag = 1, Else Flag = 0
     null as Tissue,
 	REMARKS as REMARKS,
 
@@ -313,17 +244,6 @@ SELECT
 	s2.Value as Method,
 	null as collectionMethod,
 
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-
-	Experimental as Experimental ,
-	PreAssignment as PreAssignment ,
-	Quarantine as Quarantine ,
-	Pregnant as Pregnant ,
-	Followup as Followup ,
-	Presale as Presale ,
-	Fasting as Fasting ,
-	Sedated as Sedated ,
 	null as Tissue,
 	REMARKS as REMARKS,
 
@@ -360,17 +280,6 @@ SELECT
 	s2.Value as Method,
 	null as collectionMethod,
 
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-
-	Experimental as Experimental   ,    		----- If selected Flag = 1, Else Flag = 0
-	PreAssignment as PreAssignment  ,		----- If selected Flag = 1, Else Flag = 0
-	Quarantine as Quarantine   ,			----- If selected Flag = 1, Else Flag = 0
-	Pregnant as Pregnant  ,				----- If selected Flag = 1, Else Flag = 0
-	Followup  as Followup    ,			----- If selected Flag = 1, Else Flag = 0
-	Presale as Presale  ,				----- If selected Flag = 1, Else Flag = 0
-	Fasting as Fasting  ,				----- If selected Flag = 1, Else Flag = 0
-	Sedated as Sedated  ,				----- If selected Flag = 1, Else Flag = 0
 	Tissue as Tissue, 				--- Ref_SnomedLists
 	null as remarks,
 
@@ -406,17 +315,6 @@ SELECT
 	s2.Value as Method,
 	null as collectionMethod,
 
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-
-	Experimental as Experimental ,
-	PreAssignment as PreAssignment ,
-	Quarantine as Quarantine ,
-	Pregnant as Pregnant ,
-	Followup as Followup  ,
-	Presale as Presale ,
-	Fasting as Fasting  ,
-	Sedated as Sedated ,
 	Tissue as Tissue, 			----- Ref_Snomedlists
 	null as remarks,
 
@@ -452,16 +350,6 @@ SELECT
 	Method as MethodInt  ,
 	s2.Value as Method,
 	null as collectionMethod,
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-	Experimental as Experimental ,     ----- If selected Flag = 1 else Flag = 0
-	PreAssignment as PreAssignment ,   ----- If selected Flag = 1 else Flag = 0
-	Quarantine as Quarantine ,         ----- If selected Flag = 1 else Flag = 0
-	Pregnant as Pregnant ,              ----- If selected Flag = 1 else Flag = 0
-	Followup as Followup ,             ----- If selected Flag = 1 else Flag = 0
-	Presale as Presale ,               ----- If selected Flag = 1 else Flag = 0
-	Fasting as Fasting  ,              ----- If selected Flag = 1 else Flag = 0
-	Sedated as Sedated,
 	null as Tissue,
 	null as remarks,
 
@@ -497,16 +385,6 @@ SELECT
       s2.Value  as Method,
       null as collectionMethod,
 
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-	Experimental as Experimental  ,
-	PreAssignment as PreAssignment ,
-	Quarantine as Quarantine ,
-	Pregnant as Pregnant,
-	Followup as Followup ,
-	Presale as Presale ,
-	Fasting  as Fasting ,
-	Sedated  as Sedated,
 	null as tissue,
 	null as remarks,
 
@@ -541,16 +419,6 @@ SELECT
 	Method as MethodInt  ,
 	s2.Value as Method,
 	s5.value as collectionMethod,
-	Condition as ConditionInt  ,
-	s3.Value as Condition,
-	Experimental as Experimental   ,
-	PreAssignment as PreAssignment  ,
-	Quarantine as Quarantine   ,
-	Pregnant  as Pregnant,
-	Followup as Followup  ,
-	Presale as Presale  ,
-	Fasting as Fasting  ,
-	Sedated  as Sedated ,
 	null as tissue,
 	Remarks as Remarks,
 
@@ -564,15 +432,6 @@ FROM Cln_Urinalysis cln
    left join Sys_parameters s3 on (s3.Field = 'AnimalConditionLab'and s3.Flag = Condition)
 --    left join Sys_parameters s4 on (s4.Field = 'UrineAppearance' and s4.Flag = Appearance)
    left join Sys_parameters s5 on (s5.Field = 'UrineCollection' and s5.Flag = Collection)
---    left join Sys_parameters s6 on (s6.Field = 'UrineColor'and s6.Flag = Color)
---    left join Sys_parameters s7 on (s7.Field = 'BacteriaCount' and s7.Flag = Bacteria)
---    left join Sys_parameters s8 on (s8.Field = 'UrineMeasurement' and s8.Flag = Protein)
---    left join Sys_parameters s9 on (s9.Field = 'UrineMeasurement' and s9.Flag = Glucose)
---    left join Sys_parameters s10 on (s10.Field = 'UrineMeasurement' and s10.Flag = Ketone)
---    left join Sys_parameters s11 on (s11.Field = 'UrineMeasurement' and s11.Flag = Bilirubin)
---    left join Sys_parameters s12 on (s12.Field = 'UrineMeasurement' and s12.Flag = Blood)
---    left join Sys_parameters s13 on (s13.Field = 'Casts' and s13.Flag = CastsType1)
---    left join Sys_parameters s14 on (s14.Field = 'Casts' and s14.Flag = CastsType2)
    left join Sys_parameters s15 on (s15.Field = 'DepartmentCode' and s15.Flag = rt.DeptCode)
 
 --parasitology
@@ -595,17 +454,6 @@ Select
 	Method as methodInt,
 	s2.Value as method,
 	null as collectionMethod,
-	Condition as conditionInt,
-	s3.value as condition,
-
-	Experimental,       ----- If selected Flag = 1, Else Flag = 0
-	PreAssignment as PreAssignment ,   ----- If selected Flag = 1, Else Flag = 0
-	Quarantine as Quarantine ,         ----- If selected Flag = 1, Else Flag = 0
-	Pregnant as Pregnant ,             ----- If selected Flag = 1, Else Flag = 0
-	Followup  as Followup,             ----- If selected Flag = 1, Else Flag = 0
-	Presale as Presale ,               ----- If selected Flag = 1, Else Flag = 0
-	Fasting as Fasting ,		   ----- If selected Flag = 1, Else Flag = 0
-	Sedated as Sedated ,		   ----- If selected Flag = 1, Else Flag = 0
 	null as tissue,
 	null as remarks,
 

@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 SELECT
-  d.id,
-  d.species,
-  d.gender,
-  d.id.activeAssignments.projects,
-  d.id.activeAssignments.investigators,
-  d.id.age.ageInYears,
-  h.result as PLT,
-  h2.result as HCT,
+  d.Id,
+  t.lastDate as labworkDate,
+  hr1.result as PLT,
+  hr2.result as HCT,
+  hr1.runId as runIdPLT,
+  hr2.runId as runIdHCT,
+  CASE
+    WHEN (hr2.result < 30 OR hr1.result < 50) THEN 'WARNING'
+    ELSE null
+  END as status,
+
 FROM study.demographics d
 LEFT JOIN (
-  SELECT hr.id, hr.result
-  FROM study.hematologyResults hr
-  WHERE hr.testId = 'PLT' and hr.result IS NOT NULL and hr.date = (SELECT max(date) FROM study.hematologyResults hr2 WHERE hr2.id = hr.id)
-) h ON (d.id = h.id)
+  SELECT r.id, max(r.date) as lastDate
+  FROM study.clinpathRuns r
+  WHERE r.type = 'Hematology'
+  GROUP BY r.id
+) t ON (t.id = d.id)
+LEFT JOIN study.hematologyResults hr1 ON (hr1.id = d.id AND hr1.date = t.lastDate AND hr1.testid = 'PLT')
+LEFT JOIN study.hematologyResults hr2 ON (hr2.id = d.id AND hr2.date = t.lastDate AND hr2.testid = 'HCT')
 
-LEFT JOIN (
-  SELECT hr.id, hr.result
-  FROM study.hematologyResults hr
-  WHERE hr.testId = 'HCT' and hr.result IS NOT NULL and hr.date = (SELECT max(date) FROM study.hematologyResults hr2 WHERE hr2.id = hr.id)
-) h2 ON (d.id = h2.id)
+WHERE d.calculated_status = 'Alive'

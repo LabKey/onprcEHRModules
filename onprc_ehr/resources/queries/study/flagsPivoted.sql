@@ -15,14 +15,14 @@
  */
 SELECT
 f.id,
-f.flag,
+COALESCE(f.flag, 'Other') as flags,
 group_concat(f.value, chr(10)) as valueField
 
 FROM study.flags f
 
-WHERE (f.enddate IS NULL OR COALESCE(f.enddate, curdate()) >= curdate()) and category is not null
+WHERE f.enddateCoalesced >= curdate() and flag is not null
 
-GROUP BY f.id, f.flag
+GROUP BY f.id, COALESCE(f.flag, 'Other')
 
-PIVOT valueField by flag
+PIVOT valueField by flags
 

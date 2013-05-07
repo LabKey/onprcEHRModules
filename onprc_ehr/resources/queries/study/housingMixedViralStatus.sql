@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 SELECT
+  h1.room,
+  group_concat(DISTINCT h1.status, chr(10)) as viralStatuses,
+  count(DISTINCT h1.viralStatus) as distinctStatuses
+
+FROM (
+SELECT
   h.room,
-  group_concat(DISTINCT h.Id.viral_status.viralStatus, chr(10)) as viralStatuses,
-  count(DISTINCT h.Id.viral_status.viralStatus) as distinctStatuses
+  h.Id.viral_status.viralStatus as viralStatus,
+  count(distinct h.id) as totalAnimals,
+  h.Id.viral_status.viralStatus || ' (' || cast(count(distinct h.id) as varchar) || ')' as status,
 
 FROM study.housing h
 WHERE h.enddateTimeCoalesced >= now()
-GROUP BY h.room
+GROUP BY h.room, h.Id.viral_status.viralStatus
+
+) h1
+GROUP BY h1.room
 
 

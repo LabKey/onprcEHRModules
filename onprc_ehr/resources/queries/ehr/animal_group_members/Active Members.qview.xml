@@ -1,0 +1,11 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <filters>
+        <filter column="enddateCoalesced" operator="dategte" value="+0d"/>
+    </filters>
+    <sorts>
+        <sort column="groupId/name"/>
+        <sort column="Id/curLocation/room_order"/>
+        <sort column="Id/curLocation/cage_order" />
+        <sort column="Id"/>
+    </sorts>
+</customView>

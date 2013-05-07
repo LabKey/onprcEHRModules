@@ -24,7 +24,7 @@
         </column>
     </columns>
     <sorts>
-        <sort column="room" descending="false"/>
+        <sort column="room/sort_order"/>
         <sort column="cage" descending="false"/>
         <sort column="Id" descending="false"/>
     </sorts>

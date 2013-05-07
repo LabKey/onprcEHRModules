@@ -26,9 +26,11 @@ Tested by: 			Date:
  SELECT
 	cast(ml.AnimalID as nvarchar(4000)) as Id,
 	ML.DateCreated as date,
---	ML.DateDisabled as enddate,
-	
-	coalesce(ML.DateDisabled, q.deathdate, q.departuredate) as enddate ,
+
+	CASE
+	  WHEN c.CloseDate < ml.DateDisabled THEN coalesce(c.CloseDate, q.deathdate, q.departuredate)
+      ELSE coalesce(ML.DateDisabled, q.deathdate, q.departuredate)
+    END as enddate,
 	
 	null as parentid,
 	c.objectid as caseid,
@@ -40,4 +42,4 @@ left join Af_Case c on (c.CaseID = ml.CaseID)
 LEFT JOIN Sys_parameters s1 ON (s1.Field = 'MasterProblemList' and s1.Flag = MasterProblem)
 left join Af_Qrf q on (q.animalid = ml.animalid)
 
-WHERE ml.ts > ? or q.ts > ?
+WHERE (ml.ts > ? or q.ts > ? OR c.ts > ?)

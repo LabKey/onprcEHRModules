@@ -2,6 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="iStat" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
                 <tableTitle>iStat</tableTitle>
                 <columns>
                     <column columnName="lsid">

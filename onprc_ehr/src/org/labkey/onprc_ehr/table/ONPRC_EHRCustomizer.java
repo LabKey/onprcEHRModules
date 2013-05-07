@@ -32,6 +32,7 @@ import org.labkey.api.data.WrappedColumn;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
+import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.ExprColumn;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
@@ -88,9 +89,21 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeAnimalTable((AbstractTableInfo)table);
             }
+            else if (matches(table, "study", "Demographics"))
+            {
+                customizeDemographicsTable((AbstractTableInfo)table);
+            }
             else if (matches(table, "study", "Birth"))
             {
                 customizeBirthTable((AbstractTableInfo) table);
+            }
+            else if (matches(table, "study", "Matings"))
+            {
+                customizeMatingTable((AbstractTableInfo) table);
+            }
+            else if (matches(table, "study", "Pregnancy Confirmations"))
+            {
+                customizePregnancyConfirmationTable((AbstractTableInfo) table);
             }
             else if (matches(table, "study", "Housing"))
             {
@@ -120,6 +133,15 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeCageTable((AbstractTableInfo) table);
             }
+            else if (matches(table, "ehr_lookups", "areas"))
+            {
+                customizeAreaTable((AbstractTableInfo) table);
+            }
+        }
+
+        if (matches(table, "study", "surgeryChecklist"))
+        {
+            customizeSurgChecklistTable((AbstractTableInfo) table);
         }
     }
 
@@ -297,6 +319,16 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             return;
         }
 
+        String curLocation = "curLocation";
+        ColumnInfo existingLocation = ds.getColumn(curLocation);
+        if (existingLocation != null)
+            ds.removeColumn(existingLocation);
+
+        ColumnInfo col13 = getWrappedIdCol(us, ds, curLocation, "demographicsCurrentLocation");
+        col13.setLabel("Housing - Current");
+        col13.setDescription("The calculates the current housing location for each living animal.");
+        ds.addColumn(col13);
+
         if (ds.getColumn("activeFlags") == null)
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "activeFlags", "flagsPivoted");
@@ -305,11 +337,35 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ds.addColumn(col);
         }
 
+        if (ds.getColumn("currentCondition") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "currentCondition", "demographicsCondition");
+            col.setLabel("Condition");
+            //col.setDescription("");
+            ds.addColumn(col);
+        }
+
         if (ds.getColumn("openProblems") == null)
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "openProblems", "demographicsActiveProblems");
             col.setLabel("Open Problems");
-            //col.setDescription("");
+            col.setDescription("This will display open problems for this animal");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("origin") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "origin", "demographicsOrigin");
+            col.setLabel("Origin");
+            col.setDescription("Contains fields related to the origin of the animal (ie. center vs. acquired), arrival date at the center, etc.");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("terminal") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "terminal", "demographicsTermination");
+            col.setLabel("Terminal Projects");
+            col.setDescription("Summarizes whether the animal is assigned to terminal projects");
             ds.addColumn(col);
         }
 
@@ -317,6 +373,13 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "activeCases", "demographicsActiveCases");
             col.setLabel("Active Cases");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("parents") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "parents", "demographicsParents");
+            col.setLabel("Parents");
             ds.addColumn(col);
         }
 
@@ -406,6 +469,24 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         appendLatestHxCol(ti);
         appendSurgeryCol(ti);
         appendCaseHistoryCol(ti);
+
+        String problemCategories = "problemCategories";
+        if (ti.getColumn(problemCategories) == null)
+        {
+            TableInfo pl = getStudyUserSchema(ti).getTable("Problem List");
+            if (pl == null)
+                return;
+
+            TableInfo realTable = getRealTable(pl);
+            if (realTable == null)
+                return;
+
+            String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
+            SQLFragment sql = new SQLFragment("(select " + ti.getSqlDialect().getGroupConcat(new SQLFragment("pl.category"), true, true, chr + "(10)") + " FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)");
+            ExprColumn newCol = new ExprColumn(ti, problemCategories, sql, JdbcType.VARCHAR, ti.getColumn("objectid"));
+            newCol.setLabel("Master Problem(s)");
+            ti.addColumn(newCol);
+        }
     }
 
     private void customizeHousingTable(AbstractTableInfo ti)
@@ -430,10 +511,85 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             if (realTable != null)
             {
                 SQLFragment roomSql = new SQLFragment(realTable.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "(SELECT max(h2.enddate) as d FROM " + realTable.getSelectName() + " h2 WHERE h2.enddate IS NOT NULL AND h2.enddate <= " + ExprColumn.STR_TABLE_ALIAS + ".date AND h2.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid and h2.room != " + ExprColumn.STR_TABLE_ALIAS + ".room)"));
-                ExprColumn roomCol = new ExprColumn(ti, "daysInRoom", roomSql, JdbcType.VARCHAR, realTable.getColumn("participantid"), realTable.getColumn("date"), realTable.getColumn("enddate"));
+                ExprColumn roomCol = new ExprColumn(ti, "daysInRoom", roomSql, JdbcType.INTEGER, realTable.getColumn("participantid"), realTable.getColumn("date"), realTable.getColumn("enddate"));
                 roomCol.setLabel("Days In Room");
                 ti.addColumn(roomCol);
 
+            }
+        }
+
+        if (ti.getColumn("daysInArea") == null)
+        {
+            TableInfo realTable = getRealTable(ti);
+            if (realTable != null)
+            {
+                SQLFragment sql = new SQLFragment(realTable.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "(SELECT max(h2.enddate) as d FROM " + realTable.getSelectName() + " h2 LEFT JOIN ehr_lookups.rooms r1 ON (r1.room = h2.room) WHERE h2.enddate IS NOT NULL AND h2.enddate <= " + ExprColumn.STR_TABLE_ALIAS + ".date AND h2.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid and r1.area != (select area FROM ehr_lookups.rooms r WHERE r.room = " + ExprColumn.STR_TABLE_ALIAS + ".room))"));
+                ExprColumn areaCol = new ExprColumn(ti, "daysInArea", sql, JdbcType.INTEGER, realTable.getColumn("participantid"), realTable.getColumn("date"), realTable.getColumn("enddate"));
+                areaCol .setLabel("Days In Area");
+                ti.addColumn(areaCol );
+
+            }
+        }
+
+        String cagePosition = "cagePosition";
+        if (ti.getColumn(cagePosition) == null)
+        {
+            UserSchema us = getUserSchema(ti, "ehr_lookups");
+            if (us != null)
+            {
+                WrappedColumn wrapped = new WrappedColumn(ti.getColumn("cage"), cagePosition);
+                wrapped.setLabel("Cage Position");
+                wrapped.setIsUnselectable(true);
+                wrapped.setUserEditable(false);
+                wrapped.setFk(new QueryForeignKey(us, "cage_positions", "cage", "cage"));
+                ti.addColumn(wrapped);
+            }
+        }
+    }
+
+    private void customizeDemographicsTable(AbstractTableInfo ti)
+    {
+        ColumnInfo originCol = ti.getColumn("origin");
+        if (originCol != null)
+        {
+            originCol.setLabel("Source");
+        }
+    }
+
+    private void customizeMatingTable(AbstractTableInfo ti)
+    {
+        String colName = "outcome";
+        if (ti.getColumn(colName) == null)
+        {
+            UserSchema us = getStudyUserSchema(ti);
+            if (us != null)
+            {
+                WrappedColumn wrapped = new WrappedColumn(ti.getColumn("lsid"), colName);
+                wrapped.setLabel("Mating Outcome");
+                wrapped.setIsUnselectable(true);
+                wrapped.setUserEditable(false);
+                wrapped.setFk(new QueryForeignKey(us, "matingOutcome", "lsid", "confirmations"));
+
+                ti.addColumn(wrapped);
+            }
+        }
+    }
+
+    private void customizePregnancyConfirmationTable(AbstractTableInfo ti)
+    {
+        String colName = "outcome";
+        if (ti.getColumn(colName) == null)
+        {
+            UserSchema us = getStudyUserSchema(ti);
+            if (us != null)
+            {
+                WrappedColumn wrapped = new WrappedColumn(ti.getColumn("lsid"), colName);
+                wrapped.setLabel("Pregnancy Outcome");
+                wrapped.setIsUnselectable(true);
+                wrapped.setUserEditable(false);
+                wrapped.setFk(new QueryForeignKey(us, "pregnancyOutcome", "lsid", "confirmations"));
+
+                ti.addColumn(wrapped);
             }
         }
     }
@@ -563,21 +719,11 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             }
         }
 
-        String name = "displayName";
-        if (ti.getColumn(name) == null)
-        {
-            SQLFragment sql = new SQLFragment("COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".external_id, " + ExprColumn.STR_TABLE_ALIAS + ".protocol)");
-            ExprColumn displayCol = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("external_id"), ti.getColumn("protocol"));
-            displayCol.setLabel("Display Name");
-            ti.addColumn(displayCol);
-
-            ti.setTitleColumn(name);
-        }
-
         String renewalDate = "renewalDate";
         if (ti.getColumn(renewalDate) == null)
         {
-            String sqlString = "DATEADD(year, 3, " + ExprColumn.STR_TABLE_ALIAS + ".approve)";
+            //NOTE: day used instead of year to be PG / LK12.3 compatible
+            String sqlString = "(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN {fn timestampadd(SQL_TSI_DAY, 1095, " + ExprColumn.STR_TABLE_ALIAS + ".approve)} ELSE null END)";
             SQLFragment sql = new SQLFragment(sqlString);
             ExprColumn renewalCol = new ExprColumn(ti, renewalDate, sql, JdbcType.DATE, ti.getColumn("approve"));
             renewalCol.setLabel("Next Renewal Date");
@@ -590,6 +736,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                     " ELSE NULL END)");
             ExprColumn daysUntilCol = new ExprColumn(ti, daysUntil, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
             daysUntilCol.setLabel("Days Until Renewal");
+            daysUntilCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
             ti.addColumn(daysUntilCol);
         }
     }
@@ -703,6 +850,72 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         }
     }
 
+    private void customizeSurgChecklistTable(TableInfo table)
+    {
+        ColumnInfo plt = table.getColumn("PLT");
+        if (plt != null)
+        {
+            plt.setDisplayColumnFactory(new DisplayColumnFactory()
+            {
+                @Override
+                public DisplayColumn createRenderer(final ColumnInfo colInfo)
+                {
+                    return new DataColumn(colInfo){
+
+                        public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+                        {
+                            String runId = (String)ctx.get("runIdPLT");
+                            String id = (String)ctx.get("Id");
+                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
+                        }
+
+                        @Override
+                        public void addQueryFieldKeys(Set<FieldKey> keys)
+                        {
+                            super.addQueryFieldKeys(keys);
+                            keys.add(FieldKey.fromString("runIdPLT"));
+                            keys.add(FieldKey.fromString("Id"));
+                        }
+                    };
+                }
+            });
+        }
+
+        ColumnInfo hct = table.getColumn("HCT");
+        if (hct != null)
+        {
+            hct.setDisplayColumnFactory(new DisplayColumnFactory()
+            {
+                @Override
+                public DisplayColumn createRenderer(final ColumnInfo colInfo)
+                {
+                    return new DataColumn(colInfo){
+
+                        public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+                        {
+                            String runId = (String)ctx.get("runIdHCT");
+                            String id = (String)ctx.get("Id");
+                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
+                        }
+
+                        @Override
+                        public void addQueryFieldKeys(Set<FieldKey> keys)
+                        {
+                            super.addQueryFieldKeys(keys);
+                            keys.add(FieldKey.fromString("runIdHCT"));
+                            keys.add(FieldKey.fromString("Id"));
+                        }
+                    };
+                }
+            });
+        }
+    }
+
+    private void customizeAreaTable(AbstractTableInfo table)
+    {
+        table.setDetailsURL(DetailsURL.fromString("/onprc_ehr/areaDetails.view?area=${area}"));
+    }
+
     private void customizeCageTable(AbstractTableInfo table)
     {
         ColumnInfo joinToCage = table.getColumn("joinToCage");
@@ -770,7 +983,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         String objectid = (String)ctx.get("objectid");
                         String id = (String)ctx.get("Id");
 
-                        out.write("<span style=\"white-space:nowrap\">[<a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showCaseHistory('" + objectid + "', '" + id + "', this);\">Show Case Hx</a>]</span>");
+                        out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showCaseHistory('" + objectid + "', '" + id + "', this);\">[Show Case Hx]</a></span>");
                     }
 
                     @Override

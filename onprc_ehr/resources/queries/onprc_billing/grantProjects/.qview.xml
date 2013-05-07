@@ -29,6 +29,6 @@
         <sort column="projectNumber" descending="false"/>
     </sorts>
     <filters>
-        <filter column="budgetEndDateCoalesced" operator="dategte" value="+0d"/>
+        <filter column="budgetEndDateCoalesced" operator="dategte" value="-0d"/>
     </filters>
 </customView>

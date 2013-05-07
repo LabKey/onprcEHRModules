@@ -3,6 +3,7 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="miscTests" tableDbType="TABLE" useColumnOrder="true">
                 <tableTitle>Misc Tests</tableTitle>
+                <tableUrl />
                 <columns>
                     <column columnName="lsid">
                         <isHidden>true</isHidden>

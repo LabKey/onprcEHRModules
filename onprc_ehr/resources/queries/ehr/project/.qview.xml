@@ -3,7 +3,16 @@
         <column name="name"/>
         <column name="protocol"/>
         <column name="title"/>
-        <column name="investigatorId"/>
+        <column name="investigatorId">
+            <properties>
+                <property name="columnTitle" value="Project Investigator"/>
+            </properties>
+        </column>
+        <column name="protocol/investigatorId">
+            <properties>
+                <property name="columnTitle" value="Protocol Investigator"/>
+            </properties>
+        </column>
         <column name="account"/>
         <column name="startdate"/>
         <column name="enddate"/>

@@ -1,0 +1,52 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="assignmentProblemSummary" tableDbType="TABLE">
+                <tableTitle>Morbidity and Mortality By Project</tableTitle>
+                <columns>
+                    <column columnName="project">
+
+                    </column>
+                    <column columnName="category">
+
+                    </column>
+                    <column columnName="totalIds">
+                        <columnTitle>Distinct Animals Assigned Over Interval</columnTitle>
+                    </column>
+                    <column columnName="totalIdWithProblems">
+                        <columnTitle>Total Animals With Problem</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=assignmentProblemData&amp;
+                            query.category~eq=${category}&amp;
+                            query.project/displayName~eq=${project/displayName}&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                        </url>
+                    </column>
+                    <column columnName="totalProblems">
+                        <columnTitle>Total Problems Overlapping</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=assignmentProblemData&amp;
+                            query.category~eq=${category}&amp;
+                            query.project/displayName~eq=${project/displayName}&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                        </url>
+                    </column>
+                    <column columnName="pctWithProblem">
+                        <columnTitle>Pct With Problem</columnTitle>
+                        <formatString>0.##</formatString>
+                    </column>
+                    <column columnName="StartDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="EndDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -18,7 +18,7 @@
 Select
 	cast(p.AnimalID as nvarchar(4000)) as Id,
 	--p.PoolCode as PoolCode,    ----- Ref_Pool
-	rp.ShortDescription AS flag,
+	rtrim(ltrim(rp.ShortDescription)) AS flag,
 	rp.Description as value,
 
 	DateAssigned as date,
@@ -36,6 +36,23 @@ From Af_Pool p
 left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
 left join Af_Qrf q on (q.animalid = p.animalid)
 
-where (p.ts > ? or q.ts > ? or rp.ts > ?) and rp.ShortDescription != 'Origin'
+where (p.ts > ? or q.ts > ? or rp.ts > ?) and rp.ShortDescription not in ('CBG', 'EBG', 'HBG', 'PBG', 'STG', 'SBG', 'Origin')
 
+UNION ALL
 
+select
+
+r.animalid as Id,
+null as flag,
+'Sample sent for parentage' as value,
+r.DateProcessed as date,
+coalesce(q.deathdate, q.departuredate) as enddate,
+r.objectid
+
+from Res_DNABank r
+left join Af_Qrf q on (cast(q.AnimalID as nvarchar(4000)) = r.animalid)
+
+where r.DateProcessed is not null
+--exclude non-center animals
+and r.animalid not like '%n' and r.animalid not like '%f'
+and (r.ts > ? or q.ts > ?)

@@ -78,6 +78,7 @@ SELECT
 	END as QualResult,
 	Remarks as Remarks,
 	cln.ts as rowversion,
+	cln.ts as rowversion2,
 	cln.objectid,
 	null as runid
 
@@ -110,6 +111,7 @@ s5.Value as qualResult,
 --cp.OccultBlood,
 null as remark,
 cp.ts as rowversion,
+cp.ts as rowversion2,
 cp.objectid,
 null as runid
  
@@ -147,6 +149,7 @@ SELECT
 	null as qualResult,
 	cln.Remarks as Remarks,
 	cln.ts as rowversion,
+	h.ts as rowversion2,
 	cln.objectid,
 	h.objectid as runid
 
@@ -157,9 +160,11 @@ left join Sys_Parameters s1 on (s1.Flag = h.Category And s1.Field = 'RequestCate
 left join Sys_Parameters s2 on (s2.Flag = h.Method And s2.Field = 'AnalysisMethod')
 left join Specimen sp on (sp.Value = h.Specimen)
 
+--these will be in serology
+where rt.RareTest != 'Interferon-Gamma Mycobacterium Testing (Primagam)'
 ) t
 
 left join Ref_Technicians tech on (t.TechnicianId = tech.ID)
 
 
-where t.rowversion > ?
+where (t.rowversion > ? or t.rowversion2 > ?)

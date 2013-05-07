@@ -100,7 +100,23 @@ UNION ALL
 Select
 	cast(sg.AnimalID as nvarchar(4000)) as Id,
 	sg.Date as Date ,
-	null as enddate,
+	(SELECT
+ 	    CASE
+ 			when (l.time = 'NULL' or l.time is null or l.time = '' or l.time = 0) then null
+ 			--when LEN(l.time) = 3 then convert(datetime, CONVERT(varchar(100), sg.date, 111) + ' 0' + left(l.time, 1) + ':' + RIGHT(l.time, 2))
+ 			when l.time = '0094' then null
+ 			when l.time = '2400' OR l.time = '0000' then convert(datetime, CONVERT(varchar(100), sg.date, 111) + ' ' + '00:00')
+ 			when LEN(l.time) = 3 then null
+ 			when LEN(l.time) = 4 and substring(l.time, 1, 2) < 60 then convert(datetime, CONVERT(varchar(100), sg.date, 111) + ' ' + left(l.time, 2) + ':' + RIGHT(l.time, 2))
+ 			else null
+ 		end as enddate
+		FROM (select MAX(l.Time) as time FROM (
+			select l.surgeryid, max(ltrim(rtrim(replace(l.time, '_', '0')))) as time
+			FROM Sur_AnesthesiaLogData l
+			WHERE l.time is not null AND l.time != '' AND l.Time not like '%-%' AND l.Time not like '^_%' AND l.Time != '0' AND l.Time != '00' AND l.Time != '000'
+			GROUP BY l.SurgeryID) l
+			WHERE l.SurgeryID = sg.SurgeryID) l
+	) as enddate,
 	'Surgery' as type,
 	null as caseno,
     c.objectid as caseid,
@@ -130,8 +146,8 @@ left join (
 	select c.AnimalID, max(ts) as ts, count(c.CaseID) as count, max(CAST(c.objectid AS varchar(36))) as objectid, c.OpenDate as date
 	from af_case c
 	WHERE c.GroupCode = 2
-	GROUP BY c.AnimalID, c.OpenDate) c ON (c.AnimalID = sg.AnimalID AND c.date = sg.date
-)
+	GROUP BY c.AnimalID, c.OpenDate
+) c ON (c.AnimalID = sg.AnimalID AND c.date = sg.date)
 
 WHERE sg.ts > ? or c.ts > ?
 

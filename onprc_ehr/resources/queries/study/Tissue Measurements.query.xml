@@ -2,6 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="tissueMeasurements" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
                 <tableTitle>Tissue Measurements</tableTitle>
                 <columns>
                     <column columnName="lsid">

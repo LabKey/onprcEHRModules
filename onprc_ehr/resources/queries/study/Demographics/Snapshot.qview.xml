@@ -11,8 +11,8 @@
                 <property name="columnTitle" value="Cage"/>
             </properties>
         </column>
-        <column name="species"/>
         <column name="gender"/>
+        <column name="species"/>
         <column name="geographic_origin"/>
         <column name="calculated_status"/>
         <!--<column name="dam"/>-->

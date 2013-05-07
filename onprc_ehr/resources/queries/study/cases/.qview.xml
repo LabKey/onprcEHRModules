@@ -1,32 +1,17 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
         <column name="Id"/>
-        <!--<column name="Id/curLocation/area">-->
-            <!--<properties>-->
-                <!--<property name="columnTitle" value="Area"/>-->
-            <!--</properties>-->
-        <!--</column>-->
         <column name="Id/curLocation/location"/>
-        <!--<column name="Id/curLocation/cage">-->
-            <!--<properties>-->
-                <!--<property name="columnTitle" value="Cage"/>-->
-            <!--</properties>-->
-        <!--</column>-->
+        <column name="category"/>
         <column name="date"/>
         <column name="reviewdate"/>
         <column name="enddate"/>
-        <column name="Id/openProblems/problems">
-            <properties>
-                <property name="columnTitle" value="Open Problems"/>
-            </properties>
-        </column>
+        <column name="problemCategories"/>
         <column name="Id/demographics/species"/>
         <column name="Id/demographics/gender"/>
         <!--<column name="category"/>-->
         <!--<column name="remark"/>-->
         <column name="performedby"/>
-        <column name="latestHx"/>
-        <column name="todaysP2"/>
         <column name="caseHistory"/>
     </columns>
     <sorts>

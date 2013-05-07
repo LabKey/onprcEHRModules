@@ -116,73 +116,76 @@ WHERE s3.Field = 'MedicationFrequency' AND f.meaning IS NULL;
 
 
 
-TRUNCATE TABLE labkey.ehr_lookups.rooms;
-INSERT INTO labkey.ehr_lookups.rooms (room, area, building, maxCages, housingtype, housingCondition, dateDisabled)
-SELECT
-	t.Location as room,
-	t.area,
-	t.buildingName,
-	t.Size,
-	max(t.LocationType) as locationtype,
-	max(t.LocationDefinition) as housingcategory,
-	min(t.datedisabled) as datedisabled
-
-FROM (
-Select
-	Location,
-	BuildingName as area,
-	BuildingName,
-	Size,
-	Status as active,
-	--s1.SearchKey as LocationTypeInt,
-	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s1.Field and l.value = s1.Value) as locationType,
-	--s1.Value as LocationType,
-	--s2.searchkey as LocationDefinitionInt
-
-	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s2.Field and l.value = s2.Value) as locationDefinition,
-	loc.DateDisabled
-	--s2.Value as LocationDefinition,
-	--loc.DateCreated,
-	--loc.DateDisabled,
-	--loc.DisplayOrder,
-	--LockDownDate
-
-From IRIS_Production.dbo.Ref_Location loc,
-	IRIS_Production.dbo.Sys_Parameters s1, IRIS_Production.dbo.Sys_Parameters s2, IRIS_Production.dbo.Ref_Building rb
-Where s1.Field = 'LocationType'
-	and s1.Flag = loc.LocationType
-	and s2.Field = 'LocationDefinition'
-	and s2.Flag = loc.LocationDefinition
-	and rb.BuildingId = loc.BuildingID
-	and loc.DateDisabled is null
-
-UNION ALL
-
-Select
-	Location,
-	BuildingName as area,
-	BuildingName,				--Ref_Building
-	Size,
-	Status,
-	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s1.Field and l.value = s1.Value) as locationType,
-	--s1.Value as LocationType,
-	--s2.searchkey as LocationDefinitionInt
-
-	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s2.Field and l.value = s2.Value) as locationDefinition,
-	--s2.Value as LocationDefinition,
-	rls.datedisabled
-
-From IRIS_Production.dbo.Ref_LocationSPF rls,
-	IRIS_Production.dbo.Sys_Parameters s1, IRIS_Production.dbo.Sys_Parameters s2, IRIS_Production.dbo.Ref_Building rb
-Where s1.Field = 'LocationType'
-	and s1.Flag = rls.LocationType
-	and s2.Field = 'LocationDefinition'
-	and s2.Flag = rls.LocationDefinition
-	and rb.BuildingId = rls.BuildingID
-	and rls.DateDisabled is null
-
-) t
-GROUP BY t.location, t.area, t.buildingName, t.size;
+-- TRUNCATE TABLE labkey.ehr_lookups.rooms;
+-- INSERT INTO labkey.ehr_lookups.rooms (room, area, building, maxCages, housingtype, housingCondition, dateDisabled, sort_order)
+-- SELECT
+-- 	t.Location as room,
+-- 	max(t.area) as area,
+-- 	max(t.buildingName) as buildingName,
+-- 	max(t.Size) as size,
+-- 	max(t.LocationType) as locationtype,
+-- 	max(t.LocationDefinition) as housingcategory,
+-- 	min(t.datedisabled) as datedisabled,
+-- 	min(sort_order) as sort_order
+--
+-- FROM (
+-- Select
+-- 	Location,
+-- 	BuildingName as area,
+-- 	BuildingName,
+-- 	Size,
+-- 	Status as active,
+-- 	--s1.SearchKey as LocationTypeInt,
+-- 	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s1.Field and l.value = s1.Value) as locationType,
+-- 	--s1.Value as LocationType,
+-- 	--s2.searchkey as LocationDefinitionInt
+--
+-- 	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s2.Field and l.value = s2.Value) as locationDefinition,
+-- 	loc.DateDisabled,
+-- 	loc.DisplayOrder as sort_order
+-- 	--s2.Value as LocationDefinition,
+-- 	--loc.DateCreated,
+-- 	--loc.DateDisabled,
+-- 	--loc.DisplayOrder,
+-- 	--LockDownDate
+--
+-- From IRIS_Production.dbo.Ref_Location loc,
+-- 	IRIS_Production.dbo.Sys_Parameters s1, IRIS_Production.dbo.Sys_Parameters s2, IRIS_Production.dbo.Ref_Building rb
+-- Where s1.Field = 'LocationType'
+-- 	and s1.Flag = loc.LocationType
+-- 	and s2.Field = 'LocationDefinition'
+-- 	and s2.Flag = loc.LocationDefinition
+-- 	and rb.BuildingId = loc.BuildingID
+-- 	--and loc.DateDisabled is null
+--
+-- UNION ALL
+--
+-- Select
+-- 	Location,
+-- 	BuildingName as area,
+-- 	BuildingName,				--Ref_Building
+-- 	Size,
+-- 	Status,
+-- 	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s1.Field and l.value = s1.Value) as locationType,
+-- 	--s1.Value as LocationType,
+-- 	--s2.searchkey as LocationDefinitionInt
+--
+-- 	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s2.Field and l.value = s2.Value) as locationDefinition,
+-- 	--s2.Value as LocationDefinition,
+-- 	rls.datedisabled,
+-- 	rls.DisplayOrder as sort_order
+--
+-- From IRIS_Production.dbo.Ref_LocationSPF rls,
+-- 	IRIS_Production.dbo.Sys_Parameters s1, IRIS_Production.dbo.Sys_Parameters s2, IRIS_Production.dbo.Ref_Building rb
+-- Where s1.Field = 'LocationType'
+-- 	and s1.Flag = rls.LocationType
+-- 	and s2.Field = 'LocationDefinition'
+-- 	and s2.Flag = rls.LocationDefinition
+-- 	and rb.BuildingId = rls.BuildingID
+-- 	--and rls.DateDisabled is null
+--
+-- ) t
+-- GROUP BY t.location;
 
 --cage types
 TRUNCATE TABLE labkey.ehr_lookups.cage_type;
@@ -216,9 +219,9 @@ WHERE DateDisabled is null;
 -- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 5');
 -- INSERT INTO labkey.ehr_lookups.areas (area) VALUES ('Catch 8');
 
-TRUNCATE TABLE labkey.ehr_lookups.areas;
-INSERT INTO labkey.ehr_lookups.areas (area, description)
-SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE datedisabled IS NULL;
+-- TRUNCATE TABLE labkey.ehr_lookups.areas;
+-- INSERT INTO labkey.ehr_lookups.areas (area, description)
+-- SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE datedisabled IS NULL;
 
 
 -- INSERT INTO labkey.ehr_lookups.divider_types (divider)
@@ -296,3 +299,13 @@ from iris_production.dbo.Sys_Parameters s
 where s.Field = 'MasterProblemList'
 and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'problem_list_category');
 
+TRUNCATE TABLE labkey.ehr_lookups.animal_condition;
+INSERT INTO labkey.ehr_lookups.animal_condition (code, meaning, created, createdby, modified, modifiedby)
+select
+PoolCode as code,
+Description as meaning,
+getdate() as created,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
+getdate() as modified,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
+from iris_production.dbo.ref_pool where (ShortDescription = 'Condition' or poolcode = 207) and DateDisabled is null;

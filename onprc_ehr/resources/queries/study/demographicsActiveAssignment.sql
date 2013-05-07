@@ -15,8 +15,9 @@
  */
 SELECT
   d.id,
-  group_concat(DISTINCT a.project.name, chr(10)) as projects,
-  group_concat(DISTINCT a.project.investigatorId.lastName, chr(10)) as investigators,
+  group_concat(DISTINCT a.project.displayName, chr(10)) as projects,
+  group_concat(DISTINCT a.project.protocol.displayName, chr(10)) as protocols,
+  group_concat(DISTINCT cast(a.project.investigatorId.lastName as varchar), chr(10)) as investigators,
   group_concat(DISTINCT a.project.investigatorId.assignedVet.lastName, chr(10)) as vets,
   COALESCE(count(distinct a.project.name), 0) as totalProjects,
   COALESCE(count(a.lsid), 0) as numActiveAssignments

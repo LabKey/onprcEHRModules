@@ -14,6 +14,9 @@
                         <columnTitle>Total Animals In Pairing</columnTitle>
                         <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Demographics&amp;query.id/numPaired/room~eq=${room}&amp;query.id/numPaired/effectiveCage~eq=${effectiveCage}</url>
                     </column>
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>

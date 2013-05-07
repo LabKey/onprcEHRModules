@@ -29,4 +29,4 @@ FROM IACUC_NHPSurgeries IACUC
 left join Ref_SurgProcedure s on (iacuc.ProcedureID = s.ProcedureID)
 left join Ref_ProjectsIACUC ri on (IACUC.ProjectID = ri.ProjectID) 
 where IACUC.DateDisabled is null
-and iacuc.ts > ?
+and (iacuc.ts > ? or s.ts > ? or ri.ts > ?)

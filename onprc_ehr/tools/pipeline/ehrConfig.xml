@@ -7,7 +7,7 @@
     <bean class="org.labkey.api.pipeline.TaskPipelineRegistrar">
         <property name="factoryImpls">
             <list>
-                <bean class="org.labkey.ehr.pipeline.KinshipRTask$Factory">
+                <bean class="org.labkey.ehr.pipeline.GeneticCalculationsRTask$Factory">
                     <property name="location" value="sequenceAnalysis" />
                 </bean>
             </list>

@@ -38,9 +38,9 @@ public class ONPRCBillingAdminRole extends AbstractRole
     {
         super("ONPRC Billing Admin", "Users with this role are able to make changes to the billing and finance tables", ONPRC_EHRModule.class,
             ReadPermission.class,
-            InsertPermission.class,
-            UpdatePermission.class,
-            DeletePermission.class,
+            //InsertPermission.class,
+            //UpdatePermission.class,
+            //DeletePermission.class,
             ONPRCBillingPermission.class
         );
     }

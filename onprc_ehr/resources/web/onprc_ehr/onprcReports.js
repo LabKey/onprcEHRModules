@@ -61,7 +61,44 @@ EHR.reports.hematology = function(panel, tab){
         style: 'margin-bottom:20px;',
         queryConfig: resultsConfig
     });
-}
+};
+
+EHR.reports.antibioticSensitivity = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    var config = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'antibioticSensitivityPivoted',
+        title: "Common Antibiotics" + title,
+        titleField: 'Id',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable,
+        sort: '-date'
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: config
+    });
+
+    var miscConfig = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'antibioticSensitivityMisc',
+        title: "Misc Antibiotics" + title,
+        titleField: 'Id',
+        sort: '-date',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: miscConfig
+    });
+};
 
 EHR.reports.iStat = function(panel, tab){
     var filterArray = panel.getFilterArray(tab);
@@ -182,6 +219,7 @@ EHR.reports.snapshot = function(panel, tab){
                     title: 'Overview: ' + subjects[i],
                     items: [{
                         xtype: 'ehr-snapshotpanel',
+                        showExtendedInformation: true,
                         hrefTarget: '_blank',
                         border: false,
                         subjectId: subjects[i]

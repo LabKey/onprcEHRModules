@@ -1,19 +1,15 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="flags" tableDbType="TABLE">
-                <tableUrl>/query/detailsQueryRow.view?schemaName=study&amp;query.queryName=Animal Record Flags&amp;lsid=${lsid}</tableUrl>
+            <table tableName="flags" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
                 <insertUrl />
                 <importUrl />
                 <updateUrl />
                 <deleteUrl />
                 <columns>
-                    <column columnName="date">
-                        <columnTitle>Date Added</columnTitle>
-                    </column>
-                    <column columnName="enddate">
-                        <columnTitle>Date Removed</columnTitle>
-                        <isHidden>false</isHidden>
+                    <column columnName="Id">
+
                     </column>
                     <column columnName="category">
                         <columnTitle>Category</columnTitle>
@@ -25,6 +21,14 @@
                     <column columnName="value">
                         <columnTitle>Value</columnTitle>
                     </column>
+                    <column columnName="date">
+                        <columnTitle>Date Added</columnTitle>
+                    </column>
+                    <column columnName="enddate">
+                        <columnTitle>Date Removed</columnTitle>
+                        <isHidden>false</isHidden>
+                    </column>
+
                 </columns>
             </table>
         </tables>

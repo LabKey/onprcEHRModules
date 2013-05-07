@@ -1,0 +1,98 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function (){
+        if (!LABKEY.ActionURL.getParameter('key')){
+            alert('Must Provide Project Number');
+            return false;
+        }
+
+        var project = LABKEY.ActionURL.getParameter('key');
+
+        var webpart = <%=webpartContext%>;
+        var domSpec = [{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'projectDetails_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'projectLinks_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'allowableAnimals_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'housingSummary_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'projectAssignments_' + webpart.wrapperDivId
+        }];
+
+        var el = Ext4.get(webpart.wrapperDivId);
+        Ext4.DomHelper.append(el, domSpec);
+
+        Ext4.create('LDK.panel.DetailsPanel', {
+            store: {
+                schemaName: 'ehr',
+                queryName: 'project',
+                filterArray: [
+                    LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)
+                ]
+            },
+            title: 'Project Details',
+            renderTo: 'projectDetails_' + webpart.wrapperDivId
+        });
+
+        LDK.Utils.getReadOnlyQWP({
+            title: 'Allowable Animals',
+            schemaName: 'ehr',
+            queryName: 'animalUsage',
+            filters: [LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)],
+            failure: LDK.Utils.getErrorCallback()
+        }).render('allowableAnimals_' + webpart.wrapperDivId);
+
+        LDK.Utils.getReadOnlyQWP({
+            title: 'Housing Summary',
+            schemaName: 'study',
+            queryName: 'projectHousingSummary',
+            columns: 'room,room/housingType,totalAnimals',
+            filters: [LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)],
+            failure: LDK.Utils.getErrorCallback()
+        }).render('housingSummary_' + webpart.wrapperDivId);
+
+        Ext4.create('LDK.panel.WebpartPanel', {
+            title: 'Other Reports',
+            items: [{
+                xtype: 'ldk-navpanel',
+                sections: [{
+                    header: null,
+                    items: [{
+                        name: 'View All Assignments Made To This Project',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Assignment', 'query.project~eq': project})
+                    },{
+                        name: 'View All Animals Assigned To This Project Over A Date Range',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentOverlapsById', 'query.param.Project': project})
+                    },{
+                        name: 'View All Morbidity and Mortality Data For This Project Over A Date Range',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentProblemSummary', 'query.project~eq': project})
+                    }]
+                }]
+            }],
+            renderTo: 'projectLinks_' + webpart.wrapperDivId
+        });
+
+        LDK.Utils.getReadOnlyQWP({
+            title: 'Active Assignments',
+            schemaName: 'study',
+            queryName: 'Assignment',
+            viewName: 'Active Assignments',
+            filters: [LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)],
+            sort: '-Date',
+            failure: LDK.Utils.getErrorCallback()
+        }).render('projectAssignments_' + webpart.wrapperDivId);
+    });
+
+</script>

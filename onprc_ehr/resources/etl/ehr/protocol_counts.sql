@@ -26,7 +26,11 @@ CASE
   WHEN sp.commonname = 'Japanese' THEN 'JAPANESE MACAQUE'
   ELSE sp.CommonName
 END as species,
-s.Value as gender,
+CASE
+  WHEN s.value = 'Female' then 'f'
+  WHEN s.value = 'Male' then 'm'
+  ELSE s.Value
+END as gender,
 y.objectid
 
 from IACUC_NHPYearly y

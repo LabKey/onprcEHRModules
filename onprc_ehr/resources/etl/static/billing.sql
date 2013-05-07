@@ -183,6 +183,37 @@ From IRIS_Production.dbo.Ref_FeesMiscellaneous c
 left join IRIS_Production.dbo.Ref_FeesProcedures r ON (c.ProcedureID = r.ProcedureID)
 left join labkey.onprc_billing.chargeableItems lk ON (lk.name = r.procedureName);
 
+--add surg fees
+INSERT INTO labkey.onprc_billing.chargeRates
+(chargeId, unitcost, startDate, enddate, container)
+Select
+	lk.rowid as chargeId,
+	c.SurgeryStaff as unitcost,
+	c.DateCreated as startdate,
+	c.DateDisabled as enddate,
+	(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
+
+From IRIS_Production.dbo.Ref_FeesSurgical c
+left join IRIS_Production.dbo.Ref_SurgProcedure r ON (c.ProcedureID = r.ProcedureID)
+left join labkey.onprc_billing.chargeableItems lk ON (lk.name = (r.procedureName + ' - Staff'))
+WHERE r.ProcedureID is not null
+
+UNION ALL
+
+Select
+	lk.rowid as chargeId,
+	c.NoStaff as unitcost,
+	c.DateCreated as startdate,
+	c.DateDisabled as enddate,
+	(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
+
+From IRIS_Production.dbo.Ref_FeesSurgical c
+left join IRIS_Production.dbo.Ref_SurgProcedure r ON (c.ProcedureID = r.ProcedureID)
+left join labkey.onprc_billing.chargeableItems lk ON (lk.name = (r.procedureName + ' - No Staff'))
+WHERE r.ProcedureID is not null;
+--EO surg fees
+
+
 --add lease records to charge rates
 INSERT INTO labkey.onprc_billing.chargeRates
 (chargeId, unitcost, startDate, enddate, container)

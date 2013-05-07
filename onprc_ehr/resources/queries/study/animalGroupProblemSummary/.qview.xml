@@ -1,0 +1,9 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <sorts>
+        <sort column="groupId/name"/>
+    </sorts>
+    <aggregates>
+        <aggregate column="totalIdWithProblems" label="Total" type="SUM"/>
+        <aggregate column="totalProblems" label="Total" type="SUM"/>
+    </aggregates>
+</customView>

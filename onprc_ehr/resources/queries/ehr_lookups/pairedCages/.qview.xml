@@ -1,6 +1,6 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <sorts>
-        <sort column="room"/>
+        <sort column="room/sort_order"/>
         <sort column="row"/>
         <sort column="column"/>
     </sorts>

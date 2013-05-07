@@ -1,0 +1,19 @@
+<script type="text/javascript">
+
+Ext4.onReady(function (){
+    if (!LABKEY.ActionURL.getParameter('area')){
+        alert('Must Provide The Area Name'); return false;
+    }
+
+    var webpart = <%=webpartContext%>;
+
+    Ext4.create('ONPRC.panel.RoomLayoutPanel', {
+        filterArray: [
+            LABKEY.Filter.create('room/area', LABKEY.ActionURL.getParameter('area'), LABKEY.Filter.Types.EQUAL),
+            LABKEY.Filter.create('room/datedisabled', null, LABKEY.Filter.Types.ISBLANK)
+        ]
+    }).render(webpart.wrapperDivId);
+
+});
+
+</script>

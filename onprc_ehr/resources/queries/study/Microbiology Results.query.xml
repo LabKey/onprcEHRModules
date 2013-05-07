@@ -3,6 +3,7 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="microbiologyResults" tableDbType="TABLE" useColumnOrder="true">
                 <tableTitle>Microbiology Results</tableTitle>
+                <tableUrl />
                 <columns>
                     <column columnName="lsid">
                         <isHidden>true</isHidden>
@@ -15,6 +16,14 @@
                     </column>
                     <column columnName="enddate">
 
+                    </column>
+                    <column columnName="tissue">
+                        <columnTitle>Tissue</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>snomed</fkTable>
+                            <fkColumnName>Code</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="organism">
                         <columnTitle>Organism</columnTitle>

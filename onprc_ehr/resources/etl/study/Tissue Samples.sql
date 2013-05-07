@@ -25,7 +25,7 @@ Select
 	s1.Value as Preparation,
 	pat.Weight as Weight,
 	--pat.WeightModifier as WeightModifierInt,
-    s2.Value as tissueQualifier,
+    s2.Value as tissueCondition,
 	--pat.Appearance as AppearanceInt,
     s3.Value as remark,
 	--Pat.Displayorder as Displayorder,
@@ -40,7 +40,7 @@ From  Path_AutopsyWtsMaterials Pat
   left join  Sys_Parameters s3 on (Pat.Appearance = s3.Flag And s3.Field = 'TissueAppearance')
   left join ref_snomed sno ON (sno.SnomedCode = pat.Organ)
   left join Path_Autopsy pa ON (pa.AutopsyId = pat.AutopsyID)
-where Weight = 0 and (pat.ts > ? or pa.ts > ?)
+where (pat.ts > ? or pa.ts > ?)
 
 union all
 
@@ -57,9 +57,9 @@ Select
 	
 	Weight as Weight,
 	--WeightModifier as WeightModifierInt,
-    s3.Value as tissueQualifier,
+    s2.Value as tissueCondition,
 	--Appearance as AppearanceInt,
-    s2.Value as remark,
+    s3.Value as remark,
     --null as displayorder,
     
 	pat.objectid
@@ -72,4 +72,4 @@ From Path_BiopsyWtsMaterials Pat
 	left join ref_snomed sno ON (sno.SnomedCode = pat.Organ)
 	left join Path_biopsy pa ON (pa.BiopsyID = pat.BiopsyID)
 
-where Weight = 0 and (pat.ts > ? or pa.ts > ?)
+where (pat.ts > ? or pa.ts > ?)

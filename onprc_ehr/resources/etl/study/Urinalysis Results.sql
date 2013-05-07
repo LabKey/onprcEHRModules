@@ -245,8 +245,8 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
-	RBCMin as result,
-	RBCMax as rangeMax,
+	CASE WHEN RBCMin != -1 THEN RBCMin ELSE NULL END as result,
+	CASE WHEN RBCMax != -1 THEN RBCMax ELSE NULL END as rangeMax,
 	null as QualResult,
 	'RBC' as TestId,
 	cln.ts as rowversion,
@@ -264,8 +264,8 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
-	WBCMin as result,
-	WBCMax as rangeMax,
+	CASE WHEN WBCMin != -1 THEN WBCMin ELSE null END as result,
+	CASE WHEN WBCMax != -1 THEN WBCMax ELSE null END as rangeMax,
 	null as QualResult,
 	'WBC' as TestId,
 	cln.ts as rowversion,
@@ -291,7 +291,7 @@ SELECT
 	cln.objectid
 
 FROM Cln_Urinalysis cln
-WHERE SpecificGravity is not null
+WHERE SpecificGravity is not null and SpecificGravity != -1
 
 UNION ALL
 
@@ -302,8 +302,8 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
-	EpitheliaMin as result,
-	EpitheliaMax as rangeMax,
+	CASE WHEN EpitheliaMin != -1 THEN EpitheliaMin ELSE null END as result,
+	CASE WHEN EpitheliaMax != -1 THEN EpitheliaMax ELSE null END as rangeMax,
 	null as QualResult,
 	'Epith' as TestId,
 	cln.ts as rowversion,
@@ -329,6 +329,7 @@ SELECT
 	cln.objectid
 
 FROM Cln_Urinalysis cln
+WHERE cln.PHValue IS NOT NULL and cln.PHValue != -1
 
 UNION ALL
 
@@ -339,8 +340,8 @@ SELECT
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
-	CastsMin as result,
-	CastsMax as rangeMax,
+	CASE WHEN CastsMin != -1 THEN CastsMin ELSE null END as result,
+	CASE WHEN CastsMax != -1 THEN CastsMax ELSE null END as rangeMax,
 	null as QualResult,
 	'Casts' as TestId,
 	cln.ts as rowversion,

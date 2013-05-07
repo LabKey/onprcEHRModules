@@ -1,0 +1,102 @@
+<script type="text/javascript">
+
+Ext4.onReady(function (){
+    if (!LABKEY.ActionURL.getParameter('key')){
+        alert('Must Provide Protocol Number');
+        return false;
+    }
+
+    var protocol = LABKEY.ActionURL.getParameter('key').toLowerCase();
+
+    var webpart = <%=webpartContext%>;
+    var domSpec = [{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'protocolDetails_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'protocolProjects_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'protocolLinks_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'allowableAnimals_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'housingSummary_' + webpart.wrapperDivId
+    }];
+
+    var el = Ext4.get(webpart.wrapperDivId);
+    Ext4.DomHelper.append(el, domSpec);
+
+    Ext4.create('LDK.panel.DetailsPanel', {
+        store: {
+            schemaName: 'ehr',
+            queryName: 'protocol',
+            filterArray: [
+                LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)
+            ]
+        },
+        title: 'Protocol Details:',
+        renderTo: 'protocolDetails_' + webpart.wrapperDivId
+    });
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Housing Summary',
+        schemaName: 'study',
+        queryName: 'protocolHousingSummary',
+        columns: 'room,room/housingType,totalAnimals',
+        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback()
+    }).render('housingSummary_' + webpart.wrapperDivId);
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Projects Under This Protocol',
+        schemaName: 'ehr',
+        queryName: 'project',
+        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback()
+     }).render('protocolProjects_' + webpart.wrapperDivId);
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Allowable Animals',
+        schemaName: 'ehr',
+        queryName: 'animalUsage',
+        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback()
+    }).render('allowableAnimals_' + webpart.wrapperDivId);
+
+    Ext4.create('LDK.panel.WebpartPanel', {
+        title: 'Other Reports',
+        bodyStyle: 'padding:5px;',
+        items: [{
+            xtype: 'ldk-navpanel',
+            sections: [{
+                header: null,
+                items: [{
+                    name: 'View Active Animal Assignments',
+                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Assignment', 'query.viewName': 'Active Assignments', 'query.project/protocol~eq': protocol})
+                },{
+                    name: 'View All Animals Assigned To This Project Protocol Over A Date Range',
+                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentOverlapsById', 'query.param.Protocol': protocol})
+                },{
+                    name: 'View Procedures Allowed Under This Protocol',
+                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'protocolProcedures', 'query.protocol~eq': protocol})
+                },{
+                    name: 'View Procedures Performed Under This Protocol',
+                    url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.project/protocol~eq': protocol})
+                },{
+                    name: 'View Procedure Count Performed Under This Protocol',
+                    url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'proceduresPerYear', 'query.protocol~eq': protocol})
+                }]
+            }]
+        }]
+    }).render('protocolLinks_' + webpart.wrapperDivId);
+});
+
+</script>

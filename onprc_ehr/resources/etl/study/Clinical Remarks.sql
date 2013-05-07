@@ -44,7 +44,14 @@ SELECT
         null
 	  else
 	   rt.Initials
-    END as performedBy
+    END as performedBy,
+	Case
+		When c.GroupCode = 1 Then 'Clinical'
+		When c.GroupCode = 2 Then 'Surgery'
+		When c.GroupCode = 3 Then 'Behavior'
+		When c.GroupCode = 4 Then 'Weight'
+		Else null
+	End AS Category
 
 FROM Cln_Dx dx
 left join Af_Case c ON (dx.CaseID = c.CaseID)

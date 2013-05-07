@@ -1,0 +1,90 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function (){
+        if (!LABKEY.ActionURL.getParameter('procedureId')){
+            alert('Must Provide A Procedure Id');
+            return false;
+        }
+
+        var procedureId = LABKEY.ActionURL.getParameter('procedureId');
+
+        var webpart = <%=webpartContext%>;
+        var domSpec = [{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'procedureDetails_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'procedureSummary_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'procedureTreatments_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'procedureCodes_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'procedureCharges_' + webpart.wrapperDivId
+        }]
+
+        var el = Ext4.get(webpart.wrapperDivId);
+        Ext4.DomHelper.append(el, domSpec);
+
+        Ext4.create('LDK.panel.DetailsPanel', {
+            showBackBtn: false,
+            store: {
+                schemaName: 'ehr_lookups',
+                queryName: 'procedures',
+                filterArray: [
+                    LABKEY.Filter.create('rowid', procedureId, LABKEY.Filter.Types.EQUAL)
+                ],
+                listeners: {
+                    scope: this,
+                    load: function(store){
+                        if (store.getCount() == 1){
+                            var rec = store.getAt(0);
+                            var name = rec.get('name');
+                            LDK.Assert.assertNotEmpty('Name field was empty', name);
+
+                            LDK.Utils.getReadOnlyQWP({
+                                title: 'Default Charges',
+                                schemaName: 'onprc_billing',
+                                queryName: 'chargeRates',
+                                viewName: 'Active Rates',
+                                filters: [LABKEY.Filter.create('chargeId/name', name, LABKEY.Filter.Types.STARTS_WITH)]
+                            }).render('procedureCharges_' + webpart.wrapperDivId);
+                        }
+                    }
+                }
+            },
+            title: 'Procedure Details',
+            renderTo: 'procedureDetails_' + webpart.wrapperDivId
+        });
+
+        LDK.Utils.getReadOnlyQWP({
+            title: 'Default Summary',
+            schemaName: 'ehr_lookups',
+            queryName: 'procedure_default_comments',
+            filters: [LABKEY.Filter.create('procedureId', procedureId, LABKEY.Filter.Types.EQUAL)]
+        }).render('procedureSummary_' + webpart.wrapperDivId);
+
+        LDK.Utils.getReadOnlyQWP({
+            title: 'Default Treatments',
+            schemaName: 'ehr_lookups',
+            queryName: 'procedure_default_treatments',
+            filters: [LABKEY.Filter.create('procedureId', procedureId, LABKEY.Filter.Types.EQUAL)]
+        }).render('procedureTreatments_' + webpart.wrapperDivId);
+
+        LDK.Utils.getReadOnlyQWP({
+            title: 'Default Codes',
+            schemaName: 'ehr_lookups',
+            queryName: 'procedure_default_codes',
+            filters: [LABKEY.Filter.create('procedureId', procedureId, LABKEY.Filter.Types.EQUAL)]
+        }).render('procedureCodes_' + webpart.wrapperDivId);
+    });
+
+</script>

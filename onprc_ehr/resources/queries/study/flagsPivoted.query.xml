@@ -3,6 +3,11 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="flagsPivoted" tableDbType="TABLE">
                 <tableTitle>Summary of Active Flags</tableTitle>
+                <columns>
+                    <column columnName="Id">
+                        <isKeyField>true</isKeyField>
+                    </column>
+                </columns>
             </table>
         </tables>
     </metadata>

@@ -165,6 +165,23 @@ public class ONPRC_EHRController extends SpringActionController
             }
             resp.getProperties().put("cores", cores);
 
+            //then DCM
+            List<JSONObject> dcm = new ArrayList<JSONObject>();
+            Container dcmContainer = ContainerManager.getForPath("/ONPRC/DCM");
+            if (dcmContainer != null)
+            {
+                for (Container c : dcmContainer.getChildren())
+                {
+                    JSONObject json = new JSONObject();
+                    json.put("name", c.getName());
+                    json.put("path", c.getPath());
+                    json.put("url", c.getStartURL(getUser()));
+                    json.put("canRead", c.hasPermission(getUser(), ReadPermission.class));
+                    dcm.add(json);
+                }
+            }
+            resp.getProperties().put("dcm", dcm);
+
             //for now, EHR is hard coded
             List<JSONObject> ehr = new ArrayList<JSONObject>();
             Container ehrContainer = ContainerManager.getForPath("/ONPRC/EHR");
@@ -605,6 +622,15 @@ public class ONPRC_EHRController extends SpringActionController
             if (types.contains("elispot"))
                 sb.append(LegacyDataManager.getInstance().importElispotResults(getViewContext(), true)).append("<hr>");
 
+            if (types.contains("mhc"))
+                sb.append(LegacyDataManager.getInstance().importMHCData(getViewContext(), true)).append("<hr>");
+
+            if (types.contains("str"))
+                sb.append(LegacyDataManager.getInstance().importGenotypeData(getViewContext(), true)).append("<hr>");
+
+            if (types.contains("snp"))
+                sb.append(LegacyDataManager.getInstance().importSNPData(getViewContext(), true)).append("<hr>");
+
             sb.append("<br>Do you want to continue?");
 
             return new HtmlView(sb.toString());
@@ -629,6 +655,15 @@ public class ONPRC_EHRController extends SpringActionController
 
             if (types.contains("elispot"))
                 LegacyDataManager.getInstance().importElispotResults(getViewContext(), false);
+
+            if (types.contains("mhc"))
+                LegacyDataManager.getInstance().importMHCData(getViewContext(), false);
+
+            if (types.contains("str"))
+                LegacyDataManager.getInstance().importGenotypeData(getViewContext(), false);
+
+            if (types.contains("snp"))
+                LegacyDataManager.getInstance().importSNPData(getViewContext(), false);
 
             return true;
         }

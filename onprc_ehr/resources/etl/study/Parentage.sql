@@ -51,3 +51,16 @@ SELECT
 	cast(objectid as varchar(38)) as objectid
 From iris_production.dbo.Birth_FosterMom
 WHERE ts > ?
+
+UNION ALL
+
+select
+	cast(b.AnimalID as nvarchar(4000)) as Id,
+	b.Date as date,
+	null as enddate,
+	cast(b.SurrogateMotherID as nvarchar(4000)) as parent,
+    'Surrogate Mother' as relationship,
+    'Other' as method,
+	cast(objectid as varchar(38)) as objectid
+from iris_production.dbo.Af_Birth b
+where SurrogateMotherID is not null AND ts > ?

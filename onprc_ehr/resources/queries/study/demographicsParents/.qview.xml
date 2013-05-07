@@ -1,0 +1,13 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="false">
+    <columns>
+        <column name="Id"/>
+        <column name="dam"/>
+        <column name="damType"/>
+        <column name="sire"/>
+        <column name="sireType"/>
+        <column name="numParents"/>
+    </columns>
+    <sorts>
+        <sort column="Id"/>
+    </sorts>
+</customView>

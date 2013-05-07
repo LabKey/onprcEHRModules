@@ -2,12 +2,15 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="Pregnancy Confirmations" tableDbType="TABLE">
-                <tableUrl>/query/detailsQueryRow.view?schemaName=study&amp;query.queryName=Pregnancy%20Confirmations&amp;lsid=${lsid}</tableUrl>
+                <tableUrl />
                 <insertUrl />
                 <importUrl />
                 <updateUrl />
                 <deleteUrl />
                 <columns>
+                    <column columnName="date">
+                        <columnTitle>Confirmation Date</columnTitle>
+                    </column>
                     <column columnName="sire">
                         <columnTitle>Sire</columnTitle>
                         <fk>

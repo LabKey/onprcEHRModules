@@ -20,8 +20,8 @@ SELECT
   h.date,
   h.enddate,
   c.cage_type,
-  c.leftCage,
-  c.left_cage_type,
+  c.lowerCage,
+  c.lower_cage_type,
   c.divider,
   c.isAvailable
 FROM study.housing h

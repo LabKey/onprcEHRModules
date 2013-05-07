@@ -71,10 +71,11 @@ public class BloodAlertsNotification extends BloodAdminAlertsNotification
 
         bloodDrawsOnDeadAnimals(c, u, msg);
         bloodDrawsOverLimit(c, u, msg);
-        bloodDrawsNotAssignedToProject(c, u, msg);
         findNonApprovedDraws(c, u, msg);
-        drawsNotAssigned(c, u, msg);
-        incompleteDraws(c, u, msg);
+
+        //drawsNotAssigned(c, u, msg);
+        //incompleteDraws(c, u, msg);
+        //bloodDrawsNotAssignedToProject(c, u, msg);
 
         return msg.toString();
     }

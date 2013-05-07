@@ -79,6 +79,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 public class ETLRunnable implements Runnable
 {
@@ -381,6 +382,10 @@ public class ETLRunnable implements Runnable
             try
             {
                 targetTableName = kv.getKey();
+                //NOTE: in order to make scripts run in the correct order, we allow underscore prefixes on the file names
+                if (targetTableName.startsWith("_"))
+                    targetTableName = targetTableName.replaceFirst("_", "");
+
                 sql = kv.getValue();
 
                 //debug purposes only
@@ -952,7 +957,7 @@ public class ETLRunnable implements Runnable
 
     private Map<String, String> loadQueries(Collection<Resource> sqlFiles) throws IOException
     {
-        Map<String, String> qMap = new HashMap<String, String>();
+        Map<String, String> qMap = new TreeMap<String, String>();
 
         for (Resource sqlFile : sqlFiles)
         {
@@ -1146,7 +1151,7 @@ public class ETLRunnable implements Runnable
             put("project", new String[]{"Ref_ProjectsIACUC", "Ref_ProjInvest"});
             put("protocol", new String[]{"Ref_ProjectsIACUC", "Ref_IACUCParentChildren"});
             put("protocol_counts", new String[]{"IACUC_NHPYearly", "IACUC_NHPAnimals", "ref_ProjectsIACUC"});
-            put("protocolProcedures", new String[]{"IACUC_NHPSurgeries"});
+            put("protocolProcedures", new String[]{"IACUC_NHPSurgeries", "Ref_SurgProcedure", "Ref_ProjectsIACUC"});
             put("snomed_tags", new String[]{"Cln_DxSnomed", "sur_snomed", "Path_AutopsyDiagnosis", "Path_BiopsyDiagnosis"});
 
             put("cage", new String[]{"Ref_RowCage"});
@@ -1173,7 +1178,7 @@ public class ETLRunnable implements Runnable
             put("Diet", new String[]{"Af_Diet", "Af_Qrf"});
             put("Drug Administration", new String[]{"Cln_Medications", "Cln_MedicationTimes", "Sur_AnesthesiaLogHeader", "sur_general", "Sur_Medications", "Sur_AnesthesiaLogHeader"});
             put("Enrichment", new String[]{"Af_Toys"});
-            put("Flags", new String[]{"Af_Pool"});
+            put("Flags", new String[]{"Af_Pool", "Res_DNABank", "Af_Qrf"});
             put("Hematology Results", new String[]{"Cln_Hematology", "Cln_CerebralspinalFluid"});
             put("Housing", new String[]{"Af_Transfer", "Af_Qrf"});
             put("iStat", new String[]{"Cln_IStat"});
@@ -1191,6 +1196,7 @@ public class ETLRunnable implements Runnable
             put("Problem List", new String[]{"MasterProblemList", "Af_Qrf"});
             put("Serology", new String[]{"Cln_SerologyData", "Cln_SerologyHeader"});
             put("TB Tests", new String[]{"Af_weights"});
+            put("Tissue Distributions", new String[]{"Path_TissueDistributions", "Path_TissueDetails"});
             put("Tissue Samples", new String[]{"Path_AutopsyWtsMaterials", "Path_Autopsy", "Path_BiopsyWtsMaterials", "Path_biopsy"});
             put("Treatment Orders", new String[]{"Cln_Medications", "Af_Qrf"});
             put("Urinalysis Results", new String[]{"Cln_Urinalysis"});
@@ -1223,6 +1229,9 @@ public class ETLRunnable implements Runnable
                         originConnection = getOriginConnection();
 
                     targetTableName = kv.getKey();
+                    //NOTE: in order to make scripts run in the correct order, we allow underscore prefixes on the file names
+                    if (targetTableName.startsWith("_"))
+                        targetTableName = targetTableName.replaceFirst("_", "");
 
                     if (targetTableName.equals("lookups"))
                     {
@@ -1286,7 +1295,7 @@ public class ETLRunnable implements Runnable
 
                     if (missingFromLK.size() > 0 || toDeleteFromLK.size() > 0)
                     {
-                        sb.append("table: " + targetTableName + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete<br>");
+                        sb.append("table: " + targetTableName + (realTable == null ? "" : " (" + realTable.getSelectName() + ") ") + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete<br>");
                         if (missingFromLK.size() > 0)
                         {
                             sb.append("records missing:<br>");

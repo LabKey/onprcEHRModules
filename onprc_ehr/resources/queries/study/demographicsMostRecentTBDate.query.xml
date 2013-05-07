@@ -2,6 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="demographicsMostRecentTBDate" tableDbType="NOT_IN_DB">
+                <tableTitle>Most Recent TB Date</tableTitle>
                 <columns>
                     <column columnName="Id">
                         <isKeyField>true</isKeyField>
@@ -17,6 +18,9 @@
                     </column>
                     <column columnName="MonthsSinceLastTB">
                         <columnTitle>Months Since Last TB</columnTitle>
+                    </column>
+                    <column columnName="flags">
+                        <columnTitle>Serologic Exemptions</columnTitle>
                     </column>
                 </columns>
                 <titleColumn>MostRecentTBDate</titleColumn>

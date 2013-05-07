@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="delivery" tableDbType="TABLE">
-                <tableUrl>/query/detailsQueryRow.view?schemaName=study&amp;query.queryName=Delivery&amp;lsid=${lsid}</tableUrl>
+                <tableUrl />
                 <insertUrl />
                 <importUrl />
                 <updateUrl />

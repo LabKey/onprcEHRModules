@@ -19,14 +19,27 @@ SELECT
   t.room,
   t.effectiveCage,
   t.total,
-  t.animals
+  t.animals,
+  CASE
+    WHEN t.housingType != 'Cage Location' THEN 'Group'
+    WHEN (t.total > 1 AND t.countAsSeparate = true AND t.countAsPaired = true) THEN 'Cage, Grooming'
+    WHEN t.total = 1 THEN 'Cage, Single'
+    WHEN t.total > 1 THEN 'Cage, Paired'
+    ELSE 'Unknown'
+  END as category,
+  t.housingType,
+  t.countAsSeparate,
+  t.countAsPaired,
 
 FROM study.demographics d
 LEFT JOIN (
 SELECT
   h.id,
   h.room,
+  h.room.housingType.value as housingType,
   h.effectiveCage.effectiveCage,
+  c.divider.countAsPaired as countAsPaired,
+  c.divider.countAsSeparate as countAsSeparate,
 
   count(distinct h2.id) as total,
   group_concat(distinct h2.id, ', ') as animals,
@@ -34,12 +47,14 @@ SELECT
 FROM study.housing h
 
 JOIN study.housing h2
-ON (h.room = h2.room and (h.effectiveCage.effectiveCage = h2.effectiveCage.effectiveCage OR (h.cage IS NULL and h2.cage IS NULL)))
+ON (h.room = h2.room and (h.effectiveCage.effectiveCage = h2.effectiveCage.effectiveCage OR (h.cage IS NULL and h2.cage IS NULL) OR (h.room.housingType.value != 'Cage Location' AND h.cage = h2.cage)))
+
+LEFT JOIN ehr_lookups.cage c ON (h.effectiveCage.effectiveCage = c.cage AND c.room = h.room)
 
 --account for date/time
 WHERE h.enddateTimeCoalesced >= now() and h2.enddateTimeCoalesced >= now()
 
-GROUP BY h.id, h.room, h.effectiveCage.effectiveCage
+GROUP BY h.id, h.room, h.effectiveCage.effectiveCage, c.divider.countAsPaired, c.divider.countAsSeparate, h.room.housingType.value
 
 ) t ON (t.id = d.id)
 

@@ -17,7 +17,16 @@
                 <property name="columnTitle" value="Title"/>
             </properties>
         </column>
-        <column name="project/investigatorId"/>
+        <column name="project/investigatorId">
+            <properties>
+                <property name="columnTitle" value="Project Investigator"/>
+            </properties>
+        </column>
+        <column name="project/protocol/investigatorId">
+            <properties>
+                <property name="columnTitle" value="Protocol Investigator"/>
+            </properties>
+        </column>
         <column name="date"/>
         <column name="enddate"/>
         <column name="qcstate" />

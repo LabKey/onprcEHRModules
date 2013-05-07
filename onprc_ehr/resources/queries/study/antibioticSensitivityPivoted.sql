@@ -29,7 +29,34 @@ CASE
 END as resistant
 
 from study."Antibiotic Sensitivity" a
-
+WHERE a.antibiotic.code IN (
+  'E-71875',
+  'E-719Y1',
+  'E-719Y3',
+  'E-72040',
+  'E-72045',
+  'E-721X0',
+  'E-72360',
+  'E-72500',
+  'E-72600',
+  'E-72682',
+  'E-72720',
+  'E-Y7240'
+)
 group by a.id, a.date, a.runId, a.tissue, a.microbe.meaning, a.antibiotic.meaning
 
 pivot resistant by antibiotic
+
+--the codes correspond to:
+-- Trimethoprim/sulfa (480mg)
+-- ENROFLOXACIN (68mg)
+-- CIPROFLOXACIN (200mg)
+-- CHLORAMPHENICOL injectable (250mg/ml)
+-- Flurfenical injectable (300mg/ml)
+-- CEFAZOLIN injectable (250mg/ml)
+-- Gentamycin injectable (100mg/ml)
+-- Tetracycline (250mg)
+-- Penicillin G Procaine injectable (300,000 IU/ml)
+-- AMOXICILLIN / CLAVULANIC ACID (250mg)
+-- AMPICILLIN (250mg/ml)
+-- AZITHROMYCIN (250mg)

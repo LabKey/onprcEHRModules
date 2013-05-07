@@ -25,9 +25,11 @@ select
 
 		(select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri.firstname and i.lastname = ri.lastname group by i.LastName, i.firstname having count(*) <= 1) as investigatorId,
 		--(ri.LastName + ', ' + ri.FirstName) as inves,		
-		rpi.IACUCApprovalDate as approve,
-		rpi.OriginalApprovalDate as first_approval,
-		Rpi.EndDate,
+
+        --i think this is the last yearly approval
+		--rpi.IACUCApprovalDate as approve,
+		rpi.OriginalApprovalDate as approve,
+		coalesce(rpi.dateDisabled, Rpi.EndDate) as enddate,
 		s1.Value as USDA_Level,
 		Rpi.eIACUCNum as external_id,
 		Rpi.IBCApprovalNum as ibc_approval_num,
@@ -59,9 +61,11 @@ select
 
 		(select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri.firstname and i.lastname = ri.lastname group by i.LastName, i.firstname having count(*) <= 1) as investigatorId,
 		--(ri.LastName + ', ' + ri.FirstName) as inves,
-		rpi.IACUCApprovalDate as approve,
-		rpi.OriginalApprovalDate as first_approval,
-		Rpi.EndDate,
+
+		--i think this is the last yearly approval
+		--rpi.IACUCApprovalDate as approve,
+		rpi.OriginalApprovalDate as approve,
+		coalesce(rpi.dateDisabled, Rpi.EndDate) as enddate,
 		s1.Value as USDA_Level,
 		Rpi.eIACUCNum as external_id,
 		Rpi.IBCApprovalNum as ibc_approval_num,

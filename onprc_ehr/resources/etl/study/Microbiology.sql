@@ -19,15 +19,23 @@ SELECT
 	--m.ClinicalKey as ClinicalKey  ,
 	m.Bacteria as organism,      ----- Ref_Snomedlists
 	s.Description as organismMeaning,
-	m.Quantity,
+	--m.Quantity,
+	CASE
+		WHEN Quantity = 5 THEN NULL
+		else sp.value
+	END as quantity,
 	--m.Searchkey ,
 
 	--m.ts as rowversion,
 	m.objectid,
-	mh.objectid as runId
+	mh.objectid as runId,
+
+	mh.tissue
 
 FROM Cln_MicrobiologyData m
 left join Cln_MicrobiologyHeader mh ON (m.ClinicalKey = mh.ClinicalKey)
 left join ref_snomed s ON (m.Bacteria = s.SnomedCode)
+left join sys_parameters sp ON (sp.field = 'Microbiologyquantity' and sp.flag = m.quantity)
+--left join ref_snomed s2 ON (mh.tissue = s2.SnomedCode)
 
 where m.ts > ? or mh.ts > ?

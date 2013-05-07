@@ -6,45 +6,38 @@ Ext4.onReady(function(){
     if(!ctx)
         return;
 
-    Ext4.create('LDK.panel.NavPanel', {
-        renderTo: webpart.wrapperDivId,
-        sections: [{
-            header: 'Reports',
-            items: [
-                {name: 'Date of Last PE Exam', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=demographicsPE'},
-                {name: 'Room Utilization By Investigator', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=roomsByInvestigator'},
-                {name: 'Weight: 10% Drop In Last 30 Days', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=weightRelChange&query.viewName=10 Pct Drop In Last 30 Days'},
-                {name: 'Weight: 10% Drop In Last 90 Days', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=weightRelChange&query.viewName=10 Pct Drop In Last 90 Days'},
-                {name: 'Weight: 10% Drop In Last 6 Months', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=weightRelChange&query.viewName=10 Pct Drop In Last 6 Months'}
+    EHR.Utils.getReportLinks({
+        linkTypes: ['moreReports'],
+        scope: this,
+        success: function(results){
+            results = results.moreReports || {};
+            if (!results)
+                return;
 
-                //{name: 'Blood Draw Summary', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=ScheduledBlood'},
-                //{name: 'MHC Genotype Summary', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=alleleFrequencies'},
-                //{name: 'Viral Challenges', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=ViralChallenges'}
-//            ]
-//        },{
-//            header: 'Validation',
-//            items: [
-//                {name: 'Animals with Duplicate Housing Entries', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=housingProblems'},
-//                {name: 'Duplicate Assignments', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=duplicateAssignments'},
-//                {name: 'Find Dead Animals Without A Weight in the Preceeding 7 Days', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=validateFinalWeights&query.sort=-death'},
-//                {name: 'Non-contiguous Housing Assignments', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=housingCheck'},
-//                {name: 'Records Where Review Is Required', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=study&query.queryName=studyData&query.viewName=Review Required'},
-//                {name: 'Rooms/Cages Missing From Cage List', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=ehr&query.queryName=missingCages'},
-//                //{name: 'Validate Demographics Status Field', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=Validate_status'},
-//
-//                //{name: 'Animals Without Assignments', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=No Active Assignments'},
-//                //{name: 'Cage Review', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=CageReview&query.viewName=Problem%20Cages'},
-//                {name: 'Cages Lacking Dimensions', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=missingCages'},
-//
-//                //{name: 'Housing: Condition Problems', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=housingConditionProblems&query.viewName=Problems'},
-//                {name: 'Housing: Double Entries', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=housingProblems'},
-//                //{name: 'Loners', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=demographicsDaysAlone&query.viewName=Alone 30 Days Without Exemptions'},
-//
-//                //{name: 'Rooms Without Obs Today', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=RoomsWithoutObsToday'},
-//                //{name: 'TB: Untested In >4 Months', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=TB Older Than 4 Months'},
-//                {name: 'Unweighed In Past 45 Days', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Unweighed%20Over%2045%20Days'}
-            ]}
-        ]
+            var categories = Ext4.Object.getKeys(results.sections);
+            categories = categories.sort();
+
+            var sections = [];
+            Ext4.each(categories, function(category){
+                var section = {
+                    header: category,
+                    items: []
+                };
+
+                Ext4.each(results.sections[category], function(item){
+                    section.items.push({
+                        name: item.label,
+                        url: LABKEY.ActionURL.buildURL(item.controller, item.action, ctx['EHRStudyContainer'], item.params)
+                    })
+                }, this);
+
+                sections.push(section);
+            }, this);
+
+            Ext4.create('LDK.panel.NavPanel', {
+                sections: sections
+            }).render(webpart.wrapperDivId);
+        }
     });
 });
 

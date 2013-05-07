@@ -16,11 +16,11 @@
 SELECT
 f.id,
 f.category,
-group_concat(f.remark, chr(10)) as valueField
+group_concat(f.value, chr(10)) as valueField
 
 FROM study.notes f
 
-WHERE (f.enddate IS NULL OR COALESCE(f.enddate, curdate()) >= curdate()) and category is not null
+WHERE f.enddateCoalesced >= curdate() and category is not null
 
 GROUP BY f.id, f.category
 

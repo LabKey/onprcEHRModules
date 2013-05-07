@@ -31,6 +31,7 @@ Select
 		When GroupCode = 3 Then 'Behavior'
 		When GroupCode = 4 Then 'Weight'
 	End AS Category,
+	--ml.objectid as problemId,
 
 	--TODO: what is this second table for (Af_CaseReviewData)?
 --	af.Closing_Date as  Closing_Date ,
@@ -44,7 +45,7 @@ Select
 
 From Af_Case afc
 LEFT JOIN Sys_Parameters s1 ON (afc.Status = s1.Flag and s1.field = 'CaseStatus')
---left join Cln_DX dx on (dx.CaseID = afc.CaseID and dx.Date = afc.OpenDate)
+--LEFT JOIN MasterProblemList ML ON (afc.CaseID = ml.CaseID)
 left join Af_Qrf q on (q.animalid = afc.animalid)
 
 WHERE afc.ts > ? or q.ts > ?

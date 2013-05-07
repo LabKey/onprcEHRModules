@@ -22,8 +22,8 @@ FROM (
 
 SELECT
   a.Id,
-  a.project.investigatorId.lastName || ' [' || a.project.name || ']' as use,
-  'Research' as category
+  cast(a.project.investigatorId.lastName || ' [' || a.project.name || ']' as varchar) as use,
+  cast(a.project.use_category as varchar) as category
 FROM study.assignment a
 WHERE a.enddateCoalesced >= curdate()
 

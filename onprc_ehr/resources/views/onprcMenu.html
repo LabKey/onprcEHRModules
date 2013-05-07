@@ -73,6 +73,9 @@
                 itemId: 'admin',
                 title: 'Admin'
             },{
+                itemId: 'dcm',
+                title: 'DCM'
+            },{
                 title: 'Labs',
                 itemId: 'labs'
             },{
@@ -85,7 +88,7 @@
         ONPRC.Utils.getNavItems({
             scope: this,
             success: function(results){
-                Ext4.each(['labs', 'admin', 'cores', 'ehr'], function(name){
+                Ext4.each(['labs', 'admin', 'cores', 'ehr', 'dcm'], function(name){
                     if (results[name] && results[name].length){
                         var section = panel.down('#' + name).items.get(0);
                         var toAdd = [];

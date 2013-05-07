@@ -10,6 +10,11 @@
        <column name="enddate"/>
        <column name="usda_level"/>
        <column name="project_type"/>
+       <column name="activeAnimals/totalActiveAnimals">
+           <properties>
+               <property name="columnTitle" value="# Animals Assigned"/>
+           </properties>
+       </column>
    </columns>
    <sorts>
        <sort column="protocol" />

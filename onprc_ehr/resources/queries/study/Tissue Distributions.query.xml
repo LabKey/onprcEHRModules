@@ -1,0 +1,46 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="tissueDistributions" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
+                <tableTitle>Tissue Distributions</tableTitle>
+                <columns>
+                    <column columnName="lsid">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="Id">
+
+                    </column>
+                    <column columnName="date">
+
+                    </column>
+                    <column columnName="tissue">
+                        <columnTitle>Tissue</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>snomed</fkTable>
+                            <fkColumnName>code</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="organization">
+                        <columnTitle>Organization</columnTitle>
+                    </column>
+                    <column columnName="recipient">
+                        <columnTitle>Recipient</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>tissue_recipients</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="requestCategory">
+                        <columnTitle>Request Category</columnTitle>
+                    </column>
+                    <column columnName="sampleType">
+                        <columnTitle>Sample Type</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

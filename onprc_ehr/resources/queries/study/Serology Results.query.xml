@@ -1,7 +1,8 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="serologyResults" tableDbType="TABLE" useColumnOrder="true">
+            <table tableName="Serology Results" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
                 <tableTitle>Serology Results</tableTitle>
                 <columns>
                     <column columnName="lsid">
@@ -13,36 +14,42 @@
                     <column columnName="date">
 
                     </column>
-                    <column columnName="enddate">
-
+                    <column columnName="tissue">
+                        <columnTitle>Tissue</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>snomed</fkTable>
+                            <fkColumnName>code</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="agent">
                         <columnTitle>Agent</columnTitle>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>snomed</fkTable>
-                            <fkColumnName>Code</fkColumnName>
+                            <fkColumnName>code</fkColumnName>
                         </fk>
-                    </column>
-                    <column columnName="result">
-                        <columnTitle>Result</columnTitle>
-                    </column>
-                    <column columnName="units">
-                        <columnTitle>Units</columnTitle>
-                    </column>
-                    <column columnName="qualresult">
-                        <columnTitle>Qualitative Result</columnTitle>
                     </column>
                     <column columnName="method">
                         <columnTitle>Method</columnTitle>
                     </column>
-                    <column columnName="tissue">
-                        <columnTitle>Tissue</columnTitle>
-                        <fk>
-                            <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>snomed</fkTable>
-                            <fkColumnName>Code</fkColumnName>
-                        </fk>
+                    <column columnName="result">
+                        <columnTitle>Result</columnTitle>
+                    </column>
+                    <column columnName="numericresult">
+                        <columnTitle>Numeric Result</columnTitle>
+                    </column>
+                    <column columnName="units">
+                        <columnTitle>Units</columnTitle>
+                    </column>
+                    <column columnName="qualifier">
+                        <columnTitle>Qualifier</columnTitle>
+                    </column>
+                    <column columnName="definitive">
+                        <columnTitle>Definitive Result?</columnTitle>
+                    </column>
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
                     </column>
                 </columns>
             </table>

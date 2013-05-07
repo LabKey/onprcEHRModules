@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="antiBioticSensitivity" tableDbType="TABLE">
-                <tableUrl>/query/detailsQueryRow.view?schemaName=study&amp;query.queryName=Antibiotic%20Sensitivity&amp;lsid=${lsid}</tableUrl>
+                <tableUrl />
                 <insertUrl />
                 <importUrl />
                 <updateUrl />

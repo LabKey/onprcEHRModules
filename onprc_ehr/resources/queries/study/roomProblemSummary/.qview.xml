@@ -1,0 +1,10 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <sorts>
+        <sort column="room/sort_order"/>
+        <sort column="category"/>
+    </sorts>
+    <aggregates>
+        <aggregate column="totalIdWithProblems" label="Total" type="SUM"/>
+        <aggregate column="totalProblems" label="Total" type="SUM"/>
+    </aggregates>
+</customView>

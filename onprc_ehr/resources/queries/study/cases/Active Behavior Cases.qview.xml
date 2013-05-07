@@ -1,10 +1,22 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="Id/curLocation/location"/>
+        <column name="Id/utilization/use"/>
+        <column name="date"/>
+        <column name="Id/demographics/species"/>
+        <column name="Id/demographics/gender"/>
+        <!--<column name="performedby"/>-->
+        <column name="problemCategories"/>
+        <column name="todaysRemarks"/>
+        <column name="history"/>
+    </columns>
     <filters>
         <filter column="enddate" operator="isblank"/>
         <filter column="category" operator="eq" value="Behavior"/>
     </filters>
     <sorts>
-        <sort column="Id/curLocation/room" />
-        <sort column="Id/curLocation/cage" />
+        <sort column="Id/curLocation/room_order"/>
+        <sort column="Id/curLocation/cage_order"/>
     </sorts>
 </customView>

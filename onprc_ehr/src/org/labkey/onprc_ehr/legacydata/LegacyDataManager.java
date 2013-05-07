@@ -89,6 +89,7 @@ public class LegacyDataManager
 {
     private static final LegacyDataManager _instance = new LegacyDataManager();
     private static final Logger _log = Logger.getLogger(LegacyDataManager.class);
+    private final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private LegacyDataManager()
     {
@@ -898,6 +899,516 @@ public class LegacyDataManager
             sb.append("Creating peptide: " + sequence).append("<br>");
 
             Table.insert(u, ti, toInsert);
+        }
+    }
+
+    public String importGenotypeData(final ViewContext ctx, final Boolean validateOnly)
+    {
+        if (!ctx.getContainer().isWorkbook())
+            return "This current container is not a workbook, aborting";
+
+        final StringBuilder sb = new StringBuilder();
+
+        UserSchema schema = QueryService.get().getUserSchema(ctx.getUser(), ctx.getContainer().getParent(), "grip");
+        if (schema == null)
+            throw new RuntimeException("Unable to find grip DB");
+
+        TableInfo ti = schema.getTable("genotypes");
+        if (ti == null)
+            throw new RuntimeException("Unable to find genotypes table");
+
+        AssayProvider ap = AssayService.get().getProvider("Genotype Assay");
+        if (ap == null)
+            throw new RuntimeException("Unable to find Genotype_Assay provider");
+
+        List<ExpProtocol> protocols = AssayService.get().getAssayProtocols(ContainerManager.getSharedContainer(), ap);
+        if (protocols == null || protocols.size() == 0)
+            throw new RuntimeException("Unable to find Genotype_Assay protocol");
+
+        final ExpProtocol protocol = protocols.get(0);
+
+        String importMethod = "Default Excel";
+        AssayImportMethod method = LaboratoryService.get().getDataProviderForAssay(ap).getImportMethodByName(importMethod);
+        if (method == null)
+        {
+            throw new RuntimeException("Import method not recognized: " + importMethod);
+        }
+
+        final Map<String, List<Map<String, Object>>> runs = new HashMap<String, List<Map<String, Object>>>();
+        final Map<String, Date> runDateMap = new HashMap<String, Date>();
+
+        SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
+        filter.addCondition("animalid", " ", CompareType.NEQ);
+        filter.addCondition("abs_allele1", ":", CompareType.DOES_NOT_CONTAIN);
+
+        TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, filter, new Sort("expdate"));
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Date exptDate = rs.getDate("expdate");
+                String expId = rs.getString("RemoteExpId");
+
+                String expName = null;
+                if (exptDate != null)
+                    expName = _dateFormat.format(exptDate);
+                else if (expId != null)
+                    expName = "Expt " + expId;
+
+                String runName = "GRIP Genotype Data" + (expName == null ? "" : ": " + expName);
+                runDateMap.put(runName, exptDate);
+
+                ExpRun[] existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
+                if (existingRuns.length > 0)
+                {
+                    for (ExpRun r : existingRuns)
+                    {
+                        if (r.getName().equals(runName))
+                        {
+                            sb.append("Existing run found, skipping: " + runName).append("<br>");
+                            return;
+                        }
+                    }
+                }
+
+                Map<String, Object> row1 = new HashMap<String, Object>();
+                Map<String, Object> row2 = new HashMap<String, Object>();
+
+                row1.put("subjectId", rs.getObject("AnimalId"));
+                row1.put("date", rs.getObject("expdate"));
+                row1.put("category", "Unknown");
+                row1.put("marker", rs.getString("locus"));
+                row1.put("locus", rs.getObject("locus"));
+
+                row2.put("subjectId", rs.getObject("AnimalId"));
+                row2.put("date", rs.getObject("expdate"));
+                row2.put("category", "Unknown");
+                row2.put("marker", rs.getString("locus"));
+                row2.put("locus", rs.getObject("locus"));
+
+                String statusflag = rs.getInt("DefMarker") == 1 ? "Definitive" :  null;
+                row1.put("statusflag", statusflag);
+                row2.put("statusflag", statusflag);
+
+                if (rs.getObject("Abs_allele1") != null)
+                {
+                    String allele = (String)rs.getObject("Abs_allele1");
+                    allele = StringUtils.trimToNull(allele);
+                    if (allele != null)
+                    {
+                        String[] pieces = allele.split("_");
+                        try
+                        {
+                            String token = pieces[pieces.length - 1];
+                            token = StringUtils.trimToNull(token);
+                            if (token == null)
+                            {
+                                row1.put("result", 0);
+                                row1.put("qual_result", "NULL");
+                            }
+                            else
+                            {
+                                Integer value = Integer.parseInt(token);
+                                row1.put("result", value);
+                            }
+                        }
+                        catch (NumberFormatException e)
+                        {
+                            row1.put("qual_result", pieces[pieces.length -1 ]);
+                            row1.put("qcflags", "Suspect Size");
+                        }
+                    }
+                }
+
+                if (rs.getObject("Abs_allele2") != null)
+                {
+                    String allele = (String)rs.getObject("Abs_allele2");
+                    allele = StringUtils.trimToNull(allele);
+                    if (allele != null)
+                    {
+                        String[] pieces = allele.split("_");
+                        try
+                        {
+                            String token = pieces[pieces.length - 1];
+                            token = StringUtils.trimToNull(token);
+                            if (token == null)
+                            {
+                                //row2.put("result", 0);
+                                row2.put("qual_result", "NULL");
+                            }
+                            else
+                            {
+                                Integer value = Integer.parseInt(token);
+                                row2.put("result", value);
+                            }
+                        }
+                        catch (NumberFormatException e)
+                        {
+                            row2.put("qual_result", pieces[pieces.length -1 ]);
+                            row2.put("qcflags", "Suspect Size");
+                        }
+                    }
+                }
+
+                List<Map<String, Object>> results = runs.get(runName);
+                if (results == null)
+                    results = new ArrayList<Map<String, Object>>();
+
+                if (row1.containsKey("result") || row1.containsKey("qual_result"))
+                    results.add(row1);
+
+                if (row2.containsKey("result") || row2.containsKey("qual_result"))
+                    results.add(row2);
+
+                runs.put(runName, results);
+            }
+        });
+
+        createRuns(ctx, protocol, validateOnly, runDateMap, sb, runs, method, "STR");
+
+        return sb.toString();
+    }
+
+    public String importSNPData(final ViewContext ctx, final Boolean validateOnly)
+    {
+        if (!ctx.getContainer().isWorkbook())
+            return "This current container is not a workbook, aborting";
+
+        final StringBuilder sb = new StringBuilder();
+
+        UserSchema schema = QueryService.get().getUserSchema(ctx.getUser(), ctx.getContainer().getParent(), "grip");
+        if (schema == null)
+            throw new RuntimeException("Unable to find grip DB");
+
+        TableInfo ti = schema.getTable("genotypes");
+        if (ti == null)
+            throw new RuntimeException("Unable to find genotypes table");
+
+        AssayProvider ap = AssayService.get().getProvider("SNP Assay");
+        if (ap == null)
+            throw new RuntimeException("Unable to find SNP_Assay provider");
+
+        List<ExpProtocol> protocols = AssayService.get().getAssayProtocols(ContainerManager.getSharedContainer(), ap);
+        if (protocols == null || protocols.size() == 0)
+            throw new RuntimeException("Unable to find SNP_Assay protocol");
+
+        final ExpProtocol protocol = protocols.get(0);
+
+        String importMethod = "Default Excel";
+        AssayImportMethod method = LaboratoryService.get().getDataProviderForAssay(ap).getImportMethodByName(importMethod);
+        if (method == null)
+        {
+            throw new RuntimeException("Import method not recognized: " + importMethod);
+        }
+
+        final Map<String, List<Map<String, Object>>> runs = new HashMap<String, List<Map<String, Object>>>();
+        final Map<String, Date> runDateMap = new HashMap<String, Date>();
+
+        SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
+        filter.addCondition("animalid", " ", CompareType.NEQ);
+        filter.addCondition("abs_allele1", ":", CompareType.CONTAINS);
+
+        TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, filter, new Sort("expdate"));
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Date exptDate = rs.getDate("expdate");
+                String expId = rs.getString("RemoteExpId");
+
+                String expName = null;
+                if (exptDate != null)
+                    expName = _dateFormat.format(exptDate);
+                else if (expId != null)
+                    expName = "Expt " + expId;
+
+                String runName = "GRIP SNP Data" + (expName == null ? "" : ": " + expName);
+                runDateMap.put(runName, exptDate);
+
+                ExpRun[] existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
+                if (existingRuns.length > 0)
+                {
+                    for (ExpRun r : existingRuns)
+                    {
+                        if (r.getName().equals(runName))
+                        {
+                            sb.append("Existing run found, skipping: " + runName).append("<br>");
+                            return;
+                        }
+                    }
+                }
+
+                Map<String, Object> row1 = new HashMap<String, Object>();
+                Map<String, Object> row2 = new HashMap<String, Object>();
+
+                row1.put("subjectId", rs.getObject("AnimalId"));
+                row1.put("date", rs.getObject("expdate"));
+                row1.put("category", "Unknown");
+                row1.put("marker", rs.getString("MarkerId"));
+
+                row2.put("subjectId", rs.getObject("AnimalId"));
+                row2.put("date", rs.getObject("expdate"));
+                row2.put("category", "Unknown");
+                row2.put("marker", rs.getString("MarkerId"));
+
+                String statusflag = rs.getInt("DefMarker") == 1 ? "Definitive" :  null;
+                row1.put("statusflag", statusflag);
+                row2.put("statusflag", statusflag);
+
+                if (rs.getObject("Abs_allele1") != null)
+                {
+                    String allele = (String)rs.getObject("Abs_allele1");
+                    allele = StringUtils.trimToNull(allele);
+                    if (allele != null)
+                    {
+                        String[] pieces = allele.split(":");
+                        row1.put("ref_nt_name", pieces[0]);
+
+                        String[] tokens = pieces[1].split("_");
+                        try
+                        {
+                            row1.put("position", Integer.parseInt(tokens[0]));
+                        }
+                        catch (NumberFormatException e)
+                        {
+                            _log.error(e.getMessage(), e);
+                        }
+
+                        row1.put("nt", tokens[1]);
+                    }
+                }
+
+                if (rs.getObject("Abs_allele2") != null)
+                {
+                    String allele = (String)rs.getObject("Abs_allele2");
+                    allele = StringUtils.trimToNull(allele);
+                    if (allele != null)
+                    {
+                        String[] pieces = allele.split(":");
+                        row2.put("ref_nt_name", pieces[0]);
+
+                        String[] tokens = pieces[1].split("_");
+                        try
+                        {
+                            row2.put("position", Integer.parseInt(tokens[0]));
+                        }
+                        catch (NumberFormatException e)
+                        {
+                            _log.error(e.getMessage(), e);
+                        }
+
+                        row2.put("nt", tokens[1]);
+                    }
+                }
+
+                List<Map<String, Object>> results = runs.get(runName);
+                if (results == null)
+                    results = new ArrayList<Map<String, Object>>();
+
+                if (row1.containsKey("marker"))
+                    results.add(row1);
+
+                if (row2.containsKey("marker"))
+                    results.add(row2);
+
+                runs.put(runName, results);
+            }
+        });
+
+        createRuns(ctx, protocol, validateOnly, runDateMap, sb, runs, method, "STR");
+
+        return sb.toString();
+    }
+
+    public String importMHCData(final ViewContext ctx, final Boolean validateOnly)
+    {
+        if (!ctx.getContainer().isWorkbook())
+            return "This current container is not a workbook, aborting";
+
+        final StringBuilder sb = new StringBuilder();
+        UserSchema schema = QueryService.get().getUserSchema(ctx.getUser(), ctx.getContainer().getParent(), "grip");
+        if (schema == null)
+            throw new RuntimeException("Unable to find grip DB");
+
+        TableInfo ti = schema.getTable("mhctype");
+        if (ti == null)
+            throw new RuntimeException("Unable to find mhctype table");
+
+        AssayProvider ap = AssayService.get().getProvider("SSP Typing");
+        if (ap == null)
+            throw new RuntimeException("Unable to find SSP Typing provider");
+
+        List<ExpProtocol> protocols = AssayService.get().getAssayProtocols(ContainerManager.getSharedContainer(), ap);
+        if (protocols == null || protocols.size() == 0)
+            throw new RuntimeException("Unable to find SSP Typing protocol");
+
+        final ExpProtocol protocol = protocols.get(0);
+
+        String importMethod = "Default Excel";
+        AssayImportMethod method = LaboratoryService.get().getDataProviderForAssay(ap).getImportMethodByName(importMethod);
+        if (method == null)
+        {
+            throw new RuntimeException("Import method not recognized: " + importMethod);
+        }
+
+        final Map<String, List<Map<String, Object>>> runs = new HashMap<String, List<Map<String, Object>>>();
+        final Map<String, Date> runDateMap= new HashMap<String, Date>();
+
+        SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
+        filter.addCondition("animalid", " ", CompareType.NEQ);
+        TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, filter, new Sort("expid"));
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Integer exptId = rs.getInt("expid");
+                String runName = "GRIP SSP Data" + (exptId == null ? "" : ": Expt " + exptId);
+
+                ExpRun[] existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
+                if (existingRuns.length > 0)
+                {
+                    for (ExpRun r : existingRuns)
+                    {
+                        if (r.getName().equals(runName))
+                        {
+                            sb.append("Existing run found, skipping: " + runName).append("<br>");
+                            return;
+                        }
+                    }
+                }
+
+                Map<String, Object> row1 = new HashMap<String, Object>();
+
+                row1.put("subjectId", rs.getObject("AnimalId"));
+                row1.put("category", "Unknown");
+
+                String marker = rs.getString("marker");
+                if (marker.equalsIgnoreCase("AO1"))
+                    marker = "A01";
+                else if (marker.equalsIgnoreCase("401"))
+                    marker = "DRB10401/06/11";
+
+                row1.put("primerPair", marker);
+
+                Integer resultInt = rs.getInt("test");
+                String result = null;
+                switch  (resultInt)
+                {
+                    case 1:
+                        result = "POS";
+                        break;
+                    case 0:
+                        result = "NEG";
+                        break;
+                    case 2:
+                        result = "IND";
+                        break;
+                };
+
+                row1.put("result", result);
+
+                String statusflag = rs.getInt("DefMarker") == 1 ? "Definitive" :  null;
+                row1.put("statusflag", statusflag);
+
+                List<Map<String, Object>> results = runs.get(runName);
+                if (results == null)
+                    results = new ArrayList<Map<String, Object>>();
+
+                results.add(row1);
+
+                runs.put(runName, results);
+            }
+        });
+
+        createRuns(ctx, protocol, validateOnly, runDateMap, sb, runs, method);
+
+        return sb.toString();
+    }
+
+    private void createRuns(ViewContext ctx, ExpProtocol protocol, boolean validateOnly, Map<String, Date> runDateMap, StringBuilder sb, Map<String, List<Map<String, Object>>> runs, AssayImportMethod method)
+    {
+        createRuns(ctx, protocol, validateOnly, runDateMap, sb, runs, method, null);
+    }
+
+    private void createRuns(ViewContext ctx, ExpProtocol protocol, boolean validateOnly, Map<String, Date> runDateMap, StringBuilder sb, Map<String, List<Map<String, Object>>> runs, AssayImportMethod method, String assayType)
+    {
+        for (String name : runs.keySet())
+        {
+            List<Map<String, Object>> rows = runs.get(name);
+            sb.append("<br>-----------------------<br>");
+            JSONObject json = new JSONObject();
+            JSONObject runProperties = new JSONObject();
+
+            runProperties.put(ExperimentJSONConverter.NAME, name);
+            if (runDateMap.containsKey(name))
+                runProperties.put("runDate", runDateMap.get(name));
+            if (assayType != null)
+                runProperties.put("assayType", assayType);
+
+
+            json.put("Run", runProperties);
+
+            JSONObject batchProperties = new JSONObject();
+            batchProperties.put(ExperimentJSONConverter.NAME, name);
+            json.put("Batch", batchProperties);
+
+            JSONArray jsonArray = new JSONArray();
+            sb.append(name).append("<br>");
+            sb.append("Rows: " + rows.size() + "<br>");
+            for (Map<String, Object> row : rows)
+            {
+                jsonArray.put(row);
+//                sb.append("......").append("<br>");
+//                for (String key : row.keySet())
+//                {
+//                    sb.append(key).append(": ").append(row.get(key)).append("<br>");
+//                }
+            }
+            json.put("ResultRows", jsonArray);
+
+            json.put("errorLevel", "ERROR");
+
+            FileContentService svc = ServiceRegistry.get().getService(FileContentService.class);
+            File root = svc.getFileRoot(ctx.getContainer(), FileContentService.ContentType.files);
+            if (!root.exists())
+                root.mkdir();
+
+            root = new File(root, "assaydata");
+            if (!root.exists())
+                root.mkdir();
+
+            if (!validateOnly)
+            {
+                try
+                {
+                    File f = new File(root, name + ".tsv");
+                    if (f.exists())
+                        f.delete();
+
+                    f.createNewFile();
+                    ViewContext ctx2 = new ViewContext(ctx);
+                    ctx2.setContainer(ctx.getContainer());
+
+                    AssayParser parser = method.getFileParser(ctx.getContainer(), ctx.getUser(), protocol.getRowId());
+                    parser.saveBatch(json, f, f.getName(), ctx2);
+                    _log.info("created run: " + name + ", " + rows.size() + " rows");
+                }
+                catch (BatchValidationException e)
+                {
+                    for (ValidationException ve : e.getRowErrors())
+                    {
+                        _log.error(ve.getMessage(), ve);
+                    }
+                    _log.error(e.getMessage(), e);
+                }
+                catch (IOException e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 }

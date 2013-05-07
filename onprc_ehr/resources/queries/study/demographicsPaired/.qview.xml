@@ -30,12 +30,11 @@
             </properties>
         </column>
         <column name="Id/age/yearAndDays"/>
+        <column name="category"/>
+        <column name="housingType"/>
     </columns>
     <sorts>
-        <sort column="Id/curLocation/room" descending="false"/>
-        <sort column="Id/curLocation/cage" descending="false"/>
+        <sort column="Id/curLocation/room_order"/>
+        <sort column="Id/curLocation/cage_order"/>
     </sorts>
-    <!--<filters>-->
-    <!--<filter column="qcstate/publicdata" operator="eq" value="true"/>-->
-    <!--</filters>-->
 </customView>

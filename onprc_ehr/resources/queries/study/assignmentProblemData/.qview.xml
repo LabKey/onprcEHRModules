@@ -1,0 +1,15 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="project"/>
+        <column name="Id"/>
+        <column name="Id/demographics/gender"/>
+        <column name="Id/demographics/species"/>
+        <column name="problemOpen"/>
+        <column name="problemEnd"/>
+        <column name="category"/>
+        <column name="Id/demographics/history"/>
+    </columns>
+    <sorts>
+        <sort column="Id"/>
+    </sorts>
+</customView>

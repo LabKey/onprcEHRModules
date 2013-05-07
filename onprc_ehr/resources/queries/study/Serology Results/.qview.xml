@@ -3,10 +3,12 @@
         <column name="Id"/>
         <column name="date"/>
         <column name="agent"/>
-        <column name="method"/>
-        <column name="qualresult"/>
-        <column name="result"/>
         <column name="tissue"/>
+        <column name="method"/>
+        <column name="result"/>
+        <column name="numericresult"/>
+        <column name="units"/>
+        <column name="qualifier"/>
         <column name="remark"/>
 
         <column name="requestid"/>

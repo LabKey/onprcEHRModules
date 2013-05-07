@@ -34,12 +34,28 @@ select
 	(select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa where rpi.projectid = rpa.ProjectID order by datecreated desc) as account,
 	Rpi.Title,
 	Rpi.StartDate,
-	Rpi.EndDate,
+	coalesce(rpi.dateDisabled, Rpi.EndDate) as enddate,
 	CASE
 	  WHEN pc2.InvestigatorID IS NULL THEN (select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri.firstname and i.lastname = ri.lastname group by i.LastName, i.firstname having count(*) <= 1)
       ELSE (select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri2.firstname and i.lastname = ri2.lastname group by i.LastName, i.firstname having count(*) <= 1)
     END as investigatorId,
-	rpi.objectid
+	rpi.objectid,
+	CASE
+	  WHEN Rpi.IACUCCode LIKE '%0492%' THEN 0
+	  ELSE 1
+    END as research,
+    CASE
+      WHEN Rpi.IACUCCode = '0492-03' THEN 'U24'
+      WHEN Rpi.IACUCCode = '0492-02' THEN 'U42'
+      WHEN Rpi.IACUCCode = '0300' THEN 'Center Resource'
+      WHEN Rpi.IACUCCode = '0456' THEN 'Center Resource'
+      WHEN Rpi.IACUCCode = 'O833' THEN 'Center Resource'
+      WHEN Rpi.IACUCCode = '0095-50' THEN 'Center Resource'
+      WHEN Rpi.IACUCCode = '0689' THEN 'Center Resource'
+      WHEN Rpi.IACUCCode = '0794' THEN 'Center Resource'
+
+      ELSE 'Research'
+    END as use_category
 
 From Ref_ProjectsIACUC rpi
 	left join Ref_ProjInvest pc on (pc.ProjectID = rpi.ProjectID AND pc.DateDisabled is null and pc.PIFlag = 1 and pc.investigatorid != 0)

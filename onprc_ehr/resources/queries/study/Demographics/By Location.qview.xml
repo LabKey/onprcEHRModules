@@ -25,6 +25,7 @@
             </properties>
         </column>
         <column name="birth"/>
+        <column name="Id/age/yearAndDays"/>
         <column name="Id/MostRecentWeight/MostRecentWeight">
             <properties>
                 <property name="columnTitle" value="Current Weight (kg)"/>
@@ -35,14 +36,15 @@
                 <property name="columnTitle" value="Weight Date"/>
             </properties>
         </column>
+        <column name="Id/viral_status/viralStatus"/>
         <column name="history"/>
     </columns>
     <filters>
         <filter column="calculated_status" operator="eq" value="Alive"/>
     </filters>
     <sorts>
-        <sort column="Id/curLocation/room" descending="false"/>
-        <sort column="Id/curLocation/cage" descending="false"/>
-        <sort column="Id" descending="false"/>
+        <sort column="Id/curLocation/room_order"/>
+        <sort column="Id/curLocation/cage_order"/>
+        <sort column="Id" />
     </sorts>
 </customView>

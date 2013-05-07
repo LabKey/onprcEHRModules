@@ -13,10 +13,10 @@ SELECT
    t.totalWeight,
    t.requiredSqFt,
    t.totalCageSqFt,
-   round((t.requiredSqFt / t.totalCageSqFt) * 100, 1) as sqftPct,
+   --round((t.requiredSqFt / t.totalCageSqFt) * 100, 1) as sqftPct,
    t.requiredHeight,
    t.minCageHeight,
-   round((t.requiredHeight / t.minCageHeight) * 100, 1) as heightPct,
+   --round((t.requiredHeight / t.minCageHeight) * 100, 1) as heightPct,
    t.totalCageRows,
    CASE
      WHEN t.totalCageSqFt < t.requiredSqFt THEN ('Insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFt as varchar))

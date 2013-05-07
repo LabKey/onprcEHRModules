@@ -1,10 +1,6 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
    <columns>
-        <column name="room/area">
-             <properties>
-                 <property name="columnTitle" value="Area"/>
-             </properties>
-        </column>
+        <column name="room/area"/>
         <column name="room"/>
         <column name="room/assignments/projects"/>
         <column name="room/assignments/investigators"/>
@@ -17,6 +13,6 @@
    </columns>
    <sorts>
        <sort column="room/area"/>
-       <sort column="room"/>
+       <sort column="room/sort_order"/>
    </sorts>
 </customView>

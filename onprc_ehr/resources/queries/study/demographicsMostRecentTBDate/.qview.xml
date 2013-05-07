@@ -1,0 +1,31 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="false">
+    <columns>
+        <column name="Id/curLocation/area">
+            <properties>
+                <property name="columnTitle" value="Area"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/room">
+            <properties>
+                <property name="columnTitle" value="Room"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/cage">
+            <properties>
+                <property name="columnTitle" value="Cage"/>
+            </properties>
+        </column>
+        <column name="Id"/>
+        <column name="Id/utilization/use"/>
+        <column name="MostRecentTBDate"/>
+        <column name="MonthsSinceLastTB"/>
+        <column name="MonthsUntilDue"/>
+        <column name="flags"/>
+        <column name="Id/MostRecentWeight/MostRecentWeight"/>
+        <column name="Id/MostRecentWeight/MostRecentWeightDate"/>
+    </columns>
+    <sorts>
+        <sort column="Id/curLocation/room_order"/>
+        <sort column="Id/curLocation/cage_order"/>
+    </sorts>
+</customView>

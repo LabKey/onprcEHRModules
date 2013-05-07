@@ -19,6 +19,9 @@
         <dataset name="delivery" id="5020" category="Reproductive Management" type="Standard">
             <tags/>
         </dataset>
+        <dataset name="serology" id="5021" category="ClinPath" type="Standard">
+            <tags/>
+        </dataset>
         <dataset name="pregnancyConfirmation" id="5022" category="Reproductive Management" type="Standard">
             <tags/>
         </dataset>
@@ -46,7 +49,7 @@
         <dataset name="enrichment" id="5017" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="birth" id="1007" category="Clinical" demographicData="true" type="Standard">
+        <dataset name="birth" id="1007" category="Colony Management" demographicData="true" type="Standard">
             <tags/>
         </dataset>
         <dataset name="blood" id="1008" category="Clinical" type="Standard">
@@ -109,9 +112,6 @@
         <dataset name="urinalysisResults" id="1081" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="virologyResults" id="1054" category="ClinPath" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="arrival" id="1001" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
@@ -145,13 +145,13 @@
         <dataset name="histology" id="1070" category="Pathology" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="organ_weights" id="1072" showByDefault="false" category="Pathology" type="Standard">
+        <dataset name="organ_weights" id="1072" showByDefault="true" category="Pathology" type="Standard">
             <tags/>
         </dataset>
         <dataset name="tissue_samples" id="1071" showByDefault="false" category="Pathology" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="ActiveHousing" id="5010" showByDefault="false" category="Colony Management" demographicData="true" type="Standard">
+        <dataset name="tissueDistributions" id="5027" showByDefault="false" category="Pathology" type="Standard">
             <tags/>
         </dataset>
         <dataset name="pairings" id="5024" showByDefault="false" category="Colony Management" demographicData="false" type="Standard">

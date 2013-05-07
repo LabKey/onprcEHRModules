@@ -14,14 +14,28 @@
  * limitations under the License.
  */
 
+SELECT
+  t.Id,
+  t.groupId,
+  t.groupName,
+  t.date,
+  CASE
+    WHEN (t.enddate IS NULL) THEN t.poolDisabledDate
+    WHEN (t.poolDisabledDate IS NULL) THEN t.enddate
+    WHEN (t.enddate < t.poolDisabledDate) THEN t.enddate
+    ELSE t.poolDisabledDate
+  END as enddate,
+  t.objectid
+
+FROM (
 Select
 	cast(p.AnimalID as nvarchar(4000)) as Id,
 	(select rowid FROM labkey.ehr.animal_groups g where g.name = rp.description) as groupId,
 	rp.Description as groupName,
 
 	DateAssigned as date,
-	coalesce(DateReleased, q.deathdate, q.departuredate, rp.datedisabled) as enddate,
-
+	coalesce(DateReleased, q.deathdate, q.departuredate) as enddate,
+	rp.datedisabled as poolDisabledDate,
 	p.objectid
 
 From Af_Pool p
@@ -30,4 +44,5 @@ left join Af_Qrf q on (q.animalid = p.animalid)
 
 where (p.ts > ? or q.ts > ? or rp.ts > ?) and rp.ShortDescription in ('CBG', 'EBG', 'HBG', 'PBG', 'STG', 'SBG')
 
+) t
 

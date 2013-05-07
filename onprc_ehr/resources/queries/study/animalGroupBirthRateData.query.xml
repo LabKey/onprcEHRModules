@@ -1,0 +1,43 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="animalGroupBirthRateData" tableDbType="TABLE">
+                <tableTitle>Animal Group Birth Rate Raw Data</tableTitle>
+                <columns>
+                    <column columnName="StartDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="EndDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="birthRoom">
+                        <columnTitle>Birth Room</columnTitle>
+                        <displayWidth>180</displayWidth>
+                    </column>
+                    <column columnName="birthRoomType">
+                        <columnTitle>Birth Room Type</columnTitle>
+                        <displayWidth>180</displayWidth>
+                    </column>
+                    <column columnName="underOneYrOld">
+                        <columnTitle>Is Under One Year Old?</columnTitle>
+                    </column>
+                    <column columnName="under180DaysOld">
+                        <columnTitle>Is Under 180 Days Old?</columnTitle>
+                    </column>
+                    <column columnName="diedBefore180Days">
+                        <columnTitle>Died Before 180 Days</columnTitle>
+                    </column>
+                    <column columnName="diedBeforeOneYear">
+                        <columnTitle>Died Before 365 Days?</columnTitle>
+                    </column>
+                    <column columnName="bornDead">
+                        <columnTitle>Survived 0 Days?</columnTitle>
+                    </column>
+                </columns>
+                <buttonBarOptions includeStandardButtons="true">
+                    <includeScript>ehr.context</includeScript>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>
