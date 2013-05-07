@@ -276,6 +276,10 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
             msg.append("</table>");
             msg.append("<br><br>");
         }
+        else
+        {
+            msg.append("There are no weight alerts");
+        }
 
         msg.append("<hr>\n");
     }

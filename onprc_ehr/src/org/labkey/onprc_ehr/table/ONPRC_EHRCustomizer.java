@@ -44,7 +44,6 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.study.DataSetTable;
-import org.labkey.api.view.HttpView;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -801,33 +800,25 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     public UserSchema getUserSchema(AbstractTableInfo ds, String name)
     {
-        if (!(ds instanceof FilteredTable))
-        {
-            return null;
-        }
-
         if (_userSchemas.containsKey(name))
             return _userSchemas.get(name);
 
-        User u;
-        Container c = ((FilteredTable)ds).getContainer();
-
-        if (HttpView.hasCurrentView()){
-            u = HttpView.currentContext().getUser();
-        }
-        else
-        {
-            u = EHRService.get().getEHRUser(c);
-        }
-
-        if (u == null)
-            return null;
-
-        UserSchema us = QueryService.get().getUserSchema(u, c, name);
+        UserSchema us = ds.getUserSchema();
         if (us != null)
-            _userSchemas.put(name, us);
+        {
+            _userSchemas.put(us.getName(), us);
 
-        return us;
+            if (name.equalsIgnoreCase(us.getName()))
+                return us;
+
+            UserSchema us2 = QueryService.get().getUserSchema(us.getUser(), us.getContainer(), name);
+            if (us2 != null)
+                _userSchemas.put(name, us2);
+
+            return us2;
+        }
+
+        return null;
     }
 
     private boolean matches(TableInfo ti, String schema, String query)

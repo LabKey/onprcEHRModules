@@ -4,7 +4,7 @@ SELECT
   d.id.curLocation.cage,
   d.id.age.ageInDays,
 
-  d2.id as dam,
+  d2.dam as dam,
   dl.room as damRoom,
   dl.cage as damCage,
 
