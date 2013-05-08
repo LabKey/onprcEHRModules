@@ -34,5 +34,5 @@ From Path_TissueDistributions td
 	left join Sys_Parameters s3 on (s3.flag = td.Origination And s3.Field = 'TissueOrigination' )
 	left join ref_snomed sno on (sno.SnomedCode = ptd.organ)
 
-AND (ptd.ts > ? or td.ts > ?)
+WHERE (ptd.ts > ? or td.ts > ?)
 
