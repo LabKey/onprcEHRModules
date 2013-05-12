@@ -112,7 +112,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
             filter.addCondition(FieldKey.fromString("category"), "Routine", CompareType.DOES_NOT_CONTAIN);
             filter.addCondition(FieldKey.fromString("category"), "Other", CompareType.DOES_NOT_CONTAIN);
 
-            rs = QueryService.get().select(ti, cols.values(), filter, new Sort("groupId/name"), params);
+            rs = QueryService.get().select(ti, cols.values(), filter, new Sort("groupId/name"), params, true);
             int idx = 0;
             while (rs.next())
             {
@@ -178,7 +178,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
             filter.addCondition(FieldKey.fromString("room/area"), "Hospital", CompareType.NEQ);
             filter.addCondition(FieldKey.fromString("totalIdWithProblems"), 2, CompareType.GT);
 
-            rs = QueryService.get().select(ti, cols.values(), filter, new Sort("room/sort_order"), params);
+            rs = QueryService.get().select(ti, cols.values(), filter, new Sort("room/sort_order"), params, true);
             int idx = 0;
             while (rs.next())
             {
