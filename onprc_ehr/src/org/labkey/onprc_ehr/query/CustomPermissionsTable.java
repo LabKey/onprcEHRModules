@@ -40,6 +40,12 @@ public class CustomPermissionsTable<SchemaType extends UserSchema> extends Simpl
     }
 
     @Override
+    public CustomPermissionsTable<SchemaType> init()
+    {
+        return (CustomPermissionsTable<SchemaType>)super.init();
+    }
+
+    @Override
     public boolean hasPermission(UserPrincipal user, Class<? extends Permission> perm)
     {
         if (!_userSchema.getContainer().hasPermission(user, perm))

@@ -47,7 +47,7 @@ public class ONPRC_EHRBillingUserSchema extends SimpleUserSchema
     @Nullable
     protected TableInfo createWrappedTable(String name, @NotNull TableInfo schematable)
     {
-        CustomPermissionsTable ti = new CustomPermissionsTable(this, schematable);
+        CustomPermissionsTable ti = new CustomPermissionsTable(this, schematable).init();
         ti.addPermissionMapping(InsertPermission.class, ONPRCBillingPermission.class);
         ti.addPermissionMapping(UpdatePermission.class, ONPRCBillingPermission.class);
         ti.addPermissionMapping(DeletePermission.class, ONPRCBillingPermission.class);
