@@ -280,9 +280,9 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
         filter.addCondition(FieldKey.fromString("date"), date.getTime(), CompareType.DATE_GTE);
         Sort sort = new Sort();
-        sort.appendSortColumn(sort.new SortField(FieldKey.fromString("Id/curLocation/area"), Sort.SortDirection.ASC));
-        sort.appendSortColumn(sort.new SortField(FieldKey.fromString("Id/curLocation/room"), Sort.SortDirection.ASC));
-        sort.appendSortColumn(sort.new SortField(FieldKey.fromString("Id/curLocation/cage"), Sort.SortDirection.ASC));
+        sort.appendSortColumn(new Sort.SortField(FieldKey.fromString("Id/curLocation/area"), Sort.SortDirection.ASC));
+        sort.appendSortColumn(new Sort.SortField(FieldKey.fromString("Id/curLocation/room"), Sort.SortDirection.ASC));
+        sort.appendSortColumn(new Sort.SortField(FieldKey.fromString("Id/curLocation/cage"), Sort.SortDirection.ASC));
 
         TableInfo ti = getStudySchema(c, u).getTable("weightConsecutiveDrops");
         assert ti != null;
