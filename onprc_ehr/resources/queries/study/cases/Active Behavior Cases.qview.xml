@@ -12,7 +12,7 @@
         <column name="history"/>
     </columns>
     <filters>
-        <filter column="enddate" operator="isblank"/>
+        <filter column="isActive" operator="eq" value="true"/>
         <filter column="category" operator="eq" value="Behavior"/>
     </filters>
     <sorts>

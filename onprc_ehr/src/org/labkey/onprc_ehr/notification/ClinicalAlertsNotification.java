@@ -70,13 +70,13 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 30 5 * * ?";
+        return "0 30 5 ? * MON";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 5:30AM";
+        return "every Monday at 5:30AM";
     }
 
     @Override
@@ -117,6 +117,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         fieldKeys.add(FieldKey.fromString("groupId/name"));
         fieldKeys.add(FieldKey.fromString("category"));
         fieldKeys.add(FieldKey.fromString("totalIds"));
+        fieldKeys.add(FieldKey.fromString("totalIdWithProblems"));
         fieldKeys.add(FieldKey.fromString("pctWithProblem"));
         Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, fieldKeys);
 
@@ -137,14 +138,14 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
                     msg.append("<b>WARNING: The following animal groups have a high incidence of clinical problems (>" + threshold + "% of animals) in the past " + interval + " days:</b><br>\n");
                     msg.append("<p><a href='" + url + "'>Click here to view them</a><br><br>\n\n");
                     msg.append("<table border=1 style='border-collapse: collapse;'>");
-                    msg.append("<tr style='font-weight: bold;'><td>Group</td><td>Problem Category</td><td>Distinct Animals In Group</td><td>Percent With Problem</td></tr>");
+                    msg.append("<tr style='font-weight: bold;'><td>Group</td><td>Problem Category</td><td>Distinct Animals In Group</td><td>Distinct Animals With Problem</td><td>Percent With Problem</td></tr>");
                 }
                 idx++;
 
                 String groupName = rs.getString(FieldKey.fromString("groupId/name"));
                 String category = rs.getString(FieldKey.fromString("category"));
                 String url2 = url + "&query.groupId/name~eq=" + groupName + "&query.category~eq=" + category;
-                msg.append("<tr><td>").append(groupName).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append("<a href='" + url2 + "'>").append(rs.getDouble(FieldKey.fromString("pctWithProblem")) + "%").append("</a>").append("</td></tr>");
+                msg.append("<tr><td>").append(groupName).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(rs.getDouble(FieldKey.fromString("pctWithProblem")) + "%").append("</a>").append("</td></tr>");
             }
 
             if (idx > 0)
@@ -181,6 +182,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         fieldKeys.add(FieldKey.fromString("room"));
         fieldKeys.add(FieldKey.fromString("category"));
         fieldKeys.add(FieldKey.fromString("totalIds"));
+        fieldKeys.add(FieldKey.fromString("totalIdWithProblems"));
         fieldKeys.add(FieldKey.fromString("pctWithProblem"));
         Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, fieldKeys);
 
@@ -203,14 +205,14 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
                     msg.append("<b>WARNING: The following non-hospital rooms have a high incidence of clinical problems (>" + threshold + "% of animals, with at least 2 animals afflicted) in the past " + interval + " days:</b><br>\n");
                     msg.append("<p><a href='" + url + "'>Click here to view them</a><br><br>\n\n");
                     msg.append("<table border=1 style='border-collapse: collapse;'>");
-                    msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Problem Category</td><td>Distinct Animals In Room</td><td>Percent With Problem</td></tr>");
+                    msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Problem Category</td><td>Distinct Animals In Room</td><td>Distinct Animals With Problem</td><td>Percent With Problem</td></tr>");
                 }
                 idx++;
 
                 String room = rs.getString(FieldKey.fromString("room"));
                 String category = rs.getString(FieldKey.fromString("category"));
                 String url2 = url + "&query.room~eq=" + room + "&query.category~eq=" + category;
-                msg.append("<tr><td>").append(room).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append("<a href='" + url2 + "'>").append(rs.getDouble(FieldKey.fromString("pctWithProblem")) + "%").append("</a>").append("</td></tr>");
+                msg.append("<tr><td>").append(room).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(rs.getDouble(FieldKey.fromString("pctWithProblem")) + "%").append("</a>").append("</td></tr>");
             }
 
             if (idx > 0)

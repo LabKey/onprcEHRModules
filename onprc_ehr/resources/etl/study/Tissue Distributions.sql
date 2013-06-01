@@ -14,25 +14,28 @@
  * limitations under the License.
  */
 Select
-	cast(td.AnimalID as varchar(4000)) as Id,
-	td.Date,
-	s3.Value as Origination,
-	ptd.Recipient,						--Ref_TissueRecipients
-	ptd.Organ as tissue,							--Ref_Snomed
-	sno.Description as tissueMeaning,
-	--ptd.Affiliation as AffiliationInt,
-	s1.Value as requestCategory,
-	--Sample as SampleInt,
-	s2.Value as sampleType,
+  cast(td.AnimalID as varchar(4000)) as Id,
+  td.Date,
+  s3.Value as Origination,
 
-	ptd.objectid
+  (select rowid from labkey.onprc_ehr.tissue_recipients r where r.objectid = tr.objectid) as recipient,
+--ptd.Recipient,						--Ref_TissueRecipients
+  ptd.Organ as tissue,							--Ref_Snomed
+  sno.Description as tissueMeaning,
+--ptd.Affiliation as AffiliationInt,
+  s1.Value as requestCategory,
+--Sample as SampleInt,
+  s2.Value as sampleType,
+
+  ptd.objectid
 
 From Path_TissueDistributions td
-	left join Path_TissueDetails ptd on (td.tissueId = ptd.tissueid)
-	left join Sys_Parameters s1 on (s1.Field = 'TissueAffiliation' and ptd.Affiliation = s1.Flag)
-	left join Sys_Parameters s2 on (s2.Field = 'TissueSample' and ptd.Sample = s2.Flag)
-	left join Sys_Parameters s3 on (s3.flag = td.Origination And s3.Field = 'TissueOrigination' )
-	left join ref_snomed sno on (sno.SnomedCode = ptd.organ)
+  left join Path_TissueDetails ptd on (td.tissueId = ptd.tissueid)
+  left join Sys_Parameters s1 on (s1.Field = 'TissueAffiliation' and ptd.Affiliation = s1.Flag)
+  left join Sys_Parameters s2 on (s2.Field = 'TissueSample' and ptd.Sample = s2.Flag)
+  left join Sys_Parameters s3 on (s3.flag = td.Origination And s3.Field = 'TissueOrigination' )
+  left join ref_snomed sno on (sno.SnomedCode = ptd.organ)
+  left join Ref_TissueRecipients tr ON (tr.recipientId = ptd.recipient)
 
 WHERE (ptd.ts > ? or td.ts > ?)
 

@@ -309,6 +309,44 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             }
         }
 
+        customizeDateColumn(ti);
+
+    }
+
+    private void customizeDateColumn(AbstractTableInfo ti)
+    {
+        ColumnInfo dateCol = ti.getColumn("date");
+        if (dateCol == null)
+            return;
+
+        String calendarYear = "calendarYear";
+        if (ti.getColumn(calendarYear) == null)
+        {
+            SQLFragment sql = new SQLFragment(ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + ".date"));
+            ExprColumn calCol = new ExprColumn(ti, calendarYear, sql, JdbcType.INTEGER, dateCol);
+            calCol.setLabel("Calendar Year");
+            calCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+            calCol.setHidden(true);
+            ti.addColumn(calCol);
+
+            String fiscalYear = "fiscalYear";
+            SQLFragment sql2 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + ".date") + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, ExprColumn.STR_TABLE_ALIAS + ".date") + " < 5 THEN -1 ELSE 0 END)");
+            ExprColumn fiscalYearCol = new ExprColumn(ti, fiscalYear, sql2, JdbcType.INTEGER, dateCol);
+            fiscalYearCol.setLabel("Fiscal Year (May 1)");
+            fiscalYearCol.setDescription("This column will calculate the fiscal year of the record, based on a May 1 cycle");
+            fiscalYearCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+            fiscalYearCol.setHidden(true);
+            ti.addColumn(fiscalYearCol);
+
+            String fiscalYearJuly = "fiscalYearJuly";
+            SQLFragment sql3 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + ".date") + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, ExprColumn.STR_TABLE_ALIAS + ".date") + " < 7 THEN -1 ELSE 0 END)");
+            ExprColumn fiscalYearJulyCol = new ExprColumn(ti, fiscalYearJuly, sql3, JdbcType.INTEGER, dateCol);
+            fiscalYearJulyCol.setLabel("Fiscal Year (July 1)");
+            fiscalYearJulyCol.setDescription("This column will calculate the fiscal year of the record, based on a July 1 cycle");
+            fiscalYearJulyCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+            fiscalYearJulyCol.setHidden(true);
+            ti.addColumn(fiscalYearJulyCol);
+        }
     }
 
     private void customizeAnimalTable(AbstractTableInfo ds)
@@ -340,6 +378,22 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "currentCondition", "demographicsCondition");
             col.setLabel("Condition");
+            //col.setDescription("");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("lastMense") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "lastMense", "demographicsLastMense");
+            col.setLabel("Mense Data");
+            //col.setDescription("");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("spfStatus") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "spfStatus", "demographicsSPF");
+            col.setLabel("SPF Status");
             //col.setDescription("");
             ds.addColumn(col);
         }
@@ -484,6 +538,15 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             SQLFragment sql = new SQLFragment("(select " + ti.getSqlDialect().getGroupConcat(new SQLFragment("pl.category"), true, true, chr + "(10)") + " FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)");
             ExprColumn newCol = new ExprColumn(ti, problemCategories, sql, JdbcType.VARCHAR, ti.getColumn("objectid"));
             newCol.setLabel("Master Problem(s)");
+            ti.addColumn(newCol);
+        }
+
+        String isActive = "isActive";
+        if (ti.getColumn(isActive) == null)
+        {
+            SQLFragment sql = new SQLFragment("(CASE WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL) THEN " + ti.getSqlDialect().getBooleanFALSE() + " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".reviewdate IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".reviewdate <= {fn curdate()}) THEN " + ti.getSqlDialect().getBooleanTRUE() + " ELSE " + ti.getSqlDialect().getBooleanTRUE() + " END)");
+            ExprColumn newCol = new ExprColumn(ti, isActive, sql, JdbcType.BOOLEAN, ti.getColumn("enddate"), ti.getColumn("reviewdate"));
+            newCol.setLabel("Is Active?");
             ti.addColumn(newCol);
         }
     }
@@ -762,6 +825,24 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ColumnInfo nameCol = ti.getColumn("name");
         nameCol.setHidden(false);
         nameCol.setLabel("Project");
+
+
+        String research = "isResearch";
+        if (ti.getColumn(research) == null)
+        {
+            ColumnInfo useCol = ti.getColumn("use_category");
+            SQLFragment sql1 = new SQLFragment("(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".use_category = 'Research' THEN 1 ELSE 0 END)");
+            ExprColumn col1 = new ExprColumn(ti, research, sql1, JdbcType.INTEGER, useCol);
+            col1.setLabel("Is Research?");
+            col1.setHidden(true);
+            ti.addColumn(col1);
+
+            SQLFragment sql2 = new SQLFragment("(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".use_category IN ('U24', 'U42') THEN 1 ELSE 0 END)");
+            ExprColumn col2 = new ExprColumn(ti, "isU24U42", sql2, JdbcType.INTEGER, useCol);
+            col2.setLabel("Is U24/U42?");
+            col2.setHidden(true);
+            ti.addColumn(col2);
+        }
     }
 
     private void customizeRooms(AbstractTableInfo ti)

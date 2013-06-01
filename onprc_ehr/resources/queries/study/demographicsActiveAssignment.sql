@@ -20,9 +20,10 @@ SELECT
   group_concat(DISTINCT cast(a.project.investigatorId.lastName as varchar), chr(10)) as investigators,
   group_concat(DISTINCT a.project.investigatorId.assignedVet.lastName, chr(10)) as vets,
   COALESCE(count(distinct a.project.name), 0) as totalProjects,
-  COALESCE(count(a.lsid), 0) as numActiveAssignments
+  COALESCE(count(a.lsid), 0) as numActiveAssignments,
+  COALESCE(SUM(a.project.isResearch), 0) as numResearchAssignments,
+  COALESCE(SUM(a.project.isU24U42), 0) as numU24U42Assignments
 
 FROM study.demographics d
-LEFT JOIN study.assignment a ON (a.id = d.id)
-WHERE (a.enddateCoalesced >= curdate() or a.lsid IS NULL) and d.calculated_status = 'Alive'
+LEFT JOIN study.assignment a ON (a.id = d.id AND a.enddateCoalesced >= curdate())
 GROUP BY d.id

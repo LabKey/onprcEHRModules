@@ -206,7 +206,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("roomUtilization"), Table.ALL_COLUMNS, filter, null);
         if (ts.getRowCount() > 0)
         {
-            msg.append("<b>WARNING: The following rooms reports a negative number for available cages.  This probably means there is a problem in the cage divider configuration, or an animal is listed as being housed in the higher-numbered cage of a joined pair:</b><br>\n");
+            msg.append("<b>WARNING: The following rooms report a negative number for available cages.  This probably means there is a problem in the cage divider configuration, or an animal is listed as being housed in the higher-numbered cage of a joined pair:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
@@ -237,9 +237,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), Table.ALL_COLUMNS, filter, new Sort("room"));
-        if (ts.getRowCount() > 0)
+        long count = ts.getRowCount();
+        if (count > 0)
         {
-            msg.append("<b>WARNING: The following rooms have animals with mixed viral statuses:\n");
+            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses:\n");
             msg.append(" <a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=housingMixedViralStatus&query.distinctStatuses~gt=1'>Click here to view this list</a></b><p></p>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
@@ -397,38 +398,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void animalsLackingAssignments(final Container c, User u, final StringBuilder msg)
     {
-        QueryHelper qh = new QueryHelper(c, u, "study", "Demographics", "No Active Assignments");
-        Results rs = null;
-        try
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/activeAssignments/numActiveAssignments"), 0, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id/Demographics/calculated_status"), "Alive", CompareType.EQUAL);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), Collections.singleton("Id"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
         {
-            rs = qh.select();
-            int count = 0;
-            StringBuilder tmpHtml = new StringBuilder();
-            Set<String> ids = new HashSet<String>();
-
-            while (rs.next())
-            {
-                ids.add(rs.getString(getStudy(c).getSubjectColumnName()));
-                count++;
-            }
-
-            tmpHtml.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Demographics&query.viewName=No Active Assignments'>Click here to view these animals</a></p>\n");
-            tmpHtml.append("<hr>\n");
-
-            if (count > 0)
-            {
-                msg.append("<b>WARNING: There are " + count + " living animals without any active assignments:</b><br>\n");
-                msg.append(StringUtils.join(new ArrayList<String>(ids), ",<br>"));
-                msg.append(tmpHtml);
-            }
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeSQLException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
+            msg.append("<b>WARNING: There are " + count + " living animals without any active assignments:</b><br>\n");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Demographics&query.Id/activeAssignments/numActiveAssignments~eq=0&query.Id/Demographics/calculated_status~eq=Alive'>Click here to view them</a><br>\n\n");
         }
     }
 
@@ -940,21 +917,21 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are " + count + " animals housed in cages that should not be available, based on the cage/divider configuration.</b><br>\n");
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=housedInUnavailableCages'>Click here to view them</a><br>\n\n");
 
-            final Set<String> rooms = new TreeSet<String>();
+            final Map<String, String> locations = new TreeMap<String, String>();
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
                 {
-                    rooms.add(object.getString("room"));
+                    locations.put(object.getString("room"), object.getString("room") + " / " + object.getString("cage"));
                 }
             });
 
             msg.append("<br>");
-            for (String room : rooms)
+            for (String room : locations.keySet())
             {
                 String url = AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/cageDetails.view?room=" + room;
-                msg.append("<a href='" + url + "'>" + room + "</a><br>");
+                msg.append("<a href='" + url + "'>" + locations.get(room) + "</a><br>");
             }
 
             msg.append("<br><hr>\n\n");
@@ -1069,7 +1046,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.DATE, -5);
+        cal.add(Calendar.DATE, -3);
 
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ);
@@ -1088,7 +1065,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " blood draws within the past 5 days exceeding the allowable volume. Click the IDs below to see more information:</b><br>");
+            msg.append("<b>WARNING: There are " + count + " blood draws within the past 3 days exceeding the allowable volume. Click the IDs below to see more information:</b><br><br>");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
             {
                 public void exec(ResultSet object) throws SQLException
@@ -1100,7 +1077,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     Double amount = -1.0 * rs.getDouble(FieldKey.fromString("BloodRemaining/availableBlood"));
                     text.append(": ").append(DecimalFormat.getNumberInstance().format(amount)).append(" mL overdrawn on ").append(_dateFormat.format(rs.getDate(FieldKey.fromString("date"))));
 
-                    String url = AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/participantView.view?participantId=" + rs.getString(getStudy(c).getSubjectColumnName());
+                    //String url = getParticipantURL(c, rs.getString(getStudy(c).getSubjectColumnName()));
+                    String url = getBaseUrl(c) + "schemaName=study&query.queryName=Blood Draws&query.viewName=With Blood Volume&query.Id~eq=" + rs.getString(getStudy(c).getSubjectColumnName());
                     msg.append("<a href='" + url + "'>" + text.toString() + "</a><br>\n");
                 }
             });
@@ -1366,7 +1344,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     /**
      * Displays any animal groups with members in multiple rooms, excluding the hospital
      */
-    protected void animalGroupsAcrossRooms(Container c, User u, final StringBuilder msg)
+    protected void animalGroupsAcrossRooms(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("totalRooms"), 1, CompareType.GT);
 
@@ -1381,10 +1359,31 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " groups with members located in more than 1 room, excluding hospital rooms.</b><br>");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=animalGroupLocationSummary&query.totalRooms~gt=1'>Click here to view them</a><br>\n");
+            msg.append("<b>WARNING: There are " + count + " animal groups with members located in more than 1 room, excluding hospital rooms.  This may indicate that group designations need to be updated for some of the animals.</b><br>");
+            final String url = getBaseUrl(c) + "schemaName=study&query.queryName=animalGroupLocationSummary&query.totalRooms~gt=1";
+            msg.append("<p><a href='" + url + "'>Click here to view them</a><br><br>\n");
+
+            msg.append("<table border=1 style='border-collapse: collapse;'>\n");
+            ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
+            {
+                public void exec(ResultSet object) throws SQLException
+                {
+                    ResultsImpl rs = new ResultsImpl(object, columns);
+                    String summary = rs.getString(FieldKey.fromString("roomSummary"));
+                    if (summary != null)
+                    {
+                        summary = summary.replaceAll("\\)\n", ")<br>");
+                        summary = summary.replaceAll("\n", " / ");
+                    }
+
+                    String group = rs.getString(FieldKey.fromString("groupId/name"));
+                    String url2 = url + "&query.groupId/name~eq=" + group;
+                    msg.append("<tr><td style='vertical-align:top;'><a href='" + url2 + "'>" + group + ":</a></td><td><a href='" + url2 + "'>" + summary + "</a></td></tr>\n");
+                }
+            });
+            msg.append("</table>\n");
             msg.append("<hr>\n");
-        }
+       }
     }
 
     /**
@@ -1433,18 +1432,42 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     /**
      * Displays any infants not housed with the dam
      */
-    protected void infantsNotWithMother(Container c, User u, final StringBuilder msg)
+    protected void infantsNotWithMother(final Container c, User u, final StringBuilder msg)
     {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("ageInDays"), 180, CompareType.LTE);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/age/ageInDays"), 180, CompareType.LTE);
+        filter.addCondition(FieldKey.fromString("Id/demographics/calculated_status"), "Alive", CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 191", CompareType.NEQ);
+        filter.addCondition(FieldKey.fromString("withMother"), 0, CompareType.EQUAL);
 
         TableInfo ti = getStudySchema(c, u).getTable("infantsSeparateFromMother");
 
-        TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, filter, null);
+        Set<FieldKey> fieldKeys = new HashSet<FieldKey>();
+        fieldKeys.add(FieldKey.fromString("Id"));
+        fieldKeys.add(FieldKey.fromString("Id/curLocation/room"));
+        fieldKeys.add(FieldKey.fromString("Id/curLocation/cage"));
+        final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, fieldKeys);
+
+        TableSelector ts = new TableSelector(ti, cols.values(), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animals under 180 days old not housed with their mother</b><br>");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=infantsSeparateFromMother&query.ageInDays~lte=180'>Click here to view them</a><br>\n");
+            msg.append("<b>WARNING: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in ASB RM 191</b><br><br>");
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    ResultsImpl rs = new ResultsImpl(object, cols);
+                    String subjectId = rs.getString(getStudy(c).getSubjectColumnName());
+                    String location = rs.getString(FieldKey.fromString("Id/curLocation/room"));
+                    String cage = rs.getString(FieldKey.fromString("Id/curLocation/cage"));
+                    if (cage != null)
+                        location += " " + cage;
+
+                    String url = getParticipantURL(c, subjectId);
+                    msg.append("<a href='" + url + "'>" + subjectId + " (" + location + ")</a><br>\n");
+                }
+            });
             msg.append("<hr>\n");
         }
     }
@@ -1489,5 +1512,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Drug Administration&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~gt=300'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
+    }
+
+    protected String getParticipantURL(Container c, String id)
+    {
+        return AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/participantView.view?participantId=" + id;
     }
 }

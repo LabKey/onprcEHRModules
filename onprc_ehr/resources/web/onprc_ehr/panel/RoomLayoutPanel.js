@@ -172,10 +172,11 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                             var bgColor = '';
                             var emptyCageColor = '#00EE00';
                             var prevCage = (colIdx > 1) ? cages[colIdx - 1] : null;
+                            var cageType = row.getValue('cage_type');
+                            var cageAnimals = row.getValue('totalAnimals/animals');
                             if (prevCage){
                                 var prevIsSeparate = prevCage.getValue('divider/countAsSeparate');
                                 var prevAnimals = prevCage.getValue('totalAnimals/animals');
-                                var cageAnimals = row.getValue('totalAnimals/animals');
 
                                 if (!prevIsSeparate && !Ext4.isEmpty(cageAnimals))
                                     bgColor = 'red';
@@ -185,11 +186,26 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                                 if (!prevIsSeparate && Ext4.isEmpty(cageAnimals) && Ext4.isEmpty(prevAnimals))
                                     bgColor = emptyCageColor;
+
+                                if (cageType == 'No Cage'){
+                                    if (!Ext4.isEmpty(cageAnimals))
+                                        bgColor = 'red';
+                                    else
+                                        bgColor = 'grey';
+                                }
                             }
                             else {
                                 //flag cage if empty
                                 if (Ext4.isEmpty(row.getValue('totalAnimals/animals'))){
                                     bgColor = emptyCageColor;
+                                }
+
+                                //also if no cage present
+                                if (cageType == 'No Cage'){
+                                    if (!Ext4.isEmpty(cageAnimals))
+                                        bgColor = 'red';
+                                    else
+                                        bgColor = 'grey';
                                 }
                             }
 

@@ -73,7 +73,7 @@
                 <ns:columnTitle>Division</ns:columnTitle>
             </ns:column>
             <ns:column columnName="assignedVet">
-                <ns:columnTitle>Assigned Vet</ns:columnTitle>
+                <ns:columnTitle>Responsible Vet</ns:columnTitle>
                 <ns:fk>
                     <ns:fkDbSchema>core</ns:fkDbSchema>
                     <ns:fkTable>users</ns:fkTable>
@@ -116,6 +116,87 @@
             <ns:column columnName="interval">
                 <ns:columnTitle>Test Interval (Months)</ns:columnTitle>
             </ns:column>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="tissue_recipients" tableDbType="TABLE">
+        <ns:tableTitle>Tissue Recipients</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:columns>
+            <ns:column columnName="rowId"/>
+            <ns:column columnName="firstName">
+                <ns:columnTitle>First Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="lastName">
+                <ns:columnTitle>Last Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="institution">
+                <ns:columnTitle>Institution</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="title">
+                <ns:columnTitle>Title</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="affiliation">
+                <ns:columnTitle>Affilication</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="address">
+                <ns:columnTitle>Address</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="city">
+                <ns:columnTitle>City</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="state">
+                <ns:columnTitle>State</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="country">
+                <ns:columnTitle>Country</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="zip">
+                <ns:columnTitle>ZIP</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="phoneNumber">
+                <ns:columnTitle>Phone Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="recipientType">
+                <ns:columnTitle>Recipient Type</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="emailAddress">
+                <ns:columnTitle>Email Address</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="shipAddress">
+                <ns:columnTitle>Ship Address</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="shipCity">
+                <ns:columnTitle>Ship City</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="shipState">
+                <ns:columnTitle>Ship State</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="shipCountry">
+                <ns:columnTitle>Ship Country</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="shipZip">
+                <ns:columnTitle>Ship ZIP</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="dateCreated">
+                <ns:columnTitle>Date Created</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="dateDisabled">
+                <ns:columnTitle>Date Disabled</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="investigatorId">
+                <ns:columnTitle>Investigator</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_ehr</ns:fkDbSchema>
+                    <ns:fkTable>investigators</ns:fkTable>
+                    <ns:fkColumnName>rowId</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="objectid"/>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdby"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedby"/>
+            <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
 </ns:tables>

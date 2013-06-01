@@ -21,9 +21,9 @@ y.CurrentYearStartDate as start,
 y.CurrentYearEndDate as endDate,
 a.NumAnimalsAssigned as allowed,
 CASE
-  WHEN sp.commonname = 'Cynomolgus' THEN 'CYNOMOLGUS MACAQUE'
-  WHEN sp.commonname = 'Rhesus' THEN 'RHESUS MACAQUE'
-  WHEN sp.commonname = 'Japanese' THEN 'JAPANESE MACAQUE'
+  WHEN sp.commonname like '%Cynomolgus%' THEN 'CYNOMOLGUS MACAQUE'
+  WHEN sp.commonname like '%Rhesus%' THEN 'RHESUS MACAQUE'
+  WHEN sp.commonname like '%Japanese%' THEN 'JAPANESE MACAQUE'
   ELSE sp.CommonName
 END as species,
 CASE

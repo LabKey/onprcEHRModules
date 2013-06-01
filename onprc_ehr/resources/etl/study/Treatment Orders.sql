@@ -17,18 +17,19 @@
 select
 t.id,
 t.date,
-t.code,
-t.snomedMeaning,
-t.amount,
-t.amount_units,
-t.route,
 t.frequency,
+--t.times,
 CASE 
   WHEN t.enddate is null THEN t.alternateEnd
   WHEN t.alternateEnd is null then t.enddate
   WHEN t.alternateEnd < t.enddate THEN t.alternateEnd
   ELSE t.enddate
 END as enddate,
+t.code,
+t.snomedMeaning,
+t.amount,
+t.amount_units,
+t.route,
 t.Reason,
 t.performedBy,
 t.Remark,
@@ -58,9 +59,7 @@ SELECT
 
 	--Reason as ReasonInt  ,
 	s5.Value as Reason,
-
-	--TODO
-	--RenewalFlag as RenewalFlag ,
+	--(select labkey.core.GROUP_CONCAT_DS(mt.medicationtime, ',', 1) as time FROM Cln_MedicationTimes mt where cln.SearchKey=mt.SearchKey) as times,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
@@ -93,6 +92,7 @@ FROM Cln_Medications cln
      left join ref_snomed sno on (sno.SnomedCode = cln.Medication)
      left join Af_Qrf q on (q.animalid = cln.animalid)
 
-where Medication is not null and Medication != ''
-AND cln.ts > ? or q.ts > ?
+where Medication is not null and Medication != '' 
+AND (cln.ts > ? or q.ts > ?)
+
 ) t

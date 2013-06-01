@@ -935,11 +935,25 @@ public class LegacyDataManager
         }
 
         final Map<String, List<Map<String, Object>>> runs = new HashMap<String, List<Map<String, Object>>>();
-        final Map<String, Date> runDateMap = new HashMap<String, Date>();
+        final Map<String, Map<String, Object>> runPropMap = new HashMap<String, Map<String, Object>>();
 
         SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
         filter.addCondition("animalid", " ", CompareType.NEQ);
         filter.addCondition("abs_allele1", ":", CompareType.DOES_NOT_CONTAIN);
+
+        TableInfo projectTable = schema.getTable("Projects");
+        TableSelector projectSelector = new TableSelector(projectTable, Table.ALL_COLUMNS, null, null);
+        final Map<Integer, String> projectMap = new HashMap<Integer, String>();
+        projectSelector.forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Integer proj = rs.getInt("ProjectID");
+                String projDesc = rs.getString("ProjDescription");
+                projectMap.put(proj, projDesc);
+            }
+        });
 
         TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, filter, new Sort("expdate"));
         ts.forEach(new Selector.ForEachBlock<ResultSet>()
@@ -949,6 +963,7 @@ public class LegacyDataManager
             {
                 Date exptDate = rs.getDate("expdate");
                 String expId = rs.getString("RemoteExpId");
+                String projDescription = projectMap.get(rs.getInt("ProjectID"));
 
                 String expName = null;
                 if (exptDate != null)
@@ -957,7 +972,9 @@ public class LegacyDataManager
                     expName = "Expt " + expId;
 
                 String runName = "GRIP Genotype Data" + (expName == null ? "" : ": " + expName);
-                runDateMap.put(runName, exptDate);
+                Map<String, Object> runProps = new HashMap<String, Object>();
+                runProps.put("runDate", exptDate);
+                runProps.put("purpose", projDescription);
 
                 ExpRun[] existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
                 if (existingRuns.length > 0)
@@ -975,6 +992,18 @@ public class LegacyDataManager
                 Map<String, Object> row1 = new HashMap<String, Object>();
                 Map<String, Object> row2 = new HashMap<String, Object>();
 
+                String marker = rs.getString("MarkerId");
+                if (marker != null)
+                {
+                    if (marker.endsWith("DA"))
+                    {
+                        runProps.put("method", "UC Davis");
+                    }
+                    else if (marker.endsWith("SW"))
+                    {
+                        runProps.put("method", "Southwest");
+                    }
+                }
                 row1.put("subjectId", rs.getObject("AnimalId"));
                 row1.put("date", rs.getObject("expdate"));
                 row1.put("category", "Unknown");
@@ -1051,6 +1080,7 @@ public class LegacyDataManager
                     }
                 }
 
+                runPropMap.put(runName, runProps);
                 List<Map<String, Object>> results = runs.get(runName);
                 if (results == null)
                     results = new ArrayList<Map<String, Object>>();
@@ -1065,7 +1095,7 @@ public class LegacyDataManager
             }
         });
 
-        createRuns(ctx, protocol, validateOnly, runDateMap, sb, runs, method, "STR");
+        createRuns(ctx, protocol, validateOnly, runPropMap, sb, runs, method, "STR");
 
         return sb.toString();
     }
@@ -1103,7 +1133,7 @@ public class LegacyDataManager
         }
 
         final Map<String, List<Map<String, Object>>> runs = new HashMap<String, List<Map<String, Object>>>();
-        final Map<String, Date> runDateMap = new HashMap<String, Date>();
+        final Map<String, Map<String, Object>> runPropMap = new HashMap<String, Map<String, Object>>();
 
         SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
         filter.addCondition("animalid", " ", CompareType.NEQ);
@@ -1125,7 +1155,9 @@ public class LegacyDataManager
                     expName = "Expt " + expId;
 
                 String runName = "GRIP SNP Data" + (expName == null ? "" : ": " + expName);
-                runDateMap.put(runName, exptDate);
+                Map<String, Object> runProps = new HashMap<String, Object>();
+                runProps.put("runDate", exptDate);
+                runPropMap.put(runName, runProps);
 
                 ExpRun[] existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
                 if (existingRuns.length > 0)
@@ -1217,7 +1249,7 @@ public class LegacyDataManager
             }
         });
 
-        createRuns(ctx, protocol, validateOnly, runDateMap, sb, runs, method, "STR");
+        createRuns(ctx, protocol, validateOnly, runPropMap, sb, runs, method, "STR");
 
         return sb.toString();
     }
@@ -1254,7 +1286,7 @@ public class LegacyDataManager
         }
 
         final Map<String, List<Map<String, Object>>> runs = new HashMap<String, List<Map<String, Object>>>();
-        final Map<String, Date> runDateMap= new HashMap<String, Date>();
+        final Map<String, Map<String, Object>> runPropMap = new HashMap<String, Map<String, Object>>();
 
         SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
         filter.addCondition("animalid", " ", CompareType.NEQ);
@@ -1323,17 +1355,17 @@ public class LegacyDataManager
             }
         });
 
-        createRuns(ctx, protocol, validateOnly, runDateMap, sb, runs, method);
+        createRuns(ctx, protocol, validateOnly, runPropMap, sb, runs, method);
 
         return sb.toString();
     }
 
-    private void createRuns(ViewContext ctx, ExpProtocol protocol, boolean validateOnly, Map<String, Date> runDateMap, StringBuilder sb, Map<String, List<Map<String, Object>>> runs, AssayImportMethod method)
+    private void createRuns(ViewContext ctx, ExpProtocol protocol, boolean validateOnly, Map<String, Map<String, Object>> runPropMap, StringBuilder sb, Map<String, List<Map<String, Object>>> runs, AssayImportMethod method)
     {
-        createRuns(ctx, protocol, validateOnly, runDateMap, sb, runs, method, null);
+        createRuns(ctx, protocol, validateOnly, runPropMap, sb, runs, method, null);
     }
 
-    private void createRuns(ViewContext ctx, ExpProtocol protocol, boolean validateOnly, Map<String, Date> runDateMap, StringBuilder sb, Map<String, List<Map<String, Object>>> runs, AssayImportMethod method, String assayType)
+    private void createRuns(ViewContext ctx, ExpProtocol protocol, boolean validateOnly, Map<String, Map<String, Object>> runPropMap, StringBuilder sb, Map<String, List<Map<String, Object>>> runs, AssayImportMethod method, String assayType)
     {
         for (String name : runs.keySet())
         {
@@ -1343,8 +1375,10 @@ public class LegacyDataManager
             JSONObject runProperties = new JSONObject();
 
             runProperties.put(ExperimentJSONConverter.NAME, name);
-            if (runDateMap.containsKey(name))
-                runProperties.put("runDate", runDateMap.get(name));
+            if (runPropMap.containsKey(name))
+            {
+                runProperties.putAll(runPropMap.get(name));
+            }
             if (assayType != null)
                 runProperties.put("assayType", assayType);
 

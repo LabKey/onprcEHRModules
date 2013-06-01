@@ -10,7 +10,7 @@ SELECT
 -- d.id.curLocation.cage as CurrentCage,
 d.id,
 d.calculated_status,
-s.*,
+s.*
 -- s.lsid || '||' || s.date as primaryKey2,
 -- s.objectid || '||' || s.date as primaryKey,
 --(SELECT max(d.qcstate) as label FROM study.drug d WHERE (s.objectid || '||' || s.date) = d.treatmentid) as treatmentStatus,
@@ -25,8 +25,12 @@ SELECT
   t1.dataset,
   t1.id as animalid,
 
-  timestampadd('SQL_TSI_HOUR', ft.hourofday, d.date) as date,
+  timestampadd('SQL_TSI_HOUR', coalesce(tt.time, ft.hourofday), dr.date) as date,
   ft.timedescription as timeOfDay,
+  CASE
+    WHEN (tt.time IS NULL) THEN 'Default'
+    ELSE 'Custom'
+  END as timeType,
 
   t1.frequency.meaning as frequency,
   t1.date as StartDate,
@@ -53,19 +57,20 @@ SELECT
   t1.remark,
   --t1.description,
 
-  t1.qcstate,
+  t1.qcstate
 
-FROM ehr_lookups.next30Days d
+FROM ehr_lookups.dateRange dr
 
 JOIN study."Treatment Orders" t1
-  ON (d.date >= t1.date and d.dateOnly <= t1.enddateCoalesced AND
-    mod(timestampdiff('SQL_TSI_DAY', curdate(), d.dateOnly), t1.frequency.intervalindays) = 0
+  ON (dr.date >= t1.date and dr.dateOnly <= t1.enddateCoalesced AND
+    mod(timestampdiff('SQL_TSI_DAY', curdate(), dr.dateOnly), t1.frequency.intervalindays) = 0
   )
 
-JOIN ehr_lookups.treatment_frequency_times ft ON (ft.frequency = t1.frequency.meaning)
+LEFT JOIN ehr.treatment_times tt ON (tt.treatmentid = t1.objectid)
+LEFT JOIN ehr_lookups.treatment_frequency_times ft ON (ft.frequency = t1.frequency.meaning AND tt.rowid IS NULL)
 
 -- LEFT JOIN study.assignment a1
---   ON (a1.project = t1.project AND a1.dateOnly <= cast(d.date as date) AND a1.enddateCoalesced >= CAST(d.date as date) AND a1.id = t1.id)
+--   ON (a1.project = t1.project AND a1.dateOnly <= cast(dr.date as date) AND a1.enddateCoalesced >= CAST(dr.date as date) AND a1.id = t1.id)
 
 WHERE t1.date is not null AND t1.qcstate.publicdata = true
 

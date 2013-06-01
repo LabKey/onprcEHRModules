@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 SELECT
-  d.id,
-  d.id.curLocation.room,
-  d.id.curLocation.cage,
-  d.id.age.ageInDays,
+  t.id,
+  max(t.status) as withMother
 
-  d2.dam as dam,
-  dl.room as damRoom,
-  dl.cage as damCage,
+FROM (
+
+SELECT
+  d.id,
+  CASE
+    WHEN (d.id.curLocation.room = dl.room AND coalesce(d.id.curLocation.cage, '') = coalesce(dl.cage, '')) THEN 1
+    ELSE 0
+  END as status,
 
 FROM study.demographics d
 
-LEFT JOIN study.demographicsParents d2 ON (d.id = d2.id)
+LEFT JOIN study.parentageSummary d2 ON (d.id = d2.Id and d2.relationship like '%Dam%')
 
-LEFT JOIN study.demographicsCurrentLocation dl ON (d2.dam = dl.id)
+LEFT JOIN study.demographicsCurrentLocation dl ON (d2.parent = dl.id)
 
-WHERE d.id.curLocation.room != dl.room AND coalesce(d.id.curLocation.cage, '') != coalesce(dl.cage, '')
+) t
+
+GROUP BY t.Id

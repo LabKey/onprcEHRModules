@@ -14,6 +14,7 @@
         <column name="reason" />
         <!--<column name="taskId"/>-->
         <!--<column name="qcstate"/>-->
+        <column name="timeType"/>
     </columns>
     <sorts>
         <sort column="date"/>

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
---TODO: split this table between flags, notes and animal groups
 
 Select
 	cast(p.AnimalID as nvarchar(4000)) as Id,
 	--p.PoolCode as PoolCode,    ----- Ref_Pool
 	rtrim(ltrim(rp.ShortDescription)) AS flag,
+	rtrim(ltrim(rp.ShortDescription)) AS category,
 	rp.Description as value,
 
 	DateAssigned as date,
@@ -30,7 +30,7 @@ Select
 	--Status as  Status,            ---- flag = 1 Active pools, Flag = 0 Inactive Pools
 
 	--p.ts as rowversion,
-	p.objectid
+	cast(p.objectid as varchar(38)) as objectid
 
 From Af_Pool p
 left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
@@ -44,15 +44,38 @@ select
 
 r.animalid as Id,
 null as flag,
+'Genetics' as category,
 'Sample sent for parentage' as value,
 r.DateProcessed as date,
 coalesce(q.deathdate, q.departuredate) as enddate,
-r.objectid
+(cast(r.objectid as varchar(38)) + '_parentage') as objectid
 
 from Res_DNABank r
-left join Af_Qrf q on (cast(q.AnimalID as nvarchar(4000)) = r.animalid)
+join Af_Qrf q on (cast(q.AnimalID as nvarchar(4000)) = r.animalid)
 
 where r.DateProcessed is not null
 --exclude non-center animals
 and r.animalid not like '%n' and r.animalid not like '%f'
 and (r.ts > ? or q.ts > ?)
+
+UNION ALL
+
+select
+
+  r.animalid as Id,
+  null as flag,
+  'Genetics' as category,
+  'Blood drawn for DNA Bank' as value,
+  r.DateProcessed as date,
+  coalesce(q.deathdate, q.departuredate) as enddate,
+  (cast(r.objectid as varchar(38)) + '_dna') as objectid
+
+from Res_DNABank r
+  join Af_Qrf q on (cast(q.AnimalID as nvarchar(4000)) = r.animalid)
+  left join Sys_Parameters s ON (r.Project = s.Flag AND s.Field = 'DNAProject')
+
+where r.DateProcessed is not null
+      --exclude non-center animals
+      and (r.animalid not like '%n' and r.animalid not like '%f')
+      and s.Value = 'DNA Bank'
+      and (r.ts > ? or q.ts > ?)

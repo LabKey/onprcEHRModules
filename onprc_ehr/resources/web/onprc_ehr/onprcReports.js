@@ -345,11 +345,25 @@ EHR.reports.clinicalHistory = function(panel, tab){
     }
 }
 
-//Temporary:
 EHR.reports.treatmentSchedule = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    var date = (new Date()).format('Y-m-d');
     tab.add({
-        html: 'This report will show treatments that need to be given today',
-        border: false
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'treatmentSchedule',
+            title: 'Treatment Schedule ' + title,
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable,
+            parameters: {
+                StartDate: date,
+                NumDays: 0
+            }
+        })
     });
 }
 

@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 SELECT
-p.ohsuaccountnumber as account,
-MAX(CONVERT(varchar(38), p.objectid)) as objectid,
+  m.objectid as treatmentid,
+  cln.objectid,
+  cast(cln.MedicationTime as int) as time
 
-count(*) as total
+FROM Cln_MedicationTimes cln
+left join Cln_Medications m on (m.SearchKey = cln.SearchKey)
 
-FROM Ref_ProjectAccounts p
-
-WHERE p.datedisabled is null and datalength(p.OHSUAccountNumber) > 0 
-and p.OHSUAccountNumber != ' '
-and p.OHSUAccountNumber != '0'
-and p.OHSUAccountNumber != '00000000000'
-and p.OHSUAccountNumber NOT LIKE '111%'
-
-group by p.ohsuaccountnumber
-
-having MAX(ts) > ?
+where m.AnimalId is not null and cln.medicationtime is not null
+and (cln.ts > ? or m.ts > ?)

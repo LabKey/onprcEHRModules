@@ -46,7 +46,7 @@ SELECT
 	Foster_Start_Date as date,
 	Foster_End_Date as enddate,
 	cast(Foster_Mom as nvarchar(4000)) as parent,
-    'Foster Mother' as relationship,	
+    'Foster Dam' as relationship,
     'Observed' as method, 	
 	cast(objectid as varchar(38)) as objectid
 From iris_production.dbo.Birth_FosterMom
@@ -59,7 +59,7 @@ select
 	b.Date as date,
 	null as enddate,
 	cast(b.SurrogateMotherID as nvarchar(4000)) as parent,
-    'Surrogate Mother' as relationship,
+    'Surrogate Dam' as relationship,
     'Other' as method,
 	cast(objectid as varchar(38)) as objectid
 from iris_production.dbo.Af_Birth b

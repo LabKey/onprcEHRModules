@@ -2,6 +2,6 @@
     <sorts>
         <sort column="room/sort_order"/>
         <sort column="row"/>
-        <sort column="column"/>
+        <sort column="columnIdx"/>
     </sorts>
 </customView>

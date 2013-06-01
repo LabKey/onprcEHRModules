@@ -99,10 +99,10 @@ select
     q.AnimalID,
     --labkey.core.group_concat_d(a.PoolCode, ',') as codes,
     CASE
-        WHEN q.Species = 291 THEN 'Japanese'
-        WHEN q.Species = 305 AND count(distinct a.PoolCode) = 1 AND max(a.PoolCode) = 1052 THEN 'Chinese'
-        WHEN q.Species = 305 AND count(distinct a.PoolCode) = 1 AND max(a.PoolCode) = 1053 THEN 'Chinese Indian Cross'
-        WHEN q.Species = 305 AND count(distinct a.PoolCode) = 1 AND max(a.PoolCode) = 1050 THEN 'Indian'
+        WHEN q.Species = 291 THEN 'Japan'
+        WHEN q.Species = 305 AND count(distinct a.PoolCode) = 1 AND max(a.PoolCode) = 1052 THEN 'China'
+        WHEN q.Species = 305 AND count(distinct a.PoolCode) = 1 AND max(a.PoolCode) = 1053 THEN 'Hybrid (China / India)'
+        WHEN q.Species = 305 AND count(distinct a.PoolCode) = 1 AND max(a.PoolCode) = 1050 THEN 'India'
         else null
     END as geographic_origin,
     MAX(a.ts) as ts

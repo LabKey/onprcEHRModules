@@ -507,7 +507,8 @@ public class ETLRunnable implements Runnable
                                 likeWithIds.append(filterColumn.getValueSql("t") + " LIKE CAST((? " + delim + " '%') as nvarchar(4000)) ");
                             }
 
-                            if (count++ > 100)
+                            count++;
+                            if (count > 100)
                             {
                                 //if we have the DB table, just do the delete directly.
                                 log.info("attempting to delete " + count + " rows from table: " + targetTableName + " based on deleted_records, using: " + filterColumn.getFieldKey().toString());
@@ -1153,6 +1154,7 @@ public class ETLRunnable implements Runnable
             put("protocol_counts", new String[]{"IACUC_NHPYearly", "IACUC_NHPAnimals", "ref_ProjectsIACUC"});
             put("protocolProcedures", new String[]{"IACUC_NHPSurgeries", "Ref_SurgProcedure", "Ref_ProjectsIACUC"});
             put("snomed_tags", new String[]{"Cln_DxSnomed", "sur_snomed", "Path_AutopsyDiagnosis", "Path_BiopsyDiagnosis"});
+            put("treatment_times", new String[]{"Cln_MedicationTimes", "Cln_Medications"});
 
             put("cage", new String[]{"Ref_RowCage"});
             //note: this is skipped b/c records will get added directly to it outside of ETL

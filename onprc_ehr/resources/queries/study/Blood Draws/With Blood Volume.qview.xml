@@ -11,6 +11,7 @@
        </column>
        <column name="quantity" />
        <column name="performedby" />
+       <column name="reason" />
        <column name="remark" />
        <column name="BloodRemaining/lastWeight"/>
        <column name="BloodRemaining/allowableBlood"/>

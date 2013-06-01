@@ -73,7 +73,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.314;
+        return 12.315;
     }
 
     public boolean hasScripts()
@@ -140,7 +140,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Living Center Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Alive%2C at Center"), "Browse Animals");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Center Animals (including dead and shipped)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics"), "Browse Animals");
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Unassigned Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=No Active Assignments"), "Browse Animals");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Unassigned Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Assignment Info&query.Id/activeAssignments/numResearchAssignments~eq=0"), "Browse Animals");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Pregnant Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=pregnantAnimals"), "Browse Animals");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Population Summary By Species, Gender and Age", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=colonyPopulationByAge"), "Other Searches");
@@ -164,16 +164,19 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Birth Rate Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=birthRateBySpecies"), "Colony Management");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Animals Not On Termnal Projects", this, DetailsURL.fromString("/ehr/populationSummary.view?query.Id/demographics/calculated_status~eq=Alive&query.Id/terminal/status~eq=N"), "Colony Management");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Serology Testing Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=serologyTestSchedule&query.Id/demographics/calculated_status~eq=Alive"), "Colony Management");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Flag Usage Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=flagUsageSummary"), "Colony Management");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Matings 30-36 Days Ago", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Matings&query.viewName=30-36 Days Ago"), "Reproductive Management");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Offspring Over 250 Days, Still In Cage With Dam", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=offspringWithMother&query.viewName=Offspring Over 250 Days"), "Reproductive Management");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Pregnant Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=pregnantAnimals"), "Reproductive Management");
 
-        EHRService.get().registerActionOverride(EHRService.EHR_ACTION_TYPE.projectDetails, this, "views/projectDetails.html");
-        EHRService.get().registerActionOverride(EHRService.EHR_ACTION_TYPE.protocolDetails, this, "views/protocolDetails.html");
-        EHRService.get().registerActionOverride(EHRService.EHR_ACTION_TYPE.procedureDetails, this, "views/procedureDetails.html");
-        EHRService.get().registerActionOverride(EHRService.EHR_ACTION_TYPE.animalGroupDetails, this, "views/animalGroupDetails.html");
-        EHRService.get().registerActionOverride(EHRService.EHR_ACTION_TYPE.cageDetails, this, "views/cageDetails.html");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummary"), "Pathology");
+
+        EHRService.get().registerActionOverride("projectDetails", this, "views/projectDetails.html");
+        EHRService.get().registerActionOverride("protocolDetails", this, "views/protocolDetails.html");
+        EHRService.get().registerActionOverride("procedureDetails", this, "views/procedureDetails.html");
+        EHRService.get().registerActionOverride("animalGroupDetails", this, "views/animalGroupDetails.html");
+        EHRService.get().registerActionOverride("cageDetails", this, "views/cageDetails.html");
     }
 
     @Override

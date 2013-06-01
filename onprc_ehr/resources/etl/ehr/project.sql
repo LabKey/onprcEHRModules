@@ -43,19 +43,20 @@ select
 	CASE
 	  WHEN Rpi.IACUCCode LIKE '%0492%' THEN 0
 	  ELSE 1
-    END as research,
-    CASE
-      WHEN Rpi.IACUCCode = '0492-03' THEN 'U24'
-      WHEN Rpi.IACUCCode = '0492-02' THEN 'U42'
-      WHEN Rpi.IACUCCode = '0300' THEN 'Center Resource'
-      WHEN Rpi.IACUCCode = '0456' THEN 'Center Resource'
-      WHEN Rpi.IACUCCode = 'O833' THEN 'Center Resource'
-      WHEN Rpi.IACUCCode = '0095-50' THEN 'Center Resource'
-      WHEN Rpi.IACUCCode = '0689' THEN 'Center Resource'
-      WHEN Rpi.IACUCCode = '0794' THEN 'Center Resource'
+  END as research,
 
-      ELSE 'Research'
-    END as use_category
+  CASE
+    WHEN Rpi.IACUCCode = '0492-03' THEN 'U24'
+    WHEN Rpi.IACUCCode = '0492-02' THEN 'U42'
+    WHEN Rpi.IACUCCode = '0300' THEN 'Center Resource'
+    WHEN Rpi.IACUCCode = '0456' THEN 'Center Resource'
+    WHEN Rpi.IACUCCode = 'O833' THEN 'Center Resource'
+    WHEN Rpi.IACUCCode = '0095-50' THEN 'Center Resource'
+    WHEN Rpi.IACUCCode = '0689' THEN 'Center Resource'
+    WHEN Rpi.IACUCCode = '0794' THEN 'Center Resource'
+
+    ELSE 'Research'
+  END as use_category
 
 From Ref_ProjectsIACUC rpi
 	left join Ref_ProjInvest pc on (pc.ProjectID = rpi.ProjectID AND pc.DateDisabled is null and pc.PIFlag = 1 and pc.investigatorid != 0)

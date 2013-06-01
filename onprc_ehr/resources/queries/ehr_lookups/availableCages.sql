@@ -31,6 +31,7 @@ lc.divider,
 --if the divider on the left-hand cage is separating, then these cages are separate
 --and should be counted.  if there's no left-hand cage, always include
 CASE
+  WHEN c.cage_type = 'No Cage' THEN false
   WHEN lc.divider.countAsSeparate = false THEN false
   ELSE true
 END as isAvailable
@@ -39,4 +40,4 @@ FROM ehr_lookups.cage c
 --find the cage located to the left
 LEFT JOIN ehr_lookups.cage lc ON (lc.cage_type != 'No Cage' and c.room = lc.room and c.cagePosition.row = lc.cagePosition.row and (c.cagePosition.columnIdx - 1) = lc.cagePosition.columnIdx)
 
-WHERE c.cage_type != 'No Cage'
+WHERE c.room.housingType.value = 'Cage Location'

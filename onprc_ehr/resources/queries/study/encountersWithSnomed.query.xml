@@ -1,0 +1,13 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="encountersWithSnomed" tableDbType="TABLE">
+                <columns>
+                    <column columnName="objectid">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

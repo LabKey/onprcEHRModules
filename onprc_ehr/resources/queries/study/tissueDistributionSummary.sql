@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 SELECT
-  year(t.date) as year,
-  count(t.*) as totalSamples,
+  fiscalYear,
+  t.recipient.affiliation,
+  count(t.Id) as totalSamples,
   count(distinct t.Id) as distinctAnimals,
 
-FROM study.tissueDistribution t
+FROM study.tissueDistributions t
 
-GROUP BY year(t.date)
+GROUP BY fiscalYear, t.recipient.affiliation

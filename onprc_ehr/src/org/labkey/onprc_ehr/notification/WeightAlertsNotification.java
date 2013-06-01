@@ -225,7 +225,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
         if (summary.size() > 0)
         {
-            msg.append("<table border=1><tr><td>Area</td><td>Room</td><td>Cage</td><td>Id</td><td>Investigators</td><td>Assigned Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Dates</td><td>Days Between</td><td>Weight (kg)</td><td>Percent Change</td></tr>");
+            msg.append("<table border=1><tr><td>Area</td><td>Room</td><td>Cage</td><td>Id</td><td>Investigators</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Dates</td><td>Days Between</td><td>Weight (kg)</td><td>Percent Change</td></tr>");
             for (String area : summary.keySet())
             {
                 Map<String, List<Map<String, Object>>> areaValue = summary.get(area);
@@ -308,7 +308,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
             final Set<String> animalIds = new HashSet<String>();
 
             msg.append("<b>WARNING: The following animals have a weight entered since " + _dateFormat.format(date.getTime()) + " representing 3 consecutive weight drops with a total drop of more than 3%:</b><br><br>\n");
-            msg.append("<table border=1><tr><td>Room</td><td>Cage</td><td>Id</td><td>Investigator(s)</td><td>Assigned Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Date</td><td>Interval (days)</td><td>Weight (kg)</td><td>% Change</td></tr>");
+            msg.append("<table border=1><tr><td>Room</td><td>Cage</td><td>Id</td><td>Investigator(s)</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Date</td><td>Interval (days)</td><td>Weight (kg)</td><td>% Change</td></tr>");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {

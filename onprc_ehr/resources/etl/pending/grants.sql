@@ -15,7 +15,7 @@
  */
 --TODO: this needs works
 SELECT
-p.grantNumber as "grant",
+p.grantNumber,
 max(p.grantTitle) as title,
 MAX(CONVERT(varchar(38), p.objectid)) as objectid,
 count(*) as total
