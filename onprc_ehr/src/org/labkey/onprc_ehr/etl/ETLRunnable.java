@@ -604,7 +604,7 @@ public class ETLRunnable implements Runnable
                                 SimpleFilter filter = new SimpleFilter(FieldKey.fromString(filterColumn.getColumnName()), searchParams, CompareType.IN);
                                 Set<String> cols = new HashSet(targetTable.getPkColumnNames());
                                 TableSelector ts = new TableSelector(targetTable, cols, filter, null);
-                                Map<String, Object>[] rows = ts.getArray(Map.class);
+                                Map<String, Object>[] rows = ts.getMapArray();
 
                                 long duration = ((new Date()).getTime() - start) / 1000;
                                 log.info("Pre-selected " + searchParams.size() + " rows for table: " + targetTable.getName() + " using column: " + filterColumn.getColumnName() + ", which took: " + duration + "s");
@@ -643,7 +643,7 @@ public class ETLRunnable implements Runnable
                                     {
                                         log.warn("Table: " + targetTable.getName() + " delete abnormality.  searchParams: " + searchParams.size() + ", rows: " + rows.length + ", deleted: " + totalDeleted);
                                         TableSelector ts1 = new TableSelector(targetTable, cols, filter, null);
-                                        Map<String, Object>[] rows2 = ts1.getArray(Map.class);
+                                        Map<String, Object>[] rows2 = ts1.getMapArray();
                                         log.info("rows: " + rows2.length);
                                     }
                                     duration = ((new Date()).getTime() - start) / 1000;

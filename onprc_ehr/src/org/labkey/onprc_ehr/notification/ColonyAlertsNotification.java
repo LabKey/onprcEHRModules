@@ -27,14 +27,11 @@ import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
 import org.labkey.api.data.SqlSelector;
-import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
-import org.labkey.api.gwt.client.util.StringUtils;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryDefinition;
 import org.labkey.api.query.QueryException;
-import org.labkey.api.query.QueryHelper;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.QuerySettings;
 import org.labkey.api.query.QueryView;
@@ -60,7 +57,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * Created by IntelliJ IDEA.
@@ -165,7 +161,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void cagesWithoutDimensions(final Container c, User u, final StringBuilder msg)
     {
-        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("missingCages"), Table.ALL_COLUMNS, null, null);
+        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("missingCages"));
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following cages have animals, but do not have known dimensions:</b><br>\n");
@@ -181,7 +177,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<hr>\n");
         }
 
-        TableSelector ts2 = new TableSelector(getEHRLookupsSchema(c, u).getTable("cagesMissingColumn"), Table.ALL_COLUMNS, null, null);
+        TableSelector ts2 = new TableSelector(getEHRLookupsSchema(c, u).getTable("cagesMissingColumn"));
         if (ts2.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following cages do have have their row/column specified:</b><br>\n");
@@ -203,7 +199,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void roomsReportingNegativeCagesAvailable(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("CagesEmpty"), 0, CompareType.LT);
-        TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("roomUtilization"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("roomUtilization"), filter, null);
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following rooms report a negative number for available cages.  This probably means there is a problem in the cage divider configuration, or an animal is listed as being housed in the higher-numbered cage of a joined pair:</b><br>\n");
@@ -236,7 +232,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void roomsWithMixedViralStatus(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), Table.ALL_COLUMNS, filter, new Sort("room"));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("room"));
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -270,7 +266,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void roomsWithoutInfo(final Container c, User u, final StringBuilder msg)
     {
-        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("missingRooms"), Table.ALL_COLUMNS, null, null);
+        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("missingRooms"));
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following rooms have animals, but do not have a record in the rooms table:</b><br>\n");
@@ -325,7 +321,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         //then we find all living animals with multiple active housing records:
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingProblems"), Table.ALL_COLUMNS, null, sort);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingProblems"), null, sort);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -351,7 +347,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Housing"), Table.ALL_COLUMNS, filter, sort);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Housing"), filter, sort);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -375,7 +371,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("Id/curLocation/room/room"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), Table.ALL_COLUMNS, filter, sort);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), filter, sort);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -414,7 +410,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //then we find all records with problems in the calculated_status field
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -428,7 +424,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Cases"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Cases"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -445,7 +441,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
         filter.addCondition(FieldKey.fromString("project/protocol"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -457,7 +453,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     protected void duplicateAssignments(final Container c, User u, final StringBuilder msg)
     {
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("duplicateAssignments"), Table.ALL_COLUMNS, null, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("duplicateAssignments"));
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -489,7 +485,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         Date date = new Date();
         filter.addCondition(FieldKey.fromString("date"), date, CompareType.GTE);
         filter.addCondition(FieldKey.fromString("dataset/label"), datasets, CompareType.NOT_IN);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("StudyData"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("StudyData"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -508,7 +504,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -5);
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_GTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Deaths"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Deaths"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         if (ts.getRowCount() > 0)
         {
             msg.append("Deaths since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + ":<br><br>\n");
@@ -532,7 +528,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -5);
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_GTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Birth"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Birth"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         if (ts.getRowCount() > 0)
         {
             msg.append("Births since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + ":<br><br>\n");
@@ -555,7 +551,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
         filter.addCondition(FieldKey.fromString("projectedRelease"), cal.getTime(), CompareType.DATE_EQUAL);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -572,7 +568,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         Date date = new Date();
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("projectedRelease"), date, CompareType.DATE_EQUAL);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -615,7 +611,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/Id"), null, CompareType.ISBLANK);
         filter.addCondition(FieldKey.fromString("notAtCenter"), true, CompareType.NEQ_OR_NULL);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Deaths"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Deaths"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -663,7 +659,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void protocolsNearingLimit(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("TotalRemaining"), 5, CompareType.LT);
-        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("protocolTotalAnimalsBySpecies"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("protocolTotalAnimalsBySpecies"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -673,7 +669,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
 
         filter = new SimpleFilter(FieldKey.fromString("PercentUsed"), 95, CompareType.GTE);
-        ts = new TableSelector(getEHRSchema(c, u).getTable("protocolTotalAnimalsBySpecies"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        ts = new TableSelector(getEHRSchema(c, u).getTable("protocolTotalAnimalsBySpecies"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count2 = ts.getRowCount();
         if (count2 > 0)
         {
@@ -693,7 +689,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         cal.add(Calendar.DATE, -90);
 
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("death"), cal.getTime(), CompareType.DATE_GTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("validateFinalWeights"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("validateFinalWeights"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         Long total = ts.getRowCount();
 
         if (total > 0)
@@ -711,7 +707,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("death"), "-90d", CompareType.DATE_GTE);
         filter.addCondition(FieldKey.fromString("gender"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following demographics records were entered in the last 90 days, but are missing a gender:</b><br>\n");
@@ -738,7 +734,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), "-90d", CompareType.DATE_GTE);
         filter.addCondition(FieldKey.fromString("gender"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Birth"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Birth"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following birth records were entered in the last 90 days, but are missing a gender:</b><br>\n");
@@ -788,7 +784,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -805,7 +801,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Problem List"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Problem List"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -822,7 +818,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Treatment Orders"), Table.ALL_COLUMNS, filter, new Sort(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Treatment Orders"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -839,8 +835,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void cageReview(final Container c, User u, final StringBuilder msg, boolean notifyOnNone)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("cageStatus"), "ERROR", CompareType.STARTS_WITH);
-        TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), Table.ALL_COLUMNS, filter, null);
-        Map<String, Object>[] rows = ts.getArray(Map.class);
+        TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), filter, null);
+        Map<String, Object>[] rows = ts.getMapArray();
 
         if (rows.length > 0)
         {
@@ -872,8 +868,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
 
 //        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("sqftPct"), 97.0, CompareType.GTE);
-//        TableSelector ts2 = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), Table.ALL_COLUMNS, filter2, null);
-//        Map<String, Object>[] warningRows = ts2.getArray(Map.class);
+//        TableSelector ts2 = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), filter2, null);
+//        Map<String, Object>[] warningRows = ts2.getMapArray();
 //        DecimalFormat format = new DecimalFormat("0.#");
 //
 //        if (warningRows.length > 0)
@@ -942,7 +938,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Diet"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Diet"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -956,7 +952,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Flags"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Flags"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -970,7 +966,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Notes"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Notes"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -984,7 +980,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("animal_group_members"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("animal_group_members"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -1007,7 +1003,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         sort.appendSortColumn(FieldKey.fromString("cage"), Sort.SortDirection.ASC, false);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Housing"), PageFlowUtil.set("Id", "room", "cage"), filter, sort);
-        Map<String, Object>[] rows = ts.getArray(Map.class);
+        Map<String, Object>[] rows = ts.getMapArray();
         if (rows.length > 0)
         {
             final Map<String, Integer> roomMap = new TreeMap<String, Integer>();
@@ -1159,7 +1155,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Pending");
         filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Blood Draws"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Blood Draws"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -1178,7 +1174,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
         filter.addCondition(FieldKey.fromString("billedby"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Blood Draws"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Blood Draws"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -1200,7 +1196,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 //    {
 //        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("path_lsid"), null, CompareType.ISBLANK);
 //        filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_EQUAL);
-//        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("ValidateBloodDrawClinpath"), Table.ALL_COLUMNS, filter, null);
+//        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("ValidateBloodDrawClinpath"), filter, null);
 //        if (ts.getRowCount() > 0)
 //        {
 //            msg.append("<b>WARNING: There are " + ts.getRowCount() + " blood draws scheduled today that request clinpath services, but lack a corresponding clinpath request.</b><br>");
@@ -1331,7 +1327,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ);
         filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Blood Draws"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Blood Draws"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -1392,7 +1388,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void duplicateFlags(Container c, User u, final StringBuilder msg)
     {
         TableInfo ti = getStudySchema(c, u).getTable("flagDuplicates");
-        TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, null, null);
+        TableSelector ts = new TableSelector(ti);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -1409,7 +1405,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         filter.addCondition(FieldKey.fromString("project/protocol"), "IS00002718", CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room/housingType/value"), "Cage Location", CompareType.EQUAL);
 
-        TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(ti, filter, null);
         long count = ts.getRowCount();
         String level = null;
         if (count > 75)
@@ -1441,7 +1437,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         TableInfo ti = getStudySchema(c, u).getTable("infantsSeparateFromMother");
 
-        Set<FieldKey> fieldKeys = new HashSet<FieldKey>();
+        Set<FieldKey> fieldKeys = new HashSet<>();
         fieldKeys.add(FieldKey.fromString("Id"));
         fieldKeys.add(FieldKey.fromString("Id/curLocation/room"));
         fieldKeys.add(FieldKey.fromString("Id/curLocation/cage"));

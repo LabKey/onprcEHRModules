@@ -312,7 +312,7 @@ public class LegacyDataManager
         UserSchema us = QueryService.get().getUserSchema(u, c, "sacha_db");
         TableInfo ti = us.getTable("users");
         TableSelector ts = new TableSelector(ti, new SimpleFilter(FieldKey.fromString("id_user"), legacyId), null);
-        Map<String, Object>[] userRows = ts.getArray(Map.class);
+        Map<String, Object>[] userRows = ts.getMapArray();
         if (userRows.length != 1)
             return null;
 
@@ -358,7 +358,7 @@ public class LegacyDataManager
             SimpleFilter filter = new SimpleFilter(FieldKey.fromString("firstname"), firstName);
             filter.addCondition(FieldKey.fromString("lastname"), lastName);
             TableSelector ts2 = new TableSelector(usersTable, filter, null);
-            Map<String, Object>[] ret = ts2.getArray(Map.class);
+            Map<String, Object>[] ret = ts2.getMapArray();
             if (ret.length == 1)
             {
                 Integer userId = (Integer)ret[0].get("UserId");
@@ -406,7 +406,7 @@ public class LegacyDataManager
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("id_animal"), null, CompareType.NONBLANK);
         filter.addCondition(FieldKey.fromString("id_animal"), "", CompareType.NEQ);
         filter.addCondition(FieldKey.fromString("spots"), null, CompareType.NONBLANK);
-        TableSelector ts = new TableSelector(elispotTable, Table.ALL_COLUMNS, filter, new Sort("id_experiment"));
+        TableSelector ts = new TableSelector(elispotTable, filter, new Sort("id_experiment"));
 
         final FileContentService svc = ServiceRegistry.get().getService(FileContentService.class);
         final Map<Container, List<Map<String, Object>>> runs = new HashMap<Container, List<Map<String, Object>>>();
@@ -846,7 +846,7 @@ public class LegacyDataManager
             fieldKeys.add(FieldKey.fromString("poolid/pool_name"));
             fieldKeys.add(FieldKey.fromString("sequence"));
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(peptidePoolMembersTable, fieldKeys);
-            TableSelector ts = new TableSelector(peptidePoolMembersTable, colMap.values(), new SimpleFilter("container", c.getId()), null);
+            TableSelector ts = new TableSelector(peptidePoolMembersTable, colMap.values(), SimpleFilter.createContainerFilter(c), null);
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
@@ -942,7 +942,7 @@ public class LegacyDataManager
         filter.addCondition("abs_allele1", ":", CompareType.DOES_NOT_CONTAIN);
 
         TableInfo projectTable = schema.getTable("Projects");
-        TableSelector projectSelector = new TableSelector(projectTable, Table.ALL_COLUMNS, null, null);
+        TableSelector projectSelector = new TableSelector(projectTable);
         final Map<Integer, String> projectMap = new HashMap<Integer, String>();
         projectSelector.forEach(new Selector.ForEachBlock<ResultSet>()
         {
@@ -1139,7 +1139,7 @@ public class LegacyDataManager
         filter.addCondition("animalid", " ", CompareType.NEQ);
         filter.addCondition("abs_allele1", ":", CompareType.CONTAINS);
 
-        TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, filter, new Sort("expdate"));
+        TableSelector ts = new TableSelector(ti, filter, new Sort("expdate"));
         ts.forEach(new Selector.ForEachBlock<ResultSet>()
         {
             @Override
@@ -1290,7 +1290,7 @@ public class LegacyDataManager
 
         SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
         filter.addCondition("animalid", " ", CompareType.NEQ);
-        TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, filter, new Sort("expid"));
+        TableSelector ts = new TableSelector(ti, filter, new Sort("expid"));
         ts.forEach(new Selector.ForEachBlock<ResultSet>()
         {
             @Override

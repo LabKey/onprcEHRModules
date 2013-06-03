@@ -271,8 +271,8 @@ public class ONPRC_EHRController extends SpringActionController
                         else
                         {
                             TableInfo ti = ONPRC_EHRSchema.getInstance().getSchema().getTable(ONPRC_EHRSchema.TABLE_ETL_RUNS);
-                            TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, new SimpleFilter(FieldKey.fromString("rowid"), value), null);
-                            Map<String, Object>[] rows = ts.getArray(Map.class);
+                            TableSelector ts = new TableSelector(ti, new SimpleFilter(FieldKey.fromString("rowid"), value), null);
+                            Map<String, Object>[] rows = ts.getMapArray();
                             if (rows.length != 1)
                                 continue;
 

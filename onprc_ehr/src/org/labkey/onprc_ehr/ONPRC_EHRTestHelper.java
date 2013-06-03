@@ -70,7 +70,7 @@ public class ONPRC_EHRTestHelper
             //run query
             SimpleFilter filter = new SimpleFilter(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ);
             filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-            TableSelector ts = new TableSelector(bloodDraws, Table.ALL_COLUMNS, filter, null);
+            TableSelector ts = new TableSelector(bloodDraws, filter, null);
 
             //verify results
             //TODO
