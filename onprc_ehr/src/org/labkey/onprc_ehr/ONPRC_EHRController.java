@@ -28,10 +28,8 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.SimpleFilter;
-import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
-import org.labkey.api.ldk.NavItem;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.AdminConsoleAction;
@@ -84,26 +82,26 @@ public class ONPRC_EHRController extends SpringActionController
     {
         public ApiResponse execute(Object form, BindException errors)
         {
-            ApiResponse resp = new ApiSimpleResponse();
-            resp.getProperties().put("enabled", ETL.isEnabled());
-            resp.getProperties().put("active", ETL.isRunning());
-            resp.getProperties().put("scheduled", ETL.isScheduled());
-            resp.getProperties().put("nextSync", ETL.nextSync());
+            Map<String, Object> resultProperties = new HashMap<>();
+            resultProperties.put("enabled", ETL.isEnabled());
+            resultProperties.put("active", ETL.isRunning());
+            resultProperties.put("scheduled", ETL.isScheduled());
+            resultProperties.put("nextSync", ETL.nextSync());
 
             String[] etlConfigKeys = {"labkeyUser", "labkeyContainer", "jdbcUrl", "jdbcDriver", "runIntervalInMinutes"};
 
-            resp.getProperties().put("configKeys", etlConfigKeys);
-            resp.getProperties().put("config", PropertyManager.getProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN));
-            resp.getProperties().put("rowversions", PropertyManager.getProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN));
+            resultProperties.put("configKeys", etlConfigKeys);
+            resultProperties.put("config", PropertyManager.getProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN));
+            resultProperties.put("rowversions", PropertyManager.getProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN));
             Map<String, String> map = PropertyManager.getProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN);
-            Map<String, Date> timestamps = new TreeMap<String, Date>();
+            Map<String, Date> timestamps = new TreeMap<>();
             for (String key : map.keySet())
             {
                 timestamps.put(key, new Date(Long.parseLong(map.get(key))));
             }
-            resp.getProperties().put("timestamps", timestamps);
+            resultProperties.put("timestamps", timestamps);
 
-            return resp;
+            return new ApiSimpleResponse(resultProperties);
         }
     }
 
@@ -112,10 +110,10 @@ public class ONPRC_EHRController extends SpringActionController
     {
         public ApiResponse execute(Object form, BindException errors)
         {
-            ApiResponse resp = new ApiSimpleResponse();
+            Map<String, Object> resultProperties = new HashMap<>();
 
             //first add labs
-            List<JSONObject> labs = new ArrayList<JSONObject>();
+            List<JSONObject> labs = new ArrayList<>();
             Container labContainer = ContainerManager.getForPath("/ONPRC/Labs");
             if (labContainer != null)
             {
@@ -129,10 +127,10 @@ public class ONPRC_EHRController extends SpringActionController
                     labs.add(json);
                 }
             }
-            resp.getProperties().put("labs", labs);
+            resultProperties.put("labs", labs);
 
             //then admin
-            List<JSONObject> admin = new ArrayList<JSONObject>();
+            List<JSONObject> admin = new ArrayList<>();
             Container adminContainer = ContainerManager.getForPath("/ONPRC/Admin");
             if (adminContainer != null)
             {
@@ -146,10 +144,10 @@ public class ONPRC_EHRController extends SpringActionController
                     admin.add(json);
                 }
             }
-            resp.getProperties().put("admin", admin);
+            resultProperties.put("admin", admin);
 
             //then cores
-            List<JSONObject> cores = new ArrayList<JSONObject>();
+            List<JSONObject> cores = new ArrayList<>();
             Container coresContainer = ContainerManager.getForPath("/ONPRC/Core Facilities");
             if (coresContainer != null)
             {
@@ -163,7 +161,7 @@ public class ONPRC_EHRController extends SpringActionController
                     cores.add(json);
                 }
             }
-            resp.getProperties().put("cores", cores);
+            resultProperties.put("cores", cores);
 
             //then DCM
             List<JSONObject> dcm = new ArrayList<JSONObject>();
@@ -180,7 +178,7 @@ public class ONPRC_EHRController extends SpringActionController
                     dcm.add(json);
                 }
             }
-            resp.getProperties().put("dcm", dcm);
+            resultProperties.put("dcm", dcm);
 
             //for now, EHR is hard coded
             List<JSONObject> ehr = new ArrayList<JSONObject>();
@@ -207,11 +205,11 @@ public class ONPRC_EHRController extends SpringActionController
             json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
             ehr.add(json);
 
-            resp.getProperties().put("ehr", ehr);
+            resultProperties.put("ehr", ehr);
 
-            resp.getProperties().put("success", true);
+            resultProperties.put("success", true);
 
-            return resp;
+            return new ApiSimpleResponse(resultProperties);
         }
     }
 
@@ -220,7 +218,7 @@ public class ONPRC_EHRController extends SpringActionController
     {
         public ApiResponse execute(EtlAdminForm form, BindException errors)
         {
-            ApiResponse resp = new ApiSimpleResponse();
+            Map<String, Object> resultProperties = new HashMap<>();
 
             PropertyManager.PropertyMap configMap = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
 
@@ -300,9 +298,9 @@ public class ONPRC_EHRController extends SpringActionController
                     ETL.stop();
             }
 
-            resp.getProperties().put("success", true);
+            resultProperties.put("success", true);
 
-            return resp;
+            return new ApiSimpleResponse(resultProperties);
         }
     }
 
