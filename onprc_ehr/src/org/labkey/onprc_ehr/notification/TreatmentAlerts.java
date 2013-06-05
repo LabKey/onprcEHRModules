@@ -471,7 +471,7 @@ public class TreatmentAlerts extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Treatment Orders"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Treatment Orders"), filter, null);
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: There are " + ts.getRowCount() + " active treatments for animals not currently at WNPRC.</b>");
@@ -487,7 +487,7 @@ public class TreatmentAlerts extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Problem List"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Problem List"), filter, null);
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: There are " + ts.getRowCount() + " unresolved problems for animals not currently at the center.</b>");

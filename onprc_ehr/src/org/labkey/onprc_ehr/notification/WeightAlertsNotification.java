@@ -114,7 +114,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         final Map<FieldKey, ColumnInfo> columns = QueryService.get().getColumns(ti, colKeys);
 
         TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
-        if (ts.getRowCount() > 0)
+        if (ts.exists())
         {
             msg.append("<b>WARNING: The following animals do not have a weight:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
@@ -303,7 +303,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         }
 
         TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
-        if (ts.getRowCount() > 0)
+        if (ts.exists())
         {
             final Set<String> animalIds = new HashSet<String>();
 

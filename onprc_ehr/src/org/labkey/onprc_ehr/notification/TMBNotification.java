@@ -78,7 +78,7 @@ public class TMBNotification extends ColonyAlertsNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("daysElapsed"), 30, CompareType.GTE);
         filter.addCondition(FieldKey.fromString("daysElapsed"), 36, CompareType.LTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Matings"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Matings"), filter, null);
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: There are " + ts.getRowCount() + " matings that occurred 30-36 days ago</b><br>\n");
@@ -91,7 +91,7 @@ public class TMBNotification extends ColonyAlertsNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("ageInDays"), 250, CompareType.GTE);
         filter.addCondition(FieldKey.fromString("room/housingType/value"), "Cage Location", CompareType.EQUAL);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("offspringWithMother"), Table.ALL_COLUMNS, filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("offspringWithMother"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -104,7 +104,7 @@ public class TMBNotification extends ColonyAlertsNotification
     protected void pregnantAnimals(final Container c, User u, final StringBuilder msg)
     {
         //SimpleFilter filter = new SimpleFilter(FieldKey.fromString("estDeliveryDays"), 30, CompareType.LTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("pregnantAnimals"), Table.ALL_COLUMNS, null, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("pregnantAnimals"));
         long count = ts.getRowCount();
         if (count > 0)
         {

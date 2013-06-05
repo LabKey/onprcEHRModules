@@ -955,7 +955,7 @@ public class LegacyDataManager
             }
         });
 
-        TableSelector ts = new TableSelector(ti, Table.ALL_COLUMNS, filter, new Sort("expdate"));
+        TableSelector ts = new TableSelector(ti, filter, new Sort("expdate"));
         ts.forEach(new Selector.ForEachBlock<ResultSet>()
         {
             @Override
