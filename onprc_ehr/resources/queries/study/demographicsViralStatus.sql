@@ -26,7 +26,7 @@ LEFT JOIN (
     count(distinct f.value) as total
 
   FROM study.flags f
-  WHERE f.enddateTimeCoalesced >= now() AND f.flag = 'SPF' and f.id.dataset.demographics.calculated_status = 'Alive'
+  WHERE f.enddateTimeCoalesced >= now() AND f.flag = 'SPF' and f.date <= curdate() and f.id.dataset.demographics.calculated_status = 'Alive'
   --TODO: this is a hack
   AND f.value not like '%Candidate%'
 

@@ -1932,6 +1932,9 @@
             <column columnName="reason">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="category">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="meaning">
                 <datatype>varchar</datatype>
             </column>

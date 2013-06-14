@@ -26,6 +26,9 @@
                     <column columnName="totalAnimals">
                         <columnTitle>Total Animals</columnTitle>
                     </column>
+                    <column columnName="totalApproachingLimit">
+                        <columnTitle>Total Animals Within 5% of Increasing Cage Class</columnTitle>
+                    </column>
                     <column columnName="cageStatus">
                         <columnTitle>Cage Status</columnTitle>
                         <displayWidth>50</displayWidth>

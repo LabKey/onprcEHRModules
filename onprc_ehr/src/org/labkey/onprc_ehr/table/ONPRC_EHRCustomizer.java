@@ -152,6 +152,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             appendAssignmentAtTimeCol(us, ds);
             appendGroupsAtTimeCol(us, ds);
             appendProblemsAtTimeCol(us, ds);
+            appendFlagsAtTimeCol(us, ds);
         }
     }
 
@@ -322,7 +323,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         String calendarYear = "calendarYear";
         if (ti.getColumn(calendarYear) == null)
         {
-            SQLFragment sql = new SQLFragment(ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + ".date"));
+            SQLFragment sql = new SQLFragment(ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + "." + dateCol.getSelectName()));
             ExprColumn calCol = new ExprColumn(ti, calendarYear, sql, JdbcType.INTEGER, dateCol);
             calCol.setLabel("Calendar Year");
             calCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
@@ -330,7 +331,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ti.addColumn(calCol);
 
             String fiscalYear = "fiscalYear";
-            SQLFragment sql2 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + ".date") + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, ExprColumn.STR_TABLE_ALIAS + ".date") + " < 5 THEN -1 ELSE 0 END)");
+            SQLFragment sql2 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + "."+ dateCol.getSelectName()) + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, ExprColumn.STR_TABLE_ALIAS + "." + dateCol.getSelectName()) + " < 5 THEN -1 ELSE 0 END)");
             ExprColumn fiscalYearCol = new ExprColumn(ti, fiscalYear, sql2, JdbcType.INTEGER, dateCol);
             fiscalYearCol.setLabel("Fiscal Year (May 1)");
             fiscalYearCol.setDescription("This column will calculate the fiscal year of the record, based on a May 1 cycle");
@@ -339,7 +340,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ti.addColumn(fiscalYearCol);
 
             String fiscalYearJuly = "fiscalYearJuly";
-            SQLFragment sql3 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + ".date") + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, ExprColumn.STR_TABLE_ALIAS + ".date") + " < 7 THEN -1 ELSE 0 END)");
+            SQLFragment sql3 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + "." + dateCol.getSelectName()) + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, ExprColumn.STR_TABLE_ALIAS + "." + dateCol.getSelectName()) + " < 7 THEN -1 ELSE 0 END)");
             ExprColumn fiscalYearJulyCol = new ExprColumn(ti, fiscalYearJuly, sql3, JdbcType.INTEGER, dateCol);
             fiscalYearJulyCol.setLabel("Fiscal Year (July 1)");
             fiscalYearJulyCol.setDescription("This column will calculate the fiscal year of the record, based on a July 1 cycle");
@@ -374,10 +375,34 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ds.addColumn(col);
         }
 
+        if (ds.getColumn("activePregnancies") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "activePregnancies", "demographicsPregnancy");
+            col.setLabel("Pregnancies - Active");
+            //col.setDescription("");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("kinshipAvg") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "kinshipAvg", "kinshipAverage");
+            col.setLabel("Kinship - Average");
+            col.setDescription("Calculates the average kinship coefficient against all living animals, including the current animal");
+            ds.addColumn(col);
+        }
+
         if (ds.getColumn("currentCondition") == null)
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "currentCondition", "demographicsCondition");
             col.setLabel("Condition");
+            //col.setDescription("");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("offspringUnder1Yr") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "offspringUnder1Yr", "demographicsTotalOffspringUnder1Yr");
+            col.setLabel("Offspring Under 1 Year");
             //col.setDescription("");
             ds.addColumn(col);
         }
@@ -821,6 +846,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         UserSchema us = getUserSchema(ti, "onprc_ehr");
         if (us != null)
             invest.setFk(new QueryForeignKey(us, "investigators", "rowid", "lastname"));
+        invest.setLabel("Project Contact");
 
         ColumnInfo nameCol = ti.getColumn("name");
         nameCol.setHidden(false);
@@ -1141,7 +1167,45 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         "group_concat(DISTINCT h.project.name) as AssignmentsAtTime\n" +
                         "FROM study.\"" + ds.getName() + "\" sd\n" +
                         "JOIN study.assignment h\n" +
-                        "  ON (sd.id = h.id AND h.date <= sd.date AND sd.date < COALESCE(h.enddate, now()) AND h.qcstate.publicdata = true)\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= sd.dateOnly AND sd.dateOnly <= h.enddateCoalesced AND h.qcstate.publicdata = true)\n" +
+                        "group by sd.lsid");
+                qd.setIsTemporary(true);
+
+                List<QueryException> errors = new ArrayList<QueryException>();
+                TableInfo ti = qd.getTable(errors, true);
+
+                ti.getColumn("lsid").setHidden(true);
+                ti.getColumn("lsid").setKeyField(true);
+
+                return ti;
+            }
+        });
+
+        ds.addColumn(col);
+    }
+
+    private void appendFlagsAtTimeCol(final UserSchema us, final AbstractTableInfo ds)
+    {
+        String name = "flagsAtTime";
+        if (ds.getColumn(name) != null)
+            return;
+
+        WrappedColumn col = new WrappedColumn(ds.getColumn("lsid"), name);
+        col.setLabel("Flags At Time");
+        col.setReadOnly(true);
+        col.setIsUnselectable(true);
+        col.setUserEditable(false);
+        col.setFk(new LookupForeignKey(){
+            public TableInfo getLookupTableInfo()
+            {
+                String name = ds.getName() + "_flagsAtTime";
+                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                qd.setSql("SELECT\n" +
+                        "sd.lsid,\n" +
+                        "group_concat(DISTINCT h.value, chr(10)) as FlagsAtTime\n" +
+                        "FROM study.\"" + ds.getName() + "\" sd\n" +
+                        "JOIN study.flags h\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= sd.dateOnly AND sd.dateOnly <= h.enddateCoalesced AND h.qcstate.publicdata = true)\n" +
                         "group by sd.lsid");
                 qd.setIsTemporary(true);
 
@@ -1179,7 +1243,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         "group_concat(DISTINCT h.category) as ProblemsAtTime\n" +
                         "FROM study.\"" + ds.getName() + "\" sd\n" +
                         "JOIN study.\"Problem List\" h\n" +
-                        "  ON (sd.id = h.id AND h.date <= sd.date AND sd.date < COALESCE(h.enddate, now()) AND h.qcstate.publicdata = true)\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= sd.dateOnly AND sd.dateOnly <= h.enddateCoalesced AND h.qcstate.publicdata = true)\n" +
                         "group by sd.lsid");
                 qd.setIsTemporary(true);
 
@@ -1217,7 +1281,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         "group_concat(DISTINCT h.groupId.name) as GroupsAtTime\n" +
                         "FROM study.\"" + ds.getName() + "\" sd\n" +
                         "JOIN ehr.animal_group_members h\n" +
-                        "  ON (sd.id = h.id AND h.date <= sd.date AND sd.date < COALESCE(h.enddate, now()))\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= sd.dateOnly AND sd.dateOnly <= h.enddateCoalesced)\n" +
                         "group by sd.lsid");
                 qd.setIsTemporary(true);
 

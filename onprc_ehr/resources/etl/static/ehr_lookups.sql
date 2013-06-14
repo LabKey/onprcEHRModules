@@ -39,16 +39,16 @@ TRUNCATE TABLE labkey.ehr_lookups.buildings;
 INSERT INTO labkey.ehr_lookups.buildings (name, description)
 SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE datedisabled IS NULL;
 
---species
-TRUNCATE TABLE labkey.ehr_lookups.species;
-INSERT INTO labkey.ehr_lookups.species (common, scientific_name)
-Select max(commonname), max(latinname) From IRIS_Production.dbo.ref_species WHERE Active = 1 GROUP BY CommonName;
-
-UPDATE labkey.ehr_lookups.species SET blood_draw_interval = 21;
-
-UPDATE labkey.ehr_lookups.species SET blood_per_kg = 56;
-UPDATE labkey.ehr_lookups.species SET blood_per_kg = 65 WHERE common = 'CYNOMOLGUS MACAQUE';
-UPDATE labkey.ehr_lookups.species SET max_draw_pct = 0.125;
+-- --species
+-- TRUNCATE TABLE labkey.ehr_lookups.species;
+-- INSERT INTO labkey.ehr_lookups.species (common, scientific_name)
+-- Select max(commonname), max(latinname) From IRIS_Production.dbo.ref_species WHERE Active = 1 GROUP BY CommonName;
+--
+-- UPDATE labkey.ehr_lookups.species SET blood_draw_interval = 21;
+--
+-- UPDATE labkey.ehr_lookups.species SET blood_per_kg = 56;
+-- UPDATE labkey.ehr_lookups.species SET blood_per_kg = 65 WHERE common = 'CYNOMOLGUS MACAQUE';
+-- UPDATE labkey.ehr_lookups.species SET max_draw_pct = 0.125;
 
 --snomed
 TRUNCATE TABLE labkey.ehr_lookups.full_snomed;

@@ -26,17 +26,19 @@ Select
 	  WHEN rs.Value = 'Unknown' THEN 'u'
 	  ELSE rs.Value
     END AS Gender,
-    
+
     CASE
-		WHEN c.DamId != '0' THEN cast(c.DamId as nvarchar(4000)) 
-		WHEN b.MotherID != '0' THEN cast(b.MotherId as nvarchar(4000)) 
+        WHEN (gr.DamId IS NOT NULL AND gr.DamId != '0') THEN cast(gr.DamId as nvarchar(4000))
+		--WHEN c.DamId != '0' THEN cast(c.DamId as nvarchar(4000))
+		WHEN b.MotherID != '0' THEN cast(b.MotherId as nvarchar(4000))
 		ELSE NULL
 	END as dam,
     --b.MotherID,
-    
+
     CASE
-		WHEN c.SireId != '0' THEN cast(c.SireId as nvarchar(4000)) 
-		WHEN b.FatherID != '0' THEN cast(b.FatherId as nvarchar(4000)) 
+        WHEN (gr.sireId IS NOT NULL AND gr.SireId != '0') THEN cast(gr.SireId as nvarchar(4000))
+		--WHEN c.SireId != '0' THEN cast(c.SireId as nvarchar(4000))
+		WHEN b.FatherID != '0' THEN cast(b.FatherId as nvarchar(4000))
 		ELSE NULL
 	END as sire,
 	--b.FatherID,
@@ -45,7 +47,7 @@ Select
 	--rtrim(r2.row) + convert(char(2), r2.Cage) As cage,
 
 	afq.BirthDate as Birth,
-	
+
 	afq.DeathDate as Death,
 
 	CASE
@@ -75,23 +77,32 @@ From Af_Qrf afq
 left join Sys_Parameters s1 on (afq.Deathflag = s1.Flag And s1.Field = 'DeathFlag')
 left join Sys_Parameters s2 on (afq.BirthFlag = s2.Flag and s2.Field = 'BirthFlag')
 left join Ref_RowCage r2 on  (r2.CageID = afq.CageID)
-left join Ref_Location l2 on (r2.LocationID = l2.LocationId) 
+left join Ref_Location l2 on (r2.LocationID = l2.LocationId)
 left join Ref_SEX rs ON (rs.Flag = afq.Sex)
 left join Ref_Species sp ON (sp.SpeciesCode = afq.Species)
 left join Ref_RowCage rc ON (rc.CageID = afq.CageID)
-left join (
-	select 
-	c.AnimalId,
-	max(c.DamId) as DamId,
-	max(c.SireId) as SireId,
-	max(c.birthdate) as birthdate,
-	max(cast(c.objectid as varchar(38))) as objectid,
-	max(r.Description) as description
-	from combinedrelationship c
-	left join refs r ON (r.field like '%calc%' AND r.Code = c.CalcType)
-	group by c.AnimalId
-) c ON (c.AnimalId = afq.AnimalID)
+-- left join (
+-- 	select
+-- 	c.AnimalId,
+-- 	max(c.DamId) as DamId,
+-- 	max(c.SireId) as SireId,
+-- 	max(c.birthdate) as birthdate,
+-- 	max(cast(c.objectid as varchar(38))) as objectid,
+-- 	max(r.Description) as description
+-- 	from combinedrelationship c
+-- 	left join refs r ON (r.field like '%calc%' AND r.Code = c.CalcType)
+-- 	group by c.AnimalId
+-- ) c ON (c.AnimalId = afq.AnimalID)
 left join Af_Birth b ON (b.AnimalID = afq.AnimalID)
+left join (
+  SELECT
+    gr.animalid,
+    max(gr.sireid) as sireid,
+    max(gr.damid) as damid,
+    max(gr.ts) as ts
+  FROM grip_prd.dbo.Geneticrelationship gr
+  GROUP BY gr.animalid
+) gr ON (gr.animalid = afq.animalid)
 
 left JOIN (
 
@@ -112,4 +123,4 @@ GROUP BY q.AnimalID, q.Species
 
 ) t ON (t.animalid = cast(afq.animalid AS nvarchar(4000)))
 
-WHERE (afq.ts > ? or b.ts > ? or t.ts > ?)
+WHERE (afq.ts > ? or b.ts > ? or t.ts > ? or gr.ts > ?)

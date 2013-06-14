@@ -1,0 +1,13 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="potentialConceptionLocations" tableDbType="TABLE">
+                <tableTitle>Potential Conception Locations</tableTitle>
+                <description>This query identifies all female animals co-housed in the same room/cage at time of birth, and reports the distinct room/cage combinations where these animals were housed during the conception window</description>
+                <columns>
+
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

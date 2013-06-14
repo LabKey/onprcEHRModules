@@ -22,7 +22,7 @@ count(distinct a.id) as totalAnimals
 
 from study.assignment a
 
-where a.enddateCoalesced >= curdate() and a.id.curLocation.room IS NOT NULL
+where a.enddateCoalesced >= curdate() and a.date <= curdate() and a.id.curLocation.room IS NOT NULL
 and a.project.investigatorId IS NOT NULL
 
 group by a.id.curLocation.room, a.project.investigatorId

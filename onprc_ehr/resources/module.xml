@@ -1,0 +1,18 @@
+<module xmlns="http://labkey.org/moduleProperties/xml/">
+    <properties>
+        <propertyDescriptor name="SSRSServerURL">
+            <canSetPerContainer>true</canSetPerContainer>
+            <description>The is the baseURL to the server used to load SSRS reports.  It is expected to be something like: 'http://myServer.edu/Reports/Pages/ReportViewer.aspx?'</description>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
+        <propertyDescriptor name="SSRSReportFolder">
+            <canSetPerContainer>true</canSetPerContainer>
+            <description>The is the subfolder within SSRS that holds the EHR reports</description>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
+    </properties>
+</module>

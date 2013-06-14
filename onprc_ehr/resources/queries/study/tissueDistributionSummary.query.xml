@@ -10,7 +10,7 @@
                             schemaName=study&amp;
                             query.queryName=Tissue Distributions&amp;
                             query.fiscalYear~eq=${fiscalYear}&amp;
-                            query.recipient/affiliation~eq=${affiliation}&amp;
+                            query.requestCategory~eq=${requestCategory}&amp;
                         </url>
                     </column>
                 </columns>

@@ -121,6 +121,7 @@
     <ns:table tableName="tissue_recipients" tableDbType="TABLE">
         <ns:tableTitle>Tissue Recipients</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:titleColumn>lastName</ns:titleColumn>
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="firstName">

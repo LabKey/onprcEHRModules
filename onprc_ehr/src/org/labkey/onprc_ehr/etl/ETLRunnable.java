@@ -678,17 +678,17 @@ public class ETLRunnable implements Runnable
                                 log.info("committing transaction: " + targetTableName);
                                 scope.commitTransaction();
 
-                                if (realTable != null)
-                                {
-                                    //NOTE: this may be less important on SQLServer
-                                    log.info("Performing Analyze");
-                                    String analyze = realTable.getSchema().getSqlDialect().getAnalyzeCommandForTable(realTable.getSchema().getName() + "." + realTable.getName());
-                                    new SqlExecutor(realTable.getSchema()).execute(new SQLFragment(analyze));
-                                }
-                                else
-                                {
-                                    log.warn("realTable is null, wont analyze");
-                                }
+//                                if (realTable != null)
+//                                {
+//                                    //NOTE: this may be less important on SQLServer
+//                                    log.info("Performing Analyze");
+//                                    String analyze = realTable.getSchema().getSqlDialect().getAnalyzeCommandForTable(realTable.getSchema().getName() + "." + realTable.getName());
+//                                    new SqlExecutor(realTable.getSchema()).execute(new SQLFragment(analyze));
+//                                }
+//                                else
+//                                {
+//                                    log.warn("realTable is null, wont analyze");
+//                                }
 
                                 scope.ensureTransaction();
                                 currentBatch = 0;

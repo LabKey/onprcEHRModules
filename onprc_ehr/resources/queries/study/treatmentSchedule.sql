@@ -20,22 +20,42 @@ s.*
 FROM study.demographics d JOIN (
 
 SELECT
+  s.*,
+  timestampadd('SQL_TSI_MINUTE', ((s.hours * 60) + s.minutes), s.origDate) as date,
+  CASE
+    WHEN (hours >= 6 AND hours < 16) THEN 'AM'
+    WHEN (hours < 6 OR hours >= 16) THEN 'PM'
+    ELSE 'Other'
+  END as timeOfDay,
+
+  ((s.hours * 60) + s.minutes) as timeOffset
+
+FROM (
+
+SELECT
   t1.lsid,
   t1.objectid,
   t1.dataset,
   t1.id as animalid,
 
-  timestampadd('SQL_TSI_HOUR', coalesce(tt.time, ft.hourofday), dr.date) as date,
-  ft.timedescription as timeOfDay,
+  coalesce(tt.time, ft.hourofday) as time,
+  (coalesce(tt.time, ft.hourofday) / 100) as hours,
+  (((coalesce(tt.time, ft.hourofday) / 100.0) - floor(coalesce(tt.time, ft.hourofday) / 100)) * 100) as minutes,
+  dr.date as origDate,
+  --ft.timedescription as timeOfDay,
   CASE
     WHEN (tt.time IS NULL) THEN 'Default'
     ELSE 'Custom'
   END as timeType,
 
+  coalesce(sc.primaryCategory, 'Medication') as category,
+  t1.category as treatmentCategory,
+
   t1.frequency.meaning as frequency,
   t1.date as StartDate,
+  timestampdiff('SQL_TSI_DAY', t1.date, curdate()) as daysElapsed,
   t1.enddate,
-  t1.duration,
+  --t1.duration,
   t1.project,
   t1.meaning,
   t1.code,
@@ -62,17 +82,17 @@ SELECT
 FROM ehr_lookups.dateRange dr
 
 JOIN study."Treatment Orders" t1
-  ON (dr.date >= t1.date and dr.dateOnly <= t1.enddateCoalesced AND
+  ON (dr.dateOnly >= t1.dateOnly and dr.dateOnly <= t1.enddateCoalesced AND
     mod(timestampdiff('SQL_TSI_DAY', curdate(), dr.dateOnly), t1.frequency.intervalindays) = 0
   )
 
 LEFT JOIN ehr.treatment_times tt ON (tt.treatmentid = t1.objectid)
 LEFT JOIN ehr_lookups.treatment_frequency_times ft ON (ft.frequency = t1.frequency.meaning AND tt.rowid IS NULL)
-
--- LEFT JOIN study.assignment a1
---   ON (a1.project = t1.project AND a1.dateOnly <= cast(dr.date as date) AND a1.enddateCoalesced >= CAST(dr.date as date) AND a1.id = t1.id)
+LEFT JOIN ehr_lookups.snomed_subset_codes sc ON (sc.code = t1.code AND sc.primaryCategory = 'Diet')
 
 WHERE t1.date is not null AND t1.qcstate.publicdata = true
+
+) s
 
 ) s ON (s.animalid = d.id)
 

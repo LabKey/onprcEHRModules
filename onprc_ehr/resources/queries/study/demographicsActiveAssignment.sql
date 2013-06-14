@@ -14,16 +14,33 @@
  * limitations under the License.
  */
 SELECT
-  d.id,
-  group_concat(DISTINCT a.project.displayName, chr(10)) as projects,
-  group_concat(DISTINCT a.project.protocol.displayName, chr(10)) as protocols,
-  group_concat(DISTINCT cast(a.project.investigatorId.lastName as varchar), chr(10)) as investigators,
-  group_concat(DISTINCT a.project.investigatorId.assignedVet.lastName, chr(10)) as vets,
-  COALESCE(count(distinct a.project.name), 0) as totalProjects,
+  a.id,
+  group_concat(DISTINCT a.projectString, chr(10)) as projectAndInvestigator,
+  group_concat(DISTINCT a.displayName, chr(10)) as projects,
+  group_concat(DISTINCT a.protocolDisplayName, chr(10)) as protocols,
+  group_concat(DISTINCT cast(a.lastName as varchar), chr(10)) as investigators,
+  group_concat(DISTINCT a.lastName, chr(10)) as vets,
+  COALESCE(count(distinct a.projectName), 0) as totalProjects,
   COALESCE(count(a.lsid), 0) as numActiveAssignments,
-  COALESCE(SUM(a.project.isResearch), 0) as numResearchAssignments,
-  COALESCE(SUM(a.project.isU24U42), 0) as numU24U42Assignments
+  COALESCE(SUM(a.isResearch), 0) as numResearchAssignments,
+  COALESCE(SUM(a.isU24U42), 0) as numU24U42Assignments
+
+FROM (
+
+SELECT
+  d.id,
+  a.project.displayName as displayName,
+  a.project.protocol.displayName as protocolDisplayName,
+  a.project.investigatorId.lastName as lastName,
+  a.project.investigatorId.assignedVet.lastName as assignedVet,
+  a.project.name as projectName,
+  a.lsid,
+  a.project.isResearch as isResearch,
+  a.project.isU24U42 as isU24U42,
+  cast(a.project.investigatorId.lastName || ' [' || a.project.name || ']' as varchar) as projectString
 
 FROM study.demographics d
-LEFT JOIN study.assignment a ON (a.id = d.id AND a.enddateCoalesced >= curdate())
-GROUP BY d.id
+LEFT JOIN study.assignment a ON (a.id = d.id AND a.enddateCoalesced >= curdate() AND a.date <= curdate())
+) a
+
+GROUP BY a.id

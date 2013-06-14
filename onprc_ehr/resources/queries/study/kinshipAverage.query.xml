@@ -1,0 +1,27 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="kinshipAverage" tableDbType="TABLE">
+                <tableTitle>Kinship Average</tableTitle>
+                <columns>
+                    <column columnName="avgCoefficient">
+                        <columnTitle>Avg. Coefficient</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=ehr&amp;
+                            query.queryName=kinship&amp;
+                            query.Id~eq=${Id}
+                        </url>
+                    </column>
+                    <column columnName="distinctAnimals">
+                        <columnTitle>Distinct Animals</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=ehr&amp;
+                            query.queryName=kinship&amp;
+                            query.Id~eq=${Id}
+                        </url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

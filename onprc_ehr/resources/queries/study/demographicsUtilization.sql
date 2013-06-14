@@ -25,7 +25,7 @@ SELECT
   cast(a.project.investigatorId.lastName || ' [' || a.project.name || ']' as varchar) as use,
   cast(a.project.use_category as varchar) as category
 FROM study.assignment a
-WHERE a.enddateCoalesced >= curdate()
+WHERE a.enddateCoalesced >= curdate() and a.date <= curdate()
 
 UNION ALL
 
@@ -35,7 +35,7 @@ SELECT
   a.groupId.category as category
 
 FROM ehr.animal_group_members a
-WHERE a.enddateCoalesced >= curdate()
+WHERE a.enddateCoalesced >= curdate() AND a.date <= curdate()
 
 ) t
 

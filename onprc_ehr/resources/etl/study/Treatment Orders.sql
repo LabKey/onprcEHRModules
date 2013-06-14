@@ -32,7 +32,8 @@ t.amount_units,
 t.route,
 t.Reason,
 t.performedBy,
-t.Remark,
+t.category,
+REPLACE(t.Remark, Char(21), Char(39)) as remark,
 t.objectid
  
  
@@ -60,6 +61,10 @@ SELECT
 	--Reason as ReasonInt  ,
 	s5.Value as Reason,
 	--(select labkey.core.GROUP_CONCAT_DS(mt.medicationtime, ',', 1) as time FROM Cln_MedicationTimes mt where cln.SearchKey=mt.SearchKey) as times,
+  CASE
+    WHEN s6.value = 'Surgery' THEN 'Surgery'
+    ELSE 'Clinical'
+  END as category,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN

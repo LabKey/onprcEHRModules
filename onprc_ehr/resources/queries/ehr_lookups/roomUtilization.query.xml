@@ -15,6 +15,7 @@
                     </column>
                     <column columnName="TotalCages">
                         <columnTitle>Total Cage Spaces</columnTitle>
+                        <displayWidth>40</displayWidth>
                         <url>/query/executeQuery.view?
                             schemaName=ehr_lookups&amp;
                             query.queryName=cage&amp;
@@ -24,6 +25,7 @@
                     </column>
                     <column columnName="AvailableCages">
                         <columnTitle>Total Cages Present</columnTitle>
+                        <displayWidth>40</displayWidth>
                         <url>/query/executeQuery.view?
                             schemaName=ehr_lookups&amp;
                             query.queryName=availableCages&amp;
@@ -34,6 +36,7 @@
                     </column>
                     <column columnName="CagesUsed">
                         <columnTitle>Cages Used</columnTitle>
+                        <displayWidth>40</displayWidth>
                         <url>/query/executeQuery.view?
                             schemaName=ehr_lookups&amp;
                             query.queryName=cage&amp;
@@ -45,6 +48,7 @@
                     </column>
                     <column columnName="CagesEmpty">
                         <columnTitle>Cages Empty</columnTitle>
+                        <displayWidth>40</displayWidth>
                         <url>/query/executeQuery.view?
                             schemaName=ehr_lookups&amp;
                             query.queryName=cage&amp;
@@ -55,10 +59,12 @@
                         </url>
                     </column>
                     <column columnName="pctUsed">
+                        <displayWidth>40</displayWidth>
                         <columnTitle>% Used</columnTitle>
                     </column>
                     <column columnName="TotalAnimals">
                         <columnTitle>Total Animals</columnTitle>
+                        <displayWidth>40</displayWidth>
                         <url>/query/executeQuery.view?
                             schemaName=study&amp;
                             query.queryName=Demographics&amp;

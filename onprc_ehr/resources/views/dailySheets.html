@@ -1,0 +1,390 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+
+        Ext4.define('ONPRC.panel.DailySheetsPanel', {
+            itemId: 'sheetPanel',
+            extend: 'Ext.panel.Panel',
+
+            initComponent: function(){
+                Ext4.apply(this, {
+                    border: false,
+                    defaults: {
+                        border: false
+                    },
+                    items: this.getItems()
+
+                });
+
+                this.callParent();
+            },
+
+            getItems: function(){
+                var items = [{
+                    html: 'This page allows daily sheets to be printed by room or area.  After picking the location(s) using the drop downs below, hit the \'Print\' buttons below to print any of the reports',
+                    style: 'padding-bottom: 20px;'
+                },{
+                    xtype: 'labkey-combo',
+                    itemId: 'areaField',
+                    width: 400,
+                    fieldLabel: 'Area(s)',
+                    multiSelect: true,
+                    store: {
+                        type: 'labkey-store',
+                        schemaName: 'ehr_lookups',
+                        queryName: 'areas',
+                        autoLoad: true
+                    },
+                    valueField: 'area',
+                    displayField: 'area',
+                    listeners: {
+                        change: function(field, val){
+                            var roomField = field.up('panel').down('#roomField');
+                            roomField.filterByAreas(val);
+                        },
+                        render: function(field){
+                            var val = field.getValue();
+                            if (val && val.length){
+                                var roomField = field.up('panel').down('#roomField');
+                                roomField.filterByAreas(val);
+                            }
+                        }
+                    }
+                },{
+                    xtype: 'ehr-roomfield',
+                    itemId: 'roomField',
+                    width: 400,
+                    fieldLabel: 'Room(s)',
+                    multiSelect: true
+                },{
+                    html: '',
+                    style: 'margin-bottom: 10px;'
+                },{
+                    html: '<hr>'
+                },{
+                    html: '<b>Available Printouts:</b>',
+                    style: 'padding-bottom: 20px;'
+                }];
+
+                items.push({
+                    layout: {
+                        type: 'table',
+                        columns: 3,
+                        tdAttrs: {
+                            valign: 'top'
+                        }
+                    },
+                    defaults: {
+                        border: false
+                    },
+                    items: [{
+                        html: '<i>Clinical Cases:</i>'
+                    },{
+                        style: 'padding-left: 10px;',
+                        html: ''
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'View/Print',
+                        border: true,
+                        handler: function(btn){
+                            var panel = btn.up('#sheetPanel');
+                            var params = panel.getParams();
+                            if (!params)
+                                return;
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveClinicalCases';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+                            console.log(url);
+                            window.open(url);
+                        }
+                    },{
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 3
+                    },{
+                        html: '<i>Clinical Treatments:</i>'
+                    },{
+                        style: 'padding-left: 10px;',
+                        items: [{
+                            xtype: 'datefield',
+                            hidden: true,
+                            fieldLabel: 'Date',
+                            itemId: 'treatmentDateField',
+                            value: new Date(),
+                            allowBlank: false
+                        },{
+                            xtype: 'combo',
+                            multiSelect: true,
+                            fieldLabel: 'Time of Day',
+                            itemId: 'treatmentTimeOfDayField',
+                            value: 'both',
+                            displayField: 'display',
+                            valueField: 'time',
+                            queryMode: 'local',
+                            store: {
+                                type: 'array',
+                                fields: ['time', 'display'],
+                                data: [['both', 'Both'], ['AM', 'AM'],['PM', 'PM']]
+                            }
+                        }]
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'View/Print',
+                        border: true,
+                        handler: function(btn){
+                            var panel = btn.up('#sheetPanel');
+                            var params = panel.getParams();
+                            if (!params)
+                                return;
+
+                            var date = panel.down('#treatmentDateField').getValue();
+                            if (!date){
+                                Ext4.Msg.alert('Error', 'Must provide a date');
+                                return;
+                            }
+
+                            params['TreatmentDate'] = date.format('Y-m-d');
+                            params['NumDays'] = 0;
+                            params['Category'] = 'Medication';
+
+                            var timeOfDay = panel.down('#treatmentTimeOfDayField').getValue();
+                            if (timeOfDay && timeOfDay.length && timeOfDay[0] != 'both'){
+                                params['TimeOfDay'] = timeOfDay.join(';');
+                            }
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+                            console.log(url);
+                            window.open(url);
+                        }
+                    },{
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 3
+                    },{
+                        html: '<i>Diets:</i>'
+                    },{
+                        style: 'padding-left: 10px;',
+                        items: [{
+                            xtype: 'datefield',
+                            hidden: true,
+                            fieldLabel: 'Date',
+                            itemId: 'dietDateField',
+                            value: new Date(),
+                            allowBlank: false
+                        },{
+                            xtype: 'combo',
+                            multiSelect: true,
+                            fieldLabel: 'Time of Day',
+                            itemId: 'dietTimeOfDayField',
+                            displayField: 'display',
+                            value: 'both',
+                            valueField: 'time',
+                            queryMode: 'local',
+                            store: {
+                                type: 'array',
+                                fields: ['time', 'display'],
+                                data: [['both', 'Both'], ['AM', 'AM'],['PM', 'PM']]
+                            }
+                        }]
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'View/Print',
+                        border: true,
+                        handler: function(btn){
+                            var panel = btn.up('#sheetPanel');
+                            var params = panel.getParams();
+                            if (!params)
+                                return;
+
+                            var date = panel.down('#dietDateField').getValue();
+                            if (!date){
+                                Ext4.Msg.alert('Error', 'Must provide a date');
+                                return;
+                            }
+
+                            params['TreatmentDate'] = date.format('Y-m-d');
+                            params['NumDays'] = 0;
+                            params['Category'] = 'Diet';
+
+                            var timeOfDay = panel.down('#dietTimeOfDayField').getValue();
+                            if (timeOfDay && timeOfDay.length && timeOfDay[0] != 'both'){
+                                params['TimeOfDay'] = timeOfDay.join(';');
+                            }
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+                            console.log(url);
+                            window.open(url);
+                        }
+                    },{
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 3
+                    },{
+                        html: '<i>Surgical Cases:</i>'
+                    },{
+                        style: 'padding-left: 10px;',
+                        html: ''
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'View/Print',
+                        border: true,
+                        handler: function(btn){
+                            var panel = btn.up('#sheetPanel');
+                            var params = panel.getParams();
+                            if (!params)
+                                return;
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'SurgicalCases';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+                            console.log(url);
+                            window.open(url);
+                        }
+                    },{
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 3
+                    },{
+                        html: '<i>Surgical Treatments:</i>'
+                    },{
+                        style: 'padding-left: 10px;',
+                        items: [{
+                            xtype: 'datefield',
+                            hidden: true,
+                            fieldLabel: 'Date',
+                            itemId: 'surgicalTreatmentDateField',
+                            value: new Date(),
+                            allowBlank: false
+                        },{
+                            xtype: 'combo',
+                            multiSelect: true,
+                            fieldLabel: 'Time of Day',
+                            itemId: 'surgicalTreatmentTimeOfDayField',
+                            displayField: 'display',
+                            value: 'both',
+                            valueField: 'time',
+                            queryMode: 'local',
+                            store: {
+                                type: 'array',
+                                fields: ['time', 'display'],
+                                data: [['both', 'Both'], ['AM', 'AM'],['PM', 'PM']]
+                            }
+                        }]
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'View/Print',
+                        border: true,
+                        handler: function(btn){
+                            var panel = btn.up('#sheetPanel');
+                            var params = panel.getParams();
+                            if (!params)
+                                return;
+
+                            var date = panel.down('#surgicalTreatmentDateField').getValue();
+                            if (!date){
+                                Ext4.Msg.alert('Error', 'Must provide a date');
+                                return;
+                            }
+
+                            params['TreatmentDate'] = date.format('Y-m-d');
+                            params['NumDays'] = 0;
+                            params['Category'] = 'Medication';
+                            params['Reason'] = 'Post-op analgesia';
+
+                            var timeOfDay = panel.down('#surgicalTreatmentTimeOfDayField').getValue();
+                            if (timeOfDay && timeOfDay.length && timeOfDay[0] != 'both'){
+                                params['TimeOfDay'] = timeOfDay.join(';');
+                            }
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+                            console.log(url);
+                            window.open(url);
+                        }
+                    },{
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 3
+                    },{
+                        html: '<i>Weight Sheets:</i>'
+                    },{
+                        style: 'padding-left: 5px;',
+                        html: ''
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'View/Print',
+                        border: true,
+                        handler: function(btn){
+                            var panel = btn.up('#sheetPanel');
+                            var params = panel.getParams();
+                            if (!params)
+                                return;
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'WeightSheets';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+                            console.log(url);
+                            window.open(url);
+                        }
+                    }]
+                });
+
+                return items;
+            },
+
+            getParams: function(){
+                var params = {
+                    SessionId: LABKEY.Security.currentUser.sessionid
+                };
+
+                var areas = this.down('#areaField').getValue() || [];
+                var rooms = this.down('#roomField').getValue() || [];
+
+                if (!areas.length && !rooms.length){
+                    Ext4.Msg.alert('Error', 'Must select an area or room');
+                    return;
+                }
+
+                //if rooms have been chosen, ignore areas
+                if (rooms.length){
+                    params.Rooms = rooms.join(';');
+                }
+                else if (areas.length){
+                    params.Areas = areas.join(';');
+                }
+
+                return params;
+            }
+        });
+
+        Ext4.create('ONPRC.panel.DailySheetsPanel', {
+
+        }).render(webpart.wrapperDivId);
+    });
+
+</script>

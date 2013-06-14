@@ -1477,10 +1477,11 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -4);
 
+        int minValue = 5;
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("created"), cal.getTime(), CompareType.DATE_GTE);
         filter.addCondition(FieldKey.fromString("qcstate/PublicData"), true);
         filter.addCondition(FieldKey.fromString("code/meaning"), "ketamine;telazol", CompareType.CONTAINS_ONE_OF);
-        filter.addCondition(FieldKey.fromString("amount"), 1, CompareType.LT);
+        filter.addCondition(FieldKey.fromString("amount"), minValue, CompareType.LT);
         filter.addCondition(FieldKey.fromString("amount_units"), "mg", CompareType.CONTAINS);
 
         TableInfo ti = getStudySchema(c, u).getTable("Drug Administration");
@@ -1489,23 +1490,25 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " drug entries since " + _dateFormat.format(cal.getTime()) + " for ketamine or telazol using mgs listing an amount less than 1</b><br>");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Drug Administration&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~lt=1'>Click here to view them</a><br>\n");
+            msg.append("<b>WARNING: There are " + count + " drug entries since " + _dateFormat.format(cal.getTime()) + " for ketamine or telazol using mgs listing an amount less than " + minValue +"</b><br>");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Drug Administration&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~lt=" + minValue + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
 
+
+        int maxValue = 300;
         SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("created"), cal.getTime(), CompareType.DATE_GTE);
         filter2.addCondition(FieldKey.fromString("qcstate/PublicData"), true);
         filter.addCondition(FieldKey.fromString("code/meaning"), "ketamine;telazol", CompareType.CONTAINS_ONE_OF);
-        filter2.addCondition(FieldKey.fromString("amount"), 300, CompareType.GT);
+        filter2.addCondition(FieldKey.fromString("amount"), maxValue, CompareType.GT);
         filter2.addCondition(FieldKey.fromString("amount_units"), "mg", CompareType.CONTAINS);
 
         TableSelector ts2 = new TableSelector(ti, PageFlowUtil.set(ti.getColumn("Id"), ti.getColumn("date"), ti.getColumn("amount"), ti.getColumn("amount_units")), filter2, null);
         long count2 = ts2.getRowCount();
         if (count2 > 0)
         {
-            msg.append("<b>WARNING: There are " + count2 + " drug entries since " + _dateFormat.format(cal.getTime()) + " for ketamine or telazol using mgs listing an amount greater than 300</b><br>");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Drug Administration&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~gt=300'>Click here to view them</a><br>\n");
+            msg.append("<b>WARNING: There are " + count2 + " drug entries since " + _dateFormat.format(cal.getTime()) + " for ketamine or telazol using mgs listing an amount greater than " + maxValue + "</b><br>");
+            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Drug Administration&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~gt=" + maxValue + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }

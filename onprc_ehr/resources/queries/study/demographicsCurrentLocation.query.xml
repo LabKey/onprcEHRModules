@@ -16,11 +16,6 @@
                     </column>
                     <column columnName="room">
                         <displayWidth>40</displayWidth>
-                        <!--<fk>-->
-                          <!--<fkDbSchema>ehr_lookups</fkDbSchema>-->
-                          <!--<fkTable>rooms</fkTable>-->
-                          <!--<fkColumnName>room</fkColumnName>-->
-                        <!--</fk>-->
                     </column>
                     <column columnName="cage">
                         <displayWidth>40</displayWidth>
@@ -33,6 +28,21 @@
                             query.enddate~isblank&amp;
                             query.sort=Id&amp;
                         </url>
+                    </column>
+                    <column columnName="prevRoom">
+                        <columnTitle>Previous Room</columnTitle>
+                        <isHidden>true</isHidden>
+                        <displayWidth>40</displayWidth>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>rooms</fkTable>
+                            <fkColumnName>room</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="prevCage">
+                        <columnTitle>Previous Cage</columnTitle>
+                        <isHidden>true</isHidden>
+                        <displayWidth>40</displayWidth>
                     </column>
                 </columns>
                 <titleColumn>Location</titleColumn>

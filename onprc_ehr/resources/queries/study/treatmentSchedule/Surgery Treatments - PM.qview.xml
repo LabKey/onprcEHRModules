@@ -7,5 +7,6 @@
     <filters>
         <filter column="calculated_status" operator="eq" value="Alive"/>
         <filter column="timeofday" operator="eq" value="PM"/>
+        <filter column="treatmentCategory" operator="eq" value="Surgery"/>
    </filters>
 </customView>

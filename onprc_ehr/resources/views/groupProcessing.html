@@ -1,0 +1,148 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        var groupName = LABKEY.ActionURL.getParameter('groupName');
+
+        Ext4.create('Ext.panel.Panel', {
+            border: false,
+            defaults: {
+                border: false
+            },
+            items: [{
+                html: 'This page is designed to provide information to help with processing of animal groups.  ',
+                style: 'margin-bottom: 20px;'
+            },{
+                xtype: 'labkey-combo',
+                fieldLabel: 'Group Name',
+                value: groupName,
+                itemId: 'groupName',
+                displayField: 'name',
+                valueField: 'name',
+                store: {
+                    type: 'labkey-store',
+                    schemaName: 'ehr',
+                    queryName: 'animal_groups',
+                    viewName: 'Active Groups',
+                    columns: 'name',
+                    autoLoad: true
+                }
+            },{
+                html: '<hr><b>Blood Summary Report:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will summarize blood needed for viral surveillance and genetics, based on the criteria outlined below for those reports.  Either of these can be run individually using the sections below.<br>',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                scope: this,
+                handler: function(btn){
+                    var groupName = btn.up('panel').down('#groupName').getValue();
+                    if (!groupName){
+                        Ext4.Msg.alert('Error', 'Must pick a group');
+                        return;
+                    }
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'processingBloodDraws', 'query.Id/activeAnimalGroups/groups~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive'}))
+                }
+            },{
+                html: '<hr><b>Blood Needed For Viral Surveillance:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will summarize blood needed for viral surveillance based on the following criteria:<br>' +
+                        '- HBV testing is required on all SPF animals over 180 days old that have not been HBV tested during this calendar year<br>' +
+                        '- SRV testing is required for all Japanese Macaques, and non-SPF Cynos that have not been testing during this calendar year',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                scope: this,
+                handler: function(btn){
+                    var groupName = btn.up('panel').down('#groupName').getValue();
+                    if (!groupName){
+                        Ext4.Msg.alert('Error', 'Must pick a group');
+                        return;
+                    }
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'processingSerology', 'query.Id/activeAnimalGroups/groups~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive', 'query.bloodVol~gt': 0}))
+                }
+            },{
+                html: '<hr><b>Blood Needed For Genetic Testing:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will summarize blood needed for genetic testing, using the following criteria:<br>' +
+                    '- 1mL of blood is needed for Parentage testing on all animals that do not already have genetic parentage data.<br>' +
+                    '- 1mL of blood is needed for MHC Typing on all U42 rhesus (males and females) and P51 male rhesus, unless the animal already has MHC data.<br>' +
+                    '- 5mL of blood is needed for the DNA Bank, unless a sample is already present',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                scope: this,
+                handler: function(btn){
+                    var groupName = btn.up('panel').down('#groupName').getValue();
+                    if (!groupName){
+                        Ext4.Msg.alert('Error', 'Must pick a group');
+                        return;
+                    }
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'processingGeneticsBloodDraws', 'query.Id/activeAnimalGroups/groups~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive', 'query.totalBloodDrawVol~gt': 0}))
+                }
+            },{
+                html: '<hr><b>TB Testing:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will show the last TB test date for members of this group.',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                scope: this,
+                handler: function(btn){
+                    var groupName = btn.up('panel').down('#groupName').getValue();
+                    if (!groupName){
+                        Ext4.Msg.alert('Error', 'Must pick a group');
+                        return;
+                    }
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'demographicsMostRecentTBDate', 'query.Id/activeAnimalGroups/groups~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive'}))
+                }
+            },{
+                html: '<hr><b>Ivermectin Treatments:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will show the last date ivermectin was given to each member of this group.',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                scope: this,
+                handler: function(btn){
+                    var groupName = btn.up('panel').down('#groupName').getValue();
+                    if (!groupName){
+                        Ext4.Msg.alert('Error', 'Must pick a group');
+                        return;
+                    }
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'processingIvermectin', 'query.Id/activeAnimalGroups/groups~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive'}))
+                }
+            }]
+        }).render(webpart.wrapperDivId);
+    });
+
+</script>

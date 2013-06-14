@@ -15,12 +15,12 @@
  */
 SELECT
   f.id,
-  f.flag,
+  f.category,
   group_concat(f.value, chr(10)) as values,
   count(f.value) as totalFlags
 
 FROM study.flags f
-JOIN ehr_lookups.flag_categories fc ON (f.flag = fc.category)
-WHERE fc.enforceUnique = true and f.enddateTimeCoalesced >= now()
-GROUP BY f.id, f.flag
+JOIN ehr_lookups.flag_categories fc ON (f.category = fc.category)
+WHERE fc.enforceUnique = true and f.enddateTimeCoalesced >= now() and f.date <= curdate()
+GROUP BY f.id, f.category
 HAVING count(*) > 1

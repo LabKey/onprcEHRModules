@@ -22,7 +22,10 @@ SELECT
      WHEN t.totalCageSqFt < t.requiredSqFt THEN ('Insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFt as varchar))
      WHEN (t.minCageHeight is not null AND t.minCageHeight < t.requiredHeight) THEN ('Insufficient height, needs at least: ' || cast(t.requiredHeight AS varchar))
      ELSE null
-   END as cageStatus
+   END as cageStatus,
+   t.totalApproachingLimit,
+  highs,
+  weights
 
 FROM (
 
@@ -39,9 +42,15 @@ SELECT
     sum(c1.sqft) as requiredSqFt,
     max(c1.height) as requiredHeight,
     count(c1.sqft) as totalCageRows,
+    sum(CASE
+      WHEN ((h.Id.mostRecentWeight.mostRecentWeight / c1.high) > 0.95) THEN 1
+      ELSE 0
+    END) as totalApproachingLimit,
+         group_concat(c1.high) as highs,
+         group_concat(h.Id.mostRecentWeight.mostRecentWeight) as weights
 FROM ehr_lookups.pairedCages pc
 
-LEFT JOIN study.housing h ON (h.room = pc.room AND pc.cage = h.cage AND h.enddateTimeCoalesced >= now())
+JOIN study.housing h ON (h.room = pc.room AND pc.cage = h.cage AND h.enddateTimeCoalesced >= now())
 LEFT JOIN ehr_lookups.cageclass c1 ON (c1.low <= h.Id.mostRecentWeight.mostRecentWeight AND h.Id.mostRecentWeight.mostRecentWeight < c1.high)
 
 GROUP BY pc.room, pc.effectiveCage

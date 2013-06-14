@@ -18,5 +18,5 @@ SELECT
   group_concat(p.category, char(10)) as categories,
   count(*) as total
 FROM study.cases p
-WHERE p.enddateTimeCoalesced >= now()
+WHERE p.isActive = true
 GROUP BY p.id

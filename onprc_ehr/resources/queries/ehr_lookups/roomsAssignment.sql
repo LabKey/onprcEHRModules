@@ -15,13 +15,29 @@
  */
 select
 
-a.id.curLocation.room,
-group_concat(distinct a.project.name, chr(10)) as projects,
-group_concat(distinct a.project.investigatorId.lastname, chr(10)) as investigators,
-count(distinct a.id) as totalAnimals
+  a.room,
+  group_concat(distinct a.name, chr(10)) as projects,
+  group_concat(distinct a.investigator, chr(10)) as investigators,
+
+  group_concat(distinct a.projectIdTotal, chr(10)) as projectIdCount,
+  group_concat(distinct a.projectCageTotal, chr(10)) as projectCageCount,
+
+  sum(a.totalAnimals) as totalAssignedAnimals
+
+FROM (
+
+select
+  a.id.curLocation.room as room,
+  a.project.name as name,
+  a.project.investigatorId.lastname as investigator,
+  cast(a.project.name || ' (' || a.project.investigatorId.lastname || '): ' || cast(count(distinct a.Id) as varchar) as varchar) as projectIdTotal,
+  cast(a.project.name || ' (' || a.project.investigatorId.lastname || '): ' || cast(count(distinct a.id.curLocation.cage) as varchar) as varchar) as projectCageTotal,
+  count(distinct a.id) as totalAnimals
 
 from study.assignment a
+where a.enddateCoalesced >= curdate() and a.date <= curdate() and a.id.curLocation.room IS NOT NULL
+group by a.id.curLocation.room, a.project.name, a.project.investigatorId.lastname
 
-where a.enddateCoalesced >= curdate() and a.id.curLocation.room IS NOT NULL
+) a
 
-group by a.id.curLocation.room
+group by a.room

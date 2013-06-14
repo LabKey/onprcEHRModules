@@ -20,5 +20,5 @@ SELECT
   count(f.Id) as totalRecords
 
 FROM study."Animal Record Flags" f
-WHERE f.enddateCoalesced >= curdate()
+WHERE f.enddateCoalesced >= curdate() and f.date <= curdate()
 GROUP BY f.category, f.value

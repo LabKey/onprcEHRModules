@@ -1,6 +1,6 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
    <sorts>
        <sort column="fiscalYear" descending="true"/>
-       <sort column="affiliation"/>
+       <sort column="requestCategory"/>
    </sorts>
 </customView>

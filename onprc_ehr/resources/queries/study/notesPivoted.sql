@@ -20,7 +20,7 @@ group_concat(f.value, chr(10)) as valueField
 
 FROM study.notes f
 
-WHERE f.enddateCoalesced >= curdate() and category is not null
+WHERE f.enddateCoalesced >= curdate() and category is not null and f.date <= curdate()
 
 GROUP BY f.id, f.category
 

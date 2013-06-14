@@ -31,7 +31,7 @@ SELECT
 
 	t.TestId,
 
-	t.rowversion,
+	t.remarks as remark,
 	(cast(t.objectid as varchar(38)) + '_' + t.TestId) as objectid,
 	 t.objectid as runid
 
@@ -62,6 +62,7 @@ SELECT
 	WBC as Result,
 	'WBC' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -77,6 +78,7 @@ SELECT
 	RBC as Result,
 	'RBC' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -92,6 +94,7 @@ SELECT
 	Hemoglobin as Result,
 	'Hg' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -107,6 +110,7 @@ SELECT
 	Hematocrit as Result,
 	'HCT' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -122,6 +126,7 @@ SELECT
 	MCV as Result,
 	'MCV' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -137,6 +142,7 @@ SELECT
 	MCH as Result,
 	'MCH' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -152,6 +158,7 @@ SELECT
 	MCHC as Result,
 	'MCHC' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -167,6 +174,7 @@ SELECT
 	PlateletCount as Result,
 	'PLT' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -182,6 +190,7 @@ SELECT
 	TotalProtein as Result,
 	'TP' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -197,6 +206,7 @@ SELECT
 	MPMN as Result,
 	'Neut' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -212,6 +222,7 @@ SELECT
 	IPMN as Result,
 	'Bands' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -227,6 +238,7 @@ SELECT
 	Lymphocyte as Result,
 	'Lymph' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -242,6 +254,7 @@ SELECT
 	Monocyte as Result,
 	'Mono' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -257,6 +270,7 @@ SELECT
 	Eosinophil as Result,
 	'EO' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -272,6 +286,7 @@ SELECT
 	Basophil as Result,
 	'BAS' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -287,6 +302,7 @@ SELECT
 	SEDRate as Result,
 	'SEDRate' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -302,6 +318,7 @@ SELECT
 	LUC as Result,
 	'LUC' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -317,6 +334,7 @@ SELECT
 	NRBC as Result,
 	'NRBC' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -332,6 +350,7 @@ SELECT
 	Reticulocyte as Result,
 	'RETIC' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -347,6 +366,7 @@ SELECT
 	RBCHypochromic as Result,
 	'Hypochromic RBC' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -362,6 +382,7 @@ SELECT
 	RBCMicrocyte as Result,
 	'Microcytic RBC' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -377,6 +398,7 @@ SELECT
 	RBCPolychromasia as Result,
 	'Polychromasia RBC' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -392,6 +414,7 @@ SELECT
 	RBCMacrocyte as Result,
 	'Macrocytic RBC' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -407,6 +430,7 @@ SELECT
 	RBCAnisocytosis as Result,
 	'Anisocytosis' as TestId,
 	cln.ts as rowversion,
+  cln.remarks,
 	cln.objectid
 
 FROM Cln_Hematology cln
@@ -424,6 +448,7 @@ SELECT
 	TotalWBC as Result,
 	'WBC' as TestId,
 	cln.ts as rowversion,
+  null as remarks,
 	cln.objectid
 
 FROM Cln_CerebralspinalFluid cln
@@ -439,6 +464,7 @@ SELECT
 	WBCNeurophils as Result,
 	'Neut' as TestId,
 	cln.ts as rowversion,
+  null as remarks,
 	cln.objectid
 
 FROM Cln_CerebralspinalFluid cln
@@ -454,6 +480,7 @@ SELECT
 	WBCLymphocytes as Result,
 	'LY' as TestId,
 	cln.ts as rowversion,
+  null as remarks,
 	cln.objectid
 
 FROM Cln_CerebralspinalFluid cln
@@ -469,6 +496,7 @@ SELECT
 	TotalProtein as Result,
 	'TP' as TestId,
 	cln.ts as rowversion,
+  null as remarks,
 	cln.objectid
 
 FROM Cln_CerebralspinalFluid cln
@@ -484,6 +512,7 @@ SELECT
 	Glucose as Result,
 	'GLUC' as TestId,
 	cln.ts as rowversion,
+  null as remarks,
 	cln.objectid
 
 FROM Cln_CerebralspinalFluid cln

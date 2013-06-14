@@ -345,7 +345,27 @@ EHR.reports.clinicalHistory = function(panel, tab){
     }
 }
 
-EHR.reports.treatmentSchedule = function(panel, tab){
+EHR.reports.clinAMTreatmentSchedule = function(panel, tab){
+    EHR.reports.treatmentSchedule(panel, tab, 'Clinical Treatments - AM');
+};
+
+EHR.reports.clinPMTreatmentSchedule = function(panel, tab){
+    EHR.reports.treatmentSchedule(panel, tab, 'Clinical Treatments - PM');
+};
+
+EHR.reports.dietSchedule = function(panel, tab){
+    EHR.reports.treatmentSchedule(panel, tab, 'Diets');
+};
+
+EHR.reports.surgAMTreatmentSchedule = function(panel, tab){
+    EHR.reports.treatmentSchedule(panel, tab, 'Surgery Treatments - AM');
+};
+
+EHR.reports.surgPMTreatmentSchedule = function(panel, tab){
+    EHR.reports.treatmentSchedule(panel, tab, 'Surgery Treatments - PM');
+};
+
+EHR.reports.treatmentSchedule = function(panel, tab, viewName){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
 
@@ -356,6 +376,7 @@ EHR.reports.treatmentSchedule = function(panel, tab){
         queryConfig: panel.getQWPConfig({
             schemaName: 'study',
             queryName: 'treatmentSchedule',
+            viewName: viewName,
             title: 'Treatment Schedule ' + title,
             filters: filterArray.nonRemovable,
             removeableFilters: filterArray.removable,
@@ -379,23 +400,44 @@ EHR.reports.underConstruction = function(panel, tab){
         html: 'This report is being developed and should be added soon',
         border: false
     });
-}
+};
 
-EHR.reports.reproSummary = function(panel, tab){
+EHR.reports.potentialParents = function(panel, tab){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
+
+    tab.add({
+        border: false,
+        style: 'padding-bottom: 20px;',
+        html: 'This report calculates potential parents for the selected animal(s).  The potential parents are determined as follows:' +
+            '<br><br>' +
+            '<ul style="margin-left: 20px">' +
+            '<li style="list-style-type: disc;">Potential dams are determined by finding any female housed in the animal\'s birth location at the time of birth</li>' +
+            '<li style="list-style-type: disc;">Potential sires are determined by finding the locations where all potential dams were housed between 155-180 days prior to the animal\'s birth.  The potential sires are any male animals housed in these locations during the conception window.</li>' +
+            '</ul>'
+    });
 
     tab.add({
         xtype: 'ldk-querypanel',
         style: 'margin-bottom:20px;',
         queryConfig: panel.getQWPConfig({
             schemaName: 'study',
-            queryName: 'reproSummary',
-            title: "Repro Summary" + title,
+            queryName: 'potentialDams',
+            title: "Potential Dams" + title,
             filters: filterArray.nonRemovable,
-            removeableFilters: filterArray.removable,
-            sort: 'Id,-year,monthnum'
+            removeableFilters: filterArray.removable
         })
     });
 
-}
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'potentialSires',
+            title: "Potential Sires" + title,
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable
+        })
+    });
+};
