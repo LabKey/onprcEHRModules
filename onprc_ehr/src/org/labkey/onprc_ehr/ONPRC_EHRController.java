@@ -163,7 +163,7 @@ public class ONPRC_EHRController extends SpringActionController
             resultProperties.put("cores", cores);
 
             //then DCM
-            List<JSONObject> dcm = new ArrayList<JSONObject>();
+            List<JSONObject> dcm = new ArrayList<>();
             Container dcmContainer = ContainerManager.getForPath("/ONPRC/DCM");
             if (dcmContainer != null)
             {
@@ -180,7 +180,7 @@ public class ONPRC_EHRController extends SpringActionController
             resultProperties.put("dcm", dcm);
 
             //for now, EHR is hard coded
-            List<JSONObject> ehr = new ArrayList<JSONObject>();
+            List<JSONObject> ehr = new ArrayList<>();
             Container ehrContainer = ContainerManager.getForPath("/ONPRC/EHR");
 
             JSONObject json = new JSONObject();
@@ -605,7 +605,7 @@ public class ONPRC_EHRController extends SpringActionController
                 return new HtmlView("No import types provided");
             }
 
-            List<String> types = new ArrayList<String>();
+            List<String> types = new ArrayList<>();
             types.addAll(Arrays.asList(form.getTypes()));
 
             sb.append("This action is highly experimental and should be used at your own risk.  It is designed to bulk upload existing folders into workbooks. <br><br>");
@@ -641,7 +641,7 @@ public class ONPRC_EHRController extends SpringActionController
                 return false;
             }
 
-            List<String> types = new ArrayList<String>();
+            List<String> types = new ArrayList<>();
             types.addAll(Arrays.asList(form.getTypes()));
 
             if (types.contains("expt"))

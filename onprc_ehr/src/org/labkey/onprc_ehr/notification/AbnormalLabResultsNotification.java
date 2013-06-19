@@ -118,7 +118,7 @@ public class AbnormalLabResultsNotification extends AbstractEHRNotification
             boolean doSend = false;
             if (rs.next())
             {
-                Map<String, Map<String, StringBuilder>> summary = new HashMap<String, Map<String, StringBuilder>>();
+                Map<String, Map<String, StringBuilder>> summary = new HashMap<>();
 
                 int rowCount = 0;
                 do
@@ -136,7 +136,7 @@ public class AbnormalLabResultsNotification extends AbstractEHRNotification
 
                     Map<String, StringBuilder> areaNode = summary.get(area);
                     if (areaNode == null)
-                        areaNode = new HashMap<String, StringBuilder>();
+                        areaNode = new HashMap<>();
 
                     StringBuilder sb = areaNode.get(room);
                     if (sb == null)

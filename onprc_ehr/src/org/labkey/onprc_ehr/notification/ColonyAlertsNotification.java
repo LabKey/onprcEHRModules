@@ -289,7 +289,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
 
         TableInfo ti = getStudySchema(c, u).getTable("Demographics");
-        List<FieldKey> colKeys = new ArrayList<FieldKey>();
+        List<FieldKey> colKeys = new ArrayList<>();
         colKeys.add(FieldKey.fromString(getStudy(c).getSubjectColumnName()));
         colKeys.add(FieldKey.fromString("Id/age/AgeFriendly"));
         final Map<FieldKey, ColumnInfo> columns = QueryService.get().getColumns(ti, colKeys);
@@ -587,7 +587,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         TableInfo ti = getEHRSchema(c, u).getTable("protocol");
 
-        List<FieldKey> colKeys = new ArrayList<FieldKey>();
+        List<FieldKey> colKeys = new ArrayList<>();
         colKeys.add(FieldKey.fromString("displayName"));
         colKeys.add(FieldKey.fromString("daysUntilrenewal"));
         colKeys.add(FieldKey.fromString("activeAnimals/totalActiveAnimals"));
@@ -761,7 +761,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //TODO: discuss w/ Josh
         UserSchema us = getStudySchema(c, u);
         QueryDefinition qd = us.getQueryDefForTable("HousingCheck");
-        List<QueryException> errors = new ArrayList<QueryException>();
+        List<QueryException> errors = new ArrayList<>();
         TableInfo ti = qd.getTable(us, errors, true);
         SQLFragment sql = ti.getFromSQL("t");
         sql = new SQLFragment("SELECT * FROM " + sql.getSQL(), cal.getTime(), cal.getTime(), cal.getTime());
@@ -912,7 +912,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are " + count + " animals housed in cages that should not be available, based on the cage/divider configuration.</b><br>\n");
             msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=housedInUnavailableCages'>Click here to view them</a><br>\n\n");
 
-            final Map<String, String> locations = new TreeMap<String, String>();
+            final Map<String, String> locations = new TreeMap<>();
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
@@ -1005,7 +1005,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         Map<String, Object>[] rows = ts.getMapArray();
         if (rows.length > 0)
         {
-            final Map<String, Integer> roomMap = new TreeMap<String, Integer>();
+            final Map<String, Integer> roomMap = new TreeMap<>();
             for (Map<String, Object> row : rows)
             {
                 String room = (String)row.get("room");
@@ -1050,7 +1050,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         filter.addCondition(FieldKey.fromString("BloodRemaining/availableBlood"), 0, CompareType.LT);
 
         TableInfo ti = getStudySchema(c, u).getTable("Blood Draws");
-        Set<FieldKey> colKeys = new HashSet<FieldKey>();
+        Set<FieldKey> colKeys = new HashSet<>();
         colKeys.add(FieldKey.fromString("BloodRemaining/availableBlood"));
         colKeys.add(FieldKey.fromString("date"));
         colKeys.add(FieldKey.fromString("Id"));
@@ -1237,7 +1237,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 Integer complete = 0;
                 Integer incomplete = 0;
 
-                Map<String, Map<String, Map<String, Object>>> summary = new HashMap<String, Map<String, Map<String, Object>>>();
+                Map<String, Map<String, Map<String, Object>>> summary = new HashMap<>();
 
                 do
                 {
@@ -1251,12 +1251,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
                         Map<String, Map<String, Object>> areaNode = summary.get(area);
                         if (areaNode == null)
-                            areaNode = new HashMap<String, Map<String, Object>>();
+                            areaNode = new HashMap<>();
 
                         Map<String, Object> roomNode = areaNode.get(room);
                         if (roomNode == null)
                         {
-                            roomNode = new HashMap<String, Object>();
+                            roomNode = new HashMap<>();
                             roomNode.put("complete", 0);
                             roomNode.put("incomplete", 0);
                             roomNode.put("cagesHtml", new StringBuilder());
@@ -1344,7 +1344,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("totalRooms"), 1, CompareType.GT);
 
         TableInfo ti = getStudySchema(c, u).getTable("animalGroupLocationSummary");
-        List<FieldKey> colKeys = new ArrayList<FieldKey>();
+        List<FieldKey> colKeys = new ArrayList<>();
         colKeys.add(FieldKey.fromString("groupId"));
         colKeys.add(FieldKey.fromString("groupId/name"));
         colKeys.add(FieldKey.fromString("roomSummary"));

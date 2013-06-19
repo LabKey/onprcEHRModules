@@ -451,7 +451,7 @@ public class ETLRunnable implements Runnable
 
                 QueryUpdateService updater = targetTable.getUpdateService();
                 updater.setBulkLoad(true);
-                Map<String, Object> extraContext = new HashMap<String, Object>();
+                Map<String, Object> extraContext = new HashMap<>();
                 extraContext.put("dataSource", "etl");
 
                 //NOTE: the purpose of this switch is to allow alternate keyfields, such as
@@ -469,7 +469,7 @@ public class ETLRunnable implements Runnable
                     // perform any deletes
                     if (!deletedIds.isEmpty())
                     {
-                        Map<String, SQLFragment> joins = new HashMap<String, SQLFragment>();
+                        Map<String, SQLFragment> joins = new HashMap<>();
                         filterColumn.declareJoins("t", joins);
 
                         // Some ehr records are transformed into multiple records en route to labkey. the multiple records have objectids that
@@ -483,7 +483,7 @@ public class ETLRunnable implements Runnable
                             like.append(joins.values().iterator().next());
                         like.append(" WHERE ");
 
-                        SQLFragment likeWithIds = new SQLFragment(like.getSQL(), new ArrayList<Object>(like.getParams()));
+                        SQLFragment likeWithIds = new SQLFragment(like.getSQL(), new ArrayList<>(like.getParams()));
                         int count = 0;
                         int deleted = 0;
                         for (final String deletedId : deletedIds)
@@ -519,7 +519,7 @@ public class ETLRunnable implements Runnable
                                 deleted += Table.delete(realTable, filter);
 
                                 // Reset the count and SQL
-                                likeWithIds = new SQLFragment(like.getSQL(), new ArrayList<Object>(like.getParams()));
+                                likeWithIds = new SQLFragment(like.getSQL(), new ArrayList<>(like.getParams()));
                                 count = 0;
                             }
                         }
@@ -544,12 +544,12 @@ public class ETLRunnable implements Runnable
                             log.info("no rows were deleted");
                     }
 
-                    List<Map<String, Object>> sourceRows = new ArrayList<Map<String, Object>>();
+                    List<Map<String, Object>> sourceRows = new ArrayList<>();
                     // accumulating batches of rows. would employ ResultSet.isDone to manage the last remainder
                     // batch but the MySQL jdbc driver doesn't support that method if it is a streaming result set.
                     boolean isDone = false;
                     boolean isDemographics = false;
-                    List<Object> searchParams = new ArrayList<Object>();
+                    List<Object> searchParams = new ArrayList<>();
                     if (targetTable instanceof DataSetTable)
                     {
                         if(((DataSetTable)targetTable).getDataSet().isDemographicData())
@@ -616,7 +616,7 @@ public class ETLRunnable implements Runnable
                                     int totalDeleted;
                                     if (realTable != null)
                                     {
-                                        List<Object> pks = new ArrayList<Object>();
+                                        List<Object> pks = new ArrayList<>();
                                         for (Map<String, Object> r : rows)
                                         {
                                             pks.add(r.get(pkColumn.getName()));
@@ -726,7 +726,7 @@ public class ETLRunnable implements Runnable
                         try
                         {
                             TableInfo ti = ONPRC_EHRSchema.getInstance().getSchema().getTable(ONPRC_EHRSchema.TABLE_ETL_RUNS);
-                            Map<String, Object> row = new HashMap<String, Object>();
+                            Map<String, Object> row = new HashMap<>();
                             row.put("date", new Date(newBaselineTimestamp));
                             row.put("queryname", targetTableName);
                             byte[] encoded = Base64.encodeBase64(newBaselineVersion);
@@ -771,7 +771,7 @@ public class ETLRunnable implements Runnable
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Set<String> deletes = new HashSet<String>();
+        Set<String> deletes = new HashSet<>();
 
         try
         {
@@ -958,7 +958,7 @@ public class ETLRunnable implements Runnable
 
     private Map<String, String> loadQueries(Collection<Resource> sqlFiles) throws IOException
     {
-        Map<String, String> qMap = new TreeMap<String, String>();
+        Map<String, String> qMap = new TreeMap<>();
 
         for (Resource sqlFile : sqlFiles)
         {
@@ -975,7 +975,7 @@ public class ETLRunnable implements Runnable
 
     private Map<String, Object> mapResultSetRow(ResultSet rs) throws SQLException
     {
-        Map<String, Object> map = new CaseInsensitiveHashMap<Object>();
+        Map<String, Object> map = new CaseInsensitiveHashMap<>();
         ResultSetMetaData md = rs.getMetaData();
         int columnCount = md.getColumnCount();
         for (int i = 1; i <= columnCount; i++)
@@ -1279,8 +1279,8 @@ public class ETLRunnable implements Runnable
                     sb.append("*************************<br>");
                     sb.append("validating ETL for table: " + targetTableName + "<br><br>");
                     rs = ps.executeQuery();
-                    Set<String> missingFromLK = new HashSet<String>();
-                    Set<String> toDeleteFromLK = new HashSet<String>();
+                    Set<String> missingFromLK = new HashSet<>();
+                    Set<String> toDeleteFromLK = new HashSet<>();
                     while (rs.next())
                     {
                         String col1 = rs.getString("objectid");
@@ -1301,7 +1301,7 @@ public class ETLRunnable implements Runnable
                         if (missingFromLK.size() > 0)
                         {
                             sb.append("records missing:<br>");
-                            List<String> toShow = new ArrayList<String>();
+                            List<String> toShow = new ArrayList<>();
                             toShow.addAll(missingFromLK);
                             sb.append("'" + StringUtils.join(toShow, "','") + "'").append("<br><br>");
 
@@ -1313,7 +1313,7 @@ public class ETLRunnable implements Runnable
                                     for (String table : tables)
                                     {
                                         //although in LK objectIds can have other info appended, we need to truncate to the original objectid for IRIS
-                                        Set<String> objectIdsToAdd = new HashSet<String>();
+                                        Set<String> objectIdsToAdd = new HashSet<>();
                                         for (String objectid : missingFromLK)
                                         {
                                             if (objectid.length() >= 36)
@@ -1322,7 +1322,7 @@ public class ETLRunnable implements Runnable
                                                 objectIdsToAdd.add(objectid);
                                         }
                                         //SQLServer will automatically bump the rowversion for us
-                                        ps2 = originConnection.prepareStatement("UPDATE dbo." + table + " SET objectid = objectid WHERE objectid IN ('" + StringUtils.join(new ArrayList<String>(objectIdsToAdd), "','") + "')");
+                                        ps2 = originConnection.prepareStatement("UPDATE dbo." + table + " SET objectid = objectid WHERE objectid IN ('" + StringUtils.join(new ArrayList<>(objectIdsToAdd), "','") + "')");
                                         ps2.execute();
                                         ps2.close();
                                     }
@@ -1337,7 +1337,7 @@ public class ETLRunnable implements Runnable
                         if (toDeleteFromLK.size() > 0)
                         {
                             sb.append("to delete from LabKey:<br>");
-                            List<String> toShow = new ArrayList<String>();
+                            List<String> toShow = new ArrayList<>();
                             toShow.addAll(toDeleteFromLK);
                             sb.append("'" + StringUtils.join(toShow, "','") + "'").append("<br><br>");
                             if (attemptRepair)

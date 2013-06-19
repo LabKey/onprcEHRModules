@@ -73,7 +73,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     public void customize(TableInfo table)
     {
-        _userSchemas = new HashMap<String, UserSchema>();
+        _userSchemas = new HashMap<>();
 
         if (table instanceof AbstractTableInfo)
         {
@@ -1171,7 +1171,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         "group by sd.lsid");
                 qd.setIsTemporary(true);
 
-                List<QueryException> errors = new ArrayList<QueryException>();
+                List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
 
                 ti.getColumn("lsid").setHidden(true);
@@ -1209,7 +1209,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         "group by sd.lsid");
                 qd.setIsTemporary(true);
 
-                List<QueryException> errors = new ArrayList<QueryException>();
+                List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
 
                 ti.getColumn("lsid").setHidden(true);
@@ -1247,7 +1247,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         "group by sd.lsid");
                 qd.setIsTemporary(true);
 
-                List<QueryException> errors = new ArrayList<QueryException>();
+                List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
 
                 ti.getColumn("lsid").setHidden(true);
@@ -1285,7 +1285,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         "group by sd.lsid");
                 qd.setIsTemporary(true);
 
-                List<QueryException> errors = new ArrayList<QueryException>();
+                List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
                 if (errors.size() > 0)
                 {

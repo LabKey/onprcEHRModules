@@ -133,7 +133,7 @@ public class LegacyDataManager
                 {
                     sb.append("<br>----------------------------------<br>");
 
-                    Map<String, Object> row = new HashMap<String, Object>();
+                    Map<String, Object> row = new HashMap<>();
                     Date created = null;
                     if (rs.getObject("experiment_date") != null && rs.getObject("experiment_date") instanceof Date)
                     {
@@ -235,7 +235,7 @@ public class LegacyDataManager
                                     root.mkdir();
                             }
 
-                            List<File> toMove = new ArrayList<File>();
+                            List<File> toMove = new ArrayList<>();
                             for (File subfolder : sourceFolder.listFiles())
                             {
                                 if (subfolder.isDirectory())
@@ -296,7 +296,7 @@ public class LegacyDataManager
         return sb.toString();
     }
 
-    private Map<Integer, User> _userMap = new HashMap<Integer, User>();
+    private Map<Integer, User> _userMap = new HashMap<>();
 
     private User resolveUser(User u, Container c, ResultSet rs, StringBuilder sb) throws SQLException
     {
@@ -409,9 +409,9 @@ public class LegacyDataManager
         TableSelector ts = new TableSelector(elispotTable, filter, new Sort("id_experiment"));
 
         final FileContentService svc = ServiceRegistry.get().getService(FileContentService.class);
-        final Map<Container, List<Map<String, Object>>> runs = new HashMap<Container, List<Map<String, Object>>>();
-        final Map<Container, String> nameMap = new HashMap<Container, String>();
-        final Map<Container, Date> runDateMap = new HashMap<Container, Date>();
+        final Map<Container, List<Map<String, Object>>> runs = new HashMap<>();
+        final Map<Container, String> nameMap = new HashMap<>();
+        final Map<Container, Date> runDateMap = new HashMap<>();
 
         AssayProvider ap = AssayService.get().getProvider("ELISPOT_Assay");
         if (ap == null)
@@ -435,7 +435,7 @@ public class LegacyDataManager
             @Override
             public void exec(ResultSet rs) throws SQLException
             {
-                Map<String, Object> row = new HashMap<String, Object>();
+                Map<String, Object> row = new HashMap<>();
                 Integer expt = rs.getInt("id_experiment");
                 Container workbook = resolveWorkbookFromId(expt, ctx.getUser(), ctx.getContainer());
                 String runName = "Expt: " + expt;
@@ -501,7 +501,7 @@ public class LegacyDataManager
 
                 List<Map<String, Object>> results = runs.get(workbook);
                 if (results == null)
-                    results = new ArrayList<Map<String, Object>>();
+                    results = new ArrayList<>();
 
                 results.add(row);
 
@@ -632,9 +632,9 @@ public class LegacyDataManager
             }
 
             TableSelector ts2 = new TableSelector(mysqlPepTable);
-            final List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+            final List<Map<String, Object>> rows = new ArrayList<>();
             final Map<String, String> poolsToCreate = new CaseInsensitiveHashMap();
-            final Map<String, Set<String>> poolMembers = new HashMap<String, Set<String>>();
+            final Map<String, Set<String>> poolMembers = new HashMap<>();
 
             ts2.forEach(new Selector.ForEachBlock<ResultSet>()
             {
@@ -648,7 +648,7 @@ public class LegacyDataManager
                         poolsToCreate.put(pool_name, pool_name);
                     }
 
-                    Map<String, Object> row = new HashMap<String, Object>();
+                    Map<String, Object> row = new HashMap<>();
                     row.put("container", c.getId());
                     row.put("name", StringUtils.trimToNull(object.getString("full_name")));
                     row.put("peptideId", object.getInt("id_peptide"));
@@ -729,10 +729,10 @@ public class LegacyDataManager
 
                 if (poolsToCreate.size() > 0)
                 {
-                    List<Map<String, Object>> poolRows = new ArrayList<Map<String, Object>>();
+                    List<Map<String, Object>> poolRows = new ArrayList<>();
                     for (String name : poolsToCreate.values())
                     {
-                        Map<String, Object> row = new HashMap<String, Object>();
+                        Map<String, Object> row = new HashMap<>();
                         row.put("pool_name", StringUtils.trimToNull(name));
                         row.put("container", c.getId());
                         poolRows.add(row);
@@ -754,7 +754,7 @@ public class LegacyDataManager
 
                 if (poolMembers.size() > 0)
                 {
-                    List<Map<String, Object>> toInsert = new ArrayList<Map<String, Object>>();
+                    List<Map<String, Object>> toInsert = new ArrayList<>();
                     for (String poolName : poolMembers.keySet())
                     {
                         Integer poolId = getPoolId(c, poolName, peptidePoolTable);
@@ -763,7 +763,7 @@ public class LegacyDataManager
 
                         for (String aaseq : poolMembers.get(poolName))
                         {
-                            Map<String, Object> row = new HashMap<String, Object>();
+                            Map<String, Object> row = new HashMap<>();
                             row.put("poolid", poolId);
                             row.put("sequence", aaseq);
                             toInsert.add(row);
@@ -823,7 +823,7 @@ public class LegacyDataManager
         {
             Set<String> members = poolMembers.get(pool_name);
             if (members == null)
-                members = new HashSet<String>();
+                members = new HashSet<>();
 
             if (!members.contains(aaseq))
                 members.add(aaseq);
@@ -832,7 +832,7 @@ public class LegacyDataManager
         }
     }
 
-    private Map<String, Set<String>> _existingPeptides = new HashMap<String, Set<String>>();
+    private Map<String, Set<String>> _existingPeptides = new HashMap<>();
 
     private boolean getPeptidePoolMember(Container c, String pool_name, String aaseq, TableInfo peptidePoolMembersTable)
     {
@@ -842,7 +842,7 @@ public class LegacyDataManager
         }
         else
         {
-            Set<FieldKey> fieldKeys = new HashSet<FieldKey>();
+            Set<FieldKey> fieldKeys = new HashSet<>();
             fieldKeys.add(FieldKey.fromString("poolid/pool_name"));
             fieldKeys.add(FieldKey.fromString("sequence"));
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(peptidePoolMembersTable, fieldKeys);
@@ -857,7 +857,7 @@ public class LegacyDataManager
                     String aaseq = rs.getString(FieldKey.fromString("sequence"));
                     Set<String> members = _existingPeptides.get(name);
                     if (members == null)
-                        members = new HashSet<String>();
+                        members = new HashSet<>();
 
                     if (!members.contains(aaseq))
                         members.add(aaseq);
@@ -888,7 +888,7 @@ public class LegacyDataManager
 
         if (count == 0)
         {
-            Map<String, Object> toInsert = new HashMap<String, Object>();
+            Map<String, Object> toInsert = new HashMap<>();
             toInsert.put("sequence", sequence);
 
             if (row.getString("mhc_restriction") != null)
@@ -934,8 +934,8 @@ public class LegacyDataManager
             throw new RuntimeException("Import method not recognized: " + importMethod);
         }
 
-        final Map<String, List<Map<String, Object>>> runs = new HashMap<String, List<Map<String, Object>>>();
-        final Map<String, Map<String, Object>> runPropMap = new HashMap<String, Map<String, Object>>();
+        final Map<String, List<Map<String, Object>>> runs = new HashMap<>();
+        final Map<String, Map<String, Object>> runPropMap = new HashMap<>();
 
         SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
         filter.addCondition("animalid", " ", CompareType.NEQ);
@@ -943,7 +943,7 @@ public class LegacyDataManager
 
         TableInfo projectTable = schema.getTable("Projects");
         TableSelector projectSelector = new TableSelector(projectTable);
-        final Map<Integer, String> projectMap = new HashMap<Integer, String>();
+        final Map<Integer, String> projectMap = new HashMap<>();
         projectSelector.forEach(new Selector.ForEachBlock<ResultSet>()
         {
             @Override
@@ -972,7 +972,7 @@ public class LegacyDataManager
                     expName = "Expt " + expId;
 
                 String runName = "GRIP Genotype Data" + (expName == null ? "" : ": " + expName);
-                Map<String, Object> runProps = new HashMap<String, Object>();
+                Map<String, Object> runProps = new HashMap<>();
                 runProps.put("runDate", exptDate);
                 runProps.put("purpose", projDescription);
 
@@ -989,8 +989,8 @@ public class LegacyDataManager
                     }
                 }
 
-                Map<String, Object> row1 = new HashMap<String, Object>();
-                Map<String, Object> row2 = new HashMap<String, Object>();
+                Map<String, Object> row1 = new HashMap<>();
+                Map<String, Object> row2 = new HashMap<>();
 
                 String marker = rs.getString("MarkerId");
                 if (marker != null)
@@ -1083,7 +1083,7 @@ public class LegacyDataManager
                 runPropMap.put(runName, runProps);
                 List<Map<String, Object>> results = runs.get(runName);
                 if (results == null)
-                    results = new ArrayList<Map<String, Object>>();
+                    results = new ArrayList<>();
 
                 if (row1.containsKey("result") || row1.containsKey("qual_result"))
                     results.add(row1);
@@ -1132,8 +1132,8 @@ public class LegacyDataManager
             throw new RuntimeException("Import method not recognized: " + importMethod);
         }
 
-        final Map<String, List<Map<String, Object>>> runs = new HashMap<String, List<Map<String, Object>>>();
-        final Map<String, Map<String, Object>> runPropMap = new HashMap<String, Map<String, Object>>();
+        final Map<String, List<Map<String, Object>>> runs = new HashMap<>();
+        final Map<String, Map<String, Object>> runPropMap = new HashMap<>();
 
         SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
         filter.addCondition("animalid", " ", CompareType.NEQ);
@@ -1155,7 +1155,7 @@ public class LegacyDataManager
                     expName = "Expt " + expId;
 
                 String runName = "GRIP SNP Data" + (expName == null ? "" : ": " + expName);
-                Map<String, Object> runProps = new HashMap<String, Object>();
+                Map<String, Object> runProps = new HashMap<>();
                 runProps.put("runDate", exptDate);
                 runPropMap.put(runName, runProps);
 
@@ -1172,8 +1172,8 @@ public class LegacyDataManager
                     }
                 }
 
-                Map<String, Object> row1 = new HashMap<String, Object>();
-                Map<String, Object> row2 = new HashMap<String, Object>();
+                Map<String, Object> row1 = new HashMap<>();
+                Map<String, Object> row2 = new HashMap<>();
 
                 row1.put("subjectId", rs.getObject("AnimalId"));
                 row1.put("date", rs.getObject("expdate"));
@@ -1237,7 +1237,7 @@ public class LegacyDataManager
 
                 List<Map<String, Object>> results = runs.get(runName);
                 if (results == null)
-                    results = new ArrayList<Map<String, Object>>();
+                    results = new ArrayList<>();
 
                 if (row1.containsKey("marker"))
                     results.add(row1);
@@ -1285,8 +1285,8 @@ public class LegacyDataManager
             throw new RuntimeException("Import method not recognized: " + importMethod);
         }
 
-        final Map<String, List<Map<String, Object>>> runs = new HashMap<String, List<Map<String, Object>>>();
-        final Map<String, Map<String, Object>> runPropMap = new HashMap<String, Map<String, Object>>();
+        final Map<String, List<Map<String, Object>>> runs = new HashMap<>();
+        final Map<String, Map<String, Object>> runPropMap = new HashMap<>();
 
         SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
         filter.addCondition("animalid", " ", CompareType.NEQ);
@@ -1312,7 +1312,7 @@ public class LegacyDataManager
                     }
                 }
 
-                Map<String, Object> row1 = new HashMap<String, Object>();
+                Map<String, Object> row1 = new HashMap<>();
 
                 row1.put("subjectId", rs.getObject("AnimalId"));
                 row1.put("category", "Unknown");
@@ -1347,7 +1347,7 @@ public class LegacyDataManager
 
                 List<Map<String, Object>> results = runs.get(runName);
                 if (results == null)
-                    results = new ArrayList<Map<String, Object>>();
+                    results = new ArrayList<>();
 
                 results.add(row1);
 

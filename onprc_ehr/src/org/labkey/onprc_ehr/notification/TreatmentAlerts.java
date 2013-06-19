@@ -235,7 +235,7 @@ public class TreatmentAlerts extends AbstractEHRNotification
             {
                 int complete = 0;
                 int incomplete = 0;
-                Map<String, Map<String, Map<String, Object>>> summary = new HashMap<String, Map<String, Map<String, Object>>>();
+                Map<String, Map<String, Map<String, Object>>> summary = new HashMap<>();
                 do
                 {
                     if("Completed".equals(rs.getString(FieldKey.fromString("treatmentStatus/Label"))))
@@ -248,12 +248,12 @@ public class TreatmentAlerts extends AbstractEHRNotification
                         String room = rs.getString(FieldKey.fromString("CurrentRoom"));
                         Map<String, Map<String, Object>> areaNode = summary.get(area);
                         if (areaNode == null)
-                            areaNode = new HashMap<String, Map<String, Object>>();
+                            areaNode = new HashMap<>();
 
                         Map<String, Object> roomNode = areaNode.get(room);
                         if (roomNode == null)
                         {
-                            roomNode = new HashMap<String, Object>();
+                            roomNode = new HashMap<>();
                             roomNode.put("incomplete", 0);
                             roomNode.put("complete", 0);
                             roomNode.put("html", new StringBuilder());
@@ -367,19 +367,19 @@ public class TreatmentAlerts extends AbstractEHRNotification
             {
                 msg.append("<a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=TreatmentsThatDiffer&query.date~dateeq=$datestr'>Click here to view them</a><p/>\n");
 
-                Map<String, Map<String, Map<String, Object>>> summary = new HashMap<String, Map<String, Map<String, Object>>>();
+                Map<String, Map<String, Map<String, Object>>> summary = new HashMap<>();
                 do
                 {
                     String area = rs.getString("CurrentArea");
                     String room = rs.getString("CurrentRoom");
                     Map<String, Map<String, Object>> areaNode = summary.get(area);
                     if (areaNode == null)
-                        areaNode = new HashMap<String, Map<String, Object>>();
+                        areaNode = new HashMap<>();
 
                     Map<String, Object> roomNode = areaNode.get(room);
                     if (roomNode == null)
                     {
-                        roomNode = new HashMap<String, Object>();
+                        roomNode = new HashMap<>();
                         roomNode.put("total", 0);
                         roomNode.put("html", new StringBuilder());
                     }

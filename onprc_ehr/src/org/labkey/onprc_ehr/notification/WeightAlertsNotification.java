@@ -107,7 +107,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
 
         TableInfo ti = getStudySchema(c, u).getTable("Demographics");
-        List<FieldKey> colKeys = new ArrayList<FieldKey>();
+        List<FieldKey> colKeys = new ArrayList<>();
         colKeys.add(FieldKey.fromString(getStudy(c).getSubjectColumnName()));
         colKeys.add(FieldKey.fromString("Id/age/AgeFriendly"));
         final Map<FieldKey, ColumnInfo> columns = QueryService.get().getColumns(ti, colKeys);
@@ -148,7 +148,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         final FieldKey vetsKey = FieldKey.fromString("Id/activeAssignments/vets");
         final FieldKey peKey = FieldKey.fromString("Id/physicalExamHistory/daysSinceExam");
 
-        List<FieldKey> colKeys = new ArrayList<FieldKey>();
+        List<FieldKey> colKeys = new ArrayList<>();
         colKeys.add(areaKey);
         colKeys.add(roomKey);
         colKeys.add(cageKey);
@@ -178,7 +178,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
         msg.append("<b>Weights since " + _dateFormat.format(date.getTime()) + " representing changes of " + (pct > 0 ? "+" : "") + pct + "% in the past " + max + " days:</b><p>");
 
-        final Map<String, Map<String, List<Map<String, Object>>>> summary = new TreeMap<String, Map<String, List<Map<String, Object>>>>();
+        final Map<String, Map<String, List<Map<String, Object>>>> summary = new TreeMap<>();
         ts.forEach(new Selector.ForEachBlock<ResultSet>()
         {
             @Override
@@ -189,7 +189,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                 Map<String, List<Map<String, Object>>> areaMap = summary.get(area);
                 if (areaMap == null)
                 {
-                    areaMap = new TreeMap<String, List<Map<String, Object>>>();
+                    areaMap = new TreeMap<>();
                     summary.put(area, areaMap);
                 }
 
@@ -197,11 +197,11 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                 List<Map<String, Object>> roomList = areaMap.get(room);
                 if (roomList == null)
                 {
-                    roomList = new ArrayList<Map<String, Object>>();
+                    roomList = new ArrayList<>();
                     summary.get(area).put(room, roomList);
                 }
 
-                Map<String, Object> rowMap = new HashMap<String, Object>();
+                Map<String, Object> rowMap = new HashMap<>();
                 rowMap.put("area", rs.getString(areaKey));
                 rowMap.put("room", rs.getString(roomKey));
                 rowMap.put("cage", rs.getString(cageKey));
@@ -286,7 +286,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         TableInfo ti = getStudySchema(c, u).getTable("weightConsecutiveDrops");
         assert ti != null;
 
-        List<FieldKey> colKeys = new ArrayList<FieldKey>();
+        List<FieldKey> colKeys = new ArrayList<>();
         colKeys.add(FieldKey.fromString("Id/curLocation/area"));
         colKeys.add(FieldKey.fromString("Id/curLocation/room"));
         colKeys.add(FieldKey.fromString("Id/curLocation/cage"));
@@ -304,7 +304,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
         if (ts.exists())
         {
-            final Set<String> animalIds = new HashSet<String>();
+            final Set<String> animalIds = new HashSet<>();
 
             msg.append("<b>WARNING: The following animals have a weight entered since " + _dateFormat.format(date.getTime()) + " representing 3 consecutive weight drops with a total drop of more than 3%:</b><br><br>\n");
             msg.append("<table border=1><tr><td>Room</td><td>Cage</td><td>Id</td><td>Investigator(s)</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Date</td><td>Interval (days)</td><td>Weight (kg)</td><td>% Change</td></tr>");

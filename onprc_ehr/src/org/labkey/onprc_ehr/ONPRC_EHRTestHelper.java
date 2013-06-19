@@ -64,7 +64,7 @@ public class ONPRC_EHRTestHelper
                 return;
 
             //insert dummy records
-            Map<String, Object> record = new HashMap<String, Object>();
+            Map<String, Object> record = new HashMap<>();
             Table.insert(u, bloodDraws, record);
 
             //run query

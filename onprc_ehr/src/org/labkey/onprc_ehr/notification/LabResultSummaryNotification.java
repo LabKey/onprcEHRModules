@@ -131,7 +131,7 @@ public class LabResultSummaryNotification extends AbstractEHRNotification
                 msg.append("There are " + total + " completed requests since " + AbstractEHRNotification._dateTimeFormat.format(cal.getTime()) + ". Below is a summary.  Click the Animal Id for more detail.  <br>");
                 msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Clinpath Runs&query.viewName=Plus Room&query.taskid/datecompleted~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "&query.taskid/datecompleted~nonblank'>Click here to view them</a><p>\n");
 
-                Map<String, Map<String, StringBuilder>> summary = new HashMap<String, Map<String, StringBuilder>>();
+                Map<String, Map<String, StringBuilder>> summary = new HashMap<>();
                 do
                 {
                     String area = rs.getString(FieldKey.fromParts("Id/curLocation/area"));
@@ -149,7 +149,7 @@ public class LabResultSummaryNotification extends AbstractEHRNotification
 
                     Map<String, StringBuilder> areaNode = summary.get(area);
                     if (areaNode == null)
-                        areaNode = new HashMap<String, StringBuilder>();
+                        areaNode = new HashMap<>();
 
                     StringBuilder sb = areaNode.get(room);
                     if (sb == null)

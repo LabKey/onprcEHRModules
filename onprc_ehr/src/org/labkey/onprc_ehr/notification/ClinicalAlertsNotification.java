@@ -106,12 +106,12 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
 
         UserSchema us = getStudySchema(c, u);
         QueryDefinition qd = us.getQueryDefForTable("animalGroupProblemSummary");
-        List<QueryException> errors = new ArrayList<QueryException>();
+        List<QueryException> errors = new ArrayList<>();
         TableInfo ti = qd.getTable(us, errors, true);
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("StartDate", cal.getTime());
         params.put("EndDate", new Date());
-        Set<FieldKey> fieldKeys = new HashSet<FieldKey>();
+        Set<FieldKey> fieldKeys = new HashSet<>();
         fieldKeys.add(FieldKey.fromString("Id"));
         fieldKeys.add(FieldKey.fromString("groupId"));
         fieldKeys.add(FieldKey.fromString("groupId/name"));
@@ -172,12 +172,12 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
 
         UserSchema us = getStudySchema(c, u);
         QueryDefinition qd = us.getQueryDefForTable("roomProblemSummary");
-        List<QueryException> errors = new ArrayList<QueryException>();
+        List<QueryException> errors = new ArrayList<>();
         TableInfo ti = qd.getTable(us, errors, true);
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("StartDate", cal.getTime());
         params.put("EndDate", new Date());
-        Set<FieldKey> fieldKeys = new HashSet<FieldKey>();
+        Set<FieldKey> fieldKeys = new HashSet<>();
         fieldKeys.add(FieldKey.fromString("Id"));
         fieldKeys.add(FieldKey.fromString("room"));
         fieldKeys.add(FieldKey.fromString("category"));

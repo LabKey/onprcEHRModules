@@ -159,9 +159,9 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
 
     protected Map<String, Integer> getAreaMap(TableSelector ts, Set<ColumnInfo> cols)
     {
-        final Map<String, Integer> areaMap = new TreeMap<String, Integer>();
+        final Map<String, Integer> areaMap = new TreeMap<>();
         final FieldKey areaKey = FieldKey.fromString("Id/curLocation/area");
-        final Map<FieldKey, ColumnInfo> fieldKeyMap = new HashMap<FieldKey, ColumnInfo>();
+        final Map<FieldKey, ColumnInfo> fieldKeyMap = new HashMap<>();
         for (ColumnInfo col : cols)
         {
             fieldKeyMap.put(col.getFieldKey(), col);
@@ -192,7 +192,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
 
     protected Set<ColumnInfo> appendLocationCols(TableInfo ti)
     {
-        Set<ColumnInfo> cols = new HashSet<ColumnInfo>();
+        Set<ColumnInfo> cols = new HashSet<>();
         cols.addAll(ti.getColumns());
 
         Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("Id/curLocation/area"), FieldKey.fromString("Id/curLocation/room"), FieldKey.fromString("Id/curLocation/cage")));
