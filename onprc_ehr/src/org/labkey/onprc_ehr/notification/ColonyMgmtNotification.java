@@ -21,7 +21,6 @@ import org.labkey.api.security.User;
 import java.util.Date;
 
 /**
- * Created by IntelliJ IDEA.
  * User: bbimber
  * Date: 8/4/12
  * Time: 8:28 PM

@@ -59,7 +59,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * Created by IntelliJ IDEA.
  * User: bbimber
  * Date: 7/14/12
  * Time: 3:16 PM

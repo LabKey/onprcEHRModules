@@ -56,7 +56,6 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
  * User: bbimber
  * Date: 5/16/12
  * Time: 1:52 PM

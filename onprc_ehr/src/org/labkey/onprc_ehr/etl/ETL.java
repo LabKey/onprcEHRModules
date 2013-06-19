@@ -26,7 +26,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by IntelliJ IDEA.
  * User: newton
  * Date: Oct 26, 2010
  * Time: 10:07:34 AM

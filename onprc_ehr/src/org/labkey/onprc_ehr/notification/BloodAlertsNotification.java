@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
  * User: bbimber
  * Date: 8/4/12
  * Time: 8:25 PM
