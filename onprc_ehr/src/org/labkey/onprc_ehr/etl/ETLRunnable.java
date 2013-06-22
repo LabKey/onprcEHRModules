@@ -286,8 +286,7 @@ public class ETLRunnable implements Runnable
             String sql;
             PreparedStatement s = null;
 
-            ExperimentService.get().ensureTransaction();
-            try
+            try (DbScope.Transaction transaction = ExperimentService.get().ensureTransaction())
             {
                 fileName = kv.getKey();
                 sql = kv.getValue();
@@ -301,7 +300,7 @@ public class ETLRunnable implements Runnable
                     s = DbScope.getLabkeyScope().getConnection().prepareStatement(script);
                     s.execute();
                 }
-                ExperimentService.get().commitTransaction();
+                transaction.commit();
             }
             catch (SQLException e)
             {
@@ -312,7 +311,6 @@ public class ETLRunnable implements Runnable
             finally
             {
                 close(s);
-                ExperimentService.get().closeTransaction();
             }
         }
     }
