@@ -113,6 +113,43 @@
             <ns:column columnName="creditedaccount">
                 <ns:columnTitle>Credited Alias</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="lastName">
+                <ns:columnTitle>Last Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="firstName">
+                <ns:columnTitle>First Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="project">
+                <ns:columnTitle>Project</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="invoiceDate">
+                <ns:columnTitle>Invoice Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="invoiceNumber">
+                <ns:columnTitle>Invoice Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="transactionType">
+                <ns:columnTitle>Transaction Type</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="department">
+                <ns:columnTitle>Department</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="mailcode">
+                <ns:columnTitle>Mail Code</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="contactPhone">
+                <ns:columnTitle>Contact Phone</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="faid">
+                <ns:columnTitle>FAID</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="cageId">
+                <ns:columnTitle>Cage Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="objectid">
+                <ns:columnTitle>Key</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
             <ns:column columnName="category">
                 <ns:columnTitle>Category</ns:columnTitle>
             </ns:column>
@@ -129,6 +166,9 @@
                 <ns:columnTitle>Total Cost</ns:columnTitle>
             </ns:column>
             <ns:column columnName="chargeId"/>
+            <ns:column columnName="credit">
+                <ns:columnTitle>Credit?</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="rateId">
                 <ns:columnTitle>Rate Id</ns:columnTitle>
             </ns:column>
@@ -137,9 +177,6 @@
             </ns:column>
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>
-            </ns:column>
-            <ns:column columnName="flag">
-                <ns:columnTitle>Flag</ns:columnTitle>
             </ns:column>
             <ns:column columnName="sourceRecord">
                 <ns:columnTitle>Source Record</ns:columnTitle>
@@ -288,6 +325,9 @@
             </ns:column>
             <ns:column columnName="runBy">
                 <ns:columnTitle>Run By</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="runDate">
+                <ns:columnTitle>Run Date</ns:columnTitle>
             </ns:column>
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>

@@ -134,6 +134,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         birthRecordsWithoutDemographics(c, u, msg);
         deathRecordsWithoutDemographics(c, u, msg);
         animalGroupsAcrossRooms(c, u, msg);
+        duplicateGroupMembership(c, u, msg);
         duplicateFlags(c, u, msg);
         suspiciousMedications(c, u, msg);
 
@@ -171,8 +172,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=missingCages'>Click here to view the problem cages</a></p>\n");
-            //msg.append("<a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cage'>Click here to edit the cage list and fix the problem</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "missingCages", null) + "'>Click here to view the problem cages</a></p>\n");
             msg.append("<hr>\n");
         }
 
@@ -187,7 +187,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=cagesMissingColumn'>Click here to view the problem cages</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "cagesMissingColumn", null) + "'>Click here to view the problem cages</a></p>\n");
             msg.append("<hr>\n");
         }
     }
@@ -209,7 +209,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=roomUtilization&query.CagesEmpty~lt=0'>Click here to view the problem rooms</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr_lookups", "roomUtilization", null) + "&query.CagesEmpty~lt=0'>Click here to view the problem rooms</a></p>\n");
             msg.append("<hr>\n");
         }
 
@@ -235,8 +235,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses:\n");
-            msg.append(" <a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=housingMixedViralStatus&query.distinctStatuses~gt=1'>Click here to view this list</a></b><p></p>\n");
+            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses:</b><p></p>\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p></p>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
@@ -251,7 +251,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     }
 
                     String room = rs.getString("room");
-                    String url = getBaseUrl(c) + "schemaName=study&query.queryName=demographics&query.viewName=By Location&query.Id/curLocation/room~eq=" + room;
+                    String url = getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&query.Id/curLocation/room~eq=" + room;
                     msg.append("<tr><td style='vertical-align:top;'><a href='" + url + "'>" + room + ":</a></td><td><a href='" + url + "'>" + status + "</a></td></tr>\n");
                 }
             });
@@ -276,8 +276,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=missingRooms'>Click here to view the problem rooms</a></p>\n");
-            //msg.append("<a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cage'>Click here to edit the room list and fix the problem</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "missingRooms", null) + "'>Click here to view the problem rooms</a></p>\n");
             msg.append("<hr>\n");
         }
     }
@@ -311,7 +310,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Demographics&query.calculated_status~eq=Alive&query.Id/MostRecentWeight/MostRecentWeightDate~isblank'>Click here to view these animals</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&query.calculated_status~eq=Alive&query.Id/MostRecentWeight/MostRecentWeightDate~isblank'>Click here to view these animals</a></p>\n");
             msg.append("<hr>\n");
         }
     }
@@ -325,18 +324,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals with multiple active housing records:</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=housingProblems'>Click here to view these animals</a></p>\n");
-//            msg.append("<a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Housing&query.Id~in=");
-//
-//            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-//                public void exec(ResultSet rs) throws SQLException
-//                {
-//                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + ";");
-//                }
-//            });
-//
-//            msg.append("&query.enddate~isblank'>Click here to view the problem records</a><p>");
-//            msg.append("<hr>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "housingProblems", null) + "'>Click here to view these animals</a></p>\n");
         }
     }
 
@@ -359,7 +347,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Housing&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Housing", null) + "&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -383,7 +371,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Demographics&query.Id/curLocation/room/room~isblank&query.Id/Dataset/Demographics/calculated_status~eq=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&query.Id/curLocation/room/room~isblank&query.Id/Dataset/Demographics/calculated_status~eq=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -400,7 +388,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " living animals without any active assignments:</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Demographics&query.Id/activeAssignments/numActiveAssignments~eq=0&query.Id/Demographics/calculated_status~eq=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&query.Id/activeAssignments/numActiveAssignments~eq=0&query.Id/Demographics/calculated_status~eq=Alive'>Click here to view them</a><br>\n\n");
         }
     }
 
@@ -408,13 +396,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         //then we find all records with problems in the calculated_status field
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " active assignments for animals not currently at the center.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Assignment&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -422,13 +410,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void deadAnimalsWithActiveCases(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Cases"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " active cases for animals not currently at the center.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Cases&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Cases", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -438,14 +426,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void assignmentsWithoutValidProtocol(final Container c, User u, final StringBuilder msg)
     {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("project/protocol"), null, CompareType.ISBLANK);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " active assignments to a project without a valid protocol.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Assignment&query.enddate~isblank&query.project/protocol~isblank'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.isActive~eq=true&query.project/protocol~isblank'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -457,7 +445,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals double assigned to the same project.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=duplicateAssignments'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "duplicateAssignments", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -489,7 +477,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " finalized records with future dates.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=StudyData&query.date~dategt=" + AbstractEHRNotification._dateFormat.format(date) + "&query.qcstate/PublicData~eq=true&query.dataset/label~notin=" + datasets + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "StudyData", null) + "&query.date~dategt=" + AbstractEHRNotification._dateFormat.format(date) + "&query.qcstate/PublicData~eq=true&query.dataset/label~notin=" + datasets + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -514,7 +502,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Deaths&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Deaths", null) + "&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><p>\n");
         }
     }
 
@@ -538,7 +526,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Birth&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Birth", null) + "&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><p>\n");
         }
     }
 
@@ -548,14 +536,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         cal.setTime(new Date());
         cal.add(Calendar.DATE, 1);
 
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("projectedRelease"), cal.getTime(), CompareType.DATE_EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>ALERT: There are " + count + " assignments with a projected release date for tomorrow.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Assignment&query.projectedRelease~dateeq=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.projectedRelease~dateeq=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -572,7 +560,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>ALERT: There are " + count + " assignments with a projected release date for today that have not already been ended.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Assignment&query.projectedRelease~dateeq=" + AbstractEHRNotification._dateFormat.format(date) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.projectedRelease~dateeq=" + AbstractEHRNotification._dateFormat.format(date) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -598,7 +586,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>ALERT: There are " + count + " protocols with active assignments set to expire within the next 30 days.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=protocol&query.daysUntilRenewal~lte=30&query.activeAnimals/totalActiveAnimals~gt=0'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocol", null) + "&query.daysUntilRenewal~lte=30&query.activeAnimals/totalActiveAnimals~gt=0'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -615,7 +603,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " death records without a corresponding demographics record.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "/executeQuery.view?schemaName=study&query.queryName=Deaths&query.Id/Dataset/Demographics/Id~isblank&query.notAtCenter~neqornull=true'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Deaths", null) + "&query.Id/Dataset/Demographics/Id~isblank&query.notAtCenter~neqornull=true'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -631,7 +619,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " birth records without a corresponding demographics record.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Birth&query.Id/Dataset/Demographics/Id~isblank'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Birth", null) + "&query.Id/Dataset/Demographics/Id~isblank'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -647,7 +635,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " protocols that will expire within the next 14 days.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=protocol&query.daysUntilRenewal~lte=14'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocol", null) + "&query.daysUntilRenewal~lte=14'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -663,7 +651,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " protocols with fewer than 5 remaining animals.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=protocolTotalAnimalsBySpecies&query.TotalRemaining~lt=5'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocolTotalAnimalsBySpecies", null) + "&query.TotalRemaining~lt=5'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
 
@@ -673,7 +661,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count2 > 0)
         {
             msg.append("<b>WARNING: There are " + count2 + " protocols with fewer than 5% of their animals remaining.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=protocolTotalAnimalsBySpecies&query.PercentUsed~gte=95'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocolTotalAnimalsBySpecies", null) + "&query.PercentUsed~gte=95'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -694,7 +682,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (total > 0)
         {
             msg.append("<b>WARNING: There are " + total + " animals that are dead, but do not have a weight within the previous 7 days:</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=validateFinalWeights&query.death~dategte=-90d'>Click here to view them</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "validateFinalWeights", null) + "&query.death~dategte=-90d'>Click here to view them</a></p>\n");
             msg.append("<hr>\n");
         }
     }
@@ -721,7 +709,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     msg.append("<br>\n");
                 }
             });
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Demographics&query.gender~isblank=&query.created~dategte=-90d'>Click here to view these animals</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&query.gender~isblank=&query.created~dategte=-90d'>Click here to view these animals</a></p>\n");
             msg.append("<hr>\n");
         }
     }
@@ -744,7 +732,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Birth&query.gender~isblank=&query.date~dategte=-90d'>Click here to view these animals</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Birth", null) + "&query.gender~isblank=&query.date~dategte=-90d'>Click here to view these animals</a></p>\n");
             msg.append("<hr>\n");
         }
     }
@@ -771,7 +759,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (total > 0)
         {
             msg.append("<b>WARNING: There are " + total + " housing records since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + " that do not have a contiguous previous or next record.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=HousingCheck&query.param.MINDATE=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "HousingCheck", null) + "&query.param.MINDATE=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -782,13 +770,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void activeAssignmentsForDeadAnimals(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " active assignments for animals not currently at the center.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Assignment&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -799,13 +787,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void activeProblemsForDeadAnimals(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Problem List"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " unresolved problems for animals not currently at the center.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Problem List&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Problem List", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -816,13 +804,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void activeTreatmentsForDeadAnimals(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Treatment Orders"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " active treatments for animals not currently at the center.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Treatment Orders&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Treatment Orders", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -858,7 +846,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 msg.append("<br>");
             }
 
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cageReview&query.viewName=Problem Cages'>Click here to view these cages</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr_lookups", "cageReview", "Problem Cages") + "'>Click here to view these cages</a></p>\n");
             msg.append("<hr>\n");
         }
         else if (notifyOnNone)
@@ -896,7 +884,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 //            }
 //            msg.append("</table>");
 //
-//            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr_lookups&query.queryName=cageReview&query.sqftPct~gte=98.0'>Click here to view all problems and warnings</a></p>\n");
+//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr_lookups", "cageReview", null) + "&query.sqftPct~gte=98.0'>Click here to view all problems and warnings</a></p>\n");
 //            msg.append("<hr>\n");
 //        }
     }
@@ -910,7 +898,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals housed in cages that should not be available, based on the cage/divider configuration.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=housedInUnavailableCages'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "housedInUnavailableCages", null) + "'>Click here to view them</a><br>\n\n");
 
             final Map<String, String> locations = new TreeMap<>();
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
@@ -936,13 +924,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void deadAnimalsWithActiveDiet(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Diet"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " active diets for animals not currently at the center.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Diet&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Diet", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -950,13 +938,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void deadAnimalsWithActiveFlags(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Flags"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " active flags for animals not currently at the center.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Flags&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -964,13 +952,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void deadAnimalsWithActiveNotes(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Notes"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " active notes for animals not currently at the center.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Notes&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -978,13 +966,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void deadAnimalsWithActiveGroups(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("animal_group_members"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals assigned to groups, where the animal is currently at the housed center.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=ehr&query.queryName=animal_group_members&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animal_group_members", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -1019,11 +1007,11 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             }
 
             String formatted = _dateFormat.format(cal.getTime());
-            msg.append("The following transfers took place on " + formatted + ".  <a href='" + (getBaseUrl(c) + "schemaName=study&query.queryName=Housing&query.date~dateeq=" + formatted) + "'>click here to view them</a><br>");
+            msg.append("The following transfers took place on " + formatted + ".  <a href='" + (getExecuteQueryUrl(c, "study", "Housing", null) + "&query.date~dateeq=" + formatted) + "'>click here to view them</a><br>");
             msg.append("<table border=1 style='border-collapse: collapse;'><tr><td>Room</td><td>Total</td></tr>");
             for (String room : roomMap.keySet())
             {
-                msg.append("<tr><td>").append(room).append("</td><td>").append("<a href='" + (getBaseUrl(c) + "schemaName=study&query.queryName=Housing&query.date~dateeq=-1d&query.room~eq=" + room) + "'>" + roomMap.get(room) + "</a>").append("</td></tr>");
+                msg.append("<tr><td>").append(room).append("</td><td>").append("<a href='" + (getExecuteQueryUrl(c, "study", "Housing", null) + "&query.date~dateeq=-1d&query.room~eq=" + room) + "'>" + roomMap.get(room) + "</a>").append("</td></tr>");
             }
             msg.append("</table><br>");
         }
@@ -1073,7 +1061,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     text.append(": ").append(DecimalFormat.getNumberInstance().format(amount)).append(" mL overdrawn on ").append(_dateFormat.format(rs.getDate(FieldKey.fromString("date"))));
 
                     //String url = getParticipantURL(c, rs.getString(getStudy(c).getSubjectColumnName()));
-                    String url = getBaseUrl(c) + "schemaName=study&query.queryName=Blood Draws&query.viewName=With Blood Volume&query.Id~eq=" + rs.getString(getStudy(c).getSubjectColumnName());
+                    String url = getExecuteQueryUrl(c, "study", "Blood Draws", "With Blood Volume") + "&query.Id~eq=" + rs.getString(getStudy(c).getSubjectColumnName());
                     msg.append("<a href='" + url + "'>" + text.toString() + "</a><br>\n");
                 }
             });
@@ -1123,7 +1111,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
                 while (rs.next());
 
-                msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=BloodSchedule&query.projectStatus~isnonblank&query.Id/DataSet/Demographics/calculated_status~eq=Alive&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
+                msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BloodSchedule", null) + "&query.projectStatus~isnonblank&query.Id/DataSet/Demographics/calculated_status~eq=Alive&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
                 msg.append("<hr>\n");
             }
             else
@@ -1199,7 +1187,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 //        if (ts.getRowCount() > 0)
 //        {
 //            msg.append("<b>WARNING: There are " + ts.getRowCount() + " blood draws scheduled today that request clinpath services, but lack a corresponding clinpath request.</b><br>");
-//            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=ValidateBloodDrawClinpath&query.viewName=Lacking Clinpath Request&query.date~dateeq=" + _dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
+//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "ValidateBloodDrawClinpath", "Lacking Clinpath Request") + "&query.date~dateeq=" + _dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
 //            msg.append("<hr>\n");
 //        }
 //    }
@@ -1273,7 +1261,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
                 while (rs.next());
 
-                String url = "<a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=BloodSchedule&query.date~dateeq=$datestr&query.Id/DataSet/Demographics/calculated_status~eq=Alive'>Click here to view them</a></p>\n";
+                String url = "<a href='" + getExecuteQueryUrl(c, "study", "BloodSchedule", null) + "&query.date~dateeq=$datestr&query.Id/DataSet/Demographics/calculated_status~eq=Alive'>Click here to view them</a></p>\n";
                 msg.append("There are " + (incomplete + complete) + " scheduled blood draws for $datestr.  " + complete + " have been completed.  " + url + "<p>\n");
 
                 if(incomplete == 0)
@@ -1331,7 +1319,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " current or scheduled blood draws for animals not currently at the center.</b><br>");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Blood Draws&query.date~dategte=$datestr&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Blood Draws", null) + "&query.date~dategte=$datestr&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
@@ -1355,7 +1343,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animal groups with members located in more than 1 room, excluding hospital rooms.  This may indicate that group designations need to be updated for some of the animals.</b><br>");
-            final String url = getBaseUrl(c) + "schemaName=study&query.queryName=animalGroupLocationSummary&query.totalRooms~gt=1";
+            final String url = getExecuteQueryUrl(c, "study", "animalGroupLocationSummary", null) + "&query.totalRooms~gt=1";
             msg.append("<p><a href='" + url + "'>Click here to view them</a><br><br>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
@@ -1392,19 +1380,36 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals with duplicate active flags from the same category.</b><br>");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=flagDuplicates'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flagDuplicates", null) + "'>Click here to view them</a><br>\n");
+            msg.append("<hr>\n");
+        }
+    }
+
+    /**
+     * Displays any animals double-assigned to animal groups
+     */
+    protected void duplicateGroupMembership(Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("animalGroupMemberDuplicates");
+        TableSelector ts = new TableSelector(ti, Collections.singleton("Id"), null, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " animals actively assigned to multiple animal groups.</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "animalGroupMemberDuplicates", null) + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
 
     protected void getU42Assignments(Container c, User u, final StringBuilder msg)
     {
+        String U42 = "0492-02";
         TableInfo ti = getStudySchema(c, u).getTable("assignment");
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddateTimeCoalesced"), new Date(), CompareType.GTE);
-        filter.addCondition(FieldKey.fromString("project/protocol"), "IS00002718", CompareType.EQUAL);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("project/name"), U42, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room/housingType/value"), "Cage Location", CompareType.EQUAL);
 
-        TableSelector ts = new TableSelector(ti, filter, null);
+        TableSelector ts = new TableSelector(ti, Collections.singleton("Id"), filter, null);
         long count = ts.getRowCount();
         String level = null;
         if (count > 75)
@@ -1415,11 +1420,16 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             level = "WARNING";
         }
+        else if (count == 0)
+        {
+            msg.append("<b>WARNING: this alert did not find any animals assigned to U42 (" + U42 + ") in caged locations.</b>  This probably indicates a problem with the alert, or perhaps the U42 project # has changed.<p><hr>");
+            return;
+        }
 
         if (level != null)
         {
-            msg.append("<b>" + level + ": There are " + count + " animals assigned to U42 that are housed in cage locations.</b><br>");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Assignment&query.Id/curLocation/room/housingType/value~eq=Cage Location&query.project/protocol~eq=IS00002718&query.enddateTimeCoalesced~gte=" + _dateTimeFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
+            msg.append("<b>" + level + ": There are " + count + " animals assigned to U42 (" + U42 + ") that are housed in cage locations.</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/curLocation/room/housingType/value~eq=Cage Location&query.Id/utilization/use~contains=" + U42 + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
@@ -1490,7 +1500,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " drug entries since " + _dateFormat.format(cal.getTime()) + " for ketamine or telazol using mgs listing an amount less than " + minValue +"</b><br>");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Drug Administration&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~lt=" + minValue + "'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Drug Administration", null) + "&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~lt=" + minValue + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
 
@@ -1507,7 +1517,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count2 > 0)
         {
             msg.append("<b>WARNING: There are " + count2 + " drug entries since " + _dateFormat.format(cal.getTime()) + " for ketamine or telazol using mgs listing an amount greater than " + maxValue + "</b><br>");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Drug Administration&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~gt=" + maxValue + "'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Drug Administration", null) + "&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~gt=" + maxValue + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }

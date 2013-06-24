@@ -21,5 +21,5 @@ p.DateDisabled as enddate,
 p.objectid
 
 From ref_pool p
-where p.ShortDescription IN ('CBG', 'EBG', 'HBG', 'PBG', 'STG', 'SBG')
+where p.ShortDescription IN ('CBG', 'EBG', 'HBG', 'PBG', 'STG', 'SBG', 'JBG')
 and p.ts > ?

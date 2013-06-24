@@ -98,7 +98,7 @@ LEFT JOIN (
     f.Id,
     group_concat(f.value) as spfStatus,
   FROM study.flags f
-  WHERE f.date <= now() AND f.enddateCoalesced >= curdate() AND f.category = 'SPF'
+  WHERE f.isActive = true AND f.category = 'SPF'
   GROUP BY f.Id
 ) spf ON (spf.Id = d.Id)
 

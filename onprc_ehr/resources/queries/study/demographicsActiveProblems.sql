@@ -15,8 +15,8 @@
  */
 SELECT
   p.Id,
-  group_concat(p.category, char(10)) as problems,
+  group_concat(p.category, chr(10)) as problems,
   count(*) as totalProblems
 FROM study.problem p
-WHERE p.enddateTimeCoalesced >= now()
+WHERE p.isActive = true
 GROUP BY p.id

@@ -27,6 +27,9 @@
                     <column columnName="remark">
                         <columnTitle>Diagnosis</columnTitle>
                     </column>
+                    <column columnName="sort_order">
+                        <columnTitle>Sort Order</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>

@@ -129,7 +129,7 @@ public class LabResultSummaryNotification extends AbstractEHRNotification
             if (total > 0)
             {
                 msg.append("There are " + total + " completed requests since " + AbstractEHRNotification._dateTimeFormat.format(cal.getTime()) + ". Below is a summary.  Click the Animal Id for more detail.  <br>");
-                msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Clinpath Runs&query.viewName=Plus Room&query.taskid/datecompleted~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "&query.taskid/datecompleted~nonblank'>Click here to view them</a><p>\n");
+                msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Clinpath Runs", "Plus Room") + "&query.taskid/datecompleted~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "&query.taskid/datecompleted~nonblank'>Click here to view them</a><p>\n");
 
                 Map<String, Map<String, StringBuilder>> summary = new HashMap<>();
                 do

@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.notification;
 
+import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
@@ -93,11 +94,27 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         msg.append("This email contains alerts of significant weight changes.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
 
         getLivingWithoutWeight(c, u, msg);
-        processWeights(c, u, msg, 0, 30, CompareType.LTE, -10);
 
-        consecutiveWeightDrops(c, u, msg);
+        generateCombinedWeightTable(c, u, msg);
 
         return msg.toString();
+    }
+
+    private void generateCombinedWeightTable(final Container c, User u, final StringBuilder msg)
+    {
+        StringBuilder sb = new StringBuilder();
+        Set<String> distinctIds = new HashSet<String>();
+
+        processWeights(c, u, sb, 0, 30, CompareType.LTE, -10, distinctIds);
+        consecutiveWeightDrops(c, u, sb, distinctIds);
+
+        if (distinctIds.size() > 0)
+        {
+            String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(distinctIds), ";"));
+            sb.insert(0, "<b>WARNING: There are " + distinctIds.size() + " animals that experienced either a large weight loss, or 3 consecutive weight drops.</b>  <a href='" + url + "'>Click here to view this list</a>, or view the data below.<p><hr>");
+        }
+
+        msg.append(sb);
     }
 
     private void getLivingWithoutWeight(final Container c, User u, final StringBuilder msg)
@@ -115,7 +132,9 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
         if (ts.exists())
         {
-            msg.append("<b>WARNING: The following animals do not have a weight:</b><br>\n");
+            msg.append("<b>WARNING: The animals listed below do not have a weight.</b>\n");
+            msg.append("  <a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id/MostRecentWeight/MostRecentWeightDate~isblank'>Click here to view these animals</a></p>\n");
+
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
@@ -129,12 +148,11 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/query" + c.getPath() + "/executeQuery.view?schemaName=study&query.queryName=Demographics&query.calculated_status~eq=Alive&query.Id/MostRecentWeight/MostRecentWeightDate~isblank'>Click here to view these animals</a></p>\n");
             msg.append("<hr>\n");
         }
     }
 
-    private void processWeights(Container c, User u, final StringBuilder msg, int min, int max, CompareType ct, double pct)
+    private void processWeights(Container c, User u, final StringBuilder msg, int min, int max, CompareType ct, double pct, @Nullable Set<String> distinctIds)
     {
         TableInfo ti = getStudySchema(c, u).getTable("weightRelChange");
         assert ti != null;
@@ -177,6 +195,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(ti, columns.values(), filter, null);
 
         msg.append("<b>Weights since " + _dateFormat.format(date.getTime()) + " representing changes of " + (pct > 0 ? "+" : "") + pct + "% in the past " + max + " days:</b><p>");
+        final Set<String> distinctAnimals = new HashSet<String>();
 
         final Map<String, Map<String, List<Map<String, Object>>>> summary = new TreeMap<>();
         ts.forEach(new Selector.ForEachBlock<ResultSet>()
@@ -219,11 +238,15 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                 rowMap.put("peDate", rs.getString(peKey));
 
                 roomList.add(rowMap);
+
+                distinctAnimals.add(rs.getString("Id"));
             }
         });
 
         if (summary.size() > 0)
         {
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(distinctAnimals), ";"))+ "'>Click here to view these " + distinctAnimals.size() + " animals</a></p>\n");
+
             msg.append("<table border=1><tr><td>Area</td><td>Room</td><td>Cage</td><td>Id</td><td>Investigators</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Dates</td><td>Days Between</td><td>Weight (kg)</td><td>Percent Change</td></tr>");
             for (String area : summary.keySet())
             {
@@ -269,9 +292,12 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         {
             msg.append("There are no changes during this period.<hr>");
         }
+
+        if (distinctIds != null && distinctAnimals.size() > 0)
+            distinctIds.addAll(distinctAnimals);
     }
 
-    protected void consecutiveWeightDrops(final Container c, User u, final StringBuilder msg)
+    protected void consecutiveWeightDrops(final Container c, User u, final StringBuilder msg, @Nullable Set<String> distinctIds)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/dataset/demographics/calculated_status"), "Alive");
         Calendar date = Calendar.getInstance();
@@ -307,47 +333,49 @@ public class WeightAlertsNotification extends AbstractEHRNotification
             final Set<String> animalIds = new HashSet<>();
 
             msg.append("<b>WARNING: The following animals have a weight entered since " + _dateFormat.format(date.getTime()) + " representing 3 consecutive weight drops with a total drop of more than 3%:</b><br><br>\n");
-            msg.append("<table border=1><tr><td>Room</td><td>Cage</td><td>Id</td><td>Investigator(s)</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Date</td><td>Interval (days)</td><td>Weight (kg)</td><td>% Change</td></tr>");
+
+            final StringBuilder tableMsg = new StringBuilder();
+            tableMsg.append("<table border=1><tr><td>Room</td><td>Cage</td><td>Id</td><td>Investigator(s)</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Date</td><td>Interval (days)</td><td>Weight (kg)</td><td>% Change</td></tr>");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
                     Results results = new ResultsImpl(rs, columns);
 
-                    msg.append("<tr>");
-                    msg.append("<td>").append(getValue(results, "Id/curLocation/room")).append("</td>");
-                    msg.append("<td>").append(getValue(results, "Id/curLocation/cage")).append("</td>");
+                    tableMsg.append("<tr>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/curLocation/room")).append("</td>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/curLocation/cage")).append("</td>");
                     String subj = getValue(results, getStudy(c).getSubjectColumnName());
-                    msg.append("<td><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath());
-                    msg.append("/animalHistory.view?#inputType:singleSubject&showReport:1&subjects:" + subj + "'>");
-                    msg.append(subj).append("</a></td>");
+                    tableMsg.append("<td><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath());
+                    tableMsg.append("/animalHistory.view?#inputType:singleSubject&showReport:1&subjects:" + subj + "'>");
+                    tableMsg.append(subj).append("</a></td>");
 
-                    msg.append("<td>").append(getValue(results, "Id/activeAssignments/investigators")).append("</td>");
-                    msg.append("<td>").append(getValue(results, "Id/activeAssignments/vets")).append("</td>");
-                    msg.append("<td>").append(getValue(results, "Id/openProblems/problems")).append("</td>");
-                    msg.append("<td>").append(getValue(results, "Id/physicalExamHistory/daysSinceExam")).append("</td>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/activeAssignments/investigators")).append("</td>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/activeAssignments/vets")).append("</td>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/openProblems/problems")).append("</td>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/physicalExamHistory/daysSinceExam")).append("</td>");
 
-                    msg.append("<td>").append(getDateValue(results, "date")).append("<br>");
-                    msg.append(getDateValue(results, "prevDate1")).append("<br>");
-                    msg.append(getDateValue(results, "prevDate2"));
-                    msg.append("</td>");
+                    tableMsg.append("<td>").append(getDateValue(results, "date")).append("<br>");
+                    tableMsg.append(getDateValue(results, "prevDate1")).append("<br>");
+                    tableMsg.append(getDateValue(results, "prevDate2"));
+                    tableMsg.append("</td>");
 
-                    msg.append("<td>");
-                    msg.append(getNumericValue(results, "interval1")).append("<br>");
-                    msg.append(getNumericValue(results, "interval2")).append("<br>");
-                    msg.append("<br>");
-                    msg.append("</td>");
+                    tableMsg.append("<td>");
+                    tableMsg.append(getNumericValue(results, "interval1")).append("<br>");
+                    tableMsg.append(getNumericValue(results, "interval2")).append("<br>");
+                    tableMsg.append("<br>");
+                    tableMsg.append("</td>");
 
-                    msg.append("<td>").append(getValue(results, "curWeight")).append("<br>");
-                    msg.append(getValue(results, "prevWeight1")).append("<br>");
-                    msg.append(getValue(results, "prevWeight2"));
-                    msg.append("</td>");
+                    tableMsg.append("<td>").append(getValue(results, "curWeight")).append("<br>");
+                    tableMsg.append(getValue(results, "prevWeight1")).append("<br>");
+                    tableMsg.append(getValue(results, "prevWeight2"));
+                    tableMsg.append("</td>");
 
-                    msg.append("<td>").append(getNumericValue(results, "pctChange1")).append("<br>");
-                    msg.append(getNumericValue(results, "pctChange2")).append("<br>");
-                    msg.append("<br>");
-                    msg.append("</td>");
+                    tableMsg.append("<td>").append(getNumericValue(results, "pctChange1")).append("<br>");
+                    tableMsg.append(getNumericValue(results, "pctChange2")).append("<br>");
+                    tableMsg.append("<br>");
+                    tableMsg.append("</td>");
 
-                    msg.append("</tr>");
+                    tableMsg.append("</tr>");
 
                     String id = getValue(results, getStudy(c).getSubjectColumnName());
                     if (id != null)
@@ -355,10 +383,14 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("</table>\n");
+            tableMsg.append("</table>\n");
 
-            msg.append("<p><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/query" + c.getPath() + "/executeQuery.view?schemaName=study&query.queryName=Demographics&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(animalIds), ";"))+ "'>Click here to view these animals</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(animalIds), ";"))+ "'>Click here to view these " + animalIds.size() + " animals</a></p>\n");
+            msg.append(tableMsg);
             msg.append("<hr>\n");
+
+            if (distinctIds != null && animalIds.size() > 0)
+                distinctIds.addAll(animalIds);
         }
     }
 

@@ -3248,6 +3248,9 @@
                 <datatype>timestamp</datatype>
                 <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
             </column>
+            <column columnName="sort_order">
+                <datatype>integer</datatype>
+            </column>
         </columns>
         <tableTitle>Morphologic Diagnosis</tableTitle>
     </table>

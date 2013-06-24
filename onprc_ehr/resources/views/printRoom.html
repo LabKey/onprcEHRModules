@@ -8,20 +8,25 @@
 <script type="text/javascript">
 
     Ext4.onReady(function (){
-        if (!LABKEY.ActionURL.getParameter('area')){
-            alert('Must Provide The Area Name'); return false;
+        if (!LABKEY.ActionURL.getParameter('area') && !LABKEY.ActionURL.getParameter('rooms')){
+            alert('Must Provide The Area or Room Name'); return false;
         }
 
         var webpart = <%=webpartContext%>;
+        var filterArray = [LABKEY.Filter.create('room/datedisabled', null, LABKEY.Filter.Types.ISBLANK)];
+
+        //preferentially use room over area if both provided
+        if (LABKEY.ActionURL.getParameter('rooms') != null){
+            filterArray.push(LABKEY.Filter.create('room', LABKEY.ActionURL.getParameterArray('rooms').join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
+        }
+        else if (LABKEY.ActionURL.getParameter('area') != null){
+            filterArray.push(LABKEY.Filter.create('room/area', LABKEY.ActionURL.getParameter('area'), LABKEY.Filter.Types.EQUAL));
+        }
 
         Ext4.create('ONPRC.panel.RoomLayoutPanel', {
             printMode: 1,
-            filterArray: [
-                LABKEY.Filter.create('room/area', LABKEY.ActionURL.getParameter('area'), LABKEY.Filter.Types.EQUAL),
-                LABKEY.Filter.create('room/datedisabled', null, LABKEY.Filter.Types.ISBLANK)
-            ]
+            filterArray: filterArray
         }).render(webpart.wrapperDivId);
-
     });
 
 </script>

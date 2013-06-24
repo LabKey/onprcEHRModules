@@ -19,7 +19,7 @@
         </column>
         <column name="project/investigatorId">
             <properties>
-                <property name="columnTitle" value="Project Investigator"/>
+                <property name="columnTitle" value="Project Contact"/>
             </properties>
         </column>
         <column name="project/protocol/investigatorId">

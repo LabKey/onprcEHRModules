@@ -14,7 +14,6 @@
         <column name="species"/>
         <column name="geographic_origin"/>
         <column name="gender"/>
-        <column name="birth"/>
         <column name="Id/age/ageInYears">
             <properties>
                 <property name="columnTitle" value="Age"/>
@@ -35,11 +34,6 @@
         <column name="Id/MostRecentWeight/MostRecentWeight">
             <properties>
                 <property name="columnTitle" value="Current Weight (kg)"/>
-            </properties>
-        </column>
-        <column name="Id/MostRecentWeight/MostRecentWeightDate">
-            <properties>
-                <property name="columnTitle" value="Weight Date"/>
             </properties>
         </column>
         <column name="Id/MostRecentWeight/DaysSinceWeight">

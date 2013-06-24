@@ -21,7 +21,6 @@ SELECT
   p.method
 
 FROM study.parentage p
---WHERE p.enddateCoalesced <= curdate()
 
 UNION ALL
 

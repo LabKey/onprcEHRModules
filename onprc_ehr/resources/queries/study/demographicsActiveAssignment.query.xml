@@ -10,22 +10,22 @@
                     <column columnName="totalProjects">
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                         <columnTitle>Total Projects</columnTitle>
-                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.enddateCoalesced~dategte=-0d</url>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true</url>
                     </column>
                     <column columnName="numActiveAssignments">
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                         <columnTitle># Active Assignments</columnTitle>
-                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.enddateCoalesced~dategte=-0d</url>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true</url>
                     </column>
                     <column columnName="numResearchAssignments">
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                         <columnTitle># Research Assignments</columnTitle>
-                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.enddateCoalesced~dategte=-0d&amp;query.project/isResearch~eq=1</url>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true&amp;query.project/isResearch~eq=1</url>
                     </column>
                     <column columnName="numU24U42Assignments">
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                         <columnTitle># U24/U42 Assignments</columnTitle>
-                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.enddateCoalesced~dategte=-0d&amp;query.project/isU24U42~eq=1</url>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true&amp;query.project/isU24U42~eq=1</url>
                     </column>
                     <column columnName="vets">
                         <columnTitle>Resonsible Vet(s)</columnTitle>

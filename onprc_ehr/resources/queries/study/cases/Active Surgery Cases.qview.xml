@@ -5,8 +5,8 @@
         <column name="Id/utilization/use"/>
         <column name="date"/>
         <column name="Id/demographics/species"/>
-        <!--<column name="performedby"/>-->
-        <column name="proceduresPerformed"/>
+        <column name="remarksOnOpenDate"/>
+        <!--<column name="proceduresPerformed"/>-->
         <column name="todaysRemarks"/>
         <column name="history"/>
     </columns>
@@ -17,5 +17,6 @@
     <sorts>
         <sort column="Id/curLocation/room_order"/>
         <sort column="Id/curLocation/cage_order"/>
+        <sort column="date" descending="true"/>
     </sorts>
 </customView>

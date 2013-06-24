@@ -1,8 +1,17 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="caseno"/>
+        <column name="set_number"/>
+        <column name="sort"/>
+        <column name="code"/>
+        <column name="code/code"/>
+    </columns>
     <sorts>
         <sort column="Id"/>
-        <sort column="date"/>
-        <sort column="objectid"/>
+        <sort column="date" descending="true"/>
+        <sort column="caseid"/>
         <sort column="set_number"/>
         <sort column="sort"/>
     </sorts>

@@ -10,7 +10,7 @@
                     </column>
                     <column columnName="totalAssignedAnimals">
                         <columnTitle>Total Assigned Animals</columnTitle>
-                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=assignment&amp;query.enddateCoalesced~dategte=-0d&amp;query.id/curLocation/room~eq=${room}</url>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=assignment&amp;query.isActive~eq=true&amp;query.id/curLocation/room~eq=${room}</url>
                     </column>
                     <column columnName="projects">
                         <displayWidth>80</displayWidth>

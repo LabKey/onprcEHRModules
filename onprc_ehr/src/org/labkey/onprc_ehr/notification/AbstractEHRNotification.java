@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.notification;
 
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.ldk.notification.Notification;
@@ -97,9 +98,18 @@ abstract public class AbstractEHRNotification implements Notification
         return null;//"0 0/5 * * * ?";
     }
 
-    protected String getBaseUrl(Container c)
+    /**
+     * This should really be using URLHelpers better, but there is a lot of legacy URL strings
+     * migrated into java and its not worth changing all of it at this point
+     */
+    protected String getExecuteQueryUrl(Container c, String schemaName, String queryName, @Nullable String viewName)
     {
         DetailsURL url = DetailsURL.fromString("/query/executeQuery.view", c);
-        return AppProps.getInstance().getBaseServerUrl() + url.getActionURL().toString();
+        String ret = AppProps.getInstance().getBaseServerUrl() + url.getActionURL().toString();
+        ret += "schemaName=" + schemaName + "&query.queryName=" + queryName;
+        if (viewName != null)
+            ret += "&query.viewName=" + viewName;
+
+        return ret;
     }
 }

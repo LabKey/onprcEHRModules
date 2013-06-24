@@ -40,7 +40,7 @@ SELECT
   cast(a.project.investigatorId.lastName || ' [' || a.project.name || ']' as varchar) as projectString
 
 FROM study.demographics d
-LEFT JOIN study.assignment a ON (a.id = d.id AND a.enddateCoalesced >= curdate() AND a.date <= curdate())
+LEFT JOIN study.assignment a ON (a.id = d.id AND a.isActive = true)
 ) a
 
 GROUP BY a.id

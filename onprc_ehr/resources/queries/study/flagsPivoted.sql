@@ -20,7 +20,7 @@ group_concat(f.value, chr(10)) as valueField
 
 FROM study.flags f
 
-WHERE f.enddateCoalesced >= curdate() and f.category is not null and f.date <= curdate()
+WHERE f.isActive = true and f.category is not null
 
 GROUP BY f.id, COALESCE(f.category, 'Other')
 

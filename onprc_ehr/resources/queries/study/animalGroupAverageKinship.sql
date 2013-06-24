@@ -24,9 +24,7 @@ JOIN ehr.kinship k ON (d.Id = k.Id)
 JOIN ehr.animal_group_members d2 ON (d2.Id = k.Id2 and d.groupId = d2.groupId)
 
 WHERE
-  d.enddateCoalesced >= curdate() and
-  d2.enddateCoalesced >= curdate() and
-  d.date <= now() and
-  d2.date <= now()
+  d.isActive = true and
+  d2.isActive = true
 
 GROUP BY d.groupId, d.Id

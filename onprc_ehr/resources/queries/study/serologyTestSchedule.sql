@@ -28,7 +28,7 @@ FROM study.flags f
 JOIN onprc_ehr.serology_test_schedule st ON (st.flag = f.value)
 LEFT JOIN study.serology s ON (f.id = s.id AND s.agent = st.code)
 
-WHERE f.enddateCoalesced >= curdate()
+WHERE f.isActive = true
 
 GROUP BY f.id, f.flag, st.code.meaning
 

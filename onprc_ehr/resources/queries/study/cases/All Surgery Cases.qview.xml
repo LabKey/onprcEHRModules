@@ -4,7 +4,8 @@
         <column name="Id/curLocation/location"/>
         <column name="date"/>
         <column name="enddate"/>
-        <column name="proceduresPerformed"/>
+        <column name="remarksOnOpenDate"/>
+        <!--<column name="proceduresPerformed"/>-->
         <column name="history"/>
     </columns>
     <filters>
@@ -13,5 +14,6 @@
     <sorts>
         <sort column="Id/curLocation/room_order"/>
         <sort column="Id/curLocation/cage_order"/>
+        <sort column="date" descending="true"/>
     </sorts>
 </customView>

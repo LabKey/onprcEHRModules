@@ -21,6 +21,6 @@ SELECT
 
 FROM study.flags f
 JOIN ehr_lookups.flag_categories fc ON (f.category = fc.category)
-WHERE fc.enforceUnique = true and f.enddateTimeCoalesced >= now() and f.date <= curdate()
+WHERE fc.enforceUnique = true and f.isActive = true
 GROUP BY f.id, f.category
 HAVING count(*) > 1

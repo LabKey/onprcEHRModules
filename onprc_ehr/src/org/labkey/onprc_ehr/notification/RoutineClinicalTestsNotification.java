@@ -118,7 +118,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         long overdueCount = ts.getRowCount();
         if (overdueCount > 0)
         {
-            String url = getBaseUrl(c) + "schemaName=study&query.queryName=demographicsMostRecentTBDate&query.MonthsUntilDue~lte=0&query.Id/demographics/calculated_status~eq=Alive&query.flags~isblank";
+            String url = getExecuteQueryUrl(c, "study", "demographicsMostRecentTBDate", null) + "&query.MonthsUntilDue~lte=0&query.Id/demographics/calculated_status~eq=Alive&query.flags~isblank";
             msg.append("ALERT: There are " + overdueCount + " animals due for TB testing, and are not excluded from serologic testing.  <b><a href=\"" + url + "\">Click here to view them.</a></b><br><br>\n");
             msg.append("Summary by area:<br>\n");
             msg.append("<table>");
@@ -140,7 +140,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         long warnCount = ts2.getRowCount();
         if (warnCount > 0)
         {
-            String url = getBaseUrl(c) + "schemaName=study&query.queryName=demographicsMostRecentTBDate&query.MonthsUntilDue~lte=1&query.Id/demographics/calculated_status~eq=Alive&query.flags~isblank";
+            String url = getExecuteQueryUrl(c, "study", "demographicsMostRecentTBDate", null) + "&query.MonthsUntilDue~lte=1&query.Id/demographics/calculated_status~eq=Alive&query.flags~isblank";
             msg.append("WARNING: There are " + warnCount + " animals that will be due for TB testing within the next month, and are not excluded from serologic testing.  <b><a href=\"" + url + "\">Click here to view them.</a></b><br><br>\n");
             msg.append("Summary by area:<br>\n");
             msg.append("<table>");
@@ -217,7 +217,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         long overdueCount = ts.getRowCount();
         if (overdueCount > 0)
         {
-            String url = getBaseUrl(c) + "schemaName=study&query.queryName=demographicsPE&query.daysUntilNextExam~lte=0&query.Id/age/ageInYears~gte=1";
+            String url = getExecuteQueryUrl(c, "study", "demographicsPE", null) + "&query.daysUntilNextExam~lte=0&query.Id/age/ageInYears~gte=1";
             msg.append("ALERT: There are " + overdueCount + " animals over 1 yr. old due for Physical Exams.  <b><a href=\"" + url + "\">Click here to view them.</a></b><br><br>\n");
             msg.append("Summary by area:<br>\n");
             msg.append("<table>");
@@ -238,7 +238,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         long warnCount = ts2.getRowCount();
         if (warnCount > 0)
         {
-            String url = getBaseUrl(c) + "schemaName=study&query.queryName=demographicsPE&query.daysUntilNextExam~lte=30&query.Id/age/ageInYears~gte=1";
+            String url = getExecuteQueryUrl(c, "study", "demographicsPE", null) + "&query.daysUntilNextExam~lte=30&query.Id/age/ageInYears~gte=1";
             msg.append("WARNING: There are " + warnCount + " animals over 1 yr. old that will be due for Physical Exams within the next 30 days.  <b><a href=\"" + url + "\">Click here to view them.</a></b><br><br>\n");
             msg.append("Summary by area:<br>\n");
             msg.append("<table>");
@@ -277,7 +277,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         if (count > 0)
         {
             msg.append("WARNING: There are " + count + " animals in cage locations and have not been weighed in the past 60 days: ");
-            String url = getBaseUrl(c) + "schemaName=study&query.viewName=By Location&query.queryName=Demographics&query.Id/MostRecentWeight/DaysSinceWeight~gt=60&query.calculated_status~eq=Alive&query.Id/curLocation/Room/housingType/value~eq=Cage Location";
+            String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/MostRecentWeight/DaysSinceWeight~gt=60&query.calculated_status~eq=Alive&query.Id/curLocation/Room/housingType/value~eq=Cage Location";
             msg.append("<b><a href='" + url + "'>Click here to view them.</a></b><br><br>\n");
 
             msg.append("Summary by area:<br>\n");

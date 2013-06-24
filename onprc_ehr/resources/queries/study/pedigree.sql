@@ -21,6 +21,7 @@ CASE (d.id.demographics.calculated_status)
 END
 AS status,
 d.id.demographics.calculated_status as status_code,
+d.id.demographics.species,
 'Demographics' as source
 
 FROM study.demographicsParents d

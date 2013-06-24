@@ -345,27 +345,31 @@ EHR.reports.clinicalHistory = function(panel, tab){
     }
 }
 
-EHR.reports.clinAMTreatmentSchedule = function(panel, tab){
-    EHR.reports.treatmentSchedule(panel, tab, 'Clinical Treatments - AM');
+EHR.reports.clinAMMedicationSchedule = function(panel, tab){
+    EHR.reports.medicationSchedule(panel, tab, 'Clinical Medications - AM');
 };
 
-EHR.reports.clinPMTreatmentSchedule = function(panel, tab){
-    EHR.reports.treatmentSchedule(panel, tab, 'Clinical Treatments - PM');
+EHR.reports.clinPMMedicationSchedule = function(panel, tab){
+    EHR.reports.medicationSchedule(panel, tab, 'Clinical Medications - PM');
 };
 
 EHR.reports.dietSchedule = function(panel, tab){
-    EHR.reports.treatmentSchedule(panel, tab, 'Diets');
+    EHR.reports.medicationSchedule(panel, tab, 'Diets');
 };
 
-EHR.reports.surgAMTreatmentSchedule = function(panel, tab){
-    EHR.reports.treatmentSchedule(panel, tab, 'Surgery Treatments - AM');
+EHR.reports.surgMedicationSchedule = function(panel, tab){
+    EHR.reports.medicationSchedule(panel, tab, 'Surgical Medications - All');
 };
 
-EHR.reports.surgPMTreatmentSchedule = function(panel, tab){
-    EHR.reports.treatmentSchedule(panel, tab, 'Surgery Treatments - PM');
+EHR.reports.surgAMMedicationSchedule = function(panel, tab){
+    EHR.reports.medicationSchedule(panel, tab, 'Surgical Medications - AM');
 };
 
-EHR.reports.treatmentSchedule = function(panel, tab, viewName){
+EHR.reports.surgPMMedicationSchedule = function(panel, tab){
+    EHR.reports.medicationSchedule(panel, tab, 'Surgical Medications - PM');
+};
+
+EHR.reports.medicationSchedule = function(panel, tab, viewName){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
 
@@ -377,12 +381,12 @@ EHR.reports.treatmentSchedule = function(panel, tab, viewName){
             schemaName: 'study',
             queryName: 'treatmentSchedule',
             viewName: viewName,
-            title: 'Treatment Schedule ' + title,
+            title: viewName + ' ' + title,
             filters: filterArray.nonRemovable,
             removeableFilters: filterArray.removable,
             parameters: {
                 StartDate: date,
-                NumDays: 0
+                NumDays: 1
             }
         })
     });

@@ -4,18 +4,17 @@
         <column name="Id/curLocation/cage"/>
         <column name="Id"/>
         <column name="date"/>
-        <!--<column name="time"/>-->
         <column name="timeOfDay"/>
-        <!--<column name="project"/>-->
+        <column name="daysElapsed"/>
+
         <column name="frequency"/>
         <column name="code"/>
         <column name="amountWithUnits"/>
         <column name="route"/>
-        <column name="reason" />
+        <column name="performedby"/>
+        <column name="startDate"/>
         <column name="category"/>
-        <!--<column name="taskId"/>-->
-        <!--<column name="qcstate"/>-->
-        <!--<column name="timeType"/>-->
+        <column name="reason" />
     </columns>
     <sorts>
         <sort column="date"/>

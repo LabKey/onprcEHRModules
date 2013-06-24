@@ -37,6 +37,7 @@ import org.labkey.api.util.ResultSetUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -82,7 +83,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
     @Override
     public String getDescription()
     {
-        return "The report is designed to provide a daily alert for any rooms or animals groups with high incidence of clinical problems";
+        return "The report is designed alert for any rooms or animals groups with high incidence of clinical problems";
     }
 
     public String getMessage(Container c, User u)
@@ -115,6 +116,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         fieldKeys.add(FieldKey.fromString("Id"));
         fieldKeys.add(FieldKey.fromString("groupId"));
         fieldKeys.add(FieldKey.fromString("groupId/name"));
+        fieldKeys.add(FieldKey.fromString("groupId/majorityLocation/majorityLocation"));
         fieldKeys.add(FieldKey.fromString("category"));
         fieldKeys.add(FieldKey.fromString("totalIds"));
         fieldKeys.add(FieldKey.fromString("totalIdWithProblems"));
@@ -132,20 +134,21 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
             int idx = 0;
             while (rs.next())
             {
-                String url = getBaseUrl(c) + "schemaName=study&query.queryName=animalGroupProblemSummary&query.param.StartDate=" + _dateFormat.format(cal.getTime())+ "&query.param.EndDate=" + _dateFormat.format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other";
+                String url = getExecuteQueryUrl(c, "study", "animalGroupProblemSummary", null) + " &query.param.StartDate=" + _dateFormat.format(cal.getTime())+ "&query.param.EndDate=" + _dateFormat.format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other";
                 if (idx == 0)
                 {
                     msg.append("<b>WARNING: The following animal groups have a high incidence of clinical problems (>" + threshold + "% of animals) in the past " + interval + " days:</b><br>\n");
                     msg.append("<p><a href='" + url + "'>Click here to view them</a><br><br>\n\n");
                     msg.append("<table border=1 style='border-collapse: collapse;'>");
-                    msg.append("<tr style='font-weight: bold;'><td>Group</td><td>Problem Category</td><td>Distinct Animals In Group</td><td>Distinct Animals With Problem</td><td>Percent With Problem</td></tr>");
+                    msg.append("<tr style='font-weight: bold;'><td>Group</td><td>Majority Location</td><td>Problem Category</td><td>Distinct Animals In Group</td><td>Distinct Animals With Problem</td><td>Percent With Problem</td></tr>");
                 }
                 idx++;
 
                 String groupName = rs.getString(FieldKey.fromString("groupId/name"));
+                String groupLocation = rs.getString(FieldKey.fromString("groupId/majorityLocation/majorityLocation"));
                 String category = rs.getString(FieldKey.fromString("category"));
                 String url2 = url + "&query.groupId/name~eq=" + groupName + "&query.category~eq=" + category;
-                msg.append("<tr><td>").append(groupName).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(rs.getDouble(FieldKey.fromString("pctWithProblem")) + "%").append("</a>").append("</td></tr>");
+                msg.append("<tr><td>").append(groupName).append("</td><td>").append(groupLocation).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(NumberFormat.getInstance().format(rs.getDouble(FieldKey.fromString("pctWithProblem"))) + "%").append("</a>").append("</td></tr>");
             }
 
             if (idx > 0)
@@ -199,7 +202,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
             int idx = 0;
             while (rs.next())
             {
-                String url = getBaseUrl(c) + "schemaName=study&query.queryName=roomProblemSummary&query.param.StartDate=" + _dateFormat.format(cal.getTime())+ "&query.param.EndDate=" + _dateFormat.format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other&query.room/area~neq=Hospital&query.totalIdWithProblems~gt=2";
+                String url = getExecuteQueryUrl(c, "study", "roomProblemSummary", null) + "&query.param.StartDate=" + _dateFormat.format(cal.getTime())+ "&query.param.EndDate=" + _dateFormat.format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other&query.room/area~neq=Hospital&query.totalIdWithProblems~gt=2";
                 if (idx == 0)
                 {
                     msg.append("<b>WARNING: The following non-hospital rooms have a high incidence of clinical problems (>" + threshold + "% of animals, with at least 2 animals afflicted) in the past " + interval + " days:</b><br>\n");
@@ -212,7 +215,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
                 String room = rs.getString(FieldKey.fromString("room"));
                 String category = rs.getString(FieldKey.fromString("category"));
                 String url2 = url + "&query.room~eq=" + room + "&query.category~eq=" + category;
-                msg.append("<tr><td>").append(room).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(rs.getDouble(FieldKey.fromString("pctWithProblem")) + "%").append("</a>").append("</td></tr>");
+                msg.append("<tr><td>").append(room).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(NumberFormat.getInstance().format(rs.getDouble(FieldKey.fromString("pctWithProblem"))) + "%").append("</a>").append("</td></tr>");
             }
 
             if (idx > 0)
@@ -245,7 +248,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals that have been housed in a cage location in the hospital for more than 30 days</b><br>");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Housing&query.viewName=Active Housing&query.Id/curLocation/area~eq=Hospital&query.Id/curLocation/room/housingType/value~eq=Cage Location&query.enddate~isblank&query.daysInArea~gte=30'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Housing", "Active Housing") + "&query.Id/curLocation/area~eq=Hospital&query.Id/curLocation/room/housingType/value~eq=Cage Location&query.enddate~isblank&query.daysInArea~gte=30'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }

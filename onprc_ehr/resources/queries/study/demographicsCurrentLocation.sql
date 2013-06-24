@@ -26,6 +26,9 @@ coalesce(d2.room.sort_order, 0) as room_order,
 
 coalesce(d2.cagePosition.sort_order, 0) AS cage_order,
 
+d2.daysInRoom,
+d2.daysInArea,
+d2.previousLocation.location as prevLocation,
 d2.previousLocation.room as prevRoom,
 d2.previousLocation.cage as prevCage
 

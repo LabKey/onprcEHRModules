@@ -3,7 +3,7 @@
     Ext4.onReady(function(){
         var webpart = <%=webpartContext%>;
 
-        Ext4.define('ONPRC.panel.DailySheetsPanel', {
+        Ext4.define('ONPRC.panel.PrintableReportsPanel', {
             itemId: 'sheetPanel',
             extend: 'Ext.panel.Panel',
 
@@ -22,14 +22,14 @@
 
             getItems: function(){
                 var items = [{
-                    html: 'This page allows daily sheets to be printed by room or area.  After picking the location(s) using the drop downs below, hit the \'Print\' buttons below to print any of the reports',
+                    html: 'This page provides reports to be printed by room or area.  After picking the location(s) using the drop downs below, hit the \'Print\' buttons below to print any of the reports',
                     style: 'padding-bottom: 20px;'
                 },{
                     xtype: 'labkey-combo',
                     itemId: 'areaField',
                     width: 400,
-                    fieldLabel: 'Area(s)',
-                    multiSelect: true,
+                    fieldLabel: 'Area',
+                    //multiSelect: true,
                     store: {
                         type: 'labkey-store',
                         schemaName: 'ehr_lookups',
@@ -39,16 +39,28 @@
                     valueField: 'area',
                     displayField: 'area',
                     listeners: {
-                        change: function(field, val){
+                        select: function(field, records){
+                            if (!records.length)
+                                return;
+
+                            var areas = [];
+                            Ext4.Array.forEach(records, function(r){
+                                areas.push(r.get('area'));
+                            }, this);
+
                             var roomField = field.up('panel').down('#roomField');
-                            roomField.filterByAreas(val);
+                            roomField.suspendEvents();
+                            roomField.selectByAreas(areas);
+                            roomField.resumeEvents();
                         },
                         render: function(field){
                             var val = field.getValue();
-                            if (val && val.length){
-                                var roomField = field.up('panel').down('#roomField');
-                                roomField.filterByAreas(val);
-                            }
+                            val = Ext4.isArray(val) || !val ? val : [val];
+
+                            var roomField = field.up('panel').down('#roomField');
+                            roomField.suspendEvents();
+                            roomField.selectByAreas(val);
+                            roomField.resumeEvents();
                         }
                     }
                 },{
@@ -56,7 +68,13 @@
                     itemId: 'roomField',
                     width: 400,
                     fieldLabel: 'Room(s)',
-                    multiSelect: true
+                    multiSelect: true,
+                    listeners: {
+                        change: function(field){
+                            var areaField = field.up('panel').down('#areaField');
+                            areaField.reset();
+                        }
+                    }
                 },{
                     html: '',
                     style: 'margin-bottom: 10px;'
@@ -79,7 +97,7 @@
                         border: false
                     },
                     items: [{
-                        html: '<i>Clinical Cases:</i>'
+                        html: '<i>Open Clinical Cases:</i>'
                     },{
                         style: 'padding-left: 10px;',
                         html: ''
@@ -107,21 +125,21 @@
                         style: 'padding-top: 10px;',
                         colspan: 3
                     },{
-                        html: '<i>Clinical Treatments:</i>'
+                        html: '<i>Clinical Medications:</i>'
                     },{
                         style: 'padding-left: 10px;',
                         items: [{
                             xtype: 'datefield',
                             hidden: true,
                             fieldLabel: 'Date',
-                            itemId: 'treatmentDateField',
+                            itemId: 'medicationDateField',
                             value: new Date(),
                             allowBlank: false
                         },{
                             xtype: 'combo',
                             multiSelect: true,
                             fieldLabel: 'Time of Day',
-                            itemId: 'treatmentTimeOfDayField',
+                            itemId: 'medicationTimeOfDayField',
                             value: 'both',
                             displayField: 'display',
                             valueField: 'time',
@@ -143,17 +161,17 @@
                             if (!params)
                                 return;
 
-                            var date = panel.down('#treatmentDateField').getValue();
+                            var date = panel.down('#medicationDateField').getValue();
                             if (!date){
                                 Ext4.Msg.alert('Error', 'Must provide a date');
                                 return;
                             }
 
                             params['TreatmentDate'] = date.format('Y-m-d');
-                            params['NumDays'] = 0;
-                            params['Category'] = 'Medication';
+                            params['NumDays'] = 1;
+                            params['Category'] = 'Clinical';
 
-                            var timeOfDay = panel.down('#treatmentTimeOfDayField').getValue();
+                            var timeOfDay = panel.down('#medicationTimeOfDayField').getValue();
                             if (timeOfDay && timeOfDay.length && timeOfDay[0] != 'both'){
                                 params['TimeOfDay'] = timeOfDay.join(';');
                             }
@@ -214,7 +232,7 @@
                             }
 
                             params['TreatmentDate'] = date.format('Y-m-d');
-                            params['NumDays'] = 0;
+                            params['NumDays'] = 1;
                             params['Category'] = 'Diet';
 
                             var timeOfDay = panel.down('#dietTimeOfDayField').getValue();
@@ -235,7 +253,7 @@
                         style: 'padding-top: 10px;',
                         colspan: 3
                     },{
-                        html: '<i>Surgical Cases:</i>'
+                        html: '<i>Open Surgical Cases:</i>'
                     },{
                         style: 'padding-left: 10px;',
                         html: ''
@@ -263,21 +281,21 @@
                         style: 'padding-top: 10px;',
                         colspan: 3
                     },{
-                        html: '<i>Surgical Treatments:</i>'
+                        html: '<i>Surgical Medications:</i>'
                     },{
                         style: 'padding-left: 10px;',
                         items: [{
                             xtype: 'datefield',
                             hidden: true,
                             fieldLabel: 'Date',
-                            itemId: 'surgicalTreatmentDateField',
+                            itemId: 'surgicalMedicationDateField',
                             value: new Date(),
                             allowBlank: false
                         },{
                             xtype: 'combo',
                             multiSelect: true,
                             fieldLabel: 'Time of Day',
-                            itemId: 'surgicalTreatmentTimeOfDayField',
+                            itemId: 'surgicalMedicationTimeOfDayField',
                             displayField: 'display',
                             value: 'both',
                             valueField: 'time',
@@ -299,18 +317,17 @@
                             if (!params)
                                 return;
 
-                            var date = panel.down('#surgicalTreatmentDateField').getValue();
+                            var date = panel.down('#surgicalMedicationDateField').getValue();
                             if (!date){
                                 Ext4.Msg.alert('Error', 'Must provide a date');
                                 return;
                             }
 
                             params['TreatmentDate'] = date.format('Y-m-d');
-                            params['NumDays'] = 0;
-                            params['Category'] = 'Medication';
-                            params['Reason'] = 'Post-op analgesia';
+                            params['NumDays'] = 1;
+                            params['Category'] = 'Surgical';
 
-                            var timeOfDay = panel.down('#surgicalTreatmentTimeOfDayField').getValue();
+                            var timeOfDay = panel.down('#surgicalMedicationTimeOfDayField').getValue();
                             if (timeOfDay && timeOfDay.length && timeOfDay[0] != 'both'){
                                 params['TimeOfDay'] = timeOfDay.join(';');
                             }
@@ -351,6 +368,38 @@
                             console.log(url);
                             window.open(url);
                         }
+                    },{
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 3
+                    },{
+                        html: '<i>EXPERIMENTAL - Room Layout:</i>'
+                    },{
+                        style: 'padding-left: 5px;',
+                        html: ''
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'View/Print',
+                        border: true,
+                        handler: function(btn){
+                            var panel = btn.up('#sheetPanel');
+                            var area = panel.down('#areaField').getValue();
+                            var rooms = panel.down('#roomField').getValue();
+                            if (Ext4.isEmpty(area) &&  Ext4.isEmpty(rooms)){
+                                Ext4.Msg.alert('Error', 'Must provide a room or area');
+                                return;
+                            }
+
+                            var params = {};
+                            if (area)
+                                params.area = area;
+                            if (rooms)
+                                params.rooms = rooms;
+
+                            var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
+                            window.open(url);
+                        }
                     }]
                 });
 
@@ -363,7 +412,10 @@
                 };
 
                 var areas = this.down('#areaField').getValue() || [];
+                areas = Ext4.isArray(areas) ? areas : [areas];
+
                 var rooms = this.down('#roomField').getValue() || [];
+                rooms = Ext4.isArray(rooms) ? rooms: [rooms];
 
                 if (!areas.length && !rooms.length){
                     Ext4.Msg.alert('Error', 'Must select an area or room');
@@ -372,7 +424,7 @@
 
                 //if rooms have been chosen, ignore areas
                 if (rooms.length){
-                    params.Rooms = rooms.join(';');
+                    params.Rooms = rooms;
                 }
                 else if (areas.length){
                     params.Areas = areas.join(';');
@@ -382,7 +434,7 @@
             }
         });
 
-        Ext4.create('ONPRC.panel.DailySheetsPanel', {
+        Ext4.create('ONPRC.panel.PrintableReportsPanel', {
 
         }).render(webpart.wrapperDivId);
     });

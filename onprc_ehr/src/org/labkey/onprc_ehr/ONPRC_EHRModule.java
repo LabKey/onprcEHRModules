@@ -72,7 +72,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.315;
+        return 12.316;
     }
 
     public boolean hasScripts()
@@ -179,6 +179,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerActionOverride("procedureDetails", this, "views/procedureDetails.html");
         EHRService.get().registerActionOverride("animalGroupDetails", this, "views/animalGroupDetails.html");
         EHRService.get().registerActionOverride("cageDetails", this, "views/cageDetails.html");
+
+        //data entry
+        EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "study", "weight", "Clinical");
+        EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "study", "Drug Administration", "Clinical");
+        EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "study", "vitals", "Clinical");
+
     }
 
     @Override

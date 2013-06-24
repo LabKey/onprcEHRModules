@@ -35,7 +35,7 @@ select
   count(distinct a.id) as totalAnimals
 
 from study.assignment a
-where a.enddateCoalesced >= curdate() and a.date <= curdate() and a.id.curLocation.room IS NOT NULL
+where a.isActive = true and a.id.curLocation.room IS NOT NULL
 group by a.id.curLocation.room, a.project.name, a.project.investigatorId.lastname
 
 ) a

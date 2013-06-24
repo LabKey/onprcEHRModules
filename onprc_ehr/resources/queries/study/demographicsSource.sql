@@ -1,26 +1,28 @@
 /*
- * Copyright (c) 2013 LabKey Corporation
+ * Copyright (c) 2010-2012 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 SELECT
   d.Id AS Id,
 
-  T1.MostRecentArrival,
-  T1.EarliestArrival,
+  T1.mostRecentArrival,
+  T1.earliestArrival,
   d.birth,
-  coalesce(T1.EarliestArrival, d.birth) as Center_Arrival,
+  coalesce(T1.EarliestArrival, d.birth) as center_Arrival,
 
   CASE
     WHEN T1.EarliestArrival IS NULL AND d.birth IS NOT NULL THEN true
     ELSE false
   END as fromCenter,
+  t2.source,
 
   CASE
     WHEN T1.EarliestArrival IS NULL AND d.birth IS NOT NULL THEN 'Born At Center'
-    ELSE 'External'
-  END as type,
-  t2.source,
+    WHEN T1.EarliestArrival IS NOT NULL AND t2.source IS NOT NULL THEN ('Acquired: ' || t2.source.meaning)
+    WHEN T1.EarliestArrival IS NOT NULL AND t2.source IS NULL THEN 'Acquired'
+    ELSE 'Unknown'
+  END as type
 
 FROM study.demographics d
 

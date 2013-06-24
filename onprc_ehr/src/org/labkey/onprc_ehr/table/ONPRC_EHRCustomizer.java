@@ -88,6 +88,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeAnimalTable((AbstractTableInfo)table);
             }
+            else if (table.getName().equalsIgnoreCase("animal_groups") && table.getSchema().getName().equalsIgnoreCase("ehr"))
+            {
+                customizeAnimalGroups((AbstractTableInfo) table);
+            }
             else if (matches(table, "study", "Demographics"))
             {
                 customizeDemographicsTable((AbstractTableInfo)table);
@@ -123,6 +127,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             else if (matches(table, "ehr", "protocol"))
             {
                 customizeProtocol((AbstractTableInfo) table);
+            }
+            else if (matches(table, "ehr", "tasks") || matches(table, "ehr", "my_tasks"))
+            {
+                customizeTasks((AbstractTableInfo) table);
             }
             else if (matches(table, "ehr_lookups", "room") || matches(table, "ehr_lookups", "rooms"))
             {
@@ -323,7 +331,8 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         String calendarYear = "calendarYear";
         if (ti.getColumn(calendarYear) == null)
         {
-            SQLFragment sql = new SQLFragment(ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + "." + dateCol.getSelectName()));
+            String colSql = dateCol.getValueSql(ExprColumn.STR_TABLE_ALIAS).getSQL();
+            SQLFragment sql = new SQLFragment(ti.getSqlDialect().getDatePart(Calendar.YEAR, colSql));
             ExprColumn calCol = new ExprColumn(ti, calendarYear, sql, JdbcType.INTEGER, dateCol);
             calCol.setLabel("Calendar Year");
             calCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
@@ -331,7 +340,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ti.addColumn(calCol);
 
             String fiscalYear = "fiscalYear";
-            SQLFragment sql2 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + "."+ dateCol.getSelectName()) + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, ExprColumn.STR_TABLE_ALIAS + "." + dateCol.getSelectName()) + " < 5 THEN -1 ELSE 0 END)");
+            SQLFragment sql2 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, colSql) + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, colSql) + " < 5 THEN -1 ELSE 0 END)");
             ExprColumn fiscalYearCol = new ExprColumn(ti, fiscalYear, sql2, JdbcType.INTEGER, dateCol);
             fiscalYearCol.setLabel("Fiscal Year (May 1)");
             fiscalYearCol.setDescription("This column will calculate the fiscal year of the record, based on a May 1 cycle");
@@ -340,7 +349,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ti.addColumn(fiscalYearCol);
 
             String fiscalYearJuly = "fiscalYearJuly";
-            SQLFragment sql3 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, ExprColumn.STR_TABLE_ALIAS + "." + dateCol.getSelectName()) + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, ExprColumn.STR_TABLE_ALIAS + "." + dateCol.getSelectName()) + " < 7 THEN -1 ELSE 0 END)");
+            SQLFragment sql3 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, colSql) + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, colSql) + " < 7 THEN -1 ELSE 0 END)");
             ExprColumn fiscalYearJulyCol = new ExprColumn(ti, fiscalYearJuly, sql3, JdbcType.INTEGER, dateCol);
             fiscalYearJulyCol.setLabel("Fiscal Year (July 1)");
             fiscalYearJulyCol.setDescription("This column will calculate the fiscal year of the record, based on a July 1 cycle");
@@ -372,6 +381,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ColumnInfo col = getWrappedIdCol(us, ds, "activeFlags", "flagsPivoted");
             col.setLabel("Active Flags");
             //col.setDescription("");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("returnLocation") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "returnLocation", "demographicsReturnLocation");
+            col.setLabel("Housing - Return Location");
+            col.setDescription("This calculates the most likely location to return this animal during a transfer");
             ds.addColumn(col);
         }
 
@@ -431,11 +448,11 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ds.addColumn(col);
         }
 
-        if (ds.getColumn("origin") == null)
+        if (ds.getColumn("source") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "origin", "demographicsOrigin");
-            col.setLabel("Origin");
-            col.setDescription("Contains fields related to the origin of the animal (ie. center vs. acquired), arrival date at the center, etc.");
+            ColumnInfo col = getWrappedIdCol(us, ds, "source", "demographicsSource");
+            col.setLabel("Source");
+            col.setDescription("Contains fields related to the source of the animal (ie. center vs. acquired), arrival date at the center, etc.");
             ds.addColumn(col);
         }
 
@@ -749,6 +766,20 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         todaysRemarks.setLabel("Remarks Entered Today");
         todaysRemarks.setDisplayWidth("250");
         ti.addColumn(todaysRemarks);
+
+        SQLFragment rmSql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+                " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date)");
+        ExprColumn remarksOnOpenDate = new ExprColumn(ti, "remarksOnOpenDate", rmSql2, JdbcType.VARCHAR, objectId);
+        remarksOnOpenDate.setLabel("Remarks Entered On Open Date");
+        remarksOnOpenDate.setDisplayWidth("250");
+        ti.addColumn(remarksOnOpenDate);
+
+        SQLFragment assesmentSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.a"), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+                " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.a IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date)");
+        ExprColumn assessmentOnOpenDate = new ExprColumn(ti, "assessmentOnOpenDate", assesmentSql, JdbcType.VARCHAR, objectId);
+        assessmentOnOpenDate.setLabel("Assessment Entered On Open Date");
+        assessmentOnOpenDate.setDisplayWidth("250");
+        ti.addColumn(assessmentOnOpenDate);
     }
 
     private void appendSurgeryCol(AbstractTableInfo ti)
@@ -779,9 +810,25 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 " AND CAST(r.date AS date) = CAST(" + ExprColumn.STR_TABLE_ALIAS + ".date as date) " +
                 " AND r.type = 'Surgery')");
         ExprColumn procedureCol = new ExprColumn(ti, name, procedureSql, JdbcType.VARCHAR, ti.getColumn("date"));
-        procedureCol.setLabel("Procedures Performed On This Date");
+        procedureCol.setLabel("Procedures Performed On Open Date");
         procedureCol.setDisplayWidth("300");
         ti.addColumn(procedureCol);
+    }
+
+    private void customizeTasks(AbstractTableInfo ti)
+    {
+        //TODO: conditional based on user permissions?
+        ColumnInfo updateCol = ti.getColumn("updateTitle");
+        if (updateCol == null)
+        {
+            updateCol = new WrappedColumn(ti.getColumn("title"), "updateTitle");
+            ti.addColumn(updateCol);
+        }
+
+        updateCol.setURL(DetailsURL.fromString("/ehr/dataEntryForm.view?formType=${formtype}&taskid=${taskid}"));
+        updateCol.setLabel("Title");
+        updateCol.setHidden(true);
+        updateCol.setDisplayWidth("150");
     }
 
     private void customizeProtocol(AbstractTableInfo ti)
@@ -1304,5 +1351,22 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         });
 
         ds.addColumn(col);
+    }
+
+    private void customizeAnimalGroups(AbstractTableInfo ti)
+    {
+        if (ti.getColumn("majorityLocation") == null)
+        {
+            UserSchema us = getStudyUserSchema(ti);
+            if (us != null)
+            {
+                ColumnInfo rowidCol = ti.getColumn("rowid");
+                ColumnInfo col = ti.addColumn(new WrappedColumn(rowidCol, "majorityLocation"));
+                col.setLabel("Majority Location");
+                col.setUserEditable(false);
+                col.setIsUnselectable(true);
+                col.setFk(new QueryForeignKey(us, "animalGroupMajorityLocation", "rowid", "room"));
+            }
+        }
     }
 }

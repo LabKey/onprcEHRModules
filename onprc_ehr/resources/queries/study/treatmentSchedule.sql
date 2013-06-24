@@ -48,12 +48,11 @@ SELECT
     ELSE 'Custom'
   END as timeType,
 
-  coalesce(sc.primaryCategory, 'Medication') as category,
-  t1.category as treatmentCategory,
+  t1.category,
 
   t1.frequency.meaning as frequency,
-  t1.date as StartDate,
-  timestampdiff('SQL_TSI_DAY', t1.date, curdate()) as daysElapsed,
+  t1.date as startDate,
+  timestampdiff('SQL_TSI_DAY', t1.dateOnly, curdate()) + 1 as daysElapsed,
   t1.enddate,
   --t1.duration,
   t1.project,
@@ -88,9 +87,8 @@ JOIN study."Treatment Orders" t1
 
 LEFT JOIN ehr.treatment_times tt ON (tt.treatmentid = t1.objectid)
 LEFT JOIN ehr_lookups.treatment_frequency_times ft ON (ft.frequency = t1.frequency.meaning AND tt.rowid IS NULL)
-LEFT JOIN ehr_lookups.snomed_subset_codes sc ON (sc.code = t1.code AND sc.primaryCategory = 'Diet')
 
-WHERE t1.date is not null AND t1.qcstate.publicdata = true
+WHERE t1.date is not null AND t1.qcstate.publicdata = true and t1.dateOnly <= curdate()
 
 ) s
 

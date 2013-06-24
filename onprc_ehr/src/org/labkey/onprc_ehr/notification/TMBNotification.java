@@ -82,7 +82,7 @@ public class TMBNotification extends ColonyAlertsNotification
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: There are " + ts.getRowCount() + " matings that occurred 30-36 days ago</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=Matings&query.viewName=30-36 Days Ago'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Matings", "30-36 Days Ago") + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -96,7 +96,7 @@ public class TMBNotification extends ColonyAlertsNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " offspring over 250 days old that are still in cage with their mother</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=offspringWithMother&query.viewName=Offspring Over 250 Days'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "offspringWithMother", "Offspring Over 250 Days") + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -109,7 +109,7 @@ public class TMBNotification extends ColonyAlertsNotification
         if (count > 0)
         {
             msg.append("<b>Alert: There are " + count + " animals known to be pregnant.</b><br>\n");
-            msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=pregnantAnimals'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnantAnimals", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }

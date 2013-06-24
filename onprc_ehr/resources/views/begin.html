@@ -80,7 +80,7 @@ Ext4.onReady(function(){
 //                //{name: 'Treatment Schedule - AM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleAM'},
 //                //{name: 'Treatment Schedule - PM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentSchedulePM'},
 //                //{name: 'Treatment Schedule - Night', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleNight'}
-                {name: 'Print Daily Sheets', url: LABKEY.ActionURL.buildURL('onprc_ehr', 'dailySheets', ctx['EHRStudyContainer'])}
+                {name: 'Printable Reports', url: LABKEY.ActionURL.buildURL('onprc_ehr', 'printableReports', ctx['EHRStudyContainer'])}
             ]
         },{
             header: 'Entire Colony',
@@ -121,7 +121,7 @@ Ext4.onReady(function(){
                 style: 'font-weight: bold;'
             },
             items: [
-                {name: 'Enter Data', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntry.view'}
+                {name: 'Enter Data', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/enterData.view'}
             ]
         },{
             header: 'Service Requests',

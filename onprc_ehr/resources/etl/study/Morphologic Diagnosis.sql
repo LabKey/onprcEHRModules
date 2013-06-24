@@ -17,7 +17,7 @@ Select
 	cast(pa.AnimalID as nvarchar(4000)) as Id,
 	pa.Date as date,
 	pa.objectid as parentid,
-	SequenceNo,
+	SequenceNo as sort_order,
 	d.objectid 
 
 From Path_AutopsyDiagnosis d

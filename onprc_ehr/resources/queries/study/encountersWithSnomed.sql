@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 SELECT
-  e.id,
+  e.Id,
   e.date,
+  e.caseno,
+  e.objectid as caseid,
   s.objectid,
   s.set_number,
   s.sort,

@@ -18,5 +18,5 @@ SELECT
   group_concat(f.value, chr(10)) as status
 
 FROM study.flags f
-WHERE f.enddateTimeCoalesced >= now() AND f.category = 'SPF' and f.date <= curdate()
+WHERE f.isActive = true AND f.category = 'SPF'
 GROUP BY f.id

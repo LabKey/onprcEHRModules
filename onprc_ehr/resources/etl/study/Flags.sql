@@ -36,7 +36,7 @@ From Af_Pool p
 left join ref_pool rp ON (rp.PoolCode = p.PoolCode)
 left join Af_Qrf q on (q.animalid = p.animalid)
 
-where (p.ts > ? or q.ts > ? or rp.ts > ?) and rp.ShortDescription not in ('CBG', 'EBG', 'HBG', 'PBG', 'STG', 'SBG', 'Origin')
+where (p.ts > ? or q.ts > ? or rp.ts > ?) and rp.ShortDescription not in ('CBG', 'EBG', 'HBG', 'PBG', 'STG', 'SBG', 'JBG', 'Origin')
 
 UNION ALL
 

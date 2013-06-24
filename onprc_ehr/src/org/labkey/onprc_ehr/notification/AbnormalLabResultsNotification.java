@@ -173,7 +173,7 @@ public class AbnormalLabResultsNotification extends AbstractEHRNotification
                 while (rs.next());
 
                 msg.append("There have been " + rowCount + " abnormal results since " + AbstractEHRNotification._dateTimeFormat.format(lastRun) + ".<br>\n");
-                msg.append("<p><a href='" + getBaseUrl(c) + "schemaName=study&query.queryName=ClinpathRefRange&query.taskid/datecompleted~gte=" + AbstractEHRNotification._dateTimeFormat.format(lastRun) + "&query.taskid/datecompleted~nonblank&query.qcstate/PublicData~eq=true'>Click here to view them</a><p>\n");
+                msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "ClinpathRefRange", null) + "&query.taskid/datecompleted~gte=" + AbstractEHRNotification._dateTimeFormat.format(lastRun) + "&query.taskid/datecompleted~nonblank&query.qcstate/PublicData~eq=true'>Click here to view them</a><p>\n");
 
                 for (String area : summary.keySet())
                 {
