@@ -18,7 +18,6 @@ package org.labkey.onprc_ehr.notification;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.SimpleFilter;
-import org.labkey.api.data.Table;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.User;
@@ -26,7 +25,6 @@ import org.labkey.api.security.User;
 import java.util.Date;
 
 /**
- * Created with IntelliJ IDEA.
  * User: bimber
  * Date: 4/26/13
  * Time: 9:09 AM

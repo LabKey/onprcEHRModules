@@ -34,11 +34,8 @@ import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
  * User: bimber
  * Date: 12/19/12
  * Time: 7:32 PM

@@ -19,7 +19,6 @@ import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.dialect.SqlDialect;
 
 /**
- * Created with IntelliJ IDEA.
  * User: bimber
  * Date: 11/9/12
  * Time: 2:50 PM

@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
  * User: bimber
  * Date: 1/7/13
  * Time: 9:05 AM

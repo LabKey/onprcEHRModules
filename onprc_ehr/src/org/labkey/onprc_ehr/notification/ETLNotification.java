@@ -19,11 +19,9 @@ import org.labkey.api.data.Container;
 import org.labkey.api.security.User;
 import org.labkey.onprc_ehr.etl.ETLRunnable;
 
-import java.io.IOException;
 import java.util.Date;
 
 /**
- * Created with IntelliJ IDEA.
  * User: bimber
  * Date: 3/26/13
  * Time: 7:36 AM

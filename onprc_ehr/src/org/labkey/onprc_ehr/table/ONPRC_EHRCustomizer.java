@@ -18,7 +18,6 @@ package org.labkey.onprc_ehr.table;
 import org.apache.log4j.Logger;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.ColumnInfo;
-import org.labkey.api.data.Container;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DisplayColumn;
@@ -29,7 +28,6 @@ import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
-import org.labkey.api.ehr.EHRService;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
 import org.labkey.api.query.DetailsURL;
@@ -42,7 +40,6 @@ import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
-import org.labkey.api.security.User;
 import org.labkey.api.study.DataSetTable;
 
 import java.io.IOException;
@@ -56,7 +53,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
  * User: bimber
  * Date: 12/7/12
  * Time: 2:22 PM

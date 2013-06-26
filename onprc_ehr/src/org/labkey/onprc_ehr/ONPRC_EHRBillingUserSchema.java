@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.DbSchema;
-import org.labkey.api.data.SchemaTableInfo;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.query.SimpleUserSchema;
 import org.labkey.api.security.User;
@@ -31,7 +30,6 @@ import org.labkey.onprc_ehr.query.CustomPermissionsTable;
 import org.labkey.onprc_ehr.security.ONPRCBillingPermission;
 
 /**
- * Created with IntelliJ IDEA.
  * User: bimber
  * Date: 1/9/13
  * Time: 1:23 PM

@@ -15,42 +15,30 @@
  */
 package org.labkey.onprc_ehr.notification;
 
-import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
-import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
-import org.labkey.api.data.RuntimeSQLException;
-import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
-import org.labkey.api.data.Sort;
-import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
-import org.labkey.api.data.dialect.SqlDialect;
 import org.labkey.api.query.FieldKey;
-import org.labkey.api.query.QueryHelper;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
-import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.util.ResultSetUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * Created with IntelliJ IDEA.
  * User: bimber
  * Date: 4/5/13
  * Time: 2:25 PM
