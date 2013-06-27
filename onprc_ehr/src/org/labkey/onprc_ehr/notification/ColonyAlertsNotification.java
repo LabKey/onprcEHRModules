@@ -554,13 +554,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void assignmentsProjectedToday(final Container c, User u, final StringBuilder msg)
     {
         Date date = new Date();
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("projectedRelease"), date, CompareType.DATE_EQUAL);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("projectedRelease"), date, CompareType.DATE_LTE);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>ALERT: There are " + count + " assignments with a projected release date for today that have not already been ended.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.projectedRelease~dateeq=" + AbstractEHRNotification._dateFormat.format(date) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<b>ALERT: There are " + count + " assignments with a projected release date for today or earlier that have not already been ended.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.projectedRelease~datelte=" + AbstractEHRNotification._dateFormat.format(date) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }

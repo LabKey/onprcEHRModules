@@ -503,6 +503,8 @@ onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.307-12.308.sql
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.309-12.310.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.310-12.311.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.315-12.316.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.316-12.317.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.317-12.318.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.302-12.303.sql -text
@@ -521,6 +523,8 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.307-12.308.sql 
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.309-12.310.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.310-12.311.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.315-12.316.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.316-12.317.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.317-12.318.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text

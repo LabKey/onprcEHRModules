@@ -3,6 +3,61 @@
     Ext4.onReady(function(){
         var webpart = <%=webpartContext%>;
 
+        Ext4.define('EHR.field.TimeOfDayField', {
+            extend: 'Ext.form.ComboBox',
+            alias: 'widget.ehr-timeofdayfield',
+
+            initComponent: function(){
+                Ext4.apply(this, {
+                    multiSelect: true,
+                    fieldLabel: 'Time of Day',
+                    value: 'both',
+                    displayField: 'display',
+                    valueField: 'time',
+                    queryMode: 'local',
+                    store: {
+                        type: 'array',
+                            fields: ['time', 'display'],
+                            data: [['both', 'Both'], ['AM', 'AM'],['PM', 'PM']]
+                        },
+                    listeners: {
+                        change: function(field, val, oldVal){
+                            val = (!val || Ext4.isArray(val)) ? val : [val];
+                            oldVal = (!oldVal || Ext4.isArray(oldVal)) ? oldVal : [oldVal];
+
+                            //if the previous selection was just 'both', and the user picks something else, we need to de-select 'both'
+                            if (oldVal.indexOf('both') != -1 && oldVal.length == 1 && val.indexOf('both') != -1 && val.length > 1){
+                                val = val.remove('both');
+                                this.setValue(val);
+                            }
+                            else if (val.indexOf('both') != -1 && val.length > 1 && oldVal.indexOf('both') == -1){
+                                this.setValue('both');
+                            }
+//                            else if (val.indexOf('AM') > -1 && val.indexOf('PM') > -1){
+//                                this.setValue('both');
+//                            }
+                        }
+                    }
+                });
+
+                this.callParent(arguments);
+            },
+
+            getURLParam: function(){
+                var timeOfDay = this.getValue();
+                timeOfDay = (!timeOfDay || Ext4.isArray(timeOfDay)) ? timeOfDay : [timeOfDay];
+
+                if (timeOfDay && timeOfDay.indexOf('both') > -1){
+                    return null;
+                }
+                else if (timeOfDay && timeOfDay.indexOf('AM') > -1 && timeOfDay.indexOf('PM') > -1){
+                    return null;
+                }
+
+                return timeOfDay.join(';');
+            }
+        });
+
         Ext4.define('ONPRC.panel.PrintableReportsPanel', {
             itemId: 'sheetPanel',
             extend: 'Ext.panel.Panel',
@@ -136,19 +191,8 @@
                             value: new Date(),
                             allowBlank: false
                         },{
-                            xtype: 'combo',
-                            multiSelect: true,
-                            fieldLabel: 'Time of Day',
-                            itemId: 'medicationTimeOfDayField',
-                            value: 'both',
-                            displayField: 'display',
-                            valueField: 'time',
-                            queryMode: 'local',
-                            store: {
-                                type: 'array',
-                                fields: ['time', 'display'],
-                                data: [['both', 'Both'], ['AM', 'AM'],['PM', 'PM']]
-                            }
+                            xtype: 'ehr-timeofdayfield',
+                            itemId: 'medicationTimeOfDayField'
                         }]
                     },{
                         xtype: 'button',
@@ -171,9 +215,9 @@
                             params['NumDays'] = 1;
                             params['Category'] = 'Clinical';
 
-                            var timeOfDay = panel.down('#medicationTimeOfDayField').getValue();
-                            if (timeOfDay && timeOfDay.length && timeOfDay[0] != 'both'){
-                                params['TimeOfDay'] = timeOfDay.join(';');
+                            var timeOfDay = panel.down('#medicationTimeOfDayField').getURLParam();
+                            if (timeOfDay){
+                                params['TimeOfDay'] = timeOfDay;
                             }
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
@@ -200,19 +244,8 @@
                             value: new Date(),
                             allowBlank: false
                         },{
-                            xtype: 'combo',
-                            multiSelect: true,
-                            fieldLabel: 'Time of Day',
-                            itemId: 'dietTimeOfDayField',
-                            displayField: 'display',
-                            value: 'both',
-                            valueField: 'time',
-                            queryMode: 'local',
-                            store: {
-                                type: 'array',
-                                fields: ['time', 'display'],
-                                data: [['both', 'Both'], ['AM', 'AM'],['PM', 'PM']]
-                            }
+                            xtype: 'ehr-timeofdayfield',
+                            itemId: 'dietTimeOfDayField'
                         }]
                     },{
                         xtype: 'button',
@@ -235,9 +268,9 @@
                             params['NumDays'] = 1;
                             params['Category'] = 'Diet';
 
-                            var timeOfDay = panel.down('#dietTimeOfDayField').getValue();
-                            if (timeOfDay && timeOfDay.length && timeOfDay[0] != 'both'){
-                                params['TimeOfDay'] = timeOfDay.join(';');
+                            var timeOfDay = panel.down('#dietTimeOfDayField').getURLParam();
+                            if (timeOfDay){
+                                params['TimeOfDay'] = timeOfDay;
                             }
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
@@ -292,19 +325,8 @@
                             value: new Date(),
                             allowBlank: false
                         },{
-                            xtype: 'combo',
-                            multiSelect: true,
-                            fieldLabel: 'Time of Day',
-                            itemId: 'surgicalMedicationTimeOfDayField',
-                            displayField: 'display',
-                            value: 'both',
-                            valueField: 'time',
-                            queryMode: 'local',
-                            store: {
-                                type: 'array',
-                                fields: ['time', 'display'],
-                                data: [['both', 'Both'], ['AM', 'AM'],['PM', 'PM']]
-                            }
+                            xtype: 'ehr-timeofdayfield',
+                            itemId: 'surgicalMedicationTimeOfDayField'
                         }]
                     },{
                         xtype: 'button',
@@ -327,9 +349,9 @@
                             params['NumDays'] = 1;
                             params['Category'] = 'Surgical';
 
-                            var timeOfDay = panel.down('#surgicalMedicationTimeOfDayField').getValue();
-                            if (timeOfDay && timeOfDay.length && timeOfDay[0] != 'both'){
-                                params['TimeOfDay'] = timeOfDay.join(';');
+                            var timeOfDay = panel.down('#surgicalMedicationTimeOfDayField').getURLParam();
+                            if (timeOfDay){
+                                params['TimeOfDay'] = timeOfDay;
                             }
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
@@ -422,11 +444,13 @@
                     return;
                 }
 
-                //if rooms have been chosen, ignore areas
+                //NOTE: we now include both area + rooms if supplied.  we reply on the combos to be smart about turning
+                //off area if the user picked a set of rooms that differers from the definition
                 if (rooms.length){
                     params.Rooms = rooms;
                 }
-                else if (areas.length){
+
+                if (areas.length){
                     params.Areas = areas.join(';');
                 }
 

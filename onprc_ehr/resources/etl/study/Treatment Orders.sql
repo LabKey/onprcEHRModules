@@ -63,7 +63,7 @@ SELECT
 	--(select labkey.core.GROUP_CONCAT_DS(mt.medicationtime, ',', 1) as time FROM Cln_MedicationTimes mt where cln.SearchKey=mt.SearchKey) as times,
   CASE
     WHEN s6.value = 'Surgery' THEN 'Surgical'
-    WHEN sno.description like '%Diet%' THEN 'Diet'
+    WHEN (sno.description like '%Diet%' or sno.snomedcode in ('E-82870', 'E-YY870')) THEN 'Diet'
     ELSE 'Clinical'
   END as category,
 

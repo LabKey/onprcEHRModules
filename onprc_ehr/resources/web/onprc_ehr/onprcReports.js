@@ -445,3 +445,49 @@ EHR.reports.potentialParents = function(panel, tab){
         })
     });
 };
+
+EHR.reports.reproSummary = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'reproSummary',
+            title: "Repro Summary" + title,
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable
+        })
+    });
+
+    tab.add({
+        xtype: 'panel',
+        bodyStyle: 'padding: 10px;',
+        border: false,
+        defaults: {
+            border: false
+        },
+        items: [{
+            html: '<b>Key:</b>',
+            style: 'padding-bottom: 5px;'
+        },{
+            html: 'C: C-Section'
+        },{
+            html: 'F: Fetus Not Recovered'
+        },{
+            html: 'M: Menses'
+        },{
+            html: 'N: No Delivery - Fetus Recovered'
+        },{
+            html: 'R: Resorbtion'
+        },{
+            html: 'T: Timed Mating'
+        },{
+            html: 'V: Vaginal'
+        },{
+            html: '*: Other Mating'
+        }]
+    });
+};

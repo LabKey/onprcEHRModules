@@ -84,6 +84,14 @@
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="itemCode">
+                <ns:columnTitle>Item Code</ns:columnTitle>
+                <ns:description>A code used to refer to identify this item, which is primarily used when exporting or communicating with external billing systems</ns:description>
+            </ns:column>
+            <ns:column columnName="departmentCode">
+                <ns:columnTitle>Department Code</ns:columnTitle>
+                <ns:description>A code used to categorize these items by department, primarily used when exporting or communicating with external billing systems.  Similar to itemCode</ns:description>
+            </ns:column>
             <ns:column columnName="active">
                 <ns:columnTitle>Is Active?</ns:columnTitle>
             </ns:column>
@@ -152,6 +160,10 @@
             </ns:column>
             <ns:column columnName="category">
                 <ns:columnTitle>Category</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="itemCode">
+                <ns:columnTitle>Item Code</ns:columnTitle>
+                <ns:description>A code used to refer to identify this item, which is primarily used when exporting or communicating with external billing systems</ns:description>
             </ns:column>
             <ns:column columnName="item">
                 <ns:columnTitle>Item</ns:columnTitle>
@@ -328,6 +340,12 @@
             </ns:column>
             <ns:column columnName="runDate">
                 <ns:columnTitle>Run Date</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="billingPeriodStart">
+                <ns:columnTitle>Billing Period Start</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="billingPeriodEnd">
+                <ns:columnTitle>Billing Period End</ns:columnTitle>
             </ns:column>
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>
