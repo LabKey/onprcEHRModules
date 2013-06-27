@@ -29,6 +29,7 @@
         </column>
         <column name="date"/>
         <column name="enddate"/>
+        <column name="projectedRelease"/>
         <column name="qcstate" />
         <column name="taskid" />
     </columns>
