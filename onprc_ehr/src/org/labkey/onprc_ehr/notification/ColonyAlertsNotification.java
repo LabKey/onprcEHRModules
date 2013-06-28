@@ -692,12 +692,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void demographicsWithoutGender(final Container c, User u, final StringBuilder msg)
     {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("death"), "-90d", CompareType.DATE_GTE);
-        filter.addCondition(FieldKey.fromString("gender"), null, CompareType.ISBLANK);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("gender/meaning"), PageFlowUtil.set("", "Unknown"), CompareType.IN);
+        filter.addCondition(FieldKey.fromString("calculated_status"), "Alive", CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id/age/ageInDays"), 30, CompareType.GTE);
+
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         if (ts.getRowCount() > 0)
         {
-            msg.append("<b>WARNING: The following demographics records were entered in the last 90 days, but are missing a gender:</b><br>\n");
+            msg.append("<b>WARNING: The following animals are listed as Alive and are over 30 days old, but do not have a known gender:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
             {
                 public void exec(ResultSet rs) throws SQLException
@@ -709,7 +711,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     msg.append("<br>\n");
                 }
             });
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&query.gender~isblank=&query.created~dategte=-90d'>Click here to view these animals</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&query.gender/meaning~in=;Unknown&query.calculated_status~eq=Alive&query.Id/age/ageInDays~gte=30'>Click here to view these animals</a></p>\n");
             msg.append("<hr>\n");
         }
     }
