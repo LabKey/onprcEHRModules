@@ -34,6 +34,7 @@ import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.etl.ETL;
+import org.labkey.onprc_ehr.etl.ETLAuditProvider;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
 import org.labkey.onprc_ehr.notification.BloodAdminAlertsNotification;
 import org.labkey.onprc_ehr.notification.BloodAlertsNotification;
@@ -97,6 +98,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
         DetailsURL details = DetailsURL.fromString("/onprc_ehr/etlAdmin.view", ContainerManager.getSharedContainer());
         AdminConsole.addLink(AdminConsole.SettingsLinkType.Management, "ehr etl admin", details.getActionURL());
+
+        AuditLogService.registerAuditType(new ETLAuditProvider());
 
         RoleManager.registerRole(new ONPRCBillingAdminRole());
 

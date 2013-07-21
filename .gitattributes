@@ -607,6 +607,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETL.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditViewFactory.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/legacydata/LegacyDataManager.java -text
