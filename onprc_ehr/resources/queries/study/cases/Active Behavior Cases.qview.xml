@@ -1,7 +1,8 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
         <column name="Id"/>
-        <column name="Id/curLocation/location"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
         <column name="Id/utilization/use"/>
         <column name="date"/>
         <column name="Id/demographics/species"/>
@@ -9,7 +10,7 @@
         <!--<column name="performedby"/>-->
         <column name="problemCategories"/>
         <column name="todaysRemarks"/>
-        <column name="history"/>
+        <column name="caseHistory"/>
     </columns>
     <filters>
         <filter column="isActive" operator="eq" value="true"/>

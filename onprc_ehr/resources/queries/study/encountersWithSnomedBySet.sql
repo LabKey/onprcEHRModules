@@ -33,7 +33,7 @@ SELECT
   cast(s.codeWithSort as varchar) as codeWithSort,
   s.code,
   sno.meaning,
-  cast((cast(s.sort as varchar) || ': ' || sno.meaning || ' (' || s.code || ')') as varchar) as codeMeaning
+  cast((cast(s.sort as varchar(10)) || ': ' || sno.meaning || ' (' || s.code || ')') as varchar(2000)) as codeMeaning
 
 FROM study.encounters e
 JOIN ehr.snomed_tags s ON (e.id = s.id AND e.objectid = s.recordid)

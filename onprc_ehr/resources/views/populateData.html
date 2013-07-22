@@ -276,9 +276,31 @@ Ext.onReady(function(){
         var fields = ('value').split(',');
 
         var data = [
-            ['Anesthesia'],
             ['Clinical'],
-            ['Surgery']
+            ['Surgical'],
+            ['Diet']
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
+    function populateClinremarksCategories(){
+        pendingInserts++;
+        //records for task forms:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'clinremarks_category',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('value').split(',');
+
+        var data = [
+            ['Clinical'],
+            ['Surgery'],
+            ['Behavior'],
+            ['Weight']
         ];
 
         LABKEY.Query.insertRows(makeObject(config, data, fields));
@@ -382,14 +404,12 @@ Ext.onReady(function(){
             ['drug' ,'Clinical' ,'query' ,'Medications Given' ,'true' ,'' ,'study' ,'Drug Administration', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains records of all medications administered to each animal'],
             ['weight' ,'Colony Management' ,'js' ,'Weights' ,'true' ,'' ,'study' ,'weightGraph', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal\'s weight, including a graph'],
             ['clinicalHistory' ,'Clinical' ,'js' ,'Clinical History' ,'true' ,'' ,'study' ,'clinicalHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
+            ['fullClinicalHistory' ,'Pathology' ,'js' ,'Clinical History - Full' ,'true' ,'' ,'study' ,'fullClinicalHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
 
-            ['clinAMMedicationSchedule' ,'Today At Center' ,'js' ,'Clinical Medications - AM' ,'true', '' ,'study' ,'clinAMMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
-            ['clinPMMedicationSchedule' ,'Today At Center' ,'js' ,'Clinical Medications - PM', 'true', '' ,'study' ,'clinPMMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
+            ['clinMedicationSchedule' ,'Today At Center' ,'js' ,'Clinical Medication Schedule' ,'true', '' ,'study' ,'clinMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
             ['dietSchedule' ,'Today At Center' ,'js' ,'Diets', 'true', '' , 'study' ,'dietSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
-            ['surgAMMedicationSchedule' ,'Today At Center' ,'js' ,'Surgical Medications - AM' ,'true', '' ,'study' ,'surgAMMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
-            ['surgPMMedicationSchedule' ,'Today At Center' ,'js' ,'Surgical Medications - PM', 'true', '' ,'study' ,'surgPMMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
-
-            ['surgMedicationSchedule' ,'Surgery' ,'js' ,'Surgical Medication Schedule' ,'true', '' ,'study' ,'surgAllMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
+            ['surgMedicationSchedule2' ,'Surgery' ,'js' ,'Surgical Medication Schedule' ,'true', '' ,'study' ,'surgMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
+            ['surgMedicationSchedule' ,'Today At Center' ,'js' ,'Surgical Medication Schedule' ,'true', '' ,'study' ,'surgMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
 
             ['bloodSchedule' ,'Today At Center' ,'js' ,'Blood Schedule' ,'true' ,'' ,'study' ,'bloodSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
             //['behaviorRemarks' ,'Colony Management' ,'query' ,'Behavior Remarks' ,'true' ,'' ,'study' ,'Behavior Remarks', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains remarks entered by Behavioral Management'],
@@ -443,6 +463,7 @@ Ext.onReady(function(){
             ['cases' ,'Today At Center' ,'query' ,'Active Clinical Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Clinical Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active clinical cases'],
             ['hospitalAnimals' ,'Today At Center' ,'query' ,'Hospital Animals' ,'true' ,'' ,'study' ,'hospitalAnimals', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays animals currently housed in the hospital'],
             ['behaviorCases' ,'Behavior' ,'query' ,'Behavior Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Behavior Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active behavior cases'],
+            ['enrichment' ,'Behavior' ,'query' ,'Enrichment' ,'true' ,'' ,'study' ,'Enrichment', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
             ['surgicalCases' ,'Today At Center' ,'query' ,'Active Surgery Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Surgery Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active surgery cases'],
             ['activeFlags' ,'General' ,'query' ,'Active Flags' ,'true' ,'' ,'study' ,'Animal Record Flags', 'Active Flags', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active flags for this animals'],
             ['surgicalCases2' ,'Surgery' ,'query' ,'Surgery Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Surgery Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active surgery cases'],
@@ -468,17 +489,17 @@ Ext.onReady(function(){
     }
 
     var lookupSetData = [
-        ['PregnancyConfirm', 'Pregnancy Confirmation Types', 'rowid', 'value'],
-        ['DeliveryMode', 'Delivery Types', 'rowid', 'value'],
-        ['AcquistionType', 'Acquistion Types', 'rowid', 'value'],
-        ['RearingType', 'Rearing Types', 'rowid', 'value'],
-        ['MatingType', 'Mating Types', 'rowid', 'value'],
-        ['PairingType', 'Pairing Types', 'rowid', 'value'],
-        ['PairingOutcome', 'Pairing Outcomes', 'rowid', 'value'],
-        ['PairingSeparationReason', 'Pairing Separation Reasons', 'rowid', 'value'],
-        ['TransferReason', 'Transfer Reasons', 'rowid', 'value'],
-        ['perDiemFeeType', 'Per Diem Fee Types', 'rowid', 'value'],
-        ['parentageMethods', 'Parentage Determination Methods', 'rowid', 'value']
+        ['PregnancyConfirm', 'Pregnancy Confirmation Types', null],
+        ['DeliveryMode', 'Delivery Types', null],
+        ['AcquistionType', 'Acquistion Types', null],
+        ['RearingType', 'Rearing Types', null],
+        ['MatingType', 'Mating Types', null],
+        ['PairingType', 'Pairing Types', null],
+        ['PairingOutcome', 'Pairing Outcomes', null],
+        ['PairingSeparationReason', 'Pairing Separation Reasons', null],
+        ['TransferReason', 'Transfer Reasons', null],
+        ['perDiemFeeType', 'Per Diem Fee Types', null],
+        ['parentageMethods', 'Parentage Determination Methods', null]
     ];
 
     function populateLookupSets(){
@@ -1229,6 +1250,18 @@ Ext.onReady(function(){
             scope: this,
             handler: function(){
                 deleteAll('ehr_lookups', 'drug_categories', 'rowid');
+            }
+        },{
+            xtype: 'button',
+            text: 'Populate Clinremarks Category Table',
+            scope: this,
+            handler: populateClinremarksCategories
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Clinremarks Category',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'clinremarks_category', 'rowid');
             }
         },{
             xtype: 'button',

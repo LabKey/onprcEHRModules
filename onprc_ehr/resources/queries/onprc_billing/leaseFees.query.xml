@@ -4,6 +4,13 @@
             <table tableName="leaseFees" tableDbType="TABLE">
                 <tableTitle>Lease Fees Calculation</tableTitle>
                 <columns>
+                    <column columnName="project">
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>project</fkTable>
+                            <fkColumnName>project</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="chargeId">
                         <columnTitle>Charge 1</columnTitle>
                         <fk>

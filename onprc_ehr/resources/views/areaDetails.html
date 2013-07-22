@@ -8,6 +8,7 @@ Ext4.onReady(function (){
     var webpart = <%=webpartContext%>;
 
     Ext4.create('ONPRC.panel.RoomLayoutPanel', {
+        doRowInversion: LABKEY.ActionURL.getParameter('doRowInversion'),
         filterArray: [
             LABKEY.Filter.create('room/area', LABKEY.ActionURL.getParameter('area'), LABKEY.Filter.Types.EQUAL),
             LABKEY.Filter.create('room/datedisabled', null, LABKEY.Filter.Types.ISBLANK)

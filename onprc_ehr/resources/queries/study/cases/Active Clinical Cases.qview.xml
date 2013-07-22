@@ -1,14 +1,15 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
         <column name="Id"/>
-        <column name="Id/curLocation/location"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
         <column name="todaysP2"/>
         <column name="yesterdaysP2"/>
         <column name="latestHx"/>
         <column name="Id/utilization/use"/>
         <column name="date"/>
         <column name="problemCategories"/>
-        <column name="history"/>
+        <column name="caseHistory"/>
     </columns>
     <filters>
         <filter column="isActive" operator="eq" value="true"/>

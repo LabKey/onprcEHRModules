@@ -73,6 +73,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -776,7 +777,12 @@ public class ETLRunnable implements Runnable
 
             StringBuilder sql = new StringBuilder("SELECT objectid FROM dbo.deleted_records WHERE ts2 > ?");
             String[] sources = LK_TO_IRIS.get(tableName);
-            if (sources != null && sources.length > 0)
+            if (sources == null || sources.length == 0)
+            {
+                log.error("No table mapping for: " + tableName);
+                return Collections.emptySet();
+            }
+            else
             {
                 sql.append(" AND tableName IN ('");
                 String delim = "";
@@ -1154,6 +1160,9 @@ public class ETLRunnable implements Runnable
             put("snomed_tags", new String[]{"Cln_DxSnomed", "sur_snomed", "Path_AutopsyDiagnosis", "Path_BiopsyDiagnosis"});
             put("treatment_times", new String[]{"Cln_MedicationTimes", "Cln_Medications"});
 
+            put("invoicedItems", new String[]{"Af_Chargesibs"});
+            put("invoiceRuns", new String[]{"Ref_Invoice"});
+
             put("cage", new String[]{"Ref_RowCage"});
             //note: this is skipped b/c records will get added directly to it outside of ETL
             put("lookups", new String[]{""});
@@ -1194,7 +1203,7 @@ public class ETLRunnable implements Runnable
             put("Parasitology Results", new String[]{"Cln_Parasitology"});
             put("PregnancyConfirmation", new String[]{"Brd_PregnancyConfirm"});
             put("Problem List", new String[]{"MasterProblemList", "Af_Qrf"});
-            put("Serology", new String[]{"Cln_SerologyData", "Cln_SerologyHeader"});
+            put("Serology Results", new String[]{"Cln_SerologyData", "Cln_SerologyHeader"});
             put("TB Tests", new String[]{"Af_weights"});
             put("Tissue Distributions", new String[]{"Path_TissueDistributions", "Path_TissueDetails"});
             put("Tissue Samples", new String[]{"Path_AutopsyWtsMaterials", "Path_Autopsy", "Path_BiopsyWtsMaterials", "Path_biopsy"});
@@ -1204,6 +1213,8 @@ public class ETLRunnable implements Runnable
             put("Weight", new String[]{"Af_Weights", "Sur_general", "Af_Death"});
         }
     };
+
+    private String[] TABLES_WITH_LK_ADDITIONS = new String[]{"Flags"};
 
     private String validateEtlScript(Map<String, String> queries, UserSchema schema, boolean attemptRepair) throws BadConfigException, BatchValidationException
     {
@@ -1293,7 +1304,8 @@ public class ETLRunnable implements Runnable
                     ps.close();
                     rs.close();
 
-                    if (missingFromLK.size() > 0 || toDeleteFromLK.size() > 0)
+                    boolean hasLKInserts = Arrays.asList(TABLES_WITH_LK_ADDITIONS).contains(targetTableName);
+                    if ((missingFromLK.size()) > 0 || (toDeleteFromLK.size() > 0 && !hasLKInserts))
                     {
                         sb.append("table: " + targetTableName + (realTable == null ? "" : " (" + realTable.getSelectName() + ") ") + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete<br>");
                         if (missingFromLK.size() > 0)
@@ -1332,7 +1344,7 @@ public class ETLRunnable implements Runnable
                             }
                         }
 
-                        if (toDeleteFromLK.size() > 0)
+                        if (toDeleteFromLK.size() > 0 && !hasLKInserts)
                         {
                             sb.append("to delete from LabKey:<br>");
                             List<String> toShow = new ArrayList<>();

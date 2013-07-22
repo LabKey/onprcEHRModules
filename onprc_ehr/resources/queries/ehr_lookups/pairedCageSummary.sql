@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 SELECT
-  year(c.date) as year,
-  month(c.date) as monthNum,
-  monthname(c.date) as month,
-  c.eventType,
-  c.value,
-  count(*) as total
+p.room,
+p.effectiveCage,
+group_concat(p.cage) as cages,
+count(p.cage) as numCages,
+group_concat(distinct p.cage_type) as cageTypes,
+--sum(p.cage_type.cageSlots) as expectedCageSlots,
 
-FROM study.clinicalEvents c
-GROUP BY year(c.date), month(c.date), monthname(c.date), c.eventType, c.value
+-- this is sort of a hack.  we really should correctly size our cages
+sum(p.cage_type.sqft / p.cage_type.cageSlots) as totalSqFt
+
+FROM ehr_lookups.pairedCages p
+
+GROUP BY p.room, p.effectiveCage

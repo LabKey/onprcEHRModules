@@ -3,9 +3,9 @@
         <column name="Id"/>
         <column name="date"/>
         <column name="tissue"/>
-        <column name="tissueCondition"/>
+        <!--<column name="tissueCondition"/>-->
         <column name="qualifier"/>
-        <column name="preservation"/>
+        <column name="preparation"/>
         <column name="quantity"/>
         <column name="weight"/>
 

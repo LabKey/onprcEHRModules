@@ -8,12 +8,48 @@
 
 PARAMETERS(STARTDATE TIMESTAMP, ENDDATE TIMESTAMP)
 
-SELECT e.*
+SELECT
+  e.Id,
+  e.date,
+  e.project,
+  e.procedureId,
+  p.chargeId
 
 FROM study.encounters e
-JOIN onprc_billing.procedureFeeDefinition p ON (p.procedureId = e.procedureId)
+JOIN onprc_billing.procedureFeeDefinition p ON (p.procedureId = e.procedureId and e.billedby = p.billedby)
 
-WHERE CONVERT(e.date, DATE) >= STARTDATE AND CONVERT(e.date, DATE) <= ENDDATE
+WHERE e.dateOnly >= CAST(STARTDATE as date) AND e.dateOnly <= CAST(ENDDATE as date)
 AND e.qcstate.publicdata = true AND p.active = true
 
---TODO: blood draws
+UNION ALL
+
+--Blood draws
+SELECT
+  e.Id,
+  e.date,
+  e.project,
+  null as procedureId,
+  (select rowid from onprc_billing.chargeableItems ci where ci.name = 'Blood Draw' and ci.active = true) as chargeId
+
+FROM study.blood e
+WHERE e.dateOnly >= CAST(STARTDATE as date) AND e.dateOnly <= CAST(ENDDATE as date)
+and e.billedby != 'No Charge'
+AND e.qcstate.publicdata = true
+
+UNION ALL
+
+--Clinpath data
+SELECT
+  e.Id,
+  e.date,
+  e.project,
+  null as procedureId,
+  ci.rowId as chargeId
+
+from study."Clinpath Runs" e
+join onprc_billing.chargeableItems ci
+ON (e.servicerequested = ci.name and ci.category = 'Clinpath')
+WHERE e.dateOnly >= CAST(STARTDATE as date) AND e.dateOnly <= CAST(ENDDATE as date)
+AND e.qcstate.publicdata = true
+
+--TODO: drug administration

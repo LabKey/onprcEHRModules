@@ -188,19 +188,19 @@ WHERE s3.Field = 'MedicationFrequency' AND f.meaning IS NULL;
 -- GROUP BY t.location;
 
 --cage types
-TRUNCATE TABLE labkey.ehr_lookups.cage_type;
-INSERT INTO labkey.ehr_lookups.cage_type (cagetype,sqft,cageslots)
-
-Select
-	CASE
-		WHEN ct.CageTypeID = 19 THEN ct.CageDescription
-		ELSE CONVERT(VARCHAR, ct.CageDescription + ' - ') + CONVERT(VARCHAR, ct.CageSize)
-	END as cagetype,
-	--ugly
-	convert(float, rtrim(replace(replace(replace(cagesize, 'T', ''), 'O', ''), 'U', ''))) as cagesize,
-	CageSlots
-From IRIS_Production.dbo.Ref_CageTypes ct
-WHERE DateDisabled is null;
+-- TRUNCATE TABLE labkey.ehr_lookups.cage_type;
+-- INSERT INTO labkey.ehr_lookups.cage_type (cagetype,sqft,cageslots)
+--
+-- Select
+-- 	CASE
+-- 		WHEN ct.CageTypeID = 19 THEN ct.CageDescription
+-- 		ELSE CONVERT(VARCHAR, ct.CageDescription + ' - ') + CONVERT(VARCHAR, ct.CageSize)
+-- 	END as cagetype,
+-- 	--ugly
+-- 	convert(float, rtrim(replace(replace(replace(cagesize, 'T', ''), 'O', ''), 'U', ''))) as cagesize,
+-- 	CageSlots
+-- From IRIS_Production.dbo.Ref_CageTypes ct
+-- WHERE DateDisabled is null;
 
 --areas
 -- DELETE FROM labkey.ehr_lookups.areas;

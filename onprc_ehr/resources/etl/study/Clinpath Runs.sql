@@ -28,7 +28,7 @@ SELECT
 	collectionMethod,
 
     Tissue,
-	remarks,
+	remarks as remark,
 
 	case
 	  WHEN TechLastName = 'Unassigned' or TechFirstName = 'Unassigned' THEN

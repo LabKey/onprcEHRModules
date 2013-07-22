@@ -7,48 +7,55 @@
 SELECT
    t.room,
    t.cage,
-   t.numCages,
-   t.cages,
+   jc.numCages,
+   jc.cages,
+   jc.cageTypes,
    t.totalAnimals,
+   t.distinctAnimals,
+   t.weights,
    t.totalWeight,
+   t.rawWeight,
+   jc.totalSqFt,
    t.requiredSqFt,
-   t.totalCageSqFt,
-   --round((t.requiredSqFt / t.totalCageSqFt) * 100, 1) as sqftPct,
+   t.requiredSqFtIncluding5Mo,
    t.requiredHeight,
    t.minCageHeight,
-   --round((t.requiredHeight / t.minCageHeight) * 100, 1) as heightPct,
-   t.totalCageRows,
    CASE
-     WHEN t.totalCageSqFt < t.requiredSqFt THEN ('Insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFt as varchar))
-     WHEN (t.minCageHeight is not null AND t.minCageHeight < t.requiredHeight) THEN ('Insufficient height, needs at least: ' || cast(t.requiredHeight AS varchar))
+     WHEN jc.totalSqFt < t.requiredSqFt THEN ('ERROR: Insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFt as varchar))
+     WHEN (t.minCageHeight is not null AND t.minCageHeight < t.requiredHeight) THEN ('ERROR: Insufficient height, needs at least: ' || cast(t.requiredHeight AS varchar))
+     WHEN jc.totalSqFt < t.requiredSqFtIncluding5Mo THEN ('WARNING: When including 5 month olds, insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFtIncluding5Mo as varchar))
      ELSE null
    END as cageStatus,
    t.totalApproachingLimit,
-  highs,
-  weights
+   t.heights
 
 FROM (
 
 SELECT
     pc.room,
     pc.effectiveCage as cage,
-    group_concat(DISTINCT pc.cage, ',') as cages,
-    count(distinct pc.cage) as numCages,
     count(DISTINCT h.id) as totalAnimals,
-    cast(sum(h.Id.MostRecentWeight.MostRecentWeight) as float) as totalWeight,
+    SUM(CASE WHEN h.Id.age.ageInMonths >= 6.0 THEN 0 ELSE 1 END) as totalAnimalsUnder6Mo,
+    SUM(CASE WHEN h.Id.age.ageInMonths = 5.0 THEN 0 ELSE 1 END) as totalAnimals5MonthsOld,
+    group_concat(DISTINCT h.id, chr(10)) as distinctAnimals,
+    cast(sum(CASE
+      WHEN h.Id.age.ageInMonths >= 6.0 THEN h.Id.MostRecentWeight.MostRecentWeight
+      ELSE 0
+    END) as float) as totalWeight,
+    cast(sum(h.Id.MostRecentWeight.MostRecentWeight) as float) as rawWeight,
     min(pc.cage_type.height) as minCageHeight,
-    sum(pc.cage_type.sqft) as totalCageSqFt,
-    --sum(pc.cage_type.MaxAnimalWeight) as maxAllowable,
-    sum(c1.sqft) as requiredSqFt,
+
+    sum(CASE WHEN (h.Id.age.ageInMonths >= 6.0) THEN c1.sqft ELSE 0.0 END) as requiredSqFt,
+    sum(CASE WHEN (h.Id.age.ageInMonths >= 5.0) THEN c1.sqft ELSE 0.0 END) as requiredSqFtIncluding5Mo,
+    sum(c1.sqft) as requiredSqFtForAll,
     max(c1.height) as requiredHeight,
-    count(c1.sqft) as totalCageRows,
     sum(CASE
       WHEN ((h.Id.mostRecentWeight.mostRecentWeight / c1.high) > 0.95) THEN 1
       ELSE 0
     END) as totalApproachingLimit,
-         group_concat(c1.high) as highs,
-         group_concat(h.Id.mostRecentWeight.mostRecentWeight) as weights
-FROM ehr_lookups.pairedCages pc
+    group_concat(c1.high) as heights,
+    group_concat(h.Id.mostRecentWeight.mostRecentWeight) as weights
+FROM ehr_lookups.connectedCages pc
 
 JOIN study.housing h ON (h.room = pc.room AND pc.cage = h.cage AND h.enddateTimeCoalesced >= now())
 LEFT JOIN ehr_lookups.cageclass c1 ON (c1.low <= h.Id.mostRecentWeight.mostRecentWeight AND h.Id.mostRecentWeight.mostRecentWeight < c1.high)
@@ -56,3 +63,5 @@ LEFT JOIN ehr_lookups.cageclass c1 ON (c1.low <= h.Id.mostRecentWeight.mostRecen
 GROUP BY pc.room, pc.effectiveCage
 
 ) t
+
+LEFT JOIN ehr_lookups.connectedCageSummary jc ON (t.cage = jc.effectiveCage AND t.room = jc.room)

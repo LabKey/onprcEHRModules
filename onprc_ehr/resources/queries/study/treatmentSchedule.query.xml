@@ -203,11 +203,6 @@
                             </onClick>
                             <!--<target>javascript:void(0)</target>-->
                         </item>
-                        <item text="Jump To Other Dataset">
-                            <onClick>
-                                EHR.DatasetButtons.datasetHandler(dataRegion, dataRegionName);
-                            </onClick>
-                        </item>
                         <item text="Return Distinct Values">
                             <onClick>
                                 EHR.DatasetButtons.getDistinctHandler(dataRegion, dataRegionName);

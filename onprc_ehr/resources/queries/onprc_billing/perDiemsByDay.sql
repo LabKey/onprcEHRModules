@@ -8,6 +8,7 @@ PARAMETERS(STARTDATE TIMESTAMP, ENDDATE TIMESTAMP)
 
 SELECT
     i.date,
+    i.dateOnly,
     h.id,
     h.project,
     h.project.protocol as protocol,
@@ -21,14 +22,7 @@ SELECT
     group_concat(DISTINCT h3.room.housingCondition) as housingConditions,
     group_concat(DISTINCT h3.room.housingType) as housingTypes,
     group_concat(DISTINCT pdf.chargeId) as chargeIds,
-FROM (
-  --generate one row per day over the selected range
-  SELECT
-    timestampadd('SQL_TSI_DAY', i.value, CAST(COALESCE(STARTDATE, curdate()) AS TIMESTAMP)) as date
-  FROM ldk.integers i
-  WHERE i.value <= TIMESTAMPDIFF('SQL_TSI_DAY', CAST(COALESCE(STARTDATE, curdate()) AS TIMESTAMP), CAST(COALESCE(ENDDATE, curdate()) AS TIMESTAMP))
-) i
-
+FROM ehr_lookups.dateRange i
 JOIN (
   --join to any assignment record overlapping each day
   SELECT
@@ -47,13 +41,13 @@ JOIN (
 
   WHERE
     --exclude 1-day assignments
-    (TIMESTAMPDIFF('SQL_TSI_DAY', h.date, h.enddateCoalesced) > 1)
+    h.duration > 0
     AND h.qcstate.publicdata = true
 
 ) h ON (
     h.dateOnly <= i.date
     --assignments end at midnight, so an assignment doesnt count on the current date if it ends on it
-    AND h.enddateCoalesced > i.date
+    AND h.enddateCoalesced > i.dateOnly
   )
 
 LEFT JOIN (
@@ -70,13 +64,13 @@ LEFT JOIN (
   FROM study.assignment h
   WHERE
     --exclude 1-day assignments
-    (TIMESTAMPDIFF('SQL_TSI_DAY', h.date, h.enddateCoalesced) > 1)
+    h.duration > 1
     AND h.qcstate.publicdata = true
 ) h2 ON (
   h.id = h2.id
-  AND h2.dateOnly <= i.date
+  AND h2.dateOnly <= i.dateOnly
   --assignments end at midnight, so an assignment doesnt count on the current date if it ends on it
-  AND h2.enddateCoalesced > i.date
+  AND h2.enddateCoalesced > i.dateOnly
   AND h.lsid != h2.lsid
 )
 
@@ -96,4 +90,4 @@ ON (
   (pdf.releaseCondition = h.releaseCondition OR pdf.releaseCondition is null)
 )
 
-GROUP BY i.date, h.id, h.project, h.project.account, h.project.protocol
+GROUP BY i.date, i.dateOnly, h.id, h.project, h.project.account, h.project.protocol

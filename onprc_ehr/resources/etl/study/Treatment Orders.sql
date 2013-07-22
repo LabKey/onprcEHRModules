@@ -53,7 +53,7 @@ SELECT
 	
 	--Duration as Duration,
 	CASE
-	  WHEN enddate IS NULL THEN cast(DATEADD(day, cln.duration - 1, cln.date) as DATE)
+    WHEN enddate IS NULL THEN cast(DATEADD(minute, -1, DATEADD(day, 1+CASE WHEN duration = 0 THEN 1 ELSE duration END, cast(cast(date as date) AS datetime))) as datetime)
 	  ELSE coalesce(EndDate, q.deathdate, q.departuredate)
     END as enddate,
     coalesce(q.deathdate, q.departuredate) as alternateEnd,

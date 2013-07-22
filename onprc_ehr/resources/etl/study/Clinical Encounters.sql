@@ -38,7 +38,9 @@ Select
     END as performedBy,
     null as procedureId,
 
-	pat.objectid 
+	pat.objectid,
+    null as billedby,
+  null as project
 
 From Path_Biopsy Pat
      left join Ref_Technicians Rt on (Pat.Pathologist = Rt.ID)
@@ -79,7 +81,9 @@ Select
     END as performedBy,
     null as procedureId,
 
-	PTT.objectid
+	PTT.objectid,
+    null as billedby,
+    null as project
 
 From Path_Autopsy PTT
 left join Sys_Parameters s1 on (PTT.CauseofDeath = s1.flag And s1.Field = 'Deathcause')
@@ -137,11 +141,14 @@ Select
     END as performedBy,
     (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
 
-	sg.objectid
+	sg.objectid,
+    s4.value as billedby,
+  ibs.projectId as project
 From Sur_General sg
 LEFT JOIN Ref_SurgProcedure r on (sg.procedureid = r.procedureid)
 left join Ref_Technicians Rt on (sg.Surgeon = Rt.ID)
 left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
+left join Sys_Parameters s4 on (s4.flag = sg.ChargeCode And s4.Field = 'SurgeryChargeCode')
 left join (
 	select c.AnimalID, max(ts) as ts, count(c.CaseID) as count, max(CAST(c.objectid AS varchar(36))) as objectid, c.OpenDate as date
 	from af_case c
@@ -149,7 +156,27 @@ left join (
 	GROUP BY c.AnimalID, c.OpenDate
 ) c ON (c.AnimalID = sg.AnimalID AND c.date = sg.date)
 
-WHERE sg.ts > ? or c.ts > ?
+LEFT JOIN (
+Select
+  t1.surgeryId,
+  max(ibs2.ProjectID) as projectId,
+  max(ibs2.ts) as ts
+from (
+   SELECT
+     sg1.SurgeryID,
+     MAX(sg1.AnimalID) as AnimalID,
+     MAX(sg1.date) as date,
+     MAX(sg1.procedureId) as procedureId,
+     max(ibs1.InvoiceNumber) as maxNumber
+     From Sur_General sg1
+     left join AF_ChargesIBS ibs1 on (convert(varchar(10),sg1.AnimalID) = ibs1.TransactionDescription and sg1.Date = ibs1.TransactionDate and convert(varchar(10), sg1.ProcedureID) = ibs1.ItemCode)
+     group by sg1.SurgeryID
+  ) t1
+  left join AF_ChargesIBS ibs2 on (t1.maxNumber = ibs2.InvoiceNumber And convert(varchar(10),t1.AnimalID) = ibs2.TransactionDescription and t1.Date = ibs2.TransactionDate and convert(varchar(10), t1.ProcedureID) = ibs2.ItemCode)
+  group by t1.SurgeryID
+) ibs ON (ibs.surgeryId = sg.surgeryId)
+
+WHERE (sg.ts > ? or c.ts > ? or ibs.ts > ?)
 
 UNION ALL
 
@@ -178,7 +205,9 @@ Select
     END as performedBy,
     null as procedureId,
 
-	cln.objectid
+	cln.objectid,
+  null as billedby,
+  null as project
 
 FROM Cln_Dx cln
      left join  Ref_Technicians rt on (cln.Technician = rt.ID)

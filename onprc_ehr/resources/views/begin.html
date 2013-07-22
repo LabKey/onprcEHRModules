@@ -77,9 +77,8 @@ Ext4.onReady(function(){
 //                {name: 'Blood Draw Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:todaysBlood'},
                 {name: 'Open Clinical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:cases'},
                 {name: 'Open Surgical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgicalCases'},
-//                //{name: 'Treatment Schedule - AM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleAM'},
-//                //{name: 'Treatment Schedule - PM', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentSchedulePM'},
-//                //{name: 'Treatment Schedule - Night', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage&activeReport:treatmentScheduleNight'}
+                {name: 'Clinical Medication Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:clinMedicationSchedule'},
+                {name: 'Surgical Medication Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgMedicationSchedule'},
                 {name: 'Printable Reports', url: LABKEY.ActionURL.buildURL('onprc_ehr', 'printableReports', ctx['EHRStudyContainer'])}
             ]
         },{
@@ -90,7 +89,6 @@ Ext4.onReady(function(){
             },
             items: [
                 {name: 'Animal Groups', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=animal_groups&query.viewName=Active Groups'},
-                //{name: 'Colony Population By Age', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=study&query.queryName=colonyPopulationByAge'},
                 {name: 'Colony Overview', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/colonyOverview.view?'},
                 {name: 'Room Utilization', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=roomUtilization'},
                 {name: 'More Reports', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/moreReports.view?'}
@@ -108,9 +106,7 @@ Ext4.onReady(function(){
                 style: 'font-weight: bold;'
             },
             items: [
-                //{name: 'About the EHR Project', url: '<%=contextPath%>/project' + ctx['EHRStudyContainer'] + '/About The EHR/begin.view?'},
                 {name: 'Compare Lists of Animals', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/utilities.view?'},
-                //{name: 'Run SQL Directly', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/executeSql.view?'},
                 {name: 'Procedure List', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=procedures&query.viewName=Active Procedures'},
                 {name: 'Search Center SNOMED Codes', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=snomed'}
             ]
@@ -146,8 +142,6 @@ Ext4.onReady(function(){
             },
             items: [
                 {name: 'EHR Admin Page', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/ehrAdmin.view'}
-                //{name: 'Manage EHR Study', url: '<%=contextPath%>/study' + ctx['EHRStudyContainer'] + '/manageStudy.view?'}
-                //{name: 'Manage Lookup Tables', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataAdmin.view'}
             ]
         });
     }

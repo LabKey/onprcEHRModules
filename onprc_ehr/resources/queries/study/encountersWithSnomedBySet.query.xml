@@ -6,7 +6,7 @@
                 <columns>
                     <column columnName="codesMeaning">
                         <columnTitle>SNOMED Codes</columnTitle>
-                        <displayWidth>300</displayWidth>
+                        <displayWidth>600</displayWidth>
                     </column>
                     <column columnName="objectid">
                         <isHidden>true</isHidden>

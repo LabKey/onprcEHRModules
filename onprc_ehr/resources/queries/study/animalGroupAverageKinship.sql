@@ -14,9 +14,19 @@
  * limitations under the License.
  */
 SELECT
+  t.groupId,
+  t.Id,
+  --NOTE: add 0.5 to include kinship with self
+  (0.5 + coalesce(t.sumCoefficient, 0)) / (select count(*) as total from ehr.animal_group_members d where d.isActive = true and d.groupId = t.groupId) as avgCoefficient,
+  t.distinctAnimals,
+  (select count(*) as total from ehr.animal_group_members d where d.isActive = true and d.groupId = t.groupId) as totalInPopulation
+
+FROM (
+
+SELECT
   d.groupId,
   d.Id,
-  avg(k.coefficient) as avgCoefficient,
+  sum(k.coefficient) as sumCoefficient,
   count(k.Id2) as distinctAnimals
 
 FROM ehr.animal_group_members d
@@ -28,3 +38,5 @@ WHERE
   d2.isActive = true
 
 GROUP BY d.groupId, d.Id
+
+) t

@@ -20,13 +20,12 @@ SELECT
   h.date,
   h.enddate,
   c.cage_type,
-  c.lowerCage,
-  c.lower_cage_type,
   c.divider,
-  c.isAvailable
+  c.effectiveCage as expectedCage
 FROM study.housing h
-JOIN ehr_lookups.availableCages c ON (c.room = h.room AND c.cage = h.cage)
+JOIN ehr_lookups.connectedCages c ON (c.room = h.room AND c.cage = h.cage)
 
-WHERE h.enddatetimeCoalesced >= now()
+--WHERE h.isActive = true
+  WHERE h.enddateTimeCoalesced >= now()
 
-AND c.isAvailable = false
+AND h.cage != c.effectiveCage

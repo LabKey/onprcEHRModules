@@ -1,4 +1,13 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="enddate"/>
+        <column name="category"/>
+        <column name="value"/>
+        <column name="remark"/>
+        <column name="performedby"/>
+    </columns>
     <sorts>
         <sort column="date" descending="true"/>
     </sorts>

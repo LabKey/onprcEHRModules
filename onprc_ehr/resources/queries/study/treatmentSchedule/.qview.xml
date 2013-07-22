@@ -11,6 +11,7 @@
         <column name="code"/>
         <column name="amountWithUnits"/>
         <column name="route"/>
+        <column name="remark"/>
         <column name="performedby"/>
         <column name="startDate"/>
         <column name="category"/>

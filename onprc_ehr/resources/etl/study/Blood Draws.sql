@@ -13,29 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Select 
-	cast(AnimalID as nvarchar(4000)) as Id,
-	Date as Date,
-	Amount as quantity,
-	DrawCount as needlesticks,
+Select
+  cast(afb.AnimalID as nvarchar(4000)) as Id,
+  Date as Date,
+  ref1.projectId as project,
+  CASE
+  WHEN bd.NoChargeFlag = 1 THEN 'No Charge'
+  ELSE null
+  END as billedby,
+
+    Amount as quantity,
+    DrawCount as needlesticks,
 
 --	Investigator as Investigator  ,  ----- Ref_Investigator(InvestigatorID)
 --		Ref.LastName as LastName,
 --	IDKey as  IDKey, 
 
     s1.Value as Reason,
-	--Reason as ReasonInt,
+    --Reason as ReasonInt,
 
-	afb.objectid,
+    afb.objectid,
 
-	--blood data
-	--bd.BloodIDKey as BloodIDkey,
-	bd.ProjectId as Project,             ----- Ref_Projectsiacuc(ProjectID)
+    --blood data
+    --bd.BloodIDKey as BloodIDkey,
 
-	bd.InvestigatorId as InvestigatorId,   ----- Ref_Investigator(InvestigatorID)
-	ref.LastName + ', ' + ref.FirstName as requestor,
-	bd.NoChargeFlag as NoChargeFlag,       ------When Not to be billed transaction Flag = 1, When it is to be billed Flag = 0
-	bd.BloodDrawFlag as BloodDrawFlag      ------When Blood Draw transaction Flag = 1, When injections Flag = 0
+    bd.InvestigatorId as InvestigatorId,   ----- Ref_Investigator(InvestigatorID)
+    ref.LastName + ', ' + ref.FirstName as requestor,
+    bd.NoChargeFlag as NoChargeFlag,       ------When Not to be billed transaction Flag = 1, When it is to be billed Flag = 0
+    bd.BloodDrawFlag as BloodDrawFlag      ------When Blood Draw transaction Flag = 1, When injections Flag = 0
 
 
 From Af_Blood Afb
@@ -46,4 +51,4 @@ LEFT JOIN Af_BloodData bd ON (bd.BloodIDKey = afb.IDKey)
 LEFT JOIN Ref_Projectsiacuc ref1 ON (ref1.ProjectID = bd.ProjectId)
 LEFT JOIN Ref_Investigator ref2 ON (ref2.InvestigatorId = bd.InvestigatorId)
 
-where afb.ts > ? or bd.ts > ?
+WHERE (afb.ts > ? or bd.ts > ?)

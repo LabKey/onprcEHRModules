@@ -2,7 +2,7 @@
 
 my $data_dir = '/var/lib/munin/ohsu.edu';
 my $err_file = '/var/log/munin-error';
-my $err_file = '/var/log/munin-check-status';
+my $status_file = '/var/log/munin-check-status';
 
 ########################
 

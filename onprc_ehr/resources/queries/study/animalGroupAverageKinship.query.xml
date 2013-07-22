@@ -17,8 +17,12 @@
                         <url>/query/executeQuery.view?
                             schemaName=ehr&amp;
                             query.queryName=kinship&amp;
-                            query.Id~eq=${Id}
+                            query.Id~eq=${Id}&amp;
+                            query.Id2/Id/utilization/use~contains=${groupId/name}
                         </url>
+                    </column>
+                    <column columnName="totalInPopulation">
+                        <columnTitle>Total Animals In Population</columnTitle>
                     </column>
                 </columns>
             </table>

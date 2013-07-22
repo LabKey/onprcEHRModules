@@ -43,6 +43,7 @@ Ext4.onReady(function (){
     });
 
     Ext4.create('ONPRC.panel.RoomLayoutPanel', {
+        doRowInversion: LABKEY.ActionURL.getParameter('doRowInversion'),
         filterArray: [LABKEY.Filter.create('room', LABKEY.ActionURL.getParameter('room'), LABKEY.Filter.Types.EQUAL)]
     }).render('cageLayout_' + webpart.wrapperDivId);
 

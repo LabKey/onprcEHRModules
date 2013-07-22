@@ -6,7 +6,6 @@
     </sorts>
     <filters>
         <filter column="calculated_status" operator="eq" value="Alive"/>
-        <filter column="timeofday" operator="eq" value="PM"/>
         <filter column="category" operator="eq" value="Clinical"/>
    </filters>
 </customView>

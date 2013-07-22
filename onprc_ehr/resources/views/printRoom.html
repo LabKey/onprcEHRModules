@@ -20,13 +20,29 @@
             filterArray.push(LABKEY.Filter.create('room', LABKEY.ActionURL.getParameterArray('rooms').join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
         }
         else if (LABKEY.ActionURL.getParameter('area') != null){
-            filterArray.push(LABKEY.Filter.create('room/area', LABKEY.ActionURL.getParameter('area'), LABKEY.Filter.Types.EQUAL));
+            filterArray.push(LABKEY.Filter.create('area', LABKEY.ActionURL.getParameter('area'), LABKEY.Filter.Types.EQUAL));
         }
 
-        Ext4.create('ONPRC.panel.RoomLayoutPanel', {
-            printMode: 1,
-            filterArray: filterArray
-        }).render(webpart.wrapperDivId);
+        LABKEY.Query.selectRows({
+            schemaName: 'ehr_lookups',
+            queryName: 'rooms',
+            filterArray: filterArray,
+            scope: this,
+            failure: LDK.Utils.getErrorCallback(),
+            success: function(results){
+                if (results && results.rows){
+                    Ext4.Array.each(results.rows, function(r, idx){
+                        var target = Ext4.get(webpart.wrapperDivId).createChild({tag: 'div', cls: (idx+1 < results.rows.length ? 'page-break' : null)});
+
+                        Ext4.create('ONPRC.panel.RoomLayoutPanel', {
+                            doRowInversion: LABKEY.ActionURL.getParameter('doRowInversion'),
+                            printMode: 1,
+                            filterArray: [LABKEY.Filter.create('room', r.room)]
+                        }).render(target.id);
+                    }, this);
+                }
+            }
+        });
     });
 
 </script>

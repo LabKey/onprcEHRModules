@@ -45,7 +45,13 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
         });
     },
 
+    getRowNumber: function(letter){
+        return Ext4.isEmpty(letter) ? 0 : letter.toUpperCase().charCodeAt(0) - 65;
+    },
+
     onDataLoad: function(results){
+        this.results = results;
+
         var toAdd = [];
 
         if (!results || !results.rows || !results.rows.length){
@@ -57,7 +63,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
             if (!this.printMode){
                 toAdd.push({
                     border: false,
-                    style: 'padding-bottom: 10px;',
+                    style: 'margin-bottom: 10px;',
                     html: 'NOTE: Click on either the cage or divider for more information.  A yellow divider indicates the cages are paired.  A black divider indicates the cages are separate.  Cages are colored green when they are empty.'
                 });
             }
@@ -71,9 +77,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                 var room = row.getValue('room');
                 var maxCage = maxCageMap[room] || 0;
                 var letter = row.getValue('cagePosition/row');
-                var letterNum = Ext4.isEmpty(letter) ? 0 : letter.toUpperCase().charCodeAt(0) - 65;
-                letterNum = Math.round(letterNum / 4);
-                var isInverted = (letterNum == 1);
+                var letterNum = this.getRowNumber(letter);
+                var isInverted = this.doRowInversion ? (Math.round(letterNum / 4) == 1) : false;
                 invertedMap[letter] = isInverted;
 
                 var col = row.getValue('cagePosition/columnIdx');
@@ -97,9 +102,18 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
             var rooms = Ext4.Object.getKeys(roomMap).sort();
             var dividerWidth = 18;
             var height = 90;
-            var cageWidth = 65;
+            var cageWidth = 60;
+            var hasCages = false;
 
-            Ext4.each(rooms, function(room){
+            Ext4.each(rooms, function(room, roomIdx){
+                if (roomIdx == 0 && !this.printMode){
+                    toAdd.push(this.getButtonCfg());
+                    toAdd.push({
+                        style: 'margin-bottom: 20px;',
+                        border: false
+                    });
+                }
+
                 var cageMap = roomMap[room];
                 var maxCage = maxCageMap[room];
                 var rowIdxs = Ext4.Object.getKeys(cageMap).sort();
@@ -117,7 +131,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                     var rowItems = [];
                     var isInverted = invertedMap[ri] === true;
 
-                    if(rowIdx > 0 && prevRowOrientation != isInverted){
+                    if(rowIdx > 0 && (this.getRowNumber(ri) % 2) == 0){
                         cfg.items.push({
                             colspan: (maxCage * 2) - 1,
                             border: false,
@@ -335,6 +349,9 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                         style: 'padding-left: 5px;'
                     });
                 }
+                else {
+                    hasCages = true;
+                }
 
                 var panelCfg = {
                     itemId: room,
@@ -355,6 +372,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                 toAdd.push(panelCfg);
             }, this);
+
+            if (hasCages && !this.printMode){
+                toAdd.push(this.getButtonCfg());
+            }
         }
 
         this.removeAll();
@@ -369,6 +390,60 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
         });
 
         this.doLayout();
+    },
+
+    getButtonCfg: function(){
+        var items = [];
+        items.push(this.getPrintBtnCfg());
+
+        //spacer
+        items.push({
+            border: false,
+            width: 10
+        });
+
+        items.push({
+            xtype: 'button',
+            border: true,
+            text: 'Invert Cages',
+            tooltip: 'This allows the cages of C/D rows to be either ordered lowest to highest, or reversed (which matches the room itself, when printed)',
+            doRowInversion: !this.doRowInversion,
+            scope: this,
+            handler: function(btn){
+                this.doRowInversion = !this.doRowInversion;
+                this.onDataLoad(this.results);
+            }
+        });
+
+        return {
+            layout: 'hbox',
+            items: items
+        }
+    },
+
+    getPrintBtnCfg: function(){
+        return {
+            xtype: 'button',
+            text: 'Print Version',
+            border: true,
+            scope: this,
+            handler: function(btn){
+                var params = {};
+                params.doRowInversion = !!this.doRowInversion;
+
+                Ext4.Array.forEach(this.filterArray, function(filter){
+                    //we only support room/area on the URL
+                    if (filter.getURLParameterName().match(/query.room\/area~/) && filter.getURLParameterValue()){
+                        params.area = filter.getURLParameterValue().split(';')
+                    }
+                    else if (filter.getURLParameterName().match(/query.room~/) && filter.getURLParameterValue()){
+                        params.rooms = filter.getURLParameterValue().split(';')
+                    }
+                }, this);
+
+                window.open(LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params));
+            }
+        }
     }
 });
 

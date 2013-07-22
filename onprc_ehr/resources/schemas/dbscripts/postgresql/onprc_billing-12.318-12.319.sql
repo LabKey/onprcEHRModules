@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-SELECT
-  year(c.date) as year,
-  c.eventType,
-  c.value,
-  count(*) as total
 
-FROM study.clinicalEvents c
-GROUP BY year(c.date), c.eventType, c.value
+ALTER Table onprc_billing.procedureFeeDefinition DROP COLUMN chargeType;
+ALTER Table onprc_billing.procedureFeeDefinition ADD billedby varchar(100);

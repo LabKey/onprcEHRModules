@@ -142,3 +142,20 @@ UPDATE prop.Properties
 SET       Value = 'test-onprcitsupport@ohsu.edu'
 WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'org.labkey.ldk.notifications.config'
 	      AND Name = 'returnEmail';
+
+--change reply emails
+UPDATE prop.Properties
+SET       Value = 'test-onprcitsupport@ohsu.edu'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'LookAndFeel'
+          AND Name = 'systemEmailAddress';
+
+UPDATE prop.Properties
+SET       Value = 'test-onprcitsupport@ohsu.edu'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'SiteConfig'
+          AND Name = 'administratorContactEmail';
+
+--disable genetics pipeline
+UPDATE prop.Properties
+SET       Value = 'false'
+WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'org.labkey.ehr.geneticcalculations'
+          AND Name = 'enabled';

@@ -66,7 +66,7 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
 
         livingAnimalsWithoutWeight(c, u, msg);
         cagesWithoutDimensions(c, u, msg);
-        cageReview(c, u, msg, true);
+        cageReviewErrors(c, u, msg, true);
         roomsWithoutInfo(c, u, msg);
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);

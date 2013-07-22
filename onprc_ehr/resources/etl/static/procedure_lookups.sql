@@ -82,35 +82,36 @@ Select
 FROM IRIS_Production.dbo.Ref_SurgProcedure r
 WHERE VesselID = 1;
 
---procedure medications
-TRUNCATE TABLE labkey.ehr_lookups.procedure_default_treatments;
-INSERT INTO labkey.ehr_lookups.procedure_default_treatments (procedureid, code, dosage, dosage_units, route, frequency)
-Select
-	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedurename) as procedureid,
-	Medication as code,
-	rsm.Dose as dosage,
-	s1.Value as dosage_units,
-	--Route as RouteInt,
-	s2.Value as Route,
-	null as frequency
-	--(SELECT rowid from labkey.ehr_lookups.treatment_frequency f WHERE f.meaning = s3.Value) as Frequency
-
-From IRIS_Production.dbo.Ref_SurgMedications rsm
-	left join IRIS_Production.dbo.Sys_Parameters s1 on (s1.Field = 'MedicationUnits' and s1.Flag = rsm.Units)
-	left join IRIS_Production.dbo.Sys_Parameters s2 on (s2.Field = 'MedicationRoute' and s2.Flag = rsm.route)
-	left join IRIS_Production.dbo.Sys_Parameters s3 on (s3.Field = 'MedicationFrequency' and s3.Flag = rsm.frequency)
-	LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure r on (rsm.procedureid = r.procedureid);
-
-
---procedure_default_codes
-TRUNCATE TABLE labkey.ehr_lookups.procedure_default_codes;
-INSERT INTO labkey.ehr_lookups.procedure_default_codes (procedureid, sort_order, code)
-Select
-	(SELECT max(rowid) as rowid from labkey.ehr_lookups.procedures p2 WHERE p.ProcedureName = p2.name) as procedureid,
-	s2.i as sort,
-	s2.value as code
-
-From IRIS_Production.dbo.Ref_SurgSnomed r
-left join IRIS_Production.dbo.Ref_SurgProcedure p on (r.ProcedureID = p.ProcedureID)
-cross apply IRIS_Production.dbo.fn_splitter(r.SnomedCodes, ',') s2
-where s2.value is not null and s2.value != '' and p.ProcedureID is not null;
+--NOTE: due to additions in PRIMe, these are no longer synced
+-- --procedure medications
+-- TRUNCATE TABLE labkey.ehr_lookups.procedure_default_treatments;
+-- INSERT INTO labkey.ehr_lookups.procedure_default_treatments (procedureid, code, dosage, dosage_units, route, frequency)
+-- Select
+-- 	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedurename) as procedureid,
+-- 	Medication as code,
+-- 	rsm.Dose as dosage,
+-- 	s1.Value as dosage_units,
+-- 	--Route as RouteInt,
+-- 	s2.Value as Route,
+-- 	null as frequency
+-- 	--(SELECT rowid from labkey.ehr_lookups.treatment_frequency f WHERE f.meaning = s3.Value) as Frequency
+--
+-- From IRIS_Production.dbo.Ref_SurgMedications rsm
+-- 	left join IRIS_Production.dbo.Sys_Parameters s1 on (s1.Field = 'MedicationUnits' and s1.Flag = rsm.Units)
+-- 	left join IRIS_Production.dbo.Sys_Parameters s2 on (s2.Field = 'MedicationRoute' and s2.Flag = rsm.route)
+-- 	left join IRIS_Production.dbo.Sys_Parameters s3 on (s3.Field = 'MedicationFrequency' and s3.Flag = rsm.frequency)
+-- 	LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure r on (rsm.procedureid = r.procedureid);
+--
+--
+-- --procedure_default_codes
+-- TRUNCATE TABLE labkey.ehr_lookups.procedure_default_codes;
+-- INSERT INTO labkey.ehr_lookups.procedure_default_codes (procedureid, sort_order, code)
+-- Select
+-- 	(SELECT max(rowid) as rowid from labkey.ehr_lookups.procedures p2 WHERE p.ProcedureName = p2.name) as procedureid,
+-- 	s2.i as sort,
+-- 	s2.value as code
+--
+-- From IRIS_Production.dbo.Ref_SurgSnomed r
+-- left join IRIS_Production.dbo.Ref_SurgProcedure p on (r.ProcedureID = p.ProcedureID)
+-- cross apply IRIS_Production.dbo.fn_splitter(r.SnomedCodes, ',') s2
+-- where s2.value is not null and s2.value != '' and p.ProcedureID is not null;

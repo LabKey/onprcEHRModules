@@ -13,76 +13,125 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+-- SELECT
+--   d.*,
+--   --add in projects
+--   coalesce(
+--       (SELECT CASE WHEN count(projectId) = 1 THEN max(projectId) ELSE null END as project FROM Af_ChargesIBS ibs WHERE ibs.IDKey = d.IDKey),
+--       (SELECT CASE WHEN count(projectId) = 1 THEN max(projectId) ELSE null END as project FROM AF_Assignments a WHERE a.animalid = d.animalid AND (d.date >= a.AssignDate AND d.Date <= a.ReleaseDate))
+--   ) as project,
+--
+--   coalesce(
+--       (SELECT max(ts) as ts FROM Af_ChargesIBS ibs WHERE ibs.IDKey = d.IDKey),
+--       (SELECT max(ts) as ts FROM AF_Assignments a WHERE a.animalid = d.animalid AND (d.date >= a.AssignDate AND d.Date <= a.ReleaseDate))
+--   ) as projectTs
+--
+-- FROM (
+
+SELECT * FROM (
 SELECT
-	t.Id,
-	DATEADD (DAY , i.value, t.date) as date,
-	--t.duration,
-	--i.value,
-	t.code,
-	t.meaning,
-	t.remark,
-	t.amount,
-	t.amount_units,
-	t.route,
-	(cast(t.objectid as varchar(38)) + '_' + cast(i.value as varchar(10))) as objectid,
-	t.parentId,
-	t.treatmentId,
-	t.performedBy,
-	'Clinical' as category,
-	null as caseid
+  t.Id,
+  DATEADD (DAY , i.value, t.date) as date,
+  t.treatmentStartDate,
+  t.enddate as treatmentEndDate,
+--t.duration,
+--i.value,
+  t.code,
+  t.meaning,
+  t.remark,
+  t.amount,
+  t.amount_units,
+  t.route,
+  (cast(t.objectid as varchar(38)) + '_' + convert(varchar, t.date, 120)) as objectid,
+  t.parentId,
+  t.treatmentId,
+  t.performedBy,
+  'Clinical' as category,
+  null as caseid
 
 FROM (
-	SELECT
-		coalesce(m.duration, 0) as duration,
-		cast(m.AnimalId as nvarchar(4000)) as Id,
+   SELECT
+     t1.*,
+     CASE
+       WHEN t1.enddate2 is null THEN t1.alternateEnd
+       WHEN t1.alternateEnd is null then t1.enddate2
+       WHEN t1.alternateEnd < t1.enddate2 THEN t1.alternateEnd
+       ELSE t1.enddate2
+     END as enddate,
+     CASE
+      WHEN (t1.enddate2 is null AND t1.alternateEnd is null) THEN null
+      WHEN t1.enddate2 is null THEN DateDiff(d, cast(t1.date as date), cast(t1.alternateEnd as date))
+      WHEN t1.alternateEnd is null then DateDiff(d, cast(t1.date as date), cast(t1.enddate2 as date))
+      WHEN t1.alternateEnd < t1.enddate2 THEN DateDiff(d, cast(t1.date as date), cast(t1.alternateEnd as date))
+      ELSE DateDiff(d, t1.date, t1.enddate2)
+     END + 1 as duration
+FROM (
+SELECT
+  CASE
+    WHEN enddate IS NULL THEN cast(DATEADD(minute, -1, DATEADD(day, 1+CASE WHEN duration = 0 THEN 1 ELSE duration END, cast(cast(date as date) AS datetime))) as datetime)
+    ELSE coalesce(EndDate, q.deathdate, q.departuredate)
+  END as enddate2,
+  coalesce(q.deathdate, q.departuredate) as alternateEnd,
 
-		case
-		  when cln.MedicationTime is null or cln.MedicationTime = '' or LEN(medicationtime) = 0 then m.date
-		  when LEN(medicationtime) = 3 then convert(datetime, CONVERT(varchar(100), m.date, 111) + ' 0' + left(cln.MedicationTime, 1) + ':' + RIGHT(cln.medicationtime, 2))
-		  else convert(datetime, CONVERT(varchar(100), m.date, 111) + ' ' + left(cln.MedicationTime, 2) + ':' + RIGHT(cln.medicationtime, 2))
-		end as date,
+  cast(m.AnimalId as nvarchar(4000)) as Id,
+  m.date AS treatmentStartDate,
 
-		Medication as code,
-		sno.Description as meaning,
+  case
+  when cln.MedicationTime is null or cln.MedicationTime = '' or LEN(medicationtime) = 0 then m.date
+  when LEN(medicationtime) = 3 then convert(datetime, CONVERT(varchar(100), m.date, 111) + ' 0' + left(cln.MedicationTime, 1) + ':' + RIGHT(cln.medicationtime, 2))
+  else convert(datetime, CONVERT(varchar(100), m.date, 111) + ' ' + left(cln.MedicationTime, 2) + ':' + RIGHT(cln.medicationtime, 2))
+  end as date,
 
-		null as remark,
-		Dose as amount,
+  Medication as code,
+  sno.Description as meaning,
 
-		--Units as UnitsInt ,
-		s2.Value as amount_units,
-		--Route as RouteInt ,
-		s3.Value as route,
-		coalesce(cln.objectid, m.objectid) as objectid,
-		null as parentId,
-		m.objectId as treatmentId,
+  null as remark,
+  Dose as amount,
 
-		case
-		  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
-			'Unassigned'
-		  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
-			rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
-		  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
-			rt.LastName + ', ' + rt.FirstName
-		  WHEN datalength(LastName) > 0 AND datalength(rt.Initials) > 0 THEN
-			rt.LastName + ' (' + rt.Initials + ')'
-		  WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
-			null
-		  else
-		   rt.Initials
-		END as performedBy
+  s2.Value as amount_units,
+  s3.Value as route,
+  coalesce(cln.objectid, m.objectid) as objectid,
+  null as parentId,
+  m.objectId as treatmentId,
 
-	FROM Cln_Medications m
-	left join Cln_MedicationTimes cln on (m.SearchKey = cln.SearchKey)
-	left join ref_snomed sno on (sno.SnomedCode = m.Medication)
-	left join Sys_parameters s2 on (s2.Field = 'MedicationUnits' and s2.Flag = m.Units)
-	left join Sys_parameters s3 on (s3.Field = 'MedicationRoute' and s3.Flag = m.Route)
-	left join Ref_Technicians rt ON (rt.ID = m.Technician)
-	where m.AnimalId is not null
-	and (cln.ts > ? or m.ts > ?)
-) t
+  case
+  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+    'Unassigned'
+  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+    rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+    rt.LastName + ', ' + rt.FirstName
+  WHEN datalength(LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+    rt.LastName + ' (' + rt.Initials + ')'
+  WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+    null
+  else
+  rt.Initials
+  END as performedBy,
+  tf.intervalindays
 
-LEFT JOIN labkey.ldk.integers i on (i.value < t.Duration)
+FROM Cln_Medications m
+  left join Cln_MedicationTimes cln on (m.SearchKey = cln.SearchKey)
+  left join ref_snomed sno on (sno.SnomedCode = m.Medication)
+  left join Sys_parameters s2 on (s2.Field = 'MedicationUnits' and s2.Flag = m.Units)
+  left join Sys_parameters s3 on (s3.Field = 'MedicationRoute' and s3.Flag = m.Route)
+  left join Ref_Technicians rt ON (rt.ID = m.Technician)
 
+  left join Sys_parameters s4 on (s4.Field = 'MedicationFrequency' and s4.Flag = Frequency)
+  left join labkey.ehr_lookups.treatment_frequency tf ON (tf.meaning = s4.value)
+  left join Af_Qrf q on (q.animalid = m.animalid)
+
+where m.AnimalId is not null
+and (cln.ts > ? or m.ts > ? or q.ts > ?)
+) t1
+
+ ) t
+
+LEFT JOIN labkey.ldk.integers i on (i.value < t.Duration AND ((i.value + 1) % t.intervalindays = 0))
+
+) t2
+
+WHERE t2.date >= t2.treatmentStartDate and t2.date <= t2.treatmentEndDate
 
 UNION ALL
 
@@ -106,7 +155,7 @@ SELECT
 	h.objectid,
 	g.objectid as parentId,
 	null as treatmentId,
-	
+
 	null as performedby,
 	'Anesthesia' as category,
 	c.objectid as caseid
@@ -157,3 +206,7 @@ FROM Sur_Medications m
     ) c ON (c.AnimalID = g.AnimalID AND c.date = g.date)
 
 WHERE m.ts > ? or g.ts > ?
+
+-- ) d
+--
+-- WHERE d.projectTs > ?

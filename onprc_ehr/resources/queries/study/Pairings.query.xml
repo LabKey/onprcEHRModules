@@ -16,6 +16,7 @@
                     </column>
                     <column columnName="Id2">
                         <columnTitle>Second Id</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                         <fk>
                             <fkDbSchema>study</fkDbSchema>
                             <fkTable>animal</fkTable>
@@ -60,14 +61,19 @@
                     </column>
                     <column columnName="aggressor">
                         <columnTitle>Aggressor</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                         <fk>
                             <fkDbSchema>study</fkDbSchema>
                             <fkTable>animal</fkTable>
                             <fkColumnName>id</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
                         </fk>
                     </column>
                     <column columnName="remark">
                         <columnTitle>Remark</columnTitle>
+                    </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
                     </column>
                 </columns>
             </table>

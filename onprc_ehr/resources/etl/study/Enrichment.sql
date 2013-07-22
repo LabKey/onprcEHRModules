@@ -23,7 +23,7 @@ Select
 
 	toy.ToyType as type,
 	Reason,
-	Remarks as Remarks,
+	Remarks as Remark,
 	t.objectid,
 	t.ts as rowversion
 

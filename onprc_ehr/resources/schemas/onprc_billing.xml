@@ -350,6 +350,7 @@
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="objectid"/>
             <ns:column columnName="container"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -498,8 +499,8 @@
             <ns:column columnName="procedureId">
                 <ns:columnTitle>Procedure Id</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="chargeType">
-                <ns:columnTitle>Charge Type</ns:columnTitle>
+            <ns:column columnName="billedby">
+                <ns:columnTitle>Billed By</ns:columnTitle>
             </ns:column>
             <ns:column columnName="chargeId">
                 <ns:columnTitle>Charge Id</ns:columnTitle>

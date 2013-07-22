@@ -103,7 +103,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //housing
         //livingAnimalsWithoutWeight(c, u, msg);
         cagesWithoutDimensions(c, u, msg);
-        cageReview(c, u, msg, true);
+        cageReviewErrors(c, u, msg, true);
+        cageReviewWarnings(c, u, msg, false);
         roomsWithoutInfo(c, u, msg);
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);
@@ -817,19 +818,29 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    protected void cageReviewErrors(final Container c, User u, final StringBuilder msg, boolean notifyOnNone)
+    {
+        cageReview(c, u, msg, notifyOnNone, "ERROR", "WARNING: The following cages are too small for the animals currently in them:");
+    }
+
+    protected void cageReviewWarnings(final Container c, User u, final StringBuilder msg, boolean notifyOnNone)
+    {
+        cageReview(c, u, msg, notifyOnNone, "WARN", "WARNING: The following cages have 5 month olds that will cause the cage to become too small when they turn 6 months:");
+    }
+
     /**
      * then we find all animals with cage size problems
      * @param msg
      */
-    protected void cageReview(final Container c, User u, final StringBuilder msg, boolean notifyOnNone)
+    private void cageReview(final Container c, User u, final StringBuilder msg, boolean notifyOnNone, String filterTerm, String message)
     {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("cageStatus"), "ERROR", CompareType.STARTS_WITH);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("cageStatus"), filterTerm, CompareType.STARTS_WITH);
         TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), filter, null);
         Map<String, Object>[] rows = ts.getMapArray();
 
         if (rows.length > 0)
         {
-            msg.append("<b>WARNING: The following cages are too small for the animals currently in them:</b><br>");
+            msg.append("<b>" + message + "</b><br>");
             for (Map<String, Object> row : rows)
             {
                 String room = (String)row.get("room");

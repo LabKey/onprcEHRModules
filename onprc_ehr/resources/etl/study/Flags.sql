@@ -45,7 +45,7 @@ select
 r.animalid as Id,
 null as flag,
 'Genetics' as category,
-'Sample sent for parentage' as value,
+'Parentage Blood Draw Collected' as value,
 r.DateProcessed as date,
 coalesce(q.deathdate, q.departuredate) as enddate,
 (cast(r.objectid as varchar(38)) + '_parentage') as objectid
@@ -57,25 +57,3 @@ where r.DateProcessed is not null
 --exclude non-center animals
 and r.animalid not like '%n' and r.animalid not like '%f'
 and (r.ts > ? or q.ts > ?)
-
-UNION ALL
-
-select
-
-  r.animalid as Id,
-  null as flag,
-  'Genetics' as category,
-  'Blood drawn for DNA Bank' as value,
-  r.DateProcessed as date,
-  coalesce(q.deathdate, q.departuredate) as enddate,
-  (cast(r.objectid as varchar(38)) + '_dna') as objectid
-
-from Res_DNABank r
-  join Af_Qrf q on (cast(q.AnimalID as nvarchar(4000)) = r.animalid)
-  left join Sys_Parameters s ON (r.Project = s.Flag AND s.Field = 'DNAProject')
-
-where r.DateProcessed is not null
-      --exclude non-center animals
-      and (r.animalid not like '%n' and r.animalid not like '%f')
-      and s.Value = 'DNA Bank'
-      and (r.ts > ? or q.ts > ?)

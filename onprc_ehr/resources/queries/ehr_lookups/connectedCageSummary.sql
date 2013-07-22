@@ -16,9 +16,15 @@
 SELECT
 p.room,
 p.effectiveCage,
-group_concat(p.cage, ',') as cages
+group_concat(p.cage) as cages,
+count(p.cage) as numCages,
+group_concat(distinct p.cage_type) as cageTypes,
+--sum(p.cage_type.cageSlots) as expectedCageSlots,
 
 
-FROM ehr_lookups.pairedCages p
+-- this is sort of a hack.  we really should correctly size our cages
+sum(p.cage_type.sqft / p.cage_type.cageSlots) as totalSqFt
+
+FROM ehr_lookups.connectedCages p
 
 GROUP BY p.room, p.effectiveCage

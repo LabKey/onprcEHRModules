@@ -262,7 +262,11 @@ EHR.reports.snapshot = function(panel, tab){
 
 };
 
-EHR.reports.clinicalHistory = function(panel, tab){
+EHR.reports.fullClinicalHistory = function(panel, tab){
+    EHR.reports.clinicalHistory(panel, tab, true);
+}
+
+EHR.reports.clinicalHistory = function(panel, tab, includeAll){
     if (tab.filters.subjects){
         renderSubjects(tab.filters.subjects, tab);
     }
@@ -305,7 +309,7 @@ EHR.reports.clinicalHistory = function(panel, tab){
             return;
         }
 
-        var minDate = Ext4.Date.add(new Date(), Ext4.Date.YEAR, -2);
+        var minDate = includeAll ? null : Ext4.Date.add(new Date(), Ext4.Date.YEAR, -2);
         var toAdd = [];
         Ext4.each(subjects, function(s){
             toAdd.push({
@@ -345,12 +349,8 @@ EHR.reports.clinicalHistory = function(panel, tab){
     }
 }
 
-EHR.reports.clinAMMedicationSchedule = function(panel, tab){
-    EHR.reports.medicationSchedule(panel, tab, 'Clinical Medications - AM');
-};
-
-EHR.reports.clinPMMedicationSchedule = function(panel, tab){
-    EHR.reports.medicationSchedule(panel, tab, 'Clinical Medications - PM');
+EHR.reports.clinMedicationSchedule = function(panel, tab){
+    EHR.reports.medicationSchedule(panel, tab, 'Clinical Medications');
 };
 
 EHR.reports.dietSchedule = function(panel, tab){
@@ -358,15 +358,7 @@ EHR.reports.dietSchedule = function(panel, tab){
 };
 
 EHR.reports.surgMedicationSchedule = function(panel, tab){
-    EHR.reports.medicationSchedule(panel, tab, 'Surgical Medications - All');
-};
-
-EHR.reports.surgAMMedicationSchedule = function(panel, tab){
-    EHR.reports.medicationSchedule(panel, tab, 'Surgical Medications - AM');
-};
-
-EHR.reports.surgPMMedicationSchedule = function(panel, tab){
-    EHR.reports.medicationSchedule(panel, tab, 'Surgical Medications - PM');
+    EHR.reports.medicationSchedule(panel, tab, 'Surgical Medications');
 };
 
 EHR.reports.medicationSchedule = function(panel, tab, viewName){

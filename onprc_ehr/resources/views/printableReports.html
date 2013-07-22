@@ -3,61 +3,6 @@
     Ext4.onReady(function(){
         var webpart = <%=webpartContext%>;
 
-        Ext4.define('EHR.field.TimeOfDayField', {
-            extend: 'Ext.form.ComboBox',
-            alias: 'widget.ehr-timeofdayfield',
-
-            initComponent: function(){
-                Ext4.apply(this, {
-                    multiSelect: true,
-                    fieldLabel: 'Time of Day',
-                    value: 'both',
-                    displayField: 'display',
-                    valueField: 'time',
-                    queryMode: 'local',
-                    store: {
-                        type: 'array',
-                            fields: ['time', 'display'],
-                            data: [['both', 'Both'], ['AM', 'AM'],['PM', 'PM']]
-                        },
-                    listeners: {
-                        change: function(field, val, oldVal){
-                            val = (!val || Ext4.isArray(val)) ? val : [val];
-                            oldVal = (!oldVal || Ext4.isArray(oldVal)) ? oldVal : [oldVal];
-
-                            //if the previous selection was just 'both', and the user picks something else, we need to de-select 'both'
-                            if (oldVal.indexOf('both') != -1 && oldVal.length == 1 && val.indexOf('both') != -1 && val.length > 1){
-                                val = val.remove('both');
-                                this.setValue(val);
-                            }
-                            else if (val.indexOf('both') != -1 && val.length > 1 && oldVal.indexOf('both') == -1){
-                                this.setValue('both');
-                            }
-//                            else if (val.indexOf('AM') > -1 && val.indexOf('PM') > -1){
-//                                this.setValue('both');
-//                            }
-                        }
-                    }
-                });
-
-                this.callParent(arguments);
-            },
-
-            getURLParam: function(){
-                var timeOfDay = this.getValue();
-                timeOfDay = (!timeOfDay || Ext4.isArray(timeOfDay)) ? timeOfDay : [timeOfDay];
-
-                if (timeOfDay && timeOfDay.indexOf('both') > -1){
-                    return null;
-                }
-                else if (timeOfDay && timeOfDay.indexOf('AM') > -1 && timeOfDay.indexOf('PM') > -1){
-                    return null;
-                }
-
-                return timeOfDay.join(';');
-            }
-        });
-
         Ext4.define('ONPRC.panel.PrintableReportsPanel', {
             itemId: 'sheetPanel',
             extend: 'Ext.panel.Panel',
@@ -80,43 +25,14 @@
                     html: 'This page provides reports to be printed by room or area.  After picking the location(s) using the drop downs below, hit the \'Print\' buttons below to print any of the reports',
                     style: 'padding-bottom: 20px;'
                 },{
-                    xtype: 'labkey-combo',
+                    xtype: 'ehr-areafield',
                     itemId: 'areaField',
+                    addAllSelector: true,
+                    fieldLabel: 'Area(s)',
                     width: 400,
-                    fieldLabel: 'Area',
-                    //multiSelect: true,
-                    store: {
-                        type: 'labkey-store',
-                        schemaName: 'ehr_lookups',
-                        queryName: 'areas',
-                        autoLoad: true
-                    },
-                    valueField: 'area',
-                    displayField: 'area',
-                    listeners: {
-                        select: function(field, records){
-                            if (!records.length)
-                                return;
-
-                            var areas = [];
-                            Ext4.Array.forEach(records, function(r){
-                                areas.push(r.get('area'));
-                            }, this);
-
-                            var roomField = field.up('panel').down('#roomField');
-                            roomField.suspendEvents();
-                            roomField.selectByAreas(areas);
-                            roomField.resumeEvents();
-                        },
-                        render: function(field){
-                            var val = field.getValue();
-                            val = Ext4.isArray(val) || !val ? val : [val];
-
-                            var roomField = field.up('panel').down('#roomField');
-                            roomField.suspendEvents();
-                            roomField.selectByAreas(val);
-                            roomField.resumeEvents();
-                        }
+                    pairedWithRoomField: true,
+                    getRoomField: function(){
+                        return this.up('panel').down('#roomField');
                     }
                 },{
                     xtype: 'ehr-roomfield',
@@ -138,12 +54,16 @@
                 },{
                     html: '<b>Available Printouts:</b>',
                     style: 'padding-bottom: 20px;'
+                },{
+                    html: 'This page is designed to provide a prinable version of these reports.  If you plan to view this information in front of a computer, please see the \'Online Version\' buttons below to load them directly.  The online version may allow access to additional information beyond the printed one.',
+                    width: 800,
+                    style: 'padding-bottom: 20px;'
                 }];
 
                 items.push({
                     layout: {
                         type: 'table',
-                        columns: 3,
+                        columns: 4,
                         tdAttrs: {
                             valign: 'top'
                         }
@@ -159,7 +79,7 @@
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
-                        text: 'View/Print',
+                        text: 'Print Version',
                         border: true,
                         handler: function(btn){
                             var panel = btn.up('#sheetPanel');
@@ -176,9 +96,19 @@
                             window.open(url);
                         }
                     },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Online Version',
+                        border: true,
+                        handler: function(btn){
+                            var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
+                            url += btn.up('#sheetPanel').getAnimalHistoryHash('cases');
+                            window.open(url);
+                        }
+                    },{
                         html: '<hr>',
                         style: 'padding-top: 10px;',
-                        colspan: 3
+                        colspan: 4
                     },{
                         html: '<i>Clinical Medications:</i>'
                     },{
@@ -197,7 +127,7 @@
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
-                        text: 'View/Print',
+                        text: 'Print Version',
                         border: true,
                         handler: function(btn){
                             var panel = btn.up('#sheetPanel');
@@ -229,9 +159,19 @@
                             window.open(url);
                         }
                     },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Online Version',
+                        border: true,
+                        handler: function(btn){
+                            var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
+                            url += btn.up('#sheetPanel').getAnimalHistoryHash('clinMedicationSchedule');
+                            window.open(url);
+                        }
+                    },{
                         html: '<hr>',
                         style: 'padding-top: 10px;',
-                        colspan: 3
+                        colspan: 4
                     },{
                         html: '<i>Diets:</i>'
                     },{
@@ -250,7 +190,7 @@
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
-                        text: 'View/Print',
+                        text: 'Print Version',
                         border: true,
                         handler: function(btn){
                             var panel = btn.up('#sheetPanel');
@@ -278,13 +218,22 @@
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            console.log(url);
+                            window.open(url);
+                        }
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Online Version',
+                        border: true,
+                        handler: function(btn){
+                            var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
+                            url += btn.up('#sheetPanel').getAnimalHistoryHash('diet');
                             window.open(url);
                         }
                     },{
                         html: '<hr>',
                         style: 'padding-top: 10px;',
-                        colspan: 3
+                        colspan: 4
                     },{
                         html: '<i>Open Surgical Cases:</i>'
                     },{
@@ -293,26 +242,36 @@
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
-                        text: 'View/Print',
+                        text: 'Print Version',
                         border: true,
                         handler: function(btn){
                             var panel = btn.up('#sheetPanel');
-                            var params = panel.getParams();
+                            var params = panel.getParams(true);
                             if (!params)
                                 return;
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'SurgicalCases';
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveSurgicalCases';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
                             console.log(url);
                             window.open(url);
                         }
                     },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Online Version',
+                        border: true,
+                        handler: function(btn){
+                            var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
+                            url += btn.up('#sheetPanel').getAnimalHistoryHash('surgicalCases');
+                            window.open(url);
+                        }
+                    },{
                         html: '<hr>',
                         style: 'padding-top: 10px;',
-                        colspan: 3
+                        colspan: 4
                     },{
                         html: '<i>Surgical Medications:</i>'
                     },{
@@ -331,7 +290,7 @@
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
-                        text: 'View/Print',
+                        text: 'Print Version',
                         border: true,
                         handler: function(btn){
                             var panel = btn.up('#sheetPanel');
@@ -359,13 +318,22 @@
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            console.log(url);
+                            window.open(url);
+                        }
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Online Version',
+                        border: true,
+                        handler: function(btn){
+                            var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
+                            url += btn.up('#sheetPanel').getAnimalHistoryHash('surgMedicationSchedule');
                             window.open(url);
                         }
                     },{
                         html: '<hr>',
                         style: 'padding-top: 10px;',
-                        colspan: 3
+                        colspan: 4
                     },{
                         html: '<i>Weight Sheets:</i>'
                     },{
@@ -374,7 +342,7 @@
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
-                        text: 'View/Print',
+                        text: 'Print Version',
                         border: true,
                         handler: function(btn){
                             var panel = btn.up('#sheetPanel');
@@ -391,18 +359,20 @@
                             window.open(url);
                         }
                     },{
+                        html: ''
+                    },{
                         html: '<hr>',
                         style: 'padding-top: 10px;',
-                        colspan: 3
+                        colspan: 4
                     },{
-                        html: '<i>EXPERIMENTAL - Room Layout:</i>'
+                        html: '<i>Room Utilization / Layout:</i>'
                     },{
                         style: 'padding-left: 5px;',
                         html: ''
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
-                        text: 'View/Print',
+                        text: 'Print Version',
                         border: true,
                         handler: function(btn){
                             var panel = btn.up('#sheetPanel');
@@ -422,13 +392,31 @@
                             var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
                             window.open(url);
                         }
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Online Version',
+                        border: true,
+                        handler: function(btn){
+                            var urlParams = {schemaName: 'ehr_lookups', 'query.queryName': 'roomUtilization'};
+                            var params = btn.up('#sheetPanel').getParams(true) || {};
+                            if (params.Areas){
+                                urlParams['query.room/area~in'] = params.Areas.join(';');
+                            }
+                            else if (params.Rooms){
+                                urlParams['query.room~in'] = params.Rooms.join(';');
+                            }
+
+                            var url = LABKEY.ActionURL.buildURL('query', 'executeQuery', null, urlParams);
+                            window.open(url);
+                        }
                     }]
                 });
 
                 return items;
             },
 
-            getParams: function(){
+            getParams: function(supressErrors){
                 var params = {
                     SessionId: LABKEY.Security.currentUser.sessionid
                 };
@@ -439,7 +427,7 @@
                 var rooms = this.down('#roomField').getValue() || [];
                 rooms = Ext4.isArray(rooms) ? rooms: [rooms];
 
-                if (!areas.length && !rooms.length){
+                if (!rooms.length && !supressErrors){
                     Ext4.Msg.alert('Error', 'Must select an area or room');
                     return;
                 }
@@ -450,11 +438,26 @@
                     params.Rooms = rooms;
                 }
 
-                if (areas.length){
-                    params.Areas = areas.join(';');
-                }
+                //NOTE: this is always omitted, since the UI should never allow an area w/o a room and it's easier for SSRS to handle a single param
+                //if (areas.length){
+                //    params.Areas = areas.join(';');
+                //}
 
                 return params;
+            },
+
+            getAnimalHistoryHash: function(reportName){
+                var params = this.getParams(true) || {};
+
+                var ret = '#showReport:1&activeReport:' + reportName;
+                if (params.Rooms){
+                    ret += '&inputType:roomCage&room:' + params.Rooms.join(',')
+                }
+                else {
+                    ret += '&inputType:none'
+                }
+
+                return ret;
             }
         });
 

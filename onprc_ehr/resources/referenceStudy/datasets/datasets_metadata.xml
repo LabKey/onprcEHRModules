@@ -3547,6 +3547,9 @@
             <column columnName="preservation">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="preparation">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="qualifier">
                 <datatype>varchar</datatype>
             </column>

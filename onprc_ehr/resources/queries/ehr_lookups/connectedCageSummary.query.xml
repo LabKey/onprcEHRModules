@@ -1,8 +1,8 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="joinedCages" tableDbType="TABLE">
-                <tableTitle>Joined Cages</tableTitle>
+            <table tableName="connectedCageSummary" tableDbType="TABLE">
+                <tableTitle>Connected Cage Summary</tableTitle>
             </table>
         </tables>
     </metadata>

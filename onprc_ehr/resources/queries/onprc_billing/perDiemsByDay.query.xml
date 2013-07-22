@@ -3,6 +3,16 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="perDiemsByDay" tableDbType="TABLE">
                 <tableTitle>Per Diems, Raw Data</tableTitle>
+                <columns>
+                    <column columnName="chargeIds">
+                        <columnTitle>Charge</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>chargeableItems</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
+                    </column>
+                </columns>
             </table>
         </tables>
     </metadata>

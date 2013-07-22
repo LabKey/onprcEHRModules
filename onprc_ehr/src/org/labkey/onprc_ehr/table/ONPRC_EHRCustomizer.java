@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.ColumnInfo;
@@ -75,9 +76,9 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         {
             customizeColumns((AbstractTableInfo) table);
 
-            if (table instanceof DataSetTable)
+            if (table.getColumn("dateOnly") != null)
             {
-                customizeDataset((AbstractTableInfo) table);
+                addCalculatedCols((AbstractTableInfo) table, "dateOnly");
             }
 
             if (matches(table, "study", "Animal"))
@@ -148,15 +149,20 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         }
     }
 
-    private void customizeDataset(AbstractTableInfo ds)
+    private boolean isDemographicsTable(TableInfo ti)
+    {
+        return ti.getName().equalsIgnoreCase("demographics") && ti.getPublicSchemaName().equalsIgnoreCase("study");
+    }
+
+    private void addCalculatedCols(AbstractTableInfo ds, String dateColName)
     {
         UserSchema us = getStudyUserSchema(ds);
-        if (us != null)
+        if (us != null && !isDemographicsTable(ds))
         {
-            appendAssignmentAtTimeCol(us, ds);
-            appendGroupsAtTimeCol(us, ds);
-            appendProblemsAtTimeCol(us, ds);
-            appendFlagsAtTimeCol(us, ds);
+            appendAssignmentAtTimeCol(us, ds, dateColName);
+            appendGroupsAtTimeCol(us, ds, dateColName);
+            appendProblemsAtTimeCol(us, ds, dateColName);
+            appendFlagsAtTimeCol(us, ds, dateColName);
         }
     }
 
@@ -167,7 +173,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         {
             UserSchema us = getUserSchema(ti, "ehr");
             if (us != null)
-                project.setFk(new QueryForeignKey(us, "project", "project", "name"));
+                project.setFk(new QueryForeignKey(us, "project", "project", "displayName"));
         }
 
         ColumnInfo account = ti.getColumn("account");
@@ -729,7 +735,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
         ColumnInfo objectId = ti.getColumn("objectid");
         String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
-        SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'Hx: '", "r.hx")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+        SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'Hx: '", "r.hx")), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 WHERE r2.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r2.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r2.hx is not null)" +
                 " AND r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)"
         );
@@ -738,7 +744,15 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         latestHx.setDisplayWidth("250");
         ti.addColumn(latestHx);
 
-        SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+        SQLFragment recentp2Sql = new SQLFragment("(SELECT TOP 1 (" + ti.getSqlDialect().concatenate("'P2: '", "r.p2") + ") as _expr FROM " + realTable.getSelectName() +
+                " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL ORDER BY r.date desc)");
+        ExprColumn recentP2 = new ExprColumn(ti, "mostRecentP2", recentp2Sql, JdbcType.VARCHAR, objectId);
+        recentP2.setLabel("Most Recent P2");
+        recentP2.setDescription("This column will display the most recent P2 from this case.");
+        recentP2.setDisplayWidth("250");
+        ti.addColumn(recentP2);
+
+        SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
         ExprColumn todaysP2 = new ExprColumn(ti, "todaysP2", p2Sql, JdbcType.VARCHAR, objectId);
         todaysP2.setLabel("P2s Entered Today");
@@ -749,28 +763,28 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         yesterday.setTime(new Date());
         yesterday.add(Calendar.DATE, -1);
 
-        SQLFragment p2Sql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+        SQLFragment p2Sql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", yesterday.getTime());
         ExprColumn yesterdaysP2 = new ExprColumn(ti, "yesterdaysP2", p2Sql2, JdbcType.VARCHAR, objectId);
         yesterdaysP2.setLabel("P2s Entered Yesterday");
         yesterdaysP2.setDisplayWidth("250");
         ti.addColumn(yesterdaysP2);
 
-        SQLFragment rmSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+        SQLFragment rmSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
         ExprColumn todaysRemarks = new ExprColumn(ti, "todaysRemarks", rmSql, JdbcType.VARCHAR, objectId);
         todaysRemarks.setLabel("Remarks Entered Today");
         todaysRemarks.setDisplayWidth("250");
         ti.addColumn(todaysRemarks);
 
-        SQLFragment rmSql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+        SQLFragment rmSql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date)");
         ExprColumn remarksOnOpenDate = new ExprColumn(ti, "remarksOnOpenDate", rmSql2, JdbcType.VARCHAR, objectId);
         remarksOnOpenDate.setLabel("Remarks Entered On Open Date");
         remarksOnOpenDate.setDisplayWidth("250");
         ti.addColumn(remarksOnOpenDate);
 
-        SQLFragment assesmentSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.a"), false, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+        SQLFragment assesmentSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.a"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.a IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date)");
         ExprColumn assessmentOnOpenDate = new ExprColumn(ti, "assessmentOnOpenDate", assesmentSql, JdbcType.VARCHAR, objectId);
         assessmentOnOpenDate.setLabel("Assessment Entered On Open Date");
@@ -1189,13 +1203,29 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         }
     }
 
-    private void appendAssignmentAtTimeCol(final UserSchema us, final AbstractTableInfo ds)
+    private ColumnInfo getPkCol(TableInfo ti)
+    {
+        List<ColumnInfo> pks = ti.getPkColumns();
+        return (pks.size() != 1) ? null : pks.get(0);
+    }
+
+    private void appendAssignmentAtTimeCol(final UserSchema us, final AbstractTableInfo ds, final String dateColName)
     {
         String name = "assignmentAtTime";
         if (ds.getColumn(name) != null)
             return;
 
-        WrappedColumn col = new WrappedColumn(ds.getColumn("lsid"), name);
+        final ColumnInfo pkCol = getPkCol(ds);
+        if (pkCol == null)
+            return;
+
+        if (ds.getColumn("Id") == null)
+            return;
+
+        if (!hasTable(ds, "study", "Assignment"))
+            return;
+
+        WrappedColumn col = new WrappedColumn(pkCol, name);
         col.setLabel("Assignments At Time");
         col.setReadOnly(true);
         col.setIsUnselectable(true);
@@ -1206,126 +1236,15 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 String name = ds.getName() + "_assignmentsAtTime";
                 QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
                 qd.setSql("SELECT\n" +
-                        "sd.lsid,\n" +
-                        "group_concat(DISTINCT h.project.name) as AssignmentsAtTime\n" +
-                        "FROM study.\"" + ds.getName() + "\" sd\n" +
+                        "sd." + pkCol.getSelectName() + ",\n" +
+                        "group_concat(DISTINCT h.project.displayName, chr(10)) as projectsAtTime,\n" +
+                        "group_concat(DISTINCT h.project.protocol.displayName, chr(10)) as protocolsAtTime,\n" +
+                        "group_concat(DISTINCT h.project.investigatorId.lastName, chr(10)) as investigatorsAtTime,\n" +
+                        "group_concat(DISTINCT h.project.name, chr(10)) as projectNumbersAtTime\n" +
+                        "FROM \"" + ds.getPublicSchemaName() + "\".\"" + ds.getName() + "\" sd\n" +
                         "JOIN study.assignment h\n" +
-                        "  ON (sd.id = h.id AND h.dateOnly <= sd.dateOnly AND sd.dateOnly <= h.enddateCoalesced AND h.qcstate.publicdata = true)\n" +
-                        "group by sd.lsid");
-                qd.setIsTemporary(true);
-
-                List<QueryException> errors = new ArrayList<>();
-                TableInfo ti = qd.getTable(errors, true);
-
-                ti.getColumn("lsid").setHidden(true);
-                ti.getColumn("lsid").setKeyField(true);
-
-                return ti;
-            }
-        });
-
-        ds.addColumn(col);
-    }
-
-    private void appendFlagsAtTimeCol(final UserSchema us, final AbstractTableInfo ds)
-    {
-        String name = "flagsAtTime";
-        if (ds.getColumn(name) != null)
-            return;
-
-        WrappedColumn col = new WrappedColumn(ds.getColumn("lsid"), name);
-        col.setLabel("Flags At Time");
-        col.setReadOnly(true);
-        col.setIsUnselectable(true);
-        col.setUserEditable(false);
-        col.setFk(new LookupForeignKey(){
-            public TableInfo getLookupTableInfo()
-            {
-                String name = ds.getName() + "_flagsAtTime";
-                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
-                qd.setSql("SELECT\n" +
-                        "sd.lsid,\n" +
-                        "group_concat(DISTINCT h.value, chr(10)) as FlagsAtTime\n" +
-                        "FROM study.\"" + ds.getName() + "\" sd\n" +
-                        "JOIN study.flags h\n" +
-                        "  ON (sd.id = h.id AND h.dateOnly <= sd.dateOnly AND sd.dateOnly <= h.enddateCoalesced AND h.qcstate.publicdata = true)\n" +
-                        "group by sd.lsid");
-                qd.setIsTemporary(true);
-
-                List<QueryException> errors = new ArrayList<>();
-                TableInfo ti = qd.getTable(errors, true);
-
-                ti.getColumn("lsid").setHidden(true);
-                ti.getColumn("lsid").setKeyField(true);
-
-                return ti;
-            }
-        });
-
-        ds.addColumn(col);
-    }
-
-    private void appendProblemsAtTimeCol(final UserSchema us, final AbstractTableInfo ds)
-    {
-        final String colName = "problemsAtTime";
-        if (ds.getColumn(colName) != null)
-            return;
-
-        WrappedColumn col = new WrappedColumn(ds.getColumn("lsid"), colName);
-        col.setLabel("Problems At Time");
-        col.setReadOnly(true);
-        col.setIsUnselectable(true);
-        col.setUserEditable(false);
-        col.setFk(new LookupForeignKey(){
-            public TableInfo getLookupTableInfo()
-            {
-                String name = ds.getName() + "_" + colName;
-                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
-                qd.setSql("SELECT\n" +
-                        "sd.lsid,\n" +
-                        "group_concat(DISTINCT h.category) as ProblemsAtTime\n" +
-                        "FROM study.\"" + ds.getName() + "\" sd\n" +
-                        "JOIN study.\"Problem List\" h\n" +
-                        "  ON (sd.id = h.id AND h.dateOnly <= sd.dateOnly AND sd.dateOnly <= h.enddateCoalesced AND h.qcstate.publicdata = true)\n" +
-                        "group by sd.lsid");
-                qd.setIsTemporary(true);
-
-                List<QueryException> errors = new ArrayList<>();
-                TableInfo ti = qd.getTable(errors, true);
-
-                ti.getColumn("lsid").setHidden(true);
-                ti.getColumn("lsid").setKeyField(true);
-
-                return ti;
-            }
-        });
-
-        ds.addColumn(col);
-    }
-
-    private void appendGroupsAtTimeCol(final UserSchema us, final AbstractTableInfo ds)
-    {
-        final String colName = "groupsAtTime";
-        if (ds.getColumn(colName) != null)
-            return;
-
-        WrappedColumn col = new WrappedColumn(ds.getColumn("lsid"), colName);
-        col.setLabel("Groups At Time");
-        col.setReadOnly(true);
-        col.setIsUnselectable(true);
-        col.setUserEditable(false);
-        col.setFk(new LookupForeignKey(){
-            public TableInfo getLookupTableInfo()
-            {
-                String name = ds.getName() + "_" + colName;
-                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
-                qd.setSql("SELECT\n" +
-                        "sd.lsid,\n" +
-                        "group_concat(DISTINCT h.groupId.name) as GroupsAtTime\n" +
-                        "FROM study.\"" + ds.getName() + "\" sd\n" +
-                        "JOIN ehr.animal_group_members h\n" +
-                        "  ON (sd.id = h.id AND h.dateOnly <= sd.dateOnly AND sd.dateOnly <= h.enddateCoalesced)\n" +
-                        "group by sd.lsid");
+                        "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
+                        "group by sd." + pkCol.getSelectName());
                 qd.setIsTemporary(true);
 
                 List<QueryException> errors = new ArrayList<>();
@@ -1339,8 +1258,189 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                     return null;
                 }
 
-                ti.getColumn("lsid").setHidden(true);
-                ti.getColumn("lsid").setKeyField(true);
+                ti.getColumn(pkCol.getSelectName()).setHidden(true);
+                ti.getColumn(pkCol.getSelectName()).setKeyField(true);
+
+                ti.getColumn("projectsAtTime").setLabel("Projects At Time");
+                ti.getColumn("protocolsAtTime").setLabel("Protocols At Time");
+                ti.getColumn("investigatorsAtTime").setLabel("Investigators At Time");
+
+                ti.getColumn("projectNumbersAtTime").setLabel("Project Numbers At Time");
+                ti.getColumn("projectNumbersAtTime").setHidden(true);
+
+                return ti;
+            }
+        });
+
+        ds.addColumn(col);
+    }
+
+    private void appendFlagsAtTimeCol(final UserSchema us, final AbstractTableInfo ds, final String dateColName)
+    {
+        String name = "flagsAtTime";
+        if (ds.getColumn(name) != null)
+            return;
+
+        final ColumnInfo pkCol = getPkCol(ds);
+        if (pkCol == null)
+            return;
+
+        if (ds.getColumn("Id") == null)
+            return;
+
+        if (!hasTable(ds, "study", "Animal Record Flags"))
+            return;
+
+        WrappedColumn col = new WrappedColumn(pkCol, name);
+        col.setLabel("Flags At Time");
+        col.setReadOnly(true);
+        col.setIsUnselectable(true);
+        col.setUserEditable(false);
+        col.setFk(new LookupForeignKey(){
+            public TableInfo getLookupTableInfo()
+            {
+                String name = ds.getName() + "_flagsAtTime";
+                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                qd.setSql("SELECT\n" +
+                        "sd." + pkCol.getSelectName() + ",\n" +
+                        "group_concat(DISTINCT h.value, chr(10)) as flagsAtTime\n" +
+                        "FROM \"" + ds.getPublicSchemaName() + "\".\"" + ds.getName() + "\" sd\n" +
+                        "JOIN study.flags h\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
+                        "group by sd." + pkCol.getSelectName());
+                qd.setIsTemporary(true);
+
+                List<QueryException> errors = new ArrayList<>();
+                TableInfo ti = qd.getTable(errors, true);
+                if (errors.size() > 0)
+                {
+                    for (QueryException error : errors)
+                    {
+                        _log.error(error.getMessage(), error);
+                    }
+                    return null;
+                }
+
+                ti.getColumn(pkCol.getSelectName()).setHidden(true);
+                ti.getColumn(pkCol.getSelectName()).setKeyField(true);
+
+                ti.getColumn("flagsAtTime").setLabel("Flags At Time");
+
+                return ti;
+            }
+        });
+
+        ds.addColumn(col);
+    }
+
+    private void appendProblemsAtTimeCol(final UserSchema us, final AbstractTableInfo ds, final String dateColName)
+    {
+        final String colName = "problemsAtTime";
+        if (ds.getColumn(colName) != null)
+            return;
+
+        final ColumnInfo pkCol = getPkCol(ds);
+        if (pkCol == null)
+            return;
+
+        if (ds.getColumn("Id") == null)
+            return;
+
+        if (!hasTable(ds, "study", "Problem List"))
+            return;
+
+        WrappedColumn col = new WrappedColumn(pkCol, colName);
+        col.setLabel("Problems At Time");
+        col.setReadOnly(true);
+        col.setIsUnselectable(true);
+        col.setUserEditable(false);
+        col.setFk(new LookupForeignKey(){
+            public TableInfo getLookupTableInfo()
+            {
+                String name = ds.getName() + "_" + colName;
+                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                qd.setSql("SELECT\n" +
+                        "sd." + pkCol.getSelectName() + ",\n" +
+                        "group_concat(DISTINCT h.category, chr(10)) as problemsAtTime\n" +
+                        "FROM \"" + ds.getPublicSchemaName() + "\".\"" + ds.getName() + "\" sd\n" +
+                        "JOIN study.\"Problem List\" h\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
+                        "group by sd." + pkCol.getSelectName());
+                qd.setIsTemporary(true);
+
+                List<QueryException> errors = new ArrayList<>();
+                TableInfo ti = qd.getTable(errors, true);
+                if (errors.size() > 0)
+                {
+                    for (QueryException error : errors)
+                    {
+                        _log.error(error.getMessage(), error);
+                    }
+                    return null;
+                }
+
+                ti.getColumn(pkCol.getSelectName()).setHidden(true);
+                ti.getColumn(pkCol.getSelectName()).setKeyField(true);
+
+                ti.getColumn("problemsAtTime").setLabel("Problems At Time");
+
+                return ti;
+            }
+        });
+
+        ds.addColumn(col);
+    }
+
+    private void appendGroupsAtTimeCol(final UserSchema us, final AbstractTableInfo ds, final String dateColName)
+    {
+        final String colName = "groupsAtTime";
+        if (ds.getColumn(colName) != null)
+            return;
+
+        final ColumnInfo pkCol = getPkCol(ds);
+        if (pkCol == null)
+            return;
+
+        if (ds.getColumn("Id") == null)
+            return;
+
+        if (!hasTable(ds, "ehr", "animal_group_members"))
+            return;
+
+        WrappedColumn col = new WrappedColumn(pkCol, colName);
+        col.setLabel("Groups At Time");
+        col.setReadOnly(true);
+        col.setIsUnselectable(true);
+        col.setUserEditable(false);
+        col.setFk(new LookupForeignKey(){
+            public TableInfo getLookupTableInfo()
+            {
+                String name = ds.getName() + "_" + colName;
+                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                qd.setSql("SELECT\n" +
+                        "sd." + pkCol.getSelectName() + ",\n" +
+                        "group_concat(DISTINCT h.groupId.name, chr(10)) as groupsAtTime\n" +
+                        "FROM \"" + ds.getPublicSchemaName() + "\".\"" + ds.getName() + "\" sd\n" +
+                        "JOIN ehr.animal_group_members h\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced))\n" +
+                        "group by sd." + pkCol.getSelectName());
+                qd.setIsTemporary(true);
+
+                List<QueryException> errors = new ArrayList<>();
+                TableInfo ti = qd.getTable(errors, true);
+                if (errors.size() > 0)
+                {
+                    for (QueryException error : errors)
+                    {
+                        _log.error(error.getMessage(), error);
+                    }
+                    return null;
+                }
+
+                ti.getColumn(pkCol.getSelectName()).setHidden(true);
+                ti.getColumn(pkCol.getSelectName()).setKeyField(true);
+
+                ti.getColumn("groupsAtTime").setLabel("Groups At Time");
 
                 return ti;
             }
@@ -1364,5 +1464,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 col.setFk(new QueryForeignKey(us, "animalGroupMajorityLocation", "rowid", "room"));
             }
         }
+    }
+
+    private boolean hasTable (AbstractTableInfo ti, String schemaName, String queryName)
+    {
+        UserSchema us = getUserSchema(ti, schemaName);
+        if (us == null)
+            return false;
+
+        return us.getTableNames().contains(queryName);
     }
 }

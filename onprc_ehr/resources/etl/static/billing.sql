@@ -308,3 +308,42 @@ from IRIS_Production.dbo.ref_feesProcedures r
 left join IRIS_Production.dbo.Sys_Parameters s1 ON (s1.Field = 'LocationType' and s1.Flag = HousingType)
 left join IRIS_Production.dbo.Sys_Parameters s2 ON (s2.Field = 'LocationDefinition' and s2.Flag = HousingDefinition)
 where r.HousingDefinition is not null and r.DateDisabled is null;
+
+
+--procedureFeeDef
+truncate table labkey.onprc_billing.procedureFeeDefinition;
+insert into labkey.onprc_billing.procedureFeeDefinition (procedureId, chargeId, billedby, active, created, modified, createdBy, modifiedBy)
+  select
+    (select rowid from labkey.ehr_lookups.procedures p WHERE p.name = t.ProcedureName) as procedureId,
+    (select rowid from labkey.onprc_billing.chargeableItems p WHERE p.name = t.name) as chargeId,
+    max(chargeType) as billedby,
+    MAX(t.active) as active,
+    getdate() as modified,
+    getdate() as created,
+    (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
+    (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby
+  FROM (
+
+         Select
+           s.ProcedureName + ' - No Staff' as name,
+           s.ProcedureName,
+           'Surgery Staff' AS chargeType,
+           CASE WHEN fs.DateDisabled is null THEN 1 else 0 END as active
+
+         From IRIS_Production.dbo.Ref_FeesSurgical fs
+           LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
+         WHERE s.procedureName IS NOT NULL
+         UNION ALL
+
+         Select
+           s.ProcedureName + ' - Staff' as name,
+           s.ProcedureName,
+           'No Surgery Staff' AS chargeType,
+           CASE WHEN fs.DateDisabled is null THEN 1 else 0 END as active
+
+         From IRIS_Production.dbo.Ref_FeesSurgical fs
+           LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure s ON (fs.ProcedureID = s.ProcedureID)
+         WHERE s.procedureName IS NOT NULL
+       ) t
+
+  GROUP BY name, ProcedureName

@@ -13,6 +13,11 @@
                     </column>
                     <column columnName="category">
                         <columnTitle>Category</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>flag_categories</fkTable>
+                            <fkColumnName>category</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="flag">
                         <columnTitle>Flag</columnTitle>

@@ -39,30 +39,7 @@ FROM (
     mp.Id as problemId,
   FROM study.assignment gm
 
-  JOIN (
-    SELECT
-      p.lsid,
-      p.Id,
-      p.dateOnly as date,
-      p.enddate,
-      p.enddateCoalesced,
-      p.category,
-      p.history,
-    FROM study.problem p
-
-    UNION ALL
-
-    SELECT
-      d.lsid,
-      d.Id,
-      d.dateOnly,
-      d.date as enddate,
-      d.dateOnly as enddateCoalesced,
-      cast(('Death: ' || d.cause) as varchar) as category,
-      d.history,
-    FROM study.deaths d
-
-    ) mp ON (
+  JOIN study.morbidityAndMortalityData mp ON (
       mp.date <= gm.endDateCoalesced AND
       mp.enddateCoalesced >= gm.date AND
       mp.date <= EndDate AND
