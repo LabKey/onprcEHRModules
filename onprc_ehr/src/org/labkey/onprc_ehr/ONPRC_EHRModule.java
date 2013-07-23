@@ -35,6 +35,7 @@ import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.ManageCasesButton;
+import org.labkey.onprc_ehr.dataentry.ChargesFormSection;
 import org.labkey.onprc_ehr.dataentry.TreatmentsTaskFormSection;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
@@ -44,6 +45,8 @@ import org.labkey.onprc_ehr.demographics.SourceDemographicsProvider;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLAuditProvider;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
+import org.labkey.onprc_ehr.history.DefaultEnrichmentDataSource;
+import org.labkey.onprc_ehr.history.DefaultPairingDataSource;
 import org.labkey.onprc_ehr.notification.BloodAdminAlertsNotification;
 import org.labkey.onprc_ehr.notification.BloodAlertsNotification;
 import org.labkey.onprc_ehr.notification.ClinicalAlertsNotification;
@@ -200,6 +203,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "BSU", "Pairings", "study", "Pairings");
         EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "BSU", "Enrichment", "study", "Enrichment");
 
+        EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Billing", "miscCharges", "Misc Charges", Collections.<FormSection>singletonList(new ChargesFormSection()));
+
         //demographics
         EHRService.get().registerDemographicsProvider(new ActiveCasesDemographicsProvider());
         EHRService.get().registerDemographicsProvider(new CagematesDemographicsProvider());
@@ -209,6 +214,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //buttons
         EHRService.get().registerMoreActionsButton(new ManageCasesButton(this), "study", "cases");
+
+        //history
+        EHRService.get().registerHistoryDataSource(new DefaultEnrichmentDataSource());
+        EHRService.get().registerHistoryDataSource(new DefaultPairingDataSource());
     }
 
     @Override

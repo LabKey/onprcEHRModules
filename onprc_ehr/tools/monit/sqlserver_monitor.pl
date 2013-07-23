@@ -70,9 +70,9 @@ foreach my $key (keys %$queries) {
 if (!-e $err_file || $has_error){
    `touch $err_file`;
 }
-else {
-   `touch $status_file`;
-}
+
+#always touch status file, which indicates script ran
+`touch $status_file`;
 
 sub run_query {
     my $sql = shift;

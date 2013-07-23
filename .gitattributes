@@ -615,6 +615,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/ManageCasesButton.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ChargesFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/TreatmentsTaskFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ActiveCasesDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/CagematesDemographicsProvider.java -text
@@ -625,6 +626,9 @@ onprc_ehr/src/org/labkey/onprc_ehr/etl/ETL.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditViewFactory.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/history/AbstractEHRDataSource.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultEnrichmentDataSource.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultPairingDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/legacydata/LegacyDataManager.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/AbnormalLabResultsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/AbstractEHRNotification.java -text

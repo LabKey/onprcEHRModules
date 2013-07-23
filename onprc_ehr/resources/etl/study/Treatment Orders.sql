@@ -63,7 +63,7 @@ SELECT
 	--(select labkey.core.GROUP_CONCAT_DS(mt.medicationtime, ',', 1) as time FROM Cln_MedicationTimes mt where cln.SearchKey=mt.SearchKey) as times,
   CASE
     WHEN s6.value = 'Surgery' THEN 'Surgical'
-    WHEN (sno.description like '%Diet%' or sno.snomedcode in ('E-82870', 'E-YY870')) THEN 'Diet'
+    WHEN ss.code is not null THEN 'Diet'
     ELSE 'Clinical'
   END as category,
 
@@ -95,6 +95,7 @@ FROM Cln_Medications cln
      left join Sys_parameters s4 on (s4.Field = 'MedicationFrequency' and s4.Flag = Frequency)
      left join Sys_parameters s5 on (s5.Field = 'MedicationReason' and s5.Flag = Reason)
      left join Sys_parameters s6 on (s6.Field = 'DepartmentCode' and s6.Flag = rt.DeptCode)
+     left join labkey.ehr_lookups.snomed_subset_codes ss ON (ss.code = cln.medication AND ss.primaryCategory = 'Diet' and ss.container = (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC'))
      left join ref_snomed sno on (sno.SnomedCode = cln.Medication)
      left join Af_Qrf q on (q.animalid = cln.animalid)
 

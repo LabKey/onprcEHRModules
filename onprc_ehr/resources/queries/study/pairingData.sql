@@ -48,3 +48,4 @@ SELECT
   p2.performedby
 
 FROM study.pairings p2
+where p2.Id2 is not null

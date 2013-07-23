@@ -247,7 +247,9 @@
                 <ns:columnTitle>Date</ns:columnTitle>
             </ns:column>
             <ns:column columnName="project"/>
-            <ns:column columnName="account"/>
+            <ns:column columnName="account">
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
             <ns:column columnName="category">
                 <ns:columnTitle>Category</ns:columnTitle>
             </ns:column>
@@ -260,9 +262,11 @@
             </ns:column>
             <ns:column columnName="unitcost">
                 <ns:columnTitle>Unit Cost</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="totalcost">
                 <ns:columnTitle>Total Cost</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>

@@ -46,7 +46,7 @@ SELECT
   t.parentId,
   t.treatmentId,
   t.performedBy,
-  'Clinical' as category,
+  t.category,
   null as caseid
 
 FROM (
@@ -87,6 +87,11 @@ SELECT
 
   null as remark,
   Dose as amount,
+  CASE
+    WHEN s6.value = 'Surgery' THEN 'Surgical'
+    WHEN ss.code is not null THEN 'Diet'
+    ELSE 'Clinical'
+  END as category,
 
   s2.Value as amount_units,
   s3.Value as route,
@@ -116,10 +121,12 @@ FROM Cln_Medications m
   left join Sys_parameters s2 on (s2.Field = 'MedicationUnits' and s2.Flag = m.Units)
   left join Sys_parameters s3 on (s3.Field = 'MedicationRoute' and s3.Flag = m.Route)
   left join Ref_Technicians rt ON (rt.ID = m.Technician)
+  left join Sys_parameters s6 on (s6.Field = 'DepartmentCode' and s6.Flag = rt.DeptCode)
 
   left join Sys_parameters s4 on (s4.Field = 'MedicationFrequency' and s4.Flag = Frequency)
   left join labkey.ehr_lookups.treatment_frequency tf ON (tf.meaning = s4.value)
   left join Af_Qrf q on (q.animalid = m.animalid)
+  left join labkey.ehr_lookups.snomed_subset_codes ss ON (ss.code = m.Medication AND ss.primaryCategory = 'Diet' and ss.container = (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC'))
 
 where m.AnimalId is not null
 and (cln.ts > ? or m.ts > ? or q.ts > ?)
@@ -138,6 +145,8 @@ UNION ALL
 SELECT
     cast(g.AnimalId as nvarchar(4000)) as Id,
 	g.Date,
+    null as treatmentStartDate,
+    null as treatmentEndDate,
     --null as datetime,
 
 	AnesthesiaGas as code,
@@ -180,6 +189,8 @@ UNION ALL
 SELECT
 cast(g.AnimalId as nvarchar(4000)) as Id,
 g.Date,
+null as treatmentStartDate,
+null as treatmentEndDate,
 Medication as code,
 sno.Description as meaning,
 null as remark,
@@ -190,7 +201,7 @@ m.objectid,
 g.objectid as parentid,
 null as treatmentId,
 null as performedby,
-'Surgery' as category,
+'Surgical' as category,
 c.objectid as caseid
 
 FROM Sur_Medications m

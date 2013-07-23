@@ -1499,7 +1499,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -4);
 
-        int minValue = 5;
+        int minValue = 2;
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("created"), cal.getTime(), CompareType.DATE_GTE);
         filter.addCondition(FieldKey.fromString("qcstate/PublicData"), true);
         filter.addCondition(FieldKey.fromString("code/meaning"), "ketamine;telazol", CompareType.CONTAINS_ONE_OF);

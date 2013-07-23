@@ -3,7 +3,7 @@
         <column name="Id"/>
         <column name="date"/>
         <column name="enddate"/>
-        <column name="toy"/>
+        <column name="toycode"/>
         <column name="reason"/>
         <column name="remark"/>
         <column name="performedby"/>
