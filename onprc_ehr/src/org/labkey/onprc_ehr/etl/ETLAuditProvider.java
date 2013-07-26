@@ -8,18 +8,24 @@ import org.labkey.api.audit.query.AbstractAuditDomainKind;
 import org.labkey.api.data.JdbcType;
 import org.labkey.api.data.PropertyStorageSpec;
 import org.labkey.api.exp.property.DomainKind;
+import org.labkey.api.query.FieldKey;
 
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
  * User: klum
  * Date: 7/21/13
  */
 public class ETLAuditProvider extends AbstractAuditTypeProvider implements AuditTypeProvider
 {
     public static final String AUDIT_EVENT_TYPE = "EHRSyncAuditEvent";
+
+    public static final String COLUMN_NAME_TYPE = "Type";
+    public static final String COLUMN_NAME_EHR_ERRORS = "EhrErrors";
+    public static final String COLUMN_NAME_DATASET_ERRORS = "DatasetErrors";
+    public static final String COLUMN_NAME_EHR_LOOKUP_ERRORS = "EhrLookupErrors";
 
     @Override
     protected DomainKind getDomainKind()
@@ -61,6 +67,17 @@ public class ETLAuditProvider extends AbstractAuditTypeProvider implements Audit
             bean.setEhrLookupErrors(event.getIntKey3());
 
         return (K)bean;
+    }
+
+    @Override
+    public Map<FieldKey, String> legacyNameMap()
+    {
+        Map<FieldKey, String> legacyNames = super.legacyNameMap();
+        legacyNames.put(FieldKey.fromParts("key1"), COLUMN_NAME_TYPE);
+        legacyNames.put(FieldKey.fromParts("intKey1"), COLUMN_NAME_EHR_ERRORS);
+        legacyNames.put(FieldKey.fromParts("intKey2"), COLUMN_NAME_DATASET_ERRORS);
+        legacyNames.put(FieldKey.fromParts("intKey3"), COLUMN_NAME_EHR_LOOKUP_ERRORS);
+        return legacyNames;
     }
 
     public static class ETLAuditEvent extends AuditTypeEvent
@@ -128,10 +145,10 @@ public class ETLAuditProvider extends AbstractAuditTypeProvider implements Audit
         private static final Set<PropertyStorageSpec> _fields = new LinkedHashSet<>();
 
         static {
-            _fields.add(createFieldSpec("Type", JdbcType.VARCHAR));
-            _fields.add(createFieldSpec("EhrErrors", JdbcType.INTEGER));
-            _fields.add(createFieldSpec("DatasetErrors", JdbcType.INTEGER));
-            _fields.add(createFieldSpec("EhrLookupErrors", JdbcType.INTEGER));
+            _fields.add(createFieldSpec(COLUMN_NAME_TYPE, JdbcType.VARCHAR));
+            _fields.add(createFieldSpec(COLUMN_NAME_EHR_ERRORS, JdbcType.INTEGER));
+            _fields.add(createFieldSpec(COLUMN_NAME_DATASET_ERRORS, JdbcType.INTEGER));
+            _fields.add(createFieldSpec(COLUMN_NAME_EHR_LOOKUP_ERRORS, JdbcType.INTEGER));
         }
 
         @Override
