@@ -80,6 +80,12 @@ public class ETLAuditProvider extends AbstractAuditTypeProvider implements Audit
         return legacyNames;
     }
 
+    @Override
+    public <K extends AuditTypeEvent> Class<K> getEventClass()
+    {
+        return (Class<K>)ETLAuditEvent.class;
+    }
+
     public static class ETLAuditEvent extends AuditTypeEvent
     {
         private String _type;
