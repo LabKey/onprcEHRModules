@@ -19,14 +19,4 @@ public class ChargesFormSection extends SimpleFormSection
         super("onprc_billing", "miscCharges", "Misc. Charges", "ehr-gridpanel");
         setConfigSources(Collections.singletonList("Task"));
     }
-
-    @Override
-    public List<String> getTbarButtons()
-    {
-        List<String> defaultButtons = new ArrayList<String>();
-        defaultButtons.add("ADDRECORD");
-        defaultButtons.add("DELETERECORD");
-        defaultButtons.add("ADDANIMALS");
-        return defaultButtons;
-    }
 }

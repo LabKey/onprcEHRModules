@@ -20,6 +20,8 @@ SELECT
 	cast(t.Id as nvarchar(4000)) as Id,
 	t.DATE ,
 	--t.Specimen ,     --      Speciment database table
+  (select max(ProjectID) as project from Ref_ProjectsIACUC rpi WHERE rpi.DateDisabled is null and rpi.IACUCCode = t.IacucCode) as project,
+  t.IacucCode as projectCode,
 	--sp.Name,
 	--sp.SNOMEDCODE as snomed,
 	--t.MethodInt  ,
@@ -55,6 +57,7 @@ FROM (
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -71,6 +74,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -87,6 +91,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -103,6 +108,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -119,6 +125,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -135,6 +142,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -151,6 +159,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -167,6 +176,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -183,6 +193,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -199,6 +210,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -215,6 +227,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -231,6 +244,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -247,6 +261,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -263,6 +278,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -279,6 +295,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -295,6 +312,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -311,6 +329,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -327,6 +346,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -343,6 +363,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -359,6 +380,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -374,7 +396,110 @@ FROM Cln_Hematology cln
 union all
 
 SELECT
+  ClinicalKey ,
+  IacucCode,
+  AnimalID as Id  ,
+  DATE ,
+  Specimen as Specimen ,     --      Speciment database table
+  Method as MethodInt  ,
+  RBC_Acanthocytes as Result,
+  'RBC Acanthocytes' as TestId,
+  cln.ts as rowversion,
+  cln.remarks,
+  cln.objectid
+
+FROM Cln_Hematology cln
+
+union all
+
+SELECT
+  ClinicalKey ,
+  IacucCode,
+  AnimalID as Id  ,
+  DATE ,
+  Specimen as Specimen ,     --      Speciment database table
+  Method as MethodInt  ,
+  RBC_Poikilocytes as Result,
+  'RBC Poikilocytes' as TestId,
+  cln.ts as rowversion,
+  cln.remarks,
+  cln.objectid
+
+FROM Cln_Hematology cln
+
+union all
+
+SELECT
+  ClinicalKey ,
+  IacucCode,
+  AnimalID as Id  ,
+  DATE ,
+  Specimen as Specimen ,     --      Speciment database table
+  Method as MethodInt  ,
+  RBC_Spherocytes as Result,
+  'RBC Spherocytes' as TestId,
+  cln.ts as rowversion,
+  cln.remarks,
+  cln.objectid
+
+FROM Cln_Hematology cln
+
+union all
+
+SELECT
+  ClinicalKey ,
+  IacucCode,
+  AnimalID as Id  ,
+  DATE ,
+  Specimen as Specimen ,     --      Speciment database table
+  Method as MethodInt  ,
+  RBC_TargetCells as Result,
+  'RBC TargetCells' as TestId,
+  cln.ts as rowversion,
+  cln.remarks,
+  cln.objectid
+
+FROM Cln_Hematology cln
+
+union all
+
+SELECT
+  ClinicalKey ,
+  IacucCode,
+  AnimalID as Id  ,
+  DATE ,
+  Specimen as Specimen ,     --      Speciment database table
+  Method as MethodInt  ,
+  MPV as Result,
+  'MPV' as TestId,
+  cln.ts as rowversion,
+  cln.remarks,
+  cln.objectid
+
+FROM Cln_Hematology cln
+
+union all
+
+SELECT
+  ClinicalKey ,
+  IacucCode,
+  AnimalID as Id  ,
+  DATE ,
+  Specimen as Specimen ,     --      Speciment database table
+  Method as MethodInt  ,
+  RDW as Result,
+  'RDW' as TestId,
+  cln.ts as rowversion,
+  cln.remarks,
+  cln.objectid
+
+FROM Cln_Hematology cln
+
+union all
+
+SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -391,6 +516,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -407,6 +533,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -423,6 +550,7 @@ union all
 
 SELECT
 	ClinicalKey ,
+  IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -441,6 +569,7 @@ UNION ALL
 --TODO: does this belong here??
 SELECT
 	ClinicalKey ,
+  null as IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -457,6 +586,7 @@ UNION ALL
 
 SELECT
 	ClinicalKey ,
+  null as IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -473,6 +603,7 @@ UNION ALL
 
 SELECT
 	ClinicalKey ,
+  null as IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -489,6 +620,7 @@ UNION ALL
 
 SELECT
 	ClinicalKey ,
+  null as IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table
@@ -505,6 +637,7 @@ UNION ALL
 
 SELECT
 	ClinicalKey ,
+  null as IacucCode,
 	AnimalID as Id  ,
 	DATE ,
 	Specimen as Specimen ,     --      Speciment database table

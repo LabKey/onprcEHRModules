@@ -100,30 +100,22 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         Date now = new Date();
         msg.append("This email contains a series of automatic alerts about the colony.  It was run on: " + AbstractEHRNotification._dateFormat.format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
 
-        //housing
-        //livingAnimalsWithoutWeight(c, u, msg);
-        cagesWithoutDimensions(c, u, msg);
-        cageReviewErrors(c, u, msg, true);
-        cageReviewWarnings(c, u, msg, false);
-        roomsWithoutInfo(c, u, msg);
-        multipleHousingRecords(c, u, msg);
-        deadAnimalsWithActiveHousing(c, u, msg);
-        livingAnimalsWithoutHousing(c, u, msg);
-        housedInUnavailableCages(c, u, msg);
-        roomsReportingNegativeCagesAvailable(c, u, msg);
-        nonContiguousHousing(c, u, msg);
-        roomsWithMixedViralStatus(c, u, msg);
-        infantsNotWithMother(c, u, msg);
-
         //assignments
         doAssignmentChecks(c, u, msg);
         getU42Assignments(c, u, msg);
 
+        //housing
+        roomsWithMixedViralStatus(c, u, msg);
+        livingAnimalsWithoutHousing(c, u, msg);
+
         //clinical
         deadAnimalsWithActiveCases(c, u, msg);
         deadAnimalsWithActiveDiet(c, u, msg);
-        activeTreatmentsForDeadAnimals(c, u, msg);
-        activeProblemsForDeadAnimals(c, u, msg);
+        deadAnimalsWithActiveFlags(c, u, msg);
+        deadAnimalsWithActiveNotes(c, u, msg);
+        deadAnimalsWithActiveGroups(c, u, msg);
+        deadAnimalsWithActiveTreatments(c, u, msg);
+        deadAnimalsWithActiveProblems(c, u, msg);
 
         //blood draws
         bloodDrawsOnDeadAnimals(c, u, msg);
@@ -134,7 +126,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         demographicsWithoutGender(c, u, msg);
         birthRecordsWithoutDemographics(c, u, msg);
         deathRecordsWithoutDemographics(c, u, msg);
-        animalGroupsAcrossRooms(c, u, msg);
+
         duplicateGroupMembership(c, u, msg);
         duplicateFlags(c, u, msg);
         suspiciousMedications(c, u, msg);
@@ -142,16 +134,31 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         return msg.toString();
     }
 
+    protected void doHousingChecks(final Container c, User u, final StringBuilder msg)
+    {
+        cagesWithoutDimensions(c, u, msg);
+        cageReviewErrors(c, u, msg, true);
+        cageReviewWarnings(c, u, msg, false);
+        roomsWithoutInfo(c, u, msg);
+        multipleHousingRecords(c, u, msg);
+        deadAnimalsWithActiveHousing(c, u, msg);
+        livingAnimalsWithoutHousing(c, u, msg);
+        housedInUnavailableCages(c, u, msg);
+        roomsReportingNegativeCagesAvailable(c, u, msg);
+
+        animalGroupsAcrossRooms(c, u, msg);
+        nonContiguousHousing(c, u, msg);
+        infantsNotWithMother(c, u, msg);
+    }
+
     protected void doAssignmentChecks(final Container c, User u, final StringBuilder msg)
     {
         deadAnimalsWithActiveAssignments(c, u, msg);
-        deadAnimalsWithActiveFlags(c, u, msg);
-        deadAnimalsWithActiveNotes(c, u, msg);
-        deadAnimalsWithActiveGroups(c, u, msg);
         assignmentsWithoutValidProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);
-        activeAssignmentsForDeadAnimals(c, u, msg);
+        protocolsWithFutureApproveDates(c, u, msg);
         protocolsNearingLimit(c, u, msg);
+        assignmentsNotAllowed(c, u, msg);
         assignmentsProjectedToday(c, u, msg);
         assignmentsProjectedTomorrow(c, u, msg);
         protocolsWithAnimalsExpiringSoon(c, u, msg);
@@ -232,7 +239,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void roomsWithMixedViralStatus(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("room"));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("area,room"));
         long count = ts.getRowCount();
         if (count > 0)
         {
@@ -251,9 +258,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                         status = status.replaceAll("\n", " / ");
                     }
 
+                    String area = rs.getString("area");
                     String room = rs.getString("room");
                     String url = getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&query.Id/curLocation/room~eq=" + room;
-                    msg.append("<tr><td style='vertical-align:top;'><a href='" + url + "'>" + room + ":</a></td><td><a href='" + url + "'>" + status + "</a></td></tr>\n");
+                    msg.append("<tr><td style='vertical-align:top;'>" + area + "</td><td style='vertical-align:top;'><a href='" + url + "'>" + room + ":</a></td><td><a href='" + url + "'>" + status + "</a></td></tr>\n");
                 }
             });
             msg.append("</table>\n");
@@ -507,6 +515,22 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    protected void protocolsWithFutureApproveDates(final Container c, User u, final StringBuilder msg)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, +7);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("approve"), cal.getTime(), CompareType.DATE_GTE);
+        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("protocol"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " IACUC protocols with approve dates listed more than 7 days in the future.</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocol", null) + "&query.approve~dategte=+7d'>Click here to view them</a><p>\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
     /**
      * births in the last 5 days
      */
@@ -646,23 +670,43 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void protocolsNearingLimit(final Container c, User u, final StringBuilder msg)
     {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("TotalRemaining"), 5, CompareType.LT);
-        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("protocolTotalAnimalsBySpecies"), filter, new Sort(getStudy(c).getSubjectColumnName()));
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("totalRemaining"), 5, CompareType.LT);
+        filter.addCondition(FieldKey.fromString("isActive"), true);
+        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("animalUsage"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " protocols with fewer than 5 remaining animals.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocolTotalAnimalsBySpecies", null) + "&query.TotalRemaining~lt=5'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animalUsage", null) + "&query.totalRemaining~lt=5&query.isActive~eq=true'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
 
-        filter = new SimpleFilter(FieldKey.fromString("PercentUsed"), 95, CompareType.GTE);
-        ts = new TableSelector(getEHRSchema(c, u).getTable("protocolTotalAnimalsBySpecies"), filter, new Sort(getStudy(c).getSubjectColumnName()));
+        filter = new SimpleFilter(FieldKey.fromString("pctUsed"), 95, CompareType.GTE);
+        filter.addCondition(FieldKey.fromString("isActive"), true);
+        ts = new TableSelector(getEHRSchema(c, u).getTable("animalUsage"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count2 = ts.getRowCount();
         if (count2 > 0)
         {
             msg.append("<b>WARNING: There are " + count2 + " protocols with fewer than 5% of their animals remaining.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocolTotalAnimalsBySpecies", null) + "&query.PercentUsed~gte=95'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animalUsage", null) + "&query.pctUsed~gte=95&query.isActive~eq=true'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    /**
+     * we find protocols nearing the animal limit, based on number and percent
+     */
+    protected void assignmentsNotAllowed(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("project/protocol/enddateCoalesced"), new Date(), CompareType.DATE_GTE);
+        filter.addCondition(FieldKey.fromString("date"), "-3y", CompareType.DATE_GTE);
+
+        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("assignmentsNotAllowed"), filter, new Sort(getStudy(c).getSubjectColumnName()));
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " assignments to active IACUC Protocols within the past 3 years that do not match known allowable animal counts (for example, cynos assigned to a project only approved for rhesus).</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "assignmentsNotAllowed", null) + "&query.project/protocol/enddateCoalesced~dategte=-0d&query.date~dategte=-3y'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -768,26 +812,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     /**
-     * we find open assignments where the animal is not alive
-     */
-    protected void activeAssignmentsForDeadAnimals(final Container c, User u, final StringBuilder msg)
-    {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Assignment"), filter, new Sort(getStudy(c).getSubjectColumnName()));
-        long count = ts.getRowCount();
-        if (count > 0)
-        {
-            msg.append("<b>WARNING: There are " + count + " active assignments for animals not currently at the center.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
-            msg.append("<hr>\n\n");
-        }
-    }
-
-    /**
      * we find open ended problems where the animal is not alive
      */
-    protected void activeProblemsForDeadAnimals(final Container c, User u, final StringBuilder msg)
+    protected void deadAnimalsWithActiveProblems(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
@@ -804,7 +831,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     /**
      * we find open ended treatments where the animal is not alive
      */
-    protected void activeTreatmentsForDeadAnimals(final Container c, User u, final StringBuilder msg)
+    protected void deadAnimalsWithActiveTreatments(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
@@ -1469,7 +1496,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in ASB RM 191</b><br><br>");
+            msg.append("<b>NOTE: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in ASB RM 191</b><br><br>");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
@@ -1538,5 +1565,19 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected String getParticipantURL(Container c, String id)
     {
         return AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/participantView.view?participantId=" + id;
+    }
+
+    protected void offspringWithMother(final Container c, User u, final StringBuilder msg, int limit)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("ageInDays"), limit, CompareType.GTE);
+        filter.addCondition(FieldKey.fromString("room/housingType/value"), "Cage Location", CompareType.EQUAL);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("offspringWithMother"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " offspring over " + limit + " days old that are still in cage with their mother</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "offspringWithMother", null) + "&query.room/housingType/value~eq=Cage Location&query.ageInDays~gte=" + limit + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
     }
 }

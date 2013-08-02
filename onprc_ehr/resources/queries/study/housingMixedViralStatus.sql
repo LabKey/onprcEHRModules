@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 SELECT
+  h1.room.area as area,
   h1.room,
   group_concat(DISTINCT h1.status, chr(10)) as viralStatuses,
   count(DISTINCT h1.viralStatus) as distinctStatuses
@@ -30,6 +31,6 @@ WHERE h.enddateTimeCoalesced >= now()
 GROUP BY h.room, h.Id.viral_status.viralStatus
 
 ) h1
-GROUP BY h1.room
+GROUP BY h1.room, h1.room.area
 
 

@@ -21,8 +21,8 @@ SELECT
   s.*,
   timestampadd('SQL_TSI_MINUTE', ((s.hours * 60) + s.minutes), s.origDate) as date,
   CASE
-    WHEN (hours >= 6 AND hours < 16) THEN 'AM'
-    WHEN (hours < 6 OR hours >= 16) THEN 'PM'
+    WHEN (hours >= 6 AND hours < 20) THEN 'AM'
+    WHEN (hours < 6 OR hours >= 20) THEN 'PM'
     ELSE 'Other'
   END as timeOfDay,
 

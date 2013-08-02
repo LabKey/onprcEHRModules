@@ -1,4 +1,15 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="project"/>
+        <column name="tissue"/>
+        <!--<column name="organization"/>-->
+        <column name="recipient"/>
+        <column name="requestCategory"/>
+        <column name="sampleType"/>
+        <column name="QCState"/>
+    </columns>
     <sorts>
         <sort column="date" descending="true"/>
     </sorts>

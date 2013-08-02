@@ -51,8 +51,7 @@ SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE dat
 -- UPDATE labkey.ehr_lookups.species SET max_draw_pct = 0.125;
 
 --snomed
-TRUNCATE TABLE labkey.ehr_lookups.full_snomed;
-TRUNCATE TABLE labkey.ehr_lookups.snomed;
+--TRUNCATE TABLE labkey.ehr_lookups.snomed;
 INSERT INTO labkey.ehr_lookups.snomed (code, meaning, modified, created, modifiedby, createdby)
 Select
 SnomedCode as code,
@@ -62,15 +61,16 @@ getdate() as created,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby
 From IRIS_Production.dbo.Ref_SnoMed
+WHERE snomedcode not in (select code from labkey.ehr_lookups.snomed)
 GROUP BY SnomedCode;
 
 
 --gender
-TRUNCATE TABLE labkey.ehr_lookups.gender_codes;
-INSERT INTO labkey.ehr_lookups.gender_codes (code, meaning, origgender) VALUES ('f', 'Female', 'f');
-INSERT INTO labkey.ehr_lookups.gender_codes (code, meaning, origgender) VALUES ('m', 'Male', 'm');
-INSERT INTO labkey.ehr_lookups.gender_codes (code, meaning, origgender) VALUES ('h', 'Hermaphrodite', null);
-INSERT INTO labkey.ehr_lookups.gender_codes (code, meaning, origgender) VALUES ('u', 'Unknown', null);
+-- TRUNCATE TABLE labkey.ehr_lookups.gender_codes;
+-- INSERT INTO labkey.ehr_lookups.gender_codes (code, meaning, origgender) VALUES ('f', 'Female', 'f');
+-- INSERT INTO labkey.ehr_lookups.gender_codes (code, meaning, origgender) VALUES ('m', 'Male', 'm');
+-- INSERT INTO labkey.ehr_lookups.gender_codes (code, meaning, origgender) VALUES ('h', 'Hermaphrodite', null);
+-- INSERT INTO labkey.ehr_lookups.gender_codes (code, meaning, origgender) VALUES ('u', 'Unknown', null);
 
 --toys subset
 DELETE FROM labkey.ehr_lookups.snomed_subsets WHERE subset = 'Toys';

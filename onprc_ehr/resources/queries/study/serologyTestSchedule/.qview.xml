@@ -4,6 +4,8 @@
         <column name="Id/demographics/species"/>
         <column name="Id/age/yearAndDays"/>
         <column name="Id/utilization/use"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
         <column name="agent"/>
         <column name="flag"/>
         <column name="testInterval"/>

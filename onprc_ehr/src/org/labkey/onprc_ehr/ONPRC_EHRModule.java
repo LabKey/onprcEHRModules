@@ -35,7 +35,10 @@ import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.ManageCasesButton;
+import org.labkey.onprc_ehr.dataentry.BloodDrawFormSection;
 import org.labkey.onprc_ehr.dataentry.ChargesFormSection;
+import org.labkey.onprc_ehr.dataentry.ClinpathFormType;
+import org.labkey.onprc_ehr.dataentry.SimpleGridPanel;
 import org.labkey.onprc_ehr.dataentry.TreatmentsTaskFormSection;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
@@ -47,6 +50,7 @@ import org.labkey.onprc_ehr.etl.ETLAuditProvider;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
 import org.labkey.onprc_ehr.history.DefaultEnrichmentDataSource;
 import org.labkey.onprc_ehr.history.DefaultPairingDataSource;
+import org.labkey.onprc_ehr.notification.BehaviorNotification;
 import org.labkey.onprc_ehr.notification.BloodAdminAlertsNotification;
 import org.labkey.onprc_ehr.notification.BloodAlertsNotification;
 import org.labkey.onprc_ehr.notification.ClinicalAlertsNotification;
@@ -63,6 +67,7 @@ import org.labkey.onprc_ehr.notification.WeightAlertsNotification;
 import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -128,6 +133,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         ns.registerNotification(new WeightAlertsNotification());
         ns.registerNotification(new RoutineClinicalTestsNotification());
         ns.registerNotification(new ComplianceNotification());
+        ns.registerNotification(new BehaviorNotification());
         ns.registerNotification(new TMBNotification());
         ns.registerNotification(new ClinicalAlertsNotification());
 
@@ -202,8 +208,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "treatments", "Medications/Diet", Collections.<FormSection>singletonList(new TreatmentsTaskFormSection()));
         EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "BSU", "Pairings", "study", "Pairings");
         EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "BSU", "Enrichment", "study", "Enrichment");
-
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Billing", "miscCharges", "Misc Charges", Collections.<FormSection>singletonList(new ChargesFormSection()));
+        EHRService.get().registerFormType(new ClinpathFormType(this));
+
+        EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "bloodDraws", "Blood Draws", Collections.<FormSection>singletonList(new BloodDrawFormSection()));
+        EHRService.get().registerFormType(EHRService.FORM_TYPE.Request, this, "Requests", "bloodDrawRequest", "Blood Draw Requests", Collections.<FormSection>singletonList(new BloodDrawFormSection()));
+        EHRService.get().registerFormType(EHRService.FORM_TYPE.Request, this, "Requests", "clinpathRequest", "Clinpath Requests Requests", Collections.<FormSection>singletonList(new SimpleGridPanel("study", "Clinpath Runs", "Panel / Service")));
 
         //demographics
         EHRService.get().registerDemographicsProvider(new ActiveCasesDemographicsProvider());

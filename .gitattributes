@@ -76,6 +76,10 @@ onprc_ehr/resources/queries/ehr/animalUsage.sql -text
 onprc_ehr/resources/queries/ehr/animal_group_members/.qview.xml -text
 onprc_ehr/resources/queries/ehr/animal_group_members/Active[!!-~]Members.qview.xml -text
 onprc_ehr/resources/queries/ehr/animal_group_members/With[!!-~]Pedigree[!!-~]Info.qview.xml -text
+onprc_ehr/resources/queries/ehr/assignmentsNotAllowed.query.xml -text
+onprc_ehr/resources/queries/ehr/assignmentsNotAllowed.sql -text
+onprc_ehr/resources/queries/ehr/assignmentsNotAllowedSummary.query.xml -text
+onprc_ehr/resources/queries/ehr/assignmentsNotAllowedSummary.sql -text
 onprc_ehr/resources/queries/ehr/proceduresPerYear.query.xml -text
 onprc_ehr/resources/queries/ehr/proceduresPerYear.sql -text
 onprc_ehr/resources/queries/ehr/project.js -text
@@ -166,6 +170,7 @@ onprc_ehr/resources/queries/study/Demographics/Assignment[!!-~]Info.qview.xml -t
 onprc_ehr/resources/queries/study/Demographics/Blood[!!-~]Draws.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/By[!!-~]Investigator.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/By[!!-~]Location.qview.xml -text
+onprc_ehr/resources/queries/study/Demographics/Clinical[!!-~]History[!!-~]Review.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Repro[!!-~]Info.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Single[!!-~]Housed.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Snapshot.qview.xml -text
@@ -197,6 +202,8 @@ onprc_ehr/resources/queries/study/Morphologic[!!-~]Diagnosis/.qview.xml -text
 onprc_ehr/resources/queries/study/Pairings.js -text
 onprc_ehr/resources/queries/study/Pairings.query.xml -text
 onprc_ehr/resources/queries/study/Pairings/.qview.xml -text
+onprc_ehr/resources/queries/study/Pairings/BSU[!!-~]Pairings.qview.xml -text
+onprc_ehr/resources/queries/study/Parasitology[!!-~]Results.query.xml -text
 onprc_ehr/resources/queries/study/Parentage.js -text
 onprc_ehr/resources/queries/study/Parentage.query.xml -text
 onprc_ehr/resources/queries/study/Parentage/.qview.xml -text
@@ -326,6 +333,7 @@ onprc_ehr/resources/queries/study/demographicsParents.sql -text
 onprc_ehr/resources/queries/study/demographicsParents/.qview.xml -text
 onprc_ehr/resources/queries/study/demographicsPregnancy.query.xml -text
 onprc_ehr/resources/queries/study/demographicsPregnancy.sql -text
+onprc_ehr/resources/queries/study/demographicsProblemHistory.sql -text
 onprc_ehr/resources/queries/study/demographicsReturnLocation.query.xml -text
 onprc_ehr/resources/queries/study/demographicsReturnLocation.sql -text
 onprc_ehr/resources/queries/study/demographicsSPF.query.xml -text
@@ -566,6 +574,8 @@ onprc_ehr/resources/views/ehrAdmin.html -text
 onprc_ehr/resources/views/ehrAdmin.view.xml -text
 onprc_ehr/resources/views/etlAdmin.html -text
 onprc_ehr/resources/views/etlAdmin.view.xml -text
+onprc_ehr/resources/views/exposureReport.html -text
+onprc_ehr/resources/views/exposureReport.view.xml -text
 onprc_ehr/resources/views/financeManagement.html -text
 onprc_ehr/resources/views/financeManagement.view.xml -text
 onprc_ehr/resources/views/financeManagement.webpart.xml -text
@@ -615,7 +625,11 @@ onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/ManageCasesButton.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BloodDrawFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ChargesFormSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinpathFormSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinpathFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/SimpleGridPanel.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/TreatmentsTaskFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ActiveCasesDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/CagematesDemographicsProvider.java -text
@@ -632,6 +646,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultPairingDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/legacydata/LegacyDataManager.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/AbnormalLabResultsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/AbstractEHRNotification.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/notification/BehaviorNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/BloodAdminAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/BloodAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ClinicalAlertsNotification.java -text

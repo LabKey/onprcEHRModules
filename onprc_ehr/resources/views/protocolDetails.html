@@ -93,6 +93,9 @@ Ext4.onReady(function (){
                 },{
                     name: 'View Procedure Count Performed Under This Protocol',
                     url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'proceduresPerYear', 'query.protocol~eq': protocol})
+                },{
+                    name: 'View Any Assignments To This Protocol The Do Not Match Allowable Animals',
+                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'assignmentsNotAllowed', 'query.protocol~eq': protocol})
                 }]
             }]
         }]

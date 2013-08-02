@@ -30,7 +30,12 @@ select
 				ipc.projectparentid
 				from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on (rpi2.ProjectID = ipc.ProjectParentID and ipc.datedisabled is null)
 				where ipc.projectchildid = rpi.projectid order by ipc.datecreated desc), rpi.projectid) as protocolId,
-				
+
+  coalesce ((select max(rpi2.ts) as maxTs
+       from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on (rpi2.ProjectID = ipc.ProjectParentID and ipc.datedisabled is null)
+       where ipc.projectchildid = rpi.projectid), rpi.ts
+  ) as maxTs,
+
 	(select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa where rpi.projectid = rpa.ProjectID order by datecreated desc) as account,
 	Rpi.Title,
 	Rpi.StartDate,
@@ -70,4 +75,4 @@ WHERE (rpi.ts > ? or pc.ts > ? or ri.ts > ?)
 ) t
 
 LEFT JOIN Ref_ProjectsIACUC i2 ON (i2.ProjectID = t.protocolId)
-
+WHERE maxTs > ?

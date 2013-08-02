@@ -64,6 +64,8 @@ public class ComplianceNotification extends ColonyAlertsNotification
 
         doAssignmentChecks(c, u, msg);
 
+        bloodDrawsOverLimit(c, u, msg);
+
         return msg.toString();
     }
 }

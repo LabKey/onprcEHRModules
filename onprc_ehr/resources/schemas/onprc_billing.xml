@@ -206,7 +206,7 @@
             <ns:includeScript>/onprc_ehr/billingButtons.js</ns:includeScript>
             <ns:item insertPosition="end" text="More Actions">
                 <ns:item text="Reverse Charges">
-                    <ns:onClick>ONPRC.Billing.buttons.reverseChangesHandler(dataRegionName, arguments[0].ownerCt.floatParent);</ns:onClick>
+                    <ns:onClick>ONPRC.Billing.buttons.reverseChangesHandler(dataRegionName, arguments[0] ? arguments[0].ownerCt.floatParent : null);</ns:onClick>
                 </ns:item>
             </ns:item>
         </ns:buttonBarOptions>

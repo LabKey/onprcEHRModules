@@ -101,8 +101,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
             var rooms = Ext4.Object.getKeys(roomMap).sort();
             var dividerWidth = 18;
-            var height = 90;
-            var cageWidth = 60;
+            var height = 95;
+            var cageWidth = 65;
             var hasCages = false;
 
             Ext4.each(rooms, function(room, roomIdx){
@@ -244,7 +244,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     border: false
                                 },
                                 items: [{
-                                    html: '<a>' + ri + colIdx + '</a>',
+                                    html: '<a>' + ri + colIdx + '</a><br>(' + row.getDisplayValue('cage_type/sqft') + ')',
                                     bodyStyle: {
                                         'background-color': 'transparent'
                                     },
@@ -363,11 +363,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                     items: [{
                         html: '<b>Room: ' + room + '</b>',
                         style: 'margin-bottom: 10px;'
-                    },
-                        cfg
-                        ,{
-                            html: '<div class="page-break"></div>'
-                        }]
+                    }, cfg]
                 };
 
                 toAdd.push(panelCfg);

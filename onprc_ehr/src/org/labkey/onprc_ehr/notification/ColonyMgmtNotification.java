@@ -64,21 +64,18 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
         //Find today's date
         Date now = new Date();
 
-        livingAnimalsWithoutWeight(c, u, msg);
-        cagesWithoutDimensions(c, u, msg);
-        cageReviewErrors(c, u, msg, true);
-        roomsWithoutInfo(c, u, msg);
-        multipleHousingRecords(c, u, msg);
-        deadAnimalsWithActiveHousing(c, u, msg);
-        livingAnimalsWithoutHousing(c, u, msg);
-        housedInUnavailableCages(c, u, msg);
-        roomsReportingNegativeCagesAvailable(c, u, msg);
+        doHousingChecks(c, u, msg);
         transfersYesterday(c, u, msg);
+        roomsWithMixedViralStatus(c, u, msg);
+
+        offspringWithMother(c, u, msg, 180);
+        offspringWithMother(c, u, msg, 250);
+        offspringWithMother(c, u, msg, 365);
 
         //only send if there are alerts
         if (msg.length() > 0)
         {
-            msg.insert(0, "This email contains a series of automatic alerts for colony management and housing.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
+            msg.insert(0, "This email contains a series of automatic alerts for colony management and husbandry.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
         }
 
         return msg.toString();

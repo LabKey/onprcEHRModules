@@ -146,7 +146,7 @@ public class ETLRunnable implements Runnable
                 }
                 if (null == container)
                 {
-                    throw new BadConfigException("bad configuration: invalid labkey container");
+                    throw new BadConfigException("bad configuration: invalid labkey container: " + getConfigProperty("labkeyContainer"));
                 }
             }
             catch (ValidEmail.InvalidEmailException e)

@@ -26,11 +26,9 @@ public class TreatmentsTaskFormSection extends SimpleFormSection
     @Override
     public List<String> getTbarButtons()
     {
-        List<String> defaultButtons = new ArrayList<String>();
-        defaultButtons.add("ADDTREATMENTS");
-        defaultButtons.add("ADDRECORD");
-        defaultButtons.add("DELETERECORD");
-        defaultButtons.add("ADDANIMALS");
+        List<String> defaultButtons = super.getTbarButtons();
+        defaultButtons.add(0, "ADDTREATMENTS");
+
         return defaultButtons;
     }
 }

@@ -28,6 +28,7 @@
                     xtype: 'ehr-areafield',
                     itemId: 'areaField',
                     addAllSelector: true,
+                    editable: true,
                     fieldLabel: 'Area(s)',
                     width: 400,
                     pairedWithRoomField: true,
@@ -383,7 +384,9 @@
                                 return;
                             }
 
-                            var params = {};
+                            var params = {
+                                doRowInversion: 1
+                            };
                             if (area)
                                 params.area = area;
                             if (rooms)

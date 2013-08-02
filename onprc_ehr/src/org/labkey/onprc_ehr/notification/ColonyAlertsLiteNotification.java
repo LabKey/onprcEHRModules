@@ -74,8 +74,8 @@ public class ColonyAlertsLiteNotification extends ColonyAlertsNotification
         deadAnimalsWithActiveFlags(c, u, msg);
         deadAnimalsWithActiveNotes(c, u, msg);
 
-        activeTreatmentsForDeadAnimals(c, u, msg);
-        activeProblemsForDeadAnimals(c, u, msg);
+        deadAnimalsWithActiveTreatments(c, u, msg);
+        deadAnimalsWithActiveProblems(c, u, msg);
 
         assignmentsWithoutValidProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);

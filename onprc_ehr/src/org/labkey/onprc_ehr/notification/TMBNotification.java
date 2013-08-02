@@ -66,7 +66,7 @@ public class TMBNotification extends ColonyAlertsNotification
         StringBuilder msg = new StringBuilder();
 
         matings30DaysAgo(c, u, msg);
-        offspringOver250WithMother(c, u, msg);
+        offspringWithMother(c, u, msg, 250);
         pregnantAnimals(c, u, msg);
 
         return msg.toString();
@@ -81,20 +81,6 @@ public class TMBNotification extends ColonyAlertsNotification
         {
             msg.append("<b>WARNING: There are " + ts.getRowCount() + " matings that occurred 30-36 days ago</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Matings", "30-36 Days Ago") + "'>Click here to view them</a><br>\n\n");
-            msg.append("<hr>\n\n");
-        }
-    }
-
-    protected void offspringOver250WithMother(final Container c, User u, final StringBuilder msg)
-    {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("ageInDays"), 250, CompareType.GTE);
-        filter.addCondition(FieldKey.fromString("room/housingType/value"), "Cage Location", CompareType.EQUAL);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("offspringWithMother"), filter, null);
-        long count = ts.getRowCount();
-        if (count > 0)
-        {
-            msg.append("<b>WARNING: There are " + count + " offspring over 250 days old that are still in cage with their mother</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "offspringWithMother", "Offspring Over 250 Days") + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }

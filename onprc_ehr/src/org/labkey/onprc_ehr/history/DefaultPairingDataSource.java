@@ -76,6 +76,6 @@ public class DefaultPairingDataSource extends AbstractEHRDataSource
     @Override
     protected Set<String> getColumnNames()
     {
-        return PageFlowUtil.set("Id", "date", "enddate", "pairingType/value", "pairingoutcome/value", "separationreason/value", "aggressor", "room1", "cage1", "room2", "cage2", "remark");
+        return PageFlowUtil.set("Id", "date", "enddate", "Id2", "pairingType/value", "pairingoutcome/value", "separationreason/value", "aggressor", "room1", "cage1", "room2", "cage2", "remark");
     }
 }

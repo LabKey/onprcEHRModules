@@ -31,6 +31,7 @@ import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
+import org.labkey.api.ldk.LDKService;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.ExprColumn;
 import org.labkey.api.query.FieldKey;
@@ -169,11 +170,15 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
     private void customizeColumns(AbstractTableInfo ti)
     {
         ColumnInfo project = ti.getColumn("project");
-        if (project != null && !ti.getName().equalsIgnoreCase("project"))
+        if (project != null)
         {
-            UserSchema us = getUserSchema(ti, "ehr");
-            if (us != null)
-                project.setFk(new QueryForeignKey(us, "project", "project", "displayName"));
+            project.setLabel("Center Project");
+            if (!ti.getName().equalsIgnoreCase("project"))
+            {
+                UserSchema us = getUserSchema(ti, "ehr");
+                if (us != null)
+                    project.setFk(new QueryForeignKey(us, "project", "project", "displayName"));
+            }
         }
 
         ColumnInfo account = ti.getColumn("account");
@@ -196,11 +201,15 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ColumnInfo protocolCol = ti.getColumn("protocol");
         if (protocolCol != null)
         {
-            UserSchema us = getUserSchema(ti, "ehr");
-            if (us != null){
-                protocolCol.setFk(new QueryForeignKey(us, "protocol", "protocol", "displayName"));
+            if (!ti.getName().equalsIgnoreCase("protocol"))
+            {
+                UserSchema us = getUserSchema(ti, "ehr");
+                if (us != null){
+                    protocolCol.setFk(new QueryForeignKey(us, "protocol", "protocol", "displayName"));
+                }
             }
-            protocolCol.setLabel("Protocol");
+
+            protocolCol.setLabel("IACUC Protocol");
             protocolCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
         }
 
@@ -410,6 +419,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ds.addColumn(col);
         }
 
+        if (ds.getColumn("problemHistory") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "problemHistory", "demographicsProblemHistory");
+            col.setLabel("Clinical Problem History");
+            col.setDescription("Summarizes all clinical problems for this animal over the previous 2 years");
+            ds.addColumn(col);
+        }
+
         if (ds.getColumn("currentCondition") == null)
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "currentCondition", "demographicsCondition");
@@ -586,13 +603,16 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         }
 
         String isActive = "isActive";
-        if (ti.getColumn(isActive) == null)
+        ColumnInfo isActiveCol = ti.getColumn(isActive);
+        if (isActiveCol != null)
         {
-            SQLFragment sql = new SQLFragment("(CASE WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL) THEN " + ti.getSqlDialect().getBooleanFALSE() + " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".reviewdate IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".reviewdate <= {fn curdate()}) THEN " + ti.getSqlDialect().getBooleanTRUE() + " ELSE " + ti.getSqlDialect().getBooleanTRUE() + " END)");
-            ExprColumn newCol = new ExprColumn(ti, isActive, sql, JdbcType.BOOLEAN, ti.getColumn("enddate"), ti.getColumn("reviewdate"));
-            newCol.setLabel("Is Active?");
-            ti.addColumn(newCol);
+            ti.removeColumn(isActiveCol);
         }
+
+        SQLFragment sql = new SQLFragment("(CASE WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL) THEN " + ti.getSqlDialect().getBooleanFALSE() + " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".reviewdate IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".reviewdate <= {fn curdate()}) THEN " + ti.getSqlDialect().getBooleanTRUE() + " ELSE " + ti.getSqlDialect().getBooleanTRUE() + " END)");
+        ExprColumn newCol = new ExprColumn(ti, isActive, sql, JdbcType.BOOLEAN, ti.getColumn("enddate"), ti.getColumn("reviewdate"));
+        newCol.setLabel("Is Active?");
+        ti.addColumn(newCol);
     }
 
     private void customizeHousingTable(AbstractTableInfo ti)
@@ -933,6 +953,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         UserSchema us = getUserSchema(ti, "ehr_lookups");
 
         ColumnInfo roomCol = ti.getColumn("room");
+
         ColumnInfo assignments = ti.getColumn("assignments");
         if (assignments == null)
         {
@@ -1261,8 +1282,8 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 ti.getColumn(pkCol.getSelectName()).setHidden(true);
                 ti.getColumn(pkCol.getSelectName()).setKeyField(true);
 
-                ti.getColumn("projectsAtTime").setLabel("Projects At Time");
-                ti.getColumn("protocolsAtTime").setLabel("Protocols At Time");
+                ti.getColumn("projectsAtTime").setLabel("Center Projects At Time");
+                ti.getColumn("protocolsAtTime").setLabel("IACUC Protocols At Time");
                 ti.getColumn("investigatorsAtTime").setLabel("Investigators At Time");
 
                 ti.getColumn("projectNumbersAtTime").setLabel("Project Numbers At Time");

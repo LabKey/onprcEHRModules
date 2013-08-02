@@ -113,6 +113,27 @@ Ext.onReady(function(){
         LABKEY.Query.insertRows(makeObject(config, data, fields));
     }
 
+    function populateObservationTypes(){
+        pendingInserts++;
+        //records for task forms:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'observation_types',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('value,description').split(',');
+
+        var data = [
+            ['Alopecia', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', displayField: 'value', valueField: 'value'})],
+            ['BCS', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
+            ['Pain Score', Ext4.encode({xtype: 'numberfield', minValue: 0})]
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
+    }
+
     function populateTreatmentFrequencies(){
         pendingInserts++;
         var config = {
@@ -190,6 +211,26 @@ Ext.onReady(function(){
             failure: onError
         });
 
+    }
+
+    function populateBloodBilledBy(){
+        pendingInserts++;
+        //records for task forms:
+        var config = {
+            schemaName: 'ehr_lookups',
+            queryName: 'blood_billed_by',
+            rows: [],
+            success: onSuccess,
+            failure: onError
+        };
+        var fields = ('value,title').split(',');
+        var data = [
+            ['No Charge', 'No Charge'],
+            ['Surgery Staff', 'Surgery Staff'],
+            ['No Surgery Staff', 'No Surgery Staff']
+        ];
+
+        LABKEY.Query.insertRows(makeObject(config, data, fields));
     }
 
     function populateChemistryMethods(){
@@ -445,7 +486,9 @@ Ext.onReady(function(){
             ['histology' ,'Pathology' ,'query' ,'Histology' ,'true' ,'' ,'study' ,'Histology', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Histology records and associated diagnoses'],
             //['morphologicDiagnosis' ,'Pathology' ,'query' ,'Morphologic Diagnosis' ,'true' ,'' ,'study' ,'MorphologicDiagnosisGrouped', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains morphologic diagnoses from necropsies and biopsies'],
             ['necropsies' ,'Pathology' ,'query' ,'Necropsies' ,'true' ,'' ,'study' ,'Clinical Encounters', 'Necropsies', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains information about necropsies'],
-            ['tissueSamples' ,'Pathology' ,'query' ,'Tissues' ,'true' ,'' ,'study' ,'Tissue Samples', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains organ weights obtained at necropsy'],
+            ['tissueSamples' ,'Pathology' ,'query' ,'Tissue Weights' ,'true' ,'' ,'study' ,'Tissue Samples', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains organ weights obtained at necropsy'],
+            ['tissueDistriutions' ,'Pathology' ,'query' ,'Tissue Distributions' ,'true' ,'' ,'study' ,'Tissue Distributions', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains organ weights obtained at necropsy'],
+
             //['alopecia' ,'Physical Exam' ,'query' ,'Alopecia' ,'true' ,'' ,'study' ,'Alopecia', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains alopecia scores from the colony'],
             //['bodyCondition' ,'Physical Exam' ,'query' ,'Body Condition' ,'true' ,'' ,'study' ,'Body Condition', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains body condition scores captured during physical exams'],
             //['peObservations' ,'Physical Exam' ,'query' ,'PE Findings' ,'true' ,'' ,'study' ,'Clinical Observations', 'PE Observations', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the clinical observations entered about each animal'],
@@ -499,6 +542,8 @@ Ext.onReady(function(){
         ['PairingSeparationReason', 'Pairing Separation Reasons', null],
         ['TransferReason', 'Transfer Reasons', null],
         ['perDiemFeeType', 'Per Diem Fee Types', null],
+        ['observation_types', 'Observation Types', null],
+        ['observation_areas', 'Observation Areas', null],
         ['parentageMethods', 'Parentage Determination Methods', null]
     ];
 
@@ -608,8 +653,8 @@ Ext.onReady(function(){
             ['GGT', 'Gamma-glutamyltransferase', 'IU/L', null, true, false, true, 6],
             ['Glob', 'Globulins', null, null, true, false, false, null],
             ['GLUC', 'Glucose', 'mg/dL', 'GLU', true, false, true, 8],
-            ['HDL/CHOL', 'HDL/Cholesterol Ratio', null, null, true, false, false, null],
-            ['HDL', 'High-Density Lipoprotein', 'mg/dL', null, true, false, true, 21],
+            ['HDL/CHOL', 'HDL/Cholesterol Ratio', null, null, true, false, true, null],
+            ['HDL', 'High-Density Lipoprotein', 'mg/dL', null, true, false, false, 21],
             ['HGB', 'Hemoglobin', 'g/dL', null, true, false, false, null],
             ['K', 'Potassium', 'mmol/L', null, true, false, true, 11],
             ['LDH', 'Lactate dehydrogenase', 'IU/L', null, true, false, true, 19],
@@ -1157,6 +1202,18 @@ Ext.onReady(function(){
             }
         },{
             xtype: 'button',
+            text: 'Populate Observation Types Table',
+            scope: this,
+            handler: populateObservationTypes
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Observation Types',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'observation_types', 'rowid')
+            }
+        },{
+            xtype: 'button',
             text: 'Populate Ref Ranges Table',
             scope: this,
             handler: populateRefRange
@@ -1253,6 +1310,18 @@ Ext.onReady(function(){
             }
         },{
             xtype: 'button',
+            text: 'Populate Blood Billed By',
+            scope: this,
+            handler: populateBloodBilledBy
+        },{
+            xtype: 'button',
+            text: 'Delete Data From Blood Billed By',
+            scope: this,
+            handler: function(){
+                deleteAll('ehr_lookups', 'blood_billed_by', 'value');
+            }
+        },{
+            xtype: 'button',
             text: 'Populate Clinremarks Category Table',
             scope: this,
             handler: populateClinremarksCategories
@@ -1300,6 +1369,7 @@ Ext.onReady(function(){
                 populateHematologyTests();
                 populateUrinalysisTests();
 
+                populateObservationTypes();
                 populateParasitologyMethods();
                 populateChemistryMethods();
                 populateHematologyMethods();
@@ -1309,6 +1379,7 @@ Ext.onReady(function(){
                 populateDrugCategories();
 
                 populateAgeClass();
+                populateBloodBilledBy();
             }
         },{
             xtype: 'button',
@@ -1326,11 +1397,13 @@ Ext.onReady(function(){
                 deleteAll('ehr_lookups', 'urinalysis_tests', 'testid');
                 deleteAll('ehr_lookups', 'lab_test_range', 'testid');
                 deleteAll('ehr_lookups', 'parasitology_method', 'rowid');
+                deleteAll('ehr_lookups', 'observation_types', 'rowid');
                 deleteAll('ehr_lookups', 'chemistry_method', 'rowid');
                 deleteAll('ehr_lookups', 'hematology_method', 'rowid');
                 deleteAll('ehr_lookups', 'clinpath_sampletype', 'rowid');
                 deleteAll('ehr_lookups', 'urinalysis_method', 'rowid');
                 deleteAll('ehr_lookups', 'drug_categories', 'rowid');
+                deleteAll('ehr_lookups', 'blood_billed_by', 'value');
 
                 deleteAll('ehr_lookups', 'ageclass', 'rowid');
             }
