@@ -530,7 +530,7 @@ public class ONPRC_EHRController extends SpringActionController
     {
         public boolean handlePost(ValidateEtlSyncForm form, BindException errors) throws Exception
         {
-            if (!getUser().isAdministrator())
+            if (!getUser().isSiteAdmin())
             {
                 throw new UnauthorizedException("Only site admins can view this page");
             }
@@ -542,7 +542,7 @@ public class ONPRC_EHRController extends SpringActionController
 
         public ModelAndView getConfirmView(ValidateEtlSyncForm form, BindException errors) throws Exception
         {
-            if (!getUser().isAdministrator())
+            if (!getUser().isSiteAdmin())
             {
                 throw new UnauthorizedException("Only site admins can view this page");
             }
