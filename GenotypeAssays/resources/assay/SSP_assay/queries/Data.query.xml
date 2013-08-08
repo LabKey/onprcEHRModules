@@ -1,0 +1,69 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Data" tableDbType="TABLE">
+                <javaCustomizer>org.labkey.laboratory.query.DefaultAssayCustomizer</javaCustomizer>
+                <columns>
+                    <column columnName="sampleId">
+                        <columnTitle>Freezer Id</columnTitle>
+                        <description>The unique Id of the sample, which corresponds to a record in the Samples table</description>
+                        <fk>
+                            <fkDbSchema>laboratory</fkDbSchema>
+                            <fkTable>samples</fkTable>
+                            <fkColumnName>freezerid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="date">
+                        <description>The date the sample was collected</description>
+                    </column>
+                    <column columnName="sampleType">
+                        <description>The type of sample, ie. DNA, RNA, etc.</description>
+                        <fk>
+                            <fkDbSchema>laboratory</fkDbSchema>
+                            <fkTable>sample_type</fkTable>
+                            <fkColumnName>type</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="primerPair">
+                        <columnTitle>Primer Pair</columnTitle>
+                        <fk>
+                            <fkDbSchema>GenotypeAssays</fkDbSchema>
+                            <fkTable>primer_pairs</fkTable>
+                            <fkColumnName>primerName</fkColumnName>
+                        </fk>
+                        <dimension>true</dimension>
+                    </column>
+                    <column columnName="result">
+                        <fk>
+                            <fkDbSchema>GenotypeAssays</fkDbSchema>
+                            <fkTable>ssp_result_types</fkTable>
+                            <fkColumnName>result</fkColumnName>
+                        </fk>
+                        <conceptURI>http://cpas.labkey.com/laboratory#assayResult</conceptURI>
+                        <measure>true</measure>
+                    </column>
+                    <column columnName="sequence">
+                        <description>The sequence of the PCR product, if sequence is available</description>
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                </columns>
+                <buttonBarOptions position="both" includeStandardButtons="true">
+                    <includeScript>/laboratory/assayButtons.js</includeScript>
+                    <!--<onRender>Laboratory.onAssayLoad</onRender>-->
+                    <item text="More Actions" insertAfter="last">
+                        <item text="View Batches">
+                            <onClick>Laboratory.Assay.viewBatchesBtn(dataRegion, 'Data')</onClick>
+                        </item>
+                        <item text="View Runs">
+                            <onClick>Laboratory.Assay.viewRunsBtn(dataRegion, 'Data')</onClick>
+                        </item>
+                        <item text="Manage Assay">
+                            <onClick>Laboratory.Assay.manageAssayBtn(dataRegion, 'Data')</onClick>
+                        </item>
+                    </item>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

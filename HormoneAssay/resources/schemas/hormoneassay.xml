@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+ * Copyright (c) 2011 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+
+ -->
+<ns:tables xmlns:ns="http://labkey.org/data/xml">
+    <ns:table tableName="rochee411_tests" tableDbType="TABLE">
+        <ns:tableTitle>Roche E411 Tests</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:columns>
+            <ns:column columnName="test"/>
+            <ns:column columnName="code"/>
+            <ns:column columnName="sampletype"/>
+            <ns:column columnName="samplevolume"/>
+            <ns:column columnName="rangemin"/>
+            <ns:column columnName="rangemax"/>
+            <ns:column columnName="units"/>
+            <ns:column columnName="assaytype"/>
+            <ns:column columnName="controlmodule"/>
+            <ns:column columnName="samplediluent"/>
+            <ns:column columnName="testkey"/>
+            <ns:column columnName="createdby"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedby"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="instruments" tableDbType="TABLE">
+        <ns:tableTitle>Hormone Assay Instruments</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:columns>
+            <ns:column columnName="instrument"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="assay_tests" tableDbType="TABLE">
+        <ns:tableTitle>Hormone Assay Tests</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:columns>
+            <ns:column columnName="test"/>
+            <ns:column columnName="code"/>
+            <ns:column columnName="units"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="diluents" tableDbType="TABLE">
+        <ns:tableTitle>Diluents</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:columns>
+            <ns:column columnName="diluent"/>
+        </ns:columns>
+    </ns:table>
+</ns:tables>

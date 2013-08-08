@@ -1,0 +1,58 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Runs" tableDbType="TABLE" useColumnOrder="true">
+                <javaCustomizer>org.labkey.laboratory.query.DefaultAssayCustomizer</javaCustomizer>
+                <columns>
+                    <column columnName="Name">
+                        <columnTitle>Run Name</columnTitle>
+                    </column>
+                    <column columnName="Comments">
+                        <columnTitle>Run Description</columnTitle>
+                        <nullable>true</nullable>
+                    </column>
+                    <column columnName="performedBy">
+                        <description>The name of the person who performed this assay</description>
+                    </column>
+                    <column columnName="runDate">
+                        <description>The date this assay was performed</description>
+                    </column>
+                    <column columnName="instrument">
+                        <description>The instrument used to perform this assay</description>
+                    </column>
+                    <column columnName="assayType">
+                        <description>The type of assay used to perform this assay</description>
+                        <fk>
+                            <fkDbSchema>genotypeassay</fkDbSchema>
+                            <fkTable>assay_types</fkTable>
+                            <fkColumnName>name</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="barcode">
+                        <columnTitle>Barcode/ID</columnTitle>
+                    </column>
+                    <column columnName="Flag">
+                        <shownInInsertView>false</shownInInsertView>
+                        <shownInUpdateView>false</shownInUpdateView>
+                        <isUserEditable>false</isUserEditable>
+                    </column>
+                </columns>
+                <buttonBarOptions position="both" includeStandardButtons="true">
+                    <includeScript>/laboratory/assayButtons.js</includeScript>
+                    <!--<onRender>Laboratory.onAssayLoad</onRender>-->
+                    <item text="More Actions" insertAfter="last">
+                        <item text="View Batches">
+                            <onClick>Laboratory.Assay.viewBatchesBtn(dataRegion, 'Runs')</onClick>
+                        </item>
+                        <item text="View Results">
+                            <onClick>Laboratory.Assay.viewResultsBtn(dataRegion, 'Runs')</onClick>
+                        </item>
+                        <item text="Manage Assay">
+                            <onClick>Laboratory.Assay.manageAssayBtn(dataRegion, 'Runs')</onClick>
+                        </item>
+                    </item>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

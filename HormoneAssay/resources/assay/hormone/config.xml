@@ -1,0 +1,4 @@
+<ap:provider xmlns:ap="http://labkey.org/study/assay/xml">
+    <ap:name>Hormone Assay</ap:name>
+    <ap:description>An assay to manage hormone data, with special import for instruments such as the Roche E411</ap:description>
+</ap:provider>

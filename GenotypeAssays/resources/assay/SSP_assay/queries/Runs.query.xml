@@ -1,0 +1,38 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Runs" tableDbType="TABLE">
+                <javaCustomizer>org.labkey.laboratory.query.DefaultAssayCustomizer</javaCustomizer>
+                <columns>
+                    <column columnName="Name">
+                        <columnTitle>Run Name</columnTitle>
+                    </column>
+                    <column columnName="comments">
+                        <columnTitle>Run Description</columnTitle>
+                        <nullable>true</nullable>
+                    </column>
+                    <column columnName="flag">
+                        <shownInInsertView>false</shownInInsertView>
+                        <shownInUpdateView>false</shownInUpdateView>
+                        <isUserEditable>false</isUserEditable>
+                    </column>
+                </columns>
+                <buttonBarOptions position="both" includeStandardButtons="true">
+                    <includeScript>/laboratory/assayButtons.js</includeScript>
+                    <!--<onRender>Laboratory.onAssayLoad</onRender>-->
+                    <item text="More Actions" insertAfter="last">
+                        <item text="View Batches">
+                            <onClick>Laboratory.Assay.viewBatchesBtn(dataRegion, 'Runs')</onClick>
+                        </item>
+                        <item text="View Results">
+                            <onClick>Laboratory.Assay.viewResultsBtn(dataRegion, 'Runs')</onClick>
+                        </item>
+                        <item text="Manage Assay">
+                            <onClick>Laboratory.Assay.manageAssayBtn(dataRegion, 'Runs')</onClick>
+                        </item>
+                    </item>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -1,0 +1,75 @@
+<ns:tables xmlns:ns="http://labkey.org/data/xml">
+    <ns:table tableName="assaytypes" tableDbType="TABLE" useColumnOrder="true">
+        <ns:tableTitle>Genotyping Assay Types</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:columns>
+            <ns:column columnName="name"/>
+            <ns:column columnName="description"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="primer_pairs" tableDbType="TABLE" useColumnOrder="true">
+        <ns:tableTitle>Primer Pairs</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:pkColumnName>primername</ns:pkColumnName>
+        <ns:columns>
+            <ns:column columnName="primername">
+                <ns:columnTitle>Primer Name</ns:columnTitle>
+                <ns:isKeyField>true</ns:isKeyField>
+            </ns:column>
+            <ns:column columnName="ref_nt_name">
+                <ns:columnTitle>Ref NT Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="ref_nt_id">
+                <ns:columnTitle>Ref NT Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="shortname">
+                <ns:nullable>true</ns:nullable>
+                <ns:columnTitle>Short Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="forwardprimer">
+                <ns:nullable>true</ns:nullable>
+                <ns:columnTitle>Forward Primer</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="reverseprimer">
+                <ns:nullable>true</ns:nullable>
+                <ns:columnTitle>Reverse Primer</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="createdby">
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
+            <ns:column columnName="created">
+                <ns:isUserEditable>false</ns:isUserEditable>
+                <ns:shownInInsertView>false</ns:shownInInsertView>
+                <ns:shownInUpdateView>false</ns:shownInUpdateView>
+                <ns:nullable>true</ns:nullable>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
+            <ns:column columnName="modifiedby">
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
+            <ns:column columnName="modified">
+                <ns:isUserEditable>false</ns:isUserEditable>
+                <ns:shownInInsertView>false</ns:shownInInsertView>
+                <ns:shownInUpdateView>false</ns:shownInUpdateView>
+                <ns:nullable>true</ns:nullable>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="ssp_result_types" tableDbType="TABLE">
+        <ns:tableTitle>SSP Result Types</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:pkColumnName>result</ns:pkColumnName>
+        <ns:titleColumn>result</ns:titleColumn>
+        <ns:columns>
+            <ns:column columnName="result">
+                <ns:isKeyField>true</ns:isKeyField>
+            </ns:column>
+            <ns:column columnName="meaning">
+            </ns:column>
+            <ns:column columnName="importAliases">
+                <ns:columnTitle>Import Aliases</ns:columnTitle>
+            </ns:column>
+        </ns:columns>
+    </ns:table>
+</ns:tables>

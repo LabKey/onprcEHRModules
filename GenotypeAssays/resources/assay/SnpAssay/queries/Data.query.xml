@@ -1,0 +1,128 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Data" tableDbType="TABLE" useColumnOrder="true">
+                <javaCustomizer>org.labkey.laboratory.query.DefaultAssayCustomizer</javaCustomizer>
+                <columns>
+                    <column columnName="subjectId">
+                        <columnTitle>Subject Id</columnTitle>
+                        <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                    </column>
+                    <column columnName="date">
+                        <description>The date the sample was collected</description>
+                        <columnTitle>Sample Date</columnTitle>
+                    </column>
+                    <column columnName="marker">
+                        <columnTitle>Marker</columnTitle>
+                        <measure>false</measure>
+                        <dimension>true</dimension>
+                    </column>
+                    <column columnName="ref_nt_name">
+                        <columnTitle>Reference Sequence</columnTitle>
+                        <measure>false</measure>
+                        <dimension>true</dimension>
+                    </column>
+                    <column columnName="ref_nt_id">
+                        <columnTitle>Reference Sequence</columnTitle>
+                        <measure>false</measure>
+                        <dimension>true</dimension>
+                        <fk>
+                            <fkDbSchema>sequenceanalysis</fkDbSchema>
+                            <fkTable>ref_nt_sequences</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="position">
+                        <columnTitle>Position</columnTitle>
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                    <column columnName="nt">
+                        <columnTitle>NT</columnTitle>
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                    <column columnName="ref_nt">
+                        <columnTitle>Ref NT</columnTitle>
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                    <column columnName="sampleId">
+                        <columnTitle>Freezer Id</columnTitle>
+                        <description>The unique Id of the sample, which corresponds to a record in the Samples table</description>
+                        <fk>
+                            <fkDbSchema>laboratory</fkDbSchema>
+                            <fkTable>samples</fkTable>
+                            <fkColumnName>freezerid</fkColumnName>
+                        </fk>
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                    <column columnName="category">
+                        <description>The result category, which is primarily used to differentiate experimental controls from other results</description>
+                        <fk>
+                            <fkDbSchema>laboratory</fkDbSchema>
+                            <fkTable>samplecategory</fkTable>
+                            <fkColumnName>category</fkColumnName>
+                        </fk>
+                        <measure>false</measure>
+                        <dimension>true</dimension>
+                    </column>
+                    <column columnName="plate">
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                    <column columnName="well">
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                    <column columnName="parentId">
+                        <columnTitle>Parent Record</columnTitle>
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                    <column columnName="comment">
+                        <inputType>textarea</inputType>
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                    <column columnName="requestid">
+                        <inputType>RequestId</inputType>
+                        <!--<fk>-->
+                            <!--<fkDbSchema>laboratory</fkDbSchema>-->
+                            <!--<fkTable>assay_requests</fkTable>-->
+                            <!--<fkColumnName>rowid</fkColumnName>-->
+                        <!--</fk>-->
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                    <column columnName="qcflag">
+                        <columnTitle>QC Flags</columnTitle>
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                    <column columnName="statusflag">
+                        <columnTitle>Status Flag</columnTitle>
+                        <measure>false</measure>
+                        <dimension>false</dimension>
+                    </column>
+                </columns>
+                <buttonBarOptions position="both" includeStandardButtons="true">
+                    <includeScript>/laboratory/assayButtons.js</includeScript>
+                    <!--<onRender>Laboratory.onAssayLoad</onRender>-->
+                    <item text="More Actions" insertAfter="last">
+                        <item text="View Batches">
+                            <onClick>Laboratory.Assay.viewBatchesBtn(dataRegion, 'Data')</onClick>
+                        </item>
+                        <item text="View Runs">
+                            <onClick>Laboratory.Assay.viewRunsBtn(dataRegion, 'Data')</onClick>
+                        </item>
+                        <item text="Manage Assay">
+                            <onClick>Laboratory.Assay.manageAssayBtn(dataRegion, 'Data')</onClick>
+                        </item>
+                    </item>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

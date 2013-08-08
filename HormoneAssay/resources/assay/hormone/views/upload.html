@@ -1,0 +1,11 @@
+<script type="text/javascript">
+
+//allow a URL param to switch between default upload and legacy data upload
+Ext4.onReady(function() {
+    var webpart = <%=webpartContext%>;
+    Ext4.create('Laboratory.panel.AssayImportPanel', {
+        assayId: LABKEY.page.assay.id
+    }).render(webpart.wrapperDivId);
+});
+
+</script>
