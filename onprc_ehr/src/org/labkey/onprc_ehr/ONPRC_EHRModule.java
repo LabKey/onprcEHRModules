@@ -31,7 +31,6 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.resource.Resource;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.settings.AdminConsole;
-import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.ManageCasesButton;
@@ -64,9 +63,9 @@ import org.labkey.onprc_ehr.notification.WeightAlertsNotification;
 import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
 /**
  * User: bbimber
@@ -264,8 +263,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     @Override
     @NotNull
-    public Set<String> getSchemaNames()
+    public Collection<String> getSchemaNames()
     {
-        return PageFlowUtil.set(ONPRC_EHRSchema.SCHEMA_NAME, ONPRC_EHRSchema.BILLING_SCHEMA_NAME);
+        return Arrays.asList(ONPRC_EHRSchema.SCHEMA_NAME, ONPRC_EHRSchema.BILLING_SCHEMA_NAME);
     }
 }
