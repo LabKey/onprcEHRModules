@@ -12,6 +12,7 @@
         <column name="account"/>
         <column name="startdate"/>
         <column name="enddate"/>
+        <column name="use_category"/>
         <column name="activeAssignments/activeAssignments">
             <properties>
                 <property name="columnTitle" value="# Animals Assigned"/>

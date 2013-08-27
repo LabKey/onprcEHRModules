@@ -39,7 +39,7 @@ Select
     null as procedureId,
 
 	pat.objectid,
-    null as billedby,
+    null as chargetype,
   null as project
 
 From Path_Biopsy Pat
@@ -82,7 +82,7 @@ Select
     null as procedureId,
 
 	PTT.objectid,
-    null as billedby,
+    null as chargetype,
     null as project
 
 From Path_Autopsy PTT
@@ -142,7 +142,7 @@ Select
     (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
 
 	sg.objectid,
-    s4.value as billedby,
+    s4.value as chargetype,
   ibs.projectId as project
 From Sur_General sg
 LEFT JOIN Ref_SurgProcedure r on (sg.procedureid = r.procedureid)
@@ -206,7 +206,7 @@ Select
     null as procedureId,
 
 	cln.objectid,
-  null as billedby,
+  null as chargetype,
   null as project
 
 FROM Cln_Dx cln

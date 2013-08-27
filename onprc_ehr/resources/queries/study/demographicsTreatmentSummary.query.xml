@@ -1,0 +1,33 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsTreatmentSummary" tableDbType="NOT_IN_DB">
+                <tableTitle>Treatment Summary</tableTitle>
+                <columns>
+                    <column columnName="activeClinicalMedications">
+                        <columnTitle>Active Clinical Medications</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <displayWidth>180</displayWidth>
+                    </column>
+                    <column columnName="earliestClinicalMedication">
+                        <columnTitle>Earliest Clinical Medication</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
+                    <column columnName="daysOnClinicalMedications">
+                        <columnTitle>Days On Clinical Medications</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
+                    <column columnName="activeTreatments">
+                        <columnTitle>Active Treatments</columnTitle>
+                        <displayWidth>180</displayWidth>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
+                    <column columnName="earliestTreatment">
+                        <columnTitle>Earliest Treatment</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

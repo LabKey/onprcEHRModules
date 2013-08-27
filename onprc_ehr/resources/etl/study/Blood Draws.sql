@@ -20,7 +20,7 @@ Select
   CASE
   WHEN bd.NoChargeFlag = 1 THEN 'No Charge'
   ELSE null
-  END as billedby,
+  END as chargeType,
 
     Amount as quantity,
     DrawCount as needlesticks,

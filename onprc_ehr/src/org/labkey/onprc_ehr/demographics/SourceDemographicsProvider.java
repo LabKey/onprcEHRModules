@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.demographics;
 
 import org.labkey.api.ehr.demographics.AbstractDemographicsProvider;
 import org.labkey.api.ehr.demographics.AbstractListDemographicsProvider;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 
 import java.util.Collection;
@@ -30,19 +31,27 @@ import java.util.Set;
  */
 public class SourceDemographicsProvider extends AbstractListDemographicsProvider
 {
-    public SourceDemographicsProvider()
+    public SourceDemographicsProvider(Module module)
     {
-        super("demographicsSource", "source");
+        super("study", "demographicsSource", "source", module);
     }
 
     protected Collection<FieldKey> getFieldKeys()
     {
         Set<FieldKey> keys = new HashSet<FieldKey>();
+        keys.add(FieldKey.fromString("date"));
         keys.add(FieldKey.fromString("fromCenter"));
         keys.add(FieldKey.fromString("source"));
         keys.add(FieldKey.fromString("type"));
         keys.add(FieldKey.fromString("source/meaning"));
 
         return keys;
+    }
+
+    @Override
+    public boolean requiresRecalc(String schema, String query)
+    {
+        return ("study".equalsIgnoreCase(schema) && "Arrival".equalsIgnoreCase(query)) ||
+            ("study".equalsIgnoreCase(schema) && "Demographics".equalsIgnoreCase(query));
     }
 }

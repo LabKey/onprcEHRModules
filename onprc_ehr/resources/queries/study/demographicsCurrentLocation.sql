@@ -23,8 +23,10 @@ d2.date,
 d2.cagePosition,
 
 coalesce(d2.room.sort_order, 0) as room_order,
+room_sortValue @hidden,
 
 coalesce(d2.cagePosition.sort_order, 0) AS cage_order,
+cage_sortValue @hidden,
 
 d2.daysInRoom,
 d2.daysInArea,

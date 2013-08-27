@@ -4,7 +4,7 @@
             <table tableName="perDiemsByDay" tableDbType="TABLE">
                 <tableTitle>Per Diems, Raw Data</tableTitle>
                 <columns>
-                    <column columnName="chargeIds">
+                    <column columnName="chargeId">
                         <columnTitle>Charge</columnTitle>
                         <fk>
                             <fkDbSchema>onprc_billing</fkDbSchema>

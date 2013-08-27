@@ -16,6 +16,7 @@
 SELECT
 	cast(mh.AnimalID as nvarchar(4000)) as Id,
 	mh.DATE,
+  mh.projectid as project,
 	--m.ClinicalKey as ClinicalKey  ,
 	m.Bacteria as organism,      ----- Ref_Snomedlists
 	s.Description as organismMeaning,

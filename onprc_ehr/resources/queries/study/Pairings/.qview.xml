@@ -1,8 +1,10 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
         <column name="Id"/>
+        <column name="Id/demographics/gender"/>
         <column name="date"/>
         <column name="Id2"/>
+        <column name="Id2/demographics/gender"/>
         <column name="room1"/>
         <column name="cage1"/>
         <column name="room2"/>

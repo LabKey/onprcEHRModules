@@ -20,6 +20,9 @@ import org.labkey.api.audit.AuditLogService;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.buttons.ChangeQCStateButton;
+import org.labkey.api.ehr.buttons.CreateTaskFromIdsButton;
+import org.labkey.api.ehr.buttons.CreateTaskFromRecordsButton;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.notification.NotificationService;
@@ -36,10 +39,14 @@ import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.ManageCasesButton;
 import org.labkey.onprc_ehr.dataentry.BloodDrawFormSection;
 import org.labkey.onprc_ehr.dataentry.ChargesFormSection;
-import org.labkey.onprc_ehr.dataentry.ClinpathFormType;
+import org.labkey.onprc_ehr.dataentry.DiagnosisFormType;
+import org.labkey.onprc_ehr.dataentry.LabworkFormType;
 import org.labkey.onprc_ehr.dataentry.SimpleGridPanel;
+import org.labkey.onprc_ehr.dataentry.SurgeryRequestFormSection;
+import org.labkey.onprc_ehr.dataentry.TBDemographicsProvider;
 import org.labkey.onprc_ehr.dataentry.TreatmentsTaskFormSection;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.ActiveFlagsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.HousingDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ParentsDemographicsProvider;
@@ -84,7 +91,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.320;
+        return 12.321;
     }
 
     public boolean hasScripts()
@@ -138,6 +145,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     private void registerEHRResources()
     {
+        String bloodDrawTask = "Blood Draws";
+
         EHRService.get().registerModule(this);
         EHRService.get().registerTableCustomizer(this, ONPRC_EHRCustomizer.class);
 
@@ -166,6 +175,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.project, "View Active Projects", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=ehr&query.queryName=Project&query.enddate~isblank"), "Quick Links");
 
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Processing Blood Draws", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=processingBloodDraws"), "Processing");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPE"), "Routine Clinical Tasks");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last TB Test", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsMostRecentTBDate"), "Routine Clinical Tasks");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Summary of Clinical Tasks", this, DetailsURL.fromString("/ldk/runNotification.view?key=org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification"), "Routine Clinical Tasks");
@@ -205,21 +215,35 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "BSU", "Pairings", "study", "Pairings");
         EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "BSU", "Enrichment", "study", "Enrichment");
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Billing", "miscCharges", "Misc Charges", Collections.<FormSection>singletonList(new ChargesFormSection()));
-        EHRService.get().registerFormType(new ClinpathFormType(this));
+        EHRService.get().registerFormType(new LabworkFormType(this));
+        EHRService.get().registerFormType(new DiagnosisFormType(this));
 
-        EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "bloodDraws", "Blood Draws", Collections.<FormSection>singletonList(new BloodDrawFormSection()));
-        EHRService.get().registerFormType(EHRService.FORM_TYPE.Request, this, "Requests", "bloodDrawRequest", "Blood Draw Requests", Collections.<FormSection>singletonList(new BloodDrawFormSection()));
-        EHRService.get().registerFormType(EHRService.FORM_TYPE.Request, this, "Requests", "clinpathRequest", "Clinpath Requests Requests", Collections.<FormSection>singletonList(new SimpleGridPanel("study", "Clinpath Runs", "Panel / Service")));
+        EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", bloodDrawTask, "Blood Draws", Collections.<FormSection>singletonList(new BloodDrawFormSection(false)));
+        EHRService.get().registerFormType(EHRService.FORM_TYPE.Request, this, "Requests", "Blood Draw Request", "Blood Draw Requests", Collections.<FormSection>singletonList(new BloodDrawFormSection(true)));
+        EHRService.get().registerFormType(EHRService.FORM_TYPE.Request, this, "Requests", LabworkFormType.NAME + " Request", "Labwork Requests", Collections.<FormSection>singletonList(new SimpleGridPanel("study", "Clinpath Runs", "Panel / Service")));
+        EHRService.get().registerFormType(EHRService.FORM_TYPE.Request, this, "Requests", "Surgery Request", "Procedure Requests", Collections.<FormSection>singletonList(new SurgeryRequestFormSection()));
 
         //demographics
-        EHRService.get().registerDemographicsProvider(new ActiveCasesDemographicsProvider());
-        EHRService.get().registerDemographicsProvider(new CagematesDemographicsProvider());
-        EHRService.get().registerDemographicsProvider(new HousingDemographicsProvider());
-        EHRService.get().registerDemographicsProvider(new ParentsDemographicsProvider());
-        EHRService.get().registerDemographicsProvider(new SourceDemographicsProvider());
+        EHRService.get().registerDemographicsProvider(new ActiveCasesDemographicsProvider(this));
+        EHRService.get().registerDemographicsProvider(new CagematesDemographicsProvider(this));
+        EHRService.get().registerDemographicsProvider(new HousingDemographicsProvider(this));
+        EHRService.get().registerDemographicsProvider(new ParentsDemographicsProvider(this));
+        EHRService.get().registerDemographicsProvider(new SourceDemographicsProvider(this));
+        EHRService.get().registerDemographicsProvider(new ActiveFlagsDemographicsProvider(this));
+        EHRService.get().registerDemographicsProvider(new TBDemographicsProvider(this));
 
         //buttons
         EHRService.get().registerMoreActionsButton(new ManageCasesButton(this), "study", "cases");
+
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", bloodDrawTask, new String[]{"Blood Draws"}), "study", "Demographics");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Weight For Selected", "Weight", "weight", new String[]{"Weight"}), "study", "Demographics");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Weight For Selected", "Weight", "weight", new String[]{"Weight"}), "study", "Weight");
+
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Blood Draws", bloodDrawTask), "study", "Blood Draws");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Labwork", LabworkFormType.NAME), "study", "Clinpath Runs");
+
+        EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeBloodStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeBloodStatusWindow.js"))), "study", "Blood Draws");
+        EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "Clinpath Runs");
 
         //history
         EHRService.get().registerHistoryDataSource(new DefaultEnrichmentDataSource());

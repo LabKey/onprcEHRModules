@@ -421,7 +421,8 @@
 
             getParams: function(supressErrors){
                 var params = {
-                    SessionId: LABKEY.Security.currentUser.sessionid
+                    SessionId: LABKEY.Security.currentUser.sessionid,
+                    HostName: location.hostname
                 };
 
                 var areas = this.down('#areaField').getValue() || [];

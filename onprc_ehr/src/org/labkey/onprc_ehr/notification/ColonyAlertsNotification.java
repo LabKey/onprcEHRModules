@@ -519,14 +519,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.DATE, +7);
+        cal.add(Calendar.DATE, 7);
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("approve"), cal.getTime(), CompareType.DATE_GTE);
         TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("protocol"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " IACUC protocols with approve dates listed more than 7 days in the future.</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocol", null) + "&query.approve~dategte=+7d'>Click here to view them</a><p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocol", null) + "&query.approve~dategte=%2B7d'>Click here to view them</a><p>\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -847,7 +847,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     protected void cageReviewErrors(final Container c, User u, final StringBuilder msg, boolean notifyOnNone)
     {
-        cageReview(c, u, msg, notifyOnNone, "ERROR", "WARNING: The following cages are too small for the animals currently in them:");
+        cageReview(c, u, msg, notifyOnNone, "ERROR", "WARNING: The following cages are too small for the animals currently in them, except for animals with heigh/weight exemption flags:");
     }
 
     protected void cageReviewWarnings(final Container c, User u, final StringBuilder msg, boolean notifyOnNone)
@@ -861,9 +861,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     private void cageReview(final Container c, User u, final StringBuilder msg, boolean notifyOnNone, String filterTerm, String message)
     {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("cageStatus"), filterTerm, CompareType.STARTS_WITH);
-        TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), filter, null);
-        Map<String, Object>[] rows = ts.getMapArray();
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("status"), filterTerm, CompareType.EQUAL);
+        TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), filter, new Sort("room/room,cage"));
+        Map<String, Object>[] rows = ts.getArray(Map.class);
 
         if (rows.length > 0)
         {
@@ -872,18 +872,36 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             {
                 String room = (String)row.get("room");
                 String cage = (String)row.get("cage");
-                String status = (String)row.get("cageStatus");
+                String sqFtStatus = (String)row.get("sqFtStatus");
+                String heightStatus = (String)row.get("heightStatus");
 
-                if (room != null)
-                    msg.append("Room: ").append(room);
+                if (sqFtStatus != null && !sqFtStatus.startsWith("NOTE: "))
+                {
+                    sqFtStatus = sqFtStatus.replaceAll("\n", ", ");
+                    if (room != null)
+                        msg.append("Room: ").append(room);
 
-                if (cage != null)
-                    msg.append(" ").append(cage);
+                    if (cage != null)
+                        msg.append(" ").append(cage);
 
-                if (status != null)
-                    msg.append(": ").append(status);
+                        msg.append(": ").append(sqFtStatus);
 
-                msg.append("<br>");
+                    msg.append("<br>");
+                }
+
+                if (heightStatus != null && !heightStatus.startsWith("NOTE: "))
+                {
+                    heightStatus = heightStatus.replaceAll("\n", ", ");
+                    if (room != null)
+                        msg.append("Room: ").append(room);
+
+                    if (cage != null)
+                        msg.append(" ").append(cage);
+
+                    msg.append(": ").append(heightStatus);
+
+                    msg.append("<br>");
+                }
             }
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr_lookups", "cageReview", "Problem Cages") + "'>Click here to view these cages</a></p>\n");
@@ -1200,7 +1218,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-        filter.addCondition(FieldKey.fromString("billedby"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("chargetype"), null, CompareType.ISBLANK);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Blood Draws"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
@@ -1245,7 +1263,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         MutablePropertyValues mpv = new MutablePropertyValues();
         mpv.addPropertyValue("schemaName", "study");
         mpv.addPropertyValue("query.queryName", "BloodSchedule");
-        mpv.addPropertyValue("query.columns", "drawStatus,daterequested,project,date,project/protocol,taskid,projectStatus,tube_vol,tube_type,billedby,billedby/title,num_tubes,Id/curLocation/area,Id/curLocation/room,Id/curLocation/cage,additionalServices,remark,Id,quantity,qcstate,qcstate/Label,requestid");
+        mpv.addPropertyValue("query.columns", "drawStatus,daterequested,project,date,project/protocol,taskid,projectStatus,tube_vol,tube_type,chargetype,num_tubes,Id/curLocation/area,Id/curLocation/room,Id/curLocation/cage,additionalServices,remark,Id,quantity,qcstate,qcstate/Label,requestid");
 
         BindException errors = new NullSafeBindException(new Object(), "command");
         UserSchema us = QueryService.get().getUserSchema(u, c, "study");
@@ -1293,7 +1311,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                         roomNode.put("incomplete", ((Integer)roomNode.get("incomplete") + 1));
 
                         StringBuilder b = (StringBuilder)roomNode.get("cagesHtml");
-                        b.append("<tr><td>" + AbstractEHRNotification._dateTimeFormat.format(rs.getDate("daterequested")) + "</td><td>" +  rs.getString("Id") + "</td><td>" + (rs.getString("tube_vol")==null ? "" : rs.getString("tube_vol") + " mL") + "</td><td>" + (rs.getString("tube_type")==null ? "" : rs.getString("tube_type")) + "</td><td>" + (rs.getString("num_tubes")==null ? "" : rs.getString("num_tubes")) + "</td><td>" + (rs.getString("quantity")==null ? "" : rs.getString("quantity") + " mL") + "</td><td>" + (rs.getString("additionalServices")==null ? "" : rs.getString("additionalServices")) + "</td><td>" + (rs.getString(FieldKey.fromString("billedby/title"))==null ? "" : rs.getString(FieldKey.fromString("billedby/title"))) + "</td></tr>\n");
+                        b.append("<tr><td>" + AbstractEHRNotification._dateTimeFormat.format(rs.getDate("daterequested")) + "</td><td>" +  rs.getString("Id") + "</td><td>" + (rs.getString("tube_vol")==null ? "" : rs.getString("tube_vol") + " mL") + "</td><td>" + (rs.getString("tube_type")==null ? "" : rs.getString("tube_type")) + "</td><td>" + (rs.getString("num_tubes")==null ? "" : rs.getString("num_tubes")) + "</td><td>" + (rs.getString("quantity")==null ? "" : rs.getString("quantity") + " mL") + "</td><td>" + (rs.getString("additionalServices")==null ? "" : rs.getString("additionalServices")) + "</td><td>" + (rs.getString(FieldKey.fromString("chargetype"))==null ? "" : rs.getString(FieldKey.fromString("billedby/title"))) + "</td></tr>\n");
 
                         areaNode.put(room, roomNode);
                         summary.put(area, areaNode);
@@ -1451,6 +1469,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         TableSelector ts = new TableSelector(ti, Collections.singleton("Id"), filter, null);
         long count = ts.getRowCount();
+
+        if (count == 0)
+        {
+            msg.append("<b>WARNING: this alert did not find any animals assigned to U42 (" + U42 + ") in caged locations.</b>  This probably indicates a problem with the alert, or perhaps the U42 project # has changed.<p><hr>");
+            return;
+        }
+
         String level = null;
         if (count > 75)
         {
@@ -1459,11 +1484,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         else if (count > 65)
         {
             level = "WARNING";
-        }
-        else if (count == 0)
-        {
-            msg.append("<b>WARNING: this alert did not find any animals assigned to U42 (" + U42 + ") in caged locations.</b>  This probably indicates a problem with the alert, or perhaps the U42 project # has changed.<p><hr>");
-            return;
         }
 
         if (level != null)

@@ -18,7 +18,9 @@ SELECT
   group_concat(DISTINCT a.project.name, chr(10)) as projects,
   group_concat(DISTINCT a.project.investigatorId.lastName, chr(10)) as investigators,
   COALESCE(count(distinct a.project.name), 0) as totalProjects,
-  COALESCE(count(a.lsid), 0) as numAssignments
+  COALESCE(count(a.lsid), 0) as numAssignments,
+  max(a.enddateCoalesced) as dateLastAssigned,
+  timestampdiff('SQL_TSI_DAY', max(a.enddateCoalesced), now()) as daysSinceLastAssignment
 
 FROM study.demographics d
 LEFT JOIN study.assignment a ON (a.id = d.id)

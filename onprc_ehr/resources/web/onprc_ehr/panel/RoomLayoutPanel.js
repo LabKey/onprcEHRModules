@@ -223,6 +223,15 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 }
                             }
 
+                            //TODO: do something smarter
+                            var type = row.getDisplayValue('cage_type');
+console.log(type);
+                            var suffix = '';
+                            if (type.match(/^Tunnel/))
+                                suffix = 'TU';
+                            else if (type.match(/^Tall/) || type.match(/[0-9]T$/))
+                                suffix = 'T';
+
                             rowItems.push({
                                 border: false,
                                 style: {
@@ -244,7 +253,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     border: false
                                 },
                                 items: [{
-                                    html: '<a>' + ri + colIdx + '</a><br>(' + row.getDisplayValue('cage_type/sqft') + ')',
+                                    html: '<a>' + ri + colIdx + '</a>' + (row.getValue('cage_type/sqft') ? '<br>(' + (row.getValue('cage_type/sqft') / row.getValue('cage_type/cageslots'))+ suffix + ')' : ''),
                                     bodyStyle: {
                                         'background-color': 'transparent'
                                     },

@@ -17,6 +17,14 @@
                         <columnTitle># Assignments</columnTitle>
                         <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}</url>
                     </column>
+                    <column columnName="dateLastAssigned">
+                        <columnTitle>Date Last Assigned</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
+                    <column columnName="daysSinceLastAssignment">
+                        <columnTitle>Days Since Last Project Assignment</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
                 </columns>
             </table>
         </tables>

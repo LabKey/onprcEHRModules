@@ -7,13 +7,13 @@
 --to be considered co-housed, they only need to overlap by any period of time
 
 SELECT
-    --pd.project,
-    --pd.project.protocol,
-    pd.account,
-    --pd.type,
+    pd.Id,
+    pd.project,
+    pd.chargeId,
+
     sum(pd.effectiveDays) as effectiveDays,
-    group_concat(DISTINCT pd.id) as animals
+    min(pd.startDate) as startDate @hidden,
+    min(pd.numDays) as numDays @hidden,
 FROM onprc_billing.perDiemsByDay pd
 
-GROUP BY pd.account
---, pd.type
+GROUP BY pd.Id, pd.project, pd.chargeId

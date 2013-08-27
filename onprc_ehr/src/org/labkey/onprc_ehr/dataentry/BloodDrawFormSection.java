@@ -15,9 +15,9 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.labkey.api.ehr.dataentry.SimpleFormSection;
+import org.labkey.api.view.template.ClientDependency;
 
-import java.util.Collections;
+import java.util.List;
 
 /**
  * User: bimber
@@ -26,9 +26,24 @@ import java.util.Collections;
  */
 public class BloodDrawFormSection extends SimpleGridPanel
 {
-    public BloodDrawFormSection()
+    boolean _isForRequest;
+
+    public BloodDrawFormSection(boolean isForRequest)
     {
         super("study", "Blood Draws", "Blood Draws");
         setClientStoreClass("EHR.data.BloodDrawClientStore");
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledBloodDrawsWindow.js"));
+        _isForRequest = isForRequest;
+    }
+
+    @Override
+    public List<String> getTbarButtons()
+    {
+        List<String> defaultButtons = super.getTbarButtons();
+
+        if (!_isForRequest)
+            defaultButtons.add(0, "ADDBLOODDRAWS");
+
+        return defaultButtons;
     }
 }

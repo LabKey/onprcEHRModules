@@ -214,6 +214,29 @@ WHERE r.ProcedureID is not null;
 --EO surg fees
 
 
+INSERT INTO labkey.onprc_billing.chargeRates
+(chargeId, unitcost, startDate, enddate, container)
+select
+  (SELECT rowid FROM labkey.onprc_billing.chargeableItems ci WHERE ci.name = fp.ProcedureName) as chargeId,
+  pd.BaseCharge as unitcost,
+  pd.DateCreated as startdate,
+  pd.DateDisabled as enddate,
+  (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
+
+from IRIS_Production.dbo.Ref_FeesPerDiem pd
+  left join IRIS_Production.dbo.Ref_FeesProcedures fp
+  left join IRIS_Production.dbo.Sys_Parameters s1 ON (s1.Field = 'LocationType' and s1.Flag = HousingType)
+  left join IRIS_Production.dbo.Sys_Parameters s2 ON (s2.Field = 'LocationDefinition' and s2.Flag = HousingDefinition)
+
+    ON (
+    fp.HousingDefinition = pd.HousingDefinition AND
+    fp.HousingType = pd.HousingType AND
+    fp.DateCreated <= coalesce(pd.DateDisabled, CURRENT_TIMESTAMP) AND
+    coalesce(fp.DateDisabled, CURRENT_TIMESTAMP) >= pd.DateCreated
+  )
+where fp.ProcedureID is not null
+
+
 --add lease records to charge rates
 INSERT INTO labkey.onprc_billing.chargeRates
 (chargeId, unitcost, startDate, enddate, container)
@@ -312,11 +335,11 @@ where r.HousingDefinition is not null and r.DateDisabled is null;
 
 --procedureFeeDef
 truncate table labkey.onprc_billing.procedureFeeDefinition;
-insert into labkey.onprc_billing.procedureFeeDefinition (procedureId, chargeId, billedby, active, created, modified, createdBy, modifiedBy)
+insert into labkey.onprc_billing.procedureFeeDefinition (procedureId, chargeId, chargetype, active, created, modified, createdBy, modifiedBy)
   select
     (select rowid from labkey.ehr_lookups.procedures p WHERE p.name = t.ProcedureName) as procedureId,
     (select rowid from labkey.onprc_billing.chargeableItems p WHERE p.name = t.name) as chargeId,
-    max(chargeType) as billedby,
+    max(chargeType) as chargeType,
     MAX(t.active) as active,
     getdate() as modified,
     getdate() as created,

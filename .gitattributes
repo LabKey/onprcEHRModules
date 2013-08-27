@@ -139,6 +139,8 @@ onprc_ehr/resources/queries/onprc_billing/leaseFeeDefinition/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/leaseFees.query.xml -text
 onprc_ehr/resources/queries/onprc_billing/leaseFees.sql -text
 onprc_ehr/resources/queries/onprc_billing/perDiemFeeDefinition/.qview.xml -text
+onprc_ehr/resources/queries/onprc_billing/perDiemRates.query.xml -text
+onprc_ehr/resources/queries/onprc_billing/perDiemRates.sql -text
 onprc_ehr/resources/queries/onprc_billing/perDiems.query.xml -text
 onprc_ehr/resources/queries/onprc_billing/perDiems.sql -text
 onprc_ehr/resources/queries/onprc_billing/perDiemsByDay.query.xml -text
@@ -152,7 +154,6 @@ onprc_ehr/resources/queries/study/Animal[!!-~]Record[!!-~]Flags/Active[!!-~]Flag
 onprc_ehr/resources/queries/study/Antibiotic[!!-~]Sensitivity.js -text
 onprc_ehr/resources/queries/study/Antibiotic[!!-~]Sensitivity.query.xml -text
 onprc_ehr/resources/queries/study/Antibiotic[!!-~]Sensitivity/.qview.xml -text
-onprc_ehr/resources/queries/study/AntibioticSensitivity.js -text
 onprc_ehr/resources/queries/study/Arrival/.qview.xml -text
 onprc_ehr/resources/queries/study/Blood[!!-~]Draws/With[!!-~]Blood[!!-~]Volume.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/.qview.xml -text
@@ -162,6 +163,7 @@ onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Necropsies.qview.xml 
 onprc_ehr/resources/queries/study/Clinical[!!-~]Observations/Menses.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Remarks/Behavior[!!-~]Remarks.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Remarks/SOAP[!!-~]Note.qview.xml -text
+onprc_ehr/resources/queries/study/Clinpath[!!-~]Runs/.qview.xml -text
 onprc_ehr/resources/queries/study/Deaths/.qview.xml -text
 onprc_ehr/resources/queries/study/Delivery.js -text
 onprc_ehr/resources/queries/study/Delivery.query.xml -text
@@ -175,6 +177,7 @@ onprc_ehr/resources/queries/study/Demographics/Repro[!!-~]Info.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Single[!!-~]Housed.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Snapshot.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Transfer[!!-~]Info.qview.xml -text
+onprc_ehr/resources/queries/study/Demographics/Utilization.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Weight[!!-~]Detail.qview.xml -text
 onprc_ehr/resources/queries/study/Diagnostics.js -text
 onprc_ehr/resources/queries/study/Diet.js -text
@@ -203,7 +206,7 @@ onprc_ehr/resources/queries/study/Pairings.js -text
 onprc_ehr/resources/queries/study/Pairings.query.xml -text
 onprc_ehr/resources/queries/study/Pairings/.qview.xml -text
 onprc_ehr/resources/queries/study/Pairings/BSU[!!-~]Pairings.qview.xml -text
-onprc_ehr/resources/queries/study/Parasitology[!!-~]Results.query.xml -text
+onprc_ehr/resources/queries/study/Parasitology[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/Parentage.js -text
 onprc_ehr/resources/queries/study/Parentage.query.xml -text
 onprc_ehr/resources/queries/study/Parentage/.qview.xml -text
@@ -297,12 +300,16 @@ onprc_ehr/resources/queries/study/demographicsActiveAssignment.query.xml -text
 onprc_ehr/resources/queries/study/demographicsActiveAssignment.sql -text
 onprc_ehr/resources/queries/study/demographicsActiveCases.query.xml -text
 onprc_ehr/resources/queries/study/demographicsActiveCases.sql -text
+onprc_ehr/resources/queries/study/demographicsActiveFlags.query.xml -text
+onprc_ehr/resources/queries/study/demographicsActiveFlags.sql -text
 onprc_ehr/resources/queries/study/demographicsActiveProblems.query.xml -text
 onprc_ehr/resources/queries/study/demographicsActiveProblems.sql -text
 onprc_ehr/resources/queries/study/demographicsAssignmentHistory.query.xml -text
 onprc_ehr/resources/queries/study/demographicsAssignmentHistory.sql -text
 onprc_ehr/resources/queries/study/demographicsBloodSummary.query.xml -text
 onprc_ehr/resources/queries/study/demographicsBloodSummary.sql -text
+onprc_ehr/resources/queries/study/demographicsCaseHistory.query.xml -text
+onprc_ehr/resources/queries/study/demographicsCaseHistory.sql -text
 onprc_ehr/resources/queries/study/demographicsCondition.query.xml -text
 onprc_ehr/resources/queries/study/demographicsCondition.sql -text
 onprc_ehr/resources/queries/study/demographicsCurrentLocation.query.xml -text
@@ -311,6 +318,8 @@ onprc_ehr/resources/queries/study/demographicsDaysAlone.query.xml -text
 onprc_ehr/resources/queries/study/demographicsDaysAlone.sql -text
 onprc_ehr/resources/queries/study/demographicsHistoricAssignment.query.xml -text
 onprc_ehr/resources/queries/study/demographicsHistoricAssignment.sql -text
+onprc_ehr/resources/queries/study/demographicsHousingStats.query.xml -text
+onprc_ehr/resources/queries/study/demographicsHousingStats.sql -text
 onprc_ehr/resources/queries/study/demographicsLabwork.query.xml -text
 onprc_ehr/resources/queries/study/demographicsLabwork.sql -text
 onprc_ehr/resources/queries/study/demographicsLastMense.query.xml -text
@@ -333,6 +342,7 @@ onprc_ehr/resources/queries/study/demographicsParents.sql -text
 onprc_ehr/resources/queries/study/demographicsParents/.qview.xml -text
 onprc_ehr/resources/queries/study/demographicsPregnancy.query.xml -text
 onprc_ehr/resources/queries/study/demographicsPregnancy.sql -text
+onprc_ehr/resources/queries/study/demographicsProblemHistory.query.xml -text
 onprc_ehr/resources/queries/study/demographicsProblemHistory.sql -text
 onprc_ehr/resources/queries/study/demographicsReturnLocation.query.xml -text
 onprc_ehr/resources/queries/study/demographicsReturnLocation.sql -text
@@ -344,6 +354,8 @@ onprc_ehr/resources/queries/study/demographicsTermination.query.xml -text
 onprc_ehr/resources/queries/study/demographicsTermination.sql -text
 onprc_ehr/resources/queries/study/demographicsTotalOffspringUnder1Yr.query.xml -text
 onprc_ehr/resources/queries/study/demographicsTotalOffspringUnder1Yr.sql -text
+onprc_ehr/resources/queries/study/demographicsTreatmentSummary.query.xml -text
+onprc_ehr/resources/queries/study/demographicsTreatmentSummary.sql -text
 onprc_ehr/resources/queries/study/demographicsUtilization.query.xml -text
 onprc_ehr/resources/queries/study/demographicsUtilization.sql -text
 onprc_ehr/resources/queries/study/demographicsViralStatus.query.xml -text
@@ -518,6 +530,7 @@ onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.316-12.317.sql
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.317-12.318.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.318-12.319.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.319-12.320.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.320-12.321.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.302-12.303.sql -text
@@ -540,6 +553,7 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.316-12.317.sql 
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.317-12.318.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.318-12.319.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.319-12.320.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.320-12.321.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text
@@ -619,6 +633,8 @@ onprc_ehr/resources/web/onprc_ehr/panel/AnimalGroupDetailsPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/BloodSummaryPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/IconPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/RoomLayoutPanel.js -text
+onprc_ehr/resources/web/onprc_ehr/window/ChangeBloodStatusWindow.js -text
+onprc_ehr/resources/web/onprc_ehr/window/ChangeLabworkStatusWindow.js -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRBillingUserSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRController.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
@@ -627,11 +643,19 @@ onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/ManageCasesButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BloodDrawFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ChargesFormSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinicalObservationsFormSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinicalRemarksFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinpathFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinpathFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/DiagnosisFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkFormSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/SimpleGridPanel.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/SurgeryRequestFormSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/TBDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/TreatmentsTaskFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ActiveCasesDemographicsProvider.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/demographics/ActiveFlagsDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/CagematesDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/HousingDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ParentsDemographicsProvider.java -text

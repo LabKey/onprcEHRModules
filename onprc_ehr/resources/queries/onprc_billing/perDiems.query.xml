@@ -3,6 +3,20 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="perDiems" tableDbType="TABLE">
                 <tableTitle>Per Diems Calculation</tableTitle>
+                <columns>
+                    <column columnName="effectiveDays">
+                        <columnTitle>Effective Days</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=onprc_billing&amp;
+                            queryName=perDiemsByDay&amp;
+                            query.param.numDays=${numDays}&amp;
+                            query.param.startDate=${startDate}&amp;
+                            query.Id~eq=${Id}&amp;
+                            query.project~eq=${project}&amp;
+                            query.chargeIds~eq=${chargeIds}
+                        </url>
+                    </column>
+                </columns>
             </table>
         </tables>
     </metadata>

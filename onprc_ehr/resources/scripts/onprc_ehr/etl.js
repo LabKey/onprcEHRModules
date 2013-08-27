@@ -22,7 +22,7 @@ EHR.Server.Utils = require("ehr/utils").EHR.Server.Utils;
  * It should be written out of the validation script at some point.
  */
 EHR.ETL = {
-    fixRow: function(row, errors, scriptContext){
+    fixRow: function(helper, errors, row){
         //inserts a date if missing
         EHR.ETL.addDate(row, errors);
 
@@ -30,26 +30,25 @@ EHR.ETL = {
         EHR.ETL.fixSurgMajor(row, errors);
 
         //allows dataset-specific code
-        if(EHR.ETL.byQuery[scriptContext.queryName])
-            EHR.ETL.byQuery[scriptContext.queryName](row, errors, scriptContext);
+        if(EHR.ETL.byQuery[helper.getQueryName()])
+            EHR.ETL.byQuery[helper.getQueryName()](row, errors);
 
-        if(scriptContext.verbosity > 0)
-            console.log('Repaired: '+row);
+        helper.logDebugMsg('Repaired: '+row);
     },
 
     fixParticipantId: function (row, errors){
         if (row.hasOwnProperty('Id') && !row.Id){
             row.id = 'MISSING';
-            EHR.Server.Validation.addError(errors, 'Id', 'Missing Id', 'ERROR');
+            EHR.Server.Utils.addError(errors, 'Id', 'Missing Id', 'ERROR');
         }
     },
 
     addDate: function (row, errors){
         if (row.hasOwnProperty('date') && !row.Date){
             //row will fail unless we add something in this field
-            row.date = new java.util.Date();
+            row.date = new Date();
 
-            EHR.Server.Validation.addError(errors, 'date', 'Missing Date', 'ERROR');
+            EHR.Server.Utils.addError(errors, 'date', 'Missing Date', 'ERROR');
         }
     },
 
@@ -59,8 +58,7 @@ EHR.ETL = {
 
         var match = row.caseno.match(re);
         if (!match){
-            EHR.Server.Validation.addError(errors, 'caseno', 'Error in CaseNo: '+row.caseno, 'WARN');
-            //row.QCStateLabel = errorQC;
+            EHR.Server.Utils.addError(errors, 'caseno', 'Error in CaseNo: '+row.caseno, 'WARN');
         }
         else {
             //fix the year
@@ -74,7 +72,7 @@ EHR.ETL = {
                 //these values are ok
             }
             else {
-                EHR.Server.Validation.addError(errors, 'caseno', 'Unsure how to correct year in CaseNo: '+match[1], 'WARN');
+                EHR.Server.Utils.addError(errors, 'caseno', 'Unsure how to correct year in CaseNo: '+match[1], 'WARN');
                 //row.QCStateLabel = errorQC;
             }
 
@@ -98,7 +96,7 @@ EHR.ETL = {
             //we need to manually split these into multiple rows
 
             if (row.stringResults.match(/,/) && row.stringResults.match(/[0-9]/)){
-                EHR.Server.Validation.addError(errors, 'result', 'Problem with result: ' + row.stringResults, 'WARN');
+                EHR.Server.Utils.addError(errors, 'result', 'Problem with result: ' + row.stringResults, 'WARN');
                 row.stringResults = null;
                 //row.QCStateLabel = errorQC;
             }
@@ -160,7 +158,7 @@ EHR.ETL = {
             //we need to manually split these into multiple rows
             if (row[fieldName].match(/,/)){
                 row[fieldName] = null;
-                EHR.Server.Validation.addError(errors, fieldName, 'Problem with quantity: ' + row[fieldName], 'WARN');
+                EHR.Server.Utils.addError(errors, fieldName, 'Problem with quantity: ' + row[fieldName], 'WARN');
                 //row.QCStateLabel = errorQC;
             }
             else {

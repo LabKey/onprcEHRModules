@@ -10,6 +10,7 @@ SELECT
   T1.earliestArrival,
   d.birth,
   coalesce(T1.EarliestArrival, d.birth) as center_Arrival,
+  timestampdiff('SQL_TSI_DAY', coalesce(T1.EarliestArrival, d.birth), now()) as daysSinceCenterArrival,
 
   CASE
     WHEN T1.EarliestArrival IS NULL AND d.birth IS NOT NULL THEN true

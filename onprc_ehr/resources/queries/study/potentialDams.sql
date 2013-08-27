@@ -18,14 +18,16 @@ SELECT
   b.date as birth,
   h.Id as potentialDam,
   b.room as birthRoom,
-  b.cage as birthCage
+  b.cage as birthCage,
+  timestampdiff('SQL_TSI_YEAR', h.Id.demographics.birth, b.date) as damAgeAtTime
 
 FROM study.birth b
 
 JOIN study.housing h ON (
+    b.Id != h.Id AND
     h.date <= b.date AND
     h.enddateCoalesced >= b.date AND
     h.room = b.room AND (h.cage = b.cage OR (h.cage is null and b.cage is null))
 )
 
-WHERE h.id.demographics.gender = 'f'
+WHERE h.id.demographics.gender = 'f' and timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, b.date) > 912.5 --(2.5 years)

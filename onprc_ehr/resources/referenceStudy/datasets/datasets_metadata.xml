@@ -1043,9 +1043,9 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
-            <column columnName="billedby">
+            <column columnName="chargetype">
                 <datatype>varchar</datatype>
-                <columnTitle>Billed By</columnTitle>
+                <columnTitle>Charge Type</columnTitle>
             </column>
             <column columnName="project">
                 <datatype>integer</datatype>
@@ -1205,9 +1205,9 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
-            <column columnName="billedby">
+            <column columnName="chargetype">
                 <datatype>varchar</datatype>
-                <columnTitle>Billed By</columnTitle>
+                <columnTitle>Charge Type</columnTitle>
             </column>
             <column columnName="requestid">
                 <datatype>varchar</datatype>
@@ -2300,9 +2300,9 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
-            <column columnName="billedby">
+            <column columnName="chargetype">
                 <datatype>varchar</datatype>
-                <columnTitle>Billed By</columnTitle>
+                <columnTitle>Charge Type</columnTitle>
             </column>
             <column columnName="requestid">
                 <datatype>varchar</datatype>
@@ -2456,6 +2456,12 @@
                 <datatype>double</datatype>
             </column>
             <column columnName="units">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="quantity">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="sampletype">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="qualresult">

@@ -1,0 +1,41 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="false">
+    <columns>
+        <column name="Id"/>
+        <column name="species"/>
+        <column name="geographic_origin"/>
+        <column name="gender"/>
+        <column name="Id/age/ageInYears">
+            <properties>
+                <property name="columnTitle" value="Age"/>
+            </properties>
+        </column>
+        <column name="Id/currentCondition/condition"/>
+        <column name="Id/spfStatus/status">
+            <properties>
+                <property name="columnTitle" value="SPF Status"/>
+            </properties>
+        </column>
+
+        <column name="Id/source/daysSinceCenterArrival"/>
+        <column name="Id/assignmentHistory/daysSinceLastAssignment"/>
+        <column name="Id/historicAnimalGroups/daysSinceLastAssignment"/>
+        <column name="Id/treatmentSummary/daysOnClinicalMedications"/>
+
+        <column name="Id/housingStats/daysSinceLastCageHousing"/>
+        <column name="Id/housingStats/daysSinceLastGroupHousing"/>
+        <column name="Id/housingStats/daysSinceLastCagemate"/>
+
+        <column name="Id/caseHistory/totalBehaviorCases"/>
+
+        <!--Number of unique social groups animal has been assigned to over six months-->
+        <!--genetic value-->
+
+        <column name="history"/>
+    </columns>
+    <filters>
+        <filter column="calculated_status" operator="eq" value="Alive"/>
+    </filters>
+    <sorts>
+        <sort column="Id" descending="false"/>
+    </sorts>
+</customView>

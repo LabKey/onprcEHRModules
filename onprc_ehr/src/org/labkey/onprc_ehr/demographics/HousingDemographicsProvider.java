@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.demographics;
 
 import org.labkey.api.ehr.demographics.AbstractDemographicsProvider;
 import org.labkey.api.ehr.demographics.AbstractListDemographicsProvider;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 
 import java.util.Collection;
@@ -30,9 +31,9 @@ import java.util.Set;
  */
 public class HousingDemographicsProvider extends AbstractListDemographicsProvider
 {
-    public HousingDemographicsProvider()
+    public HousingDemographicsProvider(Module module)
     {
-        super("demographicsCurrentLocation", "activeHousing");
+        super("study", "demographicsCurrentLocation", "activeHousing", module);
     }
 
     protected Collection<FieldKey> getFieldKeys()
@@ -40,12 +41,20 @@ public class HousingDemographicsProvider extends AbstractListDemographicsProvide
         Set<FieldKey> keys = new HashSet<FieldKey>();
         keys.add(FieldKey.fromString("area"));
         keys.add(FieldKey.fromString("room"));
-        keys.add(FieldKey.fromString("room_order"));
+        keys.add(FieldKey.fromString("room_sortValue"));
         keys.add(FieldKey.fromString("cage"));
-        keys.add(FieldKey.fromString("cage_order"));
+        keys.add(FieldKey.fromString("cage_sortValue"));
         keys.add(FieldKey.fromString("cagePosition"));
         keys.add(FieldKey.fromString("date"));
 
         return keys;
     }
+
+    @Override
+    public boolean requiresRecalc(String schema, String query)
+    {
+        return ("study".equalsIgnoreCase(schema) && "Housing".equalsIgnoreCase(query)) ||
+                ("ehr_lookups".equalsIgnoreCase(schema) && "cage".equalsIgnoreCase(query));
+    }
+
 }

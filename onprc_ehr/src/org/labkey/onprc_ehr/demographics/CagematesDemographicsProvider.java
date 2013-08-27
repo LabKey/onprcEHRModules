@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.demographics;
 
 import org.labkey.api.ehr.demographics.AbstractListDemographicsProvider;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 
 import java.util.Collection;
@@ -29,9 +30,9 @@ import java.util.Set;
  */
 public class CagematesDemographicsProvider extends AbstractListDemographicsProvider
 {
-    public CagematesDemographicsProvider()
+    public CagematesDemographicsProvider(Module module)
     {
-        super("demographicsPaired", "cagemates");
+        super("study", "demographicsPaired", "cagemates", module);
     }
 
     protected Collection<FieldKey> getFieldKeys()
@@ -41,5 +42,13 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
         keys.add(FieldKey.fromString("animals"));
 
         return keys;
+    }
+
+    @Override
+    public boolean requiresRecalc(String schema, String query)
+    {
+        return ("study".equalsIgnoreCase(schema) && "Housing".equalsIgnoreCase(query)) ||
+               ("study".equalsIgnoreCase(schema) && "Demographics".equalsIgnoreCase(query)) ||
+               ("ehr_lookups".equalsIgnoreCase(schema) && "cage".equalsIgnoreCase(query));
     }
 }

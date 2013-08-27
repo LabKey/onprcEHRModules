@@ -50,7 +50,7 @@
                         return;
                     }
 
-                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'processingBloodDraws', 'query.Id/activeAnimalGroups/groups~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive'}))
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'processingBloodDraws', 'query.Id/utilization/use~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive'}))
                 }
             },{
                 html: '<hr><b>Blood Needed For Viral Surveillance:</b>',

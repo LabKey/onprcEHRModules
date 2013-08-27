@@ -29,6 +29,7 @@ import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
+import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
 import org.labkey.api.ldk.LDKService;
@@ -94,6 +95,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeDemographicsTable((AbstractTableInfo)table);
             }
+            else if (matches(table, "study", "Clinpath Runs") || matches(table, "study", "clinpathRuns"))
+            {
+                customizeClinpathRunsTable((AbstractTableInfo)table);
+            }
             else if (matches(table, "study", "Birth"))
             {
                 customizeBirthTable((AbstractTableInfo) table);
@@ -129,6 +134,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             else if (matches(table, "ehr", "tasks") || matches(table, "ehr", "my_tasks"))
             {
                 customizeTasks((AbstractTableInfo) table);
+            }
+            else if (matches(table, "ehr", "requests") || matches(table, "ehr", "my_requests"))
+            {
+                customizeRequests((AbstractTableInfo) table);
             }
             else if (matches(table, "ehr_lookups", "room") || matches(table, "ehr_lookups", "rooms"))
             {
@@ -329,6 +338,28 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             }
         }
 
+        ColumnInfo taskId = ti.getColumn("taskId");
+        if (taskId != null)
+        {
+            taskId.setURL(DetailsURL.fromString("/ehr/dataEntryFormDetails.view?formType=${taskid/formtype}&taskId=${taskid}"));
+        }
+
+        ColumnInfo requestId = ti.getColumn("requestId");
+        if (requestId != null)
+        {
+            requestId.setURL(DetailsURL.fromString("/ehr/dataEntryFormDetails.view?formType=${requestId/formtype}&requestId=${requestId}"));
+        }
+
+        ColumnInfo billedby = ti.getColumn("billedby");
+        if (billedby != null)
+        {
+            billedby.setLabel("Charge Type");
+            //TODO
+//            UserSchema us = getUserSchema(ti, "ehr");
+//            if (us != null)
+//                project.setFk(new QueryForeignKey(us, "project", "project", "displayName"));
+        }
+
         customizeDateColumn(ti);
 
     }
@@ -390,8 +421,16 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (ds.getColumn("activeFlags") == null)
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "activeFlags", "flagsPivoted");
+            col.setLabel("Active Flags By Category");
+            col.setDescription("This provides columns to summarize active flags for the animal by category, such as medical alerts, viral status, etc.");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("activeFlagList") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "activeFlagList", "demographicsActiveFlags");
             col.setLabel("Active Flags");
-            //col.setDescription("");
+            col.setDescription("This provides a columm summarizing all active flags per animal");
             ds.addColumn(col);
         }
 
@@ -416,6 +455,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ColumnInfo col = getWrappedIdCol(us, ds, "kinshipAvg", "kinshipAverage");
             col.setLabel("Kinship - Average");
             col.setDescription("Calculates the average kinship coefficient against all living animals, including the current animal");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("caseHistory") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "caseHistory", "demographicsCaseHistory");
+            col.setLabel("Case History");
+            col.setDescription("Summarizes all cases opened in the previous 6 months");
             ds.addColumn(col);
         }
 
@@ -534,6 +581,22 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ColumnInfo col = getWrappedIdCol(us, ds, "assignmentHistory", "demographicsAssignmentHistory");
             col.setLabel("Assignments - Total");
             col.setDescription("Shows all projects to which the animal has ever been assigned, including active projects");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("treatmentSummary") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "treatmentSummary", "demographicsTreatmentSummary");
+            col.setLabel("Treatment Summary");
+            col.setDescription("Provides columns that summarize the active treatments for each animal");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("housingStats") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "housingStats", "demographicsHousingStats");
+            col.setLabel("Housing Stats");
+            col.setDescription("Provides columns that summarize the recent housing history of each animal");
             ds.addColumn(col);
         }
 
@@ -671,6 +734,20 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 ti.addColumn(wrapped);
             }
         }
+    }
+
+    private void customizeClinpathRunsTable(AbstractTableInfo ti)
+    {
+        if (ti.getColumn("collectedby") != null)
+        {
+            ti.getColumn("collectedby").setHidden(true);
+        }
+
+        if (ti.getColumn("condition") != null)
+        {
+            ti.getColumn("condition").setHidden(true);
+        }
+
     }
 
     private void customizeDemographicsTable(AbstractTableInfo ti)
@@ -847,7 +924,21 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void customizeTasks(AbstractTableInfo ti)
     {
-        //TODO: conditional based on user permissions?
+        DetailsURL detailsURL = DetailsURL.fromString("/ehr/dataEntryFormDetails.view?formType=${formtype}&taskid=${taskid}");
+        ti.setDetailsURL(detailsURL);
+
+        ColumnInfo titleCol = ti.getColumn("title");
+        if (titleCol != null)
+        {
+            titleCol.setURL(detailsURL);
+        }
+
+        ColumnInfo rowIdCol = ti.getColumn("rowid");
+        if (rowIdCol != null)
+        {
+            rowIdCol.setURL(detailsURL);
+        }
+
         ColumnInfo updateCol = ti.getColumn("updateTitle");
         if (updateCol == null)
         {
@@ -855,10 +946,48 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ti.addColumn(updateCol);
         }
 
-        updateCol.setURL(DetailsURL.fromString("/ehr/dataEntryForm.view?formType=${formtype}&taskid=${taskid}"));
+        if (ti.getUserSchema().getContainer().hasPermission(ti.getUserSchema().getUser(), EHRDataEntryPermission.class))
+            updateCol.setURL(DetailsURL.fromString("/ehr/dataEntryForm.view?formType=${formtype}&taskid=${taskid}"));
+        else
+            updateCol.setURL(detailsURL);
+
         updateCol.setLabel("Title");
         updateCol.setHidden(true);
         updateCol.setDisplayWidth("150");
+    }
+
+    private void customizeRequests(AbstractTableInfo ti)
+    {
+        DetailsURL detailsURL = DetailsURL.fromString("/ehr/dataEntryFormDetails.view?formType=${formtype}&requestId=${requestId}");
+        ti.setDetailsURL(detailsURL);
+
+        ColumnInfo titleCol = ti.getColumn("title");
+        if (titleCol != null)
+        {
+            titleCol.setURL(detailsURL);
+        }
+
+        ColumnInfo rowIdCol = ti.getColumn("rowid");
+        if (rowIdCol != null)
+        {
+            rowIdCol.setURL(detailsURL);
+        }
+
+//        ColumnInfo updateCol = ti.getColumn("updateTitle");
+//        if (updateCol == null)
+//        {
+//            updateCol = new WrappedColumn(ti.getColumn("title"), "updateTitle");
+//            ti.addColumn(updateCol);
+//        }
+//
+//        if (ti.getUserSchema().getContainer().hasPermission(ti.getUserSchema().getUser(), EHRDataEntryPermission.class))
+//            updateCol.setURL(DetailsURL.fromString("/ehr/dataEntryForm.view?formType=${formtype}&taskid=${taskid}"));
+//        else
+//            updateCol.setURL(detailsURL);
+//
+//        updateCol.setLabel("Title");
+//        updateCol.setHidden(true);
+//        updateCol.setDisplayWidth("150");
     }
 
     private void customizeProtocol(AbstractTableInfo ti)
@@ -1042,7 +1171,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         {
                             String runId = (String)ctx.get("runIdPLT");
                             String id = (String)ctx.get("Id");
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.DatasetButtons.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
                         }
 
                         @Override
@@ -1071,7 +1200,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         {
                             String runId = (String)ctx.get("runIdHCT");
                             String id = (String)ctx.get("Id");
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.DatasetButtons.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
                         }
 
                         @Override
@@ -1159,7 +1288,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         String objectid = (String)ctx.get("objectid");
                         String id = (String)ctx.get("Id");
 
-                        out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.Utils.showCaseHistory('" + objectid + "', '" + id + "', this);\">[Show Case Hx]</a></span>");
+                        out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.DatasetButtons.showCaseHistory('" + objectid + "', '" + id + "', this);\">[Show Case Hx]</a></span>");
                     }
 
                     @Override

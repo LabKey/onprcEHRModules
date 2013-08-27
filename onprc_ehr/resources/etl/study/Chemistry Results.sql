@@ -19,6 +19,8 @@ SELECT
 	--t.ClinicalKey ,
 	cast(t.Id as nvarchar(4000)) as Id,
 	t.DATE ,
+  t.projectId as project,
+
 	--t.Specimen ,     --      Speciment database table
 	--sp.Name,
 	--sp.SNOMEDCODE as snomed,
@@ -43,6 +45,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Glucose as Result,
@@ -59,6 +62,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	BUN as Result,
@@ -75,6 +79,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Creatinine as Result,
@@ -91,6 +96,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Sodium as Result,
@@ -107,6 +113,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Potassium as Result,
@@ -123,6 +130,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Chloride as Result,
@@ -139,6 +147,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	TotalProtein as Result ,
@@ -155,6 +164,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Albumin as Result,
@@ -171,6 +181,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	AGRatio as Result,
@@ -187,6 +198,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Calcium as Result,
@@ -203,6 +215,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Phosphorus as Result,
@@ -219,6 +232,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	UricAcid as Reuslt,
@@ -235,6 +249,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Cholesterol as Result,
@@ -251,6 +266,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Triglycerides as Result,
@@ -267,6 +283,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	AlkPhosphotase as Result,
@@ -283,6 +300,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	LDH as Result,
@@ -299,6 +317,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	AST as Result,
@@ -315,6 +334,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	ALT as Result,
@@ -331,6 +351,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Iron as Result,
@@ -347,6 +368,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	GGT as Result,
@@ -363,6 +385,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	Globulin as Result,
@@ -379,6 +402,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	TotalBilirubin as Result,
@@ -395,6 +419,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	DirectBilirubin as Result,
@@ -411,6 +436,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	BunCreat as Result,
@@ -427,6 +453,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	RefAmylase as Result,
@@ -443,6 +470,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	RefLipase as Result,
@@ -459,6 +487,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	RefCPK as Result,
@@ -475,11 +504,12 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	HDL_CHOL as Result,
 	null as resultString,
-	'HDL/CHOL' as TestId,
+	'HDL' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -491,6 +521,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	LDL as Result,
@@ -507,6 +538,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	CHOL_HDL as Result,
@@ -523,6 +555,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	LDL_HDL as Result,
@@ -539,6 +572,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	CK as Result,
@@ -555,6 +589,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	MG as Result,
@@ -571,6 +606,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	CRP as Result,
@@ -587,6 +623,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	LACT as Result,
@@ -604,6 +641,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+  projectid,
 	Specimen as Specimen ,     --      Speciment database table
 	Method as MethodInt  ,
 	VLDL_Cholesterol as Result,

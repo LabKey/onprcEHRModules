@@ -16,6 +16,7 @@
 SELECT
   cast(t.id as nvarchar(4000)) as Id,
   t.date,
+  t.projectid as project,
   t.category,
 
   t.specimen,
@@ -57,6 +58,7 @@ SELECT
 	ClinicalKey as ClinicalKey ,
 	AnimalID as Id ,
 	Date as Date ,
+  projectid,
 	Category as CategoryInt  ,
 	s1.Value as Category,
 
@@ -73,8 +75,8 @@ SELECT
 	null as result,
 	null as stringResults,
 	CASE
-		when OccultFlag =1 THEN 'Pos'
-		else 'Neg'
+		when OccultFlag =1 THEN 'Positive'
+		else 'Negative'
 	END as QualResult,
 	Remarks as Remarks,
 	cln.ts as rowversion,
@@ -94,6 +96,7 @@ select
 null as clinicalKey,
 cp.AnimalID,
 cp.DATE,
+cp.projectid,
 cp.Category as categoryInt,
 null as category,
 cp.Technician as technicianId,
@@ -131,6 +134,7 @@ SELECT
 	cln.ClinicalKey as ClinicalKey ,
 	h.AnimalID,
 	h.DATE,
+  projectid,
 	h.Category as CategoryInt,
 	s1.Value as category,
 	h.Technician as technicianId,

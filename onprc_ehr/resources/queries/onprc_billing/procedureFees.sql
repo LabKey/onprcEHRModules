@@ -16,7 +16,7 @@ SELECT
   p.chargeId
 
 FROM study.encounters e
-JOIN onprc_billing.procedureFeeDefinition p ON (p.procedureId = e.procedureId and e.billedby = p.billedby)
+JOIN onprc_billing.procedureFeeDefinition p ON (p.procedureId = e.procedureId and e.chargetype = p.chargetype)
 
 WHERE e.dateOnly >= CAST(STARTDATE as date) AND e.dateOnly <= CAST(ENDDATE as date)
 AND e.qcstate.publicdata = true AND p.active = true
@@ -33,7 +33,7 @@ SELECT
 
 FROM study.blood e
 WHERE e.dateOnly >= CAST(STARTDATE as date) AND e.dateOnly <= CAST(ENDDATE as date)
-and e.billedby != 'No Charge'
+and e.chargetype != 'No Charge'
 AND e.qcstate.publicdata = true
 
 UNION ALL

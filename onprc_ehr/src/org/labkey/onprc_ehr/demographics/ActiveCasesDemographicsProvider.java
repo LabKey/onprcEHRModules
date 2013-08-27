@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.demographics;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.ehr.demographics.AbstractListDemographicsProvider;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 
 import java.util.Collection;
@@ -31,9 +32,9 @@ import java.util.Set;
  */
 public class ActiveCasesDemographicsProvider extends AbstractListDemographicsProvider
 {
-    public ActiveCasesDemographicsProvider()
+    public ActiveCasesDemographicsProvider(Module module)
     {
-        super("Cases", "activeCases");
+        super("study", "Cases", "activeCases", module);
     }
 
     protected Set<FieldKey> getFieldKeys()

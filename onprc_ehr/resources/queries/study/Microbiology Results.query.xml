@@ -5,9 +5,6 @@
                 <tableTitle>Microbiology Results</tableTitle>
                 <tableUrl />
                 <columns>
-                    <column columnName="lsid">
-                        <isHidden>true</isHidden>
-                    </column>
                     <column columnName="Id">
 
                     </column>
@@ -15,7 +12,10 @@
 
                     </column>
                     <column columnName="enddate">
-
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="tissue">
                         <columnTitle>Tissue</columnTitle>
@@ -47,6 +47,9 @@
                     </column>
                     <column columnName="method">
                         <columnTitle>Method</columnTitle>
+                    </column>
+                    <column columnName="lsid">
+                        <isHidden>true</isHidden>
                     </column>
                 </columns>
             </table>

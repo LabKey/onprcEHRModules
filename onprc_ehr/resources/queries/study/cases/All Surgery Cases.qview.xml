@@ -13,8 +13,8 @@
         <filter column="category" operator="eq" value="Surgery"/>
     </filters>
     <sorts>
-        <sort column="Id/curLocation/room_order"/>
-        <sort column="Id/curLocation/cage_order"/>
+        <sort column="Id/curLocation/room"/>
+        <sort column="Id/curLocation/cage"/>
         <sort column="date" descending="true"/>
     </sorts>
 </customView>

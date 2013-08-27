@@ -17,7 +17,8 @@ SELECT
   c.Id,
   h.Id as potentialSire,
   group_concat(DISTINCT h.room) as rooms,
-  group_concat(DISTINCT h.cage) as cages
+  group_concat(DISTINCT h.cage) as cages,
+  max(timestampdiff('SQL_TSI_YEAR', h.Id.demographics.birth, c.minDate)) as sireAgeAtTime
 
 FROM study.potentialConceptionLocations c
 
@@ -29,4 +30,5 @@ JOIN study.housing h ON (
     h.date <= c.maxDate AND h.enddateTimeCoalesced >= c.minDate
 )
 
+WHERE timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, c.minDate) > 912.5 --(2.5 years)
 GROUP BY c.Id, h.Id

@@ -1019,6 +1019,7 @@ public class LegacyDataManager
                 row1.put("statusflag", statusflag);
                 row2.put("statusflag", statusflag);
 
+                boolean hasNull = false;
                 if (rs.getObject("Abs_allele1") != null)
                 {
                     String allele = (String)rs.getObject("Abs_allele1");
@@ -1032,13 +1033,21 @@ public class LegacyDataManager
                             token = StringUtils.trimToNull(token);
                             if (token == null)
                             {
-                                row1.put("result", 0);
-                                row1.put("qual_result", "NULL");
+                                row1.put("result", null);
+                                row1.put("statusflags", "No Data");
+                                hasNull = true;
                             }
                             else
                             {
                                 Integer value = Integer.parseInt(token);
-                                row1.put("result", value);
+                                if (value == 0)
+                                {
+                                    row1.put("result", null);
+                                    row1.put("statusflags", "No Data");
+                                    hasNull = true;
+                                }
+                                else
+                                    row1.put("result", value);
                             }
                         }
                         catch (NumberFormatException e)
@@ -1062,13 +1071,27 @@ public class LegacyDataManager
                             token = StringUtils.trimToNull(token);
                             if (token == null)
                             {
-                                //row2.put("result", 0);
-                                row2.put("qual_result", "NULL");
+                                //no point in adding twice
+                                if (!hasNull)
+                                {
+                                    row2.put("result", null);
+                                    row2.put("statusflags", "No Data");
+                                }
                             }
                             else
                             {
                                 Integer value = Integer.parseInt(token);
-                                row2.put("result", value);
+                                if (value == 0)
+                                {
+                                    //no point in adding twice
+                                    if (!hasNull)
+                                    {
+                                        row2.put("result", null);
+                                        row2.put("statusflags", "No Data");
+                                    }
+                                }
+                                else
+                                    row2.put("result", value);
                             }
                         }
                         catch (NumberFormatException e)

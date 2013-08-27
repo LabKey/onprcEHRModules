@@ -5,14 +5,14 @@
                 <tableUrl />
                 <tableTitle>Serology Results</tableTitle>
                 <columns>
-                    <column columnName="lsid">
-                        <isHidden>true</isHidden>
-                    </column>
                     <column columnName="Id">
 
                     </column>
                     <column columnName="date">
 
+                    </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="tissue">
                         <columnTitle>Tissue</columnTitle>
@@ -35,12 +35,23 @@
                     </column>
                     <column columnName="result">
                         <columnTitle>Result</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>qualitative_results</fkTable>
+                            <fkColumnName>result</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="numericresult">
                         <columnTitle>Numeric Result</columnTitle>
                     </column>
                     <column columnName="units">
                         <columnTitle>Units</columnTitle>
+                        <displayWidth>60</displayWidth>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>lab_test_units</fkTable>
+                            <fkColumnName>units</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="qualifier">
                         <columnTitle>Qualifier</columnTitle>
@@ -50,6 +61,9 @@
                     </column>
                     <column columnName="category">
                         <columnTitle>Category</columnTitle>
+                    </column>
+                    <column columnName="lsid">
+                        <isHidden>true</isHidden>
                     </column>
                 </columns>
             </table>

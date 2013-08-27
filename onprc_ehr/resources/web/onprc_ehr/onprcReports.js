@@ -408,8 +408,8 @@ EHR.reports.potentialParents = function(panel, tab){
         html: 'This report calculates potential parents for the selected animal(s).  The potential parents are determined as follows:' +
             '<br><br>' +
             '<ul style="margin-left: 20px">' +
-            '<li style="list-style-type: disc;">Potential dams are determined by finding any female housed in the animal\'s birth location at the time of birth</li>' +
-            '<li style="list-style-type: disc;">Potential sires are determined by finding the locations where all potential dams were housed between 155-180 days prior to the animal\'s birth.  The potential sires are any male animals housed in these locations during the conception window.</li>' +
+            '<li style="list-style-type: disc;">Potential dams are determined by finding any female housed in the animal\'s birth location at the time of birth, which were at least 2.5 years old at the time</li>' +
+            '<li style="list-style-type: disc;">Potential sires are determined by finding the locations where all potential dams were housed between 155-180 days prior to the animal\'s birth.  The potential sires are any male animals housed in these locations during the conception window, which are at least 2.5 years old at the time.</li>' +
             '</ul>'
     });
 

@@ -5,9 +5,6 @@
                 <tableTitle>Misc Tests</tableTitle>
                 <tableUrl />
                 <columns>
-                    <column columnName="lsid">
-                        <isHidden>true</isHidden>
-                    </column>
                     <column columnName="Id">
 
                     </column>
@@ -17,6 +14,9 @@
                     <column columnName="enddate">
 
                     </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
+                    </column>
                     <column columnName="testId">
                         <columnTitle>Test Id</columnTitle>
                     </column>
@@ -24,13 +24,20 @@
                         <columnTitle>Category</columnTitle>
                     </column>
                     <column columnName="result">
-                        <columnTitle>Result</columnTitle>
+                        <columnTitle>Numeric Result</columnTitle>
                     </column>
                     <column columnName="units">
                         <columnTitle>Units</columnTitle>
+                        <displayWidth>60</displayWidth>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>lab_test_units</fkTable>
+                            <fkColumnName>units</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
                     </column>
                     <column columnName="qualresult">
-                        <columnTitle>Qualitative Result</columnTitle>
+                        <columnTitle>Result</columnTitle>
                     </column>
                     <column columnName="method">
                         <columnTitle>Method</columnTitle>
@@ -42,6 +49,9 @@
                             <fkTable>snomed</fkTable>
                             <fkColumnName>Code</fkColumnName>
                         </fk>
+                    </column>
+                    <column columnName="lsid">
+                        <isHidden>true</isHidden>
                     </column>
                 </columns>
             </table>

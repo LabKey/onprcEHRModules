@@ -16,6 +16,7 @@
 SELECT
 	cast(Id as varchar(4000)) as Id,
 	Date ,
+    projectId as project,
 	category as type,
 	--CategoryInt ,
 	Category2,
@@ -55,6 +56,7 @@ SELECT
 	ClinicalKey as ClinicalKey ,
 	AnimalID as Id ,
 	DATE as Date ,
+    null as projectId,
 	'Antibiotic Sensitivity' as category,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -88,6 +90,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
+    projectId,
 	'Biochemistry' as category,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -123,6 +126,7 @@ SELECT
 	IDKey,
 	AnimalID as Id  ,
 	DATE ,
+    null as projectId,
 	'iSTAT' as category,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -159,6 +163,7 @@ SELECT
 	ClinicalKey as ClinicalKey ,
 	AnimalID as Id ,
 	Date as Date ,
+    projectId,
 	'Occult Blood' as category,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -194,6 +199,7 @@ SELECT
 	ClinicalKey AS ClinicalKey  ,
 	AnimalID as Id  ,
 	Date,
+    projectId,
 	'Hematology' as category,
 
 	Category as CategoryInt  ,
@@ -229,6 +235,7 @@ SELECT
 	ClinicalKey,
 	AnimalID as Id  ,
 	DATE,
+    null as projectId,
 	'Cerebral Spinal Fluid' as category,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -264,6 +271,7 @@ SELECT
 	ClinicalKey as ClinicalKey  ,
 	AnimalID as Id ,
 	DATE as Date  ,
+    projectId,
 	'Microbiology' as category,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -299,6 +307,7 @@ SELECT
 	ClinicalKey  as ClinicalKey ,
 	AnimalID as Id ,
 	DATE as Date ,
+    projectId,
 	'Misc Tests' as category,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -337,6 +346,7 @@ SELECT
 	ClinicalKey as ClinicalKey  ,
 	AnimalID as Id ,
 	DATE as DATE ,
+    null as projectId,
 	'Virology' as category,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -369,6 +379,7 @@ SELECT
 	ClinicalKey as ClinicalKey ,
 	AnimalID as  ID,
 	DATE as Date ,
+    null as projectId,
 	'Serology' as category,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -405,6 +416,7 @@ SELECT
 	ClinicalKey as ClinicalKey  ,
 	AnimalID as Id  ,
 	DATE as Date  ,
+    projectId,
 	'Urinalysis' as category,
 
 	Category as CategoryInt  ,
@@ -441,6 +453,7 @@ Select
 	ClinicalKey,
 	AnimalID,
 	date,
+    projectId,
 	'Parasitology' as category,
 	Category as CategoryInt,
 	s1.Value as category2,
@@ -460,15 +473,12 @@ Select
 	cp.ts as rowversion,
 	cp.objectid
 
--- 	OccultBlood
-
 From Cln_Parasitology cp
 left join Sys_Parameters s1 on (s1.Flag = cp.Category And s1.Field = 'RequestCategory')
 left join Sys_Parameters s2 on (s2.Flag = cp.Method And s2.Field = 'AnalysisMethodParasitol')
 left join Sys_Parameters s3 on (s3.Flag = cp.Condition And s3.Field = 'AnimalConditionLab')
 left join Ref_Technicians rt on (cp.Technician = rt.ID)
 left join Sys_Parameters s4 on (s4.Flag = rt.DeptCode And s4.Field = 'DepartmentCode')
-left join Sys_Parameters s5 on (s5.Flag = cp.OccultBlood And s5.Field = 'occultblood')
 
 ) t
 

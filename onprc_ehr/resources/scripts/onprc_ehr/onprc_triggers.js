@@ -5,14 +5,14 @@
  */
 var console = require("console");
 var LABKEY = require("labkey");
-var Ext = require("Ext4").Ext;
-
 var ETL = require("onprc_ehr/etl").EHR.ETL;
 
 exports.init = function(EHR){
     EHR.ETL = ETL;
 
-//    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, function(errors, row, oldRow){
-//        console.log('called!!!!');
-//    });
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Drug Administration', function(helper, scriptErrors, row, oldRow){
+        if (row.outcome && row.outcome != 'Normal' && !row.remark){
+            EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required if a non-normal outcome is reported', 'WARN');
+        }
+    });
 }
