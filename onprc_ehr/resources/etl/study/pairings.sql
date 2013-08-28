@@ -38,15 +38,16 @@ Tested by:
 	L2.Location as room2,
 	ltrim(rtrim(rtrim(r2.row) + convert(char(2), r2.Cage))) As Cage2,
 
-	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'PairingType' and l.value = s2.value) as PairingType,
+	--(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'PairingType' and l.value = s2.value) as PairingType,
 	--pp.PairingType as PairingType,
-	--s2.Value AS PairingType,
-	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'PairingOutcome' and l.value = s3.value) as PairingOutcome,
+	s2.Value AS PairingType,
+	--(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'PairingOutcome' and l.value = s3.value) as PairingOutcome,
 	--pp.PairingOutcome as PairingOutcome,
-	--s3.Value as PairingOutcome,
-	(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'PairingSeparationReason' and l.value = s4.value) as SeparationReason,
+	s3.Value as PairingOutcome,
+
+  --(SELECT rowid FROM labkey.ehr_lookups.lookups l WHERE l.set_name = 'PairingSeparationReason' and l.value = s4.value) as SeparationReason,
 	--pp.SeparationReason as SeparationReason,
-	--s4.Value AS SeparationReason,
+	s4.Value AS SeparationReason,
 		
 	case when pp.aggressor = 0 then null else cast(pp.aggressor as nvarchar(4000)) end as Aggressor ,
 	pp.Remarks as Remark,

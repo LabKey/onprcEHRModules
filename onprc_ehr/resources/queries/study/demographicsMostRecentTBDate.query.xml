@@ -22,6 +22,9 @@
                     <column columnName="flags">
                         <columnTitle>Serologic Exemptions</columnTitle>
                     </column>
+                    <column columnName="calculated_status">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
                 <titleColumn>MostRecentTBDate</titleColumn>
             </table>

@@ -6,9 +6,9 @@
 SELECT
 b.id,
 b.date,
-b.runId @Hidden,
-group_concat(distinct b.remark, chr(10)) as remark,
+--b.runId,
 b.method,
+group_concat(distinct b.remark, chr(10)) as remark,
 b.testId,
 group_concat(b.result) as results
 

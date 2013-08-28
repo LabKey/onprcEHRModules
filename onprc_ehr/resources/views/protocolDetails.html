@@ -28,6 +28,10 @@ Ext4.onReady(function (){
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
+        id: 'exemptions_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
         id: 'housingSummary_' + webpart.wrapperDivId
     }];
 
@@ -70,6 +74,14 @@ Ext4.onReady(function (){
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback()
     }).render('allowableAnimals_' + webpart.wrapperDivId);
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Exemptions',
+        schemaName: 'ehr',
+        queryName: 'protocolexemptions',
+        filters: [LABKEY.Filter.create('coalescedProtocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback()
+    }).render('exemptions_' + webpart.wrapperDivId);
 
     Ext4.create('LDK.panel.WebpartPanel', {
         title: 'Other Reports',

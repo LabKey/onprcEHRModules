@@ -1,4 +1,4 @@
-<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Protocols">
    <columns>
        <column name="protocol"/>
        <column name="external_id"/>

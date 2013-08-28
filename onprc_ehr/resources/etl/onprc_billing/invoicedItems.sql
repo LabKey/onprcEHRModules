@@ -17,183 +17,67 @@
 -- PDAR debit entries - missing FAID
 --
 SELECT
-  ServiceCenter as category,
-  TransactionType as transactionType,
-  TransactionNumber as id,
-  TransactionDate as date,
-  TransactionDescription as item,
-  LastName as lastName,
-  FirstName as firstName,
-  null as faid,
-  Department as department,
-  MailCode as mailCode,
-  ContactPhone as contactPhone,
-  ItemCode as ItemCode,
-  Quantity as quantity,
-  Price as unitCost,
-  OHSUAlias as debitedAccount,
-  null as creditedaccount,
-  TotalAmount as totalCost,
-  InvoiceDate as invoiceDate,
-  InvoiceNumber as invoiceNumber,
-  ProjectID as project,
-  CageID as cageId,
-  0 as credit,
-  (select bci.rowId from labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeId,
-  ci.objectid as objectid
-from IRIS_Production.dbo.Af_Chargesibs ci
-  left outer join IRIS_Production.dbo.Ref_FeesProcedures rfp
-    on (ci.ItemCode = (Convert(varchar(6),rfp.ProcedureID) + 'C'))
-    WHERE ItemCode not like '%C'
-      and ci.FAID = ''
-      and ci.ServiceCenter = 'PDAR'
-      and ci.ts > ?
-
-union all
---
--- PDAR debit entries - with FAID
---
+	t.*,
+	(select max(bci.rowId) from labkey.onprc_billing.chargeableItems bci where t.item = bci.name) as chargeId
+FROM (	
 SELECT
-  ServiceCenter as category,
-  TransactionType as transactionType,
-  TransactionNumber as id,
-  TransactionDate as date,
-  TransactionDescription as item,
-  LastName as lastName,
-  FirstName as firstName,
-  (select fa.rowid from labkey.onprc_billing.fiscalAuthorities fa where fa.faid like '%' + ci.faid + '%') as faid,
-  Department as department,
-  MailCode as mailCode,
-  ContactPhone as contactPhone,
-  ItemCode as ItemCode,
-  Quantity as quantity,
-  Price as unitCost,
-  OHSUAlias as debitedAccount,
-  null as creditedaccount,
-  TotalAmount as totalCost,
-  InvoiceDate as invoiceDate,
-  InvoiceNumber as invoiceNumber,
-  ProjectID as project,
-  CageID as cageId,
-  0 as credit,
-  (select bci.rowId from labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeId,
-  ci.objectid as objectid
-from IRIS_Production.dbo.Af_Chargesibs ci
-  left outer join IRIS_Production.dbo.Ref_FeesProcedures rfp
-    on (ci.ItemCode = (Convert(varchar(6),rfp.ProcedureID) + 'C'))
-  WHERE ItemCode not like '%C'
-      and ci.FAID <> ''
-      and ci.ServiceCenter = 'PDAR'
-      and ci.ts > ?
+  (SELECT objectid from IRIS_Production.dbo.ref_invoice ri WHERE ci.InvoiceNumber >= ri.StartInvoice AND ci.InvoiceNumber <= ri.EndInvoice) as invoiceId,
+  --(SELECT count(objectid) from IRIS_Production.dbo.ref_invoice ri WHERE ci.InvoiceNumber >= ri.StartInvoice AND ci.InvoiceNumber <= ri.EndInvoice) as invoiceIdCount,
+  CASE
+	WHEN ci.ServiceCenter = 'PDAR' THEN rfp.ProcedureName
+	WHEN ci.ServiceCenter = 'PSURG' THEN sp.ProcedureName
+  ELSE 'ERROR'
+  END as item,
 
-union all
---
--- PSURG debit entries - with FAID
---
-SELECT
-  ServiceCenter as category,
-  TransactionType as transactionType,
-  TransactionNumber as id,
-  TransactionDate as date,
-  TransactionDescription as item,
-  LastName as lastName,
-  FirstName as firstName,
-  (select fa.rowid from labkey.onprc_billing.fiscalAuthorities fa where fa.faid like '%' + ci.faid + '%') as faid,
-  Department as department,
-  MailCode as mailCode,
-  ContactPhone as contactPhone,
-  ItemCode as ItemCode,
-  Quantity as quantity,
-  Price as unitCost,
-  OHSUAlias as debitedAccount,
-  null as creditedaccount,
-  TotalAmount as totalCost,
-  InvoiceDate as invoiceDate,
-  InvoiceNumber as invoiceNumber,
-  ProjectID as project,
-  CageID as cageId,
-  0 as credit,
-  (select bci.rowId from labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeId,
-  ci.objectid as objectid
+  ci.objectid as objectid,
+  ci.ServiceCenter as category,
+  ci.TransactionType as transactionType,
+  --ci.TransactionNumber as id,
+  ci.TransactionDate as date,
+  CASE 
+	WHEN (LEN(ci.TransactionDescription) = 5) and ISNUMERIC(ci.TransactionDescription) = 1 THEN ci.TransactionDescription
+	WHEN (ci.TransactionDescription IS NOT NULL and ISNUMERIC(substring(ci.TransactionDescription, 1, 5)) = 1) THEN substring(ci.TransactionDescription, 1, 5)
+	ELSE null
+  END as id,
+  CASE 
+	WHEN (LEN(ci.TransactionDescription) = 5) and ISNUMERIC(ci.TransactionDescription) = 1 THEN null
+	WHEN (ci.TransactionDescription IS NOT NULL and ISNUMERIC(substring(ci.TransactionDescription, 1, 5)) = 1) THEN ltrim(substring(ci.TransactionDescription, 6, LEN(ci.TransactionDescription)))
+	ELSE ci.TransactionDescription
+  END as comment,
+  
+  ci.LastName as lastName,
+  ci.FirstName as firstName,
+  CASE
+  WHEN (ci.faid IS NULL or ci.faid = '') THEN null
+  ELSE (select fa.rowid from labkey.onprc_billing.fiscalAuthorities fa where fa.faid like '%' + ci.faid + '%')
+  END as faid,
+  ci.Department as department,
+  ci.MailCode as mailCode,
+  ci.ContactPhone as contactPhone,
+  ci.ItemCode as ItemCode,
+  ci.Quantity as quantity,
+  ci.Price as unitCost,
+  ci.OHSUAlias as debitedAccount,
+  ci2.OHSUAlias as creditedaccount,
+  ci.TotalAmount as totalCost,
+  ci.InvoiceDate as invoiceDate,
+  ci.InvoiceNumber as invoiceNumber,
+  ci.ProjectID as project,
+  ci.CageID as cageId,
+  null as credit
 from IRIS_Production.dbo.Af_Chargesibs ci
-  left outer join IRIS_Production.dbo.Ref_FeesProcedures rfp
-    on (ci.ItemCode = (Convert(varchar(6),rfp.ProcedureID) + 'C'))
-WHERE ItemCode not like '%C'
-      and ci.FAID <> ''
-      and ci.ServiceCenter = 'PSURG'
-      and ci.ts > ?
 
-union all
---
--- PDAR credit entries
---
-SELECT
-  ServiceCenter as category,
-  TransactionType as transactionType,
-  TransactionNumber as id,
-  TransactionDate as date,
-  TransactionDescription as item,
-  LastName as lastName,
-  FirstName as firstName,
-  (select fa.rowid from labkey.onprc_billing.fiscalAuthorities fa where fa.faid like '%' + ci.faid + '%') as faid,
-  Department as department,
-  MailCode as mailCode,
-  ContactPhone as contactPhone,
-  ItemCode as ItemCode,
-  Quantity as quantity,
-  Price as unitCost,
-  null as debitedaccount,
-  OHSUAlias as creditedAccount,
-  TotalAmount as totalCost,
-  InvoiceDate as invoiceDate,
-  InvoiceNumber as invoiceNumber,
-  ProjectID as project,
-  CageID as cageId,
-  0 as credit,
-  (select bci.rowId from labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeId,
-  ci.objectid as objectid
-from IRIS_Production.dbo.Af_Chargesibs ci
-  left outer join IRIS_Production.dbo.Ref_FeesProcedures rfp
-    on (ci.ItemCode = (Convert(varchar(6),rfp.ProcedureID) + 'C'))
-WHERE ItemCode like '%C'
-      and ci.FAID <> ''
-      and ci.ServiceCenter = 'PDAR'
-      and ci.ts > ?
+--find corresponding debit  
+  left join IRIS_Production.dbo.Af_Chargesibs ci2 ON (ci2.ChargesIDKey = ci.ChargesIDKey AND ci.TransactionNumber = ci2.TransactionNumber AND ci.IDKey != ci2.IDKey)
 
-union all
---
--- PSURG credit entries
---
-SELECT
-  ServiceCenter as category,
-  TransactionType as transactionType,
-  TransactionNumber as id,
-  TransactionDate as date,
-  TransactionDescription as item,
-  LastName as lastName,
-  FirstName as firstName,
-  (select fa.rowid from labkey.onprc_billing.fiscalAuthorities fa where fa.faid like '%' + ci.faid + '%') as faid,
-  Department as department,
-  MailCode as mailCode,
-  ContactPhone as contactPhone,
-  ItemCode as ItemCode,
-  Quantity as quantity,
-  Price as unitCost,
-  null as debitedaccount,
-  OHSUAlias as creditedAccount,
-  TotalAmount as totalCost,
-  InvoiceDate as invoiceDate,
-  InvoiceNumber as invoiceNumber,
-  ProjectID as project,
-  CageID as cageId,
-  0 as credit,
-  (select bci.rowId from labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeId,
-  ci.objectid as objectid
-from IRIS_Production.dbo.Af_Chargesibs ci
-  left outer join IRIS_Production.dbo.Ref_FeesProcedures rfp
-    on (ci.ItemCode = (Convert(varchar(6),rfp.ProcedureID) + 'C'))
-WHERE ItemCode like '%C'
-      and ci.FAID <> ''
-      and ci.ServiceCenter = 'PSURG'
+--used to find the chargeid
+  left join IRIS_Production.dbo.Ref_FeesProcedures rfp on (ci.ItemCode = (Convert(varchar(10),rfp.ProcedureID)) AND ci.ServiceCenter = 'PDAR')
 
-and ci.ts > ?
+  left join IRIS_Production.dbo.Ref_FeesSurgical rfs on (ci.ItemCode = (Convert(varchar(10),rfs.ProcedureID)) AND ci.ServiceCenter = 'PSURG')
+  left join IRIS_Production.dbo.Ref_SurgProcedure sp on (sp.ProcedureID = rfs.ProcedureID)
+
+WHERE ci.ItemCode not like '%C'
+and (ci.ts > ? or ci2.ts > ? or rfp.ts > ? or rfs.ts > ? or sp.ts > ?)
+
+) t
+

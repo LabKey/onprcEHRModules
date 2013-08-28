@@ -19,13 +19,13 @@ INSERT into labkey.ehr_lookups.source (code, meaning, SourceCity, SourceState, S
 	select InstitutionCode, InstitutionName, InstitutionCity, InstitutionState, InstitutionCountry  from IRIS_Production.dbo.Ref_ISISInstitution;
 
 --antibiotic subset
-DELETE FROM labkey.ehr_lookups.snomed_subsets WHERE subset = 'Antibiotic';
-INSERT INTO labkey.ehr_lookups.snomed_subsets (subset) VALUES ('Antibiotic');
+DELETE FROM labkey.ehr_lookups.snomed_subsets WHERE subset = 'Antibiotics';
+INSERT INTO labkey.ehr_lookups.snomed_subsets (subset) VALUES ('Antibiotics');
 
-DELETE FROM labkey.ehr_lookups.snomed_subset_codes WHERE primaryCategory = 'Antibiotic';
+DELETE FROM labkey.ehr_lookups.snomed_subset_codes WHERE primaryCategory = 'Antibiotics';
 INSERT INTO labkey.ehr_lookups.snomed_subset_codes (primaryCategory, code, container, modified, created, modifiedby, createdby)
 Select
-'Antibiotic' as primaryCategory,
+'Antibiotics' as primaryCategory,
 AntibioticCode as code,
 (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
 getdate() as modified,
@@ -54,7 +54,7 @@ SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE dat
 --TRUNCATE TABLE labkey.ehr_lookups.snomed;
 INSERT INTO labkey.ehr_lookups.snomed (code, meaning, modified, created, modifiedby, createdby)
 Select
-SnomedCode as code,
+ltrim(rtrim(SnomedCode)) as code,
 max(description) as meaning,
 getdate() as modified,
 getdate() as created,

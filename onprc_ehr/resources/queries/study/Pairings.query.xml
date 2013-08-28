@@ -1,7 +1,7 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="Pairings" tableDbType="TABLE" useColumnOrder="true">
+            <table tableName="Pairing Observations" tableDbType="TABLE" useColumnOrder="true">
                 <tableUrl />
                 <insertUrl />
                 <importUrl />
@@ -14,26 +14,11 @@
                     <column columnName="date">
 
                     </column>
-                    <column columnName="Id2">
-                        <columnTitle>Second Id</columnTitle>
-                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                        <fk>
-                            <fkDbSchema>study</fkDbSchema>
-                            <fkTable>animal</fkTable>
-                            <fkColumnName>id</fkColumnName>
-                        </fk>
+                    <column columnName="room">
+                        <columnTitle>Room</columnTitle>
                     </column>
-                    <column columnName="room1">
-                        <columnTitle>Room 1</columnTitle>
-                    </column>
-                    <column columnName="cage1">
-                        <columnTitle>Cage 1</columnTitle>
-                    </column>
-                    <column columnName="room2">
-                        <columnTitle>Room 2</columnTitle>
-                    </column>
-                    <column columnName="cage2">
-                        <columnTitle>Cage 2</columnTitle>
+                    <column columnName="cage">
+                        <columnTitle>Cage</columnTitle>
                     </column>
                     <column columnName="pairingtype">
                         <columnTitle>Pairing Type</columnTitle>

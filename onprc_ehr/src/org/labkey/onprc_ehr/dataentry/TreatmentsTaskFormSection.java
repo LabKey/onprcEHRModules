@@ -31,18 +31,27 @@ import java.util.List;
  */
 public class TreatmentsTaskFormSection extends SimpleFormSection
 {
+    private boolean _showAddTreatments;
+
     public TreatmentsTaskFormSection()
+    {
+        this(true);
+    }
+
+    public TreatmentsTaskFormSection(boolean showAddTreatments)
     {
         super("study", "Drug Administration", "Medications/Diet", "ehr-gridpanel");
         setConfigSources(Collections.singletonList("Task"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledTreatmentsWindow.js"));
+        _showAddTreatments = showAddTreatments;
     }
 
     @Override
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "ADDTREATMENTS");
+        if (_showAddTreatments)
+            defaultButtons.add(0, "ADDTREATMENTS");
 
         return defaultButtons;
     }

@@ -17,6 +17,15 @@
                             <fkColumnName>Id</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="runId">
+                        <isHidden>true</isHidden>
+                        <shownInDetailsView>false</shownInDetailsView>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>Clinpath Runs</fkTable>
+                            <fkColumnName>objectid</fkColumnName>
+                        </fk>
+                    </column>
                 </columns>
             </table>
         </tables>

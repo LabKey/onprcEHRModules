@@ -40,6 +40,8 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
         Set<FieldKey> keys = new HashSet<FieldKey>();
         keys.add(FieldKey.fromString("total"));
         keys.add(FieldKey.fromString("animals"));
+        keys.add(FieldKey.fromString("category"));
+        keys.add(FieldKey.fromString("housingType"));
 
         return keys;
     }

@@ -7,6 +7,7 @@
             return;
 
         var groupName = LABKEY.ActionURL.getParameter('groupName');
+        var roomName = LABKEY.ActionURL.getParameter('room');
 
         Ext4.create('Ext.panel.Panel', {
             border: false,
@@ -14,7 +15,7 @@
                 border: false
             },
             items: [{
-                html: 'This page is designed to provide information to help with processing of animal groups.  ',
+                html: 'This page is designed to provide information to help with processing of animal groups.  Each of these reports can be loaded either by animal group or by room.  To load it on the entire colony, leave both combos blank.',
                 style: 'margin-bottom: 20px;'
             },{
                 xtype: 'labkey-combo',
@@ -32,6 +33,11 @@
                     autoLoad: true
                 }
             },{
+                xtype: 'ehr-roomfieldsingle',
+                itemId: 'room',
+                fieldLabel: 'Room',
+                value: roomName
+            },{
                 html: '<hr><b>Blood Summary Report:</b>',
                 style: 'margin-bottom: 10px;'
             },{
@@ -45,12 +51,19 @@
                 scope: this,
                 handler: function(btn){
                     var groupName = btn.up('panel').down('#groupName').getValue();
-                    if (!groupName){
-                        Ext4.Msg.alert('Error', 'Must pick a group');
-                        return;
-                    }
+                    var room = btn.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'processingBloodDraws',
+                        'query.Id/demographics/calculated_status~eq': 'Alive'
+                    };
 
-                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'processingBloodDraws', 'query.Id/utilization/use~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive'}))
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
                 }
             },{
                 html: '<hr><b>Blood Needed For Viral Surveillance:</b>',
@@ -68,12 +81,20 @@
                 scope: this,
                 handler: function(btn){
                     var groupName = btn.up('panel').down('#groupName').getValue();
-                    if (!groupName){
-                        Ext4.Msg.alert('Error', 'Must pick a group');
-                        return;
-                    }
+                    var room = btn.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'processingSerology',
+                        'query.Id/demographics/calculated_status~eq': 'Alive',
+                        'query.bloodVol~gt': 0
+                    };
 
-                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'processingSerology', 'query.Id/activeAnimalGroups/groups~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive', 'query.bloodVol~gt': 0}))
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
                 }
             },{
                 html: '<hr><b>Blood Needed For Genetic Testing:</b>',
@@ -92,12 +113,20 @@
                 scope: this,
                 handler: function(btn){
                     var groupName = btn.up('panel').down('#groupName').getValue();
-                    if (!groupName){
-                        Ext4.Msg.alert('Error', 'Must pick a group');
-                        return;
-                    }
+                    var room = btn.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'processingGeneticsBloodDraws',
+                        'query.Id/demographics/calculated_status~eq': 'Alive',
+                        'query.totalBloodDrawVol~gt': 0
+                    };
 
-                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'processingGeneticsBloodDraws', 'query.Id/activeAnimalGroups/groups~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive', 'query.totalBloodDrawVol~gt': 0}))
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
                 }
             },{
                 html: '<hr><b>TB Testing:</b>',
@@ -113,12 +142,19 @@
                 scope: this,
                 handler: function(btn){
                     var groupName = btn.up('panel').down('#groupName').getValue();
-                    if (!groupName){
-                        Ext4.Msg.alert('Error', 'Must pick a group');
-                        return;
-                    }
+                    var room = btn.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'demographicsMostRecentTBDate',
+                        'query.Id/demographics/calculated_status~eq': 'Alive'
+                    };
 
-                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'demographicsMostRecentTBDate', 'query.Id/activeAnimalGroups/groups~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive'}))
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
                 }
             },{
                 html: '<hr><b>Ivermectin Treatments:</b>',
@@ -134,12 +170,19 @@
                 scope: this,
                 handler: function(btn){
                     var groupName = btn.up('panel').down('#groupName').getValue();
-                    if (!groupName){
-                        Ext4.Msg.alert('Error', 'Must pick a group');
-                        return;
-                    }
+                    var room = btn.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'processingIvermectin',
+                        'query.Id/demographics/calculated_status~eq': 'Alive'
+                    };
 
-                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'processingIvermectin', 'query.Id/activeAnimalGroups/groups~contains': groupName, 'query.Id/demographics/calculated_status~eq': 'Alive'}))
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
                 }
             }]
         }).render(webpart.wrapperDivId);

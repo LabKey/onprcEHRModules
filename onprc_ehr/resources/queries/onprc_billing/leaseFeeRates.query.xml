@@ -1,0 +1,14 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="leaseFeeRates" tableDbType="TABLE">
+                <tableTitle>Lease Fee Charges</tableTitle>
+                <columns>
+                    <column columnName="isExemption">
+                        <columnTitle>Is Special Fee?</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

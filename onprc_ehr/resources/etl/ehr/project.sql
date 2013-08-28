@@ -51,6 +51,11 @@ select
   END as research,
 
   CASE
+    WHEN Rpi.IACUCCode = '0492-06' THEN 1
+    ELSE 0
+  END as alwaysavailable,
+
+  CASE
     WHEN Rpi.IACUCCode = '0492-03' THEN 'U24'
     WHEN Rpi.IACUCCode = '0492-02' THEN 'U42'
     WHEN Rpi.IACUCCode = '0300' THEN 'Center Resource'

@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -31,7 +32,12 @@ public class ChargesFormSection extends SimpleFormSection
 {
     public ChargesFormSection()
     {
-        super("onprc_billing", "miscCharges", "Misc. Charges", "ehr-gridpanel");
+        this(EHRService.FORM_SECTION_LOCATION.Body);
+    }
+
+    public ChargesFormSection(EHRService.FORM_SECTION_LOCATION location)
+    {
+        super("onprc_billing", "miscCharges", "Misc. Charges", "ehr-gridpanel", location);
         setConfigSources(Collections.singletonList("Task"));
     }
 }

@@ -26,14 +26,15 @@ import java.util.List;
  */
 public class BloodDrawFormSection extends SimpleGridPanel
 {
-    boolean _isForRequest;
+    boolean _showAddScheduledBtn;
 
-    public BloodDrawFormSection(boolean isForRequest)
+    public BloodDrawFormSection(boolean showAddScheduledBtn)
     {
         super("study", "Blood Draws", "Blood Draws");
         setClientStoreClass("EHR.data.BloodDrawClientStore");
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledBloodDrawsWindow.js"));
-        _isForRequest = isForRequest;
+        addClientDependency(ClientDependency.fromFilePath("ehr/data/BloodDrawClientStore.js"));
+        _showAddScheduledBtn = showAddScheduledBtn;
     }
 
     @Override
@@ -41,8 +42,18 @@ public class BloodDrawFormSection extends SimpleGridPanel
     {
         List<String> defaultButtons = super.getTbarButtons();
 
-        if (!_isForRequest)
+        if (_showAddScheduledBtn)
             defaultButtons.add(0, "ADDBLOODDRAWS");
+
+        return defaultButtons;
+    }
+
+    @Override
+    public List<String> getTbarMoreActionButtons()
+    {
+        List<String> defaultButtons = super.getTbarMoreActionButtons();
+
+        defaultButtons.add("GUESSPROJECT");
 
         return defaultButtons;
     }

@@ -32,31 +32,19 @@
         <dataset name="miscTests" id="5013" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="alopecia" id="1061" showByDefault="false" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="measurements" id="5016" category="Pathology" type="Standard">
+        <dataset name="measurements" id="5016" category="Pathology" type="Standard" showByDefault="true">
             <tags/>
         </dataset>
         <dataset name="cases" id="5012" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="diet" id="5014" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="matings" id="5015" category="Reproductive Management" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="enrichment" id="5017" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
         <dataset name="birth" id="1007" category="Colony Management" demographicData="true" type="Standard">
             <tags/>
         </dataset>
         <dataset name="blood" id="1008" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="bcs" id="1065" showByDefault="false" category="Clinical" type="Standard">
             <tags/>
         </dataset>
         <dataset name="encounters" id="1067" category="Clinical" type="Standard">
@@ -68,22 +56,13 @@
         <dataset name="clinremarks" id="1047" category="Clinical" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="dentalStatus" id="1064" showByDefault="false" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="drug" id="1014" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="obs" id="1023" category="Clinical" type="Standard" showByDefault="false">
             <tags/>
         </dataset>
         <dataset name="problem" id="1030" category="Clinical" type="Standard">
             <tags/>
         </dataset>
         <dataset name="tb" id="1035" showByDefault="false" category="Clinical" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="teeth" id="1062" showByDefault="false" category="Clinical" type="Standard">
             <tags/>
         </dataset>
         <dataset name="treatment_order" id="1037" category="Clinical" type="Standard">
@@ -117,9 +96,6 @@
             <tags/>
         </dataset>
         <dataset name="assignment" id="1002" category="Colony Management" type="Standard">
-            <tags/>
-        </dataset>
-        <dataset name="behaviorRemarks" id="1004" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
         <dataset name="deaths" id="1048" category="Pathology" demographicData="true" type="Standard">

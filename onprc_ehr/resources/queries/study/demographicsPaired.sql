@@ -19,7 +19,7 @@ SELECT
   t.room,
   t.effectiveCage,
   t.total,
-  t.animals,
+  cast(t.animals as varchar(4000)) as animals,
   CASE
     WHEN t.housingType != 'Cage Location' THEN 'Group'
     WHEN (t.total > 1 AND t.countAsSeparate = true AND t.countAsPaired = true) THEN 'Cage, Grooming'

@@ -15,6 +15,8 @@
  */
 package org.labkey.onprc_ehr;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.labkey.api.action.ApiAction;
 import org.labkey.api.action.ApiResponse;
@@ -26,17 +28,22 @@ import org.labkey.api.action.SimpleViewAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
+import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.files.FileContentService;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.RequiresPermissionClass;
+import org.labkey.api.security.RequiresSiteAdmin;
 import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.ReadPermission;
+import org.labkey.api.services.ServiceRegistry;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HtmlView;
@@ -54,6 +61,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -683,6 +692,123 @@ public class ONPRC_EHRController extends SpringActionController
         public void setTypes(String[] types)
         {
             _types = types;
+        }
+    }
+
+    @RequiresSiteAdmin
+    public class FixWorkbookPathsAction extends ConfirmAction<Object>
+    {
+        public boolean handlePost(Object form, BindException errors) throws Exception
+        {
+            inspectWorkbooks(true);
+
+            return true;
+        }
+
+        public ModelAndView getConfirmView(Object form, BindException errors) throws Exception
+        {
+            List<String> msgs = inspectWorkbooks(false);
+
+            return new HtmlView(StringUtils.join(msgs, "<br><br>"));
+        }
+
+        public void validateCommand(Object form, Errors errors)
+        {
+
+        }
+
+        public ActionURL getSuccessURL(Object form)
+        {
+            return getContainer().getStartURL(getUser());
+        }
+
+        private int getChildFileCount(File f)
+        {
+            int count = 0;
+            if (f.isDirectory())
+            {
+                for (File child : f.listFiles())
+                {
+                    count += getChildFileCount(child);
+                }
+            }
+            else
+            {
+                count++;
+            }
+
+            return count;
+        }
+
+        private List<String> inspectWorkbooks(final boolean makeChanges)
+        {
+            final List<String> msgs = new ArrayList<>();
+            TableInfo containers = DbSchema.get("core").getTable("containers");
+            TableSelector ts = new TableSelector(containers, new SimpleFilter(FieldKey.fromString("type"), "workbook"), null);
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet rs) throws SQLException
+                {
+                    try
+                    {
+                        Container workbook = ContainerManager.getForId(rs.getString("entityid"));
+                        FileContentService svc = ServiceRegistry.get().getService(FileContentService.class);
+                        File parentRoot = svc.getFileRoot(workbook.getParent());
+                        if (parentRoot != null)
+                        {
+                            File oldDirectory = new File(parentRoot, "workbook-" + workbook.getRowId());
+                            if (oldDirectory.exists())
+                            {
+                                File target = new File(parentRoot, workbook.getName());
+                                if (target.exists())
+                                {
+                                    int count = getChildFileCount(target);
+                                    if (count == 0)
+                                    {
+                                        msgs.add("no files in target, deleting: " + target.getPath() + ", and moving from: " + oldDirectory.getPath());
+                                        if (makeChanges)
+                                        {
+                                            FileUtils.deleteDirectory(target);
+                                            FileUtils.moveDirectory(oldDirectory, target);
+                                            svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        msgs.add("has files, copy/merge from: " + oldDirectory.getPath() + ", to: " + target.getPath());
+                                        if (makeChanges)
+                                        {
+                                            FileUtils.copyDirectory(oldDirectory, target);
+                                            FileUtils.deleteDirectory(oldDirectory);
+                                            svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    msgs.add("no existing folder, moving from: " + oldDirectory.getPath() + ", to: " + target.getPath());
+                                    if (makeChanges)
+                                    {
+                                        FileUtils.moveDirectory(oldDirectory, target);
+                                        svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                msgs.add("old directory does not exist: " + oldDirectory.getPath());
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            return msgs;
         }
     }
 }

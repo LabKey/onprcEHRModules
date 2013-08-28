@@ -1008,12 +1008,14 @@ public class LegacyDataManager
                 row1.put("category", "Unknown");
                 row1.put("marker", rs.getString("locus"));
                 row1.put("locus", rs.getObject("locus"));
+                row1.put("comment", rs.getObject("RemoteID"));
 
                 row2.put("subjectId", rs.getObject("AnimalId"));
                 row2.put("date", rs.getObject("expdate"));
                 row2.put("category", "Unknown");
                 row2.put("marker", rs.getString("locus"));
                 row2.put("locus", rs.getObject("locus"));
+                row2.put("comment", rs.getObject("RemoteID"));
 
                 String statusflag = rs.getInt("DefMarker") == 1 ? "Definitive" :  null;
                 row1.put("statusflag", statusflag);

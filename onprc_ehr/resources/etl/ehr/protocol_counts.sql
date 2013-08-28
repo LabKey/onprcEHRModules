@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+select * from (
 Select
 y.projectID as project,
 --r.IACUCCode as project,
@@ -55,8 +56,7 @@ and (y.ts > ? OR a.ts > ? OR r.ts > ?)
 
 ) t
 
-LEFT JOIN Ref_ProjectsIACUC i2 ON (i2.ProjectID = t.protocolId)
+--LEFT JOIN Ref_ProjectsIACUC i2 ON (i2.ProjectID = t.protocolId)
 
 WHERE maxTs > ?
 
-) t2

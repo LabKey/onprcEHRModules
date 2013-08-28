@@ -28,6 +28,9 @@ left join cln_dx dx ON (dx.DiagnosisID = s.DiagnosisID)
 left join af_case c ON (dx.caseid = c.caseid)
 cross apply dbo.fn_splitter(s.snomed, ',') s2
 where s2.value is not null and s2.value != ''
+and s2.value not in ('P-Y0038', 'P-26600')  --exclude weighing and blood collection
+and s.Snomed != 'T-00010,P-02315' --limited visual exam plus body as a whole
+and s.snomed != 'P-02315' --limited visual exam without other codes
 and s.ts > ?
 
 UNION ALL

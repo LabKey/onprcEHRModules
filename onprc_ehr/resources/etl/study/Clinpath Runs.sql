@@ -17,6 +17,7 @@ SELECT
 	cast(Id as varchar(4000)) as Id,
 	Date ,
     projectId as project,
+    servicerequested,
 	category as type,
 	--CategoryInt ,
 	Category2,
@@ -58,6 +59,7 @@ SELECT
 	DATE as Date ,
     null as projectId,
 	'Antibiotic Sensitivity' as category,
+    'Antibiotic sensitivity' as servicerequested,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 	Technician As TechnicianID,
@@ -92,6 +94,7 @@ SELECT
 	DATE ,
     projectId,
 	'Biochemistry' as category,
+    null as servicerequested,  --panelflag
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 	Technician As TechnicianID,
@@ -128,6 +131,7 @@ SELECT
 	DATE ,
     null as projectId,
 	'iSTAT' as category,
+    null as servicerequested,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 
@@ -165,6 +169,7 @@ SELECT
 	Date as Date ,
     projectId,
 	'Occult Blood' as category,
+    'Occult Blood' as servicerequested,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 
@@ -201,6 +206,10 @@ SELECT
 	Date,
     projectId,
 	'Hematology' as category,
+    CASE
+      WHEN ManualDiff = 1 THEN 'CBC with manual differential'
+      ELSE 'CBC with automated differential'
+    END as servicerequested,
 
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -237,6 +246,7 @@ SELECT
 	DATE,
     null as projectId,
 	'Cerebral Spinal Fluid' as category,
+    null as servicerequested,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 
@@ -273,6 +283,7 @@ SELECT
 	DATE as Date  ,
     projectId,
 	'Microbiology' as category,
+    null as servicerequested,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 
@@ -309,6 +320,7 @@ SELECT
 	DATE as Date ,
     projectId,
 	'Misc Tests' as category,
+    null as servicerequested,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 
@@ -347,7 +359,8 @@ SELECT
 	AnimalID as Id ,
 	DATE as DATE ,
     null as projectId,
-	'Virology' as category,
+	'Serology' as category,
+    null as servicerequested,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 	Technician As TechnicianID,
@@ -381,6 +394,7 @@ SELECT
 	DATE as Date ,
     null as projectId,
 	'Serology' as category,
+    null as servicerequested,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 
@@ -418,6 +432,7 @@ SELECT
 	DATE as Date  ,
     projectId,
 	'Urinalysis' as category,
+    'Urinalysis' as servicerequested,
 
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -455,6 +470,7 @@ Select
 	date,
     projectId,
 	'Parasitology' as category,
+    'Fecal parasite exam' as servicerequested,
 	Category as CategoryInt,
 	s1.Value as category2,
 	Technician as TechnicianId,

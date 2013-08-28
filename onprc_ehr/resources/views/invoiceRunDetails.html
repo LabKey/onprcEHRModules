@@ -1,0 +1,65 @@
+<script type="text/javascript">
+
+Ext4.onReady(function(){
+    var webpart = <%=webpartContext%>;
+    var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+    if(!ctx)
+        return;
+
+    var invoiceRunId = LABKEY.ActionURL.getParameter('invoiceRunId');
+    if (!invoiceRunId){
+        Ext4.Msg.alert('Error', 'Must provide an invoiceId');
+        return;
+    }
+
+    Ext4.create('Ext.panel.Panel', {
+        bodyStyle: 'padding: 10px;',
+        border: false,
+        defaults: {
+            border: false
+        },
+        items: [{
+            xtype: 'labkey-detailspanel',
+            showTitle: false,
+            showBackBtn: false,
+            store: {
+                schemaName: 'onprc_billing',
+                queryName: 'invoiceRuns',
+                filterArray: [
+                    LABKEY.Filter.create('objectid', invoiceRunId, LABKEY.Filter.Types.EQUAL)
+                ]
+            }
+        },{
+            html: '',
+            style: 'margin-bottom: 10px;'
+        },{
+            xtype: 'tabpanel',
+            border: true,
+            defaults: {
+                border: false
+            },
+            items: [{
+                title: 'Charges By Alias',
+                xtype: 'ldk-querypanel',
+                queryConfig: {
+                    schemaName: 'onprc_billing',
+                    queryName: 'invoicedItemsByInvoiceProject',
+                    filters: [LABKEY.Filter.create('invoiceId', invoiceRunId, LABKEY.Filter.Types.EQUAL)],
+                    failure: LDK.Utils.getErrorCallback()
+                }
+            },{
+                title: 'All Charges',
+                xtype: 'ldk-querypanel',
+                queryConfig: {
+                    schemaName: 'onprc_billing',
+                    queryName: 'invoicedItems',
+                    filters: [LABKEY.Filter.create('invoiceId', invoiceRunId, LABKEY.Filter.Types.EQUAL)],
+                    failure: LDK.Utils.getErrorCallback()
+                }
+            }]
+        }]
+    }).render(webpart.wrapperDivId);
+});
+
+</script>
+

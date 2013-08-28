@@ -24,6 +24,7 @@ SELECT
 	--pm.MeasurementID,
 	pm.tissue,
 	pm.measurement,
+    'cm' as units,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
@@ -48,7 +49,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'CrownRump' as tissue,
+	'Crown Rump' as tissue,
 	CrownRump AS measurement
 
 From Path_Measurements pm
@@ -76,7 +77,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'RightHand' as tissue,
+	'Right Hand' as tissue,
 	RightHand AS measurement
 
 From Path_Measurements pm
@@ -90,7 +91,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'RightFoot' as tissue,
+	'Right Foot' as tissue,
 	RightFoot AS measurement
 
 From Path_Measurements pm
@@ -104,7 +105,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'PrimaryPlacentalDisc1' as tissue,
+	'Primary Placental Disc 1' as tissue,
 	PrimaryPlacentalDisc1 AS measurement
 
 From Path_Measurements pm
@@ -118,7 +119,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'PrimaryPlacentalDisc2' as tissue,
+	'Primary Placental Disc 2' as tissue,
 	PrimaryPlacentalDisc2 AS measurement
 
 From Path_Measurements pm
@@ -132,7 +133,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'PrimaryPlacentalDisc3' as tissue,
+	'Primary Placental Disc 3' as tissue,
 	PrimaryPlacentalDisc3 AS measurement
 
 From Path_Measurements pm
@@ -146,7 +147,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'SecondaryPlacentalDisc1' as tissue,
+	'Secondary Placental Disc 1' as tissue,
 	SecondaryPlacentalDisc1 AS measurement
 
 From Path_Measurements pm
@@ -160,7 +161,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'SecondaryPlacentalDisc2' as tissue,
+	'Secondary Placental Disc 2' as tissue,
 	SecondaryPlacentalDisc2 AS measurement
 
 From Path_Measurements pm
@@ -174,7 +175,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'SecondaryPlacentalDisc3' as tissue,
+	'Secondary Placental Disc 3' as tissue,
 	SecondaryPlacentalDisc3 AS measurement
 
 From Path_Measurements pm
@@ -188,7 +189,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'AbdominalCircumference' as tissue,
+	'Abdominal Circumference' as tissue,
 	AbdominalCircumference AS measurement
 
 From Path_Measurements pm
@@ -202,7 +203,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'HeadCircumference' as tissue,
+	'Head Circumference' as tissue,
 	HeadCircumference AS measurement
 
 From Path_Measurements pm
@@ -216,7 +217,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'ThoracicCircumference' as tissue,
+	'Thoracic Circumference' as tissue,
 	ThoracicCircumference AS measurement
 
 From Path_Measurements pm
@@ -230,7 +231,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'FemurLength' as tissue,
+	'Femur Length' as tissue,
 	FemurLength AS measurement
 
 From Path_Measurements pm
@@ -244,7 +245,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'TorsoLength' as tissue,
+	'Torso Length' as tissue,
 	TorsoLength AS measurement
 
 From Path_Measurements pm
@@ -258,7 +259,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'HeartLAV' as tissue,
+	'Heart LAV' as tissue,
 	HeartLAV AS measurement
 
 From Path_Measurements pm
@@ -272,7 +273,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'HeartRAV' as tissue,
+	'Heart RAV' as tissue,
 	HeartRAV AS measurement
 
 From Path_Measurements pm
@@ -286,7 +287,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'HeartPUL' as tissue,
+	'Heart PUL' as tissue,
 	HeartPUL AS measurement
 
 From Path_Measurements pm
@@ -300,7 +301,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'HeartAO' as tissue,
+	'Heart AO' as tissue,
 	HeartAO AS measurement
 
 From Path_Measurements pm
@@ -314,7 +315,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'HeartLVW' as tissue,
+	'Heart LVW' as tissue,
 	HeartLVW AS measurement
 
 From Path_Measurements pm
@@ -328,7 +329,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'HeartRVW' as tissue,
+	'Heart RVW' as tissue,
 	HeartRVW AS measurement
 
 From Path_Measurements pm
@@ -342,7 +343,7 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'HeartIVS' as tissue,
+	'Heart IVS' as tissue,
 	HeartIVS AS measurement
 
 From Path_Measurements pm
@@ -532,6 +533,7 @@ SELECT
 	(cast(t.objectid as varchar(38)) + t.tissue + CAST(t.measurement as nvarchar(4000))) as objectid,
 	t.tissue,
 	t.measurement,
+   'cm' as units,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
@@ -554,7 +556,7 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'CrownRump' as tissue,
+	'Crown Rump' as tissue,
 	CrownRump as measurement,
 
 	Technician,
@@ -586,7 +588,7 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'RightHand' as tissue,
+	'Right Hand' as tissue,
 	RightHand as measurement,
 
 	Technician,
@@ -602,7 +604,7 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'RightFoot' as tissue,
+	'Right Foot' as tissue,
 	RightFoot as measurement,
 
 	Technician,
@@ -618,7 +620,7 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'PrimaryPlacentalDisc1' as tissue,
+	'Primary Placental Disc 1' as tissue,
 	PrimaryPlacentalDisc1 as measurement,
 
 	Technician,
@@ -634,7 +636,7 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'PrimaryPlacentalDisc2' as tissue,
+	'Primary Placental Disc 2' as tissue,
 	PrimaryPlacentalDisc2 as measurement,
 
 	Technician,
@@ -650,7 +652,7 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'SecondaryPlacentalDisc1' as tissue,
+	'Secondary Placental Disc 1' as tissue,
 	SecondaryPlacentalDisc1 as measurement,
 
 	Technician,
@@ -666,7 +668,7 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'SecondaryPlacentalDisc2' as tissue,
+	'Secondary Placental Disc 2' as tissue,
 	SecondaryPlacentalDisc2 as measurement,
 
 	Technician,

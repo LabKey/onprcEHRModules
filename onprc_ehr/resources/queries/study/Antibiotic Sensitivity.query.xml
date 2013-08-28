@@ -1,13 +1,19 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="antiBioticSensitivity" tableDbType="TABLE">
+            <table tableName="antiBioticSensitivity" tableDbType="TABLE" useColumnOrder="true">
                 <tableUrl />
                 <insertUrl />
                 <importUrl />
                 <updateUrl />
                 <deleteUrl />
                 <columns>
+                    <column columnName="Id">
+
+                    </column>
+                    <column columnName="date">
+
+                    </column>
                     <column columnName="tissue">
                         <columnTitle>Tissue</columnTitle>
                         <fk>

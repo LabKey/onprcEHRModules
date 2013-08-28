@@ -20,7 +20,7 @@ public class DiagnosisFormType extends EncounterForm
     {
         super(owner, "diagnosis", "Diagnosis", "Clinical", Arrays.<FormSection>asList(
             new TaskFormSection(),
-            new EncounterFormSection(),
+            //new EncounterFormSection(),
             new ClinicalRemarksFormSection(),
             new ClinicalObservationsFormSection()
         ));

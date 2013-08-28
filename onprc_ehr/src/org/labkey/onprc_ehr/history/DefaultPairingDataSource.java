@@ -69,7 +69,7 @@ public class DefaultPairingDataSource extends AbstractEHRDataSource
             sb.append("\n");
         }
 
-        sb.append(safeAppend(rs, "remark", "Remark"));
+        sb.append(safeAppend(rs, "Remark", "remark"));
         return sb.toString();
     }
 

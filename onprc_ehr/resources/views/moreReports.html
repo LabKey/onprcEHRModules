@@ -27,8 +27,8 @@ Ext4.onReady(function(){
                 Ext4.each(results.sections[category], function(item){
                     section.items.push({
                         name: item.label,
-                        url: LABKEY.ActionURL.buildURL(item.controller, item.action, ctx['EHRStudyContainer'], item.params)
-                    })
+                        url: item.url || LABKEY.ActionURL.buildURL(item.controller, item.action, ctx['EHRStudyContainer'], item.params)
+                    });
                 }, this);
 
                 sections.push(section);

@@ -2,10 +2,10 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="perDiemRates" tableDbType="TABLE">
-                <tableTitle>Per Diems Rates Calculation</tableTitle>
+                <tableTitle>Per Diem Charges</tableTitle>
                 <columns>
                     <column columnName="isExemption">
-                        <columnTitle>Is Exemption?</columnTitle>
+                        <columnTitle>Is Special Fee?</columnTitle>
                     </column>
                 </columns>
             </table>

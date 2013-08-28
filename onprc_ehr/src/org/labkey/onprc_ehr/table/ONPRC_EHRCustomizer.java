@@ -87,13 +87,21 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeAnimalTable((AbstractTableInfo)table);
             }
-            else if (table.getName().equalsIgnoreCase("animal_groups") && table.getSchema().getName().equalsIgnoreCase("ehr"))
+            else if (matches(table, "ehr", "animal_groups"))
             {
                 customizeAnimalGroups((AbstractTableInfo) table);
+            }
+            else if (matches(table, "ehr", "cage_observations"))
+            {
+                customizeCageObservations((AbstractTableInfo) table);
             }
             else if (matches(table, "study", "Demographics"))
             {
                 customizeDemographicsTable((AbstractTableInfo)table);
+            }
+            else if (matches(table, "study", "treatment_order"))
+            {
+                customizeTreatmentOrdersTable((AbstractTableInfo)table);
             }
             else if (matches(table, "study", "Clinpath Runs") || matches(table, "study", "clinpathRuns"))
             {
@@ -399,8 +407,27 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             fiscalYearJulyCol.setHidden(true);
             ti.addColumn(fiscalYearJulyCol);
         }
+
+        addDatePartCol(ti, dateCol, "Year", "This column shows the year portion of the record's date", Calendar.YEAR);
+        addDatePartCol(ti, dateCol, "Month Number", "This column shows the month number (based on the record's date)", Calendar.MONTH);
+        addDatePartCol(ti, dateCol, "Day Of Month", "This column shows the day of month (based on the record's date)", Calendar.DATE);
     }
 
+    private void addDatePartCol(AbstractTableInfo ti, ColumnInfo dateCol, String label, String description, Integer datePart)
+    {
+        String colName = dateCol.getName() + label.replaceAll(" ", "");
+        if (ti.getColumn(colName) == null)
+        {
+            String colSql = dateCol.getValueSql(ExprColumn.STR_TABLE_ALIAS).getSQL();
+            SQLFragment sql = new SQLFragment("(" + ti.getSqlDialect().getDatePart(datePart, colSql) + ")");
+            ExprColumn newCol = new ExprColumn(ti, colName, sql, JdbcType.INTEGER, dateCol);
+            newCol.setLabel(label);
+            newCol.setDescription(description);
+            newCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+            newCol.setHidden(true);
+            ti.addColumn(newCol);
+        }
+    }
     private void customizeAnimalTable(AbstractTableInfo ds)
     {
         UserSchema us = getStudyUserSchema(ds);
@@ -750,6 +777,26 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     }
 
+    private void customizeTreatmentOrdersTable(AbstractTableInfo ti)
+    {
+        //for now, sqlserver only
+        if (!ti.getSqlDialect().isSqlServer())
+            return;
+
+        String name = "treatmentTimes";
+        if (ti.getColumn(name) == null)
+        {
+            String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
+            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(tt.time))  + cast(tt.time as varchar(4))"), true, false, chr + "(10)") + " as _expr " +
+                " FROM ehr.treatment_times tt " +
+                " WHERE tt.treatmentId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)"
+            );
+            ExprColumn col = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("objectid"));
+            col.setLabel("Times");
+            ti.addColumn(col);
+        }
+    }
+
     private void customizeDemographicsTable(AbstractTableInfo ti)
     {
         ColumnInfo originCol = ti.getColumn("origin");
@@ -1036,7 +1083,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void customizeProjects(AbstractTableInfo ti)
     {
-        ti.setTitleColumn("name");
+        ti.setTitleColumn("displayName");
 
         ti.getColumn("inves").setHidden(true);
         ti.getColumn("inves2").setHidden(true);
@@ -1137,7 +1184,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private boolean matches(TableInfo ti, String schema, String query)
     {
-        return ti.getSchema().getName().equalsIgnoreCase(schema) && ti.getName().equalsIgnoreCase(query);
+        if (ti instanceof DataSetTable)
+            return ti.getSchema().getName().equalsIgnoreCase(schema) && (ti.getName().equalsIgnoreCase(query) || ti.getTitle().equalsIgnoreCase(query));
+        else
+            return ti.getSchema().getName().equalsIgnoreCase(schema) && ti.getName().equalsIgnoreCase(query);
     }
 
     private void appendEnddate(AbstractTableInfo ti, ColumnInfo sourceCol, String label)
@@ -1597,6 +1647,13 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         });
 
         ds.addColumn(col);
+    }
+
+    private void customizeCageObservations(AbstractTableInfo ti)
+    {
+        ti.getColumn("userid").setHidden(true);
+        ti.getColumn("feces").setHidden(true);
+        ti.getColumn("no_observations").setHidden(true);
     }
 
     private void customizeAnimalGroups(AbstractTableInfo ti)

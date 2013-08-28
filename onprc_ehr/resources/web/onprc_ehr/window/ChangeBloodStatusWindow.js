@@ -7,7 +7,7 @@ Ext4.define('ONPRC_EHR.window.ChangeBloodStatusWindow', {
         var items = this.callParent();
         items.push({
             xtype: 'combo',
-            name: 'chargeType',
+            name: 'chargetype',
             fieldLabel: 'Charge Type',
             width: this.fieldWidth,
             store: {

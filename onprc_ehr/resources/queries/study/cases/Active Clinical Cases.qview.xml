@@ -9,6 +9,7 @@
         <column name="Id/utilization/use"/>
         <column name="date"/>
         <column name="problemCategories"/>
+        <column name="Id/curLocation/daysInRoom"/>
         <column name="caseHistory"/>
     </columns>
     <filters>

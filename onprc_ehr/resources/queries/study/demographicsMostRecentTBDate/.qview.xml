@@ -23,6 +23,7 @@
         <column name="flags"/>
         <column name="Id/MostRecentWeight/MostRecentWeight"/>
         <column name="Id/MostRecentWeight/MostRecentWeightDate"/>
+        <column name="calculated_status"/>
     </columns>
     <sorts>
         <sort column="Id/curLocation/room"/>
