@@ -210,6 +210,11 @@ public class ETLAuditProvider extends AbstractAuditTypeProvider implements Audit
             _fields.add(createFieldSpec(COLUMN_NAME_EHR_LOOKUP_ERRORS, JdbcType.INTEGER));
         }
 
+        public ETLAuditDomainKind()
+        {
+            super(AUDIT_EVENT_TYPE);
+        }
+
         @Override
         protected Set<PropertyStorageSpec> getColumns()
         {
