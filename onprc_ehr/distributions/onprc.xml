@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project default="usage">
+
+    <target name="distribution">
+        <antcall target="prepare_dist_files" />
+        <ant antfile="${basedir}/build.xml" target="package_redistributables">
+            <property name="dist_sub.dir" value="onprc" />
+            <property name="skip.zipDistribution" value="true" />
+            <property name="extraFileIdentifier" value="-onprc" />
+        </ant>
+    </target>
+
+    <target name="prepare_dist_files">
+        <antcall target="gather_extended_distributions_modules" />
+        <antcall target="gather_modules" />
+    </target>
+
+    <target name="gather_extended_distributions_modules">
+        <ant antfile="${basedir}/distributions/standard.xml" target="gather_modules" />
+    </target>
+
+    <target name="gather_modules">
+        <copy todir="${dist.modules.dir}">
+            <fileset dir="${staging.modules.dir}">
+                <include name="ehr.module" />
+                <include name="EHR_ComplianceDB.module" />
+                <include name="ELISPOT_Assay.module"/>
+                <include name="FlowAssays.module" />
+                <include name="GeneticsCore.module" />
+                <include name="GenotypeAssays.module" />
+                <include name="HormoneAssay.module"/>
+                <include name="Laboratory.module" />
+                <include name="LDK.module" />
+                <include name="ONPRC_EHR.module" />
+                <include name="ONPRC_Reports.module" />
+                <include name="SequenceAnalysis.module" />
+                <include name="Viral_Load_Assay.module" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="usage">
+        <echo>Not intended to be run directly</echo>
+        <echo>Run `ant dist -Dname=distname` from the project root to prepare a particular distribution</echo>
+    </target>
+
+</project>

@@ -1,5 +1,7 @@
 * text=auto !eol
 onprc_ehr/ONPRC_EHR.iml -text
+onprc_ehr/distributions/onprc.xml -text
+onprc_ehr/distributions/test_onprc.xml -text
 onprc_ehr/module.properties -text
 onprc_ehr/resources/etl/ehr/_animal_groups.sql -text
 onprc_ehr/resources/etl/ehr/animal_group_members.sql -text
