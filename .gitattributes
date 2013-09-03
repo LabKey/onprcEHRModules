@@ -13,6 +13,8 @@ GenotypeAssays/resources/assay/GenotypeAssay/queries/Runs.query.xml -text
 GenotypeAssays/resources/assay/GenotypeAssay/queries/Runs/.qview.xml -text
 GenotypeAssays/resources/assay/GenotypeAssay/queries/resultSummaryBySubject.query.xml -text
 GenotypeAssays/resources/assay/GenotypeAssay/queries/resultSummaryBySubject.sql -text
+GenotypeAssays/resources/assay/GenotypeAssay/queries/resultSummaryBySubjectAndMethod.query.xml -text
+GenotypeAssays/resources/assay/GenotypeAssay/queries/resultSummaryBySubjectAndMethod.sql -text
 GenotypeAssays/resources/assay/GenotypeAssay/queries/strConflicts.query.xml -text
 GenotypeAssays/resources/assay/GenotypeAssay/queries/strConflicts.sql -text
 GenotypeAssays/resources/assay/GenotypeAssay/queries/strSummary.query.xml -text

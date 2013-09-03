@@ -1,5 +1,6 @@
 package org.labkey.genotypeassays.assay;
 
+import au.com.bytecode.opencsv.CSVParser;
 import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.data.Container;
 import org.labkey.api.laboratory.assay.AssayImportMethod;
@@ -65,7 +66,7 @@ public class UCDavisSTRImportMethod extends DefaultGenotypeAssaysImportMethod
         return AppProps.getInstance().getContextPath() + "/genotypeassays/data/UCDavis.txt";
     }
 
-    private class Parser extends DefaultAssayParser
+    private class Parser extends DefaultGenotypeAssayParser
     {
         public Parser(AssayImportMethod method, Container c, User u, int assayId)
         {
@@ -94,16 +95,18 @@ public class UCDavisSTRImportMethod extends DefaultGenotypeAssaysImportMethod
 
                 sb.append("Subject Id").append(delim);
                 sb.append("Marker").append(delim);
-                sb.append("Result").append(System.getProperty("line.separator"));
+                sb.append("Result").append(delim);
+                sb.append("Comment").append(System.getProperty("line.separator"));
 
+                CSVParser parser = new CSVParser();
                 while (null != (line = reader.readLine()))
                 {
                     idx++;
 
-                    if (StringUtils.isEmpty(line))
+                    if (line == null || StringUtils.trimToNull(line.replaceAll(",", "")) == null)
                         continue;
 
-                    String[] cells = line.split(",");
+                    String[] cells = parser.parseLine(line);
 
                     if (cells.length == 0)
                         continue;
@@ -129,6 +132,12 @@ public class UCDavisSTRImportMethod extends DefaultGenotypeAssaysImportMethod
                             continue;
                         }
 
+                        String comment = cells[5];
+                        if (StringUtils.isEmpty(comment))
+                        {
+                            comment = null;
+                        }
+
                         for (Integer resultCol : header)
                         {
                             String value = cells[resultCol];
@@ -142,13 +151,66 @@ public class UCDavisSTRImportMethod extends DefaultGenotypeAssaysImportMethod
                             }
 
                             String[] tokens = value.split(":");
-                            String marker = tokens[0];
-                            String[] values = tokens[1].split("/");
-                            for (String val : values)
+                            if (tokens.length > 1)
                             {
-                                sb.append(subjectId).append(delim);
-                                sb.append(marker).append(delim);
-                                sb.append(val).append(System.getProperty("line.separator"));
+                                String marker = tokens[0];
+                                String[] values = tokens[1].split("/");
+                                List<Integer> integers = new ArrayList<Integer>();
+                                boolean hasNonNull = false;
+                                for (String v : values)
+                                {
+                                    try
+                                    {
+                                        if (StringUtils.isEmpty(v))
+                                        {
+                                            integers.add(0);
+                                        }
+                                        else
+                                        {
+                                            Integer i = Integer.parseInt(v);
+                                            if (i > 0)
+                                                hasNonNull = true;
+
+                                            integers.add(i);
+                                        }
+                                    }
+                                    catch (NumberFormatException e)
+                                    {
+                                        errors.addError("Line " + idx + ": Non-numeric allele: " + v);
+                                        continue;
+                                    }
+                                }
+
+                                //NOTE: if the incoming data has at least one non-zero allele, remove all 0's
+                                //if the data only contains NULLs, convert to a single 0
+                                if (hasNonNull)
+                                {
+                                    while (integers.remove(Integer.valueOf(0))){}
+
+                                    //if there is a single non-null value, always import as though it is homozygous
+                                    if (integers.size() == 1)
+                                    {
+                                        integers.add(integers.get(0));
+                                    }
+                                }
+                                else
+                                {
+                                    integers.clear();
+                                    //if we have only a single NULL call, import with a blank result.
+                                    //downstream code will parse this and set a statusflag of 'No Data'
+                                    integers.add(null);
+                                }
+
+                                for (Integer i : integers)
+                                {
+                                    sb.append(subjectId).append(delim);
+                                    sb.append(marker).append(delim);
+                                    sb.append(i);
+                                    if (comment != null)
+                                        sb.append(delim).append(comment);
+
+                                    sb.append(System.getProperty("line.separator"));
+                                }
                             }
                         }
                     }
