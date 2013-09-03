@@ -20,38 +20,44 @@
                     <column columnName="cage">
                         <columnTitle>Cage</columnTitle>
                     </column>
-                    <column columnName="pairingtype">
-                        <columnTitle>Pairing Type</columnTitle>
+                    <column columnName="eventtype">
+                        <columnTitle>Event Type</columnTitle>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>PairingType</fkTable>
-                            <fkColumnName>rowid</fkColumnName>
+                            <fkTable>pairingEventType</fkTable>
+                            <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
-                    <column columnName="pairingoutcome">
-                        <columnTitle>Pairing Outcome</columnTitle>
+                    <column columnName="housingtype">
+                        <columnTitle>Housing Type</columnTitle>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>PairingOutcome</fkTable>
-                            <fkColumnName>rowid</fkColumnName>
+                            <fkTable>pairingHousingType</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="observation">
+                        <columnTitle>Observation</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingObservation</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="outcome">
+                        <columnTitle>Outcome</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingOutcome</fkTable>
+                            <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
                     <column columnName="separationreason">
                         <columnTitle>Separation Reason</columnTitle>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>PairingSeparationReason</fkTable>
-                            <fkColumnName>rowid</fkColumnName>
-                        </fk>
-                    </column>
-                    <column columnName="aggressor">
-                        <columnTitle>Aggressor</columnTitle>
-                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                        <fk>
-                            <fkDbSchema>study</fkDbSchema>
-                            <fkTable>animal</fkTable>
-                            <fkColumnName>id</fkColumnName>
-                            <fkDisplayColumnName useRawValue="true"/>
+                            <fkTable>pairingSeparationReason</fkTable>
+                            <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
                     <column columnName="remark">

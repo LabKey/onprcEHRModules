@@ -35,6 +35,11 @@
                     </column>
                     <column columnName="quantity">
                         <columnTitle>Quantity</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>microbiologyQuantity</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="result">
                         <columnTitle>Result</columnTitle>

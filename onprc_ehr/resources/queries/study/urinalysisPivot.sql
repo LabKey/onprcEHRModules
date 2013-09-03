@@ -7,6 +7,7 @@ SELECT
   b.id,
   b.date,
   b.method,
+  b.collectionmethod,
   group_concat(distinct b.remark, chr(10)) as remark,
   b.testId,
   group_concat(b.results) as results
@@ -20,12 +21,13 @@ SELECT
   coalesce(b.runId, b.objectid) as runId,
   b.remark,
   b.method,
+  b.runid.collectionmethod,
   b.results
 FROM study."Urinalysis Results" b
 
 WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 ) b
 
-GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.remark
+GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.collectionmethod, b.remark
 PIVOT results BY testId IN ('Color', 'App', 'SpecGrav', 'pH', 'Bili', 'Glu', 'Ket', 'Prot', 'Urobili', 'Bact', 'Blood', 'WBC', 'RBC', 'Epith', 'Crystals', 'Casts', 'Cast-1', 'Cast-2')
 

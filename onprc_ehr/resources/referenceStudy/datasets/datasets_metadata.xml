@@ -545,10 +545,22 @@
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
             </column>
+            <column columnName="category">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="tissue">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="measurement">
+            <column columnName="dimension">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="measurement1">
+                <datatype>double</datatype>
+            </column>
+            <column columnName="measurement2">
+                <datatype>double</datatype>
+            </column>
+            <column columnName="measurement3">
                 <datatype>double</datatype>
             </column>
             <column columnName="units">
@@ -3019,9 +3031,6 @@
                     <importAlias>ptid</importAlias>
                 </importAliases>
             </column>
-            <column columnName="Id2">
-                <datatype>varchar</datatype>
-            </column>
             <column columnName="date">
                 <datatype>timestamp</datatype>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
@@ -3031,28 +3040,25 @@
                 <datatype>timestamp</datatype>
                 <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
             </column>
-            <column columnName="room1">
+            <column columnName="room">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="cage1">
+            <column columnName="cage">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="room2">
+            <column columnName="eventType">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="cage2">
+            <column columnName="housingType">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="pairingType">
-                <datatype>integer</datatype>
+            <column columnName="observation">
+                <datatype>varchar</datatype>
             </column>
-            <column columnName="pairingOutcome">
-                <datatype>integer</datatype>
+            <column columnName="outcome">
+                <datatype>varchar</datatype>
             </column>
-            <column columnName="separationReason">
-                <datatype>integer</datatype>
-            </column>
-            <column columnName="aggressor">
+            <column columnName="separationreason">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="project">
@@ -3089,6 +3095,6 @@
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
         </columns>
-        <tableTitle>Pairings</tableTitle>
+        <tableTitle>Pairing Observations</tableTitle>
     </table>
 </tables>

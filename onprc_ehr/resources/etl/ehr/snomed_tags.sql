@@ -18,7 +18,7 @@ SELECT
 	c.objectid as caseid,
 	dx.objectid as recordid,
 
-	cast(s.objectid as varchar(38)) + '_clndx' as objectid,
+	cast(s.objectid as varchar(38)) + '-' + cast(s2.value as nvarchar(100)) as objectid,
 	coalesce(s.sequenceNo, 0) as set_number,
 	s2.i as sort,
 	cast(s2.value as nvarchar(100)) as code
@@ -40,7 +40,7 @@ SELECT
 	null as caseid,
 	dx.objectid as recordid,
 
-	cast(s.objectid as varchar(38)) + '_surg' as objectid,
+	cast(s.objectid as varchar(38)) + '-' + cast(s2.value as nvarchar(100)) as objectid,
 	s.Idkey as set_number,
 	s2.i as sort,
 	cast(s2.value as nvarchar(100)) as code

@@ -33,10 +33,10 @@ public class CageObservationFormType extends TaskForm
 {
     public CageObservationFormType(Module owner)
     {
-        super(owner, "Cage Observation", "Cage Observation", "BSU", Arrays.<FormSection>asList(
+        super(owner, "Cage Observations", "Cage Observations", "BSU", Arrays.<FormSection>asList(
             new TaskFormSection(),
-            new SimpleGridPanel("ehr", "cage_observations", "Cages"),
-            new SimpleGridPanel("study", "Clinical Observations", "Observations")
+            new SimpleGridPanel("ehr", "cage_observations", "Cage Observations"),
+            new SimpleGridPanel("study", "Clinical Observations", "Animal Observations")
         ));
     }
 }

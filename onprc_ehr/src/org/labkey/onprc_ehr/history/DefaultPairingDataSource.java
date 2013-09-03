@@ -32,36 +32,24 @@ public class DefaultPairingDataSource extends AbstractEHRDataSource
 {
     public DefaultPairingDataSource()
     {
-        super("study", "pairingData", "Pairing", "Behavior");
+        super("study", "pairings", "Pairing", "Behavior");
     }
 
     @Override
     protected String getHtml(Results rs, boolean redacted) throws SQLException
     {
         StringBuilder sb = new StringBuilder();
-        sb.append(safeAppend(rs, "Second Id", "Id2"));
-        sb.append(safeAppend(rs, "Pairing Type", "pairingType/value"));
-        sb.append(safeAppend(rs, "Pairing Outcome", "pairingoutcome/value"));
-        sb.append(safeAppend(rs, "Separation Reason", "separationreason/value"));
-        sb.append(safeAppend(rs, "Aggressor", "aggressor"));
 
-        String room1 = rs.getString("room1");
+        sb.append(safeAppend(rs, "Event Type", "eventtype"));
+        sb.append(safeAppend(rs, "Housing Type", "housingtype"));
+        sb.append(safeAppend(rs, "Observation", "observation"));
+        sb.append(safeAppend(rs, "Outcome", "outcome"));
+
+        String room1 = rs.getString("room");
         if (!StringUtils.isEmpty(room1))
         {
-            sb.append("Location 1: ").append(room1);
-            String cage = rs.getString("cage1");
-            if (!StringUtils.isEmpty(cage))
-            {
-                sb.append(" / ").append(cage);
-            }
-            sb.append("\n");
-        }
-
-        String room2 = rs.getString("room2");
-        if (!StringUtils.isEmpty(room2))
-        {
-            sb.append("Location 2: ").append(room2);
-            String cage = rs.getString("cage2");
+            sb.append("Location: ").append(room1);
+            String cage = rs.getString("cage");
             if (!StringUtils.isEmpty(cage))
             {
                 sb.append(" / ").append(cage);
@@ -76,6 +64,6 @@ public class DefaultPairingDataSource extends AbstractEHRDataSource
     @Override
     protected Set<String> getColumnNames()
     {
-        return PageFlowUtil.set("Id", "date", "enddate", "Id2", "pairingType/value", "pairingoutcome/value", "separationreason/value", "aggressor", "room1", "cage1", "room2", "cage2", "remark");
+        return PageFlowUtil.set("Id", "date", "enddate", "eventtype", "housingtype", "observation", "outcome", "room", "cage", "remark");
     }
 }

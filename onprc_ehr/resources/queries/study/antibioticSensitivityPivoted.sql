@@ -52,7 +52,7 @@ pivot resistant by antibiotic
 -- ENROFLOXACIN (68mg)
 -- CIPROFLOXACIN (200mg)
 -- CHLORAMPHENICOL injectable (250mg/ml)
--- Flurfenical injectable (300mg/ml)
+-- Florfenical injectable (300mg/ml)
 -- CEFAZOLIN injectable (250mg/ml)
 -- Gentamycin injectable (100mg/ml)
 -- Tetracycline (250mg)

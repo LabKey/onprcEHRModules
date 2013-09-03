@@ -1,0 +1,17 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="invoicedItemsByInvoiceItem" tableDbType="TABLE">
+                <tableTitle>Debits By Invoice and Item</tableTitle>
+                <columns>
+                    <column columnName="numItems">
+                        <columnTitle># Items</columnTitle>
+                    </column>
+                    <column columnName="totalCost">
+                        <formatString>$###,###.00</formatString>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

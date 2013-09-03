@@ -40,7 +40,7 @@ public class SurgeryFormType extends TaskForm
                 new TaskFormSection(),
                 new ClinicalEncountersFormSection(),
                 new AnimalDetailsFormSection(),
-                //new SurgeryFormSection("ehr", "encounter_participants", "Staff", false),
+                new SurgeryFormSection("ehr", "encounter_participants", "Staff", false),
                 new SurgeryFormSection("study", "Drug Administration", "Medications/Treatments", true),
                 new SurgeryFormSection("study", "Clinical Remarks", "Remarks", false),
                 new SurgeryFormSection("study", "blood", "Blood Draws", false),

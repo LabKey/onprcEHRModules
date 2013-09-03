@@ -19,32 +19,37 @@
 SELECT
 	t.*,
 	(select max(bci.rowId) from labkey.onprc_billing.chargeableItems bci where t.item = bci.name) as chargeId
-FROM (	
+FROM (
 SELECT
   (SELECT objectid from IRIS_Production.dbo.ref_invoice ri WHERE ci.InvoiceNumber >= ri.StartInvoice AND ci.InvoiceNumber <= ri.EndInvoice) as invoiceId,
   --(SELECT count(objectid) from IRIS_Production.dbo.ref_invoice ri WHERE ci.InvoiceNumber >= ri.StartInvoice AND ci.InvoiceNumber <= ri.EndInvoice) as invoiceIdCount,
   CASE
-	WHEN ci.ServiceCenter = 'PDAR' THEN rfp.ProcedureName
-	WHEN ci.ServiceCenter = 'PSURG' THEN sp.ProcedureName
-  ELSE 'ERROR'
+	  WHEN ci.ServiceCenter = 'PDAR' THEN rfp.ProcedureName
+	  WHEN ci.ServiceCenter = 'PSURG' THEN sp.ProcedureName
+    ELSE 'ERROR'
   END as item,
+  CASE
+	  WHEN sys.Value IS NOT NULL THEN sys.value
+	  WHEN ci.ServiceCenter = 'PSURG' THEN 'Surgery'
+	  ELSE null
+  END as category,
 
   ci.objectid as objectid,
-  ci.ServiceCenter as category,
+  ci.ServiceCenter as ServiceCenter,
   ci.TransactionType as transactionType,
   --ci.TransactionNumber as id,
   ci.TransactionDate as date,
-  CASE 
+  CASE
 	WHEN (LEN(ci.TransactionDescription) = 5) and ISNUMERIC(ci.TransactionDescription) = 1 THEN ci.TransactionDescription
 	WHEN (ci.TransactionDescription IS NOT NULL and ISNUMERIC(substring(ci.TransactionDescription, 1, 5)) = 1) THEN substring(ci.TransactionDescription, 1, 5)
 	ELSE null
   END as id,
-  CASE 
+  CASE
 	WHEN (LEN(ci.TransactionDescription) = 5) and ISNUMERIC(ci.TransactionDescription) = 1 THEN null
 	WHEN (ci.TransactionDescription IS NOT NULL and ISNUMERIC(substring(ci.TransactionDescription, 1, 5)) = 1) THEN ltrim(substring(ci.TransactionDescription, 6, LEN(ci.TransactionDescription)))
 	ELSE ci.TransactionDescription
   END as comment,
-  
+
   ci.LastName as lastName,
   ci.FirstName as firstName,
   CASE
@@ -67,7 +72,7 @@ SELECT
   null as credit
 from IRIS_Production.dbo.Af_Chargesibs ci
 
---find corresponding debit  
+--find corresponding debit
   left join IRIS_Production.dbo.Af_Chargesibs ci2 ON (ci2.ChargesIDKey = ci.ChargesIDKey AND ci.TransactionNumber = ci2.TransactionNumber AND ci.IDKey != ci2.IDKey)
 
 --used to find the chargeid
@@ -75,6 +80,7 @@ from IRIS_Production.dbo.Af_Chargesibs ci
 
   left join IRIS_Production.dbo.Ref_FeesSurgical rfs on (ci.ItemCode = (Convert(varchar(10),rfs.ProcedureID)) AND ci.ServiceCenter = 'PSURG')
   left join IRIS_Production.dbo.Ref_SurgProcedure sp on (sp.ProcedureID = rfs.ProcedureID)
+  left join IRIS_Production.dbo.Sys_Parameters sys on (sys.Field = 'ChargeType' and sys.Flag = rfp.ChargeType)
 
 WHERE ci.ItemCode not like '%C'
 and (ci.ts > ? or ci2.ts > ? or rfp.ts > ? or rfs.ts > ? or sp.ts > ?)

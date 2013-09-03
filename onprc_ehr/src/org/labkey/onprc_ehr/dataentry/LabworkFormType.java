@@ -36,9 +36,9 @@ public class LabworkFormType extends TaskForm
 
     public LabworkFormType(Module owner)
     {
-        super(owner, NAME, "Lab Results", "Clinpath", Arrays.<FormSection>asList(
+        super(owner, NAME, "Lab Results", "Lab Results", Arrays.<FormSection>asList(
                 new TaskFormSection(),
-                new ClinpathRunsFormSection(),
+                new ClinpathRunsFormSection(false),
                 new AnimalDetailsFormSection(),
                 new LabworkFormSection("study", "Chemistry Results", "Biochemistry"),
                 new LabworkFormSection("study", "Hematology Results", "Hematology"),

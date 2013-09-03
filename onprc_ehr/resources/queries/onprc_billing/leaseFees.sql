@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-PARAMETERS(STARTDATE TIMESTAMP, ENDDATE TIMESTAMP)
+PARAMETERS(StartDate TIMESTAMP, EndDate TIMESTAMP)
 
 SELECT
 a.id,
@@ -24,18 +24,55 @@ a.projectedReleaseCondition,
 a.releaseCondition,
 a.assignCondition,
 a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
-lf.chargeId,
-null as chargeId2
+'Lease Fee' as chargeType,
+CASE
+  WHEN a.duration <= 1 THEN (SELECT rowid FROM onprc_billing.chargeableItems ci WHERE ci.active = true AND ci.name = 'One Day Lease')
+  ELSE lf.chargeId
+END as chargeId,
+null as leaseCharge1,
+null as leaseCharge2
 
 FROM study.assignment a
-LEFT JOIN onprc_billing.leaseFeeDefinition lf
-  ON (lf.assignCondition = a.assignCondition
-    AND lf.releaseCondition = a.projectedReleaseCondition
-    AND (a.ageAtTime.AgeAtTimeYearsRounded >= lf.minAge OR lf.minAge IS NULL)
-    AND (a.ageAtTime.AgeAtTimeYearsRounded < lf.maxAge OR lf.maxAge IS NULL)
-  )
-WHERE CONVERT(a.date, DATE) >= STARTDATE AND CONVERT(a.date, DATE) <= ENDDATE
-AND a.qcstate.publicdata = true AND lf.active = true
+
+--find overlapping TMB at date of assignment
+LEFT JOIN study.assignment a2 ON (
+  a.id = a2.id AND a.project != a2.project
+  AND a2.dateOnly <= a.dateOnly
+  AND a2.endDateCoalesced >= a.dateOnly
+  AND a2.project.name = '0300'
+)
+
+LEFT JOIN onprc_billing.leaseFeeDefinition lf ON (
+  lf.assignCondition = a.assignCondition
+  AND lf.releaseCondition = a.projectedReleaseCondition
+  AND (a.ageAtTime.AgeAtTimeYearsRounded >= lf.minAge OR lf.minAge IS NULL)
+  AND (a.ageAtTime.AgeAtTimeYearsRounded < lf.maxAge OR lf.maxAge IS NULL)
+  AND lf.active = true
+)
+
+WHERE a.dateOnly >= CAST(STARTDATE as DATE) AND a.dateOnly <= CAST(ENDDATE as DATE)
+AND a.qcstate.publicdata = true
+
+--add setup fees for all starts
+UNION ALL
+SELECT
+  a.id,
+  a.date,
+  a.project,
+  a.enddate,
+  a.projectedReleaseCondition,
+  a.releaseCondition,
+  a.assignCondition,
+  a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
+  'Lease Setup Fee' as chargeType,
+  (SELECT rowid FROM onprc_billing.chargeableItems ci WHERE ci.active = true AND ci.name = 'Lease Setup Fees') as chargeId,
+  null as leaseCharge1,
+  null as leaseCharge2
+
+FROM study.assignment a
+
+WHERE a.dateOnly >= CAST(STARTDATE as DATE) AND a.dateOnly <= CAST(ENDDATE as DATE)
+AND a.qcstate.publicdata = true
 
 --add released animals that need adjustments
 UNION ALL
@@ -49,8 +86,10 @@ a.projectedReleaseCondition,
 a.releaseCondition,
 a.assignCondition,
 a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
-lf.chargeId,
-lf2.chargeId as chargeId2
+'Lease Fee Refund' as chargeType,
+(SELECT rowid FROM onprc_billing.chargeableItems ci WHERE ci.name = 'Lease Fee Refund' and ci.active = true) as chargeId,
+lf.chargeId as leaseCharge1,
+lf2.chargeId as leaseCharge2
 
 FROM study.assignment a
 LEFT JOIN onprc_billing.leaseFeeDefinition lf
@@ -68,6 +107,6 @@ LEFT JOIN onprc_billing.leaseFeeDefinition lf2
   )
 
 WHERE a.releaseCondition != a.projectedReleaseCondition
-AND a.enddate is not null AND CONVERT(a.enddateCoalesced, DATE) >= STARTDATE AND CONVERT(a.enddateCoalesced, date) <= ENDDATE
+AND a.enddate is not null AND a.enddateCoalesced >= STARTDATE AND a.enddateCoalesced <= CAST(EndDate as DATE)
 AND a.qcstate.publicdata = true AND lf.active = true
 

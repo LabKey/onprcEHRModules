@@ -28,10 +28,16 @@ import java.util.List;
  */
 public class ClinpathRunsFormSection extends SimpleGridPanel
 {
-    public ClinpathRunsFormSection()
+    boolean _isRequest = false;
+
+    public ClinpathRunsFormSection(boolean isRequest)
     {
         super("study", "Clinpath Runs", "Panels / Services", EHRService.FORM_SECTION_LOCATION.Body);
+        setClientStoreClass("EHR.data.ClinpathRunsClientStore");
         addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/labworkButtons.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinpathRunsClientStore.js"));
+
+        _isRequest = isRequest;
     }
 
     @Override
@@ -40,13 +46,16 @@ public class ClinpathRunsFormSection extends SimpleGridPanel
         List<String> defaultButtons = new ArrayList<String>();
         defaultButtons.addAll(super.getTbarButtons());
 
-        int idx = 0;
-        if (defaultButtons.contains("DELETERECORD"))
+        if (!_isRequest)
         {
-            idx = defaultButtons.indexOf("DELETERECORD");
-            defaultButtons.remove("DELETERECORD");
+            int idx = 0;
+            if (defaultButtons.contains("DELETERECORD"))
+            {
+                idx = defaultButtons.indexOf("DELETERECORD");
+                defaultButtons.remove("DELETERECORD");
+            }
+            defaultButtons.add(idx, "PANELDELETE");
         }
-        defaultButtons.add(idx, "PANELDELETE");
 
         return defaultButtons;
     }
@@ -56,7 +65,8 @@ public class ClinpathRunsFormSection extends SimpleGridPanel
     {
         List<String> defaultButtons = super.getTbarMoreActionButtons();
 
-        defaultButtons.add("GUESSPROJECT");
+        if (!_isRequest)
+            defaultButtons.add("GUESSPROJECT");
 
         return defaultButtons;
     }

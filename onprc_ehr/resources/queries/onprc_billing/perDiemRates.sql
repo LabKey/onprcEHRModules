@@ -16,6 +16,8 @@
 SELECT
   p.*,
   coalesce(e.unitcost, cr.unitcost) as unitcost,
+  ce.account,
+  ce.rowid as creditAccountId,
   CASE
     WHEN e.unitcost IS NOT NULL THEN 'Y'
     ELSE null
@@ -34,4 +36,10 @@ LEFT JOIN onprc_billing.chargeRateExemptions e ON (
     p.startdate <= e.enddateTimeCoalesced AND
     p.chargeId = e.chargeId AND
     p.project = e.project
+)
+
+LEFT JOIN onprc_billing.creditAccount ce ON (
+    p.startdate >= ce.startDate AND
+    p.startdate <= ce.enddateTimeCoalesced AND
+    p.chargeId = ce.chargeId
 )

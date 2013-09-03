@@ -125,6 +125,12 @@
             <ns:column columnName="item">
                 <ns:columnTitle>Item</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="category">
+                <ns:columnTitle>Category</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="servicecenter">
+                <ns:columnTitle>Service Center</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="debitedaccount">
                 <ns:columnTitle>Debited Alias</ns:columnTitle>
             </ns:column>
@@ -162,9 +168,6 @@
                 <ns:isKeyField>true</ns:isKeyField>
                 <ns:shownInDetailsView>false</ns:shownInDetailsView>
                 <ns:shownInInsertView>false</ns:shownInInsertView>
-            </ns:column>
-            <ns:column columnName="category">
-                <ns:columnTitle>Category</ns:columnTitle>
             </ns:column>
             <ns:column columnName="itemCode">
                 <ns:columnTitle>Item Code</ns:columnTitle>
@@ -240,7 +243,7 @@
     </ns:table>
     <ns:table tableName="creditAccount" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
-        <ns:tableTitle>Credit Account</ns:tableTitle>
+        <ns:tableTitle>Aliases Receiving Credits For Each Charge</ns:tableTitle>
         <ns:columns>
             <ns:column columnName="rowId">
                 <ns:columnTitle>Row Id</ns:columnTitle>
@@ -356,7 +359,7 @@
     </ns:table>
     <ns:table tableName="invoiceRuns" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
-        <ns:tableTitle>Invoice Runs</ns:tableTitle>
+        <ns:tableTitle>Billing Periods</ns:tableTitle>
         <ns:tableUrl>/onprc_ehr/invoiceRunDetails.view?invoiceRunId=${objectid}</ns:tableUrl>
         <ns:columns>
             <ns:column columnName="rowId">
@@ -694,6 +697,37 @@
                 <ns:columnTitle>End Date</ns:columnTitle>
             </ns:column>
             <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="labworkFeeDefinition" tableDbType="TABLE" useColumnOrder="true">
+        <ns:tableTitle>Labwork Fee Structure</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:columns>
+            <ns:column columnName="rowid">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="servicename">
+                <ns:columnTitle>Service/Panel Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="chargetype">
+                <ns:columnTitle>Charge Type</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>ehr_lookups</ns:fkDbSchema>
+                    <ns:fkTable>procedureChargeType</ns:fkTable>
+                    <ns:fkColumnName>value</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="chargeId">
+                <ns:columnTitle>Charge Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="active">
+                <ns:columnTitle>Is Active?</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="objectid"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
             <ns:column columnName="modifiedBy"/>

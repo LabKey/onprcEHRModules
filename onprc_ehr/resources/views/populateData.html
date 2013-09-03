@@ -106,6 +106,12 @@ Ext4.onReady(function(){
             queryName: 'chemistry_tests',
             pk: 'testid'
         },{
+            label: 'Misc Tests',
+            populateFn: 'populateMiscTests',
+            schemaName: 'ehr_lookups',
+            queryName: 'misc_tests',
+            pk: 'testid'
+        },{
             label: 'Hematology Tests',
             populateFn: 'populateHematologyTests',
             schemaName: 'ehr_lookups',
@@ -117,6 +123,12 @@ Ext4.onReady(function(){
             schemaName: 'ehr_lookups',
             queryName: 'istat_tests',
             pk: 'testid'
+        },{
+            label: 'Urinalysis Qual Results',
+            populateFn: 'populateUrinalysisQualResults',
+            schemaName: 'ehr_lookups',
+            queryName: 'urinalysis_qualitative_results',
+            pk: 'rowid'
         },{
             label: 'Urinalysis Tests',
             populateFn: 'populateUrinalysisTests',
@@ -140,7 +152,7 @@ Ext4.onReady(function(){
             populateFn: 'populateSnomedSubsets',
             schemaName: 'ehr_lookups',
             queryName: 'snomed_subsets',
-            pk: 'subset'
+            pk: 'rowid'
         },{
             label: 'SNOMED Subset Codes',
             populateFn: 'populateSnomedSubsetCodes',
@@ -200,7 +212,7 @@ Ext4.onReady(function(){
             populateFn: 'populateEncounterRoles',
             schemaName: 'ehr_lookups',
             queryName: 'encounter_roles',
-            pk: 'type'
+            pk: 'value'
         },{
             label: 'Blood Draw Tube Volumes',
             populateFn: 'populateBloodDrawTubeVolumes',
@@ -242,6 +254,36 @@ Ext4.onReady(function(){
             populateFn: 'populateProcedureChargeType',
             schemaName: 'ehr_lookups',
             queryName: 'procedureChargeType',
+            pk: 'value'
+        },{
+            label: 'Pairing Event Type',
+            populateFn: 'populatePairingEventType',
+            schemaName: 'ehr_lookups',
+            queryName: 'pairingEventType',
+            pk: 'value'
+        },{
+            label: 'Pairing Separation Reason',
+            populateFn: 'populatePairingSeparationReason',
+            schemaName: 'ehr_lookups',
+            queryName: 'pairingSeparationReason',
+            pk: 'value'
+        },{
+            label: 'Pairing Observation',
+            populateFn: 'populatePairingObservation',
+            schemaName: 'ehr_lookups',
+            queryName: 'pairingObservation',
+            pk: 'value'
+        },{
+            label: 'Pairing Housing Type',
+            populateFn: 'populatePairingHousingType',
+            schemaName: 'ehr_lookups',
+            queryName: 'pairingHousingType',
+            pk: 'value'
+        },{
+            label: 'Pairing Outcome',
+            populateFn: 'populatePairingOutcome',
+            schemaName: 'ehr_lookups',
+            queryName: 'pairingOutcome',
             pk: 'value'
         },{
             label: 'Blood Draw Services',
@@ -2196,7 +2238,7 @@ Ext4.onReady(function(){
                             scope: this,
                             rows: toDelete,
                             success: function(data){
-                                console.log('success deleting rows: snomed_subsets');
+                                console.log('success deleting rows: snomed_subset codes');
                                 this.pendingDeletes--;
                                 if (this.pendingDeletes==0){
                                     this.down('#ehr_msg').update('Delete Complete');
@@ -2247,9 +2289,13 @@ Ext4.onReady(function(){
             ['AcquistionType', 'Acquistion Types', null],
             ['RearingType', 'Rearing Types', null],
             ['MatingType', 'Mating Types', null],
-            ['PairingType', 'Pairing Types', 'value'],
-            ['PairingOutcome', 'Pairing Outcomes', 'value'],
-            ['PairingSeparationReason', 'Pairing Separation Reasons', 'value'],
+            ['pairingEventType', 'Pairing Event Types', 'value'],
+            ['microbiologyQuantity', 'Microbiology Quantity', 'value'],
+            ['pairingHousingType', 'Pairing Housing Types', 'value'],
+            ['pairingOutcome', 'Pairing Outcomes', 'value'],
+            ['pairingObservation', 'Pairing Observations', 'value'],
+            ['pairingSeparationReason', 'Pairing Separation Reason', 'value'],
+            ['serologyMethod', 'Serology Methods', 'value'],
             ['TransferReason', 'Transfer Reasons', null],
             ['perDiemFeeType', 'Per Diem Fee Types', null],
             ['observation_types', 'Observation Types', null],
@@ -2262,6 +2308,118 @@ Ext4.onReady(function(){
             ['blood_draw_reason', 'Blood Draw Reason', 'value'],
             ['encounter_roles', 'Encounter Roles', 'value']
         ],
+
+        populatePairingEventType: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'pairingEventType',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['Pair Start'],
+                ['Pair End'],
+                ['Unsuccessful Attempt']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populatePairingHousingType: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'pairingHousingType',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['Full Pair'],
+                ['Grooming Contact'],
+                ['Mesh']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populatePairingOutcome: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'pairingOutcome',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['N/A'],
+                ['Successful'],
+                ['Unknown'],
+                ['Unsuccessful']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populatePairingSeparationReason: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'pairingSeparationReason',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['Aggression'],
+                ['None'],
+                ['Group Housing'],
+                ['Departure'],
+                ['Medical'],
+                ['Transfer'],
+                ['Death'],
+                ['See Remarks'],
+                ['Project Assignment'],
+                ['Project Reserve']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populatePairingObservation: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'pairingObservation',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['N/A'],
+                ['Aggression']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
 
         deleteAll: function(schemaName, queryName, pk){
             this.pendingDeletes++;
@@ -2704,22 +2862,23 @@ Ext4.onReady(function(){
                 ['Urinalysis','Color',1,'','testid'],
                 ['Urinalysis','App',2,'','testid'],
                 ['Urinalysis','SpecGrav',3,'','testid'],
-                ['Urinalysis','pH',4,'','testid'],
-                ['Urinalysis','Bili',5,'','testid'],
-                ['Urinalysis','Glu',6,'','testid'],
-                ['Urinalysis','Ket',7,'','testid'],
-                ['Urinalysis','Prot',8,'','testid'],
-                ['Urinalysis','Urobili',9,'','testid'],
-                ['Urinalysis','Bact',10,'','testid'],
-                ['Urinalysis','Blood',11,'','testid'],
+                ['Urinalysis','Urobili',4,'','testid'],
+                ['Urinalysis','Prot',5,'','testid'],
+                ['Urinalysis','pH',6,'','testid'],
+                ['Urinalysis','Blood',7,'','testid'],
+                ['Urinalysis','Ket',8,'','testid'],
+                ['Urinalysis','Bili',9,'','testid'],
+                ['Urinalysis','Glu',10,'','testid'],
+                ['Urinalysis','RBC',11,'','testid'],
                 ['Urinalysis','WBC',12,'','testid'],
-                ['Urinalysis','RBC',13,'','testid'],
+                ['Urinalysis','Bact',13,'','testid'],
                 ['Urinalysis','Epith',14,'','testid'],
-                ['Urinalysis','Crystals',15,'','testid'],
-                ['Urinalysis','Casts',16,'','testid'],
-                ['Urinalysis','Cast-1',17,'','testid'],
-                ['Urinalysis','Cast-2',18,'','testid'],
-                ['Urinalysis','Other',19,'','testid'],
+                ['Urinalysis','Bact',15,'','testid'],
+                ['Urinalysis','Cast-1',16,'','testid'],
+                ['Urinalysis','Cast-2',17,'','testid'],
+                ['Urinalysis','Crystals',18,'','testid'],
+                ['Urinalysis','Casts',19,'','testid'],
+                ['Urinalysis','Other',20,'','testid'],
                 ['CBC only, no differential','WBC',1,'','testid'],
                 ['CBC only, no differential','HCT',2,'','testid'],
                 ['CBC only, no differential','RBC',3,'','testid'],
@@ -2998,11 +3157,11 @@ Ext4.onReady(function(){
                 ['Comprehensive Chemistry panel in-house', true, null, 1.0],
                 ['MHC Typing', false, null, 2.0],
                 ['Viral Load', false, null, 1.0],
-                ['SPF Surveillance - Annual', true, 'STT', 4.0],
-                ['ESPF Surveillance - Monthly', true, 'STT', 4.0],
-                ['ESPF Surveillance - Quarterly', true, 'STT', 4.0],
-                ['Japanese Macaque Surveillance', true, 'STT', 4.0],
-                ['Compromised SPF Surveillance', true, 'STT', 4.0]
+                ['SPF Surveillance - Annual', true, 'No Additive', 4.0],
+                ['ESPF Surveillance - Monthly', true, 'No Additive', 4.0],
+                ['ESPF Surveillance - Quarterly', true, 'No Additive', 4.0],
+                ['Japanese Macaque Surveillance', true, 'No Additive', 4.0],
+                ['Compromised SPF Surveillance', true, 'No Additive', 4.0]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -3273,7 +3432,7 @@ Ext4.onReady(function(){
                 ['clinObs' ,'Clinical' ,'query' ,'Observations' ,'true' ,'' ,'study' ,'Clinical Observations', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.'],
                 ['clinremarks' ,'Clinical' ,'query' ,'Clinical Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the clinical remarks entered about each animal'],
                 ['behaviorRemarks' ,'Behavior' ,'query' ,'Behavior Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', 'Behavior Remarks', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the behavior remarks entered about each animal'],
-                ['pairings' ,'Behavior' ,'query' ,'Pairings' ,'true' ,'' ,'study' ,'pairingData', '', '', 'date', 'false', 'false', '', '', 'This report contains records about pairings made using each animal'],
+                ['pairings' ,'Behavior' ,'query' ,'Pairing Observations' ,'true' ,'' ,'study' ,'pairings', '', '', 'date', 'false', 'false', '', '', 'This report contains records about pairings made using each animal'],
 
                 //['caseSummary' ,'Clinical' ,'query' ,'Cases Over 2 Years' ,'true' ,'' ,'study' ,'clinicalCaseSummary', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This reports summarizes clinical cases opened in the past 2 years.'],
                 //['fullHistory' ,'Clinical' ,'query' ,'Full History' ,'true' ,'' ,'study' ,'StudyData', 'Full History', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains all clinical data on the animal'],
@@ -3286,12 +3445,12 @@ Ext4.onReady(function(){
                 ['behaviorHistory' ,'Behavior' ,'js' ,'Full History' ,'true' ,'' ,'study' ,'clinicalHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
                 ['fullClinicalHistory' ,'Pathology' ,'js' ,'Clinical History - Full' ,'true' ,'' ,'study' ,'fullClinicalHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
 
-                ['clinMedicationSchedule' ,'Today At Center' ,'js' ,'Clinical Medication Schedule' ,'true', '' ,'study' ,'clinMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
-                ['dietSchedule' ,'Today At Center' ,'js' ,'Diets', 'true', '' , 'study' ,'dietSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
+                ['clinMedicationSchedule' ,'Daily Reports' ,'js' ,'Clinical Medication Schedule' ,'true', '' ,'study' ,'clinMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
+                ['dietSchedule' ,'Daily Reports' ,'js' ,'Diets', 'true', '' , 'study' ,'dietSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
                 ['surgMedicationSchedule2' ,'Surgery' ,'js' ,'Surgical Medication Schedule' ,'true', '' ,'study' ,'surgMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
-                ['surgMedicationSchedule' ,'Today At Center' ,'js' ,'Surgical Medication Schedule' ,'true', '' ,'study' ,'surgMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
+                ['surgMedicationSchedule' ,'Daily Reports' ,'js' ,'Surgical Medication Schedule' ,'true', '' ,'study' ,'surgMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
 
-                ['bloodSchedule' ,'Today At Center' ,'js' ,'Blood Schedule' ,'true' ,'' ,'study' ,'bloodSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
+                ['bloodSchedule' ,'Daily Reports' ,'js' ,'Blood Schedule' ,'true' ,'' ,'study' ,'bloodSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
                 //['behaviorRemarks' ,'Colony Management' ,'query' ,'Behavior Remarks' ,'true' ,'' ,'study' ,'Behavior Remarks', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains remarks entered by Behavioral Management'],
                 ['birth' ,'Colony Management' ,'query' ,'Birth Records' ,'true' ,'' ,'study' ,'birth', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'Birth records'],
                 ['birth2' ,'Reproductive Management' ,'query' ,'Birth Records' ,'true' ,'' ,'study' ,'birth', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'Birth records'],
@@ -3339,21 +3498,21 @@ Ext4.onReady(function(){
                 //['pe' ,'Physical Exam' ,'query' ,'Exams' ,'true' ,'' ,'study' ,'Clinical Encounters', 'PE', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'A list of physical exams performed'],
                 //['teeth' ,'Physical Exam' ,'query' ,'Teeth' ,'true' ,'' ,'study' ,'Teeth', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains observations about teeth taken during physical exams'],
                 //['vitals' ,'Physical Exam' ,'query' ,'Vitals' ,'true' ,'' ,'study' ,'Vitals', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains records of vitals, including heart rate and blood pressure'],
-                //['obs' ,'Today At Center' ,'js' ,'Irregular Observations' ,'true' ,'' ,'study' ,'irregularObs', '', '', 'date', 'true', 'true', '1', '', 'Displays irregular observations from today only'],
-                //['obsTreatment' ,'Today At Center' ,'js' ,'Obs/Treatment' ,'true' ,'' ,'study' ,'irregularObsTreatment', '', '', 'date', 'true', 'true', '2', '', 'Displays irregular observations and treatments for today'],
-                //['todaysHistory' ,'Today At Center' ,'query' ,'Today\'s History' ,'true' ,'' ,'study' ,'StudyData', 'Full History', '', 'Date', 'true', 'false', '3', 'qcstate/publicdata', 'This report contains the full history, filtered to show events that happened today only'],
-                //['treatmentScheduleAM' ,'Today At Center' ,'query' ,'Treatments - Morning' ,'true' ,'' ,'study' ,'treatmentSchedule', 'AM Treatments', '', 'date', 'true', 'false', '4', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
-                //['treatmentSchedulePM' ,'Today At Center' ,'query' ,'Treatments - Afternoon' ,'true' ,'' ,'study' ,'treatmentSchedule', 'PM Treatments', '', 'date', 'true', 'false', '5', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
-                //['treatmentScheduleNight' ,'Today At Center' ,'query' ,'Treatments - Evening' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Night Treatments', '', 'date', 'true', 'false', '6', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
-                //['treatmentSchedule' ,'Today At Center' ,'query' ,'Treatments - Master' ,'true' ,'' ,'study' ,'treatmentSchedule', '', '', 'date', 'true', 'false', '7', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
-                ['cases' ,'Today At Center' ,'query' ,'Active Clinical Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Clinical Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active clinical cases'],
+                //['obs' ,'Daily Reports' ,'js' ,'Irregular Observations' ,'true' ,'' ,'study' ,'irregularObs', '', '', 'date', 'true', 'true', '1', '', 'Displays irregular observations from today only'],
+                //['obsTreatment' ,'Daily Reports' ,'js' ,'Obs/Treatment' ,'true' ,'' ,'study' ,'irregularObsTreatment', '', '', 'date', 'true', 'true', '2', '', 'Displays irregular observations and treatments for today'],
+                //['todaysHistory' ,'Daily Reports' ,'query' ,'Today\'s History' ,'true' ,'' ,'study' ,'StudyData', 'Full History', '', 'Date', 'true', 'false', '3', 'qcstate/publicdata', 'This report contains the full history, filtered to show events that happened today only'],
+                //['treatmentScheduleAM' ,'Daily Reports' ,'query' ,'Treatments - Morning' ,'true' ,'' ,'study' ,'treatmentSchedule', 'AM Treatments', '', 'date', 'true', 'false', '4', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
+                //['treatmentSchedulePM' ,'Daily Reports' ,'query' ,'Treatments - Afternoon' ,'true' ,'' ,'study' ,'treatmentSchedule', 'PM Treatments', '', 'date', 'true', 'false', '5', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
+                //['treatmentScheduleNight' ,'Daily Reports' ,'query' ,'Treatments - Evening' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Night Treatments', '', 'date', 'true', 'false', '6', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
+                //['treatmentSchedule' ,'Daily Reports' ,'query' ,'Treatments - Master' ,'true' ,'' ,'study' ,'treatmentSchedule', '', '', 'date', 'true', 'false', '7', 'qcstate/publicdata', 'The report displays all treatments scheduled for today'],
+                ['cases' ,'Daily Reports' ,'query' ,'Active Clinical Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Clinical Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active clinical cases'],
                 ['behaviorCases' ,'Behavior' ,'query' ,'Behavior Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Behavior Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active behavior cases'],
                 //['enrichment' ,'Behavior' ,'query' ,'Enrichment' ,'true' ,'' ,'study' ,'Enrichment', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
-                ['surgicalCases' ,'Today At Center' ,'query' ,'Active Surgery Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Surgery Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active surgery cases'],
+                ['surgicalCases' ,'Daily Reports' ,'query' ,'Active Surgery Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Surgery Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active surgery cases'],
                 ['activeFlags' ,'General' ,'query' ,'Active Flags' ,'true' ,'' ,'study' ,'Animal Record Flags', 'Active Flags', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active flags for this animals'],
                 ['surgicalCases2' ,'Surgery' ,'query' ,'Surgery Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Surgery Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active surgery cases'],
                 //['diet' ,'Colony Management' ,'query' ,'Diet' ,'true' ,'' ,'study' ,'Diet', 'Active Diets', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active diets'],
-                //['problemList' ,'Today At Center' ,'query' ,'Unresolved Problem List' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list'],
+                //['problemList' ,'Daily Reports' ,'query' ,'Unresolved Problem List' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list'],
                 //['openProblems' ,'Clinical' ,'query' ,'Problems - Active' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the unresolved clinical problem list'],
                 //['allProblems' ,'Clinical' ,'query' ,'Problems - History' ,'true' ,'' ,'study' ,'Problem List', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list, including closed problems'],
                 ['matings' ,'Reproductive Management' ,'query' ,'Matings' ,'true' ,'' ,'study' ,'matingsExpanded', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the records of matings'],
@@ -3363,8 +3522,8 @@ Ext4.onReady(function(){
                 ['menses' ,'Reproductive Management' ,'query' ,'Menses' ,'true' ,'' ,'study' ,'Clinical Observations', 'Menses', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 ['delivery' ,'Reproductive Management' ,'query' ,'Deliveries' ,'true' ,'' ,'study' ,'Delivery', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 ['pregnancy' ,'Reproductive Management' ,'query' ,'Pregnancies' ,'true' ,'' ,'study' ,'Pregnancy Confirmations', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', '']
-                //['todaysBlood' ,'Today At Center' ,'query' ,'Blood Draw Schedule' ,'true' ,'' ,'study' ,'BloodSchedule', 'Blood Schedule', '', 'date', 'TRUE', 'false', '9', 'qcstate/publicdata', 'Contains records of blood draws scheduled for today']
-                //['treatmentsIncomplete' ,'Today At Center' ,'query' ,'Treatments - Incomplete' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Incomplete Treatments', '', 'date', 'true', 'false', '7', 'qcstate/publicdata', 'The report displays all incomplete treatments scheduled for today']
+                //['todaysBlood' ,'Daily Reports' ,'query' ,'Blood Draw Schedule' ,'true' ,'' ,'study' ,'BloodSchedule', 'Blood Schedule', '', 'date', 'TRUE', 'false', '9', 'qcstate/publicdata', 'Contains records of blood draws scheduled for today']
+                //['treatmentsIncomplete' ,'Daily Reports' ,'query' ,'Treatments - Incomplete' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Incomplete Treatments', '', 'date', 'true', 'false', '7', 'qcstate/publicdata', 'The report displays all incomplete treatments scheduled for today']
 
                 //['sbt' ,'Genetics' ,'query' ,'MHC Genotype' ,'TRUE' ,'' ,'study' ,'demographics', '', '', 'date', 'FALSE', 'FALSE', '', 'qcstate/publicdata', 'This report contains summaries of MHC genetics, derived from many different techniques']
                 //['feeding' ,'Colony Management' ,'query' ,'Feeding' ,'true' ,'' ,'study' ,'Feeding', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the amount and type of food ordered for each animal'],
@@ -3514,6 +3673,349 @@ Ext4.onReady(function(){
                 ['Amyl', 'Amylase', null, null, true, false, true, 23],
                 ['UA', 'Uric Acid', 'mg/dL', null, true, false, false, null],
                 ['VLDL/CHOL', 'VLDL/Cholesterol Ratio', null, null, true, false, false, null]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateMiscTests: function(){
+            this.pendingInserts++;
+
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'misc_tests',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('testid,name,units,aliases,alertOnAbnormal,alertOnAny,includeInPanel,sort_order').split(',');
+
+            var data = [
+                ['% SAT', '', null, false, false, false, null],
+                ['% SATURATION', '', null, false, false, false, null],
+                ['20.71SOL', '', null, false, false, false, null],
+                ['3+ BLOOD', '', null, false, false, false, null],
+                ['4 HOUR', '', null, false, false, false, null],
+                ['661', '', null, false, false, false, null],
+                ['8 HOUR', '', null, false, false, false, null],
+                ['A/G Ratio', '', null, false, false, false, null],
+                ['ABNORMAL IgG-NO DETECTABLE LIGHT CHAIN', '', null, false, false, false, null],
+                ['ACID FAST STAIN', '', null, false, false, false, null],
+                ['ADRENOCORTICOTROPIC HORMONE (ACTH)', '', null, false, false, false, null],
+                ['ALBUMIN', '', null, false, false, false, null],
+                ['ALBUMIN 42.8%   ALPHA 1 -7.0%', '', null, false, false, false, null],
+                ['ALK PHOS  TOTAL', '', null, false, false, false, null],
+                ['Alkaline Phos isoenzyme-Bone', '', null, false, false, false, null],
+                ['Alkaline Phos isoenzyme-Intestine', '', null, false, false, false, null],
+                ['Alkaline Phos isoenzyme-Liver', '', null, false, false, false, null],
+                ['Alkaline Phos Total', '', null, false, false, false, null],
+                ['ALPHA 1', '', null, false, false, false, null],
+                ['ALPHA 1 GLOBULIN', '', null, false, false, false, null],
+                ['ALPHA 2', '', null, false, false, false, null],
+                ['ALPHA 2 GLOBULIN', '', null, false, false, false, null],
+                ['AMP TICAR TIRMETH-SULFA CEFAZOLIN CEPHAL', '', null, false, false, false, null],
+                ['AMP/SULB  AZTRE CIPROFL IMPEN MEZLO NORF', '', null, false, false, false, null],
+                ['AMYLASE', '', null, false, false, false, null],
+                ['ANA (ANTINUCLEAR ANTIBODIES)', '', null, false, false, false, null],
+                ['ANAEROBIC CULTURE', '', null, false, false, false, null],
+                ['ANTIBODY SCREEN', '', null, false, false, false, null],
+                ['ANTIMICROSOMAL', '', null, false, false, false, null],
+                ['ANTINUCLEAR ANTIBODIES', '', null, false, false, false, null],
+                ['ANTITHYROGLOBULIN', '', null, false, false, false, null],
+                ['APPEARANCE', '', null, false, false, false, null],
+                ['ARTERIAL BLOOD GASES', '', null, false, false, false, null],
+                ['B CELLS', '', null, false, false, false, null],
+                ['BENCE JONES PROTEIN  [IEP]', '', null, false, false, false, null],
+                ['BETA  13.2%', '', null, false, false, false, null],
+                ['Beta Globulin', '', null, false, false, false, null],
+                ['Bile Acids Post-parandial', '', null, false, false, false, null],
+                ['Bile Acids Pre-parandial', '', null, false, false, false, null],
+                ['BILIRUBIN', '', null, false, false, false, null],
+                ['BLOOD', '', null, false, false, false, null],
+                ['BUN', '', null, false, false, false, null],
+                ['BUN DIPSTICK', '', null, false, false, false, null],
+                ['Calcitonin', '', null, false, false, false, null],
+                ['CD20', '', null, false, false, false, null],
+                ['CD26', '', null, false, false, false, null],
+                ['CD4', '', null, false, false, false, null],
+                ['CD4/CD8', '', null, false, false, false, null],
+                ['CD8', '', null, false, false, false, null],
+                ['CEFTIZOXIME CEFTRIAXONE GENT TOBRA', '', null, false, false, false, null],
+                ['CELL COUNT', '', null, false, false, false, null],
+                ['CELL COUNT  DIFFERENTIAL', '', null, false, false, false, null],
+                ['CELL COUNT (WBC)', '', null, false, false, false, null],
+                ['CELL COUNT = 1.2', '', null, false, false, false, null],
+                ['CELL DIFFERENTIAL', '', null, false, false, false, null],
+                ['CELL SORTING', '', null, false, false, false, null],
+                ['CHOL./HDL RATIO', '', null, false, false, false, null],
+                ['CHOL/HDL', '', null, false, false, false, null],
+                ['CHOL/HDL RATIO', '', null, false, false, false, null],
+                ['CHOL/HDL RTIO', '', null, false, false, false, null],
+                ['CLOSTRIDIUM DIFFICILE TOXIN', '', null, false, false, false, null],
+                ['CLOTTING TIME', '', null, false, false, false, null],
+                ['COLD AGGLUTININ', '', null, false, false, false, null],
+                ['COMMENT: CSF CLOUDY & BLOODY', '', null, false, false, false, null],
+                ['CONTROL', '', null, false, false, false, null],
+                ['CORTISOL', '', null, false, false, false, null],
+                ['CORTISOL TOTAL SERUM', '', null, false, false, false, null],
+                ['CPK', '', null, false, false, false, null],
+                ['CPK TOTAL', '', null, false, false, false, null],
+                ['CPK-1', '', null, false, false, false, null],
+                ['CPK-1 [BB]', '', null, false, false, false, null],
+                ['CPK-1(BB)', '', null, false, false, false, null],
+                ['CPK-2', '', null, false, false, false, null],
+                ['CPK-2 [MB]', '', null, false, false, false, null],
+                ['CPK-2(MB)', '', null, false, false, false, null],
+                ['CPK-3', '', null, false, false, false, null],
+                ['CPK-3 [MM]', '', null, false, false, false, null],
+                ['CPK-3(MM)', '', null, false, false, false, null],
+                ['C-Reactive Protein', '', null, false, false, false, null],
+                ['Creatine Kinase', '', null, false, false, false, null],
+                ['CREATININE', '', null, false, false, false, null],
+                ['CRYPTOSPORIDIA', '', null, false, false, false, null],
+                ['CRYPTOSPORIDIUM EXAMINATION SENT OUT', '', null, false, false, false, null],
+                ['CSF CELL COUNT', '', null, false, false, false, null],
+                ['CSF GLUCOSE', '', null, false, false, false, null],
+                ['CSF PROTEIN', '', null, false, false, false, null],
+                ['CSF SEDIMENT', '', null, false, false, false, null],
+                ['CSF TOTAL PROTEIN', '', null, false, false, false, null],
+                ['CULTURE', '', null, false, false, false, null],
+                ['CYTOLOGY', '', null, false, false, false, null],
+                ['CYTOLOGY OF BILE', '', null, false, false, false, null],
+                ['CYTOLOGY OF LUMP ON THIGH', '', null, false, false, false, null],
+                ['CYTOLOGY OF MASS', '', null, false, false, false, null],
+                ['CYTOMEGALOVIRUS', '', null, false, false, false, null],
+                ['D1FFERENTIAL', '', null, false, false, false, null],
+                ['DARKFEILD MICROSCOPY FOR LEPTOSPIRA SP.', '', null, false, false, false, null],
+                ['DEXTROSTIX GLUCOSE', '', null, false, false, false, null],
+                ['DIFF', '', null, false, false, false, null],
+                ['DIFF QUIK STAIN FOR FUNGUS', '', null, false, false, false, null],
+                ['DIFFERENTIAL', '', null, false, false, false, null],
+                ['DIFFERENTIAL WBC', '', null, false, false, false, null],
+                ['DIHYDROTESTOSTERONE', '', null, false, false, false, null],
+                ['DIPSTICK BLOOD', '', null, false, false, false, null],
+                ['DIPSTICK PROTEIN', '', null, false, false, false, null],
+                ['DIRECT COOMBS', '', null, false, false, false, null],
+                ['E-2 (ESTROGEN)', '', null, false, false, false, null],
+                ['ECTOPARASITE EXAM', '', null, false, false, false, null],
+                ['ERYTHROPOIETIN', '', null, false, false, false, null],
+                ['ESTRADIOL', '', null, false, false, false, null],
+                ['EXAM FOR FUNGAL HYPHEA', '', null, false, false, false, null],
+                ['EXAM FOR YEAST', '', null, false, false, false, null],
+                ['F', '', null, false, false, false, null],
+                ['FACS ANALYSIS', '', null, false, false, false, null],
+                ['FECAL GRAM STAIN', '', null, false, false, false, null],
+                ['FERRITIN', '', null, false, false, false, null],
+                ['FIBRIN DEGRADATION PRODUCTS', '', null, false, false, false, null],
+                ['FIBRINOGEN', '', null, false, false, false, null],
+                ['FREE T4', '', null, false, false, false, null],
+                ['FREE T-4', '', null, false, false, false, null],
+                ['FREE THYROXINE', '', null, false, false, false, null],
+                ['FREE THYROXINE INDEX', '', null, false, false, false, null],
+                ['Fructosamine, serum', '', null, false, false, false, null],
+                ['FTI', '', null, false, false, false, null],
+                ['FUNGAL CULTURE', '', null, false, false, false, null],
+                ['FUNGUS CULTURE', '', null, false, false, false, null],
+                ['FUNGUS CULTURE ON HAIR', '', null, false, false, false, null],
+                ['FUNGUS CULTURE ON SKIN', '', null, false, false, false, null],
+                ['GALLSTONE ANALYSIS', '', null, false, false, false, null],
+                ['GAMMA', '', null, false, false, false, null],
+                ['GAMMA GLOBULIN', '', null, false, false, false, null],
+                ['Gastrin', '', null, false, false, false, null],
+                ['Giardia', '', null, false, false, false, null],
+                ['GLUCOSE', '', null, false, false, false, null],
+                ['GLUCOSE BY DEXTROSTIX', '', null, false, false, false, null],
+                ['GLUCOSE&PROTEIN', '', null, false, false, false, null],
+                ['GLYCOSYLATED HEMOGLOBIN', '', null, false, false, false, null],
+                ['GRAM STAIN', '', null, false, false, false, null],
+                ['GRAMS STAIN', '', null, false, false, false, null],
+                ['GROSS BLOOD', '', null, false, false, false, null],
+                ['HAIR CULTURE', '', null, false, false, false, null],
+                ['HDL', '', null, false, false, false, null],
+                ['HEAT INACTIV. ALK PHOS', '', null, false, false, false, null],
+                ['HEAT INACTIVATED ALK PHOS', '', null, false, false, false, null],
+                ['Helicobacter by PCR', '', null, false, false, false, null],
+                ['HEMOSIDERIN', '', null, false, false, false, null],
+                ['HISTOLOGY', '', null, false, false, false, null],
+                ['HUMAN GROWTH HORMONE', '', null, false, false, false, null],
+                ['Ig A', '', null, false, false, false, null],
+                ['Ig G', '', null, false, false, false, null],
+                ['Ig M', '', null, false, false, false, null],
+                ['IgA', '', null, false, false, false, null],
+                ['IgG', '', null, false, false, false, null],
+                ['IgG ANTIBODY', '', null, false, false, false, null],
+                ['IGM', '', null, false, false, false, null],
+                ['IMMUNOGLOBULIN A', '', null, false, false, false, null],
+                ['IMMUNOGLOBULIN G', '', null, false, false, false, null],
+                ['IMMUNOGLOBULIN M', '', null, false, false, false, null],
+                ['INDIRECT COOMBS', '', null, false, false, false, null],
+                ['Insulin, fasting', '', null, false, false, false, null],
+                ['Intact PTH', '', null, false, false, false, null],
+                ['IRON', '', null, false, false, false, null],
+                ['KETONE & BILIRUBIN DIPSTICK', '', null, false, false, false, null],
+                ['KNOTT\'S TEST FOR MICROFILARIA', '', null, false, false, false, null],
+                ['KOH PREP', '', null, false, false, false, null],
+                ['L E PREP', '', null, false, false, false, null],
+                ['L.E. PREP', '', null, false, false, false, null],
+                ['LDH-1', '', null, false, false, false, null],
+                ['LDH-2', '', null, false, false, false, null],
+                ['LDH-3', '', null, false, false, false, null],
+                ['LDH-4', '', null, false, false, false, null],
+                ['LDL', '', null, false, false, false, null],
+                ['LE PREP', '', null, false, false, false, null],
+                ['LEAD', '', null, false, false, false, null],
+                ['Leptospirosis Ab', '', null, false, false, false, null],
+                ['LIPASE', '', null, false, false, false, null],
+                ['Malaria Screen', '', null, false, false, false, null],
+                ['Measles Titer', '', null, false, false, false, null],
+                ['MICROSCOPIC', '', null, false, false, false, null],
+                ['Mitogen reacticity: Con A', '', null, false, false, false, null],
+                ['Mitogen reacticity: PHA', '', null, false, false, false, null],
+                ['Mitogen reactivity: Con A', '', null, false, false, false, null],
+                ['Mitogen reactivity: PHA', '', null, false, false, false, null],
+                ['Mitogen reactivity: Tet Tox', '', null, false, false, false, null],
+                ['Mitogen reactivity:Con A', '', null, false, false, false, null],
+                ['Mitogen reactivity:PHA', '', null, false, false, false, null],
+                ['Mitogen reactivity:Tet Tox', '', null, false, false, false, null],
+                ['Mitogen reactivity; Con A', '', null, false, false, false, null],
+                ['Mitogen reactivity; PHA', '', null, false, false, false, null],
+                ['NITROSONAPTHOL', '', null, false, false, false, null],
+                ['NO WBC COUNT DUE TO PRESENCE OF BLOOD', '', null, false, false, false, null],
+                ['NORMAL', '', null, false, false, false, null],
+                ['NOTE: DIFFERENTIAL AND TOTAL PROTIEN DON', '', null, false, false, false, null],
+                ['O HOUR', '', null, false, false, false, null],
+                ['Occult Blood', '', null, false, false, false, null],
+                ['OCCULT BLOOD ON VOMITUS', '', null, false, false, false, null],
+                ['ORAL SMEAR FOR CANDIDA', '', null, false, false, false, null],
+                ['OSMOTIC FRAGILITY', '', null, false, false, false, null],
+                ['OSMOTIC FRAGILITY CONTROL', '', null, false, false, false, null],
+                ['OTHER OBSERVATIONS', '', null, false, false, false, null],
+                ['p.H.', '', null, false, false, false, null],
+                ['P4', '', null, false, false, false, null],
+                ['P-4', '', null, false, false, false, null],
+                ['P-4 (PROGESTERONE)', '', null, false, false, false, null],
+                ['PACKED RBC VOLUME', '', null, false, false, false, null],
+                ['PACKED WBC VOLUME', '', null, false, false, false, null],
+                ['PARATHYROID HORMONE', '', null, false, false, false, null],
+                ['PERCENT LYMPHS', '', null, false, false, false, null],
+                ['PERCENT NEUTROPHILS', '', null, false, false, false, null],
+                ['PERCENT SATURATION', '', null, false, false, false, null],
+                ['pH', '', null, false, false, false, null],
+                ['Phenobarbital', '', null, false, false, false, null],
+                ['PIPER TICAR/CA AMIK CEFOTOX CEFTAZIDIME', '', null, false, false, false, null],
+                ['Plasma ACTH', '', null, false, false, false, null],
+                ['Prima TB STAT Assay', '', null, false, false, false, null],
+                ['PROGESTERONE (P4)', '', null, false, false, false, null],
+                ['PROLACTIN', '', null, false, false, false, null],
+                ['protein', '', null, false, false, false, null],
+                ['PROTEIN ELECTROPHORESIS - TOTAL PROTEIN', '', null, false, false, false, null],
+                ['Protein/Creatinine', '', null, false, false, false, null],
+                ['PROTOZOA', '', null, false, false, false, null],
+                ['PSEUDOCHOLINESTERASE', '', null, false, false, false, null],
+                ['PT(Prothrombin Time)', '', null, false, false, false, null],
+                ['PTH', '', null, false, false, false, null],
+                ['PTT (Activated partial thromboplastin time)', '', null, false, false, false, null],
+                ['QQQQQQQQQQQ', '', null, false, false, false, null],
+                ['RA FACTOR', '', null, false, false, false, null],
+                ['RBC', '', null, false, false, false, null],
+                ['RBC cell count', '', null, false, false, false, null],
+                ['RBC COUNT', '', null, false, false, false, null],
+                ['RBCS PRESENT', '', null, false, false, false, null],
+                ['REACTION TO ADENOVIRUS', '', null, false, false, false, null],
+                ['REACTION TO H. SAIMIRI', '', null, false, false, false, null],
+                ['REACTION TO H. TAMARINUS', '', null, false, false, false, null],
+                ['REACTION TO INFLUENZA B', '', null, false, false, false, null],
+                ['REACTION TO PARAINFLUENZA 1', '', null, false, false, false, null],
+                ['REACTION TO PARAINFLUENZA 3', '', null, false, false, false, null],
+                ['RED CELL FRAGILITY', '', null, false, false, false, null],
+                ['REFERENCE RANGE', '', null, false, false, false, null],
+                ['RHEUMATOID FACTOR', '', null, false, false, false, null],
+                ['RIA T3', '', null, false, false, false, null],
+                ['SATURATION', '', null, false, false, false, null],
+                ['SEDIMENT CYTOLOGY', '', null, false, false, false, null],
+                ['Selenium', '', null, false, false, false, null],
+                ['SERUM IRON', '', null, false, false, false, null],
+                ['Serum Osmolality', '', null, false, false, false, null],
+                ['SGPT', '', null, false, false, false, null],
+                ['SKIN &HAIR CULTURE FUNGUS CULTURE', '', null, false, false, false, null],
+                ['SPEC. GRAVITY', '', null, false, false, false, null],
+                ['SPECIFIC GRAVITY', '', null, false, false, false, null],
+                ['T 3 uptake', '', null, false, false, false, null],
+                ['T CELLS', '', null, false, false, false, null],
+                ['T3', '', null, false, false, false, null],
+                ['T-3', '', null, false, false, false, null],
+                ['T3  UPTAKE', '', null, false, false, false, null],
+                ['T3 RIA', '', null, false, false, false, null],
+                ['T3 UPTAKE', '', null, false, false, false, null],
+                ['T-3 UPTAKE', '', null, false, false, false, null],
+                ['T3(TRIIODOTHRONINE)  TOTAL', '', null, false, false, false, null],
+                ['T4', '', null, false, false, false, null],
+                ['T-4', '', null, false, false, false, null],
+                ['T-4 (RIA)', '', null, false, false, false, null],
+                ['T-4 BY RIA', '', null, false, false, false, null],
+                ['T4 RIA', '', null, false, false, false, null],
+                ['T-4 RIA', '', null, false, false, false, null],
+                ['T7', '', null, false, false, false, null],
+                ['T7(FTI)', '', null, false, false, false, null],
+                ['T8', '', null, false, false, false, null],
+                ['TATAL IRON BINDING CAPACITY', '', null, false, false, false, null],
+                ['TB TEST', '', null, false, false, false, null],
+                ['TESTOSTERONE', '', null, false, false, false, null],
+                ['THYROID AB  ANTIMICROSOMAL', '', null, false, false, false, null],
+                ['THYROXINE', '', null, false, false, false, null],
+                ['THYROXINE  RIA', '', null, false, false, false, null],
+                ['THYROXINE (RIA)', '', null, false, false, false, null],
+                ['THYROXINE BY RIA', '', null, false, false, false, null],
+                ['THYROXINE RIA', '', null, false, false, false, null],
+                ['TIBC', '', null, false, false, false, null],
+                ['TOTAL ALK PHOS', '', null, false, false, false, null],
+                ['TOTAL CELL COUNT', '', null, false, false, false, null],
+                ['TOTAL CELLS', '', null, false, false, false, null],
+                ['TOTAL CPK', '', null, false, false, false, null],
+                ['TOTAL GLUCOSE', '', null, false, false, false, null],
+                ['TOTAL IRON BINDING CAPACITY', '', null, false, false, false, null],
+                ['TOTAL LDH', '', null, false, false, false, null],
+                ['TOTAL LDH=1056   LDH-1', '', null, false, false, false, null],
+                ['TOTAL LDH=195  LDH-1', '', null, false, false, false, null],
+                ['TOTAL LDH=509   LDH-1', '', null, false, false, false, null],
+                ['TOTAL LDH=750   LDH-1', '', null, false, false, false, null],
+                ['TOTAL PROTEIN', '', null, false, false, false, null],
+                ['TOTAL PROTIEN', '', null, false, false, false, null],
+                ['TOTAL T4', '', null, false, false, false, null],
+                ['TOTAL T-4', '', null, false, false, false, null],
+                ['TOTAL WBC', '', null, false, false, false, null],
+                ['TOTAL WBC COUNT', '', null, false, false, false, null],
+                ['TOXOPLASMOSIS', '', null, false, false, false, null],
+                ['TP', '', null, false, false, false, null],
+                ['TREE THYROXINE INDEX (T7)', '', null, false, false, false, null],
+                ['TRIGLYCERIDE LEVEL FROM CHEM SCREED', '', null, false, false, false, null],
+                ['TRIGLYCERIDE(TRUE VALUE)', '', null, false, false, false, null],
+                ['TRIIODOTHYRONINE', '', null, false, false, false, null],
+                ['TRIIODOTHYRONINE (RIA)', '', null, false, false, false, null],
+                ['Troponin l', '', null, false, false, false, null],
+                ['TSH', '', null, false, false, false, null],
+                ['URINE DIPSTICK', '', null, false, false, false, null],
+                ['URINE ELECTROPHORESIS  TOTAL PROTEIN', '', null, false, false, false, null],
+                ['VENOUS BLOOD GASES', '', null, false, false, false, null],
+                ['Vitamin B1', '', null, false, false, false, null],
+                ['Vitamin B12', '', null, false, false, false, null],
+                ['Vitamin D', '', null, false, false, false, null],
+                ['Vitamin D (1,25 Dihydroxy)', '', null, false, false, false, null],
+                ['Vitamin D (250H)', '', null, false, false, false, null],
+                ['VLDL', '', null, false, false, false, null],
+                ['WBC', '', null, false, false, false, null],
+                ['WBC cell count', '', null, false, false, false, null],
+                ['WBC COUNT', '', null, false, false, false, null],
+                ['WBC DIFF', '', null, false, false, false, null],
+                ['WBC DIFFERENTAIL', '', null, false, false, false, null],
+                ['WBC DIFFERENTIAL', '', null, false, false, false, null],
+                ['WC COUNT', '', null, false, false, false, null],
+                ['WHITE CELL COUNT', '', null, false, false, false, null],
+                ['WHITE COUNT', '', null, false, false, false, null],
+                ['WRIGHTS STAIN', '', null, false, false, false, null],
+                ['YEAST CULTURE', '', null, false, false, false, null],
+                ['Zinc', '', null, false, false, false, null],
+                ['ZINC PROTOPORPHYRIN', '', null, false, false, false, null]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -3934,6 +4436,101 @@ Ext4.onReady(function(){
                 ['Casts', 'Casts', null, true, false, true, 16],
                 ['Cast-1', 'Cast Type 1', null, true, false, true, 17],
                 ['Cast-2', 'Cast Type 2', null, true, false, true, 18]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateUrinalysisQualResults: function(){
+            this.pendingInserts++;
+
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'urinalysis_qualitative_results',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value,description').split(',');
+            var data = [
+                ['Light Yellow','Color',1],
+                ['Yellow','Color',2],
+                ['Dark Yellow','Color',3],
+                ['Colorless','Color',4],
+                ['Amber','Color',5],
+                ['Light Amber','Color',6],
+                ['Brown','Color',7],
+                ['Orange','Color',8],
+                ['Pink','Color',9],
+                ['Red','Color',10],
+                ['Straw','Color',11],
+                ['White','Color',12],
+                ['Clear','Appearance',13],
+                ['Cloudy','Appearance',14],
+                ['Slightly Cloudy','Appearance',15],
+                ['Very Cloudy','Appearance',16],
+                ['Hazy','Appearance',17],
+                ['Turbid','Appearance',18],
+                ['Negative','Prot,Blood,Ket,Bili,Gluc',19],
+                ['Trace','Prot,Blood,Ket,Bili,Gluc',20],
+                ['1+','Prot,Blood,Ket,Bili,Gluc',21],
+                ['2+','Prot,Blood,Ket,Bili,Gluc',22],
+                ['3+','Prot,Blood,Ket,Bili,Gluc',23],
+                ['4+','Prot,Blood,Ket,Bili,Gluc',24]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateSerologyMethod: function(){
+            this.pendingInserts++;
+
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'serologyMethod',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+            var data = [
+                ['ANTIGEN CAPTIVE'],
+                ['C-ELISA'],
+                ['Cell Cult CPE'],
+                ['Dot Immunobinding'],
+                ['ELISA'],
+                ['IF - Cytoplasm'],
+                ['IF - Membrane'],
+                ['Interferon-Gamma Mycobacterium Testing (Primagam)'],
+                ['Microagglutination'],
+                ['Microarray'],
+                ['MMIA'],
+                ['PCR'],
+                ['Recombinant ELISA'],
+                ['Virus Neutralization'],
+                ['Western Blot']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateMicrobiologyQuantity: function(){
+            this.pendingInserts++;
+
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'microbiologyQuantity',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+            var data = [
+                ['1+'],
+                ['2+'],
+                ['3+'],
+                ['4+'],
+                ['None']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));

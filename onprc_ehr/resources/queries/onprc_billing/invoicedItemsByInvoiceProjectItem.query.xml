@@ -4,7 +4,9 @@
             <table tableName="invoicedItemsByInvoiceProjectItem" tableDbType="TABLE">
                 <tableTitle>Items By Invoice, Project and Item</tableTitle>
                 <columns>
-
+                    <column columnName="numItems">
+                        <columnTitle># Items</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>

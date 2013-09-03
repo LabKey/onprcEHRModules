@@ -12,15 +12,23 @@
                         </fk>
                     </column>
                     <column columnName="chargeId">
-                        <columnTitle>Charge 1</columnTitle>
+                        <columnTitle>Charge</columnTitle>
                         <fk>
                             <fkDbSchema>onprc_billing</fkDbSchema>
                             <fkTable>chargeableItems</fkTable>
                             <fkColumnName>rowid</fkColumnName>
                         </fk>
                     </column>
-                    <column columnName="chargeId2">
-                        <columnTitle>Charge 2</columnTitle>
+                    <column columnName="leaseCharge1">
+                        <columnTitle>Original Lease Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>chargeableItems</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="leaseCharge2">
+                        <columnTitle>Final Lease Type</columnTitle>
                         <fk>
                             <fkDbSchema>onprc_billing</fkDbSchema>
                             <fkTable>chargeableItems</fkTable>

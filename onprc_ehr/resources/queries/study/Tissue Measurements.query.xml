@@ -19,9 +19,23 @@
                     </column>
                     <column columnName="tissue">
                         <columnTitle>Tissue</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>snomed</fkTable>
+                            <fkColumnName>code</fkColumnName>
+                        </fk>
                     </column>
-                    <column columnName="measurement">
-                        <columnTitle>Measurement</columnTitle>
+                    <column columnName="dimension">
+                        <columnTitle>Dimension</columnTitle>
+                    </column>
+                    <column columnName="measurement1">
+                        <columnTitle>Measurement 1</columnTitle>
+                    </column>
+                    <column columnName="measurement2">
+                        <columnTitle>Measurement 2</columnTitle>
+                    </column>
+                    <column columnName="measurement3">
+                        <columnTitle>Measurement 3</columnTitle>
                     </column>
                     <column columnName="units">
                         <columnTitle>Units</columnTitle>

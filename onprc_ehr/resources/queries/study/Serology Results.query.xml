@@ -32,6 +32,12 @@
                     </column>
                     <column columnName="method">
                         <columnTitle>Method</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>serologyMethod</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
                     </column>
                     <column columnName="result">
                         <columnTitle>Result</columnTitle>
@@ -58,9 +64,11 @@
                     </column>
                     <column columnName="definitive">
                         <columnTitle>Definitive Result?</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="category">
                         <columnTitle>Category</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="lsid">
                         <isHidden>true</isHidden>

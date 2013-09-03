@@ -18,12 +18,16 @@ SELECT
 	pm.date,
 
 	pm.objectid as parentid,
-	(cast(pm.objectid as varchar(38)) + pm.tissue + CAST(pm.measurement as nvarchar(4000))) as objectid,
+	(cast(pm.objectid as varchar(38)) + pm.tissue + CAST(pm.measurement1 as nvarchar(4000))) as objectid,
 	--pm.rowversion,
 
 	--pm.MeasurementID,
 	pm.tissue,
-	pm.measurement,
+    pm.dimension,
+	pm.measurement1,
+    pm.measurement2,
+    pm.measurement3,
+    null as category,
     'cm' as units,
 
 	case
@@ -49,8 +53,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Crown Rump' as tissue,
-	CrownRump AS measurement
+  'T-00010' as tissue,
+	'Crown Rump' as dimension,
+	CrownRump AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -63,8 +70,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Transtemporal' as tissue,
-	Transtemporal AS measurement
+  'T-00010' as tissue,
+	'Transtemporal' as dimension,
+	Transtemporal AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -77,8 +87,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Right Hand' as tissue,
-	RightHand AS measurement
+	'T-Y8710' as tissue, --right hand
+  null as dimension,
+	RightHand AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -91,8 +104,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Right Foot' as tissue,
-	RightFoot AS measurement
+	'T-Y9710' as tissue,  --right foot
+  null as dimension,
+	RightFoot AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -105,8 +121,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Primary Placental Disc 1' as tissue,
-	PrimaryPlacentalDisc1 AS measurement
+	'Primary Placental Disc' as tissue,
+  null as dimension,
+	PrimaryPlacentalDisc1 AS measurement1,
+  PrimaryPlacentalDisc2 AS measurement2,
+  PrimaryPlacentalDisc3 AS measurement3
 
 From Path_Measurements pm
 
@@ -119,8 +138,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Primary Placental Disc 2' as tissue,
-	PrimaryPlacentalDisc2 AS measurement
+	'Secondary Placental Disc' as tissue,
+  null as dimension,
+	SecondaryPlacentalDisc1 AS measurement1,
+  SecondaryPlacentalDisc2 AS measurement2,
+  SecondaryPlacentalDisc3 AS measurement3
 
 From Path_Measurements pm
 
@@ -133,8 +155,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Primary Placental Disc 3' as tissue,
-	PrimaryPlacentalDisc3 AS measurement
+  'T-00010' as tissue,
+	'Abdominal Circumference' as dimension,
+	AbdominalCircumference AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -147,8 +172,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Secondary Placental Disc 1' as tissue,
-	SecondaryPlacentalDisc1 AS measurement
+  'T-00010' as tissue,
+	'Head Circumference' as dimension,
+	HeadCircumference AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -161,8 +189,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Secondary Placental Disc 2' as tissue,
-	SecondaryPlacentalDisc2 AS measurement
+  'T-00010' as tissue,
+	'Thoracic Circumference' as dimension,
+	ThoracicCircumference AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -175,8 +206,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Secondary Placental Disc 3' as tissue,
-	SecondaryPlacentalDisc3 AS measurement
+  'T-00010' as tissue,
+	'Femur Length' as dimension,
+	FemurLength AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -189,8 +223,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Abdominal Circumference' as tissue,
-	AbdominalCircumference AS measurement
+  'T-00010' as tissue,
+	'Torso Length' as dimension,
+	TorsoLength AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -203,8 +240,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Head Circumference' as tissue,
-	HeadCircumference AS measurement
+	'T-32000' as tissue,  --heart
+  'LAV' as dimension,
+	HeartLAV AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -217,8 +257,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Thoracic Circumference' as tissue,
-	ThoracicCircumference AS measurement
+	'T-32000' as tissue,  --heart
+  'RAV' as dimension,
+	HeartRAV AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -231,8 +274,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Femur Length' as tissue,
-	FemurLength AS measurement
+	'T-32000' as tissue,  --heart
+  'PUL' as dimension,
+	HeartPUL AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -245,8 +291,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Torso Length' as tissue,
-	TorsoLength AS measurement
+	'T-32000' as tissue,   --heart
+  'AO' as dimension,
+	HeartAO AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -259,8 +308,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Heart LAV' as tissue,
-	HeartLAV AS measurement
+	'T-32000' as tissue,   --heart
+  'LVW' as dimension,
+	HeartLVW AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -273,8 +325,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Heart RAV' as tissue,
-	HeartRAV AS measurement
+  'T-32000' as tissue,  --heart
+  'RVW' as dimension,
+	HeartRVW AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -287,78 +342,11 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Heart PUL' as tissue,
-	HeartPUL AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	'Heart AO' as tissue,
-	HeartAO AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	'Heart LVW' as tissue,
-	HeartLVW AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	'Heart RVW' as tissue,
-	HeartRVW AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	'Heart IVS' as tissue,
-	HeartIVS AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	TissueSnomed1 as tissue,
-	Tissue1Dimension1 AS measurement
+  'T-32000' as tissue,  --heart
+	'IVS' as dimension,
+	HeartIVS AS measurement1,
+  null AS measurement2,
+  null AS measurement3
 
 From Path_Measurements pm
 
@@ -372,21 +360,10 @@ Select
 	pm.objectid,
 	pm.ts as rowversion,
 	TissueSnomed1 as tissue,
-	Tissue1Dimension2 AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	TissueSnomed1 as tissue,
-	Tissue1Dimension3 AS measurement
+  null as dimension,
+	Tissue1Dimension1 AS measurement1,
+	Tissue1Dimension2 AS measurement2,
+	Tissue1Dimension3 AS measurement3
 
 From Path_Measurements pm
 
@@ -400,35 +377,10 @@ Select
 	pm.objectid,
 	pm.ts as rowversion,
 	TissueSnomed2 as tissue,
-	Tissue2Dimension1 AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	TissueSnomed2 as tissue,
-	Tissue2Dimension2 AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	TissueSnomed3 as tissue,
-	Tissue3Dimension3 AS measurement
+  null as dimension,
+	Tissue2Dimension1 AS measurement1,
+	Tissue2Dimension2 AS measurement2,
+	Tissue3Dimension3 AS measurement3
 
 From Path_Measurements pm
 
@@ -442,35 +394,10 @@ Select
 	pm.objectid,
 	pm.ts as rowversion,
 	TissueSnomed4 as tissue,
-	Tissue4Dimension1 AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	TissueSnomed4 as tissue,
-	Tissue4Dimension2 AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	TissueSnomed4 as tissue,
-	Tissue4Dimension3 AS measurement
+  null as dimension,
+	Tissue4Dimension1 AS measurement1,
+	Tissue4Dimension2 AS measurement2,
+	Tissue4Dimension3 AS measurement3
 
 From Path_Measurements pm
 
@@ -484,35 +411,10 @@ Select
 	pm.objectid,
 	pm.ts as rowversion,
 	TissueSnomed5 as tissue,
-	Tissue5Dimension1 AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	TissueSnomed5 as tissue,
-	Tissue5Dimension2 AS measurement
-
-From Path_Measurements pm
-
-UNION ALL
-
-Select
-	MeasurementID,
-	AnimalID as Id,
-	MeasurementDate,
-	Technician As TechnicianInt,
-	pm.objectid,
-	pm.ts as rowversion,
-	TissueSnomed5 as tissue,
-	Tissue5Dimension3 AS measurement
+  null as dimension,
+	Tissue5Dimension1 AS measurement1,
+	Tissue5Dimension2 AS measurement2,
+	Tissue5Dimension3 AS measurement3
 
 From Path_Measurements pm
 
@@ -521,7 +423,7 @@ From Path_Measurements pm
 left join Ref_Technicians rt on pm.TechnicianInt = rt.ID
 left join Sys_Parameters s1 on (s1.Flag = rt.DeptCode And s1.Field = 'DepartmentCode')
 
-where measurement > 0
+where (measurement1 > 0 or measurement2 > 0 or measurement3 > 0)
 and pm.rowversion > ?
 
 UNION ALL
@@ -529,11 +431,15 @@ UNION ALL
 SELECT
 	cast(t.AnimalID as nvarchar(4000)) as Id,
 	t.date,
-	null as parentId,
-	(cast(t.objectid as varchar(38)) + t.tissue + CAST(t.measurement as nvarchar(4000))) as objectid,
+  t.objectid as parentId,
+	(cast(t.objectid as varchar(38)) + t.tissue + CAST(t.measurement1 as nvarchar(4000))) as objectid,
 	t.tissue,
-	t.measurement,
-   'cm' as units,
+  t.dimension,
+  t.measurement1,
+  t.measurement2,
+  null as measurement3,
+  'Placental' as category,
+  'cm' as units,
 
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
@@ -556,8 +462,10 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'Crown Rump' as tissue,
-	CrownRump as measurement,
+  'T-00010' as tissue,
+	'Crown Rump' as dimension,
+	CrownRump as measurement1,
+  null as measurement2,
 
 	Technician,
 	path.objectid,
@@ -572,8 +480,10 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'Transtemporal' as tissue,
-	Transtemporal as measurement,
+  'T-00010' as tissue,
+	'Transtemporal' as dimension,
+	Transtemporal as measurement1,
+  null as measurement2,
 
 	Technician,
 	path.objectid,
@@ -588,8 +498,10 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'Right Hand' as tissue,
-	RightHand as measurement,
+	'T-Y8710' as tissue,  --right hand
+  null as dimension,
+	RightHand as measurement1,
+  null as measurement2,
 
 	Technician,
 	path.objectid,
@@ -604,8 +516,10 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'Right Foot' as tissue,
-	RightFoot as measurement,
+	'T-Y9710' as tissue,   --right foot
+  null as dimension,
+	RightFoot as measurement1,
+  null as measurement2,
 
 	Technician,
 	path.objectid,
@@ -620,15 +534,17 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'Primary Placental Disc 1' as tissue,
-	PrimaryPlacentalDisc1 as measurement,
+	'Primary Placental Disc' as tissue,
+  null as dimension,
+	PrimaryPlacentalDisc1 as measurement1,
+	PrimaryPlacentalDisc2 as measurement2,
 
 	Technician,
 	path.objectid,
 	path.ts
 
 From Path_FetalMeasurements Path
-where PrimaryPlacentalDisc1 > 0
+where (PrimaryPlacentalDisc1 > 0 or PrimaryPlacentalDisc2 > 0)
 
 UNION ALL
 
@@ -636,47 +552,17 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'Primary Placental Disc 2' as tissue,
-	PrimaryPlacentalDisc2 as measurement,
+	'Secondary Placental Disc' as tissue,
+  null as dimension,
+	SecondaryPlacentalDisc1 as measurement1,
+	SecondaryPlacentalDisc2 as measurement2,
 
 	Technician,
 	path.objectid,
 	path.ts
 
 From Path_FetalMeasurements Path
-where PrimaryPlacentalDisc2 > 0
-
-UNION ALL
-
-Select
-
-	AnimalID,
-	MeasurementDate as date,
-	'Secondary Placental Disc 1' as tissue,
-	SecondaryPlacentalDisc1 as measurement,
-
-	Technician,
-	path.objectid,
-	path.ts
-
-From Path_FetalMeasurements Path
-where SecondaryPlacentalDisc1 > 0
-
-UNION ALL
-
-Select
-
-	AnimalID,
-	MeasurementDate as date,
-	'Secondary Placental Disc 2' as tissue,
-	SecondaryPlacentalDisc2 as measurement,
-
-	Technician,
-	path.objectid,
-	path.ts
-
-From Path_FetalMeasurements Path
-where SecondaryPlacentalDisc2 > 0
+where (SecondaryPlacentalDisc1 > 0 OR SecondaryPlacentalDisc2 > 0)
 
 ) t
 

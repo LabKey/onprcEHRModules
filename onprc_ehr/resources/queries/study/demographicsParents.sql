@@ -17,14 +17,14 @@ SELECT
   d.id,
   coalesce(p2.parent, b.dam) as dam,
   CASE
-    WHEN p2.parent IS NOT NULL THEN 'Genetic'
+    WHEN p2.parent IS NOT NULL THEN p2.method
     WHEN b.dam IS NOT NULL THEN 'Observed'
     ELSE null
   END as damType,
 
   coalesce(p1.parent, b.sire) as sire,
   CASE
-    WHEN p1.parent IS NOT NULL THEN 'Genetic'
+    WHEN p1.parent IS NOT NULL THEN p1.method
     WHEN b.sire IS NOT NULL THEN 'Observed'
     ELSE null
   END as sireType,
@@ -36,15 +36,15 @@ SELECT
 FROM study.demographics d
 
 LEFT JOIN (
-  select p1.id, max(p1.parent) as parent
+  select p1.id, min(p1.method) as method, max(p1.parent) as parent
   FROM study.parentage p1
-  WHERE p1.method = 'Genetic' AND p1.relationship = 'Sire' --AND p1.enddate IS NULL
+  WHERE (p1.method = 'Genetic' OR p1.method = 'Provisional Genetic') AND p1.relationship = 'Sire' --AND p1.enddate IS NULL
   GROUP BY p1.Id
 ) p1 ON (d.Id = p1.id)
 LEFT JOIN (
-  select p2.id, max(p2.parent) as parent
+  select p2.id, min(p2.method) as method, max(p2.parent) as parent
   FROM study.parentage p2
-  WHERE p2.method = 'Genetic' AND p2.relationship = 'Dam' --AND p2.enddate IS NULL
+  WHERE (p2.method = 'Genetic' OR p2.method = 'Provisional Genetic') AND p2.relationship = 'Dam' --AND p2.enddate IS NULL
   GROUP BY p2.Id
 ) p2 ON (d.Id = p2.id)
 LEFT JOIN study.birth b ON (b.id = d.id)

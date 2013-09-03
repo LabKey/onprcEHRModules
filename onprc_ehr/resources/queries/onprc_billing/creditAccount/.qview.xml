@@ -1,8 +1,8 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <sorts>
-        <sort column="date" descending="true"/>
+        <sort column="chargeId/name"/>
     </sorts>
     <filters>
-        <filter column="remark" operator="doesnotcontain" value="transfer record"/>
+        <filter column="enddateCoalesced" operator="dategte" value="+0d"/>
     </filters>
 </customView>

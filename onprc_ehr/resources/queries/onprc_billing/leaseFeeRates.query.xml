@@ -7,6 +7,12 @@
                     <column columnName="isExemption">
                         <columnTitle>Is Special Fee?</columnTitle>
                     </column>
+                    <column columnName="unitCost">
+                        <columnTitle>Unit Cost</columnTitle>
+                    </column>
+                    <column columnName="creditAccountId">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>

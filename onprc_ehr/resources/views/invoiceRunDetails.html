@@ -12,53 +12,139 @@ Ext4.onReady(function(){
         return;
     }
 
-    Ext4.create('Ext.panel.Panel', {
-        bodyStyle: 'padding: 10px;',
+    var domSpec = [{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'invoiceDetails_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'tabpanel_' + webpart.wrapperDivId
+    }];
+
+    var el = Ext4.get(webpart.wrapperDivId);
+    Ext4.DomHelper.append(el, domSpec);
+
+    Ext4.widget({
         border: false,
-        defaults: {
-            border: false
-        },
-        items: [{
-            xtype: 'labkey-detailspanel',
-            showTitle: false,
-            showBackBtn: false,
-            store: {
-                schemaName: 'onprc_billing',
-                queryName: 'invoiceRuns',
-                filterArray: [
-                    LABKEY.Filter.create('objectid', invoiceRunId, LABKEY.Filter.Types.EQUAL)
-                ]
+        xtype: 'labkey-detailspanel',
+        showTitle: false,
+        showBackBtn: false,
+        store: {
+            schemaName: 'onprc_billing',
+            queryName: 'invoiceRuns',
+            filterArray: [
+                LABKEY.Filter.create('objectid', invoiceRunId, LABKEY.Filter.Types.EQUAL)
+            ],
+            listeners: {
+                scope: this,
+                load: function(store){
+                    var rec = store.getAt(0);
+                    if (!rec)
+                        return;
+
+                    var startDate = rec.get('billingPeriodStart') ? rec.get('billingPeriodStart').clearTime() : null;
+                    var endDate = rec.get('billingPeriodEnd') ? rec.get('billingPeriodEnd').clearTime() : null;
+                    var startDateString = startDate ? startDate.format('Y-m-d') : '';
+                    var endDateString = endDate ? endDate.format('Y-m-d') : '';
+
+                    var interval = 0;
+                    if (startDate && endDate){
+                        interval = endDate.getTime() - startDate.getTime();
+                        interval = interval / (1000 * 60 * 60 * 24);
+                    }
+
+                    Ext4.create('Ext.panel.Panel', {
+                        bodyStyle: 'padding: 10px;',
+                        border: false,
+                        defaults: {
+                            border: false
+                        },
+                        items: [{
+                            xtype: 'tabpanel',
+                            border: true,
+                            defaults: {
+                                border: false
+                            },
+                            items: [{
+                                title: 'Summary',
+                                xtype: 'ldk-querypanel',
+                                queryConfig: {
+                                    schemaName: 'onprc_billing',
+                                    queryName: 'invoicedItemsByInvoice',
+                                    filters: [LABKEY.Filter.create('invoiceId', invoiceRunId, LABKEY.Filter.Types.EQUAL)],
+                                    failure: LDK.Utils.getErrorCallback()
+                                }
+                            },{
+                                title: 'Total Charges By Category',
+                                xtype: 'ldk-querypanel',
+                                queryConfig: {
+                                    schemaName: 'onprc_billing',
+                                    queryName: 'invoicedItemsByInvoiceCategory',
+                                    filters: [LABKEY.Filter.create('invoiceId', invoiceRunId, LABKEY.Filter.Types.EQUAL)],
+                                    failure: LDK.Utils.getErrorCallback()
+                                }
+                            },{
+                                title: 'Total Charges By Alias',
+                                xtype: 'ldk-querypanel',
+                                queryConfig: {
+                                    schemaName: 'onprc_billing',
+                                    queryName: 'invoicedItemsByInvoiceDebitAccount',
+                                    filters: [LABKEY.Filter.create('invoiceId', invoiceRunId, LABKEY.Filter.Types.EQUAL)],
+                                    failure: LDK.Utils.getErrorCallback()
+                                }
+                            },{
+                                title: 'Total Revenue By Alias',
+                                xtype: 'ldk-querypanel',
+                                queryConfig: {
+                                    schemaName: 'onprc_billing',
+                                    queryName: 'invoicedItemsByInvoiceCreditAccount',
+                                    filters: [LABKEY.Filter.create('invoiceId', invoiceRunId, LABKEY.Filter.Types.EQUAL)],
+                                    failure: LDK.Utils.getErrorCallback()
+                                }
+                            },{
+                                title: 'Total Charges By Item',
+                                xtype: 'ldk-querypanel',
+                                queryConfig: {
+                                    schemaName: 'onprc_billing',
+                                    queryName: 'invoicedItemsByInvoiceItem',
+                                    filters: [LABKEY.Filter.create('invoiceId', invoiceRunId, LABKEY.Filter.Types.EQUAL)],
+                                    failure: LDK.Utils.getErrorCallback()
+                                }
+                            },{
+                                title: 'All Items',
+                                xtype: 'ldk-querypanel',
+                                queryConfig: {
+                                    schemaName: 'onprc_billing',
+                                    queryName: 'invoicedItems',
+                                    filters: [LABKEY.Filter.create('invoiceId', invoiceRunId, LABKEY.Filter.Types.EQUAL)],
+                                    failure: LDK.Utils.getErrorCallback()
+                                }
+                            },{
+                                xtype: 'ldk-navpanel',
+                                title: 'More Reports',
+                                sections: [{
+                                    header: 'Charge Calculations',
+                                    items: [
+                                        {name: 'Lease Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'onprc_billing', 'query.queryName': 'leaseFeeRates', 'query.param.StartDate': startDateString, 'query.param.EndDate': endDateString})},
+                                        {name: 'Per Diems', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'onprc_billing', 'query.queryName': 'perDiemRates', 'query.param.StartDate': startDateString, 'query.param.NumDays': interval})},
+                                        {name: 'Procedure Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'onprc_billing', 'query.queryName': 'procedureFeeRates', 'query.param.StartDate': startDateString, 'query.param.EndDate': endDateString})},
+                                        {name: 'Misc Charges', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'onprc_billing', 'query.queryName': 'miscCharges', 'query.date~dategte': startDateString, 'query.date~datelte': endDateString})}
+                                    ]
+//                                },{
+//                                    header: 'Validation',
+//                                    items: [
+//                                        //{name: 'Animal Search', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalSearch.view?'}
+//                                    ]
+
+                                }]
+                            }]
+                        }]
+                    }).render('tabpanel_' + webpart.wrapperDivId);
+                }
             }
-        },{
-            html: '',
-            style: 'margin-bottom: 10px;'
-        },{
-            xtype: 'tabpanel',
-            border: true,
-            defaults: {
-                border: false
-            },
-            items: [{
-                title: 'Charges By Alias',
-                xtype: 'ldk-querypanel',
-                queryConfig: {
-                    schemaName: 'onprc_billing',
-                    queryName: 'invoicedItemsByInvoiceProject',
-                    filters: [LABKEY.Filter.create('invoiceId', invoiceRunId, LABKEY.Filter.Types.EQUAL)],
-                    failure: LDK.Utils.getErrorCallback()
-                }
-            },{
-                title: 'All Charges',
-                xtype: 'ldk-querypanel',
-                queryConfig: {
-                    schemaName: 'onprc_billing',
-                    queryName: 'invoicedItems',
-                    filters: [LABKEY.Filter.create('invoiceId', invoiceRunId, LABKEY.Filter.Types.EQUAL)],
-                    failure: LDK.Utils.getErrorCallback()
-                }
-            }]
-        }]
-    }).render(webpart.wrapperDivId);
+        }
+    }).render('invoiceDetails_' + webpart.wrapperDivId);
 });
 
 </script>

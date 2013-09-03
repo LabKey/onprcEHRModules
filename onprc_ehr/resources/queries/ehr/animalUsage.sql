@@ -33,7 +33,7 @@ SELECT
   END as double) as pctUsed,
   CASE
     WHEN (pc.start IS NULL and p.enddateTimeCoalesced >= now()) THEN true
-    WHEN (pc.start <= now() AND pc.enddateCoalesced >= now()) THEN true
+    WHEN (pc.start <= now() AND pc.enddateTimeCoalesced >= now()) THEN true
     ELSE false
   END as isActive
 
