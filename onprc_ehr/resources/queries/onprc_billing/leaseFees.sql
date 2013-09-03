@@ -27,6 +27,7 @@ a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
 'Lease Fee' as chargeType,
 CASE
   WHEN a.duration <= 1 THEN (SELECT rowid FROM onprc_billing.chargeableItems ci WHERE ci.active = true AND ci.name = 'One Day Lease')
+  WHEN a2.id IS NOT NULL THEN (SELECT rowid FROM onprc_billing.chargeableItems ci WHERE ci.active = true AND ci.name = 'Animal Lease Fee - TMB')
   ELSE lf.chargeId
 END as chargeId,
 null as leaseCharge1,
@@ -87,9 +88,9 @@ a.releaseCondition,
 a.assignCondition,
 a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
 'Lease Fee Refund' as chargeType,
-(SELECT rowid FROM onprc_billing.chargeableItems ci WHERE ci.name = 'Lease Fee Refund' and ci.active = true) as chargeId,
-lf.chargeId as leaseCharge1,
-lf2.chargeId as leaseCharge2
+(SELECT max(rowid) as rowid FROM onprc_billing.chargeableItems ci WHERE ci.name = 'Lease Fee Refund' and ci.active = true) as chargeId,
+lf2.chargeId as leaseCharge1,
+lf.chargeId as leaseCharge2
 
 FROM study.assignment a
 LEFT JOIN onprc_billing.leaseFeeDefinition lf
@@ -102,11 +103,19 @@ LEFT JOIN onprc_billing.leaseFeeDefinition lf
 LEFT JOIN onprc_billing.leaseFeeDefinition lf2
   ON (lf2.assignCondition = a.assignCondition
     AND lf2.releaseCondition = a.projectedReleaseCondition
-    AND (a.ageAtTime.AgeAtTimeYearsRounded >= lf.minAge OR lf.minAge IS NULL)
+    AND (a.ageAtTime.AgeAtTimeYearsRounded >= lf2.minAge OR lf2.minAge IS NULL)
     AND (a.ageAtTime.AgeAtTimeYearsRounded < lf2.maxAge OR lf2.maxAge IS NULL)
+  )
+
+--find overlapping TMB at date of assignment
+  LEFT JOIN study.assignment a2 ON (
+    a.id = a2.id AND a.project != a2.project
+    AND a2.dateOnly <= a.dateOnly
+    AND a2.endDateCoalesced >= a.dateOnly
+    AND a2.project.name = '0300'
   )
 
 WHERE a.releaseCondition != a.projectedReleaseCondition
 AND a.enddate is not null AND a.enddateCoalesced >= STARTDATE AND a.enddateCoalesced <= CAST(EndDate as DATE)
 AND a.qcstate.publicdata = true AND lf.active = true
-
+AND a2.id IS NULL
