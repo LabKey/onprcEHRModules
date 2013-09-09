@@ -1409,7 +1409,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         return (pks.size() != 1) ? null : pks.get(0);
     }
 
-    private void appendAssignmentAtTimeCol(final UserSchema us, final AbstractTableInfo ds, final String dateColName)
+    private void appendAssignmentAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)
     {
         String name = "assignmentAtTime";
         if (ds.getColumn(name) != null)
@@ -1425,6 +1425,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (!hasTable(ds, "study", "Assignment"))
             return;
 
+        final String tableName = ds.getName();
+        final String queryName = ds.getPublicName();
+        final String schemaName = ds.getPublicSchemaName();
+
         WrappedColumn col = new WrappedColumn(pkCol, name);
         col.setLabel("Assignments At Time");
         col.setReadOnly(true);
@@ -1433,7 +1437,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         col.setFk(new LookupForeignKey(){
             public TableInfo getLookupTableInfo()
             {
-                String name = ds.getName() + "_assignmentsAtTime";
+                String name = tableName + "_assignmentsAtTime";
                 QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
                 qd.setSql("SELECT\n" +
                         "sd." + pkCol.getSelectName() + ",\n" +
@@ -1441,7 +1445,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         "group_concat(DISTINCT h.project.protocol.displayName, chr(10)) as protocolsAtTime,\n" +
                         "group_concat(DISTINCT h.project.investigatorId.lastName, chr(10)) as investigatorsAtTime,\n" +
                         "group_concat(DISTINCT h.project.name, chr(10)) as projectNumbersAtTime\n" +
-                        "FROM \"" + ds.getPublicSchemaName() + "\".\"" + ds.getName() + "\" sd\n" +
+                        "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN study.assignment h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
                         "group by sd." + pkCol.getSelectName());
@@ -1475,7 +1479,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ds.addColumn(col);
     }
 
-    private void appendFlagsAtTimeCol(final UserSchema us, final AbstractTableInfo ds, final String dateColName)
+    private void appendFlagsAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)
     {
         String name = "flagsAtTime";
         if (ds.getColumn(name) != null)
@@ -1491,6 +1495,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (!hasTable(ds, "study", "Animal Record Flags"))
             return;
 
+        final String tableName = ds.getName();
+        final String queryName = ds.getPublicName();
+        final String schemaName = ds.getPublicSchemaName();
+
         WrappedColumn col = new WrappedColumn(pkCol, name);
         col.setLabel("Flags At Time");
         col.setReadOnly(true);
@@ -1499,12 +1507,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         col.setFk(new LookupForeignKey(){
             public TableInfo getLookupTableInfo()
             {
-                String name = ds.getName() + "_flagsAtTime";
+                String name = tableName + "_flagsAtTime";
                 QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
                 qd.setSql("SELECT\n" +
                         "sd." + pkCol.getSelectName() + ",\n" +
                         "group_concat(DISTINCT h.value, chr(10)) as flagsAtTime\n" +
-                        "FROM \"" + ds.getPublicSchemaName() + "\".\"" + ds.getName() + "\" sd\n" +
+                        "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN study.flags h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
                         "group by sd." + pkCol.getSelectName());
@@ -1533,7 +1541,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ds.addColumn(col);
     }
 
-    private void appendProblemsAtTimeCol(final UserSchema us, final AbstractTableInfo ds, final String dateColName)
+    private void appendProblemsAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)
     {
         final String colName = "problemsAtTime";
         if (ds.getColumn(colName) != null)
@@ -1549,6 +1557,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (!hasTable(ds, "study", "Problem List"))
             return;
 
+        final String tableName = ds.getName();
+        final String queryName = ds.getPublicName();
+        final String schemaName = ds.getPublicSchemaName();
+
         WrappedColumn col = new WrappedColumn(pkCol, colName);
         col.setLabel("Problems At Time");
         col.setReadOnly(true);
@@ -1557,12 +1569,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         col.setFk(new LookupForeignKey(){
             public TableInfo getLookupTableInfo()
             {
-                String name = ds.getName() + "_" + colName;
+                String name = tableName + "_" + colName;
                 QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
                 qd.setSql("SELECT\n" +
                         "sd." + pkCol.getSelectName() + ",\n" +
                         "group_concat(DISTINCT h.category, chr(10)) as problemsAtTime\n" +
-                        "FROM \"" + ds.getPublicSchemaName() + "\".\"" + ds.getName() + "\" sd\n" +
+                        "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN study.\"Problem List\" h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
                         "group by sd." + pkCol.getSelectName());
@@ -1591,7 +1603,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ds.addColumn(col);
     }
 
-    private void appendGroupsAtTimeCol(final UserSchema us, final AbstractTableInfo ds, final String dateColName)
+    private void appendGroupsAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)
     {
         final String colName = "groupsAtTime";
         if (ds.getColumn(colName) != null)
@@ -1607,6 +1619,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (!hasTable(ds, "ehr", "animal_group_members"))
             return;
 
+        final String tableName = ds.getName();
+        final String queryName = ds.getPublicName();
+        final String schemaName = ds.getPublicSchemaName();
+
         WrappedColumn col = new WrappedColumn(pkCol, colName);
         col.setLabel("Groups At Time");
         col.setReadOnly(true);
@@ -1615,12 +1631,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         col.setFk(new LookupForeignKey(){
             public TableInfo getLookupTableInfo()
             {
-                String name = ds.getName() + "_" + colName;
+                String name = tableName + "_" + colName;
                 QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
                 qd.setSql("SELECT\n" +
                         "sd." + pkCol.getSelectName() + ",\n" +
                         "group_concat(DISTINCT h.groupId.name, chr(10)) as groupsAtTime\n" +
-                        "FROM \"" + ds.getPublicSchemaName() + "\".\"" + ds.getName() + "\" sd\n" +
+                        "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN ehr.animal_group_members h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced))\n" +
                         "group by sd." + pkCol.getSelectName());
