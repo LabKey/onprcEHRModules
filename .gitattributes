@@ -22,6 +22,7 @@ GeneticsCore/src/org/labkey/GeneticsCore/notification/GeneticsCoreNotification.j
 onprc_reports/ONPRC_Reports.iml -text
 onprc_reports/build.xml -text
 onprc_reports/module.properties -text
+onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Pivoted.sql -text
 onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Raw.sql -text
 onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Unified.query.xml -text
 onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Unified.sql -text
