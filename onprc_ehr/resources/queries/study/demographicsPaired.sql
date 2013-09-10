@@ -53,6 +53,7 @@ LEFT JOIN ehr_lookups.cage c ON (h.effectiveCage.effectiveCage = c.cage AND c.ro
 
 --account for date/time
 WHERE h.enddateTimeCoalesced >= now() and h2.enddateTimeCoalesced >= now()
+    --TODO: qc
 
 GROUP BY h.id, h.room, h.effectiveCage.effectiveCage, c.divider.countAsPaired, c.divider.countAsSeparate, h.room.housingType.value
 

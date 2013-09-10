@@ -16,10 +16,10 @@ SELECT
   p.chargeId
 
 FROM study.encounters e
-JOIN onprc_billing.procedureFeeDefinition p ON (p.procedureId = e.procedureId and e.chargetype = p.chargetype)
+JOIN onprc_billing.procedureFeeDefinition p ON (p.procedureId = e.procedureId and e.chargetype = p.chargetype AND p.active = true)
 
 WHERE e.dateOnly >= CAST(STARTDATE as date) AND e.dateOnly <= CAST(ENDDATE as date)
-AND e.qcstate.publicdata = true AND p.active = true
+AND e.qcstate.publicdata = true
 
 UNION ALL
 
@@ -34,22 +34,6 @@ SELECT
 FROM study.blood e
 WHERE e.dateOnly >= CAST(STARTDATE as date) AND e.dateOnly <= CAST(ENDDATE as date)
 and e.chargetype != 'No Charge'
-AND e.qcstate.publicdata = true
-
-UNION ALL
-
---Clinpath data
-SELECT
-  e.Id,
-  e.date,
-  e.project,
-  null as procedureId,
-  ci.rowId as chargeId
-
-from study."Clinpath Runs" e
-join onprc_billing.chargeableItems ci
-ON (e.servicerequested = ci.name and ci.category = 'Clinpath')
-WHERE e.dateOnly >= CAST(STARTDATE as date) AND e.dateOnly <= CAST(ENDDATE as date)
 AND e.qcstate.publicdata = true
 
 --TODO: drug administration

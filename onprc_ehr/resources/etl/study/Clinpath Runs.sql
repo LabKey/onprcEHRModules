@@ -94,7 +94,12 @@ SELECT
 	DATE ,
     projectId,
 	'Biochemistry' as category,
-    null as servicerequested,  --panelflag
+    CASE
+      WHEN  cln.panelflag = 15 THEN 'Basic Chemistry Panel in-house'
+      WHEN cln.panelflag = 13 THEN  'Comprehensive Chemistry Panel in-house'
+      WHEN cln.panelflag = 14 THEN  'Lipid panel in-house: Cholesterol, Triglyceride, HDL, LDL'
+      WHEN cln.panelflag = 16 THEN  ' High-density lipoprotein & Low-density lipoprotein (HDL & LDL)'
+    END as servicerequested,  --panelflag
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 	Technician As TechnicianID,
@@ -168,7 +173,7 @@ SELECT
 	AnimalID as Id ,
 	Date as Date ,
     projectId,
-	'Occult Blood' as category,
+	'Misc Tests' as category,
     'Occult Blood' as servicerequested,
 	Category as CategoryInt  ,
 	s1.Value as Category2,

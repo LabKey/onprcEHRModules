@@ -407,7 +407,7 @@ SELECT
 	Method as MethodInt  ,
 	TotalBilirubin as Result,
 	null as resultString,
-	'TB' as TestId,
+	'Tbili' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 

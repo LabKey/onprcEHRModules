@@ -32,7 +32,7 @@ WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 
 GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.remark
 PIVOT results BY testId IN
-('TP','ALB','ALKP','ALT','AST','GGT','TB','GLUC','BUN','CREAT','K','Na','Cl','Ca','Mg','Phos','Fe','CHOL','LDH','LDL','HDL', 'TRIG', 'Amyl')
+('TP','ALB','ALKP','ALT','AST','GGT','Tbili','GLUC','BUN','CREAT','K','Na','Cl','Ca','Mg','Phos','Fe','CHOL','LDH','LDL','HDL', 'TRIG', 'Amyl')
 --sadly we need to display the columns in the specific order, so rather than keying off the DB we need to hard code
 --(select testid from ehr_lookups.chemistry_tests t WHERE t.includeInPanel = true order by sort_order)
 

@@ -4,6 +4,7 @@
         <column name="date" />
         <column name="project" />
         <column name="servicerequested" />
+        <column name="servicerequested/chargetype" />
         <column name="sampletype" />
         <column name="instructions" />
         <column name="QCState" />

@@ -54,9 +54,9 @@ SELECT
 
 FROM study.demographics d
 
-JOIN ehr.animal_group_members gm ON (d.Id.parents.dam = gm.id AND gm.date <= EndDate AND gm.enddateCoalesced >= StartDate)
+JOIN ehr.animal_group_members gm ON (d.Id.parents.dam = gm.id AND gm.dateOnly <= EndDate AND gm.enddateCoalesced >= StartDate)
 
-JOIN study.housing h1 ON (h1.id = d.Id AND h1.date <= d.birth AND h1.enddateTimeCoalesced >= d.birth)
+LEFT JOIN study.housing h1 ON (h1.id = d.Id AND h1.dateOnly <= d.birth AND h1.enddateTimeCoalesced >= d.birth)
 
 WHERE cast(d.birth as date) >= StartDate AND cast(d.birth as date) <= EndDate
 

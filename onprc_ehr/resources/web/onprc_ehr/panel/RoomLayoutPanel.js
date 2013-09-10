@@ -32,7 +32,9 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
     },
 
     loadData: function(){
-        LABKEY.Query.selectRows({
+        var multi = new LABKEY.MultiRequest();
+
+        multi.add(LABKEY.Query.selectRows, {
             schemaName: 'ehr_lookups',
             queryName: 'cage',
             filterArray: this.filterArray,
@@ -41,20 +43,39 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
             columns: 'room,cage,cage_type,cage_type/sqft,cage_type/height,cage_type/cageslots,divider,cagePosition/row,cagePosition/columnIdx,cagePosition/sort_order,totalAnimals/animals,divider/countAsSeparate,divider/countAsPaired,divider/displaychar,divider/bgcolor,divider/border_style,divider/short_description',
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
-            success: this.onDataLoad
+            success: function(results){
+                this.cageResults = results;
+            }
         });
+
+        var animalFilter = [].concat(this.filterArray);
+        animalFilter.push(LABKEY.Filter.create('isActive', true));
+
+        multi.add(LABKEY.Query.selectRows, {
+            schemaName: 'study',
+            queryName: 'housing',
+            filterArray: animalFilter,
+            requiredVersion: 9.1,
+            sort: 'cage',
+            columns: 'Id,room,cage,Id/demographics/species,Id/demographics/gender,Id/mostRecentWeight/mostRecentWeight',
+            scope: this,
+            failure: LDK.Utils.getErrorCallback(),
+            success: function(results){
+                this.animalResults = results;
+            }
+        });
+
+        multi.send(this.onDataLoad, this);
     },
 
     getRowNumber: function(letter){
         return Ext4.isEmpty(letter) ? 0 : letter.toUpperCase().charCodeAt(0) - 65;
     },
 
-    onDataLoad: function(results){
-        this.results = results;
-
+    onDataLoad: function(){
         var toAdd = [];
 
-        if (!results || !results.rows || !results.rows.length){
+        if (!this.cageResults || !this.cageResults.rows || !this.cageResults.rows.length){
             toAdd.push({
                 html: 'No cages found'
             });
@@ -72,7 +93,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
             var colIdxs = {};
             var maxCageMap = {};
             var invertedMap = {};
-            Ext4.each(results.rows, function(r){
+            Ext4.each(this.cageResults.rows, function(r){
                 var row = new LDK.SelectRowsRow(r);
                 var room = row.getValue('room');
                 var maxCage = maxCageMap[room] || 0;
@@ -225,7 +246,6 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                             //TODO: do something smarter
                             var type = row.getDisplayValue('cage_type');
-console.log(type);
                             var suffix = '';
                             if (type.match(/^Tunnel/))
                                 suffix = 'TU';
@@ -362,6 +382,43 @@ console.log(type);
                     hasCages = true;
                 }
 
+                var animalPanel = {
+                    style: 'padding-top: 10px',
+                    defaults: {
+                        border: false,
+                        style: 'padding: 1px 5px 1px 5px;'
+                    },
+                    layout: {
+                        type: 'table',
+                        columns: 5
+                    },
+                    border: false,
+                    items: []
+                };
+
+                var totalAnimals = 0;
+                if (this.animalResults && this.animalResults.rows && this.animalResults.rows.length){
+                    animalPanel.items.push({html: '<b>Id</b>'});
+                    animalPanel.items.push({html: '<b>Cage</b>'});
+                    animalPanel.items.push({html: '<b>Gender</b>'});
+                    animalPanel.items.push({html: '<b>Species</b>'});
+                    animalPanel.items.push({html: '<b>Last Weight (kg)</b>'});
+
+                    Ext4.each(this.animalResults.rows, function(r){
+                        totalAnimals++;
+                        var row = new LDK.SelectRowsRow(r);
+                        var weight = row.getDisplayValue('Id/mostRecentWeight/mostRecentWeight');
+                        weight = weight ? weight + '' : '';
+
+                        animalPanel.items.push({html: row.getDisplayValue('Id')});
+                        animalPanel.items.push({html: row.getDisplayValue('cage')});
+                        animalPanel.items.push({html: row.getDisplayValue('Id/demographics/gender')});
+                        animalPanel.items.push({html: row.getDisplayValue('Id/demographics/species')});
+                        animalPanel.items.push({html: weight + ' kg'});
+
+                    }, this);
+                }
+
                 var panelCfg = {
                     itemId: room,
                     style: 'margin-bottom: 30px;',
@@ -374,6 +431,10 @@ console.log(type);
                         style: 'margin-bottom: 10px;'
                     }, cfg]
                 };
+
+                if (totalAnimals){
+                    panelCfg.items.push(animalPanel);
+                }
 
                 toAdd.push(panelCfg);
             }, this);
@@ -416,7 +477,7 @@ console.log(type);
             scope: this,
             handler: function(btn){
                 this.doRowInversion = !this.doRowInversion;
-                this.onDataLoad(this.results);
+                this.onDataLoad();
             }
         });
 

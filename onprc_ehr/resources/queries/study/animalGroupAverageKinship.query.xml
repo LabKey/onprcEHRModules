@@ -11,6 +11,7 @@
                             query.queryName=kinship&amp;
                             query.Id~eq=${Id}
                         </url>
+                        <formatString>##.###</formatString>
                     </column>
                     <column columnName="distinctAnimals">
                         <columnTitle>Distinct Animals With Kinship</columnTitle>

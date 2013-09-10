@@ -34,6 +34,7 @@ public class HousingDemographicsProvider extends AbstractListDemographicsProvide
     public HousingDemographicsProvider(Module module)
     {
         super("study", "demographicsCurrentLocation", "activeHousing", module);
+        _supportsQCState = false;
     }
 
     protected Collection<FieldKey> getFieldKeys()

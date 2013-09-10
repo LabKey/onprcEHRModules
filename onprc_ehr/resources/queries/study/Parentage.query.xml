@@ -18,11 +18,20 @@
                     </column>
                     <column columnName="relationship">
                         <columnTitle>Relationship</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>parentageRelationship</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="method">
                         <columnTitle>Method</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>parentageMethod</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
-
                 </columns>
             </table>
         </tables>

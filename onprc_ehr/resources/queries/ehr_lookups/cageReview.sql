@@ -9,6 +9,7 @@ SELECT
   CASE
     WHEN (t2.sqFtStatus LIKE '%ERROR%' OR t2.heightStatus LIKE '%ERROR%') THEN 'ERROR'
     WHEN (t2.sqFtStatus LIKE '%WARN%' OR t2.heightStatus LIKE '%WARN%') THEN 'WARNING'
+    WHEN (t2.sqFtStatus LIKE '%INFO%' OR t2.heightStatus LIKE '%INFO%') THEN 'INFO'
     ELSE null
   END as status
 FROM (
@@ -30,7 +31,7 @@ SELECT
    t.minCageHeight,
    CASE
      WHEN (jc.totalSqFt < t.requiredSqFt AND t.totalWeightExempt != t.totalAnimals) THEN ('ERROR: Insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFt as varchar))
-     WHEN jc.totalSqFt < t.requiredSqFtIncluding5Mo THEN ('WARNING: When including 5 month olds, insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFtIncluding5Mo as varchar))
+     WHEN (jc.totalSqFt < t.requiredSqFtIncluding5Mo AND t.totalWeightExempt != t.totalAnimals) THEN ('WARNING: When including 5 month olds, insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFtIncluding5Mo as varchar))
      WHEN (jc.totalSqFt < t.requiredSqFt AND t.totalWeightExempt = t.totalAnimals) THEN ('NOTE: Insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFt as varchar) || ', but has exceptions')
      ELSE null
    END as sqFtStatus,
@@ -90,7 +91,7 @@ LEFT JOIN (
     f.id,
     min(f.value) as heightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.category = 'Cage Exemptions' and f.value = 'Height requirement, Cage Exception'
+  WHERE f.isActive = true AND f.category = 'Cage Exemptions' and (f.value = 'Height requirement, Cage Exception' OR f.value = 'Medical management, Cage Exemption')
   GROUP BY f.Id
 ) f on (f.Id = h.Id)
 
@@ -100,7 +101,7 @@ LEFT JOIN (
     f.id,
     min(f.value) as weightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.category = 'Cage Exemptions' and f.value = 'Weight management, Cage Exception'
+  WHERE f.isActive = true AND f.category = 'Cage Exemptions' and (f.value = 'Weight management, Cage Exception' or f.value = 'Medical management, Cage Exemption')
   GROUP BY f.Id
 ) wf on (f.Id = h.Id)
 

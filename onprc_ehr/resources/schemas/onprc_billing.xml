@@ -108,6 +108,7 @@
         <ns:columns>
             <ns:column columnName="rowId">
                 <ns:columnTitle>Row Id</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="invoiceId">
                 <ns:columnTitle>Invoice</ns:columnTitle>
@@ -118,12 +119,29 @@
                     <ns:fkDisplayColumnName>rowid</ns:fkDisplayColumnName>
                 </ns:fk>
             </ns:column>
+            <ns:column columnName="transactionNumber">
+                <ns:columnTitle>Transaction Number</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="invoiceDate">
                 <ns:columnTitle>Invoice Date</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="chargeId"/>
+            <ns:column columnName="Id">
+                <ns:columnTitle>Animal Id</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>study</ns:fkDbSchema>
+                    <ns:fkTable>Animal</ns:fkTable>
+                    <ns:fkColumnName>Id</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="date">
+                <ns:columnTitle>Transaction Date</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="item">
                 <ns:columnTitle>Item</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="itemCode">
+                <ns:columnTitle>Item Code</ns:columnTitle>
+                <ns:description>A code used to refer to identify this item, which is primarily used when exporting or communicating with external billing systems</ns:description>
             </ns:column>
             <ns:column columnName="category">
                 <ns:columnTitle>Category</ns:columnTitle>
@@ -137,8 +155,17 @@
             <ns:column columnName="creditedaccount">
                 <ns:columnTitle>Credited Alias</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="date">
-                <ns:columnTitle>Transaction Date</ns:columnTitle>
+            <ns:column columnName="project">
+                <ns:columnTitle>Project</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="faid">
+                <ns:columnTitle>FAID</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>fiscalAuthorities</ns:fkTable>
+                    <ns:fkColumnName>rowid</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>lastName</ns:fkDisplayColumnName>
+                </ns:fk>
             </ns:column>
             <ns:column columnName="lastName">
                 <ns:columnTitle>Last Name</ns:columnTitle>
@@ -148,15 +175,18 @@
             </ns:column>
             <ns:column columnName="department">
                 <ns:columnTitle>Department</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="mailcode">
                 <ns:columnTitle>Mail Code</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="contactPhone">
                 <ns:columnTitle>Contact Phone</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
-            <ns:column columnName="faid">
-                <ns:columnTitle>FAID</ns:columnTitle>
+            <ns:column columnName="chargeId">
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="cageId">
                 <ns:columnTitle>Cage Id</ns:columnTitle>
@@ -168,10 +198,6 @@
                 <ns:isKeyField>true</ns:isKeyField>
                 <ns:shownInDetailsView>false</ns:shownInDetailsView>
                 <ns:shownInInsertView>false</ns:shownInInsertView>
-            </ns:column>
-            <ns:column columnName="itemCode">
-                <ns:columnTitle>Item Code</ns:columnTitle>
-                <ns:description>A code used to refer to identify this item, which is primarily used when exporting or communicating with external billing systems</ns:description>
             </ns:column>
             <ns:column columnName="quantity">
                 <ns:columnTitle>Quantity</ns:columnTitle>
@@ -200,13 +226,6 @@
             </ns:column>
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>
-            </ns:column>
-            <ns:column columnName="project">
-                <ns:columnTitle>Project</ns:columnTitle>
-            </ns:column>
-            <ns:column columnName="id">
-                <ns:columnTitle>Animal Id</ns:columnTitle>
-                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="transactionType">
                 <ns:columnTitle>Transaction Type</ns:columnTitle>
@@ -285,7 +304,7 @@
                 <ns:columnTitle>Category</ns:columnTitle>
             </ns:column>
             <ns:column columnName="chargeId"/>
-            <ns:column columnName="descrption">
+            <ns:column columnName="description">
                 <ns:columnTitle>Description</ns:columnTitle>
             </ns:column>
             <ns:column columnName="quantity">
@@ -302,6 +321,17 @@
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="invoiceId">
+                <ns:columnTitle>Invoice</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>invoiceRuns</ns:fkTable>
+                    <ns:fkColumnName>objectid</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>rowid</ns:fkDisplayColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="chargeType"/>
+            <ns:column columnName="billingDate"/>
             <ns:column columnName="taskid">
                 <ns:columnTitle>Task Id</ns:columnTitle>
             </ns:column>

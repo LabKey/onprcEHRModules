@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 select
-  'Legacy data' as comment,
-  ri.RunDate as runDate,
+  'IRIS Legacy data' as comment,
+  max(ri2.RunDate) as runDate,
   ri.StartDate as billingPeriodStart,
   ri.EndDate as billingPeriodEnd,
-  ri.objectid as objectid
+  max(cast(ri.objectid as varchar(38))) as objectid
 from IRIS_Production.dbo.Ref_Invoice ri
-where ri.ts > ?
+left join IRIS_Production.dbo.ref_invoice ri2 ON (ri.startdate = ri2.startdate AND ri.enddate = ri2.enddate)
+where (ri.ts > ? or ri2.ts > ?)
+group by ri.startdate, ri.enddate

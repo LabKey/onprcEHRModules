@@ -27,6 +27,7 @@
                     </column>
                     <column columnName="dimension">
                         <columnTitle>Dimension</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="measurement1">
                         <columnTitle>Measurement 1</columnTitle>

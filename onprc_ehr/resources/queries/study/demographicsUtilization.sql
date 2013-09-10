@@ -22,8 +22,11 @@ FROM (
 
 SELECT
   a.Id,
-  cast(a.project.investigatorId.lastName || ' [' || a.project.name || ']' as varchar) as use,
-  cast(a.project.use_category as varchar) as category
+  cast(CASE
+    WHEN a.project.investigatorId IS NOT NULL THEN (a.project.investigatorId.lastName || ' [' || a.project.name || ']')
+    ELSE a.project.name
+  END as varchar(500)) as use,
+  cast(a.project.use_category as varchar(500)) as category
 FROM study.assignment a
 WHERE a.isActive = true
 

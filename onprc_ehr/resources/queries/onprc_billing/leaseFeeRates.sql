@@ -22,14 +22,14 @@ SELECT
   p.releaseCondition,
   p.assignCondition,
   p.ageAtTime,
-  p.chargeType,
+  p.category,
   p.chargeId,
 
   p.leaseCharge1,
   p.leaseCharge2,
 
   CASE
-    WHEN p.chargeType = 'Lease Fee' THEN coalesce(e.unitcost, cr.unitcost)
+    WHEN p.category = 'Lease Fee' THEN coalesce(e.unitcost, cr.unitcost)
     ELSE (coalesce(e3.unitcost, cr3.unitcost) - coalesce(e2.unitcost, cr2.unitcost))
   END as unitcost,
 

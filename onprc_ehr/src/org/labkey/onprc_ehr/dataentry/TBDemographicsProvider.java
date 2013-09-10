@@ -34,6 +34,7 @@ public class TBDemographicsProvider extends AbstractListDemographicsProvider
     public TBDemographicsProvider(Module module)
     {
         super("study", "demographicsMostRecentTBDate", "tb", module);
+        _supportsQCState = false;
     }
 
     protected Set<FieldKey> getFieldKeys()

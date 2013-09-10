@@ -1,0 +1,5 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="Active Items">
+    <sorts>
+        <sort column="projectNumber" descending="false"/>
+    </sorts>
+</customView>

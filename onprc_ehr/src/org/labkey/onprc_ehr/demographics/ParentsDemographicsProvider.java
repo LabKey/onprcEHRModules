@@ -33,6 +33,7 @@ public class ParentsDemographicsProvider extends AbstractListDemographicsProvide
     public ParentsDemographicsProvider(Module module)
     {
         super("study", "parentageSummary", "parents", module);
+        _supportsQCState = false;
     }
 
     protected Collection<FieldKey> getFieldKeys()

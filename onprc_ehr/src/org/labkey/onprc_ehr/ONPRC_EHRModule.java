@@ -47,6 +47,7 @@ import org.labkey.onprc_ehr.dataentry.ChargesFormSection;
 import org.labkey.onprc_ehr.dataentry.DiagnosisFormType;
 import org.labkey.onprc_ehr.dataentry.LabworkFormType;
 import org.labkey.onprc_ehr.dataentry.LabworkRequestFormType;
+import org.labkey.onprc_ehr.dataentry.PairingFormType;
 import org.labkey.onprc_ehr.dataentry.ProcessingFormType;
 import org.labkey.onprc_ehr.dataentry.SimpleGridPanel;
 import org.labkey.onprc_ehr.dataentry.SurgeryFormType;
@@ -101,7 +102,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.324;
+        return 12.326;
     }
 
     public boolean hasScripts()
@@ -232,7 +233,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //data entry
         EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "Weights", "study", "weight");
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "treatments", "Medications/Diet", Collections.<FormSection>singletonList(new TreatmentsTaskFormSection()));
-        EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "BSU", "Pairing Observations", "study", "Pairings");
+        EHRService.get().registerFormType(new PairingFormType(this));
         //EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "BSU", "Enrichment", "study", "Enrichment");
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Billing", "miscCharges", "Misc Charges", Collections.<FormSection>singletonList(new ChargesFormSection()));
         EHRService.get().registerFormType(new LabworkFormType(this));
@@ -266,9 +267,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Blood Draws", bloodDrawTask), "study", "blood");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Labwork", LabworkFormType.NAME), "study", "clinpathRuns");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Surgeries", SurgeryFormType.NAME), "study", "surgery");
 
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeBloodStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeBloodStatusWindow.js"))), "study", "blood");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "clinpathRuns");
+        EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeEncounterStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeEncounterStatusWindow.js"))), "study", "encounters");
         EHRService.get().registerTbarButton(new ChangeQCStateButton(this, "Mark Delivered", "ONPRC_EHR.window.MarkLabworkDeliveredWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/MarkLabworkDeliveredWindow.js"))), "study", "clinpathRuns");
 
         //history

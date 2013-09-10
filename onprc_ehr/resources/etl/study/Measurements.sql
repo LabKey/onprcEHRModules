@@ -18,12 +18,11 @@ SELECT
 	pm.date,
 
 	pm.objectid as parentid,
-	(cast(pm.objectid as varchar(38)) + pm.tissue + CAST(pm.measurement1 as nvarchar(4000))) as objectid,
+  (cast(pm.objectid as varchar(38)) + '||' + coalesce(pm.tissue, '') + '||' + CAST(pm.measurement1 as nvarchar(4000))) as objectid,
 	--pm.rowversion,
 
 	--pm.MeasurementID,
 	pm.tissue,
-    pm.dimension,
 	pm.measurement1,
     pm.measurement2,
     pm.measurement3,
@@ -53,8 +52,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-  'T-00010' as tissue,
-	'Crown Rump' as dimension,
+  'T-Y9650' as tissue,
+	--'Crown Rump' as dimension,
 	CrownRump AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -70,8 +69,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-  'T-00010' as tissue,
-	'Transtemporal' as dimension,
+  'T-Y9750' as tissue,
+	--'Transtemporal' as dimension,
 	Transtemporal AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -88,7 +87,7 @@ Select
 	pm.objectid,
 	pm.ts as rowversion,
 	'T-Y8710' as tissue, --right hand
-  null as dimension,
+  --null as dimension,
 	RightHand AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -105,7 +104,7 @@ Select
 	pm.objectid,
 	pm.ts as rowversion,
 	'T-Y9710' as tissue,  --right foot
-  null as dimension,
+  --null as dimension,
 	RightFoot AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -121,8 +120,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Primary Placental Disc' as tissue,
-  null as dimension,
+	'T-YZ050' as tissue,
+  --null as dimension,
 	PrimaryPlacentalDisc1 AS measurement1,
   PrimaryPlacentalDisc2 AS measurement2,
   PrimaryPlacentalDisc3 AS measurement3
@@ -138,8 +137,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'Secondary Placental Disc' as tissue,
-  null as dimension,
+	'T-YZ060' as tissue,
+  --null as dimension,
 	SecondaryPlacentalDisc1 AS measurement1,
   SecondaryPlacentalDisc2 AS measurement2,
   SecondaryPlacentalDisc3 AS measurement3
@@ -155,8 +154,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-  'T-00010' as tissue,
-	'Abdominal Circumference' as dimension,
+  'T-Y9855' as tissue,
+	--'Abdominal Circumference' as dimension,
 	AbdominalCircumference AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -172,8 +171,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-  'T-00010' as tissue,
-	'Head Circumference' as dimension,
+  'T-Y9845' as tissue,
+	--'Head Circumference' as dimension,
 	HeadCircumference AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -189,8 +188,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-  'T-00010' as tissue,
-	'Thoracic Circumference' as dimension,
+  'T-Y9889' as tissue,
+	--'Thoracic Circumference' as dimension,
 	ThoracicCircumference AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -206,8 +205,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-  'T-00010' as tissue,
-	'Femur Length' as dimension,
+  'T-Y9880' as tissue,
+	--'Femur Length' as dimension,
 	FemurLength AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -223,8 +222,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-  'T-00010' as tissue,
-	'Torso Length' as dimension,
+  'T-Y9865' as tissue,
+	--'Torso Length' as dimension,
 	TorsoLength AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -240,8 +239,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'T-32000' as tissue,  --heart
-  'LAV' as dimension,
+	'T-36000' as tissue,  --heart
+  --'LAV' as dimension,
 	HeartLAV AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -257,8 +256,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'T-32000' as tissue,  --heart
-  'RAV' as dimension,
+	'T-38000' as tissue,  --heart
+  --'RAV' as dimension,
 	HeartRAV AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -274,8 +273,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'T-32000' as tissue,  --heart
-  'PUL' as dimension,
+	'T-37000' as tissue,  --heart
+  --'PUL' as dimension,
 	HeartPUL AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -291,8 +290,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'T-32000' as tissue,   --heart
-  'AO' as dimension,
+	'T-39000' as tissue,   --heart
+  --'AO' as dimension,
 	HeartAO AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -308,8 +307,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-	'T-32000' as tissue,   --heart
-  'LVW' as dimension,
+	'T-Y9890' as tissue,   --heart
+  --'LVW' as dimension,
 	HeartLVW AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -325,8 +324,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-  'T-32000' as tissue,  --heart
-  'RVW' as dimension,
+  'T-Y9870' as tissue,  --heart
+  --'RVW' as dimension,
 	HeartRVW AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -342,8 +341,8 @@ Select
 	Technician As TechnicianInt,
 	pm.objectid,
 	pm.ts as rowversion,
-  'T-32000' as tissue,  --heart
-	'IVS' as dimension,
+  'T-32410' as tissue,  --heart
+	--'IVS' as dimension,
 	HeartIVS AS measurement1,
   null AS measurement2,
   null AS measurement3
@@ -360,7 +359,7 @@ Select
 	pm.objectid,
 	pm.ts as rowversion,
 	TissueSnomed1 as tissue,
-  null as dimension,
+  --null as dimension,
 	Tissue1Dimension1 AS measurement1,
 	Tissue1Dimension2 AS measurement2,
 	Tissue1Dimension3 AS measurement3
@@ -377,7 +376,7 @@ Select
 	pm.objectid,
 	pm.ts as rowversion,
 	TissueSnomed2 as tissue,
-  null as dimension,
+  --null as dimension,
 	Tissue2Dimension1 AS measurement1,
 	Tissue2Dimension2 AS measurement2,
 	Tissue3Dimension3 AS measurement3
@@ -394,7 +393,7 @@ Select
 	pm.objectid,
 	pm.ts as rowversion,
 	TissueSnomed4 as tissue,
-  null as dimension,
+  --null as dimension,
 	Tissue4Dimension1 AS measurement1,
 	Tissue4Dimension2 AS measurement2,
 	Tissue4Dimension3 AS measurement3
@@ -411,7 +410,7 @@ Select
 	pm.objectid,
 	pm.ts as rowversion,
 	TissueSnomed5 as tissue,
-  null as dimension,
+  --null as dimension,
 	Tissue5Dimension1 AS measurement1,
 	Tissue5Dimension2 AS measurement2,
 	Tissue5Dimension3 AS measurement3
@@ -434,7 +433,6 @@ SELECT
   t.objectid as parentId,
 	(cast(t.objectid as varchar(38)) + t.tissue + CAST(t.measurement1 as nvarchar(4000))) as objectid,
 	t.tissue,
-  t.dimension,
   t.measurement1,
   t.measurement2,
   null as measurement3,
@@ -462,8 +460,8 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-  'T-00010' as tissue,
-	'Crown Rump' as dimension,
+  'T-Y9650' as tissue,
+	--'Crown Rump' as dimension,
 	CrownRump as measurement1,
   null as measurement2,
 
@@ -480,8 +478,8 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-  'T-00010' as tissue,
-	'Transtemporal' as dimension,
+  'T-Y9750' as tissue,
+	--'Transtemporal' as dimension,
 	Transtemporal as measurement1,
   null as measurement2,
 
@@ -499,7 +497,7 @@ Select
 	AnimalID,
 	MeasurementDate as date,
 	'T-Y8710' as tissue,  --right hand
-  null as dimension,
+  --null as dimension,
 	RightHand as measurement1,
   null as measurement2,
 
@@ -517,7 +515,7 @@ Select
 	AnimalID,
 	MeasurementDate as date,
 	'T-Y9710' as tissue,   --right foot
-  null as dimension,
+  --null as dimension,
 	RightFoot as measurement1,
   null as measurement2,
 
@@ -534,8 +532,8 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'Primary Placental Disc' as tissue,
-  null as dimension,
+	'T-YZ050' as tissue,
+  --null as dimension,
 	PrimaryPlacentalDisc1 as measurement1,
 	PrimaryPlacentalDisc2 as measurement2,
 
@@ -552,8 +550,8 @@ Select
 
 	AnimalID,
 	MeasurementDate as date,
-	'Secondary Placental Disc' as tissue,
-  null as dimension,
+	'T-YZ060' as tissue,
+  --null as dimension,
 	SecondaryPlacentalDisc1 as measurement1,
 	SecondaryPlacentalDisc2 as measurement2,
 

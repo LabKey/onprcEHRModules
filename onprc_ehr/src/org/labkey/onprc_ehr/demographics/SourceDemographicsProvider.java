@@ -34,6 +34,7 @@ public class SourceDemographicsProvider extends AbstractListDemographicsProvider
     public SourceDemographicsProvider(Module module)
     {
         super("study", "demographicsSource", "source", module);
+        _supportsQCState = false;
     }
 
     protected Collection<FieldKey> getFieldKeys()

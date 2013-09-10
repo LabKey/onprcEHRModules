@@ -88,7 +88,6 @@ EHR.DataEntryUtils.registerGridButton('PANELDELETE', function(config){
 
                     if (s != grid.store){
                         if (!s.model.prototype.fields.containsKey('runid')){
-                            console.log('no runid: ' + s.storeId);
                             return;
                         }
 
@@ -106,8 +105,6 @@ EHR.DataEntryUtils.registerGridButton('PANELDELETE', function(config){
                         }, this);
                     }
                 }, this);
-
-                console.log(childrenToDelete);
             }
 
             if (hasPermission){

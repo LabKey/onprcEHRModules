@@ -18,8 +18,8 @@ SELECT
   i.project,
   i.item,
 
-  sum(i.quantity) as quantity,
-  sum(i.totalCost) as totalCost,
+  sum(i.quantity) as numItems,
+  sum(i.totalCost) as totalCost
 
 FROM onprc_billing.invoicedItems i
 

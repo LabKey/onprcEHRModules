@@ -37,7 +37,7 @@ select
   END as method,
   (cast(c.objectid as varchar(38)) + '_sire') as objectid
 
-from grip_prd.dbo.combinedrelationship c
+from iris_production.dbo.combinedrelationship c
 where SireId != '0' and SireId is not null
 AND c.ts > ?
 
@@ -67,7 +67,7 @@ select
   END as method,
   (cast(c.objectid as varchar(38)) + '_dam') as objectid
 
-from grip_prd.dbo.combinedrelationship c
+from iris_production.dbo.combinedrelationship c
 where DamId != '0' and DamId is not null
 AND c.ts > ?
 

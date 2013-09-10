@@ -108,7 +108,7 @@ public class LabResultSummaryNotification extends AbstractEHRNotification
         MutablePropertyValues mpv = new MutablePropertyValues();
         mpv.addPropertyValue("schemaName", "study");
         mpv.addPropertyValue("query.queryName", "Clinpath Runs");
-        mpv.addPropertyValue("query.columns", "Id,date,Id/curLocation/area,Id/curLocation/room,Id/curLocation/cage,serviceRequested,requestId,requestid/description,reviewedBy,dateReviewed");
+        mpv.addPropertyValue("query.columns", "Id,date,Id/curLocation/area,Id/curLocation/room,Id/curLocation/cage,servicerequested,requestId,requestid/description,reviewedBy,dateReviewed");
         mpv.addPropertyValue("query.sort", "Id,date");
 
         BindException errors = new NullSafeBindException(new Object(), "command");
@@ -156,7 +156,7 @@ public class LabResultSummaryNotification extends AbstractEHRNotification
                         sb = new StringBuilder();
 
                     sb.append("<tr><td><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/animalHistory.view?#inputType:singleSubject&showReport:1&subjects:");
-                    sb.append(rs.getString(FieldKey.fromString("Id")) + "&activeReport:clinPathRuns'>" + rs.getString(FieldKey.fromString("Id")) +  "</a></td><td>" + AbstractEHRNotification._dateFormat.format(rs.getDate(FieldKey.fromString("date"))) + "</td><td>" + rs.getString(FieldKey.fromString("serviceRequested")) + "</td><td>" + description + "</td><td>");
+                    sb.append(rs.getString(FieldKey.fromString("Id")) + "&activeReport:clinPathRuns'>" + rs.getString(FieldKey.fromString("Id")) +  "</a></td><td>" + AbstractEHRNotification._dateFormat.format(rs.getDate(FieldKey.fromString("date"))) + "</td><td>" + rs.getString(FieldKey.fromString("servicerequested")) + "</td><td>" + description + "</td><td>");
                     sb.append((rs.getString(FieldKey.fromString("dateReviewed")) == null ? "" : rs.getString(FieldKey.fromString("dateReviewed"))) + "</td><td" + (rs.getString(FieldKey.fromString("reviewedBy"))==null ? "" : " style=background:red;") + ">" + (rs.getString(FieldKey.fromString("reviewedBy"))==null ? "" : rs.getString(FieldKey.fromString("reviewedBy")) + "</td></tr>"));
 
                     areaNode.put(room, sb);

@@ -104,25 +104,25 @@ Ext4.onReady(function(){
             populateFn: 'populateChemistryTests',
             schemaName: 'ehr_lookups',
             queryName: 'chemistry_tests',
-            pk: 'testid'
+            pk: 'rowid'
         },{
             label: 'Misc Tests',
             populateFn: 'populateMiscTests',
             schemaName: 'ehr_lookups',
             queryName: 'misc_tests',
-            pk: 'testid'
+            pk: 'rowid'
         },{
             label: 'Hematology Tests',
             populateFn: 'populateHematologyTests',
             schemaName: 'ehr_lookups',
             queryName: 'hematology_tests',
-            pk: 'testid'
+            pk: 'rowid'
         },{
             label: 'iSTAT Tests',
             populateFn: 'populateiStatTests',
             schemaName: 'ehr_lookups',
             queryName: 'istat_tests',
-            pk: 'testid'
+            pk: 'rowid'
         },{
             label: 'Urinalysis Qual Results',
             populateFn: 'populateUrinalysisQualResults',
@@ -134,7 +134,7 @@ Ext4.onReady(function(){
             populateFn: 'populateUrinalysisTests',
             schemaName: 'ehr_lookups',
             queryName: 'urinalysis_tests',
-            pk: 'testid'
+            pk: 'rowid'
         },{
             label: 'Observation Types',
             populateFn: 'populateObservationTypes',
@@ -212,7 +212,7 @@ Ext4.onReady(function(){
             populateFn: 'populateEncounterRoles',
             schemaName: 'ehr_lookups',
             queryName: 'encounter_roles',
-            pk: 'value'
+            pk: 'rowid'
         },{
             label: 'Blood Draw Tube Volumes',
             populateFn: 'populateBloodDrawTubeVolumes',
@@ -224,13 +224,25 @@ Ext4.onReady(function(){
             populateFn: 'populateBloodChargeType',
             schemaName: 'ehr_lookups',
             queryName: 'bloodChargeType',
-            pk: 'value'
+            pk: 'rowid'
+        },{
+            label: 'Parentage Methods',
+            populateFn: 'populateParentageMethod',
+            schemaName: 'ehr_lookups',
+            queryName: 'parentageMethod',
+            pk: 'rowid'
+        },{
+            label: 'Parentage Relationships',
+            populateFn: 'populateParentageRelationship',
+            schemaName: 'ehr_lookups',
+            queryName: 'parentageRelationship',
+            pk: 'rowid'
         },{
             label: 'Labwork Charge Type',
             populateFn: 'populateLabworkChargeType',
             schemaName: 'ehr_lookups',
             queryName: 'labworkChargeType',
-            pk: 'value'
+            pk: 'rowid'
         },{
             label: 'Labwork Services',
             populateFn: 'populateLabworkServices',
@@ -248,43 +260,49 @@ Ext4.onReady(function(){
             populateFn: 'populateObservationAreas',
             schemaName: 'ehr_lookups',
             queryName: 'observation_areas',
-            pk: 'value'
+            pk: 'rowid'
         },{
             label: 'Procedure Charge Type',
             populateFn: 'populateProcedureChargeType',
             schemaName: 'ehr_lookups',
             queryName: 'procedureChargeType',
-            pk: 'value'
+            pk: 'rowid'
         },{
             label: 'Pairing Event Type',
             populateFn: 'populatePairingEventType',
             schemaName: 'ehr_lookups',
             queryName: 'pairingEventType',
-            pk: 'value'
+            pk: 'rowid'
         },{
             label: 'Pairing Separation Reason',
             populateFn: 'populatePairingSeparationReason',
             schemaName: 'ehr_lookups',
             queryName: 'pairingSeparationReason',
-            pk: 'value'
+            pk: 'rowid'
         },{
             label: 'Pairing Observation',
             populateFn: 'populatePairingObservation',
             schemaName: 'ehr_lookups',
             queryName: 'pairingObservation',
-            pk: 'value'
+            pk: 'rowid'
         },{
             label: 'Pairing Housing Type',
             populateFn: 'populatePairingHousingType',
             schemaName: 'ehr_lookups',
             queryName: 'pairingHousingType',
-            pk: 'value'
+            pk: 'rowid'
+        },{
+            label: 'Pairing Goal',
+            populateFn: 'populatePairingGoal',
+            schemaName: 'ehr_lookups',
+            queryName: 'pairingGoal',
+            pk: 'rowid'
         },{
             label: 'Pairing Outcome',
             populateFn: 'populatePairingOutcome',
             schemaName: 'ehr_lookups',
             queryName: 'pairingOutcome',
-            pk: 'value'
+            pk: 'rowid'
         },{
             label: 'Blood Draw Services',
             populateFn: 'populateBloodDrawServices',
@@ -296,13 +314,13 @@ Ext4.onReady(function(){
             populateFn: 'populateBloodDrawReason',
             schemaName: 'ehr_lookups',
             queryName: 'blood_draw_reason',
-            pk: 'value'
+            pk: 'rowid'
         },{
             label: 'Drug Outcome',
             populateFn: 'populateDrugOutcome',
             schemaName: 'ehr_lookups',
             queryName: 'drugOutcome',
-            pk: 'value'
+            pk: 'rowid'
         },{
             label: 'Clinremarks Category',
             populateFn: 'populateClinpathTypes',
@@ -2200,13 +2218,29 @@ Ext4.onReady(function(){
             ['P-08300','Diet'],
             ['P-08301','Diet'],
             ['T-0X000','Parasitology Sampletype'],
-            ['T-0X500','Parasitology Sampletype'],
-            ['T-2X120','Parasitology Sampletype'],
             ['T-6Y101','Parasitology Sampletype'],
             ['T-6Y102','Parasitology Sampletype'],
             ['T-6Y103','Parasitology Sampletype'],
             ['T-6Y104','Parasitology Sampletype'],
-            ['T-7X100','Parasitology Sampletype']
+            ['T-7X100','Parasitology Sampletype'],
+            ['T-Y9650','Measurements'],
+            ['T-Y9750','Measurements'],
+            ['T-Y8710','Measurements'],
+            ['T-Y9710','Measurements'],
+            ['T-YZ050','Measurements'],
+            ['T-YZ060','Measurements'],
+            ['T-36000','Measurements'],
+            ['T-38000','Measurements'],
+            ['T-37000','Measurements'],
+            ['T-39000','Measurements'],
+            ['T-32410','Measurements'],
+            ['T-Y9870','Measurements'],
+            ['T-Y9890','Measurements'],
+            ['T-Y9845','Measurements'],
+            ['T-Y9855','Measurements'],
+            ['T-Y9865','Measurements'],
+            ['T-Y9889','Measurements'],
+            ['T-Y9880','Measurements']
         ],
 
         deleteSnomedSubsets: function(){
@@ -2293,6 +2327,7 @@ Ext4.onReady(function(){
             ['microbiologyQuantity', 'Microbiology Quantity', 'value'],
             ['pairingHousingType', 'Pairing Housing Types', 'value'],
             ['pairingOutcome', 'Pairing Outcomes', 'value'],
+            ['pairingGoal', 'Pairing Goal', 'value'],
             ['pairingObservation', 'Pairing Observations', 'value'],
             ['pairingSeparationReason', 'Pairing Separation Reason', 'value'],
             ['serologyMethod', 'Serology Methods', 'value'],
@@ -2306,7 +2341,9 @@ Ext4.onReady(function(){
             ['bloodChargeType', 'Blood Charge Types', 'value'],
             ['procedureChargeType', 'Procedure Charge Types', 'value'],
             ['blood_draw_reason', 'Blood Draw Reason', 'value'],
-            ['encounter_roles', 'Encounter Roles', 'value']
+            ['encounter_roles', 'Encounter Roles', 'value'],
+            ['parentageRelationship', 'Parentage Relationship', 'value'],
+            ['parentageMethod', 'Parentage Determination Methods', 'value']
         ],
 
         populatePairingEventType: function(){
@@ -2322,9 +2359,11 @@ Ext4.onReady(function(){
             var fields = ('value').split(',');
 
             var data = [
-                ['Pair Start'],
-                ['Pair End'],
-                ['Unsuccessful Attempt']
+                ['Set up'],
+                ['Pair attempt'],
+                ['Permanent separation'],
+                ['Temporary separation'],
+                ['Pair Monitor']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -2351,6 +2390,30 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
+        populatePairingGoal: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'pairingGoal',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['Full Pair'],
+                ['Grooming Contact'],
+                ['Group'],
+                ['Mesh'],
+                ['Solid'],
+                ['N/A']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
         populatePairingOutcome: function(){
             this.pendingInserts++;
             //records for task forms:
@@ -2364,10 +2427,12 @@ Ext4.onReady(function(){
             var fields = ('value').split(',');
 
             var data = [
-                ['N/A'],
-                ['Successful'],
+                ['Full'],
+                ['Grooming contact'],
+                ['Mesh'],
+                ['Solid'],
                 ['Unknown'],
-                ['Unsuccessful']
+                ['N/A']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -2393,7 +2458,9 @@ Ext4.onReady(function(){
                 ['Medical'],
                 ['Transfer'],
                 ['Death'],
+                ['Fear'],
                 ['See Remarks'],
+                ['N/A'],
                 ['Project Assignment'],
                 ['Project Reserve']
             ];
@@ -2415,6 +2482,7 @@ Ext4.onReady(function(){
 
             var data = [
                 ['N/A'],
+                ['Fear'],
                 ['Aggression']
             ];
 
@@ -2721,6 +2789,49 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
+        populateParentageMethod: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'parentageMethod',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+            var data = [
+                ['Observed'],
+                ['Genetic'],
+                ['Provisional Genetic'],
+                ['Excluded'],
+                ['Other'],
+                ['Unknown']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateParentageRelationship: function(){
+            this.pendingInserts++;
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'parentageRelationship',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+            var data = [
+                ['Dam'],
+                ['Sire'],
+                ['Surrogate Dam'],
+                ['Foster Dam']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
         populateBloodChargeType: function(){
             this.pendingInserts++;
             //records for task forms:
@@ -2928,7 +3039,7 @@ Ext4.onReady(function(){
                 ['Comprehensive Chemistry panel in-house','ALT',12,'','testid'],
                 ['Comprehensive Chemistry panel in-house','ALKP',13,'','testid'],
                 ['Comprehensive Chemistry panel in-house','GGT',14,'','testid'],
-                ['Comprehensive Chemistry panel in-house','TB',15,'','testid'],
+                ['Comprehensive Chemistry panel in-house','TBili',15,'','testid'],
                 ['Comprehensive Chemistry panel in-house','CHOL',16,'','testid'],
                 ['Comprehensive Chemistry panel in-house','TRIG',17,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out*','GLU',1,'','testid'],
@@ -2946,7 +3057,7 @@ Ext4.onReady(function(){
                 ['Comprehensive Chemistry Panel Send Out*','TRIG',13,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out*','CHOL',14,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out*','DBili',15,'','testid'],
-                ['Comprehensive Chemistry Panel Send Out*','TB',16,'','testid'],
+                ['Comprehensive Chemistry Panel Send Out*','TBili',16,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out*','GGT',17,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out*','ALKP',18,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out*','LDH',19,'','testid'],
@@ -2968,7 +3079,7 @@ Ext4.onReady(function(){
                 ['Chemistry panel with high density lipoprotein send out*','TRIG',13,'','testid'],
                 ['Chemistry panel with high density lipoprotein send out*','CHOL',14,'','testid'],
                 ['Chemistry panel with high density lipoprotein send out*','DBili',15,'','testid'],
-                ['Chemistry panel with high density lipoprotein send out*','TB',16,'','testid'],
+                ['Chemistry panel with high density lipoprotein send out*','TBili',16,'','testid'],
                 ['Chemistry panel with high density lipoprotein send out*','GGT',17,'','testid'],
                 ['Chemistry panel with high density lipoprotein send out*','ALKP',18,'','testid'],
                 ['Chemistry panel with high density lipoprotein send out*','LDH',19,'','testid'],
@@ -3432,7 +3543,9 @@ Ext4.onReady(function(){
                 ['clinObs' ,'Clinical' ,'query' ,'Observations' ,'true' ,'' ,'study' ,'Clinical Observations', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.'],
                 ['clinremarks' ,'Clinical' ,'query' ,'Clinical Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the clinical remarks entered about each animal'],
                 ['behaviorRemarks' ,'Behavior' ,'query' ,'Behavior Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', 'Behavior Remarks', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the behavior remarks entered about each animal'],
-                ['pairings' ,'Behavior' ,'query' ,'Pairing Observations' ,'true' ,'' ,'study' ,'pairings', '', '', 'date', 'false', 'false', '', '', 'This report contains records about pairings made using each animal'],
+                ['pairings' ,'Behavior' ,'query' ,'Pairing Observations' ,'true' ,'' ,'study' ,'pairingSummary', '', '', 'date', 'false', 'false', '', '', 'This report contains records about pairings made using each animal'],
+                ['roommateHistoryBSU' ,'Behavior' ,'query' ,'Cagemate History' ,'true' ,'' ,'study' ,'housingRoommates', 'Caged Housing Only', '', 'StartDate', 'false', 'false', '', 'qcstate/publicdata', 'This report displays all animals that shared a cage, including the start date, stop date and days co-housed'],
+                ['pairingHistory' ,'Behavior' ,'js' ,'Pairing History' ,'true' ,'' ,'study' ,'pairHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report displays all animals that shared a cage, including the start date, stop date and days co-housed'],
 
                 //['caseSummary' ,'Clinical' ,'query' ,'Cases Over 2 Years' ,'true' ,'' ,'study' ,'clinicalCaseSummary', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This reports summarizes clinical cases opened in the past 2 years.'],
                 //['fullHistory' ,'Clinical' ,'query' ,'Full History' ,'true' ,'' ,'study' ,'StudyData', 'Full History', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains all clinical data on the animal'],
@@ -3461,10 +3574,11 @@ Ext4.onReady(function(){
                 ['inbreeding' ,'Genetics' ,'query' ,'Inbreeding Coefficients' ,'true' ,'' ,'study' ,'Inbreeding Coefficients', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the inbreeding coefficient of each animal, where pedigree data is available. The inbreeding coefficient is the kinship coefficient between the individual\'s parents. It measures the probability that the two alleles of a gene are identical by descent in the same individual (autozygosity). It is zero if the individual is not inbred.'],
                 ['parentage' ,'Genetics' ,'query' ,'Parentage' ,'true' ,'' ,'study' ,'demographicsParents', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report shows information about the parentage of each animal, drawing from genetic data and observations'],
                 ['potentialParents' ,'Colony Management' ,'js' ,'Potential Parents' ,'true' ,'' ,'study' ,'potentialParents', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report shows potential parents for the animal, which is based on housing at estimated time of conception'],
-                ['kinship' ,'Genetics' ,'query' ,'Kinship' ,'true' ,'' ,'ehr' ,'kinship', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the kinship coefficient between every animal in the colony. The kinship coefficient is a measure of relatedness between two individuals. It represents the probability that two genes, sampled at random from each individual are identical (e.g. the kinship coefficient between a parent and an offspring is 0.25).'],
+                ['kinship' ,'Genetics' ,'query' ,'Kinship' ,'true' ,'' ,'ehr' ,'kinshipSummary', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the kinship coefficient between every animal in the colony. The kinship coefficient is a measure of relatedness between two individuals. It represents the probability that two genes, sampled at random from each individual are identical (e.g. the kinship coefficient between a parent and an offspring is 0.25).'],
                 //['mensCalendar' ,'Colony Management' ,'query' ,'Menses Calendar' ,'TRUE' ,'' ,'study' ,'mensCalendar', '', '', '', 'FALSE', 'FALSE', '', 'qcstate/publicdata', 'This report shows a calendar view of the mens observations entered by daily obs.'],
                 ['pedigree' ,'Genetics' ,'js' ,'Pedigree' ,'true' ,'' ,'study' ,'pedigree', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report displays pedigree data for animals, including parents, grandparents, siblings and offspring'],
                 ['mhcData' ,'Genetics' ,'query' ,'MHC Typing' ,'true' ,'' ,'MHC_Data' ,'MHC_Data_Unified', '', '', '', 'false', 'false', '', '', ''],
+                ['mhcDataPivoted' ,'Genetics' ,'query' ,'MHC Typing By Allele' ,'true' ,'' ,'MHC_Data' ,'MHC_Data_Pivoted', '', '', '', 'false', 'false', '', '', ''],
                 ['siblings' ,'Reproductive Management' ,'query' ,'Siblings' ,'true' ,'' ,'study' ,'demographicsSiblings', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report displays pedigree data for animals, including parents, grandparents, siblings and offspring'],
                 ['offspring' ,'Reproductive Management' ,'query' ,'Offspring' ,'true' ,'' ,'study' ,'demographicsOffspring', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report displays pedigree data for animals, including parents, grandparents, siblings and offspring'],
                 ['pedigreePlot' ,'Genetics' ,'report' ,'Pedigree Plot' ,'true' ,'' ,'study' ,'pedigree', '', 'module:EHR/schemas/study/Pedigree/Pedigree.r', '', 'false', 'false', '', 'qcstate/publicdata', 'This report will generate a pedigree plot for the selected animal'],
@@ -3636,43 +3750,36 @@ Ext4.onReady(function(){
             };
             var fields = ('testid,name,units,aliases,alertOnAbnormal,alertOnAny,includeInPanel,sort_order').split(',');
             var data = [
-                ['A/P', 'Albumin/Protein Ratio', null, null, true, false, false, null],
-                ['A/G ratio', 'Albumin Globulin Ratio', null, null, true, false, false, null],
+                ['TP', 'Total Protein', 'g/dL', null, true, false, true, 1],
                 ['ALB', 'Albumin', 'g/dL', null, true, false, true, 2],
                 ['ALKP', 'Alkaline Phosphatase', 'IU/L', 'ALP', true, false, true, 3],
-                ['B/C', 'BUN/Creatinine Ratio', 'ratio', null, true, false, false, null],
-                ['BUN', 'Blood urea nitrogen', 'mg/dL', null, true, false, true, 9],
-                ['Ca', 'Calcium', 'mg/dL', null, true, false, true, 14],
-                ['CHOL', 'Cholesterol', 'mg/dl', 'CHO', true, false, true, 18],
-                ['CHOL/HDL', 'Cholesterol/HDL Ratio', null, null, true, false, false, null],
-                ['Cl', 'Chloride', 'mEq/L', null, true, false, true, 13],
-                ['CPK', 'Creatine phosphokinase', 'U/L', null, true, false, false, null],
-                ['CRP', 'C reactive protein', null, null, true, false, false, null],
-                ['CREAT', 'Creatinine', 'mg/dL', 'CR', true, false, true, 10],
-                ['DBili', 'Direct Bilirubin', null, null, true, false, false, null],
-                ['Fe', 'Iron', '?g/dL', null, true, false, true, 17],
-                ['FIBR', 'Fibrinogen', 'mg/dL', null, true, false, false, null],
-                ['GGT', 'Gamma-glutamyltransferase', 'IU/L', null, true, false, true, 6],
-                ['Glob', 'Globulins', null, null, true, false, false, null],
-                ['GLUC', 'Glucose', 'mg/dL', 'GLU', true, false, true, 8],
-                ['HDL', 'High-Density Lipoprotein', 'mg/dL', null, true, false, true, 21],
-                ['HGB', 'Hemoglobin', 'g/dL', null, true, false, false, null],
-                ['K', 'Potassium', 'mmol/L', null, true, false, true, 11],
-                ['LDH', 'Lactate dehydrogenase', 'IU/L', null, true, false, true, 19],
-                ['LDL/HDL', 'LDL/HDL Ratio', null, null, true, false, false, null],
-                ['LDL', 'Low-Density Lipoprotein', 'mg/dL', null, true, false, true, 20],
-                ['Phos', 'Phosphorus', 'mg/dL', 'PHO', true, false, true, 16],
-                ['AST', 'Aspartate transaminase', 'IU/L', 'SGOT', true, false, true, 5],
                 ['ALT', 'Alanine transaminase', 'IU/L', 'SGPT', true, false, true, 4],
-                ['TB', 'Total Bilirubin', 'mg/dL', 'BIL', true, false, true, 7],
-                ['TP', 'Total Protein', 'g/dL', null, true, false, true, 1],
-                ['TRIG', 'Triglyceride', 'mg/dL', 'TRG', true, false, true, 22],
+                ['AST', 'Aspartate transaminase', 'IU/L', 'SGOT', true, false, true, 5],
+                ['GGT', 'Gamma-glutamyltransferase', 'IU/L', null, true, false, true, 6],
+                ['Tbili', 'Total Bilirubin', 'mg/dL', 'BIL', true, false, true, 7],
+                ['GLUC', 'Glucose', 'mg/dL', 'GLU', true, false, true, 8],
+                ['BUN', 'Blood urea nitrogen', 'mg/dL', null, true, false, true, 9],
+                ['CREAT', 'Creatinine', 'mg/dL', 'CR', true, false, true, 10],
+                ['K', 'Potassium', 'mmol/L', null, true, false, true, 11],
+                ['Na', 'Sodium', 'mmol/L', null, true, false, true, 12],
+                ['Cl', 'Chloride', 'mmol/L', null, true, false, true, 13],
+                ['Ca', 'Calcium', 'mg/dL', null, true, false, true, 14],
                 ['Mg', 'Magnesium', null, null, true, false, true, 15],
-                ['Lip', 'Lipase', null, null, true, false, false, null],
-                ['Na', 'Sodium', null, null, true, false, true, 12],
+                ['Phos', 'Phosphorus', 'mg/dL', 'PHO', true, false, true, 16],
+                ['Fe', 'Iron', 'ug/dl', null, true, false, true, 17],
+                ['CHOL', 'Cholesterol', 'mg/dl', 'CHO', true, false, true, 18],
+                ['LDH', 'Lactate dehydrogenase', 'IU/L', null, true, false, true, 19],
+                ['LDL', 'Low-Density Lipoprotein', 'mg/dL', null, true, false, true, 20],
+                ['HDL', 'High-Density Lipoprotein', 'mg/dL', null, true, false, true, 21],
+                ['TRIG', 'Triglyceride', 'mg/dL', 'TRG', true, false, true, 22],
                 ['Amyl', 'Amylase', null, null, true, false, true, 23],
+                ['HGB', 'Hemoglobin', 'g/dL', null, true, false, false, null],
+                ['LDL/HDL', 'LDL/HDL Ratio', null, null, true, false, false, null],
+                ['Lip', 'Lipase', null, null, true, false, false, null],
                 ['UA', 'Uric Acid', 'mg/dL', null, true, false, false, null],
-                ['VLDL/CHOL', 'VLDL/Cholesterol Ratio', null, null, true, false, false, null]
+                ['VLDL/CHOL', 'VLDL/Cholesterol Ratio', null, null, true, false, false, null],
+                ['Glob', 'Globulin', 'g/dl', null, true, false, false, null],
+                ['Dbili', 'Direct Bilirubin', 'mg/dl', null, true, false, false, null]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -4064,7 +4171,8 @@ Ext4.onReady(function(){
                 ['Polychromasia RBC', 'Polychromasia RBC', null, true, false, false, null],
                 ['MPMN', 'Neutrophils', null, true, false, false, null],
                 ['SEDRate', 'Sedimentation rate', null, true, false, false, null],
-                ['TP', 'Total protein', null, true, false, false, null]
+                ['TP', 'Total protein', null, true, false, false, null],
+                ['RDW', '', null, true, false, true, null]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -4087,7 +4195,7 @@ Ext4.onReady(function(){
                 ["ALT", "f", "CYNOMOLGUS MACAQUE", 20, 150, "Chemistry"],
                 ["Amyl", "f", "CYNOMOLGUS MACAQUE", 208, 790, "Chemistry"],
                 ["AST", "f", "CYNOMOLGUS MACAQUE", 20, 72, "Chemistry"],
-                ["TB", "f", "CYNOMOLGUS MACAQUE", 0.1, 0.4, "Chemistry"],
+                ["TBili", "f", "CYNOMOLGUS MACAQUE", 0.1, 0.4, "Chemistry"],
                 ["BUN", "f", "CYNOMOLGUS MACAQUE", 10, 21, "Chemistry"],
                 ["CL", "f", "CYNOMOLGUS MACAQUE", 102, 111, "Chemistry"],
                 ["CHOL", "f", "CYNOMOLGUS MACAQUE", 72, 177, "Chemistry"],
@@ -4107,7 +4215,7 @@ Ext4.onReady(function(){
                 ["ALT", "m", "CYNOMOLGUS MACAQUE", 20, 150, "Chemistry"],
                 ["Amyl", "m", "CYNOMOLGUS MACAQUE", 208, 790, "Chemistry"],
                 ["AST", "m", "CYNOMOLGUS MACAQUE", 20, 72, "Chemistry"],
-                ["TB", "m", "CYNOMOLGUS MACAQUE", 0.1, 0.4, "Chemistry"],
+                ["TBili", "m", "CYNOMOLGUS MACAQUE", 0.1, 0.4, "Chemistry"],
                 ["BUN", "m", "CYNOMOLGUS MACAQUE", 10, 21, "Chemistry"],
                 ["CL", "m", "CYNOMOLGUS MACAQUE", 102, 111, "Chemistry"],
                 ["CHOL", "m", "CYNOMOLGUS MACAQUE", 72, 177, "Chemistry"],
@@ -4127,7 +4235,7 @@ Ext4.onReady(function(){
                 ["ALT", "f", "JAPANESE MACAQUE", 27, 80, "Chemistry"],
                 ["Amyl", "f", "JAPANESE MACAQUE", 161, 478, "Chemistry"],
                 ["AST", "f", "JAPANESE MACAQUE", 15, 47, "Chemistry"],
-                ["TB", "f", "JAPANESE MACAQUE", 0.1, 0.3, "Chemistry"],
+                ["TBili", "f", "JAPANESE MACAQUE", 0.1, 0.3, "Chemistry"],
                 ["BUN", "f", "JAPANESE MACAQUE", 9, 22, "Chemistry"],
                 ["CL", "f", "JAPANESE MACAQUE", 103, 113, "Chemistry"],
                 ["CHOL", "f", "JAPANESE MACAQUE", 91, 171, "Chemistry"],
@@ -4147,7 +4255,7 @@ Ext4.onReady(function(){
                 ["ALT", "m", "JAPANESE MACAQUE", 30, 77, "Chemistry"],
                 ["Amyl", "m", "JAPANESE MACAQUE", 161, 478, "Chemistry"],
                 ["AST", "m", "JAPANESE MACAQUE", 18, 78, "Chemistry"],
-                ["TB", "m", "JAPANESE MACAQUE", 0.04, 0.3, "Chemistry"],
+                ["TBili", "m", "JAPANESE MACAQUE", 0.04, 0.3, "Chemistry"],
                 ["BUN", "m", "JAPANESE MACAQUE", 9, 22, "Chemistry"],
                 ["CL", "m", "JAPANESE MACAQUE", 103, 113, "Chemistry"],
                 ["CHOL", "m", "JAPANESE MACAQUE", 68, 127, "Chemistry"],
@@ -4167,7 +4275,7 @@ Ext4.onReady(function(){
                 ["ALT", "f", "RHESUS MACAQUE", 6, 27, "Chemistry"],
                 ["Amyl", "f", "RHESUS MACAQUE", 206, 844, "Chemistry"],
                 ["AST", "f", "RHESUS MACAQUE", 18, 58, "Chemistry"],
-                ["TB", "f", "RHESUS MACAQUE", 0, 0.4, "Chemistry"],
+                ["TBili", "f", "RHESUS MACAQUE", 0, 0.4, "Chemistry"],
                 ["BUN", "f", "RHESUS MACAQUE", 10, 27, "Chemistry"],
                 ["CL", "f", "RHESUS MACAQUE", 102, 115, "Chemistry"],
                 ["CHOL", "f", "RHESUS MACAQUE", 82, 231, "Chemistry"],
@@ -4187,7 +4295,7 @@ Ext4.onReady(function(){
                 ["ALT", "m", "RHESUS MACAQUE", 6, 27, "Chemistry"],
                 ["Amyl", "m", "RHESUS MACAQUE", 206, 844, "Chemistry"],
                 ["AST", "m", "RHESUS MACAQUE", 18, 58, "Chemistry"],
-                ["TB", "m", "RHESUS MACAQUE", 0, 0.4, "Chemistry"],
+                ["TBili", "m", "RHESUS MACAQUE", 0, 0.4, "Chemistry"],
                 ["BUN", "m", "RHESUS MACAQUE", 10, 27, "Chemistry"],
                 ["CL", "m", "RHESUS MACAQUE", 102, 115, "Chemistry"],
                 ["CHOL", "m", "RHESUS MACAQUE", 82, 231, "Chemistry"],
@@ -4417,25 +4525,25 @@ Ext4.onReady(function(){
             };
             var fields = ('testid,name,units,alertOnAbnormal,alertOnAny,includeInPanel,sort_order').split(',');
             var data = [
-                ['App', 'Appearance', null, true, false, true, 2],
-                ['Bact', 'Bacteria', null, true, false, true, 10],
+                ['App', 'Appearance', 'no units', true, false, true, 2],
+                ['Bact', 'Bacteria', 'no units', true, false, true, 10],
                 ['Bili', 'Bilirubin', 'no units', true, false, true, 5],
                 ['Blood', 'Blood', 'no units', true, false, true, 11],
-                ['Color', 'Color', null, true, false, true, 1],
-                ['Glu', 'Glucose', 'mg/dL', true, false, true, 6],
-                ['Ket', 'Ketone', 'mg/dL', true, false, true, 7],
+                ['Color', 'Color', 'no units', true, false, true, 1],
+                ['Glu', 'Glucose', 'no units', true, false, true, 6],
+                ['Ket', 'Ketone', 'no units', true, false, true, 7],
                 ['pH', 'pH', 'no units', true, false, true, 4],
-                ['Prot', 'Protein', 'mg/dL', true, false, true, 8],
+                ['Prot', 'Protein', 'no units', true, false, true, 8],
                 ['SpecGrav', 'Specific Gravity', 'no units', true, false, true, 3],
-                ['Urobili', 'Urobilinogen', 'E.U./dL', true, false, true, 9],
-                ['Other', 'Other', null, true, false, false, null],
-                ['WBC', 'WBC', null, true, false, true, 12],
-                ['RBC', 'RBC', null, true, false, true, 13],
-                ['Epith', 'Epith', null, true, false, true, 14],
-                ['Crystals', 'Crystals', null, true, false, true, 15],
-                ['Casts', 'Casts', null, true, false, true, 16],
-                ['Cast-1', 'Cast Type 1', null, true, false, true, 17],
-                ['Cast-2', 'Cast Type 2', null, true, false, true, 18]
+                ['Urobili', 'Urobilinogen', 'mg/dl', true, false, true, 9],
+                ['Other', 'Other', 'no units', true, false, false, null],
+                ['WBC', 'WBC', 'phpf', true, false, true, 12],
+                ['RBC', 'RBC', 'phpf', true, false, true, 13],
+                ['Epith', 'Epith', 'phpf', true, false, true, 14],
+                ['Crystals', 'Crystals', 'phpf', true, false, true, 15],
+                ['Casts', 'Casts', 'plpf', true, false, true, 16],
+                ['Cast-1', 'Cast Type 1', 'plpf', true, false, true, 17],
+                ['Cast-2', 'Cast Type 2', 'plpf', true, false, true, 18]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -4471,17 +4579,30 @@ Ext4.onReady(function(){
                 ['Very Cloudy','App',16],
                 ['Hazy','Appearance',17],
                 ['Turbid','Appearance',18],
-                ['Negative','Prot,Blood,Ket,Bili,Gluc',19],
-                ['Trace','Prot,Blood,Ket,Bili,Gluc',20],
-                ['1+','Prot,Blood,Ket,Bili,Gluc',21],
-                ['2+','Prot,Blood,Ket,Bili,Gluc',22],
-                ['3+','Prot,Blood,Ket,Bili,Gluc',23],
-                ['4+','Prot,Blood,Ket,Bili,Gluc',24],
-                ['Granular','Casts',25],
-                ['Hyaline','Casts',26],
-                ['RBC','Casts',27],
-                ['Waxy','Casts',28],
-                ['WBC','Casts',29]
+                ['Negative','Prot,Blood,Ket,Bili,Glu,Urobili,Bact',19],
+                ['Trace','Prot,Blood,Ket,Bili,Glu,Urobili,Bact',20],
+                ['1+','Prot,Blood,Ket,Bili,Glu,Urobili,Bact',21],
+                ['2+','Prot,Blood,Ket,Bili,Glu,Urobili,Bact',22],
+                ['3+','Prot,Blood,Ket,Bili,Glu,Urobili,Bact',23],
+                ['4+','Prot,Blood,Ket,Bili,Glu,Urobili,Bact',24],
+                ['Granular','Casts,Cast-1,Cast-2',25],
+                ['Hyaline','Casts,Cast-1,Cast-2',26],
+                ['RBC','Casts,Cast-1,Cast-2',27],
+                ['Waxy','Casts,Cast-1,Cast-2',28],
+                ['WBC','Casts,Cast-1,Cast-2',29],
+                ['Amorphous phosphates', 'Crystals', 1],
+                ['Amorphous urates', 'Crystals', 2],
+                ['Calcium oxalates', 'Crystals', 3],
+                ['Tyrosine', 'Crystals', 4],
+                ['Leucine', 'Crystals', 5],
+                ['Uric acid', 'Crystals', 6],
+                ['Hippuric acid', 'Crystals', 7],
+                ['Triple phosphates', 'Crystals', 8],
+                ['Calcium carbonates', 'Crystals', 9],
+                ['Calcium phosphates', 'Crystals', 10],
+                ['Ammonium urates', 'Crystals', 11],
+                ['Sulfa', 'Crystals', 12],
+                ['Cystine', 'Crystals', 13]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));

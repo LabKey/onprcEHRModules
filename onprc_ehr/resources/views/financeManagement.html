@@ -34,6 +34,7 @@
                     items: [
                         {name: 'Lease Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'leaseFeeRates'})},
                         {name: 'Per Diems', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'perDiemRates'})},
+                        {name: 'Labwork Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'labworkFeeRates'})},
                         {name: 'Procedure Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'procedureFeeRates'})}
                     ]
                 },{
@@ -58,8 +59,10 @@
                         {name: 'Rate Exemptions', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'chargeRateExemptions'})},
                         {name: 'Aliases Receiving Credit Per Item', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'creditAccount'})},
 
+                        {name: 'Labwork Fee Structure', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'labworkFeeDefinition'})},
                         {name: 'Lease Fee Structure', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'leaseFeeDefinition'})},
-                        {name: 'Per Diem Fee Structure', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'perDiemFeeDefinition'})}
+                        {name: 'Per Diem Fee Structure', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'perDiemFeeDefinition'})},
+                        {name: 'Procedure Fee Structure', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'procedureFeeDefinition'})}
                     ]
                 }]
             }]

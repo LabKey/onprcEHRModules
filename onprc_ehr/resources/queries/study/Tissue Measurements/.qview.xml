@@ -2,8 +2,11 @@
     <columns>
         <column name="Id"/>
         <column name="date"/>
+        <column name="category"/>
         <column name="tissue"/>
-        <column name="measurement"/>
+        <column name="measurement1"/>
+        <column name="measurement2"/>
+        <column name="measurement3"/>
         <column name="units"/>
         <!--<column name="dimension"/>-->
         <column name="remark"/>

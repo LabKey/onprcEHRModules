@@ -107,6 +107,7 @@ Ext4.onReady(function(){
             },
             items: [
                 {name: 'Compare Lists of Animals', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/utilities.view?'},
+                {name: 'Bulk History Export', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/historyExport.view?'},
                 {name: 'Exposure Report', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/exposureReport.view?'},
                 {name: 'Procedure List', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=procedures&query.viewName=Active Procedures'},
                 {name: 'Search Center SNOMED Codes', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=snomed'}

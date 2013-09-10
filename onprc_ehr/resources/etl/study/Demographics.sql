@@ -100,7 +100,7 @@ left join (
     max(gr.sireid) as sireid,
     max(gr.damid) as damid,
     max(gr.ts) as ts
-  FROM grip_prd.dbo.Geneticrelationship gr
+  FROM iris_production.dbo.Geneticrelationship gr
   GROUP BY gr.animalid
 ) gr ON (gr.animalid = afq.animalid)
 

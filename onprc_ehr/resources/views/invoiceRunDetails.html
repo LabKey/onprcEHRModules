@@ -51,7 +51,7 @@ Ext4.onReady(function(){
                     var interval = 0;
                     if (startDate && endDate){
                         interval = endDate.getTime() - startDate.getTime();
-                        interval = interval / (1000 * 60 * 60 * 24);
+                        interval = 1 + (interval / (1000 * 60 * 60 * 24));
                     }
 
                     Ext4.create('Ext.panel.Panel', {
@@ -126,6 +126,7 @@ Ext4.onReady(function(){
                                 sections: [{
                                     header: 'Charge Calculations',
                                     items: [
+                                        {name: 'Labwork Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'onprc_billing', 'query.queryName': 'labworkFeeRates', 'query.param.StartDate': startDateString, 'query.param.EndDate': endDateString})},
                                         {name: 'Lease Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'onprc_billing', 'query.queryName': 'leaseFeeRates', 'query.param.StartDate': startDateString, 'query.param.EndDate': endDateString})},
                                         {name: 'Per Diems', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'onprc_billing', 'query.queryName': 'perDiemRates', 'query.param.StartDate': startDateString, 'query.param.NumDays': interval})},
                                         {name: 'Procedure Fees', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'onprc_billing', 'query.queryName': 'procedureFeeRates', 'query.param.StartDate': startDateString, 'query.param.EndDate': endDateString})},

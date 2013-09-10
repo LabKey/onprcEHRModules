@@ -1,0 +1,56 @@
+<script type="text/javascript">
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        /* get the participant id from the request URL: this parameter is required. */
+        var subjectIds = LABKEY.ActionURL.getParameter('subjectIds');
+        subjectIds = subjectIds ? subjectIds.split(';') : [];
+
+        Ext4.create('Ext.panel.Panel', {
+            width: 300,
+            border: false,
+            items: [{
+                xtype: 'textarea',
+                width: 295,
+                fieldLabel: 'Enter Animal Id(s)',
+                labelWidth: 130,
+                itemId: 'animalField'
+            },{
+                xtype: 'checkbox',
+                fieldLabel: 'Redact Information',
+                itemId: 'redacted'
+            }],
+            buttons: [{
+                text: 'Submit',
+                scope: this,
+                handler: function(btn){
+                    var val = btn.up('panel').down('#animalField').getValue();
+                    var redacted = btn.up('panel').down('#redacted').getValue();
+
+                    if (val){
+                        val = Ext4.String.trim(val);
+                        val = val.replace(/[\s,;]+/g, ';');
+                        val = val.replace(/(^;|;$)/g, '');
+
+                        val = val ? val.split(';') : [];
+                    }
+
+                    if (!val){
+                        Ext4.Msg.alert('Error', 'Must enter at least one animal Id');
+                        return;
+                    }
+
+                    window.location = LABKEY.ActionURL.buildURL('ehr', 'clinicalHistoryExport', null, {
+                        subjectId: val,
+                        sortMode: 'type',
+                        redacted: redacted
+                        //checkedItems: 'Microbiology;TB Tests;Assignments;Serology;Necropsy'
+                    });
+                }
+            }]
+        }).render(webpart.wrapperDivId);
+    });
+</script>

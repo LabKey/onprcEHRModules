@@ -42,6 +42,7 @@ public class SurgeryFormType extends TaskForm
                 new AnimalDetailsFormSection(),
                 new SurgeryFormSection("ehr", "encounter_participants", "Staff", false),
                 new SurgeryFormSection("study", "Drug Administration", "Medications/Treatments", true),
+                new SurgeryFormSection("study", "weight", "Weight", false),
                 new SurgeryFormSection("study", "Clinical Remarks", "Remarks", false),
                 new SurgeryFormSection("study", "blood", "Blood Draws", false),
                 new SurgeryFormSection("ehr", "snomed_tags", "SNOMED Codes", true),

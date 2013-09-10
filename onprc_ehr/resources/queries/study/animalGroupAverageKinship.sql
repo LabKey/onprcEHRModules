@@ -17,7 +17,7 @@ SELECT
   t.groupId,
   t.Id,
   --NOTE: add 0.5 to include kinship with self
-  (0.5 + coalesce(t.sumCoefficient, 0)) / (select count(*) as total from ehr.animal_group_members d where d.isActive = true and d.groupId = t.groupId) as avgCoefficient,
+  CAST(((0.5 + coalesce(t.sumCoefficient, 0)) / (select count(*) as total from ehr.animal_group_members d where d.isActive = true and d.groupId = t.groupId)) as double) as avgCoefficient,
   t.distinctAnimals,
   (select count(*) as total from ehr.animal_group_members d where d.isActive = true and d.groupId = t.groupId) as totalInPopulation
 
@@ -30,7 +30,7 @@ SELECT
   count(k.Id2) as distinctAnimals
 
 FROM ehr.animal_group_members d
-JOIN ehr.kinship k ON (d.Id = k.Id)
+JOIN ehr.kinshipSummary k ON (d.Id = k.Id)
 JOIN ehr.animal_group_members d2 ON (d2.Id = k.Id2 and d.groupId = d2.groupId)
 
 WHERE

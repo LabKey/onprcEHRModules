@@ -33,6 +33,7 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
     public CagematesDemographicsProvider(Module module)
     {
         super("study", "demographicsPaired", "cagemates", module);
+        _supportsQCState = false;
     }
 
     protected Collection<FieldKey> getFieldKeys()

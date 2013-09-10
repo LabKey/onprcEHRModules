@@ -6,6 +6,11 @@
                 <columns>
                     <column columnName="numItems">
                         <columnTitle># Items</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=onprc_billing&amp;
+                            queryName=invoicedItems&amp;
+                            query.invoiceId~eq=${invoiceId}&amp;
+                            query.category~eq=${category}
+                        </url>
                     </column>
                     <column columnName="total">
                         <formatString>$###,###.00</formatString>

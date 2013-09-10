@@ -1798,7 +1798,7 @@
             <column columnName="units">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="serviceRequested">
+            <column columnName="servicerequested">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="collectedBy">
@@ -3040,6 +3040,12 @@
                 <datatype>timestamp</datatype>
                 <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
             </column>
+            <column columnName="pairid">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="lowestcage">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="room">
                 <datatype>varchar</datatype>
             </column>
@@ -3050,6 +3056,9 @@
                 <datatype>varchar</datatype>
             </column>
             <column columnName="housingType">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="goal">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="observation">

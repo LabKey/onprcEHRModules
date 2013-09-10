@@ -132,14 +132,19 @@ onprc_ehr/resources/queries/ehr_lookups/roomsByProject.query.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomsByProject.sql -text
 onprc_ehr/resources/queries/ehr_lookups/species/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/chargeRateExemptions/.qview.xml -text
+onprc_ehr/resources/queries/onprc_billing/chargeRateExemptions/All[!!-~]Items.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/chargeRates/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/chargeRates/Active[!!-~]Rates.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/chargeableItems/.qview.xml -text
+onprc_ehr/resources/queries/onprc_billing/chargeableItems/All[!!-~]Items.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/chargesIBS.sql -text
 onprc_ehr/resources/queries/onprc_billing/creditAccount/.qview.xml -text
+onprc_ehr/resources/queries/onprc_billing/creditAccount/All[!!-~]Items.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/fiscalAuthorities/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/grantProjects/.qview.xml -text
+onprc_ehr/resources/queries/onprc_billing/grantProjects/All[!!-~]Items.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/grants/.qview.xml -text
+onprc_ehr/resources/queries/onprc_billing/grants/All[!!-~]Grants.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/invoiceRuns/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/invoicedItems/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/invoicedItemsByInvoice.query.xml -text
@@ -161,6 +166,10 @@ onprc_ehr/resources/queries/onprc_billing/invoicedItemsByInvoiceProject.sql -tex
 onprc_ehr/resources/queries/onprc_billing/invoicedItemsByInvoiceProjectItem.query.xml -text
 onprc_ehr/resources/queries/onprc_billing/invoicedItemsByInvoiceProjectItem.sql -text
 onprc_ehr/resources/queries/onprc_billing/invoicedItemsByInvoiceProjectItem/.qview.xml -text
+onprc_ehr/resources/queries/onprc_billing/labworkFeeRates.query.xml -text
+onprc_ehr/resources/queries/onprc_billing/labworkFeeRates.sql -text
+onprc_ehr/resources/queries/onprc_billing/labworkFees.query.xml -text
+onprc_ehr/resources/queries/onprc_billing/labworkFees.sql -text
 onprc_ehr/resources/queries/onprc_billing/leaseFeeDefinition/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/leaseFeeRates.query.xml -text
 onprc_ehr/resources/queries/onprc_billing/leaseFeeRates.sql -text
@@ -243,6 +252,7 @@ onprc_ehr/resources/queries/study/Parasitology[!!-~]Results/.qview.xml -text
 onprc_ehr/resources/queries/study/Parentage.js -text
 onprc_ehr/resources/queries/study/Parentage.query.xml -text
 onprc_ehr/resources/queries/study/Parentage/.qview.xml -text
+onprc_ehr/resources/queries/study/Parentage/Active[!!-~]Calls.qview.xml -text
 onprc_ehr/resources/queries/study/Pregnancy[!!-~]Confirmations.js -text
 onprc_ehr/resources/queries/study/Pregnancy[!!-~]Confirmations.query.xml -text
 onprc_ehr/resources/queries/study/Pregnancy[!!-~]Confirmations/.qview.xml -text
@@ -477,6 +487,14 @@ onprc_ehr/resources/queries/study/offspringWithMother/.qview.xml -text
 onprc_ehr/resources/queries/study/offspringWithMother/Offspring[!!-~]Over[!!-~]180[!!-~]Days.qview.xml -text
 onprc_ehr/resources/queries/study/offspringWithMother/Offspring[!!-~]Over[!!-~]250[!!-~]Days.qview.xml -text
 onprc_ehr/resources/queries/study/offspringWithMother/Offspring[!!-~]Over[!!-~]365[!!-~]Days.qview.xml -text
+onprc_ehr/resources/queries/study/pairHistory.query.xml -text
+onprc_ehr/resources/queries/study/pairHistory.sql -text
+onprc_ehr/resources/queries/study/pairHistory/.qview.xml -text
+onprc_ehr/resources/queries/study/pairingSummary.query.xml -text
+onprc_ehr/resources/queries/study/pairingSummary.sql -text
+onprc_ehr/resources/queries/study/pairingSummary/.qview.xml -text
+onprc_ehr/resources/queries/study/parentageConflicts.query.xml -text
+onprc_ehr/resources/queries/study/parentageConflicts.sql -text
 onprc_ehr/resources/queries/study/parentageSummary.query.xml -text
 onprc_ehr/resources/queries/study/parentageSummary.sql -text
 onprc_ehr/resources/queries/study/pathogenData.query.xml -text
@@ -571,6 +589,8 @@ onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.320-12.321.sql
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.321-12.322.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.322-12.323.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.323-12.324.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.324-12.325.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.325-12.326.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.302-12.303.sql -text
@@ -597,6 +617,8 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.320-12.321.sql 
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.321-12.322.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.322-12.323.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.323-12.324.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.324-12.325.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.325-12.326.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text
@@ -641,6 +663,8 @@ onprc_ehr/resources/views/groupProcessing.view.xml -text
 onprc_ehr/resources/views/help.html -text
 onprc_ehr/resources/views/help.view.xml -text
 onprc_ehr/resources/views/help.webpart.xml -text
+onprc_ehr/resources/views/historyExport.html -text
+onprc_ehr/resources/views/historyExport.view.xml -text
 onprc_ehr/resources/views/invoiceRunDetails.html -text
 onprc_ehr/resources/views/invoiceRunDetails.view.xml -text
 onprc_ehr/resources/views/labsPage.html -text
@@ -684,6 +708,7 @@ onprc_ehr/resources/web/onprc_ehr/panel/IconPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/RoomLayoutPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/reports/Colony[!!-~]Census.xlsm -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeBloodStatusWindow.js -text
+onprc_ehr/resources/web/onprc_ehr/window/ChangeEncounterStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeLabworkStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/MarkLabworkDeliveredWindow.js -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRBillingUserSchema.java -text
@@ -707,6 +732,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/DiagnosisFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkRequestFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PairingFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ProcessingFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/SimpleGridPanel.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/SurgeryFormSection.java -text

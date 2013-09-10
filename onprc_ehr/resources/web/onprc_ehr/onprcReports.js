@@ -384,10 +384,48 @@ EHR.reports.medicationSchedule = function(panel, tab, viewName){
     });
 }
 
-EHR.reports.bloodSchedule = function(panel, tab){
+EHR.reports.bloodSchedule = function(panel, tab, viewName){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    filterArray.removable = filterArray.removable || [];
+    filterArray.removable.push(LABKEY.Filter.create('date', new Date(), LABKEY.Filter.Types.DATE_EQUAL));
+
+    filterArray.nonRemovable = filterArray.nonRemovable || [];
+    filterArray.nonRemovable.push(LABKEY.Filter.create('qcstate/label', 'Request:', LABKEY.Filter.Types.STARTS_WITH));
+
     tab.add({
-        html: 'This report will show a schedule of blood draws to be performed today.  This will be added once blood draws are required through PRIMe.',
-        border: false
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'blood',
+            viewName: 'Requests',
+            title: 'Daily Blood Schedule' + title,
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable
+        })
+    });
+}
+
+EHR.reports.pairHistory = function(panel, tab, viewName){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    var date = (new Date()).add(Date.YEAR, -5).format('Y-m-d');
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'pairHistory',
+            title: 'Pair History' + title,
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable,
+            parameters: {
+                StartDate: date
+            }
+        })
     });
 }
 

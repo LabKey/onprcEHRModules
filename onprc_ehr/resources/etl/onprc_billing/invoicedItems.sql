@@ -21,8 +21,7 @@ SELECT
 	(select max(bci.rowId) from labkey.onprc_billing.chargeableItems bci where t.item = bci.name) as chargeId
 FROM (
 SELECT
-  (SELECT objectid from IRIS_Production.dbo.ref_invoice ri WHERE ci.InvoiceNumber >= ri.StartInvoice AND ci.InvoiceNumber <= ri.EndInvoice) as invoiceId,
-  --(SELECT count(objectid) from IRIS_Production.dbo.ref_invoice ri WHERE ci.InvoiceNumber >= ri.StartInvoice AND ci.InvoiceNumber <= ri.EndInvoice) as invoiceIdCount,
+  ri.objectid as invoiceId,
   CASE
 	  WHEN ci.ServiceCenter = 'PDAR' THEN rfp.ProcedureName
 	  WHEN ci.ServiceCenter = 'PSURG' THEN sp.ProcedureName
@@ -37,7 +36,7 @@ SELECT
   ci.objectid as objectid,
   ci.ServiceCenter as ServiceCenter,
   ci.TransactionType as transactionType,
-  --ci.TransactionNumber as id,
+  ci.TransactionNumber as transactionNumber,
   ci.TransactionDate as date,
   CASE
 	WHEN (LEN(ci.TransactionDescription) = 5) and ISNUMERIC(ci.TransactionDescription) = 1 THEN ci.TransactionDescription
@@ -78,12 +77,18 @@ from IRIS_Production.dbo.Af_Chargesibs ci
 --used to find the chargeid
   left join IRIS_Production.dbo.Ref_FeesProcedures rfp on (ci.ItemCode = (Convert(varchar(10),rfp.ProcedureID)) AND ci.ServiceCenter = 'PDAR')
 
-  left join IRIS_Production.dbo.Ref_FeesSurgical rfs on (ci.ItemCode = (Convert(varchar(10),rfs.ProcedureID)) AND ci.ServiceCenter = 'PSURG')
-  left join IRIS_Production.dbo.Ref_SurgProcedure sp on (sp.ProcedureID = rfs.ProcedureID)
+  left join IRIS_Production.dbo.Ref_SurgProcedure sp on (ci.ItemCode = (Convert(varchar(10), sp.ProcedureID)) AND ci.ServiceCenter = 'PSURG')
   left join IRIS_Production.dbo.Sys_Parameters sys on (sys.Field = 'ChargeType' and sys.Flag = rfp.ChargeType)
 
+  left join (
+    SELECT max(ri.ts) as maxTs, max(cast(ri2.objectid as varchar(38))) as objectid, max(ri.StartInvoice) as StartInvoice, max(ri.EndInvoice) as EndInvoice
+    from IRIS_Production.dbo.ref_invoice ri
+    left join IRIS_Production.dbo.ref_invoice ri2 ON (ri.startdate = ri2.startdate AND ri.enddate = ri2.enddate)
+    GROUP BY ri.objectid
+  ) ri ON (ci.InvoiceNumber >= ri.StartInvoice AND ci.InvoiceNumber <= ri.EndInvoice)
+
 WHERE ci.ItemCode not like '%C'
-and (ci.ts > ? or ci2.ts > ? or rfp.ts > ? or rfs.ts > ? or sp.ts > ?)
+and (ci.ts > ? or ci2.ts > ? or rfp.ts > ? or sp.ts > ? or ri.maxTs > ?)
 
 ) t
 

@@ -21,6 +21,7 @@ SELECT
   p.method
 
 FROM study.parentage p
+WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
 
 UNION ALL
 
@@ -32,4 +33,4 @@ SELECT
   'Observed' as method
 
 FROM study.birth b
-WHERE b.dam is not null
+WHERE b.dam is not null and b.qcstate.publicdata = true

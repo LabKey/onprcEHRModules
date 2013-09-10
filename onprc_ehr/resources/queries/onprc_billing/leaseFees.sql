@@ -24,7 +24,7 @@ a.projectedReleaseCondition,
 a.releaseCondition,
 a.assignCondition,
 a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
-'Lease Fee' as chargeType,
+'Lease Fee' as category,
 CASE
   WHEN a.duration <= 1 THEN (SELECT rowid FROM onprc_billing.chargeableItems ci WHERE ci.active = true AND ci.name = 'One Day Lease')
   WHEN a2.id IS NOT NULL THEN (SELECT rowid FROM onprc_billing.chargeableItems ci WHERE ci.active = true AND ci.name = 'Animal Lease Fee - TMB')
@@ -65,7 +65,7 @@ SELECT
   a.releaseCondition,
   a.assignCondition,
   a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
-  'Lease Setup Fee' as chargeType,
+  'Lease Setup Fee' as category,
   (SELECT rowid FROM onprc_billing.chargeableItems ci WHERE ci.active = true AND ci.name = 'Lease Setup Fees') as chargeId,
   null as leaseCharge1,
   null as leaseCharge2
@@ -87,7 +87,7 @@ a.projectedReleaseCondition,
 a.releaseCondition,
 a.assignCondition,
 a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
-'Lease Fee Refund' as chargeType,
+'Lease Fee Refund' as category,
 (SELECT max(rowid) as rowid FROM onprc_billing.chargeableItems ci WHERE ci.name = 'Lease Fee Refund' and ci.active = true) as chargeId,
 lf2.chargeId as leaseCharge1,
 lf.chargeId as leaseCharge2
