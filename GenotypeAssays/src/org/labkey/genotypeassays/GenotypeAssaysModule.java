@@ -21,6 +21,7 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.laboratory.LaboratoryService;
+import org.labkey.api.laboratory.button.ChangeAssayResultStatusBtn;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.module.DefaultModule;
 import org.labkey.api.module.ModuleContext;
@@ -80,6 +81,8 @@ public class GenotypeAssaysModule extends ExtendedSimpleModule
         LaboratoryService.get().registerDataProvider(new SSPAssayDataProvider(this));
         LaboratoryService.get().registerDataProvider(new GenotypeAssayDataProvider(this));
         LaboratoryService.get().registerDataProvider(new SNPAssayDataProvider(this));
+
+        LaboratoryService.get().registerAssayButton(new ChangeAssayResultStatusBtn(this), GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, "Data");
     }
 
     @Override
