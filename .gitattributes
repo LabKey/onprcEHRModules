@@ -407,7 +407,6 @@ onprc_ehr/resources/queries/study/demographicsUtilization.query.xml -text
 onprc_ehr/resources/queries/study/demographicsUtilization.sql -text
 onprc_ehr/resources/queries/study/demographicsViralStatus.query.xml -text
 onprc_ehr/resources/queries/study/demographicsViralStatus.sql -text
-onprc_ehr/resources/queries/study/dietDuplicates.sql -text
 onprc_ehr/resources/queries/study/encountersWithSnomed.query.xml -text
 onprc_ehr/resources/queries/study/encountersWithSnomed.sql -text
 onprc_ehr/resources/queries/study/encountersWithSnomed/.qview.xml -text

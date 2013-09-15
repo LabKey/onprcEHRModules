@@ -1,7 +1,7 @@
     <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="chemMisc" tableDbType="TABLE">
+            <table tableName="chemPivot" tableDbType="TABLE">
                 <tableTitle>Chemistry Results</tableTitle>
                 <columns>
                     <column columnName="resultOORIndicator">

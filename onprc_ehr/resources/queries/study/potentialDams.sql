@@ -19,7 +19,8 @@ SELECT
   h.Id as potentialDam,
   b.room as birthRoom,
   b.cage as birthCage,
-  timestampdiff('SQL_TSI_YEAR', h.Id.demographics.birth, b.date) as damAgeAtTime
+  --NOTE: SQL_TSI_YEAR not support in postgres
+  (timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, b.date) / 365) as damAgeAtTime
 
 FROM study.birth b
 

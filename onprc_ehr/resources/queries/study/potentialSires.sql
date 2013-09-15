@@ -18,7 +18,8 @@ SELECT
   h.Id as potentialSire,
   group_concat(DISTINCT h.room) as rooms,
   group_concat(DISTINCT h.cage) as cages,
-  max(timestampdiff('SQL_TSI_YEAR', h.Id.demographics.birth, c.minDate)) as sireAgeAtTime
+  --NOTE: SQL_TSI_YEAR not support in postgres
+  (max(timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, c.minDate)) / 365) as sireAgeAtTime
 
 FROM study.potentialConceptionLocations c
 

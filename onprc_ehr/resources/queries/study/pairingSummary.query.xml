@@ -1,7 +1,7 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="Pairing Observations" tableDbType="TABLE" useColumnOrder="true">
+            <table tableName="pairingSummary" tableDbType="TABLE" useColumnOrder="true">
                 <columns>
                     <column columnName="Id">
 

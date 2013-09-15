@@ -861,6 +861,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void appendLatestHxCol(AbstractTableInfo ti)
     {
+        if (ti.getSqlDialect().isPostgreSQL())
+        {
+            _log.warn("Some ONPRC columns are not supported on postgres and will be skipped");
+            return;
+        }
+
         String hxName = "latestHx";
         if (ti.getColumn(hxName) != null)
             return;
@@ -891,10 +897,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         latestHx.setDisplayWidth("250");
         ti.addColumn(latestHx);
 
-        SQLFragment recentp2Sql = new SQLFragment("(SELECT TOP 1 (" + ti.getSqlDialect().concatenate("'P2: '", "r.p2") + ") as _expr FROM " + realTable.getSelectName() +
+        String prefix = ti.getSqlDialect().isSqlServer() ? " TOP 1 " : "";
+        String suffix = ti.getSqlDialect().isSqlServer() ? "" : " LIMIT 1 ";
+        SQLFragment recentp2Sql = new SQLFragment("(SELECT " + prefix + " (" + ti.getSqlDialect().concatenate("'P2: '", "r.p2") + ") as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
                 //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL ORDER BY r.date desc)");
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL ORDER BY r.date desc " + suffix + ")");
         ExprColumn recentP2 = new ExprColumn(ti, "mostRecentP2", recentp2Sql, JdbcType.VARCHAR, objectId);
         recentP2.setLabel("Most Recent P2");
         recentP2.setDescription("This column will display the most recent P2 that has been entered for the animal.");
