@@ -27,6 +27,7 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.ModuleContext;
+import org.labkey.api.pipeline.PipelineService;
 import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.QuerySchema;
@@ -41,7 +42,9 @@ import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
 import org.labkey.onprc_ehr.buttons.ManageCasesButton;
 import org.labkey.onprc_ehr.dataentry.BloodDrawFormSection;
+import org.labkey.onprc_ehr.dataentry.BloodDrawFormType;
 import org.labkey.onprc_ehr.dataentry.BloodDrawRequestFormType;
+import org.labkey.onprc_ehr.dataentry.BloodTreatmentsFormSection;
 import org.labkey.onprc_ehr.dataentry.CageObservationFormType;
 import org.labkey.onprc_ehr.dataentry.ChargesFormSection;
 import org.labkey.onprc_ehr.dataentry.DiagnosisFormType;
@@ -74,9 +77,12 @@ import org.labkey.onprc_ehr.notification.ColonyAlertsNotification;
 import org.labkey.onprc_ehr.notification.ColonyMgmtNotification;
 import org.labkey.onprc_ehr.notification.ComplianceNotification;
 import org.labkey.onprc_ehr.notification.ETLNotification;
+import org.labkey.onprc_ehr.notification.FinanceNotification;
 import org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification;
 import org.labkey.onprc_ehr.notification.TMBNotification;
+import org.labkey.onprc_ehr.notification.UnoccupiedRoomsNotification;
 import org.labkey.onprc_ehr.notification.WeightAlertsNotification;
+import org.labkey.onprc_ehr.pipeline.BillingPipelineProvider;
 import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -102,7 +108,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.326;
+        return 12.331;
     }
 
     public boolean hasScripts()
@@ -125,6 +131,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     protected void doStartupAfterSpringConfig(ModuleContext moduleContext)
     {
         ETL.init(1);
+        PipelineService.get().registerPipelineProvider(new BillingPipelineProvider(this));
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
         DetailsURL details = DetailsURL.fromString("/onprc_ehr/etlAdmin.view", ContainerManager.getSharedContainer());
         AdminConsole.addLink(AdminConsole.SettingsLinkType.Management, "ehr etl admin", details.getActionURL());
@@ -142,7 +149,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         ns.registerNotification(new ColonyAlertsLiteNotification());
         ns.registerNotification(new ColonyAlertsNotification());
         ns.registerNotification(new ColonyMgmtNotification());
-        //ns.registerNotification(new LabTestScheduleNotifications());
+        ns.registerNotification(new FinanceNotification());
         //ns.registerNotification(new LabResultSummaryNotification());
         ns.registerNotification(new WeightAlertsNotification());
         ns.registerNotification(new RoutineClinicalTestsNotification());
@@ -150,14 +157,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         ns.registerNotification(new BehaviorNotification());
         ns.registerNotification(new TMBNotification());
         ns.registerNotification(new ClinicalAlertsNotification());
-
+        ns.registerNotification(new UnoccupiedRoomsNotification());
         ns.registerNotification(new ETLNotification());
     }
 
     private void registerEHRResources()
     {
-        String bloodDrawTask = "Blood Draws";
-
         EHRService.get().registerModule(this);
         EHRService.get().registerTableCustomizer(this, ONPRC_EHRCustomizer.class);
 
@@ -239,10 +244,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new LabworkFormType(this));
         EHRService.get().registerFormType(new ProcessingFormType(this));
         EHRService.get().registerFormType(new SurgeryFormType(this));
-        EHRService.get().registerFormType(new CageObservationFormType(this));
+        //EHRService.get().registerFormType(new CageObservationFormType(this));
         EHRService.get().registerFormType(new DiagnosisFormType(this));
 
-        EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", bloodDrawTask, "Blood Draws", Arrays.<FormSection>asList(new BloodDrawFormSection(true), new WeightFormSection()));
+        EHRService.get().registerFormType(new BloodDrawFormType(this));
         EHRService.get().registerFormType(new BloodDrawRequestFormType(this));
         EHRService.get().registerFormType(new LabworkRequestFormType(this));
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Request, this, "Requests", "Surgery Request", "Procedure Requests", Collections.<FormSection>singletonList(new SurgeryRequestFormSection()));
@@ -261,11 +266,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "my_tasks");
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "tasks");
 
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", bloodDrawTask, new String[]{"Blood Draws"}), "study", "demographics");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", BloodDrawFormType.NAME, new String[]{"Blood Draws"}), "study", "demographics");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Weight For Selected", "Weight", "weight", new String[]{"Weight"}), "study", "demographics");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Weight For Selected", "Weight", "weight", new String[]{"Weight"}), "study", "weight");
 
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Blood Draws", bloodDrawTask), "study", "blood");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Blood Draws", BloodDrawFormType.NAME), "study", "blood");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Labwork", LabworkFormType.NAME), "study", "clinpathRuns");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Surgeries", SurgeryFormType.NAME), "study", "surgery");
 
@@ -321,3 +326,4 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         return Arrays.asList(ONPRC_EHRSchema.SCHEMA_NAME, ONPRC_EHRSchema.BILLING_SCHEMA_NAME);
     }
 }
+

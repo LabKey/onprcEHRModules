@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.notification;
 
 import org.labkey.api.action.NullSafeBindException;
+import org.labkey.api.data.Aggregate;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
@@ -48,6 +49,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -110,7 +112,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //clinical
         deadAnimalsWithActiveCases(c, u, msg);
-        deadAnimalsWithActiveDiet(c, u, msg);
         deadAnimalsWithActiveFlags(c, u, msg);
         deadAnimalsWithActiveNotes(c, u, msg);
         deadAnimalsWithActiveGroups(c, u, msg);
@@ -126,6 +127,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         demographicsWithoutGender(c, u, msg);
         birthRecordsWithoutDemographics(c, u, msg);
         deathRecordsWithoutDemographics(c, u, msg);
+        infantsNotAssignedToDamGroup(c, u, msg);
 
         duplicateGroupMembership(c, u, msg);
         duplicateFlags(c, u, msg);
@@ -137,8 +139,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void doHousingChecks(final Container c, User u, final StringBuilder msg)
     {
         cagesWithoutDimensions(c, u, msg);
-        cageReviewErrors(c, u, msg, true);
-        cageReviewWarnings(c, u, msg, false);
+        cageReviewErrors(c, u, msg, true, "The Guide");
+        cageReviewWarnings(c, u, msg, false, "The Guide");
         roomsWithoutInfo(c, u, msg);
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);
@@ -159,6 +161,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         protocolsWithFutureApproveDates(c, u, msg);
         protocolsNearingLimit(c, u, msg);
         assignmentsNotAllowed(c, u, msg);
+        overlappingProtocolCounts(c, u, msg);
         assignmentsProjectedToday(c, u, msg);
         assignmentsProjectedTomorrow(c, u, msg);
         protocolsWithAnimalsExpiringSoon(c, u, msg);
@@ -426,6 +429,23 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + count + " active cases for animals not currently at the center.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Cases", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void infantsNotAssignedToDamGroup(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("matchesDamGroup"), false, CompareType.EQUAL);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -14);
+        filter.addCondition(FieldKey.fromString("birth"), cal.getTime(), CompareType.DATE_GTE);
+
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("animalGroupInfantsNotAssigned"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " infants born within the last 14 days that are not assigned to the same group as their dam on the date of birth.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "animalGroupInfantsNotAssigned", null) + "&query.matchesDamGroup~eq=false&query.birth~dategte=-14d'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -711,6 +731,21 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    protected void overlappingProtocolCounts(final Container c, User u, final StringBuilder msg)
+    {
+        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("protocolGroupsOverlapping"));
+        Map<String, List<Aggregate.Result>> results = ts.getAggregates(Arrays.asList(new Aggregate(FieldKey.fromString("protocol"), Aggregate.Type.COUNT, null, true), new Aggregate(FieldKey.fromString("project"), Aggregate.Type.COUNT, null, true)));
+        Long totalProtocol = (Long)(results.get("protocol").get(0).getValue());
+        Long totalProject = (Long)(results.get("project").get(0).getValue());
+
+        if (totalProject > 0 || totalProtocol > 0)
+        {
+            msg.append("<b>WARNING: There are " + Math.max(totalProject, totalProtocol) + " IACUC Protocols or Center Projects that list allowable animal groups that overlap or conflict.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocolGroupsOverlapping", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
     /**
      * we find all animals that died in the past 90 days where there isnt a weight within 7 days of death:
      */
@@ -845,25 +880,30 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
-    protected void cageReviewErrors(final Container c, User u, final StringBuilder msg, boolean notifyOnNone)
+    protected void cageReviewErrors(final Container c, User u, final StringBuilder msg, boolean notifyOnNone, String requirementSet)
     {
-        cageReview(c, u, msg, notifyOnNone, "ERROR", "WARNING: The following cages are too small for the animals currently in them, except for animals with heigh/weight exemption flags:");
+        cageReview(c, u, msg, notifyOnNone, "ERROR", "WARNING: The following cages are too small for the animals currently in them (using " + requirementSet + "), except for animals with heigh/weight exemption flags:", requirementSet);
     }
 
-    protected void cageReviewWarnings(final Container c, User u, final StringBuilder msg, boolean notifyOnNone)
+    protected void cageReviewWarnings(final Container c, User u, final StringBuilder msg, boolean notifyOnNone, String requirementSet)
     {
-        cageReview(c, u, msg, notifyOnNone, "WARN", "WARNING: The following cages have 5 month olds that will cause the cage to become too small when they turn 6 months:");
+        cageReview(c, u, msg, notifyOnNone, "WARN", "WARNING: The following cages have 5 month olds that will cause the cage to become too small when they turn 6 months:", requirementSet);
     }
 
     /**
      * then we find all animals with cage size problems
      * @param msg
      */
-    private void cageReview(final Container c, User u, final StringBuilder msg, boolean notifyOnNone, String filterTerm, String message)
+    private void cageReview(final Container c, User u, final StringBuilder msg, boolean notifyOnNone, String filterTerm, String message, String requirementSet)
     {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("status"), filterTerm, CompareType.EQUAL);
-        TableSelector ts = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), filter, new Sort("room/room,cage"));
-        Map<String, Object>[] rows = ts.getArray(Map.class);
+        UserSchema us = getEHRLookupsSchema(c, u);
+        QueryDefinition qd = us.getQueryDefForTable("cageReview");
+        List<QueryException> errors = new ArrayList<>();
+        TableInfo ti = qd.getTable(us, errors, true);
+        SQLFragment sql = ti.getFromSQL("t");
+        sql = new SQLFragment("SELECT * FROM " + sql.getSQL() + " WHERE t.status = ?", requirementSet, filterTerm);
+        SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
+        Map<String, Object>[] rows = ss.getArray(Map.class);
 
         if (rows.length > 0)
         {
@@ -904,47 +944,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             }
 
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr_lookups", "cageReview", "Problem Cages") + "'>Click here to view these cages</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr_lookups", "cageReview", "Problem Cages") + "&query.param.RequirementSet=" + requirementSet + "'>Click here to view these cages</a></p>\n");
             msg.append("<hr>\n");
         }
         else if (notifyOnNone)
         {
             msg.append("<b>Cage Size Review:</b><br><br>All cages are within size limits<br><hr>");
         }
-
-//        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("sqftPct"), 97.0, CompareType.GTE);
-//        TableSelector ts2 = new TableSelector(getEHRLookupsSchema(c, u).getTable("cageReview"), filter2, null);
-//        Map<String, Object>[] warningRows = ts2.getMapArray();
-//        DecimalFormat format = new DecimalFormat("0.#");
-//
-//        if (warningRows.length > 0)
-//        {
-//            msg.append("<b>WARNING: The following cages are approaching the size limit for the animals currently in them:</b><br>");
-//
-//            msg.append("<table border=1><tr><td>Room</td><td>Cage</td><td># Animals</td><td>Total Weight (kg)</td><td>Required Sq. Ft.</td><td>Available Sq. Ft.</td><td>% Used</td><td>Height Required</td><td>Height Available</td></tr>");
-//            for (Map<String, Object> row : warningRows)
-//            {
-//                msg.append("<tr>");
-//                msg.append("<td>" + ((String)row.get("room")) + "</td>");
-//                msg.append("<td>" + ((String)row.get("cage")) + "</td>");
-//
-//                msg.append("<td>" + ((Integer)row.get("totalAnimals")) + "</td>");
-//                msg.append("<td>" + DecimalFormat.getNumberInstance().format((Double) row.get("totalWeight")) + "</td>");
-//
-//                msg.append("<td>" + DecimalFormat.getNumberInstance().format((Double) row.get("requiredSqFt")) + "</td>");
-//                msg.append("<td>" + ((Double)row.get("totalCageSqFt")) + "</td>");
-//                msg.append("<td>" + DecimalFormat.getNumberInstance().format((Double) row.get("sqftPct")) + "</td>");
-//
-//                msg.append("<td>" + DecimalFormat.getNumberInstance().format((Double) row.get("requiredHeight")) + "</td>");
-//                msg.append("<td>").append(row.get("minCageHeight") == null ? "" : ((Double)row.get("minCageHeight"))).append("</td>");
-//
-//                msg.append("</tr>");
-//            }
-//            msg.append("</table>");
-//
-//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr_lookups", "cageReview", null) + "&query.sqftPct~gte=98.0'>Click here to view all problems and warnings</a></p>\n");
-//            msg.append("<hr>\n");
-//        }
     }
 
     protected void housedInUnavailableCages(final Container c, User u, final StringBuilder msg)
@@ -976,20 +982,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             }
 
             msg.append("<br><hr>\n\n");
-        }
-    }
-
-    protected void deadAnimalsWithActiveDiet(final Container c, User u, final StringBuilder msg)
-    {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Diet"), filter, null);
-        long count = ts.getRowCount();
-        if (count > 0)
-        {
-            msg.append("<b>WARNING: There are " + count + " active diets for animals not currently at the center.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Diet", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
-            msg.append("<hr>\n\n");
         }
     }
 
@@ -1400,7 +1392,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animal groups with members located in more than 1 room, excluding hospital rooms.  This may indicate that group designations need to be updated for some of the animals.</b><br>");
+            msg.append("<b>WARNING: There are " + count + " animal groups with members located in more than 1 room, excluding hospital rooms.  This is not always an error, but may indicate that group designations need to be updated for some of the animals.</b><br>");
             final String url = getExecuteQueryUrl(c, "study", "animalGroupLocationSummary", null) + "&query.totalRooms~gt=1";
             msg.append("<p><a href='" + url + "'>Click here to view them</a><br><br>\n");
 

@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns:studySecurityPolicy xmlns:ns="http://labkey.org/studySecurityPolicy/xml">
+    <ns:securityType>ADVANCED_WRITE</ns:securityType>
+    <ns:groupPermissions>
+        <ns:groupPermission groupName="$ONPRC" securityType="NONE"/>
+        <ns:groupPermission groupName="$VGTI" securityType="NONE"/>
+        <ns:groupPermission groupName="Aging Resource" securityType="NONE"/>
+        <ns:groupPermission groupName="Axthelm Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Bioinformatics Core" securityType="NONE"/>
+        <ns:groupPermission groupName="Blood Requestors" securityType="PER_DATASET"/>
+        <ns:groupPermission groupName="Carbone Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Chavez Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Compliance" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM BSU" securityType="PER_DATASET"/>
+        <ns:groupPermission groupName="DCM Cage Crew" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Clinical Technicians" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM ClnPath" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Colony Management" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Genetics" securityType="PER_DATASET"/>
+        <ns:groupPermission groupName="DCM Lab Techs" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Lead Techs" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Management" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Operations" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Pathology" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Research Support" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Serology" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM SSU" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Supervisors" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Veterinarians" securityType="NONE"/>
+        <ns:groupPermission groupName="DNA Bank" securityType="NONE"/>
+        <ns:groupPermission groupName="EHR Readers" securityType="READ_ALL"/>
+        <ns:groupPermission groupName="EHRS" securityType="NONE"/>
+        <ns:groupPermission groupName="ELT" securityType="NONE"/>
+        <ns:groupPermission groupName="Endocrine Core" securityType="NONE"/>
+        <ns:groupPermission groupName="Facilities" securityType="NONE"/>
+        <ns:groupPermission groupName="Ferguson Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Finance" securityType="NONE"/>
+        <ns:groupPermission groupName="Frueh Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Grigsby Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Grove Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Guests" securityType="NONE"/>
+        <ns:groupPermission groupName="Haigwood Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Hennebold Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Hessell Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="HR" securityType="NONE"/>
+        <ns:groupPermission groupName="IS" securityType="NONE"/>
+        <ns:groupPermission groupName="Labwork Entry" securityType="PER_DATASET"/>
+        <ns:groupPermission groupName="Labwork Requestors" securityType="PER_DATASET"/>
+        <ns:groupPermission groupName="MCB Core" securityType="NONE"/>
+        <ns:groupPermission groupName="Mitalipov" securityType="NONE"/>
+        <ns:groupPermission groupName="NHP Resources Reader" securityType="NONE"/>
+        <ns:groupPermission groupName="Occupational Health" securityType="NONE"/>
+        <ns:groupPermission groupName="OHSU Labs" securityType="NONE"/>
+        <ns:groupPermission groupName="ONPRC Admin" securityType="NONE"/>
+        <ns:groupPermission groupName="ONPRC Affiliates" securityType="NONE"/>
+        <ns:groupPermission groupName="ONPRC Core Facilities" securityType="NONE"/>
+        <ns:groupPermission groupName="ONPRC DCM" securityType="NONE"/>
+        <ns:groupPermission groupName="ONPRC Labs" securityType="NONE"/>
+        <ns:groupPermission groupName="ONPRC Users" securityType="READ_ALL"/>
+        <ns:groupPermission groupName="ONPRC Visitors" securityType="NONE"/>
+        <ns:groupPermission groupName="Other LDAP Synced Authorized Users" securityType="NONE"/>
+        <ns:groupPermission groupName="Restricted Readers" securityType="NONE"/>
+        <ns:groupPermission groupName="Sasha Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Slayden Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Slifka Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Stenzel Poore Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="SYSTEM" securityType="NONE"/>
+        <ns:groupPermission groupName="Users" securityType="NONE"/>
+        <ns:groupPermission groupName="VGTI Labs" securityType="NONE"/>
+        <ns:groupPermission groupName="Vinson Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Virology Core" securityType="NONE"/>
+        <ns:groupPermission groupName="Wong Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Zelinski Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Users" securityType="NONE"/>
+    </ns:groupPermissions>
+    <ns:perDatasetPermissions>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="DCM Genetics" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
+        <ns:datasetPermission datasetName="flags" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="Labwork Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="delivery" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="delivery" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="delivery" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="delivery" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="delivery" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="delivery" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="delivery" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="serology" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="serology" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="serology" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="serology" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="serology" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="serology" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="serology" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="parentage" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="parentage" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="parentage" groupName="DCM Genetics" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
+        <ns:datasetPermission datasetName="parentage" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="parentage" groupName="Labwork Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="parentage" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="parentage" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="measurements" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="measurements" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="measurements" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="measurements" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="measurements" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="measurements" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="measurements" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="cases" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="cases" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="cases" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="cases" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="cases" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="cases" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="cases" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="diet" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="diet" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="diet" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="diet" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="diet" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="diet" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="diet" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="matings" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="matings" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="matings" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="matings" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="matings" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="matings" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="matings" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="DCM BSU" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="Labwork Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="birth" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="birth" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="birth" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="birth" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="birth" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="birth" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="birth" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="blood" groupName="Blood Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
+        <ns:datasetPermission datasetName="blood" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="blood" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="blood" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="blood" groupName="Labwork Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="blood" groupName="Labwork Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
+        <ns:datasetPermission datasetName="blood" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="encounters" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="encounters" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="encounters" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="encounters" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="encounters" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="encounters" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="encounters" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="DCM BSU" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="Labwork Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="drug" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="drug" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="drug" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="drug" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="drug" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="drug" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="drug" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="obs" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="obs" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="obs" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="obs" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="obs" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="obs" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="obs" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="problem" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="problem" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="problem" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="problem" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="problem" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="problem" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="problem" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="tb" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tb" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tb" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tb" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="tb" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tb" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tb" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="weight" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="weight" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="weight" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="weight" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="weight" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="weight" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="weight" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="iStat" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="Labwork Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="arrival" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="arrival" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="arrival" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="arrival" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="arrival" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="arrival" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="arrival" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="assignment" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="assignment" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="assignment" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="assignment" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="assignment" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="assignment" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="assignment" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="deaths" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="deaths" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="deaths" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="deaths" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="deaths" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="deaths" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="deaths" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="demographics" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="demographics" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="demographics" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="demographics" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="demographics" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="demographics" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="demographics" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="departure" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="departure" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="departure" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="departure" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="departure" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="departure" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="departure" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="housing" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="housing" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="housing" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="housing" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="housing" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="housing" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="housing" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="notes" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="notes" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="notes" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="notes" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="notes" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="notes" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="notes" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="histology" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="histology" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="histology" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="histology" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="histology" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="histology" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="histology" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="organ_weights" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="organ_weights" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="organ_weights" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="organ_weights" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="organ_weights" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="organ_weights" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="organ_weights" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
+        <ns:datasetPermission datasetName="pairings" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="pairings" groupName="DCM BSU" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="pairings" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="pairings" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="pairings" groupName="Labwork Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="pairings" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="pairings" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="ONPRC Users" role="NONE"/>
+    </ns:perDatasetPermissions>
+</ns:studySecurityPolicy>

@@ -17,7 +17,7 @@ SELECT
   i.invoiceId,
   i.creditedaccount,
   count(i.invoiceId) as numItems,
-  sum(i.totalCost) as totalCost
+  sum(i.totalCost) as total
 
 FROM onprc_billing.invoicedItems i
 

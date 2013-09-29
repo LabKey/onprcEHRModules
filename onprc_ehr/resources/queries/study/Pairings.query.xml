@@ -15,8 +15,8 @@
 
                     </column>
                     <column columnName="lowestcage">
-                        <columnTitle>Lowest Cage</columnTitle>
-                        <description>This is the lowest cage number of the pair.  It is used to determine which animals in the group are considered part of the pair.</description>
+                        <columnTitle>Pair Id</columnTitle>
+                        <description>This is used to identifythe lowest cage number of the pair.  It is used to determine which animals in the group are considered part of the pair.</description>
                     </column>
                     <column columnName="pairid">
                         <columnTitle>Pair ID</columnTitle>
@@ -54,19 +54,19 @@
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="outcome">
+                        <columnTitle>Pair Outcome</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingOutcome</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="observation">
                         <columnTitle>Observation</columnTitle>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>pairingObservation</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                        </fk>
-                    </column>
-                    <column columnName="outcome">
-                        <columnTitle>Outcome</columnTitle>
-                        <fk>
-                            <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>pairingOutcome</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>

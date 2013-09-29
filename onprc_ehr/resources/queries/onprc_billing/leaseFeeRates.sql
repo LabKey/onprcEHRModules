@@ -27,18 +27,32 @@ SELECT
 
   p.leaseCharge1,
   p.leaseCharge2,
+  p.sourceRecord,
 
   CASE
     WHEN p.category = 'Lease Fee' THEN coalesce(e.unitcost, cr.unitcost)
     ELSE (coalesce(e3.unitcost, cr3.unitcost) - coalesce(e2.unitcost, cr2.unitcost))
   END as unitcost,
+  1 as quantity,
+  CASE
+    WHEN p.category = 'Lease Fee' THEN coalesce(e.unitcost, cr.unitcost)
+    ELSE (coalesce(e3.unitcost, cr3.unitcost) - coalesce(e2.unitcost, cr2.unitcost))
+  END as totalcost,
 
-  ce.account,
+  ce.account as creditAccount,
   ce.rowid as creditAccountId,
   CASE
-    WHEN e.unitcost IS NOT NULL THEN 'Y'
+    WHEN e.rowid IS NOT NULL THEN 'Y'
     ELSE null
-  END as isExemption
+  END as isExemption,
+  CASE
+    WHEN p.category = 'Lease Fee' AND e.rowid IS NULL THEN cr.rowId
+    ELSE null
+  END as rateId,
+  CASE
+    WHEN p.category = 'Lease Fee' THEN e.rowid
+    ELSE null
+  END as exemptionId
 
 FROM onprc_billing.leaseFees p
 

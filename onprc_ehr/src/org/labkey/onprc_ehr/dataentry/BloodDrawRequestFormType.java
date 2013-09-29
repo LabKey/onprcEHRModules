@@ -39,6 +39,7 @@ public class BloodDrawRequestFormType extends RequestForm
     {
         super(owner, "Blood Draw Request", "Blood Draw Requests", "Requests", Arrays.<FormSection>asList(
                 new RequestFormSection(),
+                new AnimalDetailsFormSection(),
                 new BloodDrawFormSection(false)
         ));
     }

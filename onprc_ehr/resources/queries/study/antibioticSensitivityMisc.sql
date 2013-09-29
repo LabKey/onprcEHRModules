@@ -16,7 +16,7 @@
 SELECT
 a.Id,
 a.date,
-a.tissue,
+a.runid.tissue as tissue,
 a.microbe,
 a.antibiotic,
 a.resistant,

@@ -4,7 +4,17 @@
             <table tableName="pairHistory" tableDbType="TABLE">
                 <tableTitle>Pairing History</tableTitle>
                 <columns>
-
+                    <column columnName="earliestOverlap">
+                        <columnTitle>Earliest Overlap</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                    </column>
+                    <column columnName="mostRecentOverlap">
+                        <columnTitle>Most Recent Overlap</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                    </column>
+                    <column columnName="pairid">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>

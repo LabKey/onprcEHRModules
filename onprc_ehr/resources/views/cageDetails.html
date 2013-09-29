@@ -74,8 +74,11 @@ Ext4.onReady(function (){
                     name: 'View All Animals Ever Housed In This Room',
                     url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Housing', 'query.room~eq': room})
                 },{
-                    name: 'View List Of Any Cages With Insufficient Space For The Animals Housed In Them',
-                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr_lookups', 'query.queryName': 'cagereview', 'query.room~eq': room, 'query.viewName': 'Problem Cages'})
+                    name: 'View List Of Any Cages With Insufficient Space For The Animals Housed In Them (Using The Guide)',
+                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr_lookups', 'query.queryName': 'cagereview', 'query.room~eq': room, 'query.viewName': 'Problem Cages', 'query.param.RequirementSet': 'The Guide'})
+                },{
+                    name: 'View List Of Any Cages With Insufficient Space For The Animals Housed In Them (Using USDA Guidelines)',
+                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr_lookups', 'query.queryName': 'cagereview', 'query.room~eq': room, 'query.viewName': 'Problem Cages', 'query.param.RequirementSet': 'USDA'})
                 }]
             }]
         }],

@@ -19,7 +19,7 @@ SELECT
   i.item,
 
   sum(i.quantity) as numItems,
-  sum(i.totalCost) as totalCost
+  sum(i.totalCost) as total
 
 FROM onprc_billing.invoicedItems i
 

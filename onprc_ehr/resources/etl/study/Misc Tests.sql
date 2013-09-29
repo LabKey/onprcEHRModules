@@ -21,7 +21,6 @@ SELECT
 
   t.specimen,
   t.name as specimenName,
-  t.SNOMEDCODE as code,
   t.Method,
 
   t.TestId,

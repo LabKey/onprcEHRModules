@@ -9,8 +9,19 @@
                     </column>
                     <column columnName="unitCost">
                         <columnTitle>Unit Cost</columnTitle>
+                        <formatString>$###,##0.00</formatString>
+                    </column>
+                    <column columnName="totalCost">
+                        <columnTitle>Total Cost</columnTitle>
+                        <formatString>$###,##0.00</formatString>
+                    </column>
+                    <column columnName="creditAccount">
+                        <columnTitle>Credit Alias</columnTitle>
                     </column>
                     <column columnName="creditAccountId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="numDays">
                         <isHidden>true</isHidden>
                     </column>
                 </columns>

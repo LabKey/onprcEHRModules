@@ -17,19 +17,20 @@ SELECT
 	cast(Id as varchar(4000)) as Id,
 	Date ,
     projectId as project,
+  CASE
+    WHEN (projectId IS NULL AND servicerequested is not null) THEN 'Not Billable'
+    ELSE null
+  END as chargetype,
+
     servicerequested,
 	category as type,
 	--CategoryInt ,
 	Category2,
 
-	--Specimen as SpecimenId,            ---- information not required
-	sp.Name as sampleType,
-	sp.SNOMEDCODE as sampleTypeSnomed,
-	--MethodInt,
+  coalesce(t.Tissue, sp.SNOMEDCODE) as tissue,
 	Method,
 	collectionMethod,
 
-    Tissue,
 	remarks as remark,
 
 	case
@@ -59,7 +60,7 @@ SELECT
 	DATE as Date ,
     null as projectId,
 	'Antibiotic Sensitivity' as category,
-    'Antibiotic sensitivity' as servicerequested,
+    'Antibiotic Sensitivity' as servicerequested,
 	Category as CategoryInt  ,
 	s1.Value as Category2,
 	Technician As TechnicianID,
@@ -99,6 +100,10 @@ SELECT
       WHEN cln.panelflag = 13 THEN  'Comprehensive Chemistry Panel in-house'
       WHEN cln.panelflag = 14 THEN  'Lipid panel in-house: Cholesterol, Triglyceride, HDL, LDL'
       WHEN cln.panelflag = 16 THEN  ' High-density lipoprotein & Low-density lipoprotein (HDL & LDL)'
+      WHEN cln.panelflag = 17 THEN 'Albumin'
+      WHEN cln.panelflag = 18 THEN 'Amylase'
+      WHEN cln.panelflag = 16 THEN 'Lipase'
+      ELSE null
     END as servicerequested,  --panelflag
 	Category as CategoryInt  ,
 	s1.Value as Category2,
@@ -213,6 +218,7 @@ SELECT
 	'Hematology' as category,
     CASE
       WHEN ManualDiff = 1 THEN 'CBC with manual differential'
+      WHEN ManualDiff = 2 THEN 'Reticulocyte count'
       ELSE 'CBC with automated differential'
     END as servicerequested,
 
@@ -410,7 +416,7 @@ SELECT
 	--DeptCode as DepartmentCodeInt,
 	s4.Value as DepartmentCode,
 
-	Specimen as Specimen ,
+	null as Specimen ,
 	Method as MethodInt  ,
       s2.Value  as Method,
       null as collectionMethod,

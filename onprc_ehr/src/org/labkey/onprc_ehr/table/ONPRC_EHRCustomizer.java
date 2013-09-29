@@ -194,7 +194,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 UserSchema us = getUserSchema(ti, "ehr");
                 if (us != null)
-                    project.setFk(new QueryForeignKey(us, "project", "project", "displayName"));
+                {
+                    if (project.getJavaClass().equals(Integer.class))
+                        project.setFk(new QueryForeignKey(us, "project", "project", "displayName"));
+                    else if (project.getJavaClass().equals(String.class))
+                        project.setFk(new QueryForeignKey(us, "project", "displayName", "displayName"));
+                }
             }
         }
 
@@ -361,11 +366,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ColumnInfo billedby = ti.getColumn("billedby");
         if (billedby != null)
         {
-            billedby.setLabel("Charge Type");
-            //TODO
-//            UserSchema us = getUserSchema(ti, "ehr");
-//            if (us != null)
-//                project.setFk(new QueryForeignKey(us, "project", "project", "displayName"));
+            billedby.setLabel("Assigned To");
         }
 
         customizeDateColumn(ti);
@@ -450,6 +451,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ColumnInfo col = getWrappedIdCol(us, ds, "activeFlags", "flagsPivoted");
             col.setLabel("Active Flags By Category");
             col.setDescription("This provides columns to summarize active flags for the animal by category, such as medical alerts, viral status, etc.");
+            ds.addColumn(col);
+        }
+
+        if (ds.getColumn("Surgery") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "Surgery", "demographicsSurgery");
+            col.setLabel("Surgical History");
+            col.setDescription("Calculates whether this animal has ever had any surgery or a surgery flagged as major");
             ds.addColumn(col);
         }
 
@@ -879,7 +888,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         TableInfo realTable = getRealTable(clinRemarks);
         if (realTable == null)
         {
-            _log.error("Unable to find real table for clin remarks");
+            _log.warn("Unable to find real table for clin remarks");
             return;
         }
 
@@ -887,9 +896,9 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
         SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'Hx: '", "r.hx")), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 WHERE "
-                //+ " r2.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
+                + " r2.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r2.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r2.hx is not null)" +
-                //" AND r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid" +
+                " AND r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid" +
                 ")"
         );
         ExprColumn latestHx = new ExprColumn(ti, hxName, sql, JdbcType.VARCHAR, objectId);
@@ -933,17 +942,17 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
         SQLFragment rmSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE "
-                //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
+                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
         ExprColumn todaysRemarks = new ExprColumn(ti, "todaysRemarks", rmSql, JdbcType.VARCHAR, objectId);
         todaysRemarks.setLabel("Remarks Entered Today");
-        todaysRemarks.setDescription("This shows any remarks entered today for the animal");
+        todaysRemarks.setDescription("This shows any remarks entered today for this case");
         todaysRemarks.setDisplayWidth("250");
         ti.addColumn(todaysRemarks);
 
         SQLFragment rmSql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE "
-                //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
+                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date)");
         ExprColumn remarksOnOpenDate = new ExprColumn(ti, "remarksOnOpenDate", rmSql2, JdbcType.VARCHAR, objectId);
         remarksOnOpenDate.setLabel("Remarks Entered On Open Date");
@@ -952,7 +961,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
         SQLFragment assesmentSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.a"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE "
-                //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
+                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.a IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date)");
         ExprColumn assessmentOnOpenDate = new ExprColumn(ti, "assessmentOnOpenDate", assesmentSql, JdbcType.VARCHAR, objectId);
         assessmentOnOpenDate.setLabel("Assessment Entered On Open Date");
@@ -974,7 +983,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         TableInfo realTable = getRealTable(clinRemarks);
         if (realTable == null)
         {
-            _log.error("Unable to find real table for clin encounters");
+            _log.warn("Unable to find real table for clin encounters");
             return;
         }
 

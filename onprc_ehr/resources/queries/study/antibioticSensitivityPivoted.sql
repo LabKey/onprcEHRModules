@@ -18,15 +18,15 @@ select
 a.id,
 a.date,
 a.runId,
-a.tissue,
+cast(a.runid.tissue as varchar(300)) as tissue,
 a.microbe.meaning as microbe,
 a.antibiotic.meaning as antibiotic,
-CASE
-  WHEN group_concat(a.resistant) = '1' THEN 'Resistant'
-  WHEN group_concat(a.resistant) = '0' THEN 'Not Resistant'
-  WHEN group_concat(a.resistant) IS NULL THEN NULL
+cast(CASE
+  WHEN group_concat(cast(a.resistant as varchar(100))) = '1' THEN 'Resistant'
+  WHEN group_concat(cast(a.resistant as varchar(100))) = '0' THEN 'Not Resistant'
+  WHEN group_concat(cast(a.resistant as varchar(100))) IS NULL THEN NULL
   ELSE 'Discordant Results'
-END as resistant
+END as varchar(100)) as resistant
 
 from study."Antibiotic Sensitivity" a
 WHERE a.antibiotic.code IN (
@@ -43,7 +43,7 @@ WHERE a.antibiotic.code IN (
   'E-72720',
   'E-Y7240'
 )
-group by a.id, a.date, a.runId, a.tissue, a.microbe.meaning, a.antibiotic.meaning
+group by a.id, a.date, a.runId, a.runid.tissue, a.microbe.meaning, a.antibiotic.meaning
 
 pivot resistant by antibiotic
 

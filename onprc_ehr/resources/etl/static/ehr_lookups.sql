@@ -52,16 +52,17 @@ SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE dat
 
 --snomed
 --TRUNCATE TABLE labkey.ehr_lookups.snomed;
-INSERT INTO labkey.ehr_lookups.snomed (code, meaning, modified, created, modifiedby, createdby)
+INSERT INTO labkey.ehr_lookups.snomed (code, meaning, modified, created, modifiedby, createdby, container)
 Select
 ltrim(rtrim(SnomedCode)) as code,
 max(description) as meaning,
 getdate() as modified,
 getdate() as created,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
-(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
+(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC')
 From IRIS_Production.dbo.Ref_SnoMed
-WHERE snomedcode not in (select code from labkey.ehr_lookups.snomed)
+WHERE ltrim(rtrim(SnomedCode)) not in (select code from labkey.ehr_lookups.snomed WHERE container = (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC')) AND snomedcode != '---'
 GROUP BY SnomedCode;
 
 

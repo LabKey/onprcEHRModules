@@ -3,8 +3,9 @@
         <column name="Id" />
         <column name="date" />
         <column name="project" />
+        <column name="type" />
         <column name="servicerequested" />
-        <column name="sampletype" />
+        <column name="tissue" />
         <column name="collectionMethod" />
         <column name="remark" />
         <column name="QCState" />

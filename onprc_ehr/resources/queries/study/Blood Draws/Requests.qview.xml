@@ -2,7 +2,13 @@
     <columns>
         <column name="Id" />
         <column name="date" />
+        <column name="Id/activeAssignments/projects">
+            <properties>
+                <property name="columnTitle" value="Active Assignments"/>
+            </properties>
+        </column>
         <column name="project" />
+        <column name="project/investigatorid" />
         <column name="chargetype" />
         <column name="tube_vol" />
         <column name="tube_type" />

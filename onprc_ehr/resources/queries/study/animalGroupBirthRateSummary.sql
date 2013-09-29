@@ -17,7 +17,7 @@ SELECT
   b.groupId,
 
   count(b.Id) as totalIds,
-  count(DISTINCT b.dam) as totalDams,
+  count(DISTINCT b.Id.parents.dam) as totalDams,
   sum(b.bornDead) as totalBornDead,
   sum(b.diedBefore180Days) as totalDiedBefore180Days,
   sum(b.diedBeforeOneYear) as totalDiedBeforeOneYear,

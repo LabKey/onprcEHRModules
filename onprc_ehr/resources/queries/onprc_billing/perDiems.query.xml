@@ -4,6 +4,13 @@
             <table tableName="perDiems" tableDbType="TABLE">
                 <tableTitle>Per Diems Calculation</tableTitle>
                 <columns>
+                    <column columnName="project">
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>project</fkTable>
+                            <fkColumnName>project</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="effectiveDays">
                         <columnTitle>Effective Days</columnTitle>
                         <url>/query/executeQuery.view?
@@ -12,9 +19,24 @@
                             query.param.numDays=${numDays}&amp;
                             query.param.startDate=${startDate}&amp;
                             query.Id~eq=${Id}&amp;
-                            query.project~eq=${project}&amp;
-                            query.chargeIds~eq=${chargeIds}
+                            query.project/displayName~eq=${project/displayName}&amp;
+                            query.chargeId~eq=${chargeId}
                         </url>
+                    </column>
+                    <column columnName="totalDaysAssigned">
+                        <columnTitle>Total Days Assigned</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=onprc_billing&amp;
+                            queryName=perDiemsByDay&amp;
+                            query.param.numDays=${numDays}&amp;
+                            query.param.startDate=${startDate}&amp;
+                            query.Id~eq=${Id}&amp;
+                            query.project/displayName~eq=${project/displayName}&amp;
+                            query.chargeId~eq=${chargeId}
+                        </url>
+                    </column>
+                    <column columnName="numDays">
+                        <isHidden>true</isHidden>
                     </column>
                 </columns>
             </table>

@@ -28,6 +28,7 @@ import org.labkey.api.action.SimpleViewAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
+import org.labkey.api.data.DataRegionSelection;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.Selector;
@@ -35,15 +36,26 @@ import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.files.FileContentService;
+import org.labkey.api.pipeline.PipeRoot;
+import org.labkey.api.pipeline.PipelineJobException;
+import org.labkey.api.pipeline.PipelineService;
+import org.labkey.api.pipeline.PipelineValidationException;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
+import org.labkey.api.query.QueryAction;
+import org.labkey.api.query.QueryForm;
+import org.labkey.api.query.QueryService;
 import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.RequiresPermissionClass;
 import org.labkey.api.security.RequiresSiteAdmin;
 import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.AdminPermission;
+import org.labkey.api.security.permissions.DeletePermission;
+import org.labkey.api.security.permissions.Permission;
 import org.labkey.api.security.permissions.ReadPermission;
+import org.labkey.api.security.permissions.UpdatePermission;
 import org.labkey.api.services.ServiceRegistry;
+import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HtmlView;
@@ -52,6 +64,9 @@ import org.labkey.api.view.UnauthorizedException;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLRunnable;
 import org.labkey.onprc_ehr.legacydata.LegacyDataManager;
+import org.labkey.onprc_ehr.pipeline.BillingPipelineJob;
+import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
+import org.labkey.onprc_ehr.security.ONPRCBillingPermission;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -67,8 +82,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -95,6 +112,7 @@ public class ONPRC_EHRController extends SpringActionController
             resultProperties.put("active", ETL.isRunning());
             resultProperties.put("scheduled", ETL.isScheduled());
             resultProperties.put("nextSync", ETL.nextSync());
+            resultProperties.put("cannotTruncate", ETLRunnable.CANNOT_TRUNCATE);
 
             String[] etlConfigKeys = {"labkeyUser", "labkeyContainer", "jdbcUrl", "jdbcDriver", "runIntervalInMinutes"};
 
@@ -120,73 +138,10 @@ public class ONPRC_EHRController extends SpringActionController
         {
             Map<String, Object> resultProperties = new HashMap<>();
 
-            //first add labs
-            List<JSONObject> labs = new ArrayList<>();
-            Container labContainer = ContainerManager.getForPath("/ONPRC/Labs");
-            if (labContainer != null)
-            {
-                for (Container c : labContainer.getChildren())
-                {
-                    JSONObject json = new JSONObject();
-                    json.put("name", c.getName());
-                    json.put("path", c.getPath());
-                    json.put("url", c.getStartURL(getUser()));
-                    json.put("canRead", c.hasPermission(getUser(), ReadPermission.class));
-                    labs.add(json);
-                }
-            }
-            resultProperties.put("labs", labs);
-
-            //then admin
-            List<JSONObject> admin = new ArrayList<>();
-            Container adminContainer = ContainerManager.getForPath("/ONPRC/Admin");
-            if (adminContainer != null)
-            {
-                for (Container c : adminContainer.getChildren())
-                {
-                    JSONObject json = new JSONObject();
-                    json.put("name", c.getName());
-                    json.put("path", c.getPath());
-                    json.put("url", c.getStartURL(getUser()));
-                    json.put("canRead", c.hasPermission(getUser(), ReadPermission.class));
-                    admin.add(json);
-                }
-            }
-            resultProperties.put("admin", admin);
-
-            //then cores
-            List<JSONObject> cores = new ArrayList<>();
-            Container coresContainer = ContainerManager.getForPath("/ONPRC/Core Facilities");
-            if (coresContainer != null)
-            {
-                for (Container c : coresContainer.getChildren())
-                {
-                    JSONObject json = new JSONObject();
-                    json.put("name", c.getName());
-                    json.put("path", c.getPath());
-                    json.put("url", c.getStartURL(getUser()));
-                    json.put("canRead", c.hasPermission(getUser(), ReadPermission.class));
-                    cores.add(json);
-                }
-            }
-            resultProperties.put("cores", cores);
-
-            //then DCM
-            List<JSONObject> dcm = new ArrayList<>();
-            Container dcmContainer = ContainerManager.getForPath("/ONPRC/DCM");
-            if (dcmContainer != null)
-            {
-                for (Container c : dcmContainer.getChildren())
-                {
-                    JSONObject json = new JSONObject();
-                    json.put("name", c.getName());
-                    json.put("path", c.getPath());
-                    json.put("url", c.getStartURL(getUser()));
-                    json.put("canRead", c.hasPermission(getUser(), ReadPermission.class));
-                    dcm.add(json);
-                }
-            }
-            resultProperties.put("dcm", dcm);
+            resultProperties.put("labs", getSection("/ONPRC/Labs"));
+            resultProperties.put("admin", getSection("/ONPRC/Admin"));
+            resultProperties.put("cores", getSection("/ONPRC/Core Facilities"));
+            resultProperties.put("dcm", getSection("/ONPRC/DCM"));
 
             //for now, EHR is hard coded
             List<JSONObject> ehr = new ArrayList<>();
@@ -218,6 +173,38 @@ public class ONPRC_EHRController extends SpringActionController
             resultProperties.put("success", true);
 
             return new ApiSimpleResponse(resultProperties);
+        }
+
+        private List<JSONObject> getSection(String path)
+        {
+            List<JSONObject> ret = new ArrayList<>();
+            Container mainContainer = ContainerManager.getForPath(path);
+            if (mainContainer != null)
+            {
+                for (Container c : mainContainer.getChildren())
+                {
+                    JSONObject json = new JSONObject();
+                    json.put("name", c.getName());
+                    json.put("path", c.getPath());
+                    json.put("url", c.getStartURL(getUser()));
+                    json.put("canRead", c.hasPermission(getUser(), ReadPermission.class));
+                    ret.add(json);
+
+                    Container publicContainer = ContainerManager.getForPath(mainContainer.getPath() + "/Public");
+                    if (publicContainer != null)
+                    {
+                        JSONObject childJson = new JSONObject();
+                        childJson.put("name", publicContainer.getName());
+                        childJson.put("path", publicContainer.getPath());
+                        childJson.put("url", publicContainer.getStartURL(getUser()));
+                        childJson.put("canRead", publicContainer.hasPermission(getUser(), ReadPermission.class));
+
+                        json.put("publicContainer", childJson);
+                    }
+                }
+            }
+
+            return ret;
         }
     }
 
@@ -809,6 +796,133 @@ public class ONPRC_EHRController extends SpringActionController
             });
 
             return msgs;
+        }
+    }
+
+    @RequiresPermissionClass(UpdatePermission.class)
+    public class RunBillingPipelineAction extends ApiAction<BillingPipelineForm>
+    {
+        public ApiResponse execute(BillingPipelineForm form, BindException errors) throws PipelineJobException
+        {
+            Map<String, Object> resultProperties = new HashMap<>();
+
+            try
+            {
+                PipeRoot pipelineRoot = PipelineService.get().findPipelineRoot(getContainer());
+                File analysisDir = BillingPipelineJob.createAnalysisDir(pipelineRoot, form.getProtocolName());
+                PipelineService.get().queueJob(new BillingPipelineJob(getContainer(), getUser(), getViewContext().getActionURL(), pipelineRoot, analysisDir, form));
+
+                resultProperties.put("success", true);
+            }
+            catch (PipelineValidationException e)
+            {
+                errors.reject(ERROR_MSG, e.getMessage());
+                return null;
+            }
+
+            return new ApiSimpleResponse(resultProperties);
+        }
+    }
+
+    public static class BillingPipelineForm
+    {
+        private String _protocolName;
+        private Date _startDate;
+        private Date _endDate;
+        private String _comment;
+        private boolean _testOnly;
+
+        public String getProtocolName()
+        {
+            return _protocolName;
+        }
+
+        public void setProtocolName(String protocolName)
+        {
+            _protocolName = protocolName;
+        }
+
+        public Date getStartDate()
+        {
+            return _startDate;
+        }
+
+        public void setStartDate(Date startDate)
+        {
+            _startDate = startDate;
+        }
+
+        public Date getEndDate()
+        {
+            return _endDate;
+        }
+
+        public void setEndDate(Date endDate)
+        {
+            _endDate = endDate;
+        }
+
+        public boolean isTestOnly()
+        {
+            return _testOnly;
+        }
+
+        public void setTestOnly(boolean testOnly)
+        {
+            _testOnly = testOnly;
+        }
+
+        public String getComment()
+        {
+            return _comment;
+        }
+
+        public void setComment(String comment)
+        {
+            _comment = comment;
+        }
+    }
+
+    @RequiresPermissionClass(ONPRCBillingPermission.class)
+    public class DeleteBillingPeriodAction extends ConfirmAction<QueryForm>
+    {
+        public void validateCommand(QueryForm form, Errors errors)
+        {
+            Set<String> ids = DataRegionSelection.getSelected(form.getViewContext(), true);
+            if (ids.size() == 0)
+            {
+                errors.reject(ERROR_MSG, "Must select at least one item to delete");
+            }
+        }
+
+        @Override
+        public ModelAndView getConfirmView(QueryForm form, BindException errors) throws Exception
+        {
+            Set<String> ids = DataRegionSelection.getSelected(form.getViewContext(), true);
+
+            StringBuilder msg = new StringBuilder("You have selected " + ids.size() + " billing runs to delete.  This will also delete: <p>");
+            for (String m : ONPRC_EHRManager.get().deleteBillingRuns(getUser(), ids, true))
+            {
+                msg.append(m).append("<br>");
+            }
+
+            msg.append("<p>Are you sure you want to do this?");
+
+            return new HtmlView(msg.toString());
+        }
+
+        public boolean handlePost(QueryForm form, BindException errors) throws Exception
+        {
+            Set<String> ids = DataRegionSelection.getSelected(form.getViewContext(), true);
+            ONPRC_EHRManager.get().deleteBillingRuns(getUser(), ids, false);
+
+            return true;
+        }
+
+        public URLHelper getSuccessURL(QueryForm form)
+        {
+            URLHelper url = form.getReturnURLHelper();
+            return url != null ? url : QueryService.get().urlFor(getUser(), getContainer(), QueryAction.executeQuery, ONPRC_EHRSchema.SCHEMA_NAME, ONPRC_EHRSchema.TABLE_INVOICE_RUNS);
         }
     }
 }

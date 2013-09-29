@@ -15,10 +15,34 @@
  */
 package org.labkey.onprc_ehr.notification;
 
+import org.apache.commons.lang3.time.DateUtils;
+import org.json.JSONObject;
+import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.SQLFragment;
+import org.labkey.api.data.Selector;
+import org.labkey.api.data.SimpleFilter;
+import org.labkey.api.data.Sort;
+import org.labkey.api.data.SqlSelector;
+import org.labkey.api.data.TableInfo;
+import org.labkey.api.data.TableSelector;
+import org.labkey.api.query.FieldKey;
+import org.labkey.api.query.QueryDefinition;
+import org.labkey.api.query.QueryException;
+import org.labkey.api.query.QueryService;
+import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
+import org.labkey.api.util.PageFlowUtil;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,13 +67,13 @@ public class BehaviorNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 0 7 * * ?";
+        return "0 0 5 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 7:00AM";
+        return "every day at 5:00AM";
     }
 
     @Override
@@ -61,12 +85,160 @@ public class BehaviorNotification extends ColonyAlertsNotification
     @Override
     public String getMessage(Container c, User u)
     {
+        Map<String, String> saved = getSavedValues(c);
+        Map<String, String> toSave = new HashMap<String, String>();
+
         StringBuilder msg = new StringBuilder();
 
-        doHousingChecks(c, u, msg);
+        msg.append(getDescription()).append("<hr>");
 
+        colonyHousingSummary(c, u, msg, saved, toSave);
+        behaviorCaseSummary(c, u, msg);
+        setupPairs(c, u, msg);
+        changedPairs(c, u, msg);
+        singleHousedAnimals(c, u, msg);
+        transfersYesterday(c, u, msg);
 
+        //doHousingChecks(c, u, msg);
+
+        saveValues(c, toSave);
 
         return msg.toString();
+    }
+
+    private void behaviorCaseSummary(Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("cases");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true);
+        filter.addCondition(FieldKey.fromString("category"), "Behavior");
+
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("Id"), filter, null);
+        long total = ts.getRowCount();
+        msg.append("<b>Behavior Cases:</b><p>");
+        msg.append("There are " + total + " active behavior cases.  ");
+        String url = getExecuteQueryUrl(c, "study", "cases", "Active Behavior Cases");
+        msg.append("<a href='" + url + "'>Click here to view them</a>");
+        msg.append("<hr>");
+    }
+
+    private void singleHousedAnimals(Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("demographicsDaysAlone");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("cagemates"), 0, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("daysAlone"), 30, CompareType.GT);
+
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("Id"), filter, null);
+        long total = ts.getRowCount();
+        msg.append("<b>Single Housed Animals:</b><p>");
+        msg.append("There are " + total + " animals that have been single housed for at least 30 days.  ");
+        String url = getExecuteQueryUrl(c, "study", "demographicsDaysAlone", null) + "&query.cagemates~eq=0&query.sort=-DaysAlone";
+        msg.append("<a href='" + url + "'>Click here to view them</a>");
+        msg.append("<hr>");
+    }
+
+    private void setupPairs(Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("pairings");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("eventType"), "Set up");
+
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("Id"), filter, null);
+        long total = ts.getRowCount();
+        if (total > 0)
+        {
+            msg.append("<b>There are " + total + " animals with 'Set Up' as the pairing type.  These may need to be paired.</b><p>");
+            String url = getExecuteQueryUrl(c, "study", "pairings", null) + "&query.eventType~eq=Set up";
+            msg.append("<a href='" + url + "'>Click here to view them</a>");
+            msg.append("<hr>");
+        }
+    }
+
+    private void changedPairs(Container c, User u, final StringBuilder msg)
+    {
+        Calendar date1 = Calendar.getInstance();
+        date1.setTime(new Date());
+        date1 = DateUtils.round(date1, Calendar.DATE);
+
+        Calendar date2 = Calendar.getInstance();
+        date2.setTime(new Date());
+        date2 = DateUtils.round(date2, Calendar.DATE);
+        date2.add(Calendar.DATE, -1);
+
+        UserSchema us = getStudySchema(c, u);
+        QueryDefinition qd = us.getQueryDefForTable("pairDifferences");
+        List<QueryException> errors = new ArrayList<>();
+        TableInfo ti = qd.getTable(us, errors, true);
+        Map<String, Object> params = new HashMap<>();
+        params.put("Date1", date1.getTime());
+        params.put("Date2", date2.getTime());
+
+        SQLFragment sql = ti.getFromSQL("t");
+        QueryService.get().bindNamedParameters(sql, params);
+
+        sql = new SQLFragment("SELECT * FROM " + sql.getSQL() + " WHERE (t.changeType IS NOT NULL AND t.changeType != 'Group Members Changed') ORDER BY ldk.naturalize(t.room1), ldk.naturalize(t.cage1)", sql.getParams());
+        QueryService.get().bindNamedParameters(sql, params);
+        SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
+        Collection<Map<String, Object>> rows = ss.getMapCollection();
+
+        if (rows.size() > 0)
+        {
+            msg.append("<b>There are " + rows.size() + " animals with differences in pairing since yesterday.  Note, this considers full pairs vs. non-full pairs only (ie. grooming contact is treated as non-paired).  It considers housing at midnight of the days in question.</b>  ");
+            String url = getExecuteQueryUrl(c, "study", "pairDifferences", null) + "&query.changeType~isnonblank&query.changeType~neq=Group Members Changed&query.param.Date1=" + _dateFormat.format(date1.getTime()) + "&query.param.Date2=" + _dateFormat.format(date2.getTime());
+
+            msg.append("<a href='" + url + "'>Click here to view them</a><p>");
+
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr style='font-weight: bold;'><td>Id</td><td>Animals In Cage</td><td>Current Room</td><td>Current Cage</td><td>Change Type</td><td>Previous Room</td><td>Previous Cage</td><td>Pair Observations Entered On Date</td></tr>");
+
+            for (Map<String, Object> row : rows)
+            {
+                String animalUrl = getParticipantURL(c, (String)row.get("Id"));
+                msg.append("<tr><td><a href='" + animalUrl + "'>" + row.get("Id") + "</a></td><td>" + (row.get("animalsInCage1") == null ? "" : row.get("animalsInCage1")) + "</td><td>" + row.get("room1") + "</td><td>" + (row.get("cage1") == null ? "" : row.get("cage1")) + "</td><td>" + row.get("changeType") + "</td><td>" + row.get("room2") + "</td><td>" + (row.get("cage2") == null ? "" : row.get("cage2")) + "</td><td>" + row.get("pairObservations") + "</td></tr>");
+            }
+
+            msg.append("</table>");
+        }
+        else
+        {
+            msg.append("<b>No pairs have changed since yesterday</b>");
+        }
+
+        msg.append("<hr>");
+    }
+
+    private void colonyHousingSummary(final Container c, User u, final StringBuilder msg, Map<String, String> saved, Map<String, String> toSave)
+    {
+        final String colonyHousingSummary = "colonyHousingSummary";
+        final JSONObject oldValueMap = saved.containsKey(colonyHousingSummary) ? new JSONObject(saved.get(colonyHousingSummary)) : new JSONObject();
+        final JSONObject newValueMap = new JSONObject();
+        Date lastRunDate = saved.containsKey(lastSave) ? new Date(Long.parseLong(saved.get(lastSave))) : null;
+
+        TableInfo ti = getStudySchema(c, u).getTable("housingPairingSummary");
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("category", "totalAnimals"), null, new Sort("category"));
+        msg.append("<b>Housing summary:</b><p>");
+        msg.append("<table border=1 style='border-collapse: collapse;'>");
+        msg.append("<tr style='font-weight: bold;'><td>Category</td><td># Animals</td><td>Previous Value " + (lastRunDate == null ? "" : "(" + _dateFormat.format(lastRunDate) + ")") + "</td></tr>");
+        final String urlBase = getExecuteQueryUrl(c, "study", "demographics", "By Location");
+
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                String category = rs.getString("category");
+                msg.append("<tr><td>" + category + "</td><td><a href='" + urlBase + "&query.Id/numPaired/category~eq=" + category + "'>" + rs.getInt("totalAnimals") + "</a></td><td>");
+                if (oldValueMap.containsKey(category))
+                {
+                    msg.append(oldValueMap.get(category));
+                }
+                msg.append("</td></tr>");
+
+                newValueMap.put(category, rs.getInt("totalAnimals"));
+            }
+        });
+
+        msg.append("</table><p>");
+        msg.append("<hr>");
+
+        toSave.put(colonyHousingSummary, newValueMap.toString());
     }
 }

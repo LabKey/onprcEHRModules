@@ -149,14 +149,14 @@
             <ns:column columnName="servicecenter">
                 <ns:columnTitle>Service Center</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="project">
+                <ns:columnTitle>Project</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="debitedaccount">
                 <ns:columnTitle>Debited Alias</ns:columnTitle>
             </ns:column>
             <ns:column columnName="creditedaccount">
                 <ns:columnTitle>Credited Alias</ns:columnTitle>
-            </ns:column>
-            <ns:column columnName="project">
-                <ns:columnTitle>Project</ns:columnTitle>
             </ns:column>
             <ns:column columnName="faid">
                 <ns:columnTitle>FAID</ns:columnTitle>
@@ -166,6 +166,9 @@
                     <ns:fkColumnName>rowid</ns:fkColumnName>
                     <ns:fkDisplayColumnName>lastName</ns:fkDisplayColumnName>
                 </ns:fk>
+            </ns:column>
+            <ns:column columnName="investigatorId">
+
             </ns:column>
             <ns:column columnName="lastName">
                 <ns:columnTitle>Last Name</ns:columnTitle>
@@ -204,9 +207,11 @@
             </ns:column>
             <ns:column columnName="unitcost">
                 <ns:columnTitle>Unit Cost</ns:columnTitle>
+                <ns:formatString>$###,##0.00</ns:formatString>
             </ns:column>
             <ns:column columnName="totalcost">
                 <ns:columnTitle>Total Cost</ns:columnTitle>
+                <ns:formatString>$###,##0.00</ns:formatString>
             </ns:column>
             <ns:column columnName="credit">
                 <ns:columnTitle>Is Credit?</ns:columnTitle>
@@ -252,10 +257,13 @@
             <ns:column columnName="modified"/>
         </ns:columns>
         <ns:buttonBarOptions includeStandardButtons="true">
-            <ns:includeScript>/onprc_ehr/billingButtons.js</ns:includeScript>
+            <ns:includeScript>/onprc_ehr/window/ReverseChargeWindow.js</ns:includeScript>
             <ns:item insertPosition="end" text="More Actions">
-                <ns:item text="Reverse Charges">
-                    <ns:onClick>ONPRC.Billing.buttons.reverseChangesHandler(dataRegionName, arguments[0] ? arguments[0].ownerCt.floatParent : null);</ns:onClick>
+                <ns:item text="Reverse/Adjust Selected Charges">
+                    <ns:onClick>ONPRC_EHR.window.ReverseChargeWindow.buttonHandler(dataRegionName);</ns:onClick>
+                </ns:item>
+                <ns:item text="Add New Charges/Credits">
+                    <ns:onClick>Ext4.Msg.alert('Add New Charges/Credits', 'This is not yet supported');</ns:onClick>
                 </ns:item>
             </ns:item>
         </ns:buttonBarOptions>
@@ -284,45 +292,46 @@
     </ns:table>
     <ns:table tableName="miscCharges" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
-        <ns:tableTitle>Misc Charges</ns:tableTitle>
+        <ns:tableTitle>Other Charges</ns:tableTitle>
         <ns:columns>
-            <ns:column columnName="rowId">
-                <ns:columnTitle>Row Id</ns:columnTitle>
-                <ns:shownInInsertView>false</ns:shownInInsertView>
-            </ns:column>
-            <ns:column columnName="id">
+            <ns:column columnName="Id">
                 <ns:columnTitle>Id</ns:columnTitle>
             </ns:column>
             <ns:column columnName="date">
-                <ns:columnTitle>Date</ns:columnTitle>
+                <ns:columnTitle>Date of Charge</ns:columnTitle>
             </ns:column>
             <ns:column columnName="project"/>
             <ns:column columnName="account">
                 <ns:isHidden>true</ns:isHidden>
             </ns:column>
-            <ns:column columnName="category">
-                <ns:columnTitle>Category</ns:columnTitle>
-            </ns:column>
             <ns:column columnName="chargeId"/>
-            <ns:column columnName="description">
-                <ns:columnTitle>Description</ns:columnTitle>
-            </ns:column>
             <ns:column columnName="quantity">
                 <ns:columnTitle>Quantity</ns:columnTitle>
             </ns:column>
             <ns:column columnName="unitcost">
                 <ns:columnTitle>Unit Cost</ns:columnTitle>
+                <ns:formatString>$###,##0.00</ns:formatString>
                 <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="totalcost">
                 <ns:columnTitle>Total Cost</ns:columnTitle>
+                <ns:formatString>$###,##0.00</ns:formatString>
                 <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="billingDate">
+                <ns:columnTitle>Date Charge Created</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
+            <ns:column columnName="category">
+                <ns:columnTitle>Category</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
             <ns:column columnName="invoiceId">
                 <ns:columnTitle>Invoice</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
                 <ns:fk>
                     <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
                     <ns:fkTable>invoiceRuns</ns:fkTable>
@@ -330,14 +339,27 @@
                     <ns:fkDisplayColumnName>rowid</ns:fkDisplayColumnName>
                 </ns:fk>
             </ns:column>
-            <ns:column columnName="chargeType"/>
-            <ns:column columnName="billingDate"/>
+            <ns:column columnName="chargeType">
+                <ns:columnTitle>Charge Type</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
+            <ns:column columnName="invoicedItemId">
+                <ns:columnTitle>Invoiced Item</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>invoicedItems</ns:fkTable>
+                    <ns:fkColumnName>objectid</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>rowid</ns:fkDisplayColumnName>
+                </ns:fk>
+            </ns:column>
             <ns:column columnName="taskid">
                 <ns:columnTitle>Task Id</ns:columnTitle>
             </ns:column>
             <ns:column columnName="requestid">
                 <ns:columnTitle>Request Id</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="objectid"/>
             <ns:column columnName="container"/>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
@@ -398,24 +420,23 @@
             </ns:column>
             <ns:column columnName="runDate">
                 <ns:columnTitle>Run Date</ns:columnTitle>
+                <ns:nullable>false</ns:nullable>
             </ns:column>
             <ns:column columnName="billingPeriodStart">
                 <ns:columnTitle>Billing Period Start</ns:columnTitle>
+                <ns:nullable>false</ns:nullable>
             </ns:column>
             <ns:column columnName="billingPeriodEnd">
                 <ns:columnTitle>Billing Period End</ns:columnTitle>
+                <ns:nullable>false</ns:nullable>
             </ns:column>
-            <ns:column columnName="date">
-                <ns:columnTitle>Date</ns:columnTitle>
+            <ns:column columnName="invoiceNumber">
+                <ns:columnTitle>Invoice #</ns:columnTitle>
                 <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="dataSources">
                 <ns:columnTitle>Data Sources</ns:columnTitle>
                 <ns:isHidden>true</ns:isHidden>
-            </ns:column>
-            <ns:column columnName="runBy">
-                <ns:columnTitle>Run By</ns:columnTitle>
-                <!--<ns:isHidden>true</ns:isHidden>-->
             </ns:column>
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>
@@ -433,6 +454,21 @@
             <ns:column columnName="modifiedBy"/>
             <ns:column columnName="modified"/>
         </ns:columns>
+        <ns:buttonBarOptions includeStandardButtons="false">
+            <ns:includeScript>/onprc_ehr/BillingUtils.js</ns:includeScript>
+            <ns:item text="Views">
+                <ns:originalText>Views</ns:originalText>
+            </ns:item>
+            <ns:item text="Delete" permission="DELETE" requiresSelection="true">
+                <ns:onClick>ONPRC.BillingUtils.deleteInvoiceRuns(dataRegionName);</ns:onClick>
+            </ns:item>
+            <ns:item text="Export">
+                <ns:originalText>Export</ns:originalText>
+            </ns:item>
+            <ns:item text="Page Size">
+                <ns:originalText>Page Size</ns:originalText>
+            </ns:item>
+        </ns:buttonBarOptions>
     </ns:table>
     <ns:table tableName="leaseFeeDefinition" tableDbType="TABLE" useColumnOrder="true">
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
@@ -742,6 +778,11 @@
             </ns:column>
             <ns:column columnName="servicename">
                 <ns:columnTitle>Service/Panel Name</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>ehr_lookups</ns:fkDbSchema>
+                    <ns:fkTable>labwork_services</ns:fkTable>
+                    <ns:fkColumnName>servicename</ns:fkColumnName>
+                </ns:fk>
             </ns:column>
             <ns:column columnName="chargetype">
                 <ns:columnTitle>Charge Type</ns:columnTitle>

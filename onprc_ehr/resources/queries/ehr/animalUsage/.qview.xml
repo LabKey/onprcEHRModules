@@ -1,0 +1,7 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Groups">
+   <sorts>
+       <sort column="protocol"/>
+       <sort column="project"/>
+       <sort column="start" descending="true"/>
+   </sorts>
+</customView>

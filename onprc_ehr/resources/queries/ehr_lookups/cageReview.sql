@@ -4,6 +4,8 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 
+PARAMETERS(RequirementSet CHAR)
+
 SELECT
   t2.*,
   CASE
@@ -105,7 +107,7 @@ LEFT JOIN (
   GROUP BY f.Id
 ) wf on (f.Id = h.Id)
 
-LEFT JOIN ehr_lookups.cageclass c1 ON (c1.low <= h.Id.mostRecentWeight.mostRecentWeight AND h.Id.mostRecentWeight.mostRecentWeight < c1.high)
+LEFT JOIN ehr_lookups.cageclass c1 ON (c1.low <= h.Id.mostRecentWeight.mostRecentWeight AND h.Id.mostRecentWeight.mostRecentWeight < c1.high AND c1.requirementset = RequirementSet)
 
 ) t0
 

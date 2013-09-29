@@ -2,10 +2,16 @@
     <columns>
         <column name="Id" />
         <column name="date" />
+        <column name="Id/activeAssignments/projects">
+            <properties>
+                <property name="columnTitle" value="Active Assignments"/>
+            </properties>
+        </column>
         <column name="project" />
+        <column name="project/investigatorid" />
         <column name="servicerequested" />
         <column name="servicerequested/chargetype" />
-        <column name="sampletype" />
+        <column name="tissue" />
         <column name="instructions" />
         <column name="QCState" />
         <column name="requestid" />

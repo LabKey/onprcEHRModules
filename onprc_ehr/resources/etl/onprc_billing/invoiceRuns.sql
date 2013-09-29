@@ -18,8 +18,9 @@ select
   max(ri2.RunDate) as runDate,
   ri.StartDate as billingPeriodStart,
   ri.EndDate as billingPeriodEnd,
-  max(cast(ri.objectid as varchar(38))) as objectid
-from IRIS_Production.dbo.Ref_Invoice ri
-left join IRIS_Production.dbo.ref_invoice ri2 ON (ri.startdate = ri2.startdate AND ri.enddate = ri2.enddate)
+  max(cast(ri.objectid as varchar(38))) as objectid,
+  min(ri.StartInvoice) as invoiceNumber
+from Ref_Invoice ri
+left join ref_invoice ri2 ON (ri.startdate = ri2.startdate AND ri.enddate = ri2.enddate)
 where (ri.ts > ? or ri2.ts > ?)
 group by ri.startdate, ri.enddate

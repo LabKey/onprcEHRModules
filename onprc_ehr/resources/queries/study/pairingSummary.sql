@@ -15,12 +15,19 @@
  */
 SELECT
   p.Id,
-  (SELECT group_concat(distinct p2.Id, chr(10)) FROM study.pairings p2 WHERE p.Id != p2.id AND p.date = p2.date and p.room = p2.room and p.pairId = p2.pairId) as otherIds,
+  (SELECT group_concat(distinct p2.Id, chr(10)) FROM study.pairings p2 WHERE p.Id != p2.id AND p.pairId = p2.pairId) as otherIds,
   p.date,
+  p.lowestCage,
+  p.room,
+  p.cage,
   p.eventType,
-  p.housingType,
+  p.goal,
   p.observation,
   p.outcome,
-  p.remark
+  p.separationreason,
+  p.remark,
+  p.performedby,
+  p.taskid,
+  p.qcstate
 
 FROM study.pairings p

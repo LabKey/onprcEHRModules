@@ -15,9 +15,11 @@
  */
 package org.labkey.onprc_ehr.notification;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.Results;
 import org.labkey.api.ldk.notification.Notification;
 import org.labkey.api.ldk.notification.NotificationService;
@@ -34,6 +36,8 @@ import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * User: bimber
@@ -46,6 +50,7 @@ abstract public class AbstractEHRNotification implements Notification
     protected final static SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
     protected final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     protected final static SimpleDateFormat _timeFormat = new SimpleDateFormat("kk:mm");
+    protected static final String lastSave = "lastSave";
 
     protected NotificationService _ns = NotificationService.get();
 
@@ -108,5 +113,31 @@ abstract public class AbstractEHRNotification implements Notification
             ret += "&query.viewName=" + viewName;
 
         return ret;
+    }
+
+    protected Map<String, String> getSavedValues(Container c)
+    {
+        return PropertyManager.getProperties(c, getClass().getName());
+    }
+
+    protected void saveValues(Container c, Map<String, String> newValues)
+    {
+        PropertyManager.PropertyMap map = PropertyManager.getWritableProperties(c, getClass().getName(), true);
+
+        Long lastSaveMills = map.containsKey(lastSave) ? Long.parseLong(map.get(lastSave)) : null;
+
+        //if values have already been cached for this alert on this day, dont re-cache them.
+        if (lastSaveMills != null)
+        {
+            if (DateUtils.isSameDay(new Date(), new Date(lastSaveMills)))
+            {
+                return;
+            }
+        }
+
+        newValues.put(lastSave, String.valueOf(new Date().getTime()));
+        map.putAll(newValues);
+
+        PropertyManager.saveProperties(map);
     }
 }

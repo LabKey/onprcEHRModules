@@ -139,14 +139,10 @@ public class ETLRunnable implements Runnable
                     refreshQueries();
 
                 user = UserManager.getUser(new ValidEmail(getConfigProperty("labkeyUser")));
-                container = ContainerManager.getForPath(getConfigProperty("labkeyContainer"));
+                container = getContainer();
                 if (null == user)
                 {
                     throw new BadConfigException("bad configuration: invalid labkey user");
-                }
-                if (null == container)
-                {
-                    throw new BadConfigException("bad configuration: invalid labkey container: " + getConfigProperty("labkeyContainer"));
                 }
             }
             catch (ValidEmail.InvalidEmailException e)
@@ -260,6 +256,17 @@ public class ETLRunnable implements Runnable
             isRunning = false;
         }
 
+    }
+
+    public Container getContainer() throws BadConfigException
+    {
+        Container container = ContainerManager.getForPath(getConfigProperty("labkeyContainer"));
+        if (null == container)
+        {
+            throw new BadConfigException("bad configuration: invalid labkey container: " + getConfigProperty("labkeyContainer"));
+        }
+
+        return container;
     }
 
     private void truncateEtlRuns() throws SQLException
@@ -421,11 +428,29 @@ public class ETLRunnable implements Runnable
                 {
                     if (realTable != null)
                     {
-                        log.info("Truncating target table, since last rowversion is null: " + targetTableName);
-                        SQLFragment truncateSql = new SQLFragment("TRUNCATE TABLE " + realTable.getSelectName());
-                        new SqlExecutor(realTable.getSchema()).execute(truncateSql);
-                        hadResultsOnStart = false;
-                        isTargetEmpty = true;
+                        if (CANNOT_TRUNCATE.contains(targetTableName))
+                        {
+                            log.error("Attempting to truncate " + targetTableName + ", which is not allowed.  Upstream code should be checked.");
+                        }
+                        else
+                        {
+                            log.info("Truncating target table, since last rowversion is null: " + targetTableName);
+                            SQLFragment truncateSql;
+                            if (realTable.getColumn("container") == null)
+                            {
+                                log.info("Table does not have a container col, deleting rows using truncate");
+                                truncateSql = new SQLFragment("TRUNCATE TABLE " + realTable.getSelectName());
+                            }
+                            else
+                            {
+                                log.info("Table has a container col, deleting rows using delete");
+                                truncateSql = new SQLFragment("DELETE FROM " + realTable.getSelectName() + " WHERE container = ?", targetTable.getUserSchema().getContainer().getId());
+                            }
+
+                            new SqlExecutor(realTable.getSchema()).execute(truncateSql);
+                            hadResultsOnStart = false;
+                            isTargetEmpty = true;
+                        }
                     }
                     else
                     {
@@ -1144,6 +1169,23 @@ public class ETLRunnable implements Runnable
         return null;
     }
 
+    public final static Set<String> CANNOT_TRUNCATE = new HashSet<String>()
+    {
+        {
+            add("Flags");
+            add("Clinpath Runs");
+            add("Chemistry Results");
+            add("Hematology Results");
+            add("Microbiology");
+            add("AntibioticSensitivity");
+            add("Parasitology Results");
+            //add("Serology Results");
+            add("Urinalysis Results");
+            add("Misc Tests");
+            add("Flags");
+        }
+    };
+
     private final Map<String, String[]> LK_TO_IRIS = new HashMap<String, String[]>()
     {
         {
@@ -1162,6 +1204,7 @@ public class ETLRunnable implements Runnable
 
             put("invoicedItems", new String[]{"Af_Chargesibs"});
             put("invoiceRuns", new String[]{"Ref_Invoice"});
+            put("miscCharges", new String[]{"Af_ChargesPerDiem", "AF_Charges"});
 
             put("cage", new String[]{"Ref_RowCage"});
             //note: this is skipped b/c records will get added directly to it outside of ETL
@@ -1203,7 +1246,7 @@ public class ETLRunnable implements Runnable
             put("Parasitology Results", new String[]{"Cln_Parasitology"});
             put("PregnancyConfirmation", new String[]{"Brd_PregnancyConfirm"});
             put("Problem List", new String[]{"MasterProblemList", "Af_Qrf"});
-            put("Serology Results", new String[]{"Cln_SerologyData", "Cln_SerologyHeader"});
+            put("Serology Results", new String[]{"Cln_SerologyData", "Cln_SerologyHeader", "Cln_VirologyData", "Cln_VirologyHeader"});
             put("TB Tests", new String[]{"Af_weights"});
             put("Tissue Distributions", new String[]{"Path_TissueDistributions", "Path_TissueDetails"});
             put("Tissue Samples", new String[]{"Path_AutopsyWtsMaterials", "Path_Autopsy", "Path_BiopsyWtsMaterials", "Path_biopsy"});
@@ -1277,7 +1320,9 @@ public class ETLRunnable implements Runnable
                             "FROM (" + sql + "\n) t \n" +
                             "FULL JOIN " + scope.getDatabaseName() + "." + realTable.getSelectName() + " t2 \n" +
                             "ON (t." + filterCol.getSelectName() + " = t2." + filterCol.getSelectName() + ") \n" +
-                            "WHERE t." + filterCol.getSelectName() + " IS NULL OR t2." + filterCol.getSelectName() + " IS NULL" ;
+                            "WHERE (t." + filterCol.getSelectName() + " IS NULL OR t2." + filterCol.getSelectName() + " IS NULL)" +
+                                (realTable.getColumn("taskid") == null ? "" : " AND t2.taskid IS NULL") +
+                                (realTable.getColumn("container") == null ? "" : " AND (t2.container = '" + targetTable.getUserSchema().getContainer().getId() + "' or t2.container is null)");
 
                     ps = originConnection.prepareStatement(sql);
                     int paramCount = ps.getParameterMetaData().getParameterCount();
@@ -1375,15 +1420,6 @@ public class ETLRunnable implements Runnable
                         close(ps2);
                         close(ps3);
                     }
-
-                    //also make sure row count identical, which could catch different errors
-                    long rowCount1 = new TableSelector(realTable).getRowCount();
-                    long rowCount2 = new TableSelector(targetTable).getRowCount();
-                    if (rowCount1 != rowCount2)
-                    {
-                        sb.append("row count does not match.  real table has " + rowCount1 + ", but the labkey table has: " + rowCount2).append("<br>");
-                        hasErrors = true;
-                    }
                 }
                 catch (Exception e)
                 {
@@ -1416,7 +1452,7 @@ public class ETLRunnable implements Runnable
         return null;
     }
 
-    class BadConfigException extends Throwable
+    public class BadConfigException extends Throwable
     {
         public BadConfigException(String s)
         {

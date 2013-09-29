@@ -6,19 +6,20 @@
 --this query displays all animals co-housed with each housing record
 --to be considered co-housed, they only need to overlap by any period of time
 
-PARAMETERS(STARTDATE TIMESTAMP, ENDDATE TIMESTAMP)
+PARAMETERS(StartDate TIMESTAMP, EndDate TIMESTAMP)
 
 SELECT
   e.Id,
   e.date,
   e.project,
   e.procedureId,
-  p.chargeId
+  p.chargeId,
+  e.objectid as sourceRecord
 
 FROM study.encounters e
 JOIN onprc_billing.procedureFeeDefinition p ON (p.procedureId = e.procedureId and e.chargetype = p.chargetype AND p.active = true)
 
-WHERE e.dateOnly >= CAST(STARTDATE as date) AND e.dateOnly <= CAST(ENDDATE as date)
+WHERE e.dateOnly >= CAST(StartDate as date) AND e.dateOnly <= CAST(EndDate as date)
 AND e.qcstate.publicdata = true
 
 UNION ALL
@@ -29,10 +30,11 @@ SELECT
   e.date,
   e.project,
   null as procedureId,
-  (select rowid from onprc_billing.chargeableItems ci where ci.name = 'Blood Draw' and ci.active = true) as chargeId
+  (select rowid from onprc_billing.chargeableItems ci where ci.name = 'Blood Draw' and ci.active = true) as chargeId,
+  e.objectid as sourceRecord
 
 FROM study.blood e
-WHERE e.dateOnly >= CAST(STARTDATE as date) AND e.dateOnly <= CAST(ENDDATE as date)
+WHERE e.dateOnly >= CAST(StartDate as date) AND e.dateOnly <= CAST(EndDate as date)
 and e.chargetype != 'No Charge'
 AND e.qcstate.publicdata = true
 

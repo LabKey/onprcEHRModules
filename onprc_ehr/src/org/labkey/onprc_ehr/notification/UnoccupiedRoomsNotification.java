@@ -1,0 +1,107 @@
+package org.labkey.onprc_ehr.notification;
+
+import org.labkey.api.data.AbstractTableInfo;
+import org.labkey.api.data.CompareType;
+import org.labkey.api.data.Container;
+import org.labkey.api.data.Selector;
+import org.labkey.api.data.SimpleFilter;
+import org.labkey.api.data.Sort;
+import org.labkey.api.data.TableInfo;
+import org.labkey.api.data.TableSelector;
+import org.labkey.api.ldk.LDKService;
+import org.labkey.api.query.FieldKey;
+import org.labkey.api.security.User;
+import org.labkey.api.util.PageFlowUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: bimber
+ * Date: 4/5/13
+ * Time: 2:25 PM
+ */
+public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
+{
+    @Override
+    public String getName()
+    {
+        return "Unoccupied Rooms Notification";
+    }
+
+    @Override
+    public String getEmailSubject()
+    {
+        return "Unoccupied Rooms: " + _dateTimeFormat.format(new Date());
+    }
+
+    @Override
+    public String getCronString()
+    {
+        return "0 0 16 * * ?";
+    }
+
+    @Override
+    public String getScheduleDescription()
+    {
+        return "every day at 4:00PM";
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "The report is designed to provide a daily list of any rooms without animals";
+    }
+
+    @Override
+    public String getMessage(Container c, User u)
+    {
+        StringBuilder msg = new StringBuilder();
+
+        unoccupiedNHPRooms(c, u, msg);
+
+
+
+        return msg.toString();
+    }
+
+    private void unoccupiedNHPRooms(Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getEHRLookupsSchema(c, u).getTable("rooms");
+        assert ti instanceof AbstractTableInfo;
+
+        LDKService.get().applyNaturalSort((AbstractTableInfo)ti, "room");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("utilization/TotalAnimals"), 0);
+        filter.addCondition(FieldKey.fromString("housingType/value"), "Rodent Location", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("housingType/value"), "Off Campus", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("datedisabled"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("building"), null, CompareType.NONBLANK);
+        Sort sort = new Sort("building,room");  //TODO: how to sort on naturalize?
+
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("room", "building", "room_sortValue"), filter, sort);
+        if (ts.getRowCount() == 0)
+        {
+            msg.append("There are no empty rooms");
+        }
+        else
+        {
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr style='font-weight: bold;'><td>Building</td><td>Room</td></tr>");
+
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet rs) throws SQLException
+                {
+                    msg.append("<tr><td>" + (rs.getString("building") == null ? "" : rs.getString("building")) + "</td><td>" + rs.getString("room") + "</td></tr>");
+                }
+            });
+
+            msg.append("</table>");
+        }
+    }
+}

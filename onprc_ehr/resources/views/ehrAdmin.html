@@ -16,10 +16,12 @@ Ext4.onReady(function (){
                 {name: 'Populate Initial Data (ONPRC)', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/populateData.view?'},
                 {name: 'Run Custom SQL', url: '<%=contextPath%>/ldk<%=containerPath%>/runCustomSql.view?schemaName=study'},
                 {name: 'Set EHR Module Properties', url: '<%=contextPath%>/core<%=containerPath%>/modulePropertyAdmin.view?moduleName=EHR'},
-                {name: 'Update Dataset Properties', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureDatasetProperties.view?'},
+                {name: 'Update Dataset Properties and Indexes', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureDatasetProperties.view?'},
                 {name: 'Update Study QCStates', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureQCStates.view?'},
                 {name: 'Verify Dataset Resources', url: '<%=contextPath%>/ehr<%=containerPath%>/verifyDatasetResources.view?'},
-                {name: 'Verify EHR Schema Indexes Are Compressed', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureEHRSchemaIndexes.view?'}
+                {name: 'Verify EHR Schema Indexes Are Compressed', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureEHRSchemaIndexes.view?'},
+                {name: 'Get Demographics Cache Stats', url: '<%=contextPath%>/ehr<%=containerPath%>/getCacheInfo.view?'},
+                {name: 'Cache Demographics On All Living Animals', url: '<%=contextPath%>/ehr<%=containerPath%>/cacheLivingAnimals.view?'}
             ]
         },{
             header: 'Logs',
@@ -48,22 +50,6 @@ Ext4.onReady(function (){
                 {name: 'Munin: Production Pipeline Server', url: 'http://prc-labkey2.ohsu.edu:8449/'},
                 {name: 'Munin: Test/Training App Server', url: 'http://prime-test.ohsu.edu:8449/'},
                 {name: 'Munin: Test/Training Pipeline Server', url: 'http://prc-labkey4.ohsu.edu:8449/'}
-            ]
-        },{
-            header: 'Other Tables',
-            items: [
-                {name: 'Manage Animal History Reports', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ehr&query.queryName=reports'},
-                {name: 'Manage Form Types', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ehr&query.queryName=formtypes'},
-                {name: 'Manage Form Sections', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ehr&query.queryName=FormPanelSections'},
-                {name: 'Manage Templates', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ehr&query.queryName=formtemplates'},
-                {name: 'Manage Template Records', url: '<%=contextPath%>/ldk<%=containerPath%>/updateQuery.view?schemaName=ehr&query.queryName=formtemplaterecords'}
-            ]
-        },{
-            header: 'Usage',
-            items: [
-                {name: 'Site Logins By Day', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=core&query.queryName=SiteUsageByDay'},
-                {name: 'Site Logins By Month', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=core&query.queryName=SiteUsageByMonth'},
-                {name: 'Site Logins By Group', url: '<%=contextPath%>/query<%=containerPath%>/executeQuery.view?schemaName=core&query.queryName=SiteUsageByGroup'}
             ]
         }]
     });

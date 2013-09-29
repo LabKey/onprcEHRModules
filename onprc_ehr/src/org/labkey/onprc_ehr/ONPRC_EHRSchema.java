@@ -31,6 +31,9 @@ public class ONPRC_EHRSchema
     public static final String BILLING_SCHEMA_NAME = "onprc_billing";
 
     public static final String TABLE_ETL_RUNS = "etl_runs";
+    public static final String TABLE_INVOICED_ITEMS = "invoicedItems";
+    public static final String TABLE_INVOICE_RUNS = "invoiceRuns";
+    public static final String TABLE_MISC_CHARGES = "miscCharges";
 
     public static ONPRC_EHRSchema getInstance()
     {
@@ -45,6 +48,11 @@ public class ONPRC_EHRSchema
     public DbSchema getSchema()
     {
         return DbSchema.get(SCHEMA_NAME);
+    }
+
+    public DbSchema getBillingSchema()
+    {
+        return DbSchema.get(BILLING_SCHEMA_NAME);
     }
 
     public SqlDialect getSqlDialect()

@@ -12,6 +12,12 @@
                             <fkColumnName>rowid</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="ageAtTime">
+                        <columnTitle>Age At Time (Days)</columnTitle>
+                    </column>
+                    <column columnName="numDays">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>

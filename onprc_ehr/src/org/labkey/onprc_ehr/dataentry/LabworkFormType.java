@@ -40,14 +40,14 @@ public class LabworkFormType extends TaskForm
                 new TaskFormSection(),
                 new ClinpathRunsFormSection(false),
                 new AnimalDetailsFormSection(),
-                new LabworkFormSection("study", "Chemistry Results", "Biochemistry"),
-                new LabworkFormSection("study", "Hematology Results", "Hematology"),
-                new LabworkFormSection("study", "Microbiology Results", "Microbiology"),
-                new LabworkFormSection("study", "Antibiotic Sensitivity", "Antibiotic Sensitivity"),
-                new LabworkFormSection("study", "Parasitology Results", "Parasitology"),
-                new LabworkFormSection("study", "Serology Results", "Serology/Virology"),
-                new LabworkFormSection("study", "Urinalysis Results", "Urinalysis"),
-                new LabworkFormSection("study", "Misc Tests", "Misc Tests")
+                new LabworkFormSection("study", "chemistryResults", "Biochemistry"),
+                new LabworkFormSection("study", "hematologyResults", "Hematology"),
+                new LabworkFormSection("study", "microbiology", "Microbiology"),
+                new LabworkFormSection("study", "antibioticSensitivity", "Antibiotic Sensitivity"),
+                new LabworkFormSection("study", "parasitologyResults", "Parasitology"),
+                new LabworkFormSection("study", "serology", "Serology/Virology"),
+                new LabworkFormSection("study", "urinalysisResults", "Urinalysis"),
+                new LabworkFormSection("study", "miscTests", "Misc Tests")
         ));
     }
 }

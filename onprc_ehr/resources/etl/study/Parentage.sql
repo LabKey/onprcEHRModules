@@ -37,7 +37,7 @@ select
   END as method,
   (cast(c.objectid as varchar(38)) + '_sire') as objectid
 
-from iris_production.dbo.combinedrelationship c
+from combinedrelationship c
 where SireId != '0' and SireId is not null
 AND c.ts > ?
 
@@ -67,7 +67,7 @@ select
   END as method,
   (cast(c.objectid as varchar(38)) + '_dam') as objectid
 
-from iris_production.dbo.combinedrelationship c
+from combinedrelationship c
 where DamId != '0' and DamId is not null
 AND c.ts > ?
 
@@ -81,7 +81,7 @@ SELECT
   'Foster Dam' as relationship,
   'Observed' as method,
   cast(objectid as varchar(38)) as objectid
-From iris_production.dbo.Birth_FosterMom
+From Birth_FosterMom
 WHERE ts > ?
 
 UNION ALL
@@ -94,6 +94,6 @@ select
   'Surrogate Dam' as relationship,
   'Other' as method,
   cast(objectid as varchar(38)) as objectid
-from iris_production.dbo.Af_Birth b
+from Af_Birth b
 where SurrogateMotherID is not null
 AND ts > ?

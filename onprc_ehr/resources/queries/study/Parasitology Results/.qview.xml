@@ -3,6 +3,7 @@
        <column name="Id" />
        <column name="date" />
        <column name="method" />
+       <column name="runid/tissue" />
        <column name="sampletype" />
        <column name="organism" />
        <column name="result" />

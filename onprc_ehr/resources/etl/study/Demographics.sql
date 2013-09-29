@@ -100,7 +100,7 @@ left join (
     max(gr.sireid) as sireid,
     max(gr.damid) as damid,
     max(gr.ts) as ts
-  FROM iris_production.dbo.Geneticrelationship gr
+  FROM Geneticrelationship gr
   GROUP BY gr.animalid
 ) gr ON (gr.animalid = afq.animalid)
 
@@ -117,8 +117,8 @@ select
         else null
     END as geographic_origin,
     MAX(a.ts) as ts
-from IRIS_Production.dbo.Af_QRF q
-LEFT JOIN IRIS_Production.dbo.af_pool a ON (q.AnimalID = a.AnimalID AND a.poolcode in (1050,1052,1053) AND q.Species = 305 AND coalesce(a.DateReleased, CURRENT_TIMESTAMP) >= CURRENT_TIMESTAMP)
+from Af_QRF q
+LEFT JOIN af_pool a ON (q.AnimalID = a.AnimalID AND a.poolcode in (1050,1052,1053) AND q.Species = 305 AND coalesce(a.DateReleased, CURRENT_TIMESTAMP) >= CURRENT_TIMESTAMP)
 GROUP BY q.AnimalID, q.Species
 
 ) t ON (t.animalid = cast(afq.animalid AS nvarchar(4000)))

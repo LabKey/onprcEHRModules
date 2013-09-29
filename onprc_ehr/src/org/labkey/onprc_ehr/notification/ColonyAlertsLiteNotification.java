@@ -67,10 +67,10 @@ public class ColonyAlertsLiteNotification extends ColonyAlertsNotification
         multipleHousingRecords(c, u, msg);
         deadAnimalsWithActiveHousing(c, u, msg);
         livingAnimalsWithoutHousing(c, u, msg);
-        cageReviewErrors(c, u, msg, false);
+        cageReviewErrors(c, u, msg, false, "The Guide");
+        cageReviewErrors(c, u, msg, false, "USDA");
         deadAnimalsWithActiveAssignments(c, u, msg);
         deadAnimalsWithActiveCases(c, u, msg);
-        deadAnimalsWithActiveDiet(c, u, msg);
         deadAnimalsWithActiveFlags(c, u, msg);
         deadAnimalsWithActiveNotes(c, u, msg);
 

@@ -42,13 +42,13 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 10 6 * * ?";
+        return "0 15 6 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 6:10AM";
+        return "every day at 6:15AM";
     }
 
     @Override
@@ -67,6 +67,7 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
         doHousingChecks(c, u, msg);
         transfersYesterday(c, u, msg);
         roomsWithMixedViralStatus(c, u, msg);
+        livingAnimalsWithoutWeight(c, u, msg);
 
         offspringWithMother(c, u, msg, 180);
         offspringWithMother(c, u, msg, 250);

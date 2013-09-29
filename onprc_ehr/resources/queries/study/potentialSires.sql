@@ -28,7 +28,7 @@ JOIN study.housing h ON (
     h.Id.demographics.gender = 'm' AND
     h.room = c.room AND
     (h.cage = c.cage OR (h.cage IS NULL AND c.cage IS NULL)) AND
-    h.date <= c.maxDate AND h.enddateTimeCoalesced >= c.minDate
+    h.dateOnly <= cast(c.maxDate as date) AND h.enddateCoalesced >= cast(c.minDate as date)
 )
 
 WHERE timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, c.minDate) > 912.5 --(2.5 years)

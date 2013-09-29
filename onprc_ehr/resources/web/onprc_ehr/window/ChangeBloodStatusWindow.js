@@ -13,7 +13,7 @@ Ext4.define('ONPRC_EHR.window.ChangeBloodStatusWindow', {
         items.push({
             xtype: 'combo',
             name: 'chargetype',
-            fieldLabel: 'Charge Type',
+            fieldLabel: 'Assigned To',
             width: this.fieldWidth,
             store: {
                 type: 'labkey-store',

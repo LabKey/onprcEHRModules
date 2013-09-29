@@ -16,12 +16,17 @@
 SELECT
   p.*,
   coalesce(e.unitcost, cr.unitcost) as unitcost,
-  ce.account,
+  p.effectiveDays as quantity,
+  p.effectiveDays * coalesce(e.unitcost, cr.unitcost) as totalcost,
+
+  ce.account as creditAccount,
   ce.rowid as creditAccountId,
   CASE
     WHEN e.unitcost IS NOT NULL THEN 'Y'
     ELSE null
-  END as isExemption
+  END as isExemption,
+  e.rowid as exemptionId,
+  CASE WHEN e.rowid IS NULL THEN cr.rowid ELSE null END as rateId
 
 FROM onprc_billing.perDiems p
 

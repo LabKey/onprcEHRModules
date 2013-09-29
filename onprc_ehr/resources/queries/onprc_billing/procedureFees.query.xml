@@ -39,6 +39,9 @@
                     <column columnName="unitCost">
                         <columnTitle>Unit Cost</columnTitle>
                     </column>
+                    <column columnName="sourceRecord">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>

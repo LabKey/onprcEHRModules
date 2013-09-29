@@ -31,8 +31,8 @@ CASE
   ELSE lf.chargeId
 END as chargeId,
 null as leaseCharge1,
-null as leaseCharge2
-
+null as leaseCharge2,
+a.objectid as sourceRecord
 FROM study.assignment a
 
 --find overlapping TMB at date of assignment
@@ -68,7 +68,8 @@ SELECT
   'Lease Setup Fee' as category,
   (SELECT rowid FROM onprc_billing.chargeableItems ci WHERE ci.active = true AND ci.name = 'Lease Setup Fees') as chargeId,
   null as leaseCharge1,
-  null as leaseCharge2
+  null as leaseCharge2,
+  a.objectid as sourceRecord
 
 FROM study.assignment a
 
@@ -90,7 +91,8 @@ a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
 'Lease Fee Refund' as category,
 (SELECT max(rowid) as rowid FROM onprc_billing.chargeableItems ci WHERE ci.name = 'Lease Fee Refund' and ci.active = true) as chargeId,
 lf2.chargeId as leaseCharge1,
-lf.chargeId as leaseCharge2
+lf.chargeId as leaseCharge2,
+a.objectid as sourceRecord
 
 FROM study.assignment a
 LEFT JOIN onprc_billing.leaseFeeDefinition lf

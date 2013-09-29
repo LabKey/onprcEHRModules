@@ -8,117 +8,141 @@ SELECT
   t.*,
   CASE
     WHEN t.overlappingProjects IS NULL then 1
-    WHEN t.project IS NULL AND t.overlappingProjects IS NOT NULL THEN 0
+    WHEN t.assignedProject IS NULL AND t.overlappingProjects IS NOT NULL THEN 0
     WHEN t.ProjectType != 'Research' and t.overlappingProjectsCategory LIKE '%Research%' Then 0
     WHEN t.ProjectType != 'Research' and t.overlappingProjectsCategory NOT LIKE '%Research%' Then (1.0 / (t.totalOverlappingProjects + 1))
     WHEN t.ProjectType = 'Research' and t.overlappingProjectsCategory NOT LIKE '%Research%' Then 1
     WHEN t.ProjectType = 'Research' and t.overlappingProjectsCategory LIKE '%Research%' Then (1.0 / (t.totalOverlappingResearchProjects + 1))
     ELSE 1
-  END as effectiveDays
+  END as effectiveDays,
+  CASE
+    WHEN (t.assignedProject IS NULL AND t.overlappingProjects IS NULL) THEN 'Base Grant'
+    WHEN t.overlappingProjects IS NULL then 'Single Project'
+    WHEN t.assignedProject IS NULL AND t.overlappingProjects IS NOT NULL THEN 'Paid By Overlapping Project'
+    WHEN t.ProjectType != 'Research' and t.overlappingProjectsCategory LIKE '%Research%' Then 'Paid By Overlapping Project'
+    WHEN t.ProjectType != 'Research' and t.overlappingProjectsCategory NOT LIKE '%Research%' Then 'Multiple Resources'
+    WHEN t.ProjectType = 'Research' and t.overlappingProjectsCategory NOT LIKE '%Research%' Then 'Single Project'
+    WHEN t.ProjectType = 'Research' and t.overlappingProjectsCategory LIKE '%Research%' Then 'Multiple Research'
+    ELSE 'Unknown'
+  END as category
 
 FROM (
 
 SELECT
-    i.date,
-    i.dateOnly @hidden,
-    h3.id,
-    h.project,
-    h.project.protocol as protocol,
-    h.project.account as account,
-    max(h.duration) as duration,  --should only have 1 value, no so need to include in grouping
-    h.project.use_Category as ProjectType,
+    i2.Id,
+    CAST(CAST(i2.dateOnly as date) as timestamp) as date,
+    i2.dateOnly @hidden,
+    coalesce(a.project, (SELECT p.project FROM ehr.project p WHERE p.name = '0492')) as project,
+    a.project as assignedProject,
+    max(a.duration) as duration,  --should only have 1 value, no so need to include in grouping
+    max(timestampdiff('SQL_TSI_DAY', d.birth, i2.dateOnly)) as ageAtTime,
+    a.project.use_Category as ProjectType,
     count(*) as totalAssignmentRecords,
-    --1.0 / (count(h2.project) + 1) as effectiveDays,
-    group_concat(DISTINCT h2.project.displayName) as overlappingProjects,
-    count(DISTINCT h2.project) as totalOverlappingProjects,
-    count(DISTINCT CASE WHEN h2.project.use_Category = 'Research' THEN 1 ELSE 0 END) as totalOverlappingResearchProjects,
-    group_concat(DISTINCT h2.project.use_category) as overlappingProjectsCategory,
-    group_concat(DISTINCT h2.project.protocol) as overlappingProtocols,
+    group_concat(DISTINCT a2.project.displayName) as overlappingProjects,
+    count(DISTINCT a2.project) as totalOverlappingProjects,
+    count(DISTINCT CASE WHEN a2.project.use_Category = 'Research' THEN 1 ELSE 0 END) as totalOverlappingResearchProjects,
+    group_concat(DISTINCT a2.project.use_category) as overlappingProjectsCategory,
+    group_concat(DISTINCT a2.project.protocol) as overlappingProtocols,
+    count(h3.room) as totalHousingRecords,
     group_concat(DISTINCT h3.room) as rooms,
     group_concat(DISTINCT h3.cage) as cages,
     group_concat(DISTINCT h3.room.housingCondition.value) as housingConditions,
     group_concat(DISTINCT h3.room.housingType.value) as housingTypes,
-    group_concat(DISTINCT pdf.chargeId) as chargeId,
-    min(i.startDate) as startDate @hidden,
-    min(i.numDays) as numDays @hidden,
-FROM ehr_lookups.dateRange i
+    CASE
+      WHEN (max(timestampdiff('SQL_TSI_DAY', d.birth, i2.dateOnly)) < 271) THEN (SELECT ci.rowid FROM onprc_billing.chargeableItems ci WHERE ci.name = 'Per Diem Infants < 271 days')
+      --add quarantine flags, which trump housing type
+      WHEN (SELECT count(*) FROM study.flags q WHERE q.Id = i2.Id AND q.value LIKE '%Quarantine%' AND q.dateOnly <= i2.dateOnly AND q.enddateCoalesced >= i2.dateOnly) > 0 THEN (SELECT ci.rowid FROM onprc_billing.chargeableItems ci WHERE ci.name = 'Per Diem Quarantine')
+      ELSE group_concat(DISTINCT pdf.chargeId)
+    END as chargeId,
+    max(i2.startDate) as startDate @hidden,
+    max(i2.numDays) as numDays,
 
--- find any animal that was housed here on each day.  this was moved to be the
--- first join so we can be sure to include any animal housed here on that day,
--- as opposed to only assigned animals
-JOIN study.housing h3 ON (
-  -- housing is a little tricky.  assignments are considered to happen in whole-day increments, but
-  -- housing is date/time.  therefore we can find situations where the two might not align,
-  -- but it is really difficult to guess which is the correct type.  by convention, we take the housing
-  -- for the animal at 23:59 of the day in question.  this is important so we are certain is happens after start of assignment
-  -- Using midnight would not do this.  1439 is one minute less than a full day
-  h3.date <= TIMESTAMPADD('SQL_TSI_MINUTE', 1439, CONVERT(i.date, timestamp))
-  AND h3.enddatetimeCoalesced >= TIMESTAMPADD('SQL_TSI_MINUTE', 1439, CONVERT(i.date, timestamp))
-  AND h3.qcstate.publicdata = true
+FROM (
+  -- find all distinct animals housed here on each day.  this was moved to be the
+  -- first join so we can be sure to include any animal housed here on that day,
+  -- as opposed to only assigned animals
+  SELECT
+    h.Id,
+    i.dateOnly,
+    max(h.date) as lastHousingStart,
+    min(i.startDate) as startDate @hidden,
+    min(i.numDays) as numDays @hidden
+  FROM ehr_lookups.dateRange i
+  JOIN study.housing h ON (h.dateOnly <= i.dateOnly AND h.enddateCoalesced >= i.dateOnly AND h.qcstate.publicdata = true)
+  --WHERE i.dateOnly <= curdate()
+  GROUP BY h.Id, i.dateOnly
+) i2
+
+JOIN study.demographics d ON (
+  i2.Id = d.Id
 )
+
+-- housing is a little tricky.  using the query above, we want to find the max start date, on or before this day
+-- the housingType from this room will be used
+JOIN study.housing h3 ON (h3.Id = i2.Id AND i2.lastHousingStart = h3.date AND h3.qcstate.publicdata = true)
 
 --then join to any assignment record overlapping each day
 LEFT JOIN (
   SELECT
-    h.lsid,
-    h.id,
-    h.project,
-    h.project.account,
-    h.date,
-    h.assignCondition,
-    h.releaseCondition,
-    h.projectedReleaseCondition,
-    h.duration,
-    h.enddate,
-    h.dateOnly,
-    h.enddateCoalesced
-  FROM study.assignment h
+    a.lsid,
+    a.id,
+    a.project,
+    a.project.account,
+    a.date,
+    a.assignCondition,
+    a.releaseCondition,
+    a.projectedReleaseCondition,
+    a.duration,
+    a.enddate,
+    a.dateOnly,
+    a.enddateCoalesced
+  FROM study.assignment a
 
-  WHERE h.qcstate.publicdata = true
+  WHERE a.qcstate.publicdata = true
     --NOTE: we might want to exclude 1-day assignments, or deal with them differently
-    --AND h.duration > 0
+    --AND a.duration > 0
 
-) h ON (
-    h3.Id = h.id AND
-    h.dateOnly <= i.date
+) a ON (
+    i2.Id = a.id AND
+    a.dateOnly <= i2.dateOnly
     --assignments end at midnight, so an assignment doesnt count on the current date if it ends on it
     --NOTE: we do need to capture 1-day assignments, so these do count if the start and end are the same day
-    AND (h.enddate IS NULL OR h.enddateCoalesced > i.dateOnly OR (h.dateOnly = i.dateOnly AND h.enddateCoalesced = i.dateOnly))
+    AND (a.enddate IS NULL OR a.enddateCoalesced > i2.dateOnly OR (a.dateOnly = i2.dateOnly AND a.enddateCoalesced = i2.dateOnly))
   )
 
 LEFT JOIN (
   --for each assignment, find co-assigned projects on that day
   SELECT
-    h.lsid,
-    h.date,
-    h.enddate,
-    h.id,
-    h.project,
-    h.project.account,
-    h.dateOnly,
-    h.enddateCoalesced
-  FROM study.assignment h
+    a2.lsid,
+    a2.date,
+    a2.enddate,
+    a2.id,
+    a2.project,
+    a2.project.account,
+    a2.dateOnly,
+    a2.enddateCoalesced
+  FROM study.assignment a2
   WHERE
     --exclude 1-day assignments
-    h.duration > 1
-    AND h.qcstate.publicdata = true
-) h2 ON (
-  h3.id = h2.id
-  AND h2.dateOnly <= i.dateOnly
-  AND h.project != h2.project
+    a2.duration > 1
+    AND a2.qcstate.publicdata = true
+) a2 ON (
+  i2.id = a2.id
+  AND a2.dateOnly <= i2.dateOnly
+  AND a.project != a2.project
   --assignments end at midnight, so an assignment doesnt count on the current date if it ends on it
   --we also need to include 1-day assignments
-  AND (h2.enddate IS NULL OR h2.enddateCoalesced > i.dateOnly OR (h2.dateOnly = i.dateOnly AND h2.enddateCoalesced = i.dateOnly))
-  AND h.lsid != h2.lsid
+  AND (a2.enddate IS NULL OR a2.enddateCoalesced > i2.dateOnly OR (a2.dateOnly = i2.dateOnly AND a2.enddateCoalesced = i2.dateOnly))
+  AND a.lsid != a2.lsid
 )
 
 LEFT JOIN onprc_billing.perDiemFeeDefinition pdf
 ON (
   pdf.housingType = h3.room.housingType AND
   pdf.housingDefinition = h3.room.housingCondition AND
-  (pdf.releaseCondition = h.releaseCondition OR pdf.releaseCondition is null)
+  (pdf.releaseCondition = a.releaseCondition OR pdf.releaseCondition is null)
 )
 
-GROUP BY i.date, i.dateOnly, h3.Id, h.project, h.project.account, h.project.protocol, h.project.use_Category
+GROUP BY i2.dateOnly, I2.Id, a.project, a.project.use_Category
 
 ) t

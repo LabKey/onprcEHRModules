@@ -93,8 +93,8 @@
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveClinicalCases';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            console.log(url);
                             window.open(url);
+                            //window.location = url;
                         }
                     },{
                         xtype: 'button',
@@ -116,7 +116,6 @@
                         style: 'padding-left: 10px;',
                         items: [{
                             xtype: 'datefield',
-                            hidden: true,
                             fieldLabel: 'Date',
                             itemId: 'medicationDateField',
                             value: new Date(),
@@ -156,8 +155,8 @@
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            console.log(url);
                             window.open(url);
+                            //window.location = url;
                         }
                     },{
                         xtype: 'button',
@@ -179,7 +178,6 @@
                         style: 'padding-left: 10px;',
                         items: [{
                             xtype: 'datefield',
-                            hidden: true,
                             fieldLabel: 'Date',
                             itemId: 'dietDateField',
                             value: new Date(),
@@ -220,6 +218,7 @@
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
                             window.open(url);
+                            //window.location = url;
                         }
                     },{
                         xtype: 'button',
@@ -256,8 +255,8 @@
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveSurgicalCases';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            console.log(url);
                             window.open(url);
+                            //window.location = url;
                         }
                     },{
                         xtype: 'button',
@@ -279,7 +278,6 @@
                         style: 'padding-left: 10px;',
                         items: [{
                             xtype: 'datefield',
-                            hidden: true,
                             fieldLabel: 'Date',
                             itemId: 'surgicalMedicationDateField',
                             value: new Date(),
@@ -320,6 +318,7 @@
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
                             window.open(url);
+                            //window.location = url;
                         }
                     },{
                         xtype: 'button',
@@ -356,8 +355,8 @@
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'WeightSheets';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            console.log(url);
                             window.open(url);
+                            //window.location = url;
                         }
                     },{
                         html: ''
@@ -421,8 +420,9 @@
 
             getParams: function(supressErrors){
                 var params = {
-                    SessionId: LABKEY.Security.currentUser.sessionid
-                    //HostName: location.hostname
+                    SessionId: LABKEY.Security.currentUser.sessionid,
+                    HostName: location.hostname
+                    //'rs:Format': 'PDF'
                 };
 
                 var areas = this.down('#areaField').getValue() || [];

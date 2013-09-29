@@ -16,8 +16,6 @@
 SELECT
 	cast(h.AnimalID as nvarchar(4000)) as Id,
 	h.date,
-	h.Tissue,
-	s1.Description as TissueMeaning,
 	h.Microbe,
 	s2.Description as MicrobeMeaning,
 	

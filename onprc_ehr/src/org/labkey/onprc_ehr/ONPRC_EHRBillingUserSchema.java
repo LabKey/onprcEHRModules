@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.TableInfo;
+import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.query.SimpleUserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.DeletePermission;
@@ -45,12 +46,22 @@ public class ONPRC_EHRBillingUserSchema extends SimpleUserSchema
     @Nullable
     protected TableInfo createWrappedTable(String name, @NotNull TableInfo schematable)
     {
-        CustomPermissionsTable ti = new CustomPermissionsTable(this, schematable).init();
-        ti.addPermissionMapping(InsertPermission.class, ONPRCBillingPermission.class);
-        ti.addPermissionMapping(UpdatePermission.class, ONPRCBillingPermission.class);
-        ti.addPermissionMapping(DeletePermission.class, ONPRCBillingPermission.class);
-
-        return ti;
+        if ("miscCharges".equalsIgnoreCase(name))
+        {
+            CustomPermissionsTable ti = new CustomPermissionsTable(this, schematable).init();
+            ti.addPermissionMapping(InsertPermission.class, EHRDataEntryPermission.class);
+            ti.addPermissionMapping(UpdatePermission.class, EHRDataEntryPermission.class);
+            ti.addPermissionMapping(DeletePermission.class, ONPRCBillingPermission.class);
+            return ti;
+        }
+        else
+        {
+            CustomPermissionsTable ti = new CustomPermissionsTable(this, schematable).init();
+            ti.addPermissionMapping(InsertPermission.class, ONPRCBillingPermission.class);
+            ti.addPermissionMapping(UpdatePermission.class, ONPRCBillingPermission.class);
+            ti.addPermissionMapping(DeletePermission.class, ONPRCBillingPermission.class);
+            return ti;
+        }
     }
 
     @Override

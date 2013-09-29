@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
@@ -34,6 +35,7 @@ public class LabworkRequestFormType extends RequestForm
     {
         super(owner, LabworkFormType.NAME + " Request", LabworkFormType.NAME + " Requests", "Requests", Arrays.<FormSection>asList(
                 new RequestFormSection(),
+                new AnimalDetailsFormSection(),
                 new ClinpathRunsFormSection(true)
         ));
     }

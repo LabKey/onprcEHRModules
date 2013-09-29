@@ -844,7 +844,6 @@
             </column>
             <column columnName="chargetype">
                 <datatype>varchar</datatype>
-                <columnTitle>Charge Type</columnTitle>
             </column>
             <column columnName="project">
                 <datatype>integer</datatype>
@@ -949,7 +948,6 @@
             </column>
             <column columnName="chargetype">
                 <datatype>varchar</datatype>
-                <columnTitle>Charge Type</columnTitle>
             </column>
             <column columnName="requestid">
                 <datatype>varchar</datatype>
@@ -1767,6 +1765,9 @@
             <column columnName="type">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="tissue">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="project">
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
@@ -1791,9 +1792,6 @@
             <column columnName="taskid">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
-            </column>
-            <column columnName="sampleType">
-                <datatype>varchar</datatype>
             </column>
             <column columnName="units">
                 <datatype>varchar</datatype>
@@ -1825,14 +1823,10 @@
             </column>
             <column columnName="chargetype">
                 <datatype>varchar</datatype>
-                <columnTitle>Charge Type</columnTitle>
             </column>
             <column columnName="requestid">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
-            </column>
-            <column columnName="condition">
-                <datatype>varchar</datatype>
             </column>
         </columns>
         <tableTitle>Clinpath Runs</tableTitle>

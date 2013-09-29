@@ -8,7 +8,7 @@
                         <columnTitle># Items</columnTitle>
                     </column>
                     <column columnName="total">
-                        <formatString>$###,###.00</formatString>
+                        <formatString>$###,##0.00</formatString>
                     </column>
                 </columns>
             </table>

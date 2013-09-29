@@ -13,6 +13,7 @@
         <column name="remark"/>
         <column name="performedby"/>
         <column name="taskid"/>
+        <column name="QCState"/>
         <column name="history"/>
     </columns>
     <sorts>

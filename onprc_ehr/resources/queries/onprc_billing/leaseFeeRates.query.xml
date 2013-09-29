@@ -10,6 +10,12 @@
                     <column columnName="unitCost">
                         <columnTitle>Unit Cost</columnTitle>
                     </column>
+                    <column columnName="totalCost">
+                        <columnTitle>Total Cost</columnTitle>
+                    </column>
+                    <column columnName="creditAccount">
+                        <columnTitle>Credit Alias</columnTitle>
+                    </column>
                     <column columnName="creditAccountId">
                         <isHidden>true</isHidden>
                     </column>

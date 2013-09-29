@@ -64,11 +64,21 @@ public class ETLNotification extends AbstractEHRNotification
         try
         {
             ETLRunnable runnable = new ETLRunnable();
+            Container etlContainer = runnable.getContainer();
+            if (!c.equals(etlContainer))
+            {
+                sb.append("This alert can only be run from the same container as the ETL: " + etlContainer.getPath());
+            }
+
             String msg = runnable.validateEtlSync(false);
             if (msg != null)
                 sb.append(msg);
             else
                 sb.append("No ETL problems found");
+        }
+        catch (ETLRunnable.BadConfigException e)
+        {
+            sb.append(e.getMessage());
         }
         catch (Exception e)
         {

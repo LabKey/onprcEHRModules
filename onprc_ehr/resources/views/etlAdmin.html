@@ -153,6 +153,7 @@ Ext4.onReady(function (){
                         });
                         tableConfig.items.push({
                             xtype: 'combo',
+                            disabled: json.cannotTruncate.indexOf(query) > -1,
                             width: 300,
                             editable: false,
                             displayField: 'date',

@@ -10,14 +10,21 @@
         subjectIds = subjectIds ? subjectIds.split(';') : [];
 
         Ext4.create('Ext.panel.Panel', {
-            width: 300,
+            width: 400,
             border: false,
+            defaults: {
+                labelWidth: 180
+            },
             items: [{
                 xtype: 'textarea',
-                width: 295,
+                width: 400,
+                height: 200,
                 fieldLabel: 'Enter Animal Id(s)',
-                labelWidth: 130,
                 itemId: 'animalField'
+            },{
+                xtype: 'checkbox',
+                fieldLabel: 'Show Snapshot Only',
+                itemId: 'hideHistory'
             },{
                 xtype: 'checkbox',
                 fieldLabel: 'Redact Information',
@@ -29,6 +36,8 @@
                 handler: function(btn){
                     var val = btn.up('panel').down('#animalField').getValue();
                     var redacted = btn.up('panel').down('#redacted').getValue();
+                    var hideHistory = btn.up('panel').down('#hideHistory').getValue();
+
 
                     if (val){
                         val = Ext4.String.trim(val);
@@ -46,7 +55,8 @@
                     window.location = LABKEY.ActionURL.buildURL('ehr', 'clinicalHistoryExport', null, {
                         subjectId: val,
                         sortMode: 'type',
-                        redacted: redacted
+                        redacted: redacted,
+                        hideHistory: hideHistory
                         //checkedItems: 'Microbiology;TB Tests;Assignments;Serology;Necropsy'
                     });
                 }

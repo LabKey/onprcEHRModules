@@ -15,25 +15,26 @@
  */
 SELECT
   i.servicecenter,
+  i.transactionNumber,
   'N' as transactionType,
   i.date as transactionDate,
   i.item as transactionDescription,
   i.lastName,
   i.firstName,
-  null as fiscalAuthorityNumber,
   i.faid,
-  null as fiscalAuthorityName,
+  i.faid.faid as fiscalAuthorityNumber,
+  i.faid.lastName as fiscalAuthorityName,
   i.department,
-  i.mailcode,
+  'L584' as mailcode,
   i.contactPhone,
-  null as itemCode,
+  i.itemCode,
   i.quantity,
   i.unitCost as price,
   i.debitedaccount as OSUAlias,
   --i.creditedaccount,
   i.totalcost,
   i.invoiceDate,
-  i.invoiceId as invoiceNumber
+  i.invoiceId
 
 FROM onprc_billing.invoicedItems i
 
@@ -41,18 +42,19 @@ UNION ALL
 
 SELECT
   i.servicecenter,
+  i.transactionNumber,
   'N' as transactionType,
   i.date as transactionDate,
   i.item as transactionDescription,
   i.lastName,
   i.firstName,
-  null as fiscalAuthorityNumber,
   i.faid,
-  null as fiscalAuthorityName,
+  i.faid.faid as fiscalAuthorityNumber,
+  i.faid.lastName as fiscalAuthorityName,
   i.department,
-  i.mailcode,
+  'L584' as mailcode,
   i.contactPhone,
-  null as itemCode,
+  (i.itemCode || 'C') as itemCode,
   i.quantity,
   i.unitCost as price,
   --i.debitedaccount as OSUAlias,

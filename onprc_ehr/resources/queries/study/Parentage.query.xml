@@ -32,6 +32,9 @@
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>

@@ -18,7 +18,6 @@ PARAMETERS(StartDate TIMESTAMP, EndDate TIMESTAMP)
 SELECT
   d.Id,
 
-  gm.id as dam,
   gm.groupId,
 
   GROUP_CONCAT(DISTINCT h1.room, chr(10)) as birthRoom,
@@ -54,10 +53,17 @@ SELECT
 
 FROM study.demographics d
 
-JOIN ehr.animal_group_members gm ON (d.Id.parents.dam = gm.id AND gm.dateOnly <= EndDate AND gm.enddateCoalesced >= StartDate)
+JOIN ehr.animal_group_members gm ON (
+    gm.dateOnly <= EndDate AND gm.enddateCoalesced >= StartDate
+    AND (
+      --find records for this animal, or where the dam is assigned on the date of birth
+      (gm.Id = d.Id) OR
+      (d.Id.parents.dam = gm.id AND d.birth <= EndDate AND d.birth >= StartDate AND gm.dateOnly <= cast(d.birth as date) AND gm.enddateCoalesced >= cast(d.birth as date))
+    )
+  )
 
 LEFT JOIN study.housing h1 ON (h1.id = d.Id AND h1.dateOnly <= d.birth AND h1.enddateTimeCoalesced >= d.birth)
 
 WHERE cast(d.birth as date) >= StartDate AND cast(d.birth as date) <= EndDate
 
-GROUP BY d.id, d.id.age.ageInDays, d.death, gm.id, gm.groupId
+GROUP BY d.id, d.id.age.ageInDays, d.death, gm.groupId

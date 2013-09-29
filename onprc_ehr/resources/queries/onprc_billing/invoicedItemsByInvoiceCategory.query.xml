@@ -8,12 +8,12 @@
                         <columnTitle># Items</columnTitle>
                         <url>/query/executeQuery.view?schemaName=onprc_billing&amp;
                             queryName=invoicedItems&amp;
-                            query.invoiceId~eq=${invoiceId}&amp;
+                            query.invoiceId/rowid~eq=${invoiceId/rowid}&amp;
                             query.category~eq=${category}
                         </url>
                     </column>
                     <column columnName="total">
-                        <formatString>$###,###.00</formatString>
+                        <formatString>$###,##0.00</formatString>
                     </column>
                 </columns>
             </table>

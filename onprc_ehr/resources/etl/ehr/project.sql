@@ -51,9 +51,18 @@ select
   END as research,
 
   CASE
-    WHEN Rpi.IACUCCode = '0492-06' THEN 1
+    WHEN Rpi.IACUCCode = '0492-06' THEN 1  --clinical
+    WHEN Rpi.IACUCCode = '0492-13' THEN 1  --pathology
+    WHEN Rpi.IACUCCode = '0371' THEN 1  --surgery
     ELSE 0
   END as alwaysavailable,
+
+  CASE
+    WHEN Rpi.IACUCCode = '0492-06' THEN 'Clinical'
+    WHEN Rpi.IACUCCode = '0492-13' THEN 'Pathology'
+    WHEN Rpi.IACUCCode = '0371' THEN 'Surgery'
+    ELSE null
+  END as shortname,
 
   CASE
     WHEN Rpi.IACUCCode = '0492-03' THEN 'U24'

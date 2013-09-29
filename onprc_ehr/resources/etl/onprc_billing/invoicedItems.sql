@@ -18,7 +18,11 @@
 --
 SELECT
 	t.*,
-	(select max(bci.rowId) from labkey.onprc_billing.chargeableItems bci where t.item = bci.name) as chargeId
+	(select max(bci.rowId) from labkey.onprc_billing.chargeableItems bci where t.item = bci.name) as chargeId,
+  CASE
+    WHEN (t.lastName IS NOT NULL AND t.firstName IS NOT NULL ) THEN (select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = t.firstname and i.lastname = t.lastname group by i.LastName, i.firstname having count(*) <= 1)
+  ELSE null
+  END as investigatorId
 FROM (
 SELECT
   ri.objectid as invoiceId,
@@ -69,21 +73,21 @@ SELECT
   ci.ProjectID as project,
   ci.CageID as cageId,
   null as credit
-from IRIS_Production.dbo.Af_Chargesibs ci
+from Af_Chargesibs ci
 
 --find corresponding debit
-  left join IRIS_Production.dbo.Af_Chargesibs ci2 ON (ci2.ChargesIDKey = ci.ChargesIDKey AND ci.TransactionNumber = ci2.TransactionNumber AND ci.IDKey != ci2.IDKey)
+  left join Af_Chargesibs ci2 ON (ci2.ChargesIDKey = ci.ChargesIDKey AND ci.TransactionNumber = ci2.TransactionNumber AND ci.IDKey != ci2.IDKey)
 
 --used to find the chargeid
-  left join IRIS_Production.dbo.Ref_FeesProcedures rfp on (ci.ItemCode = (Convert(varchar(10),rfp.ProcedureID)) AND ci.ServiceCenter = 'PDAR')
+  left join Ref_FeesProcedures rfp on (ci.ItemCode = (Convert(varchar(10),rfp.ProcedureID)) AND ci.ServiceCenter = 'PDAR')
 
-  left join IRIS_Production.dbo.Ref_SurgProcedure sp on (ci.ItemCode = (Convert(varchar(10), sp.ProcedureID)) AND ci.ServiceCenter = 'PSURG')
-  left join IRIS_Production.dbo.Sys_Parameters sys on (sys.Field = 'ChargeType' and sys.Flag = rfp.ChargeType)
+  left join Ref_SurgProcedure sp on (ci.ItemCode = (Convert(varchar(10), sp.ProcedureID)) AND ci.ServiceCenter = 'PSURG')
+  left join Sys_Parameters sys on (sys.Field = 'ChargeType' and sys.Flag = rfp.ChargeType)
 
   left join (
     SELECT max(ri.ts) as maxTs, max(cast(ri2.objectid as varchar(38))) as objectid, max(ri.StartInvoice) as StartInvoice, max(ri.EndInvoice) as EndInvoice
-    from IRIS_Production.dbo.ref_invoice ri
-    left join IRIS_Production.dbo.ref_invoice ri2 ON (ri.startdate = ri2.startdate AND ri.enddate = ri2.enddate)
+    from ref_invoice ri
+    left join ref_invoice ri2 ON (ri.startdate = ri2.startdate AND ri.enddate = ri2.enddate)
     GROUP BY ri.objectid
   ) ri ON (ci.InvoiceNumber >= ri.StartInvoice AND ci.InvoiceNumber <= ri.EndInvoice)
 

@@ -2,4 +2,7 @@
     <sorts>
         <sort column="invoiceDate" descending="true"/>
     </sorts>
+    <aggregates>
+        <aggregate column="total" type="SUM"/>
+    </aggregates>
 </customView>
