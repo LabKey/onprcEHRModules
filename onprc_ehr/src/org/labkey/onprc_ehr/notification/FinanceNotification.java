@@ -122,17 +122,17 @@ public class FinanceNotification extends AbstractEHRNotification
         QueryService.get().bindNamedParameters(sql, params);
 
         sql = new SQLFragment("SELECT sum(t.totalcost) as totalCost, count(*) as total, " +
-                "sum(CASE WHEN t.isExemption IS NULL THEN 0 ELSE 1 END) as totalExemptions, " +
-                "sum(CASE WHEN (t.categories IS NOT NULL AND t.categories LIKE '%Multiple%') THEN 1 ELSE 0 END) as totalMultipleAssignments, " +
-                "sum(CASE WHEN (t.unitcost IS NULL OR t.unitcost = '') THEN 1 ELSE 0 END) as totalLackingCost, " +
-                "sum(CASE WHEN (t.project IS NULL OR t.project = '') THEN 1 ELSE 0 END) as totalLackingProject, " +
-                "sum(CASE WHEN (t.creditAccount IS NULL OR t.creditAccount = '') THEN 1 ELSE 0 END) as totalLackingCreditAccount " +
+                "sum(COALESCE(CASE WHEN t.isExemption IS NULL THEN 0 ELSE 1 END, 0)) as totalExemptions, " +
+                "sum(COALESCE(CASE WHEN (t.categories IS NOT NULL AND t.categories LIKE '%Multiple%') THEN 1 ELSE 0 END, 0)) as totalMultipleAssignments, " +
+                "sum(COALESCE(CASE WHEN (t.unitcost IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCost, " +
+                "sum(COALESCE(CASE WHEN (t.project IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingProject, " +
+                "sum(COALESCE(CASE WHEN (t.creditAccount IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCreditAccount " +
                 "FROM " + sql.getSQL(), sql.getParams());
         QueryService.get().bindNamedParameters(sql, params);
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
         List<Map<String, Object>> rows = new ArrayList<>(ss.getMapCollection());
 
-        Integer total = (rows.size() > 0) ? (Integer)rows.get(0).get("total") : 0;
+        Long total = (rows.size() > 0) ? Long.parseLong(rows.get(0).get("total").toString()) : 0;
         Integer totalExemptions = (rows.size() > 0 && rows.get(0).get("totalExemptions") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;
         Integer totalMultipleAssignments = (rows.size() > 0 && rows.get(0).get("totalMultipleAssignments") != null) ? (Integer)rows.get(0).get("totalMultipleAssignments") : 0;
         Integer totalLackingCost = (rows.size() > 0 && rows.get(0).get("totalLackingCost") != null) ? (Integer)rows.get(0).get("totalLackingCost") : 0;
@@ -217,18 +217,18 @@ public class FinanceNotification extends AbstractEHRNotification
         QueryService.get().bindNamedParameters(sql, params);
 
         sql = new SQLFragment("SELECT sum(t.totalcost) as totalCost, count(*) as total, " +
-                "sum(CASE WHEN t.isExemption IS NULL THEN 0 ELSE 1 END) as totalExemptions, " +
-                "sum(CASE WHEN (t.unitcost IS NULL OR t.unitcost = '') THEN 1 ELSE 0 END) as totalLackingCost, " +
-                "sum(CASE WHEN (t.project IS NULL OR t.project = '') THEN 1 ELSE 0 END) as totalLackingProject, " +
-                (hasMatchesProjectCol ? "sum(CASE WHEN t.matchesProject = " + ti.getSqlDialect().getBooleanFALSE() + " THEN 1 ELSE 0 END) as totalMismatchingProject, " : "") +
-                (hasInvoicedItemIdCol ? "sum(CASE WHEN t.invoicedItemId IS NULL THEN 0 ELSE 1 END) as totalReversals, " : "") +
-                "sum(CASE WHEN (t.creditAccount IS NULL OR t.creditAccount = '') THEN 1 ELSE 0 END) as totalLackingCreditAccount " +
+                "sum(COALESCE(CASE WHEN t.isExemption IS NULL THEN 0 ELSE 1 END, 0)) as totalExemptions, " +
+                "sum(COALESCE(CASE WHEN (t.unitcost IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCost, " +
+                "sum(COALESCE(CASE WHEN (t.project IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingProject, " +
+                (hasMatchesProjectCol ? "sum(COALESCE(CASE WHEN t.matchesProject = " + ti.getSqlDialect().getBooleanFALSE() + " THEN 1 ELSE 0 END, 0)) as totalMismatchingProject, " : "") +
+                (hasInvoicedItemIdCol ? "sum(COALESCE(CASE WHEN t.invoicedItemId IS NULL THEN 0 ELSE 1 END, 0)) as totalReversals, " : "") +
+                "sum(COALESCE(CASE WHEN (t.creditAccount IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCreditAccount " +
                 "FROM " + sql.getSQL(), sql.getParams());
         QueryService.get().bindNamedParameters(sql, params);
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
         List<Map<String, Object>> rows = new ArrayList<>(ss.getMapCollection());
 
-        Integer total = (rows.size() > 0) ? (Integer)rows.get(0).get("total") : 0;
+        Long total = (rows.size() > 0) ? Long.parseLong(rows.get(0).get("total").toString()) : 0;
         Integer totalExemptions = (rows.size() > 0 && rows.get(0).get("totalExemptions") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;
         Integer totalLackingCost = (rows.size() > 0 && rows.get(0).get("totalLackingCost") != null) ? (Integer)rows.get(0).get("totalLackingCost") : 0;
         Integer totalLackingCreditAccount = (rows.size() > 0 && rows.get(0).get("totalLackingCreditAccount") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;

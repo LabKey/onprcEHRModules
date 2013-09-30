@@ -23,7 +23,7 @@ SELECT
   t.startDate,
   t.endDate,
 
-  truncate(round((cast(t.totalIdWithProblems as double) / t.totalIds) * 100.0, 2), 2) as pctWithProblem,
+  round((cast(t.totalIdWithProblems as double) / t.totalIds) * 100.0, 2) as pctWithProblem,
 
 FROM (
 

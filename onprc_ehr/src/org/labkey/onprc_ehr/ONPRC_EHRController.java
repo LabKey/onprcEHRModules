@@ -146,27 +146,29 @@ public class ONPRC_EHRController extends SpringActionController
             //for now, EHR is hard coded
             List<JSONObject> ehr = new ArrayList<>();
             Container ehrContainer = ContainerManager.getForPath("/ONPRC/EHR");
+            if (ehrContainer != null)
+            {
+                JSONObject json = new JSONObject();
+                json.put("name", "Main Page");
+                json.put("path", ehrContainer.getPath());
+                json.put("url", ehrContainer.getStartURL(getUser()).toString());
+                json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
+                ehr.add(json);
 
-            JSONObject json = new JSONObject();
-            json.put("name", "Main Page");
-            json.put("path", ehrContainer.getPath());
-            json.put("url", ehrContainer.getStartURL(getUser()).toString());
-            json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
-            ehr.add(json);
+                json = new JSONObject();
+                json.put("name", "Animal History");
+                json.put("path", ehrContainer.getPath());
+                json.put("url", new ActionURL("ehr", "animalHistory", ehrContainer).toString());
+                json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
+                ehr.add(json);
 
-            json = new JSONObject();
-            json.put("name", "Animal History");
-            json.put("path", ehrContainer.getPath());
-            json.put("url", new ActionURL("ehr", "animalHistory", ehrContainer).toString());
-            json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
-            ehr.add(json);
-
-            json = new JSONObject();
-            json.put("name", "Animal Search");
-            json.put("path", ehrContainer.getPath());
-            json.put("url", new ActionURL("ehr", "animalSearch", ehrContainer).toString());
-            json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
-            ehr.add(json);
+                json = new JSONObject();
+                json.put("name", "Animal Search");
+                json.put("path", ehrContainer.getPath());
+                json.put("url", new ActionURL("ehr", "animalSearch", ehrContainer).toString());
+                json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
+                ehr.add(json);
+            }
 
             resultProperties.put("ehr", ehr);
 

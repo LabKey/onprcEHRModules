@@ -870,12 +870,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void appendLatestHxCol(AbstractTableInfo ti)
     {
-        if (ti.getSqlDialect().isPostgreSQL())
-        {
-            _log.warn("Some ONPRC columns are not supported on postgres and will be skipped");
-            return;
-        }
-
         String hxName = "latestHx";
         if (ti.getColumn(hxName) != null)
             return;

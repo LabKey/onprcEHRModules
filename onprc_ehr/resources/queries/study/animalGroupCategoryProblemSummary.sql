@@ -19,7 +19,7 @@ SELECT
   t.totalIdsInCategory as totalIds,
   t.totalIdWithProblems,
   t.totalProblems,
-  truncate(round((cast(t.totalIdWithProblems as float) / t.totalIdsInCategory * 100.0), 2), 2) as pctWithProblem,
+  round((cast(t.totalIdWithProblems as float) / t.totalIdsInCategory * 100.0), 2) as pctWithProblem,
   t.startDate,
   t.endDate,
 

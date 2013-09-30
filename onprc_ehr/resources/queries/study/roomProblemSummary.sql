@@ -19,7 +19,7 @@ SELECT
   t.totalIdsInRoom as totalIds,
   t.totalIdWithProblems,
   t.totalProblems,
-  truncate(round((cast(t.totalIdWithProblems as double) / t.totalIdsInRoom) * 100.0, 2), 2) as pctWithProblem,
+  round((cast(t.totalIdWithProblems as double) / t.totalIdsInRoom) * 100.0, 2) as pctWithProblem,
 
   t.startDate,
   t.endDate,
