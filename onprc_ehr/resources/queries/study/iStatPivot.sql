@@ -29,6 +29,4 @@ WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 ) b
 
 GROUP BY b.id, b.date, b.runId, b.testId, b.method
-PIVOT results BY testId IN
-('Na','K','Cl','tCO2','BUN','Gluc','HCT','pH','pO2','SO2','pCO2','HCO3','BE','An Gap','Hg','Lact')
-
+PIVOT results BY testId IN (select testid from ehr_lookups.istat_tests t WHERE t.includeInPanel = true order by sort_order)

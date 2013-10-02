@@ -29,5 +29,4 @@ WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 ) b
 
 GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.collectionmethod, b.remark
-PIVOT results BY testId IN ('Color', 'App', 'SpecGrav', 'pH', 'Bili', 'Glu', 'Ket', 'Prot', 'Urobili', 'Bact', 'Blood', 'WBC', 'RBC', 'Epith', 'Crystals', 'Casts', 'Cast-1', 'Cast-2')
-
+PIVOT results BY testId IN (select testid from ehr_lookups.urinalysis_tests t WHERE t.includeInPanel = true order by sort_order)

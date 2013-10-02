@@ -33,7 +33,5 @@ WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 
 GROUP BY b.id, b.date, b.runId, b.remark, b.testId, b.method
 PIVOT results BY testId IN
-('WBC','LYMPH','NEUT','Bands','BAS','EO','MONO','HCT','RBC','Hg','MCV','MCHC','MCH','RETIC','PLT')
---sadly we need to display the columns in the specific order, so rather than keying off the DB we need to hard code
---(select testid from ehr_lookups.hematology_tests t WHERE t.includeInPanel = true)
+(select testid from ehr_lookups.hematology_tests t WHERE t.includeInPanel = true)
 
