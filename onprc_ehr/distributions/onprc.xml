@@ -34,6 +34,7 @@
                 <include name="LDK.module" />
                 <include name="ONPRC_EHR.module" />
                 <include name="ONPRC_Reports.module" />
+                <include name="sla.module" />
                 <include name="SequenceAnalysis.module" />
                 <include name="Viral_Load_Assay.module" />
             </fileset>
