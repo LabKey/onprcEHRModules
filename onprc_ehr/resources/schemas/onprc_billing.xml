@@ -5,7 +5,7 @@
         <ns:columns>
             <ns:column columnName="rowId"/>
             <ns:column columnName="chargeId"/>
-            <ns:column columnName="unitcost">
+            <ns:column columnName="unitCost">
                 <ns:columnTitle>Unit Cost</ns:columnTitle>
             </ns:column>
             <ns:column columnName="startDate">
@@ -49,7 +49,7 @@
             <ns:column columnName="rowId"/>
             <ns:column columnName="project"/>
             <ns:column columnName="chargeId"/>
-            <ns:column columnName="unitcost">
+            <ns:column columnName="unitCost">
                 <ns:columnTitle>Unit Cost</ns:columnTitle>
             </ns:column>
             <ns:column columnName="startDate">
@@ -205,7 +205,7 @@
             <ns:column columnName="quantity">
                 <ns:columnTitle>Quantity</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="unitcost">
+            <ns:column columnName="unitCost">
                 <ns:columnTitle>Unit Cost</ns:columnTitle>
                 <ns:formatString>$###,##0.00</ns:formatString>
             </ns:column>
@@ -298,17 +298,21 @@
                 <ns:columnTitle>Id</ns:columnTitle>
             </ns:column>
             <ns:column columnName="date">
-                <ns:columnTitle>Date of Charge</ns:columnTitle>
+                <ns:columnTitle>Date</ns:columnTitle>
             </ns:column>
             <ns:column columnName="project"/>
             <ns:column columnName="account">
                 <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="chargeId"/>
+            <ns:column columnName="item">
+                <ns:columnTitle>Item</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
             <ns:column columnName="quantity">
                 <ns:columnTitle>Quantity</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="unitcost">
+            <ns:column columnName="unitCost">
                 <ns:columnTitle>Unit Cost</ns:columnTitle>
                 <ns:formatString>$###,##0.00</ns:formatString>
                 <ns:isHidden>true</ns:isHidden>
@@ -322,7 +326,7 @@
                 <ns:columnTitle>Comment</ns:columnTitle>
             </ns:column>
             <ns:column columnName="billingDate">
-                <ns:columnTitle>Date Charge Created</ns:columnTitle>
+                <ns:columnTitle>Date Charge Entered</ns:columnTitle>
                 <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="category">

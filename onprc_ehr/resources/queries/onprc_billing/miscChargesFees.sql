@@ -4,13 +4,15 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 
-PARAMETERS(EndDate TIMESTAMP)
+PARAMETERS(StartDate TIMESTAMP, EndDate TIMESTAMP)
 
 SELECT
   mc.Id,
   mc.date,
+  mc.billingDate,
   mc.project,
   mc.chargeId,
+  mc.item,
   mc.quantity,
   mc.unitCost,
   mc.totalCost,
@@ -23,4 +25,5 @@ SELECT
 FROM onprc_billing.miscCharges mc
 
 --we want to capture any unclaimed items from this table prior to the end of the billing period
-WHERE mc.dateOnly <= CAST(EndDate as date) AND mc.invoiceId IS NULL
+--for now, we
+WHERE cast(mc.billingDate as date) >= CAST(StartDate as date) AND cast(mc.billingDate as date) <= CAST(EndDate as date)

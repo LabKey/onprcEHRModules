@@ -371,3 +371,15 @@ EHR.reports.reproSummary = function(panel, tab){
         }]
     });
 };
+
+
+EHR.reports.delivery = function(panel, tab, viewName){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    tab.add({
+        html: 'This tab was essentially redundant with the Offspring tab (to the right).  The only difference is that the Offspring tab also includes genetic offspring (lacking the observed mother), and that report also included the outcome of the birth.  Please use the other report, and this tab will be removed after Oct 17th.',
+        border: false,
+        style: 'padding-bottom: 20px;'
+    });
+};

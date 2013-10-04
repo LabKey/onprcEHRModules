@@ -2,10 +2,11 @@
 
     Ext4.onReady(function(){
         var webpart = <%=webpartContext%>;
-
         var div = Ext4.get(webpart.wrapperDivId).parent('div');
         if (div)
             div.setStyle('padding', '0px');
+        else
+            div = Ext4.get(webpart.wrapperDivId);  //allow this to work in non-menu contexts
 
         Ext4.QuickTips.init();
 
@@ -24,19 +25,36 @@
                     cls: 'labkey-iconpanel',
                     tpl: [
                         '<tpl for=".">',
-                            '<div ',
-                            '<tpl if="!canRead">data-qtip="You do not have permission to view this page"</tpl>',
-                            'style="width: 300px;" class="thumb-wrap thumb-wrap-side">',
-                            '<tpl if="url"><a href="{url}"></tpl>',
-                                '<span style="font-weight: bold" class="thumb-label-side">{name:htmlEncode}</span>',
-                            '<tpl if="url"></a></tpl>',
-                            '</div>',
+                            '<tpl if="publicUrl">',
+                                '<div style="width: 300px;font-weight: bold;" class="thumb-wrap thumb-wrap-side">',
+                                    '<span style="float: left;position: relative;">{name:htmlEncode}:</span>',
+                                    '<span>',
+                                    '<a ',
+                                        '<tpl if="publicUrl">href="{publicUrl}"</tpl>',
+                                        '<tpl if="!canReadPublic"> data-qtip="You do not have permission to view this page"</tpl>',
+                                    '> [Public] </a>',
+
+                                    '<a ',
+                                    '<tpl if="url">href="{url}"</tpl>',
+                                    '<tpl if="!canRead"> data-qtip="You do not have permission to view this page"</tpl>',
+                                    '> [Private] </a>',
+                                    '</span>',
+                                '</div>',
+                            '<tpl else>',
+                                '<div ',
+                                '<tpl if="!canRead">data-qtip="You do not have permission to view this page"</tpl>',
+                                'style="width: 300px;" class="thumb-wrap thumb-wrap-side">',
+                                '<tpl if="url"><a href="{url}"></tpl>',
+                                    '<span style="font-weight: bold" class="thumb-label-side">{name:htmlEncode}</span>',
+                                '<tpl if="url"></a></tpl>',
+                                '</div>',
+                            '</tpl>',
                         '</tpl>',
                         '<div class="x-clear"></div>'
                     ],
                     store: {
                         proxy: 'memory',
-                        fields: ['name', 'url', 'canRead']
+                        fields: ['name', 'url', 'canRead', 'publicUrl', 'canReadPublic']
                     }
                 }],
                 border: true,
@@ -96,7 +114,9 @@
                             toAdd.push(LDK.StoreUtils.createModelInstance(section.store, {
                                 name: item.name,
                                 url: item.canRead ? item.url : null,
-                                canRead: item.canRead
+                                canRead: item.canRead,
+                                publicUrl: item.publicContainer ? item.publicContainer.url : null,
+                                canReadPublic: item.publicContainer ? item.publicContainer.canRead : false
                             }));
                         }, this);
 

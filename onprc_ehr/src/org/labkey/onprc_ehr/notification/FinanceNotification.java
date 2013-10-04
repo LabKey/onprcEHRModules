@@ -112,6 +112,7 @@ public class FinanceNotification extends AbstractEHRNotification
         simpleAlert(c, u , msg, "onprc_billing", "invalidChargeRateEntries", " charge rate records with invalid or overlapping intervals");
         simpleAlert(c, u , msg, "onprc_billing", "invalidChargeRateExemptionEntries", " charge rate exemptions with invalid or overlapping intervals");
         simpleAlert(c, u , msg, "onprc_billing", "invalidCreditAccountEntries", " credit account records with invalid or overlapping intervals");
+        simpleAlert(c, u , msg, "onprc_billing", "duplicateChargeableItems", " active chargeable item records with duplicate names or item codes");
 
         return msg.toString();
     }
@@ -129,8 +130,13 @@ public class FinanceNotification extends AbstractEHRNotification
         start.setTime(lastInvoiceEnd);
         start.add(Calendar.DATE, 1);
 
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(new Date());
+        endDate.add(Calendar.DATE, 1);
+
         Long numDays = ((DateUtils.round(new Date(), Calendar.DATE).getTime() - start.getTimeInMillis()) / DateUtils.MILLIS_PER_DAY) + 1;
         params.put("StartDate", start.getTime());
+        params.put("EndDate", endDate.getTime());
         params.put("NumDays", numDays.intValue());
 
         SQLFragment sql = ti.getFromSQL("t");
@@ -139,8 +145,9 @@ public class FinanceNotification extends AbstractEHRNotification
         sql = new SQLFragment("SELECT sum(t.totalcost) as totalCost, count(*) as total, " +
                 "sum(COALESCE(CASE WHEN t.isExemption IS NULL THEN 0 ELSE 1 END, 0)) as totalExemptions, " +
                 "sum(COALESCE(CASE WHEN (t.categories IS NOT NULL AND t.categories LIKE '%Multiple%') THEN 1 ELSE 0 END, 0)) as totalMultipleAssignments, " +
-                "sum(COALESCE(CASE WHEN (t.unitcost IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCost, " +
+                "sum(COALESCE(CASE WHEN (t.lacksRate IS NOT NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCost, " +
                 "sum(COALESCE(CASE WHEN (t.project IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingProject, " +
+                "sum(COALESCE(CASE WHEN (t.isMiscCharge = 'Y') THEN 1 ELSE 0 END, 0)) as totalMiscCharge, " +
                 "sum(COALESCE(CASE WHEN (t.creditAccount IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCreditAccount " +
                 "FROM " + sql.getSQL(), sql.getParams());
         QueryService.get().bindNamedParameters(sql, params);
@@ -149,6 +156,7 @@ public class FinanceNotification extends AbstractEHRNotification
 
         Long total = (rows.size() > 0) ? Long.parseLong(rows.get(0).get("total").toString()) : 0;
         Integer totalExemptions = (rows.size() > 0 && rows.get(0).get("totalExemptions") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;
+        Integer totalMiscCharges = (rows.size() > 0 && rows.get(0).get("totalMiscCharge") != null) ? (Integer)rows.get(0).get("totalMiscCharge") : 0;
         Integer totalMultipleAssignments = (rows.size() > 0 && rows.get(0).get("totalMultipleAssignments") != null) ? (Integer)rows.get(0).get("totalMultipleAssignments") : 0;
         Integer totalLackingCost = (rows.size() > 0 && rows.get(0).get("totalLackingCost") != null) ? (Integer)rows.get(0).get("totalLackingCost") : 0;
         Integer totalLackingCreditAccount = (rows.size() > 0 && rows.get(0).get("totalLackingCreditAccount") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;
@@ -158,7 +166,7 @@ public class FinanceNotification extends AbstractEHRNotification
 
         msg.append("<b>Per Diems:</b><p>");
         msg.append("There have been " + total + " items since the last invoice date of " + _dateFormat.format(lastInvoiceEnd) + ", for a total of " + _dollarFormat.format(totalCost) + ".");
-        String url = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, "perDiemRates", null) + "&query.param.StartDate=" + _dateFormat.format(start.getTime()) + "&query.param.NumDays=" + numDays;
+        String url = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, "perDiemRates", null) + "&query.param.StartDate=" + _dateFormat.format(start.getTime()) + "&query.param.EndDate=" + _dateFormat.format(endDate.getTime()) + "&query.param.NumDays=" + numDays;
 
         StringBuilder specialMessages = new StringBuilder();
         if (totalLackingProject > 0)
@@ -166,7 +174,9 @@ public class FinanceNotification extends AbstractEHRNotification
         if (totalExemptions > 0)
             specialMessages.append("- <a href='" + url + "&query.isExemption~isnonblank'>There are " + totalExemptions + " items using special fees.</a><br>");
         if (totalLackingCost > 0)
-            specialMessages.append("- <a href='" + url + "&query.unitcost~isblank'>There are " + totalLackingCost + " items without a unit cost.  This probably means there is an issue with the rate or fee structure.</a><br>");
+            specialMessages.append("- <a href='" + url + "&query.lacksRate~isnonblank'>There are " + totalLackingCost + " items without a unit cost.  This probably means there is an issue with the rate or fee structure.</a><br>");
+        if (totalMiscCharges > 0)
+            specialMessages.append("- <a href='" + url + "&query.isMiscCharge~eq=Y'>There are " + totalMiscCharges + " items that are either adjustments or charges entered after the normal billing period.</a><br>");
         if (totalLackingCreditAccount > 0)
             specialMessages.append("- <a href='" + url + "&query.creditAccount~isblank'>There are " + totalLackingCreditAccount + " items without a credit alias.  This probably means there is an issue with the rate or fee structure.</a><br>");
         if (totalMultipleAssignments > 0)
@@ -227,16 +237,18 @@ public class FinanceNotification extends AbstractEHRNotification
 
         boolean hasMatchesProjectCol = ti.getColumn(FieldKey.fromString("matchesProject")) != null;
         boolean hasInvoicedItemIdCol = ti.getColumn(FieldKey.fromString("invoicedItemId")) != null;
+        boolean hasMiscChargeCol = ti.getColumn(FieldKey.fromString("isMiscCharge")) != null;
 
         SQLFragment sql = ti.getFromSQL("t");
         QueryService.get().bindNamedParameters(sql, params);
 
         sql = new SQLFragment("SELECT sum(t.totalcost) as totalCost, count(*) as total, " +
                 "sum(COALESCE(CASE WHEN t.isExemption IS NULL THEN 0 ELSE 1 END, 0)) as totalExemptions, " +
-                "sum(COALESCE(CASE WHEN (t.unitcost IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCost, " +
+                "sum(COALESCE(CASE WHEN (t.lacksRate IS NOT NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCost, " +
                 "sum(COALESCE(CASE WHEN (t.project IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingProject, " +
                 (hasMatchesProjectCol ? "sum(COALESCE(CASE WHEN t.matchesProject = " + ti.getSqlDialect().getBooleanFALSE() + " THEN 1 ELSE 0 END, 0)) as totalMismatchingProject, " : "") +
                 (hasInvoicedItemIdCol ? "sum(COALESCE(CASE WHEN t.invoicedItemId IS NULL THEN 0 ELSE 1 END, 0)) as totalReversals, " : "") +
+                (hasMiscChargeCol ? "sum(COALESCE(CASE WHEN (t.isMiscCharge = 'Y') THEN 1 ELSE 0 END, 0)) as totalMiscCharge, " : "") +
                 "sum(COALESCE(CASE WHEN (t.creditAccount IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCreditAccount " +
                 "FROM " + sql.getSQL(), sql.getParams());
         QueryService.get().bindNamedParameters(sql, params);
@@ -263,6 +275,12 @@ public class FinanceNotification extends AbstractEHRNotification
             totalReversals = (rows.size() > 0 && rows.get(0).get("totalReversals") != null) ? (Integer)rows.get(0).get("totalReversals") : 0;
         }
 
+        Integer totalMiscCharges = 0;
+        if (hasMiscChargeCol)
+        {
+            totalMiscCharges = (rows.size() > 0 && rows.get(0).get("totalMiscCharge") != null) ? (Integer)rows.get(0).get("totalMiscCharge") : 0;
+        }
+
         msg.append("<b>" + title + ":</b><p>");
         msg.append("There have been " + total + " items since the last invoice date of " + _dateFormat.format(lastInvoiceEnd) + ", for a total of " + _dollarFormat.format(totalCost) + ".");
         String url = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, queryName, null) + "&query.param.StartDate=" + _dateFormat.format(start.getTime()) + "&query.param.EndDate=" + _dateFormat.format(endDate.getTime());
@@ -273,7 +291,9 @@ public class FinanceNotification extends AbstractEHRNotification
         if (totalExemptions > 0)
             specialMessages.append("- <a href='" + url + "&query.isExemption~isnonblank'>There are " + totalExemptions + " items using special fees.</a><br>");
         if (totalLackingCost > 0)
-            specialMessages.append("- <a href='" + url + "&query.unitcost~isblank'>There are " + totalLackingCost + " items without a unit cost.  This probably means there is an issue with the rate or fee structure.</a><br>");
+            specialMessages.append("- <a href='" + url + "&query.lacksRate~isnonblank'>There are " + totalLackingCost + " items without a unit cost.  This probably means there is an issue with the rate or fee structure.</a><br>");
+        if (totalMiscCharges > 0)
+            specialMessages.append("- <a href='" + url + "&query.isMiscCharge~eq=Y'>There are " + totalMiscCharges + " items that are either adjustments or charges entered after the normal billing period.</a><br>");
         if (totalLackingCreditAccount > 0)
             specialMessages.append("- <a href='" + url + "&query.creditAccount~isblank'>There are " + totalLackingCreditAccount + " items without a credit alias.  This probably means there is an issue with the rate or fee structure.</a><br>");
         if (totalMismatchingProject > 0)
@@ -347,11 +367,6 @@ public class FinanceNotification extends AbstractEHRNotification
             msg.append("<a href='" + getExecuteQueryUrl(c, schemaName, queryName, null) + "'>Click here to view them</a>");
             msg.append("<hr>");
         }
-    }
-
-    private void duplicateChargeableItems()
-    {
-
     }
 
     private Date getLastInvoiceDate(Container c, User u)

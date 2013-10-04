@@ -22,7 +22,7 @@
 
             getItems: function(){
                 var items = [{
-                    html: 'This page provides reports to be printed by room or area.  After picking the location(s) using the drop downs below, hit the \'Print\' buttons below to print any of the reports',
+                    html: 'This page provides reports to be printed by room or area.  After picking the location(s) using the drop downs below, hit the \'Print\' buttons below to print any of the reports<br><br><b>NOTE: For most reports, leave rooms/areas blank to print all.</b>',
                     style: 'padding-bottom: 20px;'
                 },{
                     xtype: 'ehr-areafield',
@@ -82,20 +82,45 @@
                         style: 'margin-left: 5px;',
                         text: 'Print Version',
                         border: true,
-                        handler: function(btn){
-                            var panel = btn.up('#sheetPanel');
-                            var params = panel.getParams();
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
+                            var params = panel.getParams(true, true);
                             if (!params)
                                 return;
+
+                            if (params.Rooms)
+                                params.Rooms = params.Rooms.join(';');
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveClinicalCases';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            window.open(url);
-                            //window.location = url;
-                        }
+
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
@@ -129,11 +154,14 @@
                         style: 'margin-left: 5px;',
                         text: 'Print Version',
                         border: true,
-                        handler: function(btn){
-                            var panel = btn.up('#sheetPanel');
-                            var params = panel.getParams();
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
+                            var params = panel.getParams(true, true);
                             if (!params)
                                 return;
+
+                            if (params.Rooms)
+                                params.Rooms = params.Rooms.join(';');
 
                             var date = panel.down('#medicationDateField').getValue();
                             if (!date){
@@ -155,9 +183,30 @@
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            window.open(url);
-                            //window.location = url;
-                        }
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
@@ -191,11 +240,14 @@
                         style: 'margin-left: 5px;',
                         text: 'Print Version',
                         border: true,
-                        handler: function(btn){
-                            var panel = btn.up('#sheetPanel');
-                            var params = panel.getParams();
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
+                            var params = panel.getParams(true, true);
                             if (!params)
                                 return;
+
+                            if (params.Rooms)
+                                params.Rooms = params.Rooms.join(';');
 
                             var date = panel.down('#dietDateField').getValue();
                             if (!date){
@@ -217,9 +269,30 @@
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            window.open(url);
-                            //window.location = url;
-                        }
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
@@ -244,20 +317,44 @@
                         style: 'margin-left: 5px;',
                         text: 'Print Version',
                         border: true,
-                        handler: function(btn){
-                            var panel = btn.up('#sheetPanel');
-                            var params = panel.getParams(true);
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
+                            var params = panel.getParams(true, true);
                             if (!params)
                                 return;
+
+                            if (params.Rooms)
+                                params.Rooms = params.Rooms.join(';');
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveSurgicalCases';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            window.open(url);
-                            //window.location = url;
-                        }
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
@@ -291,11 +388,14 @@
                         style: 'margin-left: 5px;',
                         text: 'Print Version',
                         border: true,
-                        handler: function(btn){
-                            var panel = btn.up('#sheetPanel');
-                            var params = panel.getParams();
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
+                            var params = panel.getParams(true, true);
                             if (!params)
                                 return;
+
+                            if (params.Rooms)
+                                params.Rooms = params.Rooms.join(';');
 
                             var date = panel.down('#surgicalMedicationDateField').getValue();
                             if (!date){
@@ -317,9 +417,30 @@
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            window.open(url);
-                            //window.location = url;
-                        }
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
@@ -344,8 +465,8 @@
                         style: 'margin-left: 5px;',
                         text: 'Print Version',
                         border: true,
-                        handler: function(btn){
-                            var panel = btn.up('#sheetPanel');
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
                             var params = panel.getParams();
                             if (!params)
                                 return;
@@ -355,9 +476,30 @@
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'WeightSheets';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            window.open(url);
-                            //window.location = url;
-                        }
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
                     },{
                         html: ''
                     },{
@@ -365,17 +507,23 @@
                         style: 'padding-top: 10px;',
                         colspan: 4
                     },{
-                        html: '<i>Room Utilization / Layout:</i>'
+                        html: '<i>Room Utilization / Layout:</i>',
+                        width: 200
                     },{
-                        style: 'padding-left: 5px;',
-                        html: ''
+                        style: 'margin-left: 5px;',
+                        xtype: 'checkbox',
+                        fieldLabel: 'Invert C/D Rows?',
+                        labelWidth: 140,
+                        itemId: 'doInvertRows',
+                        checked: false
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
                         text: 'Print Version',
+                        itemId: 'roomBtn',
                         border: true,
-                        handler: function(btn){
-                            var panel = btn.up('#sheetPanel');
+                        getUrlParams: function(){
+                            var panel = this.up('#sheetPanel');
                             var area = panel.down('#areaField').getValue();
                             var rooms = panel.down('#roomField').getValue();
                             if (Ext4.isEmpty(area) &&  Ext4.isEmpty(rooms)){
@@ -384,16 +532,39 @@
                             }
 
                             var params = {
-                                doRowInversion: 1
+                                doRowInversion: panel.down('#doInvertRows').getValue() ? 1 : 0
                             };
                             if (area)
                                 params.area = area;
                             if (rooms)
                                 params.rooms = rooms;
 
-                            var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
-                            window.open(url);
-                        }
+                            return params;
+                        },
+                        menu: [{
+                            text: 'Print With Animal Details',
+                            handler: function(menu){
+                                var btn = menu.up('#roomBtn');
+                                var params = btn.getUrlParams();
+                                if (!params)
+                                    return;
+                                params.showAnimalDetails = true;
+                                var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print Without Animal Details',
+                            handler: function(menu){
+                                var btn = menu.up('#roomBtn');
+                                var params = btn.getUrlParams();
+                                if (!params)
+                                    return;
+
+                                params.showAnimalDetails = false;
+                                var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
+                                window.open(url);
+                            }
+                        }]
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',
@@ -418,17 +589,17 @@
                 return items;
             },
 
-            getParams: function(supressErrors){
+            getParams: function(supressErrors, skipRoomsIfAllSelected){
                 var params = {
                     SessionId: LABKEY.Security.currentUser.sessionid,
                     HostName: location.hostname
-                    //'rs:Format': 'PDF'
                 };
 
                 var areas = this.down('#areaField').getValue() || [];
                 areas = Ext4.isArray(areas) ? areas : [areas];
 
-                var rooms = this.down('#roomField').getValue() || [];
+                var roomField = this.down('#roomField');
+                var rooms = roomField.getValue() || [];
                 rooms = Ext4.isArray(rooms) ? rooms: [rooms];
 
                 if (!rooms.length && !supressErrors){
@@ -438,8 +609,11 @@
 
                 //NOTE: we now include both area + rooms if supplied.  we reply on the combos to be smart about turning
                 //off area if the user picked a set of rooms that differers from the definition
+                //if all rooms are selected, treat this the same as if no rooms are selected
                 if (rooms.length){
-                    params.Rooms = rooms;
+                    if (!skipRoomsIfAllSelected || rooms.length < roomField.store.getCount()){
+                        params.Rooms = rooms;
+                    }
                 }
 
                 //NOTE: this is always omitted, since the UI should never allow an area w/o a room and it's easier for SSRS to handle a single param

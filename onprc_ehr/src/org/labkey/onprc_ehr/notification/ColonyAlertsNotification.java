@@ -242,12 +242,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void roomsWithMixedViralStatus(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
+        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "Containment", CompareType.DOES_NOT_CONTAIN);
+
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("area,room"));
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses:</b><p></p>\n");
-            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p></p>\n");
+            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding containment areas:</b><p></p>\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p/>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()

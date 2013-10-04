@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+SELECT * FROM (
 SELECT 
 	cast(dx.AnimalID as nvarchar(4000)) as Id,
 	dx.date,
@@ -56,7 +57,7 @@ SELECT
 FROM Cln_Dx dx
 left join Af_Case c ON (dx.CaseID = c.CaseID)
 left join  Ref_Technicians rt on (dx.Technician = rt.ID)
-JOIN Cln_DxRemarks cln0 ON (dx.DiagnosisID = cln0.DiagnosisID AND cln0.SequenceNo = 0)
+left JOIN Cln_DxRemarks cln0 ON (dx.DiagnosisID = cln0.DiagnosisID AND cln0.SequenceNo = 0)
 LEFT JOIN Cln_DxRemarks cln1 ON (dx.DiagnosisID = cln1.DiagnosisID AND cln1.SequenceNo = 1)
 LEFT JOIN Cln_DxRemarks cln2 ON (dx.DiagnosisID = cln2.DiagnosisID AND cln2.SequenceNo = 2)
 LEFT JOIN Cln_DxRemarks cln3 ON (dx.DiagnosisID = cln3.DiagnosisID AND cln3.SequenceNo = 3)
@@ -65,3 +66,5 @@ LEFT JOIN Cln_DxRemarks cln5 ON (dx.DiagnosisID = cln5.DiagnosisID AND cln5.Sequ
 LEFT JOIN Cln_DxRemarks cln6 ON (dx.DiagnosisID = cln6.DiagnosisID AND cln6.SequenceNo = 6)
 
 WHERE dx.DiagnosisID IN (select diagnosisid from Cln_DxRemarks r WHERE r.ts > ?)
+) t
+WHERE t.remark is not null and t.remark != ''

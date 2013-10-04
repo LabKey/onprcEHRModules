@@ -35,7 +35,8 @@
                         var target = Ext4.get(webpart.wrapperDivId).createChild({tag: 'div', cls: (idx+1 < results.rows.length ? 'page-break' : null)});
 
                         Ext4.create('ONPRC.panel.RoomLayoutPanel', {
-                            doRowInversion: LABKEY.ActionURL.getParameter('doRowInversion'),
+                            showAnimalDetails: Ext4.data.Types.BOOLEAN.convert(LABKEY.ActionURL.getParameter('showAnimalDetails')),
+                            doRowInversion: Ext4.data.Types.BOOLEAN.convert(LABKEY.ActionURL.getParameter('doRowInversion')),
                             printMode: 1,
                             filterArray: [LABKEY.Filter.create('room', r.room)]
                         }).render(target.id);

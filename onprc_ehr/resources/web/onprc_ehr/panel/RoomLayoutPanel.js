@@ -6,10 +6,12 @@
 Ext4.define('ONPRC.panel.RoomLayoutPanel', {
     extend: 'Ext.panel.Panel',
     printMode: false,
+    showAnimalDetails: true,
 
     initComponent: function(){
         Ext4.apply(this, {
             border: false,
+            itemId: 'roomLayoutPanel',
             defaults: {
                 border: false
             },
@@ -62,6 +64,12 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
             failure: LDK.Utils.getErrorCallback(),
             success: function(results){
                 this.animalResults = results;
+
+                this.animalMap = {};
+                Ext4.Array.forEach(results.rows, function(row){
+                    var sr = new LDK.SelectRowsRow(row);
+                    this.animalMap[sr.getValue('Id')] = sr;
+                }, this);
             }
         });
 
@@ -121,8 +129,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
             }, this);
 
             var rooms = Ext4.Object.getKeys(roomMap).sort();
-            var dividerWidth = 18;
-            var height = 95;
+            var dividerWidth = 8;
+            var height = 115;
             var cageWidth = 65;
             var hasCages = false;
 
@@ -172,10 +180,19 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                             }
 
                             var animalItems = [];
-                            if (animals.length){
+                            if (animals.length > 4){
+                                animalItems.push({
+                                    html: '<span style="font-size: 10px;">' + animals.length + ' animals</span>',
+                                    border: false,
+                                    bodyStyle: {
+                                        'background-color': 'transparent'
+                                    }
+                                });
+                            }
+                            else if (animals.length){
                                 Ext4.each(animals, function(animal){
                                     animalItems.push({
-                                        html: '<a>' + animal + '</a>',
+                                        html: '<span style="font-size: 9px;"><a>' + animal + '</a>' + (this.animalMap[animal] ? ': ' + Ext4.util.Format.round(this.animalMap[animal].getValue('Id/mostRecentWeight/mostRecentWeight'), 1) : '') + '</span>',
                                         animal: animal,
                                         border: false,
                                         bodyStyle: {
@@ -185,7 +202,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             scope: this,
                                             afterrender: function(cmp){
                                                 cmp.getEl().on('click', function(el){
-                                                    EHR.Utils.showClinicalHistory(null, cmp.animal, null);
+                                                    EHR.window.ClinicalHistoryWindow.showClinicalHistory(null, cmp.animal, null);
                                                 }, this);
                                             }
                                         }
@@ -268,12 +285,12 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     'background-color': bgColor
                                 },
                                 width: cageWidth,
-                                height: height,
+                                minHeight: height,
                                 defaults: {
                                     border: false
                                 },
                                 items: [{
-                                    html: '<a>' + ri + colIdx + '</a>' + (row.getValue('cage_type/sqft') ? '<br>(' + (row.getValue('cage_type/sqft') / row.getValue('cage_type/cageslots'))+ suffix + ')' : ''),
+                                    html: '<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (row.getValue('cage_type/sqft') ? ' (' + (row.getValue('cage_type/sqft') / row.getValue('cage_type/cageslots'))+ suffix + ')' : '') + '</span>',
                                     bodyStyle: {
                                         'background-color': 'transparent'
                                     },
@@ -302,7 +319,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 var divider = row.getDisplayValue('divider');
                                 var dividerColor = row.getValue('divider/bgcolor');
                                 var dividerBorderStyle = row.getValue('divider/border_style') || 'none';
-                                var dividerText = row.getValue('divider/short_description');
+                                var dividerText = ''; //row.getValue('divider/short_description');
 
                                 rowItems.push({
                                     cageRec: row,
@@ -320,7 +337,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         'background-color': dividerColor
                                     },
                                     width: divider != 'Solid Divider' ? dividerWidth : null,
-                                    height: height,
+                                    minHeight: height,
                                     listeners: {
                                         scope: this,
                                         afterrender: Ext4.Function.pass(function(row, panel, dividerText, cmp){
@@ -432,7 +449,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                     }, cfg]
                 };
 
-                if (totalAnimals){
+                if (this.showAnimalDetails && totalAnimals){
                     panelCfg.items.push(animalPanel);
                 }
 
@@ -491,13 +508,38 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
         return {
             xtype: 'button',
             text: 'Print Version',
+            itemId: 'roomBtn',
             border: true,
-            scope: this,
-            handler: function(btn){
-                var params = {};
-                params.doRowInversion = !!this.doRowInversion;
+            menu: [{
+                text: 'Print With Animal Details',
+                handler: function(menu){
+                    var btn = menu.up('#roomBtn');
+                    var params = btn.getUrlParams();
+                    if (!params)
+                        return;
+                    params.showAnimalDetails = true;
+                    var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
+                    window.open(url);
+                }
+            },{
+                text: 'Print Without Animal Details',
+                handler: function(menu){
+                    var btn = menu.up('#roomBtn');
+                    var params = btn.getUrlParams();
+                    if (!params)
+                        return;
 
-                Ext4.Array.forEach(this.filterArray, function(filter){
+                    params.showAnimalDetails = false;
+                    var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
+                    window.open(url);
+                }
+            }],
+            getUrlParams: function(){
+                var panel = this.up('#roomLayoutPanel');
+                var params = {};
+                params.doRowInversion = !!panel.doRowInversion;
+
+                Ext4.Array.forEach(panel.filterArray, function(filter){
                     //we only support room/area on the URL
                     if (filter.getURLParameterName().match(/query.room\/area~/) && filter.getURLParameterValue()){
                         params.area = filter.getURLParameterValue().split(';')
@@ -507,7 +549,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                     }
                 }, this);
 
-                window.open(LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params));
+                return params;
             }
         }
     }

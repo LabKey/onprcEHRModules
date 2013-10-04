@@ -1,8 +1,8 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="miscChargesFeeRates" tableDbType="TABLE">
-                <tableTitle>Other Charges</tableTitle>
+            <table tableName="duplicateChargeableItems" tableDbType="TABLE">
+                <tableTitle>Duplicate Chargeable Items</tableTitle>
                 <columns>
 
                 </columns>

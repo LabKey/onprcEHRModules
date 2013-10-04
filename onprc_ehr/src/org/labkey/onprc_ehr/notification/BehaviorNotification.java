@@ -236,7 +236,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             }
         });
 
-        msg.append("</table><p>");
+        msg.append("</table>");
         msg.append("<hr>");
 
         toSave.put(colonyHousingSummary, newValueMap.toString());

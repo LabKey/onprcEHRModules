@@ -25,7 +25,7 @@ select
   afc.ChargeType as chargeType,
   (select s.value from sys_parameters s where afc.ChargeType = s.Flag and s.Field = 'ChargeType') as category,
   afc.ProcedureID as procedureID,
-  rfp.ProcedureName as description,
+  rfp.ProcedureName as item,
   (select bci.rowId from Labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeID,
   afc.ProcedureCount as quantity,
   afc.Amount as unitCost,
@@ -86,7 +86,7 @@ left join (
 ) ri ON (afc.InvoiceNo >= ri.StartInvoice AND afc.InvoiceNo <= ri.EndInvoice)
 
 where afc.ChargeType not in (4, 10) and afc2.AccountNo is not null and afc2.AccountNo <> ''
-and afc.ChargeDate >= '1/1/2008' and afc2.ChargeDate >= '7/1/2012' and afc2.ChargeDate < '8/1/2013'
+and afc.ChargeDate >= '1/1/2008' and afc2.ChargeDate >= '7/1/2012'
 and (afc.ts > ? or afc2.ts > ? or rpi.ts > ?  or rfp.ts > ? or ri.maxTs > ?)
 
 UNION ALL
@@ -128,7 +128,6 @@ left join (
 where afc.ChargeType in (4, 10) and afc2.AccountNo is not null and afc2.AccountNo <> ''
 and afc.ChargeDate >= '1/1/2008'
 and afc2.ChargeDate >= '7/1/2012'
-and afc2.ChargeDate < '8/1/2013'
 and (afc.ts > ? or afc2.ts > ? or rpi.ts > ?  or rsp.ts > ? or ri.maxTs > ?)
 
 UNION ALL

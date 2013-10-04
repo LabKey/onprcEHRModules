@@ -99,7 +99,7 @@ SELECT
       WHEN  cln.panelflag = 15 THEN 'Basic Chemistry Panel in-house'
       WHEN cln.panelflag = 13 THEN  'Comprehensive Chemistry Panel in-house'
       WHEN cln.panelflag = 14 THEN  'Lipid panel in-house: Cholesterol, Triglyceride, HDL, LDL'
-      WHEN cln.panelflag = 16 THEN  ' High-density lipoprotein & Low-density lipoprotein (HDL & LDL)'
+      WHEN cln.panelflag = 16 THEN  'High-density lipoprotein & Low-density lipoprotein (HDL & LDL)'
       WHEN cln.panelflag = 17 THEN 'Albumin'
       WHEN cln.panelflag = 18 THEN 'Amylase'
       WHEN cln.panelflag = 16 THEN 'Lipase'

@@ -20,7 +20,7 @@ FROM study.clinpathRuns e
 JOIN onprc_billing.labworkFeeDefinition p ON (p.servicename = e.servicerequested AND p.active = true)
 
 WHERE e.dateOnly >= CAST(StartDate as date) AND e.dateOnly <= CAST(EndDate as date)
-AND e.chargetype != 'Not Billable'
+AND (e.chargetype != 'Not Billable' or e.chargetype is null)
 AND e.qcstate.publicdata = true
 
 UNION ALL

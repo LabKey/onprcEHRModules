@@ -192,7 +192,7 @@ public class ONPRC_EHRController extends SpringActionController
                     json.put("canRead", c.hasPermission(getUser(), ReadPermission.class));
                     ret.add(json);
 
-                    Container publicContainer = ContainerManager.getForPath(mainContainer.getPath() + "/Public");
+                    Container publicContainer = ContainerManager.getForPath(c.getPath() + "/Public");
                     if (publicContainer != null)
                     {
                         JSONObject childJson = new JSONObject();

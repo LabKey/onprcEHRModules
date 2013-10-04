@@ -33,6 +33,7 @@
                 </columns>
                 <buttonBarOptions position="both" includeStandardButtons="false">
                     <includeScript>ehr.context</includeScript>
+                    <onRender>EHR.DatasetButtons.moreActionsHandler</onRender>
                 </buttonBarOptions>
             </table>
         </tables>

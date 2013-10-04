@@ -13,20 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+PARAMETERS(EndDate TIMESTAMP)
+
 SELECT
   p.*,
-  coalesce(e.unitcost, cr.unitcost) as unitcost,
+  p.chargeId.name as item,
+  null sourceRecord,
+  coalesce(e.unitCost, cr.unitCost) as unitCost,
   p.effectiveDays as quantity,
-  p.effectiveDays * coalesce(e.unitcost, cr.unitcost) as totalcost,
+  p.effectiveDays * coalesce(e.unitCost, cr.unitCost) as totalcost,
 
   ce.account as creditAccount,
   ce.rowid as creditAccountId,
   CASE
-    WHEN e.unitcost IS NOT NULL THEN 'Y'
+    WHEN e.unitCost IS NOT NULL THEN 'Y'
     ELSE null
   END as isExemption,
+  CASE
+    WHEN (e.unitCost IS NULL AND cr.unitCost IS NULL) THEN 'Y'
+    ELSE null
+  END as lacksRate,
   e.rowid as exemptionId,
-  CASE WHEN e.rowid IS NULL THEN cr.rowid ELSE null END as rateId
+  CASE WHEN e.rowid IS NULL THEN cr.rowid ELSE null END as rateId,
+  'N' as isMiscCharge
 
 FROM onprc_billing.perDiems p
 
@@ -48,3 +57,35 @@ LEFT JOIN onprc_billing.creditAccount ce ON (
     p.startdate <= ce.enddateTimeCoalesced AND
     p.chargeId = ce.chargeId
 )
+
+UNION ALL
+
+--add misc charges
+SELECT
+  mc.id,
+  mc.date,
+  mc.project,
+  mc.chargeId,
+  null as categories,
+  null as overlappingProjects,
+  null as effectiveDays,
+  null as totalDaysAssigned,
+  null as startDate,
+  null as numDays,
+  mc.item,
+  mc.sourceRecord,
+  mc.unitcost,
+  mc.quantity,
+  mc.totalcost,
+
+  mc.creditAccount,
+  mc.creditAccountId,
+  mc.isExemption,
+  mc.lacksRate,
+  mc.exemptionId,
+  mc.rateId,
+  'Y' as isMiscCharge
+
+FROM onprc_billing.miscChargesFeeRateData mc
+WHERE cast(mc.billingDate as date) >= CAST(StartDate as date) AND cast(mc.billingDate as date) <= CAST(EndDate as date)
+AND mc.category = 'Animal Per Diem'

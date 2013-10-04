@@ -272,7 +272,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
             "servicecenter",
             "project", "debitedaccount", "investigatorid", "faid", "firstname", "lastname", "department", "contactphone",
             "creditedaccount",
-            "quantity", "unitcost", "totalcost",
+            "quantity", "unitCost", "totalcost",
             "rateId", "exemptionId", "creditaccountid", "comment", "transactionType", "sourceRecord"};
 
     private void writeToInvoicedItems(List<Map<String, Object>> rows, String category, String[] colNames) throws PipelineJobException
@@ -350,7 +350,8 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "Id",
                 "date",
                 "chargeId",
-                "chargeId/name",
+                "item",
+                //TODO: need these in the query itself to deal w/ misc charges
                 "chargeId/itemCode",
                 "chargeId/category",
                 "chargeId/departmentCode",  //todo: servicecenter?
@@ -364,7 +365,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "project/investigatorid/phonenumber",
                 "creditAccount",
                 "quantity",
-                "unitcost",
+                "unitCost",
                 "totalcost",
                 null, //rateid
                 "exemptionId",
@@ -441,6 +442,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
 
         Map<String, Object> params = new HashMap<>();
         params.put("StartDate", getSupport().getStartDate());
+        params.put("EndDate", getSupport().getEndDate());
         Long numDays = (getSupport().getEndDate().getTime() - getSupport().getStartDate().getTime()) / DateUtils.MILLIS_PER_DAY;
         params.put("NumDays", numDays.intValue() + 1);
 
@@ -448,7 +450,8 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "Id",
                 "date",
                 "chargeId",
-                "chargeId/name",
+                "item",
+                //TODO: need these values in the query itself
                 "chargeId/itemCode",
                 "chargeId/category",
                 "chargeId/departmentCode",  //todo: servicecenter?
@@ -462,7 +465,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "project/investigatorid/phonenumber",
                 "creditAccount",
                 "quantity",
-                "unitcost",
+                "unitCost",
                 "totalcost",
                 "rateid",
                 "exemptionId",
@@ -499,7 +502,8 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "Id",
                 "date",
                 "chargeId",
-                "chargeId/name",
+                "item",
+                //TODO: need these values in the query itself
                 "chargeId/itemCode",
                 "chargeId/category",
                 "chargeId/departmentCode",  //todo: servicecenter?
@@ -513,7 +517,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "project/investigatorid/phonenumber",
                 "creditAccount",
                 "quantity",
-                "unitcost",
+                "unitCost",
                 "totalcost",
                 "rateid",
                 "exemptionId",
@@ -551,7 +555,8 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "Id",
                 "date",
                 "chargeId",
-                "chargeId/name",
+                "item",
+                //TODO: need these values in the query itself
                 "chargeId/itemCode",
                 "chargeId/category",
                 "chargeId/departmentCode",  //todo: servicecenter?
@@ -565,7 +570,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "project/investigatorid/phonenumber",
                 "creditAccount",
                 "quantity",
-                "unitcost",
+                "unitCost",
                 "totalcost",
                 "rateid",
                 "exemptionId",
@@ -598,12 +603,13 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
         getJob().getLogger().info("Caching Other Charges");
 
         Map<String, Object> params = new HashMap<>();
+        params.put("StartDate", getSupport().getStartDate());
         params.put("EndDate", getSupport().getEndDate());
         String[] colNames = new String[]{
                 "Id",
                 "date",
                 "chargeId",
-                "chargeId/name",
+                "item",
                 "chargeId/itemCode",
                 "chargeId/category",
                 "chargeId/departmentCode",  //todo: servicecenter?
@@ -617,7 +623,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "project/investigatorid/phonenumber",
                 "creditAccount",
                 "quantity",
-                "unitcost",
+                "unitCost",
                 "totalcost",
                 "rateid",
                 "exemptionId",

@@ -24,19 +24,20 @@ SELECT
   p.ageAtTime,
   p.category,
   p.chargeId,
+  p.chargeId.name as item,
 
   p.leaseCharge1,
   p.leaseCharge2,
   p.sourceRecord,
 
   CASE
-    WHEN p.category = 'Lease Fee' THEN coalesce(e.unitcost, cr.unitcost)
-    ELSE (coalesce(e3.unitcost, cr3.unitcost) - coalesce(e2.unitcost, cr2.unitcost))
-  END as unitcost,
+    WHEN (p.category = 'Lease Fees' or p.category = 'Lease Setup Fee') THEN coalesce(e.unitCost, cr.unitCost)
+    ELSE (coalesce(e3.unitCost, cr3.unitCost) - coalesce(e2.unitCost, cr2.unitCost))
+  END as unitCost,
   1 as quantity,
   CASE
-    WHEN p.category = 'Lease Fee' THEN coalesce(e.unitcost, cr.unitcost)
-    ELSE (coalesce(e3.unitcost, cr3.unitcost) - coalesce(e2.unitcost, cr2.unitcost))
+    WHEN (p.category = 'Lease Fees' or p.category = 'Lease Setup Fee') THEN coalesce(e.unitCost, cr.unitCost)
+    ELSE (coalesce(e3.unitCost, cr3.unitCost) - coalesce(e2.unitCost, cr2.unitCost))
   END as totalcost,
 
   ce.account as creditAccount,
@@ -46,13 +47,19 @@ SELECT
     ELSE null
   END as isExemption,
   CASE
-    WHEN p.category = 'Lease Fee' AND e.rowid IS NULL THEN cr.rowId
+    WHEN (p.category = 'Lease Fees' or p.category = 'Lease Setup Fee') AND coalesce(e.unitCost, cr.unitCost) is null THEN 'Y'
+    WHEN (p.category != 'Lease Fese' AND p.category != 'Lease Setup Fee') AND (coalesce(e3.unitCost, cr3.unitCost) IS NULL OR coalesce(e2.unitCost, cr2.unitCost) IS NULL) THEN 'Y'
+    ELSE null
+  END as lacksRate,
+  CASE
+    WHEN (p.category = 'Lease Fees' or p.category = 'Lease Setup Fee') AND e.rowid IS NULL THEN cr.rowId
     ELSE null
   END as rateId,
   CASE
-    WHEN p.category = 'Lease Fee' THEN e.rowid
+    WHEN (p.category = 'Lease Fees' or p.category = 'Lease Setup Fee') THEN e.rowid
     ELSE null
-  END as exemptionId
+  END as exemptionId,
+  'N' as isMiscCharge
 
 FROM onprc_billing.leaseFees p
 
@@ -105,3 +112,39 @@ LEFT JOIN onprc_billing.creditAccount ce ON (
     p.date <= ce.enddateTimeCoalesced AND
     p.chargeId = ce.chargeId
 )
+
+UNION ALL
+
+--add misc charges
+SELECT
+  mc.id,
+  mc.date,
+  null as enddate,
+  mc.project,
+  null as projectedReleaseCondition,
+  null as releaseCondition,
+  null as assignCondition,
+  null as ageAtTime,
+  mc.category,
+  mc.chargeId,
+  mc.item,
+
+  null as leaseCharge1,
+  null as leaseCharge2,
+  mc.sourceRecord,
+
+  mc.unitcost,
+  mc.quantity,
+  mc.totalcost,
+
+  mc.creditAccount,
+  mc.creditAccountId,
+  mc.isExemption,
+  mc.lacksRate,
+  mc.rateId,
+  mc.exemptionId,
+  'Y' as isMiscCharge
+
+FROM onprc_billing.miscChargesFeeRateData mc
+WHERE cast(mc.billingDate as date) >= CAST(StartDate as date) AND cast(mc.billingDate as date) <= CAST(EndDate as date)
+AND mc.category IN ('Lease Fees', 'Lease Setup Fees')

@@ -146,6 +146,8 @@ onprc_ehr/resources/queries/onprc_billing/chargesIBS.query.xml -text
 onprc_ehr/resources/queries/onprc_billing/chargesIBS.sql -text
 onprc_ehr/resources/queries/onprc_billing/creditAccount/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/creditAccount/All[!!-~]Items.qview.xml -text
+onprc_ehr/resources/queries/onprc_billing/duplicateChargeableItems.query.xml -text
+onprc_ehr/resources/queries/onprc_billing/duplicateChargeableItems.sql -text
 onprc_ehr/resources/queries/onprc_billing/fiscalAuthorities/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/grantProjects/.qview.xml -text
 onprc_ehr/resources/queries/onprc_billing/grantProjects/All[!!-~]Items.qview.xml -text
@@ -199,6 +201,8 @@ onprc_ehr/resources/queries/onprc_billing/leaseFeeRates.query.xml -text
 onprc_ehr/resources/queries/onprc_billing/leaseFeeRates.sql -text
 onprc_ehr/resources/queries/onprc_billing/leaseFees.query.xml -text
 onprc_ehr/resources/queries/onprc_billing/leaseFees.sql -text
+onprc_ehr/resources/queries/onprc_billing/miscChargesFeeRateData.query.xml -text
+onprc_ehr/resources/queries/onprc_billing/miscChargesFeeRateData.sql -text
 onprc_ehr/resources/queries/onprc_billing/miscChargesFeeRates.query.xml -text
 onprc_ehr/resources/queries/onprc_billing/miscChargesFeeRates.sql -text
 onprc_ehr/resources/queries/onprc_billing/miscChargesFees.query.xml -text
@@ -631,6 +635,7 @@ onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.327-12.328.sql
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.328-12.329.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.329-12.330.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.330-12.331.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_billing-12.331-12.332.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.302-12.303.sql -text
@@ -664,6 +669,7 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.327-12.328.sql 
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.328-12.329.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.329-12.330.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.330-12.331.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_billing-12.331-12.332.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text
@@ -681,6 +687,9 @@ onprc_ehr/resources/views/adminPage.view.xml -text
 onprc_ehr/resources/views/adminPage.webpart.xml -text
 onprc_ehr/resources/views/animalGroupDetails.html -text
 onprc_ehr/resources/views/animalGroupDetails.view.xml -text
+onprc_ehr/resources/views/animalSearch.html -text
+onprc_ehr/resources/views/animalSearch.view.xml -text
+onprc_ehr/resources/views/animalSearch.webpart.xml -text
 onprc_ehr/resources/views/areaDetails.html -text
 onprc_ehr/resources/views/areaDetails.view.xml -text
 onprc_ehr/resources/views/begin.html -text

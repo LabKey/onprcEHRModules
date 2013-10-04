@@ -2190,6 +2190,7 @@ Ext4.onReady(function(){
             ['T-Y9225','Organ/Tissue'],
             ['T-Y9430','Organ/Tissue'],
             ['T-YY840','Organ/Tissue'],
+            ['E-YY547','Diet'],
             ['E-0X042','Diet'],
             ['E-50150','Diet'],
             ['E-82870','Diet'],
@@ -2688,7 +2689,7 @@ Ext4.onReady(function(){
             var fields = ('value,description').split(',');
 
             var data = [
-                ['Alopecia', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', displayField: 'value', valueField: 'value'})],
+                ['CQS', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', displayField: 'value', valueField: 'value'})],
                 ['BCS', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
                 ['Pain Score', Ext4.encode({xtype: 'numberfield', minValue: 0})]
             ];
@@ -3729,6 +3730,7 @@ Ext4.onReady(function(){
                 ['reproSummary' ,'Reproductive Management' ,'js' ,'Reproductive Summary' ,'true' ,'' ,'study' ,'reproSummary', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 ['menses' ,'Reproductive Management' ,'query' ,'Menses' ,'true' ,'' ,'study' ,'Clinical Observations', 'Menses', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 ['delivery' ,'Reproductive Management' ,'query' ,'Deliveries' ,'true' ,'' ,'study' ,'Delivery', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
+                //['delivery' ,'Reproductive Management' ,'js' ,'Deliveries' ,'true' ,'' ,'study' ,'Delivery', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 ['pregnancy' ,'Reproductive Management' ,'query' ,'Pregnancies' ,'true' ,'' ,'study' ,'Pregnancy Confirmations', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', '']
                 //['todaysBlood' ,'Daily Reports' ,'query' ,'Blood Draw Schedule' ,'true' ,'' ,'study' ,'BloodSchedule', 'Blood Schedule', '', 'date', 'TRUE', 'false', '9', 'qcstate/publicdata', 'Contains records of blood draws scheduled for today']
                 //['treatmentsIncomplete' ,'Daily Reports' ,'query' ,'Treatments - Incomplete' ,'true' ,'' ,'study' ,'treatmentSchedule', 'Incomplete Treatments', '', 'date', 'true', 'false', '7', 'qcstate/publicdata', 'The report displays all incomplete treatments scheduled for today']
