@@ -580,6 +580,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ds.addColumn(col);
         }
 
+        if (ds.getColumn("totalOffspring") == null)
+        {
+            ColumnInfo col15 = getWrappedIdCol(us, ds, "totalOffspring", "demographicsTotalOffspring");
+            col15.setLabel("Number of Offspring");
+            col15.setDescription("Shows the total offspring of each animal");
+            ds.addColumn(col15);
+        }
+
         if (ds.getColumn("activeNotes") == null)
         {
             ColumnInfo col2 = getWrappedIdCol(us, ds, "activeNotes", "notesPivoted");

@@ -31,7 +31,7 @@ select
   afc.Amount as unitCost,
   (afc.Amount * afc.ProcedureCount) as totalCost,
   afc.Remarks as comment,
-  afc.BillingDate as billingDate,
+  CASE WHEN (afc.invoiceDate IS NOT NULL AND afc.invoiceDate < afc.billingDate) THEN afc.invoiceDate ELSE afc.BillingDate END as billingDate,
   afc.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
   null as invoicedItemId,
@@ -63,13 +63,13 @@ select
   afc2.ChargeType as chargeType,
   (select s.value from sys_parameters s where afc2.ChargeType = s.Flag and s.Field = 'ChargeType') as category,
   afc2.ProcedureID as procedureID,
-  rfp.ProcedureName as description,
+  rfp.ProcedureName as item,
   (select bci.rowId from Labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeID,
   afc2.ProcedureCount as quantity,
   afc2.Amount as unitCost,
   (afc2.Amount * afc2.ProcedureCount) as totalCost,
   afc2.Remarks as comment,
-  afc2.BillingDate as billingDate,
+  CASE WHEN (afc2.invoiceDate IS NOT NULL AND afc2.invoiceDate < afc2.billingDate) THEN afc2.invoiceDate ELSE afc2.BillingDate END as billingDate,
   afc2.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
   (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc2.AccountNo = ibs.ChargesIDKey) as invoicedItemId,
@@ -109,7 +109,7 @@ select
   afc2.Amount as unitCost,
   (afc2.Amount * afc2.ProcedureCount) as totalCost,
   afc2.Remarks as comment,
-  afc2.BillingDate as billingDate,
+  CASE WHEN (afc2.invoiceDate IS NOT NULL AND afc2.invoiceDate < afc2.billingDate) THEN afc2.invoiceDate ELSE afc2.BillingDate END as billingDate,
   afc2.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
   (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc2.AccountNo = ibs.ChargesIDKey) as invoicedItemId,
@@ -152,7 +152,7 @@ select
   afc.Amount as unitCost,
   (afc.Amount * afc.ProcedureCount) as totalCost,
   null as comment,
-  afc.BillingDate as billingDate,
+  CASE WHEN (afc.invoiceDate IS NOT NULL AND afc.invoiceDate < afc.billingDate) THEN afc.invoiceDate ELSE afc.BillingDate END as billingDate,
   afc.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
   null as invoicedItemId,
@@ -167,4 +167,44 @@ left join (
   GROUP BY ri.objectid
 ) ri ON (afc.InvoiceNo >= ri.StartInvoice AND afc.InvoiceNo <= ri.EndInvoice)
 where afc.AccountNo is not null and afc.AccountNo <> '' and ChargeDate >= '1/1/2008'
-AND (afc.ts > ? or rpi.ts > ? or rfp.ts > ? or ri.maxTs > ?)
+and (afc.ts > ? or rpi.ts > ? or rfp.ts > ? or ri.maxTs > ?)
+
+UNION ALL
+
+Select
+  afc.AnimalID as id,
+  afc.chargeDate as date,
+  afc.ProjectID as project,
+  afc.OHSUAccountNo as account,
+  afc.ChargeType as chargeType,
+  (select s.value from sys_parameters s where afc.ChargeType = s.Flag and s.Field = 'ChargeType') as category,
+  afc.ProcedureID as procedureID,
+  rfp.ProcedureName as item,
+  (select bci.rowId from Labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeID,
+  afc.ProcedureCount as quantity,
+  afc.Amount as unitCost,
+  (afc.Amount * afc.ProcedureCount) as totalCost,
+  afc.Remarks as comment,
+  CASE WHEN (afc.invoiceDate IS NOT NULL AND afc.invoiceDate < afc.billingDate) THEN afc.invoiceDate ELSE afc.BillingDate END as billingDate,
+  afc.InvoiceNo as invoiceNumber,
+  ri.objectid as invoiceId,
+  (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc.AccountNo = ibs.ChargesIDKey) as invoicedItemId,
+  afc.objectid
+from af_charges afc
+--left join AF_Charges afc2 on (afc.IDKEY = afc2.AccountNo)
+left join Ref_ProjectsIACUC rpi on (afc.ProjectID = rpi.ProjectID)
+left join Ref_FeesProcedures rfp on (afc.ProcedureID = rfp.ProcedureID)
+left join (
+SELECT max(ri.ts) as maxTs, max(cast(ri2.objectid as varchar(38))) as objectid, max(ri.StartInvoice) as StartInvoice, max(ri.EndInvoice) as EndInvoice
+  from ref_invoice ri
+    left join ref_invoice ri2 ON (ri.startdate = ri2.startdate AND ri.enddate = ri2.enddate)
+  GROUP BY ri.objectid
+) ri ON (afc.InvoiceNo >= ri.StartInvoice AND afc.InvoiceNo <= ri.EndInvoice)
+
+where afc.ChargeType in (1,8) and
+  (afc.Chargedate < afc.BillingDate AND (afc.AccountNo is null or afc.AccountNo = '') AND (
+    --the intent of this is to capture any charge entered 1 billing period after the actual record
+    DATEDIFF(day, afc.Chargedate, afc.BillingDate) > 15 OR
+    CASE WHEN DAY(afc.Chargedate) <= 15 THEN 1 ELSE 2 END != CASE WHEN DAY(afc.BillingDate) <= 15 THEN 1 ELSE 2 END
+  ))
+and (afc.ts > ? or rpi.ts > ?  or rfp.ts > ? or ri.maxTs > ?)

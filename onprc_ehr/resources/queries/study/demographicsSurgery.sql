@@ -14,7 +14,9 @@ END AS majorSurgery,
 
 true As anySurgery,
 
-count(*) as numberOfSurgeries
+count(*) as numberOfSurgeries,
+max(s.date) as dateOfLastSurgery,
+timestampdiff('SQL_TSI_DAY', max(s.date), now()) as daysSinceLastSurgery
 
 FROM study.encounters s
 WHERE s.qcstate.publicdata = true AND type = 'Surgery'

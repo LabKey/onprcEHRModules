@@ -95,7 +95,7 @@ public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
         filter.addCondition(FieldKey.fromString("housingType/value"), "Off Campus", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("datedisabled"), null, CompareType.ISBLANK);
         filter.addCondition(FieldKey.fromString("building"), null, CompareType.NONBLANK);
-        Sort sort = new Sort("building,room");  //TODO: how to sort on naturalize?
+        Sort sort = new Sort("building,room");
 
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("room", "building", "room_sortValue"), filter, sort);
         if (ts.getRowCount() == 0)

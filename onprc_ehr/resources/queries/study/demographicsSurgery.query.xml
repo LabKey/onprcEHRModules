@@ -24,6 +24,12 @@
                         </url>
                         <columnTitle>Had A Major Surgery?</columnTitle>
                     </column>
+                    <column columnName="dateOfLastSurgery">
+                        <columnTitle>Date Of Last Surgery</columnTitle>
+                    </column>
+                    <column columnName="daysSinceLastSurgery">
+                        <columnTitle>Days Since Last Surgery</columnTitle>
+                    </column>
                 </columns>
                 <titleColumn>MajorSurgery</titleColumn>
             </table>

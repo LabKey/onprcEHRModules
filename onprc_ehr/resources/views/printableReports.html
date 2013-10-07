@@ -541,30 +541,14 @@
 
                             return params;
                         },
-                        menu: [{
-                            text: 'Print With Animal Details',
-                            handler: function(menu){
-                                var btn = menu.up('#roomBtn');
-                                var params = btn.getUrlParams();
-                                if (!params)
-                                    return;
-                                params.showAnimalDetails = true;
-                                var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
-                                window.open(url);
-                            }
-                        },{
-                            text: 'Print Without Animal Details',
-                            handler: function(menu){
-                                var btn = menu.up('#roomBtn');
-                                var params = btn.getUrlParams();
-                                if (!params)
-                                    return;
+                        handler: function(btn){
+                            var params = btn.getUrlParams();
+                            if (!params)
+                                return;
 
-                                params.showAnimalDetails = false;
-                                var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
-                                window.open(url);
-                            }
-                        }]
+                            var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
+                            window.open(url);
+                        }
                     },{
                         xtype: 'button',
                         style: 'margin-left: 5px;',

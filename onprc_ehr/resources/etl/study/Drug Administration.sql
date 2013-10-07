@@ -95,7 +95,7 @@ SELECT
 
   s2.Value as amount_units,
   s3.Value as route,
-  coalesce(cln.objectid, m.objectid) as objectid,
+  cast(coalesce(cln.objectid, m.objectid) as varchar(38)) as objectid,
   null as parentId,
   m.objectId as treatmentId,
 
@@ -161,7 +161,7 @@ SELECT
 	null as amount,
 	null as amount_Units,
 	'IV' as Route,
-	h.objectid,
+	cast(h.objectid as varchar(38)) as objectid,
 	g.objectid as parentId,
 	null as treatmentId,
 
@@ -197,7 +197,7 @@ null as remark,
 Dose as amount,
 s2.value as amount_units,
 s3.value as Route,
-m.objectid,
+cast(m.objectid as varchar(38)) as objectid,
 g.objectid as parentid,
 null as treatmentId,
 null as performedby,
@@ -217,6 +217,42 @@ FROM Sur_Medications m
     ) c ON (c.AnimalID = g.AnimalID AND c.date = g.date)
 
 WHERE m.ts > ? or g.ts > ?
+
+-- --implant data
+-- UNION ALL
+--
+-- SELECT
+--   cast(v.AnimalId as nvarchar(4000)) as Id,
+--   v.Date,
+--   null as treatmentStartDate,
+--   null as treatmentEndDate,
+--   null as code,
+--   null as meaning,
+--   v.comments as remark,
+--   v.implantcount as amount,
+--   null as amount_units,
+--   null as Route,
+--   cast(v.objectid as varchar(38)) as objectid,
+--   v.objectid as parentid,
+--   null as treatmentId,
+--   null as performedby,
+--   'Surgical' as category,
+--   null as caseid
+--
+--   --TODO:
+--   --s1.Value as size,
+--   --s2.Value as type,
+--   --s3.Value as site,
+--   --s4.Value as action,
+--
+-- from Sur_Implants v
+--   LEFT JOIN Sys_parameters s1 ON (s1.Field = 'ImplantSize' AND s1.Flag = v.size)
+--   LEFT JOIN Sys_parameters s2 ON (s2.Field = 'ImplantType' AND s2.Flag = v.type)
+--   LEFT JOIN Sys_parameters s3 ON (s3.Field = 'ImplantSite' AND s3.Flag = v.site)
+--   LEFT JOIN Sys_parameters s4 ON (s4.Field = 'ImplantAction' AND s4.Flag = v.action)
+--   LEFT JOIN Sys_parameters s5 ON (s5.Field = 'SurgeryChargeCode' AND s5.Flag = v.chargecode)
+--
+-- WHERE v.ts > ?
 
 -- ) d
 --

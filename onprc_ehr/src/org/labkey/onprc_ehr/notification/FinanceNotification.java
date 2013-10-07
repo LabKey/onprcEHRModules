@@ -109,10 +109,10 @@ public class FinanceNotification extends AbstractEHRNotification
 
         miscChargesLackingProjects(c, u, msg);
 
-        simpleAlert(c, u , msg, "onprc_billing", "invalidChargeRateEntries", " charge rate records with invalid or overlapping intervals");
-        simpleAlert(c, u , msg, "onprc_billing", "invalidChargeRateExemptionEntries", " charge rate exemptions with invalid or overlapping intervals");
-        simpleAlert(c, u , msg, "onprc_billing", "invalidCreditAccountEntries", " credit account records with invalid or overlapping intervals");
-        simpleAlert(c, u , msg, "onprc_billing", "duplicateChargeableItems", " active chargeable item records with duplicate names or item codes");
+        simpleAlert(c, u , msg, "onprc_billing", "invalidChargeRateEntries", " charge rate records with invalid or overlapping intervals.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
+        simpleAlert(c, u , msg, "onprc_billing", "invalidChargeRateExemptionEntries", " charge rate exemptions with invalid or overlapping intervals.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
+        simpleAlert(c, u , msg, "onprc_billing", "invalidCreditAccountEntries", " credit account records with invalid or overlapping intervals.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
+        simpleAlert(c, u , msg, "onprc_billing", "duplicateChargeableItems", " active chargeable item records with duplicate names or item codes.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
 
         return msg.toString();
     }
@@ -319,7 +319,7 @@ public class FinanceNotification extends AbstractEHRNotification
     {
         TableInfo ti = QueryService.get().getUserSchema(u, c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME).getTable(ONPRC_EHRSchema.TABLE_MISC_CHARGES);
 
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("invoiceId"), null);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("invoiceId"), null, CompareType.ISBLANK);
         filter.addCondition(FieldKey.fromString("project"), null, CompareType.ISBLANK);
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("project"), filter, null);
         long total = ts.getRowCount();
@@ -331,7 +331,7 @@ public class FinanceNotification extends AbstractEHRNotification
             msg.append("<hr>");
         }
 
-        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("invoiceId"), null);
+        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("invoiceId"), null, CompareType.ISBLANK);
         filter2.addCondition(FieldKey.fromString("project/account"), null, CompareType.ISBLANK);
         TableSelector ts2 = new TableSelector(ti, PageFlowUtil.set("project"), filter2, null);
         long total2 = ts2.getRowCount();
@@ -343,7 +343,7 @@ public class FinanceNotification extends AbstractEHRNotification
             msg.append("<hr>");
         }
 
-        SimpleFilter filter3 = new SimpleFilter(FieldKey.fromString("invoiceId"), null);
+        SimpleFilter filter3 = new SimpleFilter(FieldKey.fromString("invoiceId"), null, CompareType.ISBLANK);
         filter2.addCondition(FieldKey.fromString("project/enddateCoalesced"), new Date(), CompareType.DATE_GT);
         TableSelector ts3 = new TableSelector(ti, PageFlowUtil.set("project"), filter3, null);
         long total3 = ts3.getRowCount();

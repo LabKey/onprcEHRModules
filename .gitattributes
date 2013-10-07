@@ -3,6 +3,7 @@ onprc_ehr/ONPRC_EHR.iml -text
 onprc_ehr/distributions/onprc.xml -text
 onprc_ehr/distributions/test_onprc.xml -text
 onprc_ehr/module.properties -text
+onprc_ehr/resources/etl/deprecated/Parentage.sql -text
 onprc_ehr/resources/etl/ehr/_animal_groups.sql -text
 onprc_ehr/resources/etl/ehr/animal_group_members.sql -text
 onprc_ehr/resources/etl/ehr/encounter_flags.sql -text
@@ -60,7 +61,6 @@ onprc_ehr/resources/etl/study/Misc[!!-~]Tests.sql -text
 onprc_ehr/resources/etl/study/Morphologic[!!-~]Diagnosis.sql -text
 onprc_ehr/resources/etl/study/Notes.sql -text
 onprc_ehr/resources/etl/study/Parasitology[!!-~]Results.sql -text
-onprc_ehr/resources/etl/study/Parentage.sql -text
 onprc_ehr/resources/etl/study/PregnancyConfirmation.sql -text
 onprc_ehr/resources/etl/study/Problem[!!-~]List.sql -text
 onprc_ehr/resources/etl/study/Serology[!!-~]Results.sql -text
@@ -398,6 +398,9 @@ onprc_ehr/resources/queries/study/demographicsCurrentLocation.sql -text
 onprc_ehr/resources/queries/study/demographicsDaysAlone.query.xml -text
 onprc_ehr/resources/queries/study/demographicsDaysAlone.sql -text
 onprc_ehr/resources/queries/study/demographicsDaysAlone/.qview.xml -text
+onprc_ehr/resources/queries/study/demographicsFamily.query.xml -text
+onprc_ehr/resources/queries/study/demographicsFamily.sql -text
+onprc_ehr/resources/queries/study/demographicsFamily/.qview.xml -text
 onprc_ehr/resources/queries/study/demographicsHistoricAssignment.query.xml -text
 onprc_ehr/resources/queries/study/demographicsHistoricAssignment.sql -text
 onprc_ehr/resources/queries/study/demographicsHousingStats.query.xml -text
@@ -410,6 +413,9 @@ onprc_ehr/resources/queries/study/demographicsLastMense/.qview.xml -text
 onprc_ehr/resources/queries/study/demographicsMostRecentTBDate.query.xml -text
 onprc_ehr/resources/queries/study/demographicsMostRecentTBDate.sql -text
 onprc_ehr/resources/queries/study/demographicsMostRecentTBDate/.qview.xml -text
+onprc_ehr/resources/queries/study/demographicsOffspring.query.xml -text
+onprc_ehr/resources/queries/study/demographicsOffspring.sql -text
+onprc_ehr/resources/queries/study/demographicsOffspring/.qview.xml -text
 onprc_ehr/resources/queries/study/demographicsOpenProblems.query.xml -text
 onprc_ehr/resources/queries/study/demographicsPE.query.xml -text
 onprc_ehr/resources/queries/study/demographicsPE.sql -text
@@ -430,12 +436,17 @@ onprc_ehr/resources/queries/study/demographicsReturnLocation.query.xml -text
 onprc_ehr/resources/queries/study/demographicsReturnLocation.sql -text
 onprc_ehr/resources/queries/study/demographicsSPF.query.xml -text
 onprc_ehr/resources/queries/study/demographicsSPF.sql -text
+onprc_ehr/resources/queries/study/demographicsSiblings.query.xml -text
+onprc_ehr/resources/queries/study/demographicsSiblings.sql -text
+onprc_ehr/resources/queries/study/demographicsSiblings/.qview.xml -text
 onprc_ehr/resources/queries/study/demographicsSource.query.xml -text
 onprc_ehr/resources/queries/study/demographicsSource.sql -text
 onprc_ehr/resources/queries/study/demographicsSurgery.query.xml -text
 onprc_ehr/resources/queries/study/demographicsSurgery.sql -text
 onprc_ehr/resources/queries/study/demographicsTermination.query.xml -text
 onprc_ehr/resources/queries/study/demographicsTermination.sql -text
+onprc_ehr/resources/queries/study/demographicsTotalOffspring.query.xml -text
+onprc_ehr/resources/queries/study/demographicsTotalOffspring.sql -text
 onprc_ehr/resources/queries/study/demographicsTotalOffspringUnder1Yr.query.xml -text
 onprc_ehr/resources/queries/study/demographicsTotalOffspringUnder1Yr.sql -text
 onprc_ehr/resources/queries/study/demographicsTreatmentSummary.query.xml -text
@@ -528,6 +539,8 @@ onprc_ehr/resources/queries/study/pairDifferences.sql -text
 onprc_ehr/resources/queries/study/pairHistory.query.xml -text
 onprc_ehr/resources/queries/study/pairHistory.sql -text
 onprc_ehr/resources/queries/study/pairHistory/.qview.xml -text
+onprc_ehr/resources/queries/study/pairingIdConflicts.query.xml -text
+onprc_ehr/resources/queries/study/pairingIdConflicts.sql -text
 onprc_ehr/resources/queries/study/pairingSummary.query.xml -text
 onprc_ehr/resources/queries/study/pairingSummary.sql -text
 onprc_ehr/resources/queries/study/pairingSummary/.qview.xml -text

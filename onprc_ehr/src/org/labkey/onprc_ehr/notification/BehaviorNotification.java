@@ -98,8 +98,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         changedPairs(c, u, msg);
         singleHousedAnimals(c, u, msg);
         transfersYesterday(c, u, msg);
-
-        //doHousingChecks(c, u, msg);
+        pairIdConflicts(c, u , msg);
 
         saveValues(c, toSave);
 
@@ -119,6 +118,21 @@ public class BehaviorNotification extends ColonyAlertsNotification
         String url = getExecuteQueryUrl(c, "study", "cases", "Active Behavior Cases");
         msg.append("<a href='" + url + "'>Click here to view them</a>");
         msg.append("<hr>");
+    }
+
+    private void pairIdConflicts(Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("pairingIdConflicts");
+        TableSelector ts = new TableSelector(ti);
+        long total = ts.getRowCount();
+        if (total > 0)
+        {
+            msg.append("<b>Conflicting Pair IDs:</b><p>");
+            msg.append("There are " + total + " pairing records with conflicting pairIds.  If this occurs, there is a bug in data entry which could cause unusual results when viewing the data.  If you see this, please contact the site administrator.  ");
+            String url = getExecuteQueryUrl(c, "study", "pairingIdConflicts", null);
+            msg.append("<a href='" + url + "'>Click here to view them</a>");
+            msg.append("<hr>");
+        }
     }
 
     private void singleHousedAnimals(Container c, User u, final StringBuilder msg)

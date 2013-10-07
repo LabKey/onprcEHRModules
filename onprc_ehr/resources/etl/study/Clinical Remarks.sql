@@ -28,8 +28,8 @@ SELECT
 	cast(coalesce(cln5.Remarks, '') as nvarchar(4000)) +
 	cast(coalesce(cln6.Remarks, '') as nvarchar(4000))
 	, char(25), '<>'), Char(21), Char(39)) AS remark,
-	
-	cln0.objectid,
+
+  coalesce(cln0.objectid, cln1.objectid, cln2.objectid, cln3.objectid) as objectid,
 	dx.objectid as parentid	,
 
 	case

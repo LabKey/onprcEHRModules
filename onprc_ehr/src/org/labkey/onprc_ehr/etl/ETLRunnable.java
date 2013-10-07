@@ -1179,10 +1179,10 @@ public class ETLRunnable implements Runnable
             add("Microbiology");
             add("AntibioticSensitivity");
             add("Parasitology Results");
-            //add("Serology Results");
+            add("Serology Results");
             add("Urinalysis Results");
             add("Misc Tests");
-            add("Flags");
+            add("Parentage");
         }
     };
 
