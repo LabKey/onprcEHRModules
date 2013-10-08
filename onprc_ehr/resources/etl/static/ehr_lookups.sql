@@ -20,9 +20,10 @@ INSERT into labkey.ehr_lookups.source (code, meaning, SourceCity, SourceState, S
 
 --antibiotic subset
 DELETE FROM labkey.ehr_lookups.snomed_subsets WHERE subset = 'Antibiotics';
-INSERT INTO labkey.ehr_lookups.snomed_subsets (subset) VALUES ('Antibiotics');
+INSERT INTO labkey.ehr_lookups.snomed_subsets (container, subset) VALUES ((SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC'), 'Antibiotics');
 
 DELETE FROM labkey.ehr_lookups.snomed_subset_codes WHERE primaryCategory = 'Antibiotics';
+DELETE FROM labkey.ehr_lookups.snomed_subset_codes WHERE primarycategory = 'Antibiotic';
 INSERT INTO labkey.ehr_lookups.snomed_subset_codes (primaryCategory, code, container, modified, created, modifiedby, createdby)
 Select
 'Antibiotics' as primaryCategory,
@@ -95,15 +96,6 @@ TRUNCATE TABLE labkey.ehr_lookups.geographic_origins;
 INSERT INTO labkey.ehr_lookups.geographic_origins (meaning)
 SELECT upper(GeographicName) as meaning From IRIS_Production.dbo.Ref_ISISGeographic;
 
---diet
-DELETE FROM labkey.ehr_lookups.lookups WHERE set_name = 'Diet';
-INSERT INTO labkey.ehr_lookups.lookups (set_name, value, created, date_disabled)
-SELECT
-   'Diet' as set_name,
-	Description as value,
-	StartDate as created,
-	DisableDate as date_disabled
-FROM IRIS_Production.dbo.ref_diet  ;
 
 
 --treatment frequency

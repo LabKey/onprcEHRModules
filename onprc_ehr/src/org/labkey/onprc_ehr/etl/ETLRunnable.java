@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.etl;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
@@ -152,8 +153,8 @@ public class ETLRunnable implements Runnable
             }
             catch (BadConfigException e)
             {
-               log.error(e.getMessage(), e);
-               return;
+                log.error(e.getMessage(), e);
+                return;
             }
             catch (IOException e)
             {
@@ -637,10 +638,10 @@ public class ETLRunnable implements Runnable
                                 {
                                     log.info("Preparing for insert by pre-deleting " + rows.length + " rows for table: " + targetTable.getName());
                                     start = new Date().getTime();
-                                    int totalDeleted;
+                                    int totalDeleted = 0;
                                     if (realTable != null)
                                     {
-                                        List<Object> pks = new ArrayList<>();
+                                        Set<Object> pks = new HashSet<>();
                                         for (Map<String, Object> r : rows)
                                         {
                                             pks.add(r.get(pkColumn.getName()));
@@ -651,10 +652,14 @@ public class ETLRunnable implements Runnable
                                         {
                                             deleteCol = realTable.getColumn("participantId");
                                         }
-                                        totalDeleted = Table.delete(realTable, new SimpleFilter(deleteCol.getFieldKey(), pks, CompareType.IN));
 
-                                        if (totalDeleted > 0 && pks.size() < 100)
-                                            log.info(StringUtils.join(pks, ","));
+                                        List<Object> allPks = new ArrayList();
+                                        allPks.addAll(pks);
+                                        List<List<Object>> batches = Lists.partition(allPks, 500);
+                                        for (List<Object> batch : batches)
+                                        {
+                                            totalDeleted += Table.delete(realTable, new SimpleFilter(deleteCol.getFieldKey(), batch, CompareType.IN));
+                                        }
                                     }
                                     else
                                     {
@@ -745,7 +750,7 @@ public class ETLRunnable implements Runnable
                         setLastVersion(targetTableName, newBaselineVersion);
                         setLastTimestamp(targetTableName, newBaselineTimestamp);
 
-                       log.info(MessageFormat.format("Committed updates for {0} records in {1}", updates, targetTableName));
+                        log.info(MessageFormat.format("Committed updates for {0} records in {1}", updates, targetTableName));
 
                         try
                         {
@@ -1321,8 +1326,8 @@ public class ETLRunnable implements Runnable
                             "FULL JOIN " + scope.getDatabaseName() + "." + realTable.getSelectName() + " t2 \n" +
                             "ON (t." + filterCol.getSelectName() + " = t2." + filterCol.getSelectName() + ") \n" +
                             "WHERE (t." + filterCol.getSelectName() + " IS NULL OR t2." + filterCol.getSelectName() + " IS NULL)" +
-                                (realTable.getColumn("taskid") == null ? "" : " AND t2.taskid IS NULL") +
-                                (realTable.getColumn("container") == null ? "" : " AND (t2.container = '" + targetTable.getUserSchema().getContainer().getId() + "' or t2.container is null)");
+                            (realTable.getColumn("taskid") == null ? "" : " AND t2.taskid IS NULL") +
+                            (realTable.getColumn("container") == null ? "" : " AND (t2.container = '" + targetTable.getUserSchema().getContainer().getId() + "' or t2.container is null)");
 
                     ps = originConnection.prepareStatement(sql);
                     int paramCount = ps.getParameterMetaData().getParameterCount();

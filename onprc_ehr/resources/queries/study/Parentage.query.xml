@@ -10,6 +10,7 @@
                 <columns>
                     <column columnName="parent">
                         <columnTitle>Parent</columnTitle>
+                        <nullable>false</nullable>
                         <fk>
                             <fkDbSchema>study</fkDbSchema>
                             <fkTable>animal</fkTable>
@@ -18,6 +19,7 @@
                     </column>
                     <column columnName="relationship">
                         <columnTitle>Relationship</columnTitle>
+                        <nullable>false</nullable>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>parentageRelationship</fkTable>
@@ -26,6 +28,7 @@
                     </column>
                     <column columnName="method">
                         <columnTitle>Method</columnTitle>
+                        <nullable>false</nullable>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>parentageMethod</fkTable>

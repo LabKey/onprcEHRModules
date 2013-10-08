@@ -46,7 +46,11 @@ SELECT
     ELSE 'Custom'
   END as timeType,
 
-  t1.category,
+  CASE
+    WHEN snomed.code IS NOT NULL THEN 'Diet'
+    ELSE t1.category
+  END as category,
+  --t1.category,
 
   t1.frequency.meaning as frequency,
   t1.date as startDate,
@@ -87,6 +91,14 @@ JOIN study."Treatment Orders" t1
 
 LEFT JOIN ehr.treatment_times tt ON (tt.treatmentid = t1.objectid)
 LEFT JOIN ehr_lookups.treatment_frequency_times ft ON (ft.frequency = t1.frequency.meaning AND tt.rowid IS NULL)
+
+LEFT JOIN (
+    SELECT
+      sc.code
+    from ehr_lookups.snomed_subset_codes sc
+    WHERE sc.primaryCategory = 'Diet'
+    GROUP BY sc.code
+) snomed ON snomed.code = t1.code
 
 --NOTE: if we run this report on a future interval, we want to include those treatments
 WHERE t1.date is not null AND t1.qcstate.publicdata = true --and t1.dateOnly <= curdate()
