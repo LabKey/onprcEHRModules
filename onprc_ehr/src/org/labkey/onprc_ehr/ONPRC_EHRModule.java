@@ -26,6 +26,7 @@ import org.labkey.api.ehr.buttons.CreateTaskFromRecordsButton;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.notification.NotificationService;
+import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.pipeline.PipelineService;
 import org.labkey.api.query.DefaultSchema;
@@ -41,23 +42,18 @@ import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
 import org.labkey.onprc_ehr.buttons.ManageCasesButton;
-import org.labkey.onprc_ehr.dataentry.BloodDrawFormSection;
 import org.labkey.onprc_ehr.dataentry.BloodDrawFormType;
 import org.labkey.onprc_ehr.dataentry.BloodDrawRequestFormType;
-import org.labkey.onprc_ehr.dataentry.BloodTreatmentsFormSection;
-import org.labkey.onprc_ehr.dataentry.CageObservationFormType;
 import org.labkey.onprc_ehr.dataentry.ChargesFormSection;
 import org.labkey.onprc_ehr.dataentry.DiagnosisFormType;
 import org.labkey.onprc_ehr.dataentry.LabworkFormType;
 import org.labkey.onprc_ehr.dataentry.LabworkRequestFormType;
 import org.labkey.onprc_ehr.dataentry.PairingFormType;
 import org.labkey.onprc_ehr.dataentry.ProcessingFormType;
-import org.labkey.onprc_ehr.dataentry.SimpleGridPanel;
 import org.labkey.onprc_ehr.dataentry.SurgeryFormType;
 import org.labkey.onprc_ehr.dataentry.SurgeryRequestFormSection;
 import org.labkey.onprc_ehr.dataentry.TBDemographicsProvider;
 import org.labkey.onprc_ehr.dataentry.TreatmentsTaskFormSection;
-import org.labkey.onprc_ehr.dataentry.WeightFormSection;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveFlagsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
@@ -67,8 +63,6 @@ import org.labkey.onprc_ehr.demographics.SourceDemographicsProvider;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLAuditProvider;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
-import org.labkey.onprc_ehr.history.DefaultEnrichmentDataSource;
-import org.labkey.onprc_ehr.history.DefaultPairingDataSource;
 import org.labkey.onprc_ehr.notification.BehaviorNotification;
 import org.labkey.onprc_ehr.notification.BloodAlertsNotification;
 import org.labkey.onprc_ehr.notification.ClinicalAlertsNotification;
@@ -292,22 +286,18 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         {
             final DbSchema dbschema = DbSchema.get(schemaName);
 
-            DefaultSchema.registerProvider(schemaName, new DefaultSchema.SchemaProvider()
+            DefaultSchema.registerProvider(schemaName, new DefaultSchema.SchemaProvider(this)
             {
-                public QuerySchema getSchema(final DefaultSchema schema)
+                public QuerySchema createSchema(final DefaultSchema schema, Module module)
                 {
-                    if (schema.getContainer().getActiveModules().contains(ONPRC_EHRModule.this))
+                    if (ONPRC_EHRSchema.BILLING_SCHEMA_NAME.equals(schemaName))
                     {
-                        if (ONPRC_EHRSchema.BILLING_SCHEMA_NAME.equals(schemaName))
-                        {
-                            return new ONPRC_EHRBillingUserSchema(schema.getUser(), schema.getContainer());
-                        }
-                        else
-                        {
-                            return QueryService.get().createSimpleUserSchema(schemaName, null, schema.getUser(), schema.getContainer(), dbschema);
-                        }
+                        return new ONPRC_EHRBillingUserSchema(schema.getUser(), schema.getContainer());
                     }
-                    return null;
+                    else
+                    {
+                        return QueryService.get().createSimpleUserSchema(schemaName, null, schema.getUser(), schema.getContainer(), dbschema);
+                    }
                 }
             });
         }
