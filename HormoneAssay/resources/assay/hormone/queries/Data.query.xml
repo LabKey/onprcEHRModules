@@ -5,6 +5,9 @@
                 <javaCustomizer>org.labkey.laboratory.query.DefaultAssayCustomizer</javaCustomizer>
                 <columns>
                     <column columnName="subjectId">
+                        <importAliases>
+                            <importAlias>Animal ID</importAlias>
+                        </importAliases>
                     </column>
                     <column columnName="date">
                         <description>The date the sample was collected</description>

@@ -3,7 +3,7 @@ SELECT
   s.marker,
   s.category,
   GROUP_CONCAT(DISTINCT s.alleles, chr(10)) as allles,
-  COUNT(DISTINCT s.alleles) as totalResults,
+  COUNT(DISTINCT s.alleles) as distinctResults,
   COUNT(s.run) as totalRuns,
   SUM(totalResults) as totalDataPoints
 

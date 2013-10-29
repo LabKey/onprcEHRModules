@@ -6,7 +6,7 @@
                 <columns>
                     <column columnName="totalResults">
                         <columnTitle>Total Results</columnTitle>
-                        <url>/query/executeQuery.view?schemaName=${schemaName}&amp;query.queryName=${Data}&amp;query.subjectId~eq=${subjectId}&amp;query.run/assayType~eq=${assayType}</url>
+                        <url>/query/executeQuery.view?schemaName=${schemaName}&amp;query.queryName=Data&amp;query.subjectId~eq=${subjectId}&amp;query.run/assayType~eq=${assayType}</url>
                     </column>
                 </columns>
             </table>
