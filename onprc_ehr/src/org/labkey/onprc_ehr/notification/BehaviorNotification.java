@@ -195,7 +195,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         if (rows.size() > 0)
         {
-            msg.append("<b>There are " + rows.size() + " animals with differences in pairing since yesterday.  Note, this considers full pairs vs. non-full pairs only (ie. grooming contact is treated as non-paired).  It considers housing at midnight of the days in question.</b>  ");
+            msg.append("<b>There are " + rows.size() + " animals with differences in pairing since the previous day.  Note, this considers full pairs vs. non-full pairs only (ie. grooming contact is treated as non-paired).  It considers housing at midnight of the days in question.</b>  ");
             String url = getExecuteQueryUrl(c, "study", "pairDifferences", null) + "&query.changeType~isnonblank&query.changeType~neq=Group Members Changed&query.param.Date1=" + _dateFormat.format(date1.getTime()) + "&query.param.Date2=" + _dateFormat.format(date2.getTime());
 
             msg.append("<a href='" + url + "'>Click here to view them</a><p>");
@@ -213,7 +213,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         }
         else
         {
-            msg.append("<b>No pairs have changed since yesterday</b>");
+            msg.append("<b>No pairs changed yesterday</b>");
         }
 
         msg.append("<hr>");

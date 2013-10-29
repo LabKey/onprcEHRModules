@@ -207,6 +207,10 @@ EHR.reports.surgMedicationSchedule = function(panel, tab){
     EHR.reports.medicationSchedule(panel, tab, 'Surgical Medications');
 };
 
+EHR.reports.incompleteTreatments = function(panel, tab){
+    EHR.reports.medicationSchedule(panel, tab, 'Incomplete Treatments');
+};
+
 EHR.reports.medicationSchedule = function(panel, tab, viewName){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
@@ -383,3 +387,80 @@ EHR.reports.delivery = function(panel, tab, viewName){
         style: 'padding-bottom: 20px;'
     });
 };
+
+EHR.reports.measurementsPivoted = function(panel, tab, viewName){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'measurementsPivotedFetal',
+            title: 'Fetal Measurements' + title,
+            titleField: 'Id',
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable,
+            sort: '-date'
+        })
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'measurementsPivotedPlacental',
+            title: 'Placental Measurements' + title,
+            titleField: 'Id',
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable,
+            sort: '-date'
+        })
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'measurementsPivotedHeart',
+            title: 'Heart Measurements' + title,
+            titleField: 'Id',
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable,
+            sort: '-date'
+        })
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'measurementsPivotedBody',
+            title: 'Body Measurements' + title,
+            titleField: 'Id',
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable,
+            sort: '-date'
+        })
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'measurementsMisc',
+            title: 'Misc Measurements' + title,
+            titleField: 'Id',
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable,
+            sort: '-date'
+        })
+    });
+};
+
+

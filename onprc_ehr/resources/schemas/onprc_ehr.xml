@@ -19,6 +19,7 @@
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Investigators</ns:tableTitle>
         <ns:auditLogging>DETAILED</ns:auditLogging>
+        <ns:titleColumn>lastName</ns:titleColumn>
         <ns:importUrl></ns:importUrl>
         <ns:insertUrl></ns:insertUrl>
         <ns:updateUrl></ns:updateUrl>
@@ -27,11 +28,11 @@
             <ns:column columnName="rowid">
                 <ns:columnTitle>Investigator Id</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="firstname">
-                <ns:columnTitle>First Name</ns:columnTitle>
-            </ns:column>
             <ns:column columnName="lastname">
                 <ns:columnTitle>Last Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="firstname">
+                <ns:columnTitle>First Name</ns:columnTitle>
             </ns:column>
             <ns:column columnName="position">
                 <ns:columnTitle>Position</ns:columnTitle>
@@ -57,8 +58,17 @@
             <ns:column columnName="investigatortype">
                 <ns:columnTitle>Investigator Type</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="employeeid">
+                <ns:columnTitle>Employee Id</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
             <ns:column columnName="financialanalyst">
                 <ns:columnTitle>Financial Analyst</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>core</ns:fkDbSchema>
+                    <ns:fkTable>users</ns:fkTable>
+                    <ns:fkColumnName>userid</ns:fkColumnName>
+                </ns:fk>
             </ns:column>
             <ns:column columnName="emailaddress">
                 <ns:columnTitle>Email Address</ns:columnTitle>
@@ -78,6 +88,14 @@
                     <ns:fkDbSchema>core</ns:fkDbSchema>
                     <ns:fkTable>users</ns:fkTable>
                     <ns:fkColumnName>UserId</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="userid">
+                <ns:columnTitle>LabKey UserId</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>core</ns:fkDbSchema>
+                    <ns:fkTable>users</ns:fkTable>
+                    <ns:fkColumnName>userid</ns:fkColumnName>
                 </ns:fk>
             </ns:column>
             <ns:column columnName="createdby">

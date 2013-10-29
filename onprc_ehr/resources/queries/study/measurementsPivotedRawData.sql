@@ -13,33 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-select
-  m.id,
-  m.date,
-  m.category,
-  m.tissue,
-  group_concat(m.measurement, chr(10)) as value
-
-FROM (
 
 SELECT
   m0.Id,
   m0.date,
-  m0.category,
   CASE
     WHEN m0.measurementNo IS NOT NULL THEN cast((m0.tissue || ' - ' || m0.measurementNo) as varchar(200))
     ELSE m0.tissue
-  END as tissue,
+  END as label,
+  m0.tissue,
+  m0.measurementNo,
   m0.measurement,
-  m0.parentid
+  m0.parentid,
+  (SELECT group_concat(distinct sc.secondaryCategory) as expr FROM ehr_lookups.snomed_subset_codes sc WHERE sc.primaryCategory = 'Measurements' and m0.snomed = sc.code) as categories
 
 FROM (
 
 SELECT
   m.Id,
   m.date,
-  m.category,
   m.tissue.meaning as tissue,
+  m.tissue as snomed,
   '1' as measurementNo,
   m.measurement1 as measurement,
   m.parentid
@@ -52,8 +46,8 @@ union all
 select
   m.id,
   m.date,
-  m.category,
   m.tissue.meaning as tissue,
+  m.tissue as snomed,
   '2' as measurementNo,
   m.measurement2 as measurement,
   m.parentid
@@ -66,8 +60,8 @@ union all
 select
   m.id,
   m.date,
-  m.category,
   m.tissue.meaning as tissue,
+  m.tissue as snomed,
   '3' as measurementNo,
   m.measurement3 as measurement,
   m.parentid
@@ -76,8 +70,3 @@ from study.measurements m
 where measurement3 is not null
 
 ) m0
-
-) m
-group by m.id, m.date, m.category, m.tissue, m.parentid
-
-pivot value by tissue

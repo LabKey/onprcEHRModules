@@ -1,8 +1,5 @@
-<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="Active Items">
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Items">
     <sorts>
         <sort column="name"/>
     </sorts>
-    <filters>
-        <filter column="active" operator="eq" value="true"/>
-    </filters>
 </customView>

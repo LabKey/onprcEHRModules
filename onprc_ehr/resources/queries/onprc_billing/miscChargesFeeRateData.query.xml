@@ -50,6 +50,9 @@
                         <columnTitle>Exemption Id</columnTitle>
                         <url>/query/executeQuery.view?schemaName=onprc_billing&amp;query.queryName=chargeRateExemptions&amp;query.rowid~eq=${exemptionId}</url>
                     </column>
+                    <column columnName="sourceRecord">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>

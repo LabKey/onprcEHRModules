@@ -27,8 +27,10 @@
                 sections: [{
                     header: 'Billing Data',
                     items: [
-                        {name: 'Billing Periods', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'invoiceRuns'})},
-                        {name: 'Monthly Summary', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'invoiceRunMonthlySummary'})}
+                        {name: 'Billing Periods (From IRIS)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'invoiceRuns'})},
+                        {name: 'Billing Periods (In PRIMe)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'invoiceRuns'})},
+                        {name: 'Monthly Summary', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'invoiceRunMonthlySummary'})},
+                        {name: 'Access To Billing Data', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'dataAccess'})}
                     ]
                 },{
                     header: 'Reports To Generate Charges',
@@ -40,15 +42,15 @@
                     header: 'Reference Tables',
                     items: [
                         {name: 'IACUC Protocols', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'ehr', 'query.queryName': 'protocol'})},
-                        //{name: 'ONPRC Projects', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'ehr', 'query.queryName': 'projects'})},
+                        {name: 'ONPRC Projects', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'ehr', 'query.queryName': 'project'})},
 
-                        {name: 'Grants', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'grants'})},
-                        {name: 'Grant Projects', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'grantProjects'})},
+                        {name: 'Grants', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'grants', 'query.viewName': 'Active Grants'})},
+                        {name: 'Grant Projects', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'grantProjects', 'query.viewName': 'Active Grant Projects'})},
 
                         //{name: 'Approved IACUC Funding Sources', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'iacucFundingSources'})},
 
                         {name: 'Investigators', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_ehr', 'query.queryName': 'investigators'})},
-                        {name: 'Fiscal Authorities', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'fiscalAuthorities'})}
+                        {name: 'Financial Analysts', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'fiscalAuthorities'})}
                     ]
                 },{
                     header: 'Rates and Fee Structure',

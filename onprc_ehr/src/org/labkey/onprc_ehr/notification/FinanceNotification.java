@@ -109,6 +109,7 @@ public class FinanceNotification extends AbstractEHRNotification
 
         miscChargesLackingProjects(c, u, msg);
 
+        chargesMissingRates(c, u, msg);
         simpleAlert(c, u , msg, "onprc_billing", "invalidChargeRateEntries", " charge rate records with invalid or overlapping intervals.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
         simpleAlert(c, u , msg, "onprc_billing", "invalidChargeRateExemptionEntries", " charge rate exemptions with invalid or overlapping intervals.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
         simpleAlert(c, u , msg, "onprc_billing", "invalidCreditAccountEntries", " credit account records with invalid or overlapping intervals.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
@@ -143,6 +144,7 @@ public class FinanceNotification extends AbstractEHRNotification
         QueryService.get().bindNamedParameters(sql, params);
 
         sql = new SQLFragment("SELECT sum(t.totalcost) as totalCost, count(*) as total, " +
+                "sum(t.quantity) as totalQuantity, " +
                 "sum(COALESCE(CASE WHEN t.isExemption IS NULL THEN 0 ELSE 1 END, 0)) as totalExemptions, " +
                 "sum(COALESCE(CASE WHEN (t.categories IS NOT NULL AND t.categories LIKE '%Multiple%') THEN 1 ELSE 0 END, 0)) as totalMultipleAssignments, " +
                 "sum(COALESCE(CASE WHEN (t.lacksRate IS NOT NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCost, " +
@@ -155,17 +157,18 @@ public class FinanceNotification extends AbstractEHRNotification
         List<Map<String, Object>> rows = new ArrayList<>(ss.getMapCollection());
 
         Long total = (rows.size() > 0) ? Long.parseLong(rows.get(0).get("total").toString()) : 0;
+        Double totalQuantity = (rows.size() > 0 && rows.get(0).get("totalQuantity") != null) ? Double.parseDouble(rows.get(0).get("totalQuantity").toString()) : 0;
         Integer totalExemptions = (rows.size() > 0 && rows.get(0).get("totalExemptions") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;
         Integer totalMiscCharges = (rows.size() > 0 && rows.get(0).get("totalMiscCharge") != null) ? (Integer)rows.get(0).get("totalMiscCharge") : 0;
         Integer totalMultipleAssignments = (rows.size() > 0 && rows.get(0).get("totalMultipleAssignments") != null) ? (Integer)rows.get(0).get("totalMultipleAssignments") : 0;
         Integer totalLackingCost = (rows.size() > 0 && rows.get(0).get("totalLackingCost") != null) ? (Integer)rows.get(0).get("totalLackingCost") : 0;
-        Integer totalLackingCreditAccount = (rows.size() > 0 && rows.get(0).get("totalLackingCreditAccount") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;
+        Integer totalLackingCreditAccount = (rows.size() > 0 && rows.get(0).get("totalLackingCreditAccount") != null) ? (Integer)rows.get(0).get("totalLackingCreditAccount") : 0;
         Integer totalLackingProject = (rows.size() > 0 && rows.get(0).get("totalLackingProject") != null) ? (Integer)rows.get(0).get("totalLackingProject") : 0;
 
         Double totalCost = (rows.size() > 0 && rows.get(0).get("totalCost") != null) ? (Double)rows.get(0).get("totalCost") : 0.0;
 
         msg.append("<b>Per Diems:</b><p>");
-        msg.append("There have been " + total + " items since the last invoice date of " + _dateFormat.format(lastInvoiceEnd) + ", for a total of " + _dollarFormat.format(totalCost) + ".");
+        msg.append("There have been " + total + " items (" + totalQuantity + " effective days) since the last invoice date of " + _dateFormat.format(lastInvoiceEnd) + ", for a total of " + _dollarFormat.format(totalCost) + ".");
         String url = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, "perDiemRates", null) + "&query.param.StartDate=" + _dateFormat.format(start.getTime()) + "&query.param.EndDate=" + _dateFormat.format(endDate.getTime()) + "&query.param.NumDays=" + numDays;
 
         StringBuilder specialMessages = new StringBuilder();
@@ -258,7 +261,7 @@ public class FinanceNotification extends AbstractEHRNotification
         Long total = (rows.size() > 0) ? Long.parseLong(rows.get(0).get("total").toString()) : 0;
         Integer totalExemptions = (rows.size() > 0 && rows.get(0).get("totalExemptions") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;
         Integer totalLackingCost = (rows.size() > 0 && rows.get(0).get("totalLackingCost") != null) ? (Integer)rows.get(0).get("totalLackingCost") : 0;
-        Integer totalLackingCreditAccount = (rows.size() > 0 && rows.get(0).get("totalLackingCreditAccount") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;
+        Integer totalLackingCreditAccount = (rows.size() > 0 && rows.get(0).get("totalLackingCreditAccount") != null) ? (Integer)rows.get(0).get("totalLackingCreditAccount") : 0;
         Integer totalLackingProject = (rows.size() > 0 && rows.get(0).get("totalLackingProject") != null) ? (Integer)rows.get(0).get("totalLackingProject") : 0;
 
         Double totalCost = (rows.size() > 0 && rows.get(0).get("totalCost") != null) ? (Double)rows.get(0).get("totalCost") : 0.0;
@@ -299,7 +302,7 @@ public class FinanceNotification extends AbstractEHRNotification
         if (totalMismatchingProject > 0)
             specialMessages.append("- <a href='" + url + "&query.matchesProject~eq=false'>There are " + totalMismatchingProject + " items using a project that does not match the assignment on that date.</a><br>");
         if (totalReversals > 0)
-            specialMessages.append("- <a href='" + url + "&query.invoicedItemId~isnonblank'>There are " + totalReversals + " items which are asjustments or reversals.</a><br>");
+            specialMessages.append("- <a href='" + url + "&query.invoicedItemId~isnonblank'>There are " + totalReversals + " items which are adjustments or reversals.</a><br>");
 
         if (specialMessages.length() > 0)
         {
@@ -338,21 +341,47 @@ public class FinanceNotification extends AbstractEHRNotification
         if (total2 > 0)
         {
             msg.append("<b>Warning: There are " + total2 + " charges listed that list a project without an alias</b><p>");
-            String url2 = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, ONPRC_EHRSchema.TABLE_MISC_CHARGES, null) + "&query.project/account~isblank";
-            msg.append("<a href='" + url2 + "&query.project~isblank'>Click here to view them</a>");
+            String url2 = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, ONPRC_EHRSchema.TABLE_MISC_CHARGES, null) + "&" + filter2.toQueryString("query");
+            msg.append("<a href='" + url2 + "'>Click here to view them</a>");
             msg.append("<hr>");
         }
 
         SimpleFilter filter3 = new SimpleFilter(FieldKey.fromString("invoiceId"), null, CompareType.ISBLANK);
-        filter2.addCondition(FieldKey.fromString("project/enddateCoalesced"), new Date(), CompareType.DATE_GT);
+        filter3.addCondition(FieldKey.fromString("project/enddateCoalesced"), new Date(), CompareType.DATE_GT);
         TableSelector ts3 = new TableSelector(ti, PageFlowUtil.set("project"), filter3, null);
         long total3 = ts3.getRowCount();
         if (total3 > 0)
         {
-            msg.append("<b>Warning: There are " + total3 + " charges listed that list a project without an alias</b><p>");
-            String url3 = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, ONPRC_EHRSchema.TABLE_MISC_CHARGES, null) + "&query.project/enddateCoalesced~dategt=" + _dateFormat.format(new Date());
-            msg.append("<a href='" + url3 + "&query.project~isblank'>Click here to view them</a>");
+            msg.append("<b>Warning: There are " + total3 + " charges listed without a project</b><p>");
+            String url3 = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, ONPRC_EHRSchema.TABLE_MISC_CHARGES, null) + "&" + filter3.toQueryString("query");
+            msg.append("<a href='" + url3 + "'>Click here to view them</a>");
             msg.append("<hr>");
+        }
+    }
+
+    private void chargesMissingRates(Container c, User u, StringBuilder msg)
+    {
+        Map<String, Object> params = Collections.<String, Object>singletonMap("date", new Date());
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_billing").getTable("chargesMissingRate");
+        if (params != null)
+        {
+            SQLFragment sql = ti.getFromSQL("t");
+            QueryService.get().bindNamedParameters(sql, params);
+            sql = new SQLFragment("SELECT * FROM " + sql);
+            QueryService.get().bindNamedParameters(sql, params);
+
+            SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
+            long count = ss.getRowCount();
+
+            if (count > 0)
+            {
+                msg.append("<b>Warning: there are " + count + " active charge items missing either a default rate or a default credit alias.  This may cause problems with the billing calculation.</b><p>");
+                String url = getExecuteQueryUrl(c, "onprc_billing", "chargesMissingRate", null);
+                url += "&query.param.Date=" + _dateFormat.format(new Date());
+
+                msg.append("<a href='" + url + "'>Click here to view them</a>");
+                msg.append("<hr>");
+            }
         }
     }
 

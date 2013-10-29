@@ -25,3 +25,4 @@ SELECT
   r2.enddate as endDate2
 FROM onprc_billing.chargeRateExemptions r1
 JOIN onprc_billing.chargeRateExemptions r2 ON (r1.rowid != r2.rowid and r1.project = r2.project AND r1.chargeId = r2.chargeId AND cast(r1.startDate as DATE) <= r2.enddateCoalesced AND r1.enddateCoalesced >= cast(r2.startDate as DATE))
+where r1.rowid < r2.rowid --this will result in 1 row per pair of offending records, rather than 2

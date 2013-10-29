@@ -5,7 +5,9 @@
        <column name="title"/>
        <column name="investigatorId"/>
        <column name="approve"/>
-       <column name="renewalDate"/>
+       <!--<column name="annualReviewDate"/>-->
+       <column name="daysUntilAnnualReview"/>
+       <!--<column name="renewalDate"/>-->
        <column name="daysUntilRenewal"/>
        <column name="enddate"/>
        <column name="usda_level"/>

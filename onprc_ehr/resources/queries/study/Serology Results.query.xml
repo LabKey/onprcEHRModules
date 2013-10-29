@@ -61,6 +61,12 @@
                     </column>
                     <column columnName="qualifier">
                         <columnTitle>Qualifier</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>serologyResultQualifier</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
                     </column>
                     <column columnName="definitive">
                         <columnTitle>Definitive Result?</columnTitle>

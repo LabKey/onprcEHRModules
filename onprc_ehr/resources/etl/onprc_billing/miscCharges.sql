@@ -146,8 +146,7 @@ select
   where afc.ChargeType = s.Flag and s.Field = 'ChargeType') as category,
   afc.ProcedureID as procedureID,
   rfp.ProcedureName as description,
-  (select bci.rowId from Labkey.onprc_billing.chargeableItems bci
-  where rfp.ProcedureName = bci.name) as chargeID,
+  (select bci.rowId from Labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeID,
   afc.ProcedureCount as quantity,
   afc.Amount as unitCost,
   (afc.Amount * afc.ProcedureCount) as totalCost,

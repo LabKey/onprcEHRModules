@@ -1,7 +1,7 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="measurementsPivoted" tableDbType="TABLE">
+            <table tableName="measurementsMisc" tableDbType="TABLE">
                 <tableTitle>Tissue Measurements</tableTitle>
                 <columns>
 

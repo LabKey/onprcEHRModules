@@ -59,7 +59,7 @@ my $host = undef;
 my $stat = undef;
 my $instance_name = '';
 
-my @stats = qw(access buffer cache connections filesize locks logsize transactions);
+my @stats = qw(access buffer cache connections filesize locks logsize memory transactions);
 
 if($0 =~ /^(?:|.*\/)sqlserver_(.+?)_([^_]+)$/) {
     $host = $1;
@@ -111,7 +111,7 @@ my $access_counters = ['Probe Scans/sec', 'Range Scans/sec', 'Page Splits/sec', 
 my $buffer_counters = ['Page lookups/sec', 'Page reads/sec', 'Page writes/sec'];
 my $locks_instances = ['AllocUnit', 'HoBT', 'Metadata', 'Application', 'RID', 'Extent', 'Key', 'Page', 'Object', 'File', 'Database', '_Total'];
 my $locks_counters = ['Number of Deadlocks/sec'];
-my $memory_counters = ['Used memory (KB)', 'Total Server Memory (KB)', 'SQL Cache Memory (KB)'];
+my $memory_counters = ['Used memory (KB)', 'Total Server Memory (KB)', 'SQL Cache Memory (KB)', 'Max memory (KB)', 'Target memory (KB)', 'Query exec memory target (KB)', 'Max request memory grant (KB)', 'Optimizer Memory (KB)', 'SQL Cache Memory (KB)', 'Target Server Memory (KB)', 'Lock Memory (KB)', 'Maximum Workspace Memory (KB)'];
 my $transaction_counters = ['Transactions/sec', 'Write Transactions/sec'];
 
 

@@ -30,7 +30,7 @@ public class ClinicalEncountersFormSection extends SimpleGridPanel
 {
     public ClinicalEncountersFormSection()
     {
-        super("study", "encounters", "Panels / Services", EHRService.FORM_SECTION_LOCATION.Body);
+        super("study", "encounters", "Procedures", EHRService.FORM_SECTION_LOCATION.Body);
         addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/surgeryButtons.js"));
     }
 

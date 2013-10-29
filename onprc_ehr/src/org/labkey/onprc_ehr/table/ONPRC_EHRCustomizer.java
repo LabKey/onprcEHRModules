@@ -15,7 +15,6 @@
  */
 package org.labkey.onprc_ehr.table;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.ColumnInfo;
@@ -32,7 +31,6 @@ import org.labkey.api.data.WrappedColumn;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
-import org.labkey.api.ldk.LDKService;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.ExprColumn;
 import org.labkey.api.query.FieldKey;
@@ -44,6 +42,7 @@ import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.study.DataSetTable;
+import org.labkey.onprc_ehr.query.ClinicalRemarkDisplayColumn;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -158,6 +157,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             else if (matches(table, "ehr_lookups", "areas"))
             {
                 customizeAreaTable((AbstractTableInfo) table);
+            }
+            else if (matches(table, "onprc_billing", "invoicedItems"))
+            {
+                customizeInvoicedItems((AbstractTableInfo) table);
             }
         }
 
@@ -918,6 +921,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         recentP2.setLabel("Most Recent P2");
         recentP2.setDescription("This column will display the most recent P2 that has been entered for the animal.");
         recentP2.setDisplayWidth("250");
+        recentP2.setDisplayColumnFactory(new DisplayColumnFactory()
+        {
+            @Override
+            public DisplayColumn createRenderer(ColumnInfo colInfo)
+            {
+                return new ClinicalRemarkDisplayColumn(colInfo, "p2");
+            }
+        });
         ti.addColumn(recentP2);
 
         SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
@@ -927,6 +938,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ExprColumn todaysP2 = new ExprColumn(ti, "todaysP2", p2Sql, JdbcType.VARCHAR, objectId);
         todaysP2.setLabel("P2s Entered Today");
         todaysP2.setDisplayWidth("250");
+        todaysP2.setDisplayColumnFactory(new DisplayColumnFactory()
+        {
+            @Override
+            public DisplayColumn createRenderer(ColumnInfo colInfo)
+            {
+                return new ClinicalRemarkDisplayColumn(colInfo, "p2");
+            }
+        });
         ti.addColumn(todaysP2);
 
         Calendar yesterday = Calendar.getInstance();
@@ -939,6 +958,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", yesterday.getTime());
         ExprColumn yesterdaysP2 = new ExprColumn(ti, "yesterdaysP2", p2Sql2, JdbcType.VARCHAR, objectId);
         yesterdaysP2.setLabel("P2s Entered Yesterday");
+        yesterdaysP2.setDisplayColumnFactory(new DisplayColumnFactory()
+        {
+            @Override
+            public DisplayColumn createRenderer(ColumnInfo colInfo)
+            {
+                return new ClinicalRemarkDisplayColumn(colInfo, "p2");
+            }
+        });
         yesterdaysP2.setDisplayWidth("250");
         ti.addColumn(yesterdaysP2);
 
@@ -950,6 +977,15 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         todaysRemarks.setLabel("Remarks Entered Today");
         todaysRemarks.setDescription("This shows any remarks entered today for this case");
         todaysRemarks.setDisplayWidth("250");
+        todaysRemarks.setDisplayColumnFactory(new DisplayColumnFactory()
+        {
+            @Override
+            public DisplayColumn createRenderer(ColumnInfo colInfo)
+            {
+                return new ClinicalRemarkDisplayColumn(colInfo, "remark");
+            }
+        });
+
         ti.addColumn(todaysRemarks);
 
         SQLFragment rmSql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
@@ -1076,6 +1112,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
     {
         ti.getColumn("inves").setHidden(true);
         ti.getColumn("investigatorId").setHidden(false);
+        ti.getColumn("approve").setLabel("Initial Approval Date");
         ColumnInfo externalId = ti.getColumn("external_id");
         externalId.setHidden(false);
         externalId.setLabel("eIACUC #");
@@ -1094,25 +1131,58 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             }
         }
 
-        String renewalDate = "renewalDate";
-        if (ti.getColumn(renewalDate) == null)
+        if (ti.getSqlDialect().isSqlServer())
         {
-            //NOTE: day used instead of year to be PG / LK12.3 compatible
-            String sqlString = "(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN {fn timestampadd(SQL_TSI_DAY, 1095, " + ExprColumn.STR_TABLE_ALIAS + ".approve)} ELSE null END)";
-            SQLFragment sql = new SQLFragment(sqlString);
-            ExprColumn renewalCol = new ExprColumn(ti, renewalDate, sql, JdbcType.DATE, ti.getColumn("approve"));
-            renewalCol.setLabel("Next Renewal Date");
-            ti.addColumn(renewalCol);
+            String annualReviewDate = "annualReviewDate";
+            if (ti.getColumn(annualReviewDate) == null)
+            {
+                //NOTE: day used instead of year to be PG / LK12.3 compatible
+                String sqlString = "(CASE " +
+                        //if the protocol is already ended, or began more than 3 years ago, assume it is ended
+                        " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
+                        " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
+                        //otherwise, show the next annual renewal date
+                        " ELSE {fn timestampadd(SQL_TSI_DAY, -1, {fn timestampadd(SQL_TSI_YEAR, {fn ceiling((" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + ") / 365.0)}, " + ExprColumn.STR_TABLE_ALIAS + ".approve)})}" +
+                        " END)";
+                SQLFragment sql = new SQLFragment(sqlString);
+                ExprColumn annualReviewDateCol = new ExprColumn(ti, annualReviewDate, sql, JdbcType.DATE, ti.getColumn("approve"));
+                annualReviewDateCol.setLabel("Annual Review Date");
+                ti.addColumn(annualReviewDateCol);
 
-            String daysUntil = "daysUntilRenewal";
-            SQLFragment sql2 = new SQLFragment("(CASE " +
-                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL " +
-                    " THEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, sqlString, "{fn curdate()}") + ") " +
-                    " ELSE NULL END)");
-            ExprColumn daysUntilCol = new ExprColumn(ti, daysUntil, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
-            daysUntilCol.setLabel("Days Until Renewal");
-            daysUntilCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-            ti.addColumn(daysUntilCol);
+                String daysUntilAnnual = "daysUntilAnnualReview";
+                SQLFragment sql2 = new SQLFragment("(CASE " +
+                        // see above for logic behind this
+                        " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
+                        " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
+                        //NOTE: these expire 1 day prior to a full year, so use 364 instead of 365
+                        " ELSE 364 - ((" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + ") % 365)" +
+                        " END)");
+                ExprColumn daysUntilAnnualCol = new ExprColumn(ti, daysUntilAnnual, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
+                daysUntilAnnualCol.setLabel("Days Until Annual Review");
+                daysUntilAnnualCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+                ti.addColumn(daysUntilAnnualCol);
+            }
+
+            String renewalDate = "renewalDate";
+            if (ti.getColumn(renewalDate) == null)
+            {
+                //NOTE: while SQL_TSI_YEAR is not PG compatible, use it to deal w/ leap years.
+                String sqlString = "(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN {fn timestampadd(SQL_TSI_DAY, -1, {fn timestampadd(SQL_TSI_YEAR, 3, " + ExprColumn.STR_TABLE_ALIAS + ".approve)})} ELSE null END)";
+                SQLFragment sql = new SQLFragment(sqlString);
+                ExprColumn renewalCol = new ExprColumn(ti, renewalDate, sql, JdbcType.DATE, ti.getColumn("approve"));
+                renewalCol.setLabel("3-Yr Renewal Date");
+                ti.addColumn(renewalCol);
+
+                String daysUntil = "daysUntilRenewal";
+                SQLFragment sql2 = new SQLFragment("(CASE " +
+                        " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL " +
+                        " THEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, sqlString, "{fn curdate()}") + ") - 1" +
+                        " ELSE NULL END)");
+                ExprColumn daysUntilCol = new ExprColumn(ti, daysUntil, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
+                daysUntilCol.setLabel("Days Until 3-Yr Renewal");
+                daysUntilCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+                ti.addColumn(daysUntilCol);
+            }
         }
     }
 
@@ -1299,6 +1369,11 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 }
             });
         }
+    }
+
+    private void customizeInvoicedItems(AbstractTableInfo table)
+    {
+        table.getButtonBarConfig().setAlwaysShowRecordSelectors(true);
     }
 
     private void customizeAreaTable(AbstractTableInfo table)

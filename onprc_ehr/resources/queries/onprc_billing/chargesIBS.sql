@@ -15,7 +15,7 @@
  */
 SELECT
   i.servicecenter,
-  i.transactionNumber,
+  i.rowid as transactionNumber,
   'N' as transactionType,
   i.date as transactionDate,
   i.item as transactionDescription,
@@ -37,12 +37,13 @@ SELECT
   i.invoiceId
 
 FROM onprc_billing.invoicedItems i
+WHERE i.totalcost != 0
 
 UNION ALL
 
 SELECT
   i.servicecenter,
-  i.transactionNumber,
+  i.rowid as transactionNumber,
   'N' as transactionType,
   i.date as transactionDate,
   i.item as transactionDescription,
@@ -64,3 +65,4 @@ SELECT
   i.invoiceId as invoiceNumber
 
 FROM onprc_billing.invoicedItems i
+WHERE i.totalcost != 0

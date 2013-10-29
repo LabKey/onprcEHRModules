@@ -8,11 +8,9 @@ SELECT
 d.id,
 d.calculated_status,
 s.*,
--- s.lsid || '||' || s.date as primaryKey2,
-s.objectid || '||' || cast(s.date as varchar) as treatmentid,
-null as treatmentStatus
---(SELECT max(d.qcstate) as label FROM study.drug d WHERE (s.objectid || '||' || s.date) = d.treatmentid) as treatmentStatus,
---(SELECT max(taskId) as taskId FROM study.drug d WHERE (s.objectid || '||' || s.date) = d.treatmentid) as taskId
+s.objectid as treatmentid,
+(SELECT max(d.qcstate) as label FROM study.drug d WHERE s.objectid = d.treatmentid AND s.date = d.timeordered) as treatmentStatus
+--(SELECT max(taskId) as taskId FROM study.drug d WHERE s.objectid = d.treatmentid AND s.date = d.timeordered) as taskId
 
 
 FROM study.demographics d JOIN (

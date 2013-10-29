@@ -2,4 +2,7 @@
     <sorts>
         <sort column="name"/>
     </sorts>
+    <filters>
+        <filter column="active" operator="eq" value="true"/>
+    </filters>
 </customView>

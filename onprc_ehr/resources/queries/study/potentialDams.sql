@@ -27,7 +27,7 @@ FROM study.birth b
 JOIN study.housing h ON (
     (b.Id != h.Id AND
     h.date <= b.date AND
-    h.enddateCoalesced >= b.date AND
+    h.enddateTimeCoalesced >= b.date AND
     h.room = b.room AND (h.cage = b.cage OR (h.cage is null and b.cage is null))
     ) OR h.Id = b.dam
 )

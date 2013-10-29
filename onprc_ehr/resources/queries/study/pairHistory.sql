@@ -17,7 +17,8 @@ SELECT
   null as observation,
   null as outcome,
   null as remark,
-  null as pairId
+  null as pairId,
+  null as taskid
 
 FROM study.housingRoommates h
 WHERE h.StartDate >= StartDate and h.room.housingType.value = 'Cage Location'
@@ -37,7 +38,8 @@ SELECT
   p.observation,
   p.outcome,
   p.remark,
-  p.pairId
+  p.pairId,
+  p.taskid
 
 FROM study.pairings p
 WHERE p.date >= StartDate

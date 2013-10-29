@@ -18,6 +18,7 @@ PARAMETERS(EndDate TIMESTAMP)
 SELECT
   p.*,
   p.chargeId.name as item,
+  p.chargeId.category as category,
   null sourceRecord,
   coalesce(e.unitCost, cr.unitCost) as unitCost,
   p.effectiveDays as quantity,
@@ -73,6 +74,7 @@ SELECT
   null as startDate,
   null as numDays,
   mc.item,
+  mc.category,
   mc.sourceRecord,
   mc.unitcost,
   mc.quantity,

@@ -109,6 +109,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //housing
         roomsWithMixedViralStatus(c, u, msg);
         livingAnimalsWithoutHousing(c, u, msg);
+        livingAnimalsBornDead(c, u, msg);
 
         //clinical
         deadAnimalsWithActiveCases(c, u, msg);
@@ -386,6 +387,29 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             });
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&query.Id/curLocation/room/room~isblank&query.Id/Dataset/Demographics/calculated_status~eq=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void livingAnimalsBornDead(final Container c, User u, final StringBuilder msg)
+    {
+        Sort sort = new Sort(getStudy(c).getSubjectColumnName());
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
+        filter.addCondition(FieldKey.fromString("Id/birth/cond/value"), "Born Dead;Terminated At Birth", CompareType.IN);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), filter, sort);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " animals listed as living, but have a birth record states with 'Born Dead' or 'Terminated At Birth':</b><br>\n");
+
+            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                public void exec(ResultSet rs) throws SQLException
+                {
+                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
+                }
+            });
+
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -1460,6 +1484,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("project/name"), U42, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room/housingType/value"), "Cage Location", CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/area"), "Hospital", CompareType.NEQ_OR_NULL);
 
         TableSelector ts = new TableSelector(ti, Collections.singleton("Id"), filter, null);
         long count = ts.getRowCount();
@@ -1482,8 +1507,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         if (level != null)
         {
-            msg.append("<b>" + level + ": There are " + count + " animals assigned to U42 (" + U42 + ") that are housed in cage locations.</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/curLocation/room/housingType/value~eq=Cage Location&query.Id/utilization/use~contains=" + U42 + "'>Click here to view them</a><br>\n");
+            msg.append("<b>" + level + ": There are " + count + " animals assigned to U42 (" + U42 + ") that are housed in cage locations, excluding the hospital area.</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/curLocation/room/housingType/value~eq=Cage Location&query.Id/curLocation/area~neqornull=Hospital&query.Id/utilization/use~contains=" + U42 + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }

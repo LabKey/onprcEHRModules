@@ -122,9 +122,6 @@
         <dataset name="histology" id="1070" category="Pathology" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="organ_weights" id="1072" showByDefault="true" category="Pathology" type="Standard">
-            <tags/>
-        </dataset>
         <dataset name="tissue_samples" id="1071" showByDefault="false" category="Pathology" type="Standard">
             <tags/>
         </dataset>

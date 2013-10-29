@@ -1327,6 +1327,7 @@ public class ETLRunnable implements Runnable
                             "ON (t." + filterCol.getSelectName() + " = t2." + filterCol.getSelectName() + ") \n" +
                             "WHERE (t." + filterCol.getSelectName() + " IS NULL OR t2." + filterCol.getSelectName() + " IS NULL)" +
                             (realTable.getColumn("taskid") == null ? "" : " AND t2.taskid IS NULL") +
+                            (realTable.getColumn("requestid") == null ? "" : " AND t2.requestid IS NULL") +
                             (realTable.getColumn("container") == null ? "" : " AND (t2.container = '" + targetTable.getUserSchema().getContainer().getId() + "' or t2.container is null)");
 
                     ps = originConnection.prepareStatement(sql);

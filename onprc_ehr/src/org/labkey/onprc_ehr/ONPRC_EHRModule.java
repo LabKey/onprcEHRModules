@@ -49,6 +49,7 @@ import org.labkey.onprc_ehr.dataentry.DiagnosisFormType;
 import org.labkey.onprc_ehr.dataentry.LabworkFormType;
 import org.labkey.onprc_ehr.dataentry.LabworkRequestFormType;
 import org.labkey.onprc_ehr.dataentry.PairingFormType;
+import org.labkey.onprc_ehr.dataentry.ProcedureFormType;
 import org.labkey.onprc_ehr.dataentry.ProcessingFormType;
 import org.labkey.onprc_ehr.dataentry.SurgeryFormType;
 import org.labkey.onprc_ehr.dataentry.SurgeryRequestFormSection;
@@ -78,6 +79,7 @@ import org.labkey.onprc_ehr.notification.UnoccupiedRoomsNotification;
 import org.labkey.onprc_ehr.notification.WeightAlertsNotification;
 import org.labkey.onprc_ehr.pipeline.BillingPipelineProvider;
 import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
+import org.labkey.onprc_ehr.table.ChargeableItemsCustomizer;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
 import java.net.URISyntaxException;
@@ -102,7 +104,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.332;
+        return 12.338;
     }
 
     public boolean hasScripts()
@@ -159,6 +161,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     {
         EHRService.get().registerModule(this);
         EHRService.get().registerTableCustomizer(this, ONPRC_EHRCustomizer.class);
+        EHRService.get().registerTableCustomizer(this, ChargeableItemsCustomizer.class, "onprc_billing", "chargeableItems");
 
         Resource r = getModuleResource("/scripts/onprc_ehr/onprc_triggers.js");
         assert r != null;
@@ -182,6 +185,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Population Summary By Species, Gender and Age", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=colonyPopulationByAge"), "Other Searches");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Find Animals Housed At The Center Over A Date Range", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Other Searches");
 
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.protocol, "View All Active Protocols", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=ehr&query.queryName=Protocol&query.viewName=Active Protocols"), "Quick Links");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.protocol, "View All Protocols With Active Assignments", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=ehr&query.queryName=Protocol&query.viewName=Protocols With Active Assignments"), "Quick Links");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.project, "View Active Projects", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=ehr&query.queryName=Project&query.enddate~isblank"), "Quick Links");
@@ -234,12 +238,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "Weights", "study", "weight");
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "treatments", "Medications/Diet", Collections.<FormSection>singletonList(new TreatmentsTaskFormSection()));
         EHRService.get().registerFormType(new PairingFormType(this));
-        //EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "BSU", "Enrichment", "study", "Enrichment");
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Billing", "miscCharges", "Misc Charges", Collections.<FormSection>singletonList(new ChargesFormSection()));
         EHRService.get().registerFormType(new LabworkFormType(this));
         EHRService.get().registerFormType(new ProcessingFormType(this));
         EHRService.get().registerFormType(new SurgeryFormType(this));
-        //EHRService.get().registerFormType(new CageObservationFormType(this));
+        EHRService.get().registerFormType(new ProcedureFormType(this));
         EHRService.get().registerFormType(new DiagnosisFormType(this));
 
         EHRService.get().registerFormType(new BloodDrawFormType(this));

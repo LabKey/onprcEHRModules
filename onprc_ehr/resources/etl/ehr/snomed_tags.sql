@@ -75,7 +75,7 @@ UNION ALL
 Select
 	cast(pa.AnimalID as nvarchar(4000)) as Id,
 	null as caseid,
-	d.objectid as recordid,
+	pa.objectid as recordid,
 	(cast(d.objectid as varchar(38)) + '_' + cast(s2.value as nvarchar(100))) as objectid,
 	coalesce(d.sequenceno, 0) as set_number,
 	s2.i as sort,

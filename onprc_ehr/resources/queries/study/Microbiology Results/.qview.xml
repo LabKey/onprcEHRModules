@@ -2,6 +2,7 @@
     <columns>
         <column name="Id"/>
         <column name="date"/>
+        <column name="runid/servicerequested"/>
         <column name="runid/tissue"/>
         <column name="organism"/>
         <column name="quantity"/>

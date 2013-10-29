@@ -48,7 +48,7 @@ SELECT
   END as isExemption,
   CASE
     WHEN (p.category = 'Lease Fees' or p.category = 'Lease Setup Fee') AND coalesce(e.unitCost, cr.unitCost) is null THEN 'Y'
-    WHEN (p.category != 'Lease Fese' AND p.category != 'Lease Setup Fee') AND (coalesce(e3.unitCost, cr3.unitCost) IS NULL OR coalesce(e2.unitCost, cr2.unitCost) IS NULL) THEN 'Y'
+    WHEN (p.category != 'Lease Fees' AND p.category != 'Lease Setup Fee') AND (coalesce(e3.unitCost, cr3.unitCost) IS NULL OR coalesce(e2.unitCost, cr2.unitCost) IS NULL) THEN 'Y'
     ELSE null
   END as lacksRate,
   CASE

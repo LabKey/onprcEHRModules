@@ -40,7 +40,8 @@ Select
 
 	pat.objectid,
     null as chargetype,
-  null as project
+  null as project,
+  null as remark
 
 From Path_Biopsy Pat
      left join Ref_Technicians Rt on (Pat.Pathologist = Rt.ID)
@@ -83,7 +84,8 @@ Select
 
 	PTT.objectid,
     null as chargetype,
-    null as project
+    null as project,
+    null as remark
 
 From Path_Autopsy PTT
 left join Sys_Parameters s1 on (PTT.CauseofDeath = s1.flag And s1.Field = 'Deathcause')
@@ -143,7 +145,9 @@ Select
 
 	sg.objectid,
     s4.value as chargetype,
-  ibs.projectId as project
+  coalesce(ibs.projectId, afc.project) as project,
+  null as remark
+
 From Sur_General sg
 LEFT JOIN Ref_SurgProcedure r on (sg.procedureid = r.procedureid)
 left join Ref_Technicians Rt on (sg.Surgeon = Rt.ID)
@@ -176,7 +180,22 @@ from (
   group by t1.SurgeryID
 ) ibs ON (ibs.surgeryId = sg.surgeryId)
 
-WHERE (sg.ts > ? or c.ts > ? or ibs.ts > ?)
+LEFT JOIN (
+  SELECT
+    sg1.SurgeryID,
+    MAX(sg1.AnimalID) as AnimalID,
+    max(afc.ts) as maxTs,
+    --MAX(sg1.date) as date,
+    --MAX(sg1.procedureId) as procedureId,
+    max(afc.ProjectID) as project
+    --COUNT(distinct afc.projectID) as total
+
+  From Sur_General sg1
+    left join AF_Charges afc on (sg1.AnimalID = afc.AnimalID and sg1.Date = afc.ChargeDate and sg1.ProcedureID = afc.ProcedureID)
+  group by sg1.SurgeryID
+) afc ON (afc.surgeryId = sg.surgeryId)
+
+WHERE (sg.ts > ? or c.ts > ? or ibs.ts > ? or afc.maxTs > ?)
 
 UNION ALL
 
@@ -207,7 +226,8 @@ Select
 
 	cln.objectid,
   null as chargetype,
-  null as project
+  null as project,
+  null as remark
 
 FROM Cln_Dx cln
      left join  Ref_Technicians rt on (cln.Technician = rt.ID)
@@ -215,3 +235,47 @@ FROM Cln_Dx cln
      left join Af_Case c ON (c.CaseID = cln.CaseID)
 
 WHERE cln.ts > ?
+
+UNION ALL
+
+--implant procedures
+Select
+  cast(cln.AnimalId as varchar(4000)) as Id,
+  cln.Date ,
+  null as enddate,
+  'Surgery' as type,
+  null as caseno,
+  NULL as caseId,
+
+  max(case
+  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+    'Unassigned'
+  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+    rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+    rt.LastName + ', ' + rt.FirstName
+  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+    rt.LastName + ' (' + rt.Initials + ')'
+  WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+    null
+  else
+  rt.Initials
+  END) as performedBy,
+  (select rowid from labkey.ehr_lookups.procedures WHERE name = 'Hormone Implant/Removal' and active = 1) as procedureId,
+
+  max(cast(cln.objectid as varchar(36))) as objectid,
+  max(s5.Value) as chargetype,
+  null as project,
+  null as remark  --note: remark being entered into encounter_summaries
+
+FROM sur_implants cln
+  left join  Ref_Technicians rt on (cln.Surgeon = rt.ID)
+  LEFT JOIN Sys_parameters s1 ON (s1.Field = 'ImplantSize' AND s1.Flag = cln.size)
+  LEFT JOIN Sys_parameters s2 ON (s2.Field = 'ImplantType' AND s2.Flag = cln.type)
+  LEFT JOIN Sys_parameters s3 ON (s3.Field = 'ImplantSite' AND s3.Flag = cln.site)
+  LEFT JOIN Sys_parameters s4 ON (s4.Field = 'ImplantAction' AND s4.Flag = cln.action)
+  LEFT JOIN Sys_parameters s5 ON (s5.Field = 'SurgeryChargeCode' AND s5.Flag = cln.chargecode)
+
+  left join  Sys_parameters s6 on (s6.Field = 'DepartmentCode' And s6.Flag = rt.DeptCode)
+GROUP BY cln.AnimalID, cln.Date
+HAVING MAX(cln.ts) > ?

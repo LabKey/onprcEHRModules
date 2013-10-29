@@ -77,3 +77,21 @@ WHERE pat.surgeryid IN (select sl.SurgeryID FROM Sur_Log sl WHERE sl.ts > ?)
 ) t
 
 WHERE t.remark not like '%Testing testing%' and datalength(t.remark) > 0
+
+UNION ALL
+
+--implant data
+Select
+    cast(im.AnimalID as nvarchar(4000)) as Id,
+	im.Date,
+	im.Comments AS remark,
+
+	max(cast(im.objectid as varchar(38))) as parentid,
+	max(cast(im.objectid as varchar(38))) as objectid
+From sur_implants im
+
+WHERE comments is not null and comments != ''
+GROUP BY im.AnimalID, im.Date, im.Comments
+having max(im.ts) > ?
+
+

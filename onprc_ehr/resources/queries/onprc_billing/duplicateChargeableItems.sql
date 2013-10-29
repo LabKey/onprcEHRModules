@@ -16,6 +16,7 @@
 SELECT
 ci.name,
 null as itemCode,
+group_concat(distinct ci.category, chr(10)) as categories,
 count(*) as total
 
 from onprc_billing.chargeableItems ci
@@ -26,11 +27,15 @@ having count(*) > 1
 UNION ALL
 
 SELECT
-null as name,
+group_concat(distinct ci.name, chr(10)) as name,
 ci.itemCode,
+group_concat(distinct ci.category, chr(10)) as categories,
 count(*) as total
 
 from onprc_billing.chargeableItems ci
 where ci.active = true and ci.itemCode is not null
-group by ci.itemCode
+
+--TODO: this is a hack until data is cleaned up
+and (category != 'Surgery' and NOT(itemCode = 3 AND category = 'Lease Fees') )
+group by ci.itemCode, ci.category
 having count(*) > 1

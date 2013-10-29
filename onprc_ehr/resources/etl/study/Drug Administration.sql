@@ -45,6 +45,7 @@ SELECT
   (cast(t.objectid as varchar(38)) + '_' + convert(varchar, t.date, 120)) as objectid,
   t.parentId,
   t.treatmentId,
+  CASE WHEN t.treatmentid IS NULL THEN NULL ELSE DATEADD(DAY , i.value, t.date) END as timeordered,
   t.performedBy,
   t.category,
   null as caseid
@@ -164,6 +165,7 @@ SELECT
 	cast(h.objectid as varchar(38)) as objectid,
 	g.objectid as parentId,
 	null as treatmentId,
+  null as timeordered,
 
 	null as performedby,
 	'Anesthesia' as category,
@@ -200,6 +202,7 @@ s3.value as Route,
 cast(m.objectid as varchar(38)) as objectid,
 g.objectid as parentid,
 null as treatmentId,
+null as timeordered,
 null as performedby,
 'Surgical' as category,
 c.objectid as caseid

@@ -1,34 +1,21 @@
-<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="Active Items">
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Grant Projects">
     <columns>
         <column name="projectNumber"/>
         <column name="grantNumber"/>
-        <column name="fundingAgency"/>
-        <column name="grantType"/>
-        <column name="agencyAwardNumber"/>
-        <column name="investigatorId"/>
-        <column name="alias"/>
+        <column name="investigatorName"/>
         <column name="projectTitle"/>
         <column name="projectDescription"/>
-        <column name="currentYear"/>
-        <column name="totalYears"/>
+        <column name="alias"/>
+        <column name="fundingAgency"/>
+        <column name="grantType"/>
         <column name="awardSuffix"/>
         <column name="organization"/>
-        <column name="awardStartDate"/>
-        <column name="awardEndDate"/>
         <column name="budgetStartDate"/>
         <column name="budgetEndDate"/>
-        <column name="currentDCBudget"/>
-        <column name="currentFABudget"/>
-        <column name="totalDCBudget"/>
-        <column name="totalFABudget"/>
-        <column name="spid"/>
-        <column name="fiscalAuthority"/>
-        <column name="comment"/>
+        <column name="projectStatus"/>
+        <column name="aliasEnabled"/>
     </columns>
     <sorts>
         <sort column="projectNumber" descending="false"/>
     </sorts>
-    <filters>
-        <filter column="budgetEndDateCoalesced" operator="dategte" value="-0d"/>
-    </filters>
 </customView>

@@ -91,6 +91,11 @@
                             if (params.Rooms)
                                 params.Rooms = params.Rooms.join(';');
 
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
+
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveClinicalCases';
@@ -178,6 +183,11 @@
                                 params['TimeOfDay'] = timeOfDay;
                             }
 
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
+
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
@@ -264,6 +274,11 @@
                                 params['TimeOfDay'] = timeOfDay;
                             }
 
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
+
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
@@ -325,6 +340,11 @@
 
                             if (params.Rooms)
                                 params.Rooms = params.Rooms.join(';');
+
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
@@ -412,6 +432,11 @@
                                 params['TimeOfDay'] = timeOfDay;
                             }
 
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
+
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
                             ssrsFolder = '/' + ssrsFolder  + '/' + 'ActiveTreatments';
@@ -470,6 +495,11 @@
                             var params = panel.getParams();
                             if (!params)
                                 return;
+
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
@@ -545,6 +575,10 @@
                             var params = btn.getUrlParams();
                             if (!params)
                                 return;
+
+                            if (params.area){
+                                delete params.rooms;
+                            }
 
                             var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, params);
                             window.open(url);

@@ -18,11 +18,7 @@
 --
 SELECT
 	t.*,
-	(select max(bci.rowId) from labkey.onprc_billing.chargeableItems bci where t.item = bci.name) as chargeId,
-  CASE
-    WHEN (t.lastName IS NOT NULL AND t.firstName IS NOT NULL ) THEN (select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = t.firstname and i.lastname = t.lastname group by i.LastName, i.firstname having count(*) <= 1)
-  ELSE null
-  END as investigatorId
+	(select max(bci.rowId) from labkey.onprc_billing.chargeableItems bci where t.item = bci.name) as chargeId
 FROM (
 SELECT
   ri.objectid as invoiceId,
@@ -38,6 +34,7 @@ SELECT
   END as category,
 
   ci.objectid as objectid,
+  inves.investigatorId as investigatorId,
   ci.ServiceCenter as ServiceCenter,
   ci.TransactionType as transactionType,
   ci.TransactionNumber as transactionNumber,
@@ -83,6 +80,13 @@ from Af_Chargesibs ci
 
   left join Ref_SurgProcedure sp on (ci.ItemCode = (Convert(varchar(10), sp.ProcedureID)) AND ci.ServiceCenter = 'PSURG')
   left join Sys_Parameters sys on (sys.Field = 'ChargeType' and sys.Flag = rfp.ChargeType)
+
+  LEFT JOIN (
+    select max(i.rowid) as investigatorId, lastName, firstName
+    from labkey.onprc_ehr.investigators i
+    group by i.LastName, i.firstname
+    having count(*) <= 1
+  ) inves ON (inves.firstname = ci.firstname and inves.lastname = ci.lastname)
 
   left join (
     SELECT max(ri.ts) as maxTs, max(cast(ri2.objectid as varchar(38))) as objectid, max(ri.StartInvoice) as StartInvoice, max(ri.EndInvoice) as EndInvoice

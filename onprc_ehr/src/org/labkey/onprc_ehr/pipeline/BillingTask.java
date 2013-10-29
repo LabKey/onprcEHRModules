@@ -241,6 +241,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
             toCreate.put("billingPeriodStart", getSupport().getStartDate());
             toCreate.put("billingPeriodEnd", getSupport().getEndDate());
             toCreate.put("runDate", new Date());
+            toCreate.put("status", "Under Review");
             toCreate.put("comment", getSupport().getComment());
 
             //TODO: create/set an invoice #?
@@ -353,12 +354,12 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "item",
                 //TODO: need these in the query itself to deal w/ misc charges
                 "chargeId/itemCode",
-                "chargeId/category",
+                "category",
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
                 "project/account",
                 "project/investigatorid",
-                "project/investigatorid/financialanalyst",
+                "project/investigatorid/financialanalyst",  //TODO: this is not quite right
                 "project/investigatorid/firstname",
                 "project/investigatorid/lastname",
                 "project/investigatorid/division",
@@ -453,7 +454,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "item",
                 //TODO: need these values in the query itself
                 "chargeId/itemCode",
-                "chargeId/category",
+                "category",
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
                 "project/account",
@@ -505,7 +506,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "item",
                 //TODO: need these values in the query itself
                 "chargeId/itemCode",
-                "chargeId/category",
+                "category",
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
                 "project/account",
@@ -558,7 +559,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "item",
                 //TODO: need these values in the query itself
                 "chargeId/itemCode",
-                "chargeId/category",
+                "category",
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
                 "project/account",
@@ -611,7 +612,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "chargeId",
                 "item",
                 "chargeId/itemCode",
-                "chargeId/category",
+                "category",
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
                 "project/account",

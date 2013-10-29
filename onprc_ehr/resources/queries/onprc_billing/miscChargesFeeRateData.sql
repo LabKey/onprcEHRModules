@@ -13,7 +13,7 @@ SELECT
   coalesce(p.unitCost, e.unitCost, cr.unitCost) as unitCost,
   coalesce(p.quantity, 1) as quantity,
   coalesce(p.quantity, 1) * coalesce(p.unitCost, e.unitCost, cr.unitCost) as totalcost,
-  p.category,
+  coalesce(p.category, p.chargeId.category) as category,
   p.chargeType,
   p.invoicedItemId,
   p.sourceRecord,

@@ -18,6 +18,6 @@ SELECT
   max(o.date) as lastDate,
   timestampdiff('SQL_TSI_DAY', max(o.date), curdate()) as daysSinceLastMens
 
-FROM study.	clinical_observations o
+FROM study.clinical_observations o
 WHERE o.category = 'Menses'
 GROUP BY o.Id

@@ -89,7 +89,7 @@ a.releaseCondition,
 a.assignCondition,
 a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
 'Lease Fee Adjustment' as category,
-(SELECT max(rowid) as rowid FROM onprc_billing.chargeableItems ci WHERE ci.name = 'Lease Fee Refund' and ci.active = true) as chargeId,
+(SELECT max(rowid) as rowid FROM onprc_billing.chargeableItems ci WHERE ci.name = 'Lease Fee Adjustment' and ci.active = true) as chargeId,
 lf2.chargeId as leaseCharge1,
 lf.chargeId as leaseCharge2,
 a.objectid as sourceRecord

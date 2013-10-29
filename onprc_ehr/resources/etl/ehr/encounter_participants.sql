@@ -191,6 +191,19 @@ SELECT
 From Sur_General s
 WHERE datalength(s.Circulator) > 0
 
+UNION ALL
+
+SELECT
+  i.surgeon as userId,
+  i.animalid,
+  'Surgeon' as role,
+  max(cast(objectid as varchar(38))) as procedure_id,
+  max(ts) as rowversion
+
+From Sur_Implants i
+WHERE datalength(i.surgeon) > 0
+GROUP BY i.AnimalId, i.Date, i.Surgeon
+
 ) t
 
 left join Ref_Technicians Rt on (t.userId = Rt.ID)

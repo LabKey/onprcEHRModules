@@ -110,12 +110,12 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
                 xtype: 'labkey-combo',
                 width: 400,
                 fieldLabel: 'Choose Alias',
-                displayField: 'account',
-                valueField: 'account',
+                displayField: 'alias',
+                valueField: 'alias',
                 store: {
                     type: 'labkey-store',
                     schemaName: 'onprc_billing',
-                    queryName: 'projectAccountHistory',
+                    queryName: 'aliases',
                     autoLoad: true
                 }
             });
@@ -139,12 +139,12 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
                 xtype: 'labkey-combo',
                 width: 400,
                 fieldLabel: 'Choose Alias',
-                displayField: 'account',
-                valueField: 'account',
+                displayField: 'alias',
+                valueField: 'alias',
                 store: {
                     type: 'labkey-store',
                     schemaName: 'onprc_billing',
-                    queryName: 'projectAccountHistory',
+                    queryName: 'aliases',
                     autoLoad: true
                 }
             });

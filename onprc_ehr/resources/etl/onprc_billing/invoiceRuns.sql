@@ -15,6 +15,7 @@
  */
 select
   'IRIS Legacy data' as comment,
+  'Finalized' as status,
   max(ri2.RunDate) as runDate,
   ri.StartDate as billingPeriodStart,
   ri.EndDate as billingPeriodEnd,

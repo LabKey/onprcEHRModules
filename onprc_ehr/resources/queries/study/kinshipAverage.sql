@@ -30,10 +30,10 @@ SELECT
   count(k.Id2) as distinctAnimals
 
 FROM study.demographics d
-JOIN ehr.kinshipSummary k ON (d.Id = k.Id)
-JOIN study.demographics d2 ON (d2.Id = k.Id2)
+JOIN study.demographics d2 ON (d2.calculated_status = 'Alive' and d.species = d2.species)
+LEFT JOIN ehr.kinshipSummary k ON (d.Id = k.Id AND d2.Id = k.Id2)
 
-WHERE d.calculated_status = 'Alive' AND d2.calculated_status = 'Alive' and d.species = d2.species
+WHERE d.calculated_status = 'Alive'
 
 GROUP BY d.Id
 

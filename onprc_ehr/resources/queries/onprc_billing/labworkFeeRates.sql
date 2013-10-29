@@ -16,6 +16,7 @@
 SELECT
   p.*,
   p.chargeId.name as item,
+  p.chargeId.category as category,
   coalesce(e.unitCost, cr.unitCost) as unitCost,
   1 as quantity,
   coalesce(e.unitCost, cr.unitCost) as totalcost,

@@ -1216,6 +1216,9 @@
             <column columnName="treatmentid">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="timeordered">
+                <datatype>timestamp</datatype>
+            </column>
             <column columnName="qualifier">
                 <datatype>varchar</datatype>
             </column>
@@ -1771,6 +1774,9 @@
             <column columnName="project">
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+            </column>
+            <column columnName="instructions">
+                <datatype>varchar</datatype>
             </column>
 			<column columnName="remark">
                 <datatype>varchar</datatype>
@@ -2336,15 +2342,6 @@
             <column columnName="gender">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="dam">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="sire">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="origin">
-                <datatype>varchar</datatype>
-            </column>
             <column columnName="geographic_origin">
                 <datatype>varchar</datatype>
             </column>
@@ -2353,9 +2350,6 @@
             </column>
             <column columnName="death">
                 <datatype>timestamp</datatype>
-            </column>
-            <column columnName="cond">
-                <datatype>varchar</datatype>
             </column>
             <column columnName="species">
                 <datatype>varchar</datatype>
@@ -2785,81 +2779,6 @@
             </column>
         </columns>
         <tableTitle>Histology</tableTitle>
-    </table>
-    <table tableName="organ_weights" tableDbType="TABLE">
-        <columns>
-            <column columnName="Id">
-                <datatype>varchar</datatype>
-                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <importAliases>
-                    <importAlias>ptid</importAlias>
-                </importAliases>
-            </column>
-            <column columnName="date">
-                <datatype>timestamp</datatype>
-                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-            </column>
-            <column columnName="tissue">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="remark">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
-            </column>
-            <column columnName="description">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#Description</propertyURI>
-            </column>
-            <column columnName="objectid">
-                <datatype>entityid</datatype>
-                <propertyURI>urn:ehr.labkey.org/#ObjectId</propertyURI>
-                <isKeyField>true</isKeyField>
-            </column>
-            <column columnName="parentid">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#ParentId</propertyURI>
-            </column>
-            <column columnName="taskid">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
-            </column>
-            <column columnName="project">
-                <datatype>integer</datatype>
-                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
-            </column>
-			<column columnName="performedby">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
-            </column>
-            <column columnName="requestid">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
-            </column>
-            <column columnName="enddate">
-                <datatype>timestamp</datatype>
-                <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
-            </column>
-            <column columnName="weight">
-                <datatype>double</datatype>
-            </column>
-            <column columnName="qualifier">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="deliveryLocation">
-                <datatype>integer</datatype>
-            </column>
-            <column columnName="birthCondition">
-                <datatype>integer</datatype>
-            </column>
-            <column columnName="preparation">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="appearance">
-                <datatype>varchar</datatype>
-            </column>
-        </columns>
-        <tableTitle>Organ Weights</tableTitle>
     </table>
     <table tableName="tissueDistributions" tableDbType="TABLE">
         <columns>
