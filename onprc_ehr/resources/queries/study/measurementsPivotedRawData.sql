@@ -34,7 +34,7 @@ SELECT
   m.date,
   m.tissue.meaning as tissue,
   m.tissue as snomed,
-  '1' as measurementNo,
+  1 as measurementNo,
   m.measurement1 as measurement,
   m.parentid
 
@@ -48,7 +48,7 @@ select
   m.date,
   m.tissue.meaning as tissue,
   m.tissue as snomed,
-  '2' as measurementNo,
+  2 as measurementNo,
   m.measurement2 as measurement,
   m.parentid
 
@@ -62,7 +62,7 @@ select
   m.date,
   m.tissue.meaning as tissue,
   m.tissue as snomed,
-  '3' as measurementNo,
+  3 as measurementNo,
   m.measurement3 as measurement,
   m.parentid
 

@@ -19,10 +19,12 @@ SELECT
   f.flag,
   max(st.interval) as testInterval,
   max(s.date) as lastTestDate,
-  min(timestampdiff('SQL_TSI_MONTH', s.date, now())) as monthsSinceTest,
+  --min(timestampdiff('SQL_TSI_MONTH', s.date, now())) as monthsSinceTest,
+  min(age_in_months(s.date, now())) as monthsSinceTest,
   CASE
     WHEN max(s.date) IS NULL THEN 0
-    ELSE (max(st.interval) - min(timestampdiff('SQL_TSI_MONTH', s.date, now())))
+    --ELSE (max(st.interval) - min(timestampdiff('SQL_TSI_MONTH', s.date, now())))
+    ELSE (max(st.interval) - min(age_in_months(s.date, now())))
   END as monthsUntilDue,
 FROM study.flags f
 JOIN onprc_ehr.serology_test_schedule st ON (st.flag = f.value)

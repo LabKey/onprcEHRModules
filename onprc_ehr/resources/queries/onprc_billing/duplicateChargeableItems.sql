@@ -36,6 +36,6 @@ from onprc_billing.chargeableItems ci
 where ci.active = true and ci.itemCode is not null
 
 --TODO: this is a hack until data is cleaned up
-and (category != 'Surgery' and NOT(itemCode = 3 AND category = 'Lease Fees') )
+and (category != 'Surgery' and NOT(itemCode = '3' AND category = 'Lease Fees') )
 group by ci.itemCode, ci.category
 having count(*) > 1
