@@ -75,6 +75,7 @@ import org.labkey.onprc_ehr.notification.ETLNotification;
 import org.labkey.onprc_ehr.notification.FinanceNotification;
 import org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification;
 import org.labkey.onprc_ehr.notification.TMBNotification;
+import org.labkey.onprc_ehr.notification.TreatmentAlertsNotification;
 import org.labkey.onprc_ehr.notification.UnoccupiedRoomsNotification;
 import org.labkey.onprc_ehr.notification.WeightAlertsNotification;
 import org.labkey.onprc_ehr.pipeline.BillingPipelineProvider;
@@ -140,7 +141,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         NotificationService ns = NotificationService.get();
         //ns.registerNotification(new AbnormalLabResultsNotification());
-        //ns.registerNotification(new BloodAdminAlertsNotification());
+        ns.registerNotification(new TreatmentAlertsNotification());
         ns.registerNotification(new BloodAlertsNotification());
         ns.registerNotification(new ColonyAlertsLiteNotification());
         ns.registerNotification(new ColonyAlertsNotification());

@@ -34,10 +34,11 @@
             });
 
             var roomConfigs = ONPRC.panel.RoomLayoutPanel.getRoomItems(ret);
+            var foundCages = false;
             Ext4.Array.each(roomConfigs, function(section, idx){
                 if (section && section.items && section.items.length){
                     var target = Ext4.get(webpart.wrapperDivId).createChild({tag: 'div', cls: (idx+1 < roomConfigs.length ? 'page-break' : null)});
-
+                    foundCages = true;
                     Ext4.create('Ext.panel.Panel', {
                         border: false,
                         defaults: {
@@ -47,6 +48,10 @@
                     }).render(target.id);
                 }
             }, this);
+
+            if (!foundCages){
+                Ext4.Msg.alert('No Cages', 'No cages found for the selected rooms');
+            }
 
         }, this);
     });

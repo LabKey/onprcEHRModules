@@ -564,9 +564,9 @@
                             var params = {
                                 doRowInversion: panel.down('#doInvertRows').getValue() ? 1 : 0
                             };
-                            if (area)
+                            if (!Ext4.isEmpty(area))
                                 params.area = area;
-                            if (rooms)
+                            if (!Ext4.isEmpty(rooms))
                                 params.rooms = rooms;
 
                             return params;

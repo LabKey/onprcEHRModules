@@ -958,14 +958,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", yesterday.getTime());
         ExprColumn yesterdaysP2 = new ExprColumn(ti, "yesterdaysP2", p2Sql2, JdbcType.VARCHAR, objectId);
         yesterdaysP2.setLabel("P2s Entered Yesterday");
-        yesterdaysP2.setDisplayColumnFactory(new DisplayColumnFactory()
-        {
-            @Override
-            public DisplayColumn createRenderer(ColumnInfo colInfo)
-            {
-                return new ClinicalRemarkDisplayColumn(colInfo, "p2");
-            }
-        });
         yesterdaysP2.setDisplayWidth("250");
         ti.addColumn(yesterdaysP2);
 

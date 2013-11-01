@@ -893,7 +893,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/LabResultSummaryNotification.jav
 onprc_ehr/src/org/labkey/onprc_ehr/notification/LabTestScheduleNotifications.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/RoutineClinicalTestsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/TMBNotification.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/notification/TreatmentAlerts.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/notification/TreatmentAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/UnoccupiedRoomsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/WeightAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/pipeline/BillingPipelineJob.java -text

@@ -15,7 +15,8 @@
  */
 SELECT
   alias,
-  group_concat(distinct g.projectNumber) as projectNumber
+  group_concat(distinct g.projectNumber) as projectNumber,
+  group_concat(distinct g.aliasEnabled) as aliasEnabled
 
 FROM onprc_billing.grantProjects g
 WHERE g.alias IS NOT NULL

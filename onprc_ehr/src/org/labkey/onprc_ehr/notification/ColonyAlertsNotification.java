@@ -400,7 +400,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animals listed as living, but have a birth record states with 'Born Dead' or 'Terminated At Birth':</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " animals listed as living, but have a birth type of 'Born Dead' or 'Terminated At Birth':</b><br>\n");
 
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException

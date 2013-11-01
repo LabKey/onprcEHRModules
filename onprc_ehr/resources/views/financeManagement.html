@@ -30,6 +30,7 @@
                         {name: 'Billing Periods (From IRIS)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'invoiceRuns'})},
                         {name: 'Billing Periods (In PRIMe)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'invoiceRuns'})},
                         {name: 'Monthly Summary', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'invoiceRunMonthlySummary'})},
+                        {name: 'All Invoiced Items', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'invoicedItems'})},
                         {name: 'Access To Billing Data', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'dataAccess'})}
                     ]
                 },{

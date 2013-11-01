@@ -140,4 +140,24 @@ abstract public class AbstractEHRNotification implements Notification
 
         PropertyManager.saveProperties(map);
     }
+
+    protected String getParameterUrlString(Map<String, Object> params)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (String key : params.keySet())
+        {
+            sb.append("&query.param.").append(key).append("=");
+            if (params.get(key) instanceof Date)
+            {
+                sb.append(_dateFormat.format(params.get(key)));
+            }
+            else
+            {
+                sb.append(params.get(key));
+            }
+        }
+
+
+        return sb.toString();
+    }
 }

@@ -11,6 +11,9 @@
                             <fkColumnName>projectNumber</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="aliasEnabled">
+                        <columnTitle>Alias Enabled</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>
