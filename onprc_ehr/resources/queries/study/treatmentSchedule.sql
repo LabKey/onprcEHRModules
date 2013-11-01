@@ -52,7 +52,7 @@ SELECT
 
   t1.frequency.meaning as frequency,
   t1.date as startDate,
-  timestampdiff('SQL_TSI_DAY', t1.dateOnly, dr.dateOnly) + 1 as daysElapsed,
+  timestampdiff('SQL_TSI_DAY', cast(t1.dateOnly as timestamp), dr.dateOnly) + 1 as daysElapsed,
   t1.enddate,
   --t1.duration,
   t1.project,
@@ -84,7 +84,7 @@ JOIN study."Treatment Orders" t1
   --NOTE: should the enddate consider date/time?
   ON (dr.dateOnly >= t1.dateOnly and dr.dateOnly <= t1.enddateCoalesced AND
       --technically the first day of the treatment is day 1, not day 0
-      mod(timestampdiff('SQL_TSI_DAY', t1.dateOnly, dr.dateOnly), t1.frequency.intervalindays) = 0
+      mod(CAST(timestampdiff('SQL_TSI_DAY', CAST(t1.dateOnly as timestamp), dr.dateOnly) as integer), t1.frequency.intervalindays) = 0
   )
 
 LEFT JOIN ehr.treatment_times tt ON (tt.treatmentid = t1.objectid)
