@@ -30,7 +30,7 @@
                 <include name="GeneticsCore.module" />
                 <include name="GenotypeAssays.module" />
                 <include name="HormoneAssay.module"/>
-                <include name="Laboratory.module" />
+                <include name="laboratory.module" />
                 <include name="LDK.module" />
                 <include name="ONPRC_EHR.module" />
                 <include name="ONPRC_Reports.module" />
