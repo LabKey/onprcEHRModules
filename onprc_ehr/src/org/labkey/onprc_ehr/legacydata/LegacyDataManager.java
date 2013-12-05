@@ -936,9 +936,9 @@ public class LegacyDataManager
         final Map<String, List<Map<String, Object>>> runs = new HashMap<>();
         final Map<String, Map<String, Object>> runPropMap = new HashMap<>();
 
-        SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
-        filter.addCondition("animalid", " ", CompareType.NEQ);
-        filter.addCondition("abs_allele1", ":", CompareType.DOES_NOT_CONTAIN);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromParts("animalid"), null, CompareType.NONBLANK);
+        filter.addCondition(FieldKey.fromParts("animalid"), " ", CompareType.NEQ);
+        filter.addCondition(FieldKey.fromParts("abs_allele1"), ":", CompareType.DOES_NOT_CONTAIN);
 
         TableInfo projectTable = schema.getTable("Projects");
         TableSelector projectSelector = new TableSelector(projectTable);
@@ -1159,9 +1159,9 @@ public class LegacyDataManager
         final Map<String, List<Map<String, Object>>> runs = new HashMap<>();
         final Map<String, Map<String, Object>> runPropMap = new HashMap<>();
 
-        SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
-        filter.addCondition("animalid", " ", CompareType.NEQ);
-        filter.addCondition("abs_allele1", ":", CompareType.CONTAINS);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromParts("animalid"), null, CompareType.NONBLANK);
+        filter.addCondition(FieldKey.fromParts("animalid"), " ", CompareType.NEQ);
+        filter.addCondition(FieldKey.fromParts("abs_allele1"), ":", CompareType.CONTAINS);
 
         TableSelector ts = new TableSelector(ti, filter, new Sort("expdate"));
         ts.forEach(new Selector.ForEachBlock<ResultSet>()
@@ -1312,8 +1312,8 @@ public class LegacyDataManager
         final Map<String, List<Map<String, Object>>> runs = new HashMap<>();
         final Map<String, Map<String, Object>> runPropMap = new HashMap<>();
 
-        SimpleFilter filter = new SimpleFilter("animalid", null, CompareType.NONBLANK);
-        filter.addCondition("animalid", " ", CompareType.NEQ);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromParts("animalid"), null, CompareType.NONBLANK);
+        filter.addCondition(FieldKey.fromParts("animalid"), " ", CompareType.NEQ);
         TableSelector ts = new TableSelector(ti, filter, new Sort("expid"));
         ts.forEach(new Selector.ForEachBlock<ResultSet>()
         {
