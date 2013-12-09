@@ -1,13 +1,22 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="tb" tableDbType="TABLE">
+            <table tableName="tb" tableDbType="TABLE" useColumnOrder="true">
                 <tableUrl />
                 <insertUrl />
                 <importUrl />
                 <updateUrl />
                 <deleteUrl />
                 <columns>
+                    <column columnName="Id">
+
+                    </column>
+                    <column columnName="date">
+
+                    </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
+                    </column>
                     <column columnName="lot">
                         <columnTitle>Lot</columnTitle>
                     </column>

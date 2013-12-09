@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.List;
@@ -30,7 +31,12 @@ public class BloodDrawFormSection extends SimpleGridPanel
 
     public BloodDrawFormSection(boolean showAddScheduledBtn)
     {
-        super("study", "Blood Draws", "Blood Draws");
+        this(showAddScheduledBtn, EHRService.FORM_SECTION_LOCATION.Body);
+    }
+
+    public BloodDrawFormSection(boolean showAddScheduledBtn, EHRService.FORM_SECTION_LOCATION location)
+    {
+        super("study", "Blood Draws", "Blood Draws", location);
         setClientStoreClass("EHR.data.BloodDrawClientStore");
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledBloodDrawsWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/data/BloodDrawClientStore.js"));
@@ -44,16 +50,6 @@ public class BloodDrawFormSection extends SimpleGridPanel
 
         if (_showAddScheduledBtn)
             defaultButtons.add(0, "ADDBLOODDRAWS");
-
-        return defaultButtons;
-    }
-
-    @Override
-    public List<String> getTbarMoreActionButtons()
-    {
-        List<String> defaultButtons = super.getTbarMoreActionButtons();
-
-        defaultButtons.add("GUESSPROJECT");
 
         return defaultButtons;
     }

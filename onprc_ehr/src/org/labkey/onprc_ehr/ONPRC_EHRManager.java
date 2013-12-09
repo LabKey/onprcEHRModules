@@ -17,12 +17,17 @@ package org.labkey.onprc_ehr;
 
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.CompareType;
+import org.labkey.api.data.Container;
+import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.RuntimeSQLException;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.exp.api.ExperimentService;
+import org.labkey.api.module.Module;
+import org.labkey.api.module.ModuleLoader;
+import org.labkey.api.module.ModuleProperty;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.User;
 
@@ -41,6 +46,10 @@ import java.util.Map;
 public class ONPRC_EHRManager
 {
     private static ONPRC_EHRManager _instance = new ONPRC_EHRManager();
+    public static final String BillingContainerPropName = "BillingContainer";
+    public static final String AUC_RESERVED = "AUC Reserved";
+    public static final String PENDING_SOCIAL_GROUP = "Pending Social Group";
+    public static final String PENDING_ASSIGNMENT = "Pending Assignment";
 
     private ONPRC_EHRManager()
     {
@@ -117,5 +126,16 @@ public class ONPRC_EHRManager
         return ret;
     }
 
+    public Container getBillingContainer(Container c)
+    {
+        Module ehr = ModuleLoader.getInstance().getModule(ONPRC_EHRModule.NAME);
+        ModuleProperty mp = ehr.getModuleProperties().get(BillingContainerPropName);
+        String path = mp.getEffectiveValue(c);
+        if (path == null)
+            return null;
+
+        return ContainerManager.getForPath(path);
+
+    }
 }
 

@@ -59,15 +59,4 @@ public class ClinpathRunsFormSection extends SimpleGridPanel
 
         return defaultButtons;
     }
-
-    @Override
-    public List<String> getTbarMoreActionButtons()
-    {
-        List<String> defaultButtons = super.getTbarMoreActionButtons();
-
-        if (!_isRequest)
-            defaultButtons.add("GUESSPROJECT");
-
-        return defaultButtons;
-    }
 }

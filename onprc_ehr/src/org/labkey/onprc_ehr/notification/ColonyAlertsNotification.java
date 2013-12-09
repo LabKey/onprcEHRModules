@@ -41,6 +41,7 @@ import org.labkey.api.security.User;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.ResultSetUtil;
+import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.validation.BindException;
 
@@ -105,6 +106,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //assignments
         doAssignmentChecks(c, u, msg);
         getU42Assignments(c, u, msg);
+        doCandidateChecks(c, u, msg);
 
         //housing
         roomsWithMixedViralStatus(c, u, msg);
@@ -166,6 +168,63 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         assignmentsProjectedToday(c, u, msg);
         assignmentsProjectedTomorrow(c, u, msg);
         protocolsWithAnimalsExpiringSoon(c, u, msg);
+    }
+
+    protected void doCandidateChecks(final Container c, User u, final StringBuilder msg)
+    {
+        candidatesWithAssignments(c, u, msg);
+        candidatesWithGroups(c, u, msg);
+        candidatesForLongTime(c, u, msg);
+    }
+
+    protected void candidatesForLongTime(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("daysElapsed"), 30, CompareType.GTE);
+        filter.addCondition(FieldKey.fromString("category"), "Assign Alias", CompareType.EQUAL);
+
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("flags"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " flags for assignment aliases/candidates that have been active for more than 30 days.  This may indicate these flags should be ended.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void candidatesWithAssignments(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/activeAssignments/projects"), ONPRC_EHRManager.AUC_RESERVED + ";" + ONPRC_EHRManager.PENDING_ASSIGNMENT, CompareType.CONTAINS_ONE_OF);
+        filter.addCondition(FieldKey.fromString("Id/activeAssignments/numActiveAssignments"), 0, CompareType.GT);
+
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("demographics"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " animals which are flagged as " + ONPRC_EHRManager.AUC_RESERVED + " or " + ONPRC_EHRManager.PENDING_ASSIGNMENT + " , yet they are actively assigned to another project.  This may indicate the assignment candidate flags need to be removed.</b><br>\n");
+            //TODO: switch to toQueryString() once core bug corrected
+            String filterString = "query.Id/activeAssignments/projects~containsoneof=" + ONPRC_EHRManager.AUC_RESERVED + ";" + ONPRC_EHRManager.PENDING_ASSIGNMENT + "&query.Id/activeAssignments/numActiveAssignments~gt=0";
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&" + filterString + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void candidatesWithGroups(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/activeAnimalGroups/groups"), ONPRC_EHRManager.AUC_RESERVED + ";" + ONPRC_EHRManager.PENDING_SOCIAL_GROUP, CompareType.CONTAINS_ONE_OF);
+        filter.addCondition(FieldKey.fromString("Id/activeAnimalGroups/totalGroups"), 0, CompareType.GT);
+
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("demographics"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " animals which are flagged as " + ONPRC_EHRManager.AUC_RESERVED + " or " + ONPRC_EHRManager.PENDING_SOCIAL_GROUP + ", yet they are actively assigned to an animal group.  This may indicate the assignment candidate flags need to be removed.</b><br>\n");
+            //TODO: switch to toQueryString() once core bug corrected
+            String filterString = "query.Id/activeAnimalGroups/groups~containsoneof=" + ONPRC_EHRManager.AUC_RESERVED + ";" + ONPRC_EHRManager.PENDING_SOCIAL_GROUP + "&query.Id/activeAnimalGroups/totalGroups~gt=0";
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&" + filterString + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
     }
 
     /**
@@ -751,7 +810,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " assignments to active IACUC Protocols within the past 3 years that do not match known allowable animal counts (for example, cynos assigned to a project only approved for rhesus).</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " assignments to active IACUC Protocols within the past 3 years that do not match known allowable animal counts (for example, animals assigned prior to the start or end of the dates listed, or cynos assigned to a project only approved for rhesus).</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "assignmentsNotAllowed", null) + "&query.project/protocol/enddateCoalesced~dategte=-0d&query.date~dategte=-3y'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -1223,50 +1282,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " blood draws requested that have not been approved or denied yet.</b><br>");
-            msg.append("<p><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/dataEntry.view#topTab:Requests&activeReport:BloodDrawRequests'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "blood", null) + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
-
-    /**
-     * we find any blood draws not yet assigned to either SPI or animal care
-     */
-    protected void drawsNotAssigned(Container c, User u, final StringBuilder msg)
-    {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive");
-        filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-        filter.addCondition(FieldKey.fromString("chargetype"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Blood Draws"), filter, null);
-        long count = ts.getRowCount();
-        if (count > 0)
-        {
-            msg.append("<b>WARNING: There are " + count + " blood draws requested that have not been assigned to SPI or Animal Care.</b><br>");
-            msg.append("<p><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/dataEntry.view#topTab:Requests&activeReport:BloodDrawRequests'>Click here to view them</a><br>\n");
-            msg.append("<hr>\n");
-        }
-        else {
-            msg.append("All requested blood draws have been assigned to a group to perform them.<br>");
-            msg.append("<hr>\n");
-        }
-    }
-
-//    /**
-//     * NOTE: requests are auto-generated, so this is not necessary
-//     * we find any current blood draws with clinpath, but lacking a request
-//     */
-//    protected void drawsWithServicesAndNoRequest(final StringBuilder msg)
-//    {
-//        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("path_lsid"), null, CompareType.ISBLANK);
-//        filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_EQUAL);
-//        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("ValidateBloodDrawClinpath"), filter, null);
-//        if (ts.getRowCount() > 0)
-//        {
-//            msg.append("<b>WARNING: There are " + ts.getRowCount() + " blood draws scheduled today that request clinpath services, but lack a corresponding clinpath request.</b><br>");
-//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "ValidateBloodDrawClinpath", "Lacking Clinpath Request") + "&query.date~dateeq=" + _dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
-//            msg.append("<hr>\n");
-//        }
-//    }
 
     /*
      * we find any incomplete blood draws scheduled today, by area
@@ -1337,8 +1356,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
                 while (rs.next());
 
-                String url = "<a href='" + getExecuteQueryUrl(c, "study", "BloodSchedule", null) + "&query.date~dateeq=$datestr&query.Id/DataSet/Demographics/calculated_status~eq=Alive'>Click here to view them</a></p>\n";
-                msg.append("There are " + (incomplete + complete) + " scheduled blood draws for $datestr.  " + complete + " have been completed.  " + url + "<p>\n");
+                String url = "<a href='" + getExecuteQueryUrl(c, "study", "BloodSchedule", null) + "&query.date~dateeq=" + _dateFormat.format(new Date()) + "&query.Id/DataSet/Demographics/calculated_status~eq=Alive'>Click here to view them</a></p>\n";
+                msg.append("There are " + (incomplete + complete) + " scheduled blood draws for " + _dateFormat.format(new Date()) + ".  " + complete + " have been completed.  " + url + "<p>\n");
 
                 if(incomplete == 0)
                 {
@@ -1395,7 +1414,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " current or scheduled blood draws for animals not currently at the center.</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Blood Draws", null) + "&query.date~dategte=$datestr&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Blood Draws", null) + "&query.date~dategte=" + _dateFormat.format(new Date()) + "&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }

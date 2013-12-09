@@ -38,8 +38,16 @@
                             <fkColumnName>Code</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="result">
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>antibioticSensitivityResult</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="resistant">
                         <columnTitle>Resistant?</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                 </columns>
             </table>

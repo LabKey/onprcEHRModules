@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AbstractFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -40,7 +41,12 @@ public class TreatmentsTaskFormSection extends SimpleFormSection
 
     public TreatmentsTaskFormSection(boolean showAddTreatments)
     {
-        super("study", "Drug Administration", "Medications/Diet", "ehr-gridpanel");
+        this(showAddTreatments, EHRService.FORM_SECTION_LOCATION.Body);
+    }
+
+    public TreatmentsTaskFormSection(boolean showAddTreatments, EHRService.FORM_SECTION_LOCATION location)
+    {
+        super("study", "Drug Administration", "Medications/Diet", "ehr-gridpanel", location);
         setConfigSources(Collections.singletonList("Task"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledTreatmentsWindow.js"));
         _showAddTreatments = showAddTreatments;

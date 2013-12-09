@@ -1,0 +1,37 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId, ['DefaultAnimalHistoryReport']);
+        if(!ctx)
+            return;
+
+        Ext4.create('EHR.panel.AnimalHistoryPanel', {
+            defaultReport: ctx.DefaultAnimalHistoryReport,
+            defaultTab: 'General',
+            filterTypes: [{
+                xtype: 'ldk-singlesubjectfiltertype',
+                inputValue: LDK.panel.SingleSubjectFilterType.filterName,
+                label: LDK.panel.SingleSubjectFilterType.label
+            },{
+                xtype: 'ehr-multianimalfiltertype',
+                inputValue: EHR.panel.MultiAnimalFilterType.filterName,
+                label: EHR.panel.MultiAnimalFilterType.label
+            },{
+                xtype: 'ehr-locationfiltertype',
+                inputValue: EHR.panel.LocationFilterType.filterName,
+                label: EHR.panel.LocationFilterType.label
+            },{
+                xtype: 'onprc_ehr-assignmentfiltertype',
+                inputValue: ONPRC_EHR.panel.AssignmentFilterType.filterName,
+                label: ONPRC_EHR.panel.AssignmentFilterType.label
+            },{
+                xtype: 'ldk-nofiltersfiltertype',
+                inputValue: LDK.panel.NoFiltersFilterType.filterName,
+                label: LDK.panel.NoFiltersFilterType.label
+            }],
+            renderTo: webpart.wrapperDivId
+        });
+    });
+
+</script>

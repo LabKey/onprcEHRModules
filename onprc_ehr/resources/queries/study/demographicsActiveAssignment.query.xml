@@ -30,6 +30,10 @@
                         <columnTitle># U24/U42 Assignments</columnTitle>
                         <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true&amp;query.project/isU24U42~eq=1</url>
                     </column>
+                    <column columnName="numProvisionalAssignments">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <columnTitle># Provisional Assignments</columnTitle>
+                    </column>
                     <column columnName="vets">
                         <columnTitle>Resonsible Vet(s)</columnTitle>
                     </column>

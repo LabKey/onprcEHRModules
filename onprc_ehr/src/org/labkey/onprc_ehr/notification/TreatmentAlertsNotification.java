@@ -120,9 +120,13 @@ public class TreatmentAlertsNotification extends AbstractEHRNotification
     private void processTreatments(Container c, User u, final StringBuilder msg, final Date maxDate)
     {
         Date curDate = new Date();
+        Date roundedMax = new Date();
+        roundedMax.setTime(maxDate.getTime());
+        roundedMax = DateUtils.truncate(roundedMax, Calendar.DATE);
+
         TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("treatmentSchedule");
 
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), new Date(), CompareType.DATE_EQUAL);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), roundedMax, CompareType.DATE_EQUAL);
         filter.addCondition(FieldKey.fromString("date"), maxDate, CompareType.LTE);
         filter.addCondition(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive");
 
@@ -138,17 +142,18 @@ public class TreatmentAlertsNotification extends AbstractEHRNotification
         columns.add(FieldKey.fromString("code/meaning"));
 
         Map<String, Object> params = new HashMap<>();
-        params.put("StartDate", DateUtils.round(maxDate, Calendar.DATE));
+        params.put("StartDate", roundedMax);
         params.put("NumDays", 1);
 
         final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
         TableSelector ts = new TableSelector(ti, colMap.values(), filter, new Sort("Id/curLocation/area,Id/curLocation/room"));
         ts.setNamedParameters(params);
 
+        String url = getExecuteQueryUrl(c, "study", "treatmentSchedule", null) + "&" + filter.toQueryString("query") + getParameterUrlString(params);
         long total = ts.getRowCount();
         if (total == 0)
         {
-            msg.append("There are no treatments scheduled on " + _dateFormat.format(maxDate) + " on or before " + _timeFormat.format(maxDate) + " as of " + _dateTimeFormat.format(new Date()) + ". Treatments could be added after this email was sent, so please check online closer to the time.<hr>\n");
+            msg.append("There are no treatments scheduled on " + _dateFormat.format(maxDate) + " on or before " + _timeFormat.format(maxDate) + ". Treatments could be added after this email was sent, so please <a href='" + url + "'>click here to check online</a> closer to the time.<hr>\n");
         }
         else
         {
@@ -184,7 +189,6 @@ public class TreatmentAlertsNotification extends AbstractEHRNotification
             });
 
             msg.append("<b>Treatments:</b><p>");
-            String url = getExecuteQueryUrl(c, "study", "treatmentSchedule", null) + "&" + filter.toQueryString("query") + getParameterUrlString(params);
             msg.append("There are " + (totals.get(completed) + totals.get(incomplete)) + " scheduled treatments on or before " + _timeFormat.format(maxDate) + ".  <a href='" + url + "'>Click here to view them</a>.  Of these, " + totals.get(completed) + " have been marked completed.</p>\n");
 
             if (totals.get(incomplete) == 0)

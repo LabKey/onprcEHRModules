@@ -67,7 +67,7 @@ Ext4.onReady(function(){
                                 var interval = 0;
                                 if (startDate && endDate){
                                     interval = endDate.getTime() - startDate.getTime();
-                                    interval = 1 + (interval / (1000 * 60 * 60 * 24));
+                                    interval = Math.floor(1 + (interval / (1000 * 60 * 60 * 24)));
                                 }
 
                                 Ext4.apply(this, {
@@ -177,7 +177,8 @@ Ext4.onReady(function(){
                                                 items: [
                                                     {name: 'Download IBS Spreadsheet (All Items)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId})},
                                                     {name: 'Download IBS Spreadsheet (PDAR)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~eq': 'PDAR'})},
-                                                    {name: 'Download IBS Spreadsheet (PSURG)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~eq': 'PSURG'})}
+                                                    {name: 'Download IBS Spreadsheet (PSURG)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~eq': 'PSURG'})},
+                                                    {name: 'Download IBS Spreadsheet (Other)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~notin': 'PDAR;PSURG'})}
                                                 ]
                                             },{
                                                 header: 'Charge Calculations For This Billing Period',

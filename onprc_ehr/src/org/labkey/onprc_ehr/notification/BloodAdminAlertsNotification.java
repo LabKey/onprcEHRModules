@@ -103,7 +103,6 @@ public class BloodAdminAlertsNotification extends ColonyAlertsNotification
         bloodDrawsOverLimit(c, u, msg);
         bloodDrawsNotAssignedToProject(c, u, msg);
         findNonApprovedDraws(c, u, msg);
-        drawsNotAssigned(c, u, msg);
         incompleteDraws(c, u, msg);
 
         //drawsWithServicesAndNoRequest(msg);

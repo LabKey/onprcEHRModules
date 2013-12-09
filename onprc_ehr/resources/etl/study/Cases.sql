@@ -31,6 +31,7 @@ Select
 		When GroupCode = 3 Then 'Behavior'
 		When GroupCode = 4 Then 'Weight'
 	End AS Category,
+  (SELECT max(s1.value) expr FROM MasterProblemList ml LEFT JOIN Sys_parameters s1 ON (s1.Field = 'MasterProblemList' and s1.Flag = ml.MasterProblem) WHERE ml.caseid = afc.caseid) as problem,
 	--ml.objectid as problemId,
 
 	--TODO: what is this second table for (Af_CaseReviewData)?

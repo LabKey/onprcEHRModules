@@ -46,17 +46,35 @@
                     </column>
                     <column columnName="lacksRate">
                         <columnTitle>Lacks Unit Cost?</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="rateId">
                         <columnTitle>Rate Id</columnTitle>
+                        <isHidden>true</isHidden>
                         <url>/query/executeQuery.view?schemaName=onprc_billing&amp;query.queryName=chargeRates&amp;query.rowid~eq=${rateid}</url>
                     </column>
                     <column columnName="exemptionId">
                         <columnTitle>Exemption Id</columnTitle>
+                        <isHidden>true</isHidden>
                         <url>/query/executeQuery.view?schemaName=onprc_billing&amp;query.queryName=chargeRateExemptions&amp;query.rowid~eq=${exemptionId}</url>
                     </column>
                     <column columnName="sourceRecord">
                         <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="isMiscCharge">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="matchesProject">
+                        <columnTitle>Assigned To Project On This Date?</columnTitle>
+                    </column>
+                    <column columnName="assignmentAtTime">
+                        <columnTitle>Assignments On This Date</columnTitle>
+                    </column>
+                    <column columnName="isMissingAccount">
+                        <columnTitle>Missing Alias?</columnTitle>
+                    </column>
+                    <column columnName="isExpiredAccount">
+                        <columnTitle>Expired Alias?</columnTitle>
                     </column>
                 </columns>
             </table>

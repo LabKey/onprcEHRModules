@@ -5,7 +5,7 @@
         <column name="runId/tissue"/>
         <column name="microbe"/>
         <column name="antibiotic"/>
-        <column name="resistant"/>
+        <column name="result"/>
         <column name="requestid"/>
         <column name="taskid"/>
         <column name="QCState"/>

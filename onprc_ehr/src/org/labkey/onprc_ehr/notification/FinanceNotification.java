@@ -18,8 +18,11 @@ package org.labkey.onprc_ehr.notification;
 import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONObject;
 import org.labkey.api.data.Aggregate;
+import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.Results;
+import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
@@ -45,8 +48,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -99,16 +105,18 @@ public class FinanceNotification extends AbstractEHRNotification
         Date lastInvoiceDate = getLastInvoiceDate(c, u);
         //if we have no previous value, set to an arbitrary value
         if (lastInvoiceDate == null)
-            lastInvoiceDate = DateUtils.round(new Date(0), Calendar.DATE);
+            lastInvoiceDate = DateUtils.truncate(new Date(0), Calendar.DATE);
 
-        perDiemSummary(c, u, msg, lastInvoiceDate);
-        leaseFeeSummary(c, u, msg, lastInvoiceDate);
-        procedureSummary(c, u, msg, lastInvoiceDate);
-        labworkSummary(c, u, msg, lastInvoiceDate);
-        miscChargesSummary(c, u, msg, lastInvoiceDate);
+        getProjectSummary(c, u, msg, lastInvoiceDate, "perDiemRates", "Per Diems");
+        getProjectSummary(c, u, msg, lastInvoiceDate, "leaseFeeRates", "Lease Fees");
+        getProjectSummary(c, u, msg, lastInvoiceDate, "procedureFeeRates", "Procedure Charges");
+        getProjectSummary(c, u, msg, lastInvoiceDate, "labworkFeeRates", "Labwork Charges");
+        getProjectSummary(c, u, msg, lastInvoiceDate, "miscChargesFeeRates", "Other Charges");
 
         miscChargesLackingProjects(c, u, msg);
 
+        getExpiredAliases(c, u , msg);
+        getProjectsWithoutAliases(c, u, msg);
         chargesMissingRates(c, u, msg);
         simpleAlert(c, u , msg, "onprc_billing", "invalidChargeRateEntries", " charge rate records with invalid or overlapping intervals.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
         simpleAlert(c, u , msg, "onprc_billing", "invalidChargeRateExemptionEntries", " charge rate exemptions with invalid or overlapping intervals.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
@@ -118,108 +126,59 @@ public class FinanceNotification extends AbstractEHRNotification
         return msg.toString();
     }
 
-    private void perDiemSummary(Container c, User u, final StringBuilder msg, Date lastInvoiceEnd)
-    {
-        UserSchema us = QueryService.get().getUserSchema(u, c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME);
-        QueryDefinition qd = us.getQueryDefForTable("perDiemRates");
-        List<QueryException> errors = new ArrayList<>();
-        TableInfo ti = qd.getTable(us, errors, true);
+    private class FieldDescriptor {
+        private String _fieldName;
+        private boolean _flagIfNonNull;
+        private String _label;
 
-        Map<String, Object> params = new HashMap<>();
-
-        Calendar start = Calendar.getInstance();
-        start.setTime(lastInvoiceEnd);
-        start.add(Calendar.DATE, 1);
-
-        Calendar endDate = Calendar.getInstance();
-        endDate.setTime(new Date());
-        endDate.add(Calendar.DATE, 1);
-
-        Long numDays = ((DateUtils.round(new Date(), Calendar.DATE).getTime() - start.getTimeInMillis()) / DateUtils.MILLIS_PER_DAY) + 1;
-        params.put("StartDate", start.getTime());
-        params.put("EndDate", endDate.getTime());
-        params.put("NumDays", numDays.intValue());
-
-        SQLFragment sql = ti.getFromSQL("t");
-        QueryService.get().bindNamedParameters(sql, params);
-
-        sql = new SQLFragment("SELECT sum(t.totalcost) as totalCost, count(*) as total, " +
-                "sum(t.quantity) as totalQuantity, " +
-                "sum(COALESCE(CASE WHEN t.isExemption IS NULL THEN 0 ELSE 1 END, 0)) as totalExemptions, " +
-                "sum(COALESCE(CASE WHEN (t.categories IS NOT NULL AND t.categories LIKE '%Multiple%') THEN 1 ELSE 0 END, 0)) as totalMultipleAssignments, " +
-                "sum(COALESCE(CASE WHEN (t.lacksRate IS NOT NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCost, " +
-                "sum(COALESCE(CASE WHEN (t.project IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingProject, " +
-                "sum(COALESCE(CASE WHEN (t.isMiscCharge = 'Y') THEN 1 ELSE 0 END, 0)) as totalMiscCharge, " +
-                "sum(COALESCE(CASE WHEN (t.creditAccount IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCreditAccount " +
-                "FROM " + sql.getSQL(), sql.getParams());
-        QueryService.get().bindNamedParameters(sql, params);
-        SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
-        List<Map<String, Object>> rows = new ArrayList<>(ss.getMapCollection());
-
-        Long total = (rows.size() > 0) ? Long.parseLong(rows.get(0).get("total").toString()) : 0;
-        Double totalQuantity = (rows.size() > 0 && rows.get(0).get("totalQuantity") != null) ? Double.parseDouble(rows.get(0).get("totalQuantity").toString()) : 0;
-        Integer totalExemptions = (rows.size() > 0 && rows.get(0).get("totalExemptions") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;
-        Integer totalMiscCharges = (rows.size() > 0 && rows.get(0).get("totalMiscCharge") != null) ? (Integer)rows.get(0).get("totalMiscCharge") : 0;
-        Integer totalMultipleAssignments = (rows.size() > 0 && rows.get(0).get("totalMultipleAssignments") != null) ? (Integer)rows.get(0).get("totalMultipleAssignments") : 0;
-        Integer totalLackingCost = (rows.size() > 0 && rows.get(0).get("totalLackingCost") != null) ? (Integer)rows.get(0).get("totalLackingCost") : 0;
-        Integer totalLackingCreditAccount = (rows.size() > 0 && rows.get(0).get("totalLackingCreditAccount") != null) ? (Integer)rows.get(0).get("totalLackingCreditAccount") : 0;
-        Integer totalLackingProject = (rows.size() > 0 && rows.get(0).get("totalLackingProject") != null) ? (Integer)rows.get(0).get("totalLackingProject") : 0;
-
-        Double totalCost = (rows.size() > 0 && rows.get(0).get("totalCost") != null) ? (Double)rows.get(0).get("totalCost") : 0.0;
-
-        msg.append("<b>Per Diems:</b><p>");
-        msg.append("There have been " + total + " items (" + totalQuantity + " effective days) since the last invoice date of " + _dateFormat.format(lastInvoiceEnd) + ", for a total of " + _dollarFormat.format(totalCost) + ".");
-        String url = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, "perDiemRates", null) + "&query.param.StartDate=" + _dateFormat.format(start.getTime()) + "&query.param.EndDate=" + _dateFormat.format(endDate.getTime()) + "&query.param.NumDays=" + numDays;
-
-        StringBuilder specialMessages = new StringBuilder();
-        if (totalLackingProject > 0)
-            specialMessages.append("- <a href='" + url + "&query.project~isblank'>There are " + totalLackingProject + " items without a project.</a><br>");
-        if (totalExemptions > 0)
-            specialMessages.append("- <a href='" + url + "&query.isExemption~isnonblank'>There are " + totalExemptions + " items using special fees.</a><br>");
-        if (totalLackingCost > 0)
-            specialMessages.append("- <a href='" + url + "&query.lacksRate~isnonblank'>There are " + totalLackingCost + " items without a unit cost.  This probably means there is an issue with the rate or fee structure.</a><br>");
-        if (totalMiscCharges > 0)
-            specialMessages.append("- <a href='" + url + "&query.isMiscCharge~eq=Y'>There are " + totalMiscCharges + " items that are either adjustments or charges entered after the normal billing period.</a><br>");
-        if (totalLackingCreditAccount > 0)
-            specialMessages.append("- <a href='" + url + "&query.creditAccount~isblank'>There are " + totalLackingCreditAccount + " items without a credit alias.  This probably means there is an issue with the rate or fee structure.</a><br>");
-        if (totalMultipleAssignments > 0)
-            specialMessages.append("- <a href='" + url + "&query.categories~contains=Multiple'>There are " + totalMultipleAssignments + " items which include dual-assignments.</a><br>");
-
-        if (specialMessages.length() > 0)
-        {
-            msg.append("<p>");
-            msg.append(specialMessages);
-            msg.append("<br>");
-        }
-        else
-        {
-            msg.append("<p>");
+        public FieldDescriptor(String fieldName, boolean flagIfNonNull, String label)
+        {            
+            _fieldName = fieldName;
+            _flagIfNonNull = flagIfNonNull;
+            _label = label;
         }
 
-        msg.append("<a href='" + url + "'>Click here to view all items</a><br><hr>");
+        public String getFieldName()
+        {
+            return _fieldName;
+        }
+
+        public FieldKey getFieldKey()
+        {
+            return FieldKey.fromString(_fieldName);
+        }
+
+        public String getLabel()
+        {
+            return _label;
+        }
+
+        public boolean shouldFlag(Object val)
+        {
+            return _flagIfNonNull ? val != null : val == null;
+        }
+
+        public String getFilter()
+        {
+            return "&query." + getFieldName() + "~" + (_flagIfNonNull ? "isnonblank" : "isblank");
+        }
     }
 
-    private void leaseFeeSummary(Container c, User u, final StringBuilder msg, Date lastInvoiceEnd)
+    private FieldDescriptor[] _fields = new FieldDescriptor[]
     {
-        getSummary(c, u, msg, lastInvoiceEnd, "leaseFeeRates", "Lease Fees");
-    }
+        new FieldDescriptor("project", false, "Missing Project"),
+        new FieldDescriptor("isMissingAccount", true, "Missing Alias"),
+        new FieldDescriptor("isExpiredAccount", true, "Expired Alias"),
+        new FieldDescriptor("isMultipleProjects", true, "Multiple Research Projects"),
+        new FieldDescriptor("lacksRate", true, "Lacks Rate"),
+        new FieldDescriptor("isExemption", true, "Non-standard Rate"),
+        new FieldDescriptor("creditAccount", false, "Missing Credit Alias"),
+        new FieldDescriptor("matchesProject", true, "Project Does Not Match Assignment"),
+        //new FieldDescriptor("chargeType", true),
+        new FieldDescriptor("isMiscCharge", true, "Manually Entered")
+    };
 
-    private void procedureSummary(Container c, User u, final StringBuilder msg, Date lastInvoiceEnd)
-    {
-        getSummary(c, u, msg, lastInvoiceEnd, "procedureFeeRates", "Procedure Charges");
-    }
-
-    private void labworkSummary(Container c, User u, final StringBuilder msg, Date lastInvoiceEnd)
-    {
-        getSummary(c, u, msg, lastInvoiceEnd, "labworkFeeRates", "Labwork Charges");
-    }
-
-    private void miscChargesSummary(Container c, User u, final StringBuilder msg, Date lastInvoiceEnd)
-    {
-        getSummary(c, u, msg, lastInvoiceEnd, "miscChargesFeeRates", "Other Charges");
-    }
-
-    private void getSummary(Container c, User u, final StringBuilder msg, Date lastInvoiceEnd, String queryName, String title)
+    private void getProjectSummary(Container c, User u, final StringBuilder msg, Date lastInvoiceEnd, String queryName, String title)
     {
         UserSchema us = QueryService.get().getUserSchema(u, c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME);
         QueryDefinition qd = us.getQueryDefForTable(queryName);
@@ -235,87 +194,140 @@ public class FinanceNotification extends AbstractEHRNotification
         endDate.add(Calendar.DATE, 1);
 
         Map<String, Object> params = new HashMap<>();
+        Long numDays = ((DateUtils.truncate(new Date(), Calendar.DATE).getTime() - start.getTimeInMillis()) / DateUtils.MILLIS_PER_DAY) + 1;
         params.put("StartDate", start.getTime());
         params.put("EndDate", endDate.getTime());
+        params.put("NumDays", numDays.intValue());
 
-        boolean hasMatchesProjectCol = ti.getColumn(FieldKey.fromString("matchesProject")) != null;
-        boolean hasInvoicedItemIdCol = ti.getColumn(FieldKey.fromString("invoicedItemId")) != null;
-        boolean hasMiscChargeCol = ti.getColumn(FieldKey.fromString("isMiscCharge")) != null;
-
-        SQLFragment sql = ti.getFromSQL("t");
-        QueryService.get().bindNamedParameters(sql, params);
-
-        sql = new SQLFragment("SELECT sum(t.totalcost) as totalCost, count(*) as total, " +
-                "sum(COALESCE(CASE WHEN t.isExemption IS NULL THEN 0 ELSE 1 END, 0)) as totalExemptions, " +
-                "sum(COALESCE(CASE WHEN (t.lacksRate IS NOT NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCost, " +
-                "sum(COALESCE(CASE WHEN (t.project IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingProject, " +
-                (hasMatchesProjectCol ? "sum(COALESCE(CASE WHEN t.matchesProject = " + ti.getSqlDialect().getBooleanFALSE() + " THEN 1 ELSE 0 END, 0)) as totalMismatchingProject, " : "") +
-                (hasInvoicedItemIdCol ? "sum(COALESCE(CASE WHEN t.invoicedItemId IS NULL THEN 0 ELSE 1 END, 0)) as totalReversals, " : "") +
-                (hasMiscChargeCol ? "sum(COALESCE(CASE WHEN (t.isMiscCharge = 'Y') THEN 1 ELSE 0 END, 0)) as totalMiscCharge, " : "") +
-                "sum(COALESCE(CASE WHEN (t.creditAccount IS NULL) THEN 1 ELSE 0 END, 0)) as totalLackingCreditAccount " +
-                "FROM " + sql.getSQL(), sql.getParams());
-        QueryService.get().bindNamedParameters(sql, params);
-        SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
-        List<Map<String, Object>> rows = new ArrayList<>(ss.getMapCollection());
-
-        Long total = (rows.size() > 0) ? Long.parseLong(rows.get(0).get("total").toString()) : 0;
-        Integer totalExemptions = (rows.size() > 0 && rows.get(0).get("totalExemptions") != null) ? (Integer)rows.get(0).get("totalExemptions") : 0;
-        Integer totalLackingCost = (rows.size() > 0 && rows.get(0).get("totalLackingCost") != null) ? (Integer)rows.get(0).get("totalLackingCost") : 0;
-        Integer totalLackingCreditAccount = (rows.size() > 0 && rows.get(0).get("totalLackingCreditAccount") != null) ? (Integer)rows.get(0).get("totalLackingCreditAccount") : 0;
-        Integer totalLackingProject = (rows.size() > 0 && rows.get(0).get("totalLackingProject") != null) ? (Integer)rows.get(0).get("totalLackingProject") : 0;
-
-        Double totalCost = (rows.size() > 0 && rows.get(0).get("totalCost") != null) ? (Double)rows.get(0).get("totalCost") : 0.0;
-
-        Integer totalMismatchingProject = 0;
-        if (hasMatchesProjectCol)
+        List<FieldKey> fieldKeys = new ArrayList<>();
+        for (ColumnInfo col : ti.getColumns())
         {
-            totalMismatchingProject = (rows.size() > 0 && rows.get(0).get("totalMismatchingProject") != null) ? (Integer)rows.get(0).get("totalMismatchingProject") : 0;
+            fieldKeys.add(col.getFieldKey());
         }
+        fieldKeys.add(FieldKey.fromString("project/displayName"));
+        fieldKeys.add(FieldKey.fromString("project/investigatorId/financialAnalyst/lastName"));
 
-        Integer totalReversals = 0;
-        if (hasInvoicedItemIdCol)
-        {
-            totalReversals = (rows.size() > 0 && rows.get(0).get("totalReversals") != null) ? (Integer)rows.get(0).get("totalReversals") : 0;
-        }
+        final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, fieldKeys);
+        TableSelector ts = new TableSelector(ti, cols.values(), null, null);
+        ts.setNamedParameters(params);
 
-        Integer totalMiscCharges = 0;
-        if (hasMiscChargeCol)
+        final Map<String, String> financialAnalystMap = new HashMap<>();
+
+        final Map<String, Map<String, Integer>> projectMap = new TreeMap<>();
+        final Set<FieldDescriptor> foundCols = new LinkedHashSet<>();
+        final Map<String, Double> totalsMap = new HashMap<>();
+
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
         {
-            totalMiscCharges = (rows.size() > 0 && rows.get(0).get("totalMiscCharge") != null) ? (Integer)rows.get(0).get("totalMiscCharge") : 0;
-        }
+            @Override
+            public void exec(ResultSet object) throws SQLException
+            {
+                Results rs = new ResultsImpl(object, cols);
+
+                Double totalCost = rs.getDouble(FieldKey.fromString("totalCost"));
+                if (totalCost != null)
+                {
+                    Double t = totalsMap.containsKey("totalCost") ? totalsMap.get("totalCost") : 0.0;
+                    t += totalCost;
+                    totalsMap.put("totalCost", t);
+                }
+
+                Double quantity = rs.getDouble(FieldKey.fromString("quantity"));
+                if (quantity != null)
+                {
+                    Double t = totalsMap.containsKey("total") ? totalsMap.get("total") : 0.0;
+                    t += quantity;
+                    totalsMap.put("total", t);
+                }
+
+                String projectDisplay = rs.getString(FieldKey.fromString("project/displayName"));
+                if (projectDisplay == null)
+                {
+                    projectDisplay = "None";
+                }
+
+                String financialAnalyst = rs.getString(FieldKey.fromString("project/investigatorId/financialAnalyst/lastName"));
+                if (financialAnalyst == null)
+                {
+                    financialAnalyst = "Not Assigned";
+                }
+
+                financialAnalystMap.put(projectDisplay, financialAnalyst);
+
+                for (FieldDescriptor fd : _fields)
+                {
+                    if (!rs.hasColumn(fd.getFieldKey()))
+                    {
+                        continue;
+                    }
+
+                    Object val = rs.getObject(fd.getFieldKey());
+                    if (fd.shouldFlag(val))
+                    {
+                        Map<String, Integer> values = projectMap.get(projectDisplay);
+                        if (values == null)
+                            values = new HashMap<>();
+
+
+                        Integer count = values.containsKey(fd.getFieldName()) ? values.get(fd.getFieldName()) : 0;
+                        count++;
+                        values.put(fd.getFieldName(), count);
+
+                        projectMap.put(projectDisplay, values);
+                        if (!foundCols.contains(fd))
+                            foundCols.add(fd);
+                    }
+                }
+            }
+        });
 
         msg.append("<b>" + title + ":</b><p>");
-        msg.append("There have been " + total + " items since the last invoice date of " + _dateFormat.format(lastInvoiceEnd) + ", for a total of " + _dollarFormat.format(totalCost) + ".");
-        String url = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, queryName, null) + "&query.param.StartDate=" + _dateFormat.format(start.getTime()) + "&query.param.EndDate=" + _dateFormat.format(endDate.getTime());
+        msg.append("There have been " + totalsMap.get("total") + " items since the last invoice date of " + _dateFormat.format(lastInvoiceEnd) + ", for a total of " + _dollarFormat.format(totalsMap.get("totalCost")) + ".  ");
+        final String baseUrl = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, queryName, null) + "&query.param.StartDate=" + _dateFormat.format(start.getTime()) + "&query.param.EndDate=" + _dateFormat.format(endDate.getTime());
+        msg.append("<a href='" + baseUrl + "'>Click here to view all items</a><br>");
 
-        StringBuilder specialMessages = new StringBuilder();
-        if (totalLackingProject > 0)
-            specialMessages.append("- <a href='" + url + "&query.project~isblank'>There are " + totalLackingProject + " items without a project.</a><br>");
-        if (totalExemptions > 0)
-            specialMessages.append("- <a href='" + url + "&query.isExemption~isnonblank'>There are " + totalExemptions + " items using special fees.</a><br>");
-        if (totalLackingCost > 0)
-            specialMessages.append("- <a href='" + url + "&query.lacksRate~isnonblank'>There are " + totalLackingCost + " items without a unit cost.  This probably means there is an issue with the rate or fee structure.</a><br>");
-        if (totalMiscCharges > 0)
-            specialMessages.append("- <a href='" + url + "&query.isMiscCharge~eq=Y'>There are " + totalMiscCharges + " items that are either adjustments or charges entered after the normal billing period.</a><br>");
-        if (totalLackingCreditAccount > 0)
-            specialMessages.append("- <a href='" + url + "&query.creditAccount~isblank'>There are " + totalLackingCreditAccount + " items without a credit alias.  This probably means there is an issue with the rate or fee structure.</a><br>");
-        if (totalMismatchingProject > 0)
-            specialMessages.append("- <a href='" + url + "&query.matchesProject~eq=false'>There are " + totalMismatchingProject + " items using a project that does not match the assignment on that date.</a><br>");
-        if (totalReversals > 0)
-            specialMessages.append("- <a href='" + url + "&query.invoicedItemId~isnonblank'>There are " + totalReversals + " items which are adjustments or reversals.</a><br>");
-
-        if (specialMessages.length() > 0)
+        msg.append("<table border=1 style='border-collapse: collapse;'><tr style='font-weight: bold;'><td>Project</td><td>Financial Analyst</td>");
+        for (FieldDescriptor fd : _fields)
         {
-            msg.append("<p>");
-            msg.append(specialMessages);
-            msg.append("<br>");
+            if (!foundCols.contains(fd))
+            {
+                continue;
+            }
+
+            msg.append("<td>" + fd.getLabel() + "</td>");
         }
-        else
+        msg.append("</tr>");
+
+        for (String projectDisplay : projectMap.keySet())
         {
-            msg.append("<p>");
+            Map<String, Integer> totals = projectMap.get(projectDisplay);
+            String projUrl = baseUrl + "&query.project/displayName~eq=" + projectDisplay;
+            msg.append("<tr><td><a href='" + projUrl + "'>" + projectDisplay + "</a></td>");
+            msg.append("<td>" + financialAnalystMap.get(projectDisplay) + "</td>");
+
+            for (FieldDescriptor fd : _fields)
+            {
+                if (!foundCols.contains(fd))
+                {
+                    continue;
+                }
+
+                if (totals.containsKey(fd.getFieldName()))
+                {
+                    String url = projUrl + fd.getFilter();
+                    msg.append("<td><a href='" + url + "'>" + totals.get(fd.getFieldName()) + "</a></td>");
+                }
+                else
+                {
+                    msg.append("<td></td>");
+                }
+            }
+
+            msg.append("</tr>");
+
         }
 
-        msg.append("<a href='" + url + "'>Click here to view all items</a><br><hr>");
+        msg.append("</table><p><hr><p>");
     }
 
     private void miscChargesLackingProjects(Container c, User u, final StringBuilder msg)
@@ -409,11 +421,50 @@ public class FinanceNotification extends AbstractEHRNotification
             {
                 if (r.getValue() instanceof Date)
                 {
-                    return r.getValue() == null ? null : DateUtils.round((Date)r.getValue(), Calendar.DATE);
+                    return r.getValue() == null ? null : DateUtils.truncate((Date)r.getValue(), Calendar.DATE);
                 }
             }
         }
 
         return null;
+    }
+
+    private void getExpiredAliases(Container c, User u, StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "onprc_billing_public") == null)
+        {
+            msg.append("<b>Warning: the ONPRC billing schema has not been enabled in this folder, so the expired alias alert cannot run<p><hr>");
+            return;
+        }
+
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "ehr").getTable("project");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddateCoalesced"), "-0d", CompareType.DATE_GTE);
+        filter.addCondition(FieldKey.fromString("account/aliasEnabled"), "Y", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("account"), null, CompareType.NONBLANK);
+        TableSelector ts = new TableSelector(ti, filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>Warning: there are " + count + " active ONPRC projects with expired aliases.</b><p>");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "ehr", "project", "Alias Info") + "&" + filter.toQueryString("query") + "'>Click here to view them</a>");
+            msg.append("<hr>");
+        }
+
+    }
+
+    private void getProjectsWithoutAliases(Container c, User u, StringBuilder msg)
+    {
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "ehr").getTable("project");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddateCoalesced"), "-0d", CompareType.DATE_GTE);
+        filter.addCondition(FieldKey.fromString("account"), null, CompareType.ISBLANK);
+        TableSelector ts = new TableSelector(ti, filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>Warning: there are " + count + " active ONPRC projects without an alias.</b><p>");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "ehr", "project", "Alias Info") + "&" + filter.toQueryString("query") + "'>Click here to view them</a>");
+            msg.append("<hr>");
+        }
+
     }
 }

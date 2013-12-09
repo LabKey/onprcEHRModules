@@ -170,11 +170,11 @@ public class BehaviorNotification extends ColonyAlertsNotification
     {
         Calendar date1 = Calendar.getInstance();
         date1.setTime(new Date());
-        date1 = DateUtils.round(date1, Calendar.DATE);
+        date1 = DateUtils.truncate(date1, Calendar.DATE);
 
         Calendar date2 = Calendar.getInstance();
         date2.setTime(new Date());
-        date2 = DateUtils.round(date2, Calendar.DATE);
+        date2 = DateUtils.truncate(date2, Calendar.DATE);
         date2.add(Calendar.DATE, -1);
 
         UserSchema us = getStudySchema(c, u);

@@ -1,6 +1,8 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <sorts>
-        <sort column="invoiceDate" descending="true"/>
+        <sort column="invoiceId/rowid" descending="true"/>
+        <sort column="Id"/>
+        <sort column="date" descending="true"/>
     </sorts>
     <aggregates>
         <aggregate column="total" type="SUM"/>

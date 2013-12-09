@@ -51,6 +51,7 @@ select
   END as research,
 
   CASE
+    WHEN Rpi.IACUCCode = '0492' THEN 1  --P51
     WHEN Rpi.IACUCCode = '0492-06' THEN 1  --clinical
     WHEN Rpi.IACUCCode = '0492-13' THEN 1  --pathology
     WHEN Rpi.IACUCCode = '0371' THEN 1  --surgery
@@ -58,6 +59,7 @@ select
   END as alwaysavailable,
 
   CASE
+    WHEN Rpi.IACUCCode = '0492' THEN 'Base Grant'  --P51
     WHEN Rpi.IACUCCode = '0492-06' THEN 'Clinical'
     WHEN Rpi.IACUCCode = '0492-13' THEN 'Pathology'
     WHEN Rpi.IACUCCode = '0371' THEN 'Surgery'
@@ -65,6 +67,7 @@ select
   END as shortname,
 
   CASE
+    WHEN Rpi.IACUCCode = '0492' THEN 'P51'  --P51
     WHEN Rpi.IACUCCode = '0492-03' THEN 'U24'
     WHEN Rpi.IACUCCode = '0492-02' THEN 'U42'
     WHEN Rpi.IACUCCode = '0300' THEN 'Center Resource'
@@ -76,7 +79,8 @@ select
     WHEN Rpi.IACUCCode = '0794' THEN 'Center Resource'
 
     ELSE 'Research'
-  END as use_category
+  END as use_category,
+  s2.value as projectType
 
 From Ref_ProjectsIACUC rpi
 	left join Ref_ProjInvest pc on (pc.ProjectID = rpi.ProjectID AND pc.DateDisabled is null and pc.PIFlag = 1 and pc.investigatorid != 0)
@@ -84,6 +88,7 @@ From Ref_ProjectsIACUC rpi
 
 	left join Ref_ProjInvest pc2 on (pc2.ProjectID = rpi.ProjectID AND pc2.DateDisabled is null and pc2.PIFlag = 2 and pc2.investigatorid != 0)
 	left join Ref_Investigator ri2 on (ri2.InvestigatorID = pc2.investigatorid)
+  left join Sys_Parameters s2 on (rpi.projecttype = s2.Flag and s2.Field = 'ProjectType')
 
 WHERE (rpi.ts > ? or pc.ts > ? or ri.ts > ?)
 

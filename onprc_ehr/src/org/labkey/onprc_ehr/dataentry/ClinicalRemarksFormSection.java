@@ -26,9 +26,13 @@ import org.labkey.api.view.template.ClientDependency;
  */
 public class ClinicalRemarksFormSection extends SimpleFormSection
 {
-    public ClinicalRemarksFormSection()
+    public ClinicalRemarksFormSection(String label, EHRService.FORM_SECTION_LOCATION location)
     {
-        super("study", "Clinical Remarks", "Remarks", "ehr-clinicalremarkpanel", EHRService.FORM_SECTION_LOCATION.Body);
+        super("study", "Clinical Remarks", label, "ehr-remarksandobsgridpanel", location);
         addClientDependency(ClientDependency.fromFilePath("ehr/panel/ClinicalRemarkPanel.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/grid/RemarksAndObsGridPanel.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/grid/ObservationsSmallGridPanel.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/plugin/ClinicalRemarksRowEditor.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalObservationsClientStore.js"));
     }
 }

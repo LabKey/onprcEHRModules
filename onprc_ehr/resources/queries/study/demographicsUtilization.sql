@@ -40,6 +40,16 @@ SELECT
 FROM ehr.animal_group_members a
 WHERE a.isActive = true
 
+UNION ALL
+
+SELECT
+f.Id,
+f.value as name,
+null as category
+
+FROM study.flags f
+WHERE f.isActive = true AND f.category = 'Assign Alias'
+
 ) t
 
 GROUP BY t.Id

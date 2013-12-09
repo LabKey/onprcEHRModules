@@ -35,7 +35,7 @@ SELECT
 
 FROM study.blood e
 WHERE e.dateOnly >= CAST(StartDate as date) AND e.dateOnly <= CAST(EndDate as date)
-and e.chargetype != 'No Charge'
+and e.chargetype != 'No Charge' and e.chargetype != 'Research Staff'
 AND e.qcstate.publicdata = true
 
 --TODO: drug administration

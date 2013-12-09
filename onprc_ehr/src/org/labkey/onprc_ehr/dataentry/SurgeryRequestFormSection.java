@@ -32,14 +32,4 @@ public class SurgeryRequestFormSection extends SimpleGridPanel
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Surgery Request.js"));
         addConfigSource("Surgery Request");
     }
-
-    @Override
-    public List<String> getTbarMoreActionButtons()
-    {
-        List<String> defaultButtons = super.getTbarMoreActionButtons();
-
-        defaultButtons.add("GUESSPROJECT");
-
-        return defaultButtons;
-    }
 }

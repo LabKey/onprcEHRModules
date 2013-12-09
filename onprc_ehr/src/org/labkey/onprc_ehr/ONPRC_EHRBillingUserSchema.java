@@ -60,6 +60,11 @@ public class ONPRC_EHRBillingUserSchema extends SimpleUserSchema
             ContainerScopedTable ti = new ContainerScopedTable(this, schematable, "grantNumber");
             return ti.init();
         }
+        else if ("aliases".equalsIgnoreCase(name))
+        {
+            ContainerScopedTable ti = new ContainerScopedTable(this, schematable, "alias");
+            return ti.init();
+        }
         else
         {
             CustomPermissionsTable ti = new CustomPermissionsTable(this, schematable).init();

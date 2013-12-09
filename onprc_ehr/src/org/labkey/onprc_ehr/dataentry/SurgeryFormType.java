@@ -15,9 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
-import org.labkey.api.ehr.dataentry.EncounterFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -40,18 +38,19 @@ public class SurgeryFormType extends TaskForm
                 new TaskFormSection(),
                 new ClinicalEncountersFormSection(),
                 new AnimalDetailsFormSection(),
-                new SurgeryFormSection("ehr", "encounter_participants", "Staff", false),
-                new SurgeryFormSection("ehr", "encounter_summaries", "Narrative", true),
-                new SurgeryFormSection("study", "Drug Administration", "Medications/Treatments", true),
-                new SurgeryFormSection("study", "weight", "Weight", false),
-                new SurgeryFormSection("study", "blood", "Blood Draws", false),
-                new SurgeryFormSection("ehr", "snomed_tags", "SNOMED Codes", true),
-                new SurgeryFormSection("study", "flags", "Flags", true),
-                new SurgeryFormSection("onprc_billing", "miscCharges", "Misc. Charges", false)
+                new EncounterChildFormSection("ehr", "encounter_participants", "Staff", false),
+                new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true),
+                new EncounterChildFormSection("study", "Drug Administration", "Medications/Treatments", true),
+                new EncounterChildFormSection("study", "weight", "Weight", false),
+                new EncounterChildFormSection("study", "blood", "Blood Draws", false),
+                new EncounterChildFormSection("ehr", "snomed_tags", "SNOMED Codes", true),
+                //new EncounterChildFormSection("study", "flags", "Flags", true),
+                new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false)
         ));
 
         for (FormSection s : this.getFormSections())
         {
+            s.addConfigSource("Encounter");
             s.addConfigSource("Surgery");
         }
     }

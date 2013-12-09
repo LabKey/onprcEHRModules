@@ -49,5 +49,10 @@ public class LabworkFormType extends TaskForm
                 new LabworkFormSection("study", "urinalysisResults", "Urinalysis"),
                 new LabworkFormSection("study", "miscTests", "Misc Tests")
         ));
+
+        for (FormSection s : getFormSections())
+        {
+            s.addConfigSource("Labwork");
+        }
     }
 }

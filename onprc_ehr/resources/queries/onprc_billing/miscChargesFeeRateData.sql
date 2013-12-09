@@ -8,6 +8,7 @@ SELECT
   p.date,
   p.billingDate,
   p.project,
+  coalesce(p.debitedaccount, p.project.account) as account,
   p.chargeId,
   coalesce(p.chargeId.name, p.item) as item,
   coalesce(p.unitCost, e.unitCost, cr.unitCost) as unitCost,
@@ -18,9 +19,13 @@ SELECT
   p.invoicedItemId,
   p.sourceRecord,
   p.comment,
+  p.sourceRecord as objectid,
 
-  ce.account as creditAccount,
-  ce.rowid as creditAccountId,
+  coalesce(p.creditedaccount, ce.account) as creditAccount,
+  CASE
+    WHEN p.creditedaccount IS NULL THEN ce.rowid
+    ELSE NULL
+  END as creditAccountId,
   CASE
     WHEN (p.unitCost IS NOT NULL OR e.unitCost IS NOT NULL) THEN 'Y'
     ELSE null
@@ -34,14 +39,29 @@ SELECT
 
   --find assignment on this date
   CASE
-  WHEN p.project IS NULL THEN false
-  WHEN p.project.alwaysavailable = true THEN true
-  WHEN (SELECT count(*) as projects FROM study.assignment a WHERE
+    WHEN p.project IS NULL THEN 'N'
+    WHEN p.project.alwaysavailable = true THEN null
+    WHEN (SELECT count(*) as projects FROM study.assignment a WHERE
+      p.Id = a.Id AND
+      p.project = a.project AND
+      (cast(p.date AS DATE) < a.enddateCoalesced OR a.enddate IS NULL) AND
+      p.date >= a.dateOnly
+    ) > 0 THEN null
+    ELSE 'N'
+  END as matchesProject,
+  (SELECT group_concat(distinct a.project.displayName, chr(10)) as projects FROM study.assignment a WHERE
     p.Id = a.Id AND
     p.project = a.project AND
     (cast(p.date AS DATE) < a.enddateCoalesced OR a.enddate IS NULL) AND
     p.date >= a.dateOnly
-  ) > 0 THEN true ELSE false END as matchesProject
+  ) as assignmentAtTime,
+  p.container,
+  CASE WHEN p.project.account IS NULL THEN 'Y' ELSE null END as isMissingAccount,
+  CASE
+    WHEN ifdefined(p.project.account.aliasEnabled) IS NULL THEN null
+    WHEN (ifdefined(p.project.account.aliasEnabled) IS NULL OR ifdefined(p.project.account.aliasEnabled) != 'Y') THEN 'Y'
+    ELSE null
+  END as isExpiredAccount
 
 FROM onprc_billing.miscChargesFees p
 

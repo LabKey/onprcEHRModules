@@ -22,7 +22,7 @@ select
   max(m.measurement) as value
 
 FROM study.measurementsPivotedRawData m
-WHERE m.categories like '%Fetal%' and m.measurementNo = 1
+WHERE m.categories like '%Fetal%' and m.measurementNo = '1'
 
 group by m.id, m.date, m.tissue, m.parentid
 

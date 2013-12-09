@@ -6,8 +6,8 @@
         <column name="tissue"/>
         <!--<column name="organization"/>-->
         <column name="recipient"/>
-        <column name="requestCategory"/>
-        <column name="sampleType"/>
+        <column name="requestcategory"/>
+        <column name="sampletype"/>
         <column name="QCState"/>
     </columns>
     <sorts>

@@ -67,6 +67,7 @@ import org.labkey.api.view.ViewContext;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -1467,6 +1468,97 @@ public class LegacyDataManager
                     throw new RuntimeException(e);
                 }
             }
+        }
+    }
+
+    public void populateHxColumn(Container c, User u) throws Exception
+    {
+        UserSchema us = QueryService.get().getUserSchema(u, c, "study");
+        if (us == null)
+        {
+            throw new IllegalArgumentException("Unable to find study schema");
+        }
+
+        TableInfo ti = us.getTable("cases");
+        if (ti == null)
+        {
+            throw new IllegalArgumentException("Unable to find cases table");
+        }
+
+        TableInfo realTable = DbSchema.get("studydataset").getTable(ti.getDomain().getStorageTableName());
+
+        //clinical cases
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("latestHx"), null, CompareType.NONBLANK);
+        filter.addCondition(FieldKey.fromString("category"), "Clinical");
+        Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("lsid"), FieldKey.fromString("remark"), FieldKey.fromString("latestHx")));
+        TableSelector ts = new TableSelector(ti, cols.values(), filter, null);
+
+        final List<Map<String, Object>> toUpdate = new ArrayList<>();
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Object ret = rs.getObject("latestHx");
+                if (ret instanceof Clob)
+                {
+                    int length = new Long(((Clob) ret).length()).intValue();
+                    ret = ((Clob) ret).getSubString(new Long(1), length);
+                }
+
+                if (ret.equals(rs.getObject("remark")))
+                {
+                    return;
+                }
+
+                Map<String, Object> row = new CaseInsensitiveHashMap<>();
+                row.put("lsid", rs.getString("lsid"));
+                row.put("remark", rs.getString("latestHx"));
+                toUpdate.add(row);
+            }
+        });
+
+        _log.info("Updating " + toUpdate.size() + " clinical cases");
+        for (Map<String, Object> row : toUpdate)
+        {
+            Table.update(u, realTable, row, row.get("lsid"));
+        }
+
+        //surgical cases
+        SimpleFilter surgFilter = new SimpleFilter(FieldKey.fromString("remarksOnOpenDate"), null, CompareType.NONBLANK);
+        surgFilter.addCondition(FieldKey.fromString("category"), "Surgery");
+        Map<FieldKey, ColumnInfo> surgCols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("lsid"), FieldKey.fromString("remark"), FieldKey.fromString("remarksOnOpenDate")));
+        TableSelector surgTs = new TableSelector(ti, surgCols.values(), surgFilter, null);
+
+        final List<Map<String, Object>> surgToUpdate = new ArrayList<>();
+        surgTs.forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Object ret = rs.getObject("remarksOnOpenDate");
+                if (ret instanceof Clob)
+                {
+                    int length = new Long(((Clob) ret).length()).intValue();
+                    ret = ((Clob) ret).getSubString(new Long(1), length);
+                }
+
+                if (ret.equals(rs.getObject("remark")))
+                {
+                    return;
+                }
+
+                Map<String, Object> row = new CaseInsensitiveHashMap<>();
+                row.put("lsid", rs.getString("lsid"));
+                row.put("remark", rs.getString("remarksOnOpenDate"));
+                surgToUpdate.add(row);
+            }
+        });
+
+        _log.info("Updating " + surgToUpdate.size() + " surgical cases");
+        for (Map<String, Object> row : surgToUpdate)
+        {
+            Table.update(u, realTable, row, row.get("lsid"));
         }
     }
 }

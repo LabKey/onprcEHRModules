@@ -65,9 +65,9 @@
             <ns:column columnName="financialanalyst">
                 <ns:columnTitle>Financial Analyst</ns:columnTitle>
                 <ns:fk>
-                    <ns:fkDbSchema>core</ns:fkDbSchema>
-                    <ns:fkTable>users</ns:fkTable>
-                    <ns:fkColumnName>userid</ns:fkColumnName>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>fiscalAuthorities</ns:fkTable>
+                    <ns:fkColumnName>rowid</ns:fkColumnName>
                 </ns:fk>
             </ns:column>
             <ns:column columnName="emailaddress">

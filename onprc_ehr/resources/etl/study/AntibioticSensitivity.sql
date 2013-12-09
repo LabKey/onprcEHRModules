@@ -28,6 +28,10 @@ SELECT
 	when d.ResistanceFlag = 1 then 0
 	when d.ResistanceFlag = 0 then 1
 	end as Resistant,
+  CASE
+  when d.ResistanceFlag = 1 then 'Sensitive'
+  when d.ResistanceFlag = 0 then 'Resistant'
+  end as result,
 	--d.ResistanceFlag as Resistant,
 
 	d.ts as rowversion,

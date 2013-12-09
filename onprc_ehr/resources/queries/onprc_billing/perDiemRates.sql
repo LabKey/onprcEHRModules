@@ -36,7 +36,17 @@ SELECT
   END as lacksRate,
   e.rowid as exemptionId,
   CASE WHEN e.rowid IS NULL THEN cr.rowid ELSE null END as rateId,
-  'N' as isMiscCharge
+  null as isMiscCharge,
+  CASE WHEN p.project.account IS NULL THEN 'Y' ELSE null END as isMissingAccount,
+  CASE
+    WHEN ifdefined(p.project.account.aliasEnabled) IS NULL THEN null
+    WHEN (ifdefined(p.project.account.aliasEnabled) IS NULL OR ifdefined(p.project.account.aliasEnabled) != 'Y') THEN 'Y'
+    ELSE null
+  END as isExpiredAccount,
+  CASE
+    WHEN (p.categories IS NOT NULL AND p.categories LIKE '%Multiple%') THEN 'Y'
+    ELSE null
+  END as isMultipleProjects
 
 FROM onprc_billing.perDiems p
 
@@ -86,7 +96,10 @@ SELECT
   mc.lacksRate,
   mc.exemptionId,
   mc.rateId,
-  'Y' as isMiscCharge
+  'Y' as isMiscCharge,
+  mc.isMissingAccount,
+  mc.isExpiredAccount,
+  null as isMultipleProjects
 
 FROM onprc_billing.miscChargesFeeRateData mc
 WHERE cast(mc.billingDate as date) >= CAST(StartDate as date) AND cast(mc.billingDate as date) <= CAST(EndDate as date)

@@ -14,16 +14,12 @@
                     <column columnName="date">
 
                     </column>
-                    <column columnName="tissue">
-                        <columnTitle>Tissue</columnTitle>
-                        <fk>
-                            <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>snomed</fkTable>
-                            <fkColumnName>code</fkColumnName>
-                        </fk>
+                    <column columnName="project">
+
                     </column>
                     <column columnName="organization">
                         <columnTitle>Organization</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="recipient">
                         <columnTitle>Recipient</columnTitle>
@@ -33,20 +29,42 @@
                             <fkColumnName>rowid</fkColumnName>
                         </fk>
                     </column>
-                    <column columnName="requestCategory">
+                    <column columnName="requestcategory">
                         <columnTitle>Request Category</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>tissue_distribution_category</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
                     </column>
-                    <column columnName="sampleType">
+                    <column columnName="sampletype">
                         <columnTitle>Sample Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>tissue_sample_type</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
+                    </column>
+                    <column columnName="tissue">
+                        <columnTitle>Tissue</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>snomed</fkTable>
+                            <fkColumnName>code</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="preservation">
                         <columnTitle>Preservation</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="quantity">
                         <columnTitle>Quantity</columnTitle>
                     </column>
                     <column columnName="qualifier">
                         <columnTitle>Qualifier</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                 </columns>
             </table>

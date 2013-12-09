@@ -1189,6 +1189,9 @@ public class ETLRunnable implements Runnable
             add("Urinalysis Results");
             add("Misc Tests");
             add("Parentage");
+            add("Blood Draws");
+            add("Drug Administration");
+            add("Weight");
         }
     };
 
@@ -1243,7 +1246,7 @@ public class ETLRunnable implements Runnable
             put("Matings", new String[]{"Brd_Matings"});
             put("Measurements", new String[]{"Path_Measurements", "Path_FetalMeasurements"});
             put("Microbiology", new String[]{"Cln_MicrobiologyData", "Cln_MicrobiologyHeader"});
-            put("Misc Tests", new String[]{"Cln_OccultBlood", "Cln_RareTestData", "Cln_RareTestHeader"});
+            put("Misc Tests", new String[]{"Cln_OccultBlood", "Cln_RareTestData", "Cln_RareTestHeader", "Cln_CerebralspinalFluid"});
             put("Morphologic Diagnosis", new String[]{"Path_AutopsyDiagnosis", "Path_Autopsy", "Path_biopsyDiagnosis", "Path_Biopsy"});
             put("Notes", new String[]{"Af_Remarks", "Af_Qrf"});
             put("Organ Weights", new String[]{"Path_AutopsyWtsMaterials", "Path_Autopsy", "Path_BiopsyWtsMaterials", "Path_biopsy"});

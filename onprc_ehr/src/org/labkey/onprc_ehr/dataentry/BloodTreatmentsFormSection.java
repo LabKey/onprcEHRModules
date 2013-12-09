@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,8 +32,10 @@ public class BloodTreatmentsFormSection extends SimpleFormSection
     public BloodTreatmentsFormSection()
     {
         super("study", "Drug Administration", "Medications/Diet", "ehr-gridpanel");
-        setConfigSources(Collections.singletonList("Task"));
+
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromSectionWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/SedationWindow.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BloodDraw.js"));
     }
 
     @Override

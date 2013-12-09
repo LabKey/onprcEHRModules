@@ -15,6 +15,12 @@
 
                     </column>
                     <column columnName="enddate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="category">
 
                     </column>
                     <column columnName="tissue">
@@ -24,10 +30,6 @@
                             <fkTable>snomed</fkTable>
                             <fkColumnName>code</fkColumnName>
                         </fk>
-                    </column>
-                    <column columnName="dimension">
-                        <columnTitle>Dimension</columnTitle>
-                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="measurement1">
                         <columnTitle>Measurement 1</columnTitle>
@@ -40,6 +42,13 @@
                     </column>
                     <column columnName="units">
                         <columnTitle>Units</columnTitle>
+                    </column>
+                    <column columnName="performedby">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="dimension">
+                        <columnTitle>Dimension</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                 </columns>
             </table>

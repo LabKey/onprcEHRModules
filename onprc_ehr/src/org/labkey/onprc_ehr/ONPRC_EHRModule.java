@@ -40,21 +40,10 @@ import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.onprc_ehr.billing.BillingAuditViewFactory;
 import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
 import org.labkey.onprc_ehr.buttons.ManageCasesButton;
-import org.labkey.onprc_ehr.dataentry.BloodDrawFormType;
-import org.labkey.onprc_ehr.dataentry.BloodDrawRequestFormType;
-import org.labkey.onprc_ehr.dataentry.ChargesFormSection;
-import org.labkey.onprc_ehr.dataentry.DiagnosisFormType;
-import org.labkey.onprc_ehr.dataentry.LabworkFormType;
-import org.labkey.onprc_ehr.dataentry.LabworkRequestFormType;
-import org.labkey.onprc_ehr.dataentry.PairingFormType;
-import org.labkey.onprc_ehr.dataentry.ProcedureFormType;
-import org.labkey.onprc_ehr.dataentry.ProcessingFormType;
-import org.labkey.onprc_ehr.dataentry.SurgeryFormType;
-import org.labkey.onprc_ehr.dataentry.SurgeryRequestFormSection;
-import org.labkey.onprc_ehr.dataentry.TBDemographicsProvider;
-import org.labkey.onprc_ehr.dataentry.TreatmentsTaskFormSection;
+import org.labkey.onprc_ehr.dataentry.*;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveFlagsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
@@ -105,7 +94,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.338;
+        return 12.344;
     }
 
     public boolean hasScripts()
@@ -127,6 +116,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     protected void doStartupAfterSpringConfig(ModuleContext moduleContext)
     {
+        AuditLogService.get().addAuditViewFactory(BillingAuditViewFactory.getInstance());
+
         ETL.init(1);
         PipelineService.get().registerPipelineProvider(new BillingPipelineProvider(this));
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
@@ -167,6 +158,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         Resource r = getModuleResource("/scripts/onprc_ehr/onprc_triggers.js");
         assert r != null;
         EHRService.get().registerTriggerScript(this, r);
+
+        Resource billingTriggers = getModuleResource("/scripts/onprc_ehr/billing_triggers.js");
+        assert billingTriggers != null;
+        EHRService.get().registerTriggerScript(this, billingTriggers);
+
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/BloodSummaryPanel.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/onprcReports.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/Utils.js"), this);
@@ -179,7 +175,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Living Center Animals, By Location", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=By Location&query.calculated_status~eq=Alive"), "Browse Animals");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "All Center Animals (including dead and shipped)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics"), "Browse Animals");
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Unassigned Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Assignment Info&query.Id/activeAssignments/numResearchAssignments~eq=0"), "Browse Animals");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Unassigned Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Assignment Info&query.Id/activeAssignments/numResearchAssignments~eq=0&query.Id/activeAssignments/numProvisionalAssignments~eq=0"), "Browse Animals");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Assigned Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=Demographics&query.viewName=Assignment Info&query.Id/activeAssignments/numResearchAssignments~gt=0"), "Browse Animals");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.animalSearch, "Pregnancy/Repro Animal Search", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&queryName=Demographics&query.viewName=Repro Info"), "Browse Animals");
 
@@ -192,7 +188,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.project, "View Active Projects", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=ehr&query.queryName=Project&query.enddate~isblank"), "Quick Links");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Services Needed For Processing", this, DetailsURL.fromString("/onprc_ehr/groupProcessing.view"), "Colony Services");
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPE"), "Routine Clinical Tasks");
+
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPE&query.isRestricted~isblank"), "Routine Clinical Tasks");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last TB Test", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsMostRecentTBDate&query.calculated_status~eq=Alive"), "Routine Clinical Tasks");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Summary of Clinical Tasks", this, DetailsURL.fromString("/ldk/runNotification.view?key=org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification"), "Routine Clinical Tasks");
 
@@ -211,6 +208,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         {
             //ignore
         }
+
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Consortium Statistics", this, DetailsURL.fromString("/onprc_ehr/consortiumReport.view"), "Colony Management");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Room Utilization By Investigator", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=ehr_lookups&query.queryName=roomsByInvestigator"), "Colony Management");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Room Utilization By Project", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=ehr_lookups&query.queryName=roomsByProject"), "Colony Management");
@@ -234,19 +233,28 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerActionOverride("animalGroupDetails", this, "views/animalGroupDetails.html");
         EHRService.get().registerActionOverride("cageDetails", this, "views/cageDetails.html");
         EHRService.get().registerActionOverride("animalSearch", this, "views/animalSearch.html");
+        EHRService.get().registerActionOverride("animalHistory", this, "views/animalHistory.html");
 
         //data entry
-        EHRService.get().registerSimpleFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "Weights", "study", "weight");
+        EHRService.get().registerFormType(new WeightFormType(this));
+        EHRService.get().registerFormType(new ClinicalRoundsFormType(this));
+        EHRService.get().registerFormType(new SurgicalRoundsFormType(this));
+        EHRService.get().registerFormType(new BehaviorRoundsFormType(this));
+        //EHRService.get().registerFormType(new TissueDistributionFormType(this));
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "treatments", "Medications/Diet", Collections.<FormSection>singletonList(new TreatmentsTaskFormSection()));
+        EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "tb", "TB Tests", Collections.<FormSection>singletonList(new SimpleGridPanel("study", "tb", "TB Tests")));
         EHRService.get().registerFormType(new PairingFormType(this));
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Billing", "miscCharges", "Misc Charges", Collections.<FormSection>singletonList(new ChargesFormSection()));
         EHRService.get().registerFormType(new LabworkFormType(this));
         EHRService.get().registerFormType(new ProcessingFormType(this));
         EHRService.get().registerFormType(new SurgeryFormType(this));
-        EHRService.get().registerFormType(new ProcedureFormType(this));
-        EHRService.get().registerFormType(new DiagnosisFormType(this));
+        EHRService.get().registerFormType(new NecropsyFormType(this));
+        EHRService.get().registerFormType(new ClinicalProcedureFormType(this));
+        EHRService.get().registerFormType(new ClinicalRemarkFormType(this));
+        EHRService.get().registerFormType(new ChargesAdvancedFormType(this));
 
         EHRService.get().registerFormType(new BloodDrawFormType(this));
+        EHRService.get().registerFormType(new AuxProcedureFormType(this));
         EHRService.get().registerFormType(new BloodDrawRequestFormType(this));
         EHRService.get().registerFormType(new LabworkRequestFormType(this));
         EHRService.get().registerFormType(EHRService.FORM_TYPE.Request, this, "Requests", "Surgery Request", "Procedure Requests", Collections.<FormSection>singletonList(new SurgeryRequestFormSection()));

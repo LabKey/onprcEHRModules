@@ -37,7 +37,9 @@
                     header: 'Reports To Generate Charges',
                     items: [
                         {name: 'Billing Period Summary / Discrepancy Report', url: LABKEY.ActionURL.buildURL('ldk', 'runNotification', ctx.EHRStudyContainer, {key: 'org.labkey.onprc_ehr.notification.FinanceNotification'})},
-                        {name: 'Perform Billing Run', url: LABKEY.ActionURL.buildURL('onprc_ehr', 'billingPipeline', null)}
+                        {name: 'Billing Period Summary For Project', url: LABKEY.ActionURL.buildURL('onprc_ehr', 'invoiceEstimate', null)},
+                        {name: 'Perform Billing Run', url: LABKEY.ActionURL.buildURL('onprc_ehr', 'billingPipeline', null)},
+                        {name: 'Enter New Charges', url: LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', ctx.EHRStudyContainer, {formType: 'ChargesAdvanced'})}
                     ]
                 },{
                     header: 'Reference Tables',
@@ -47,6 +49,7 @@
 
                         {name: 'Grants', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'grants', 'query.viewName': 'Active Grants'})},
                         {name: 'Grant Projects', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'grantProjects', 'query.viewName': 'Active Grant Projects'})},
+                        {name: 'Aliases', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'aliases', 'query.viewName': 'Active Aliases'})},
 
                         //{name: 'Approved IACUC Funding Sources', url: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'iacucFundingSources'})},
 

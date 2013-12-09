@@ -27,6 +27,8 @@ JOIN ehr.protocol_counts p2 ON (
     (p.start <= p2.enddateCoalesced AND p.enddateCoalesced >= p2.start) AND
     (p.species = p2.species OR (p.species IS NOT NULL AND p2.species IS NULL)) AND
     (p.gender = p2.gender OR (p.gender IS NOT NULL AND p2.gender IS NULL))
+    --ignore groups that are immediate parent/children and share the same start/end
+    AND NOT(p.start = p2.start AND p.enddateCoalesced = p2.enddateCoalesced AND (p.project.protocol = p2.project.displayName OR p2.project.protocol = p.project.displayName))
 )
 
 GROUP BY p.rowid, p.protocol, p.project

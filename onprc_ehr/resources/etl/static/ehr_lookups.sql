@@ -51,6 +51,9 @@ SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE dat
 -- UPDATE labkey.ehr_lookups.species SET blood_per_kg = 65 WHERE common = 'CYNOMOLGUS MACAQUE';
 -- UPDATE labkey.ehr_lookups.species SET max_draw_pct = 0.125;
 
+UPDATE labkey.ehr_lookups.species
+SET cites_code = (SELECT min(SpeciesCode) FROM IRIS_Production.dbo.ref_species WHERE Active = 1 AND species.common = ref_species.CommonName)
+
 --snomed
 --TRUNCATE TABLE labkey.ehr_lookups.snomed;
 INSERT INTO labkey.ehr_lookups.snomed (code, meaning, modified, created, modifiedby, createdby, container)

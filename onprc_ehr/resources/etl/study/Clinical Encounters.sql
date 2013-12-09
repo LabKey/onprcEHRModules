@@ -144,7 +144,11 @@ Select
     (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
 
 	sg.objectid,
-    s4.value as chargetype,
+  CASE
+    WHEN s4.value = 'Surgery Staff' THEN 'Center Staff'
+    WHEN s4.value = 'No Surgery Staff' THEN 'Research Staff'
+    ELSE s4.value
+  END as chargetype,
   coalesce(ibs.projectId, afc.project) as project,
   null as remark
 

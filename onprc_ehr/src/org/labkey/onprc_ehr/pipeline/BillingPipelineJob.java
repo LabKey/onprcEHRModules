@@ -93,13 +93,13 @@ public class BillingPipelineJob extends PipelineJob implements BillingPipelineJo
 
     public Date getStartDate()
     {
-        Date ret = _form.getStartDate() == null ? null : DateUtils.round(_form.getStartDate(), Calendar.DATE);
+        Date ret = _form.getStartDate() == null ? null : DateUtils.truncate(_form.getStartDate(), Calendar.DATE);
         return ret;
     }
 
     public Date getEndDate()
     {
-        Date ret = _form.getEndDate() == null ? null : DateUtils.round(_form.getEndDate(), Calendar.DATE);
+        Date ret = _form.getEndDate() == null ? null : DateUtils.truncate(_form.getEndDate(), Calendar.DATE);
         return ret;
     }
 

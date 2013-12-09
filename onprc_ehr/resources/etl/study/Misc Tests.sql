@@ -80,7 +80,7 @@ SELECT
 	Remarks as Remarks,
 	cln.ts as rowversion,
 	cln.ts as rowversion2,
-	cln.objectid,
+  cast(cln.objectid as varchar(38)) as objectid,
 	null as runid
 
 FROM Cln_OccultBlood cln
@@ -114,7 +114,7 @@ s5.Value as qualResult,
 null as remark,
 cp.ts as rowversion,
 cp.ts as rowversion2,
-cp.objectid,
+cast(cp.objectid as varchar(38)) as objectid,
 null as runid
  
 from Cln_Parasitology cp
@@ -153,7 +153,7 @@ SELECT
 	cln.Remarks as Remarks,
 	cln.ts as rowversion,
 	h.ts as rowversion2,
-	cln.objectid,
+  cast(cln.objectid as varchar(38)) as objectid,
 	h.objectid as runid
 
 FROM Cln_RareTestData cln
@@ -165,6 +165,158 @@ left join Specimen sp on (sp.Value = h.Specimen)
 
 --these will be in serology
 where rt.RareTest != 'Interferon-Gamma Mycobacterium Testing (Primagam)'
+
+--CSF
+UNION ALL
+
+SELECT
+  ClinicalKey ,
+  AnimalID as Id  ,
+  DATE ,
+  null as projectId,
+  null as categoryInt,
+  null as category,
+  cln.Technician as technicianId,
+
+  Specimen as Specimen ,     --      Speciment database table
+  sp.name,
+  sp.snomedcode,
+  null as MethodInt,
+  null as Method  ,
+  'CSF WBC' as TestId,
+  TotalWBC as Result,
+  null as stringResults,
+  null as qual_result,
+  remarks ,
+  cln.ts as rowversion,
+  null as rowversion2,
+  (cast(cln.objectid as varchar(38)) + '_WBC') as objectid,
+  null as runid
+
+FROM Cln_CerebralspinalFluid cln
+left join Specimen sp on (sp.Value = cln.Specimen)
+WHERE cln.TotalWBC != -1 AND cln.TotalWBC is not null
+
+UNION ALL
+
+SELECT
+  ClinicalKey ,
+  AnimalID as Id  ,
+  DATE ,
+  null as projectId,
+  null as categoryInt,
+  null as category,
+  cln.Technician as technicianId,
+
+  Specimen as Specimen ,     --      Speciment database table
+  sp.name,
+  sp.snomedcode,
+  null as MethodInt,
+  null as Method  ,
+  'CSF Neut' as TestId,
+  WBCNeurophils as Result,
+  null as stringResults,
+  null as qual_result,
+  remarks ,
+  cln.ts as rowversion,
+  null as rowversion2,
+  (cast(cln.objectid as varchar(38)) + '_Neut') as objectid,
+  null as runid
+
+FROM Cln_CerebralspinalFluid cln
+left join Specimen sp on (sp.Value = cln.Specimen)
+WHERE cln.WBCNeurophils != -1 AND cln.WBCNeurophils is not null
+
+UNION ALL
+
+SELECT
+  ClinicalKey ,
+  AnimalID as Id  ,
+  DATE ,
+  null as projectId,
+  null as categoryInt,
+  null as category,
+  cln.Technician as technicianId,
+
+  Specimen as Specimen ,     --      Speciment database table
+  sp.name,
+  sp.snomedcode,
+  null as MethodInt,
+  null as Method  ,
+  'CSF Lymph' as TestId,
+  WBCLymphocytes as Result,
+  null as stringResults,
+  null as qual_result,
+  remarks ,
+  cln.ts as rowversion,
+  null as rowversion2,
+  (cast(cln.objectid as varchar(38)) + '_Lymph') as objectid,
+  null as runid
+
+FROM Cln_CerebralspinalFluid cln
+left join Specimen sp on (sp.Value = cln.Specimen)
+WHERE cln.WBCLymphocytes != -1 AND cln.WBCLymphocytes is not null
+
+UNION ALL
+
+SELECT
+  ClinicalKey ,
+  AnimalID as Id  ,
+  DATE ,
+  null as projectId,
+  null as categoryInt,
+  null as category,
+  cln.Technician as technicianId,
+
+  Specimen as Specimen ,     --      Speciment database table
+  sp.name,
+  sp.snomedcode,
+  null as MethodInt,
+  null as Method  ,
+  'CSF Total Protein' as TestId,
+  TotalProtein as Result,
+  null as stringResults,
+  null as qual_result,
+  remarks ,
+  cln.ts as rowversion,
+  null as rowversion2,
+  (cast(cln.objectid as varchar(38)) + '_TP') as objectid,
+  null as runid
+
+FROM Cln_CerebralspinalFluid cln
+left join Specimen sp on (sp.Value = cln.Specimen)
+WHERE cln.TotalProtein != -1 AND cln.TotalProtein is not null
+
+UNION ALL
+
+SELECT
+  ClinicalKey ,
+  AnimalID as Id  ,
+  DATE ,
+  null as projectId,
+  null as categoryInt,
+  null as category,
+  cln.Technician as technicianId,
+
+  Specimen as Specimen ,     --      Speciment database table
+  sp.name,
+  sp.snomedcode,
+  null as MethodInt,
+  null as Method  ,
+  'CSF Glucose' as TestId,
+  Glucose as Result,
+  null as stringResults,
+  null as qual_result,
+  remarks ,
+  cln.ts as rowversion,
+  null as rowversion2,
+  (cast(cln.objectid as varchar(38)) + '_Gluc') as objectid,
+  null as runid
+
+FROM Cln_CerebralspinalFluid cln
+left join Specimen sp on (sp.Value = cln.Specimen)
+WHERE cln.Glucose != -1 AND cln.Glucose is not null
+
 ) t
 
 left join Ref_Technicians tech on (t.TechnicianId = tech.ID)

@@ -24,7 +24,8 @@ SELECT
   COALESCE(count(distinct a.projectName), 0) as totalProjects,
   COALESCE(count(a.lsid), 0) as numActiveAssignments,
   COALESCE(SUM(a.isResearch), 0) as numResearchAssignments,
-  COALESCE(SUM(a.isU24U42), 0) as numU24U42Assignments
+  COALESCE(SUM(a.isU24U42), 0) as numU24U42Assignments,
+  COALESCE(SUM(a.isProvisional), 0) as numProvisionalAssignments
 
 FROM (
 
@@ -39,10 +40,31 @@ SELECT
   a.lsid,
   a.project.isResearch as isResearch,
   a.project.isU24U42 as isU24U42,
+  0 as isProvisional,
   cast(a.project.investigatorId.lastName || ' [' || a.project.name || ']' as varchar) as projectString
 
 FROM study.demographics d
 LEFT JOIN study.assignment a ON (a.id = d.id AND a.isActive = true)
+
+UNION ALL
+
+SELECT
+  d.id,
+  f.value as displayName,
+  f.value as protocolDisplayName,
+  f.value as lastName,
+  f.value as division,
+  null as assignedVet,
+  f.value as projectName,
+  null as lsid,  --we do not want these counted in total assignments
+  false as isResearch,
+  false as isU24U42,
+  CASE WHEN f.Id IS NULL THEN 0 ELSE 1 END as isProvisional,
+  f.value as projectString
+
+FROM study.demographics d
+JOIN study.flags f ON (f.id = d.id AND f.isActive = true AND f.category = 'Assign Alias')
+
 ) a
 
 GROUP BY a.id

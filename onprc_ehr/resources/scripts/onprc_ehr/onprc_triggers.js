@@ -14,5 +14,14 @@ exports.init = function(EHR){
         if (row.outcome && row.outcome != 'Normal' && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required if a non-normal outcome is reported', 'WARN');
         }
+
+        if (!row.code){
+            EHR.Server.Utils.addError(scriptErrors, 'code', 'Must enter a treatment', 'WARN');
+        }
+
+        if (!row.amount && !row.volume){
+            EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
+            EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+        }
     });
 }

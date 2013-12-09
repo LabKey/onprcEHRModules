@@ -1,0 +1,112 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+
+        Ext4.create('Ext.panel.Panel', {
+            border: false,
+            itemId: 'outerPanel',
+            defaults: {
+                border: false
+            },
+            items: [{
+                html: 'This report is designed to provide the raw data used for the NPRC Consortium Reports.  Note: in most cases this report will provide a grid listing the animals the provide a given metric, rather than just the final number.  This is deliberate, because sometimes interpretation may be required.',
+                width: 600
+            },{
+                xtype: 'form',
+                itemId: 'filterPanel',
+                bodyStyle: 'padding: 5px;',
+                defaults: {
+                    width: 400,
+                    labelWidth: 150
+                },
+                items: [{
+                    xtype: 'datefield',
+                    name: 'startDate',
+                    fieldLabel: 'Start Date',
+                    value: new Date((new Date()).getFullYear(), 0, 1)
+                },{
+                    xtype: 'datefield',
+                    name: 'endDate',
+                    fieldLabel: 'End Date',
+                    value: new Date((new Date()).getFullYear(), 11, 31)
+                },{
+                    xtype: 'labkey-combo',
+                    fieldLabel: 'Species',
+                    name: 'species',
+                    valueField: 'common',
+                    displayField: 'common',
+                    value: 'RHESUS MACAQUE',
+                    store: {
+                        type: 'labkey-store',
+                        schemaName: 'ehr_lookups',
+                        queryName: 'species',
+                        autoLoad: true
+                    }
+                },{
+                    xtype: 'combo',
+                    fieldLabel: 'Funding Source',
+                    name: 'fundingSource',
+                    valueField: 'source',
+                    displayField: 'source',
+                    value: 'P51',
+                    store: {
+                        type: 'array',
+                        fields: ['source'],
+                        data: [['P51'], ['U42'], ['U24']]
+                    }
+                }],
+                buttonAlign: 'left',
+                buttons: [{
+                    text: 'Submit',
+                    scope: this,
+                    handler: function(btn){
+                        var panel = btn.up('#outerPanel');
+                        var values = panel.down('#filterPanel').getForm().getValues();
+                        console.log(values);
+
+                        if (!values.startDate || !values.endDate || ! values.species || ! values.fundingSource){
+                            Ext4.Msg.alert('Error', 'Must provide a start date, end date, species and funding source');
+                            return;
+                        }
+
+                        var target = panel.down('#queryArea');
+                        target.removeAll();
+                        var toAdd = [];
+
+                        //first the total population
+                        toAdd.push({
+                            html: '<hr><p><b>Colony Size:</b><br><br>This section shows every animal with a housing record that spanned the provided dates.  The list is filtered by species.  An animal is defined as matching the provided SPF Status using the condition of the animal on the final day of the date range provided.  The total # of animals is listed in the upper left.',
+                            style: 'padding-bottom: 10px'
+                        });
+
+                        toAdd.push({
+                            xtype: 'ldk-querypanel',
+                            queryConfig: {
+                                schemaName: 'study',
+                                queryName: 'housingOverlapsByIdDateOnly',
+                                maxRows: 20,
+                                parameters: {
+                                    StartDate: values.startDate,
+                                    EndDate: values.endDate
+                                },
+                                filterArray: [LABKEY.Filter.create('Id/demographics/species', values.species, LABKEY.Filter.Types.EQUAL)]
+                            }
+                        });
+
+                        target.add(toAdd);
+                    }
+                }]
+            },{
+                itemId: 'queryArea',
+                border: false,
+                style: 'padding-top: 20px;',
+                bodyStyle: 'padding: 5px;',
+                defaults: {
+                    border: false
+                }
+            }]
+        }).render(webpart.wrapperDivId);
+    });
+
+</script>

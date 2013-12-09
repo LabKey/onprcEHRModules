@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.table;
 import org.apache.log4j.Logger;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.ColumnInfo;
+import org.labkey.api.data.Container;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DisplayColumn;
@@ -28,9 +29,11 @@ import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
+import org.labkey.api.query.AliasedColumn;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.ExprColumn;
 import org.labkey.api.query.FieldKey;
@@ -42,6 +45,8 @@ import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.study.DataSetTable;
+import org.labkey.onprc_ehr.ONPRC_EHRManager;
+import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 import org.labkey.onprc_ehr.query.ClinicalRemarkDisplayColumn;
 
 import java.io.IOException;
@@ -162,6 +167,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeInvoicedItems((AbstractTableInfo) table);
             }
+            else if (matches(table, "onprc_billing", "invoiceRuns"))
+            {
+                customizeInvoiceRuns((AbstractTableInfo) table);
+            }
         }
 
         if (matches(table, "study", "surgeryChecklist"))
@@ -212,9 +221,9 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             account.setLabel("Alias");
             if (account.getFk() == null)
             {
-                UserSchema us = getUserSchema(ti, "onprc_billing");
+                UserSchema us = getUserSchema(ti, "onprc_billing_public");
                 if (us != null)
-                    account.setFk(new QueryForeignKey(us, "accounts", "account", "account"));
+                    account.setFk(new QueryForeignKey(us, "aliases", "alias", "alias", true));
             }
 
             if (ti instanceof DataSetTable)
@@ -378,7 +387,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void customizeDateColumn(AbstractTableInfo ti)
     {
-        ColumnInfo dateCol = ti.getColumn("date");
+        customizeDateColumn(ti, "date");
+    }
+
+    private void customizeDateColumn(AbstractTableInfo ti, String dateColName)
+    {
+        ColumnInfo dateCol = ti.getColumn(dateColName);
         if (dateCol == null)
             return;
 
@@ -694,20 +708,12 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         appendSurgeryCol(ti);
         appendCaseHistoryCol(ti);
 
+        //TODO: this has been left for backwards compatibility w/ SSRS.  should update those and then remove.
         String problemCategories = "problemCategories";
         if (ti.getColumn(problemCategories) == null)
         {
-            TableInfo pl = getStudyUserSchema(ti).getTable("Problem List");
-            if (pl == null)
-                return;
-
-            TableInfo realTable = getRealTable(pl);
-            if (realTable == null)
-                return;
-
-            String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
-            SQLFragment sql = new SQLFragment("(select " + ti.getSqlDialect().getGroupConcat(new SQLFragment("pl.category"), true, true, chr + "(10)") + " FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)");
-            ExprColumn newCol = new ExprColumn(ti, problemCategories, sql, JdbcType.VARCHAR, ti.getColumn("objectid"));
+            ColumnInfo newCol = new AliasedColumn(ti, problemCategories, ti.getColumn("problem"));
+            newCol.setHidden(true);
             newCol.setLabel("Master Problem(s)");
             ti.addColumn(newCol);
         }
@@ -815,6 +821,9 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             col.setLabel("Times");
             ti.addColumn(col);
         }
+
+        ti.getColumn("meaning").setHidden(true);
+        ti.getColumn("qualifier").setHidden(true);
     }
 
     private void customizeDemographicsTable(AbstractTableInfo ti)
@@ -921,14 +930,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         recentP2.setLabel("Most Recent P2");
         recentP2.setDescription("This column will display the most recent P2 that has been entered for the animal.");
         recentP2.setDisplayWidth("250");
-        recentP2.setDisplayColumnFactory(new DisplayColumnFactory()
-        {
-            @Override
-            public DisplayColumn createRenderer(ColumnInfo colInfo)
-            {
-                return new ClinicalRemarkDisplayColumn(colInfo, "p2");
-            }
-        });
+//        recentP2.setDisplayColumnFactory(new DisplayColumnFactory()
+//        {
+//            @Override
+//            public DisplayColumn createRenderer(ColumnInfo colInfo)
+//            {
+//                return new ClinicalRemarkDisplayColumn(colInfo, "p2");
+//            }
+//        });
         ti.addColumn(recentP2);
 
         SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
@@ -938,14 +947,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ExprColumn todaysP2 = new ExprColumn(ti, "todaysP2", p2Sql, JdbcType.VARCHAR, objectId);
         todaysP2.setLabel("P2s Entered Today");
         todaysP2.setDisplayWidth("250");
-        todaysP2.setDisplayColumnFactory(new DisplayColumnFactory()
-        {
-            @Override
-            public DisplayColumn createRenderer(ColumnInfo colInfo)
-            {
-                return new ClinicalRemarkDisplayColumn(colInfo, "p2");
-            }
-        });
+//        todaysP2.setDisplayColumnFactory(new DisplayColumnFactory()
+//        {
+//            @Override
+//            public DisplayColumn createRenderer(ColumnInfo colInfo)
+//            {
+//                return new ClinicalRemarkDisplayColumn(colInfo, "p2");
+//            }
+//        });
         ti.addColumn(todaysP2);
 
         Calendar yesterday = Calendar.getInstance();
@@ -969,14 +978,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         todaysRemarks.setLabel("Remarks Entered Today");
         todaysRemarks.setDescription("This shows any remarks entered today for this case");
         todaysRemarks.setDisplayWidth("250");
-        todaysRemarks.setDisplayColumnFactory(new DisplayColumnFactory()
-        {
-            @Override
-            public DisplayColumn createRenderer(ColumnInfo colInfo)
-            {
-                return new ClinicalRemarkDisplayColumn(colInfo, "remark");
-            }
-        });
+//        todaysRemarks.setDisplayColumnFactory(new DisplayColumnFactory()
+//        {
+//            @Override
+//            public DisplayColumn createRenderer(ColumnInfo colInfo)
+//            {
+//                return new ClinicalRemarkDisplayColumn(colInfo, "remark");
+//            }
+//        });
 
         ti.addColumn(todaysRemarks);
 
@@ -1363,9 +1372,39 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         }
     }
 
+    private void customizeInvoiceRuns(AbstractTableInfo table)
+    {
+        customizeDateColumn(table, "billingPeriodStart");
+    }
+
     private void customizeInvoicedItems(AbstractTableInfo table)
     {
         table.getButtonBarConfig().setAlwaysShowRecordSelectors(true);
+        table.setDetailsURL(DetailsURL.fromString("/onprc_ehr/invoicedItemDetails.view?invoicedItem=${objectid}"));
+
+        ColumnInfo col = table.getColumn("invoicedItemId");
+        if (col != null)
+        {
+            Container c = ONPRC_EHRManager.get().getBillingContainer(table.getUserSchema().getContainer());
+            if (c != null)
+            {
+                UserSchema us = QueryService.get().getUserSchema(table.getUserSchema().getUser(), c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME);
+                if (us != null)
+                {
+                    col.setFk(new QueryForeignKey(us, "invoicedItems", "objectid", "rowid"));
+                }
+            }
+        }
+
+        ColumnInfo idCol = table.getColumn("Id");
+        if (idCol != null)
+        {
+            Container c = EHRService.get().getEHRStudyContainer(table.getUserSchema().getContainer());
+            if (c != null)
+            {
+                idCol.setFk(new QueryForeignKey("study", c, table.getUserSchema().getUser(), "animal", "Id", "Id"));
+            }
+        }
     }
 
     private void customizeAreaTable(AbstractTableInfo table)
@@ -1524,7 +1563,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (ds.getColumn("Id") == null)
             return;
 
-        if (!hasTable(ds, "study", "Assignment"))
+        if (!hasTable(ds, "study", "assignment"))
             return;
 
         final String tableName = ds.getName();
@@ -1594,7 +1633,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (ds.getColumn("Id") == null)
             return;
 
-        if (!hasTable(ds, "study", "Animal Record Flags"))
+        if (!hasTable(ds, "study", "flags"))
             return;
 
         final String tableName = ds.getName();
@@ -1656,7 +1695,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (ds.getColumn("Id") == null)
             return;
 
-        if (!hasTable(ds, "study", "Problem List"))
+        if (!hasTable(ds, "study", "problem"))
             return;
 
         final String tableName = ds.getName();

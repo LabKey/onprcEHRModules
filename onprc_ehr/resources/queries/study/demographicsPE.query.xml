@@ -20,6 +20,9 @@
                         <columnTitle>Total Exams</columnTitle>
                         <!--<url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Demographics&amp;query.id/numPaired/room~eq=${room}&amp;query.id/numPaired/effectiveCage~eq=${effectiveCage}</url>-->
                     </column>
+                    <column columnName="isRestricted">
+                        <columnTitle>Clinically Restricted?</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>

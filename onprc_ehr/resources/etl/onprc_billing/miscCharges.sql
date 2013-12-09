@@ -18,24 +18,37 @@ First get new charges
 */
 
 select
+  t.*,
+  CASE
+    WHEN t.chargeType = 'Adjustment' THEN t.rawUnitCost
+    WHEN t.rawUnitCost = cr.unitcost AND cre.rowId IS null THEN NULL
+    WHEN t.rawUnitCost = cre.unitcost THEN NULL
+    ELSE t.rawUnitCost
+  END as unitcost
+
+FROM (
+
+select
   afc.AnimalID as id,
   afc.ChargeDate as date,
   afc.ProjectID as project,
   afc.OHSUAccountNo as account,
-  afc.ChargeType as chargeType,
+  --afc.ChargeType as chargeType,
   (select s.value from sys_parameters s where afc.ChargeType = s.Flag and s.Field = 'ChargeType') as category,
   afc.ProcedureID as procedureID,
   rfp.ProcedureName as item,
   (select bci.rowId from Labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeID,
   afc.ProcedureCount as quantity,
-  afc.Amount as unitCost,
-  (afc.Amount * afc.ProcedureCount) as totalCost,
+  afc.Amount as rawunitCost,
+  --(afc.Amount * afc.ProcedureCount) as totalCost,
   afc.Remarks as comment,
   CASE WHEN (afc.invoiceDate IS NOT NULL AND afc.invoiceDate < afc.billingDate) THEN afc.invoiceDate ELSE afc.BillingDate END as billingDate,
   afc.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
   null as invoicedItemId,
-  afc.objectid
+  afc.objectid,
+  null as sourceInvoicedItem,
+  null as chargeType
 from Af_Charges afc
 left join Ref_ProjectsIACUC rpi on (afc.ProjectID = rpi.ProjectID)
 left join Ref_FeesProcedures rfp on (afc.ProcedureID = rfp.ProcedureID)
@@ -60,20 +73,22 @@ select
   afc2.ChargeDate as date,
   afc2.ProjectID as project,
   afc2.OHSUAccountNo as account,
-  afc2.ChargeType as chargeType,
+  --afc2.ChargeType as chargeType,
   (select s.value from sys_parameters s where afc2.ChargeType = s.Flag and s.Field = 'ChargeType') as category,
   afc2.ProcedureID as procedureID,
   rfp.ProcedureName as item,
   (select bci.rowId from Labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeID,
   afc2.ProcedureCount as quantity,
-  afc2.Amount as unitCost,
-  (afc2.Amount * afc2.ProcedureCount) as totalCost,
+  afc2.Amount as rawunitCost,
+  --(afc2.Amount * afc2.ProcedureCount) as totalCost,
   afc2.Remarks as comment,
   CASE WHEN (afc2.invoiceDate IS NOT NULL AND afc2.invoiceDate < afc2.billingDate) THEN afc2.invoiceDate ELSE afc2.BillingDate END as billingDate,
   afc2.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
   (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc2.AccountNo = ibs.ChargesIDKey) as invoicedItemId,
-  afc2.objectid
+  afc2.objectid,
+  null as sourceInvoicedItem,
+  'Adjustment' as chargeType
 from af_charges afc
 left join AF_Charges afc2 on (afc.IDKEY = afc2.AccountNo)
 left join Ref_ProjectsIACUC rpi on (afc2.ProjectID = rpi.ProjectID)
@@ -100,20 +115,22 @@ select
   afc2.ChargeDate as date,
   afc2.ProjectID as project,
   afc2.OHSUAccountNo as account,
-  afc2.ChargeType as chargeType,
+  --afc2.ChargeType as chargeType,
   (select s.value from sys_parameters s where afc2.ChargeType = s.Flag and s.Field = 'ChargeType') as category,
   afc2.ProcedureID as procedureID,
   rsp.ProcedureName as description,
   (select bci.rowId from Labkey.onprc_billing.chargeableItems bci where rsp.ProcedureName = bci.name) as chargeID,
   afc2.ProcedureCount as quantity,
-  afc2.Amount as unitCost,
-  (afc2.Amount * afc2.ProcedureCount) as totalCost,
+  afc2.Amount as rawunitCost,
+  --(afc2.Amount * afc2.ProcedureCount) as totalCost,
   afc2.Remarks as comment,
   CASE WHEN (afc2.invoiceDate IS NOT NULL AND afc2.invoiceDate < afc2.billingDate) THEN afc2.invoiceDate ELSE afc2.BillingDate END as billingDate,
   afc2.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
   (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc2.AccountNo = ibs.ChargesIDKey) as invoicedItemId,
-  afc2.objectid
+  afc2.objectid,
+  null as sourceInvoicedItem,
+  'Adjustment' as chargeType
 from af_charges afc
 left join AF_Charges afc2 on (afc.IDKEY = afc2.AccountNo)
 left join Ref_ProjectsIACUC rpi on (afc2.ProjectID = rpi.ProjectID)
@@ -141,21 +158,23 @@ select
   afc.ChargeDate as date,
   afc.ProjectID as project,
   afc.OHSUAccountNo as account,
-  afc.ChargeType as chargeType,
+  --afc.ChargeType as chargeType,
   (select s.value from sys_parameters s
   where afc.ChargeType = s.Flag and s.Field = 'ChargeType') as category,
   afc.ProcedureID as procedureID,
   rfp.ProcedureName as description,
   (select bci.rowId from Labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeID,
   afc.ProcedureCount as quantity,
-  afc.Amount as unitCost,
-  (afc.Amount * afc.ProcedureCount) as totalCost,
+  afc.Amount as rawunitCost,
+  --(afc.Amount * afc.ProcedureCount) as totalCost,
   null as comment,
   CASE WHEN (afc.invoiceDate IS NOT NULL AND afc.invoiceDate < afc.billingDate) THEN afc.invoiceDate ELSE afc.BillingDate END as billingDate,
   afc.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
   null as invoicedItemId,
-  afc.objectid
+  afc.objectid,
+  null as sourceInvoicedItem,
+  'Adjustment' as chargeType
 from Af_ChargesPerDiem afc
 left join Ref_ProjectsIACUC rpi on (afc.ProjectID = rpi.ProjectID)
 left join Ref_FeesProcedures rfp on (afc.ProcedureID = rfp.ProcedureID)
@@ -175,20 +194,22 @@ Select
   afc.chargeDate as date,
   afc.ProjectID as project,
   afc.OHSUAccountNo as account,
-  afc.ChargeType as chargeType,
+  --afc.ChargeType as chargeType,
   (select s.value from sys_parameters s where afc.ChargeType = s.Flag and s.Field = 'ChargeType') as category,
   afc.ProcedureID as procedureID,
   rfp.ProcedureName as item,
   (select bci.rowId from Labkey.onprc_billing.chargeableItems bci where rfp.ProcedureName = bci.name) as chargeID,
   afc.ProcedureCount as quantity,
-  afc.Amount as unitCost,
-  (afc.Amount * afc.ProcedureCount) as totalCost,
+  afc.Amount as rawunitCost,
+  --(afc.Amount * afc.ProcedureCount) as totalCost,
   afc.Remarks as comment,
   CASE WHEN (afc.invoiceDate IS NOT NULL AND afc.invoiceDate < afc.billingDate) THEN afc.invoiceDate ELSE afc.BillingDate END as billingDate,
   afc.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
   (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc.AccountNo = ibs.ChargesIDKey) as invoicedItemId,
-  afc.objectid
+  afc.objectid,
+  null as sourceInvoicedItem,
+  null as chargeType
 from af_charges afc
 --left join AF_Charges afc2 on (afc.IDKEY = afc2.AccountNo)
 left join Ref_ProjectsIACUC rpi on (afc.ProjectID = rpi.ProjectID)
@@ -207,3 +228,8 @@ where afc.ChargeType in (1,8) and
     CASE WHEN DAY(afc.Chargedate) <= 15 THEN 1 ELSE 2 END != CASE WHEN DAY(afc.BillingDate) <= 15 THEN 1 ELSE 2 END
   ))
 and (afc.ts > ? or rpi.ts > ?  or rfp.ts > ? or ri.maxTs > ?)
+
+) t
+
+left join labkey.onprc_billing.chargeRates cr ON (cr.chargeId = t.chargeId and cr.startDate <= t.date AND coalesce(cr.enddate, CURRENT_TIMESTAMP) >= t.date)
+left join labkey.onprc_billing.chargeRateExemptions cre ON (cre.chargeId = t.chargeId and cre.startDate <= t.date AND coalesce(cre.enddate, CURRENT_TIMESTAMP) >= t.date and cre.project = t.project)

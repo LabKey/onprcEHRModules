@@ -21,12 +21,7 @@ a.runId,
 cast(a.runid.tissue as varchar(300)) as tissue,
 a.microbe.meaning as microbe,
 a.antibiotic.meaning as antibiotic,
-cast(CASE
-  WHEN group_concat(cast(a.resistant as varchar(100))) = '1' THEN 'Resistant'
-  WHEN group_concat(cast(a.resistant as varchar(100))) = '0' THEN 'Not Resistant'
-  WHEN group_concat(cast(a.resistant as varchar(100))) IS NULL THEN NULL
-  ELSE 'Discordant Results'
-END as varchar(100)) as resistant
+GROUP_CONCAT(DISTINCT a.result) as results
 
 from study."Antibiotic Sensitivity" a
 WHERE a.antibiotic.code IN (
@@ -45,7 +40,7 @@ WHERE a.antibiotic.code IN (
 )
 group by a.id, a.date, a.runId, a.runid.tissue, a.microbe.meaning, a.antibiotic.meaning
 
-pivot resistant by antibiotic
+pivot results by antibiotic
 
 --the codes correspond to:
 -- Trimethoprim/sulfa (480mg)

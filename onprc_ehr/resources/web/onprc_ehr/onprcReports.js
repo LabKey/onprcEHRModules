@@ -51,7 +51,6 @@ EHR.reports.hematology = function(panel, tab){
         //viewName: 'Plus Ref Range',
         title: "Reference Ranges:",
         titleField: 'Id',
-        sort: '-date',
         filters: filterArray.nonRemovable,
         removeableFilters: filterArray.removable
     });

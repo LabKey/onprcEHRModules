@@ -15,7 +15,10 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.json.JSONObject;
+import org.labkey.api.data.Container;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.security.User;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.ArrayList;
@@ -54,5 +57,15 @@ public class LabworkFormSection extends SimpleGridPanel
         }
 
         return defaultButtons;
+    }
+
+    @Override
+    public JSONObject toJSON(Container c, User u)
+    {
+        JSONObject ret = super.toJSON(c, u);
+
+        ret.put("serverStoreSort", "Id,runid,testid/sort_order");
+
+        return ret;
     }
 }

@@ -109,6 +109,7 @@
             <ns:column columnName="rowId">
                 <ns:columnTitle>Row Id</ns:columnTitle>
                 <ns:isHidden>true</ns:isHidden>
+                <ns:isKeyField>false</ns:isKeyField>
             </ns:column>
             <ns:column columnName="invoiceId">
                 <ns:columnTitle>Invoice</ns:columnTitle>
@@ -120,18 +121,15 @@
                 </ns:fk>
             </ns:column>
             <ns:column columnName="transactionNumber">
-                <ns:columnTitle>Transaction Number</ns:columnTitle>
+                <ns:columnTitle>IRIS Transaction Number</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="invoiceDate">
                 <ns:columnTitle>Invoice Date</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="Id">
-                <ns:columnTitle>Animal Id</ns:columnTitle>
-                <ns:fk>
-                    <ns:fkDbSchema>study</ns:fkDbSchema>
-                    <ns:fkTable>Animal</ns:fkTable>
-                    <ns:fkColumnName>Id</ns:fkColumnName>
-                </ns:fk>
+                <ns:conceptURI>http://cpas.labkey.com/Study#ParticipantId</ns:conceptURI>
             </ns:column>
             <ns:column columnName="date">
                 <ns:columnTitle>Transaction Date</ns:columnTitle>
@@ -259,12 +257,9 @@
         <ns:buttonBarOptions includeStandardButtons="true">
             <ns:includeScript>ehr.context</ns:includeScript>
             <ns:includeScript>/onprc_ehr/window/ReverseChargeWindow.js</ns:includeScript>
-            <ns:item insertPosition="end" text="More Actions">
+            <ns:item insertPosition="end" text="More Actions" permission="UPDATE">
                 <ns:item text="Reverse/Adjust Selected Charges">
                     <ns:onClick>ONPRC_EHR.window.ReverseChargeWindow.buttonHandler(dataRegionName);</ns:onClick>
-                </ns:item>
-                <ns:item text="Add New Charges/Credits">
-                    <ns:onClick>Ext4.Msg.alert('Add New Charges/Credits', 'This is not yet supported');</ns:onClick>
                 </ns:item>
             </ns:item>
         </ns:buttonBarOptions>
@@ -301,6 +296,7 @@
             </ns:column>
             <ns:column columnName="date">
                 <ns:columnTitle>Date</ns:columnTitle>
+                <ns:formatString>yyyy-MM-dd</ns:formatString>
             </ns:column>
             <ns:column columnName="project"/>
             <ns:column columnName="account">
@@ -345,6 +341,36 @@
                     <ns:fkDisplayColumnName>rowid</ns:fkDisplayColumnName>
                 </ns:fk>
             </ns:column>
+            <ns:column columnName="creditedaccount">
+                <ns:columnTitle>Credit Alias</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>aliases</ns:fkTable>
+                    <ns:fkColumnName>aliases</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>aliases</ns:fkDisplayColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="debitedaccount">
+                <ns:columnTitle>Debit Alias</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>aliases</ns:fkTable>
+                    <ns:fkColumnName>aliases</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>aliases</ns:fkDisplayColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="sourceInvoicedItem">
+                <ns:columnTitle>Source Record</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+                <ns:fk>
+                    <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
+                    <ns:fkTable>invoicedItems</ns:fkTable>
+                    <ns:fkColumnName>objectid</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>rowid</ns:fkDisplayColumnName>
+                </ns:fk>
+            </ns:column>
             <ns:column columnName="chargeType">
                 <ns:columnTitle>Charge Type</ns:columnTitle>
                 <ns:isHidden>true</ns:isHidden>
@@ -359,6 +385,9 @@
                     <ns:fkDisplayColumnName>rowid</ns:fkDisplayColumnName>
                 </ns:fk>
             </ns:column>
+            <ns:column columnName="QCState">
+                <ns:columnTitle>Status</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="taskid">
                 <ns:columnTitle>Task Id</ns:columnTitle>
             </ns:column>
@@ -366,7 +395,9 @@
                 <ns:columnTitle>Request Id</ns:columnTitle>
             </ns:column>
             <ns:column columnName="objectid"/>
-            <ns:column columnName="container"/>
+            <ns:column columnName="container">
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
             <ns:column columnName="modifiedBy"/>
@@ -398,6 +429,9 @@
                     <ns:fkColumnName>rowid</ns:fkColumnName>
                     <ns:fkDisplayColumnName>value</ns:fkDisplayColumnName>
                 </ns:fk>
+            </ns:column>
+            <ns:column columnName="tier">
+                <ns:columnTitle>Tier</ns:columnTitle>
             </ns:column>
             <ns:column columnName="startdate">
                 <ns:columnTitle>Start Date</ns:columnTitle>
@@ -723,9 +757,6 @@
             <ns:column columnName="investigatorName">
                 <ns:columnTitle>Investigator Name</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="alias">
-                <ns:columnTitle>Alias</ns:columnTitle>
-            </ns:column>
             <ns:column columnName="projectTitle">
                 <ns:columnTitle>Project Title</ns:columnTitle>
             </ns:column>
@@ -740,9 +771,6 @@
             </ns:column>
             <ns:column columnName="projectStatus">
                 <ns:columnTitle>Project Status</ns:columnTitle>
-            </ns:column>
-            <ns:column columnName="aliasEnabled">
-                <ns:columnTitle>Alias Enabled</ns:columnTitle>
             </ns:column>
             <ns:column columnName="ogaProjectId">
                 <ns:columnTitle>OGA Project Id</ns:columnTitle>
@@ -760,6 +788,45 @@
             </ns:column>
             <ns:column columnName="comment">
                 <ns:columnTitle>Comment</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdBy"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedBy"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="aliases" tableDbType="TABLE" useColumnOrder="true">
+        <ns:tableTitle>Aliases</ns:tableTitle>
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableUrl>/query/recordDetails.view?schemaName=onprc_billing&amp;query.queryName=aliases&amp;keyField=rowid&amp;key=${rowid}</ns:tableUrl>
+        <ns:columns>
+            <ns:column columnName="rowid"/>
+            <ns:column columnName="alias">
+                <ns:columnTitle>Alias</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="aliasEnabled">
+                <ns:columnTitle>Alias Enabled</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="projectNumber">
+                <ns:columnTitle>OGA Project Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="grantNumber">
+                <ns:columnTitle>OGA Grant Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="agencyAwardNumber">
+                <ns:columnTitle>Agency Award Number</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="investigatorId">
+                <ns:columnTitle>Investigator</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
+            <ns:column columnName="investigatorName">
+                <ns:columnTitle>Investigator Name</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="fiscalAuthority">
+                <ns:columnTitle>Fiscal Authority</ns:columnTitle>
                 <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="container"/>

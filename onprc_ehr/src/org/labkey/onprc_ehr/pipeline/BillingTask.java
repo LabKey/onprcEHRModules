@@ -228,7 +228,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 throw new PipelineJobException("Cannot create a billing run with an end date before the start date");
             }
 
-            Date today = DateUtils.round(new Date(), Calendar.DATE);
+            Date today = DateUtils.truncate(new Date(), Calendar.DATE);
             if (getSupport().getEndDate().after(today) || getSupport().getEndDate().equals(today))
             {
                 throw new PipelineJobException("Cannot create a billing run with an end date in the future");
@@ -241,7 +241,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
             toCreate.put("billingPeriodStart", getSupport().getStartDate());
             toCreate.put("billingPeriodEnd", getSupport().getEndDate());
             toCreate.put("runDate", new Date());
-            toCreate.put("status", "Under Review");
+            toCreate.put("status", "Finalized");
             toCreate.put("comment", getSupport().getComment());
 
             //TODO: create/set an invoice #?
@@ -293,7 +293,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 toInsert.put("created", new Date());
                 toInsert.put("modifiedby", getJob().getUser().getUserId());
                 toInsert.put("modified", new Date());
-
+                toInsert.put("objectId", new GUID());
                 toInsert.put("invoiceId", invoiceId);
 
                 //TODO: create a transactionNumber?  also invoiceDate?
@@ -615,7 +615,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "category",
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
-                "project/account",
+                "account",
                 "project/investigatorid",
                 "project/investigatorid/financialanalyst",
                 "project/investigatorid/firstname",

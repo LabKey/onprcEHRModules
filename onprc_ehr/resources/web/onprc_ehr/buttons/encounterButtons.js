@@ -20,8 +20,33 @@ EHR.DataEntryUtils.registerGridButton('COPYFROMENCOUNTERS', function(config){
 
             if (store){
                 Ext4.create('EHR.window.CopyFromEncountersWindow', {
-                    targetGrid: grid,
-                    targetTab: grid.title,
+                    dataEntryPanel: panel,
+                    targetTabs: [grid],
+                    encountersStore: store
+                }).show();
+            }
+        }
+    });
+});
+
+EHR.DataEntryUtils.registerGridButton('APPLYENCOUNTERDEFAULTS', function(config){
+    return Ext4.Object.merge({
+        text: 'Add Defaults',
+        xtype: 'button',
+        tooltip: 'Click to copy records from the encounters section',
+        handler: function(btn){
+            var grid = btn.up('grid');
+            LDK.Assert.assertNotEmpty('Unable to find grid in APPLYENCOUNTERDEFAULTS button', grid);
+
+            var panel = grid.up('ehr-dataentrypanel');
+            LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in APPLYENCOUNTERDEFAULTS button', panel);
+
+            var store = panel.storeCollection.getClientStoreByName('encounters');
+            LDK.Assert.assertNotEmpty('Unable to find encounters store in APPLYENCOUNTERDEFAULTS button', store);
+
+            if (store){
+                Ext4.create('EHR.window.CopyFromEncountersWindow', {
+                    dataEntryPanel: panel,
                     encountersStore: store
                 }).show();
             }

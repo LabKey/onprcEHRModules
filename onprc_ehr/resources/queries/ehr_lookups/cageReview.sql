@@ -11,7 +11,7 @@ SELECT
   CASE
     WHEN (t2.sqFtStatus LIKE '%ERROR%' OR t2.heightStatus LIKE '%ERROR%') THEN 'ERROR'
     WHEN (t2.sqFtStatus LIKE '%WARN%' OR t2.heightStatus LIKE '%WARN%') THEN 'WARNING'
-    WHEN (t2.sqFtStatus LIKE '%INFO%' OR t2.heightStatus LIKE '%INFO%') THEN 'INFO'
+    WHEN (t2.sqFtStatus LIKE '%NOTE%' OR t2.heightStatus LIKE '%NOTE%') THEN 'NOTE'
     ELSE null
   END as status
 FROM (
@@ -34,10 +34,12 @@ SELECT
    CASE
      WHEN (jc.totalSqFt < t.requiredSqFt AND t.totalWeightExempt != t.totalAnimals) THEN ('ERROR: Insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFt as varchar))
      WHEN (jc.totalSqFt < t.requiredSqFtIncluding5Mo AND t.totalWeightExempt != t.totalAnimals) THEN ('WARNING: When including 5 month olds, insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFtIncluding5Mo as varchar))
-     WHEN (jc.totalSqFt < t.requiredSqFt AND t.totalWeightExempt = t.totalAnimals) THEN ('NOTE: Insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFt as varchar) || ', but has exceptions')
+     WHEN (jc.totalSqFt < t.requiredSqFt AND t.totalWeightExempt = t.totalAnimals) THEN ('NOTE: Insufficient Sq. Ft, needs at least: ' || cast(t.requiredSqFt as varchar) || ', but has exemptions')
      ELSE null
    END as sqFtStatus,
-   t.heightStatus
+   t.heightStatus,
+  t.weightExempt,
+  t.totalWeightExempt
 
 FROM (
 
@@ -93,7 +95,7 @@ LEFT JOIN (
     f.id,
     min(f.value) as heightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.category = 'Cage Exemptions' and (f.value = 'Height requirement, Cage Exception' OR f.value = 'Medical management, Cage Exemption')
+  WHERE f.isActive = true AND f.category = 'Cage Exemptions' and (f.value = 'Height requirement, Cage Exemption' OR f.value = 'Medical management, Cage Exemption')
   GROUP BY f.Id
 ) f on (f.Id = h.Id)
 
@@ -103,9 +105,9 @@ LEFT JOIN (
     f.id,
     min(f.value) as weightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.category = 'Cage Exemptions' and (f.value = 'Weight management, Cage Exception' or f.value = 'Medical management, Cage Exemption')
+  WHERE f.isActive = true AND f.category = 'Cage Exemptions' and (f.value = 'Weight management, Cage Exemption' or f.value = 'Medical management, Cage Exemption')
   GROUP BY f.Id
-) wf on (f.Id = h.Id)
+) wf on (wf.Id = h.Id)
 
 LEFT JOIN ehr_lookups.cageclass c1 ON (c1.low <= h.Id.mostRecentWeight.mostRecentWeight AND h.Id.mostRecentWeight.mostRecentWeight < c1.high AND c1.requirementset = RequirementSet)
 

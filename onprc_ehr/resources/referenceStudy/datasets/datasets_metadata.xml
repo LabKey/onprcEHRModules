@@ -23,8 +23,8 @@
             <column columnName="antibiotic">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="resistant">
-                <datatype>boolean</datatype>
+            <column columnName="result">
+                <datatype>varchar</datatype>
             </column>
             <column columnName="project">
                 <datatype>integer</datatype>
@@ -663,9 +663,8 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
-            <column columnName="problemid">
+            <column columnName="problem">
                 <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#ProblemId</propertyURI>
             </column>
         </columns>
         <tableTitle>Cases</tableTitle>
@@ -1142,6 +1141,9 @@
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
             </column>
             <column columnName="code">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="reason">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="amount">
@@ -2719,9 +2721,6 @@
             <column columnName="tissue">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="diagnosis">
-                <datatype>varchar</datatype>
-            </column>
             <column columnName="remark">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
@@ -2911,12 +2910,12 @@
                 <datatype>timestamp</datatype>
                 <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
             </column>
-            <column columnName="recipient">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="preservation">
-                <datatype>varchar</datatype>
-            </column>
+            <!--<column columnName="recipient">-->
+                <!--<datatype>varchar</datatype>-->
+            <!--</column>-->
+            <!--<column columnName="preservation">-->
+                <!--<datatype>varchar</datatype>-->
+            <!--</column>-->
             <column columnName="preparation">
                 <datatype>varchar</datatype>
             </column>
@@ -2926,9 +2925,9 @@
             <column columnName="quantity">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="container_type">
-                <datatype>varchar</datatype>
-            </column>
+            <!--<column columnName="container_type">-->
+                <!--<datatype>varchar</datatype>-->
+            <!--</column>-->
             <column columnName="weight">
                 <datatype>double</datatype>
             </column>

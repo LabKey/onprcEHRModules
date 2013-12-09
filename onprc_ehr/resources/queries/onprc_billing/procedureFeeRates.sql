@@ -35,15 +35,28 @@ SELECT
 
   --find assignment on this date
   CASE
-  WHEN p.project IS NULL THEN false
-  WHEN p.project.alwaysavailable = true THEN true
+  WHEN p.project IS NULL THEN 'N'
+  WHEN p.project.alwaysavailable = true THEN null
   WHEN (SELECT count(*) as projects FROM study.assignment a WHERE
     p.Id = a.Id AND
     p.project = a.project AND
     (cast(p.date AS DATE) < a.enddateCoalesced OR a.enddate IS NULL) AND
     p.date >= a.dateOnly
-  ) > 0 THEN true ELSE false END as matchesProject,
-  'N' as isMiscCharge
+  ) > 0 THEN null
+  ELSE 'N' END as matchesProject,
+  null as isMiscCharge,
+  (SELECT group_concat(distinct a.project.displayName, chr(10)) as projects FROM study.assignment a WHERE
+    p.Id = a.Id AND
+    p.project = a.project AND
+    (cast(p.date AS DATE) < a.enddateCoalesced OR a.enddate IS NULL) AND
+    p.date >= a.dateOnly
+  ) as assignmentAtTime,
+  CASE WHEN p.project.account IS NULL THEN 'Y' ELSE null END as isMissingAccount,
+  CASE
+    WHEN ifdefined(p.project.account.aliasEnabled) IS NULL THEN null
+    WHEN (ifdefined(p.project.account.aliasEnabled) IS NULL OR ifdefined(p.project.account.aliasEnabled) != 'Y') THEN 'Y'
+    ELSE null
+  END as isExpiredAccount
 
 FROM onprc_billing.procedureFees p
 
@@ -90,9 +103,12 @@ SELECT
   mc.lacksRate,
   mc.exemptionId,
   mc.rateId,
-  null as matchesProject,
-  'Y' as isMiscCharge
+  mc.matchesProject as matchesProject,
+  'Y' as isMiscCharge,
+  mc.assignmentAtTime,
+  mc.isMissingAccount,
+  mc.isExpiredAccount
 
 FROM onprc_billing.miscChargesFeeRateData mc
 WHERE cast(mc.billingDate as date) >= CAST(StartDate as date) AND cast(mc.billingDate as date) <= CAST(EndDate as date)
-AND mc.category IN ('Surgical Procedure')
+AND mc.category IN ('Surgical Procedure', 'Clinical Procedure')

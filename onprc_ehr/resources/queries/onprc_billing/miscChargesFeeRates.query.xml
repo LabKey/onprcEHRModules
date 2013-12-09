@@ -4,7 +4,49 @@
             <table tableName="miscChargesFeeRates" tableDbType="TABLE">
                 <tableTitle>Other Charges</tableTitle>
                 <columns>
-
+                    <column columnName="rateId">
+                        <columnTitle>Rate Id</columnTitle>
+                        <isHidden>true</isHidden>
+                        <url>/query/executeQuery.view?schemaName=onprc_billing&amp;query.queryName=chargeRates&amp;query.rowid~eq=${rateid}</url>
+                    </column>
+                    <column columnName="exemptionId">
+                        <columnTitle>Exemption Id</columnTitle>
+                        <isHidden>true</isHidden>
+                        <url>/query/executeQuery.view?schemaName=onprc_billing&amp;query.queryName=chargeRateExemptions&amp;query.rowid~eq=${exemptionId}</url>
+                    </column>
+                    <column columnName="creditAccountId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="sourceRecord">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="invoicedItemId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="objectid">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="lacksRate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="creditAccountId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="invoicedItemId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="container">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="container1">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="container2">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="assignmentAtTime">
+                        <columnTitle>Assignments On This Date</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>

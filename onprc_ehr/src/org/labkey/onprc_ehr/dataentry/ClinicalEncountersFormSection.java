@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.ArrayList;
@@ -26,12 +27,14 @@ import java.util.List;
  * Date: 8/23/13
  * Time: 11:32 AM
  */
-public class ClinicalEncountersFormSection extends SimpleGridPanel
+public class ClinicalEncountersFormSection extends SimpleFormSection
 {
     public ClinicalEncountersFormSection()
     {
-        super("study", "encounters", "Procedures", EHRService.FORM_SECTION_LOCATION.Body);
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/surgeryButtons.js"));
+        super("study", "encounters", "Procedures", "ehr-gridpanel", EHRService.FORM_SECTION_LOCATION.Body);
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/encounterButtons.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalEncountersClientStore.js"));
+        setClientStoreClass("EHR.data.ClinicalEncountersClientStore");
     }
 
     @Override
@@ -47,16 +50,7 @@ public class ClinicalEncountersFormSection extends SimpleGridPanel
             defaultButtons.remove("DELETERECORD");
         }
         defaultButtons.add(idx, "SURGERYDELETE");
-
-        return defaultButtons;
-    }
-
-    @Override
-    public List<String> getTbarMoreActionButtons()
-    {
-        List<String> defaultButtons = super.getTbarMoreActionButtons();
-
-        defaultButtons.add("GUESSPROJECT");
+        defaultButtons.add((idx+2), "APPLYENCOUNTERDEFAULTS");
 
         return defaultButtons;
     }

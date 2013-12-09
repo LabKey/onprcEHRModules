@@ -59,7 +59,13 @@ SELECT
     WHEN (p.category = 'Lease Fees' or p.category = 'Lease Setup Fee') THEN e.rowid
     ELSE null
   END as exemptionId,
-  'N' as isMiscCharge
+  null as isMiscCharge,
+  CASE WHEN p.project.account IS NULL THEN 'Y' ELSE null END as isMissingAccount,
+  CASE
+    WHEN ifdefined(p.project.account.aliasEnabled) IS NULL THEN null
+    WHEN (ifdefined(p.project.account.aliasEnabled) IS NULL OR ifdefined(p.project.account.aliasEnabled) != 'Y') THEN 'Y'
+    ELSE null
+  END as isExpiredAccount
 
 FROM onprc_billing.leaseFees p
 
@@ -143,7 +149,9 @@ SELECT
   mc.lacksRate,
   mc.rateId,
   mc.exemptionId,
-  'Y' as isMiscCharge
+  'Y' as isMiscCharge,
+  mc.isMissingAccount,
+  mc.isExpiredAccount
 
 FROM onprc_billing.miscChargesFeeRateData mc
 WHERE cast(mc.billingDate as date) >= CAST(StartDate as date) AND cast(mc.billingDate as date) <= CAST(EndDate as date)

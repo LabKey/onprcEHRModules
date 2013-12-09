@@ -41,8 +41,13 @@ public class BloodDrawFormType extends TaskForm
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new BloodDrawFormSection(true),
-            new BloodWeightsFormSection(),
+            new WeightFormSection(),
             new BloodTreatmentsFormSection())
         );
+
+        for (FormSection s : getFormSections())
+        {
+            s.addConfigSource("BloodDraw");
+        }
     }
 }

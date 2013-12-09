@@ -14,9 +14,22 @@
  * limitations under the License.
  */
 SELECT
-	cast(w.AnimalID as nvarchar(4000)) as Id,
-	w.date,
-    (cast(w.objectid as varchar(38)) + '_tb') as objectid
+  cast(w.AnimalID as nvarchar(4000)) as Id,
+  w.date,
+  (cast(w.objectid as varchar(38)) + '_tb') as objectid
 
 FROM af_weights w
 where w.tbflag = 1 and w.ts > ?
+
+UNION ALL
+
+SELECT
+  dx.AnimalID,
+  dx.Date,
+  cast(sno.objectid as varchar(36)) as objectid
+
+FROM Cln_DXSnomed sno
+  LEFT JOIN Cln_DX dx ON (sno.DiagnosisID = dx.DiagnosisID)
+  LEFT JOIN af_weights w2 ON (w2.AnimalId = dx.AnimalID AND w2.Date = dx.Date and w2.TBFlag = 1)
+
+WHERE sno.Snomed = 'P-54268' AND w2.AnimalId IS NULL and sno.ts > ?

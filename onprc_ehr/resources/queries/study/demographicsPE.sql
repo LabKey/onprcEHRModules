@@ -23,14 +23,30 @@ COALESCE(CASE
   ELSE (365 - TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()))
 END, 0) as daysUntilNextExam,
 count(e.lsid) as totalExams,
+CASE
+  WHEN count(f.Id) = 0 THEN null
+  ELSE 'Clinically Restricted'
+END as isRestricted
 
-FROM study.demographics d LEFT JOIN (select
+FROM study.demographics d
+LEFT JOIN (
+  select
     e.id,
     e.date,
     e.lsid
-  FROM study.encounters e left join ehr.snomed_tags t on (e.objectid = t.recordid)
+  FROM study.encounters e
+  left join ehr.snomed_tags t on (e.objectid = t.recordid)
   where t.code IN ('P-02314', 'P-02310') and e.id.demographics.calculated_status = 'Alive'
 ) e ON (e.id = d.id)
+
+--find terminal condition codes
+LEFT JOIN (
+  SELECT
+    f.Id
+  FROM study.flags f
+  WHERE f.isActive = true AND f.category = 'Condition' AND f.value = 'Clinically Restricted'
+  GROUP BY f.Id
+) f ON (f.Id = d.Id)
 
 WHERE d.calculated_status = 'Alive'
 

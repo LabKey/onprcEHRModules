@@ -679,6 +679,33 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
+    @RequiresPermissionClass(AdminPermission.class)
+    public class PopulateCaseHistoryAction extends ConfirmAction<Object>
+    {
+        public void validateCommand(Object form, Errors errors)
+        {
+
+        }
+
+        @Override
+        public ModelAndView getConfirmView(Object form, BindException errors) throws Exception
+        {
+            return new HtmlView("This will update the cases table to set the remarks column based on the IRIS Hx fields.  Do you want to continue?");
+        }
+
+        public boolean handlePost(Object form, BindException errors) throws Exception
+        {
+            LegacyDataManager.getInstance().populateHxColumn(getContainer(), getUser());
+
+            return true;
+        }
+
+        public ActionURL getSuccessURL(Object form)
+        {
+            return getContainer().getStartURL(getUser());
+        }
+    }
+
     @RequiresSiteAdmin
     public class FixWorkbookPathsAction extends ConfirmAction<Object>
     {

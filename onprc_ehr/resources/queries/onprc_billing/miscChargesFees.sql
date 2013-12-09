@@ -20,7 +20,9 @@ SELECT
   mc.chargeType,
   mc.invoicedItemId,
   mc.objectid as sourceRecord,
-  mc.comment
+  mc.comment,
+  mc.debitedaccount,
+  mc.creditedaccount
 
 FROM onprc_billing.miscCharges mc
 
