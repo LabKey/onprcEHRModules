@@ -35,6 +35,7 @@ import org.labkey.genotypeassays.assay.GenotypeAssayDataProvider;
 import org.labkey.genotypeassays.assay.SNPAssayDataProvider;
 import org.labkey.genotypeassays.assay.SSPAssayDataProvider;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -83,6 +84,10 @@ public class GenotypeAssaysModule extends ExtendedSimpleModule
         LaboratoryService.get().registerDataProvider(new SNPAssayDataProvider(this));
 
         LaboratoryService.get().registerAssayButton(new ChangeAssayResultStatusBtn(this), GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, "Data");
+
+        LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.SSP_ASSAY_PROVIDER, Arrays.asList("DataId:ASC", "include:primerPair,result,subjectId"));
+        LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("result", "DataId"));
+        LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("RowId", "DataId"));
     }
 
     @Override
