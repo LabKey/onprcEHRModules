@@ -83,6 +83,12 @@ onprc_reports/src/org/labkey/onprc_reports/ONPRC_ReportsManager.java -text
 onprc_reports/src/org/labkey/onprc_reports/ONPRC_ReportsModule.java -text
 sla/SLA.iml -text
 sla/module.properties -text
+sla/resources/etl/sla/census.sql -text
+sla/resources/etl/sla/emailList.sql -text
+sla/resources/etl/sla/purchase.sql -text
+sla/resources/etl/sla/purchasedetails.sql -text
+sla/resources/etl/sla/requestors.sql -text
+sla/resources/etl/sla/vendors.sql -text
 sla/resources/folderTypes/SLA.folderType.xml -text
 sla/resources/module.xml -text
 sla/resources/schemas/dbscripts/postgresql/sla-0.00-13.21.sql -text
