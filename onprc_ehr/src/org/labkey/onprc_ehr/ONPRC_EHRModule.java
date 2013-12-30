@@ -102,12 +102,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         return true;
     }
 
-    @NotNull
-    protected Collection<WebPartFactory> createWebPartFactories()
-    {
-        return Collections.emptyList();
-    }
-
     protected void init()
     {
         addController(CONTROLLER_NAME, ONPRC_EHRController.class);
