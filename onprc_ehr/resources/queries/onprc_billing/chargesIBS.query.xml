@@ -6,6 +6,12 @@
                 <columns>
                     <column columnName="invoiceId">
                         <isHidden>true</isHidden>
+                        <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>invoiceRuns</fkTable>
+                            <fkColumnName>objectid</fkColumnName>
+                            <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                        </fk>
                     </column>
                 </columns>
             </table>

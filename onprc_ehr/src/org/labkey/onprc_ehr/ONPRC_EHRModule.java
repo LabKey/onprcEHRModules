@@ -23,6 +23,7 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.buttons.ChangeQCStateButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromIdsButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromRecordsButton;
+import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.notification.NotificationService;
@@ -44,6 +45,7 @@ import org.labkey.onprc_ehr.billing.BillingAuditViewFactory;
 import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
 import org.labkey.onprc_ehr.buttons.ManageCasesButton;
 import org.labkey.onprc_ehr.dataentry.*;
+import org.labkey.onprc_ehr.demographics.ActiveAnimalGroupsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveFlagsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
@@ -69,6 +71,7 @@ import org.labkey.onprc_ehr.notification.UnoccupiedRoomsNotification;
 import org.labkey.onprc_ehr.notification.WeightAlertsNotification;
 import org.labkey.onprc_ehr.pipeline.BillingPipelineProvider;
 import org.labkey.onprc_ehr.security.ONPRCBillingAdminRole;
+import org.labkey.onprc_ehr.security.ONPRCChargesEntryRole;
 import org.labkey.onprc_ehr.table.ChargeableItemsCustomizer;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -94,7 +97,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.344;
+        return 12.348;
     }
 
     public boolean hasScripts()
@@ -112,6 +115,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     {
         AuditLogService.get().addAuditViewFactory(BillingAuditViewFactory.getInstance());
 
+        RoleManager.registerRole(new ONPRCBillingAdminRole());
+        RoleManager.registerRole(new ONPRCChargesEntryRole());
+
         ETL.init(1);
         PipelineService.get().registerPipelineProvider(new BillingPipelineProvider(this));
         AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
@@ -119,8 +125,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         AdminConsole.addLink(AdminConsole.SettingsLinkType.Management, "ehr etl admin", details.getActionURL());
 
         AuditLogService.registerAuditType(new ETLAuditProvider());
-
-        RoleManager.registerRole(new ONPRCBillingAdminRole());
 
         registerEHRResources();
 
@@ -187,6 +191,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last TB Test", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsMostRecentTBDate&query.calculated_status~eq=Alive"), "Routine Clinical Tasks");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Summary of Clinical Tasks", this, DetailsURL.fromString("/ldk/runNotification.view?key=org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification"), "Routine Clinical Tasks");
 
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Pairing Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=pairingSummary"), "Behavior");
+
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Pathogen Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=pathogenSummary"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Medical Cull List", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=medicalCullList"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Morbidity and Mortality By Breeding Group", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=animalGroupCategoryProblemSummary"), "Clinical");
@@ -203,6 +209,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
             //ignore
         }
 
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Listing of Cages", this, DetailsURL.fromString("/query/executeQuery.view?executeQuery.view?schemaName=ehr_lookups&query.queryName=cage"), "Colony Management");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Cites Report", this, DetailsURL.fromString("/onprc_ehr/citesReport.view"), "Colony Management");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Consortium Statistics", this, DetailsURL.fromString("/onprc_ehr/consortiumReport.view"), "Colony Management");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Room Utilization By Investigator", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=ehr_lookups&query.queryName=roomsByInvestigator"), "Colony Management");
@@ -219,6 +227,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Pregnant Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=pregnantAnimals"), "Reproductive Management");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummary"), "Pathology");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "SNOMED Search", this, DetailsURL.fromString("/onprc_ehr/snomedSearch.view"), "Pathology");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary, By Recipient", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummaryByRecipient"), "Pathology");
 
         EHRService.get().registerActionOverride("projectDetails", this, "views/projectDetails.html");
@@ -230,28 +239,29 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerActionOverride("animalHistory", this, "views/animalHistory.html");
 
         //data entry
-        EHRService.get().registerFormType(new WeightFormType(this));
-        EHRService.get().registerFormType(new ClinicalRoundsFormType(this));
-        EHRService.get().registerFormType(new SurgicalRoundsFormType(this));
-        EHRService.get().registerFormType(new BehaviorRoundsFormType(this));
-        //EHRService.get().registerFormType(new TissueDistributionFormType(this));
-        EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "treatments", "Medications/Diet", Collections.<FormSection>singletonList(new TreatmentsTaskFormSection()));
-        EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Clinical", "tb", "TB Tests", Collections.<FormSection>singletonList(new SimpleGridPanel("study", "tb", "TB Tests")));
-        EHRService.get().registerFormType(new PairingFormType(this));
-        EHRService.get().registerFormType(EHRService.FORM_TYPE.Task, this, "Billing", "miscCharges", "Misc Charges", Collections.<FormSection>singletonList(new ChargesFormSection()));
-        EHRService.get().registerFormType(new LabworkFormType(this));
-        EHRService.get().registerFormType(new ProcessingFormType(this));
-        EHRService.get().registerFormType(new SurgeryFormType(this));
-        EHRService.get().registerFormType(new NecropsyFormType(this));
-        EHRService.get().registerFormType(new ClinicalProcedureFormType(this));
-        EHRService.get().registerFormType(new ClinicalRemarkFormType(this));
-        EHRService.get().registerFormType(new ChargesAdvancedFormType(this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(WeightFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalRoundsFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SurgicalRoundsFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BehaviorRoundsFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory.TaskFactory(this, "Clinical", "treatments", "Medications/Diet", Collections.<FormSection>singletonList(new TreatmentsTaskFormSection())));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory.TaskFactory(this, "Clinical", "tb", "TB Tests", Collections.<FormSection>singletonList(new SimpleGridPanel("study", "tb", "TB Tests"))));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PairingFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory.TaskFactory(this, "Billing", "miscCharges", "Misc Charges", Collections.<FormSection>singletonList(new ChargesFormSection())));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ProcessingFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SurgeryFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SingleSurgeryFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BiopsyFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalReportFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalRemarkFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesAdvancedFormType.class, this));
 
-        EHRService.get().registerFormType(new BloodDrawFormType(this));
-        EHRService.get().registerFormType(new AuxProcedureFormType(this));
-        EHRService.get().registerFormType(new BloodDrawRequestFormType(this));
-        EHRService.get().registerFormType(new LabworkRequestFormType(this));
-        EHRService.get().registerFormType(EHRService.FORM_TYPE.Request, this, "Requests", "Surgery Request", "Procedure Requests", Collections.<FormSection>singletonList(new SurgeryRequestFormSection()));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(AuxProcedureFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawRequestFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory.RequestFactory(this, "Requests", "Surgery Request", "Procedure Requests", Collections.<FormSection>singletonList(new SurgeryRequestFormSection())));
 
         //demographics
         EHRService.get().registerDemographicsProvider(new ActiveCasesDemographicsProvider(this));
@@ -261,6 +271,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerDemographicsProvider(new SourceDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new ActiveFlagsDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new TBDemographicsProvider(this));
+        EHRService.get().registerDemographicsProvider(new ActiveAnimalGroupsDemographicsProvider());
 
         //buttons
         EHRService.get().registerMoreActionsButton(new ManageCasesButton(this), "study", "cases");
@@ -277,7 +288,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeBloodStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeBloodStatusWindow.js"))), "study", "blood");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "clinpathRuns");
-        EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeEncounterStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeEncounterStatusWindow.js"))), "study", "encounters");
+        //EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeEncounterStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeEncounterStatusWindow.js"))), "study", "encounters");
         EHRService.get().registerTbarButton(new ChangeQCStateButton(this, "Mark Delivered", "ONPRC_EHR.window.MarkLabworkDeliveredWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/MarkLabworkDeliveredWindow.js"))), "study", "clinpathRuns");
 
         //history

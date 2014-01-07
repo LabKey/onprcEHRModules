@@ -1,0 +1,19 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="birth"/>
+        <column name="potentialDam"/>
+        <column name="birthRoom"/>
+        <column name="birthCage"/>
+        <column name="damAgeAtTime"/>
+        <column name="potentialDam/source/type">
+            <properties>
+                <property name="columnTitle" value="Dam Source"/>
+            </properties>
+        </column>
+    </columns>
+    <sorts>
+        <sort column="Id"/>
+        <sort column="potentialDam"/>
+    </sorts>
+</customView>

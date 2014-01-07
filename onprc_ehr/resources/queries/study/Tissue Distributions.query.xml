@@ -17,6 +17,9 @@
                     <column columnName="project">
 
                     </column>
+                    <column columnName="category">
+                        <isHidden>true</isHidden>
+                    </column>
                     <column columnName="organization">
                         <columnTitle>Organization</columnTitle>
                         <isHidden>true</isHidden>
@@ -61,6 +64,7 @@
                     </column>
                     <column columnName="quantity">
                         <columnTitle>Quantity</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="qualifier">
                         <columnTitle>Qualifier</columnTitle>

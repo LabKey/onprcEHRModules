@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.dataentry;
 import org.json.JSONObject;
 import org.labkey.api.data.Container;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.security.User;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -39,6 +40,7 @@ public class LabworkFormSection extends SimpleGridPanel
         addClientDependency(ClientDependency.fromFilePath("ehr/data/LabworkResultsStore.js"));
         setClientStoreClass("EHR.data.LabworkResultsStore");
         addConfigSource("LabworkChild");
+        setTemplateMode(TEMPLATE_MODE.NONE);
     }
 
     @Override
@@ -48,7 +50,6 @@ public class LabworkFormSection extends SimpleGridPanel
         defaultButtons.add("COPYFROMCLINPATHRUNS");
         defaultButtons.addAll(super.getTbarButtons());
         defaultButtons.remove("ADDANIMALS");
-        defaultButtons.remove("TEMPLATE");
         if (defaultButtons.contains("ADDRECORD"))
         {
             int idx = defaultButtons.indexOf("ADDRECORD");
@@ -60,9 +61,9 @@ public class LabworkFormSection extends SimpleGridPanel
     }
 
     @Override
-    public JSONObject toJSON(Container c, User u)
+    public JSONObject toJSON(DataEntryFormContext ctx)
     {
-        JSONObject ret = super.toJSON(c, u);
+        JSONObject ret = super.toJSON(ctx);
 
         ret.put("serverStoreSort", "Id,runid,testid/sort_order");
 

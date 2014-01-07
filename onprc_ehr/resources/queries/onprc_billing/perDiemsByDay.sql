@@ -24,7 +24,13 @@ SELECT
     WHEN t.ProjectType = 'Research' and t.overlappingProjectsCategory NOT LIKE '%Research%' Then 'Single Project'
     WHEN t.ProjectType = 'Research' and t.overlappingProjectsCategory LIKE '%Research%' Then 'Multiple Research'
     ELSE 'Unknown'
-  END as category
+  END as category,
+  --find overlapping tier flags on that day
+  coalesce((
+     SELECT group_concat(DISTINCT f.value) as tier
+     FROM study.flags f
+     WHERE f.Id = t.Id AND f.enddateCoalesced > t.dateOnly AND f.dateOnly <= t.dateOnly AND f.category = 'Housing Tier'
+   ), 'Tier 2') as tier
 
 FROM (
 
@@ -141,7 +147,13 @@ LEFT JOIN onprc_billing.perDiemFeeDefinition pdf
 ON (
   pdf.housingType = h3.room.housingType AND
   pdf.housingDefinition = h3.room.housingCondition AND
-  (pdf.releaseCondition = a.releaseCondition OR pdf.releaseCondition is null)
+
+  --find overlapping tier flags on that day
+  coalesce((
+     SELECT group_concat(DISTINCT f.value) as tier
+     FROM study.flags f
+     WHERE f.Id = i2.Id AND f.enddateCoalesced > i2.dateOnly AND f.dateOnly <= i2.dateOnly AND f.category = 'Housing Tier'
+   ), 'Tier 2') = pdf.tier
 )
 
 GROUP BY i2.dateOnly, I2.Id, a.project, a.project.use_Category

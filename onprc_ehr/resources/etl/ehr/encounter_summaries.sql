@@ -16,6 +16,7 @@
 Select
     cast(pat.AnimalID as nvarchar(4000)) as Id,
 	pat.Date,
+	null as category,
 	l.LogText as remark,
 	--l.SequenceNo,
 
@@ -31,6 +32,7 @@ UNION ALL
 Select
     cast(pat.AnimalID as nvarchar(4000)) as Id,
 	pat.Date,
+	null as category,
 	l.LogText as remark,
 	--l.SequenceNo,
 
@@ -47,6 +49,7 @@ select * FROM (
 Select
     cast(pat.AnimalID as nvarchar(4000)) as Id,
 	pat.Date,
+	'Narrative' as category,
 	REPLACE(
 	cast(coalesce(log0.logtext, '') as nvarchar(4000)) +
 	cast(coalesce(log1.logtext, '') as nvarchar(4000)) +
@@ -84,6 +87,7 @@ UNION ALL
 Select
     cast(im.AnimalID as nvarchar(4000)) as Id,
 	im.Date,
+	null as category,
 	im.Comments AS remark,
 
 	max(cast(im.objectid as varchar(38))) as parentid,

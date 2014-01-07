@@ -63,7 +63,7 @@ SELECT
 	--(select labkey.core.GROUP_CONCAT_DS(mt.medicationtime, ',', 1) as time FROM Cln_MedicationTimes mt where cln.SearchKey=mt.SearchKey) as times,
   CASE
     WHEN s6.value = 'Surgery' THEN 'Surgical'
-    WHEN ss.code is not null THEN 'Diet'
+    WHEN ss.code is not null THEN 'Clinical'
     ELSE 'Clinical'
   END as category,
 

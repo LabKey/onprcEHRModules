@@ -20,8 +20,9 @@ SELECT
   coalesce(e.unitCost, cr.unitCost) as unitCost,
   1 as quantity,
   coalesce(e.unitCost, cr.unitCost) as totalcost,
-  ce.account as creditAccount,
+  cast(ce.account as varchar(100)) as creditAccount,
   ce.rowid as creditAccountId,
+  cast(coalesce(p.project.account.investigatorId, p.project.investigatorId) as integer) as investigatorId,
   CASE
     WHEN e.unitCost IS NOT NULL THEN 'Y'
     ELSE null
@@ -39,12 +40,13 @@ SELECT
   WHEN p.project.alwaysavailable = true THEN null
   WHEN (SELECT count(*) as projects FROM study.assignment a WHERE
     p.Id = a.Id AND
-    p.project = a.project AND
+    (p.project = a.project OR p.project.protocol = a.project.protocol) AND
     (cast(p.date AS DATE) < a.enddateCoalesced OR a.enddate IS NULL) AND
     p.date >= a.dateOnly
   ) > 0 THEN null
   ELSE 'N' END as matchesProject,
   null as isMiscCharge,
+  null as isAdjustment,
   (SELECT group_concat(distinct a.project.displayName, chr(10)) as projects FROM study.assignment a WHERE
     p.Id = a.Id AND
     p.project = a.project AND
@@ -52,6 +54,7 @@ SELECT
     p.date >= a.dateOnly
   ) as assignmentAtTime,
   CASE WHEN p.project.account IS NULL THEN 'Y' ELSE null END as isMissingAccount,
+  CASE WHEN ifdefined(p.project.account.fiscalAuthority.faid) IS NULL THEN 'Y' ELSE null END as isMissingFaid,
   CASE
     WHEN ifdefined(p.project.account.aliasEnabled) IS NULL THEN null
     WHEN (ifdefined(p.project.account.aliasEnabled) IS NULL OR ifdefined(p.project.account.aliasEnabled) != 'Y') THEN 'Y'
@@ -78,3 +81,40 @@ LEFT JOIN onprc_billing.creditAccount ce ON (
     p.date <= ce.enddateTimeCoalesced AND
     p.chargeId = ce.chargeId
 )
+
+UNION ALL
+
+--add misc charges
+SELECT
+  mc.id,
+  mc.date,
+  mc.project,
+  mc.account,
+  null as procedureId,
+  mc.chargeId,
+  mc.sourceRecord,
+
+  mc.item,
+  mc.category,
+  mc.unitcost,
+  mc.quantity,
+  mc.totalcost,
+
+  mc.creditAccount,
+  mc.creditAccountId,
+  mc.investigatorId,
+  mc.isExemption,
+  mc.lacksRate,
+  mc.exemptionId,
+  mc.rateId,
+  mc.matchesProject as matchesProject,
+  'Y' as isMiscCharge,
+  mc.isAdjustment,
+  mc.assignmentAtTime,
+  mc.isMissingAccount,
+  mc.isMissingFaid,
+  mc.isExpiredAccount
+
+FROM onprc_billing.miscChargesFeeRateData mc
+WHERE cast(mc.billingDate as date) >= CAST(StartDate as date) AND cast(mc.billingDate as date) <= CAST(EndDate as date)
+AND mc.category = 'Clinical Lab Test'

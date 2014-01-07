@@ -23,9 +23,9 @@ SELECT
   c.divider,
   c.effectiveCage as expectedCage
 FROM study.housing h
-JOIN ehr_lookups.connectedCages c ON (c.room = h.room AND c.cage = h.cage)
+LEFT JOIN ehr_lookups.connectedCages c ON (c.room = h.room AND c.cage = h.cage)
 
 --WHERE h.isActive = true
   WHERE h.enddateTimeCoalesced >= now()
 
-AND h.cage != c.effectiveCage
+AND h.cage IS NOT NULL AND (h.cage != c.effectiveCage OR c.effectiveCage IS NULL) and h.room.housingType.value = 'Cage Location'

@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
@@ -35,9 +36,9 @@ import java.util.List;
  */
 public class BloodDrawRequestFormType extends RequestForm
 {
-    public BloodDrawRequestFormType(Module owner)
+    public BloodDrawRequestFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, "Blood Draw Request", "Blood Draw Requests", "Requests", Arrays.<FormSection>asList(
+        super(ctx, owner, "Blood Draw Request", "Blood Draw Requests", "Requests", Arrays.<FormSection>asList(
                 new RequestFormSection(),
                 new AnimalDetailsFormSection(),
                 new BloodDrawFormSection(false)

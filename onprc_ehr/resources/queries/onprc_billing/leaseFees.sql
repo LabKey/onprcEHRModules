@@ -19,6 +19,8 @@ SELECT
 a.id,
 a.date,
 a.project,
+a.project.account,
+a.date as assignmentStart,
 a.enddate,
 a.projectedReleaseCondition,
 a.releaseCondition,
@@ -60,6 +62,8 @@ SELECT
   a.id,
   a.date,
   a.project,
+  a.project.account,
+  a.date as assignmentStart,
   a.enddate,
   a.projectedReleaseCondition,
   a.releaseCondition,
@@ -81,8 +85,10 @@ UNION ALL
 
 SELECT
 a.id,
-a.date,
+a.enddate as date, --use enddate as the date for this charge
 a.project,
+a.project.account,
+a.date as assignmentStart,
 a.enddate,
 a.projectedReleaseCondition,
 a.releaseCondition,

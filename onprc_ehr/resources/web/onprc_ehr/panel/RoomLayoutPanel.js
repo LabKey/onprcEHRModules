@@ -495,11 +495,16 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                     params.doRowInversion = !!panel.doRowInversion;
 
                     Ext4.Array.forEach(panel.filterArray, function(filter){
-                        //we only support room/area on the URL
+                        //we support room/area/building on the URL
                         if (filter.getURLParameterName().match(/query.room\/area~/) && filter.getURLParameterValue()){
                             params.area = filter.getURLParameterValue().split(';')
                         }
-                        else if (filter.getURLParameterName().match(/query.room~/) && filter.getURLParameterValue()){
+
+                        if (filter.getURLParameterName().match(/query.room\/building~/) && filter.getURLParameterValue()){
+                            params.building = filter.getURLParameterValue().split(';')
+                        }
+
+                        if (filter.getURLParameterName().match(/query.room~/) && filter.getURLParameterValue()){
                             params.rooms = filter.getURLParameterValue().split(';')
                         }
                     }, this);

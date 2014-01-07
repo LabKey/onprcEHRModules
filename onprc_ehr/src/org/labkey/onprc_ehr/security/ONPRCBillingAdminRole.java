@@ -37,7 +37,8 @@ public class ONPRCBillingAdminRole extends AbstractRole
             //InsertPermission.class,
             //UpdatePermission.class,
             //DeletePermission.class,
-            ONPRCBillingPermission.class
+            ONPRCChargeEntryPermission.class,
+            ONPRCBillingAdminPermission.class
         );
     }
 

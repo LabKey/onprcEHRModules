@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -32,9 +33,9 @@ public class TissueDistributionFormType extends TaskForm
 {
     public static final String NAME = "Tissue Distributions";
 
-    public TissueDistributionFormType(Module owner)
+    public TissueDistributionFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, NAME, "Tissue Distributions", "Pathology", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Tissue Distributions", "Pathology", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new SimpleGridPanel("study", "tissueDistributions", "Tissue Distributions"))

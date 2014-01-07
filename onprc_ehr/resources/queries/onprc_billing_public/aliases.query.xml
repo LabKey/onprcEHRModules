@@ -18,6 +18,21 @@
                             <fkColumnName>projectNumber</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="investigatorId">
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>investigators</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="fiscalAuthority">
+                        <fk>
+                            <fkDbSchema>onprc_billing_public</fkDbSchema>
+                            <fkTable>fiscalAuthorities</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                            <fkDisplayColumnName>lastName</fkDisplayColumnName>
+                        </fk>
+                    </column>
                 </columns>
             </table>
         </tables>

@@ -41,9 +41,11 @@ SELECT
   i.totalcost
 
 FROM onprc_billing.invoicedItems i
-WHERE i.invoiceId.status = 'Finalized' AND (SELECT max(rowid) as expr FROM onprc_billing.dataAccess da WHERE isMemberOf(da.userid) AND (
+WHERE (SELECT max(rowid) as expr FROM onprc_billing.dataAccess da WHERE isMemberOf(da.userid) AND (
     da.allData = true OR
     (da.project = i.project) OR
-    da.investigatorId = i.investigatorId
-  )) IS NOT NULL OR isMemberOf(i.project.investigatorId.userid) OR isMemberOf(i.project.investigatorId.financialAnalyst)
+    --TODO: this needs to get cleaned up
+    (da.investigatorId = i.investigatorId OR da.investigatorId = i.debitedaccount.investigatorId OR da.investigatorId = i.project.investigatorId)
+  )) IS NOT NULL OR
+  isMemberOf(i.project.investigatorId.userid) OR isMemberOf(i.debitedaccount.investigatorId.userid) OR isMemberOf(i.project.investigatorId.financialAnalyst)
 

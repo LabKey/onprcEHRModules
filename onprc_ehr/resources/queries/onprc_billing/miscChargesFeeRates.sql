@@ -10,5 +10,5 @@ FROM onprc_billing.miscChargesFeeRateData mc
 --note: these are captured by the appropriate rate queries:
 WHERE mc.category NOT IN (
   'Lease Fees', 'Lease Setup Fees', 'Animal Per Diem',
-  'Surgical Procedure', 'Clinical Procedure'
+  'Surgical Procedure', 'Clinical Procedure', 'Clinical Lab Test'
 )

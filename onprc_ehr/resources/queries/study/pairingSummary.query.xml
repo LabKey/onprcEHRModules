@@ -2,6 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="pairingSummary" tableDbType="TABLE" useColumnOrder="true">
+                <tableTitle>Pairing Summary</tableTitle>
                 <columns>
                     <column columnName="Id">
 

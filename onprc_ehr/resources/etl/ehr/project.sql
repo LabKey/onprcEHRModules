@@ -13,10 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+SELECT 
+	t2.*,
+	CASE
+		WHEN t2.enddateRaw > CURRENT_TIMESTAMP THEN NULL
+		else t2.enddateRaw
+	END as enddate
+	
+FROM (	
   
 select 
 	--coalesce(i2.eIACUCNum, rtrim(ltrim(lower(i2.IACUCCode)))) as protocol,
 	rtrim(ltrim(i2.IACUCCode)) as protocol,
+	CASE
+		WHEN (t.grantStart IS NOT NULL AND (t.IcacucStartDate IS NULL OR t.IcacucStartDate < t.grantStart)) THEN t.grantStart
+		ELSE t.IcacucStartDate
+	END as startdate,
+    CASE
+      WHEN (t.grantEnd IS NOT NULL AND (t.IcacucEndDate IS NULL OR t.IcacucEndDate > t.grantEnd) AND ((coalesce(i2.dateDisabled, i2.EndDate) IS NULL OR coalesce(i2.dateDisabled, i2.EndDate) > t.grantEnd))) THEN t.grantEnd
+      WHEN (t.IcacucEndDate IS NULL OR ((coalesce(i2.dateDisabled, i2.EndDate) IS NOT NULL AND coalesce(i2.dateDisabled, i2.EndDate) < t.IcacucEndDate))) THEN coalesce(i2.dateDisabled, i2.EndDate)
+      ELSE t.IcacucEndDate
+    END as enddateRaw,
 	t.*
 
 FROM (
@@ -38,8 +55,11 @@ select
 
 	(select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa where rpi.projectid = rpa.ProjectID order by datecreated desc) as account,
 	Rpi.Title,
-	Rpi.StartDate,
-	coalesce(rpi.dateDisabled, Rpi.EndDate) as enddate,
+	Rpi.StartDate as IcacucStartDate,
+	coalesce(rpi.dateDisabled, Rpi.EndDate) as IcacucEndDate,
+  (select max(pg.GrantStartDate) as startdate FROM Ref_ProjectGrants pg  WHERE pg.ProjectID = rpi.ProjectID) as grantStart,
+	(select max(coalesce(pg.GrantEndDate, pg.datedisabled)) as enddate FROM Ref_ProjectGrants pg  WHERE pg.ProjectID = rpi.ProjectID) as grantEnd,
+
 	CASE
 	  WHEN pc2.InvestigatorID IS NULL THEN (select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri.firstname and i.lastname = ri.lastname group by i.LastName, i.firstname having count(*) <= 1)
       ELSE (select max(i.rowid) from labkey.onprc_ehr.investigators i where i.firstname = ri2.firstname and i.lastname = ri2.lastname group by i.LastName, i.firstname having count(*) <= 1)
@@ -96,3 +116,5 @@ WHERE (rpi.ts > ? or pc.ts > ? or ri.ts > ?)
 
 LEFT JOIN Ref_ProjectsIACUC i2 ON (i2.ProjectID = t.protocolId)
 WHERE maxTs > ?
+OR (select max(ts) as maxts FROM Ref_ProjectGrants g WHERE g.ProjectID = t.project) > ?
+) t2

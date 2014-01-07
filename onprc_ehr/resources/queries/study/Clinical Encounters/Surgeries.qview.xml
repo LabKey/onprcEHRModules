@@ -2,6 +2,7 @@
     <columns>
         <column name="Id"/>
         <column name="date"/>
+        <column name="project"/>
         <!--<column name="enddate"/>-->
         <!--<column name="caseno"/>-->
         <column name="procedureid"/>

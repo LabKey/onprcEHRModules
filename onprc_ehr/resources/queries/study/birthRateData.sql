@@ -17,6 +17,7 @@ PARAMETERS(StartDate TIMESTAMP, EndDate TIMESTAMP)
 
 SELECT
   d.Id,
+  d.birth,
 
   GROUP_CONCAT(DISTINCT h1.room, chr(10)) as birthRoom,
   GROUP_CONCAT(DISTINCT h1.room.housingType.value, chr(10)) as birthRoomType,
@@ -50,4 +51,4 @@ JOIN study.housing h2 ON (h2.id = d.Id AND h2.dateOnly <= EndDate AND h2.enddate
 
 WHERE cast(d.birth as date) >= StartDate AND cast(d.birth as date) <= EndDate
 
-GROUP BY d.id, d.id.age.ageInDays, d.death
+GROUP BY d.id, d.id.age.ageInDays, d.death, d.birth

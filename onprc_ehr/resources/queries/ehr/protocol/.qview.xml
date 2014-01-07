@@ -1,7 +1,7 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Protocols">
    <columns>
        <column name="protocol"/>
-       <column name="external_id"/>
+       <!--<column name="external_id"/>-->
        <column name="title"/>
        <column name="investigatorId"/>
        <column name="approve"/>
@@ -11,7 +11,6 @@
        <column name="daysUntilRenewal"/>
        <column name="enddate"/>
        <column name="usda_level"/>
-       <column name="project_type"/>
        <column name="activeAnimals/totalActiveAnimals">
            <properties>
                <property name="columnTitle" value="# Animals Assigned"/>

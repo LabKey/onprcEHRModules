@@ -15,10 +15,13 @@
  */
 SELECT
   i.servicecenter,
-  i.rowid as transactionNumber,
   'N' as transactionType,
+  i.transactionNumber,
   i.date as transactionDate,
-  i.item as transactionDescription,
+  CASE
+    WHEN i.servicecenter = 'SLAU' THEN i.comment
+    ELSE i.Id
+  END as transactionDescription,  --show animal Id, rather than description, except for SLAU
   i.lastName,
   i.firstName,
   null as blank,
@@ -34,20 +37,22 @@ SELECT
   i.debitedaccount as OSUAlias,
   --i.creditedaccount,
   i.totalcost,
-  i.invoiceDate,
   i.invoiceId
 
 FROM onprc_billing.invoicedItems i
-WHERE i.totalcost != 0
+WHERE i.totalcost != 0 AND (i.transactionType != 'ERROR' OR i.transactionType IS NULL)
 
 UNION ALL
 
 SELECT
   i.servicecenter,
-  i.rowid as transactionNumber,
   'N' as transactionType,
+  i.transactionNumber,
   i.date as transactionDate,
-  i.item as transactionDescription,
+  CASE
+    WHEN i.servicecenter = 'SLAU' THEN i.comment
+    ELSE i.Id
+  END as transactionDescription,  --show animal Id, rather than description, except for SLAU
   i.lastName,
   i.firstName,
   null as blank,
@@ -63,8 +68,7 @@ SELECT
   --i.debitedaccount as OSUAlias,
   i.creditedaccount as OSUAlias,
   (i.totalcost * -1) as totalcost,
-  i.invoiceDate,
-  i.invoiceId as invoiceNumber
+  i.invoiceId
 
 FROM onprc_billing.invoicedItems i
-WHERE i.totalcost != 0
+WHERE i.totalcost != 0 AND i.creditedaccount IS NOT NULL and i.creditedaccount != '-1' AND (i.transactionType != 'ERROR' OR i.transactionType IS NULL)

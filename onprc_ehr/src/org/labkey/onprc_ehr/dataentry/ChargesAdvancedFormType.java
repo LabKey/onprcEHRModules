@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.data.Container;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -38,9 +39,9 @@ public class ChargesAdvancedFormType extends TaskForm
 {
     public static final String NAME = "ChargesAdvanced";
 
-    public ChargesAdvancedFormType(Module owner)
+    public ChargesAdvancedFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, NAME, "Charges", "Billing", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Charges", "Billing", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new ChargesInstructionFormSection(),
@@ -48,6 +49,8 @@ public class ChargesAdvancedFormType extends TaskForm
         ));
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ChargesAdvanced.js"));
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/financeButtons.js"));
+
         for (FormSection s : getFormSections())
         {
             s.addConfigSource("ChargesAdvanced");
@@ -55,7 +58,7 @@ public class ChargesAdvancedFormType extends TaskForm
     }
 
     @Override
-    public boolean isVisible(Container c, User u)
+    public boolean isVisible()
     {
         return false;
     }
@@ -64,7 +67,7 @@ public class ChargesAdvancedFormType extends TaskForm
     protected List<String> getButtonConfigs()
     {
         List<String> defaultButtons = new ArrayList<String>();
-        defaultButtons.add("SUBMIT");
+        defaultButtons.add("FINANCESUBMIT");
 
         return defaultButtons;
     }

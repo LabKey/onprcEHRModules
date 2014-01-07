@@ -12,6 +12,7 @@ SELECT
   e.Id,
   e.date,
   e.project,
+  e.project.account,
   e.procedureId,
   p.chargeId,
   e.objectid as sourceRecord
@@ -24,18 +25,20 @@ AND e.qcstate.publicdata = true
 
 UNION ALL
 
---Blood draws
+--Blood draws.  Note: group by task/date to create 1 charge per batch of draws
 SELECT
   e.Id,
-  e.date,
+  e.dateOnly as date,
   e.project,
+  e.project.account,
   null as procedureId,
   (select rowid from onprc_billing.chargeableItems ci where ci.name = 'Blood Draw' and ci.active = true) as chargeId,
-  e.objectid as sourceRecord
+  max(e.objectid) as sourceRecord
 
 FROM study.blood e
 WHERE e.dateOnly >= CAST(StartDate as date) AND e.dateOnly <= CAST(EndDate as date)
 and e.chargetype != 'No Charge' and e.chargetype != 'Research Staff'
 AND e.qcstate.publicdata = true
+GROUP BY e.Id, e.dateOnly, e.project, e.project.account, e.taskid
 
---TODO: drug administration
+--TODO: injections

@@ -35,6 +35,7 @@
                     </column>
                     <column columnName="tissueCondition">
                         <columnTitle>Tissue Condition</columnTitle>
+                        <isHidden>true</isHidden>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>tissue_condition</fkTable>

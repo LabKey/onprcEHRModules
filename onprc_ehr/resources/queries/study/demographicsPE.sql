@@ -36,7 +36,7 @@ LEFT JOIN (
     e.lsid
   FROM study.encounters e
   left join ehr.snomed_tags t on (e.objectid = t.recordid)
-  where t.code IN ('P-02314', 'P-02310') and e.id.demographics.calculated_status = 'Alive'
+  where (e.procedureid.name IN ('Physical Exam Complete') OR t.code IN ('P-02314', 'P-02310')) and e.id.demographics.calculated_status = 'Alive'
 ) e ON (e.id = d.id)
 
 --find terminal condition codes

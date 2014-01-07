@@ -1,4 +1,4 @@
-<view xmlns="http://labkey.org/data/xml/view" title="Project Details">
+<view xmlns="http://labkey.org/data/xml/view" title="Project Details" frame="none">
     <dependencies>
         <dependency path="ehr.context" />
     </dependencies>

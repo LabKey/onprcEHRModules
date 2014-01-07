@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -33,9 +34,9 @@ public class ProcessingFormType extends TaskForm
 {
     public static final String NAME = "Processing";
 
-    public ProcessingFormType(Module owner)
+    public ProcessingFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, NAME, "Processing", "Processing", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Processing", "Processing", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new BloodDrawFormSection(false),

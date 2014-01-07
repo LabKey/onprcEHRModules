@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.data.Container;
 import org.labkey.api.ehr.dataentry.AbstractFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormElement;
 import org.labkey.api.security.User;
 import org.labkey.api.view.template.ClientDependency;
@@ -39,7 +40,7 @@ public class ChargesInstructionFormSection extends AbstractFormSection
     }
 
     @Override
-    protected List<FormElement> getFormElements(Container c, User u)
+    protected List<FormElement> getFormElements(DataEntryFormContext ctx)
     {
         return Collections.emptyList();
     }

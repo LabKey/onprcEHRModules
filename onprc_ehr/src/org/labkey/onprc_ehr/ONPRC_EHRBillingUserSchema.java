@@ -29,7 +29,8 @@ import org.labkey.api.security.permissions.InsertPermission;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.security.permissions.UpdatePermission;
 import org.labkey.onprc_ehr.query.CustomPermissionsTable;
-import org.labkey.onprc_ehr.security.ONPRCBillingPermission;
+import org.labkey.onprc_ehr.security.ONPRCBillingAdminPermission;
+import org.labkey.onprc_ehr.security.ONPRCChargeEntryPermission;
 
 /**
  * User: bimber
@@ -52,7 +53,7 @@ public class ONPRC_EHRBillingUserSchema extends SimpleUserSchema
             CustomPermissionsTable ti = new CustomPermissionsTable(this, schematable).init();
             ti.addPermissionMapping(InsertPermission.class, EHRDataEntryPermission.class);
             ti.addPermissionMapping(UpdatePermission.class, EHRDataEntryPermission.class);
-            ti.addPermissionMapping(DeletePermission.class, ONPRCBillingPermission.class);
+            ti.addPermissionMapping(DeletePermission.class, ONPRCBillingAdminPermission.class);
             return ti;
         }
         else if ("grants".equalsIgnoreCase(name))
@@ -68,9 +69,10 @@ public class ONPRC_EHRBillingUserSchema extends SimpleUserSchema
         else
         {
             CustomPermissionsTable ti = new CustomPermissionsTable(this, schematable).init();
-            ti.addPermissionMapping(InsertPermission.class, ONPRCBillingPermission.class);
-            ti.addPermissionMapping(UpdatePermission.class, ONPRCBillingPermission.class);
-            ti.addPermissionMapping(DeletePermission.class, ONPRCBillingPermission.class);
+            //NOTE: more users should be able to insert records than update/delete
+            ti.addPermissionMapping(InsertPermission.class, ONPRCChargeEntryPermission.class);
+            ti.addPermissionMapping(UpdatePermission.class, ONPRCBillingAdminPermission.class);
+            ti.addPermissionMapping(DeletePermission.class, ONPRCBillingAdminPermission.class);
             return ti;
         }
     }

@@ -22,10 +22,10 @@ import org.labkey.api.security.permissions.AbstractPermission;
  * Date: 1/7/13
  * Time: 4:52 PM
  */
-public class ONPRCBillingPermission extends AbstractPermission
+public class ONPRCChargeEntryPermission extends AbstractPermission
 {
-    public ONPRCBillingPermission()
+    public ONPRCChargeEntryPermission()
     {
-        super("ONPRCBillingPermission", "Can insert and update data in the ONPRC Billing tables");
+        super("ONPRCChargeEntryPermission", "Can insert charges in the EHR");
     }
 }

@@ -19,19 +19,29 @@ INSERT INTO labkey.onprc_billing.chargeableItems
 
 SELECT t.name, t.shortName, t.category, t.itemCode, t.departmentCode, t.active, t.container FROM (
 
+SELECT
+  t.name,
+  max(t.shortname) as shortname,
+  max(t.category) as category,
+  max(t.itemcode) as itemcode,
+  max(t.departmentcode) as departmentcode,
+  min(active) as active,
+  (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
+FROM (
 Select
-  'Small Animal Fees - ' + s2.Value + ': ' + s3.Value  as name,
+  'Small Animal Fees - ' + s2.Value + ': ' + s3.Value + ', ' + s4.value as name,
   'Small Animal Fees' as shortname,
   'Small Animal Per Diem' as category,
   '7' as itemcode,
   'SLAU' as departmentcode,
-  CASE WHEN rf.DateDisabled IS NULL THEN 1 ELSE 0 END as active,
-  (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
+  CASE WHEN rf.DateDisabled IS NULL THEN 1 ELSE 0 END as active
 From IRIS_Production.dbo.Ref_FeesRodents rf
 --LEFT JOIN IRIS_Production.dbo.Sys_Parameters s1 on (rf.Species = s1.Flag And s1.Field = 'SmallAnimals')
   LEFT JOIN IRIS_Production.dbo.Sys_Parameters s2 on (rf.CageType  = s2.Flag And s2.Field = 'SmallCageType')
   LEFT JOIN IRIS_Production.dbo.Sys_Parameters s3 on (rf.CageSize  = s3.Flag And s3.Field = 'SmallCageSize')
-
+  LEFT JOIN IRIS_Production.dbo.Sys_Parameters s4 on (rf.Species  = s4.Flag And s4.Field = 'SmallAnimals')
+  where rf.DateDisabled is null
+) t where name is not null GROUP BY t.name
 -- EO Rodent definitions
 
 UNION ALL
@@ -242,6 +252,18 @@ From IRIS_Production.dbo.Ref_FeesCreditAlias f
   left join labkey.onprc_billing.chargeableItems lk ON (lk.rowId = lfd.chargeId)
 where fp.SourceTable = 'Af_Surgery' and lfd.chargeId is not null
 
+INSERT INTO labkey.onprc_billing.creditAccount
+(chargeId, account, startDate, enddate, container)
+Select
+  (select max(rowid) from labkey.onprc_billing.chargeableItems ci WHERE ci.active = 1 AND ci.name = 'Small Animal Fees - ' + s2.Value + ': ' + s3.Value + ', ' + s4.value) as chargeId,
+  -1 as account,
+  rf.dateCreated as startdate,
+  rf.datedisabled as enddate,
+  (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container
+  From IRIS_Production.dbo.Ref_FeesRodents rf
+    LEFT JOIN IRIS_Production.dbo.Sys_Parameters s2 on (rf.CageType  = s2.Flag And s2.Field = 'SmallCageType')
+    LEFT JOIN IRIS_Production.dbo.Sys_Parameters s3 on (rf.CageSize  = s3.Flag And s3.Field = 'SmallCageSize')
+    LEFT JOIN IRIS_Production.dbo.Sys_Parameters s4 on (rf.Species  = s4.Flag And s4.Field = 'SmallAnimals')
 
 --EO credit account
 
@@ -251,7 +273,7 @@ INSERT INTO labkey.onprc_billing.chargeRates
 (chargeId, unitCost, startDate, enddate, container)
   select * from (
   Select
-    (SELECT max(rowid) FROM labkey.onprc_billing.chargeableItems ci WHERE ci.active = 1 AND ci.name = ('Small Animal Fees - ' + s2.Value + ': ' + s3.Value)) as chargeId,
+    (select max(rowid) from labkey.onprc_billing.chargeableItems ci WHERE ci.active = 1 AND ci.name = 'Small Animal Fees - ' + s2.Value + ': ' + s3.Value + ', ' + s4.value) as chargeId,
     rf.BaseCharge as unitCost,
     rf.DateCreated as startdate,
     rf.DateDisabled as enddate,
@@ -260,6 +282,7 @@ INSERT INTO labkey.onprc_billing.chargeRates
   From IRIS_Production.dbo.Ref_FeesRodents rf
     LEFT JOIN IRIS_Production.dbo.Sys_Parameters s2 on (rf.CageType  = s2.Flag And s2.Field = 'SmallCageType')
     LEFT JOIN IRIS_Production.dbo.Sys_Parameters s3 on (rf.CageSize  = s3.Flag And s3.Field = 'SmallCageSize')
+    LEFT JOIN IRIS_Production.dbo.Sys_Parameters s4 on (rf.Species  = s4.Flag And s4.Field = 'SmallAnimals')
     WHERE coalesce(rf.DateDisabled, CURRENT_TIMESTAMP) >= '2009/05/02'
   ) t where t.chargeId is not null
 
@@ -438,13 +461,18 @@ INSERT INTO labkey.onprc_billing.perDiemFeeDefinition (chargeId, housingType, ho
 select
 (SELECT rowid FROM labkey.onprc_billing.chargeableItems ci WHERE ci.name = r.ProcedureName) as chargeId,
 (select rowid from labkey.ehr_lookups.lookups l WHERE l.value = s1.Value and l.set_name = 'LocationType') as HousingType,
-(select rowid from labkey.ehr_lookups.lookups l WHERE l.value = s2.Value and l.set_name = 'LocationDefinition') as HousingDefinition,
-CASE
-  WHEN r.procedureName LIKE '%Tier 1%' THEN 'Tier 1'
-  WHEN r.procedureName LIKE '%Tier 2%' THEN 'Tier 2'
-  WHEN r.procedureName LIKE '%Tier 3%' THEN 'Tier 3'
+(select rowid from labkey.ehr_lookups.lookups l WHERE l.value = CASE
+    WHEN s2.Value LIKE '%Tier 1%' THEN replace(s2.value, ' Tier 1', '')
+    WHEN s2.Value LIKE '%Tier 2%' THEN replace(s2.value, ' Tier 2', '')
+    WHEN s2.Value LIKE '%Tier 3%' THEN replace(s2.value, ' Tier 3', '')
+    ELSE s2.value
+  END and l.set_name = 'LocationDefinition') as HousingDefinition,
+coalesce(CASE
+  WHEN s2.Value LIKE '%Tier 1%' THEN 'Tier 1'
+  WHEN s2.Value LIKE '%Tier 2%' THEN 'Tier 2'
+  WHEN s2.Value LIKE '%Tier 3%' THEN 'Tier 3'
   ELSE null
-END as tier
+END, 'Tier 2') as tier
 
 from IRIS_Production.dbo.ref_feesProcedures r
 left join IRIS_Production.dbo.Sys_Parameters s1 ON (s1.Field = 'LocationType' and s1.Flag = HousingType)

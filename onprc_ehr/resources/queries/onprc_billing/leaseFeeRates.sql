@@ -18,6 +18,7 @@ SELECT
   p.date,
   p.enddate,
   p.project,
+  p.project.account,
   p.projectedReleaseCondition,
   p.releaseCondition,
   p.assignCondition,
@@ -40,8 +41,9 @@ SELECT
     ELSE (coalesce(e3.unitCost, cr3.unitCost) - coalesce(e2.unitCost, cr2.unitCost))
   END as totalcost,
 
-  ce.account as creditAccount,
+  cast(ce.account as varchar(200)) as creditAccount,
   ce.rowid as creditAccountId,
+  coalesce(p.project.account.investigatorId, p.project.investigatorId) as investigatorId,
   CASE
     WHEN e.rowid IS NOT NULL THEN 'Y'
     ELSE null
@@ -60,7 +62,9 @@ SELECT
     ELSE null
   END as exemptionId,
   null as isMiscCharge,
+  null as isAdjustment,
   CASE WHEN p.project.account IS NULL THEN 'Y' ELSE null END as isMissingAccount,
+  CASE WHEN ifdefined(p.project.account.fiscalAuthority.faid) IS NULL THEN 'Y' ELSE null END as isMissingFaid,
   CASE
     WHEN ifdefined(p.project.account.aliasEnabled) IS NULL THEN null
     WHEN (ifdefined(p.project.account.aliasEnabled) IS NULL OR ifdefined(p.project.account.aliasEnabled) != 'Y') THEN 'Y'
@@ -127,6 +131,7 @@ SELECT
   mc.date,
   null as enddate,
   mc.project,
+  mc.project.account,
   null as projectedReleaseCondition,
   null as releaseCondition,
   null as assignCondition,
@@ -145,12 +150,15 @@ SELECT
 
   mc.creditAccount,
   mc.creditAccountId,
+  mc.investigatorId,
   mc.isExemption,
   mc.lacksRate,
   mc.rateId,
   mc.exemptionId,
   'Y' as isMiscCharge,
+  mc.isAdjustment,
   mc.isMissingAccount,
+  mc.isMissingFaid,
   mc.isExpiredAccount
 
 FROM onprc_billing.miscChargesFeeRateData mc

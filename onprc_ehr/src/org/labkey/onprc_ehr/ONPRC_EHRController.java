@@ -62,7 +62,7 @@ import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLRunnable;
 import org.labkey.onprc_ehr.legacydata.LegacyDataManager;
 import org.labkey.onprc_ehr.pipeline.BillingPipelineJob;
-import org.labkey.onprc_ehr.security.ONPRCBillingPermission;
+import org.labkey.onprc_ehr.security.ONPRCBillingAdminPermission;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -163,10 +163,10 @@ public class ONPRC_EHRController extends SpringActionController
                 json.put("url", new ActionURL("ehr", "animalSearch", ehrContainer).toString());
                 json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));
                 ehr.add(json);
+
             }
 
             resultProperties.put("ehr", ehr);
-
             resultProperties.put("success", true);
 
             return new ApiSimpleResponse(resultProperties);
@@ -907,7 +907,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(ONPRCBillingPermission.class)
+    @RequiresPermissionClass(ONPRCBillingAdminPermission.class)
     public class DeleteBillingPeriodAction extends ConfirmAction<QueryForm>
     {
         public void validateCommand(QueryForm form, Errors errors)

@@ -1,7 +1,7 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="histology" tableDbType="TABLE">
+            <table tableName="histology" tableDbType="TABLE" useColumnOrder="true">
                 <tableUrl />
                 <insertUrl />
                 <importUrl />
@@ -49,6 +49,7 @@
                     </column>
                     <column columnName="remark">
                         <displayWidth>110</displayWidth>
+                        <columnTitle>Diagnosis</columnTitle>
                         <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
                         <inputType>textarea</inputType>
                     </column>

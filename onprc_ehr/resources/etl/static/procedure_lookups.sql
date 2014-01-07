@@ -40,7 +40,7 @@ INSERT INTO labkey.ehr_lookups."procedure_default_comments" (procedureid, commen
 Select
 	--p0.ProcedureID,		--Ref_SurgProcedure
 	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
-	cast(coalesce(p0.LogText, '') as nvarchar(4000)) + cast(coalesce(p1.LogPage, '') as nvarchar(4000)) + cast(coalesce(p2.LogText, '') as nvarchar(4000)) + cast(coalesce(p3.LogText, '') as nvarchar(4000)) + cast(coalesce(p4.LogText, '') as nvarchar(4000)) + cast(coalesce(p5.LogText, '') as nvarchar(4000)) as Comment
+	cast(coalesce(p0.LogText, '') as nvarchar(4000)) + cast(coalesce(p1.LogText, '') as nvarchar(4000)) + cast(coalesce(p2.LogText, '') as nvarchar(4000)) + cast(coalesce(p3.LogText, '') as nvarchar(4000)) + cast(coalesce(p4.LogText, '') as nvarchar(4000)) + cast(coalesce(p5.LogText, '') as nvarchar(4000)) as Comment
 
 From IRIS_Production.dbo.Ref_SurgLog p0
 LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure r on (p0.procedureid = r.procedureid)
@@ -87,7 +87,7 @@ WHERE VesselID = 1;
 -- TRUNCATE TABLE labkey.ehr_lookups.procedure_default_treatments;
 -- INSERT INTO labkey.ehr_lookups.procedure_default_treatments (procedureid, code, dosage, dosage_units, route, frequency)
 -- Select
--- 	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedurename) as procedureid,
+-- 	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedurename and p.category = 'Surgery') as procedureid,
 -- 	Medication as code,
 -- 	rsm.Dose as dosage,
 -- 	s1.Value as dosage_units,

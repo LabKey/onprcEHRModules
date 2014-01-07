@@ -69,7 +69,7 @@
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:tableTitle>Chargeable Items</ns:tableTitle>
         <ns:columns>
-            <ns:column columnName="rowId">
+            <ns:column columnName="rowid">
                 <ns:columnTitle>Row Id</ns:columnTitle>
             </ns:column>
             <ns:column columnName="name">
@@ -91,6 +91,9 @@
             <ns:column columnName="departmentCode">
                 <ns:columnTitle>Department Code</ns:columnTitle>
                 <ns:description>A code used to categorize these items by department, primarily used when exporting or communicating with external billing systems.  Similar to itemCode</ns:description>
+            </ns:column>
+                <ns:column columnName="allowscustomunitcost">
+                <ns:columnTitle>Allow Custom Unit Cost?</ns:columnTitle>
             </ns:column>
             <ns:column columnName="active">
                 <ns:columnTitle>Is Active?</ns:columnTitle>
@@ -121,8 +124,7 @@
                 </ns:fk>
             </ns:column>
             <ns:column columnName="transactionNumber">
-                <ns:columnTitle>IRIS Transaction Number</ns:columnTitle>
-                <ns:isHidden>true</ns:isHidden>
+                <ns:columnTitle>Transaction Number</ns:columnTitle>
             </ns:column>
             <ns:column columnName="invoiceDate">
                 <ns:columnTitle>Invoice Date</ns:columnTitle>
@@ -257,7 +259,7 @@
         <ns:buttonBarOptions includeStandardButtons="true">
             <ns:includeScript>ehr.context</ns:includeScript>
             <ns:includeScript>/onprc_ehr/window/ReverseChargeWindow.js</ns:includeScript>
-            <ns:item insertPosition="end" text="More Actions" permission="UPDATE">
+            <ns:item insertPosition="end" text="More Actions" permissionClass="org.labkey.onprc_ehr.security.ONPRCBillingAdminPermission">
                 <ns:item text="Reverse/Adjust Selected Charges">
                     <ns:onClick>ONPRC_EHR.window.ReverseChargeWindow.buttonHandler(dataRegionName);</ns:onClick>
                 </ns:item>
@@ -398,6 +400,11 @@
             <ns:column columnName="container">
                 <ns:isHidden>true</ns:isHidden>
             </ns:column>
+            <ns:column columnName="parentid">
+                <ns:isHidden>true</ns:isHidden>
+                <ns:columnTitle>Encounter Id</ns:columnTitle>
+                <ns:facetingBehavior>ALWAYS_OFF</ns:facetingBehavior>
+            </ns:column>
             <ns:column columnName="createdBy"/>
             <ns:column columnName="created"/>
             <ns:column columnName="modifiedBy"/>
@@ -433,12 +440,6 @@
             <ns:column columnName="tier">
                 <ns:columnTitle>Tier</ns:columnTitle>
             </ns:column>
-            <ns:column columnName="startdate">
-                <ns:columnTitle>Start Date</ns:columnTitle>
-            </ns:column>
-            <ns:column columnName="releaseCondition">
-                <ns:columnTitle>Release Condition</ns:columnTitle>
-            </ns:column>
             <ns:column columnName="active">
                 <ns:columnTitle>Is Active?</ns:columnTitle>
             </ns:column>
@@ -456,7 +457,7 @@
         <ns:columns>
             <ns:column columnName="rowId">
                 <ns:columnTitle>Invoice Id</ns:columnTitle>
-                <ns:isHidden>true</ns:isHidden>
+                <!--<ns:isHidden>true</ns:isHidden>-->
             </ns:column>
             <ns:column columnName="runDate">
                 <ns:columnTitle>Run Date</ns:columnTitle>
@@ -483,6 +484,7 @@
             </ns:column>
             <ns:column columnName="status">
                 <ns:columnTitle>Status</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
                 <ns:isUserEditable>false</ns:isUserEditable>
                 <ns:shownInUpdateView>false</ns:shownInUpdateView>
             </ns:column>
@@ -708,11 +710,12 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="projectAccountHistory" tableDbType="TABLE" useColumnOrder="true">
-        <ns:tableTitle>Project Account History</ns:tableTitle>
+        <ns:tableTitle>Project Alias History</ns:tableTitle>
         <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
         <ns:columns>
             <ns:column columnName="rowid">
                 <ns:columnTitle>Row Id</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="project"/>
             <ns:column columnName="account"/>
@@ -806,6 +809,9 @@
             <ns:column columnName="alias">
                 <ns:columnTitle>Alias</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="category">
+                <ns:columnTitle>Category</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="aliasEnabled">
                 <ns:columnTitle>Alias Enabled</ns:columnTitle>
             </ns:column>
@@ -827,6 +833,10 @@
             </ns:column>
             <ns:column columnName="fiscalAuthority">
                 <ns:columnTitle>Fiscal Authority</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+            </ns:column>
+            <ns:column columnName="fiscalAuthorityName">
+                <ns:columnTitle>Fiscal Authority Name</ns:columnTitle>
                 <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="container"/>

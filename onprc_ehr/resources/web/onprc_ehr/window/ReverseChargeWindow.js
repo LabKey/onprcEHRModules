@@ -69,6 +69,9 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
                 },{
                     boxLabel: 'Change Unit Cost',
                     inputValue: 'changeUnitCost'
+                },{
+                    boxLabel: 'Mark As Errored By IBS',
+                    inputValue: 'markErrored'
                 }]
             },{
                 xtype: 'panel',
@@ -128,7 +131,13 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
         var items = [];
         if (val == 'reversal'){
             items.push({
-                html: 'This will credit the debited account and charge the credited account'
+                html: 'This will credit the debited account and charge the credited account',
+                style: 'padding-bottom: 10px;'
+            },{
+                xtype: 'textarea',
+                itemId: 'comment',
+                width: 400,
+                fieldLabel: 'Comment'
             });
         }
         else if (val == 'changeProject'){
@@ -138,6 +147,7 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
             },{
                 xtype: 'ehr-projectfield',
                 itemId: 'projectField',
+                showAccount: true,
                 width: 400,
                 fieldLabel: 'Choose Project',
                 matchFieldWidth: false
@@ -169,6 +179,11 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
 //                    queryName: 'aliases',
 //                    autoLoad: true
 //                }
+            },{
+                xtype: 'textarea',
+                itemId: 'comment',
+                width: 400,
+                fieldLabel: 'Comment'
             });
         }
         else if (val == 'changeCreditAlias'){
@@ -188,6 +203,11 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
                     queryName: 'aliases',
                     autoLoad: true
                 }
+            },{
+                xtype: 'textarea',
+                itemId: 'comment',
+                width: 400,
+                fieldLabel: 'Comment'
             });
         }
         else if (val == 'changeUnitCost'){
@@ -204,11 +224,22 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
             },{
                 xtype: 'numberfield',
                 itemId: 'unitCostField',
-                decimalPrecision: true,
+                decimalPrecision: 2,
                 hideTrigger: true,
                 width: 400,
                 fieldLabel: 'Choose Unit Cost',
                 value: unitCosts.length == 1 ? unitCosts[0] : null
+            },{
+                xtype: 'textarea',
+                itemId: 'comment',
+                width: 400,
+                fieldLabel: 'Comment'
+            });
+        }
+        else if (val == 'markErrored'){
+            items.push({
+                html: 'This will mark the selected charges as errored by IBS.  This is intended to ensure the PRIMe record accurately matches what was actually sent to IBS.  This will zero out the item in PRIMe as though no transaction occurred.  If the charge was initially errored and then corrected and submitted, this is not the proper thing to do.  This should only be used to flag items that were not importing into IBS and will never be imported into IBS.',
+                style: 'padding-bottom: 10px;'
             });
         }
 
@@ -225,10 +256,12 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
         }
 
         var val = this.down('#reversalType').getValue().reversalType;
+        var commentField = this.down('#comment');
         this.hide();
 
         var miscChargesInserts = [];
-
+        var invoicedItemsUpdate = [];
+        var objectIds = [];
         Ext4.Array.forEach(this.selectRowsResults.rows, function(row){
             var sr = new LDK.SelectRowsRow(row);
             var baseValues = {
@@ -242,6 +275,7 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
                 investigatorId: sr.getValue('investigatorId'),
                 chargeId: sr.getValue('chargeId'),
                 quantity: sr.getValue('quantity'),
+                comment: commentField ? commentField.getValue() : null,
                 //only copy unit cost if using a non-standard value
                 unitcost: sr.getValue('rateId') || sr.getValue('exemptionId') ? null : sr.getValue('unitcost'),
                 //item: sr.getValue('item'),
@@ -258,6 +292,7 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
                 //creditaccountid: sr.getValue('creditaccountid'),
                 sourceInvoicedItem: sr.getValue('objectid')
             };
+            objectIds.push(sr.getValue('objectid'));
 
             if (val == 'reversal'){
                 var toInsert = LABKEY.ExtAdapter.apply({}, baseValues);
@@ -283,6 +318,7 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
 
                 var newCharge = LABKEY.ExtAdapter.apply({}, baseValues);
                 LABKEY.ExtAdapter.apply(newCharge, {
+                    chargeType: 'Adjustment (Project Change)',
                     project: combo.getValue(),
                     debitedaccount: null
                 });
@@ -306,7 +342,7 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
                 LABKEY.ExtAdapter.apply(newCharge, {
                     creditedaccount: combo.getValue(),
                     debitedaccount: null,
-                    chargeType: null
+                    chargeType: 'Adjustment (Credit Alias Change)'
                 });
 
                 miscChargesInserts.push(newCharge);
@@ -332,6 +368,14 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
 
                 miscChargesInserts.push(newCharge);
             }
+            else if (val == 'markErrored'){
+                invoicedItemsUpdate.push({
+                    rowid: sr.getValue('rowid'),
+                    objectid: sr.getValue('objectid'),
+                    transactionType: 'ERROR',
+                    totalcost: null
+                });
+            }
         }, this);
 
         this.close();
@@ -350,10 +394,37 @@ Ext4.define('ONPRC_EHR.window.ReverseChargeWindow', {
                 error: LDK.Utils.getErrorCallback(),
                 success: function(results){
                     Ext4.Msg.hide();
-                    Ext4.Msg.alert('Success', 'Charges have been reversed/adjusted.  These changes will apply to the next billing period.');
+                    Ext4.Msg.confirm('Success', 'Charges have been reversed/adjusted.  These changes will apply to the next billing period.  Do you want to view these now?', function(val){
+                        if (val == 'yes'){
+                            window.location = LABKEY.ActionURL.buildURL('query', 'executeQuery', this.ehrCtx['EHRStudyContainer'], {
+                                schemaName: 'onprc_billing',
+                                'query.queryName': 'miscCharges',
+                                'query.viewName': 'Adjustment Detail',
+                                'query.sourceInvoicedItem~in': objectIds.join(';')
+                            });
+                        }
+                    }, this);
                 }
 
             })
+        }
+        else if (invoicedItemsUpdate){
+            Ext4.Msg.wait('Saving...');
+
+            LABKEY.Query.updateRows({
+                schemaName: 'onprc_billing',
+                queryName: 'invoicedItems',
+                scope: this,
+                rows: invoicedItemsUpdate,
+                error: LDK.Utils.getErrorCallback(),
+                success: function(results){
+                    Ext4.Msg.hide();
+                    Ext4.Msg.alert('Success', 'The selected charges have been marked as errors.', function(){
+                        var dataRegion = LABKEY.DataRegions[this.dataRegionName];
+                        dataRegion.refresh();
+                    }, this);
+                }
+            });
         }
         else {
             Ext4.Msg.alert('Error', 'There are no changes to make');

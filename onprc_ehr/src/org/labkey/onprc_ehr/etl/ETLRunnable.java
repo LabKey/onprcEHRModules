@@ -437,18 +437,46 @@ public class ETLRunnable implements Runnable
                         else
                         {
                             log.info("Truncating target table, since last rowversion is null: " + targetTableName);
-                            SQLFragment truncateSql;
-                            if (realTable.getColumn("container") == null)
+                            SQLFragment truncateSql = new SQLFragment("DELETE FROM " + realTable.getSelectName());
+                            boolean appendedWhere = false;
+
+                            if (realTable.getColumn("container") != null)
                             {
-                                log.info("Table does not have a container col, deleting rows using truncate");
-                                truncateSql = new SQLFragment("TRUNCATE TABLE " + realTable.getSelectName());
-                            }
-                            else
-                            {
-                                log.info("Table has a container col, deleting rows using delete");
-                                truncateSql = new SQLFragment("DELETE FROM " + realTable.getSelectName() + " WHERE container = ?", targetTable.getUserSchema().getContainer().getId());
+                                truncateSql.append(new SQLFragment(" WHERE container = ?", targetTable.getUserSchema().getContainer().getId()));
+                                appendedWhere = true;
                             }
 
+                            if (realTable.getColumn("taskid") != null)
+                            {
+                                if (!appendedWhere)
+                                {
+                                    truncateSql.append(" WHERE ");
+                                    appendedWhere = true;
+                                }
+                                else
+                                {
+                                    truncateSql.append(" AND ");
+                                }
+
+                                truncateSql.append(" taskid IS NULL");
+                            }
+
+                            if (realTable.getColumn("requestid") != null)
+                            {
+                                if (!appendedWhere)
+                                {
+                                    truncateSql.append(" WHERE ");
+                                    appendedWhere = true;
+                                }
+                                else
+                                {
+                                    truncateSql.append(" AND ");
+                                }
+
+                                truncateSql.append(" requestid IS NULL");
+                            }
+
+                            log.info(truncateSql.getSQL());
                             new SqlExecutor(realTable.getSchema()).execute(truncateSql);
                             hadResultsOnStart = false;
                             isTargetEmpty = true;
@@ -1192,6 +1220,11 @@ public class ETLRunnable implements Runnable
             add("Blood Draws");
             add("Drug Administration");
             add("Weight");
+
+            add("Clinical Encounters");
+            add("Clinical Remarks");
+            add("pairings");
+            add("miscCharges");
         }
     };
 
@@ -1228,8 +1261,8 @@ public class ETLRunnable implements Runnable
             put("Blood Draws", new String[]{"Af_Blood", "Af_BloodData"});
             put("Cases", new String[]{"Af_Case", "Af_Qrf"});
             put("Chemistry Results", new String[]{"Cln_Biochemistry", "Cln_IStat"});
-            put("Clinical Encounters", new String[]{"Path_Biopsy", "Path_Autopsy", "Cln_Dx", "Sur_General"});
-            put("Clinical Observations", new String[]{"Brd_Menstruations"});
+            put("Clinical Encounters", new String[]{"Path_Biopsy", "Path_Autopsy", "Cln_Dx", "Sur_General", "Cln_DxSnomed"});
+            put("Clinical Observations", new String[]{"Brd_Menstruations", "Cln_DxSnomed"});
             put("Clinical Remarks", new String[]{"Af_Case", "Cln_Dx", "Cln_DXRemarks"});
             put("Clinpath Runs", new String[]{"Cln_AntibioticSensHeader", "Cln_Biochemistry", "Cln_IStat", "Cln_OccultBlood", "Cln_Hematology", "Cln_CerebralspinalFluid", "Cln_MicrobiologyHeader", "Cln_RareTestHeader", "Cln_VirologyHeader", "Cln_SerologyHeader", "Cln_Urinalysis", "Cln_Parasitology"});
             put("Deaths", new String[]{"Af_Death"});
@@ -1247,7 +1280,7 @@ public class ETLRunnable implements Runnable
             put("Measurements", new String[]{"Path_Measurements", "Path_FetalMeasurements"});
             put("Microbiology", new String[]{"Cln_MicrobiologyData", "Cln_MicrobiologyHeader"});
             put("Misc Tests", new String[]{"Cln_OccultBlood", "Cln_RareTestData", "Cln_RareTestHeader", "Cln_CerebralspinalFluid"});
-            put("Morphologic Diagnosis", new String[]{"Path_AutopsyDiagnosis", "Path_Autopsy", "Path_biopsyDiagnosis", "Path_Biopsy"});
+            put("Pathology Diagnoses", new String[]{"Path_AutopsyDiagnosis", "Path_Autopsy", "Path_biopsyDiagnosis", "Path_Biopsy"});
             put("Notes", new String[]{"Af_Remarks", "Af_Qrf"});
             put("Organ Weights", new String[]{"Path_AutopsyWtsMaterials", "Path_Autopsy", "Path_BiopsyWtsMaterials", "Path_biopsy"});
             put("pairings", new String[]{"Psych_Pairings"});
@@ -1266,7 +1299,11 @@ public class ETLRunnable implements Runnable
         }
     };
 
-    private String[] TABLES_WITH_LK_ADDITIONS = new String[]{"Flags"};
+    private String[] TABLES_TO_SKIP_VALIDATION = new String[]{
+        "Flags",
+        "invoicedItems",
+        "invoiceRuns"
+    };
 
     private String validateEtlScript(Map<String, String> queries, UserSchema schema, boolean attemptRepair) throws BadConfigException, BatchValidationException
     {
@@ -1281,6 +1318,16 @@ public class ETLRunnable implements Runnable
         PreparedStatement ps2 = null;
         PreparedStatement ps3 = null;
         ResultSet rs = null;
+        User etlUser = null;
+        try
+        {
+            etlUser = UserManager.getUser(new ValidEmail(getConfigProperty("labkeyUser")));
+        }
+        catch (ValidEmail.InvalidEmailException e)
+        {
+            log.error(e);
+            throw new BadConfigException(e.getMessage());
+        }
 
         try
         {
@@ -1332,6 +1379,9 @@ public class ETLRunnable implements Runnable
                             "WHERE (t." + filterCol.getSelectName() + " IS NULL OR t2." + filterCol.getSelectName() + " IS NULL)" +
                             (realTable.getColumn("taskid") == null ? "" : " AND t2.taskid IS NULL") +
                             (realTable.getColumn("requestid") == null ? "" : " AND t2.requestid IS NULL") +
+                            //intended for miscCharges and adjustments
+                            (realTable.getName().equalsIgnoreCase("miscCharges") ? " AND t2.chargeType IS NULL" : "") +
+                            (realTable.getName().equalsIgnoreCase("miscCharges") ? " AND t2.sourceInvoicedItem IS NULL" : "") +
                             (realTable.getColumn("container") == null ? "" : " AND (t2.container = '" + targetTable.getUserSchema().getContainer().getId() + "' or t2.container is null)");
 
                     ps = originConnection.prepareStatement(sql);
@@ -1359,7 +1409,7 @@ public class ETLRunnable implements Runnable
                     ps.close();
                     rs.close();
 
-                    boolean hasLKInserts = Arrays.asList(TABLES_WITH_LK_ADDITIONS).contains(targetTableName);
+                    boolean hasLKInserts = Arrays.asList(TABLES_TO_SKIP_VALIDATION).contains(targetTableName);
                     if ((missingFromLK.size()) > 0 || (toDeleteFromLK.size() > 0 && !hasLKInserts))
                     {
                         sb.append("table: " + targetTableName + (realTable == null ? "" : " (" + realTable.getSelectName() + ") ") + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete<br>");
@@ -1434,7 +1484,7 @@ public class ETLRunnable implements Runnable
                 catch (Exception e)
                 {
                     log.error(e.getMessage(), e);
-                    log.info(sql);
+                    log.error(sql);
                 }
                 finally
                 {

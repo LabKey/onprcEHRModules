@@ -116,6 +116,16 @@ Ext4.onReady(function(){
                                                 success: this.onDataRegionLoad
                                             }
                                         },{
+                                            title: 'Total Charges By Grant Project',
+                                            xtype: 'ldk-querypanel',
+                                            queryConfig: {
+                                                schemaName: 'onprc_billing',
+                                                queryName: 'invoicedItemsByInvoiceGrantProject',
+                                                filters: [LABKEY.Filter.create('invoiceId', this.invoiceRunId, LABKEY.Filter.Types.EQUAL)],
+                                                failure: LDK.Utils.getErrorCallback(),
+                                                success: this.onDataRegionLoad
+                                            }
+                                        },{
                                             title: 'Total Charges By Division',
                                             xtype: 'ldk-querypanel',
                                             queryConfig: {
@@ -161,6 +171,7 @@ Ext4.onReady(function(){
                                             },{
                                                 xtype: 'ldk-querypanel',
                                                 queryConfig: {
+                                                    showDetailsColumn: true,
                                                     schemaName: 'onprc_billing',
                                                     queryName: 'invoicedItems',
                                                     filters: [LABKEY.Filter.create('invoiceId', this.invoiceRunId, LABKEY.Filter.Types.EQUAL)],
@@ -178,7 +189,8 @@ Ext4.onReady(function(){
                                                     {name: 'Download IBS Spreadsheet (All Items)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId})},
                                                     {name: 'Download IBS Spreadsheet (PDAR)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~eq': 'PDAR'})},
                                                     {name: 'Download IBS Spreadsheet (PSURG)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~eq': 'PSURG'})},
-                                                    {name: 'Download IBS Spreadsheet (Other)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~notin': 'PDAR;PSURG'})}
+                                                    {name: 'Download IBS Spreadsheet (SLAU)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~eq': 'SLAU'})},
+                                                    {name: 'Download IBS Spreadsheet (Other)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~notin': 'PDAR;PSURG;SLAU'})}
                                                 ]
                                             },{
                                                 header: 'Charge Calculations For This Billing Period',
@@ -237,6 +249,7 @@ Ext4.onReady(function(){
         },{
             xtype: 'button',
             text: 'Finalize Invoice',
+            hidden: true,
             disabled: true,
             style: 'margin-left: 10px;margin-bottom: 10px;',
             itemId: 'finalizeBtn',

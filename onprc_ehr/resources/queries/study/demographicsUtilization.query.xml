@@ -11,6 +11,9 @@
                     <column columnName="usageCategories">
                         <columnTitle>Usage Categories</columnTitle>
                     </column>
+                    <column columnName="fundingCategories">
+                        <columnTitle>Funding Categories</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>

@@ -37,6 +37,8 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.util.Pair;
+import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 
 import java.sql.ResultSet;
@@ -48,6 +50,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -102,16 +105,44 @@ public class FinanceNotification extends AbstractEHRNotification
         Date now = new Date();
         msg.append(getDescription() + "  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
 
+        Container financeContainer = ONPRC_EHRManager.get().getBillingContainer(c);
+        if (financeContainer == null)
+        {
+            log.error("Finance container is not defined, so the FinanceNotification cannot run");
+            return null;
+        }
+
         Date lastInvoiceDate = getLastInvoiceDate(c, u);
         //if we have no previous value, set to an arbitrary value
         if (lastInvoiceDate == null)
             lastInvoiceDate = DateUtils.truncate(new Date(0), Calendar.DATE);
 
-        getProjectSummary(c, u, msg, lastInvoiceDate, "perDiemRates", "Per Diems");
-        getProjectSummary(c, u, msg, lastInvoiceDate, "leaseFeeRates", "Lease Fees");
-        getProjectSummary(c, u, msg, lastInvoiceDate, "procedureFeeRates", "Procedure Charges");
-        getProjectSummary(c, u, msg, lastInvoiceDate, "labworkFeeRates", "Labwork Charges");
-        getProjectSummary(c, u, msg, lastInvoiceDate, "miscChargesFeeRates", "Other Charges");
+        Map<String, Map<String, Map<String, Map<String, Integer>>>> projectMap = new TreeMap<>();
+        Map<String, String> projectToAccountMap = new HashMap<>();
+        Map<String, Map<String, Double>> totalsByCategory = new TreeMap<>();
+
+        Calendar start = Calendar.getInstance();
+        start.setTime(lastInvoiceDate);
+        start.add(Calendar.DATE, 1);
+
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(new Date());
+        endDate.add(Calendar.DATE, 1);
+
+        Map<String, String> categoryToQuery = new HashMap<>();
+        categoryToQuery.put("Per Diems", "perDiemRates");
+        categoryToQuery.put("Lease Fees", "leaseFeeRates");
+        categoryToQuery.put("Procedure Charges", "procedureFeeRates");
+        categoryToQuery.put("Labwork Charges", "labworkFeeRates");
+        categoryToQuery.put("Other Charges", "miscChargesFeeRates");
+
+        getProjectSummary(c, u, start, endDate, "Per Diems", categoryToQuery, projectMap, projectToAccountMap, totalsByCategory);
+        getProjectSummary(c, u, start, endDate, "Lease Fees", categoryToQuery, projectMap, projectToAccountMap, totalsByCategory);
+        getProjectSummary(c, u, start, endDate, "Procedure Charges", categoryToQuery, projectMap, projectToAccountMap, totalsByCategory);
+        getProjectSummary(c, u, start, endDate, "Labwork Charges", categoryToQuery, projectMap, projectToAccountMap, totalsByCategory);
+        getProjectSummary(c, u, start, endDate, "Other Charges", categoryToQuery, projectMap, projectToAccountMap, totalsByCategory);
+
+        writeResultTable(c, u, msg, lastInvoiceDate, start, endDate, projectMap, projectToAccountMap, totalsByCategory, categoryToQuery);
 
         miscChargesLackingProjects(c, u, msg);
 
@@ -130,17 +161,24 @@ public class FinanceNotification extends AbstractEHRNotification
         private String _fieldName;
         private boolean _flagIfNonNull;
         private String _label;
+        private boolean _shouldHighlight;
 
-        public FieldDescriptor(String fieldName, boolean flagIfNonNull, String label)
+        public FieldDescriptor(String fieldName, boolean flagIfNonNull, String label, boolean shouldHighlight)
         {            
             _fieldName = fieldName;
             _flagIfNonNull = flagIfNonNull;
             _label = label;
+            _shouldHighlight = shouldHighlight;
         }
 
         public String getFieldName()
         {
             return _fieldName;
+        }
+
+        private boolean isShouldHighlight()
+        {
+            return _shouldHighlight;
         }
 
         public FieldKey getFieldKey()
@@ -166,32 +204,26 @@ public class FinanceNotification extends AbstractEHRNotification
 
     private FieldDescriptor[] _fields = new FieldDescriptor[]
     {
-        new FieldDescriptor("project", false, "Missing Project"),
-        new FieldDescriptor("isMissingAccount", true, "Missing Alias"),
-        new FieldDescriptor("isExpiredAccount", true, "Expired Alias"),
-        new FieldDescriptor("isMultipleProjects", true, "Multiple Research Projects"),
-        new FieldDescriptor("lacksRate", true, "Lacks Rate"),
-        new FieldDescriptor("isExemption", true, "Non-standard Rate"),
-        new FieldDescriptor("creditAccount", false, "Missing Credit Alias"),
-        new FieldDescriptor("matchesProject", true, "Project Does Not Match Assignment"),
-        //new FieldDescriptor("chargeType", true),
-        new FieldDescriptor("isMiscCharge", true, "Manually Entered")
+        new FieldDescriptor("project", false, "Missing Project", true),
+        new FieldDescriptor("isMissingAccount", true, "Missing Alias", true),
+        new FieldDescriptor("isExpiredAccount", true, "Expired Alias", true),
+        new FieldDescriptor("lacksRate", true, "Lacks Rate", true),
+        new FieldDescriptor("creditAccount", false, "Missing Credit Alias", true),
+        new FieldDescriptor("isMissingFaid", true, "Missing FAID", true),
+        new FieldDescriptor("matchesProject", true, "Project Does Not Match Assignment", false),
+        //new FieldDescriptor("isMiscCharge", true, "Manually Entered", false),
+        new FieldDescriptor("isAdjustment", true, "Adjustment/Reversal", false),
+        new FieldDescriptor("isExemption", true, "Non-standard Rate", false),
+        new FieldDescriptor("investigatorId", false, "Missing Investigator", true),
+        new FieldDescriptor("isMultipleProjects", true, "Per Diems Split Between Projects", false)
     };
 
-    private void getProjectSummary(Container c, User u, final StringBuilder msg, Date lastInvoiceEnd, String queryName, String title)
+    private void getProjectSummary(Container c, User u, final Calendar start, Calendar endDate, final String categoryName, Map<String, String> categoryToQuery, final Map<String, Map<String, Map<String, Map<String, Integer>>>> projectMap, final Map<String, String> projectToAccountMap, final Map<String, Map<String, Double>> totalsByCategory)
     {
         UserSchema us = QueryService.get().getUserSchema(u, c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME);
-        QueryDefinition qd = us.getQueryDefForTable(queryName);
+        QueryDefinition qd = us.getQueryDefForTable(categoryToQuery.get(categoryName));
         List<QueryException> errors = new ArrayList<>();
         TableInfo ti = qd.getTable(us, errors, true);
-
-        Calendar start = Calendar.getInstance();
-        start.setTime(lastInvoiceEnd);
-        start.add(Calendar.DATE, 1);
-
-        Calendar endDate = Calendar.getInstance();
-        endDate.setTime(new Date());
-        endDate.add(Calendar.DATE, 1);
 
         Map<String, Object> params = new HashMap<>();
         Long numDays = ((DateUtils.truncate(new Date(), Calendar.DATE).getTime() - start.getTimeInMillis()) / DateUtils.MILLIS_PER_DAY) + 1;
@@ -199,23 +231,24 @@ public class FinanceNotification extends AbstractEHRNotification
         params.put("EndDate", endDate.getTime());
         params.put("NumDays", numDays.intValue());
 
-        List<FieldKey> fieldKeys = new ArrayList<>();
+        Set<FieldKey> fieldKeys = new HashSet<>();
         for (ColumnInfo col : ti.getColumns())
         {
             fieldKeys.add(col.getFieldKey());
         }
+
+        for (FieldDescriptor fd : _fields)
+        {
+            fieldKeys.add(fd.getFieldKey());
+        }
+
         fieldKeys.add(FieldKey.fromString("project/displayName"));
-        fieldKeys.add(FieldKey.fromString("project/investigatorId/financialAnalyst/lastName"));
+        fieldKeys.add(FieldKey.fromString("project/account"));
+        fieldKeys.add(FieldKey.fromString("project/account/fiscalAuthority/lastName"));
 
         final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, fieldKeys);
         TableSelector ts = new TableSelector(ti, cols.values(), null, null);
         ts.setNamedParameters(params);
-
-        final Map<String, String> financialAnalystMap = new HashMap<>();
-
-        final Map<String, Map<String, Integer>> projectMap = new TreeMap<>();
-        final Set<FieldDescriptor> foundCols = new LinkedHashSet<>();
-        final Map<String, Double> totalsMap = new HashMap<>();
 
         ts.forEach(new Selector.ForEachBlock<ResultSet>()
         {
@@ -223,6 +256,9 @@ public class FinanceNotification extends AbstractEHRNotification
             public void exec(ResultSet object) throws SQLException
             {
                 Results rs = new ResultsImpl(object, cols);
+                Map<String, Double> totalsMap = totalsByCategory.get(categoryName);
+                if (totalsMap == null)
+                    totalsMap = new HashMap<>();
 
                 Double totalCost = rs.getDouble(FieldKey.fromString("totalCost"));
                 if (totalCost != null)
@@ -240,19 +276,22 @@ public class FinanceNotification extends AbstractEHRNotification
                     totalsMap.put("total", t);
                 }
 
+                totalsByCategory.put(categoryName, totalsMap);
+                
                 String projectDisplay = rs.getString(FieldKey.fromString("project/displayName"));
                 if (projectDisplay == null)
                 {
                     projectDisplay = "None";
                 }
 
-                String financialAnalyst = rs.getString(FieldKey.fromString("project/investigatorId/financialAnalyst/lastName"));
+                String financialAnalyst = rs.getString(FieldKey.fromString("project/account/fiscalAuthority/lastName"));
                 if (financialAnalyst == null)
                 {
                     financialAnalyst = "Not Assigned";
                 }
 
-                financialAnalystMap.put(projectDisplay, financialAnalyst);
+                String account = rs.getString(FieldKey.fromString("project/account"));
+                projectToAccountMap.put(projectDisplay, account);
 
                 for (FieldDescriptor fd : _fields)
                 {
@@ -264,7 +303,15 @@ public class FinanceNotification extends AbstractEHRNotification
                     Object val = rs.getObject(fd.getFieldKey());
                     if (fd.shouldFlag(val))
                     {
-                        Map<String, Integer> values = projectMap.get(projectDisplay);
+                        Map<String, Map<String, Map<String, Integer>>> valuesForFA = projectMap.get(financialAnalyst);
+                        if (valuesForFA == null)
+                            valuesForFA = new TreeMap<>();
+
+                        Map<String, Map<String, Integer>> valuesForProject = valuesForFA.get(projectDisplay);
+                        if (valuesForProject == null)
+                            valuesForProject = new TreeMap<>();
+
+                        Map<String, Integer> values = valuesForProject.get(categoryName);
                         if (values == null)
                             values = new HashMap<>();
 
@@ -273,61 +320,95 @@ public class FinanceNotification extends AbstractEHRNotification
                         count++;
                         values.put(fd.getFieldName(), count);
 
-                        projectMap.put(projectDisplay, values);
-                        if (!foundCols.contains(fd))
-                            foundCols.add(fd);
+                        valuesForProject.put(categoryName, values);
+                        valuesForFA.put(projectDisplay, valuesForProject);
+                        projectMap.put(financialAnalyst, valuesForFA);
                     }
                 }
             }
         });
+    }
 
-        msg.append("<b>" + title + ":</b><p>");
-        msg.append("There have been " + totalsMap.get("total") + " items since the last invoice date of " + _dateFormat.format(lastInvoiceEnd) + ", for a total of " + _dollarFormat.format(totalsMap.get("totalCost")) + ".  ");
-        final String baseUrl = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, queryName, null) + "&query.param.StartDate=" + _dateFormat.format(start.getTime()) + "&query.param.EndDate=" + _dateFormat.format(endDate.getTime());
-        msg.append("<a href='" + baseUrl + "'>Click here to view all items</a><br>");
+    private void writeResultTable(Container c, User u, final StringBuilder msg, Date lastInvoiceEnd, Calendar start, Calendar endDate, final Map<String, Map<String, Map<String, Map<String, Integer>>>> projectMap, final Map<String, String> projectToAccountMap, final Map<String, Map<String, Double>> totalsByCategory, Map<String, String> categoryToQuery)
+    {
+        msg.append("<b>Charge Summary:</b><p>");
+        msg.append("The table below summarizes projected charges since the since the last invoice date of " + _dateFormat.format(lastInvoiceEnd));
 
-        msg.append("<table border=1 style='border-collapse: collapse;'><tr style='font-weight: bold;'><td>Project</td><td>Financial Analyst</td>");
-        for (FieldDescriptor fd : _fields)
+        msg.append("<table border=1 style='border-collapse: collapse;'><tr style='font-weight: bold;'><td>Category</td><td># Items</td><td>Amount</td>");
+        for (String category : totalsByCategory.keySet())
         {
-            if (!foundCols.contains(fd))
-            {
-                continue;
-            }
-
-            msg.append("<td>" + fd.getLabel() + "</td>");
+            Map<String, Double> totalsMap = totalsByCategory.get(category);
+            String url = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + _dateFormat.format(start.getTime()) + "&query.param.EndDate=" + _dateFormat.format(endDate.getTime());
+            msg.append("<tr><td><a href='" + url + "'>" + category + "</a></td><td>" + totalsMap.get("total") + "</td><td>" + _dollarFormat.format(totalsMap.get("totalCost")) + "</td></tr>");
         }
-        msg.append("</tr>");
+        msg.append("</table><br><br>");
 
-        for (String projectDisplay : projectMap.keySet())
+        msg.append("The tables below highlight any suspicious or abnormal items, grouped by project.  These will not necessarily be problems, but may warrant investigation.<br><br>");
+
+        for (String financialAnalyst : projectMap.keySet())
         {
-            Map<String, Integer> totals = projectMap.get(projectDisplay);
-            String projUrl = baseUrl + "&query.project/displayName~eq=" + projectDisplay;
-            msg.append("<tr><td><a href='" + projUrl + "'>" + projectDisplay + "</a></td>");
-            msg.append("<td>" + financialAnalystMap.get(projectDisplay) + "</td>");
-
-            for (FieldDescriptor fd : _fields)
+            //first build header row
+            Set<FieldDescriptor> foundCols = new LinkedHashSet<>();
+            for (String projectDisplay : projectMap.get(financialAnalyst).keySet())
             {
-                if (!foundCols.contains(fd))
+                Map<String, Map<String, Integer>> projectDataByCategory = projectMap.get(financialAnalyst).get(projectDisplay);
+                for (String category : projectDataByCategory.keySet())
                 {
-                    continue;
-                }
-
-                if (totals.containsKey(fd.getFieldName()))
-                {
-                    String url = projUrl + fd.getFilter();
-                    msg.append("<td><a href='" + url + "'>" + totals.get(fd.getFieldName()) + "</a></td>");
-                }
-                else
-                {
-                    msg.append("<td></td>");
+                    for (FieldDescriptor fd : _fields)
+                    {
+                        if (projectDataByCategory.get(category).containsKey(fd.getFieldName()))
+                        {
+                            foundCols.add(fd);
+                        }
+                    }
                 }
             }
 
+            msg.append("<table border=1 style='border-collapse: collapse;'><tr style='font-weight: bold;'><td>Financial Analyst</td><td>Project</td><td>Alias</td><td>Category</td>");
+            for (FieldDescriptor fd : foundCols)
+            {
+                msg.append("<td>" + fd.getLabel() + "</td>");
+            }
             msg.append("</tr>");
 
+            //then append the rows
+            for (String projectDisplay : projectMap.get(financialAnalyst).keySet())
+            {
+                Map<String, Map<String, Integer>> projectDataByCategory = projectMap.get(financialAnalyst).get(projectDisplay);
+                for (String category : projectDataByCategory.keySet())
+                {
+                    Map<String, Integer> totals = projectDataByCategory.get(category);
+
+                    String baseUrl = getExecuteQueryUrl(c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + _dateFormat.format(start.getTime()) + "&query.param.EndDate=" + _dateFormat.format(endDate.getTime());
+                    String projUrl = baseUrl + ("None".equals(projectDisplay) ? "&query.project/displayName~isblank" : "&query.project/displayName~eq=" + projectDisplay);
+                    msg.append("<tr><td>" + financialAnalyst + "</td>");    //the FA
+                    msg.append("<td><a href='" + projUrl + "'>" + projectDisplay + "</a></td>");
+
+                    String account = projectToAccountMap.containsKey(projectDisplay) ? projectToAccountMap.get(projectDisplay) : "Unknown";
+                    msg.append("<td>" + (account == null ? "None" : account) + "</td>");
+                    msg.append("<td>" + category + "</td>");
+
+                    for (FieldDescriptor fd : foundCols)
+                    {
+                        if (totals.containsKey(fd.getFieldName()))
+                        {
+                            String url = projUrl + fd.getFilter();
+                            msg.append("<td" + (fd.isShouldHighlight() ? " style='background-color: yellow;'" : "") + "><a href='" + url + "'>" + totals.get(fd.getFieldName()) + "</a></td>");
+                        }
+                        else
+                        {
+                            msg.append("<td></td>");
+                        }
+                    }
+
+                    msg.append("</tr>");
+                }
+            }
+
+            msg.append("</table><br><br>");
         }
 
-        msg.append("</table><p><hr><p>");
+        msg.append("<hr><p>");
     }
 
     private void miscChargesLackingProjects(Container c, User u, final StringBuilder msg)
@@ -404,7 +485,7 @@ public class FinanceNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>Warning: there are " + count + " " + message + ".</b><p>");
+            msg.append("<b>Warning: there are " + count + " " + message + "</b><p>");
             msg.append("<a href='" + getExecuteQueryUrl(c, schemaName, queryName, null) + "'>Click here to view them</a>");
             msg.append("<hr>");
         }
@@ -412,7 +493,13 @@ public class FinanceNotification extends AbstractEHRNotification
 
     private Date getLastInvoiceDate(Container c, User u)
     {
-        TableInfo ti = QueryService.get().getUserSchema(u, c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME).getTable(ONPRC_EHRSchema.TABLE_INVOICE_RUNS);
+        Container financeContainer = ONPRC_EHRManager.get().getBillingContainer(c);
+        if (financeContainer == null)
+        {
+            return null;
+        }
+
+        TableInfo ti = QueryService.get().getUserSchema(u, financeContainer, ONPRC_EHRSchema.BILLING_SCHEMA_NAME).getTable(ONPRC_EHRSchema.TABLE_INVOICE_RUNS);
         TableSelector ts = new TableSelector(ti);
         Map<String, List<Aggregate.Result>> aggs = ts.getAggregates(Collections.singletonList(new Aggregate(FieldKey.fromString("billingPeriodEnd"), Aggregate.Type.MAX)));
         for (List<Aggregate.Result> ag : aggs.values())

@@ -12,6 +12,7 @@ SELECT
   e.Id,
   e.date,
   e.project,
+  e.project.account,
   e.servicerequested,
   p.chargeId,
   e.objectid as sourceRecord
@@ -30,6 +31,7 @@ SELECT
   e.Id,
   e.dateOnly,
   e.project,
+  e.project.account,
   group_concat(e.servicerequested) as servicerequested,
   (SELECT c.rowid FROM onprc_billing.chargeableItems c WHERE c.name = 'Lab Processing Fee') as chargeId,
   null as sourceRecord
@@ -39,4 +41,4 @@ WHERE e.dateOnly >= CAST(StartDate as date) AND e.dateOnly <= CAST(EndDate as da
 AND e.qcstate.publicdata = true
 AND e.chargetype != 'Not Billable'
 AND e.servicerequested.outsidelab = true
-GROUP BY e.Id, e.dateOnly, e.project, e.tissue
+GROUP BY e.Id, e.dateOnly, e.project, e.project.account, e.tissue

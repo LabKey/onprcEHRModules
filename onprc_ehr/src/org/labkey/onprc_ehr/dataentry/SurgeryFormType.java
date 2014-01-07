@@ -16,42 +16,58 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
+import org.labkey.api.ehr.dataentry.EncounterForm;
+import org.labkey.api.ehr.dataentry.ExtendedAnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: bimber
  * Date: 7/29/13
  * Time: 5:03 PM
  */
-public class SurgeryFormType extends TaskForm
+public class SurgeryFormType extends EncounterForm
 {
     public static final String NAME = "Surgeries";
 
-    public SurgeryFormType(Module owner)
+    public SurgeryFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, NAME, "Surgeries", "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Surgeries", "Surgery", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new ClinicalEncountersFormSection(),
-                new AnimalDetailsFormSection(),
-                new EncounterChildFormSection("ehr", "encounter_participants", "Staff", false),
-                new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true),
-                new EncounterChildFormSection("study", "Drug Administration", "Medications/Treatments", true),
+                new ExtendedAnimalDetailsFormSection(),
+                new EncounterChildFormSection("ehr", "encounter_participants", "Staff", false, true),
+                new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true, true),
+                new EncounterChildFormSection("study", "Drug Administration", "Medications/Treatments Given", true, true, "EHR.data.DrugAdministrationRunsClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/DrugAdministrationRunsClientStore.js")), "Medications"),
+                new EncounterChildFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false, true, "EHR.data.DrugAdministrationRunsClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/DrugAdministrationRunsClientStore.js")), "Medications"),
                 new EncounterChildFormSection("study", "weight", "Weight", false),
-                new EncounterChildFormSection("study", "blood", "Blood Draws", false),
-                new EncounterChildFormSection("ehr", "snomed_tags", "SNOMED Codes", true),
-                //new EncounterChildFormSection("study", "flags", "Flags", true),
-                new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false)
+                new EncounterChildFormSection("study", "blood", "Blood Draws", false, true),
+                new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true),
+                new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/MiscChargesClientStore.js")), null)
         ));
+
+        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Surgery.js"));
 
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("Encounter");
             s.addConfigSource("Surgery");
         }
+    }
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+        ret.add("OPENSURGERYCASES");
+
+        return ret;
     }
 }

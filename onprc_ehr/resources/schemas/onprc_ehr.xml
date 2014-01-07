@@ -64,6 +64,7 @@
             </ns:column>
             <ns:column columnName="financialanalyst">
                 <ns:columnTitle>Financial Analyst</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
                 <ns:fk>
                     <ns:fkDbSchema>onprc_billing</ns:fkDbSchema>
                     <ns:fkTable>fiscalAuthorities</ns:fkTable>

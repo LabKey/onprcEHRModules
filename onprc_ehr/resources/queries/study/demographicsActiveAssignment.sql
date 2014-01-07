@@ -57,8 +57,8 @@ SELECT
   null as assignedVet,
   f.value as projectName,
   null as lsid,  --we do not want these counted in total assignments
-  false as isResearch,
-  false as isU24U42,
+  0 as isResearch,
+  0 as isU24U42,
   CASE WHEN f.Id IS NULL THEN 0 ELSE 1 END as isProvisional,
   f.value as projectString
 

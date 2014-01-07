@@ -36,6 +36,14 @@
                     <column columnName="result">
                         <columnTitle>Result</columnTitle>
                     </column>
+                    <column columnName="method">
+                        <columnTitle>Method</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>tb_method</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
                 </columns>
             </table>
         </tables>

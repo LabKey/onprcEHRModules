@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
@@ -31,9 +32,12 @@ import java.util.List;
  */
 public class LabworkRequestFormType extends RequestForm
 {
-    public LabworkRequestFormType(Module owner)
+    public static final String NAME = LabworkFormType.NAME + " Request";
+    private static final String LABEL = LabworkFormType.NAME + " Requests";
+
+    public LabworkRequestFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, LabworkFormType.NAME + " Request", LabworkFormType.NAME + " Requests", "Requests", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, LABEL, "Requests", Arrays.<FormSection>asList(
                 new RequestFormSection(),
                 new AnimalDetailsFormSection(),
                 new ClinpathRunsFormSection(true)

@@ -21,15 +21,17 @@ SELECT
   p.comment,
   p.sourceRecord as objectid,
 
-  coalesce(p.creditedaccount, ce.account) as creditAccount,
+  coalesce(p.creditedaccount, cast(ce.account as varchar(200))) as creditAccount,
   CASE
     WHEN p.creditedaccount IS NULL THEN ce.rowid
     ELSE NULL
   END as creditAccountId,
+  coalesce(p.project.account.investigatorId, p.project.investigatorId) as investigatorId,
   CASE
     WHEN (p.unitCost IS NOT NULL OR e.unitCost IS NOT NULL) THEN 'Y'
     ELSE null
   END as isExemption,
+  CASE WHEN (p.chargeType = 'Reversal' OR p.chargeType = 'Adjustment') THEN 'Y' ELSE null END as isAdjustment,
   CASE
     WHEN (p.unitCost IS NULL AND e.unitCost IS NULL AND cr.unitCost IS NULL) THEN 'Y'
     ELSE null
@@ -43,7 +45,7 @@ SELECT
     WHEN p.project.alwaysavailable = true THEN null
     WHEN (SELECT count(*) as projects FROM study.assignment a WHERE
       p.Id = a.Id AND
-      p.project = a.project AND
+      (p.project = a.project OR p.project.protocol = a.project.protocol) AND
       (cast(p.date AS DATE) < a.enddateCoalesced OR a.enddate IS NULL) AND
       p.date >= a.dateOnly
     ) > 0 THEN null
@@ -57,6 +59,7 @@ SELECT
   ) as assignmentAtTime,
   p.container,
   CASE WHEN p.project.account IS NULL THEN 'Y' ELSE null END as isMissingAccount,
+  CASE WHEN ifdefined(p.project.account.fiscalAuthority.faid) IS NULL THEN 'Y' ELSE null END as isMissingFaid,
   CASE
     WHEN ifdefined(p.project.account.aliasEnabled) IS NULL THEN null
     WHEN (ifdefined(p.project.account.aliasEnabled) IS NULL OR ifdefined(p.project.account.aliasEnabled) != 'Y') THEN 'Y'

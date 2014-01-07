@@ -16,10 +16,12 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
 
@@ -32,14 +34,22 @@ public class WeightFormType extends TaskForm
 {
     public static final String NAME = "weight";
 
-    public WeightFormType(Module owner)
+    public WeightFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, NAME, "Weights", "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Weights", "Clinical", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new WeightFormSection(),
-            new WeightTreatmentsFormSection(),
+            new DrugAdministrationFormSection(),
             new SimpleGridPanel("study", "tb", "TB Tests")
         ));
+
+        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Weight.js"));
+
+        for (FormSection s : getFormSections())
+        {
+            s.addConfigSource("Task");
+            s.addConfigSource("Weight");
+        }
     }
 }

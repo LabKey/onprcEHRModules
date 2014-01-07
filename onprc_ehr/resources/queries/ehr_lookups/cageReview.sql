@@ -77,10 +77,10 @@ SELECT
   pc.cage_type.height as cageHeight,
   c1.sqft as requiredSqFt,
   c1.height as requiredHeight,
-  group_concat(c1.high) as heights,
+  group_concat(c1.height) as heights,
   CASE
-    WHEN pc.cage_type.height < c1.high AND f.heightExemption IS NULL THEN ('ERROR: Insufficient height, ' || h.id ||' needs at least: ' || cast(c1.height AS varchar))
-    WHEN pc.cage_type.height < c1.high AND f.heightExemption IS NOT NULL THEN ('NOTE: Height Exemption: ' || h.Id)
+    WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NULL) THEN ('ERROR: Insufficient height, ' || h.id ||' needs at least: ' || cast(c1.height AS varchar(50)))
+    WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NOT NULL) THEN cast(('NOTE: Height Exemption: ' || h.Id) as varchar(500))
     ELSE null
   END as heightStatus,
   wf.weightExemption

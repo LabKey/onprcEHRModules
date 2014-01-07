@@ -73,7 +73,7 @@ EHR.DataEntryUtils.registerGridButton('SURGERYADD', function(config){
 
             Ext4.create('EHR.window.SurgeryAddRecordWindow', {
                 targetGrid: grid,
-                encountersStore: store
+                dataEntryPanel: panel
             }).show();
         }
     }, config);

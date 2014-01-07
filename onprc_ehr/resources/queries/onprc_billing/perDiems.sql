@@ -10,9 +10,11 @@ SELECT
     pd.Id,
     min(pd.date) as date,
     pd.project,
+    pd.project.account,
     pd.chargeId,
     group_concat(distinct pd.category) as categories,
     group_concat(distinct pd.overlappingProjects) as overlappingProjects,
+    group_concat(distinct pd.tier) as tiers,
 
     sum(pd.effectiveDays) as effectiveDays,
     count(pd.Id) as totalDaysAssigned,
@@ -20,4 +22,4 @@ SELECT
     min(pd.numDays) as numDays @hidden,
 FROM onprc_billing.perDiemsByDay pd
 
-GROUP BY pd.Id, pd.project, pd.chargeId
+GROUP BY pd.Id, pd.project, pd.project.account, pd.chargeId

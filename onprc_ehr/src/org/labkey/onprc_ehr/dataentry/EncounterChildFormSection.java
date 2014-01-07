@@ -29,20 +29,41 @@ import java.util.List;
 public class EncounterChildFormSection extends SimpleGridPanel
 {
     private boolean _allowAddDefaults;
+    private boolean _allowTemplates = false;
 
     public EncounterChildFormSection(String schemaName, String queryName, String label, boolean allowAddDefaults)
     {
+        this(schemaName, queryName, label, allowAddDefaults, false);
+    }
+
+    public EncounterChildFormSection(String schemaName, String queryName, String label, boolean allowAddDefaults, boolean allowTemplates)
+    {
         super(schemaName, queryName, label, EHRService.FORM_SECTION_LOCATION.Tabs);
         _allowAddDefaults = allowAddDefaults;
+        _allowTemplates = allowTemplates;
 
         addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/encounterButtons.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/EncounterChild.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Surgery.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/SurgeryAddRecordWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromEncountersWindow.js"));
 
         addConfigSource("Encounter");
         addConfigSource("EncounterChild");
+
+        setTemplateMode(TEMPLATE_MODE.ENCOUNTER);
+    }
+
+    public EncounterChildFormSection(String schemaName, String queryName, String label, boolean allowAddDefaults, boolean allowTemplates, String clientStoreClass, List<ClientDependency> extraDependencies, String tabName)
+    {
+        this(schemaName, queryName, label, allowAddDefaults, allowTemplates);
+        setClientStoreClass(clientStoreClass);
+        for (ClientDependency cd : extraDependencies)
+        {
+            addClientDependency(cd);
+        }
+
+        if (tabName != null)
+            setTabName(tabName);
     }
 
     @Override
@@ -55,7 +76,7 @@ public class EncounterChildFormSection extends SimpleGridPanel
 
         defaultButtons.addAll(super.getTbarButtons());
         defaultButtons.remove("ADDANIMALS");
-        defaultButtons.remove("TEMPLATE");
+
         if (defaultButtons.contains("ADDRECORD"))
         {
             int idx = defaultButtons.indexOf("ADDRECORD");

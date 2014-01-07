@@ -3,6 +3,7 @@
        <column name="Id"/>
        <column name="date"/>
        <column name="enddate"/>
+       <!--<column name="duration"/>-->
        <column name="frequency"/>
        <column name="treatmentTimes"/>
        <column name="project"/>

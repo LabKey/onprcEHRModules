@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -34,9 +35,9 @@ public class LabworkFormType extends TaskForm
 {
     public static final String NAME = "Labwork";
 
-    public LabworkFormType(Module owner)
+    public LabworkFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, NAME, "Lab Results", "Lab Results", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Lab Results", "Lab Results", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new ClinpathRunsFormSection(false),
                 new AnimalDetailsFormSection(),

@@ -34,6 +34,7 @@ public class ONPRC_EHRSchema
     public static final String TABLE_INVOICED_ITEMS = "invoicedItems";
     public static final String TABLE_INVOICE_RUNS = "invoiceRuns";
     public static final String TABLE_MISC_CHARGES = "miscCharges";
+    public static final String TABLE_PROJECT_ACCOUNT_HISTORY = "projectAccountHistory";
 
     public static ONPRC_EHRSchema getInstance()
     {

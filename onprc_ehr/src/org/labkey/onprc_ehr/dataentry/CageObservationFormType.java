@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
@@ -31,9 +32,9 @@ import java.util.Arrays;
  */
 public class CageObservationFormType extends TaskForm
 {
-    public CageObservationFormType(Module owner)
+    public CageObservationFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, "Cage Observations", "Cage Observations", "BSU", Arrays.<FormSection>asList(
+        super(ctx, owner, "Cage Observations", "Cage Observations", "BSU", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new SimpleGridPanel("ehr", "cage_observations", "Cage Observations"),
             new SimpleGridPanel("study", "Clinical Observations", "Animal Observations")

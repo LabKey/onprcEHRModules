@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.labkey.onprc_ehr.dataentry;
+package org.labkey.onprc_ehr.security;
 
-import java.util.List;
+import org.labkey.api.security.permissions.AbstractPermission;
 
 /**
  * User: bimber
- * Date: 11/20/13
- * Time: 7:52 PM
+ * Date: 1/7/13
+ * Time: 4:52 PM
  */
-public class NecropsyFormSection extends EncounterChildFormSection
+public class ONPRCBillingAdminPermission extends AbstractPermission
 {
-    public NecropsyFormSection(String schemaName, String queryName, String label)
+    public ONPRCBillingAdminPermission()
     {
-        super(schemaName, queryName, label, false);
-    }
-
-    @Override
-    public List<String> getTbarButtons()
-    {
-        List<String> defaultButtons = super.getTbarButtons();
-        //defaultButtons.add("TEMPLATE");
-
-        return defaultButtons;
+        super("ONPRCBillingAdminPermission", "Can insert and update data in the ONPRC Billing tables");
     }
 }

@@ -22,4 +22,3 @@ SELECT
   r.comment,
   r.objectid
 FROM onprc_billing.invoiceRuns r
-where r.status = 'Finalized'

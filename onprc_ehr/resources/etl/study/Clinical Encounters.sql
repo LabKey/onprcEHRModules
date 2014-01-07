@@ -38,7 +38,7 @@ Select
     END as performedBy,
     null as procedureId,
 
-	pat.objectid,
+	CAST(pat.objectid as varchar(38)) as objectid,
     null as chargetype,
   null as project,
   null as remark
@@ -82,7 +82,7 @@ Select
     END as performedBy,
     null as procedureId,
 
-	PTT.objectid,
+	CAST(PTT.objectid as varchar(38)) as objectid,
     null as chargetype,
     null as project,
     null as remark
@@ -141,9 +141,9 @@ Select
 	  else
 	   rt.Initials
     END as performedBy,
-    (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
+    (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.category = 'Surgery' AND p.name = r.procedureName) as procedureid,
 
-	sg.objectid,
+  cast(sg.objectid as varchar(38)) as objectid,
   CASE
     WHEN s4.value = 'Surgery Staff' THEN 'Center Staff'
     WHEN s4.value = 'No Surgery Staff' THEN 'Research Staff'
@@ -228,7 +228,7 @@ Select
     END as performedBy,
     null as procedureId,
 
-	cln.objectid,
+  cast(cln.objectid as varchar(38)) as objectid,
   null as chargetype,
   null as project,
   null as remark
@@ -283,3 +283,134 @@ FROM sur_implants cln
   left join  Sys_parameters s6 on (s6.Field = 'DepartmentCode' And s6.Flag = rt.DeptCode)
 GROUP BY cln.AnimalID, cln.Date
 HAVING MAX(cln.ts) > ?
+
+UNION ALL
+
+SELECT
+  cast(dx.AnimalID as nvarchar(4000)) as Id,
+  dx.date,
+  null as enddate,
+  'Procedure' as type,
+  null as caseno,
+  null as caseid,
+  null as performedBy,
+  (SELECT rowid FROM labkey.ehr_lookups.procedures WHERE category = 'Procedure' AND name = CASE
+    WHEN s2.value = 'F-79020' THEN 'Aspiration gastric contents'
+    WHEN s2.value = 'P-YY841' THEN 'Bottle feed'
+    WHEN s2.value = 'P-Y3060' THEN 'Cage change'
+    WHEN s2.value = 'P-1210C' THEN 'Chorio-Decidual Infusion'
+    WHEN s2.value = 'F-Y0215' THEN 'Collar Check'
+    WHEN s2.value = 'F-Y0225' THEN 'Collar Placement'
+    WHEN s2.value = 'F-Y0220' THEN 'Collar Rmvl'
+    WHEN s2.value = 'P-X1550' THEN 'CT Scan'
+    WHEN s2.value = 'P-X7200' THEN 'DEXA Scan'
+    WHEN s2.value = 'P-17800' THEN 'Dressing, apply'
+    WHEN s2.value = 'P-X0820' THEN 'Dx Rads Bilateral INJ, w/Cont Media'
+    WHEN s2.value = 'P-X1000' THEN 'Dx Rads INJ w/Cont Media'
+    WHEN s2.value = 'P-X0650' THEN 'Dx Rads PO w/Cont Media'
+    WHEN s2.value = 'P-X0900' THEN 'Dx Rads Positive INJ, w/Cont Media'
+    WHEN s2.value = 'P-YY500' THEN 'Dye marking'
+    WHEN s2.value = 'P-95700' THEN 'Ejaculation'
+    WHEN s2.value = 'P-40370' THEN 'Glucose Tolerance Test'
+    WHEN s2.value = 'P-yy780' THEN 'HbA1C test'
+    WHEN s2.value = 'P-Y3230' THEN 'Heelstick lancet'
+    WHEN s2.value = 'P-X9770' THEN 'ID monitor of fetus'
+    WHEN s2.value = 'P-40375' THEN 'Insulin Tolerance Test'
+    WHEN s2.value = 'P-X9770' THEN 'Intrapartum Doppler monitor of fetus'
+    WHEN s2.value = 'P-12550' THEN 'Intubation'
+    WHEN s2.value = 'P-1920X' THEN 'Jacket, Apply'
+    WHEN s2.value = 'P-1927X' THEN 'Jacket, Maintain'
+    WHEN s2.value = 'P-1924X' THEN 'Jacket, Remove'
+    WHEN s2.value = 'P-71630' THEN 'Monitoring Temperature'
+    WHEN s2.value = 'p-x5200' THEN 'MRI'
+    WHEN s2.value = 'P-YY838' THEN 'Nasal (only) swab'
+    WHEN s2.value = 'P-YY843' THEN 'Nasal gastric swab'
+    WHEN s2.value = 'P-YY835' THEN 'Nasal/gastric gavage'
+    WHEN s2.value = 'P-02360' THEN 'Palpation'
+    WHEN s2.value = 'P-02400' THEN 'Palpation, bimanual'
+    WHEN s2.value = 'P-00110' THEN 'Procedure for Staff Training'
+    WHEN s2.value = 'P-10850' THEN 'Puncture & Drainage'
+    WHEN s2.value = 'P-Y3192' THEN 'Remove animal appendage from cage'
+    WHEN s2.value = '' THEN 'Sedation'
+    WHEN s2.value = 'P-Y3130' THEN 'Sex determination'
+    WHEN s2.value = 'P-2037X' THEN 'Spec Clltn: Urine cystocentesis'
+    WHEN s2.value = 'P-1926x' THEN 'Swivel-Tether change'
+    WHEN s2.value = 'P-12090' THEN 'Tattoo'
+    WHEN s2.value = 'P-Y3100' THEN 'Transporting'
+    WHEN s2.value = 'P-X9751' THEN 'Ultrasonic guidance of amniocentesis'
+    WHEN s2.value = 'P-X9750' THEN 'Ultrasound'
+    WHEN s2.value = 'P-2035X' THEN 'Vag Swab Cltn(by Lab)'
+    WHEN s2.value = 'P-YY787' THEN 'Vag tampon insertion, initial'
+    WHEN s2.value = 'P-YY790' THEN 'Vaginal ring, insertion'
+    WHEN s2.value = 'P-YY791' THEN 'Vaginal ring, removal'
+    WHEN s2.value = 'P-YY789' THEN 'Vaginal tampon, final removal'
+    WHEN s2.value = 'P-YY788' THEN 'Vaginal tampon, maintenance'
+    WHEN s2.value = 'P-Y3110' THEN 'Worming'
+    WHEN s2.value = 'P-02314' THEN 'Physical Exam Complete'  --annual exam
+    WHEN s2.value = 'P-02310' THEN 'Physical Exam Complete'  --PE complete
+  END) as procedureId,
+
+  cast(s.objectid as varchar(38)) + '-' + cast(s2.i as varchar(100)) + '-' + cast(s2.value as nvarchar(100)) as objectid,
+  null as chargetype,
+  null as project,
+  null as remark
+
+FROM Cln_DxSnomed s
+  left join cln_dx dx ON (dx.DiagnosisID = s.DiagnosisID)
+  left join af_case c ON (dx.caseid = c.caseid)
+  cross apply dbo.fn_splitter(s.snomed, ',') s2
+where s2.value is not null and s2.value IN (
+  'F-79020',
+  'P-YY841',
+  'P-Y3060',
+  'P-1210C',
+  'F-Y0215',
+  'F-Y0225',
+  'F-Y0220',
+  'P-X1550',
+  'P-X7200',
+  'P-17800',
+  'P-X0820',
+  'P-X1000',
+  'P-X0650',
+  'P-X0900',
+  'P-YY500',
+  'P-95700',
+  'P-40370',
+  'P-yy780',
+  'P-Y3230',
+  'P-X9770',
+  'P-40375',
+  'P-X9770',
+  'P-12550',
+  'P-1920X',
+  'P-1927X',
+  'P-1924X',
+  'P-71630',
+  'p-x5200',
+  'P-YY838',
+  'P-YY843',
+  'P-YY835',
+  'P-02360',
+  'P-02400',
+  'P-00110',
+  'P-10850',
+  'P-Y3192',
+  'P-Y3130',
+  'P-2037X',
+  'P-1926x',
+  'P-12090',
+  'P-Y3100',
+  'P-X9751',
+  'P-X9750',
+  'P-2035X',
+  'P-YY787',
+  'P-YY790',
+  'P-YY791',
+  'P-YY789',
+  'P-YY788',
+  'P-Y3110',
+  'P-02314',
+  'P-02310'
+)
+and s.ts > ?

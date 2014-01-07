@@ -52,14 +52,31 @@
                         return;
                     }
 
-                    window.location = LABKEY.ActionURL.buildURL('ehr', 'clinicalHistoryExport', null, {
-                        subjectId: val,
-                        sortMode: 'type',
-                        redacted: redacted,
-                        hideGridButtons: true,
-                        hideHistory: hideHistory
-                        //checkedItems: 'Microbiology;TB Tests;Assignments;Serology;Necropsy'
-                    });
+                    if (!hideHistory){
+                        var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                        var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                        ssrsFolder = '/' + ssrsFolder  + '/' + 'SalesMedicalHistoryReport';
+
+                        url += ssrsFolder + '&' + LABKEY.ActionURL.queryString({
+                            SessionID: LABKEY.Security.currentUser.sessionid,
+                            HostName: location.hostname,
+                            'rs:ClearSession': true,
+                            Redacted: redacted ? 'true' : 'false',
+                            AnimalId: val
+                        });
+
+                        //url += '&rs:Format=PDF'
+                        window.location = url;
+                    }
+                    else {
+                        window.location = LABKEY.ActionURL.buildURL('ehr', 'clinicalHistoryExport', null, {
+                            subjectId: val,
+                            sortMode: 'type',
+                            redacted: redacted,
+                            hideGridButtons: true,
+                            hideHistory: hideHistory
+                        });
+                    }
                 }
             }]
         }).render(webpart.wrapperDivId);

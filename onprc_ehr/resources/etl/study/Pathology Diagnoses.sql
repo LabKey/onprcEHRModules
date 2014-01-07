@@ -21,7 +21,7 @@ Select
 	d.objectid 
 
 From Path_AutopsyDiagnosis d
-left join Path_Autopsy pa on (d.AutopsyID = pa.AutopsyId)
+join Path_Autopsy pa on (d.AutopsyID = pa.AutopsyId)
 
 WHERE d.ts > ?
 
@@ -35,6 +35,6 @@ Select
 	d.objectid 
 
 From Path_biopsyDiagnosis d
-left join Path_Biopsy pa on (d.BiopsyID = pa.BiopsyId)
+join Path_Biopsy pa on (d.BiopsyID = pa.BiopsyId)
 
 WHERE d.ts > ? or pa.ts > ?

@@ -15,11 +15,13 @@
  */
 package org.labkey.onprc_ehr.notification;
 
+import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.action.NullSafeBindException;
 import org.labkey.api.data.Aggregate;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.RuntimeSQLException;
@@ -60,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * User: bbimber
@@ -700,6 +703,11 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void protocolsWithAnimalsExpiringSoon(final Container c, User u, final StringBuilder msg)
     {
+        if (!DbScope.getLabkeyScope().getSqlDialect().isSqlServer())
+        {
+            return;
+        }
+
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("daysUntilRenewal"), 30, CompareType.LTE);
         filter.addCondition(FieldKey.fromString("activeAnimals/totalActiveAnimals"), 0, CompareType.GT);
 
@@ -1042,30 +1050,26 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         UserSchema us = QueryService.get().getUserSchema(u, c, "study");
         TableInfo ti = us.getTable("housedInUnavailableCages");
-        TableSelector ts = new TableSelector(ti);
+        TableSelector ts = new TableSelector(ti, null, new Sort("room,cage"));
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals housed in cages that should not be available, based on the cage/divider configuration.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "housedInUnavailableCages", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<br>");
 
-            final Map<String, String> locations = new TreeMap<>();
+            final Set<String> locations = new TreeSet<>();
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
                 {
-                    locations.put(object.getString("room"), object.getString("room") + " / " + object.getString("cage"));
+                    String url = AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/cageDetails.view?room=" + object.getString("room");
+                    locations.add("<a href='" + url + "'>" + object.getString("room") + " / " + object.getString("cage") + (object.getString("expectedCage") == null ? ".  No record of this cage" : ".  Expected cage: " + object.getString("expectedCage")) + "</a>");
                 }
             });
 
-            msg.append("<br>");
-            for (String room : locations.keySet())
-            {
-                String url = AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/cageDetails.view?room=" + room;
-                msg.append("<a href='" + url + "'>" + locations.get(room) + "</a><br>");
-            }
-
+            msg.append(StringUtils.join(locations, "<br>"));
             msg.append("<br><hr>\n\n");
         }
     }

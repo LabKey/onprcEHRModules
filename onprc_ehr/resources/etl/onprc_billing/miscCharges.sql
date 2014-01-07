@@ -85,12 +85,12 @@ select
   CASE WHEN (afc2.invoiceDate IS NOT NULL AND afc2.invoiceDate < afc2.billingDate) THEN afc2.invoiceDate ELSE afc2.BillingDate END as billingDate,
   afc2.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
-  (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc2.AccountNo = ibs.ChargesIDKey) as invoicedItemId,
+  (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc2.AccountNo = cast(ibs.ChargesIDKey as varchar(100))) as invoicedItemId,
   afc2.objectid,
   null as sourceInvoicedItem,
   'Adjustment' as chargeType
 from af_charges afc
-left join AF_Charges afc2 on (afc.IDKEY = afc2.AccountNo)
+left join AF_Charges afc2 on (cast(afc.IDKEY as varchar(100))= afc2.AccountNo)
 left join Ref_ProjectsIACUC rpi on (afc2.ProjectID = rpi.ProjectID)
 left join Ref_FeesProcedures rfp on (afc2.ProcedureID = rfp.ProcedureID)
 left join (
@@ -127,12 +127,12 @@ select
   CASE WHEN (afc2.invoiceDate IS NOT NULL AND afc2.invoiceDate < afc2.billingDate) THEN afc2.invoiceDate ELSE afc2.BillingDate END as billingDate,
   afc2.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
-  (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc2.AccountNo = ibs.ChargesIDKey) as invoicedItemId,
+  (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc2.AccountNo = cast(ibs.ChargesIDKey as varchar(100))) as invoicedItemId,
   afc2.objectid,
   null as sourceInvoicedItem,
   'Adjustment' as chargeType
 from af_charges afc
-left join AF_Charges afc2 on (afc.IDKEY = afc2.AccountNo)
+left join AF_Charges afc2 on (cast(afc.IDKEY as varchar(100)) = afc2.AccountNo)
 left join Ref_ProjectsIACUC rpi on (afc2.ProjectID = rpi.ProjectID)
 left join Ref_SurgProcedure rsp on (afc2.ProcedureID = rsp.ProcedureID)
 left join (
@@ -206,7 +206,7 @@ Select
   CASE WHEN (afc.invoiceDate IS NOT NULL AND afc.invoiceDate < afc.billingDate) THEN afc.invoiceDate ELSE afc.BillingDate END as billingDate,
   afc.InvoiceNo as invoiceNumber,
   ri.objectid as invoiceId,
-  (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc.AccountNo = ibs.ChargesIDKey) as invoicedItemId,
+  (SELECT MAX(cast(ibs.objectid as varchar(38))) FROM AF_ChargesIBS ibs WHERE afc.AccountNo = cast(ibs.ChargesIDKey as varchar(100))) as invoicedItemId,
   afc.objectid,
   null as sourceInvoicedItem,
   null as chargeType

@@ -12,6 +12,13 @@
                             <fkColumnName>rowid</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="project">
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>project</fkTable>
+                            <fkColumnName>project</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="ageAtTime">
                         <columnTitle>Age At Time (Days)</columnTitle>
                     </column>

@@ -116,7 +116,10 @@
         <dataset name="notes" id="1068" showByDefault="false" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
-        <dataset name="morphologicDiagnosis" id="1005" category="Pathology" type="Standard">
+        <dataset name="grossFindings" id="5028" category="Pathology" type="Standard" showByDefault="false">
+            <tags/>
+        </dataset>
+        <dataset name="pathologyDiagnoses" id="1005" category="Pathology" type="Standard">
             <tags/>
         </dataset>
         <dataset name="histology" id="1070" category="Pathology" type="Standard">

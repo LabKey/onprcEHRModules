@@ -48,7 +48,13 @@ public class TreatmentsTaskFormSection extends SimpleFormSection
     {
         super("study", "Drug Administration", "Medications/Diet", "ehr-gridpanel", location);
         setConfigSources(Collections.singletonList("Task"));
+
+        setClientStoreClass("EHR.data.DrugAdministrationRunsClientStore");
+        addClientDependency(ClientDependency.fromFilePath("ehr/data/DrugAdministrationRunsClientStore.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledTreatmentsWindow.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromSectionWindow.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/SedationWindow.js"));
+
         _showAddTreatments = showAddTreatments;
     }
 

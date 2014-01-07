@@ -16,7 +16,6 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Collections;
@@ -27,7 +26,7 @@ import java.util.List;
  * Date: 7/7/13
  * Time: 10:36 AM
  */
-public class ClinicalRoundsRemarksFormSection extends ClinicalRemarksFormSection
+public class ClinicalRoundsRemarksFormSection extends RoundsRemarksFormSection
 {
     public ClinicalRoundsRemarksFormSection()
     {

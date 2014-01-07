@@ -300,33 +300,100 @@ EHR.reports.potentialParents = function(panel, tab){
             '<br><br>' +
             '<ul style="margin-left: 20px">' +
             '<li style="list-style-type: disc;">Potential dams are determined by finding any female housed in the animal\'s birth location at the time of birth, which were at least 2.5 years old at the time</li>' +
-            '<li style="list-style-type: disc;">Potential sires are determined by finding the locations where all potential dams were housed between 155-180 days prior to the animal\'s birth.  The potential sires are any male animals housed in these locations during the conception window, which are at least 2.5 years old at the time.</li>' +
+            '<li style="list-style-type: disc;">Potential sires are determined by finding the locations where all potential dams were housed during the conception window (defined below) relative to the animal\'s birth.  The potential sires are any male animals housed in these locations during the conception window, which are at least 2.5 years old at the time.</li>' +
             '</ul>'
     });
 
     tab.add({
-        xtype: 'ldk-querypanel',
-        style: 'margin-bottom:20px;',
-        queryConfig: panel.getQWPConfig({
-            schemaName: 'study',
-            queryName: 'potentialDams',
-            title: "Potential Dams" + title,
-            filters: filterArray.nonRemovable,
-            removeableFilters: filterArray.removable
-        })
-    });
+        xtype: 'panel',
+        ownerTabbedPanel: panel,
+        itemId: 'potentialParents',
+        border: false,
+        items: [{
+            itemId: 'filterArea',
+            style: 'padding-bottom: 10px;',
+            border: false,
+            defaults: {
+                border: false
+            },
+            items: [{
+                layout: 'hbox',
+                defaults: {
+                    border: false
+                },
+                items: [{
+                    html: 'Choose Conception Range (Days Prior To Birth):',
+                    style: 'padding-bottom: 10px;'
+                },{
+                    xtype: 'numberfield',
+                    hideTrigger: true,
+                    itemId: 'rangeMin',
+                    style: 'margin-left: 10px;',
+                    value: 155
+                },{
+                    html: 'through',
+                    style: 'margin-left: 10px;'
+                },{
+                    xtype: 'numberfield',
+                    itemId: 'rangeMax',
+                    style: 'margin-left: 10px;',
+                    hideTrigger: true,
+                    value: 180
+                }]
+            }],
+            buttonAlign: 'left',
+            buttons: [{
+                text: 'Submit',
+                handler: function(btn){
+                    var panel = btn.up('#potentialParents');
+                    var rangeMin = panel.down('#rangeMin').getValue();
+                    var rangeMax = panel.down('#rangeMax').getValue();
 
-    tab.add({
-        xtype: 'ldk-querypanel',
-        style: 'margin-bottom:20px;',
-        queryConfig: panel.getQWPConfig({
-            schemaName: 'study',
-            queryName: 'potentialSires',
-            title: "Potential Sires" + title,
-            filters: filterArray.nonRemovable,
-            removeableFilters: filterArray.removable
-        })
-    });
+                    if (Ext4.isEmpty(rangeMin) || Ext4.isEmpty(rangeMax)){
+                        Ext4.Msg.alert('Error', 'Must provide a range');
+                        return;
+                    }
+
+                    var target = panel.down('#target');
+                    target.removeAll();
+
+                    target.add({
+                        xtype: 'ldk-querypanel',
+                        style: 'margin-bottom:20px;',
+                        queryConfig: panel.ownerTabbedPanel.getQWPConfig({
+                            schemaName: 'study',
+                            queryName: 'potentialDams',
+                            title: "Potential Dams" + title,
+                            filters: filterArray.nonRemovable,
+                            removeableFilters: filterArray.removable
+                        })
+                    });
+
+                    target.add({
+                        xtype: 'ldk-querypanel',
+                        style: 'margin-bottom:20px;',
+                        queryConfig: panel.ownerTabbedPanel.getQWPConfig({
+                            schemaName: 'study',
+                            queryName: 'potentialSires',
+                            title: "Potential Sires" + title,
+                            filters: filterArray.nonRemovable,
+                            removeableFilters: filterArray.removable,
+                            parameters: {
+                                RangeMin: rangeMin,
+                                RangeMax: rangeMax
+                            }
+                        })
+                    });
+                }
+            }]
+        },{
+            border: false,
+            defaults: {
+                border: false
+            },
+            itemId: 'target'
+        }],
+    })
 };
 
 EHR.reports.reproSummary = function(panel, tab){

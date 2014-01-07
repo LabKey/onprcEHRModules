@@ -38,6 +38,52 @@ Ext4.onReady(function (){
     var el = Ext4.get(webpart.wrapperDivId);
     Ext4.DomHelper.append(el, domSpec);
 
+    LABKEY.Query.selectRows({
+        requiredVersion: 9.1,
+        schemaName: 'ehr',
+        queryName: 'protocol',
+        columns: 'protocol,displayName',
+        filterArray: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback(),
+        scope: this,
+        success: function(results){
+            if (!results || !results.rows || !results.rows.length){
+                return;
+            }
+            var sr = new LDK.SelectRowsRow(results.rows[0]);
+
+            Ext4.create('LDK.panel.WebpartPanel', {
+                title: 'Other Reports',
+                bodyStyle: 'padding:5px;',
+                items: [{
+                    xtype: 'ldk-navpanel',
+                    sections: [{
+                        header: null,
+                        items: [{
+                            name: 'View Active Animal Assignments',
+                            url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Assignment', 'query.viewName': 'Active Assignments', 'query.project/protocol/displayName~eq': sr.getValue('displayName')})
+                        },{
+                            name: 'View All Animals Assigned To This Project Protocol Over A Date Range',
+                            url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentOverlapsById', 'query.param.Protocol': sr.getValue('displayName')})
+                        },{
+                            name: 'View Procedures Allowed Under This Protocol',
+                            url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'protocolProcedures', 'query.protocol/displayName~eq': sr.getValue('displayName')})
+                        },{
+                            name: 'View Procedures Performed Under This Protocol',
+                            url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.project/protocol/displayName~eq': sr.getValue('displayName')})
+                        },{
+                            name: 'View Procedure Count Performed Under This Protocol',
+                            url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'proceduresPerYear', 'query.protocol/displayName~eq': sr.getValue('displayName')})
+                        },{
+                            name: 'View Any Assignments To This Protocol The Do Not Match Allowable Animals',
+                            url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'assignmentsNotAllowed', 'query.protocol/displayName~eq': sr.getValue('displayName')})
+                        }]
+                    }]
+                }]
+            }).render('protocolLinks_' + webpart.wrapperDivId);
+        }
+    });
+
     Ext4.create('LDK.panel.DetailsPanel', {
         store: {
             schemaName: 'ehr',
@@ -65,7 +111,7 @@ Ext4.onReady(function (){
         queryName: 'project',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback()
-     }).render('protocolProjects_' + webpart.wrapperDivId);
+    }).render('protocolProjects_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
         title: 'Allowable Animals',
@@ -83,35 +129,6 @@ Ext4.onReady(function (){
         failure: LDK.Utils.getErrorCallback()
     }).render('exemptions_' + webpart.wrapperDivId);
 
-    Ext4.create('LDK.panel.WebpartPanel', {
-        title: 'Other Reports',
-        bodyStyle: 'padding:5px;',
-        items: [{
-            xtype: 'ldk-navpanel',
-            sections: [{
-                header: null,
-                items: [{
-                    name: 'View Active Animal Assignments',
-                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Assignment', 'query.viewName': 'Active Assignments', 'query.project/protocol~eq': protocol})
-                },{
-                    name: 'View All Animals Assigned To This Project Protocol Over A Date Range',
-                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentOverlapsById', 'query.param.Protocol': protocol})
-                },{
-                    name: 'View Procedures Allowed Under This Protocol',
-                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'protocolProcedures', 'query.protocol~eq': protocol})
-                },{
-                    name: 'View Procedures Performed Under This Protocol',
-                    url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.project/protocol~eq': protocol})
-                },{
-                    name: 'View Procedure Count Performed Under This Protocol',
-                    url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'proceduresPerYear', 'query.protocol~eq': protocol})
-                },{
-                    name: 'View Any Assignments To This Protocol The Do Not Match Allowable Animals',
-                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'assignmentsNotAllowed', 'query.protocol~eq': protocol})
-                }]
-            }]
-        }]
-    }).render('protocolLinks_' + webpart.wrapperDivId);
 });
 
 </script>

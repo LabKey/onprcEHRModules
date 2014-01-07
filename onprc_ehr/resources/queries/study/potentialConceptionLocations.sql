@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+PARAMETERS(RangeMin INTEGER, RangeMax INTEGER)
+
 SELECT
   b1.Id,
   h1.room,
@@ -27,8 +29,8 @@ SELECT
   b.Id,
   b.potentialDam,
   b.birth,
-  timestampadd('SQL_TSI_DAY', -180, b.birth) as minDate,
-  timestampadd('SQL_TSI_DAY', -155, b.birth) as maxDate
+  timestampadd('SQL_TSI_DAY', (-1 * RangeMax), b.birth) as minDate,
+  timestampadd('SQL_TSI_DAY', (-1 * RangeMin), b.birth) as maxDate
 
 FROM study.potentialDams b
 

@@ -36,7 +36,7 @@ public class BloodDrawFormSection extends SimpleGridPanel
 
     public BloodDrawFormSection(boolean showAddScheduledBtn, EHRService.FORM_SECTION_LOCATION location)
     {
-        super("study", "Blood Draws", "Blood Draws", location);
+        super("study", "blood", "Blood Draws", location);
         setClientStoreClass("EHR.data.BloodDrawClientStore");
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledBloodDrawsWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/data/BloodDrawClientStore.js"));

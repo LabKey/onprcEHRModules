@@ -37,5 +37,7 @@ public class WeightFormSection extends SimpleGridPanel
         super("study", "Weight", "Weights", location);
         setClientStoreClass("EHR.data.WeightClientStore");
         addClientDependency(ClientDependency.fromFilePath("ehr/data/WeightClientStore.js"));
+
+        _showLocation = true;
     }
 }

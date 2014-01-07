@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -24,6 +25,7 @@ import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: bimber
@@ -32,14 +34,14 @@ import java.util.Arrays;
  */
 public class SurgicalRoundsFormType extends TaskForm
 {
-    public SurgicalRoundsFormType(Module owner)
+    public SurgicalRoundsFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, "Surgical Rounds", "Surgical Rounds", "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, "Surgical Rounds", "Surgical Rounds", "Surgery", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new SurgicalRoundsRemarksFormSection(),
             new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
-            new ClinicalObservationsFormPanel(EHRService.FORM_SECTION_LOCATION.Tabs)
+            new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
 
         for (FormSection s : this.getFormSections())
@@ -48,5 +50,27 @@ public class SurgicalRoundsFormType extends TaskForm
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/SurgicalRounds.js"));
+    }
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+
+        int idx = ret.indexOf("SUBMIT");
+        assert idx > -1;
+
+        ret.add(idx, "REVIEW");
+
+        return ret;
+    }
+
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> ret = super.getMoreActionButtonConfigs();
+        ret.remove("REVIEW");
+
+        return ret;
     }
 }

@@ -35,8 +35,8 @@ y.projectID as project,
 ) as protocolId,
 
 (select max(rpi2.ts) as maxTs
-  from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on (rpi2.ProjectID = ipc.ProjectParentID and ipc.datedisabled is null)
-  where ipc.projectchildid = r.projectid
+ from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on (rpi2.ProjectID = ipc.ProjectParentID and ipc.datedisabled is null)
+ where ipc.projectchildid = r.projectid
 ) as maxTs,
 
 --r.eIACUCNum,
@@ -69,5 +69,5 @@ and (y.ts > ? OR a.ts > ? OR r.ts > ?)
 
 LEFT JOIN Ref_ProjectsIACUC i2 ON (i2.ProjectID = t.protocolId)
 
-WHERE maxTs > ?
+WHERE (maxTs > ? or maxTs IS NULL)
 

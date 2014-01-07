@@ -545,13 +545,7 @@
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
             </column>
-            <column columnName="category">
-                <datatype>varchar</datatype>
-            </column>
             <column columnName="tissue">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="dimension">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="measurement1">
@@ -2638,7 +2632,7 @@
         </columns>
         <tableTitle>Notes</tableTitle>
     </table>
-    <table tableName="morphologicDiagnosis" tableDbType="TABLE">
+    <table tableName="grossFindings" tableDbType="TABLE">
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
@@ -2669,12 +2663,6 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
             </column>
-            <column columnName="tissue">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="tissue_qualifier">
-                <datatype>varchar</datatype>
-            </column>
             <column columnName="remark">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
@@ -2691,15 +2679,64 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
             </column>
-            <column columnName="enddate">
-                <datatype>timestamp</datatype>
-                <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
-            </column>
             <column columnName="sort_order">
                 <datatype>integer</datatype>
             </column>
         </columns>
-        <tableTitle>Morphologic Diagnosis</tableTitle>
+        <tableTitle>Gross Findings</tableTitle>
+    </table>
+    <table tableName="pathologyDiagnoses" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="sort_order">
+                <datatype>integer</datatype>
+            </column>
+            <column columnName="parentid">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#ParentId</propertyURI>
+            </column>
+            <column columnName="description">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Description</propertyURI>
+            </column>
+            <column columnName="objectid">
+                <datatype>entityid</datatype>
+                <propertyURI>urn:ehr.labkey.org/#ObjectId</propertyURI>
+                <isKeyField>true</isKeyField>
+            </column>
+            <column columnName="taskid">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
+            </column>
+            <column columnName="remark">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+            </column>
+            <column columnName="performedby">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
+            </column>
+            <column columnName="requestid">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
+            </column>
+        </columns>
+        <tableTitle>Pathology Diagnoses</tableTitle>
     </table>
     <table tableName="histology" tableDbType="TABLE">
         <columns>

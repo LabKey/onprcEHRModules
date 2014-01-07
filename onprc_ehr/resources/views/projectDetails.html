@@ -63,25 +63,44 @@
             failure: LDK.Utils.getErrorCallback()
         }).render('housingSummary_' + webpart.wrapperDivId);
 
-        Ext4.create('LDK.panel.WebpartPanel', {
-            title: 'Other Reports',
-            items: [{
-                xtype: 'ldk-navpanel',
-                sections: [{
-                    header: null,
+        LABKEY.Query.selectRows({
+            requiredVersion: 9.1,
+            schemaName: 'ehr',
+            queryName: 'project',
+            columns: 'project,displayName',
+            filterArray: [LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)],
+            failure: LDK.Utils.getErrorCallback(),
+            scope: this,
+            success: function(results){
+                if (!results || !results.rows || !results.rows.length){
+                    return;
+                }
+                var sr = new LDK.SelectRowsRow(results.rows[0]);
+
+                Ext4.create('LDK.panel.WebpartPanel', {
+                    title: 'Other Reports',
                     items: [{
-                        name: 'View All Assignments Made To This Project',
-                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Assignment', 'query.project~eq': project})
-                    },{
-                        name: 'View All Animals Assigned To This Project Over A Date Range',
-                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentOverlapsById', 'query.param.Project': project})
-                    },{
-                        name: 'View All Morbidity and Mortality Data For This Project Over A Date Range',
-                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentProblemSummary', 'query.project~eq': project})
-                    }]
-                }]
-            }],
-            renderTo: 'projectLinks_' + webpart.wrapperDivId
+                        xtype: 'ldk-navpanel',
+                        sections: [{
+                            header: null,
+                            items: [{
+                                name: 'View All Assignments Made To This Project',
+                                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Assignment', 'query.project/displayName~eq': sr.getValue('displayName')})
+                            },{
+                                name: 'View All Aliases That Have Been Assocated Wwith This Project',
+                                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'projectAccountHistory', 'query.project/displayName~eq': sr.getValue('displayName')})
+                            },{
+                                name: 'View All Animals Assigned To This Project Over A Date Range',
+                                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentOverlapsById', 'query.param.Project': sr.getValue('displayName')})
+                            },{
+                                name: 'View All Morbidity and Mortality Data For This Project Over A Date Range',
+                                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentProblemSummary', 'query.project~eq': sr.getValue('displayName')})
+                            }]
+                        }]
+                    }],
+                    renderTo: 'projectLinks_' + webpart.wrapperDivId
+                });
+            }
         });
 
         LDK.Utils.getReadOnlyQWP({

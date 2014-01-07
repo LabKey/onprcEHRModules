@@ -17,7 +17,6 @@
 SELECT
   m.Id,
   m.date,
-  m.category,
   m.tissue,
   m.measurement1,
   m.measurement2,

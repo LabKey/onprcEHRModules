@@ -8,6 +8,7 @@ b.Id,
 b.date,
 b.method,
 group_concat(distinct b.remark, chr(10)) as remark,
+group_concat(distinct b.runRemark, chr(10)) as runRemark,
 b.testId,
 group_concat(b.result) as results
 
@@ -20,6 +21,7 @@ SELECT
   coalesce(b.runId, b.objectid) as runId,
   b.method,
   b.remark,
+  b.runId.remark as runRemark,
   b.resultoorindicator,
   CASE
   WHEN b.result IS NULL THEN  b.qualresult
@@ -30,7 +32,7 @@ WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 
 ) b
 
-GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.remark
+GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.remark, b.runRemark
 PIVOT results BY testId IN
 (select testid from ehr_lookups.chemistry_tests t WHERE t.includeInPanel = true order by sort_order)
 

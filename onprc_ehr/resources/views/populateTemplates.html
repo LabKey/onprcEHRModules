@@ -1,0 +1,1155 @@
+<script type="text/javascript">
+
+Ext4.onReady(function(){
+    var webpart = <%=webpartContext%>;
+    Ext4.define('ONPRC_EHR.panel.PopulateDataPanel', {
+        extend: 'Ext.panel.Panel',        
+    
+        initComponent: function(){
+            LABKEY.ExtAdapter.apply(this, {
+                defaults: {
+                    style: 'padding: 10px;'
+                },
+                items: this.getItems()
+            });
+
+            this.pendingInserts = 0;
+            this.pendingDeletes = 0;
+
+            this.callParent();
+        },
+
+        getItems: function(){
+            var items = [{
+                border: false,
+                layout: {
+                    type: 'table',
+                    columns: 2
+                },
+                defaults: {
+                    style: 'margin: 2px;'
+                },
+                items: []
+            },{
+                border: false,
+                itemId: 'ehr_msg'
+            }];
+
+            Ext4.each(this.tables, function(table){
+                items[0].items.push({
+                    xtype: 'button',
+                    text: 'Populate ' + table.label,
+                    scope: this,
+                    handler: function(){
+                        this.down('#ehr_msg').update('');
+                        this[table.populateFn].call(this);
+                    }
+                });
+
+                items[0].items.push({
+                    xtype: 'button',
+                    text: 'Delete Data From ' + table.label,
+                    scope: this,
+                    handler: function(){
+                        this.down('#ehr_msg').update('');
+                        this.deleteHandler(table);
+                    }
+                });
+            }, this);
+
+            items[0].items.push({
+                xtype: 'button',
+                text: 'Populate All',
+                scope: this,
+                handler: function(){
+                    this.down('#ehr_msg').update('');
+                    Ext4.each(this.tables, function(table){
+                        if (!table.doSkip)
+                            this[table.populateFn]();
+                        else
+                            console.log('skipping: ' + table.label)
+                    }, this);
+                }
+            });
+            items[0].items.push({
+                xtype: 'button',
+                text: 'Delete All',
+                scope: this,
+                handler: function(){
+                    this.pendingDeletes = 0;
+
+                    Ext4.each(this.tables, function(table){
+                        if (!table.doSkip)
+                            this.deleteHandler(table);
+                        else
+                            console.log('skipping: ' + table.label);
+                    }, this);
+                }
+            });
+
+            return items;
+        },
+
+        deleteHandler: function(table){
+            if (table.deleteFn){
+                table.deleteFn.call(this);
+            }
+            else {
+                this.deleteAll(table.schemaName, table.queryName, table.pk);
+            }
+        },
+
+        deleteAll: function(schemaName, queryName, pk){
+            this.pendingDeletes++;
+            LABKEY.Query.selectRows({
+                schemaName: schemaName,
+                queryName: queryName,
+                columns: '*',
+                scope: this,
+                success: function(data){
+                    var rows = [];
+                    if (data.rows && data.rows.length){
+                        for (var i=0;i<data.rows.length;i++){
+                            var obj = {};
+                            obj[pk] = data.rows[i][pk];
+
+                            rows.push(obj);
+                        }
+                    }
+
+                    if (rows.length){
+                        LABKEY.Query.deleteRows({
+                            schemaName: schemaName,
+                            queryName: queryName,
+                            scope: this,
+                            rows: rows,
+                            success: function(data){
+                                console.log('success deleting rows: '+queryName);
+                                this.pendingDeletes--;
+                                if (this.pendingDeletes==0){
+                                    this.down('#ehr_msg').update('Delete Complete');
+                                }
+                            },
+                            failure: LDK.Utils.getErrorCallback()
+                        });
+                    }
+                    else {
+                        console.log('nothing to delete: '+queryName);
+                        this.pendingDeletes--;
+                        if (this.pendingDeletes==0){
+                            this.down('#ehr_msg').update('Delete Complete');
+                        }
+                    }
+                },
+                failure: LDK.Utils.getErrorCallback()
+            });
+        },
+
+        tables: [{
+            label: 'Form Templates',
+            populateFn: 'populateFormTemplates',
+            schemaName: 'ehr',
+            queryName: 'formtemplates',
+            pk: 'entityid'
+        },{
+            label: 'Formulary',
+            populateFn: 'populateFormulary',
+            schemaName: 'ehr_lookups',
+            queryName: 'drug_defaults',
+            pk: 'rowid'
+        }],
+
+        populateFormulary: function(){
+            this.pendingInserts++;
+
+            LABKEY.Query.selectRows({
+                schemaName: 'ehr_lookups',
+                queryName: 'treatment_frequency',
+                scope: this,
+                failure: LDK.Utils.getErrorCallback(),
+                success: function(results){
+                    var map = {};
+                    Ext4.Array.forEach(results.rows, function(row){
+                        map[row.meaning] = row.rowid;
+                    }, this);
+
+                    var config = {
+                        schemaName: 'ehr_lookups',
+                        queryName: 'drug_defaults',
+                        rows: [],
+                        success: this.onSuccess,
+                        failure: this.onError
+                    };
+                    var fields = ('code,route,frequency,duration,concentration,conc_units,dosage,dosage_units,amount,amount_units').split(',');
+                    var data = [
+                        ['E-YY980','IM','BID','3','10','mg/ml','0.05','mg/kg','','mL','1','mg',''],
+                        ['E-77510','PO','BID','5','80','mg/tab','8','mg/kg','','tab','80','mg',''],
+                        ['E-77510','','','','80','mg/tab','8','mg/kg','','tab','80','mg',''],
+                        ['E-YY035','PO','BID','5','32','mg/ml','8','mg/kg','','mL','80','mg',''],
+                        ['E-YY200','PO','SID','5','','','50','mg/kg','','mL','500','mg',''],
+                        ['E-82130','Topical','SID','5','','','','','','','','',''],
+                        ['E-07237','IM','SID','5','250','mg/ml','5','mg/kg','','mL','50','mg',''],
+                        ['E-79710','IM','SID','2','25','mg/ml','5','mg/kg','','mL','50','mg',''],
+                        ['E-79030','PO','BID','7','25','mg/tab','1','mg/kg','','tab','10','mg',''],
+                        ['E-72682','PO','BID','5','62.5','mg/tab','10','mg/kg','','mL','100','mg',''],
+                        ['E-72681','PO','BID','5','250','mg/cap','10','mg/kg','','mL','100','mg',''],
+                        ['E-72720','PO','BID','5','250','mg/tab','20','mg/kg','','tab','200','mg',''],
+                        ['E-77710','PO','BID','5','325','mg/tab','20','mg/kg','','tab','200','mg',''],
+                        ['E-77710','','','','80','mg/tab','','mg/kg','','tab','100','mg',''],
+                        ['E-YY735','IM','','0','5','mg/ml','','mg/kg','','mL','','',''],
+                        ['E-75470','IM','','0','0.4','mg/ml','0.02','mg/kg','','mL','0.2','mg',''],
+                        ['E-Y7240','PO','SID','1','','','40','mg/kg','','tab','400','mg',''],
+                        ['E-Y7240','PO','SID','4','','','20','mg/kg','','tab','200','mg',''],
+                        ['E-YY045','PO','SID','1','','','40','mg/kg','','mL','400','mg',''],
+                        ['E-YY045','PO','SID','4','','','20','mg/kg','','mL','20','mg',''],
+                        ['E-81310','PO','','0','','','6','ml/kg','','tsp','60','mL',''],
+                        ['E-YY943','PO','BID','3','','','','','','','','',''],
+                        ['E-80410','PO','BID','3','262','mg/tab','','','','tab','131','mg',''],
+                        ['E-YY055','PO','BID','3','17.5','mg/ml','3','ml/kg','','mL','30','mL',''],
+                        ['E-YY728','ID','Single dose','0','5','mg/ml','','mg/kg','','mL','','',''],
+                        ['E-YY792','IM','BID','3','0.3','mg/ml','0.01','mg/kg','','mL','0.1','mg',''],
+                        ['E-77900','IM','TID','3','10','mg/ml','0.05','mg/kg','','mL','0.5','mg',''],
+                        ['E-87601','SQ','Weekly','30','12.5','mg/ml','','','','mEq','250','mEq',''],
+                        ['E-YY548','PO','SID','5','50','mg/ml','10','mg/kg','','mL','100','mg',''],
+                        ['E-721X0','IM','Single dose','0','250','mg/ml','25','mg/kg','','mL','250','mg',''],
+                        ['E-72170','PO','BID','5','250','mg/cap','25','mg/kg','','cap','250','mg',''],
+                        ['E-Y2270','PO','BID','5','50','mg/ml','25','mg/kg','','mL','250','mg',''],
+                        ['E-72040','IM','BID','7','250','mg/ml','50','mg/kg','','mL','500','mg',''],
+                        ['E-72040','IM','BID','7','','','25','mg/kg','','','250','mg',''],
+                        ['E-79110','PO','BID','7','25','mg/tab','1','mg/kg','','tab','10','mg',''],
+                        ['E-YY280','PO','BID','7','25','mg/ml','1','mg/kg','','mL','10','mg',''],
+                        ['E-82070','IM','TID','7','300','mg','10','mg/kg','','tab','100','mg',''],
+                        ['E-719Y3','PO','BID','5','250','mg/tab','10','mg/kg','','tab','100','mg',''],
+                        ['E-Y7921','PO','BID','5','1','mg/ml','0.5','mg/kg','','mL','5','mg',''],
+                        ['E-72090','IM','BID','5','75','mg/tab','12.5','mg/kg','','tab','125','mg',''],
+                        ['E-YY948','PO','BID','5','25','mg/cap','3','mg/kg','','cap','30','mg',''],
+                        ['E-YY785','PO','SID','42','500','','2','','','cap','2','cap',''],
+                        ['E-YY785','','SID','365','','','1','','','cap','1','cap',''],
+                        ['E-YY785','PO','SID','42','','','1','','','cap','1','cap',''],
+                        ['E-YY785','','SID','365','','','0.5','','','cap','0.5','cap',''],
+                        ['E-87725','TOP ','SID','30','645','mg/cap','1','cap/animal','','cap','1','cap',''],
+                        ['E-85151','IV','Single dose','0','2','mg/ml','2','mg/kg','','mL','20','mg',''],
+                        ['E-85151','IM','SID','1','','','0.25','mg/kg','','mL','2.5','mg',''],
+                        ['E-85151','IM','BID','1','','','0.25','mg/kg','','mL','2.5','mg',''],
+                        ['E-85182','IM','Single dose','0','4','mg/ml','4','mg/kg','','mL','','',''],
+                        ['E-YY001','IV','Single dose','0','0.5','g/ml','','','','mL','','',''],
+                        ['E-YY295','PO','BID','7','5','mg/tab','0.5','mg/kg','','tab','5','mg',''],
+                        ['E-YY298','PO','BID','7','10','mg/tab','0.5','mg/kg','','tab','5','mg',''],
+                        ['E-79520','IV','Single dose','0','5','mg/ml','0.5','mg/kg','','mL','5','mg',''],
+                        ['E-76860','PO','BID','30','0.125','mg','','','','mL','','',''],
+                        ['E-YY320','PO','BID','5','25','mg/tab','2','mg/kg','','tab','2','mg',''],
+                        ['E-YY325','PO','BID','5','2.5','mg/ml','2','mg/kg','','mL','2','mg',''],
+                        ['E-88450','IM','BID','2','50','mg/ml','2','mg/kg','','mL','2','mg',''],
+                        ['E-88450','PO','BID','5','','','2','mg/kg','','','2','mg',''],
+                        ['E-82340','PO','BID','5','','','0.1','mg/kg','','','1','mg',''],
+                        ['E-YY788','SUP','BID','2','100','mg','','mg/kg','','cap','','',''],
+                        ['E-74710','IV','Single dose','0','','','1','mcg/kg/min','','mL','10','mcg',''],
+                        ['E-74710','IV','Single dose','0','','','0.5','mcg/kg/min','','','5','mcg',''],
+                        ['E-YY310','PO','TID','30','10','mg/cap','','mg','','cap','','',''],
+                        ['E-07255','PO','BID','1','','','2.5','mg/kg','','tab','25','mg',''],
+                        ['E-07255','PO','SID','5','','','2.5','mg/kg','','','25','mg',''],
+                        ['E-719Y1','PO','SID','5','68','mg/tab','10','mg/kg','','tab','100','mg',''],
+                        ['E-719Y1','PO','BID','5','','','5','mg/kg','','','50','mg',''],
+                        ['E-YYY70','PO','SID','5','22.7','mg/tab','10','mg/kg','','tab','100','mg',''],
+                        ['E-YYY70','PO','BID','5','','','5','mg/kg','','','50','mg',''],
+                        ['E-719Y5','PO','SID','5','100','mg/ml','','','10','mg','100','mg',''],
+                        ['E-719Y5','IV','SID','1','','','','','10','mg','100','mg',''],
+                        ['E-719Y5','IM','SID','1','','','10','','10','mg','100','mg',''],
+                        ['E-74650','IV','Single dose','0','1','mg','0.5','mg/kg','','mg','','',''],
+                        ['E-YYY78','IV','Single dose','0','10','mg','0.05','mg/kg','','mg','','',''],
+                        ['E-72400','PO','BID','5','250','mg/cap','50','mg/kg','','mg','500','mg',''],
+                        ['E-YYY76','PO','BID','5','80','mg/ml','50','mg/kg','','mg','500','mg',''],
+                        ['E-YYY80','IM','BID','3','10','mg/ml','0.5','mg/kg','','mg','5','mg',''],
+                        ['E-82080','PO','BID','3','10','mg/tab','0.5','mg/kg','','mg','5','mg',''],
+                        ['E-YY949','PO','SID','3','100','mg/ml','50','mg/kg','','mg','500','mg',''],
+                        ['E-YY949','','','','','','','','','','','',''],
+                        ['E-07789','TOP','SID','1','25','cmg','4','mcg','','h','40','mcg',''],
+                        ['E-72045','IM','SID','3','300','mg/ml','20','mg/kg','','mg','200','mg',''],
+                        ['E-Y8825','IV','Single','0','0.1','mg/ml','0.01','mg/kg','','mg','0.1','mg',''],
+                        ['E-Y8825','IV','Single','0','','','','','','','','',''],
+                        ['E-YY950','PO','SID','7','10','mg/tab','5','mg/animal','','tab','50','mg',''],
+                        ['E-YY950','PO','SID','30','','','10','','','','100','mg',''],
+                        ['E-YY387','TOP','SID','3','0.03','mg/tab','','','','tab','','',''],
+                        ['E-89190','IV','Single dose','0','50','mg/ml','1','mg/kg','','mL','10','mg',''],
+                        ['E-89190','IM','BID','3','','','0.02','ml/kg','','','0.2','mg',''],
+                        ['E-YYY83','PO','BID','14','100','mg/cap','10','mg/kg','','cap','100','mg',''],
+                        ['E-72360','IM','SID','5','100','mg/ml','1.25','mg/kg','','mL','12.5','mg',''],
+                        ['','TOP','BID','3','100','mg/ml','','','','mL','','',''],
+                        ['E-YY165','SQ','SID','30','','','0.5','U/kg','','mL','5','u',''],
+                        ['E-YY165','','','','','','','U/kg','','mL','','',''],
+                        ['E-Y7564','IV','Single dose','0','0.2','mg/ml','0.01','mg/kg','','mL','0.1','mg',''],
+                        ['E-YY810','PO','Single dose','0','','','30','ml/kg','','','300','mL',''],
+                        ['E-YY786','PO','BID','30','2','mg/tab','0.5','mg/kg','','tab','5','mg',''],
+                        ['E-79190','PO','Single dose','30','2','mg/ml','0.03','mg/kg','','mL','0.3','mg',''],
+                        ['E-79190','','','','5','mg','','','','mL','','',''],
+                        ['E-84215','IV','Single dose','0','1000','ul','','','','mL','','',''],
+                        ['E-YY883','IV','Single dose','0','','','5','ml/kg','','mL','50',' ml',''],
+                        ['E-YY205','TOP','SID','7','','','','','','','','',''],
+                        ['E-85262','TOP','SID','7','','','','','','','','',''],
+                        ['E-77851','IM','TID','2','2','mg/ml','','','0.25','mL','2.5','mL',''],
+                        ['E-YY915','IV','Single dose','0','','mg','2.5','ml/kg','','mL','25','mL',''],
+                        ['E-77720','PO','BID','5','100','mg/tab','10','mg/kg','','tab','100','mg',''],
+                        ['E-YYY40','PO','BID','5','20','mg/ml','10','mg/kg','','mL','100','mg',''],
+                        ['E-85824','SQ','BID','30','','U','0.125','U/kg','','mL','1.25','u',''],
+                        ['E-YY290','PO','BID','5','650','mg/tab','20','mg/kg','','tab','200','mg',''],
+                        ['E-84840','IM','Single dose','0','100','mg/ml','10','mg/kg','','mL','100','mg',''],
+                        ['E-YY710','','','','50','mg','','','','tab','','',''],
+                        ['E-YY740','PO','SID','30','','mg','4','mg/kg','','tab','40','mg',''],
+                        ['E-Y7410','SQ','Single dose','0','10','mg/ml','0.2','mg/kg','','mL','2','mg',''],
+                        ['E-YY955','PO','BID','3','240','mg/tab','0.25','','','tab','120','mg',''],
+                        ['E-70590','IM','Single dose','0','10','mg/ml','10','mg/kg','','mg','100','mg',''],
+                        ['E-779X0','IM','SID','5','100','mg/ml','2.2','mg/kg','','mL','22','mg',''],
+                        ['E-779X0','','','','75','mg','','mg/kg','','cap','','',''],
+                        ['E-18700','PO','SID','7','','','','','0.25','g','2.5','mg',''],
+                        ['E-YY734','PO','BID','7','0.6','g/ml','','','','g','','',''],
+                        ['','PO','SID','30','','','','','0.5','tsp','5','tsp',''],
+                        ['E-YY750','SQ','Single dose','0','20','mg/ml','','','','mL','','',''],
+                        ['E-70310','TOP','SID','7','10','mg/ml','','','','mL','','',''],
+                        ['E-82345','PO','BID','3','2','mg/tab','','','','tab','0.5','tab',''],
+                        ['E-82345','','','','','','0.25','','','tab','','',''],
+                        ['E-889Y0','IV','Single dose','0','200','mg/ml','0.25','g/kg','','mL','2.5','mg',''],
+                        ['E-889Y0','IV','Single dose','0','','','6.6','ml/kg','','','66','mL',''],
+                        ['E-YY730','IM','Single dose','0','1','mg/ml','','ml/kg','','mL','','',''],
+                        ['E-85760','IM','Single dose','0','150','mg/ml','4','','','mL','40','mg',''],
+                        ['E-YY535','PO','Single dose','0','1.5','mg/ml','0.2','mg/kg','','mL','20','mg',''],
+                        ['E-YY535','PO','SID','5','','','','','','','','',''],
+                        ['','SQ','Single dose','0','5','mg/ml','0.2','mg/kg','','mL','20','mg',''],
+                        ['E-YY545','PO','BID','7','500','mg/cap','','','0.125','cap','0.125','tab',''],
+                        ['E-08209','PO','BID','3','10','mg/tab','0.2','mg/kg','','tab','2','mg',''],
+                        ['E-YYY50','IM','BID','3','5','mg/ml','0.2','mg/kg','','mL','2','mg',''],
+                        ['E-74020','PO','BD','7','250','mg/tab','25','mg/kg','','tab','250','mg',''],
+                        ['E-74020','IV','BID','1','','','','','','','','',''],
+                        ['E-YYY60','PO','BID','7','100','mg/ml','25','mg/kg','','mL','250','mg',''],
+                        ['E-YYY60','','','','','','','','','','','',''],
+                        ['','IM','Single dose','0','5','mg/ml','0.1','mg/kg','','mL','10','mg',''],
+                        ['E-87600','PO','SID','14','','','','tab/animal','','tab','0.5','tab',''],
+                        ['E-YY782','PO','BID','3','','','','tab/animal','','','0.5','tab',''],
+                        ['E-778X0','IM','BID','3','20','mg/ml','1','mg/kg','','mL','10','mg',''],
+                        ['E-08811','IM','Single dose','0','','','0.01','mg/kg','','mL','0.1','mg',''],
+                        ['E-08811','IV','Single dose','0','','','','','','','','',''],
+                        ['E-Y9611','TOP','SID','3','','u','','','','mL','','',''],
+                        ['E-YY675','PO','BID','10','500','mg/tab','','','0.25','tab','0.25','tab',''],
+                        ['E-73010','TOP','TID','10','','u','','','','mL','','',''],
+                        ['E-73010','PO','BID','10','100000','u/ml','','','','mL','100000','u',''],
+                        ['E-8208X','PO','SID','3','20','mg/tab','0.7','mg/kg','','tab','70','mg',''],
+                        ['E-YYY88','PO','SID','3','20','mg/ml','0.7','mg/kg','','mL','70','mg',''],
+                        ['','IM','BID','3','','mg/ml','0.1','mg/kg','','','10','mg',''],
+                        ['','','','','2','','','mg/kg','','mL','','',''],
+                        ['E-07262','IM','TID','5','','u/ml','16.7','mg/kg','','','167','mg',''],
+                        ['E-07262','','','','20','','','mg/kg','','mL','','',''],
+                        ['E-77980','IM','TID','2','','','0.15','mg/kg','','','1.5','mg',''],
+                        ['E-77980','IM','TID','2','','','0.025','mg/kg','','','','',''],
+                        ['E-86040','IM','Single dose','0','20','IU/ml','2','U/animal','','mL','2','u',''],
+                        ['E-86040','IM','Single dose','0','','','','','','','','',''],
+                        ['E-72351','PO','BID','5','250','mg/cap','25','mg/kg','','cap','250','mg',''],
+                        ['E-72600','IM','SID','1','300000','u/ml','50000','IU/kg','','mL','500000','u',''],
+                        ['E-78860','PO','BID','30','30','mg/tab','5','mg/kg','','tab','50','mg',''],
+                        ['E-78120','PO','BID','30','25','mg/ml','5','mg/kg','','mL','50','mg',''],
+                        ['E-78120','','','','','','20','mg/kg','','','200','mg',''],
+                        ['E-87250','IV','Single dose','0','2','mEq/ml','','mEq','','mL','','',''],
+                        ['E-87251','PO','SID','3','2.66','mEq/ml','0.4','ml/kg','','mL','4','mL',''],
+                        ['E-Y7430','PO','Single dose','0','56.8','mg/ml','5','mg/kg','','mL','50','mg',''],
+                        ['E-85350','IM','Single dose','0','10','mg/ml','10','mg/kg','','mL','100','mg',''],
+                        ['E-85360','PO','Single dose','0','5','mg/tab','0.5','mg/kg','','tab','5','mg',''],
+                        ['E-85360','PO','Single dose','0','','','','','5','mg','50','mg',''],
+                        ['E-85350','PO','BID','7','5','mg/tab','0.5','mg/kg','','tab','5','mg',''],
+                        ['E-85350','','','','','','','','','','','',''],
+                        ['E-Y7884','IV','Single dose','0','10','mg/ml','6','mg/kg','','mL','60','mg',''],
+                        ['E-Y7884','IV','Single dose','0','','','4','mg/kg','','mL','40','mg',''],
+                        ['E-Y7884','CRI','Single dose','0','','','0.1','mg/kg','','mL','1','mg',''],
+                        ['E-82870','PO','SID','7','','','1','g','','cube','1','cube',''],
+                        ['E-74280','PO','SID','5','50','mg/ml','20','mg/kg','','mL','200','mg',''],
+                        ['E-74280','','','','180','mg/ml','','mg/kg','','mL','','',''],
+                        ['E-82030','PO','BID','5','80','mg/tab','','','','tab','40','mg',''],
+                        ['E-82270','IV','Single dose','0','1','mEq/ml','1','mEq/kg','','mL','10','mEq',''],
+                        ['E-87270','IV','Single dose','0','9','mg/ml','','','','mL','','',''],
+                        ['','IV','Single dose','0','4','mEq/ml','','','','mL','','',''],
+                        ['E-80401','PO','TID','5','1','g/tab','0.5','g','','tab','500','mg',''],
+                        ['E-71900','PO','BID','14','500','mg/tab','15','mg/kg','','tab','150','mg',''],
+                        ['E-Y7450','TOP','SID','3','','u','','mg/kg','','mL','','',''],
+                        ['E-746Y0','PO','BID','3','1','mg/ml','','','0.625','mg','6.25','mg',''],
+                        ['E-746Y0','PO','BID','3','','','0.2','mg/kg','','mL','2','mg',''],
+                        ['E-746Y0','IV','Single dose','0','','','0.05','mg/kg','','mL','0.5','mg',''],
+                        ['E-72500','PO','BID','10','250','mg/cap','40','mg/kg','','cap','400','mg',''],
+                        ['E-YYY30','PO','BID','10','100','mg/ml','40','mg/kg','',' ml','400','mg',''],
+                        ['E-YY992','IM','Single dose','0','100','mg/ml','2.5','mg/kg','','mL','25','mg',''],
+                        ['E-YY992','IM','Single dose','0','','','1','mg/kg','','mL','10','mg',''],
+                        ['E-74025','PO','SID','5','500','mg/tab','50','mg/kg','','tab','500','mg',''],
+                        ['E-YY732','PO','BID','5','50','mg/tab','3','mg/kg','','tab','30','mg',''],
+                        ['E-71875','PO','BID','5','480','mg/tab','30','mg/kg','','tab','300','mg',''],
+                        ['E-YYY20','PO','BID','7','48','mg/ml','30','mg/kg','','mL','300','mg',''],
+                        ['E-YY395','TOP','SID','3','','','','','','','','',''],
+                        ['E-Y9611','TOP','SID','3','','','','','','','','',''],
+                        ['E-YY946','PO','SID','7','100','g','','','0.125','tsp','0.125','tsp',''],
+                        ['E-72330','IV','BID','7','','mg','20','mg/kg','','mL','200','mg',''],
+                        ['E-YY905','PO','BID','30','25','mg','0.5','mg/kg','','mL','5','mg',''],
+                        ['E-YY790','IM','Single dose','0','20','mg','0.5','mg/kg','','mL','5','mg',''],
+                        ['E-X0050','PO','SID','3','','','1','','1','pan','','',''],
+                        ['E-X0750','PO','SID','3','','','1','','1','pan','','',''],
+                        ['E-X0408','PO','SID','3','','','1','','1','pan','','',''],
+                        ['E-YY870','PO','SID','3','','','1','','1','pan','','',''],
+                        ['E-X0310','PO','SID','3','','','1','','','cube','','',''],
+                        ['E-X1460','PO','SID','3','','','1','','','cube','','',''],
+                        ['E-87251','PO','SID','3','','','1','','','mL','','',''],
+                        ['E-X0430','PO','SID','3','','','1','','1','pan','','',''],
+                        ['E-X1200','PO','SID','3','','','1','','1','pan','','',''],
+                        ['E-X0460','PO','SID','3','','','1','','1','pan','','',''],
+                        ['E-X0470','PO','SID','3','','','1','','','mL','','',''],
+                        ['E-X0409','PO','SID','3','','','1','','','','','','']
+                    ];
+
+                    var newRows = [];
+                    Ext4.Array.forEach(data, function(row){
+                        if (!row[0])
+                            return;
+
+                        if (row[2]){
+                            if (!map[row[2]]){
+                                console.error('unknown: ' + row[2]);
+                            }
+
+                            row[2] = map[row[2]];
+                        }
+                        else {
+                            row[2] = null;
+                        }
+
+                        newRows.push(row);
+                    }, this);
+
+                    LABKEY.Query.insertRows(this.makeObject(config, newRows, fields));
+                }
+            });
+        },
+
+        populateFormTemplates: function(){
+            this.pendingInserts++;
+
+            var config = {
+                schemaName: 'ehr',
+                queryName: 'formtemplates',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('title,category,formtype,userid,description').split(',');
+
+            //the general ones
+            //TODO: more PEs
+            var templateRows = [{
+                template: ['PE - CMU', 'Section', 'Clinical Observations', '', ''],             
+                records: [
+                    ['Clinical Observations', '{"category":"BCS","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"Alopecia Score","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"CRT","area":"N/A","observation":"1-2"}'],
+                    ['Clinical Observations', '{"category":"MM","area":"N/A","observation":"Pink"}'],
+                    ['Clinical Observations', '{"category":"Temp","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"Pulse","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"Resp","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"Assessment","area":"Oral","observation":"Normal"}'],
+                    ['Clinical Observations', '{"category":"Assessment","area":"Integ","observation":"Normal"}'],
+                    ['Clinical Observations', '{"category":"Assessment","area":"Abd/Thorax","observation":"Normal"}'],
+                    ['Clinical Observations', '{"category":"Assessment","area":"EENT","observation":"Normal"}'],
+                    ['Clinical Observations', '{"category":"Assessment","area":"MS","observation":"Normal"}'],
+                    ['Clinical Observations', '{"category":"Assessment","area":"PLN","observation":"Normal"}'],
+                    ['Clinical Observations', '{"category":"Assessment","area":"U/G","observation":"Normal"}']
+                ]
+            },{
+                template: ['Clinical Rounds', 'Section', 'Clinical Observations', '', ''],
+                records: [
+                    ['Clinical Observations', '{"category":"Stool","area":"N/A","observation":"F"}'],
+                    ['Clinical Observations', '{"category":"App","area":"N/A","observation":"Good"}'],
+                    ['Clinical Observations', '{"category":"Att","area":"N/A","observation":"BAR"}'],
+                    ['Clinical Observations', '{"category":"Pain Score","area":"N/A","observation":"0"}'],
+                    ['Clinical Observations', '{"category":"Hyd","area":"N/A","observation":"Good"}']
+                ]
+            },{
+                template: ['Surgical Rounds', 'Section', 'Clinical Observations', '', ''],
+                records: [
+                    ['Clinical Observations', '{"category":"Stool","area":"N/A","observation":"F"}'],
+                    ['Clinical Observations', '{"category":"App","area":"N/A","observation":"Good"}'],
+                    ['Clinical Observations', '{"category":"Att","area":"N/A","observation":"BAR"}'],
+                    ['Clinical Observations', '{"category":"Pain Score","area":"N/A","observation":"0"}'],
+                    ['Clinical Observations', '{"category":"Hyd","area":"N/A","observation":"Good"}'],
+                    ['Clinical Observations', '{"category":"Incision","area":"Incision - Main","observation":""}']
+                ]
+            },{
+                template: ['BSU Rounds', 'Section', 'Clinical Observations', '', ''],
+                records: [
+                    ['Clinical Observations', '{"category":"BCS","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"Alopecia Score","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"Stool","area":"N/A","observation":"F"}'],
+                    ['Clinical Observations', '{"category":"App","area":"N/A","observation":"Good"}'],
+                    ['Clinical Observations', '{"category":"Att","area":"N/A","observation":"BAR"}'],
+                    ['Clinical Observations', '{"category":"Pain Score","area":"N/A","observation":"0"}'],
+                    ['Clinical Observations', '{"category":"Hyd","area":"N/A","observation":"Good"}']
+                ]
+            },{
+                template: ['CBC and Chem', 'Section', 'blood', '', ''],
+                records: [
+                    ['blood', '{"chargetype":"DCM: CMU","reason":"Clinical","tube_type":"EDTA","quantity":1,"additionalServices":["CBC with automated differential"]}'],
+                    ['blood', '{"chargetype":"DCM: CMU","reason":"Clinical","tube_type":"No Additive","quantity":2,"additionalServices":["Comprehensive Chemistry panel in-house"]}']
+                ]
+            },{
+                template: ['Minor Surgery', 'Section', 'encounter_participants', '', ''],
+                records: [
+                    ['encounter_participants', '{"role":"Surgeon"}']
+                ]
+            },{
+                template: ['Major Surgery', 'Section', 'encounter_participants', '', ''],
+                records: [
+                    ['encounter_participants', '{"role":"Surgeon"}'],
+                    ['encounter_participants', '{"role":"Anesthetist"}'],
+                    ['encounter_participants', '{"role":"Assistant"}']
+                ]
+            },{
+                template: ['Biopsy', 'Section', 'encounter_participants', '', ''],
+                records: [
+                    ['encounter_participants', '{"role":"Pathologist"}'],
+                    ['encounter_participants', '{"role":"Prosector"}'],
+                    ['encounter_participants', '{"role":"Prosector"}']
+                ]
+            },{
+                template: ['Necropsy', 'Section', 'encounter_participants', '', ''],
+                records: [
+                    ['encounter_participants', '{"role":"Pathologist"}'],
+                    ['encounter_participants', '{"role":"Prosector"}'],
+                    ['encounter_participants', '{"role":"Prosector"}']
+                ]
+            }];
+
+            //the SOAPs
+            templateRows = templateRows.concat([{
+                template: ['Epistaxis', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Animal reported for epistaxis, BAR.","o":"Epistaxis (reported by area technician) (observed)","a":"Epistaxis of unknown etiology","p":"","p2":"Monitor and record and recurrence of epistaxis."}']]
+            },{
+                template: ['Vomit', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Animal reported for vomiting, BAR.","o":"Vomitus in cage pan","a":"Vomitus of unknown etiology\\nHistory of chronic vomiting","p":"","p2":"Monitor and record an recurrence of emesis."}']]
+            },{
+                template: ['Diarrhea 1st Day Cage', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Animal reported for diarrhea, BAR.","o":"XX stool in cagepan, animal appears/does not appear hydrated, is/is not eating.","a":"Diarrhea of unknown etiology.","p":"Start GI protectants, review clinical history.","p2":"Monitor hydration and stool quality."}']]
+            },{
+                template: ['Uterine ultrasound', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Patient sedated for ultrasound exam, BAR prior to sedation.","o":"BPD is XXX\\nFetus is/is not in vertex position\\nfHR WNL\\nPlacental attachment WNL","a":"Estimated GD XXXX, no indication of fetal distress, fetus in position for normal delivery.","p":"","p2":"Follow-up US scheduled for XXXXXX"}']]
+            },{
+                template: ['Exposure', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated to perform post-exposure exam, BAR prior to sedation.\\n","o":"Did not observe any lesions characteristic of herpes B virus.\\nOr\\nLesions suggestive of herpes B virus observed.\\n","a":"Appears (does not appear) healthy.","p":"4 cc\'s of blood, conjunctival (OU), oral and gential swabs collected.","p2":"Post-exposure results pending, monitor. "}']]
+            },{
+                template: ['Wound First Day', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Presented for wound to (location), BAR prior to sedation.","o":"","a":"Victim of physical trauma, (location).","p":"Administered cefazolin, ketoprofen, buprenorphine. Start cephazolin, meloxicam, metronidazole, tramadol on XX/XX. Wound cultures submitted. Clipped and cleaned wound, lavaged with sterile saline. Applied (bandage).","p2":"Monitor (location). Bandage change XX/XX. Wound cultures pending (XX/XX). Ceph/Melox/metro end XX/XX, tramadol ends XX/XX. "}']]
+            },{
+                template: ['Diarrhea 1st Day Colony', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Presented for diarrhea and dehydration, QAR prior to sedation.","o":"iStat:","a":"Dehydration (and poor body condition) secondary to diarrhea of unknown etiology. ","p":"Blood draw for iSTAT, submitted rectal fecal culture. Placed IVC (size and lcation) and administered (fluids and additives). Begin XXXX once recovered from sedation","p2":"DX. Repeat iSTAT/Hydration check XX/XX. Fecal culture pending XX/XX. XXX ends XX. "}']]
+            },{
+                template: ['Diarrhea 1st Day Dysentery', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Presented for diarrhea, dehydration, and lethargy. Depressed prior to sedation.","o":"iStat:","a":"Hypovolemic shock secondary to enteric loss.","p":"Blood draw for iSTAT, submitted rectal fecal culture. Placed (size and location) IV catheter, bolused hetastarch and crystalloids, administered (fluids, additives, analgesics).  ","p2":"DX. Repeat iSTAT XX/XX. Fecal culture pending XX/XX. XX ends XX. "}']]
+            },{
+                template: ['Treat and Release', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Wounds noted during routine processing, BAR prior to sedation.","o":"","a":"Minor wound from physical trauma.","p":"Administered Pen G, ketoprofen. Clipped and cleaned wound, lavaged with sterile saline. Freshened wound edges. Apposed subcutaneous tissue with ____ and skin with ____. ","p2":"Monitor in social group."}']]
+            },{
+                template: ['Digit Amputation', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Presented for wound to (location), BAR prior to sedation.","o":"","a":"Amputation of XXX due to physical trauma. ","p":"Local anesthetic was administered and the skin aseptically prepared. A tourniquet was placed and the area aspetically draped. A transverse encircling incision (inverse Y) was made at the _____ intraphalangeal joint. The flexor and extensor tendons, ligaments and joint capsule were transected. Distal arteries and veins were ligated with ____. The digit associated sesamoid bones were disarticulated. The subcutaneous tissues were apposed over the end of the bone with _____ and simple interrupted sutures. The skin was apposed with approximating sutures. The tourniquet was removed and a dry/dry bandage placed. .   ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Surgical Repair', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"\\nInteg/MS: removed bandage, lavaged wound, appears ready for primary closure.\\n","a":"Wound ready for primary closure","p":"Intubated with ____  ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Placed line block of 0.5% bupivacaine and 2% lidocaine. Prepared skin with PVI, aseptically draped. (Insert surgical description) Lavaged, closed subcutaneous tissue with 4-0 Monocryl SI. Freshened skin edges, closed skin with 4-0 Monocryl SI. Administered buprenorphine IM. Good recovery.","p2":"(Enter plan)"}']]
+            },{
+                template: ['Tendon Repair', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"\\nInteg/MS: removed bandage, lavaged wound, appears ready for primary closure.\\n","a":"Wound ready for primary closure","p":"Intubated with ___ ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Prepared skin with PVI, lavaged with sterile saline. Prepared skin with PVI, aseptically draped. Incised over the caudolateral surface of the tendon, 5 cm. Identified the (insert names) muscles. Freshened edges and apposed tendon with 2-0 PDS with a far-near near-far pattern. Lavaged, closed fascia with 3-0 Monocryl SI. Freshened skin edges, closed with 3-0 Monocryl SI. Placed a padded bandage and fiberglas cast. Administered analgesics. Good recovery.","p2":"(Enter plan)"}']]
+            },{
+                template: ['Achilles Tendon Repair', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"\\nInteg/MS: removed bandage, lavaged wound, appears ready for primary closure.\\n","a":"Wound ready for primary closure","p":"Intubated with ___ ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Prepared skin with PVI, lavaged with sterile saline. Prepared skin with PVI, aseptically draped. Incised over the caudolateral surface of the tendon, 5 cm. Identified the gastronemius, superficial digital flexor, and common tendon. Freshened tendon edges and apposed with 2-0 PDS with a far-near near-far pattern. Lavaged, closed fascia with 3-0 Monocryl SI. Freshened skin edges, closed with 3-0 Monocryl SI. Placed a padded bandage and fiberglas cast. Administered analgesics. Good recovery from anesthesia. ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Enucleation', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"","a":"O_ requires enucleation.","p":"The skin clipped, cleaned, aseptically prepared, and sterilely draped. An incision was made 1-2 cm laterally from the junction of the upper and lower eyelid margins. Using thumb forceps, the conjunctiva was grasped near the limbus. A 360 degree perilimbal incision was made. Using curved Metzenbaum’s, s the conjunctiva, Tenon’s capsule, and extraocular muscle were separated from the sclera. The lacrimal gland was excised. Once the globe attachments were freed, the globe was gently retracted. The optic nerve was served with curved Metzendaum scissors. Hemorrhage was controlled with gentle pressure. Approximagely 3-4 mm of the eyelid margins were removed, to the medial canthus. The angularis oculi vein located superficial and medial to the medial canthal tendon was avoided. The conjunctiva, orbital septum and Tenon’s capsule were closed with 3-0 ________. The subcutaneous tissue was apposed with 4-0 _______. The lid margins were closed with _______. ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Partial Therapeutic Caudectomy', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for partial therapeutic caudectomy, BAR prior to sedation.","o":"","a":"Distal ___ cm of tail ready for amputation.","p":"The distal tail is wrapped with gauze and tape and the skin is aseptically prepared. A tourniquet is placed proximal to the transaction site. Determine the desired intravertebral transaction site and ake a double V incision in the skin distal to the site. The V is oriented to create dorsal and ventral skin flaps that are longer than the desired tail length. Identify and ligate the medial and lateral caudal arteries and veins just proximal to the incision site. Incise the soft tissue just distal to the intervertebral space and disarticulate the distal tail. If bleeding occurs, place a circumferential ligature around the distal end of the remaining tail or re-ligate the caudal vessels. Appose subcutaneous tissue and muscle over the exposed vertebrae with interrupted approximating sutures. Appose the skin edges with approximating sutures. ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Complete Therapeutic Caudectomy', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for complete therapeutic caudectomy, BAR prior to sedation.","o":"","a":"Therapeutic caudectomy required.","p":"A tourniquet was placed proximal to the transaction site but not tightened.The skin is clipped and cleaned, and the desired intravertebral transection site identified. A local block is placed proximal to the site. The skin was prepared with PVI, and aseptically draped. The tourniquet was tightened by the anesthetist. A  double V incision was made on the skin distal to the site. The V was oriented to create dorsal and ventral skin flaps that are longer than the desired tail length. The medial and lateral caudal arteries and veins just proximal to the incision site were identified and ligated. The soft tissue just distal to the intervertebral space was incised and the distal tail disarticulate. Bleeding was controlled with direct pressure (or circumferential ligature around the distal end of the remaining tail or re-ligate the caudal vessels). Subcutaneous tissue and muscle were apposed over the exposed vertebrae with interrupted approximating sutures of ______. The skin edges were apposed with _________. ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Rhabdomyolysis', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Presented for extensive crush trauma, QAR prior to sedation.","o":"MS: Ultrasound of muscles demonstrates","a":"Extensive crush trauma, r/o rhabdomyolysis.","p":"","p2":"(Enter plan)"}']]
+            },{
+                template: ['Repeat iSTAT', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for repeat iSTAT, BAR prior to sedation.","o":"iSTAT:","a":"Diarrhea of unknown etiology.","p":"Collected ____ cc\'s blood for iSTAT.  iSTAT abnormalities: (enter abnormalities and plan). ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Bone Marrow Biopsy', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for bone marrow biopsy, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The skin over the (iliac crest, trochanteric fossa of the femur, or craniodorsal humerus) was aseptically prepared. A skin incision was made using a scalpel blade.  A bone marrow biopsy needle was inserted through the cortex. Following removal of the stylet, ____ cc’s of marrow was aspirated. The stylet was replaced, and the needle removed. Direct pressurewais applied to the site for 30-60 seconds following removal of the needle. The skin incision was closed with tissue adhesive.","p2":"(Enter plan)"}']]
+            },{
+                template: ['Lymph Node Biopsy', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for lymph node biopsy, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The area over the (axillary or inguinal nodes) was clipped and cleaned, prepared with PVI, and aseptically draped. The skin over the lymph node was stabilized, and an incision made over the node. The node was removed from surrounding tissue using blunt dissection and vessels were ligated with _______. Following removal of the node, the surgery site was closed using a two-layer closure and _____. Sample sites will include axillary and inguinal nodes. Typically, all four sites may be used. ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Gastric lavage', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for gastric lavage, BAR prior to sedation.","o":"","a":"Inadequate caloric intake, gastric lavage for nutritional support.","p":"Prior to lavage, the ET tube was checked to ensure the cuff was adequately inflated. The patient was placed in lateral recumbancy, with the head slightly lower than the abdomen. The distance from the nose to the last rib was measured, and marked on a 10 Fr, fenestrated gastric tube. The sterile tube was lubricated, then gently passed down the esophagus. Tube placement was confirmed by aspiration of gastric contents. Warm, sterile saline (5-10 ml/kg) was infused into the stomach. Samples were collected for culture and cytology.  The gastric tube was kinked at the oral end and gently withdrawn. ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Skin biopsy', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for skin biopsy, BAR prior to sedation.","o":"","a":"Skin lesions, etiology unknown.","p":"","p2":"(Enter plan)"}']]
+            },{
+                template: ['Tb Test Results', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Cageside observation, BAR.","o":"","a":"Normal","p":"(Enter actions)","p2":"(Enter plan)"}']]
+            },{
+                template: ['Arthrocentesis with Intraarticular injection', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for arthrocentesis with intraarticular injection, BAR prior to sedation.","o":"","a":"Arthritis of (joint or joints).","p":"The skin was clipped with #40 clipper blades,  aseptically prepared and draped. Synovial fluid for cytology and culture was sterilely collected using a 22 g needles attached to a 3 cc syringe. Following sample collection, the joint was injected with 0.1 cc of 0.5% bupivacaine and 0.5 cc/1 mg dexamethasone.","p2":"(Enter plan)"}']]
+            },{
+                template: ['Arthrocentesis   ', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for arthrocentesis, BAR prior to sedation.","o":"","a":"Arthritis of (joint or joints).","p":"The skin was clipped with #40 clipper blades,  aseptically prepared and draped. Synovial fluid for cytology and culture was sterilely collected using a 22 g needles attached to a 3 cc syringe. ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Radiographs', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for radiographs, BAR prior to sedation.","o":"","a":"","p":"Following sedation, (View) and (view) of the (area) were taken. ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Hepatic Biopsy', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for ultrasound-guided percutaneous hepatic biopsy, BAR prior to sedation.","o":"","a":"Hepatopathy.","p":"Administered 0.5 cc/0.15 mg buprenorphine IM, 0.1 cc bupivicaine and 0.1 cc lidocaine at site. Prepared skin aseptically, stabe incision with #11 blade, 18 g x 1 cm hepatic biopsy, sample submitted to pathology. Good recovery from anesthesia, monitored post procedure then returned to social group.","p2":"(Enter plan)"}']]
+            },{
+                template: ['Cerebral Spinal Fluid Collection from the lumbar region', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for CSF collection, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The patient was placed in lateral recumbency. The area was clipped, cleaned, prepared, and aseptically draped. The lumbar spine was gently flexed to open the interarcuate space between L4 and L5. The spinous process caudal to this space was palpated, and the needle inserted at the caudal lateral edge of the spinous process.  The needle was gently advanced until the vertebral arch was encountered, then walked cranially to the interarcuate space. The needle was advanced through the ligament and spinal canal and (sample volume) was collected. The needle was retracted following fluid collection.","p2":"(Enter plan)"}']]
+            },{
+                template: ['Cerebral Spinal Fluid Collection from cistem magnum', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for CSF collection, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The patient was placed in lateral recumbancy. The skin from the occipital protuberance to the level of C3 was clipped, cleaned, and aseptically draped,. The neck was flexed 90 to 100 degrees at the cisternal region. Care was taken to keep the head parallel to the table. The wings of the atlas were palpated to ensure superimposition. Collection was done (puncture may be made in the center of the triangle formed by the wings of the atlas and the occiput. Alternatively, a midline puncture, halfway between the occiput and the cranial end of the spinous process of C2). The needle was inserted at 90 degrees, and gradually advanced through the various tissue layers. Dura penetration was confirmed by observation of CSF in the hub of the needle. Samples (volume and type) were collected and the needle was gently withdrawn. ","p2":"(Enter plan)"}']]
+            },{
+                template: ['Nasal Flush', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for nasal flush, BAR prior to sedation.","o":"","a":"Nasal discharge, etiology unknown","p":"The patient was anesthetized and intubated with a cuffed _____ ID ET tube. Gauze sponges were placed in the oral pharynx and around the tube. The distance from the external nares to the medial canthus was measured, and mark the catheter. Sterile saline was infused (for a diagnostic flush, infuse 5-10 cc’s of sterile saline, then collect the residual fluid and submit for culture and cytology. For therapeutic flush, use a a 35 cc syringe and infuse 150 to 300 cc’s of saline into the nasal cavity). An otoscope was used to visualize the proximal nasal passages during the procedure.","p2":"(Enter plan)"}']]
+            },{
+                template: ['Bronchioalveolar Lavage', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for bronchioavlveolar lavage, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The monkey was positioned in dorsal recumbency and a pulse oximeter attached.  The bronchoscope was then passed through the oral cavity and into the trachea using a laryngoscope.  An oral speculum was then positioned between the upper and lower incisors to prevent damage to the bronchoscope.  The bronchoscope was advanced near the carina where 1ml of 1% lidocaine was introduced through the working channel of the scope.  The bronchoscope was then advanced into the right main stem bronchus and through approximately three bifurcations of the bronchi.  Next, bronchoalveolar lavage was performed by infusing three to five 10ml aliquots of normal saline followed by immediate aspiration of the saline infusate after each 10ml infusion.  The procedure was repeated in the left lung.  The bronchoscope was removed.","p2":"(Enter plan)"}']]
+            },{
+                template: ['Technician Exam', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for technicain examination, BAR prior to sedation.","o":"","a":"No significant findings noted on physical examination. ","p":"(Enter actions)","p2":"(Enter plan)"}']]
+            },{
+                template: ['Diagnostic Exam', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for diagnostic physical examination, BAR prior to sedation.","o":"","a":"Appears _________","p":"(Enter actions)","p2":"(Enter plan)"}']]
+            },{
+                template: ['Complete Exam', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Sedated for physical examinatioin, BAR prior to sedation.","o":"","a":"No significant findings noted on physical examination. ","p":"(Enter actions)","p2":"(Enter plan)"}']]
+            },{
+                template: ['Limited Exam', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Limited examination, BAR prior to sedation.","o":"","a":"Appears _________","p":"(Enter actions)","p2":"(Enter plan)"}']]
+            },{
+                template: ['Limited Visual Exam', 'Section', 'Clinical Remarks', '', ''],
+                records: [['Clinical Remarks', '{"s":"Cageside observation, BAR.","o":"","a":"Appears _________","p":"(Enter actions)","p2":"(Enter plan)"}']]
+            }]);
+
+            templateRows = templateRows.concat([{
+                template: ['Pentobarbitol', 'Section', 'Drug Administration', '', ''],
+                records: [
+                    ['Drug Administration', '{"code":"E-78840"}']
+                ]
+            }]);
+
+            //drug templates
+            templateRows = templateRows.concat([{
+                template: ['Diarrhea 1st Day Cage', 'Section', 'Drug Administration', '', ''],
+                records: [
+                ]
+            },{
+                template: ['Diarrhea 1st Day Colony', 'Section', 'Drug Administration', '', ''],
+                records: [
+
+                    ['Drug Administration', '{"code":"E-87350"}'],
+                    ['Drug Administration', '{"code":"E-87250"}'],
+                    ['Drug Administration', '{"code":"E-82270"}']
+                ]
+            },{
+                template: ['Diarrhea Dysentery', 'Section', 'Drug Administration', '', ''],
+                records: [
+
+                    ['Drug Administration', '{"code":"E-87350"}'],
+                    ['Drug Administration', '{"code":"E-87250"}'],
+                    ['Drug Administration', '{"code":"E-82270"}'],
+                    ['Drug Administration', '{"code":"E-YY883"}']
+                ]
+            },{
+                template: ['Digit Amputation', 'Section', 'Drug Administration', '', ''],
+                records: [
+
+
+
+
+                    ['Drug Administration', '{"code":"E-721X0"}'],
+                    ['Drug Administration', '{"code":"E-YY750"}']
+                ]
+            },{
+                template: ['Minor Wound', 'Section', 'Drug Administration', '', ''],
+                records: [
+
+
+                    ['Drug Administration', '{"code":"E-721X0"}']
+                ]
+            },{
+                template: ['Research Procedure', 'Section', 'Drug Administration', '', ''],
+                records: [
+
+                    ['Drug Administration', '{"code":"E-70590"}'],
+                    ['Drug Administration', '{"code":"E-YY750"}']
+                ]
+            },{
+                template: ['Rhabdomyolysis', 'Section', 'Drug Administration', '', ''],
+                records: [
+
+                    ['Drug Administration', '{"code":"E-87350"}'],
+                    ['Drug Administration', '{"code":"E-YY883"}'],
+                    ['Drug Administration', '{"code":"E-82270"}'],
+                    ['Drug Administration', '{"code":"E-85182"}'],
+                    ['Drug Administration', '{"code":"E-721X0"}']
+                ]
+            },{
+                template: ['Sedation', 'Section', 'Drug Administration', '', ''],
+                records: [	['Drug Administration', '{"code":"E-70590"}']
+                ]
+            },{
+                template: ['Surgical Repair', 'Section', 'Drug Administration', '', ''],
+                records: [
+
+
+
+                    ['Drug Administration', '{"code":"E-721X0"}'],
+                    ['Drug Administration', '{"code":"E-YY750"}'],
+                    ['Drug Administration', '{"code":"F-10470"}'],
+                    ['Drug Administration', '{"code":"E-70720"}'],
+                    ['Drug Administration', '{"code":"E-YY008"}']
+                ]
+            },{
+                template: ['Treat and Release', 'Section', 'Drug Administration', '', ''],
+                records: [
+
+                ]
+            }]);
+
+
+            //treatment orders
+            templateRows = templateRows.concat([{
+                template: ['Diarrhea 1st Day Cage', 'Section', 'Treatment Orders', '', ''],
+                records: [	['Treatment Orders', '{"code":"E-80410"}']
+                ]
+            },{
+                template: ['Diarrhea 1st Day Colony', 'Section', 'Treatment Orders', '', ''],
+                records: [	['Treatment Orders', '{"code":"E-80410"}'],
+                    ['Treatment Orders', '{"code":"E-YY045"}']
+                ]
+            },{
+                template: ['Diarrhea Dysentery', 'Section', 'Treatment Orders', '', ''],
+                records: [	['Treatment Orders', '{"code":"E-80410"}'],
+                    ['Treatment Orders', '{"code":"E-719Y5"}']
+                ]
+            },{
+                template: ['Digit Amputation', 'Section', 'Treatment Orders', '', ''],
+                records: [	['Treatment Orders', '{"code":"E-72170"}'],
+                    ['Treatment Orders', '{"code":"E-779X0"}'],
+                    ['Treatment Orders', '{"code":"E-YY927"}'],
+                    ['Treatment Orders', '{"code":"E-YY732"}'],
+                    ['Treatment Orders', '{"code":"E-YYY83"}']
+                ]
+            },{
+                template: ['Minor Wound', 'Section', 'Treatment Orders', '', ''],
+                records: [	['Treatment Orders', '{"code":"E-72170"}'],
+                    ['Treatment Orders', '{"code":"E-779X0"}'],
+                    ['Treatment Orders', '{"code":"E-YY927"}']
+                ]
+            },{
+                template: ['Research Procedure', 'Section', 'Treatment Orders', '', ''],
+                records: [	['Treatment Orders', '{"code":"E-779X0"}'],
+                    ['Treatment Orders', '{"code":"E-YY927"}']
+                ]
+            },{
+                template: ['Rhabdomyolysis', 'Section', 'Treatment Orders', '', ''],
+                records: [	['Treatment Orders', '{"code":"E-YY792"}'],
+                    ['Treatment Orders', '{"code":"E-X1200"}']
+                ]
+            },{
+                template: ['Sedation', 'Section', 'Treatment Orders', '', ''],
+                records: [
+                ]
+            },{
+                template: ['Surgical Repair', 'Section', 'Treatment Orders', '', ''],
+                records: [	['Treatment Orders', '{"code":"E-72170"}'],
+                    ['Treatment Orders', '{"code":"E-779X0"}'],
+                    ['Treatment Orders', '{"code":"E-YY927"}'],
+                    ['Treatment Orders', '{"code":"E-YY732"}']
+                ]
+            },{
+                template: ['Treat and Release', 'Section', 'Treatment Orders', '', ''],
+                records: [	['Treatment Orders', '{"code":"E-72600"}'],
+                    ['Treatment Orders', '{"code":"E-779X0"}']
+                ]
+            }]);
+
+            //full form templates
+            templateRows = templateRows.concat([{
+                template: ['Epistaxis', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Epistaxis'],
+                    ['Clinical Observations', '', 'PE - CMU']
+                ]
+            },{
+                template: ['Vomit', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Vomit'],
+                    ['Clinical Observations', '', 'PE - CMU']
+                ]
+            },{
+                template: ['Diarrhea 1st Day Cage', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Diarrhea 1st Day Cage'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Diarrhea 1st Day Cage'],
+                    ['Treatment Orders', '', 'Diarrhea 1st Day Cage']
+                ]
+            },{
+                template: ['Uterine ultrasound', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Uterine ultrasound'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Sedation'],
+                    ['Treatment Orders', '', 'Sedation']
+                ]
+            },{
+                template: ['Exposure', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Exposure'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Sedation'],
+                    ['Treatment Orders', '', 'Sedation']
+                ]
+            },{
+                template: ['Wound First Day', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Wound First Day'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Minor Wound'],
+                    ['Treatment Orders', '', 'Minor Wound']
+                ]
+            },{
+                template: ['Diarrhea 1st Day Colony', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Diarrhea 1st Day Colony'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Diarrhea 1st Day Colony'],
+                    ['Treatment Orders', '', 'Diarrhea 1st Day Colony']
+                ]
+            },{
+                template: ['Diarrhea 1st Day Dysentery', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Diarrhea 1st Day Dysentery'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Diarrhea Dysentery'],
+                    ['Treatment Orders', '', 'Diarrhea Dysentery']
+                ]
+            },{
+                template: ['Treat and Release', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Treat and Release'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Treat and Release'],
+                    ['Treatment Orders', '', 'Treat and Release']
+                ]
+            },{
+                template: ['Digit Amputation', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Digit Amputation'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Digit Amputation'],
+                    ['Treatment Orders', '', 'Digit Amputation']
+                ]
+            },{
+                template: ['Surgical Repair', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Surgical Repair'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Surgical Repair'],
+                    ['Treatment Orders', '', 'Surgical Repair']
+                ]
+            },{
+                template: ['Tendon Repair', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Tendon Repair'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Surgical Repair'],
+                    ['Treatment Orders', '', 'Surgical Repair']
+                ]
+            },{
+                template: ['Achilles Tendon Repair', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Achilles Tendon Repair'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Surgical Repair'],
+                    ['Treatment Orders', '', 'Surgical Repair']
+                ]
+            },{
+                template: ['Enucleation', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Enucleation'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Surgical Repair'],
+                    ['Treatment Orders', '', 'Surgical Repair']
+                ]
+            },{
+                template: ['Partial Therapeutic Caudectomy', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Partial Therapeutic Caudectomy'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Surgical Repair'],
+                    ['Treatment Orders', '', 'Surgical Repair']
+                ]
+            },{
+                template: ['Complete Therapeutic Caudectomy', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Complete Therapeutic Caudectomy'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Surgical Repair'],
+                    ['Treatment Orders', '', 'Surgical Repair']
+                ]
+            },{
+                template: ['Rhabdomyolysis', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Rhabdomyolysis'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Rhabdomyolysis'],
+                    ['Treatment Orders', '', 'Rhabdomyolysis']
+                ]
+            },{
+                template: ['Repeat iSTAT', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Repeat iSTAT'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Sedation'],
+                    ['Treatment Orders', '', 'Sedation']
+                ]
+            },{
+                template: ['Bone Marrow Biopsy', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Bone Marrow Biopsy'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Research Procedure'],
+                    ['Treatment Orders', '', 'Research Procedure']
+                ]
+            },{
+                template: ['Lymph Node Biopsy', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Lymph Node Biopsy'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Research Procedure'],
+                    ['Treatment Orders', '', 'Research Procedure']
+                ]
+            },{
+                template: ['Gastric lavage', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Gastric lavage'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Sedation'],
+                    ['Treatment Orders', '', 'Sedation']
+                ]
+            },{
+                template: ['Skin biopsy', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Skin biopsy'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Research Procedure'],
+                    ['Treatment Orders', '', 'Research Procedure']
+                ]
+            },{
+                template: ['Tb Test Results', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Tb Test Results'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Sedation'],
+                    ['Treatment Orders', '', 'Sedation']
+                ]
+            },{
+                template: ['Arthrocentesis with Intraarticular injection', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Arthrocentesis with Intraarticular injection'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Research Procedure'],
+                    ['Treatment Orders', '', 'Research Procedure']
+                ]
+            },{
+                template: ['Arthrocentesis   ', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Arthrocentesis   '],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Research Procedure'],
+                    ['Treatment Orders', '', 'Research Procedure']
+                ]
+            },{
+                template: ['Radiographs', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Radiographs'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Sedation'],
+                    ['Treatment Orders', '', 'Sedation']
+                ]
+            },{
+                template: ['Hepatic Biopsy', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Hepatic Biopsy'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Research Procedure'],
+                    ['Treatment Orders', '', 'Research Procedure']
+                ]
+            },{
+                template: ['Cerebral Spinal Fluid Collection from the lumbar region', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Cerebral Spinal Fluid Collection from the lumbar region'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Research Procedure'],
+                    ['Treatment Orders', '', 'Research Procedure']
+                ]
+            },{
+                template: ['Cerebral Spinal Fluid Collection from cistem magnum', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Cerebral Spinal Fluid Collection from cistem magnum'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Research Procedure'],
+                    ['Treatment Orders', '', 'Research Procedure']
+                ]
+            },{
+                template: ['Nasal Flush', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Nasal Flush'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Research Procedure'],
+                    ['Treatment Orders', '', 'Research Procedure']
+                ]
+            },{
+                template: ['Bronchioalveolar Lavage', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Bronchioalveolar Lavage'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Research Procedure'],
+                    ['Treatment Orders', '', 'Research Procedure']
+                ]
+            },{
+                template: ['Technician Exam', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Technician Exam'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Sedation'],
+                    ['Treatment Orders', '', 'Sedation']
+                ]
+            },{
+                template: ['Diagnostic Exam', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Diagnostic Exam'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Sedation'],
+                    ['Treatment Orders', '', 'Sedation']
+                ]
+            },{
+                template: ['Complete Exam', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Complete Exam'],
+                    ['Clinical Observations', '', 'PE - CMU'],
+                    ['Drug Administration', '', 'Sedation'],
+                    ['Treatment Orders', '', 'Sedation']
+                ]
+            },{
+                template: ['Limited Exam', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Limited Exam'],
+                    ['Clinical Observations', '', 'PE - CMU']
+                ]
+            },{
+                template: ['Limited Visual Exam', 'Form', 'Clinical Report', '', ''],
+                records: [
+                    ['Clinical Remarks', '', 'Limited Visual Exam'],
+                    ['Clinical Observations', '', 'PE - CMU']
+                ]
+            }]);
+
+            var toInsert = [];
+            var data = [];
+            Ext4.Array.forEach(templateRows, function(r){
+                data.push(r.template);
+            }, this);
+
+            var queryConfig = this.makeObject(config, data, fields);
+            queryConfig.success = function(results){
+                var templateMap = [];
+                Ext4.Array.forEach(results.rows, function(row, idx){
+                    if (row.category == 'Section'){
+                        templateMap[[row.formtype, row.title].join('||')] = row.entityid;
+                    }
+                }, this);
+
+                Ext4.Array.forEach(results.rows, function(row, idx){
+                    var entityId = row.entityid;
+
+                    Ext4.Array.forEach(templateRows[idx].records, function(r){
+                        //add blank spot for targettemplate
+                        if (r.length == 2){
+                            r.push(null);
+                        }
+
+                        if (r[2]){
+                            var key = r[0] + '||' + r[2];
+                            if (!templateMap[key]){
+                                console.log(key);
+                                console.log(r);
+                            }
+                            r[2] = templateMap[key];
+                        }
+
+                        r.push(entityId);
+                        toInsert.push(r);
+                    }, this);
+                }, this);
+
+                if (toInsert.length){
+                    var config2 = {
+                        schemaName: 'ehr',
+                        queryName: 'formtemplaterecords',
+                        rows: [],
+                        success: this.onSuccess,
+                        failure: this.onError
+                    };
+                    var fields2 = ('storeid,json,targettemplate,templateid').split(',');
+                    LABKEY.Query.insertRows(this.makeObject(config2, toInsert, fields2));
+                }
+                else {
+                    console.log('nothing to insert');
+                }
+            };
+
+            LABKEY.Query.insertRows(queryConfig);
+        },
+
+        makeObject: function(config, data, fields){
+            Ext4.each(data, function(row){
+                var record = {};
+                Ext4.each(fields, function(f, idx){
+                    record[f] = row[idx];
+                }, this);
+                config.rows.push(record);
+            }, this);
+
+            config.scope = config.scope || this;
+
+            return config;
+        },
+
+        onSuccess: function(result){
+            this.pendingInserts--;
+
+            console.log('Success: '+result.queryName);
+
+            if (this.pendingInserts==0){
+                this.down('#ehr_msg').update('Populate Complete');
+            }
+        },
+
+        onError: function(result){
+            this.pendingInserts--;
+
+            console.log('Error Loading Data: '+result.queryName);
+            console.log(result);
+
+            if (this.pendingInserts==0){
+                this.down('#ehr_msg').update('Populate Complete');
+            }
+        }        
+    });
+    
+    Ext4.create('ONPRC_EHR.panel.PopulateDataPanel').render(webpart.wrapperDivId);
+});
+
+</script>

@@ -35,6 +35,7 @@
                 <include name="ONPRC_EHR.module" />
                 <include name="ONPRC_Reports.module" />
                 <include name="ogasync.module" />
+                <include name="mergesync.module" />
                 <include name="ONPRC_BillingPublic.module" />
                 <include name="sla.module" />
                 <include name="SequenceAnalysis.module" />

@@ -12,7 +12,7 @@
         <!--</column>-->
         <!--<column name="account"/>-->
         <column name="type"/>
-        <column name="title"/>
+        <column name="procedureid"/>
         <column name="performedby"/>
 
         <column name="remark"/>

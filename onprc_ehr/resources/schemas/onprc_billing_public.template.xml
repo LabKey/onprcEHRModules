@@ -3,6 +3,7 @@
         <tableName>publicInvoiceRuns</tableName>
         <tableName>publicInvoicedItems</tableName>
         <tableName>chargeableItems</tableName>
+        <tableName>fiscalAuthorities</tableName>
         <tableName>aliases</tableName>
         <tableName>grants</tableName>
         <tableName>grantProjects</tableName>

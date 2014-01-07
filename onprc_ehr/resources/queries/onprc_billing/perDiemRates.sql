@@ -24,8 +24,9 @@ SELECT
   p.effectiveDays as quantity,
   p.effectiveDays * coalesce(e.unitCost, cr.unitCost) as totalcost,
 
-  ce.account as creditAccount,
+  cast(ce.account as varchar(200)) as creditAccount,
   ce.rowid as creditAccountId,
+  coalesce(p.project.account.investigatorId, p.project.investigatorId) as investigatorId,
   CASE
     WHEN e.unitCost IS NOT NULL THEN 'Y'
     ELSE null
@@ -37,7 +38,9 @@ SELECT
   e.rowid as exemptionId,
   CASE WHEN e.rowid IS NULL THEN cr.rowid ELSE null END as rateId,
   null as isMiscCharge,
+  null as isAdjustment,
   CASE WHEN p.project.account IS NULL THEN 'Y' ELSE null END as isMissingAccount,
+  CASE WHEN ifdefined(p.project.account.fiscalAuthority.faid) IS NULL THEN 'Y' ELSE null END as isMissingFaid,
   CASE
     WHEN ifdefined(p.project.account.aliasEnabled) IS NULL THEN null
     WHEN (ifdefined(p.project.account.aliasEnabled) IS NULL OR ifdefined(p.project.account.aliasEnabled) != 'Y') THEN 'Y'
@@ -76,9 +79,11 @@ SELECT
   mc.id,
   mc.date,
   mc.project,
+  mc.account,
   mc.chargeId,
   null as categories,
   null as overlappingProjects,
+  null as tiers,
   null as effectiveDays,
   null as totalDaysAssigned,
   null as startDate,
@@ -92,12 +97,15 @@ SELECT
 
   mc.creditAccount,
   mc.creditAccountId,
+  mc.investigatorId,
   mc.isExemption,
   mc.lacksRate,
   mc.exemptionId,
   mc.rateId,
   'Y' as isMiscCharge,
+  mc.isAdjustment,
   mc.isMissingAccount,
+  mc.isMissingFaid,
   mc.isExpiredAccount,
   null as isMultipleProjects
 

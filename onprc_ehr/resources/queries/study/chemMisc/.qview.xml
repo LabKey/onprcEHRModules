@@ -5,6 +5,12 @@
         <column name="testId"/>
         <column name="result"/>
         <column name="qualresult" />
+        <column name="remark" />
+        <column name="runId/remark">
+            <properties>
+                <property name="columnTitle" value="Run Remark"/>
+            </properties>
+        </column>
         <column name="qcstate" />
         <column name="taskid" />
     </columns>

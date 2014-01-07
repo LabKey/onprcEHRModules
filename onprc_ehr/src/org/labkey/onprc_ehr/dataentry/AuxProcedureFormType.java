@@ -16,13 +16,13 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,15 +35,15 @@ public class AuxProcedureFormType extends TaskForm
 {
     public static final String NAME = "Auxiliary Procedures";
 
-    public AuxProcedureFormType(Module owner)
+    public AuxProcedureFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(owner, NAME, NAME, "Research", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, NAME, "Research", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new SimpleGridPanel("study", "encounters", "Procedures"),
             new BloodDrawFormSection(false),
             new WeightFormSection(),
-            new BloodTreatmentsFormSection())
+            new DrugAdministrationFormSection())
         );
 
         for (FormSection s : getFormSections())

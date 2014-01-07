@@ -18,7 +18,7 @@ SELECT
 	c.objectid as caseid,
 	dx.objectid as recordid,
 
-	cast(s.objectid as varchar(38)) + '-' + cast(s2.value as nvarchar(100)) as objectid,
+  (cast(s.objectid as varchar(38)) + '-' + cast(s2.i as varchar(100)) + '-' + cast(s2.value as nvarchar(100))) as objectid,
 	coalesce(s.sequenceNo, 0) as set_number,
 	s2.i as sort,
 	cast(s2.value as nvarchar(100)) as code
@@ -31,6 +31,21 @@ where s2.value is not null and s2.value != ''
 and s2.value not in ('P-Y0038', 'P-26600')  --exclude weighing and blood collection
 and s.Snomed != 'T-00010,P-02315' --limited visual exam plus body as a whole
 and s.snomed != 'P-02315' --limited visual exam without other codes
+--BCS / alopecia:
+AND s2.value NOT IN (
+  --observations
+  'F-YY002',
+  'F-YY003',
+  'F-YY004',
+  'F-YY005',
+  'F-YY006',
+  'F-Y3712',
+  'F-Y3714',
+  'F-Y3716',
+  'F-Y3718',
+  'F-Y3720',
+  'F-Y3722'
+)
 and s.ts > ?
 
 UNION ALL
@@ -40,7 +55,7 @@ SELECT
 	null as caseid,
 	dx.objectid as recordid,
 
-	cast(s.objectid as varchar(38)) + '-' + cast(s2.value as nvarchar(100)) as objectid,
+  (cast(s.objectid as varchar(38)) + '-' + cast(s2.i as varchar(100)) + '-' + cast(s2.value as nvarchar(100))) as objectid,
 	s.Idkey as set_number,
 	s2.i as sort,
 	cast(s2.value as nvarchar(100)) as code
@@ -56,15 +71,13 @@ UNION ALL
 Select
 	cast(pa.AnimalID as nvarchar(4000)) as Id,
 	null as caseid,
-	pa.objectid as recordid,
-	(cast(d.objectid as varchar(38)) + '_' + cast(s2.value as nvarchar(100))) as objectid,
+	d.objectid as recordid,
+	(cast(d.objectid as varchar(38)) + '-' + cast(s2.i as varchar(100)) + '-' + cast(s2.value as nvarchar(100))) as objectid,
 	coalesce(d.sequenceno, 0) as set_number,
 	s2.i as sort,
 	cast(s2.value as nvarchar(100)) as code
 
 From Path_AutopsyDiagnosis d
-left join ref_snomed sno on (sno.SnomedCode = TCode)
---left join ref_snomed sno2 on (sno2.SnomedCode = d.SnomedCodes)
 left join Path_Autopsy pa on (d.AutopsyID = pa.AutopsyId)
 cross apply dbo.fn_splitter(d.SnomedCodes, ',') s2
 where s2.value is not null and s2.value != ''
@@ -75,8 +88,8 @@ UNION ALL
 Select
 	cast(pa.AnimalID as nvarchar(4000)) as Id,
 	null as caseid,
-	pa.objectid as recordid,
-	(cast(d.objectid as varchar(38)) + '_' + cast(s2.value as nvarchar(100))) as objectid,
+	d.objectid as recordid,
+	(cast(d.objectid as varchar(38)) + '-' + cast(s2.i as varchar(100)) + '-' + cast(s2.value as nvarchar(100))) as objectid,
 	coalesce(d.sequenceno, 0) as set_number,
 	s2.i as sort,
 	cast(s2.value as nvarchar(100)) as code	

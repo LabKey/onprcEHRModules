@@ -21,10 +21,14 @@ import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.DbSchema;
+import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
+import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
+import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
@@ -130,6 +134,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 getOrCreateInvoiceRunRecord();
             }
 
+            loadTransactionNumber();
             leaseFeeProcessing(ehrContainer);
             perDiemProcessing(ehrContainer);
             proceduresProcessing(ehrContainer);
@@ -144,6 +149,34 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
         }
 
         return new RecordedActionSet(Collections.singleton(action));
+    }
+
+    private int _lastTransactionNumber;
+
+    private void loadTransactionNumber()
+    {
+        SqlSelector se = new SqlSelector(ONPRC_EHRSchema.getInstance().getSchema(), new SQLFragment("select max(cast(transactionNumber as integer)) as expr from " + ONPRC_EHRSchema.BILLING_SCHEMA_NAME+ "." + ONPRC_EHRSchema.TABLE_INVOICED_ITEMS + " WHERE ISNUMERIC(transactionNumber) = " + DbScope.getLabkeyScope().getSqlDialect().getBooleanTRUE()));
+        Integer[] rows = se.getArray(Integer.class);
+
+        if (rows.length == 1)
+        {
+            _lastTransactionNumber = rows[0];
+        }
+        else if (rows.length == 0)
+        {
+            _lastTransactionNumber = 0;
+        }
+        else
+        {
+            throw new IllegalArgumentException("Improper value for lastTransactionNumber.  Returned " + rows.length + " rows");
+        }
+    }
+
+    private int getNextTransactionNumber()
+    {
+        _lastTransactionNumber++;
+
+        return _lastTransactionNumber;
     }
 
     private Container getEHRContainer()
@@ -289,8 +322,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 toInsert.put("modified", new Date());
                 toInsert.put("objectId", new GUID());
                 toInsert.put("invoiceId", invoiceId);
-
-                //TODO: create a transactionNumber?  also invoiceDate?
+                toInsert.put("transactionNumber", getNextTransactionNumber());
 
                 int idx = 0;
                 for (String field : invoicedItemsCols)
@@ -303,6 +335,15 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                     if (row.containsKey(translatedKey))
                     {
                         toInsert.put(field, row.get(translatedKey));
+                    }
+                }
+
+                List<String> required = Arrays.asList("date", "chargeId", "item", "servicecenter", "project", "debitedaccount", "faid", "unitCost", "totalcost");
+                for (String field : required)
+                {
+                    if (toInsert.get(field) == null)
+                    {
+                        getJob().getLogger().warn("Missing value for field: " + field + " for transactionNumber: " + toInsert.get("transactionNumber"));
                     }
                 }
 
@@ -352,12 +393,12 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
                 "project/account",
-                "project/investigatorid",
-                "project/investigatorid/financialanalyst",  //TODO: this is not quite right
-                "project/investigatorid/firstname",
-                "project/investigatorid/lastname",
-                "project/investigatorid/division",
-                "project/investigatorid/phonenumber",
+                "investigatorId",
+                "project/account/fiscalAuthority",
+                "investigatorId/firstname",
+                "investigatorId/lastname",
+                "investigatorId/division",
+                "investigatorId/phonenumber",
                 "creditAccount",
                 "quantity",
                 "unitCost",
@@ -452,12 +493,12 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
                 "project/account",
-                "project/investigatorid",
-                "project/investigatorid/financialanalyst",
-                "project/investigatorid/firstname",
-                "project/investigatorid/lastname",
-                "project/investigatorid/division",
-                "project/investigatorid/phonenumber",
+                "investigatorId",
+                "project/account/fiscalAuthority",
+                "investigatorId/firstname",
+                "investigatorId/lastname",
+                "investigatorId/division",
+                "investigatorId/phonenumber",
                 "creditAccount",
                 "quantity",
                 "unitCost",
@@ -504,12 +545,12 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
                 "project/account",
-                "project/investigatorid",
-                "project/investigatorid/financialanalyst",
-                "project/investigatorid/firstname",
-                "project/investigatorid/lastname",
-                "project/investigatorid/division",
-                "project/investigatorid/phonenumber",
+                "investigatorId",
+                "project/account/fiscalAuthority",
+                "investigatorId/firstname",
+                "investigatorId/lastname",
+                "investigatorId/division",
+                "investigatorId/phonenumber",
                 "creditAccount",
                 "quantity",
                 "unitCost",
@@ -557,12 +598,12 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
                 "project/account",
-                "project/investigatorid",
-                "project/investigatorid/financialanalyst",
-                "project/investigatorid/firstname",
-                "project/investigatorid/lastname",
-                "project/investigatorid/division",
-                "project/investigatorid/phonenumber",
+                "investigatorId",
+                "project/account/fiscalAuthority",
+                "investigatorId/firstname",
+                "investigatorId/lastname",
+                "investigatorId/division",
+                "investigatorId/phonenumber",
                 "creditAccount",
                 "quantity",
                 "unitCost",
@@ -610,12 +651,12 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 "chargeId/departmentCode",  //todo: servicecenter?
                 "project",
                 "account",
-                "project/investigatorid",
-                "project/investigatorid/financialanalyst",
-                "project/investigatorid/firstname",
-                "project/investigatorid/lastname",
-                "project/investigatorid/division",
-                "project/investigatorid/phonenumber",
+                "investigatorId",
+                "project/account/fiscalAuthority",
+                "investigatorId/firstname",
+                "investigatorId/lastname",
+                "investigatorId/division",
+                "investigatorId/phonenumber",
                 "creditAccount",
                 "quantity",
                 "unitCost",
@@ -633,7 +674,34 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
 
         if (!getSupport().isTestOnly())
         {
-            writeToInvoicedItems(rows, "Other Charges", colNames);
+            try
+            {
+                writeToInvoicedItems(rows, "Other Charges", colNames);
+
+                //update records in miscCharges to show proper invoiceId
+                TableInfo ti = DbSchema.get(ONPRC_EHRSchema.BILLING_SCHEMA_NAME).getTable(ONPRC_EHRSchema.TABLE_MISC_CHARGES);
+                String invoiceId = getOrCreateInvoiceRunRecord();
+
+                for (Map<String, Object> row : rows)
+                {
+                    String objectId = (String)row.get("sourceRecord");
+                    if (objectId == null)
+                    {
+                        getJob().getLogger().error("Misc Charges Record lacks objectid");
+                        continue;
+                    }
+
+                    Map<String, Object> toUpdate = new CaseInsensitiveHashMap<>();
+                    toUpdate.put("invoiceId", invoiceId);
+                    toUpdate.put("objectId", objectId);
+
+                    Table.update(getJob().getUser(), ti, toUpdate, objectId);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new PipelineJobException(e);
+            }
         }
         else
         {

@@ -23,7 +23,7 @@ FROM (
 SELECT
   ri.objectid as invoiceId,
   CASE
-	  WHEN ci.ServiceCenter = 'PDAR' THEN rfp.ProcedureName
+	  WHEN (ci.ServiceCenter = 'PDAR' OR ci.ServiceCenter = 'SLAU') THEN rfp.ProcedureName
 	  WHEN ci.ServiceCenter = 'PSURG' THEN sp.ProcedureName
     ELSE 'ERROR'
   END as item,
@@ -76,7 +76,7 @@ from Af_Chargesibs ci
   left join Af_Chargesibs ci2 ON (ci2.ChargesIDKey = ci.ChargesIDKey AND ci.TransactionNumber = ci2.TransactionNumber AND ci.IDKey != ci2.IDKey)
 
 --used to find the chargeid
-  left join Ref_FeesProcedures rfp on (ci.ItemCode = (Convert(varchar(10),rfp.ProcedureID)) AND ci.ServiceCenter = 'PDAR')
+  left join Ref_FeesProcedures rfp on (ci.ItemCode = (Convert(varchar(10),rfp.ProcedureID)) AND (ci.ServiceCenter = 'PDAR' OR ci.servicecenter = 'SLAU'))
 
   left join Ref_SurgProcedure sp on (ci.ItemCode = (Convert(varchar(10), sp.ProcedureID)) AND ci.ServiceCenter = 'PSURG')
   left join Sys_Parameters sys on (sys.Field = 'ChargeType' and sys.Flag = rfp.ChargeType)
@@ -96,7 +96,7 @@ from Af_Chargesibs ci
   ) ri ON (ci.InvoiceNumber >= ri.StartInvoice AND ci.InvoiceNumber <= ri.EndInvoice)
 
 WHERE ci.ItemCode not like '%C'
-and (ci.ts > ? or ci2.ts > ? or rfp.ts > ? or sp.ts > ? or ri.maxTs > ?)
+and (ci.ts > ? or ci2.ts > ? or rfp.ts > ? or sp.ts > ?)  --Note: removing or ri.maxTs > ?, as this is very slow and no strictly necessary at this point since we have migrated most data
 
 ) t
 
