@@ -164,6 +164,7 @@ public class ETLRunnable implements Runnable
             }
 
             int stackSize = -1;
+
             try
             {
                 log.info("Begin incremental sync from external datasource.");
@@ -171,6 +172,8 @@ public class ETLRunnable implements Runnable
                 // Push a fake ViewContext onto the HttpView stack
                 stackSize = HttpView.getStackSize();
                 ViewContext.getMockViewContext(user, container, new ActionURL("onprc_ehr", "fake.view", container), true);
+
+                QueryService.get().setEnvironment(QueryService.Environment.USER, user);
 
                 ETLAuditViewFactory.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0, 0, 0);
 
@@ -249,6 +252,7 @@ public class ETLRunnable implements Runnable
             }
             finally
             {
+                QueryService.get().clearEnvironment();
                 if (stackSize > -1)
                     HttpView.resetStackSize(stackSize);
             }
