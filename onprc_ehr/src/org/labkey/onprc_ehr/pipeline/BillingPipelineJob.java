@@ -15,9 +15,7 @@
  */
 package org.labkey.onprc_ehr.pipeline;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
 import org.labkey.api.data.Container;
 import org.labkey.api.files.FileUrls;
 import org.labkey.api.pipeline.PipeRoot;
@@ -52,7 +50,7 @@ public class BillingPipelineJob extends PipelineJob implements BillingPipelineJo
         super(null, new ViewBackgroundInfo(c, user, url), pipeRoot);
 
         _analysisDir = analysisDir;
-        setLogFile(new File(FileUtil.makeFileNameWithTimestamp(new File(analysisDir, "billingPipeline").getPath(), "log")));
+        setLogFile(new File(analysisDir.getParentFile(), FileUtil.makeFileNameWithTimestamp("billingPipeline", "log")));
         _form = form;
     }
 
