@@ -24,10 +24,10 @@
 
     <target name="gather_modules">
         <copy todir="${dist.modules.dir}">
-            <fileset dir="${staging.modules.dir}">
-                <include name="dumbster.module" />
-                <include name="GenotypeAssays.module" />
-            </fileset>
+            <filelist dir="${staging.modules.dir}">
+                <file name="dumbster.module" />
+                <file name="GenotypeAssays.module" />
+            </filelist>
         </copy>
     </target>
 
