@@ -32,15 +32,16 @@ public class ClinicalEncountersFormSection extends SimpleFormSection
     public ClinicalEncountersFormSection()
     {
         super("study", "encounters", "Procedures", "ehr-gridpanel", EHRService.FORM_SECTION_LOCATION.Body);
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/encounterButtons.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/buttons/encounterButtons.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalEncountersClientStore.js"));
         setClientStoreClass("EHR.data.ClinicalEncountersClientStore");
+        setTemplateMode(TEMPLATE_MODE.NONE);
     }
 
     @Override
     public List<String> getTbarButtons()
     {
-        List<String> defaultButtons = new ArrayList<String>();
+        List<String> defaultButtons = new ArrayList<>();
         defaultButtons.addAll(super.getTbarButtons());
 
         int idx = 0;
@@ -49,8 +50,7 @@ public class ClinicalEncountersFormSection extends SimpleFormSection
             idx = defaultButtons.indexOf("DELETERECORD");
             defaultButtons.remove("DELETERECORD");
         }
-        defaultButtons.add(idx, "SURGERYDELETE");
-        defaultButtons.add((idx+2), "APPLYENCOUNTERDEFAULTS");
+        defaultButtons.add(idx, "ENCOUNTERDELETE");
 
         return defaultButtons;
     }

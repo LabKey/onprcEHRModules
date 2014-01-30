@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-select 
+SELECT * FROM (
+
+select
 CASE WHEN t.protocolId IS NULL THEN project WHEN t.protocolId = t.project THEN null ELSE t.project END as project,
 CASE WHEN t.protocolId = project THEN RTRIM(ltrim(i2.IACUCCode)) ELSE null END as protocol,
 t.species,
@@ -71,3 +73,6 @@ LEFT JOIN Ref_ProjectsIACUC i2 ON (i2.ProjectID = t.protocolId)
 
 WHERE (maxTs > ? or maxTs IS NULL)
 
+) t
+
+WHERE (t.project IS NOT NULL OR t.protocol IS NOT NULL)

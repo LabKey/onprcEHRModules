@@ -19,6 +19,7 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.ExtendedAnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -40,20 +41,22 @@ public class SingleSurgeryFormType extends EncounterForm
     public SingleSurgeryFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, "Surgery", "Surgery", Arrays.<FormSection>asList(
+                new NonStoreFormSection("Instructions", "Instructions", "ehr-surgeryinstructionspanel", Arrays.asList(ClientDependency.fromFilePath("ehr/panel/SurgeryInstructionsPanel.js"))),
                 new TaskFormSection(),
-                new SimpleFormPanelSection("study", "encounters", "Surgery"),
+                new ClinicalEncountersFormPanelSection("Surgery"),
                 new ExtendedAnimalDetailsFormSection(),
-                new EncounterChildFormSection("ehr", "encounter_participants", "Staff", false, true),
-                new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true, true),
-                new EncounterChildFormSection("study", "Drug Administration", "Medications/Treatments Given", true, true, "EHR.data.DrugAdministrationRunsClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/DrugAdministrationRunsClientStore.js")), "Medications"),
-                new EncounterChildFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false, true, "EHR.data.DrugAdministrationRunsClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/DrugAdministrationRunsClientStore.js")), "Medications"),
-                new EncounterChildFormSection("study", "weight", "Weight", false, true),
-                new EncounterChildFormSection("study", "blood", "Blood Draws", false, true),
-                new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true, true),
-                new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/MiscChargesClientStore.js")), null)
+                new EncounterChildFormSection("ehr", "encounter_participants", "Staff", false),
+                new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true),
+                new EncounterMedicationsFormSection("study", "Drug Administration", "Medications/Treatments Given", true),
+                new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
+                new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/WeightClientStore.js")), null),
+                new EncounterChildFormSection("study", "blood", "Blood Draws", false, "EHR.data.BloodDrawClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/window/AddScheduledBloodDrawsWindow.js"), ClientDependency.fromFilePath("ehr/data/BloodDrawClientStore.js")), null),
+                new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true),
+                new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/MiscChargesClientStore.js")), null)
         ));
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Surgery.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/OpenSurgeryCasesWindow.js"));
 
         for (FormSection s : this.getFormSections())
         {

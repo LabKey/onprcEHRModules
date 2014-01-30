@@ -503,6 +503,19 @@ Ext4.onReady(function(){
             schemaName: 'ehr_lookups',
             queryName: 'treatment_frequency_times',
             pk: 'rowid'
+        },{
+            label: 'Procedures',
+            populateFn: 'populateProcedures',
+            schemaName: 'ehr_lookups',
+            queryName: 'procedures',
+            deleteFn: function(){
+                console.log('procedures are not actually deleted, skipping');
+                this.pendingDeletes++;
+                this.onDeleteSuccess({
+                    queryName: 'procedures'
+                });
+            },
+            pk: 'rowid'
         }],
 
         snomedSubsetData: [
@@ -2585,6 +2598,15 @@ Ext4.onReady(function(){
             ['F-31020','Diagnostic Codes',null],
             ['F-31030','Diagnostic Codes',null],
             ['F-31040','Diagnostic Codes',null],
+            ['F-61570','Diagnostic Codes',null],
+            ['F-62400','Diagnostic Codes',null],
+            ['F-01790','Diagnostic Codes',null],
+            ['F-31920','Diagnostic Codes',null],
+            ['F-30980','Diagnostic Codes',null],
+            ['F-01704','Diagnostic Codes',null],
+            ['F-60015','Diagnostic Codes',null],
+            ['F-31000','Diagnostic Codes',null],
+            ['F-85760','Diagnostic Codes',null],
             ['E-07237','Common Treatments',null],
             ['E-07255','Common Treatments',null],
             ['E-07262','Common Treatments',null],
@@ -5042,7 +5064,10 @@ Ext4.onReady(function(){
 
             var data = [
                 ['Set up'],
+                ['Reunite'],
                 ['Pair attempt'],
+                ['Pair change'],
+                ['Extended temporary separation'],
                 ['Permanent separation'],
                 ['Temporary separation'],
                 ['Pair Monitor']
@@ -5112,7 +5137,8 @@ Ext4.onReady(function(){
                 ['BAR'],
                 ['QAR'],
                 ['Lethargic'],
-                ['Sedated']
+                ['Sedated'],
+                ['Unknown']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5132,12 +5158,14 @@ Ext4.onReady(function(){
 
             var data = [
                 ['WNL', 1],
-                ['Mild inflammation', 2],
-                ['Moderate inflammation', 3],
-                ['Severe inflammation', 4],
-                ['Exposed', 5],
-                ['Bruising', 5],
-                ['None', 5]
+                ['Inflammation: Mild', 2],
+                ['Inflammation: Moderate', 3],
+                ['Inflammation: Severe', 4],
+                //['Exposed', 5],
+                ['Bruising: Mild', 6],
+                ['Bruising: Moderate', 7],
+                ['BruisingL Severe', 8],
+                ['None', 9]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5205,7 +5233,10 @@ Ext4.onReady(function(){
                 ['M', 4],
                 ['L/M', 5],
                 ['L', 6],
-                ['None/Scant', 7]
+                ['Pelleted', 7],
+                ['Scant', 8],
+                ['None', 9],
+                ['Unknown', 10]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5404,7 +5435,8 @@ Ext4.onReady(function(){
                 ['See Remarks'],
                 ['N/A'],
                 ['Project Assignment'],
-                ['Project Reserve']
+                ['Project Reserve'],
+                ['Incompatibility']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5476,13 +5508,7 @@ Ext4.onReady(function(){
                             queryName: queryName,
                             scope: this,
                             rows: rows,
-                            success: function(data){
-                                console.log('success deleting rows: '+queryName);
-                                this.pendingDeletes--;
-                                if (this.pendingDeletes==0){
-                                    this.down('#ehr_msg').update('Delete Complete');
-                                }
-                            },
+                            success: this.onDeleteSuccess,
                             failure: LDK.Utils.getErrorCallback()
                         });
                     }
@@ -5496,6 +5522,14 @@ Ext4.onReady(function(){
                 },
                 failure: LDK.Utils.getErrorCallback()
             });
+        },
+
+        onDeleteSuccess: function(data){
+            console.log('success deleting rows: ' + (data ? data.queryName : ' no query'));
+            this.pendingDeletes--;
+            if (this.pendingDeletes==0){
+                this.down('#ehr_msg').update('Delete Complete');
+            }
         },
 
         populateParasitologyMethods: function(){
@@ -5579,7 +5613,7 @@ Ext4.onReady(function(){
                 ['BCS', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
                 ['CRT', Ext4.encode({xtype: 'textfield', minValue: 0, defaultValue: '1-2'})],
                 ['MM', Ext4.encode({xtype: 'textfield', minValue: 0, defaultValue: 'Pink'})],
-                ['Pain Score', Ext4.encode({xtype: 'numberfield', minValue: 0})],
+                ['Pain Score', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0, maxValue: 12})],
                 ['Other', Ext4.encode({xtype: 'textfield'})],
                 ['Mens', Ext4.encode({xtype: 'textfield'})],
                 ['App', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'app_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
@@ -5587,11 +5621,12 @@ Ext4.onReady(function(){
                 ['Hyd', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'hyd_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
                 ['Stool', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'stool_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
                 ['Incision', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'incision_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
-                ['Assessment', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'normal_abnormal', displayField: 'state', valueField: 'state'})],
-                ['Temp', Ext4.encode({xtype: 'numberfield', minValue: 0})],
-                ['Pulse', Ext4.encode({xtype: 'numberfield', minValue: 0})],
-                ['Resp', Ext4.encode({xtype: 'numberfield', minValue: 0})],
-                ['Vet Review', Ext4.encode({xtype: 'textfield'})]
+                ['Observations', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'normal_abnormal', displayField: 'state', valueField: 'state'})],
+                ['Temp', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0})],
+                ['Pulse', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0})],
+                ['Resp', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0})],
+                ['Vet Attention', Ext4.encode({xtype: 'textfield', value: 'Review Needed'})],
+                ['Reviewed', Ext4.encode({xtype: 'textfield'})]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5609,21 +5644,35 @@ Ext4.onReady(function(){
             var fields = ('frequency,hourofday,timedescription').split(',');
             var data = [
                 ['BID - Two times a day',800,'AM'],
-                ['BID - Two times a day',2000,'PM'],
+                ['BID - Two times a day',2000,'Night'],
+                ['BID - AM/PM',800,'AM'],
+                ['BID - AM/PM',1500,'PM'],
+                ['BID - AM/Night',800,'AM'],
+                ['BID - AM/Night',2000,'Night'],
                 ['SID - Once a day',800,'AM'],
+                ['SID - AM',800,'AM'],
+                ['SID - PM',1500,'PM'],
+                ['SID - Night',2000,'Night'],
                 ['TID - Three times a day',800,'AM'],
                 ['TID - Three times a day',1200,'Noon'],
                 ['TID - Three times a day',1600,'PM'],
+                ['TID',800,'AM'],
+                ['TID',1200,'Noon'],
+                ['TID',1600,'PM'],
                 ['QID - Four times a day',800,'AM'],
                 ['QID - Four times a day',1200,'Noon'],
                 ['QID - Four times a day',1600,'PM'],
                 ['QID - Four times a day',2000,'Night'],
+                ['QID',800,'AM'],
+                ['QID',1200,'Noon'],
+                ['QID',1600,'PM'],
+                ['QID',2000,'Night'],
                 ['CON',800,'AM'],
                 ['Q2H',800,'AM'],
                 ['Q4H',800,'AM'],
                 ['Q6H',800,'AM'],
                 ['EOD - Every other Day',800,'AM'],
-                ['1/w  - One per Week',800,'AM'],
+                ['1/w - One per Week',800,'AM'],
                 ['Once every six months',800,'AM'],
                 ['Q1MO - Once a month',800,'AM'],
                 ['E3D - Every Three Days',800,'AM'],
@@ -5635,20 +5684,118 @@ Ext4.onReady(function(){
 
             this.pendingInserts++;
             var dataMap = {
-                'BID - Two times a day': 1,
-                'SID - Once a day': 1,
-                'TID - Three times a day': 1,
-                'QID - Four times a day': 1,
-                'CON': 1,
-                'Q2H': 1,
-                'Q4H': 1,
-                'Q6H': 1,
-                'EOD - Every other Day': 2,
-                '1/w  - One per Week': 7,
-                'Once every six months': 180,
-                'Q1MO - Once a month': 30,
-                'E3D - Every Three Days': 3,
-                'EOW - Every other Week': 14
+                'BID - Two times a day': {
+                    intervalindays: 1,
+                    shortname: 'BID',
+                    active: false
+                },
+                'BID - AM/Night': {
+                    intervalindays: 1,
+                    shortname: 'BID',
+                    sort_order: 4,
+                    active: true
+                },
+                'BID - AM/PM': {
+                    intervalindays: 1,
+                    shortname: 'BID',
+                    sort_order: 5,
+                    active: true
+                },
+                'SID - Once a day': {
+                    intervalindays: 1,
+                    shortname: 'SID',
+                    active: false
+                },
+                'SID - AM': {
+                    intervalindays: 1,
+                    shortname: 'SID',
+                    sort_order: 1,
+                    active: true
+                },
+                'SID - PM': {
+                    intervalindays: 1,
+                    shortname: 'SID',
+                    sort_order: 2,
+                    active: true
+                },
+                'SID - Night': {
+                    intervalindays: 1,
+                    shortname: 'SID',
+                    sort_order: 3,
+                    active: true
+                },
+                'SID - Custom': {
+                    intervalindays: 1,
+                    shortname: 'SID',
+                    sort_order: 12,
+                    active: true
+                },
+                'TID - Three times a day': {
+                    intervalindays: 1,
+                    shortname: 'TID',
+                    active: false
+                },
+                'TID': {
+                    intervalindays: 1,
+                    shortname: 'TID',
+                    sort_order: 6,
+                    active: true
+                },
+                'QID - Four times a day': {
+                    intervalindays: 1,
+                    shortname: 'QID',
+                    active: false
+                },
+                'QID': {
+                    intervalindays: 1,
+                    shortname: 'QID',
+                    sort_order: 7,
+                    active: true
+                },
+                'CON': {
+                    intervalindays: 1,
+                    active: false
+                },
+                'Q2H': {
+                    intervalindays: 1,
+                    active: false
+                },
+                'Q4H': {
+                    intervalindays: 1,
+                    active: false
+                },
+                'Q6H': {
+                    intervalindays: 1,
+                    active: false
+                },
+                'EOD - Every other Day': {
+                    intervalindays: 2,
+                    sort_order: 8,
+                    active: true
+                },
+                '1/w - One per Week': {
+                    intervalindays: 7,
+                    sort_order: 10,
+                    active: true
+                },
+                'Once every six months': {
+                    intervalindays: 180,
+                    active: false
+                },
+                'Q1MO - Once a month': {
+                    intervalindays: 30,
+                    active: false
+                },
+                'E3D - Every Three Days': {
+                    intervalindays: 3,
+                    sort_order: 9,
+                    active: false
+                },
+                'EOW - Every other Week': {
+                    intervalindays: 14,
+                    sort_order: 11,
+                    active: true
+                }
             };
 
             LABKEY.Query.selectRows({
@@ -5657,9 +5804,18 @@ Ext4.onReady(function(){
                 scope: this,
                 success: function(results){
                     var toUpdate = results.rows;
+                    var found = [];
                     Ext4.each(toUpdate, function(row){
-                        var interval = dataMap[row.meaning];
-                        row.intervalindays = interval;
+                        found.push(row.meaning);
+                        var values = dataMap[row.meaning];
+                        if (values){
+                            Ext4.apply(row, values);
+                        }
+                        else {
+                            //console.log('Unknown treatment frequency: ' + row.meaning);
+                        }
+
+                        row.sort_order = row.sort_order || 999;
                     }, this);
 
                     LABKEY.Query.updateRows({
@@ -5667,13 +5823,918 @@ Ext4.onReady(function(){
                         queryName: 'treatment_frequency',
                         rows: toUpdate,
                         scope: this,
-                        success: this.onSuccess,
+                        success: checkForUpdates,
                         failure: this.onError
                     });
+
+                    function checkForUpdates(){
+                        var toInsert = [];
+                        for (var meaning in dataMap){
+                            if (found.indexOf(meaning) == -1){
+                                dataMap[meaning].meaning = meaning;
+                                toInsert.push(dataMap[meaning]);
+                            }
+                        }
+
+                        if (toInsert.length){
+                            console.log('pending inserts: ' + toInsert.length);
+                            LABKEY.Query.insertRows({
+                                schemaName: 'ehr_lookups',
+                                queryName: 'treatment_frequency',
+                                rows: toInsert,
+                                scope: this,
+                                success: this.onSuccess,
+                                failure: this.onError
+                            });
+                        }
+                        else {
+                            this.onSuccess({
+                                schemaName: 'ehr_lookups',
+                                queryName: 'treatment_frequency'
+                            });
+                        }
+                    }
                 },
                 failure: this.onError
             });
+        },
 
+        procedureData: [
+            ['Procedure','Minor Laceration','Clipped and cleaned wound, lavaged with sterile saline. Freshened wound edges. Apposed subcutaneous tissue with ____ and skin with ____. ', true],
+            ['Procedure','Surgical wound I','Clipped and cleaned wound, lavaged with sterile saline. Freshened wound edges. Apposed muscle with _______, subcutaneous tissue with ____ and skin with ____. Placed dry/dry bandage. ', true],
+            ['Procedure','Surgical wound II','Intubated with ____  ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Placed line block of 0.5% bupivacaine and 2% lidocaine. Prepared skin with PVI, aseptically draped. (Insert surgical description) Lavaged, closed subcutaneous tissue with 4-0 Monocryl SI. Freshened skin edges, closed skin with 4-0 Monocryl SI. Administered buprenorphine IM. Good recovery.', true],
+            ['Procedure','Tendon Repair','Intubated with ___ ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Prepared skin with PVI, lavaged with sterile saline. Prepared skin with PVI, aseptically draped. Incised over the caudolateral surface of the tendon, 5 cm. Identified the (insert names) muscles. Freshened edges and apposed tendon with 2-0 PDS with a far-near near-far pattern. Lavaged, closed fascia with 3-0 Monocryl SI. Freshened skin edges, closed with 3-0 Monocryl SI. Placed a padded bandage and fiberglas cast. Administered analgesics. Good recovery.', true],
+            ['Procedure','Achilles Tendon Repair','Intubated with ___ ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Prepared skin with PVI, lavaged with sterile saline. Prepared skin with PVI, aseptically draped. Incised over the caudolateral surface of the tendon, 5 cm. Identified the gastronemius, superficial digital flexor, and common tendon. Freshened tendon edges and apposed with 2-0 PDS with a far-near near-far pattern. Lavaged, closed fascia with 3-0 Monocryl SI. Freshened skin edges, closed with 3-0 Monocryl SI. Placed a padded bandage and fiberglas cast. Administered analgesics. Good recovery from anesthesia. ', true],
+            ['Procedure','Enucleation','The skin clipped, cleaned, aseptically prepared, and sterilely draped. An incision was made 1-2 cm laterally from the junction of the upper and lower eyelid margins. Using thumb forceps, the conjunctiva was grasped near the limbus. A 360 degree perilimbal incision was made. Using curved Metzenbaum’s, s the conjunctiva, Tenon’s capsule, and extraocular muscle were separated from the sclera. The lacrimal gland was excised. Once the globe attachments were freed, the globe was gently retracted. The optic nerve was served with curved Metzendaum scissors. Hemorrhage was controlled with gentle pressure. Approximagely 3-4 mm of the eyelid margins were removed, to the medial canthus. The angularis oculi vein located superficial and medial to the medial canthal tendon was avoided. The conjunctiva, orbital septum and Tenon’s capsule were closed with 3-0 ________. The subcutaneous tissue was apposed with 4-0 _______. The lid margins were closed with _______. ', true],
+            ['Procedure','Partial Therapeutic Caudectomy','The distal tail is wrapped with gauze and tape and the skin is aseptically prepared. A tourniquet is placed proximal to the transaction site. Determine the desired intravertebral transaction site and ake a double V incision in the skin distal to the site. The V is oriented to create dorsal and ventral skin flaps that are longer than the desired tail length. Identify and ligate the medial and lateral caudal arteries and veins just proximal to the incision site. Incise the soft tissue just distal to the intervertebral space and disarticulate the distal tail. If bleeding occurs, place a circumferential ligature around the distal end of the remaining tail or re-ligate the caudal vessels. Appose subcutaneous tissue and muscle over the exposed vertebrae with interrupted approximating sutures. Appose the skin edges with approximating sutures. ', true],
+            ['Procedure','Complete Therapeutic Caudectomy','A tourniquet was placed proximal to the transaction site but not tightened.The skin is clipped and cleaned, and the desired intravertebral transection site identified. A local block is placed proximal to the site. The skin was prepared with PVI, and aseptically draped. The tourniquet was tightened by the anesthetist. A  double V incision was made on the skin distal to the site. The V was oriented to create dorsal and ventral skin flaps that are longer than the desired tail length. The medial and lateral caudal arteries and veins just proximal to the incision site were identified and ligated. The soft tissue just distal to the intervertebral space was incised and the distal tail disarticulate. Bleeding was controlled with direct pressure (or circumferential ligature around the distal end of the remaining tail or re-ligate the caudal vessels). Subcutaneous tissue and muscle were apposed over the exposed vertebrae with interrupted approximating sutures of ______. The skin edges were apposed with _________. ', true],
+            ['Procedure','Rhabdomyolysis','', true],
+            ['Procedure','First Day I','Collected fecal culture, submitted. ', true],
+            ['Procedure','First Day II','Collected ____ cc\'\'s blood for iSTAT, rectal fecal culture. iSTAT abnormalities: (enter abnormals). Placed 22 g IV catheter in the ______ vein. Administered crystalloids and (medication and additives). ', true],
+            ['Procedure','First Day III','Collected ____ cc\'\'s blood for iSTAT, rectal fecal culture. iSTAT abnormalities: (enter abnormals). Placed 22 g IV catheter in the ______ vein. Administered crystalloids and hetastarch IV. Administered (medication and additives).  ', true],
+            ['Procedure','Repeat iSTAT','Collected ____ cc\'\'s blood for iSTAT.  iSTAT abnormalities: (enter abnormalities and plan). ', true],
+            ['Procedure','Bone Marrow Biopsy','The skin over the (iliac crest, trochanteric fossa of the femur, or craniodorsal humerus) was aseptically prepared. A skin incision was made using a scalpel blade.  A bone marrow biopsy needle was inserted through the cortex. Following removal of the stylet, ____ cc’s of marrow was aspirated. The stylet was replaced, and the needle removed. Direct pressurewais applied to the site for 30-60 seconds following removal of the needle. The skin incision was closed with tissue adhesive.', true],
+            ['Procedure','Tb Test Results','', true],
+            ['Procedure','Physical Exam Complete','', true],
+            ['Procedure','Physical Exam Limited','', true],
+            ['Procedure','Technician Exam','', true],
+            ['Procedure','Visual Examination','', true],
+            ['Procedure','Arthrocentesis with Intraarticular injection','The skin was clipped with #40 clipper blades,  aseptically prepared and draped. Synovial fluid for cytology and culture was sterilely collected using a 22 g needles attached to a 3 cc syringe. Following sample collection, the joint was injected with 0.1 cc of 0.5% bupivacaine and 0.5 cc/1 mg dexamethasone.', true],
+            ['Procedure','Arthrocentesis','The skin was clipped with #40 clipper blades,  aseptically prepared and draped. Synovial fluid for cytology and culture was sterilely collected using a 22 g needles attached to a 3 cc syringe. ', true],
+            ['Procedure','Radiographs','Following sedation, (View) and (view) of the (area) were taken. ', true],
+            ['Procedure','Hepatic Biopsy','Administered 0.5 cc/0.15 mg buprenorphine IM, 0.1 cc bupivicaine and 0.1 cc lidocaine at site. Prepared skin aseptically, stabe incision with #11 blade, 18 g x 1 cm hepatic biopsy, sample submitted to pathology. Good recovery from anesthesia, monitored post procedure then returned to social group.', true],
+            ['Procedure','Cerebral Spinal Fluid Collection from the lumbar region','The patient was placed in lateral recumbency. The area was clipped, cleaned, prepared, and aseptically draped. The lumbar spine was gently flexed to open the interarcuate space between L4 and L5. The spinous process caudal to this space was palpated, and the needle inserted at the caudal lateral edge of the spinous process.  The needle was gently advanced until the vertebral arch was encountered, then walked cranially to the interarcuate space. The needle was advanced through the ligament and spinal canal and (sample volume) was collected. The needle was retracted following fluid collection.', true],
+            ['Procedure','Cerebral Spinal Fluid Collection from cistem magnum','The patient was placed in lateral recumbancy. The skin from the occipital protuberance to the level of C3 was clipped, cleaned, and aseptically draped,. The neck was flexed 90 to 100 degrees at the cisternal region. Care was taken to keep the head parallel to the table. The wings of the atlas were palpated to ensure superimposition. Collection was done (puncture may be made in the center of the triangle formed by the wings of the atlas and the occiput. Alternatively, a midline puncture, halfway between the occiput and the cranial end of the spinous process of C2). The needle was inserted at 90 degrees, and gradually advanced through the various tissue layers. Dura penetration was confirmed by observation of CSF in the hub of the needle. Samples (volume and type) were collected and the needle was gently withdrawn. ', true],
+            ['Procedure','Nasal Flush','The patient was anesthetized and intubated with a cuffed _____ ID ET tube. Gauze sponges were placed in the oral pharynx and around the tube. The distance from the external nares to the medial canthus was measured, and mark the catheter. Sterile saline was infused (for a diagnostic flush, infuse 5-10 cc’s of sterile saline, then collect the residual fluid and submit for culture and cytology. For therapeutic flush, use a a 35 cc syringe and infuse 150 to 300 cc’s of saline into the nasal cavity). An otoscope was used to visualize the proximal nasal passages during the procedure.', true],
+            ['Procedure','Technician Exam','', true],
+            ['Procedure','Diagnostic','', true],
+            ['Procedure','Complete','', true],
+            ['Procedure','Limited','', true],
+            ['Procedure','Limited Visual','', true],
+            ['Pathology','Necropsy','', true],
+            ['Pathology','Biopsy','', true],
+            ['Procedure','Aspiration gastric contents','', true],
+            ['Procedure','Bottle feed','', true],
+            ['Procedure','Cage change','', true],
+            ['Procedure','Chorio-Decidual Infusion','', true],
+            ['Procedure','Collar Check','', true],
+            ['Procedure','Collar Placement','', true],
+            ['Procedure','Collar Rmvl','', true],
+            ['Procedure','CT Scan','', true],
+            ['Procedure','DEXA Scan','', true],
+            ['Procedure','Dressing, apply','', true],
+            ['Procedure','Dx Rads Bilateral INJ, w/Cont Media','', true],
+            ['Procedure','Dx Rads INJ w/Cont Media','', true],
+            ['Procedure','Dx Rads PO w/Cont Media','', true],
+            ['Procedure','Dx Rads Positive INJ, w/Cont Media','', true],
+            ['Procedure','Dye marking','', true],
+            ['Procedure','Ejaculation','', true],
+            ['Procedure','Glucose Tolerance Test','', true],
+            ['Procedure','HbA1C test','', true],
+            ['Procedure','Heelstick lancet','', true],
+            ['Procedure','ID monitor of fetus','', true],
+            ['Procedure','Insulin Tolerance Test','', true],
+            ['Procedure','Intrapartum Doppler monitor of fetus','', true],
+            ['Procedure','Intubation','', true],
+            ['Procedure','Jacket, Apply','', true],
+            ['Procedure','Jacket, Maintain','', true],
+            ['Procedure','Jacket, Remove','', true],
+            ['Procedure','Monitoring Temperature','', true],
+            ['Procedure','MRI','', true],
+            ['Procedure','Nasal (only) swab','', true],
+            ['Procedure','Nasal gastric swab','', true],
+            ['Procedure','Nasal/gastric gavage','', true],
+            ['Procedure','Palpation','', true],
+            ['Procedure','Palpation, bimanual','', true],
+            ['Procedure','Procedure for Staff Training','', true],
+            ['Procedure','Puncture & Drainage','', true],
+            ['Procedure','Remove animal appendage from cage','', true],
+            ['Procedure','Sedation','', true],
+            ['Procedure','Sex determination','', true],
+            ['Procedure','Spec Clltn: Urine cystocentesis','', true],
+            ['Procedure','SPF Surveillance','', true],
+            ['Procedure','Swivel-Tether change','', true],
+            ['Procedure','Tattoo','', true],
+            ['Procedure','Transporting','', true],
+            ['Procedure','Ultrasonic guidance of amniocentesis','', true],
+            ['Procedure','Ultrasound - Uterus','', true],
+            ['Procedure','Ultrasound - Ovaries','', true],
+            ['Procedure','Vag Swab Cltn(by Lab)','', true],
+            ['Procedure','Vag tampon insertion, initial','', true],
+            ['Procedure','Vaginal ring, insertion','', true],
+            ['Procedure','Vaginal ring, removal','', true],
+            ['Procedure','Vaginal tampon, final removal','', true],
+            ['Procedure','Vaginal tampon, maintenance','', true],
+            ['Procedure','Worming','', true],
+            ['Procedure','Research Procedure - Other','', true],
+            ['Procedure','Urine Collection','', true],
+
+            //surgeries
+            ['Pathology','Biopsy',null,true,'',false,false,null,null,'',''],
+            ['Pathology','Necropsy',null,,'',false,false,null,null,'',''],
+            ['Surgery','AAV Cisterna Magna Infusion and Sample Collection',null,true,'',false,false,7,3,'Analgeia - Carprofen','None'],
+            ['Surgery','AAV Infusion and Sample Collection',null,true,'',false,false,0,3,'None','None'],
+            ['Surgery','Abscess Incised and Drained',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Adductus Longus Left Biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Adductus Longus Right Biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Adrenalectomy Bilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Adrenalectomy Left',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Adrenalectomy Right',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Air Embolism',null,false,'',true,null,null,null,'',''],
+            ['Surgery','ALS Infusion',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Amniocentesis',null,true,'',false,false,3,3,'None','None'],
+            ['Surgery','Amniotic Catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Amniotic Implant',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Amygdala Bilateral, Ablation Using',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Anesthesia procedure, BSU Staff (NC)',null,false,'',true,false,null,null,'',''],
+            ['Surgery','Anesthesia procedure, CMU (NC)',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Anesthesia procedure, CMU Staff (NC)',null,true,'',false,false,null,null,'',''],
+            ['Surgery','Anesthesia procedure, Research Staff (NC)',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Anesthesia Study',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Anesthesia Study with Ultrasound and Resveratrol Infusion',null,true,'',false,false,3,1,'None','None'],
+            ['Surgery','Angiotensin Study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Antebrachial Gland Left Biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Antebrachial Gland Right Biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Anterior chamber tap, bilateral',null,true,'',false,false,7,7,'None','None'],
+            ['Surgery','Anterior chamber tap, unilateral',null,true,'',false,false,null,null,'',''],
+            ['Surgery','Aorto-Iliac Shunt',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Arcuate Nucleus Bilateral, Lesion Using',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Arterial Blood Collection',null,true,'',false,false,1,0,'None','None'],
+            ['Surgery','Artificial Insemination',null,true,'',false,false,1,0,'None','None'],
+            ['Surgery','Biceps Left Biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Biceps Right Biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Bile Sample',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Bile stone implantation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','BLOOD COLLECTION',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Blood Pressure Monitoring',null,false,'',true,null,null,null,'',''],
+            ['Surgery','BLOOD TRANSFUSION',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Bone Densitometry',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Bone fracture repaired',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Bone Marrow Aspirate, Femur',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Bone Marrow Aspirate, Femur, Needle',null,true,'Bone Marrow Aspirate',true,true,7,1,'Analgesia - Biopsies','None'],
+            ['Surgery','Bone Marrow Aspirate, Humerus',null,true,'Bone Marrow Aspirate',false,true,7,1,'Analgesia - Biopsies','None'],
+            ['Surgery','Bone Marrow Aspirate, Left Femur',null,true,'Bone Marrow Aspirate',false,true,7,1,'Analgesia - Biopsies','None'],
+            ['Surgery','Bone Marrow Aspirate, Left Humerus',null,true,'Bone Marrow Aspirate',false,true,7,1,'Analgesia - Biopsies','None'],
+            ['Surgery','Bone Marrow Aspirate, Right Femur',null,true,'Bone Marrow Aspirate',false,true,7,1,'Analgesia - Biopsies','None'],
+            ['Surgery','Bone Marrow Aspirate, Right Humerus',null,true,'Bone Marrow Aspirate',false,true,7,1,'Analgesia - Biopsies','None'],
+            ['Surgery','Bone marrow femur biopsy',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Brachial gland bilateral biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Brachial gland left biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Brachial gland right biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Brachioradialis left biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Brachioradialis right biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Brainstem cannulation (rabbit)',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Bronchial reactivity test',null,true,'',false,false,7,0,'None','None'],
+            ['Surgery','Bronchoalveolar Lavage',null,true,'Bronchalveolar lavage',false,false,3,0,'None','None'],
+            ['Surgery','Bronchoalveolar lavage - no staff, data entry only',null,true,'Bronchalveolar lavage',false,false,3,0,'None','None'],
+            ['Surgery','Bronchoalveolar lavage - Super BAL',null,true,'Bronchalveolar lavage',false,false,3,0,'None','None'],
+            ['Surgery','Bronchoalveolar lavage - Unilateral',null,true,'Bronchalveolar lavage',false,false,3,0,'None','None'],
+            ['Surgery','Bronchoscopy',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Cardiac Ischemia',null,true,'',false,false,30,7,'None','None'],
+            ['Surgery','Carotic Artery, Left, Catheterized',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Carotid artery biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Carotid artery electrode implant',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Carotid Artery Infusion',null,true,'',false,true,14,7,'Analgesia - Standard','None'],
+            ['Surgery','Carotid artery injection',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Carotid artery, right catheterized',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Cataract removal',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Catheter buried',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Catheter exteriorization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Catheter implantation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Catheter Removed',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Catheter repaired',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Celiac artery catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Celiac ganglionectomy bilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Celiac ganglionectomy right',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cerebral ventriculogram',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cerebrospinal fluid aspirate',null,true,'',false,false,3,1,'Analgeia - Carprofen','None'],
+            ['Surgery','Cervical biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cervix, Cannulation',null,true,'',false,false,7,3,'None','None'],
+            ['Surgery','Cesarean Section',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Cesarean Section + MiniPump Removal',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 2d'],
+            ['Surgery','Cesarean Section + Vascular Catheter Removed',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Cholecystectomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cholecystotomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Clinical Case',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Clinical Diagnostic Procedure',null,true,'',false,false,null,null,'',''],
+            ['Surgery','Colon biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Colon biopsy, endoscopic',null,true,'',false,false,7,3,'Analgesia - Biopsies','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Colon biopsy, laparoscopic',null,true,'',true,true,30,7,'Analgesia - Biopsies','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Colon Resection and Anastomosis',null,true,'',true,true,60,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Colonic volvulus reduction',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Colonoscopy',null,true,'',false,false,7,3,'Analgesia - Biopsies','None'],
+            ['Surgery','Colopexy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Common bile duct anastomosis',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Common bile duct catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Coronary angiography',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Coronary artery experimental thrombosis',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Coronary insufficiency study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Corpus haemorrhagicum transplant',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Corpus luteum transplant',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cranial baseplate and hub implantation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cranial baseplate and hub removed',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cranial cannulation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cranial cannulation + Femoral vein catheterization(rabbit)',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cranial Cannulation + Vascular Catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cranial cannulation, LFV cath removed',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cranial electrode implanted',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cranial Fiducial Marker Placement',null,true,'',true,true,3,7,'Analgesia - Standard','None'],
+            ['Surgery','Craniotomy',null,true,'',true,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Creatinine Clearance Study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cruciate Ligament Repair',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cryptorchid bilateral iatrogenic',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cyst lanced',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cystic duct ligation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Cystocentesis',null,true,'',false,false,1,0,'None','None'],
+            ['Surgery','Cystotomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Datalogger Abdominal Temperature Probe Removal',null,true,'',true,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 2d'],
+            ['Surgery','Datalogger probe placement, intra-abdominal',null,true,'',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 2d'],
+            ['Surgery','Datalogger temperature probe access',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Datalogger temperature probe implantation',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Decapitation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Dehydration',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Digit amputation',null,true,'',false,true,7,1,'Analgesia - Standard','None'],
+            ['Surgery','Dislocation reduction',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Drug Infusion Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Drug Pharmacokinetic Study',null,true,'',false,false,3,1,'None','None'],
+            ['Surgery','Ductuli efferentes bilateral biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ductuli efferentes left biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ductuli efferentes right biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Dummy procedure for Surgical Implant Medications',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Duodenal resection and anastomosis',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Duodenoscopy',null,true,'',false,false,7,3,'Analgesia - Biopsies','None'],
+            ['Surgery','ECG Study',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Echocardiography',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','EKG skin electrodes implanted',null,false,'',true,null,null,null,'',''],
+            ['Surgery','EKG skin electrodes removed',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Electroejaculation',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Electroejaculation, Rectal Probe',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Electroejaculation, Rectal Probe (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Electrolyte Therapy',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Electroretinography',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Electroretinography (NC)',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Embryo Transfer, Laparotomy (NC)',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Embryo Transfer, Transcervical',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Embryo Transplant - Generic',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Embryo transplant and tubal ligation, unilateral',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Embryo Transplant Left, Surgical',null,true,'Embryo Transplant',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Embryo Transplant Right, Surgical',null,true,'Embryo Transplant',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Embryo Transplant,  Laparoscopic',null,true,'Embryo Transplant, Laparoscopic',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Embryo Transplant, Laparoscopic (NC)',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Embryo transplant, transcervical',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Embryo Transplant, Transcervical (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','EMG - Rectal Muscles',null,false,'',true,null,null,null,'',''],
+            ['Surgery','EMG electrodes implanted',null,false,'',true,null,null,null,'',''],
+            ['Surgery','EMG electrodes removed',null,false,'',true,null,null,null,'',''],
+            ['Surgery','EMG Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','EMG telemetry implantation',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Endometrial curettage, transcervical',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Endometrial transplant',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Endometrial transplant biopsy',null,true,'',false,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Endometrial transplant injection',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Endometriectomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Endometriectomy - Impres Medical',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Endometriectomy with Implant - Impres Medical',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Endometriosis biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Epididymal Aspirate',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Epididymal Aspirate (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Epididymectomy left',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Epididymectomy right',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Epididymis bilateral biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Epididymis left biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Epididymis right biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Evisceration repair',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Experimental surgery',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Exsanguination',null,false,'',true,null,null,null,'',''],
+            ['Surgery','External Jugular Vein, Left, Catheterized',null,false,'',false,null,null,null,'',''],
+            ['Surgery','External jugular vein, right catheterized',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Extremity amputation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Eye bilateral enucleation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Eye examination',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Eye left enucleation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Eye right enucleation',null,true,'',true,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Eye study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Eyelid Repair',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Fat & Liver Biopsy, Laparoscopic + Muscle Biopsy',null,true,'',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Fat & Muscle Biopsy',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Fat Biopsy',null,true,'',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','femoral artery catheterization and removal',null,true,'Femoral Artery Catheter, unilateral and removal',true,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Femoral Artery, Left, Catheterized',null,true,'Femoral Artery Catheter, unilateral',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Femoral Artery, Left, Catheterized +  Subclavian Vein, Right, Catheter Removed',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Femoral artery, right catheterized',null,true,'Femoral Artery Catheter, unilateral',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Femoral A-V Shunt',null,true,'Femoral A-V Shunt',false,true,30,7,'Analgesia - Standard','Antibiotics - Enrofloxacin 5d'],
+            ['Surgery','Femoral Head & Neck Ostectomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Femoral Shunt Removal',null,true,'Femoral A-V Shunt Removal',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Femoral Vein, Left, Catheter Removed',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Femoral Vein, Left, Catheterized',null,true,'Femoral Vein Catheter, unilateral',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Femoral Vein, Left, Catheterized  + Internal jugular vein, left, catheter removed',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Femoral vein, right, catheterized',null,true,'Femoral Vein Catheter, unilateral',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Femoral vein, right, catheterized + Femoral vein, left, catheter removed',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Femoral vein, right, catheterized + Subclavian vein, left, catheter removed',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Fenfluramine challenge',null,true,'Fenfluramine challenge',false,false,3,1,'None','None'],
+            ['Surgery','Fentanyl patch placement',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Fentanyl patch removal',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Fetal Surgery',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fetal Surgery - Fetal Vascular Catheterization',null,true,'Fetal Surgery - Fetal Vascular Catheterization',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Fetal Surgery - Maternal Catheterization',null,true,'Fetal Surgery - Maternal Catheterization',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Fetectomy',null,true,'Fetectomy',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Fimbria bilateral soak',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fimbria biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fimbria Biopsy,  Laparoscopic',null,true,'Fimbria Biopsy,  Laparoscopic',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Fimbria transplant',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fimbria transplant biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fimbria transplant evaluation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fimbria transplant injection',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fimbriaectomy bilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fimbriaectomy left',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fimbriaectomy right',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fimbriaectomy, Unilateral, Laparoscopic',null,true,'Fimbriaectomy, Unilateral, Laparoscopic',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Finger laceration repair',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Fistulectomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Flow Probe Study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Frontal and Occipital Lobe Biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Fundoscopy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Gastric bypass - Training only',null,true,'Gastric bypass - Training only',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Gastric bypass + biopsies',null,true,'Gastric bypass + biopsies',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Gastric bypass pre-necropsy biopsies',null,true,'Gastric bypass pre-necropsy biopsies',true,true,0,0,'None','None'],
+            ['Surgery','Gastric bypass SHAM + biopsies',null,true,'Gastric bypass SHAM + biopsies',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Gastric lavage',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Gastroscopy',null,true,'Gastroscopy',false,false,7,3,'None','None'],
+            ['Surgery','Gastrotomy',null,true,'Gastrotomy',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Gelfoam Implants - Wong',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Gene Gun Immunization',null,true,'Gene Gun Immunization',false,false,3,3,'None','None'],
+            ['Surgery','Glucose Clamp',null,true,'Glucose Clamp',false,false,3,1,'None','None'],
+            ['Surgery','Glucose Clamp DVM',null,true,'Glucose Clamp',false,false,3,1,'None','None'],
+            ['Surgery','Glucose Clamp Study',null,true,'Glucose Clamp',false,false,3,1,'None','None'],
+            ['Surgery','Hepatic portal vein catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hepatic vein catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Herniorrhaphy Incisional',null,true,'Herniorrhaphy',true,true,14,7,'Analgesia - Standard','None'],
+            ['Surgery','Herniorrhaphy inguinal bilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Herniorrhaphy inguinal left',null,true,'Herniorrhaphy',true,true,14,7,'Analgesia - Standard','None'],
+            ['Surgery','Herniorrhaphy inguinal right',null,true,'Herniorrhaphy',true,true,14,7,'Analgesia - Standard','None'],
+            ['Surgery','Herniorrhaphy umbilical',null,true,'Herniorrhaphy',true,true,14,7,'Analgesia - Standard','None'],
+            ['Surgery','Herniorrhaphy Umbilical (NC)',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Herniorrhaphy, Incisional (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Homocysteine Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Hormone Implant/Removal',null,true,'Hormone Implant/Removal',false,true,3,2,'None','None'],
+            ['Surgery','Hormone Implant/Removal (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Hormone Packet and Pellet Placement',null,true,'Hormone Packet and Pellet Placement',false,true,3,2,'None','None'],
+            ['Surgery','Hourly Operating Room',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Hourly Surgeon',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Hourly Surgery Anesthesia (including PAM)',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Hourly Surgical Assistant',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Hydrocele bilateral repaired',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hydrocele left repaired',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hydrocele right repaired',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hydrosalpinx Evaluation - Laparoscopic',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Hypophysectomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hypophysectomy sham',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hypothalamic Microinjection',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hypothalamus medial eminence cannulation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hypothalamus, anterior medial basal',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hypothalamus, medial basal, 360 degree',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hypothalamus, medial basal, ablation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hypothalamus, posterior medial, 270',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hypoxia Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Hysterectomy',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Hysteropexy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hysterosalpingectomy',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Hysterosalpingectomy (NC)',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Hysterosalpingectomy +  Pump/port Removal',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Hysterosalpingectomy + endometrial transplant',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Hysterosalpingoophorectomy',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Hysterotomy',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','ICV Cannula Removed',null,false,'',true,null,null,null,'',''],
+            ['Surgery','ICV Cannula Repair',null,false,'',false,null,null,null,'',''],
+            ['Surgery','ICV injection',null,true,'',false,true,14,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','ICV injection + ICV catheter & vascular catheter removed',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Ileal biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ileal intussusception excision',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ileal resection and anastomosis',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Incision and drainage',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Incision repair',null,true,'',false,true,7,7,'None','None'],
+            ['Surgery','Infant Intubation',null,true,'',false,false,2,0,'None','None'],
+            ['Surgery','Injection, IM or SC',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Internal jugular vein, left, catheterized',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Internal jugular vein, right, catheterized',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Interplacental connecting vessel',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Interplacental Connecting Vessel SHAM',null,true,'',true,false,null,null,'',''],
+            ['Surgery','Intracranial Injection Support',null,true,'',false,true,14,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Intracranial Virus Injection',null,true,'',true,true,14,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Intra-CSF injection, cisterna magna',null,true,'',false,false,3,3,'Analgeia - Carprofen','None'],
+            ['Surgery','Intraluteal Injection',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Intraovarian catheter removal',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Intraovarian catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Intraovarian Catheterization + Vascular Catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Intraovarian Catheterization, & Bilateral + Mini Pump, Bilateral',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Intraovarian Catheterization, Unilateral + Mini Pump, Unilateral',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Intraovarian implant bilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Intraovarian Implant Bilateral + Intraovarian Injection',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Intraovarian implant removal',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Intraovarian injection',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Intraperitoneal Injection',null,true,'',false,false,3,1,'None','None'],
+            ['Surgery','Intravitreal Injection',null,true,'',true,false,3,7,'None','None'],
+            ['Surgery','Intravitreal Injection Bilateral',null,true,'',true,false,3,7,'None','None'],
+            ['Surgery','In-utero death',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Isotope Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','IUD implant, laparotomy',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','IUD implant, transcervical',null,false,'',false,null,null,null,'',''],
+            ['Surgery','IUD removal, laparotomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','IUD removal, transcervical',null,false,'',false,null,null,null,'',''],
+            ['Surgery','IV catheter placement and data entry',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Jejunal biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Jejunal resection and anastomosis',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Kidney bilateral biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Kidney left biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Kidney right biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Labor Study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Laminaria Placement',null,true,'',false,false,1,1,'None','None'],
+            ['Surgery','Laparoscopic Adipose Tissue Biopsies',null,true,'',true,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Laparoscopic bilat salpingoophorectomy',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Laparoscopic Tru-Cut Uterine Biopsy',null,true,'',true,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Laparoscopy',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Laparoscopy - Peritoneal Fluid Aspiration',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Laparoscopy (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Laparoscopy, Exploratory',null,true,'',false,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Laparotomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Laparotomy exploratory',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Large bowel biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Lateral ventricle left, cannulation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Left brachial artery catheterized',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Left leg amputation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','LHRH Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Lienal artery catheterized',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Lienal vein catheterized',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Lip Biopsy - Salivary Gland',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Liver and muscle biopsy, infant, with drug infusion',null,true,'',true,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Liver Biopsy, Laparoscopic',null,true,'',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Liver Biopsy, Percutaneous',null,true,'',false,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Liver biopsy, percutaneous and muscle biopsy',null,true,'',true,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','LRF Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Lung perfusion',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Luteectomy, Left, Unilateral',null,true,'Luteectomy, unilateral',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Luteectomy, Right, Unilateral',null,true,'Luteectomy, unilateral',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Lymph Node and Skin Biopsy - FITC',null,true,'',false,true,7,7,'Analgesia - Biopsies','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Lymph Node and Skin Biopsy - FITC (infant)',null,true,'',false,true,7,7,'Analgesia - Biopsies','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Lymph node biopsy',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Lymph Node Biopsy, Left Axillary',null,true,'Lymph node biopsy',false,true,7,7,'Analgesia - Biopsies','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Lymph Node Biopsy, Left Inguinal',null,true,'Lymph node biopsy',false,true,7,7,'Analgesia - Biopsies','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Lymph Node Biopsy, Right Axillary',null,true,'Lymph node biopsy',false,true,7,7,'Analgesia - Biopsies','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Lymph Node Biopsy, Right Inguinal',null,true,'Lymph node biopsy',false,true,7,7,'Analgesia - Biopsies','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Lymph Node Biopsy, Two Sites',null,true,'',false,true,7,7,'Analgesia - Biopsies','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Mammary biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Mammary tumor excision',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Mastectomy',null,true,'',true,true,14,7,'Analgesia - Standard','None'],
+            ['Surgery','Maternal - Fetal Catheterization',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Maternal-Fetal Sedation and Monitoring',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Maternal-Fetal Sedation Control',null,true,'',false,false,2,0,'None','None'],
+            ['Surgery','Menstrual blood collection (control), laparoscopic',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Menstrual blood collection and abdominal seeding, laparoscopic',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Mesenteric biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Microchip placement',null,true,'',false,false,1,1,'None','None'],
+            ['Surgery','Microsphere Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Middle Cerebral Artery Occlusion',null,true,'',true,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3 doses'],
+            ['Surgery','Mini Pump Change',null,true,'',false,true,3,3,'None','Antibiotics - Cefazolin 2d'],
+            ['Surgery','Minipump Implant',null,true,'',false,true,3,3,'None','Antibiotics - Cefazolin 2d'],
+            ['Surgery','Minipump Removal',null,true,'',false,true,3,3,'None','Antibiotics - Cefazolin 2d'],
+            ['Surgery','Mock Orchidectomy',null,true,'',false,false,null,null,'',''],
+            ['Surgery','MRI 0.5 hour',null,true,'MRI',false,false,3,0,'None','None'],
+            ['Surgery','MRI 1 hour',null,true,'MRI',false,false,3,0,'None','None'],
+            ['Surgery','MRI 1.5 hour',null,true,'MRI',false,false,3,0,'None','None'],
+            ['Surgery','MRI 2 hours',null,true,'MRI',false,false,3,0,'None','None'],
+            ['Surgery','MRI 2.5 hour',null,true,'MRI',false,false,3,0,'None','None'],
+            ['Surgery','MRI 3 hours',null,true,'MRI',false,false,3,0,'None','None'],
+            ['Surgery','Multiple organ biopsies',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Muscle biopsy',null,true,'',false,true,7,3,'Analgesia - Biopsies','None'],
+            ['Surgery','Muscle imaging with ultrasound',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Muscle imaging with ultrasound (no molecular imaging)',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Myocardial contractility study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Naso-gastric lavage',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Neonate sedation and monitoring',null,true,'',false,false,2,0,'None','None'],
+            ['Surgery','Neonate sedation protocol control',null,true,'',false,false,2,0,'None','None'],
+            ['Surgery','Nephrectomy bilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Nephrectomy left',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Nephrectomy right',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Nerve constriction',null,false,'',true,null,null,null,'',''],
+            ['Surgery','No entry',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Omental laceration',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oophorectomy Bilateral',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Oophorectomy bilateral + hysteroscopy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oophorectomy bilateral + hysterotomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oophorectomy Bilateral + Ovarian Follicle Aspiration, Multiple Follicle',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oophorectomy Bilateral + Ovarian Follicle Aspiration, Single Follicle',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oophorectomy Bilateral + Oviduct Catheterization, Bilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oophorectomy bilateral, Laparoscopic',null,true,'',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Oophorectomy Bilateral, Laparoscopic (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Oophorectomy bilateral, Laparoscopic + Telemetry & Minipump Removed',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oophorectomy left',null,true,'Oophorectomy, unilateral',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Oophorectomy right',null,true,'Oophorectomy, unilateral',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Oophorectomy Unilateral + Ovarian Follicle Aspiration',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oophorectomy unilateral + Salpingoophorectomy unilateral',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Oophorectomy Unilateral + Salpingoophorectomy Unilateral, Laparoscopic',null,true,'',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Oophorectomy unilateral and intraovarian catheter removal, laparoscopic + minipump removal',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Oophorectomy, bilateral, laparoscopic and minipump removal',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Oophorectomy, Left Unilateral, Laparoscopic',null,true,'Oophorectomy, unilateral, laparoscopic',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Oophorectomy, Right Unilateral, Laparoscopic',null,true,'Oophorectomy, unilateral, laparoscopic',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Oophorectomy, sham',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oophorectomy, Unilateral, Laparoscopic',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Oophorectomy, unilateral, laparoscopic and minipump removal',null,true,'Oophorectomy, unilateral, laparoscopic and minipump removal',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Optical Coherence Tomography',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Oral gavage',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Oral Mucosa Biopsies',null,true,'',false,false,3,1,'None','None'],
+            ['Surgery','Oral pharynx examination',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Orchidectomy bilateral',null,true,'Orchidectomy, bilateral',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Orchidectomy left',null,true,'Orchidectomy, unilateral',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Orchidectomy right',null,true,'Orchidectomy, unilateral',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Orchidectomy, sham',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Orchioepididymectomy bilateral',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Orchioepididymectomy bilateral, sham',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ovarian Epithelial Resection, Laparoscopic',null,true,'',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian evaluation bilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ovarian Evaluation, Laparoscopic',null,true,'Ovarian Evaluation, Laparoscopic',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian follicle aspiration (rabbit)',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ovarian Follicle Aspiration, Multiple + Oophorectomy, Bilateral, Laparoscopic',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Ovarian Follicle Aspiration, Multiple + Oophorectomy, Bilateral, Laparoscopic + Pump Removal',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Ovarian Follicle Aspiration, Multiple Follicles',null,true,'Ovarian Follicle Aspiration, Multiple Follicles',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian Follicle Aspiration, Multiple, Laparoscopic',null,true,'Ovarian Follicle Aspiration, Multiple, Laparoscopic',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian Follicle Aspiration, Multiple, Laparoscopic (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Ovarian Follicle Aspiration, Multiple, Lparasocopic + Embryo Transplant',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Ovarian Follicle Aspiration, Single Follicle, Laparoscopic + Telemetry Implant',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Ovarian Follicle Aspiration, Single Follicles',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian Follicle Aspiration, Single Laparoscopic (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Ovarian Follicle Aspiration, Single Laparsocopic',null,true,'',false,null,null,null,'',''],
+            ['Surgery','Ovarian Follicle Aspiration, Subcutaneous',null,true,'',false,false,3,7,'None','None'],
+            ['Surgery','Ovarian Follicle Explant, Subcutaneous',null,true,'',false,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian Follicle Injection, Laparoscopic',null,true,'Ovarian Follicle Injection, Laparoscopic',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian Follicle Injection, Left',null,true,'Ovarian Follicle Injection',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian Follicle Injection, Right',null,true,'Ovarian Follicle Injection',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian Follicle Irrigation, Single, Laparotomy',null,true,'Ovarian Follicle Injection',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian Irradiation & Oophorectomy Unilateral',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian Irradiation, Bilateral',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Ovarian Irradiation, Bilateral (Sham)',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Ovarian Lymphatic Mapping and Oophorectomy, Unilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ovarian Resection',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ovarian Resection - Generic',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ovarian Surface Epithelium Ablation - Laparotomy',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Ovarian Tissue Biopsy',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Ovarian Tissue Transplant, Intramuscular',null,true,'',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Ovarian Tissue Transplant, Subcutaneous',null,true,'',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Ovarian transplant',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Ovarian Transplant Retrieval',null,true,'',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Ovarian Transplant Retrieval, multiple sites',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Ovarian vein bilateral blood sample',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ovarian vein left blood sample',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ovarian vein right blood sample',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ovarian-fimbria ligament transection',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Overtime Hourly Surgeon',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Overtime Hourly Surgical Assistant',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Oviduct bilateral catheter evaluation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oviduct Catheter Disconnect',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Oviduct Catheter Removal, Laparoscopic',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Oviduct catheter repair',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oviduct Catheterization + Oophorectomy, Contralateral',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Oviduct Catheterization + Salpingoophorectomy, Contralateral',null,true,'',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Oviduct Catheterization Bilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oviduct catheterization, left',null,true,'Oviduct catheterization',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Oviduct catheterization, right',null,true,'Oviduct catheterization',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Oviduct infusion study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oviduct lavage bilateral, rabbit',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oviduct lavage, left',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Oviduct lavage, right',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Oviduct Resection',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Oviductal fluid aspiration, no surgery staff',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Oxygen Breathing Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Palpation for Implant',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Pampiniform plexis left partial ligation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Pancreas biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Pancreatectomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Pancreatic islet cell transplantation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Perinephric left ligature',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Petrosal Sinus Catheterization',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Pharyngostomy Tube',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Pilot project - major surgery',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Pituitary cannulation, chronic',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Pituitary stalk section',null,false,'',true,null,null,null,'',''],
+            ['Surgery','pK study (vitals, blood draw, dosing)',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Placenta retained',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Placental vessel catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Pneumonectomy left middle lobe',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Portal Implant',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Portal Removal',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Post operative examination',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Preoptic area and supraooptic nucleus',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Preoptic area bilateral, ablation using',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Preoptic area bilateral, lesion using',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Probe Snare Removed',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Procedure for Staff Training - Cath & Intubation',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Procedure for Staff Training (Embryo Transfer)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Procedure for Staff Training (NC)',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Procedure for Staff Training (Non-Surgical)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Procedure for Staff Training (Surgical)',null,true,'',true,true,0,0,'None','None'],
+            ['Surgery','Prosencephalectomy type II',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Prosencephalectomy type II with,',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Prosencephalectomy type II, modified',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Prosencephalectomy type III',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Prosencephalectomy type III with,',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Prostate biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Prosthetic device implanted',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Prosthetic Device Removed',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Pulmonary Function Test (noninvasive)',null,true,'',false,false,7,0,'None','None'],
+            ['Surgery','Rectal prolapse repaired',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Rectus abdominus left biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Renal vein bilateral blood sample',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Renal vein left blood sample',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Renal vein right blood sample',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Retinal angiography',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Retinal laser exposure',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Retinal Photography',null,true,'Retinal Photography',false,false,3,0,'None','None'],
+            ['Surgery','Retinal Photography (NC)',null,true,'Retinal Photography',false,false,3,0,'None','None'],
+            ['Surgery','Right brachial artery catheterized',null,false,'',true,null,null,null,'',''],
+            ['Surgery','RIOD evaluation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','RIOD implantation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','RIOD reversal',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Roux En Y, Pre-necropsy biopsies',null,true,'',true,true,30,0,'None','None'],
+            ['Surgery','Saline Perfusion',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Saline Perfusion Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Salpingectomy bilateral',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Salpingectomy left',null,true,'Salpingectomy, unilateral',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Salpingectomy right',null,true,'Salpingectomy, unilateral',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Salpingectomy, Bilateral, Laparoscopic',null,true,'',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Salpingectomy, Unilateral, Laparoscopic',null,true,'',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Salpingoophorectomy bilateral (rabbit)',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Salpingoophorectomy bilateral, Laparoscopic',null,true,'',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Salpingoophorectomy Left',null,true,'Salpingoophorectomy, unilateral',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Salpingoophorectomy Right',null,true,'Salpingoophorectomy, unilateral',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Salpingoophorectomy, Bilateral',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Salpingoophorectomy, Left unilateral, Laparoscopic',null,true,'Salpingoophorectomy, unilateral, Laparoscopic',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Salpingoophorectomy, Right Unilateral, Laparoscopic',null,true,'Salpingoophorectomy, unilateral, Laparoscopic',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Sample (Specimen Collection)',null,true,'',false,null,null,null,'',''],
+            ['Surgery','Sartorius muscle left excision',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Sartorius muscle right excision',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Sedate, catheter, and monitor',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Sedation, intubation, and monitoring',null,true,'',false,false,3,0,'None','None'],
+            ['Surgery','Seminal vesicle bilateral biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Seminal vesicle left biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Seminal vesicle right biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Seroma repair',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Skin biopsy',null,true,'',false,true,3,3,'None','None'],
+            ['Surgery','Skin transplant autologous',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Skin transplant homologous',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Skin wound',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Small and large intestine biopsy, laparoscopic',null,true,'',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Soleus left biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Soleus right biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Special Run Surgical Sterilization Fee',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Spinal Hemisection via Dorsal Laminectomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Splenectomy',null,true,'',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Stereotaxic study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Sternotomy median',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Stomach biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Subclavian Catheter + Pharyngostomy Tube',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Subclavian vein, catheterized + Minipump implant, multiple',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Subclavian vein, left + femoral vein, left, catheterization',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Subclavian vein, left + femoral vein, right, catheterization',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Subclavian vein, left, catheterization',null,true,'Subclavian vein catheterization',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Subclavian vein, right, catheterization',null,true,'Subclavian vein catheterization',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Subclavian vein, right, catheterized + Femoral vein, right, catheter removed',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Subclavian vein, right, catheterized + Subclavian vein, left, catheter removed',null,true,'Subclavian vein catheterization, contralateral catheter removal',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Subcutaneous graft excision (sham)',null,true,'',false,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Subcutaneous graft placement (sham)',null,true,'',false,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Subretinal Injection',null,true,'',false,false,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Surgery Cancelled',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Surgery Cancelled (Anesthesia & OR Setup)',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Surgery Cancelled (N/C)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Surgical Equipment Rental/day',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Surgical Pharmaceutical/Consumable Fee, Per Line Item',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Surgical Sterilization Fee',null,true,'',false,false,0,0,'None','None'],
+            ['Surgery','Tachometry study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Tail amputation',null,true,'',false,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Telemetry Device Explant',null,true,'Telemetry Device Explant',false,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Telemetry Device Explant w/o ECG',null,true,'Telemetry Device Explant',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Telemetry Device Implant',null,true,'Telemetry Device Implant',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Telemetry Device Implant (w/o ECG)',null,true,'Telemetry Device Implant',false,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Telemetry Study',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Temperature Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Terminated',null,false,'',false,null,null,null,'',''],
+            ['Surgery','test value',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Testicular  biopsy, right',null,true,'Testicular biopsy, unilateral',false,true,7,3,'Analgesia - Biopsies','None'],
+            ['Surgery','Testicular artery left blood sample',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Testicular bilateral infusion',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Testicular Biopsy - True Cut',null,true,'Testicular biopsy, unilateral',false,true,7,3,'Analgesia - Biopsies','None'],
+            ['Surgery','Testicular biopsy (N/C)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Testicular Biopsy (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Testicular Biopsy, bilateral',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Testicular biopsy, left',null,true,'Testicular biopsy, unilateral',false,true,7,3,'Analgesia - Biopsies','None'],
+            ['Surgery','Testicular left biopsy (rabbit)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Testicular right biopsy (rabbit)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Testicular temperature',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Testicular vein left blood sample',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Testicular vein right blood sample',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Testis left prosthetic device implanted',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Testis right prosthetic device implanted',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Testosterone Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Third vent cann, LSV cath',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Third ventricle cannula removal',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Third ventricle cannula repair',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Third ventricle, cannulation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Thoracic Duct Catheterization',null,true,'Thoracic Duct Catheterization',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Thoracic Duct Re-Catheterization',null,true,'Thoracic Duct Re-Catheterization',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Thoracoscopy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Thoracotomy exploratory',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Thymectomy',null,true,'Thymectomy',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Thymectomy (Sham)',null,true,'Thymectomy (Sham)',true,true,30,7,'Analgesia - Standard','Antibiotics - Cefazolin 5d'],
+            ['Surgery','Thyroidectomy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Tooth Extraction',null,true,'Tooth Extraction',false,true,7,3,'Analgesia - Biopsies','None'],
+            ['Surgery','Tracheal cast removed',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Tracheal catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Tracheal ligation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Tracheostomy',null,true,'Tracheostomy',true,true,7,7,'None','None'],
+            ['Surgery','Tracheostomy + Pulmonary Function Test',null,true,'Tracheostomy + Pulmonary Function Test',true,true,7,7,'None','None'],
+            ['Surgery','Transcervical cannulation of uterus with laparoscopy',null,true,'Transcervical cannulation, laparoscopic',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Transcervical Cannulation of uterus with ultrasound',null,true,'Transcervical cannulation, ultrasound',false,false,5,5,'None','None'],
+            ['Surgery','Transcervical cannulation of uterus with ultrasound and x-rays',null,true,'Transcervical cannulation, ultrasound and radiographs',false,false,5,5,'None','None'],
+            ['Surgery','Traumatic Injury',null,false,'',false,null,null,null,'',''],
+            ['Surgery','TRH Study',null,false,'',false,null,null,null,'',''],
+            ['Surgery','True-Cut Muscle Biopsy',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Tubal ligation, bilateral',null,true,'Tubal ligation, bilateral',true,true,30,7,'Analgesia - Standard','None'],
+            ['Surgery','Tumor biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ulnar nerve left resection',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ultrasound + Amniocentesis + Minipump Change',null,true,'Ultrasound + Amniocentesis + Minipump Change',false,true,3,3,'None','None'],
+            ['Surgery','ultrasound + mini pump change',null,true,'ultrasound + mini pump change',false,true,3,3,'None','Antibiotics - Cefazolin 2d'],
+            ['Surgery','Ultrasound Study',null,true,'Ultrasound Study',false,false,3,0,'None','None'],
+            ['Surgery','Ultrasound Study (gas anesthesia)',null,true,'Ultrasound Study (gas anesthesia)',false,false,3,0,'None','None'],
+            ['Surgery','Ultrasound/Hypoxia Study (gas anesthesia)',null,true,'Ultrasound/Hypoxia Study (gas anesthesia)',false,false,3,1,'None','None'],
+            ['Surgery','Unilateral Salpingoophorectomy with Ipsilateral Cornual Wedge Resection',null,true,'',true,false,null,null,'',''],
+            ['Surgery','Uterine biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Uterine biopsy + IUD implant',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Uterine biopsy + IUD implant + Oophorectomy bilateral',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Uterine Catheterization with portal, + Mini Pump implant',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Uterine Infusion, Transcervical + Oviduct Leakage Evaluation, Laparoscopic',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Uterine infusion/x-ray',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Uterine injection',null,true,'Uterine injection',false,false,3,1,'None','None'],
+            ['Surgery','Uterine lavage',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Utero-ovarian vein left catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Utero-ovarian vein right catheterization',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vagina biopsy',null,true,'Vagina biopsy',false,false,7,3,'Analgesia - Biopsies','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Vaginal biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vaginal delivery assistance',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vaginal Prolapse Repair',null,true,'Vaginal Prolapse Repair',false,false,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Vaginoscopy',null,true,'Vaginoscopy',false,false,3,1,'None','None'],
+            ['Surgery','Varicocele evaluation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Varicocele left iatrogenic',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Varicocele right iatrogenic',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Vas deferen-rete testis anastomosis',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens bilateral anastomosis',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens bilateral evaluation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens bilateral implant evaluation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens bilateral prosthetic impl removal',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens bilateral prosthetic implantation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens bilateral valve reversed',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens fistula iatrogenic',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens left anastomosis',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens left fistula repaired',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens left valve evaluation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens right anastomosis',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vas deferens right fistula repaired',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vascular bed surgical exploration',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vascular catheter removal',null,true,'Vascular catheter removal',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Vascular catheter revision',null,true,'Vascular catheter revision',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Vascular Catheterization - Generic',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Vascular catheterization (NC)',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Vascular catheterization with portal',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vascular Catheterization, double',null,true,'Vascular Catheterization, double',false,true,7,7,'Analgesia - Standard','Antibiotics - Cefazolin 3d'],
+            ['Surgery','Vasectomy bilateral',null,true,'Vasectomy bilateral',false,true,7,7,'Analgesia - Standard','None'],
+            ['Surgery','Vasectomy bilateral, sham',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vasectomy evaluation',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vasectomy left',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Vasectomy right',null,false,'',false,null,null,null,'',''],
+            ['Surgery','Vastas lateralis left biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Vastas lateralis right biopsy',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Ventricular myocardia threshold',null,false,'',true,null,null,null,'',''],
+            ['Surgery','Wound repair',null,true,'Wound repair',false,true,7,7,'Analgesia - Standard','None']
+        ],
+
+        populateProcedures: function(){
+            this.pendingInserts++;
+
+            LABKEY.Query.selectRows({
+                schemaName: 'ehr_lookups',
+                queryName: 'procedures',
+                scope: this,
+                success: function(results){
+                    //build map of records needed
+                    var procedureMap = {};
+                    Ext4.Array.forEach(this.procedureData, function(r){
+                        var key = r[0] + '||' + r[1];
+
+                        procedureMap[key] = {
+                            category: r[0],
+                            name: r[1],
+                            remark: r[2],
+                            active: r[3],
+                            genericname: r[4],
+                            major: r[5],
+                            incision: r[6],
+                            recoveryDays: r[7],
+                            followupDays: r[8],
+                            analgesiaRx: r[9],
+                            antibioticRx: r[10]
+                        };
+                    }, this);
+
+                    var toInsert = [];
+                    var toUpdate = [];
+                    if (results.rows && results.rows.length){
+                        Ext4.each(results.rows, function(row){
+                            var key = row.category + '||' + row.name;
+                            if (procedureMap[key]){
+                                procedureMap[key]._found = true;
+                                row = LABKEY.ExtAdapter.apply(row, procedureMap[key]);
+                                toUpdate.push(row);
+                            }
+                            else {
+
+                            }
+                        }, this);
+                    }
+
+                    if (toUpdate.length){
+                        console.log('updating: ' + toUpdate.length);
+                        LABKEY.Query.updateRows({
+                            schemaName: 'ehr_lookups',
+                            queryName: 'procedures',
+                            rows: toUpdate,
+                            scope: this,
+                            success: function(){
+                                this.insertProcedures(procedureMap);
+                            },
+                            failure: this.onError
+                        });
+                    }
+                    else {
+                        console.log('no updates, inserting procedures');
+                        this.insertProcedures(procedureMap);
+                    }
+                },
+                failure: this.onError
+            });
+        },
+
+        insertProcedures: function(procedureMap){
+            var toInsert = [];
+            for (var key in procedureMap){
+                if (!procedureMap[key]._found){
+                    if (procedureMap[key].active){
+                        console.log('creating: ' + key);
+                        toInsert.push(procedureMap[key]);
+                    }
+                    else {
+                        console.log('skipping creation of inactive: ' + key);
+                    }
+                }
+            }
+
+            if (toInsert.length){
+                console.log('inserting procedures rows');
+                LABKEY.Query.insertRows({
+                    schemaName: 'ehr_lookups',
+                    queryName: 'procedures',
+                    rows: toInsert,
+                    scope: this,
+                    success: function(results){
+                        console.log('done inserting procedures');
+                        this.onSuccess(results);
+                    },
+                    failure: this.onError
+                });
+            }
+            else {
+                console.log('no procedure inserts to perform, skipping')
+                this.onSuccess({
+                    schemaName: 'ehr_lookups',
+                    queryName: 'procedures'
+                });
+            }
         },
 
         populateNormalAbnormal: function(){
@@ -5690,7 +6751,7 @@ Ext4.onReady(function(){
             var data = [
                 ['Normal'],
                 ['Abnormal'],
-                ['Not Examined']
+                ['Not Evaluated']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5754,8 +6815,8 @@ Ext4.onReady(function(){
                 ['Anesthetist', 'Anesthetist'],
                 ['Instrument Tech', 'Instrument Tech'],
                 ['Circulator', 'Circulator'],
-                ['Pathologist', 'Pathologist'],
-                ['Pathologist - Gross', 'Pathologist - Gross'],
+                ['Pathologist - DCM', 'Pathologist - DCM'],
+                ['Pathologist - Research ', 'Pathologist - Research '],
                 ['Pathologist - Histopathology', 'Pathologist - Histopathology'],
                 ['Prosector', 'Prosector']
             ];
@@ -5887,7 +6948,7 @@ Ext4.onReady(function(){
             };
             var fields = ('value,title').split(',');
             var data = [
-                //['No Charge', 'No Charge'],
+                ['No Charge', 'No Charge'],
                 ['DCM: CMU', 'DCM: CMU'],
                 ['DCM: RFO', 'DCM: RFO'],
                 ['DCM: Surgery', 'DCM: Surgery'],
@@ -5983,7 +7044,8 @@ Ext4.onReady(function(){
                 ['CSF Glucose',true,'Clinpath','Misc Tests','T-X1000',''],
                 ['CSF Total Protein',true,'Clinpath','Misc Tests','T-X1000',''],
                 ['Other Clinpath',false,'Clinpath','Misc Tests','',''],
-                ['Other SPF Surveillance',false,'SPF Surveillance Lab','Misc Tests','','']
+                ['Other SPF Surveillance',false,'SPF Surveillance Lab','Misc Tests','',''],
+                ['BASIC Chemistry Panel (Axthelm)',false,'Research Staff','Biochemistry','T-0X500','']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -6124,8 +7186,8 @@ Ext4.onReady(function(){
                 ['Comprehensive Chemistry Panel Send Out','A/G Ratio',12,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out','TRIG',13,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out','CHOL',14,'','testid'],
-                ['Comprehensive Chemistry Panel Send Out','DBili',15,'','testid'],
-                ['Comprehensive Chemistry Panel Send Out','TBili',16,'','testid'],
+                ['Comprehensive Chemistry Panel Send Out','TBili',15,'','testid'],
+                ['Comprehensive Chemistry Panel Send Out','DBili',16,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out','GGT',17,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out','ALKP',18,'','testid'],
                 ['Comprehensive Chemistry Panel Send Out','LDH',19,'','testid'],
@@ -6273,7 +7335,21 @@ Ext4.onReady(function(){
                 ['PDL ABSCN-5','E-YY331',3,'MMIA','agent'],
                 ['PDL ABSCN-8','E-YY331',3,'MMIA','agent'],
                 ['PDL STLV WB','E-YY331',5,'Western Blot','agent'],
-                ['SRV Virus Isolation','E-YY328',1,'Cell Culture CPE','agent']
+                ['SRV Virus Isolation','E-YY328',1,'Cell Culture CPE','agent'],
+                ['BASIC Chemistry Panel (Axthelm)','GLUC',1,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','BUN',2,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','CREAT',3,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','Na',4,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','K',5,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','TP',6,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','ALB',7,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','AST',8,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','ALT',9,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','ALKP',10,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','Amyl',11,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','TBili',12,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','Ca',13,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','Glob',14,'','testid']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -6331,15 +7407,16 @@ Ext4.onReady(function(){
             };
             var fields = ('service,automaticrequestfromblooddraw,requiredtubetype,minvolume,labwork_service,formtype').split(',');
             var data = [
-                ['CBC with automated differential', true, 'EDTA', 0.5, 'CBC with automated differential', 'Labwork Request'],
-                ['Comprehensive Chemistry panel in-house', true, null, 1.0, 'Comprehensive Chemistry panel in-house', 'Labwork Request'],
+                //TODO: all of these have been set to false for the time being.  re-able once ready
+                ['CBC with automated differential', false, 'EDTA', 0.5, 'CBC with automated differential', 'Labwork Request'], //true
+                ['Comprehensive Chemistry panel in-house', false, null, 1.0, 'Comprehensive Chemistry panel in-house', 'Labwork Request'], //true
                 ['MHC Typing', false, null, 2.0, null, null],
                 ['Viral Load', false, null, 1.0, null, null],
-                ['SPF Surveillance - Annual', true, 'No Additive', 4.0, 'SPF Surveillance - Annual', 'Labwork Request'],
-                ['ESPF Surveillance - Monthly', true, 'No Additive', 4.0, 'ESPF Surveillance - Monthly', 'Labwork Request'],
-                ['ESPF Surveillance - Quarterly', true, 'No Additive', 4.0, 'ESPF Surveillance - Quarterly', 'Labwork Request'],
-                ['Japanese Macaque Surveillance', true, 'No Additive', 4.0, 'Japanese Macaque Surveillance', 'Labwork Request'],
-                ['Compromised SPF Surveillance', true, 'No Additive', 4.0, 'Compromised SPF Surveillance', 'Labwork Request']
+                ['SPF Surveillance - Annual', false, 'No Additive', 4.0, 'SPF Surveillance - Annual', 'Labwork Request'], //true
+                ['ESPF Surveillance - Monthly', false, 'No Additive', 4.0, 'ESPF Surveillance - Monthly', 'Labwork Request'], //true
+                ['ESPF Surveillance - Quarterly', false, 'No Additive', 4.0, 'ESPF Surveillance - Quarterly', 'Labwork Request'], //true
+                ['Japanese Macaque Surveillance', false, 'No Additive', 4.0, 'Japanese Macaque Surveillance', 'Labwork Request'], //true
+                ['Compromised SPF Surveillance', false, 'No Additive', 4.0, 'Compromised SPF Surveillance', 'Labwork Request'] //true
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -6711,7 +7788,7 @@ Ext4.onReady(function(){
                 //['diet' ,'Colony Management' ,'query' ,'Diet' ,'true' ,'' ,'study' ,'Diet', 'Active Diets', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active diets'],
                 //['problemList' ,'Daily Reports' ,'query' ,'Unresolved Problem List' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list'],
                 //['openProblems' ,'Clinical' ,'query' ,'Problems - Active' ,'true' ,'' ,'study' ,'Problem List', 'Unresolved Problems', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the unresolved clinical problem list'],
-                //['allProblems' ,'Clinical' ,'query' ,'Problems - History' ,'true' ,'' ,'study' ,'Problem List', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list, including closed problems'],
+                ['allProblems' ,'Clinical' ,'query' ,'Master Problems' ,'true' ,'' ,'study' ,'Problem List', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the clinical problem list, including closed problems'],
                 ['matings' ,'Reproductive Management' ,'query' ,'Matings' ,'true' ,'' ,'study' ,'matingsExpanded', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays the records of matings'],
                 ['matingSuccessRates' ,'Reproductive Management' ,'query' ,'Mating Success Rates' ,'true' ,'' ,'study' ,'matingSuccessRates', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays a summary of matings'],
 
@@ -13095,6 +14172,7 @@ Ext4.onReady(function(){
             var data = [
                 ['g'],
                 ['IU'],
+                ['U'],
                 ['mEq'],
                 ['mg'],
                 ['no units'],
@@ -13125,10 +14203,10 @@ Ext4.onReady(function(){
                 ['g/kg', 'g', 'kg'],
                 ['IU/kg', 'IU', 'kg'],
                 ['mEq/kg', 'mEq', 'kg'],
-                ['mg/animal', 'mg', 'animal'],
+                ['mg/animal', 'mg', null],
                 ['mg/kg', 'mg', 'kg'],
                 ['ml/kg', 'ml', 'kg'],
-                ['no units', ' ', ' '],
+                ['no units', null, null],
                 ['ounces/kg', 'ounces', 'kg'],
                 ['ug/kg', 'ug', 'kg'],
                 ['units/kg', 'units', 'kg']
@@ -13152,6 +14230,7 @@ Ext4.onReady(function(){
                 ['capsule(s)'],
                 ['cup'],
                 ['drop(s)'],
+                ['cube'],
                 ['mL'],
                 ['no units'],
                 ['ounce(s)'],

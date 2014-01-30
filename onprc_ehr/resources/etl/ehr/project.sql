@@ -53,7 +53,7 @@ select
        where ipc.projectchildid = rpi.projectid), rpi.ts
   ) as maxTs,
 
-	(select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa where rpi.projectid = rpa.ProjectID order by datecreated desc) as account,
+	rtrim(ltrim((select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa where rpi.projectid = rpa.ProjectID order by datecreated desc))) as account,
 	Rpi.Title,
 	Rpi.StartDate as IcacucStartDate,
 	coalesce(rpi.dateDisabled, Rpi.EndDate) as IcacucEndDate,

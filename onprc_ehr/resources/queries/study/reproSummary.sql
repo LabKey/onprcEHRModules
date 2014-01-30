@@ -19,95 +19,10 @@ SELECT
   t2.monthname,
   t2.monthnum @hidden,
   t2.day,
-  CASE
-    WHEN count(p.id) > 0 THEN 'P'
-    ELSE null
-  END as isPregnant,
-  group_concat(t2.value, chr(10)) as value,
+  group_concat(DISTINCT t2.isPregnant) as isPregnant,
+  group_concat(DISTINCT t2.value, chr(10)) as value,
 
-FROM (
-
-SELECT
-  t1.id,
-  t1.year,
-  t1.monthname,
-  t1.monthnum @hidden,
-  t1.day,
-  t1.value,
-  CAST(cast(t1.year as varchar) || '-' || cast(t1.monthNum as varchar) || '-' || '01' as date) as mindate,
-  TIMESTAMPADD('SQL_TSI_MONTH', 1, CAST(cast(t1.year as varchar) || '-' || cast(t1.monthNum as varchar) || '-' || '01' as date)) as maxdate,
-
-FROM (
-
-SELECT
-  t.id,
-  t.date,
-  'Menses' as category,
-  'M' as value,
-
-  convert(year(t.date), integer) as year,
-  monthname(t.date) AS monthname,
-  convert(month(t.date), integer) AS monthnum,
-  convert(dayofmonth(t.date), integer) as day,
-
-FROM study."Clinical Observations" t
-WHERE t.category = 'Menses'
-
-UNION ALL
-
-SELECT
-  t.id,
-  t.date,
-  'Delivery' as category,
-  substring(t.deliveryType.value, 1, 1) as value,
-
-  convert(year(t.date), integer) as year,
-  monthname(t.date) AS monthname,
-  convert(month(t.date), integer) AS monthnum,
-  convert(dayofmonth(t.date), integer) as day,
-
-FROM study.delivery t
-
--- UNION ALL
---
--- SELECT
---   t.id,
---   t.date,
---   'Pregnancies' as category,
---   'Pregnancy' as value,
---
---   convert(year(t.date), integer) as year,
---   monthname(t.date) AS monthname,
---   convert(month(t.date), integer) AS monthnum,
---   convert(dayofmonth(t.date), integer) as day,
---
--- FROM study.pregnancyconfirmation t
-
-UNION ALL
-
-SELECT
-  t.id,
-  t.date,
-  'Matings' as category,
-  CASE
-    WHEN t.matingType.value = 'Timed Mating' THEN 'T'
-    ELSE '*'
-  END as value,
-
-  convert(year(t.date), integer) as year,
-  monthname(t.date) AS monthname,
-  convert(month(t.date), integer) AS monthnum,
-  convert(dayofmonth(t.date), integer) as day,
-
-FROM study.matings t
-
-) t1
-
-) t2
-
-LEFT JOIN study.pregnancyOutcome p ON (p.id = t2.id and p.birthDate is not null AND
-  (p.date <= t2.maxDate AND p.birthDate >= t2.minDate)
-)
+FROM study.reproSummaryRawData t2
 
 GROUP BY t2.year, t2.monthname, t2.monthnum, t2.day, t2.id
-PIVOT value BY day
+PIVOT value BY day IN (SELECT value FROM ldk.integers i WHERE i.value > 0 AND i.value <=31 ORDER BY i.value)

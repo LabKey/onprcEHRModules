@@ -5,7 +5,7 @@
         <column name="Id/curLocation/cage"/>
         <column name="date"/>
         <column name="enddate"/>
-        <column name="problem"/>
+        <column name="problemCategories"/>
         <column name="caseHistory"/>
     </columns>
     <filters>

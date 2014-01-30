@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH', {
-    text: 'Enter Death',
+    text: 'Enter/Manage Death',
     name: 'enterdeath',
     itemId: 'enterdeath',
     tooltip: 'Click to enter the death record for this animal',
@@ -14,7 +14,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH', {
 
         var store = panel.storeCollection.getClientStoreByName('encounters');
         LDK.Assert.assertNotEmpty('Unable to find encounters store in ENTERDEATH button', store);
-        LDK.Assert.assertEquality('Did not find a single record in encounters store in ENTERDEATH button.', 1, store.getCount());
+        LDK.Assert.assertEquality('Expected to find only 1 record in encounters store in ENTERDEATH button.', 1, store.getCount());
 
         if (!store || store.getCount() != 1){
             Ext4.Msg.alert('Error', 'Unable to find animal ID.  Please contact your administrator');
@@ -22,6 +22,9 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH', {
         }
 
         var animalId = store.getAt(0).get('Id');
+        var caseno = store.getAt(0).get('caseno');
+        var parentid = store.getAt(0).get('objectid');
+
         if (!animalId){
             Ext4.Msg.alert('Error', 'You must enter an Animal Id');
             return;
@@ -37,18 +40,29 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH', {
                 return;
             }
 
-            if (ar.getDeathInfo()){
-                Ext4.Msg.alert('Error', 'This animal has already been marked as dead');
-                return;
+            var objectid = null;
+            if (ar.getDeathInfo() && ar.getDeathInfo().length){
+                objectid = ar.getDeathInfo()[0].objectid;
             }
-            else {
-                Ext4.create('EHR.window.ManageRecordWindow', {
-                    schemaName: 'study',
-                    queryName: 'deaths',
-                    pkCol: 'objectid',
-                    pkValue: LABKEY.Utils.generateUUID()
-                }).show();
-            }
+
+            Ext4.create('EHR.window.ManageRecordWindow', {
+                schemaName: 'study',
+                queryName: 'deaths',
+                pkCol: 'objectid',
+                pkValue: objectid || LABKEY.Utils.generateUUID(),
+                extraMetaData: {
+                    Id: {
+                        defaultValue: animalId,
+                        editable: false
+                    },
+                    caseno: {
+                        defaultValue: caseno
+                    },
+                    parentid: {
+                        defaultValue: parentid
+                    }
+                }
+            }).show();
         }, this);
     }
 });

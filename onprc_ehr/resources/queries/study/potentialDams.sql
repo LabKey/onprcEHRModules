@@ -26,10 +26,12 @@ FROM study.birth b
 
 JOIN study.housing h ON (
     (b.Id != h.Id AND
-    h.date <= b.date AND
-    h.enddateTimeCoalesced >= b.date AND
+    h.dateOnly <= b.dateOnly AND
+    h.enddateCoalesced >= b.dateOnly AND
     h.room = b.room AND (h.cage = b.cage OR (h.cage is null and b.cage is null))
-    ) OR h.Id = b.dam
+    )
+    --note: this is to always include observed parents
+    OR h.Id = b.dam
 )
 
 WHERE h.id.demographics.gender = 'f' and timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, b.date) > 912.5 --(2.5 years)

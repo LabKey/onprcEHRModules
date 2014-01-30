@@ -1490,39 +1490,8 @@ public class LegacyDataManager
         //clinical cases
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("latestHx"), null, CompareType.NONBLANK);
         filter.addCondition(FieldKey.fromString("category"), "Clinical");
-        Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("lsid"), FieldKey.fromString("remark"), FieldKey.fromString("latestHx")));
+        final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("lsid"), FieldKey.fromString("remark"), FieldKey.fromString("enddate"), FieldKey.fromString("plan"), FieldKey.fromString("latestHx"), FieldKey.fromString("mostRecentP2")));
         TableSelector ts = new TableSelector(ti, cols.values(), filter, null);
-
-        final List<Map<String, Object>> toUpdate = new ArrayList<>();
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
-        {
-            @Override
-            public void exec(ResultSet rs) throws SQLException
-            {
-                Object ret = rs.getObject("latestHx");
-                if (ret instanceof Clob)
-                {
-                    int length = new Long(((Clob) ret).length()).intValue();
-                    ret = ((Clob) ret).getSubString(new Long(1), length);
-                }
-
-                if (ret.equals(rs.getObject("remark")))
-                {
-                    return;
-                }
-
-                Map<String, Object> row = new CaseInsensitiveHashMap<>();
-                row.put("lsid", rs.getString("lsid"));
-                row.put("remark", rs.getString("latestHx"));
-                toUpdate.add(row);
-            }
-        });
-
-        _log.info("Updating " + toUpdate.size() + " clinical cases");
-        for (Map<String, Object> row : toUpdate)
-        {
-            Table.update(u, realTable, row, row.get("lsid"));
-        }
 
         //surgical cases
         SimpleFilter surgFilter = new SimpleFilter(FieldKey.fromString("remarksOnOpenDate"), null, CompareType.NONBLANK);

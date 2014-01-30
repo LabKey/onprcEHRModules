@@ -299,7 +299,7 @@ EHR.reports.potentialParents = function(panel, tab){
         html: 'This report calculates potential parents for the selected animal(s).  The potential parents are determined as follows:' +
             '<br><br>' +
             '<ul style="margin-left: 20px">' +
-            '<li style="list-style-type: disc;">Potential dams are determined by finding any female housed in the animal\'s birth location at the time of birth, which were at least 2.5 years old at the time</li>' +
+            '<li style="list-style-type: disc;">Potential dams are determined by finding any female housed in the animal\'s birth location at the time of birth, which were at least 2.5 years old at the time.  Note: this report considers housing in whole-day increments in order to avoid missing potential parents due to errors in the timestamp of transfers.</li>' +
             '<li style="list-style-type: disc;">Potential sires are determined by finding the locations where all potential dams were housed during the conception window (defined below) relative to the animal\'s birth.  The potential sires are any male animals housed in these locations during the conception window, which are at least 2.5 years old at the time.</li>' +
             '</ul>'
     });
@@ -392,54 +392,144 @@ EHR.reports.potentialParents = function(panel, tab){
                 border: false
             },
             itemId: 'target'
-        }],
+        }]
     })
 };
 
 EHR.reports.reproSummary = function(panel, tab){
-    var filterArray = panel.getFilterArray(tab);
-    var title = panel.getTitleSuffix();
+    if (tab.filters.subjects){
+        renderReproReport(tab.filters.subjects, tab);
+    }
+    else
+    {
+        panel.resolveSubjectsFromHousing(tab, renderReproReport, this);
+    }
 
-    tab.add({
-        xtype: 'ldk-querypanel',
-        style: 'margin-bottom:20px;',
-        queryConfig: panel.getQWPConfig({
-            schemaName: 'study',
-            queryName: 'reproSummary',
-            title: "Repro Summary" + title,
-            filters: filterArray.nonRemovable,
-            removeableFilters: filterArray.removable
-        })
-    });
+    function renderReproReport(subjects, tab){
+        if (!subjects.length){
+            Ext4.Msg.alert('No Animals', 'No animals were found');
+            return;
+        }
 
-    tab.add({
-        xtype: 'panel',
-        bodyStyle: 'padding: 10px;',
-        border: false,
-        defaults: {
-            border: false
-        },
-        items: [{
-            html: '<b>Key:</b>',
-            style: 'padding-bottom: 5px;'
-        },{
-            html: 'C: C-Section'
-        },{
-            html: 'F: Fetus Not Recovered'
-        },{
-            html: 'M: Menses'
-        },{
-            html: 'N: No Delivery - Fetus Recovered'
-        },{
-            html: 'R: Resorbtion'
-        },{
-            html: 'T: Timed Mating'
-        },{
-            html: 'V: Vaginal'
-        },{
-            html: '*: Other Mating'
-        }]
-    });
+        var filterArray = panel.getFilterArray(tab);
+        var title = panel.getTitleSuffix();
+
+        //set to 1 year in past
+        var startDate = Ext4.Date.add(new Date(), Ext4.Date.YEAR, -1);
+        startDate.setDate(1);
+
+        tab.add({
+            xtype: 'panel',
+            ownerTabbedPanel: panel,
+            itemId: 'reproSummary',
+            border: false,
+            items: [{
+                itemId: 'filterArea',
+                style: 'padding-bottom: 10px;',
+                border: false,
+                defaults: {
+                    border: false
+                },
+                items: [{
+                    layout: 'hbox',
+                    style: 'margin-left: 5px;',
+                    defaults: {
+                        border: false
+                    },
+                    items: [{
+                        xtype: 'datefield',
+                        fieldLabel: 'Start Date',
+                        itemId: 'startDate',
+                        style: 'margin-right: 10px;',
+                        value: startDate
+                    },{
+                        xtype: 'numberfield',
+                        itemId: 'numMonths',
+                        fieldLabel: '# Months',
+                        style: 'margin-left: 10px;',
+                        hideTrigger: true,
+                        value: 13
+                    }]
+                }],
+                buttonAlign: 'left',
+                buttons: [{
+                    text: 'Submit/Reload',
+                    handler: function(btn){
+                        var panel = btn.up('#reproSummary');
+                        var startDate = panel.down('#startDate').getValue();
+                        var numMonths = panel.down('#numMonths').getValue();
+
+                        if (Ext4.isEmpty(startDate) || Ext4.isEmpty(numMonths)){
+                            Ext4.Msg.alert('Error', 'Must provide a start date and number of months');
+                            return;
+                        }
+
+                        var target = panel.down('#target');
+                        target.removeAll();
+
+                        var toAdd = [];
+
+                        Ext4.Array.forEach(subjects, function(id){
+                            toAdd.push({
+                                xtype: 'ldk-querypanel',
+                                style: 'margin-bottom:20px;',
+                                queryConfig: panel.ownerTabbedPanel.getQWPConfig({
+                                    schemaName: 'study',
+                                    queryName: 'reproSummaryByMonth',
+                                    title: 'Repro Summary: ' + id,
+                                    sort: 'year,monthNum',
+                                    parameters: {
+                                        Id: id,
+                                        StartDate: startDate,
+                                        NumMonths: numMonths
+                                    }
+                                })
+                            });
+                        }, this);
+
+                        if (toAdd.length){
+                            target.add(toAdd);
+                        }
+                    }
+                }]
+            },{
+                border: false,
+                defaults: {
+                    border: false
+                },
+                itemId: 'target'
+            }]
+        });
+
+        tab.add({
+            xtype: 'panel',
+            bodyStyle: 'padding: 10px;',
+            border: false,
+            defaults: {
+                border: false
+            },
+            items: [{
+                html: '<b>Key:</b>',
+                style: 'padding-bottom: 5px;'
+            },{
+                html: 'C: C-Section'
+            },{
+                html: 'F: Fetus Not Recovered'
+            },{
+                html: 'M: Menses'
+            },{
+                html: 'N: No Delivery - Fetus Recovered'
+            },{
+                html: 'R: Resorbtion'
+            },{
+                html: 'T: Timed Mating'
+            },{
+                html: 'V: Vaginal'
+            },{
+                html: '*: Other Mating'
+            }]
+        });
+    }
 };
 
 

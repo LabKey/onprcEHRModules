@@ -7,7 +7,7 @@
         <column name="date"/>
         <column name="reviewdate"/>
         <column name="enddate"/>
-        <column name="problem"/>
+        <column name="problemCategories"/>
         <column name="Id/demographics/species"/>
         <column name="Id/demographics/gender"/>
         <!--<column name="category"/>-->

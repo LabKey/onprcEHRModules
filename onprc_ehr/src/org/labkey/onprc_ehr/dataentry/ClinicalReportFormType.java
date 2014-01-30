@@ -20,7 +20,9 @@ import org.labkey.api.ehr.dataentry.AbstractFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.ExtendedAnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
+import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
@@ -42,9 +44,10 @@ public class ClinicalReportFormType extends TaskForm
     public ClinicalReportFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, LABEL, "Clinical", Arrays.<FormSection>asList(
+                new NonStoreFormSection("Instructions", "Instructions", "ehr-examinstructionspanel", Arrays.asList(ClientDependency.fromFilePath("ehr/panel/ExamInstructionsPanel.js"))),
                 new TaskFormSection(),
-                new SimpleFormPanelSection("study", "Clinical Remarks", "SOAP", false),
                 new ExtendedAnimalDetailsFormSection(),
+                new SimpleFormPanelSection("study", "Clinical Remarks", "SOAP", false, EHRService.FORM_SECTION_LOCATION.Tabs),
                 new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new SimpleGridPanel("study", "encounters", "Procedures", EHRService.FORM_SECTION_LOCATION.Tabs),
                 new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
@@ -54,6 +57,8 @@ public class ClinicalReportFormType extends TaskForm
                 new SimpleGridPanel("ehr", "snomed_tags", "Diagnostic Codes", EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
 
+        setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NO_ID);
+
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("ClinicalDefaults");
@@ -62,8 +67,13 @@ public class ClinicalReportFormType extends TaskForm
             if (!s.getName().equals("Clinical Remarks"))
                 s.addConfigSource("ClinicalReportChild");
 
+            if (s instanceof SimpleFormSection && !s.getName().equals("tasks"))
+                s.setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NO_ID);
+
             if (s instanceof AbstractFormSection)
-                ((AbstractFormSection)s).setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NO_ID);
+            {
+                ((AbstractFormSection)s).setAllowBulkAdd(false);
+            }
         }
 
         setStoreCollectionClass("EHR.data.ClinicalReportStoreCollection");

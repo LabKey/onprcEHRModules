@@ -6,6 +6,7 @@
 var console = require("console");
 var LABKEY = require("labkey");
 var ETL = require("onprc_ehr/etl").EHR.ETL;
+var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
 
 exports.init = function(EHR){
     EHR.ETL = ETL;
@@ -42,15 +43,15 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'ehr', 'project', function(helper, scriptErrors, row, oldRow){
-        if (helper.isETL()){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPDATE, 'study', 'Treatment Orders', function(helper, scriptErrors, row, oldRow){
+        if (helper.isETL() || helper.isValidateOnly()){
             return;
         }
 
-        if (row && oldRow && row.project == oldRow.project && row.account != oldRow.account){
-            var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
-            triggerHelper.processProjectAccountChange(row.project, row.account, oldRow.account);
+        if (row && oldRow){
+            EHR.Assert.assertNotEmpty('triggerHelper is null', triggerHelper);
+
+            triggerHelper.onTreatmentOrderChange(row, oldRow);
         }
     });
-
 };

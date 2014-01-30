@@ -19,6 +19,8 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.List;
+
 /**
  * User: bimber
  * Date: 11/16/13
@@ -26,17 +28,41 @@ import org.labkey.api.view.template.ClientDependency;
  */
 public class ClinicalObservationsFormSection extends SimpleFormSection
 {
+    private boolean _allowAdd = true;
+
     public ClinicalObservationsFormSection()
     {
-        this(EHRService.FORM_SECTION_LOCATION.Body);
+        this(EHRService.FORM_SECTION_LOCATION.Body, true);
     }
 
     public ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
+        this(location, true);
+    }
+
+    public ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION location, boolean allowAdd)
+    {
         super("study", "Clinical Observations", "Observations", "ehr-clinicalobservationgridpanel", location);
+        addClientDependency(ClientDependency.fromFilePath("ehr/plugin/ClinicalObservationsCellEditing.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalObservationsClientStore.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/grid/ClinicalObservationGridPanel.js"));
 
         setClientStoreClass("EHR.data.ClinicalObservationsClientStore");
+
+        _allowAdd = allowAdd;
+        setAllowBulkAdd(allowAdd);
+    }
+
+    @Override
+    public List<String> getTbarButtons()
+    {
+        List<String> defaultButtons = super.getTbarButtons();
+
+        if (!_allowAdd)
+        {
+            defaultButtons.remove("ADDRECORD");
+        }
+
+        return defaultButtons;
     }
 }

@@ -41,11 +41,14 @@ public class ActiveCasesDemographicsProvider extends AbstractListDemographicsPro
     {
         Set<FieldKey> keys = new HashSet<FieldKey>();
         keys.add(FieldKey.fromString("lsid"));
+        keys.add(FieldKey.fromString("objectid"));
         keys.add(FieldKey.fromString("Id"));
         keys.add(FieldKey.fromString("date"));
         keys.add(FieldKey.fromString("enddate"));
         keys.add(FieldKey.fromString("category"));
-        keys.add(FieldKey.fromString("problem"));
+        keys.add(FieldKey.fromString("problemCategories"));
+        keys.add(FieldKey.fromString("assignedvet"));
+        keys.add(FieldKey.fromString("assignedvet/DisplayName"));
         keys.add(FieldKey.fromString("performedby"));
         keys.add(FieldKey.fromString("remark"));
 
@@ -56,7 +59,7 @@ public class ActiveCasesDemographicsProvider extends AbstractListDemographicsPro
     protected SimpleFilter getFilter(Collection<String> ids)
     {
         SimpleFilter filter = super.getFilter(ids);
-        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
         filter.addCondition(FieldKey.fromString("qcstate/publicData"), true, CompareType.EQUAL);
 
         return filter;

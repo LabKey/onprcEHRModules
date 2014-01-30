@@ -1,0 +1,63 @@
+<script type="text/javascript">
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        Ext4.create('Ext.panel.Panel', {
+            itemId: 'outerPanel',
+            border: false,
+            defaults: {
+                border: false
+            },
+            items: [{
+                width: 400,
+                items: [{
+                    xtype: 'ehr-vetfieldcombo',
+                    width: 400,
+                    fieldLabel: 'Choose Vet (blank for all)',
+                    itemId: 'userField'
+                },{
+                    fieldLabel: 'Days Since Vet Review',
+                    xtype: 'ldk-numberfield',
+                    itemId: 'daysSinceVetReview',
+                    value: 1,
+                    width: 400
+                }],
+                buttons: [{
+                    text: 'Submit',
+                    handler: function(btn){
+                        var panel = btn.up('#outerPanel');
+                        var userId = panel.down('#userField').getValue();
+                        var daysSinceLastVetReview = panel.down('#daysSinceVetReview').getValue();
+
+                        var filterArray = [];
+                        if (userId){
+                            filterArray.push(LABKEY.Filter.create('assignedvet', userId, LABKEY.Filter.Types.EQUAL));
+                        }
+
+                        if (daysSinceLastVetReview){
+                            filterArray.push(LABKEY.Filter.create('daysSinceLastVetReview', daysSinceLastVetReview, LABKEY.Filter.Types.GTE));
+                        }
+
+                        var target = panel.down('#targetPanel');
+                        target.removeAll();
+                        target.add({
+                            xtype: 'ldk-querypanel',
+                            queryConfig: {
+                                schemaName: 'study',
+                                queryName: 'cases',
+                                viewName: 'Clinical Case Review',
+                                filterArray: filterArray
+                            }
+                        });
+                    }
+                }]
+            },{
+                itemId: 'targetPanel',
+                style: 'padding-top: 20px'
+            }]
+        }).render(webpart.wrapperDivId);
+    });
+</script>

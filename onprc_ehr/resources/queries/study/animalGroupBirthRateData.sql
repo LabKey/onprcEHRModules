@@ -56,8 +56,9 @@ FROM study.demographics d
 JOIN ehr.animal_group_members gm ON (
     gm.dateOnly <= EndDate AND gm.enddateCoalesced >= StartDate
     AND (
-      --find records for this animal, or where the dam is assigned on the date of birth
-      (gm.Id = d.Id) OR
+      --find records for this animal that overlap its birth
+      (gm.Id = d.Id AND d.birth >= gm.dateOnly AND d.birth <= gm.enddateCoalesced) OR
+      --or where the dam is assigned on the date of birth
       (d.Id.parents.dam = gm.id AND d.birth <= EndDate AND d.birth >= StartDate AND gm.dateOnly <= cast(d.birth as date) AND gm.enddateCoalesced >= cast(d.birth as date))
     )
   )

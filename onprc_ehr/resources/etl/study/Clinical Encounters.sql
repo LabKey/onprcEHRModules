@@ -147,7 +147,8 @@ Select
   CASE
     WHEN s4.value = 'Surgery Staff' THEN 'Center Staff'
     WHEN s4.value = 'No Surgery Staff' THEN 'Research Staff'
-    ELSE s4.value
+    WHEN s4.value = 'No Charge' THEN 'No Charge'
+    ELSE ('ERROR: ' + s4.value)
   END as chargetype,
   coalesce(ibs.projectId, afc.project) as project,
   null as remark
@@ -268,8 +269,13 @@ Select
   (select rowid from labkey.ehr_lookups.procedures WHERE name = 'Hormone Implant/Removal' and active = 1) as procedureId,
 
   max(cast(cln.objectid as varchar(36))) as objectid,
-  max(s5.Value) as chargetype,
-  null as project,
+  CASE
+    WHEN max(s5.Value) = 'Surgery Staff' THEN 'Center Staff'
+    WHEN max(s5.Value) = 'No Surgery Staff' THEN 'Research Staff'
+    WHEN max(s5.Value) = 'No Charge' THEN 'No Charge'
+    ELSE ('ERROR: ' + max(s4.value))
+  END as chargetype,
+  max(proj.ProjectId) as project,
   null as remark  --note: remark being entered into encounter_summaries
 
 FROM sur_implants cln
@@ -281,6 +287,22 @@ FROM sur_implants cln
   LEFT JOIN Sys_parameters s5 ON (s5.Field = 'SurgeryChargeCode' AND s5.Flag = cln.chargecode)
 
   left join  Sys_parameters s6 on (s6.Field = 'DepartmentCode' And s6.Flag = rt.DeptCode)
+  LEFT JOIN (
+    SELECT
+    i.IDKey,
+    --a.AnimalID,
+    --a.ChargeDate,
+    max(a.ProjectID) as ProjectID
+
+    FROM Sur_Implants i
+    left join Af_Charges a ON (i.AnimalID = a.AnimalID AND i.Date = a.ChargeDate)
+    left join Ref_FeesSurgical fs on (a.ProcedureID = fs.ProcedureID and fs.DateDisabled is null)
+    left join Ref_SurgProcedure r on (fs.ProcedureID = r.ProcedureID)
+    where r.ProcedureName like '%Hormone%' and a.AccountNo is null
+    and a.ChargeDate > '2013-10-01'
+    GROUP BY i.IdKey
+  ) proj ON (cln.IdKey = proj.IdKey)
+
 GROUP BY cln.AnimalID, cln.Date
 HAVING MAX(cln.ts) > ?
 

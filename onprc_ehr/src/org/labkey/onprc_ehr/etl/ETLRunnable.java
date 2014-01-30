@@ -136,9 +136,8 @@ public class ETLRunnable implements Runnable
         {
             try
             {
-                //always reload the queries if we're in devmode
-                if (AppProps.getInstance().isDevMode())
-                    refreshQueries();
+                //always reload the queries
+                refreshQueries();
 
                 user = UserManager.getUser(new ValidEmail(getConfigProperty("labkeyUser")));
                 container = getContainer();
@@ -174,7 +173,6 @@ public class ETLRunnable implements Runnable
                 ViewContext.getMockViewContext(user, container, new ActionURL("onprc_ehr", "fake.view", container), true);
 
                 QueryService.get().setEnvironment(QueryService.Environment.USER, user);
-
                 ETLAuditViewFactory.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0, 0, 0);
 
                 for (String datasetName : studyQueries.keySet())
@@ -1305,6 +1303,7 @@ public class ETLRunnable implements Runnable
 
     private String[] TABLES_TO_SKIP_VALIDATION = new String[]{
         "Flags",
+        "miscCharges",
         "invoicedItems",
         "invoiceRuns"
     };
@@ -1339,6 +1338,9 @@ public class ETLRunnable implements Runnable
             {
                 try
                 {
+                    StringBuilder sbForTable = new StringBuilder();
+                    boolean tableHasErrors = false;
+
                     if (originConnection == null)
                         originConnection = getOriginConnection();
 
@@ -1394,8 +1396,8 @@ public class ETLRunnable implements Runnable
                     {
                         ps.setBytes(i, DEFAULT_VERSION);
                     }
-                    sb.append("*************************<br>");
-                    sb.append("validating ETL for table: " + targetTableName + "<br><br>");
+                    sbForTable.append("*************************<br>");
+                    sbForTable.append("validating ETL for table: " + targetTableName + "<br><br>");
                     rs = ps.executeQuery();
                     Set<String> missingFromLK = new HashSet<>();
                     Set<String> toDeleteFromLK = new HashSet<>();
@@ -1416,13 +1418,14 @@ public class ETLRunnable implements Runnable
                     boolean hasLKInserts = Arrays.asList(TABLES_TO_SKIP_VALIDATION).contains(targetTableName);
                     if ((missingFromLK.size()) > 0 || (toDeleteFromLK.size() > 0 && !hasLKInserts))
                     {
-                        sb.append("table: " + targetTableName + (realTable == null ? "" : " (" + realTable.getSelectName() + ") ") + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete<br>");
+                        tableHasErrors = true;
+                        sbForTable.append("table: " + targetTableName + (realTable == null ? "" : " (" + realTable.getSelectName() + ") ") + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete<br>");
                         if (missingFromLK.size() > 0)
                         {
-                            sb.append("records missing:<br>");
+                            sbForTable.append("records missing:<br>");
                             List<String> toShow = new ArrayList<>();
                             toShow.addAll(missingFromLK);
-                            sb.append("'" + StringUtils.join(toShow, "','") + "'").append("<br><br>");
+                            sbForTable.append("'" + StringUtils.join(toShow, "','") + "'").append("<br><br>");
 
                             if (attemptRepair)
                             {
@@ -1455,10 +1458,11 @@ public class ETLRunnable implements Runnable
 
                         if (toDeleteFromLK.size() > 0 && !hasLKInserts)
                         {
-                            sb.append("to delete from LabKey:<br>");
+                            tableHasErrors = true;
+                            sbForTable.append("to delete from LabKey:<br>");
                             List<String> toShow = new ArrayList<>();
                             toShow.addAll(toDeleteFromLK);
-                            sb.append("'" + StringUtils.join(toShow, "','") + "'").append("<br><br>");
+                            sbForTable.append("'" + StringUtils.join(toShow, "','") + "'").append("<br><br>");
                             if (attemptRepair)
                             {
                                 //rather than delete directly, append record into deleted_records and let the next ETL handle it.
@@ -1477,7 +1481,11 @@ public class ETLRunnable implements Runnable
                             }
                         }
 
-                        hasErrors = true;
+                        if (tableHasErrors)
+                        {
+                            sb.append(sbForTable);
+                            hasErrors = true;
+                        }
 
                         close(rs);
                         close(ps);

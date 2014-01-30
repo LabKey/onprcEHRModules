@@ -26,7 +26,7 @@ import java.util.List;
  * Date: 7/7/13
  * Time: 10:36 AM
  */
-public class TreatmentOrdersFormSection extends SimpleFormSection
+public class TreatmentOrdersFormSection extends DrugAdministrationFormSection
 {
     public TreatmentOrdersFormSection()
     {
@@ -35,22 +35,18 @@ public class TreatmentOrdersFormSection extends SimpleFormSection
 
     public TreatmentOrdersFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super("study", "Treatment Orders", "Medication/Treatment Orders", "ehr-gridpanel");
-        setClientStoreClass("EHR.data.DrugAdministrationRunsClientStore");
-        addClientDependency(ClientDependency.fromFilePath("ehr/data/DrugAdministrationRunsClientStore.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromSectionWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/SedationWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/DrugAmountWindow.js"));
-
-        setLocation(location);
-        setTabName("Medications");
+        super(location);
+        setName("Treatment Orders");
+        setLabel("Medication/Treatment Orders");
+        setQueryName("Treatment Orders");
+        _showAddTreatments = false;
     }
 
     @Override
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add("DRUGAMOUNTHELPER");
+        defaultButtons.remove("SEDATIONHELPER");
 
         return defaultButtons;
     }

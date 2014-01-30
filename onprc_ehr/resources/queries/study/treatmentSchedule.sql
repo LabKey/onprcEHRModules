@@ -99,7 +99,9 @@ LEFT JOIN (
 ) snomed ON snomed.code = t1.code
 
 --NOTE: if we run this report on a future interval, we want to include those treatments
-WHERE t1.date is not null AND t1.qcstate.publicdata = true --and t1.dateOnly <= curdate()
+WHERE t1.date is not null
+--NOTE: they have decided to include non-public data
+--AND t1.qcstate.publicdata = true --and t1.dateOnly <= curdate()
 
 ) s
 

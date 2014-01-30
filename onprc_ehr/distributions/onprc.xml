@@ -22,25 +22,26 @@
 
     <target name="gather_modules">
         <copy todir="${dist.modules.dir}">
-            <filelist dir="${staging.modules.dir}">
-                <file name="ehr.module" />
-                <file name="EHR_ComplianceDB.module" />
-                <file name="ELISPOT_Assay.module"/>
-                <file name="FlowAssays.module" />
-                <file name="GeneticsCore.module" />
-                <file name="GenotypeAssays.module" />
-                <file name="HormoneAssay.module"/>
-                <file name="laboratory.module" />
-                <file name="LDK.module" />
-                <file name="ONPRC_EHR.module" />
-                <file name="ONPRC_Reports.module" />
-                <file name="ogasync.module" />
-                <file name="mergesync.module" />
-                <file name="ONPRC_BillingPublic.module" />
-                <file name="sla.module" />
-                <file name="SequenceAnalysis.module" />
-                <file name="Viral_Load_Assay.module" />
-            </filelist>
+            <fileset dir="${staging.modules.dir}">
+                <include name="ehr.module" />
+                <include name="EHR_ComplianceDB.module" />
+                <include name="elispot_assay.module"/>
+                <include name="flowassays.module" />
+                <include name="GeneticsCore.module" />
+                <include name="GenotypeAssays.module" />
+                <include name="HormoneAssay.module"/>
+                <include name="laboratory.module" />
+                <include name="LDK.module" />
+                <include name="onprc_ehr.module" />
+                <include name="onprc_reports.module" />
+                <include name="ogasync.module" />
+                <include name="mergesync.module" />
+                <include name="onprc_billing.module" />
+                <include name="onprc_billingpublic.module" />
+                <include name="sla.module" />
+                <include name="SequenceAnalysis.module" />
+                <include name="Viral_Load_Assay.module" />
+            </fileset>
         </copy>
     </target>
 

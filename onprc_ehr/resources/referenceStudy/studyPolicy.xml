@@ -28,6 +28,7 @@
         <ns:groupPermission groupName="DCM Operations" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Pathology" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Research Support" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM RVSU Technicians" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Serology" securityType="NONE"/>
         <ns:groupPermission groupName="DCM SSU" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Supervisors" securityType="NONE"/>
@@ -103,19 +104,19 @@
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="ONPRC Users" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Research Clinical Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="Basic Clinical Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="Basic Clinical Entry Updaters" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="Behavior Admins" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="Blood Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="Data Admins" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="DCM BSU" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="DCM Genetics" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="EHR Readers" role="org.labkey.api.security.roles.ReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="Labwork Admins" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="Labwork Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="Labwork Requestors" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="ONPRC Users" role="org.labkey.api.security.roles.ReaderRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="Research Clinical Entry" role="org.labkey.api.security.roles.RestrictedReaderRole"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Basic Clinical Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Basic Clinical Entry Updaters" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Behavior Admins" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Labwork Admins" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Labwork Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Basic Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Basic Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Behavior Admins" role="NONE"/>
@@ -298,7 +299,7 @@
         <ns:datasetPermission datasetName="blood" groupName="Labwork Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
         <ns:datasetPermission datasetName="blood" groupName="ONPRC Users" role="NONE"/>
         <ns:datasetPermission datasetName="blood" groupName="Research Clinical Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
-        <ns:datasetPermission datasetName="encounters" groupName="Basic Clinical Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="encounters" groupName="Basic Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="encounters" groupName="Basic Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="encounters" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="encounters" groupName="Blood Requestors" role="NONE"/>
@@ -597,19 +598,19 @@
         <ns:datasetPermission datasetName="notes" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="ONPRC Users" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Research Clinical Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Basic Clinical Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Basic Clinical Entry Updaters" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Behavior Admins" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Blood Requestors" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="DCM BSU" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="DCM Genetics" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="EHR Readers" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Labwork Admins" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Labwork Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Labwork Requestors" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="ONPRC Users" role="NONE"/>
-        <ns:datasetPermission datasetName="morphologicDiagnosis" groupName="Research Clinical Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Basic Clinical Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Basic Clinical Entry Updaters" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Behavior Admins" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="DCM BSU" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="EHR Readers" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Labwork Admins" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Labwork Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Labwork Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="ONPRC Users" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Basic Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Basic Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Behavior Admins" role="NONE"/>

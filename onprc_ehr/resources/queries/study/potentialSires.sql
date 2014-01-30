@@ -31,5 +31,8 @@ JOIN study.housing h ON (
     h.dateOnly <= cast(c.maxDate as date) AND h.enddateCoalesced >= cast(c.minDate as date)
 )
 
+--note: this is to always include all observed sires
+OR h.Id = c.Id.birth.sire
+
 WHERE timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, c.minDate) > 912.5 --(2.5 years)
 GROUP BY c.Id, h.Id

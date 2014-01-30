@@ -100,7 +100,7 @@
                         <columnTitle>Concentration</columnTitle>
                     </column>
                     <column columnName="amount2">
-                        <columnTitle>Amount Given</columnTitle>
+                        <columnTitle>Amount</columnTitle>
                     </column>
                     <column columnName="volume2">
                         <columnTitle>Volume</columnTitle>

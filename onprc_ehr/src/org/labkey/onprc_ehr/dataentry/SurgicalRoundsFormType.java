@@ -40,13 +40,17 @@ public class SurgicalRoundsFormType extends TaskForm
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new SurgicalRoundsRemarksFormSection(),
-            new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
-            new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
+            new ClinicalObservationsFormSection()
         ));
 
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("SurgicalRounds");
+
+            if (s instanceof ClinicalObservationsFormSection)
+            {
+                ((ClinicalObservationsFormSection)s).setHidden(true);
+            }
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/SurgicalRounds.js"));

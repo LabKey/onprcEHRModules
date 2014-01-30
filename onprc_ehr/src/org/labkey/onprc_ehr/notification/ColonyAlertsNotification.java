@@ -165,7 +165,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         assignmentsWithoutValidProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);
         protocolsWithFutureApproveDates(c, u, msg);
-        protocolsNearingLimit(c, u, msg);
+        protocolsOverLimit(c, u, msg);
         assignmentsNotAllowed(c, u, msg);
         overlappingProtocolCounts(c, u, msg);
         assignmentsProjectedToday(c, u, msg);
@@ -567,6 +567,18 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    protected void duplicateCases(final Container c, User u, final StringBuilder msg)
+    {
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("duplicateCases"));
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " animals with duplicate cases of the same category.  One of the duplicates should be closed</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "duplicateCases", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
     /**
      * find records created within the past 7 days, which have a date more than 7 days before then
      */
@@ -634,7 +646,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " IACUC protocols with approve dates listed more than 7 days in the future.</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocol", null) + "&query.approve~dategte=%2B7d'>Click here to view them</a><p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocol", null) + "&query.approve~dategte=%2B7d'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -723,7 +735,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>ALERT: There are " + count + " protocols with active assignments set to expire within the next 30 days.</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " protocols with active assignments set to expire within the next 30 days.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocol", null) + "&query.daysUntilRenewal~lte=30&query.activeAnimals/totalActiveAnimals~gt=0'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -779,31 +791,31 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     /**
-     * we find protocols nearing the animal limit, based on number and percent
+     * we find protocols over the animal limit
      */
-    protected void protocolsNearingLimit(final Container c, User u, final StringBuilder msg)
+    protected void protocolsOverLimit(final Container c, User u, final StringBuilder msg)
     {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("totalRemaining"), 5, CompareType.LT);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("totalRemaining"), 0, CompareType.LT);
         filter.addCondition(FieldKey.fromString("isActive"), true);
         TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("animalUsage"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " protocols with fewer than 5 remaining animals.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animalUsage", null) + "&query.totalRemaining~lt=5&query.isActive~eq=true'>Click here to view them</a><br>\n\n");
+            msg.append("<b>WARNING: There are " + count + " protocols that have exceeded the allowable animal limit, based on the data in the system.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animalUsage", null) + "&query.totalRemaining~lt=0&query.isActive~eq=true'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
 
-        filter = new SimpleFilter(FieldKey.fromString("pctUsed"), 95, CompareType.GTE);
-        filter.addCondition(FieldKey.fromString("isActive"), true);
-        ts = new TableSelector(getEHRSchema(c, u).getTable("animalUsage"), filter, new Sort(getStudy(c).getSubjectColumnName()));
-        long count2 = ts.getRowCount();
-        if (count2 > 0)
-        {
-            msg.append("<b>WARNING: There are " + count2 + " protocols with fewer than 5% of their animals remaining.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animalUsage", null) + "&query.pctUsed~gte=95&query.isActive~eq=true'>Click here to view them</a><br>\n\n");
-            msg.append("<hr>\n\n");
-        }
+//        filter = new SimpleFilter(FieldKey.fromString("pctUsed"), 95, CompareType.GTE);
+//        filter.addCondition(FieldKey.fromString("isActive"), true);
+//        ts = new TableSelector(getEHRSchema(c, u).getTable("animalUsage"), filter, new Sort(getStudy(c).getSubjectColumnName()));
+//        long count2 = ts.getRowCount();
+//        if (count2 > 0)
+//        {
+//            msg.append("<b>WARNING: There are " + count2 + " protocols with fewer than 5% of their animals remaining.</b><br>\n");
+//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animalUsage", null) + "&query.pctUsed~gte=95&query.isActive~eq=true'>Click here to view them</a><br>\n\n");
+//            msg.append("<hr>\n\n");
+//        }
     }
 
     /**
@@ -1187,7 +1199,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " blood draws within the past 3 days exceeding the allowable volume. Click the IDs below to see more information:</b><br><br>");
+            msg.append("<b>WARNING: There are " + count + " blood draws within the past 3 days exceeding the allowable volume.  Note: this warning may include draws scheduled on that day, but have not actually been performed.  Click the IDs below to see more information:</b><br><br>");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
             {
                 public void exec(ResultSet object) throws SQLException
@@ -1502,7 +1514,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     protected void getU42Assignments(Container c, User u, final StringBuilder msg)
     {
-        String U42 = "0492-02";
+        String U42 = ONPRC_EHRManager.U42_PROJECT;
         TableInfo ti = getStudySchema(c, u).getTable("assignment");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("project/name"), U42, CompareType.EQUAL);

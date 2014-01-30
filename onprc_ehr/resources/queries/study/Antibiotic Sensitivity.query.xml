@@ -39,6 +39,7 @@
                         </fk>
                     </column>
                     <column columnName="result">
+                        <columnTitle>Result</columnTitle>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>antibioticSensitivityResult</fkTable>

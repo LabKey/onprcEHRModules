@@ -19,6 +19,7 @@ import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -41,17 +42,16 @@ public class NecropsyFormType extends EncounterForm
     public NecropsyFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, LABEL, "Pathology", Arrays.<FormSection>asList(
+                new NonStoreFormSection("Instructions", "Instructions", "ehr-necropsyinstructionspanel", Arrays.asList(ClientDependency.fromFilePath("ehr/panel/NecropsyInstructionsPanel.js"))),
                 new TaskFormSection(),
-                new SimpleFormPanelSection("study", "encounters", "Necropsy"),
+                new ClinicalEncountersFormPanelSection("Necropsy"),
                 new AnimalDetailsFormSection(),
+                new GrossFindingsFormPanelSection(),
                 new PathologyFormSection("ehr", "encounter_participants", "Staff"),
-                new PathologyFormSection("ehr", "encounter_summaries", "Summaries"),
-                new PathologyFormSection("study", "Drug Administration", "Medications/Treatments"),
-                new PathologyFormSection("study", "weight", "Weight"),
+                new PathologyMedicationsFormSection("study", "Drug Administration", "Medications/Treatments"),
                 new PathologyFormSection("study", "tissue_samples", "Tissues/Weights"),
                 new PathologyFormSection("study", "tissueDistributions", "Tissue Distributions"),
                 new PathologyFormSection("study", "measurements", "Measurements"),
-                //new PathologyDiagnosesFormSection("study", "grossFindings", "Gross Findings"),
                 new PathologyDiagnosesFormSection("study", "histology", "Histologic Findings"),
                 new PathologyDiagnosesFormSection("study", "pathologyDiagnoses", "Diagnoses")
         ));
@@ -67,12 +67,14 @@ public class NecropsyFormType extends EncounterForm
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Necropsy.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/form/field/PathologyCaseNoField.js"));
         addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/pathologyButtons.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromCaseWindow.js"));
     }
 
     @Override
     protected List<String> getMoreActionButtonConfigs()
     {
         List<String> ret = super.getMoreActionButtonConfigs();
+        ret.add("COPYFROMCASE");
         ret.add("ENTERDEATH");
 
         return ret;

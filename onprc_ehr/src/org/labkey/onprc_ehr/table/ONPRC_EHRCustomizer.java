@@ -33,6 +33,7 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
+import org.labkey.api.ldk.table.AbstractTableCustomizer;
 import org.labkey.api.query.AliasedColumn;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.ExprColumn;
@@ -64,9 +65,8 @@ import java.util.Set;
  * Date: 12/7/12
  * Time: 2:22 PM
  */
-public class ONPRC_EHRCustomizer implements TableCustomizer
+public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 {
-    private Map<String, UserSchema> _userSchemas;
     private static final Logger _log = Logger.getLogger(ONPRC_EHRCustomizer.class);
 
     public ONPRC_EHRCustomizer()
@@ -76,8 +76,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     public void customize(TableInfo table)
     {
-        _userSchemas = new HashMap<>();
-
         if (table instanceof AbstractTableInfo)
         {
             customizeColumns((AbstractTableInfo) table);
@@ -167,18 +165,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             {
                 customizeAreaTable((AbstractTableInfo) table);
             }
-            else if (matches(table, "onprc_billing", "invoicedItems"))
-            {
-                customizeInvoicedItems((AbstractTableInfo) table);
-            }
-            else if (matches(table, "onprc_billing", "invoiceRuns"))
-            {
-                customizeInvoiceRuns((AbstractTableInfo) table);
-            }
-            else if (matches(table, "onprc_billing", "miscCharges"))
-            {
-                customizeMiscCharges((AbstractTableInfo) table);
-            }
         }
 
         if (matches(table, "study", "surgeryChecklist"))
@@ -212,7 +198,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             project.setLabel("Center Project");
             if (!ti.getName().equalsIgnoreCase("project"))
             {
-                UserSchema us = getUserSchema(ti, "ehr");
+                UserSchema us = getEHRUserSchema(ti, "ehr");
                 if (us != null)
                 {
                     if (project.getJavaClass().equals(Integer.class))
@@ -227,16 +213,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (account != null && !ti.getName().equalsIgnoreCase("accounts"))
         {
             account.setLabel("Alias");
-            if (account.getFk() == null)
-            {
-                UserSchema us = getUserSchema(ti, "onprc_billing_public");
-                if (us != null)
-                {
-                    account.setFk(new QueryForeignKey(us, "aliases", "alias", "alias", true));
-                    account.setURL(DetailsURL.fromString("/query/executeQuery.view?schemaName=onprc_billing_public&query.queryName=aliases&query.alias~eq=${account}"));
-                }
-            }
-
             if (ti instanceof DataSetTable)
             {
                 account.setHidden(true);
@@ -247,32 +223,13 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (protocolCol != null)
         {
             //NOTE: we keep the lookup even on the protocol table, so we always use displayName to identify the column
-            UserSchema us = getUserSchema(ti, "ehr");
+            UserSchema us = getEHRUserSchema(ti, "ehr");
             if (us != null){
                 protocolCol.setFk(new QueryForeignKey(us, "protocol", "protocol", "displayName"));
             }
 
             protocolCol.setLabel("IACUC Protocol");
             //protocolCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-        }
-
-        boolean found = false;
-        for (String field : new String[]{"grant", "grantNumber"})
-        {
-            if (found)
-                continue; //a table should never contain both of these anyway
-
-            ColumnInfo grant = ti.getColumn(field);
-            if (grant!= null)
-            {
-                found = true;
-                if (!ti.getName().equalsIgnoreCase("grants") && grant.getFk() == null)
-                {
-                    UserSchema us = getUserSchema(ti, "onprc_billing");
-                    if (us != null)
-                        grant.setFk(new QueryForeignKey(us, "grants", "grantNumber", "grantNumber"));
-                }
-            }
         }
 
         ColumnInfo room = ti.getColumn("room");
@@ -287,20 +244,10 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             location.setDisplayWidth("120");
         }
 
-        ColumnInfo chargeId = ti.getColumn("chargeId");
-        if (chargeId != null)
-        {
-            UserSchema us = getUserSchema(ti, "onprc_billing");
-            if (us != null){
-                chargeId.setFk(new QueryForeignKey(us, "chargeableItems", "rowid", "name"));
-            }
-            chargeId.setLabel("Charge Name");
-        }
-
         ColumnInfo snomed = ti.getColumn("snomed");
         if (snomed != null)
         {
-            UserSchema us = getUserSchema(ti, "ehr_lookups");
+            UserSchema us = getEHRUserSchema(ti, "ehr_lookups");
             if (us != null){
                 snomed.setFk(new QueryForeignKey(us, "snomed", "code", "meaning"));
             }
@@ -310,14 +257,14 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ColumnInfo procedureId = ti.getColumn("procedureId");
         if (procedureId != null)
         {
-            UserSchema us = getUserSchema(ti, "ehr_lookups");
+            UserSchema us = getEHRUserSchema(ti, "ehr_lookups");
             if (us != null){
                 procedureId.setFk(new QueryForeignKey(us, "procedures", "rowid", "name"));
             }
             procedureId.setLabel("Procedure");
         }
 
-        found = false;
+        boolean found = false;
         for (String field : new String[]{"investigator", "investigatorId"})
         {
             if (found)
@@ -331,7 +278,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
                 if (!ti.getName().equalsIgnoreCase("investigators") && investigator.getJavaClass().equals(Integer.class))
                 {
-                    UserSchema us = getUserSchema(ti, "onprc_ehr");
+                    UserSchema us = getEHRUserSchema(ti, "onprc_ehr");
                     if (us != null){
                         investigator.setFk(new QueryForeignKey(us, "investigators", "rowid", "lastname"));
                     }
@@ -343,7 +290,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         ColumnInfo fiscalAuthority = ti.getColumn("fiscalAuthority");
         if (fiscalAuthority != null)
         {
-            UserSchema us = getUserSchema(ti, "onprc_billing");
+            UserSchema us = getUserSchema(ti, "onprc_billing_public");
             if (us != null){
                 fiscalAuthority.setFk(new QueryForeignKey(us, "fiscalAuthorities", "rowid", "lastName"));
             }
@@ -366,9 +313,9 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             caseId.setLabel("Case");
             if (caseId.getFk() == null)
             {
-                UserSchema us = getUserSchema(ti, "study");
+                UserSchema us = getEHRUserSchema(ti, "study");
                 if (us != null)
-                    caseId.setFk(new QueryForeignKey(us, "cases", "objectid", "caseid"));
+                    caseId.setFk(new QueryForeignKey(us, "cases", "objectid", "category"));
             }
         }
 
@@ -396,65 +343,9 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
     private void customizeDateColumn(AbstractTableInfo ti)
     {
-        customizeDateColumn(ti, "date");
+        EHRService.get().customizeDateColumn(ti, "date");
     }
 
-    private void customizeDateColumn(AbstractTableInfo ti, String dateColName)
-    {
-        ColumnInfo dateCol = ti.getColumn(dateColName);
-        if (dateCol == null)
-            return;
-
-        String calendarYear = "calendarYear";
-        if (ti.getColumn(calendarYear) == null)
-        {
-            String colSql = dateCol.getValueSql(ExprColumn.STR_TABLE_ALIAS).getSQL();
-            SQLFragment sql = new SQLFragment(ti.getSqlDialect().getDatePart(Calendar.YEAR, colSql));
-            ExprColumn calCol = new ExprColumn(ti, calendarYear, sql, JdbcType.INTEGER, dateCol);
-            calCol.setLabel("Calendar Year");
-            calCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-            calCol.setHidden(true);
-            ti.addColumn(calCol);
-
-            String fiscalYear = "fiscalYear";
-            SQLFragment sql2 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, colSql) + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, colSql) + " < 5 THEN -1 ELSE 0 END)");
-            ExprColumn fiscalYearCol = new ExprColumn(ti, fiscalYear, sql2, JdbcType.INTEGER, dateCol);
-            fiscalYearCol.setLabel("Fiscal Year (May 1)");
-            fiscalYearCol.setDescription("This column will calculate the fiscal year of the record, based on a May 1 cycle");
-            fiscalYearCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-            fiscalYearCol.setHidden(true);
-            ti.addColumn(fiscalYearCol);
-
-            String fiscalYearJuly = "fiscalYearJuly";
-            SQLFragment sql3 = new SQLFragment("(" + ti.getSqlDialect().getDatePart(Calendar.YEAR, colSql) + " + CASE WHEN " + ti.getSqlDialect().getDatePart(Calendar.MONTH, colSql) + " < 7 THEN -1 ELSE 0 END)");
-            ExprColumn fiscalYearJulyCol = new ExprColumn(ti, fiscalYearJuly, sql3, JdbcType.INTEGER, dateCol);
-            fiscalYearJulyCol.setLabel("Fiscal Year (July 1)");
-            fiscalYearJulyCol.setDescription("This column will calculate the fiscal year of the record, based on a July 1 cycle");
-            fiscalYearJulyCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-            fiscalYearJulyCol.setHidden(true);
-            ti.addColumn(fiscalYearJulyCol);
-        }
-
-        addDatePartCol(ti, dateCol, "Year", "This column shows the year portion of the record's date", Calendar.YEAR);
-        addDatePartCol(ti, dateCol, "Month Number", "This column shows the month number (based on the record's date)", Calendar.MONTH);
-        addDatePartCol(ti, dateCol, "Day Of Month", "This column shows the day of month (based on the record's date)", Calendar.DATE);
-    }
-
-    private void addDatePartCol(AbstractTableInfo ti, ColumnInfo dateCol, String label, String description, Integer datePart)
-    {
-        String colName = dateCol.getName() + label.replaceAll(" ", "");
-        if (ti.getColumn(colName) == null)
-        {
-            String colSql = dateCol.getValueSql(ExprColumn.STR_TABLE_ALIAS).getSQL();
-            SQLFragment sql = new SQLFragment("(" + ti.getSqlDialect().getDatePart(datePart, colSql) + ")");
-            ExprColumn newCol = new ExprColumn(ti, colName, sql, JdbcType.INTEGER, dateCol);
-            newCol.setLabel(label);
-            newCol.setDescription(description);
-            newCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-            newCol.setHidden(true);
-            ti.addColumn(newCol);
-        }
-    }
     private void customizeAnimalTable(AbstractTableInfo ds)
     {
         UserSchema us = getStudyUserSchema(ds);
@@ -725,12 +616,19 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         appendSurgeryCol(ti);
         appendCaseHistoryCol(ti);
 
-        //TODO: this has been left for backwards compatibility w/ SSRS.  should update those and then remove.
         String problemCategories = "problemCategories";
         if (ti.getColumn(problemCategories) == null)
         {
-            ColumnInfo newCol = new AliasedColumn(ti, problemCategories, ti.getColumn("problem"));
-            newCol.setHidden(true);
+            TableInfo pl = getStudyUserSchema(ti).getTable("Problem List");
+            if (pl == null)
+                return;
+
+            TableInfo realTable = getRealTable(pl);
+            if (realTable == null)
+                return;
+
+            SQLFragment sql = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment("pl.category"), true, true, getChr(ti) + "(10)") + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)");
+            ExprColumn newCol = new ExprColumn(ti, problemCategories, sql, JdbcType.VARCHAR, ti.getColumn("objectid"));
             newCol.setLabel("Master Problem(s)");
             ti.addColumn(newCol);
         }
@@ -742,10 +640,35 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
             ti.removeColumn(isActiveCol);
         }
 
-        SQLFragment sql = new SQLFragment("(CASE WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL) THEN " + ti.getSqlDialect().getBooleanFALSE() + " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".reviewdate IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".reviewdate <= {fn curdate()}) THEN " + ti.getSqlDialect().getBooleanTRUE() + " ELSE " + ti.getSqlDialect().getBooleanTRUE() + " END)");
-        ExprColumn newCol = new ExprColumn(ti, isActive, sql, JdbcType.BOOLEAN, ti.getColumn("enddate"), ti.getColumn("reviewdate"));
+        SQLFragment sql = new SQLFragment("(CASE WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".lsid) IS NULL THEN " + ti.getSqlDialect().getBooleanFALSE() + " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL) THEN " + ti.getSqlDialect().getBooleanFALSE() + " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".reviewdate IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".reviewdate <= {fn curdate()}) THEN " + ti.getSqlDialect().getBooleanTRUE() + " ELSE " + ti.getSqlDialect().getBooleanTRUE() + " END)");
+        ExprColumn newCol = new ExprColumn(ti, isActive, sql, JdbcType.BOOLEAN, ti.getColumn("lsid"), ti.getColumn("enddate"), ti.getColumn("reviewdate"));
         newCol.setLabel("Is Active?");
         ti.addColumn(newCol);
+
+        //days since vet review
+        String lastVetReview = "lastVetReview";
+        if (ti.getColumn(lastVetReview) == null)
+        {
+            TableInfo obsTable = getTableInfo(ti, "study", "clinical_observations");
+            if (obsTable != null)
+            {
+                TableInfo obsRealTable = getRealTable(obsTable);
+
+                SQLFragment obsSql = new SQLFragment("(SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId)", ONPRC_EHRManager.VET_REVIEW);
+                ExprColumn obsCol = new ExprColumn(ti, lastVetReview, obsSql, JdbcType.TIMESTAMP, ti.getColumn("Id"));
+                obsCol.setLabel("Last Vet Review");
+                ti.addColumn(obsCol);
+
+                String daysSinceLastReview = "daysSinceLastVetReview";
+                SQLFragment obsSql2 = new SQLFragment("(SELECT coalesce((" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "max(t.date)") + "), 999) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId)", ONPRC_EHRManager.VET_REVIEW);
+                ExprColumn obsCol2 = new ExprColumn(ti, daysSinceLastReview, obsSql2, JdbcType.INTEGER, ti.getColumn("Id"));
+                obsCol2.setLabel("Days Since Last Vet Review");
+                ti.addColumn(obsCol2);
+            }
+        }
+
+        //TODO: days since last change
+        //TODO: most recent observations
     }
 
     private void customizeHousingTable(AbstractTableInfo ti)
@@ -872,6 +795,34 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         if (originCol != null)
         {
             originCol.setLabel("Source");
+        }
+
+        String hxName = "mostRecentHx";
+        if (ti.getColumn(hxName) == null)
+        {
+            TableInfo clinRemarks = getStudyUserSchema(ti).getTable("Clinical Remarks");
+            if (clinRemarks == null)
+                return;
+
+            TableInfo realTable = getRealTable(clinRemarks);
+            if (realTable == null)
+            {
+                _log.warn("Unable to find real table for clin remarks");
+                return;
+            }
+
+            ColumnInfo idCol = ti.getColumn("Id");
+            assert idCol != null;
+
+            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.hx"), true, false, getChr(ti) + "(10)") + " FROM " + realTable.getSelectName() +
+                    " r WHERE r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 WHERE "
+                    + " r2.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r2.hx is not null)" +
+                    ")"
+            );
+            ExprColumn latestHx = new ExprColumn(ti, hxName, sql, JdbcType.VARCHAR, idCol);
+            latestHx.setLabel("Most Recent Hx");
+            latestHx.setDisplayWidth("250");
+            ti.addColumn(latestHx);
         }
     }
 
@@ -1228,7 +1179,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
 
         ColumnInfo invest = ti.getColumn("investigatorId");
         invest.setHidden(false);
-        UserSchema us = getUserSchema(ti, "onprc_ehr");
+        UserSchema us = getEHRUserSchema(ti, "onprc_ehr");
         if (us != null)
             invest.setFk(new QueryForeignKey(us, "investigators", "rowid", "lastname"));
         invest.setLabel("Project Contact");
@@ -1291,35 +1242,13 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
         return getUserSchema(ds, "study");
     }
 
-    public UserSchema getUserSchema(AbstractTableInfo ds, String name)
+    public UserSchema getEHRUserSchema(AbstractTableInfo ds, String name)
     {
-        if (_userSchemas.containsKey(name))
-            return _userSchemas.get(name);
+        Container ehrContainer = EHRService.get().getEHRStudyContainer(ds.getUserSchema().getContainer());
+        if (ehrContainer == null)
+            return null;
 
-        UserSchema us = ds.getUserSchema();
-        if (us != null)
-        {
-            _userSchemas.put(us.getName(), us);
-
-            if (name.equalsIgnoreCase(us.getName()))
-                return us;
-
-            UserSchema us2 = QueryService.get().getUserSchema(us.getUser(), us.getContainer(), name);
-            if (us2 != null)
-                _userSchemas.put(name, us2);
-
-            return us2;
-        }
-
-        return null;
-    }
-
-    private boolean matches(TableInfo ti, String schema, String query)
-    {
-        if (ti instanceof DataSetTable)
-            return ti.getSchema().getName().equalsIgnoreCase(schema) && (ti.getName().equalsIgnoreCase(query) || ti.getTitle().equalsIgnoreCase(query));
-        else
-            return ti.getSchema().getName().equalsIgnoreCase(schema) && ti.getName().equalsIgnoreCase(query);
+        return getUserSchema(ds, name, ehrContainer);
     }
 
     private void appendEnddate(AbstractTableInfo ti, ColumnInfo sourceCol, String label)
@@ -1353,7 +1282,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         {
                             String runId = (String)ctx.get("runIdPLT");
                             String id = (String)ctx.get("Id");
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.DatasetButtons.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
                         }
 
                         @Override
@@ -1382,7 +1311,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         {
                             String runId = (String)ctx.get("runIdHCT");
                             String id = (String)ctx.get("Id");
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.DatasetButtons.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
                         }
 
                         @Override
@@ -1395,107 +1324,6 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                     };
                 }
             });
-        }
-    }
-
-    private void customizeInvoiceRuns(AbstractTableInfo table)
-    {
-        customizeDateColumn(table, "billingPeriodStart");
-    }
-
-    private UserSchema _billingUserSchema = null;
-
-    private UserSchema getBillingUserSchema(AbstractTableInfo table)
-    {
-        if (_billingUserSchema != null)
-        {
-            return _billingUserSchema;
-        }
-
-        Container c = ONPRC_EHRManager.get().getBillingContainer(table.getUserSchema().getContainer());
-        if (c != null)
-        {
-            UserSchema us = QueryService.get().getUserSchema(table.getUserSchema().getUser(), c, ONPRC_EHRSchema.BILLING_SCHEMA_NAME);
-            if (us != null && us.getContainer().hasPermission(table.getUserSchema().getUser(), ReadPermission.class))
-            {
-                _billingUserSchema = us;
-                return us;
-            }
-        }
-
-        return null;
-    }
-
-    private void customizeMiscCharges(AbstractTableInfo table)
-    {
-        UserSchema us = getBillingUserSchema(table);
-        if (us == null)
-        {
-            return;
-        }
-
-        ColumnInfo invoicedItemId = table.getColumn("invoicedItemId");
-        if (invoicedItemId != null)
-        {
-            invoicedItemId.setFk(new QueryForeignKey(us, "invoicedItems", "objectid", "rowid"));
-        }
-
-        ColumnInfo sourceInvoicedItem = table.getColumn("sourceInvoicedItem");
-        if (sourceInvoicedItem != null)
-        {
-            sourceInvoicedItem.setFk(new QueryForeignKey(us, "invoicedItems", "objectid", "rowid"));
-        }
-
-        ColumnInfo invoiceId = table.getColumn("invoiceId");
-        if (invoiceId != null)
-        {
-            invoiceId.setFk(new QueryForeignKey(us, "invoiceRuns", "objectid", "rowid"));
-        }
-    }
-
-    private void customizeInvoicedItems(AbstractTableInfo table)
-    {
-        table.getButtonBarConfig().setAlwaysShowRecordSelectors(true);
-        table.setDetailsURL(DetailsURL.fromString("/onprc_ehr/invoicedItemDetails.view?invoicedItem=${objectid}"));
-
-        ColumnInfo col = table.getColumn("invoicedItemId");
-        if (col != null)
-        {
-            UserSchema us = getBillingUserSchema(table);
-            if (us != null)
-            {
-                col.setFk(new QueryForeignKey(us, "invoicedItems", "objectid", "rowid"));
-            }
-        }
-
-        ColumnInfo idCol = table.getColumn("Id");
-        if (idCol != null)
-        {
-            Container c = EHRService.get().getEHRStudyContainer(table.getUserSchema().getContainer());
-            if (c != null)
-            {
-                idCol.setFk(new QueryForeignKey("study", c, table.getUserSchema().getUser(), "animal", "Id", "Id"));
-            }
-        }
-
-        ColumnInfo debitedaccount = table.getColumn("debitedaccount");
-        if (debitedaccount != null && debitedaccount.getFk() == null)
-        {
-            UserSchema us = getUserSchema(table, "onprc_billing_public");
-            if (us == null)
-            {
-                us = getUserSchema(table, "onprc_billing");
-            }
-
-            if (us != null)
-            {
-                debitedaccount.setFk(new QueryForeignKey(us, "aliases", "alias", "alias", true));
-                debitedaccount.setURL(DetailsURL.fromString("/query/executeQuery.view?schemaName=onprc_billing_public&query.queryName=aliases&query.alias~eq=${account}"));
-
-                ColumnInfo creditedaccount = table.getColumn("creditedaccount");
-                creditedaccount.setFk(new QueryForeignKey(us, "aliases", "alias", "alias", true));
-                creditedaccount.setURL(DetailsURL.fromString("/query/executeQuery.view?schemaName=onprc_billing_public&query.queryName=aliases&query.alias~eq=${account}"));
-            }
         }
     }
 
@@ -1571,7 +1399,7 @@ public class ONPRC_EHRCustomizer implements TableCustomizer
                         String objectid = (String)ctx.get("objectid");
                         String id = (String)ctx.get("Id");
 
-                        out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.DatasetButtons.showCaseHistory('" + objectid + "', '" + id + "', this);\">[Show Case Hx]</a></span>");
+                        out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.window.CaseHistoryWindow.showCaseHistory('" + objectid + "', '" + id + "', this);\">[Show Case Hx]</a></span>");
                     }
 
                     @Override

@@ -17,7 +17,7 @@ SELECT
   p.protocol,
   pc.project,
   pc.species,
-  pc.gender,
+  coalesce(pc.gender.meaning, 'Male/Female') as gender,
   pc.start,
   pc.enddate,
   pc2.totalAssignments,

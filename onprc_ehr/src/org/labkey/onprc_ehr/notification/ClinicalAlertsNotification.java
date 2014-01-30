@@ -90,6 +90,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         groupProblemSummary(c, u, msg, 30, 10);
         roomProblemSummary(c, u, msg, 7, 5);
         roomProblemSummary(c, u, msg, 30, 10);
+        duplicateCases(c, u, msg);
 
         return msg.toString();
     }

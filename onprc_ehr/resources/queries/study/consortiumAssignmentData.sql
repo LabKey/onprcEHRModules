@@ -8,7 +8,7 @@ PARAMETERS(StartDate TIMESTAMP, EndDate TIMESTAMP)
 
 SELECT
   ao.Id,
-  ao.date,
+  cast(ao.date as timestamp) as date,
   group_concat(DISTINCT f.value, chr(10)) as spfStatus,
   ao.project,
 

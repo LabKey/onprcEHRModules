@@ -94,7 +94,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         colonyHousingSummary(c, u, msg, saved, toSave);
         behaviorCaseSummary(c, u, msg);
-        setupPairs(c, u, msg);
+        getFlaggedPairs(c, u, msg);
         changedPairs(c, u, msg);
         singleHousedAnimals(c, u, msg);
         transfersYesterday(c, u, msg);
@@ -150,17 +150,15 @@ public class BehaviorNotification extends ColonyAlertsNotification
         msg.append("<hr>");
     }
 
-    private void setupPairs(Container c, User u, final StringBuilder msg)
+    private void getFlaggedPairs(Container c, User u, final StringBuilder msg)
     {
-        TableInfo ti = getStudySchema(c, u).getTable("pairings");
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("eventType"), "Set up");
-
-        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("Id"), filter, null);
+        TableInfo ti = getStudySchema(c, u).getTable("pairingSeparations");
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("Id"));
         long total = ts.getRowCount();
         if (total > 0)
         {
-            msg.append("<b>There are " + total + " animals with 'Set Up' as the pairing type.  These may need to be paired.</b><p>");
-            String url = getExecuteQueryUrl(c, "study", "pairings", null) + "&query.eventType~eq=Set up";
+            msg.append("<b>There are " + total + " animals with temporary separations, but no record is either a reunite or permanent separation.  These may need attention.</b><p>");
+            String url = getExecuteQueryUrl(c, "study", "pairingSeparations", null);
             msg.append("<a href='" + url + "'>Click here to view them</a>");
             msg.append("<hr>");
         }

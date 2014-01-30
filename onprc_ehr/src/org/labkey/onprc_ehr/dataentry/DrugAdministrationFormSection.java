@@ -30,6 +30,8 @@ import java.util.List;
  */
 public class DrugAdministrationFormSection extends SimpleFormSection
 {
+    protected boolean _showAddTreatments = true;
+
     public DrugAdministrationFormSection()
     {
         this(EHRService.FORM_SECTION_LOCATION.Body);
@@ -41,7 +43,7 @@ public class DrugAdministrationFormSection extends SimpleFormSection
         setClientStoreClass("EHR.data.DrugAdministrationRunsClientStore");
         addClientDependency(ClientDependency.fromFilePath("ehr/data/DrugAdministrationRunsClientStore.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/SedationWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/DrugAmountWindow.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledTreatmentsWindow.js"));
 
         setLocation(location);
         setTabName("Medications");
@@ -52,7 +54,23 @@ public class DrugAdministrationFormSection extends SimpleFormSection
     {
         List<String> defaultButtons = super.getTbarButtons();
         defaultButtons.add(0, "SEDATIONHELPER");
-        defaultButtons.add("DRUGAMOUNTHELPER");
+
+        int idx = defaultButtons.indexOf("SELECTALL");
+        if (idx > -1)
+            defaultButtons.add(idx + 1, "DRUGAMOUNTHELPER");
+        else
+            defaultButtons.add("DRUGAMOUNTHELPER");
+
+        return defaultButtons;
+    }
+
+    @Override
+    public List<String> getTbarMoreActionButtons()
+    {
+        List<String> defaultButtons = super.getTbarMoreActionButtons();
+
+        if (_showAddTreatments)
+            defaultButtons.add("ADDTREATMENTS");
 
         return defaultButtons;
     }

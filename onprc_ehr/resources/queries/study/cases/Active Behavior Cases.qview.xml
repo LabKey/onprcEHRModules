@@ -8,7 +8,7 @@
         <column name="Id/demographics/species"/>
         <column name="Id/demographics/gender"/>
         <!--<column name="performedby"/>-->
-        <column name="problem"/>
+        <column name="problemCategories"/>
         <column name="todaysRemarks"/>
         <column name="caseHistory"/>
     </columns>

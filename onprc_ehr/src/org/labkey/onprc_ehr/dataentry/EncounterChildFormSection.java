@@ -29,23 +29,16 @@ import java.util.List;
 public class EncounterChildFormSection extends SimpleGridPanel
 {
     private boolean _allowAddDefaults;
-    private boolean _allowTemplates = false;
 
     public EncounterChildFormSection(String schemaName, String queryName, String label, boolean allowAddDefaults)
     {
-        this(schemaName, queryName, label, allowAddDefaults, false);
-    }
-
-    public EncounterChildFormSection(String schemaName, String queryName, String label, boolean allowAddDefaults, boolean allowTemplates)
-    {
         super(schemaName, queryName, label, EHRService.FORM_SECTION_LOCATION.Tabs);
         _allowAddDefaults = allowAddDefaults;
-        _allowTemplates = allowTemplates;
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/encounterButtons.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/buttons/encounterButtons.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/EncounterChild.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/SurgeryAddRecordWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromEncountersWindow.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/EncounterAddRecordWindow.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/AddProcedureDefaultsWindow.js"));
 
         addConfigSource("Encounter");
         addConfigSource("EncounterChild");
@@ -53,9 +46,9 @@ public class EncounterChildFormSection extends SimpleGridPanel
         setTemplateMode(TEMPLATE_MODE.ENCOUNTER);
     }
 
-    public EncounterChildFormSection(String schemaName, String queryName, String label, boolean allowAddDefaults, boolean allowTemplates, String clientStoreClass, List<ClientDependency> extraDependencies, String tabName)
+    public EncounterChildFormSection(String schemaName, String queryName, String label, boolean allowAddDefaults, String clientStoreClass, List<ClientDependency> extraDependencies, String tabName)
     {
-        this(schemaName, queryName, label, allowAddDefaults, allowTemplates);
+        this(schemaName, queryName, label, allowAddDefaults);
         setClientStoreClass(clientStoreClass);
         for (ClientDependency cd : extraDependencies)
         {
@@ -72,7 +65,7 @@ public class EncounterChildFormSection extends SimpleGridPanel
         List<String> defaultButtons = new ArrayList<String>();
 
         if (_allowAddDefaults)
-            defaultButtons.add("COPYFROMENCOUNTERS");
+            defaultButtons.add("ADDPROCEDUREDEFAULTS");
 
         defaultButtons.addAll(super.getTbarButtons());
         defaultButtons.remove("ADDANIMALS");
@@ -81,7 +74,7 @@ public class EncounterChildFormSection extends SimpleGridPanel
         {
             int idx = defaultButtons.indexOf("ADDRECORD");
             defaultButtons.remove("ADDRECORD");
-            defaultButtons.add(idx, "SURGERYADD");
+            defaultButtons.add(idx, "ENCOUNTERADD");
         }
 
         return defaultButtons;

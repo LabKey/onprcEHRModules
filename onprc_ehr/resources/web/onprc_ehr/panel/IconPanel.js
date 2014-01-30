@@ -32,10 +32,13 @@ Ext4.define('ONPRC.panel.IconPanel', {
                 if (this.category && results[this.category]){
                     var toAdd = [];
                     Ext4.each(results[this.category], function(result){
+                        var url = result.publicContainer ? (result.publicContainer.canRead ? result.publicContainer.url : null) : (result.canRead ? result.url : null);
+                        var canRead = result.publicContainer ? result.publicContainer.canRead : result.canRead;
+
                         var rec = LDK.StoreUtils.createModelInstance(this.store, {
                             name: result.name,
-                            url: result.canRead ? result.url : null,
-                            tooltip: !result.canRead ? 'You do not have permission to view this page' : null,
+                            url: url,
+                            tooltip: !canRead ? 'You do not have permission to view this page' : null,
                             iconurl: LABKEY.ActionURL.buildURL('project', 'downloadProjectIcon')
                         });
 

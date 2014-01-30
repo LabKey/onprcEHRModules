@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.AbstractFormSection;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
@@ -40,13 +41,20 @@ public class ClinicalRoundsFormType extends TaskForm
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new ClinicalRoundsRemarksFormSection(),
+            //NOTE: originally removed in order to enforce non-editable IDs
+            //however, have been re-added apparently people do use them
             new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
-            new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
+            new WeightFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+            new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+            new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, false)
         ));
+
+        setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NONE);
 
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("ClinicalRounds");
+            s.setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NONE);
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalRounds.js"));

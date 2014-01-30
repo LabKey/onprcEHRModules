@@ -20,6 +20,7 @@
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>flag_categories</fkTable>
                             <fkColumnName>category</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
                         </fk>
                     </column>
                     <column columnName="flag">

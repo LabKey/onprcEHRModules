@@ -628,9 +628,15 @@
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
             </column>
+            <column columnName="assignedvet">
+                <datatype>integer</datatype>
+            </column>
 			<column columnName="remark">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
+            </column>
+            <column columnName="plan">
+                <datatype>varchar</datatype>
             </column>
             <column columnName="objectid">
                 <datatype>entityid</datatype>

@@ -39,8 +39,8 @@ FROM study.potentialDams b
 --find all housing records for these females overlapping the conception window
 JOIN study.housing h1 ON (
   h1.Id = b1.potentialDam AND
-  h1.date <= b1.maxDate AND 
-  h1.enddateTimeCoalesced >= b1.minDate
+  h1.dateOnly <= CAST(b1.maxDate as DATE) AND
+  h1.enddateCoalesced >= CAST(b1.minDate as DATE)
 )
 
 GROUP BY b1.Id, h1.room, h1.cage

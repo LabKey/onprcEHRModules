@@ -40,7 +40,7 @@ public class ProcessingFormType extends TaskForm
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new BloodDrawFormSection(false),
-                new TreatmentsTaskFormSection(false),
+                new DrugAdministrationFormSection(),
                 new WeightFormSection()
         ));
 

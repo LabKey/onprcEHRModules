@@ -14,12 +14,5 @@
                 <permission>ADMIN</permission>
             </editPermissions>
         </propertyDescriptor>
-        <propertyDescriptor name="BillingContainer">
-            <canSetPerContainer>true</canSetPerContainer>
-            <description>The is the path to the container holding billing data.  Use of slashes is very important - it should be in the format '/myProject/ehr'</description>
-            <editPermissions>
-                <permission>ADMIN</permission>
-            </editPermissions>
-        </propertyDescriptor>
     </properties>
 </module>

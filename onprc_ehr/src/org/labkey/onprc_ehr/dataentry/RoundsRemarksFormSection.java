@@ -31,11 +31,13 @@ public class RoundsRemarksFormSection extends SimpleFormSection
     public RoundsRemarksFormSection(String label, EHRService.FORM_SECTION_LOCATION location)
     {
         super("study", "Clinical Remarks", label, "ehr-roundsremarksgridpanel", location);
+        addClientDependency(ClientDependency.fromFilePath("ehr/plugin/ClinicalObservationsCellEditing.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/panel/ClinicalRemarkPanel.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/grid/RoundsRemarksGridPanel.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/grid/ObservationsRowEditorGridPanel.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/plugin/ClinicalRemarksRowEditor.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalObservationsClientStore.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/buttons/roundsButtons.js"));
 
         setTemplateMode(TEMPLATE_MODE.NONE);
     }
@@ -45,6 +47,26 @@ public class RoundsRemarksFormSection extends SimpleFormSection
     {
         List<String> defaultButtons = super.getTbarButtons();
         defaultButtons.remove("COPYFROMSECTION");
+        defaultButtons.remove("ADDRECORD");
+        defaultButtons.remove("ADDANIMALS");
+
+        if (defaultButtons.contains("DELETERECORD"))
+        {
+            int idx = defaultButtons.indexOf("DELETERECORD");
+            defaultButtons.remove("DELETERECORD");
+            defaultButtons.add(idx, "ROUNDSDELETE");
+        }
+
+        defaultButtons.add("MARK_ROUNDS_REVIEWED");
+
+        return defaultButtons;
+    }
+
+    @Override
+    public List<String> getTbarMoreActionButtons()
+    {
+        List<String> defaultButtons = super.getTbarMoreActionButtons();
+        defaultButtons.remove("DUPLICATE");
 
         return defaultButtons;
     }

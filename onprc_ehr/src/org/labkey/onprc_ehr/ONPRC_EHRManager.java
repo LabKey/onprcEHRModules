@@ -29,6 +29,7 @@ import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.module.ModuleProperty;
 import org.labkey.api.query.FieldKey;
+import org.labkey.api.query.Queryable;
 import org.labkey.api.security.User;
 
 import java.sql.SQLException;
@@ -46,10 +47,25 @@ import java.util.Map;
 public class ONPRC_EHRManager
 {
     private static ONPRC_EHRManager _instance = new ONPRC_EHRManager();
-    public static final String BillingContainerPropName = "BillingContainer";
+
+    @Queryable
     public static final String AUC_RESERVED = "AUC Reserved";
+    @Queryable
     public static final String PENDING_SOCIAL_GROUP = "Pending Social Group";
+    @Queryable
     public static final String PENDING_ASSIGNMENT = "Pending Assignment";
+    @Queryable
+    public static final String BASE_GRANT_PROJECT = "0492";
+    @Queryable
+    public static final String U42_PROJECT = "0492-02";
+    @Queryable
+    public static final String TMB_PROJECT = "0300";
+    @Queryable
+    public static final String VET_USER_GROUP = "DCM Veterinarians";
+    @Queryable
+    public static final String VET_REVIEW = "Vet Review";
+    @Queryable
+    public static final String TECH_REVIEW = "Reviewed";
 
     private ONPRC_EHRManager()
     {
@@ -59,83 +75,6 @@ public class ONPRC_EHRManager
     public static ONPRC_EHRManager get()
     {
         return _instance;
-    }
-
-    public List<String> deleteBillingRuns(User user, Collection<String> pks, boolean testOnly)
-    {
-        TableInfo invoiceRuns = ONPRC_EHRSchema.getInstance().getBillingSchema().getTable(ONPRC_EHRSchema.TABLE_INVOICE_RUNS);
-        TableInfo invoicedItems = ONPRC_EHRSchema.getInstance().getBillingSchema().getTable(ONPRC_EHRSchema.TABLE_INVOICED_ITEMS);
-        TableInfo miscCharges = ONPRC_EHRSchema.getInstance().getBillingSchema().getTable(ONPRC_EHRSchema.TABLE_MISC_CHARGES);
-
-        //create filters
-        SimpleFilter invoiceRunFilter = new SimpleFilter(FieldKey.fromString("invoiceId"), pks, CompareType.IN);
-
-        SimpleFilter adjustmentFilter = new SimpleFilter(FieldKey.fromString("invoiceId"), pks, CompareType.IN);
-        adjustmentFilter.addCondition(FieldKey.fromString("invoicedItemId"), null, CompareType.NONBLANK);
-
-        SimpleFilter miscChargesFilter = new SimpleFilter(FieldKey.fromString("invoiceId"), pks, CompareType.IN);
-        miscChargesFilter.addCondition(FieldKey.fromString("invoicedItemId"), null, CompareType.ISBLANK);
-
-        //perform the work
-        List<String> ret = new ArrayList<>();
-        if (testOnly)
-        {
-            TableSelector tsRuns = new TableSelector(invoicedItems, invoiceRunFilter, null);
-            ret.add(tsRuns.getRowCount() + " records from invoiced items");
-
-            TableSelector tsMiscCharges = new TableSelector(miscCharges, adjustmentFilter, null);
-            ret.add(tsMiscCharges.getRowCount() + " records of adjustments or reversals that will be deleted.");
-
-            TableSelector tsMiscCharges2 = new TableSelector(miscCharges, miscChargesFilter, null);
-            ret.add(tsMiscCharges2.getRowCount() + " records from misc charges will be removed from the deleted invoice, which means they will be picked up by the next invoice.  They are not deleted.");
-        }
-        else
-        {
-            ExperimentService.get().ensureTransaction();
-            try
-            {
-                long deleted1 = Table.delete(invoicedItems, invoiceRunFilter);
-
-                //TODO: should I actually update these and set invoiceItemId to null instead?
-                long deleted2 = Table.delete(miscCharges, adjustmentFilter);
-
-
-                TableSelector tsMiscCharges2 = new TableSelector(miscCharges, Collections.singleton("objectid"), miscChargesFilter, null);
-                String[] miscChargesIds = tsMiscCharges2.getArray(String.class);
-                for (String objectid : miscChargesIds)
-                {
-                    Map<String, Object> map = new CaseInsensitiveHashMap<>();
-                    map.put("invoiceId", null);
-                    map = Table.update(user, miscCharges, map, objectid);
-                }
-
-                long deleted3 = Table.delete(invoiceRuns, new SimpleFilter(FieldKey.fromString("objectid"), pks, CompareType.IN));
-
-                ExperimentService.get().commitTransaction();
-            }
-            catch (SQLException e)
-            {
-                throw new RuntimeSQLException(e);
-            }
-            finally
-            {
-                ExperimentService.get().closeTransaction();
-            }
-        }
-
-        return ret;
-    }
-
-    public Container getBillingContainer(Container c)
-    {
-        Module ehr = ModuleLoader.getInstance().getModule(ONPRC_EHRModule.NAME);
-        ModuleProperty mp = ehr.getModuleProperties().get(BillingContainerPropName);
-        String path = mp.getEffectiveValue(c);
-        if (path == null)
-            return null;
-
-        return ContainerManager.getForPath(path);
-
     }
 }
 

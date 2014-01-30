@@ -29,12 +29,7 @@ public class ONPRC_EHRSchema
     private static final ONPRC_EHRSchema _instance = new ONPRC_EHRSchema();
     public static final String SCHEMA_NAME = "onprc_ehr";
     public static final String BILLING_SCHEMA_NAME = "onprc_billing";
-
     public static final String TABLE_ETL_RUNS = "etl_runs";
-    public static final String TABLE_INVOICED_ITEMS = "invoicedItems";
-    public static final String TABLE_INVOICE_RUNS = "invoiceRuns";
-    public static final String TABLE_MISC_CHARGES = "miscCharges";
-    public static final String TABLE_PROJECT_ACCOUNT_HISTORY = "projectAccountHistory";
 
     public static ONPRC_EHRSchema getInstance()
     {

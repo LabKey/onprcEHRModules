@@ -32,15 +32,24 @@ import java.util.List;
  */
 public class LabworkFormSection extends SimpleGridPanel
 {
+    private boolean _allowPanelEdit = false;
+
     public LabworkFormSection(String schemaName, String queryName, String label)
+    {
+        this(schemaName, queryName, label, false);
+    }
+
+    public LabworkFormSection(String schemaName, String queryName, String label, boolean allowPanelEdit)
     {
         super(schemaName, queryName, label, EHRService.FORM_SECTION_LOCATION.Tabs);
         addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/labworkButtons.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/LabworkChild.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/data/LabworkResultsStore.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/LabworkPanelEditWindow.js"));
         setClientStoreClass("EHR.data.LabworkResultsStore");
         addConfigSource("LabworkChild");
         setTemplateMode(TEMPLATE_MODE.NONE);
+        _allowPanelEdit = allowPanelEdit;
     }
 
     @Override
@@ -56,6 +65,9 @@ public class LabworkFormSection extends SimpleGridPanel
             defaultButtons.remove("ADDRECORD");
             defaultButtons.add(idx, "LABWORKADD");
         }
+
+        if (_allowPanelEdit)
+            defaultButtons.add("EDIT_AS_PANEL");
 
         return defaultButtons;
     }

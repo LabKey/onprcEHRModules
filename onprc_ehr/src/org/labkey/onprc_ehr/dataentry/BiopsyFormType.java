@@ -26,6 +26,7 @@ import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: bimber
@@ -40,10 +41,10 @@ public class BiopsyFormType extends EncounterForm
     {
         super(ctx, owner, NAME, NAME, "Pathology", Arrays.<FormSection>asList(
                 new TaskFormSection(),
-                new SimpleFormPanelSection("study", "encounters", "Biopsy"),
+                new ClinicalEncountersFormPanelSection("Biopsy"),
                 new AnimalDetailsFormSection(),
                 new PathologyFormSection("ehr", "encounter_participants", "Staff"),
-                new PathologyFormSection("study", "Drug Administration", "Medications/Treatments"),
+                new PathologyMedicationsFormSection("study", "Drug Administration", "Medications/Treatments"),
                 new PathologyFormSection("study", "tissue_samples", "Tissues/Weights"),
                 new PathologyFormSection("study", "tissueDistributions", "Tissue Distributions"),
                 new PathologyFormSection("study", "measurements", "Measurements"),
@@ -63,5 +64,15 @@ public class BiopsyFormType extends EncounterForm
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Biopsy.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/form/field/PathologyCaseNoField.js"));
         addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/pathologyButtons.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromCaseWindow.js"));
+    }
+
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> ret = super.getMoreActionButtonConfigs();
+        ret.add("COPYFROMCASE");
+
+        return ret;
     }
 }
