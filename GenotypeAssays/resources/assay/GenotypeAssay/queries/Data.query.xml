@@ -70,11 +70,6 @@
                     </column>
                     <column columnName="requestid">
                         <inputType>RequestId</inputType>
-                        <!--<fk>-->
-                            <!--<fkDbSchema>laboratory</fkDbSchema>-->
-                            <!--<fkTable>assay_requests</fkTable>-->
-                            <!--<fkColumnName>rowid</fkColumnName>-->
-                        <!--</fk>-->
                         <measure>false</measure>
                         <dimension>false</dimension>
                     </column>
@@ -82,6 +77,15 @@
                         <columnTitle>QC Flags</columnTitle>
                         <measure>false</measure>
                         <dimension>false</dimension>
+                    </column>
+                    <column columnName="analysisId">
+                        <columnTitle>Analysis Id</columnTitle>
+                        <isUserEditable>false</isUserEditable>
+                        <fk>
+                            <fkDbSchema>sequenceanalysis</fkDbSchema>
+                            <fkTable>sequence_analyses</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
                     </column>
                 </columns>
                 <buttonBarOptions position="both" includeStandardButtons="true">

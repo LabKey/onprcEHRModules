@@ -57,6 +57,7 @@ GenotypeAssays/resources/schemas/dbscripts/sqlserver/genotypeassays-0.00-0.01.sq
 GenotypeAssays/resources/schemas/dbscripts/sqlserver/genotypeassays-0.02-0.03.sql -text
 GenotypeAssays/resources/schemas/genotypeassays.xml -text
 GenotypeAssays/resources/web/genotypeassays/data/UCDavis.txt -text
+GenotypeAssays/resources/web/genotypeassays/window/CacheResultsWindow.js -text
 GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysController.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysManager.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysModule.java -text
@@ -70,6 +71,7 @@ GenotypeAssays/src/org/labkey/genotypeassays/assay/SSPAssayDefaultImportMethod.j
 GenotypeAssays/src/org/labkey/genotypeassays/assay/SSPImportHelper.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/assay/SSPPivotingImportMethod.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/assay/UCDavisSTRImportMethod.java -text
+GenotypeAssays/src/org/labkey/genotypeassays/buttons/CacheAnalysesButton.java -text
 HormoneAssay/HormoneAssay.iml -text
 HormoneAssay/module.properties -text
 HormoneAssay/resources/assay/hormone/config.xml -text

@@ -16,18 +16,29 @@
 
 package org.labkey.genotypeassays;
 
+import org.labkey.api.action.ApiAction;
+import org.labkey.api.action.ApiResponse;
+import org.labkey.api.action.ApiSimpleResponse;
 import org.labkey.api.action.ConfirmAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.SqlExecutor;
 import org.labkey.api.data.TableInfo;
+import org.labkey.api.exp.api.ExpProtocol;
+import org.labkey.api.exp.api.ExperimentService;
 import org.labkey.api.security.RequiresPermissionClass;
 import org.labkey.api.security.permissions.ReadPermission;
+import org.labkey.api.security.permissions.UpdatePermission;
+import org.labkey.api.util.Pair;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.HtmlView;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GenotypeAssaysController extends SpringActionController
 {
@@ -92,6 +103,73 @@ public class GenotypeAssaysController extends SpringActionController
         public URLHelper getSuccessURL(Object form)
         {
             return getContainer().getStartURL(getUser());
+        }
+    }
+
+    @RequiresPermissionClass(UpdatePermission.class)
+    public class CacheAnalysesAction extends ApiAction<CacheAnalysesForm>
+    {
+        public ApiResponse execute(CacheAnalysesForm form, BindException errors)
+        {
+            Map<String, Object> resultProperties = new HashMap<>();
+
+            //first verify permission to delete
+            if (form.getAnalysisIds() != null)
+            {
+                try
+                {
+                    ExpProtocol protocol = ExperimentService.get().getExpProtocol(form.getProtocolId());
+                    if (protocol == null)
+                    {
+                        errors.reject(ERROR_MSG, "Unknown protocol: " + form.getProtocolId());
+                        return null;
+                    }
+
+                    Pair<List<Integer>, List<Integer>> ret = GenotypeAssaysManager.get().cacheAnalyses(getViewContext(), protocol, form.getAnalysisIds());
+                    resultProperties.put("runsCreated", ret.first);
+                    resultProperties.put("runsDeleted", ret.second);
+                }
+                catch (IllegalArgumentException e)
+                {
+                    errors.reject(ERROR_MSG, e.getMessage());
+                    return null;
+                }
+            }
+            else
+            {
+                errors.reject(ERROR_MSG, "No analysis IDs provided");
+                return null;
+            }
+
+            resultProperties.put("success", true);
+
+            return new ApiSimpleResponse(resultProperties);
+        }
+    }
+
+    public static class CacheAnalysesForm
+    {
+        private Integer[] _analysisIds;
+        private int _protocolId;
+
+        public Integer[] getAnalysisIds()
+        {
+            return _analysisIds;
+        }
+
+        public void setAnalysisIds(Integer[] analysisIds)
+        {
+            _analysisIds = analysisIds;
+        }
+
+        public int getProtocolId()
+        {
+            return _protocolId;
+        }
+
+        public void setProtocolId(int protocolId)
+        {
+            _protocolId = protocolId;
         }
     }
 }

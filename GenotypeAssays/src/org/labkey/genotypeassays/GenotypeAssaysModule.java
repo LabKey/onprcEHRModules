@@ -34,6 +34,7 @@ import org.labkey.api.view.WebPartFactory;
 import org.labkey.genotypeassays.assay.GenotypeAssayDataProvider;
 import org.labkey.genotypeassays.assay.SNPAssayDataProvider;
 import org.labkey.genotypeassays.assay.SSPAssayDataProvider;
+import org.labkey.genotypeassays.buttons.CacheAnalysesButton;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -88,6 +89,8 @@ public class GenotypeAssaysModule extends ExtendedSimpleModule
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.SSP_ASSAY_PROVIDER, Arrays.asList("DataId:ASC", "include:primerPair,result,subjectId"));
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("result", "DataId"));
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("RowId", "DataId"));
+
+        LaboratoryService.get().registerQueryButton(new CacheAnalysesButton(this), "sequenceanalysis", "sequence_analyses");
     }
 
     @Override
