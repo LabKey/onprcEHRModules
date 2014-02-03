@@ -28,7 +28,7 @@ Ext4.define('GenotypeAssays.window.CacheResultsWindow', {
                 border: false
             },
             items: [{
-                html: 'This will take a snapshot of the alignment results and store the summary in the Genotyping assay.  If any of the selected analyses have already been cached, this will replace the previously cached data with the current information.  Note: this will cache alignmented grouped on lineage, and only include rows where the percent is above 1 and total lineages less than 3.',
+                html: 'This will take a snapshot of the alignment results and store the summary in the Genotyping assay.  If any of the selected analyses have already been cached, this will replace the previously cached data with the current information.  Note: this will cache alignmented grouped on lineage, and only include rows where the percent is above the threshold selected below, and total lineages less than 3.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'combo',
@@ -47,6 +47,14 @@ Ext4.define('GenotypeAssays.window.CacheResultsWindow', {
                     },
                     fields: ['Name', 'RowId']
                 }
+            },{
+                xtype: 'ldk-numberfield',
+                width: 400,
+                minValue: 0,
+                maxValue: 100,
+                value: 0.1,
+                fieldLabel: 'Min Percent',
+                itemId: 'pctThresholdField'
             }],
             buttons: [{
                 text: 'Submit',
@@ -93,13 +101,14 @@ Ext4.define('GenotypeAssays.window.CacheResultsWindow', {
     onSubmit: function(){
         var analysisIds = LABKEY.DataRegions[this.dataRegionName].getChecked();
         var protocol = this.down('#protocolField').getValue();
+        var pctThreshold = this.down('#pctThresholdField').getValue();
         if (!analysisIds.length || !protocol){
             Ext4.Msg.alert('Error', 'Missing either analyses or the target assay');
         }
 
         Ext4.Msg.wait('Saving...');
         LABKEY.Ajax.request({
-            url: LABKEY.ActionURL.buildURL('genotypeassays', 'cacheAnalyses', null, {analysisIds: analysisIds, protocolId: protocol}),
+            url: LABKEY.ActionURL.buildURL('genotypeassays', 'cacheAnalyses', null, {analysisIds: analysisIds, protocolId: protocol, pctThreshold: pctThreshold}),
             method: 'post',
             timeout: 10000000,
             scope: this,

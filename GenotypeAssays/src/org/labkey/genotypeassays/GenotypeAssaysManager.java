@@ -83,11 +83,12 @@ public class GenotypeAssaysManager
     public static final String SEQUENCEANALYSIS_SCHEMA = "sequenceanalysis";
     public static final String TABLE_SEQUENCE_ANALYSES = "sequence_analyses";
 
-    public Pair<List<Integer>, List<Integer>> cacheAnalyses(final ViewContext ctx, final ExpProtocol protocol, Integer[] analysisIds) throws IllegalArgumentException
+    public Pair<List<Integer>, List<Integer>> cacheAnalyses(final ViewContext ctx, final ExpProtocol protocol, Integer[] analysisIds, final Double pctThreshold) throws IllegalArgumentException
     {
         final User u = ctx.getUser();
         final List<Integer> runsCreated = new ArrayList<>();
         final List<Integer> runsDeleted = new ArrayList<>();
+        final int maxLineages = 2;
 
         ExperimentService.get().ensureTransaction();
         try
@@ -131,8 +132,9 @@ public class GenotypeAssaysManager
                     }
 
                     SimpleFilter filter = new SimpleFilter(FieldKey.fromString("analysis_id"), analysisId);
-                    filter.addCondition(FieldKey.fromString("percent"), 1, CompareType.GT);
-                    filter.addCondition(FieldKey.fromString("totalLineages"), 2, CompareType.LTE);
+                    if (pctThreshold != null)
+                        filter.addCondition(FieldKey.fromString("percent"), pctThreshold, CompareType.GT);
+                    filter.addCondition(FieldKey.fromString("totalLineages"), maxLineages, CompareType.LTE);
                     Set<FieldKey> fieldKeys = new HashSet<>();
                     fieldKeys.add(FieldKey.fromString("analysis_id"));
                     fieldKeys.add(FieldKey.fromString("analysis_id/readset/subjectid"));
@@ -180,6 +182,7 @@ public class GenotypeAssaysManager
                         runProps.put("assayType", "SBT");
                         runProps.put("runDate", new Date());
                         runProps.put("performedby", u.getDisplayName(u));
+                        runProps.put("Comments", "Percent Threshold: " + pctThreshold + "\n" + "Max Lineages: " + maxLineages);
                         json.put("Run", runProps);
 
                         try

@@ -8,6 +8,7 @@
         <column name="purpose"/>
         <column name="instrument"/>
         <column name="method"/>
+        <column name="Comments"/>
         <column name="workbook"/>
     </columns>
     <sorts>

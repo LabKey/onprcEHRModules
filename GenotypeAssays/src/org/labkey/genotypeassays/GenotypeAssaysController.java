@@ -125,7 +125,7 @@ public class GenotypeAssaysController extends SpringActionController
                         return null;
                     }
 
-                    Pair<List<Integer>, List<Integer>> ret = GenotypeAssaysManager.get().cacheAnalyses(getViewContext(), protocol, form.getAnalysisIds());
+                    Pair<List<Integer>, List<Integer>> ret = GenotypeAssaysManager.get().cacheAnalyses(getViewContext(), protocol, form.getAnalysisIds(), form.getPctThreshold());
                     resultProperties.put("runsCreated", ret.first);
                     resultProperties.put("runsDeleted", ret.second);
                 }
@@ -151,6 +151,7 @@ public class GenotypeAssaysController extends SpringActionController
     {
         private Integer[] _analysisIds;
         private int _protocolId;
+        private Double _pctThreshold;
 
         public Integer[] getAnalysisIds()
         {
@@ -170,6 +171,16 @@ public class GenotypeAssaysController extends SpringActionController
         public void setProtocolId(int protocolId)
         {
             _protocolId = protocolId;
+        }
+
+        public Double getPctThreshold()
+        {
+            return _pctThreshold;
+        }
+
+        public void setPctThreshold(Double pctThreshold)
+        {
+            _pctThreshold = pctThreshold;
         }
     }
 }
