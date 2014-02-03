@@ -169,7 +169,6 @@ onprc_billing/resources/queries/onprc_billing/slaPerDiemRates.query.xml -text
 onprc_billing/resources/queries/onprc_billing/slaPerDiemRates.sql -text
 onprc_billing/resources/queries/onprc_billing/slaPerDiems.query.xml -text
 onprc_billing/resources/queries/onprc_billing/slaPerDiems.sql -text
-onprc_billing/resources/queries/onprc_billing_public/aliases.query.xml -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.30-12.301.sql -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.301-12.302.sql -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.302-12.303.sql -text
@@ -217,6 +216,7 @@ onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.350-12.351
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.351-12.352.sql -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.352-12.353.sql -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.353-12.354.sql -text
+onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.354-12.355.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.30-12.301.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.301-12.302.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.302-12.303.sql -text
@@ -264,6 +264,7 @@ onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.350-12.351.
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.351-12.352.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.352-12.353.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.353-12.354.sql -text
+onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.354-12.355.sql -text
 onprc_billing/resources/schemas/onprc_billing.xml -text
 onprc_billing/resources/schemas/onprc_billing_public.template.xml -text
 onprc_billing/resources/scripts/onprc_billing/billing_triggers.js -text
@@ -311,6 +312,8 @@ onprc_billing/webapp/WEB-INF/onprc_billing/onprc_billingContext.xml -text
 onprc_billingpublic/ONPRC_BillingPublic.iml -text
 onprc_billingpublic/build.xml -text
 onprc_billingpublic/module.properties -text
+onprc_billingpublic/resources/queries/onprc_billing_public/aliases.query.xml -text
+onprc_billingpublic/resources/queries/onprc_billing_public/aliases/.qview.xml -text
 onprc_billingpublic/resources/queries/onprc_billing_public/invoicedItemsByProject.query.xml -text
 onprc_billingpublic/resources/queries/onprc_billing_public/invoicedItemsByProject.sql -text
 onprc_billingpublic/resources/queries/onprc_billing_public/invoicedItemsByProject/.qview.xml -text
