@@ -22,6 +22,7 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -74,5 +75,14 @@ public class BiopsyFormType extends EncounterForm
         ret.add("COPYFROMCASE");
 
         return ret;
+    }
+
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRPathologyEntryPermission.class))
+            return false;
+
+        return super.canInsert();
     }
 }

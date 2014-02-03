@@ -5,59 +5,94 @@
         if(!ctx)
             return;
 
-        Ext4.create('Ext.panel.Panel', {
-            itemId: 'outerPanel',
-            border: false,
-            defaults: {
-                border: false
-            },
-            items: [{
-                width: 400,
-                items: [{
-                    xtype: 'ehr-vetfieldcombo',
-                    width: 400,
-                    fieldLabel: 'Choose Vet (blank for all)',
-                    itemId: 'userField'
-                },{
-                    fieldLabel: 'Days Since Vet Review',
-                    xtype: 'ldk-numberfield',
-                    itemId: 'daysSinceVetReview',
-                    value: 1,
-                    width: 400
-                }],
-                buttons: [{
-                    text: 'Submit',
-                    handler: function(btn){
-                        var panel = btn.up('#outerPanel');
-                        var userId = panel.down('#userField').getValue();
-                        var daysSinceLastVetReview = panel.down('#daysSinceVetReview').getValue();
+        Ext4.define('EHR.panel.CaseReviewPanel', {
+            extend: 'Ext.panel.Panel',
 
-                        var filterArray = [];
-                        if (userId){
-                            filterArray.push(LABKEY.Filter.create('assignedvet', userId, LABKEY.Filter.Types.EQUAL));
-                        }
+            initComponent: function(){
+                LABKEY.ExtAdapter.apply(this, {
+                    itemId: 'outerPanel',
+                    border: false,
+                    defaults: {
+                        border: false
+                    },
+                    items: [{
+                        width: 400,
+                        items: [{
+                            xtype: 'ehr-vetfieldcombo',
+                            width: 400,
+                            fieldLabel: 'Choose Vet (blank for all)',
+                            itemId: 'userField'
+                        },{
+                            fieldLabel: 'Days Since Vet Review',
+                            xtype: 'ldk-numberfield',
+                            itemId: 'daysSinceVetReview',
+                            value: 1,
+                            width: 400
+                        }],
+                        buttons: [{
+                            text: 'Submit',
+                            scope: this,
+                            handler: function(btn){
+                                var panel = btn.up('#outerPanel');
+                                var userId = panel.down('#userField').getValue();
+                                var daysSinceLastVetReview = panel.down('#daysSinceVetReview').getValue();
 
-                        if (daysSinceLastVetReview){
-                            filterArray.push(LABKEY.Filter.create('daysSinceLastVetReview', daysSinceLastVetReview, LABKEY.Filter.Types.GTE));
-                        }
+                                var filterArray = [];
+                                if (userId){
+                                    filterArray.push(LABKEY.Filter.create('assignedvet', userId, LABKEY.Filter.Types.EQUAL));
+                                }
 
-                        var target = panel.down('#targetPanel');
-                        target.removeAll();
-                        target.add({
-                            xtype: 'ldk-querypanel',
-                            queryConfig: {
-                                schemaName: 'study',
-                                queryName: 'cases',
-                                viewName: 'Clinical Case Review',
-                                filterArray: filterArray
+                                if (daysSinceLastVetReview){
+                                    filterArray.push(LABKEY.Filter.create('daysSinceLastVetReview', daysSinceLastVetReview, LABKEY.Filter.Types.GTE));
+                                }
+
+                                var target = panel.down('#targetPanel');
+                                target.removeAll();
+                                target.add({
+                                    xtype: 'ldk-querypanel',
+                                    queryConfig: {
+                                        schemaName: 'study',
+                                        queryName: 'cases',
+                                        viewName: 'Clinical Case Review',
+                                        filterArray: filterArray,
+                                        scope: this,
+                                        success: function(dr){
+                                            this.doResize(target.getWidth() + 80);
+                                        }
+                                    }
+                                });
                             }
-                        });
+                        }]
+                    },{
+                        itemId: 'targetPanel',
+                        style: 'padding-top: 20px'
+                    }]
+                });
+
+                this.callParent(arguments);
+
+                this.on('afterrender', function(panel){
+                    this.originalWidth = Math.max(this.getWidth(), Ext4.getBody().getWidth());
+                }, this);
+            },
+
+            doResize: function(itemWidth){
+                var width2 = this.getWidth();
+                if (itemWidth > width2){
+                    this.setWidth(itemWidth);
+                    this.doLayout();
+                }
+                else if (itemWidth < width2) {
+                    if (this.originalWidth && width2 != this.originalWidth){
+                        this.setWidth(Math.max(this.originalWidth, itemWidth));
+                        this.doLayout();
                     }
-                }]
-            },{
-                itemId: 'targetPanel',
-                style: 'padding-top: 20px'
-            }]
+                }
+            }
+        });
+
+        Ext4.create('EHR.panel.CaseReviewPanel', {
+
         }).render(webpart.wrapperDivId);
     });
 </script>

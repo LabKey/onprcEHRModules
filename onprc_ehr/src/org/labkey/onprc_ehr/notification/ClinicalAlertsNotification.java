@@ -86,6 +86,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         StringBuilder msg = new StringBuilder();
 
         hospitalAnimalsOver30Days(c, u, msg);
+        hospitalAnimalsWithoutCase(c, u, msg);
         groupProblemSummary(c, u, msg, 7, 5);
         groupProblemSummary(c, u, msg, 30, 10);
         roomProblemSummary(c, u, msg, 7, 5);
@@ -245,6 +246,24 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         {
             msg.append("<b>WARNING: There are " + count + " animals that have been housed in a cage location in the hospital for more than 30 days</b><br>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Housing", "Active Housing") + "&query.Id/curLocation/area~eq=Hospital&query.Id/curLocation/room/housingType/value~eq=Cage Location&query.enddate~isblank&query.daysInArea~gte=30'>Click here to view them</a><br>\n");
+            msg.append("<hr>\n");
+        }
+    }
+
+    protected void hospitalAnimalsWithoutCase(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/curLocation/area"), "Hospital", CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room/housingType/value"), "Cage Location", CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id/activeCases/categories"), "Clinical", CompareType.DOES_NOT_CONTAIN);
+
+        TableInfo ti = getStudySchema(c, u).getTable("demographics");
+
+        TableSelector ts = new TableSelector(ti, Collections.singleton(ti.getColumn("Id")), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " animals in a room marked as hospital that do not have an open clinical case</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", "By Location", filter) + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }

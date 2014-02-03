@@ -6,6 +6,8 @@ import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
+import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -53,5 +55,14 @@ public class PathologyTissuesFormType extends EncounterForm
         ret.add("COPYFROMCASE");
 
         return ret;
+    }
+
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRPathologyEntryPermission.class))
+            return false;
+
+        return super.canInsert();
     }
 }

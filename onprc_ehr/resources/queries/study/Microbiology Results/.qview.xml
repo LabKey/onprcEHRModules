@@ -8,6 +8,11 @@
         <column name="quantity"/>
 
         <column name="remark"/>
+        <column name="runid/remark">
+            <properties>
+                <property name="columnTitle" value="Run Remarks"/>
+            </properties>
+        </column>
         <column name="performedby"/>
         <column name="requestid"/>
         <column name="taskid"/>

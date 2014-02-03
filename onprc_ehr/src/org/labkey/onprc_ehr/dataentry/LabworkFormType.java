@@ -21,6 +21,8 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.security.EHRLabworkEntryPermission;
+import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -55,5 +57,14 @@ public class LabworkFormType extends TaskForm
         {
             s.addConfigSource("Labwork");
         }
+    }
+
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRLabworkEntryPermission.class))
+            return false;
+
+        return super.canInsert();
     }
 }

@@ -10,6 +10,11 @@
         <column name="date"/>
         <column name="problemCategories"/>
         <column name="Id/curLocation/daysInRoom"/>
+        <column name="assignedvet/UserId/DisplayName">
+            <properties>
+                <property name="columnTitle" value="Assigned Vet"/>
+            </properties>
+        </column>
         <column name="caseHistory"/>
     </columns>
     <filters>

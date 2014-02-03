@@ -24,6 +24,7 @@ import org.labkey.api.ehr.buttons.CreateTaskFromIdsButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromRecordsButton;
 import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.SingleQueryFormProvider;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.ModuleContext;
@@ -171,6 +172,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Morbidity and Mortality By Breeding Group", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=animalGroupCategoryProblemSummary"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Morbidity and Mortality Raw Data", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=morbidityAndMortalityData"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Weight Loss Report", this, DetailsURL.fromString("/ldk/runNotification.view?key=org.labkey.onprc_ehr.notification.WeightAlertsNotification"), "Clinical");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Weight Change Data", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsWeightChange&query.viewName=By Location"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Alerts Report", this, DetailsURL.fromString("/ldk/runNotification.view?key=org.labkey.onprc_ehr.notification.ClinicalAlertsNotification"), "Clinical");
 
         try
@@ -228,12 +230,17 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PathologyTissuesFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalReportFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalRemarkFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(MensFormType.class, this));
 
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(AuxProcedureFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory.RequestFactory(this, "Requests", "Surgery Request", "Procedure Requests", Collections.<FormSection>singletonList(new SurgeryRequestFormSection())));
+
+        //single section forms
+        EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
+        EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "drug", new MedicationsQueryFormSection("study", "Drug Administration", "Medication/Treatments Given")));
 
         //demographics
         EHRService.get().registerDemographicsProvider(new ActiveCasesDemographicsProvider(this));

@@ -21,6 +21,7 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -56,5 +57,14 @@ public class ClinicalRemarkFormType extends TaskForm
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
+    }
+
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRClinicalEntryPermission.class))
+            return false;
+
+        return super.canInsert();
     }
 }

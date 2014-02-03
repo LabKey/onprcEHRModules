@@ -23,6 +23,8 @@ import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
+import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -72,5 +74,14 @@ public class SingleSurgeryFormType extends EncounterForm
         ret.add("OPENSURGERYCASES");
 
         return ret;
+    }
+
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRSurgeryEntryPermission.class))
+            return false;
+
+        return super.canInsert();
     }
 }

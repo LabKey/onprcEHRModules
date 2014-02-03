@@ -9,7 +9,7 @@ category,
 count(*) as totalCases
 
 FROM study.cases a
-WHERE (a.enddate is null OR a.reviewdate > curdate())
+WHERE a.isActive = true
 GROUP BY a.id, a.category
 HAVING count (*) > 1
 

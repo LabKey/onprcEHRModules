@@ -2700,7 +2700,6 @@ Ext4.onReady(function(){
             ['E-X0750','Common Treatments',null],
             ['E-X1200','Common Treatments',null],
             ['E-X1460','Common Treatments',null],
-            ['E-Y2270','Common Treatments',null],
             ['E-Y7240','Common Treatments',null],
             ['E-Y7410','Common Treatments',null],
             ['E-Y7430','Common Treatments',null],
@@ -2768,6 +2767,41 @@ Ext4.onReady(function(){
             ['E-YYY80','Common Treatments',null],
             ['E-YYY83','Common Treatments',null],
             ['E-YYY88','Common Treatments',null],
+            ['E-70000','Common Treatments',null],
+            ['E-YY120','Common Treatments',null],
+            ['E-X0405','Common Treatments',null],
+            ['E-YY771','Common Treatments',null],
+            ['E-50150','Common Treatments',null],
+            ['E-X0210','Common Treatments',null],
+            ['E-X0420','Common Treatments',null],
+            ['E-X0700','Common Treatments',null],
+            ['E-YY745','Common Treatments',null],
+            ['E-X0445','Common Treatments',null],
+            ['E-X0300','Common Treatments',null],
+            ['F-60130','Common Treatments',null],
+            ['E-X0610','Common Treatments',null],
+            ['E-X0410','Common Treatments',null],
+            ['P-08301','Common Treatments',null],
+            ['F-62450','Common Treatments',null],
+            ['E-X0450','Common Treatments',null],
+            ['E-87255','Common Treatments',null],
+            ['E-YY867','Common Treatments',null],
+            ['E-X0220','Common Treatments',null],
+            ['E-X0435','Common Treatments',null],
+            ['E-X0315','Common Treatments',null],
+            ['E-YY670','Common Treatments',null],
+            ['E-YY770','Common Treatments',null],
+            ['E-X0406','Common Treatments',null],
+            ['E-X0000','Common Treatments',null],
+            ['E-0X042','Common Treatments',null],
+            ['E-X0800','Common Treatments',null],
+            ['E-X0230','Common Treatments',null],
+            ['E-X0407','Common Treatments',null],
+            ['P-08300','Common Treatments',null],
+            ['E-YY547','Common Treatments',null],
+            ['E-YY547','Common Treatments',null],
+            ['E-X0100','Common Treatments',null],
+            ['E-X0500','Common Treatments',null],
             ['T-YZ060','Pathology Codes',null],
             ['E-44550','Pathology Codes',null],
             ['M-31605','Pathology Codes',null],
@@ -5115,7 +5149,8 @@ Ext4.onReady(function(){
                 ['Fair-Poor', 4],
                 ['Poor', 5],
                 ['Unknown', 6],
-                ['Fasted', 7]
+                ['Fasted', 7],
+                ['Nursing', 8]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5158,14 +5193,30 @@ Ext4.onReady(function(){
 
             var data = [
                 ['WNL', 1],
-                ['Inflammation: Mild', 2],
-                ['Inflammation: Moderate', 3],
-                ['Inflammation: Severe', 4],
-                //['Exposed', 5],
-                ['Bruising: Mild', 6],
-                ['Bruising: Moderate', 7],
-                ['BruisingL Severe', 8],
-                ['None', 9]
+                ['Inflammation: Minor', 2],
+                ['Inflammation: Mild', 3],
+                ['Inflammation: Moderate', 4],
+                ['Inflammation: Severe', 5],
+                ['Bruising: Minor', 6],
+                ['Bruising: Mild', 7],
+                ['Bruising: Moderate', 8],
+                ['Bruising: Severe', 9],
+                ['Granulation Present', 10],
+                ['Hematoma Present', 11],
+                ['Seroma Present', 12],
+                ['Discharge: Purulent', 13],
+                ['Discharge: Caseous', 14],
+                ['Discharge: Serous', 15],
+                ['Discharge: Serosanguinous', 16],
+                ['Sutures: Patient appears to be picking at Sutures, sutures intact', 17],
+                ['Sutures: Partially Removed', 18],
+                ['Sutures: Removed', 19],
+                ['Sutures: Tag Present', 20],
+                ['Incision Not Visible: Infant', 21],
+                ['Incision Not Visible: Jacket', 22],
+                ['Incision Not Visible: Posture', 23],
+                ['Incision Not Visible: No Incision', 24],
+                ['None', 25]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5231,12 +5282,17 @@ Ext4.onReady(function(){
                 ['F/M', 2],
                 ['F/M/L', 3],
                 ['M', 4],
-                ['L/M', 5],
-                ['L', 6],
-                ['Pelleted', 7],
-                ['Scant', 8],
-                ['None', 9],
-                ['Unknown', 10]
+                ['M/F', 4],
+                ['M/F/L', 5],
+                ['M/L', 6],
+                ['M/L/F', 7],
+                ['L/M/F', 8],
+                ['L/M', 9],
+                ['L', 10],
+                ['Pelleted', 11],
+                ['Scant', 12],
+                ['None', 13],
+                ['Unknown', 14]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5611,11 +5667,12 @@ Ext4.onReady(function(){
             var data = [
                 ['Alopecia Score', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', displayField: 'value', valueField: 'value'})],
                 ['BCS', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
-                ['CRT', Ext4.encode({xtype: 'textfield', minValue: 0, defaultValue: '1-2'})],
-                ['MM', Ext4.encode({xtype: 'textfield', minValue: 0, defaultValue: 'Pink'})],
+                ['CRT', Ext4.encode({xtype: 'textfield', defaultValue: '1-2'})],
+                ['MM', Ext4.encode({xtype: 'textfield', defaultValue: 'Pink'})],
+                ['Turgor', Ext4.encode({xtype: 'textfield'})],
                 ['Pain Score', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0, maxValue: 12})],
                 ['Other', Ext4.encode({xtype: 'textfield'})],
-                ['Mens', Ext4.encode({xtype: 'textfield'})],
+                ['Menses', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'obs_mens', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
                 ['App', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'app_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
                 ['Att', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'att_score', displayField: 'value', valueField: 'value'})],
                 ['Hyd', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'hyd_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
@@ -7467,7 +7524,8 @@ Ext4.onReady(function(){
             var fields = ('value,title').split(',');
             var data = [
                 ['No Charge', 'No Charge'],
-                ['Center Staff', 'Center Staff'],
+                ['Surgery Staff', 'Surgery Staff'],
+                ['Clinical Staff', 'Clinical Staff'],
                 ['Research Staff', 'Research Staff']
             ];
 
@@ -13176,6 +13234,9 @@ Ext4.onReady(function(){
                 ['Agents'],
                 ['Antibiotics'],
                 ['Culture Source'],
+                ['Procedures'],
+                ['Pathology Codes'],
+                ['Common Treatments'],
                 ['Diagnostic Codes'],
                 ['Diet'],
                 ['Drugs and Procedures'],
@@ -14176,10 +14237,8 @@ Ext4.onReady(function(){
                 ['mEq'],
                 ['mg'],
                 ['no units'],
-                ['ounces'],
                 ['ug'],
                 ['units'],
-                ['mL'],
                 ['L/min'],
                 ['%']
             ];
@@ -14234,6 +14293,7 @@ Ext4.onReady(function(){
                 ['mL'],
                 ['no units'],
                 ['ounce(s)'],
+                ['pan'],
                 ['piece(s)'],
                 ['tablet(s)'],
                 ['tsp']

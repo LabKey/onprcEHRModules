@@ -493,6 +493,8 @@ onprc_ehr/resources/queries/study/microbiologyPivoted.sql -text
 onprc_ehr/resources/queries/study/morbidityAndMortalityData.query.xml -text
 onprc_ehr/resources/queries/study/morbidityAndMortalityData.sql -text
 onprc_ehr/resources/queries/study/morbidityAndMortalityData/.qview.xml -text
+onprc_ehr/resources/queries/study/mostRecentObservations.query.xml -text
+onprc_ehr/resources/queries/study/mostRecentObservations.sql -text
 onprc_ehr/resources/queries/study/notesPivoted.query.xml -text
 onprc_ehr/resources/queries/study/notesPivoted.sql -text
 onprc_ehr/resources/queries/study/offspringWithMother.query.xml -text
@@ -747,6 +749,8 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/GrossFindingsFormPanelSection.java 
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkRequestFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MedicationsQueryFormSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MensFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/NecropsyFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PairingFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PairingFormType.java -text

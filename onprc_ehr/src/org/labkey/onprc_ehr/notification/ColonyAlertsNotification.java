@@ -573,7 +573,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animals with duplicate cases of the same category.  One of the duplicates should be closed</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " animals with multiple active cases of the same category.  One of the duplicates should be closed or set for review</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "duplicateCases", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }

@@ -182,7 +182,7 @@ Ext4.onReady(function(){
                     };
                     var fields = ('code,route,frequency,duration,offset,concentration,conc_units,dosage,dosage_units,volume,vol_units,volume_rounding,amount,amount_units,amount_rounding,amount_max,category').split(',');
                     var data = [
-                        ['E-70590','IM','','0','0','10','mg/ml','10','mg/kg','','mL','0.5','','mg','','100','Standard'],
+                        ['E-70590','IM','','0','0','100','mg/ml','10','mg/kg','','mL','0.1','','mg','','100','Standard'],
                         ['E-YY980','IM','BID - AM/Night','3','6','10','mg/ml','0.05','mg/kg','','mL','0.05','','mg','','1','Standard'],
                         ['E-77510','PO','BID - AM/Night','5','4','80','mg/tablet','8','mg/kg','','tablet(s)','0.25','','mg','','80','Standard'],
                         ['E-YY035','PO','BID - AM/Night','5','4','32','mg/ml','8','mg/kg','','mL','0.1','','mg','','80','Standard'],
@@ -283,7 +283,7 @@ Ext4.onReady(function(){
                         ['E-84840','IM','','0','','100','mg/ml','10','mg/kg','','mL','0.1','','mg','','100','Standard'],
                         ['E-YY710','','','','','50','mg/tablet','','','','tablet(s)','0.25','','mg','','','Standard'],
                         ['E-YY740','PO','SID - AM','30','12','','mg/tablet','4','mg/kg','','tablet(s)','0.25','','mg','','40','Standard'],
-                        ['E-Y7410','SQ','','0','','10','mg/ml','0.2','mg/kg','','mL','0.5','','mg','','2','Standard'],
+                        ['E-Y7410','SQ','','0','','10','mg/ml','0.2','mg/kg','','mL','0.1','','mg','','2','Standard'],
                         ['E-YY955','PO','BID - AM/Night','3','4','240','mg/tablet','0.25','','','tablet(s)','0.25','','mg','','120','Standard'],
                         ['E-779X0','IM','SID - AM','5','12','100','mg/ml','2.2','mg/kg','','mL','0.01','','mg','','22','Standard'],
                         ['E-18700','PO','SID - AM','7','6','','','','','','','','0.25','g','','2.5','Standard'],
@@ -439,7 +439,6 @@ Ext4.onReady(function(){
                     ['Clinical Observations', '{"category":"MM","area":"N/A","observation":"Pink"}'],
                     ['Clinical Observations', '{"category":"CRT","area":"N/A","observation":"1-2"}'],
                     ['Clinical Observations', '{"category":"BCS","area":"N/A"}'],
-                    ['Clinical Observations', '{"category":"Alopecia Score","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"Observations","area":"Oral","observation":"Not Evaluated"}'],
                     ['Clinical Observations', '{"category":"Observations","area":"Integ","observation":"Not Evaluated"}'],
                     ['Clinical Observations', '{"category":"Observations","area":"Abdomen","observation":"Not Evaluated"}'],
@@ -504,6 +503,16 @@ Ext4.onReady(function(){
                 template: ['CBC and Chem', 'Section', 'blood', '', ''],
                 records: [
                     ['blood', '{"chargetype":"DCM: CMU","reason":"Clinical","tube_type":"EDTA","quantity":1,"additionalServices":["CBC with automated differential"]}'],
+                    ['blood', '{"chargetype":"DCM: CMU","reason":"Clinical","tube_type":"No Additive","quantity":2,"additionalServices":["Comprehensive Chemistry panel in-house"]}']
+                ]
+            },{
+                template: ['CBC', 'Section', 'blood', '', ''],
+                records: [
+                    ['blood', '{"chargetype":"DCM: CMU","reason":"Clinical","tube_type":"EDTA","quantity":1,"additionalServices":["CBC with automated differential"]}']
+                ]
+            },{
+                template: ['Chem', 'Section', 'blood', '', ''],
+                records: [
                     ['blood', '{"chargetype":"DCM: CMU","reason":"Clinical","tube_type":"No Additive","quantity":2,"additionalServices":["Comprehensive Chemistry panel in-house"]}']
                 ]
             },{

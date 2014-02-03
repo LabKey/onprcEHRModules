@@ -23,22 +23,28 @@ import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
+import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
+import org.labkey.api.data.SqlExecutor;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.exp.property.Domain;
 import org.labkey.api.query.BatchValidationException;
 import org.labkey.api.query.DuplicateKeyException;
 import org.labkey.api.query.FieldKey;
+import org.labkey.api.query.FilteredTable;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.QueryUpdateServiceException;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
+import org.labkey.api.study.DataSetTable;
 import org.labkey.api.util.GUID;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 import org.labkey.onprc_ehr.dataentry.LabworkRequestFormType;
 
@@ -121,7 +127,7 @@ public class ONPRC_EHRTriggerHelper
         return map;
     }
 
-    public void onTreatmentOrderChange(Map<String, Object> row, Map<String, Object> oldRow) throws Exception
+    public Date onTreatmentOrderChange(Map<String, Object> row, Map<String, Object> oldRow) throws Exception
     {
         if (row != null)
         {
@@ -134,7 +140,7 @@ public class ONPRC_EHRTriggerHelper
         }
 
         boolean hasChanged = false;
-        Set<String> triggersChange = PageFlowUtil.set("code", "project", "frequency", "route", "concentration", "conc_units", "dosage", "dosage_units", "volume", "vol_units", "amount", "amount_units");
+        Set<String> triggersChange = PageFlowUtil.set("code", "project", "frequency", "route", "volume", "vol_units", "amount", "amount_units");
         for (String field : triggersChange)
         {
             Object current = row.get(field);
@@ -146,24 +152,34 @@ public class ONPRC_EHRTriggerHelper
             }
         }
 
-        if (hasChanged && hasTreatmentBeenGiven((Date)oldRow.get("date"), (Integer)oldRow.get("frequency")))
+        if (hasChanged && hasTreatmentBeenGiven((Date)oldRow.get("date"), (Integer)oldRow.get("frequency")) && !hasTerminated((Date)oldRow.get("enddate")))
         {
-            createUpdatedTreatmentRow(row, oldRow);
+            return createUpdatedTreatmentRow(row, oldRow);
+        }
+        else
+        {
+            _log.info("no need to update treatment records");
+            return null;
         }
     }
 
-    private Map<Integer, Integer> _cachedFrequencies = new HashMap<>();
+    private boolean hasTerminated(Date enddate)
+    {
+        return !(enddate == null || enddate.after(new Date()));
+    }
+    private Map<Integer, List<Integer>> _cachedFrequencies = new HashMap<>();
 
-    private Integer getEarliestHourForFrequency(int frequency)
+    private List<Integer> getEarliestFrequencyHours(int frequency)
     {
         if (!_cachedFrequencies.containsKey(frequency))
         {
             TableInfo ti = getTableInfo("ehr_lookups", "treatment_frequency_times");
             TableSelector ts = new TableSelector(ti, PageFlowUtil.set("hourofday"), new SimpleFilter(FieldKey.fromString("frequency/rowid"), frequency), new Sort("hourofday"));
             List<Integer> hours = ts.getArrayList(Integer.class);
+            if (!hours.isEmpty())
+                Collections.sort(hours);
 
-            Integer ret = hours.isEmpty() ? null : hours.get(0);
-            _cachedFrequencies.put(frequency, ret);
+            _cachedFrequencies.put(frequency, (hours.isEmpty() ? null : hours));
         }
 
         return _cachedFrequencies.get(frequency);
@@ -176,22 +192,93 @@ public class ONPRC_EHRTriggerHelper
             return false;
         }
 
-        Calendar earliestDose = Calendar.getInstance();
-        earliestDose.setTime(startDate);
+        Date earliestDose = null;
 
-        Integer firstHour = getEarliestHourForFrequency(frequency);
-        if (firstHour != null)
+        List<Integer> hours = getEarliestFrequencyHours(frequency);
+        if (hours != null)
         {
-            earliestDose.set(Calendar.HOUR_OF_DAY, (int) Math.floor(firstHour / 100));
-            earliestDose.set(Calendar.MINUTE, firstHour % 100);
+            for (Integer hour : hours)
+            {
+                Calendar timeToTest = Calendar.getInstance();
+                timeToTest.setTime(startDate);
+                timeToTest.set(Calendar.HOUR_OF_DAY, (int) Math.floor(hour / 100));
+                timeToTest.set(Calendar.MINUTE, hour % 100);
+
+                if (timeToTest.getTime().getTime() >= startDate.getTime())
+                {
+                    earliestDose = timeToTest.getTime();
+                    break;
+                }
+            }
         }
 
-        //return true if the earliest expected dose is before now
-        return earliestDose.before(new Date());
+        // return true if the earliest expected dose is before now
+        return earliestDose == null ? false : earliestDose.before(new Date());
     }
 
-    public void createUpdatedTreatmentRow(Map<String, Object> row, Map<String, Object> oldRow) throws Exception
+    public Date createUpdatedTreatmentRow(Map<String, Object> row, Map<String, Object> oldRow) throws Exception
     {
         _log.info("creating updated treatment: " + row.get("objectid"));
+        Map<String, Object> toCreate = new CaseInsensitiveHashMap<>();
+        toCreate.putAll(oldRow);
+        toCreate.remove("lsid");
+
+        String originalObjectId = (String)toCreate.get("objectid");
+        assert originalObjectId != null;
+
+        String newObjectId = new GUID().toString();
+        toCreate.put("objectid", newObjectId);
+
+        //set dates to match
+        Date now = new Date();
+        toCreate.put("enddate", now);
+        row.put("date", now);
+
+        TableInfo treatmentOrders = getTableInfo("study", "Treatment Orders");
+        BatchValidationException errors = new BatchValidationException();
+        List<Map<String, Object>> createdRows = treatmentOrders.getUpdateService().insertRows(getUser(), getContainer(), Arrays.asList(toCreate), errors, getExtraContext());
+
+        //also update records in drugs table
+        if (!createdRows.isEmpty())
+        {
+            TableInfo drugAdministration = getRealTable(getTableInfo("study", "Drug Administration"));
+            SQLFragment sql = new SQLFragment("UPDATE " + drugAdministration.getSelectName() + " SET treatmentid = ? WHERE treatmentid = ?", newObjectId, originalObjectId);
+            SqlExecutor se = new SqlExecutor(drugAdministration.getSchema().getScope());
+            se.execute(sql);
+        }
+
+        return now;
+    }
+
+    private TableInfo getRealTable(TableInfo targetTable)
+    {
+        TableInfo realTable = null;
+        if (targetTable instanceof FilteredTable)
+        {
+            DbSchema dbSchema;
+            if (targetTable instanceof DataSetTable)
+            {
+                Domain domain = ((FilteredTable)targetTable).getDomain();
+                if (domain != null)
+                {
+                    String tableName = domain.getStorageTableName();
+                    dbSchema = DbSchema.get("studydataset");
+                    realTable = dbSchema.getTable(tableName);
+                }
+            }
+            else if (targetTable.getSchema() != null)
+            {
+                realTable = targetTable.getSchema().getTable(targetTable.getName());
+            }
+        }
+        return realTable;
+    }
+
+    public void replaceSoap(String objectId)
+    {
+        TableInfo remarks = getRealTable(getTableInfo("study", "Clinical Remarks"));
+        SQLFragment sql = new SQLFragment("UPDATE " + remarks.getSelectName() + " SET category = ? WHERE objectid = ?", ONPRC_EHRManager.REPLACED_SOAP, objectId);
+        SqlExecutor se = new SqlExecutor(remarks.getSchema().getScope());
+        se.execute(sql);
     }
 }

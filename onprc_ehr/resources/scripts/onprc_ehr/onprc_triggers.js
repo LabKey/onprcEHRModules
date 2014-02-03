@@ -29,6 +29,12 @@ exports.init = function(EHR){
         }
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Treatment Orders', function(helper, scriptErrors, row){
+        if (row.date && ((new Date()).getTime() - row.date.getTime()) > 3600000){  //one hour in past
+            EHR.Server.Utils.addError(scriptErrors, 'date', 'Note: you are ordering a treatment that starts in the past', 'INFO');
+        }
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Treatment Orders', function(helper, scriptErrors, row, oldRow){
         if (!row.code){
             EHR.Server.Utils.addError(scriptErrors, 'code', 'Must enter a treatment', 'WARN');
@@ -51,7 +57,22 @@ exports.init = function(EHR){
         if (row && oldRow){
             EHR.Assert.assertNotEmpty('triggerHelper is null', triggerHelper);
 
-            triggerHelper.onTreatmentOrderChange(row, oldRow);
+            var date = triggerHelper.onTreatmentOrderChange(row, oldRow);
+            if (date){
+                row.date = date;
+            }
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Clinical Remarks', function(scriptErrors, helper, row, oldRow){
+        if (helper.isETL() || helper.isValidateOnly()){
+            return;
+        }
+
+        if (row && row.category == 'Replacement SOAP' && row.parentid){
+            EHR.Assert.assertNotEmpty('triggerHelper is null', triggerHelper);
+
+            triggerHelper.replaceSoap(row.parentid);
         }
     });
 };

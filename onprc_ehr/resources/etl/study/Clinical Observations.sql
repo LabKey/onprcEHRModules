@@ -16,9 +16,9 @@
 SELECT
 	cast(AnimalID as nvarchar(4000)) as Id,
 	Date as Date,
-  'N/A' as area,
+    'N/A' as area,
 	'Menses' as category,
-  null as observation,
+    'M' as observation,
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' or rt.LastName = ' none' THEN
         'Unassigned'

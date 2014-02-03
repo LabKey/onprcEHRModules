@@ -45,12 +45,15 @@ public class ActiveCasesDemographicsProvider extends AbstractListDemographicsPro
         keys.add(FieldKey.fromString("Id"));
         keys.add(FieldKey.fromString("date"));
         keys.add(FieldKey.fromString("enddate"));
+        keys.add(FieldKey.fromString("reviewdate"));
         keys.add(FieldKey.fromString("category"));
         keys.add(FieldKey.fromString("problemCategories"));
         keys.add(FieldKey.fromString("assignedvet"));
-        keys.add(FieldKey.fromString("assignedvet/DisplayName"));
+        keys.add(FieldKey.fromString("assignedvet/UserId/DisplayName"));
         keys.add(FieldKey.fromString("performedby"));
         keys.add(FieldKey.fromString("remark"));
+        keys.add(FieldKey.fromString("isActive"));
+        keys.add(FieldKey.fromString("isOpen"));
 
         return keys;
     }
@@ -59,7 +62,7 @@ public class ActiveCasesDemographicsProvider extends AbstractListDemographicsPro
     protected SimpleFilter getFilter(Collection<String> ids)
     {
         SimpleFilter filter = super.getFilter(ids);
-        filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isOpen"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("qcstate/publicData"), true, CompareType.EQUAL);
 
         return filter;

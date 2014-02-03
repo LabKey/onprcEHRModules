@@ -627,10 +627,15 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             if (realTable == null)
                 return;
 
-            SQLFragment sql = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment("pl.category"), true, true, getChr(ti) + "(10)") + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)");
+            SQLFragment sql = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment("pl.category"), true, true, getChr(ti) + "(10)") + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND (pl.enddate IS NULL OR pl.enddate > {fn now()}))");
             ExprColumn newCol = new ExprColumn(ti, problemCategories, sql, JdbcType.VARCHAR, ti.getColumn("objectid"));
-            newCol.setLabel("Master Problem(s)");
+            newCol.setLabel("Active Master Problem(s)");
             ti.addColumn(newCol);
+
+            SQLFragment sql2 = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment("pl.category"), true, true, getChr(ti) + "(10)") + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)");
+            ExprColumn newCol2 = new ExprColumn(ti, "allProblemCategories", sql2, JdbcType.VARCHAR, ti.getColumn("objectid"));
+            newCol2.setLabel("All Master Problem(s)");
+            ti.addColumn(newCol2);
         }
 
         String isActive = "isActive";
@@ -640,10 +645,23 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ti.removeColumn(isActiveCol);
         }
 
-        SQLFragment sql = new SQLFragment("(CASE WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".lsid) IS NULL THEN " + ti.getSqlDialect().getBooleanFALSE() + " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL) THEN " + ti.getSqlDialect().getBooleanFALSE() + " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".reviewdate IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".reviewdate <= {fn curdate()}) THEN " + ti.getSqlDialect().getBooleanTRUE() + " ELSE " + ti.getSqlDialect().getBooleanTRUE() + " END)");
+        SQLFragment sql = new SQLFragment("(CASE " +
+                " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".lsid) IS NULL THEN " + ti.getSqlDialect().getBooleanFALSE() +
+                " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".enddate <= {fn curdate()}) THEN " + ti.getSqlDialect().getBooleanFALSE() +
+                " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".reviewdate IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".reviewdate > {fn curdate()}) THEN " + ti.getSqlDialect().getBooleanFALSE() +
+                " ELSE " + ti.getSqlDialect().getBooleanTRUE() + " END)");
         ExprColumn newCol = new ExprColumn(ti, isActive, sql, JdbcType.BOOLEAN, ti.getColumn("lsid"), ti.getColumn("enddate"), ti.getColumn("reviewdate"));
         newCol.setLabel("Is Active?");
         ti.addColumn(newCol);
+
+        SQLFragment sql2 = new SQLFragment("(CASE " +
+                " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".lsid) IS NULL THEN " + ti.getSqlDialect().getBooleanFALSE() +
+                " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".enddate <= {fn curdate()}) THEN " + ti.getSqlDialect().getBooleanFALSE() +
+                " ELSE " + ti.getSqlDialect().getBooleanTRUE() + " END)");
+        ExprColumn newCol2 = new ExprColumn(ti, "isOpen", sql2, JdbcType.BOOLEAN, ti.getColumn("lsid"), ti.getColumn("enddate"), ti.getColumn("reviewdate"));
+        newCol2.setLabel("Is Open?");
+        newCol2.setDescription("Displays whether this case is still open, which will includes cases that have been closed for review");
+        ti.addColumn(newCol2);
 
         //days since vet review
         String lastVetReview = "lastVetReview";
@@ -753,9 +771,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn(name) == null)
         {
             String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
-            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(tt.time))  + cast(tt.time as varchar(4))"), true, false, chr + "(10)") + " as _expr " +
+            SQLFragment sql = new SQLFragment("COALESCE(" +
+                "(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(tt.time))  + cast(tt.time as varchar(4))"), true, false, chr + "(10)") + " as _expr " +
                 " FROM ehr.treatment_times tt " +
-                " WHERE tt.treatmentId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)"
+                " WHERE tt.treatmentId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)" +
+                ", (SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(ft.hourofday))  + cast(ft.hourofday as varchar(4))"), true, false, chr + "(10)") + " as _expr " +
+                " FROM ehr_lookups.treatment_frequency f " +
+                " JOIN ehr_lookups.treatment_frequency_times ft ON (f.meaning = ft.frequency) WHERE f.rowid = " + ExprColumn.STR_TABLE_ALIAS + ".frequency)" +
+                ", 'Custom')"
             );
             ExprColumn col = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("objectid"));
             col.setLabel("Times");
@@ -815,13 +838,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             assert idCol != null;
 
             SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.hx"), true, false, getChr(ti) + "(10)") + " FROM " + realTable.getSelectName() +
-                    " r WHERE r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 WHERE "
-                    + " r2.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r2.hx is not null)" +
-                    ")"
+                    " r WHERE r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.hx IS NOT NULL AND r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 "
+                    + " WHERE r2.participantId = r.participantId AND r2.hx is not null))"
             );
             ExprColumn latestHx = new ExprColumn(ti, hxName, sql, JdbcType.VARCHAR, idCol);
             latestHx.setLabel("Most Recent Hx");
-            latestHx.setDisplayWidth("250");
+            latestHx.setDisplayWidth("200");
             ti.addColumn(latestHx);
         }
     }
@@ -919,7 +941,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         );
         ExprColumn latestHx = new ExprColumn(ti, hxName, sql, JdbcType.VARCHAR, objectId);
         latestHx.setLabel("Latest Hx");
-        latestHx.setDisplayWidth("250");
+        latestHx.setDisplayWidth("200");
         ti.addColumn(latestHx);
 
         String prefix = ti.getSqlDialect().isSqlServer() ? " TOP 1 " : "";
@@ -931,7 +953,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ExprColumn recentP2 = new ExprColumn(ti, "mostRecentP2", recentp2Sql, JdbcType.VARCHAR, objectId);
         recentP2.setLabel("Most Recent P2");
         recentP2.setDescription("This column will display the most recent P2 that has been entered for the animal.");
-        recentP2.setDisplayWidth("250");
+        recentP2.setDisplayWidth("200");
         ti.addColumn(recentP2);
 
         SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
@@ -940,7 +962,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
         ExprColumn todaysP2 = new ExprColumn(ti, "todaysP2", p2Sql, JdbcType.VARCHAR, objectId);
         todaysP2.setLabel("P2s Entered Today");
-        todaysP2.setDisplayWidth("250");
+        todaysP2.setDisplayWidth("200");
         ti.addColumn(todaysP2);
 
         Calendar yesterday = Calendar.getInstance();
@@ -953,7 +975,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", yesterday.getTime());
         ExprColumn yesterdaysP2 = new ExprColumn(ti, "yesterdaysP2", p2Sql2, JdbcType.VARCHAR, objectId);
         yesterdaysP2.setLabel("P2s Entered Yesterday");
-        yesterdaysP2.setDisplayWidth("250");
+        yesterdaysP2.setDisplayWidth("200");
         ti.addColumn(yesterdaysP2);
 
         SQLFragment rmSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
@@ -963,7 +985,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ExprColumn todaysRemarks = new ExprColumn(ti, "todaysRemarks", rmSql, JdbcType.VARCHAR, objectId);
         todaysRemarks.setLabel("Remarks Entered Today");
         todaysRemarks.setDescription("This shows any remarks entered today for this case");
-        todaysRemarks.setDisplayWidth("250");
+        todaysRemarks.setDisplayWidth("200");
         ti.addColumn(todaysRemarks);
 
         SQLFragment rmSql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
@@ -972,7 +994,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date)");
         ExprColumn remarksOnOpenDate = new ExprColumn(ti, "remarksOnOpenDate", rmSql2, JdbcType.VARCHAR, objectId);
         remarksOnOpenDate.setLabel("Remarks Entered On Open Date");
-        remarksOnOpenDate.setDisplayWidth("250");
+        remarksOnOpenDate.setDisplayWidth("200");
         ti.addColumn(remarksOnOpenDate);
 
         SQLFragment assesmentSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.a"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
@@ -981,8 +1003,17 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.a IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date)");
         ExprColumn assessmentOnOpenDate = new ExprColumn(ti, "assessmentOnOpenDate", assesmentSql, JdbcType.VARCHAR, objectId);
         assessmentOnOpenDate.setLabel("Assessment Entered On Open Date");
-        assessmentOnOpenDate.setDisplayWidth("250");
+        assessmentOnOpenDate.setDisplayWidth("200");
         ti.addColumn(assessmentOnOpenDate);
+
+        if (ti.getColumn("mostRecentObservations") == null)
+        {
+            ColumnInfo col17 = getWrappedCol(us, ti, "mostRecentObservations", "mostRecentObservations", "objectid", "caseid");
+            col17.setLabel("Most Recent Observations");
+            col17.setDescription("Displays the most recent set of observations associated with this case");
+            col17.setDisplayWidth("150");
+            ti.addColumn(col17);
+        }
     }
 
     private void appendSurgeryCol(AbstractTableInfo ti)
@@ -1227,12 +1258,17 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private ColumnInfo getWrappedIdCol(UserSchema us, AbstractTableInfo ds, String name, String queryName)
     {
-        String ID_COL = "Id";
-        WrappedColumn col = new WrappedColumn(ds.getColumn(ID_COL), name);
+        return getWrappedCol(us, ds, name, queryName, "Id", "Id");
+    }
+
+    private ColumnInfo getWrappedCol(UserSchema us, AbstractTableInfo ds, String name, String queryName, String colName, String targetCol)
+    {
+
+        WrappedColumn col = new WrappedColumn(ds.getColumn(colName), name);
         col.setReadOnly(true);
         col.setIsUnselectable(true);
         col.setUserEditable(false);
-        col.setFk(new QueryForeignKey(us, queryName, ID_COL, ID_COL));
+        col.setFk(new QueryForeignKey(us, queryName, targetCol, targetCol));
 
         return col;
     }

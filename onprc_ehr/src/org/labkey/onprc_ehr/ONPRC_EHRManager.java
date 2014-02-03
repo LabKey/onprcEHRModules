@@ -66,6 +66,8 @@ public class ONPRC_EHRManager
     public static final String VET_REVIEW = "Vet Review";
     @Queryable
     public static final String TECH_REVIEW = "Reviewed";
+    @Queryable
+    public static final String REPLACED_SOAP = "Replaced SOAP";
 
     private ONPRC_EHRManager()
     {

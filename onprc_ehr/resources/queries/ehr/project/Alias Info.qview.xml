@@ -17,7 +17,8 @@
         <column name="account/aliasEnabled"/>
         <column name="account/projectNumber"/>
         <column name="account/projectNumber/projectStatus"/>
-        <column name="account/projectNumber/budgetEndDate"/>
+        <column name="account/budgetStartDate"/>
+        <column name="account/budgetEndDate"/>
         <column name="account/investigatorId"/>
     </columns>
     <sorts>

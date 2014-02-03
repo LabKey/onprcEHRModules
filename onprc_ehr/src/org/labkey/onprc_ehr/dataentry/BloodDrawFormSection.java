@@ -46,7 +46,7 @@ public class BloodDrawFormSection extends SimpleGridPanel
     @Override
     public List<String> getTbarMoreActionButtons()
     {
-        List<String> defaultButtons = super.getTbarButtons();
+        List<String> defaultButtons = super.getTbarMoreActionButtons();
 
         if (_showAddScheduledBtn)
             defaultButtons.add(0, "ADDBLOODDRAWS");

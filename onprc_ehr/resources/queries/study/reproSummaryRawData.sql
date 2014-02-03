@@ -43,7 +43,7 @@ SELECT
   t.id,
   t.date,
   'Menses' as category,
-  'M' as value,
+  t.observation as value,
 
   convert(year(t.date), integer) as year,
   monthname(t.date) AS monthname,

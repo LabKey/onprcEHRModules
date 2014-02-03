@@ -25,6 +25,7 @@ import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -89,21 +90,17 @@ public class ClinicalReportFormType extends TaskForm
     {
         List<String> ret = super.getButtonConfigs();
 
-        int idx = ret.indexOf("SUBMIT");
-        assert idx > -1;
-
-        ret.add(idx, "REVIEW");
         ret.add("OPENCLINICALCASE");
 
         return ret;
     }
 
     @Override
-    protected List<String> getMoreActionButtonConfigs()
+    protected boolean canInsert()
     {
-        List<String> ret = super.getMoreActionButtonConfigs();
-        ret.remove("REVIEW");
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRClinicalEntryPermission.class))
+            return false;
 
-        return ret;
+        return super.canInsert();
     }
 }

@@ -145,7 +145,7 @@ Select
 
   cast(sg.objectid as varchar(38)) as objectid,
   CASE
-    WHEN s4.value = 'Surgery Staff' THEN 'Center Staff'
+    WHEN s4.value = 'Surgery Staff' THEN 'Surgery Staff'
     WHEN s4.value = 'No Surgery Staff' THEN 'Research Staff'
     WHEN s4.value = 'No Charge' THEN 'No Charge'
     ELSE ('ERROR: ' + s4.value)
@@ -270,7 +270,7 @@ Select
 
   max(cast(cln.objectid as varchar(36))) as objectid,
   CASE
-    WHEN max(s5.Value) = 'Surgery Staff' THEN 'Center Staff'
+    WHEN max(s5.Value) = 'Surgery Staff' THEN 'Surgery Staff'
     WHEN max(s5.Value) = 'No Surgery Staff' THEN 'Research Staff'
     WHEN max(s5.Value) = 'No Charge' THEN 'No Charge'
     ELSE ('ERROR: ' + max(s4.value))
