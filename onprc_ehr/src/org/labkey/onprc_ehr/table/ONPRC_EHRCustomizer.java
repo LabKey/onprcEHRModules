@@ -202,9 +202,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 if (us != null)
                 {
                     if (project.getJavaClass().equals(Integer.class))
-                        project.setFk(new QueryForeignKey(us, "project", "project", "displayName"));
+                        project.setFk(new QueryForeignKey(us, null, "project", "project", "displayName"));
                     else if (project.getJavaClass().equals(String.class))
-                        project.setFk(new QueryForeignKey(us, "project", "displayName", "displayName"));
+                        project.setFk(new QueryForeignKey(us, null, "project", "displayName", "displayName"));
                 }
             }
         }
@@ -225,7 +225,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             //NOTE: we keep the lookup even on the protocol table, so we always use displayName to identify the column
             UserSchema us = getEHRUserSchema(ti, "ehr");
             if (us != null){
-                protocolCol.setFk(new QueryForeignKey(us, "protocol", "protocol", "displayName"));
+                protocolCol.setFk(new QueryForeignKey(us, null, "protocol", "protocol", "displayName"));
             }
 
             protocolCol.setLabel("IACUC Protocol");
@@ -249,7 +249,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             UserSchema us = getEHRUserSchema(ti, "ehr_lookups");
             if (us != null){
-                snomed.setFk(new QueryForeignKey(us, "snomed", "code", "meaning"));
+                snomed.setFk(new QueryForeignKey(us, null, "snomed", "code", "meaning"));
             }
             snomed.setLabel("SNOMED");
         }
@@ -259,7 +259,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             UserSchema us = getEHRUserSchema(ti, "ehr_lookups");
             if (us != null){
-                procedureId.setFk(new QueryForeignKey(us, "procedures", "rowid", "name"));
+                procedureId.setFk(new QueryForeignKey(us, null, "procedures", "rowid", "name"));
             }
             procedureId.setLabel("Procedure");
         }
@@ -280,7 +280,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 {
                     UserSchema us = getEHRUserSchema(ti, "onprc_ehr");
                     if (us != null){
-                        investigator.setFk(new QueryForeignKey(us, "investigators", "rowid", "lastname"));
+                        investigator.setFk(new QueryForeignKey(us, null, "investigators", "rowid", "lastname"));
                     }
                 }
                 investigator.setLabel("Investigator");
@@ -292,7 +292,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             UserSchema us = getUserSchema(ti, "onprc_billing_public");
             if (us != null){
-                fiscalAuthority.setFk(new QueryForeignKey(us, "fiscalAuthorities", "rowid", "lastName"));
+                fiscalAuthority.setFk(new QueryForeignKey(us, null, "fiscalAuthorities", "rowid", "lastName"));
             }
             fiscalAuthority.setLabel("Fiscal Authority");
         }
@@ -315,7 +315,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             {
                 UserSchema us = getEHRUserSchema(ti, "study");
                 if (us != null)
-                    caseId.setFk(new QueryForeignKey(us, "cases", "objectid", "category"));
+                    caseId.setFk(new QueryForeignKey(us, null, "cases", "objectid", "category"));
             }
         }
 
@@ -701,7 +701,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 col.setLabel("Lowest Joined Cage");
                 col.setUserEditable(false);
                 col.setIsUnselectable(true);
-                col.setFk(new QueryForeignKey(us, "housingEffectiveCage", "lsid", "effectiveCage"));
+                col.setFk(new QueryForeignKey(us, null, "housingEffectiveCage", "lsid", "effectiveCage"));
             }
         }
 
@@ -741,7 +741,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 wrapped.setLabel("Cage Position");
                 wrapped.setIsUnselectable(true);
                 wrapped.setUserEditable(false);
-                wrapped.setFk(new QueryForeignKey(us, "cage_positions", "cage", "cage"));
+                wrapped.setFk(new QueryForeignKey(us, null, "cage_positions", "cage", "cage"));
                 ti.addColumn(wrapped);
             }
         }
@@ -860,7 +860,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 wrapped.setLabel("Mating Outcome");
                 wrapped.setIsUnselectable(true);
                 wrapped.setUserEditable(false);
-                wrapped.setFk(new QueryForeignKey(us, "matingOutcome", "lsid", "confirmations"));
+                wrapped.setFk(new QueryForeignKey(us, null, "matingOutcome", "lsid", "confirmations"));
 
                 ti.addColumn(wrapped);
             }
@@ -879,7 +879,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 wrapped.setLabel("Pregnancy Outcome");
                 wrapped.setIsUnselectable(true);
                 wrapped.setUserEditable(false);
-                wrapped.setFk(new QueryForeignKey(us, "pregnancyOutcome", "lsid", "confirmations"));
+                wrapped.setFk(new QueryForeignKey(us, null, "pregnancyOutcome", "lsid", "confirmations"));
 
                 ti.addColumn(wrapped);
             }
@@ -895,7 +895,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             UserSchema us = getUserSchema(ti, "ehr_lookups");
             if (us != null)
             {
-                cond.setFk(new QueryForeignKey(us, "birth_condition", "value", "value"));
+                cond.setFk(new QueryForeignKey(us, null, "birth_condition", "value", "value"));
             }
         }
 
@@ -1136,7 +1136,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 col2.setLabel("Total Projects");
                 col2.setUserEditable(false);
                 col2.setIsUnselectable(true);
-                col2.setFk(new QueryForeignKey(us, "protocolTotalProjects", "protocol", "protocol"));
+                col2.setFk(new QueryForeignKey(us, null, "protocolTotalProjects", "protocol", "protocol"));
             }
         }
 
@@ -1212,7 +1212,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         invest.setHidden(false);
         UserSchema us = getEHRUserSchema(ti, "onprc_ehr");
         if (us != null)
-            invest.setFk(new QueryForeignKey(us, "investigators", "rowid", "lastname"));
+            invest.setFk(new QueryForeignKey(us, null, "investigators", "rowid", "lastname"));
         invest.setLabel("Project Contact");
 
         ColumnInfo nameCol = ti.getColumn("name");
@@ -1251,7 +1251,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             col.setReadOnly(true);
             col.setIsUnselectable(true);
             col.setUserEditable(false);
-            col.setFk(new QueryForeignKey(us, "roomsAssignment", "room", "room"));
+            col.setFk(new QueryForeignKey(us, null, "roomsAssignment", "room", "room"));
             ti.addColumn(col);
         }
     }
@@ -1268,7 +1268,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         col.setReadOnly(true);
         col.setIsUnselectable(true);
         col.setUserEditable(false);
-        col.setFk(new QueryForeignKey(us, queryName, targetCol, targetCol));
+        col.setFk(new QueryForeignKey(us, null, queryName, targetCol, targetCol));
 
         return col;
     }
@@ -1387,7 +1387,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 col.setReadOnly(true);
                 col.setIsUnselectable(true);
                 col.setUserEditable(false);
-                col.setFk(new QueryForeignKey(us, "availableCages", "location", "location"));
+                col.setFk(new QueryForeignKey(us, null, "availableCages", "location", "location"));
                 table.addColumn(col);
             }
         }
@@ -1781,7 +1781,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 col.setLabel("Majority Location");
                 col.setUserEditable(false);
                 col.setIsUnselectable(true);
-                col.setFk(new QueryForeignKey(us, "animalGroupMajorityLocation", "rowid", "room"));
+                col.setFk(new QueryForeignKey(us, null, "animalGroupMajorityLocation", "rowid", "room"));
             }
         }
     }
