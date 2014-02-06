@@ -34,9 +34,12 @@ SELECT
   t1.dataset,
   t1.id as animalid,
 
-  coalesce(tt.time, ft.hourofday) as time,
-  (coalesce(tt.time, ft.hourofday) / 100) as hours,
-  (((coalesce(tt.time, ft.hourofday) / 100.0) - floor(coalesce(tt.time, ft.hourofday) / 100)) * 100) as minutes,
+  coalesce(tt.time, ft.hourofday, ((hour(t1.date) * 100) + minute(t1.date))) as time,
+  (coalesce(tt.time, ft.hourofday, (hour(t1.date) * 100)) / 100) as hours,
+  CASE
+    WHEN (tt.time IS NOT NULL OR ft.hourofday IS NOT NULL) THEN (((coalesce(tt.time, ft.hourofday) / 100.0) - floor(coalesce(tt.time, ft.hourofday) / 100)) * 100)
+    ELSE minute(t1.date)
+  END as minutes,
   dr.date as origDate,
   --ft.timedescription as timeOfDay,
   CASE
@@ -66,6 +69,7 @@ SELECT
   t1.amount,
   t1.amount_units,
   t1.amountWithUnits,
+  t1.amountAndVolume,
   t1.dosage,
   t1.dosage_units,
   t1.qualifier,

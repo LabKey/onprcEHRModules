@@ -57,4 +57,4 @@ left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Department
 left join Ref_pool rp on (rp.PoolCode = afr.PoolCode)
 left join Af_Qrf q on (q.animalid = afr.animalid)
 
-WHERE (afr.ts > ? or q.ts > ?)
+WHERE (afr.ts > ?)

@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.notification;
 
 import org.labkey.api.data.Container;
+import org.labkey.api.module.Module;
 import org.labkey.api.security.User;
 
 import java.util.Date;
@@ -27,6 +28,11 @@ import java.util.Date;
  */
 public class ColonyMgmtNotification extends ColonyAlertsNotification
 {
+    public ColonyMgmtNotification(Module owner)
+    {
+        super(owner);
+    }
+
     @Override
     public String getName()
     {

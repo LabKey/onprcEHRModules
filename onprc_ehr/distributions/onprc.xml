@@ -38,6 +38,7 @@
                 <include name="mergesync.module" />
                 <include name="onprc_billing.module" />
                 <include name="onprc_billingpublic.module" />
+                <include name="onprc_ssu.module" />
                 <include name="sla.module" />
                 <include name="SequenceAnalysis.module" />
                 <include name="Viral_Load_Assay.module" />

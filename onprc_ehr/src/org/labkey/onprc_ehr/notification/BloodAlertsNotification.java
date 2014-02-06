@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.notification;
 
 import org.labkey.api.data.Container;
+import org.labkey.api.module.Module;
 import org.labkey.api.security.User;
 
 import java.util.Collections;
@@ -29,6 +30,11 @@ import java.util.Set;
  */
 public class BloodAlertsNotification extends BloodAdminAlertsNotification
 {
+    public BloodAlertsNotification(Module owner)
+    {
+        super(owner);
+    }
+
     @Override
     public String getName()
     {

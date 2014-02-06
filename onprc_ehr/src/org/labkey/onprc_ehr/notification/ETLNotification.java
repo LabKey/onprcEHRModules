@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.notification;
 
 import org.labkey.api.data.Container;
+import org.labkey.api.module.Module;
 import org.labkey.api.security.User;
 import org.labkey.onprc_ehr.etl.ETLRunnable;
 
@@ -28,6 +29,11 @@ import java.util.Date;
  */
 public class ETLNotification extends AbstractEHRNotification
 {
+    public ETLNotification(Module owner)
+    {
+        super(owner);
+    }
+
     @Override
     public String getName()
     {

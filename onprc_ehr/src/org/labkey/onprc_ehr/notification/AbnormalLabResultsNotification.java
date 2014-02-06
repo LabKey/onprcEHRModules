@@ -21,6 +21,7 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.RuntimeSQLException;
 import org.labkey.api.data.SimpleFilter;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.QuerySettings;
@@ -47,6 +48,11 @@ import java.util.Set;
  */
 public class AbnormalLabResultsNotification extends AbstractEHRNotification
 {
+    public AbnormalLabResultsNotification(Module owner)
+    {
+        super(owner);
+    }
+
     public String getName()
     {
         return "Abornmal Lab Results";

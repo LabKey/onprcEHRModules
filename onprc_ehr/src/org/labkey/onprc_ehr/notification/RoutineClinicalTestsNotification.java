@@ -23,6 +23,7 @@ import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
@@ -45,6 +46,11 @@ import java.util.TreeMap;
  */
 public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
 {
+    public RoutineClinicalTestsNotification(Module owner)
+    {
+        super(owner);
+    }
+
     @Override
     public String getName()
     {

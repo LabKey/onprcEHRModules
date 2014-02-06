@@ -11,6 +11,12 @@ var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY
 exports.init = function(EHR){
     EHR.ETL = ETL;
 
+    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.INIT, function(event, helper){
+        helper.setScriptOptions({
+            cacheAccount: false
+        });
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Drug Administration', function(helper, scriptErrors, row, oldRow){
         if (row.outcome && row.outcome != 'Normal' && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required if a non-normal outcome is reported', 'WARN');
@@ -19,7 +25,7 @@ exports.init = function(EHR){
         if (!row.code){
             EHR.Server.Utils.addError(scriptErrors, 'code', 'Must enter a treatment', 'WARN');
         }
-        else if ((row.code == 'E-70590' || row.code == 'E-YY928') && row.amount && row.amount_units && row.amount_units.toLowerCase() != 'mg'){
+        else if ((row.code == 'E-70590' || row.code == 'E-YY928') && (row.amount || row.volume) && (!row.amount || !row.amount_units || row.amount_units.toLowerCase() != 'mg')){
             EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering ketamine or telazol, amount must be in mg', 'WARN');
         }
 
@@ -39,7 +45,7 @@ exports.init = function(EHR){
         if (!row.code){
             EHR.Server.Utils.addError(scriptErrors, 'code', 'Must enter a treatment', 'WARN');
         }
-        else if ((row.code == 'E-70590' || row.code == 'E-YY928') && row.amount && row.amount_units && row.amount_units.toLowerCase() != 'mg'){
+        else if ((row.code == 'E-70590' || row.code == 'E-YY928') && (row.amount || row.volume) && (!row.amount || !row.amount_units || row.amount_units.toLowerCase() != 'mg')){
             EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering ketamine or telazol, amount must be in mg', 'WARN');
         }
 

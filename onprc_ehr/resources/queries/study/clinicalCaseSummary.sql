@@ -15,7 +15,7 @@
  */
 SELECT
   c.Id,
-  c.problem,
+  c.problemCategories,
   count(c.Id) as totalCases
 
 FROM study.cases c
@@ -24,4 +24,4 @@ FROM study.cases c
 WHERE timestampdiff('SQL_TSI_DAY', c.date, now()) <= (365 * 2)
 AND c.category = 'Clinical'
 
-GROUP BY c.Id, c.problem
+GROUP BY c.Id, c.problemCategories

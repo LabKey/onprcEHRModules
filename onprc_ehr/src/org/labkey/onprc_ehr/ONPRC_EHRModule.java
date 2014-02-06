@@ -25,7 +25,9 @@ import org.labkey.api.ehr.buttons.CreateTaskFromRecordsButton;
 import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.SingleQueryFormProvider;
+import org.labkey.api.ehr.security.EHRProtocolEditPermission;
 import org.labkey.api.ldk.ExtendedSimpleModule;
+import org.labkey.api.ldk.buttons.ShowEditUIButton;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.query.DetailsURL;
@@ -50,6 +52,7 @@ import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
 import org.labkey.onprc_ehr.notification.BehaviorNotification;
 import org.labkey.onprc_ehr.notification.BloodAlertsNotification;
 import org.labkey.onprc_ehr.notification.ClinicalAlertsNotification;
+import org.labkey.onprc_ehr.notification.ClinicalRoundsNotification;
 import org.labkey.onprc_ehr.notification.ColonyAlertsLiteNotification;
 import org.labkey.onprc_ehr.notification.ColonyAlertsNotification;
 import org.labkey.onprc_ehr.notification.ColonyMgmtNotification;
@@ -111,20 +114,20 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         NotificationService ns = NotificationService.get();
         //ns.registerNotification(new AbnormalLabResultsNotification());
-        ns.registerNotification(new TreatmentAlertsNotification());
-        ns.registerNotification(new BloodAlertsNotification());
-        ns.registerNotification(new ColonyAlertsLiteNotification());
-        ns.registerNotification(new ColonyAlertsNotification());
-        ns.registerNotification(new ColonyMgmtNotification());
-        //ns.registerNotification(new LabResultSummaryNotification());
-        ns.registerNotification(new WeightAlertsNotification());
-        ns.registerNotification(new RoutineClinicalTestsNotification());
-        ns.registerNotification(new ComplianceNotification());
-        ns.registerNotification(new BehaviorNotification());
-        ns.registerNotification(new TMBNotification());
-        ns.registerNotification(new ClinicalAlertsNotification());
-        ns.registerNotification(new UnoccupiedRoomsNotification());
-        ns.registerNotification(new ETLNotification());
+        ns.registerNotification(new TreatmentAlertsNotification(this));
+        ns.registerNotification(new BloodAlertsNotification(this));
+        ns.registerNotification(new ColonyAlertsLiteNotification(this));
+        ns.registerNotification(new ColonyAlertsNotification(this));
+        ns.registerNotification(new ColonyMgmtNotification(this));
+        ns.registerNotification(new ClinicalRoundsNotification(this));
+        ns.registerNotification(new WeightAlertsNotification(this));
+        ns.registerNotification(new RoutineClinicalTestsNotification(this));
+        ns.registerNotification(new ComplianceNotification(this));
+        ns.registerNotification(new BehaviorNotification(this));
+        ns.registerNotification(new TMBNotification(this));
+        ns.registerNotification(new ClinicalAlertsNotification(this));
+        ns.registerNotification(new UnoccupiedRoomsNotification(this));
+        ns.registerNotification(new ETLNotification(this));
     }
 
     private void registerEHRResources()
@@ -255,6 +258,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //buttons
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "my_tasks");
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "tasks");
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr", "project", EHRProtocolEditPermission.class), "ehr", "animalUsage");
 
         EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", BloodDrawFormType.NAME, new String[]{"Blood Draws"}), "study", "demographics");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Weight For Selected", "Weight", "weight", new String[]{"Weight"}), "study", "demographics");

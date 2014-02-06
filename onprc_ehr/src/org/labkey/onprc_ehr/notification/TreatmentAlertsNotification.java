@@ -26,6 +26,7 @@ import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.security.User;
@@ -47,6 +48,11 @@ import java.util.TreeMap;
  */
 public class TreatmentAlertsNotification extends AbstractEHRNotification
 {
+    public TreatmentAlertsNotification(Module owner)
+    {
+        super(owner);
+    }
+
     public String getName()
     {
         return "Treatment Alerts";

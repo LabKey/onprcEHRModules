@@ -19,6 +19,7 @@ import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.User;
 
@@ -31,6 +32,11 @@ import java.util.Date;
  */
 public class TMBNotification extends ColonyAlertsNotification
 {
+    public TMBNotification(Module owner)
+    {
+        super(owner);
+    }
+
     @Override
     public String getName()
     {

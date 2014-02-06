@@ -22,8 +22,10 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.SimpleFilter;
+import org.labkey.api.ldk.notification.AbstractNotification;
 import org.labkey.api.ldk.notification.Notification;
 import org.labkey.api.ldk.notification.NotificationService;
+import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
@@ -45,7 +47,7 @@ import java.util.Map;
  * Date: 12/19/12
  * Time: 7:32 PM
  */
-abstract public class AbstractEHRNotification implements Notification
+abstract public class AbstractEHRNotification extends AbstractNotification
 {
     protected final static Logger log = Logger.getLogger(AbstractEHRNotification.class);
     protected final static SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
@@ -53,11 +55,16 @@ abstract public class AbstractEHRNotification implements Notification
     protected final static SimpleDateFormat _timeFormat = new SimpleDateFormat("kk:mm");
     protected static final String lastSave = "lastSave";
 
+    public AbstractEHRNotification(Module owner)
+    {
+        super(owner);
+    }
+
     protected NotificationService _ns = NotificationService.get();
 
     public boolean isAvailable(Container c)
     {
-        if (!c.getActiveModules().contains(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)))
+        if (!super.isAvailable(c))
             return false;
 
         if (StudyService.get().getStudy(c) == null)
@@ -99,29 +106,6 @@ abstract public class AbstractEHRNotification implements Notification
     public String getCronString()
     {
         return null;//"0 0/5 * * * ?";
-    }
-
-    protected String getExecuteQueryUrl(Container c, String schemaName, String queryName, @Nullable String viewName)
-    {
-        return getExecuteQueryUrl(c, schemaName, queryName, viewName, null);
-    }
-
-    /**
-     * This should really be using URLHelpers better, but there is a lot of legacy URL strings
-     * migrated into java and its not worth changing all of it at this point
-     */
-    protected String getExecuteQueryUrl(Container c, String schemaName, String queryName, @Nullable String viewName, @Nullable SimpleFilter filter)
-    {
-        DetailsURL url = DetailsURL.fromString("/query/executeQuery.view", c);
-        String ret = AppProps.getInstance().getBaseServerUrl() + url.getActionURL().toString();
-        ret += "schemaName=" + schemaName + "&query.queryName=" + queryName;
-        if (viewName != null)
-            ret += "&query.viewName=" + viewName;
-
-        if (filter != null)
-            ret += "&" + filter.toQueryString("query");
-
-        return ret;
     }
 
     protected Map<String, String> getSavedValues(Container c)

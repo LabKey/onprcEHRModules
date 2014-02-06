@@ -20,6 +20,7 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
+import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
@@ -34,7 +35,7 @@ import java.util.List;
  * Date: 7/29/13
  * Time: 5:03 PM
  */
-public class PathologyTissuesFormType extends EncounterForm
+public class PathologyTissuesFormType extends TaskForm
 {
     public static final String NAME = "PathologyTissues";
     public static final String LABEL = "Pathology Tissues";
@@ -44,10 +45,10 @@ public class PathologyTissuesFormType extends EncounterForm
         super(ctx, owner, NAME, LABEL, "Pathology", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
-                new PathologyMedicationsFormSection("study", "Drug Administration", "Medications/Treatments"),
-                new PathologyFormSection("study", "tissue_samples", "Tissues/Weights"),
-                new PathologyFormSection("study", "tissueDistributions", "Tissue Distributions"),
-                new PathologyFormSection("study", "measurements", "Measurements")
+                new DrugAdministrationFormSection(),
+                new SimpleGridPanel("study", "tissue_samples", "Tissues/Weights"),
+                new SimpleGridPanel("study", "tissueDistributions", "Tissue Distributions"),
+                new SimpleGridPanel("study", "measurements", "Measurements")
         ));
 
         for (FormSection s : this.getFormSections())

@@ -140,7 +140,7 @@ public class ONPRC_EHRTriggerHelper
         }
 
         boolean hasChanged = false;
-        Set<String> triggersChange = PageFlowUtil.set("code", "project", "frequency", "route", "volume", "vol_units", "amount", "amount_units");
+        Set<String> triggersChange = PageFlowUtil.set("code", "frequency", "route", "volume", "vol_units", "amount", "amount_units");
         for (String field : triggersChange)
         {
             Object current = row.get(field);

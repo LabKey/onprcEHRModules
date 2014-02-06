@@ -1225,6 +1225,16 @@ public class ETLRunnable implements Runnable
 
             add("Clinical Encounters");
             add("Clinical Remarks");
+            add("Cases");
+            add("Problem List");
+            add("Clinical Observations");
+            add("encounter_flags");
+            add("encounter_participants");
+            add("encounter_summaries");
+            add("invoiceRuns");
+            add("invoicedItems");
+            add("snomed_tags");
+            add("treatment_times");
             add("pairings");
             add("miscCharges");
         }
@@ -1305,7 +1315,15 @@ public class ETLRunnable implements Runnable
         "Flags",
         "miscCharges",
         "invoicedItems",
-        "invoiceRuns"
+        "invoiceRuns",
+
+        //deprecated in IRIS
+        "Cases",
+        "Problem List",
+        //"Clinical Encounters",
+        //"Clinical Observations",
+        //"Treatment Orders",
+        //"Drug Administration"
     };
 
     private String validateEtlScript(Map<String, String> queries, UserSchema schema, boolean attemptRepair) throws BadConfigException, BatchValidationException
@@ -1383,6 +1401,8 @@ public class ETLRunnable implements Runnable
                             "FULL JOIN " + scope.getDatabaseName() + "." + realTable.getSelectName() + " t2 \n" +
                             "ON (t." + filterCol.getSelectName() + " = t2." + filterCol.getSelectName() + ") \n" +
                             "WHERE (t." + filterCol.getSelectName() + " IS NULL OR t2." + filterCol.getSelectName() + " IS NULL)" +
+                            //all records should have been created by this user, so anything else was inserted directly into LK
+                            (realTable.getColumn("createdby") == null ? "" : " AND (t2.createdby = " + etlUser.getUserId() + ")") +
                             (realTable.getColumn("taskid") == null ? "" : " AND t2.taskid IS NULL") +
                             (realTable.getColumn("requestid") == null ? "" : " AND t2.requestid IS NULL") +
                             //intended for miscCharges and adjustments

@@ -2,9 +2,13 @@
     <columns>
         <column name="Id/demographics/history"/>
         <column name="Id"/>
-        <column name="latestHx"/>
+        <column name="Id/demographics/mostRecentHx"/>
+        <!--all since last review-->
         <column name="mostRecentP2"/>
         <column name="mostRecentObservations/observations"/>
+        <!--all since last review-->
+        <column name="mostRecentRemark"/>
+        <column name="assessmentOnOpenDate"/>
         <column name="problemCategories"/>
         <column name="lastVetReview"/>
         <column name="Id/utilization/use"/>

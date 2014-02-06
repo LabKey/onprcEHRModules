@@ -36,8 +36,6 @@ public class EncounterMedicationsFormSection extends EncounterChildFormSection
         addClientDependency(ClientDependency.fromFilePath("ehr/window/SedationWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/DrugAmountWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/SurgeryPostOpMedsWindow.js"));
-
-        setTabName("Medications");
     }
 
     @Override

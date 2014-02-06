@@ -26,6 +26,7 @@ import org.labkey.api.data.Sort;
 import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryDefinition;
 import org.labkey.api.query.QueryException;
@@ -52,6 +53,11 @@ import java.util.Map;
  */
 public class BehaviorNotification extends ColonyAlertsNotification
 {
+    public BehaviorNotification(Module owner)
+    {
+        super(owner);
+    }
+
     @Override
     public String getName()
     {

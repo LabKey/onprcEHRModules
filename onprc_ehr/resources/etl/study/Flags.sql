@@ -56,4 +56,4 @@ join Af_Qrf q on (cast(q.AnimalID as nvarchar(4000)) = r.animalid)
 where r.DateProcessed is not null
 --exclude non-center animals
 and r.animalid not like '%n' and r.animalid not like '%f'
-and (r.ts > ? or q.ts > ?)
+and (r.ts > ?)

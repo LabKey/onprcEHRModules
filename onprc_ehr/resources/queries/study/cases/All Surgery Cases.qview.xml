@@ -5,7 +5,7 @@
         <column name="Id/curLocation/cage"/>
         <column name="date"/>
         <column name="enddate"/>
-        <column name="remarksOnOpenDate"/>
+        <column name="remark"/>
         <!--<column name="proceduresPerformed"/>-->
         <column name="caseHistory"/>
     </columns>

@@ -9,7 +9,7 @@
 
         <column name="frequency"/>
         <column name="code"/>
-        <column name="amountWithUnits"/>
+        <column name="amountAndVolume"/>
         <column name="route"/>
         <column name="remark"/>
         <column name="performedby"/>

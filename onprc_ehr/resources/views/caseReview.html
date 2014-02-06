@@ -18,6 +18,20 @@
                     items: [{
                         width: 400,
                         items: [{
+                            xtype: 'combo',
+                            width: 400,
+                            fieldLabel: 'Category',
+                            itemId: 'categoryField',
+                            value: 'Clinical',
+                            forceSelection: true,
+                            valueField: 'value',
+                            displayField: 'value',
+                            store: {
+                                type: 'store',
+                                fields: ['value'],
+                                data: [{value: 'Clinical'}, {value: 'Surgery'}]
+                            }
+                        },{
                             xtype: 'ehr-vetfieldcombo',
                             width: 400,
                             fieldLabel: 'Choose Vet (blank for all)',
@@ -35,6 +49,7 @@
                             handler: function(btn){
                                 var panel = btn.up('#outerPanel');
                                 var userId = panel.down('#userField').getValue();
+                                var category = panel.down('#categoryField').getValue();
                                 var daysSinceLastVetReview = panel.down('#daysSinceVetReview').getValue();
 
                                 var filterArray = [];
@@ -42,6 +57,17 @@
                                     filterArray.push(LABKEY.Filter.create('assignedvet', userId, LABKEY.Filter.Types.EQUAL));
                                 }
 
+                                if (category){
+                                    filterArray.push(LABKEY.Filter.create('category', category, LABKEY.Filter.Types.EQUAL));
+                                }
+
+                                var viewName;
+                                if (category == 'Clinical'){
+                                    viewName = 'Clinical Case Review';
+                                }
+                                else if (category == 'Surgery'){
+                                    viewName = 'Surgery Case Review';
+                                }
                                 if (daysSinceLastVetReview){
                                     filterArray.push(LABKEY.Filter.create('daysSinceLastVetReview', daysSinceLastVetReview, LABKEY.Filter.Types.GTE));
                                 }
@@ -53,7 +79,7 @@
                                     queryConfig: {
                                         schemaName: 'study',
                                         queryName: 'cases',
-                                        viewName: 'Clinical Case Review',
+                                        viewName: viewName,
                                         filterArray: filterArray,
                                         scope: this,
                                         success: function(dr){

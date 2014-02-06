@@ -6,9 +6,8 @@
         <column name="Id/utilization/use"/>
         <column name="date"/>
         <column name="Id/demographics/species"/>
-        <column name="remarksOnOpenDate"/>
+        <column name="remark"/>
         <!--<column name="proceduresPerformed"/>-->
-        <column name="todaysRemarks"/>
         <column name="caseHistory"/>
     </columns>
     <filters>

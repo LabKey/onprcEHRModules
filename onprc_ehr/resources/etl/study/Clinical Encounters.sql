@@ -292,7 +292,8 @@ FROM sur_implants cln
     i.IDKey,
     --a.AnimalID,
     --a.ChargeDate,
-    max(a.ProjectID) as ProjectID
+    max(a.ProjectID) as ProjectID,
+    max(a.ts) as maxChargeTs
 
     FROM Sur_Implants i
     left join Af_Charges a ON (i.AnimalID = a.AnimalID AND i.Date = a.ChargeDate)
@@ -304,7 +305,7 @@ FROM sur_implants cln
   ) proj ON (cln.IdKey = proj.IdKey)
 
 GROUP BY cln.AnimalID, cln.Date
-HAVING MAX(cln.ts) > ?
+HAVING (MAX(cln.ts) > ? OR max(proj.maxChargeTs) > ?)
 
 UNION ALL
 

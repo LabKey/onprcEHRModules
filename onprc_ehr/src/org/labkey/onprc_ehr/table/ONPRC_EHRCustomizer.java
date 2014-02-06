@@ -80,9 +80,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             customizeColumns((AbstractTableInfo) table);
 
-            if (table.getColumn("dateOnly") != null)
+            if (table.getColumn("date") != null)
             {
-                addCalculatedCols((AbstractTableInfo) table, "dateOnly");
+                addCalculatedCols((AbstractTableInfo) table, "date");
             }
 
             if (matches(table, "study", "Animal"))
@@ -202,9 +202,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 if (us != null)
                 {
                     if (project.getJavaClass().equals(Integer.class))
-                        project.setFk(new QueryForeignKey(us, null, "project", "project", "displayName"));
+                        project.setFk(new QueryForeignKey(us, us.getContainer(), "project", "project", "displayName"));
                     else if (project.getJavaClass().equals(String.class))
-                        project.setFk(new QueryForeignKey(us, null, "project", "displayName", "displayName"));
+                        project.setFk(new QueryForeignKey(us, us.getContainer(), "project", "displayName", "displayName"));
                 }
             }
         }
@@ -225,7 +225,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             //NOTE: we keep the lookup even on the protocol table, so we always use displayName to identify the column
             UserSchema us = getEHRUserSchema(ti, "ehr");
             if (us != null){
-                protocolCol.setFk(new QueryForeignKey(us, null, "protocol", "protocol", "displayName"));
+                protocolCol.setFk(new QueryForeignKey(us, us.getContainer(), "protocol", "protocol", "displayName"));
             }
 
             protocolCol.setLabel("IACUC Protocol");
@@ -249,7 +249,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             UserSchema us = getEHRUserSchema(ti, "ehr_lookups");
             if (us != null){
-                snomed.setFk(new QueryForeignKey(us, null, "snomed", "code", "meaning"));
+                snomed.setFk(new QueryForeignKey(us, us.getContainer(), "snomed", "code", "meaning"));
             }
             snomed.setLabel("SNOMED");
         }
@@ -259,7 +259,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             UserSchema us = getEHRUserSchema(ti, "ehr_lookups");
             if (us != null){
-                procedureId.setFk(new QueryForeignKey(us, null, "procedures", "rowid", "name"));
+                procedureId.setFk(new QueryForeignKey(us, us.getContainer(), "procedures", "rowid", "name"));
             }
             procedureId.setLabel("Procedure");
         }
@@ -280,7 +280,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 {
                     UserSchema us = getEHRUserSchema(ti, "onprc_ehr");
                     if (us != null){
-                        investigator.setFk(new QueryForeignKey(us, null, "investigators", "rowid", "lastname"));
+                        investigator.setFk(new QueryForeignKey(us, us.getContainer(), "investigators", "rowid", "lastname"));
                     }
                 }
                 investigator.setLabel("Investigator");
@@ -682,11 +682,21 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 ExprColumn obsCol2 = new ExprColumn(ti, daysSinceLastReview, obsSql2, JdbcType.INTEGER, ti.getColumn("Id"));
                 obsCol2.setLabel("Days Since Last Vet Review");
                 ti.addColumn(obsCol2);
+
+                //also add days since last observations (proxy for rounds)
+                String lastRoundsObs = "lastRoundsObs";
+                SQLFragment roundsSql = new SQLFragment("(SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category != ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId AND " + ExprColumn.STR_TABLE_ALIAS + ".objectid = t.caseid)", ONPRC_EHRManager.VET_REVIEW);
+                ExprColumn roundsCol = new ExprColumn(ti, lastRoundsObs, roundsSql, JdbcType.TIMESTAMP, ti.getColumn("Id"), ti.getColumn("objectid"));
+                roundsCol.setLabel("Last Rounds Observations");
+                ti.addColumn(roundsCol);
+
+                String daysSinceLastRounds = "daysSinceLastRounds";
+                SQLFragment roundsSql2 = new SQLFragment("(SELECT coalesce((" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "max(t.date)") + "), 999) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category != ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId AND " + ExprColumn.STR_TABLE_ALIAS + ".objectid = t.caseid)", ONPRC_EHRManager.VET_REVIEW);
+                ExprColumn roundsCol2 = new ExprColumn(ti, daysSinceLastRounds, roundsSql2, JdbcType.INTEGER, ti.getColumn("Id"), ti.getColumn("objectid"));
+                roundsCol2.setLabel("Days Since Last Rounds Observations");
+                ti.addColumn(roundsCol2);
             }
         }
-
-        //TODO: days since last change
-        //TODO: most recent observations
     }
 
     private void customizeHousingTable(AbstractTableInfo ti)
@@ -838,8 +848,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             assert idCol != null;
 
             SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.hx"), true, false, getChr(ti) + "(10)") + " FROM " + realTable.getSelectName() +
-                    " r WHERE r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.hx IS NOT NULL AND r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 "
-                    + " WHERE r2.participantId = r.participantId AND r2.hx is not null))"
+                    " r WHERE r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.hx IS NOT NULL AND (r.category != ? OR r.category IS NULL) AND r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 "
+                    + " WHERE r2.participantId = r.participantId AND r2.hx is not null AND (r2.category != ? OR r2.category IS NULL)))", ONPRC_EHRManager.REPLACED_SOAP, ONPRC_EHRManager.REPLACED_SOAP
             );
             ExprColumn latestHx = new ExprColumn(ti, hxName, sql, JdbcType.VARCHAR, idCol);
             latestHx.setLabel("Most Recent Hx");
@@ -930,36 +940,50 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             return;
         }
 
+        //uses caseId
         ColumnInfo objectId = ti.getColumn("objectid");
         String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
         SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.hx"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
-                " r WHERE r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 WHERE "
+                " r WHERE (r.category != ? OR r.category IS NULL) AND r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 WHERE "
                 + " r2.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r2.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r2.hx is not null)" +
-                " AND r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid" +
-                ")"
+                + " r2.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r2.hx is not null AND (r2.category != ? OR r2.category IS NULL)) AND "
+                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid" +
+                ")", ONPRC_EHRManager.REPLACED_SOAP, ONPRC_EHRManager.REPLACED_SOAP
         );
         ExprColumn latestHx = new ExprColumn(ti, hxName, sql, JdbcType.VARCHAR, objectId);
-        latestHx.setLabel("Latest Hx");
+        latestHx.setLabel("Latest Hx For Case");
         latestHx.setDisplayWidth("200");
         ti.addColumn(latestHx);
 
+        //does not use caseId
         String prefix = ti.getSqlDialect().isSqlServer() ? " TOP 1 " : "";
         String suffix = ti.getSqlDialect().isSqlServer() ? "" : " LIMIT 1 ";
         SQLFragment recentp2Sql = new SQLFragment("(SELECT " + prefix + " (" + "r.p2" + ") as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
                 //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL ORDER BY r.date desc)");
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc " + suffix + ")", ONPRC_EHRManager.REPLACED_SOAP);
         ExprColumn recentP2 = new ExprColumn(ti, "mostRecentP2", recentp2Sql, JdbcType.VARCHAR, objectId);
         recentP2.setLabel("Most Recent P2");
         recentP2.setDescription("This column will display the most recent P2 that has been entered for the animal.");
         recentP2.setDisplayWidth("200");
         ti.addColumn(recentP2);
 
+        //uses caseId.  this is a proxy for rounds
+        SQLFragment recentRemarkSql = new SQLFragment("(SELECT " + prefix + " (" + "r.remark" + ") as _expr FROM " + realTable.getSelectName() +
+                " r WHERE "
+                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc " + suffix + ")", ONPRC_EHRManager.REPLACED_SOAP);
+        ExprColumn recentRemark = new ExprColumn(ti, "mostRecentRemark", recentRemarkSql, JdbcType.VARCHAR, objectId);
+        recentRemark.setLabel("Most Recent Remark For Case");
+        recentRemark.setDescription("This column will display the most recent remark that has been entered for the animal.");
+        recentRemark.setDisplayWidth("200");
+        ti.addColumn(recentRemark);
+
+        //does not use caseId
         SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE "
                 //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date) AND (r.category != ? OR r.category IS NULL))", new Date(), ONPRC_EHRManager.REPLACED_SOAP);
         ExprColumn todaysP2 = new ExprColumn(ti, "todaysP2", p2Sql, JdbcType.VARCHAR, objectId);
         todaysP2.setLabel("P2s Entered Today");
         todaysP2.setDisplayWidth("200");
@@ -969,43 +993,47 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         yesterday.setTime(new Date());
         yesterday.add(Calendar.DATE, -1);
 
+        //does not use caseId
         SQLFragment p2Sql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE "
                 //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", yesterday.getTime());
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date) AND (r.category != ? OR r.category IS NULL))", yesterday.getTime(), ONPRC_EHRManager.REPLACED_SOAP);
         ExprColumn yesterdaysP2 = new ExprColumn(ti, "yesterdaysP2", p2Sql2, JdbcType.VARCHAR, objectId);
         yesterdaysP2.setLabel("P2s Entered Yesterday");
         yesterdaysP2.setDisplayWidth("200");
         ti.addColumn(yesterdaysP2);
 
+        //uses caseId as a proxy for rounds
         SQLFragment rmSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE "
                 + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND CAST(r.date AS date) = CAST(? as date))", new Date());
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND CAST(r.date AS date) = CAST(? as date) AND (r.category != ? OR r.category IS NULL))", new Date(), ONPRC_EHRManager.REPLACED_SOAP);
         ExprColumn todaysRemarks = new ExprColumn(ti, "todaysRemarks", rmSql, JdbcType.VARCHAR, objectId);
         todaysRemarks.setLabel("Remarks Entered Today");
         todaysRemarks.setDescription("This shows any remarks entered today for this case");
         todaysRemarks.setDisplayWidth("200");
         ti.addColumn(todaysRemarks);
 
-        SQLFragment rmSql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
-                " r WHERE "
-                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date)");
-        ExprColumn remarksOnOpenDate = new ExprColumn(ti, "remarksOnOpenDate", rmSql2, JdbcType.VARCHAR, objectId);
-        remarksOnOpenDate.setLabel("Remarks Entered On Open Date");
-        remarksOnOpenDate.setDisplayWidth("200");
-        ti.addColumn(remarksOnOpenDate);
+//        SQLFragment rmSql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
+//                " r WHERE "
+//                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
+//                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date AND (r.category != ? OR r.category IS NULL))", ONPRC_EHRManager.REPLACED_SOAP);
+//        ExprColumn remarksOnOpenDate = new ExprColumn(ti, "remarksOnOpenDate", rmSql2, JdbcType.VARCHAR, objectId);
+//        remarksOnOpenDate.setLabel("Remarks Entered On Open Date");
+//        remarksOnOpenDate.setDisplayWidth("200");
+//        ti.addColumn(remarksOnOpenDate);
 
+        //TODO: convert to a real column
         SQLFragment assesmentSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.a"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE "
                 + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.a IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date)");
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.a IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date AND (r.category != ? OR r.category IS NULL))", ONPRC_EHRManager.REPLACED_SOAP);
         ExprColumn assessmentOnOpenDate = new ExprColumn(ti, "assessmentOnOpenDate", assesmentSql, JdbcType.VARCHAR, objectId);
         assessmentOnOpenDate.setLabel("Assessment Entered On Open Date");
         assessmentOnOpenDate.setDisplayWidth("200");
         ti.addColumn(assessmentOnOpenDate);
 
+        //based on caseid
         if (ti.getColumn("mostRecentObservations") == null)
         {
             ColumnInfo col17 = getWrappedCol(us, ti, "mostRecentObservations", "mostRecentObservations", "objectid", "caseid");
@@ -1120,6 +1148,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     private void customizeProtocol(AbstractTableInfo ti)
     {
         ti.getColumn("inves").setHidden(true);
+        ti.getColumn("maxAnimals").setHidden(true);
+        ti.getColumn("title").setScale(80);
         ti.getColumn("investigatorId").setHidden(false);
         ti.getColumn("approve").setLabel("Initial Approval Date");
         ColumnInfo externalId = ti.getColumn("external_id");
@@ -1204,6 +1234,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.getColumn("reqname").setHidden(true);
         ti.getColumn("research").setHidden(true);
         ti.getColumn("avail").setHidden(true);
+        ti.getColumn("contact_emails").setHidden(true);
 
         ti.getColumn("project").setLabel("Project Id");
         ti.getColumn("project").setHidden(true);
@@ -1544,7 +1575,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         "group_concat(DISTINCT h.project.name, chr(10)) as projectNumbersAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN study.assignment h\n" +
-                        "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
                         "group by sd." + pkCol.getSelectName());
                 qd.setIsTemporary(true);
 
@@ -1611,7 +1642,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         "group_concat(DISTINCT h.value, chr(10)) as flagsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN study.flags h\n" +
-                        "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
                         "group by sd." + pkCol.getSelectName());
                 qd.setIsTemporary(true);
 
@@ -1673,7 +1704,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         "group_concat(DISTINCT h.category, chr(10)) as problemsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN study.\"Problem List\" h\n" +
-                        "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
                         "group by sd." + pkCol.getSelectName());
                 qd.setIsTemporary(true);
 
@@ -1735,7 +1766,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         "group_concat(DISTINCT h.groupId.name, chr(10)) as groupsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN ehr.animal_group_members h\n" +
-                        "  ON (sd.id = h.id AND h.dateOnly <= sd." + dateColName + " AND (sd." + dateColName + " <= h.enddateCoalesced))\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced))\n" +
                         "group by sd." + pkCol.getSelectName());
                 qd.setIsTemporary(true);
 

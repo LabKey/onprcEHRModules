@@ -15,7 +15,9 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.json.JSONObject;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -69,5 +71,15 @@ public class RoundsRemarksFormSection extends SimpleFormSection
         defaultButtons.remove("DUPLICATE");
 
         return defaultButtons;
+    }
+
+    @Override
+    public JSONObject toJSON(DataEntryFormContext ctx)
+    {
+        JSONObject ret = super.toJSON(ctx);
+
+        ret.put("serverStoreSort", "Id/curLocation/room,Id/curLocation/cage,Id");
+
+        return ret;
     }
 }

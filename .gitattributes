@@ -3,7 +3,9 @@ onprc_ehr/ONPRC_EHR.iml -text
 onprc_ehr/distributions/onprc.xml -text
 onprc_ehr/distributions/test_onprc.xml -text
 onprc_ehr/module.properties -text
+onprc_ehr/resources/etl/deprecated/Cases.sql -text
 onprc_ehr/resources/etl/deprecated/Parentage.sql -text
+onprc_ehr/resources/etl/deprecated/Problem[!!-~]List.sql -text
 onprc_ehr/resources/etl/deprecated/billing.sql -text
 onprc_ehr/resources/etl/deprecated/invoiceRuns.sql -text
 onprc_ehr/resources/etl/deprecated/invoicedItems.sql -text
@@ -40,7 +42,6 @@ onprc_ehr/resources/etl/study/Arrival.sql -text
 onprc_ehr/resources/etl/study/Assignment.sql -text
 onprc_ehr/resources/etl/study/Birth.sql -text
 onprc_ehr/resources/etl/study/Blood[!!-~]Draws.sql -text
-onprc_ehr/resources/etl/study/Cases.sql -text
 onprc_ehr/resources/etl/study/Chemistry[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Clinical[!!-~]Encounters.sql -text
 onprc_ehr/resources/etl/study/Clinical[!!-~]Observations.sql -text
@@ -64,7 +65,6 @@ onprc_ehr/resources/etl/study/Notes.sql -text
 onprc_ehr/resources/etl/study/Parasitology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Pathology[!!-~]Diagnoses.sql -text
 onprc_ehr/resources/etl/study/PregnancyConfirmation.sql -text
-onprc_ehr/resources/etl/study/Problem[!!-~]List.sql -text
 onprc_ehr/resources/etl/study/Serology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/TB[!!-~]Tests.sql -text
 onprc_ehr/resources/etl/study/Tissue[!!-~]Distributions.sql -text
@@ -162,6 +162,7 @@ onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Diagnoses.qview.xml -
 onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Necropsies.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Procedures.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Surgeries[!!-~]Plus[!!-~]Codes.qview.xml -text
+onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Surgeries[!!-~]Today.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Surgeries.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Observations/Menses.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Remarks/Behavior[!!-~]Remarks.qview.xml -text
@@ -302,6 +303,7 @@ onprc_ehr/resources/queries/study/cases/All[!!-~]Behavior[!!-~]Cases.qview.xml -
 onprc_ehr/resources/queries/study/cases/All[!!-~]Clinical[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/All[!!-~]Surgery[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Clinical[!!-~]Case[!!-~]Review.qview.xml -text
+onprc_ehr/resources/queries/study/cases/Surgery[!!-~]Case[!!-~]Review.qview.xml -text
 onprc_ehr/resources/queries/study/chemMisc.query.xml -text
 onprc_ehr/resources/queries/study/chemMisc.sql -text
 onprc_ehr/resources/queries/study/chemMisc/.qview.xml -text
@@ -793,6 +795,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/BehaviorNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/BloodAdminAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/BloodAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ClinicalAlertsNotification.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/notification/ClinicalRoundsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsLiteNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyMgmtNotification.java -text

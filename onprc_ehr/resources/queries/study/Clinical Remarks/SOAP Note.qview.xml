@@ -4,6 +4,7 @@
         <column name="date"/>
         <column name="caseid"/>
         <column name="project"/>
+        <column name="category"/>
         <column name="performedby"/>
 
         <column name="hx"/>

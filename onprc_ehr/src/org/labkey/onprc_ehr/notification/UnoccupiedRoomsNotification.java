@@ -24,6 +24,7 @@ import org.labkey.api.data.Sort;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ldk.LDKService;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
@@ -42,6 +43,11 @@ import java.util.List;
  */
 public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
 {
+    public UnoccupiedRoomsNotification(Module owner)
+    {
+        super(owner);
+    }
+
     @Override
     public String getName()
     {

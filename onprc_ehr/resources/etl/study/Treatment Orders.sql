@@ -100,6 +100,6 @@ FROM Cln_Medications cln
      left join Af_Qrf q on (q.animalid = cln.animalid)
 
 where Medication is not null and Medication != '' 
-AND (cln.ts > ? or q.ts > ?)
+AND (cln.ts > ?)
 
 ) t

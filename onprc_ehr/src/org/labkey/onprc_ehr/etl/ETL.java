@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,7 +50,11 @@ public class ETL
     {
         if (!isScheduled)
         {
-            executor = (executor == null ? Executors.newSingleThreadScheduledExecutor() : executor);
+            executor = (executor == null ? Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+                public Thread newThread(Runnable r) {
+                    return new Thread(r, "ONPRC_EHR ETL");
+                }
+            }) : executor);
 
             try
             {

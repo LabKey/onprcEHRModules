@@ -28,6 +28,7 @@
 --
 -- FROM (
 
+-- TODO: deprecate?
 SELECT * FROM (
 SELECT
   t.Id,
@@ -133,7 +134,7 @@ where m.AnimalId is not null
 and (cln.ts > ? or m.ts > ? or q.ts > ?)
 ) t1
 
- ) t
+) t
 
 LEFT JOIN labkey.ldk.integers i on (i.value < t.Duration AND ((i.value + 1) % t.intervalindays = 0))
 

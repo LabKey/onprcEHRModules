@@ -1488,46 +1488,74 @@ public class LegacyDataManager
         TableInfo realTable = DbSchema.get("studydataset").getTable(ti.getDomain().getStorageTableName());
 
         //clinical cases
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("latestHx"), null, CompareType.NONBLANK);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("assessmentOnOpenDate"), null, CompareType.NONBLANK);
         filter.addCondition(FieldKey.fromString("category"), "Clinical");
-        final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("lsid"), FieldKey.fromString("remark"), FieldKey.fromString("enddate"), FieldKey.fromString("plan"), FieldKey.fromString("latestHx"), FieldKey.fromString("mostRecentP2")));
+        filter.addCondition(FieldKey.fromString("remark"), null, CompareType.ISBLANK);
+        final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("lsid"), FieldKey.fromString("remark"), FieldKey.fromString("enddate"), FieldKey.fromString("remark"), FieldKey.fromString("assessmentOnOpenDate")));
         TableSelector ts = new TableSelector(ti, cols.values(), filter, null);
 
-        //surgical cases
-        SimpleFilter surgFilter = new SimpleFilter(FieldKey.fromString("remarksOnOpenDate"), null, CompareType.NONBLANK);
-        surgFilter.addCondition(FieldKey.fromString("category"), "Surgery");
-        Map<FieldKey, ColumnInfo> surgCols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("lsid"), FieldKey.fromString("remark"), FieldKey.fromString("remarksOnOpenDate")));
-        TableSelector surgTs = new TableSelector(ti, surgCols.values(), surgFilter, null);
-
-        final List<Map<String, Object>> surgToUpdate = new ArrayList<>();
-        surgTs.forEach(new Selector.ForEachBlock<ResultSet>()
+        final List<Map<String, Object>> toUpdate = new ArrayList<>();
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
         {
             @Override
-            public void exec(ResultSet rs) throws SQLException
+            public void exec(ResultSet object) throws SQLException
             {
-                Object ret = rs.getObject("remarksOnOpenDate");
-                if (ret instanceof Clob)
-                {
-                    int length = new Long(((Clob) ret).length()).intValue();
-                    ret = ((Clob) ret).getSubString(new Long(1), length);
-                }
-
-                if (ret.equals(rs.getObject("remark")))
-                {
-                    return;
-                }
+                Results rs = new ResultsImpl(object, cols);
 
                 Map<String, Object> row = new CaseInsensitiveHashMap<>();
                 row.put("lsid", rs.getString("lsid"));
-                row.put("remark", rs.getString("remarksOnOpenDate"));
-                surgToUpdate.add(row);
+
+                //only update if case is open
+                if (rs.getObject("assessmentOnOpenDate") != null)
+                {
+                     row.put("remark", rs.getObject("assessmentOnOpenDate"));
+                     toUpdate.add(row);
+                }
             }
         });
 
-        _log.info("Updating " + surgToUpdate.size() + " surgical cases");
-        for (Map<String, Object> row : surgToUpdate)
+        _log.info("Updating " + toUpdate.size() + " clinical cases");
+        for (Map<String, Object> row : toUpdate)
         {
             Table.update(u, realTable, row, row.get("lsid"));
         }
+
+// deprecated
+//        //surgical cases
+//        SimpleFilter surgFilter = new SimpleFilter(FieldKey.fromString("remarksOnOpenDate"), null, CompareType.NONBLANK);
+//        surgFilter.addCondition(FieldKey.fromString("category"), "Surgery");
+//        Map<FieldKey, ColumnInfo> surgCols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("lsid"), FieldKey.fromString("remark"), FieldKey.fromString("remarksOnOpenDate")));
+//        TableSelector surgTs = new TableSelector(ti, surgCols.values(), surgFilter, null);
+//
+//        final List<Map<String, Object>> surgToUpdate = new ArrayList<>();
+//        surgTs.forEach(new Selector.ForEachBlock<ResultSet>()
+//        {
+//            @Override
+//            public void exec(ResultSet rs) throws SQLException
+//            {
+//                Object ret = rs.getObject("remarksOnOpenDate");
+//                if (ret instanceof Clob)
+//                {
+//                    int length = new Long(((Clob) ret).length()).intValue();
+//                    ret = ((Clob) ret).getSubString(new Long(1), length);
+//                }
+//
+//                if (ret.equals(rs.getObject("remark")))
+//                {
+//                    return;
+//                }
+//
+//                Map<String, Object> row = new CaseInsensitiveHashMap<>();
+//                row.put("lsid", rs.getString("lsid"));
+//                row.put("remark", rs.getString("remarksOnOpenDate"));
+//                surgToUpdate.add(row);
+//            }
+//        });
+//
+//        _log.info("Updating " + surgToUpdate.size() + " surgical cases");
+//        for (Map<String, Object> row : surgToUpdate)
+//        {
+//            Table.update(u, realTable, row, row.get("lsid"));
+//        }
     }
 }

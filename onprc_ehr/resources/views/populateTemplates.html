@@ -203,7 +203,7 @@ Ext4.onReady(function(){
                         ['E-YY045','PO','SID - AM','4','4','','','20','mg/kg','','mL','0.1','','mg','','20','Standard'],
                         ['E-81310','PO','','0','0','','','6','ml/kg','','tsp','0.125','','','','','Standard'],
                         ['E-YY943','PO','BID - AM/Night','3','0','','','','','','','','','','','','Standard'],
-                        ['E-80410','PO','BID - AM/Night','3','4','262','mg/tablet','','','0.25','tablet(s)','0.25','','mg','','131','Standard'],
+                        ['E-80410','PO','BID - AM/Night','3','4','262','mg/tablet','','','','tablet(s)','0.25','','mg','','131','Standard'],
                         ['E-YY055','PO','BID - AM/Night','3','4','17.5','mg/ml','3','ml/kg','','mL','0.1','','mg','','','Standard'],
                         ['E-YY728','ID','','0','4','5','mg/ml','','mg/kg','','mL','0.05','','mg','','','Standard'],
                         ['E-YY792','IM','BID - AM/Night','3','2','0.3','mg/ml','0.01','mg/kg','','mL','0.05','','mg','','0.1','Standard'],
@@ -215,7 +215,7 @@ Ext4.onReady(function(){
                         ['E-Y2270','PO','BID - AM/Night','5','6','50','mg/ml','25','mg/kg','','mL','0.1','','mg','','250','Standard'],
                         ['E-72040','IM','BID - AM/Night','7','8','250','mg/ml','50','mg/kg','','mL','0.05','','mg','','500','Standard'],
                         ['E-79110','PO','BID - AM/Night','7','8','25','mg/tablet','1','mg/kg','','tablet(s)','0.25','','mg','','10','Standard'],
-                        ['E-YY280','PO','BID - AM/Night','7','8','25','mg/ml','1','mg/kg','','mL','0.1','','mg','','10','Standard'],
+                        ['E-YY280','IM','BID - AM/Night','7','8','25','mg/ml','1','mg/kg','','mL','0.1','','mg','','10','Standard'],
                         ['E-82070','IM','TID','7','6','300','mg','10','mg/kg','','tablet(s)','0.25','','mg','','100','Standard'],
                         ['E-719Y3','PO','BID - AM/Night','5','10','250','mg/tablet','10','mg/kg','','tablet(s)','0.25','','mg','','100','Standard'],
                         ['E-Y7921','PO','BID - AM/Night','5','6','1','mg/ml','0.5','mg/kg','','mL','0.1','','mg','','5','Standard'],
@@ -367,7 +367,7 @@ Ext4.onReady(function(){
                         ['E-X0470','PO','SID - AM','3','4','','','1','','','mL','1','','','','','Standard'],
                         ['E-X0409','PO','SID - AM','3','4','','','1','','','','','','','','','Standard'],
                         ['E-70000','IM','','','','','','','','','','','1','U','','','Standard'],
-                        ['E-78840','','','','','','','','','','','','','','','','Standard'],
+                        ['E-78840','IV','','','','','','25','mg/kg','','','','','','','','Standard'],
                         ['E-70720','INH','SID - AM','1','0','','','','','','','','1.5','%','','','Standard'],
                         ['E-YY945','SQ','','','','','','4','mg/kg','','','','','','','','Standard'],
                         ['F-10470','INH','SID - AM','1','0','','','','','','','','1','L/min','','','Standard'],
@@ -561,7 +561,7 @@ Ext4.onReady(function(){
                 records: [['Clinical Remarks', '{"s":"Sedated to perform post-exposure exam, BAR prior to sedation.\\n","o":"Did not observe any lesions characteristic of herpes B virus.\\nOr\\nLesions suggestive of herpes B virus observed.\\n","a":"Appears (does not appear) healthy.","p":"4 cc\'s of blood, conjunctival (OU), oral and gential swabs collected.","p2":"Post-exposure results pending, monitor. "}']]
             },{
                 template: ['Wound First Day', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Presented for wound to (location), BAR prior to sedation.","o":"","a":"Victim of physical trauma, (location).","p":"Administered cefazolin, ketoprofen, buprenorphine. Start cephalexin, meloxicam, tramadol on XX/XX. Wound cultures submitted. Clipped and cleaned wound, lavaged with sterile saline. Applied (bandage).","p2":"Monitor (location). Bandage change XX/XX. Wound cultures pending (XX/XX). Ceph/Melox/metro end XX/XX, tramadol ends XX/XX. "}']]
+                records: [['Clinical Remarks', '{"s":"Presented for wound to (location), BAR prior to sedation.","o":"","a":"Victim of physical trauma, (location).","p":"Administered cefazolin, ketoprofen, buprenorphine. Start cephalexin, meloxicam, tramadol on XX/XX. Wound cultures submitted. Clipped and cleaned wound, lavaged with sterile saline. Applied (bandage).","p2":"Monitor (location). Bandage change XX/XX. Wound cultures pending (XX/XX). Ceph/Melox end XX/XX, tramadol ends XX/XX. "}']]
             },{
                 template: ['Diarrhea 1st Day Colony', 'Section', 'Clinical Remarks', '', ''],
                 records: [['Clinical Remarks', '{"s":"Presented for diarrhea and dehydration, QAR prior to sedation.","o":"iStat:","a":"Dehydration (and poor body condition) secondary to diarrhea of unknown etiology. ","p":"Blood draw for iSTAT, submitted rectal fecal culture. Placed IVC (size and lcation) and administered (fluids and additives). Begin XXXX once recovered from sedation","p2":"DX. Repeat iSTAT/Hydration check XX/XX. Fecal culture pending XX/XX. XXX ends XX. "}']]
@@ -751,17 +751,197 @@ Ext4.onReady(function(){
                 ]
             }]);
 
+            //pathology form templates
+            templateRows = templateRows.concat([{
+                template: ['Necropsy', 'Form', 'Necropsies', '', ''],
+                records: [
+                    ['encounter_summaries', '', 'Gross Findings'],
+                    ['encounter_participants', '', 'Necropsy']
+                ]
+            }]);
+
+            //pathology histology
+            templateRows = templateRows.concat([{
+                template: ['SIV Female Histology Findings', 'Section', 'histology', '', ''],
+                records: [	['histology', '{"code":"T-08710"}'],
+                    ['histology', '{"code":"T-08650"}'],
+                    ['histology', '{"code":"T-08810"}'],
+                    ['histology', '{"code":"T-08510"}'],
+                    ['histology', '{"code":"T-08420"}'],
+                    ['histology', '{"code":"T-08160"}'],
+                    ['histology', '{"code":"T-08332"}'],
+                    ['histology', '{"code":"T-08520"}'],
+                    ['histology', '{"code":"T-55100"}'],
+                    ['histology', '{"code":"T-55300"}'],
+                    ['histology', '{"code":"T-53000"}'],
+                    ['histology', '{"code":"T-61100"}'],
+                    ['histology', '{"code":"T-60110"}'],
+                    ['histology', '{"code":"T-51300"}'],
+                    ['histology', '{"code":"T-93000"}'],
+                    ['histology', '{"code":"T-96000"}'],
+                    ['histology', '{"code":"T-98000"}'],
+                    ['histology', '{"code":"T-01000"}'],
+                    ['histology', '{"code":"T-06000"}'],
+                    ['histology', '{"code":"T-13000"}'],
+                    ['histology', '{"code":"T-X2003"}'],
+                    ['histology', '{"code":"T-91000"}'],
+                    ['histology', '{"code":"T-X7410"}'],
+                    ['histology', '{"code":"T-07000"}'],
+                    ['histology', '{"code":"T-42000"}'],
+                    ['histology', '{"code":"T-33010"}'],
+                    ['histology', '{"code":"T-28000"}'],
+                    ['histology', '{"code":"T-56000"}'],
+                    ['histology', '{"code":"T-57000"}'],
+                    ['histology', '{"code":"T-59000"}'],
+                    ['histology', '{"code":"T-71000"}'],
+                    ['histology', '{"code":"T-74000"}'],
+                    ['histology', '{"code":"T-62000"}'],
+                    ['histology', '{"code":"T-63000"}'],
+                    ['histology', '{"code":"T-64300"}'],
+                    ['histology', '{"code":"T-65100"}'],
+                    ['histology', '{"code":"T-65200"}'],
+                    ['histology', '{"code":"T-67000"}'],
+                    ['histology', '{"code":"T-68000"}'],
+                    ['histology', '{"code":"T-83000"}'],
+                    ['histology', '{"code":"T-87000"}'],
+                    ['histology', '{"code":"T-81000"}'],
+                    ['histology', '{"code":"T-82000"}'],
+                    ['histology', '{"code":"T-86100"}']
+                ]
+            },{
+                template: ['Standard Male Histology Findings', 'Section', 'histology', '', ''],
+                records: [	['histology', '{"code":"T-98000"}'],
+                    ['histology', '{"code":"T-55300"}'],
+                    ['histology', '{"code":"T-33010"}'],
+                    ['histology', '{"code":"T-42000"}'],
+                    ['histology', '{"code":"T-28000"}'],
+                    ['histology', '{"code":"T-08332"}'],
+                    ['histology', '{"code":"T-25000"}'],
+                    ['histology', '{"code":"T-91000"}'],
+                    ['histology', '{"code":"T-04000"}'],
+                    ['histology', '{"code":"T-08710"}'],
+                    ['histology', '{"code":"T-07000"}'],
+                    ['histology', '{"code":"T-96000"}'],
+                    ['histology', '{"code":"T-71000"}'],
+                    ['histology', '{"code":"T-93000"}'],
+                    ['histology', '{"code":"T-59000"}'],
+                    ['histology', '{"code":"T-08810"}'],
+                    ['histology', '{"code":"T-56000"}'],
+                    ['histology', '{"code":"T-57000"}'],
+                    ['histology', '{"code":"T-74000"}'],
+                    ['histology', '{"code":"T-77100"}'],
+                    ['histology', '{"code":"T-79100"}'],
+                    ['histology', '{"code":"T-77500"}'],
+                    ['histology', '{"code":"T-78000"}'],
+                    ['histology', '{"code":"T-X2003"}'],
+                    ['histology', '{"code":"T-62000"}'],
+                    ['histology', '{"code":"T-63000"}'],
+                    ['histology', '{"code":"T-64000"}'],
+                    ['histology', '{"code":"T-671000"}'],
+                    ['histology', '{"code":"T-67000"}'],
+                    ['histology', '{"code":"T-08510"}']
+                ]
+            },{
+                template: ['Standard Female Histology Findings', 'Section', 'histology', '', ''],
+                records: [	['histology', '{"code":"T-98000"}'],
+                    ['histology', '{"code":"T-55300"}'],
+                    ['histology', '{"code":"T-33010"}'],
+                    ['histology', '{"code":"T-42000"}'],
+                    ['histology', '{"code":"T-28000"}'],
+                    ['histology', '{"code":"T-08332"}'],
+                    ['histology', '{"code":"T-25000"}'],
+                    ['histology', '{"code":"T-91000"}'],
+                    ['histology', '{"code":"T-04000"}'],
+                    ['histology', '{"code":"T-08710"}'],
+                    ['histology', '{"code":"T-07000"}'],
+                    ['histology', '{"code":"T-96000"}'],
+                    ['histology', '{"code":"T-71000"}'],
+                    ['histology', '{"code":"T-93000"}'],
+                    ['histology', '{"code":"T-59000"}'],
+                    ['histology', '{"code":"T-08810"}'],
+                    ['histology', '{"code":"T-56000"}'],
+                    ['histology', '{"code":"T-57000"}'],
+                    ['histology', '{"code":"T-74000"}'],
+                    ['histology', '{"code":"T-83000"}'],
+                    ['histology', '{"code":"T-87000"}'],
+                    ['histology', '{"code":"T-81000"}'],
+                    ['histology', '{"code":"T-82000"}'],
+                    ['histology', '{"code":"T-86100"}'],
+                    ['histology', '{"code":"T-X2003"}'],
+                    ['histology', '{"code":"T-62000"}'],
+                    ['histology', '{"code":"T-63000"}'],
+                    ['histology', '{"code":"T-64000"}'],
+                    ['histology', '{"code":"T-671000"}'],
+                    ['histology', '{"code":"T-67000"}'],
+                    ['histology', '{"code":"T-08510"}']
+                ]
+            },{
+                template: ['SIV Male Histology Findings', 'Section', 'histology', '', ''],
+                records: [	['histology', '{"code":"T-08710"}'],
+                    ['histology', '{"code":"T-08650"}'],
+                    ['histology', '{"code":"T-08810"}'],
+                    ['histology', '{"code":"T-08510"}'],
+                    ['histology', '{"code":"T-08420"}'],
+                    ['histology', '{"code":"T-08160"}'],
+                    ['histology', '{"code":"T-08332"}'],
+                    ['histology', '{"code":"T-08520"}'],
+                    ['histology', '{"code":"T-55100"}'],
+                    ['histology', '{"code":"T-55300"}'],
+                    ['histology', '{"code":"T-53000"}'],
+                    ['histology', '{"code":"T-61100"}'],
+                    ['histology', '{"code":"T-60110"}'],
+                    ['histology', '{"code":"T-51300"}'],
+                    ['histology', '{"code":"T-93000"}'],
+                    ['histology', '{"code":"T-96000"}'],
+                    ['histology', '{"code":"T-98000"}'],
+                    ['histology', '{"code":"T-01000"}'],
+                    ['histology', '{"code":"T-06000"}'],
+                    ['histology', '{"code":"T-13000"}'],
+                    ['histology', '{"code":"T-X2003"}'],
+                    ['histology', '{"code":"T-91000"}'],
+                    ['histology', '{"code":"T-X7410"}'],
+                    ['histology', '{"code":"T-07000"}'],
+                    ['histology', '{"code":"T-42000"}'],
+                    ['histology', '{"code":"T-33010"}'],
+                    ['histology', '{"code":"T-28000"}'],
+                    ['histology', '{"code":"T-56000"}'],
+                    ['histology', '{"code":"T-57000"}'],
+                    ['histology', '{"code":"T-59000"}'],
+                    ['histology', '{"code":"T-71000"}'],
+                    ['histology', '{"code":"T-74000"}'],
+                    ['histology', '{"code":"T-62000"}'],
+                    ['histology', '{"code":"T-63000"}'],
+                    ['histology', '{"code":"T-64300"}'],
+                    ['histology', '{"code":"T-65100"}'],
+                    ['histology', '{"code":"T-65200"}'],
+                    ['histology', '{"code":"T-67000"}'],
+                    ['histology', '{"code":"T-68000"}'],
+                    ['histology', '{"code":"T-77100"}'],
+                    ['histology', '{"code":"T-79100"}'],
+                    ['histology', '{"code":"T-77500"}'],
+                    ['histology', '{"code":"T-78000"}']
+                ]
+            }]);
+
+            //gross findings
+            templateRows = templateRows.concat([{
+                template: ['Gross Findings', 'Section', 'encounter_summaries', '', ''],
+                records: [
+                    ['encounter_summaries', '{"remark":"External:\\nPresented is a    macaque, weighing  kg, in   BCS.\\nThe hair coat is\\n \\nBody Cavities:\\n__________ subcutaneous and visceral fat stores\\n \\nRespiratory System:\\n \\nCardiovascular System:\\n \\nHemopoietic System:\\n__________ amount of thymic tissue\\nSpleen, visceral and peripheral lymph nodes: no gross lesions\\nBone marrow not examined\\n \\nLiver and Pancreas:\\n \\nGastrointestinal Tract:\\nSalivary glands, esophagus: no gross lesions\\nStomach\\nContents:\\nMucosa: no gross lesions\\nSmall intestinal\\nContents:\\nMucosa: no gross lesions\\nLarge intestinal\\nContents:\\nMucosa: no gross lesions\\n \\nGenitourinary System:\\nKidneys, ureters, urinary bladder, reproductive tract: no gross lesions\\n \\nEndocrine System:\\n \\nMusculoskeletal System:\\nStifle, shoulder, coxofemoral joints: no gross lesions\\n \\nCentral Nervous System:\\nBrain: no gross lesions\\nSpinal cord: not examined\\n \\nSUMMARY OF GROSS FINDINGS"}']
+                ]
+            }]);
+
             //surgery post-op meds
             templateRows = templateRows.concat([{
                 template: ['Analgesia - Standard', 'Section', 'Treatment Orders', '', ''],
                 records: [
-                    ['Treatment Orders', '{"code":"E-YY792","frequency_meaning":"TID","amount":"0.3","duration":2,"offset":0}'],
-                    ['Treatment Orders', '{"code":"E-77851","frequency_meaning":"SID - Night","amount":"1","duration":2,"offset":0}']
+                    ['Treatment Orders', '{"code":"E-YY792","frequency_meaning":"TID","amount":"0.3","duration":2,"offset":3}'],
+                    ['Treatment Orders', '{"code":"E-77851","frequency_meaning":"SID - Night","amount":"1","duration":1,"offset":0}']
                 ]
             },{
                 template: ['Analgesia - Biopsies', 'Section', 'Treatment Orders', '', ''],
                 records: [
-                    ['Treatment Orders', '{"code":"E-YY792","frequency_meaning":"BID - AM/Night","amount":"0.3","duration":2,"offset":0}']
+                    ['Treatment Orders', '{"code":"E-YY792","frequency_meaning":"BID - AM/Night","amount":"0.3","duration":1,"offset":0}']
                 ]
             },{
                 template: ['Analgeia - Carprofen', 'Section', 'Treatment Orders', '', ''],
@@ -771,26 +951,25 @@ Ext4.onReady(function(){
             },{
                 template: ['Antibiotics - Cefazolin 5d', 'Section', 'Treatment Orders', '', ''],
                 records: [
-                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":5,"offset":"1d"}']
+                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":5,"offset":0}']
                 ]
             },{
                 template: ['Antibiotics - Cefazolin 3d', 'Section', 'Treatment Orders', '', ''],
                 records: [
-                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":3,"offset":"1d"}']
+                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":3,"offset":0}']
                 ]
             },{
                 template: ['Antibiotics - Cefazolin 2d', 'Section', 'Treatment Orders', '', ''],
                 records: [
-                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":2,"offset":"1d"}']
+                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":2,"offset":0}']
                 ]
             },{
                 template: ['Antibiotics - Enrofloxacin 5d', 'Section', 'Treatment Orders', '', ''],
-                records: [	['Treatment Orders', '{"code":"E-719Y5","frequency_meaning":"SID - AM","duration":5,"offset":1}']
+                records: [	['Treatment Orders', '{"code":"E-719Y5","frequency_meaning":"SID - AM","duration":5,"offset":0}']
                 ]
             },{
                 template: ['Antibiotics - Cefazolin 3 doses', 'Section', 'Treatment Orders', '', ''],
-                records: [	['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":1,"offset":1}'],
-                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"SID - AM","duration":1,"offset":37}']
+                records: [	['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":1,"offset":0}']
                 ]
             }]);
 

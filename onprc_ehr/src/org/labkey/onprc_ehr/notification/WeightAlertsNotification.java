@@ -27,6 +27,7 @@ import org.labkey.api.data.Sort;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.gwt.client.util.StringUtils;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryDefinition;
 import org.labkey.api.query.QueryException;
@@ -58,6 +59,11 @@ import java.util.TreeMap;
  */
 public class WeightAlertsNotification extends AbstractEHRNotification
 {
+    public WeightAlertsNotification(Module owner)
+    {
+        super(owner);
+    }
+
     public String getName()
     {
         return "Weight Drop Alerts";

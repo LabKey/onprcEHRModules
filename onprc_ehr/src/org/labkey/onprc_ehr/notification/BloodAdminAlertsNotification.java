@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.notification;
 
 import org.labkey.api.data.Container;
+import org.labkey.api.module.Module;
 import org.labkey.api.security.User;
 
 import java.util.Date;
@@ -27,6 +28,11 @@ import java.util.Date;
  */
 public class BloodAdminAlertsNotification extends ColonyAlertsNotification
 {
+    public BloodAdminAlertsNotification(Module owner)
+    {
+        super(owner);
+    }
+
     public static enum TimeOfDay {
         AM(9),
         Noon(12),
