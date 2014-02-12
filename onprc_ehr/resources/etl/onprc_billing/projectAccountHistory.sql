@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
+SELECT * FROM (
 select
-        rpi.projectid as project,
-        --rpi.IACUCCode as project,
+    rpa.projectid as project,
 		rpa.ohsuaccountnumber as account,
-		rpa.aliasstartdate as startdate,
-		rpa.AliasExpirationDate as enddate,
+		CASE
+			WHEN (rpa.aliasstartdate >= rpa.DateCreated) THEN CAST(rpa.aliasstartdate AS DATE)
+			ELSE CAST(rpa.DateCreated  AS DATE)
+		END as startdate,
+		CASE
+			WHEN (rpa.AliasExpirationDate >= rpa.DateDisabled) THEN CAST(rpa.DateDisabled AS DATE)
+			ELSE CAST(rpa.AliasExpirationDate AS DATE)
+		END as enddate,
 		rpa.objectid
-	from Ref_ProjectsIACUC rpi join Ref_ProjectAccounts rpa on rpi.ProjectID = rpa.ProjectID
-
-AND (rpi.ts > ? or rpa.ts > ?)
-
+	from Ref_ProjectAccounts rpa
+  where rpa.ts > ?
+) t WHERE t.startdate >= '2010-01-01'

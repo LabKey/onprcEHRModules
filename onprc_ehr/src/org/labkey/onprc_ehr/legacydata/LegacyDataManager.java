@@ -1491,6 +1491,7 @@ public class LegacyDataManager
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("assessmentOnOpenDate"), null, CompareType.NONBLANK);
         filter.addCondition(FieldKey.fromString("category"), "Clinical");
         filter.addCondition(FieldKey.fromString("remark"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("isOpen"), true, CompareType.EQUAL);
         final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("lsid"), FieldKey.fromString("remark"), FieldKey.fromString("enddate"), FieldKey.fromString("remark"), FieldKey.fromString("assessmentOnOpenDate")));
         TableSelector ts = new TableSelector(ti, cols.values(), filter, null);
 
@@ -1506,7 +1507,7 @@ public class LegacyDataManager
                 row.put("lsid", rs.getString("lsid"));
 
                 //only update if case is open
-                if (rs.getObject("assessmentOnOpenDate") != null)
+                if (rs.getObject("remark") == null && rs.getObject("assessmentOnOpenDate") != null)
                 {
                      row.put("remark", rs.getObject("assessmentOnOpenDate"));
                      toUpdate.add(row);

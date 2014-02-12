@@ -73,9 +73,9 @@ public class LabworkFormSection extends SimpleGridPanel
     }
 
     @Override
-    public JSONObject toJSON(DataEntryFormContext ctx)
+    public JSONObject toJSON(DataEntryFormContext ctx, boolean includeFormElements)
     {
-        JSONObject ret = super.toJSON(ctx);
+        JSONObject ret = super.toJSON(ctx, includeFormElements);
 
         ret.put("serverStoreSort", "Id,runid,testid/sort_order");
 

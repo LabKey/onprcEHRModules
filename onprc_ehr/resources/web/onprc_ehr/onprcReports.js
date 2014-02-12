@@ -619,4 +619,14 @@ EHR.reports.measurementsPivoted = function(panel, tab, viewName){
     });
 };
 
+EHR.reports.onprcSnapshot = function(panel, tab){
+    EHR.reports.snapshot(panel, tab, true);
+};
 
+EHR.reports.onprcFullClinicalHistory = function(panel, tab){
+    EHR.reports.clinicalHistory(panel, tab, true, true);
+};
+
+EHR.reports.onprcClinicalHistory = function(panel, tab){
+    EHR.reports.clinicalHistory(panel, tab, true);
+};

@@ -15,17 +15,17 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.ExtendedAnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
-import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
-import org.labkey.api.security.permissions.Permission;
+import org.labkey.api.security.PrincipalType;
+import org.labkey.api.security.SecurityManager;
+import org.labkey.api.security.UserPrincipal;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
@@ -39,6 +39,7 @@ import java.util.List;
 public class SurgeryFormType extends EncounterForm
 {
     public static final String NAME = "Surgeries";
+    public static final String DEFAULT_GROUP = "DCM SSU";
 
     public SurgeryFormType(DataEntryFormContext ctx, Module owner)
     {
@@ -59,6 +60,7 @@ public class SurgeryFormType extends EncounterForm
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Surgery.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/OpenSurgeryCasesWindow.js"));
+        setDisplayReviewRequired(true);
 
         for (FormSection s : this.getFormSections())
         {
@@ -74,6 +76,20 @@ public class SurgeryFormType extends EncounterForm
         ret.add("OPENSURGERYCASES");
 
         return ret;
+    }
+
+    @Override
+    protected Integer getDefaultAssignedTo()
+    {
+        UserPrincipal up = SecurityManager.getPrincipal(DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
+    }
+
+    @Override
+    protected Integer getDefaultReviewRequiredPrincipal()
+    {
+        UserPrincipal up = SecurityManager.getPrincipal(DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
     }
 
     @Override

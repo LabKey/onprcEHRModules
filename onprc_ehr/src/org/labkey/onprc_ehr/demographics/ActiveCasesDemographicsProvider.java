@@ -47,7 +47,7 @@ public class ActiveCasesDemographicsProvider extends AbstractListDemographicsPro
         keys.add(FieldKey.fromString("enddate"));
         keys.add(FieldKey.fromString("reviewdate"));
         keys.add(FieldKey.fromString("category"));
-        keys.add(FieldKey.fromString("problemCategories"));
+        keys.add(FieldKey.fromString("allProblemCategories"));
         keys.add(FieldKey.fromString("assignedvet"));
         keys.add(FieldKey.fromString("assignedvet/UserId/DisplayName"));
         keys.add(FieldKey.fromString("performedby"));

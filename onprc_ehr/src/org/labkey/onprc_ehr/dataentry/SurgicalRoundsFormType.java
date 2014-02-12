@@ -24,6 +24,9 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.PrincipalType;
+import org.labkey.api.security.SecurityManager;
+import org.labkey.api.security.UserPrincipal;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
@@ -56,28 +59,7 @@ public class SurgicalRoundsFormType extends TaskForm
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/SurgicalRounds.js"));
-    }
-
-    @Override
-    protected List<String> getButtonConfigs()
-    {
-        List<String> ret = super.getButtonConfigs();
-
-        int idx = ret.indexOf("SUBMIT");
-        assert idx > -1;
-
-        ret.add(idx, "REVIEW");
-
-        return ret;
-    }
-
-    @Override
-    protected List<String> getMoreActionButtonConfigs()
-    {
-        List<String> ret = super.getMoreActionButtonConfigs();
-        ret.remove("REVIEW");
-
-        return ret;
+        setDisplayReviewRequired(true);
     }
 
     @Override
@@ -89,4 +71,17 @@ public class SurgicalRoundsFormType extends TaskForm
         return super.canInsert();
     }
 
+    @Override
+    protected Integer getDefaultAssignedTo()
+    {
+        UserPrincipal up = SecurityManager.getPrincipal(SurgeryFormType.DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
+    }
+
+    @Override
+    protected Integer getDefaultReviewRequiredPrincipal()
+    {
+        UserPrincipal up = SecurityManager.getPrincipal(SurgeryFormType.DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
+    }
 }

@@ -41,6 +41,40 @@ exports.init = function(EHR){
         }
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Treatment Orders', function(scriptErrors, helper, row, oldRow){
+        var fieldPairs = [
+            ['dosage_units', 'dosage'],
+            ['conc_units', 'concentration'],
+            ['vol_units', 'volume'],
+            ['amount_units', 'amount']
+        ];
+
+        //if we have a value entered for units, but no value in the corresponding numeric field, clear units
+        for (var i=0;i<fieldPairs.length;i++){
+            var pair = fieldPairs[i];
+            if (row[pair[0]] && LABKEY.ExtAdapter.isEmpty(row[pair[1]])){
+                row[pair[0]] = null;
+            }
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Drug Administration', function(scriptErrors, helper, row, oldRow){
+        var fieldPairs = [
+            ['dosage_units', 'dosage'],
+            ['conc_units', 'concentration'],
+            ['vol_units', 'volume'],
+            ['amount_units', 'amount']
+        ];
+
+        //if we have a value entered for units, but no value in the corresponding numeric field, clear units
+        for (var i=0;i<fieldPairs.length;i++){
+            var pair = fieldPairs[i];
+            if (row[pair[0]] && LABKEY.ExtAdapter.isEmpty(row[pair[1]])){
+                row[pair[0]] = null;
+            }
+        }
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Treatment Orders', function(helper, scriptErrors, row, oldRow){
         if (!row.code){
             EHR.Server.Utils.addError(scriptErrors, 'code', 'Must enter a treatment', 'WARN');

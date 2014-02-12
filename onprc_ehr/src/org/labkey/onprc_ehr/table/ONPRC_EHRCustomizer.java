@@ -46,7 +46,11 @@ import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.permissions.ReadPermission;
+import org.labkey.api.study.DataSet;
 import org.labkey.api.study.DataSetTable;
+import org.labkey.api.study.Study;
+import org.labkey.api.study.StudyService;
+import org.labkey.api.util.PageFlowUtil;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 
@@ -56,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,6 +73,7 @@ import java.util.Set;
 public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 {
     private static final Logger _log = Logger.getLogger(ONPRC_EHRCustomizer.class);
+    private Map<String, DataSet> _cachedDatasets;
 
     public ONPRC_EHRCustomizer()
     {
@@ -76,6 +82,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     public void customize(TableInfo table)
     {
+        _cachedDatasets = new HashMap<>();
+
         if (table instanceof AbstractTableInfo)
         {
             customizeColumns((AbstractTableInfo) table);
@@ -187,6 +195,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             appendGroupsAtTimeCol(us, ds, dateColName);
             appendProblemsAtTimeCol(us, ds, dateColName);
             appendFlagsAtTimeCol(us, ds, dateColName);
+            appendIsAssignedAtTimeCol(us, ds, dateColName);
         }
     }
 
@@ -205,6 +214,20 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         project.setFk(new QueryForeignKey(us, us.getContainer(), "project", "project", "displayName"));
                     else if (project.getJavaClass().equals(String.class))
                         project.setFk(new QueryForeignKey(us, us.getContainer(), "project", "displayName", "displayName"));
+                }
+            }
+        }
+
+        ColumnInfo projectName = ti.getColumn("projectName");
+        if (projectName != null)
+        {
+            projectName.setLabel("Center Project");
+            if (!ti.getName().equalsIgnoreCase("project"))
+            {
+                UserSchema us = getEHRUserSchema(ti, "ehr");
+                if (us != null)
+                {
+                    projectName.setFk(new QueryForeignKey(us, us.getContainer(), "projectNames", "displayName", "displayName"));
                 }
             }
         }
@@ -387,6 +410,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ds.addColumn(col);
         }
 
+        if (ds.getColumn("activeTreatments") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "activeTreatments", "demographicsActiveTreatments");
+            col.setLabel("Active Treatments");
+            col.setDescription("This provides a summary of active treatments for this animal");
+            ds.addColumn(col);
+        }
+
         if (ds.getColumn("returnLocation") == null)
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "returnLocation", "demographicsReturnLocation");
@@ -545,6 +576,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ds.addColumn(col);
         }
 
+        if (ds.getColumn("surgeryChecklist") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "surgeryChecklist", "surgeryChecklist");
+            col.setLabel("Surgery Checklist");
+            col.setDescription("Shows information to review prior to surgeries");
+            ds.addColumn(col);
+        }
+
         if (ds.getColumn("demographicsAssignmentHistory") == null)
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "assignmentHistory", "demographicsAssignmentHistory");
@@ -619,11 +658,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String problemCategories = "problemCategories";
         if (ti.getColumn(problemCategories) == null)
         {
-            TableInfo pl = getStudyUserSchema(ti).getTable("Problem List");
-            if (pl == null)
-                return;
-
-            TableInfo realTable = getRealTable(pl);
+            TableInfo realTable = getRealTableForDataSet(ti, "Problem List");
             if (realTable == null)
                 return;
 
@@ -667,11 +702,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String lastVetReview = "lastVetReview";
         if (ti.getColumn(lastVetReview) == null)
         {
-            TableInfo obsTable = getTableInfo(ti, "study", "clinical_observations");
-            if (obsTable != null)
+            TableInfo obsRealTable = getRealTableForDataSet(ti, "Clinical Observations");
+            if (obsRealTable != null)
             {
-                TableInfo obsRealTable = getRealTable(obsTable);
-
                 SQLFragment obsSql = new SQLFragment("(SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId)", ONPRC_EHRManager.VET_REVIEW);
                 ExprColumn obsCol = new ExprColumn(ti, lastVetReview, obsSql, JdbcType.TIMESTAMP, ti.getColumn("Id"));
                 obsCol.setLabel("Last Vet Review");
@@ -691,8 +724,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 ti.addColumn(roundsCol);
 
                 String daysSinceLastRounds = "daysSinceLastRounds";
-                SQLFragment roundsSql2 = new SQLFragment("(SELECT coalesce((" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "max(t.date)") + "), 999) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category != ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId AND " + ExprColumn.STR_TABLE_ALIAS + ".objectid = t.caseid)", ONPRC_EHRManager.VET_REVIEW);
-                ExprColumn roundsCol2 = new ExprColumn(ti, daysSinceLastRounds, roundsSql2, JdbcType.INTEGER, ti.getColumn("Id"), ti.getColumn("objectid"));
+                SQLFragment roundsSql2 = new SQLFragment(ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category != ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId AND " + ExprColumn.STR_TABLE_ALIAS + ".objectid = t.caseid), " + ExprColumn.STR_TABLE_ALIAS + ".date)"), ONPRC_EHRManager.VET_REVIEW);
+                ExprColumn roundsCol2 = new ExprColumn(ti, daysSinceLastRounds, roundsSql2, JdbcType.INTEGER, ti.getColumn("Id"), ti.getColumn("objectid"), ti.getColumn("date"));
                 roundsCol2.setLabel("Days Since Last Rounds Observations");
                 ti.addColumn(roundsCol2);
             }
@@ -833,11 +866,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String hxName = "mostRecentHx";
         if (ti.getColumn(hxName) == null)
         {
-            TableInfo clinRemarks = getStudyUserSchema(ti).getTable("Clinical Remarks");
-            if (clinRemarks == null)
-                return;
-
-            TableInfo realTable = getRealTable(clinRemarks);
+            TableInfo realTable = getRealTableForDataSet(ti, "Clinical Remarks");
             if (realTable == null)
             {
                 _log.warn("Unable to find real table for clin remarks");
@@ -928,36 +957,30 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn(hxName) != null)
             return;
 
-        UserSchema us = getStudyUserSchema(ti);
-        TableInfo clinRemarks = us.getTable("Clinical Remarks");
-        if (clinRemarks == null)
-            return;
-
-        TableInfo realTable = getRealTable(clinRemarks);
+        TableInfo realTable = getRealTableForDataSet(ti, "Clinical Remarks");
         if (realTable == null)
         {
             _log.warn("Unable to find real table for clin remarks");
             return;
         }
 
+        String prefix = ti.getSqlDialect().isSqlServer() ? " TOP 1 " : "";
+        String suffix = ti.getSqlDialect().isSqlServer() ? "" : " LIMIT 1 ";
+
         //uses caseId
         ColumnInfo objectId = ti.getColumn("objectid");
         String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
-        SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.hx"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
-                " r WHERE (r.category != ? OR r.category IS NULL) AND r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 WHERE "
-                + " r2.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r2.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r2.hx is not null AND (r2.category != ? OR r2.category IS NULL)) AND "
-                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid" +
-                ")", ONPRC_EHRManager.REPLACED_SOAP, ONPRC_EHRManager.REPLACED_SOAP
-        );
-        ExprColumn latestHx = new ExprColumn(ti, hxName, sql, JdbcType.VARCHAR, objectId);
+        SQLFragment latestHxSql = new SQLFragment("(SELECT " + prefix + " (" + "r.hx" + ") as _expr FROM " + realTable.getSelectName() +
+                " r WHERE "
+                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.hx IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc " + suffix + ")", ONPRC_EHRManager.REPLACED_SOAP);
+
+        ExprColumn latestHx = new ExprColumn(ti, hxName, latestHxSql, JdbcType.VARCHAR, objectId, ti.getColumn("Id"));
         latestHx.setLabel("Latest Hx For Case");
         latestHx.setDisplayWidth("200");
         ti.addColumn(latestHx);
 
         //does not use caseId
-        String prefix = ti.getSqlDialect().isSqlServer() ? " TOP 1 " : "";
-        String suffix = ti.getSqlDialect().isSqlServer() ? "" : " LIMIT 1 ";
         SQLFragment recentp2Sql = new SQLFragment("(SELECT " + prefix + " (" + "r.p2" + ") as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
                 //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
@@ -1036,6 +1059,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         //based on caseid
         if (ti.getColumn("mostRecentObservations") == null)
         {
+            UserSchema us = getStudyUserSchema(ti);
             ColumnInfo col17 = getWrappedCol(us, ti, "mostRecentObservations", "mostRecentObservations", "objectid", "caseid");
             col17.setLabel("Most Recent Observations");
             col17.setDescription("Displays the most recent set of observations associated with this case");
@@ -1050,12 +1074,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn(name) != null)
             return;
 
-        UserSchema us = getStudyUserSchema(ti);
-        TableInfo clinRemarks = us.getTable("Clinical Encounters");
-        if (clinRemarks == null)
-            return;
-
-        TableInfo realTable = getRealTable(clinRemarks);
+        TableInfo realTable = getRealTableForDataSet(ti, "Clinical Encounters");
         if (realTable == null)
         {
             _log.warn("Unable to find real table for clin encounters");
@@ -1347,17 +1366,17 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
                         public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
                         {
-                            String runId = (String)ctx.get("runIdPLT");
-                            String id = (String)ctx.get("Id");
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
+                            String runId = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdPLT"));
+                            String id = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
+                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
                         }
 
                         @Override
                         public void addQueryFieldKeys(Set<FieldKey> keys)
                         {
                             super.addQueryFieldKeys(keys);
-                            keys.add(FieldKey.fromString("runIdPLT"));
-                            keys.add(FieldKey.fromString("Id"));
+                            keys.add(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdPLT"));
+                            keys.add(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
                         }
                     };
                 }
@@ -1376,17 +1395,17 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
                         public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
                         {
-                            String runId = (String)ctx.get("runIdHCT");
-                            String id = (String)ctx.get("Id");
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary('" + runId + "', '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
+                            String runId = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdHCT"));
+                            String id = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
+                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
                         }
 
                         @Override
                         public void addQueryFieldKeys(Set<FieldKey> keys)
                         {
                             super.addQueryFieldKeys(keys);
-                            keys.add(FieldKey.fromString("runIdHCT"));
-                            keys.add(FieldKey.fromString("Id"));
+                            keys.add(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdHCT"));
+                            keys.add(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
                         }
                     };
                 }
@@ -1422,6 +1441,43 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 table.addColumn(col);
             }
         }
+    }
+
+    private TableInfo getRealTableForDataSet(AbstractTableInfo ti, String label)
+    {
+        Container ehrContainer = EHRService.get().getEHRStudyContainer(ti.getUserSchema().getContainer());
+        if (ehrContainer == null)
+            return null;
+
+        DataSet ds;
+        String key = ehrContainer.getId() + "||" + label;
+        if (_cachedDatasets.containsKey(key))
+        {
+            ds = _cachedDatasets.get(key);
+        }
+        else
+        {
+            Study s = StudyService.get().getStudy(ehrContainer);
+            if (s == null)
+                return null;
+
+            ds = s.getDataSetByLabel(label);
+            if (ds == null)
+            {
+                _log.error("A dataset was requested that does not exist: " + label);
+            }
+
+            _cachedDatasets.put(key, null);
+        }
+
+        if (ds != null)
+        {
+            String tableName = ds.getDomain().getStorageTableName();
+            DbSchema dbSchema = DbSchema.get("studydataset");
+            return dbSchema.getTable(tableName);
+        }
+
+        return null;
     }
 
     private TableInfo getRealTable(TableInfo targetTable)
@@ -1535,6 +1591,38 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     {
         List<ColumnInfo> pks = ti.getPkColumns();
         return (pks.size() != 1) ? null : pks.get(0);
+    }
+
+    private void appendIsAssignedAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)
+    {
+        Container ehrContainer = EHRService.get().getEHRStudyContainer(ds.getUserSchema().getContainer());
+        if (ehrContainer == null)
+            return;
+
+        String name = "isAssignedAtTime";
+        if (ds.getColumn(name) != null)
+            return;
+
+        if (ds.getColumn("Id") == null || ds.getColumn("date") == null || ds.getColumn("project") == null)
+            return;
+
+        if (matches(ds, "study", "assignment"))
+            return;
+
+        TableInfo realTable = getRealTableForDataSet(ds, "Assignment");
+        if (realTable == null)
+            return;
+
+        String idColSql = ds.getColumn("Id").getValueSql(ExprColumn.STR_TABLE_ALIAS).toString();
+        String dateColSql = ds.getColumn("date").getValueSql(ExprColumn.STR_TABLE_ALIAS).toString();
+        SQLFragment sql = new SQLFragment("CASE " +
+            " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IS NULL THEN NULL " +
+            " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project NOT IN (select a.project FROM " + realTable.getSelectName() + " a WHERE a.participantid = " + idColSql + " AND CAST(a.date AS DATE) <= CAST(" + dateColSql + " as DATE) AND (a.enddate IS NULL OR a.enddate >= " + dateColSql + ")) THEN 'Y'" +
+            " ELSE 'N' END");
+        ExprColumn newCol = new ExprColumn(ds, name, sql, JdbcType.VARCHAR, ds.getColumn("Id"), ds.getColumn("date"), ds.getColumn("project"));
+        newCol.setLabel("Is Assigned At Time?");
+        newCol.setDescription("Displays whether the animal is assigned to the selected project on the date of each record");
+        ds.addColumn(newCol);
     }
 
     private void appendAssignmentAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)

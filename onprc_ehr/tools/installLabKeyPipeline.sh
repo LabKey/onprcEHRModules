@@ -45,3 +45,9 @@ echo "Removing folder: $DIR"
 rm -Rf $DIR
 echo "GZipping distribution"
 gzip $TAR
+
+echo "Updating pipeline code"
+su labkey -c 'svn update /usr/local/labkey/svn/trunk/pipeline_code/'
+
+echo "cleaning up installers, leaving 5 most recent"
+ls -tr | grep '^LabKey.*\.gz$' | head -n -5 | xargs rm

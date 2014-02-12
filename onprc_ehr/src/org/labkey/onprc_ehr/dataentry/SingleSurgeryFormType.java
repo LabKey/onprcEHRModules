@@ -26,6 +26,9 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.PrincipalType;
+import org.labkey.api.security.SecurityManager;
+import org.labkey.api.security.UserPrincipal;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
@@ -59,6 +62,7 @@ public class SingleSurgeryFormType extends EncounterForm
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Surgery.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/OpenSurgeryCasesWindow.js"));
+        setDisplayReviewRequired(true);
 
         for (FormSection s : this.getFormSections())
         {
@@ -83,5 +87,19 @@ public class SingleSurgeryFormType extends EncounterForm
             return false;
 
         return super.canInsert();
+    }
+
+    @Override
+    protected Integer getDefaultAssignedTo()
+    {
+        UserPrincipal up = SecurityManager.getPrincipal(SurgeryFormType.DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
+    }
+
+    @Override
+    protected Integer getDefaultReviewRequiredPrincipal()
+    {
+        UserPrincipal up = SecurityManager.getPrincipal(SurgeryFormType.DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
     }
 }

@@ -52,27 +52,6 @@ public class AuxProcedureFormType extends TaskForm
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ResearchProcedures.js"));
-    }
-
-    @Override
-    protected List<String> getButtonConfigs()
-    {
-        List<String> ret = super.getButtonConfigs();
-
-        int idx = ret.indexOf("SUBMIT");
-        assert idx > -1;
-
-        ret.add(idx, "REVIEW");
-
-        return ret;
-    }
-
-    @Override
-    protected List<String> getMoreActionButtonConfigs()
-    {
-        List<String> ret = super.getMoreActionButtonConfigs();
-        ret.remove("REVIEW");
-
-        return ret;
+        setDisplayReviewRequired(true);
     }
 }

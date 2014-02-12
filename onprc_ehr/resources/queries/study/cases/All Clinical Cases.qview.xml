@@ -5,7 +5,7 @@
         <column name="Id/curLocation/cage"/>
         <column name="date"/>
         <column name="enddate"/>
-        <column name="problemCategories"/>
+        <column name="allProblemCategories"/>
         <column name="assignedvet/UserId/DisplayName">
             <properties>
                 <property name="columnTitle" value="Assigned Vet"/>

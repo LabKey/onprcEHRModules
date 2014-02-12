@@ -7,9 +7,10 @@
         <column name="mostRecentRemark"/>
         <column name="lastVetReview"/>
         <column name="Id/utilization/use"/>
+        <column name="isActive"/>
     </columns>
     <filters>
-        <filter column="isActive" operator="eq" value="true"/>
+        <!--<filter column="isActive" operator="eq" value="true"/>-->
         <filter column="category" operator="eq" value="Surgery"/>
     </filters>
     <sorts>

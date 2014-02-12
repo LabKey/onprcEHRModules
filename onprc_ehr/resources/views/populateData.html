@@ -354,6 +354,12 @@ Ext4.onReady(function(){
             queryName: 'stool_score',
             pk: 'rowid'
         },{
+            label: 'SIB Score',
+            populateFn: 'populateSibScore',
+            schemaName: 'ehr_lookups',
+            queryName: 'sib_score',
+            pk: 'rowid'
+        },{
             label: 'Drug Reason',
             populateFn: 'populateDrugReason',
             schemaName: 'ehr_lookups',
@@ -5036,6 +5042,7 @@ Ext4.onReady(function(){
             ['att_score', 'Attitude Score', 'value'],
             ['hyd_score', 'Hyd Score', 'value'],
             ['stool_score', 'Stool Score', 'value'],
+            ['sib_score', 'SIB Score', 'value'],
             ['incision_score', 'Incision Score', 'value'],
             ['tissue_sample_type', 'Tissue Distribution Sample Type', 'value'],
             ['tissue_distribution_category', 'Tissue Distribution Request Category', 'value'],
@@ -5296,6 +5303,31 @@ Ext4.onReady(function(){
                 ['Scant', 12],
                 ['None', 13],
                 ['Unknown', 14]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateSibScore: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'sib_score',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value,sort_order').split(',');
+
+            var data = [
+                ['0', 1],
+                ['1.1', 2],
+                ['1.2', 3],
+                ['1.3', 4],
+                ['1', 4],
+                ['2', 5],
+                ['3', 6]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -7496,19 +7528,20 @@ Ext4.onReady(function(){
             var data = [
                 ['N/A','N/A', 1],
                 ['Whole Body','Whole Body', 2],                
-                ['Abd/Thorax','Abd/Thorax', 3],
-                ['EENT','EENT', 4],
-                ['Integ','Integ', 5],
-                ['MS','MS', 6],
-                ['Oral','Oral', 7],
-                ['PLN','PLN', 8],
-                ['U/G','U/G', 9],                
-                ['Other','Other', 10],
-                ['Incision: Main','Incision: Main', 11],
-                ['Incision: Port','Incision: Port', 12],
-                ['Incision: L-Port','Incision: L-Port', 13],
-                ['Incision: R-Port','Incision: R-Port', 14],
-                ['Incision: All','Incision: All', 15]
+                ['Abdomen','Abdomen', 3],
+                ['Thorax','Thorax', 4],
+                ['EENT','EENT', 5],
+                ['Integ','Integ', 6],
+                ['MS','MS', 7],
+                ['Oral','Oral', 8],
+                ['PLN','PLN', 9],
+                ['U/G','U/G', 10],
+                ['Other','Other', 11],
+                ['Incision: Main','Incision: Main', 12],
+                ['Incision: Port','Incision: Port', 13],
+                ['Incision: L-Port','Incision: L-Port', 14],
+                ['Incision: R-Port','Incision: R-Port', 15],
+                ['Incision: All','Incision: All', 16]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -7772,9 +7805,9 @@ Ext4.onReady(function(){
                 ['treatments' ,'Clinical' ,'query' ,'Medication Orders' ,'true' ,'' ,'study' ,'Treatment Orders', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains a list of all orders for treatments'],
                 ['drug' ,'Clinical' ,'query' ,'Medications Given' ,'true' ,'' ,'study' ,'Drug Administration', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains records of all medications administered to each animal'],
                 ['weight' ,'Colony Management' ,'js' ,'Weights' ,'true' ,'' ,'study' ,'weightGraph', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal\'s weight, including a graph'],
-                ['clinicalHistory' ,'Clinical' ,'js' ,'Clinical History' ,'true' ,'' ,'study' ,'clinicalHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
-                ['behaviorHistory' ,'Behavior' ,'js' ,'Full History' ,'true' ,'' ,'study' ,'clinicalHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
-                ['fullClinicalHistory' ,'Pathology' ,'js' ,'Clinical History - Full' ,'true' ,'' ,'study' ,'fullClinicalHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
+                ['clinicalHistory' ,'Clinical' ,'js' ,'Clinical History' ,'true' ,'' ,'study' ,'onprcClinicalHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
+                ['behaviorHistory' ,'Behavior' ,'js' ,'Full History' ,'true' ,'' ,'study' ,'onprcClinicalHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
+                ['fullClinicalHistory' ,'Pathology' ,'js' ,'Clinical History - Full' ,'true' ,'' ,'study' ,'onprcFullClinicalHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains an overview of the animal\'s clinical history'],
 
                 ['clinMedicationSchedule' ,'Daily Reports' ,'js' ,'Clinical Medication Schedule' ,'true', '' ,'study' ,'clinMedicationSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
                 ['dietSchedule' ,'Daily Reports' ,'js' ,'Diets', 'true', '' , 'study' ,'dietSchedule', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of daily treatments to be administered'],
@@ -7806,8 +7839,8 @@ Ext4.onReady(function(){
                 //['dnaBank' ,'Genetics' ,'query' ,'DNA Bank' ,'true' ,'' ,'DNABank' ,'Samples', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the inbreeding coefficient of each animal, where pedigree data is available. The inbreeding coefficient is the kinship coefficient between the individual\'s parents. It measures the probability that the two alleles of a gene are identical by descent in the same individual (autozygosity). It is zero if the individual is not inbred.'],
 
                 ['TB' ,'Lab Results' ,'query' ,'TB Tests' ,'true' ,'' ,'study' ,'TB Tests', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'TB Test results'],
-                ['snapshot' ,'General' ,'js' ,'Snapshot' ,'true' ,'' ,'study' ,'snapshot', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
-                ['clinSnapshot' ,'Clinical' ,'js' ,'Clinical Snapshot' ,'true' ,'' ,'study' ,'snapshot', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
+                ['snapshot' ,'General' ,'js' ,'Snapshot' ,'true' ,'' ,'study' ,'onprcSnapshot', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
+                ['clinSnapshot' ,'Clinical' ,'js' ,'Clinical Snapshot' ,'true' ,'' ,'study' ,'onprcSnapshot', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
                 ['arrivalDeparture' ,'General' ,'js' ,'Arrival/Departure' ,'true' ,'' ,'study' ,'arrivalDeparture', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Displays arrival and departure dates'],
                 ['bloodDraws' ,'General' ,'query' ,'Blood Draw History' ,'true' ,'' ,'study' ,'Blood Draws', '', '', 'date', 'false', 'false', '', '', 'Contains records of blood draws.  '],
                 //['charges' ,'General' ,'query' ,'Charges' ,'true' ,'' ,'study' ,'Charges', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of charges attached to the animal\'s record'],

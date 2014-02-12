@@ -92,6 +92,8 @@ onprc_ehr/resources/queries/ehr/proceduresPerYear.sql -text
 onprc_ehr/resources/queries/ehr/project.js -text
 onprc_ehr/resources/queries/ehr/project/.qview.xml -text
 onprc_ehr/resources/queries/ehr/project/Alias[!!-~]Info.qview.xml -text
+onprc_ehr/resources/queries/ehr/projectNames.query.xml -text
+onprc_ehr/resources/queries/ehr/projectNames.sql -text
 onprc_ehr/resources/queries/ehr/protocol/.qview.xml -text
 onprc_ehr/resources/queries/ehr/protocolGroupsOverlapping.query.xml -text
 onprc_ehr/resources/queries/ehr/protocolGroupsOverlapping.sql -text
@@ -336,6 +338,8 @@ onprc_ehr/resources/queries/study/demographicsActiveFlags.query.xml -text
 onprc_ehr/resources/queries/study/demographicsActiveFlags.sql -text
 onprc_ehr/resources/queries/study/demographicsActiveProblems.query.xml -text
 onprc_ehr/resources/queries/study/demographicsActiveProblems.sql -text
+onprc_ehr/resources/queries/study/demographicsActiveTreatments.query.xml -text
+onprc_ehr/resources/queries/study/demographicsActiveTreatments.sql -text
 onprc_ehr/resources/queries/study/demographicsAssignmentHistory.query.xml -text
 onprc_ehr/resources/queries/study/demographicsAssignmentHistory.sql -text
 onprc_ehr/resources/queries/study/demographicsBloodSummary.query.xml -text
@@ -463,6 +467,8 @@ onprc_ehr/resources/queries/study/infantsSeparateFromMother.query.xml -text
 onprc_ehr/resources/queries/study/infantsSeparateFromMother.sql -text
 onprc_ehr/resources/queries/study/kinshipAverage.query.xml -text
 onprc_ehr/resources/queries/study/kinshipAverage.sql -text
+onprc_ehr/resources/queries/study/latestObservationsForCase.query.xml -text
+onprc_ehr/resources/queries/study/latestObservationsForCase.sql -text
 onprc_ehr/resources/queries/study/matingOutcome.query.xml -text
 onprc_ehr/resources/queries/study/matingOutcome.sql -text
 onprc_ehr/resources/queries/study/matingSuccessRates.query.xml -text
@@ -543,7 +549,6 @@ onprc_ehr/resources/queries/study/pregnancyOutcome.sql -text
 onprc_ehr/resources/queries/study/pregnantAnimals.query.xml -text
 onprc_ehr/resources/queries/study/pregnantAnimals.sql -text
 onprc_ehr/resources/queries/study/pregnantAnimals/.qview.xml -text
-onprc_ehr/resources/queries/study/previousObservations.sql -text
 onprc_ehr/resources/queries/study/proceduresPerYear.query.xml -text
 onprc_ehr/resources/queries/study/proceduresPerYear.sql -text
 onprc_ehr/resources/queries/study/proceduresPerYear/.qview.xml -text

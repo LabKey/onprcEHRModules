@@ -42,6 +42,12 @@
                             itemId: 'daysSinceVetReview',
                             value: 1,
                             width: 400
+                        },{
+                            fieldLabel: 'Only Show Active',
+                            xtype: 'checkbox',
+                            itemId: 'showActive',
+                            checked: true,
+                            width: 400
                         }],
                         buttons: [{
                             text: 'Submit',
@@ -51,6 +57,7 @@
                                 var userId = panel.down('#userField').getValue();
                                 var category = panel.down('#categoryField').getValue();
                                 var daysSinceLastVetReview = panel.down('#daysSinceVetReview').getValue();
+                                var showActive = panel.down('#showActive').getValue();
 
                                 var filterArray = [];
                                 if (userId){
@@ -59,6 +66,10 @@
 
                                 if (category){
                                     filterArray.push(LABKEY.Filter.create('category', category, LABKEY.Filter.Types.EQUAL));
+                                }
+
+                                if (showActive){
+                                    filterArray.push(LABKEY.Filter.create('isActive', true, LABKEY.Filter.Types.EQUAL));
                                 }
 
                                 var viewName;

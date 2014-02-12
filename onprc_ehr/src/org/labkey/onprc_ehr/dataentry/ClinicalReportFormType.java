@@ -59,6 +59,7 @@ public class ClinicalReportFormType extends TaskForm
         ));
 
         setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NO_ID);
+        setDisplayReviewRequired(true);
 
         for (FormSection s : this.getFormSections())
         {

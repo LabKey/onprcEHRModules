@@ -19,6 +19,8 @@ SELECT
   b.date,
   b.testId,
   coalesce(b.runId, b.objectid) as runId,
+  --NOTE: removed to allow legacy runs to group into 1 row.  since we already group on Id/Date/Test, this should be ok
+  --coalesce(b.taskId, b.runId) as groupingId,
   b.method,
   b.remark,
   b.runId.remark as runRemark,
@@ -32,7 +34,7 @@ WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 
 ) b
 
-GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.remark, b.runRemark
+GROUP BY b.id, b.date, b.testId, b.method, b.remark, b.runRemark
 PIVOT results BY testId IN
 (select testid from ehr_lookups.chemistry_tests t WHERE t.includeInPanel = true order by sort_order)
 

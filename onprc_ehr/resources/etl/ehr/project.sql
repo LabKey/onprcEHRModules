@@ -117,4 +117,5 @@ WHERE (rpi.ts > ? or pc.ts > ? or ri.ts > ?)
 LEFT JOIN Ref_ProjectsIACUC i2 ON (i2.ProjectID = t.protocolId)
 WHERE maxTs > ?
 OR (select max(ts) as maxts FROM Ref_ProjectGrants g WHERE g.ProjectID = t.project) > ?
+OR (select max(ts) as maxts from Ref_ProjectAccounts rpa where t.project = rpa.ProjectID) > ?
 ) t2

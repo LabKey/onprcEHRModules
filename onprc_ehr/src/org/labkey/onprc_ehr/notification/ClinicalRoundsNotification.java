@@ -104,17 +104,17 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
         keys.add(FieldKey.fromString("Id/curLocation/cage"));
         keys.add(FieldKey.fromString("daysSinceLastRounds"));
         keys.add(FieldKey.fromString("assignedvet/UserId/DisplayName"));
-        keys.add(FieldKey.fromString("problemCategories"));
+        keys.add(FieldKey.fromString("allProblemCategories"));
         final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, keys);
 
         TableSelector ts = new TableSelector(ti, cols.values(), filter, new Sort("Id/curLocation/room_sortValue,Id/curLocation/cage_sortValue"));
         long count = ts.getRowCount();
         if (count > 0)
         {
+            msg.append("<b>WARNING: There are " + count + " active cases that do not have obs entered today.</b><br>");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Cage</td><td>Id</td><td>Assigned Vet</td><td>Problem(s)</td><td>Days Since Last Rounds</td></tr>");
 
-            msg.append("<b>WARNING: There are " + count + " active cases that do not have obs entered today.</b><br>");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
@@ -126,7 +126,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("Id/curLocation/cage")), "") + "</td>");
                     msg.append("<td>" + rs.getString(FieldKey.fromString("Id")) + "</td>");
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("assignedvet/UserId/DisplayName")), "None") + "</td>");
-                    msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("problemCategories")), "None") + "</td>");
+                    msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("allProblemCategories")), "None") + "</td>");
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("daysSinceLastRounds")), "") + "</td>");
                     msg.append("</tr>");
                 }
@@ -155,17 +155,17 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
         keys.add(FieldKey.fromString("Id/curLocation/cage"));
         keys.add(FieldKey.fromString("daysSinceLastVetReview"));
         keys.add(FieldKey.fromString("assignedvet/UserId/DisplayName"));
-        keys.add(FieldKey.fromString("problemCategories"));
+        keys.add(FieldKey.fromString("allProblemCategories"));
         final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, keys);
 
         TableSelector ts = new TableSelector(ti, cols.values(), filter, new Sort("Id/curLocation/room_sortValue,Id/curLocation/cage_sortValue"));
         long count = ts.getRowCount();
         if (count > 0)
         {
+            msg.append("<b>WARNING: There are " + count + " active cases that have not been vet reviewed in the past 7 days.</b><br>");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Cage</td><td>Id</td><td>Assigned Vet</td><td>Problem(s)</td><td>Days Since last Vet Review</td></tr>");
 
-            msg.append("<b>WARNING: There are " + count + " active cases that have not been vet reviewed in the past 7 days.</b><br>");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
@@ -177,7 +177,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("Id/curLocation/cage")), "") + "</td>");
                     msg.append("<td>" + rs.getString(FieldKey.fromString("Id")) + "</td>");
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("assignedvet/UserId/DisplayName")), "None") + "</td>");
-                    msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("problemCategories")), "None") + "</td>");
+                    msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("allProblemCategories")), "None") + "</td>");
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("daysSinceLastVetReview")), "") + "</td>");
                     msg.append("</tr>");
                 }

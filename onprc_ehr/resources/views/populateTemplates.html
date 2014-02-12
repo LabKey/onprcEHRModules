@@ -935,12 +935,15 @@ Ext4.onReady(function(){
             templateRows = templateRows.concat([{
                 template: ['Analgesia - Standard', 'Section', 'Treatment Orders', '', ''],
                 records: [
-                    ['Treatment Orders', '{"code":"E-YY792","frequency_meaning":"TID","amount":"0.3","duration":2,"offset":3}'],
-                    ['Treatment Orders', '{"code":"E-77851","frequency_meaning":"SID - Night","amount":"1","duration":1,"offset":0}']
+                    //Hydromorphone
+                    ['Treatment Orders', '{"code":"E-77851","frequency_meaning":"TID","amount":"1","duration":1,"offset":0}'],
+                    //Buprenorphine
+                    ['Treatment Orders', '{"code":"E-YY792","frequency_meaning":"SID - Night","amount":"0.3","duration":1,"offset":0}']
                 ]
             },{
                 template: ['Analgesia - Biopsies', 'Section', 'Treatment Orders', '', ''],
                 records: [
+                    //Buprenorphine
                     ['Treatment Orders', '{"code":"E-YY792","frequency_meaning":"BID - AM/Night","amount":"0.3","duration":1,"offset":0}']
                 ]
             },{
@@ -951,21 +954,21 @@ Ext4.onReady(function(){
             },{
                 template: ['Antibiotics - Cefazolin 5d', 'Section', 'Treatment Orders', '', ''],
                 records: [
-                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":5,"offset":0}']
+                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":4,"offset":0}']
                 ]
             },{
                 template: ['Antibiotics - Cefazolin 3d', 'Section', 'Treatment Orders', '', ''],
                 records: [
-                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":3,"offset":0}']
+                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":2,"offset":0}']
                 ]
             },{
                 template: ['Antibiotics - Cefazolin 2d', 'Section', 'Treatment Orders', '', ''],
                 records: [
-                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":2,"offset":0}']
+                    ['Treatment Orders', '{"code":"E-721X0","frequency_meaning":"BID - AM/Night","duration":1,"offset":0}']
                 ]
             },{
                 template: ['Antibiotics - Enrofloxacin 5d', 'Section', 'Treatment Orders', '', ''],
-                records: [	['Treatment Orders', '{"code":"E-719Y5","frequency_meaning":"SID - AM","duration":5,"offset":0}']
+                records: [	['Treatment Orders', '{"code":"E-719Y5","frequency_meaning":"SID - AM","duration":4,"offset":0}']
                 ]
             },{
                 template: ['Antibiotics - Cefazolin 3 doses', 'Section', 'Treatment Orders', '', ''],

@@ -40,6 +40,7 @@ public class ProcessingFormType extends TaskForm
         super(ctx, owner, NAME, "Processing", "Processing", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
+                new SimpleGridPanel("study", "encounters", "Procedures"),
                 new BloodDrawFormSection(false),
                 new DrugAdministrationFormSection(),
                 new WeightFormSection()
@@ -51,6 +52,8 @@ public class ProcessingFormType extends TaskForm
             s.addConfigSource("Processing");
             s.addClientDependency(cd);
         }
+
+        setDisplayReviewRequired(true);
     }
 
     @Override
