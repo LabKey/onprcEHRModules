@@ -1464,7 +1464,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ds = s.getDataSetByLabel(label);
             if (ds == null)
             {
-                _log.error("A dataset was requested that does not exist: " + label);
+                _log.error("A dataset was requested that does not exist: " + label + " in container: " + ehrContainer.getPath());
+                StringBuilder sb = new StringBuilder();
+                for (DataSet d : s.getDataSets())
+                {
+                    sb.append(d.getName() + ", ");
+                }
+                _log.error("datasets present: " + sb.toString());
             }
 
             _cachedDatasets.put(key, null);
