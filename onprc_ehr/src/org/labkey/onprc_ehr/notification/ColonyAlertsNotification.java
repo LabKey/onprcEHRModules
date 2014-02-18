@@ -516,12 +516,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void deadAnimalsWithActiveCases(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("isOpen"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Cases"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " active cases for animals not currently at the center.</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " active cases or cases under review for animals not currently at the center.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Cases", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -1012,7 +1012,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         List<QueryException> errors = new ArrayList<>();
         TableInfo ti = qd.getTable(us, errors, true);
         SQLFragment sql = ti.getFromSQL("t");
-        sql = new SQLFragment("SELECT * FROM " + sql.getSQL() + " WHERE t.status = ?", requirementSet, filterTerm);
+        Map<String, Object> params = new HashMap<>();
+        params.put("RequirementSet", requirementSet);
+        QueryService.get().bindNamedParameters(sql, params);
+
+        List<Object> newParams = sql.getParams();
+        newParams.add(filterTerm);
+        sql = new SQLFragment("SELECT * FROM " + sql.getSQL() + " WHERE t.status = ?", newParams);
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
         Map<String, Object>[] rows = ss.getArray(Map.class);
 

@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 SELECT
-	cast(Id as varchar(4000)) as Id,
-	Date ,
-    projectId as project,
+  cast(Id as varchar(4000)) as Id,
+  date,
+  CASE
+    WHEN projectId IN (470,1173,1455) THEN 625
+    ELSE projectId
+  END as project,
   CASE
     WHEN (projectId IS NULL AND servicerequested is not null) THEN 'Not Billable'
     ELSE null

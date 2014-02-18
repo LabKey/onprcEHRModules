@@ -655,6 +655,14 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
             </column>
+            <column columnName="vetreview">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReview</propertyURI>
+            </column>
+            <column columnName="vetreviewdate">
+                <datatype>timestamp</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReviewDate</propertyURI>
+            </column>
             <column columnName="description">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Description</propertyURI>
@@ -938,6 +946,14 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
             </column>
+            <column columnName="vetreview">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReview</propertyURI>
+            </column>
+            <column columnName="vetreviewdate">
+                <datatype>timestamp</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReviewDate</propertyURI>
+            </column>
             <column columnName="title">
                 <datatype>varchar</datatype>
             </column>
@@ -1004,6 +1020,14 @@
             <column columnName="remark">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
+            </column>
+            <column columnName="vetreview">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReview</propertyURI>
+            </column>
+            <column columnName="vetreviewdate">
+                <datatype>timestamp</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReviewDate</propertyURI>
             </column>
             <column columnName="taskid">
                 <datatype>varchar</datatype>
@@ -1085,6 +1109,14 @@
             <column columnName="taskid">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
+            </column>
+            <column columnName="vetreview">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReview</propertyURI>
+            </column>
+            <column columnName="vetreviewdate">
+                <datatype>timestamp</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReviewDate</propertyURI>
             </column>
             <column columnName="hx">
                 <datatype>varchar</datatype>
@@ -1186,6 +1218,14 @@
             </column>
             <column columnName="category">
                 <datatype>varchar</datatype>
+            </column>
+            <column columnName="vetreview">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReview</propertyURI>
+            </column>
+            <column columnName="vetreviewdate">
+                <datatype>timestamp</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReviewDate</propertyURI>
             </column>
             <column columnName="description">
                 <datatype>varchar</datatype>

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-SELECT 
+SELECT
 	t2.*,
 	CASE
 		WHEN t2.enddateRaw > CURRENT_TIMESTAMP THEN NULL
 		else t2.enddateRaw
 	END as enddate
-	
-FROM (	
-  
-select 
+
+FROM (
+
+select
 	--coalesce(i2.eIACUCNum, rtrim(ltrim(lower(i2.IACUCCode)))) as protocol,
 	rtrim(ltrim(i2.IACUCCode)) as protocol,
 	CASE
@@ -37,8 +37,8 @@ select
 	t.*
 
 FROM (
- 
-select 
+
+select
 
     Rpi.ProjectId as project,
     rpi.IACUCCode,
@@ -47,11 +47,6 @@ select
 				ipc.projectparentid
 				from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on (rpi2.ProjectID = ipc.ProjectParentID and ipc.datedisabled is null)
 				where ipc.projectchildid = rpi.projectid order by ipc.datecreated desc), rpi.projectid) as protocolId,
-
-  coalesce ((select max(rpi2.ts) as maxTs
-       from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on (rpi2.ProjectID = ipc.ProjectParentID and ipc.datedisabled is null)
-       where ipc.projectchildid = rpi.projectid), rpi.ts
-  ) as maxTs,
 
 	rtrim(ltrim((select top 1 ohsuaccountnumber from Ref_ProjectAccounts rpa where rpi.projectid = rpa.ProjectID order by datecreated desc))) as account,
 	Rpi.Title,
@@ -72,17 +67,11 @@ select
 
   CASE
     WHEN Rpi.IACUCCode = '0492' THEN 1  --P51
-    WHEN Rpi.IACUCCode = '0492-06' THEN 1  --clinical
-    WHEN Rpi.IACUCCode = '0492-13' THEN 1  --pathology
-    WHEN Rpi.IACUCCode = '0371' THEN 1  --surgery
     ELSE 0
   END as alwaysavailable,
 
   CASE
     WHEN Rpi.IACUCCode = '0492' THEN 'Base Grant'  --P51
-    WHEN Rpi.IACUCCode = '0492-06' THEN 'Clinical'
-    WHEN Rpi.IACUCCode = '0492-13' THEN 'Pathology'
-    WHEN Rpi.IACUCCode = '0371' THEN 'Surgery'
     ELSE null
   END as shortname,
 
@@ -110,12 +99,12 @@ From Ref_ProjectsIACUC rpi
 	left join Ref_Investigator ri2 on (ri2.InvestigatorID = pc2.investigatorid)
   left join Sys_Parameters s2 on (rpi.projecttype = s2.Flag and s2.Field = 'ProjectType')
 
-WHERE (rpi.ts > ? or pc.ts > ? or ri.ts > ?)
-
+WHERE (rpi.ts > ? or pc.ts > ? or ri.ts > ?
+       OR (select max(ts) as maxts FROM Ref_ProjectGrants g WHERE g.ProjectID = rpi.ProjectID) > ?
+       OR (select max(ts) as maxts from Ref_ProjectAccounts rpa where rpi.ProjectID = rpa.ProjectID) > ?
+       OR (select max(rpi2.ts) as maxTs from Ref_ProjectsIACUC rpi2 join Ref_IACUCParentChildren ipc on (rpi2.ProjectID = ipc.ProjectParentID and ipc.datedisabled is null) where ipc.projectchildid = rpi.projectid) > ?
+)
 ) t
 
 LEFT JOIN Ref_ProjectsIACUC i2 ON (i2.ProjectID = t.protocolId)
-WHERE maxTs > ?
-OR (select max(ts) as maxts FROM Ref_ProjectGrants g WHERE g.ProjectID = t.project) > ?
-OR (select max(ts) as maxts from Ref_ProjectAccounts rpa where t.project = rpa.ProjectID) > ?
 ) t2

@@ -38,6 +38,7 @@ import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
+import org.labkey.onprc_ehr.buttons.VetReviewRecordButton;
 import org.labkey.onprc_ehr.dataentry.*;
 import org.labkey.onprc_ehr.demographics.ActiveAnimalGroupsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
@@ -87,7 +88,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.352;
+        return 12.353;
     }
 
     public boolean hasScripts()
@@ -234,6 +235,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalReportFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalRemarkFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(MensFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PregnancyConfirmationFormType.class, this));
 
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(AuxProcedureFormType.class, this));
@@ -272,6 +274,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "clinpathRuns");
         //EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeEncounterStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeEncounterStatusWindow.js"))), "study", "encounters");
         EHRService.get().registerTbarButton(new ChangeQCStateButton(this, "Mark Delivered", "ONPRC_EHR.window.MarkLabworkDeliveredWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/MarkLabworkDeliveredWindow.js"))), "study", "clinpathRuns");
+        EHRService.get().registerTbarButton(new VetReviewRecordButton(this), "study", "vetRecordReview");
     }
 
     @Override

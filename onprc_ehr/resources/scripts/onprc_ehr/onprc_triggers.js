@@ -41,6 +41,13 @@ exports.init = function(EHR){
         }
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Blood Draws', function(helper, scriptErrors, row){
+        if (!helper.isETL() && row.project && row.chargetype){
+            if (row.chargetype == 'No Charge' && !helper.getJavaHelper().isDefaultProject(row.project))
+                EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'You have chosen \'No Charge\' with a project that does not support this.  You may need to choose \'Research\' instead (which is not billed)', 'INFO');
+        }
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Treatment Orders', function(scriptErrors, helper, row, oldRow){
         var fieldPairs = [
             ['dosage_units', 'dosage'],

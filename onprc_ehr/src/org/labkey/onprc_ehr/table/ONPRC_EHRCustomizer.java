@@ -73,7 +73,6 @@ import java.util.Set;
 public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 {
     private static final Logger _log = Logger.getLogger(ONPRC_EHRCustomizer.class);
-    private Map<String, DataSet> _cachedDatasets;
 
     public ONPRC_EHRCustomizer()
     {
@@ -82,8 +81,6 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     public void customize(TableInfo table)
     {
-        _cachedDatasets = new HashMap<>();
-
         if (table instanceof AbstractTableInfo)
         {
             customizeColumns((AbstractTableInfo) table);
@@ -458,6 +455,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ds.addColumn(col);
         }
 
+        if (ds.getColumn("assignedVet") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "assignedVet", "demographicsAssignedVet");
+            col.setLabel("Assigned Vet");
+            col.setDescription("Calculates the assigned veternarian, based on assignment and housing.");
+            ds.addColumn(col);
+        }
+
         if (ds.getColumn("currentCondition") == null)
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "currentCondition", "demographicsCondition");
@@ -728,6 +733,20 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 ExprColumn roundsCol2 = new ExprColumn(ti, daysSinceLastRounds, roundsSql2, JdbcType.INTEGER, ti.getColumn("Id"), ti.getColumn("objectid"), ti.getColumn("date"));
                 roundsCol2.setLabel("Days Since Last Rounds Observations");
                 ti.addColumn(roundsCol2);
+            }
+        }
+
+        if (ti.getColumn("cagematesAtOpen") == null)
+        {
+            UserSchema us = getStudyUserSchema(ti);
+            if (us != null)
+            {
+                ColumnInfo lsidCol = ti.getColumn("lsid");
+                ColumnInfo col = ti.addColumn(new WrappedColumn(lsidCol, "cagematesAtOpen"));
+                col.setLabel("Cagemates At Open");
+                col.setUserEditable(false);
+                col.setIsUnselectable(true);
+                col.setFk(new QueryForeignKey(us, null, "caseHousingAtOpen", "lsid", "locations"));
             }
         }
     }
@@ -1450,40 +1469,30 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             return null;
 
         DataSet ds;
-        String key = ehrContainer.getId() + "||" + label;
-        if (_cachedDatasets.containsKey(key))
+        Study s = StudyService.get().getStudy(ehrContainer);
+        if (s == null)
+            return null;
+
+        ds = s.getDataSetByLabel(label);
+        if (ds == null)
         {
-            ds = _cachedDatasets.get(key);
+            // NOTE: this seems to happen during study import on TeamCity.  It does not seem to happen during normal operation
+            _log.info("A dataset was requested that does not exist: " + label + " in container: " + ehrContainer.getPath());
+            StringBuilder sb = new StringBuilder();
+            for (DataSet d : s.getDataSets())
+            {
+                sb.append(d.getName() + ", ");
+            }
+            _log.info("datasets present: " + sb.toString());
+
+            return null;
         }
         else
-        {
-            Study s = StudyService.get().getStudy(ehrContainer);
-            if (s == null)
-                return null;
-
-            ds = s.getDataSetByLabel(label);
-            if (ds == null)
-            {
-                _log.error("A dataset was requested that does not exist: " + label + " in container: " + ehrContainer.getPath());
-                StringBuilder sb = new StringBuilder();
-                for (DataSet d : s.getDataSets())
-                {
-                    sb.append(d.getName() + ", ");
-                }
-                _log.error("datasets present: " + sb.toString());
-            }
-
-            _cachedDatasets.put(key, null);
-        }
-
-        if (ds != null)
         {
             String tableName = ds.getDomain().getStorageTableName();
             DbSchema dbSchema = DbSchema.get("studydataset");
             return dbSchema.getTable(tableName);
         }
-
-        return null;
     }
 
     private TableInfo getRealTable(TableInfo targetTable)

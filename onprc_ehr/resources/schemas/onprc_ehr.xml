@@ -219,4 +219,30 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
+    <ns:table tableDbType="TABLE" tableName="vet_assignment">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Vet Assignment</ns:tableTitle>
+        <ns:columns>
+            <ns:column columnName="rowid"/>
+            <ns:column columnName="userid">
+                <ns:columnTitle>Vet</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="area">
+                <ns:columnTitle>Area</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>ehr_lookups</ns:fkDbSchema>
+                    <ns:fkTable>areas</ns:fkTable>
+                    <ns:fkColumnName>area</ns:fkColumnName>
+                </ns:fk>
+            </ns:column>
+            <ns:column columnName="protocol">
+                <ns:columnTitle>IACUC Protocol</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdby"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedby"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
 </ns:tables>

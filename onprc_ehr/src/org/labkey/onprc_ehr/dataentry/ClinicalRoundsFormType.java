@@ -55,10 +55,12 @@ public class ClinicalRoundsFormType extends TaskForm
 
         for (FormSection s : this.getFormSections())
         {
+            s.addConfigSource("ClinicalDefaults");
             s.addConfigSource("ClinicalRounds");
             s.setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NONE);
         }
 
+        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalRounds.js"));
     }
 

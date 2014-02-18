@@ -3,14 +3,7 @@
         <column name="Id"/>
         <column name="date"/>
         <column name="enddate"/>
-        <!--<column name="caseno"/>-->
-        <!--<column name="project"/>-->
-        <!--<column name="project/protocol">-->
-            <!--<properties>-->
-                <!--<property name="columnTitle" value="Protocol"/>-->
-            <!--</properties>-->
-        <!--</column>-->
-        <!--<column name="account"/>-->
+        <column name="project"/>
         <column name="type"/>
         <column name="procedureid"/>
         <column name="performedby"/>

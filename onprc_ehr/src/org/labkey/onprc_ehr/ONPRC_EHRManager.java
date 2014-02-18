@@ -68,6 +68,10 @@ public class ONPRC_EHRManager
     public static final String TECH_REVIEW = "Reviewed";
     @Queryable
     public static final String REPLACED_SOAP = "Replaced SOAP";
+    @Queryable
+    public static final String TB_TEST_INTRADERMAL = "TB Test Intradermal";
+    @Queryable
+    public static final String TB_TEST_SEROLOGIC = "TB Test Serologic";
 
     private ONPRC_EHRManager()
     {

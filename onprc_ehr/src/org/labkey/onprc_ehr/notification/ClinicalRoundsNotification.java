@@ -86,7 +86,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
 
         duplicateCases(c, u, msg);
         animalsWithoutRounds(c, u, msg);
-        animalsWithoutVetReview(c, u, msg);
+        //animalsWithoutVetReview(c, u, msg);
 
         return msg.toString();
     }
@@ -96,6 +96,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("daysSinceLastRounds"), 0, CompareType.GT);
         filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("category"), "Clinical", CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id/demographics/calculated_status"), "Alive", CompareType.EQUAL);
 
         TableInfo ti = getStudySchema(c, u).getTable("cases");
         Set<FieldKey> keys = new HashSet<>();

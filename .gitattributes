@@ -146,6 +146,7 @@ onprc_ehr/resources/queries/ehr_lookups/roomsByProject.sql -text
 onprc_ehr/resources/queries/ehr_lookups/species/.qview.xml -text
 onprc_ehr/resources/queries/onprc_ehr/investigators/.qview.xml -text
 onprc_ehr/resources/queries/onprc_ehr/investigators/Active[!!-~]Investigators.qview.xml -text
+onprc_ehr/resources/queries/onprc_ehr/vet_assignment.query.xml -text
 onprc_ehr/resources/queries/study/Animal[!!-~]Record[!!-~]Flags.js -text
 onprc_ehr/resources/queries/study/Animal[!!-~]Record[!!-~]Flags.query.xml -text
 onprc_ehr/resources/queries/study/Animal[!!-~]Record[!!-~]Flags/.qview.xml -text
@@ -297,6 +298,9 @@ onprc_ehr/resources/queries/study/bloodDrawsByIdAndTask.query.xml -text
 onprc_ehr/resources/queries/study/bloodDrawsByIdAndTask.sql -text
 onprc_ehr/resources/queries/study/bloodSummary.query.xml -text
 onprc_ehr/resources/queries/study/bloodSummary.sql -text
+onprc_ehr/resources/queries/study/caseHousingAtOpen.query.xml -text
+onprc_ehr/resources/queries/study/caseHousingAtOpen.sql -text
+onprc_ehr/resources/queries/study/caseHousingAtOpen/.qview.xml -text
 onprc_ehr/resources/queries/study/cases/.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Behavior[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Clinical[!!-~]Cases.qview.xml -text
@@ -306,6 +310,7 @@ onprc_ehr/resources/queries/study/cases/All[!!-~]Clinical[!!-~]Cases.qview.xml -
 onprc_ehr/resources/queries/study/cases/All[!!-~]Surgery[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Clinical[!!-~]Case[!!-~]Review.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Surgery[!!-~]Case[!!-~]Review.qview.xml -text
+onprc_ehr/resources/queries/study/cases/With[!!-~]Initial[!!-~]Housing.qview.xml -text
 onprc_ehr/resources/queries/study/chemMisc.query.xml -text
 onprc_ehr/resources/queries/study/chemMisc.sql -text
 onprc_ehr/resources/queries/study/chemMisc/.qview.xml -text
@@ -340,6 +345,9 @@ onprc_ehr/resources/queries/study/demographicsActiveProblems.query.xml -text
 onprc_ehr/resources/queries/study/demographicsActiveProblems.sql -text
 onprc_ehr/resources/queries/study/demographicsActiveTreatments.query.xml -text
 onprc_ehr/resources/queries/study/demographicsActiveTreatments.sql -text
+onprc_ehr/resources/queries/study/demographicsAssignedVet.query.xml -text
+onprc_ehr/resources/queries/study/demographicsAssignedVet.sql -text
+onprc_ehr/resources/queries/study/demographicsAssignedVet/.qview.xml -text
 onprc_ehr/resources/queries/study/demographicsAssignmentHistory.query.xml -text
 onprc_ehr/resources/queries/study/demographicsAssignmentHistory.sql -text
 onprc_ehr/resources/queries/study/demographicsBloodSummary.query.xml -text
@@ -603,6 +611,9 @@ onprc_ehr/resources/queries/study/urinalysisPivot.sql -text
 onprc_ehr/resources/queries/study/urinalysisPivot/.qview.xml -text
 onprc_ehr/resources/queries/study/urinalysisRefRange.query.xml -text
 onprc_ehr/resources/queries/study/urinalysisRefRange.sql -text
+onprc_ehr/resources/queries/study/vetRecordReview.query.xml -text
+onprc_ehr/resources/queries/study/vetRecordReview.sql -text
+onprc_ehr/resources/queries/study/vetRecordReview/.qview.xml -text
 onprc_ehr/resources/referenceStudy/README -text
 onprc_ehr/resources/referenceStudy/datasets/PrimateElectronicHealthRecord.dataset -text
 onprc_ehr/resources/referenceStudy/datasets/datasets_manifest.xml -text
@@ -621,6 +632,7 @@ onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.314-12.315.sql -te
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.333-12.334.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.335-12.336.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.350-12.351.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.352-12.353.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text
@@ -632,6 +644,7 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.314-12.315.sql -tex
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.333-12.334.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.335-12.336.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.350-12.351.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.352-12.353.sql -text
 onprc_ehr/resources/schemas/onprc_ehr.xml -text
 onprc_ehr/resources/scripts/onprc_ehr/etl.js -text
 onprc_ehr/resources/scripts/onprc_ehr/onprc_triggers.js -text
@@ -707,6 +720,8 @@ onprc_ehr/resources/views/protocolDetails.view.xml -text
 onprc_ehr/resources/views/serviceRequests.html -text
 onprc_ehr/resources/views/snomedSearch.html -text
 onprc_ehr/resources/views/snomedSearch.view.xml -text
+onprc_ehr/resources/views/vetReview.html -text
+onprc_ehr/resources/views/vetReview.view.xml -text
 onprc_ehr/resources/web/onprc_ehr/EHROverrides.js -text
 onprc_ehr/resources/web/onprc_ehr/Utils.js -text
 onprc_ehr/resources/web/onprc_ehr/buttons.js -text
@@ -725,12 +740,14 @@ onprc_ehr/resources/web/onprc_ehr/window/ChangeBloodStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeEncounterStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeLabworkStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/MarkLabworkDeliveredWindow.js -text
+onprc_ehr/resources/web/onprc_ehr/window/VetRecordReviewWindow.js -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRController.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRManager.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/DiscardTaskButton.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/buttons/VetReviewRecordButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/AuxProcedureFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BehaviorRoundsFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BehaviorRoundsRemarksFormSection.java -text
@@ -765,6 +782,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PathologyDiagnosesFormSection.java 
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PathologyFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PathologyMedicationsFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PathologyTissuesFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PregnancyConfirmationFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ProcessingFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/RoundsRemarksFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/SimpleGridPanel.java -text

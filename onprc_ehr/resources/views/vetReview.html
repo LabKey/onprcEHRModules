@@ -1,0 +1,88 @@
+<script type="text/javascript">
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        Ext4.define('EHR.panel.VetReviewPanel', {
+            extend: 'Ext.panel.Panel',
+
+            initComponent: function(){
+                LABKEY.ExtAdapter.apply(this, {
+                    itemId: 'outerPanel',
+                    border: false,
+                    defaults: {
+                        border: false
+                    },
+                    items: [{
+                        width: 400,
+                        items: [{
+                            xtype: 'ehr-vetfieldcombo',
+                            width: 400,
+                            labelWidth: 180,
+                            fieldLabel: 'Choose Vet (blank for all or unassigned)',
+                            itemId: 'userField'
+                        }],
+                        buttons: [{
+                            text: 'Submit',
+                            scope: this,
+                            handler: function(btn){
+                                var panel = btn.up('#outerPanel');
+                                var displayName = panel.down('#userField').getDisplayValue();
+
+                                var filterArray = [];
+                                if (displayName){
+                                    filterArray.push(LABKEY.Filter.create('Id/assignedVet/assignedVet', displayName, LABKEY.Filter.Types.CONTAINS));
+                                }
+
+                                var target = panel.down('#targetPanel');
+                                target.removeAll();
+                                target.add({
+                                    xtype: 'ldk-querypanel',
+                                    queryConfig: {
+                                        schemaName: 'study',
+                                        queryName: 'vetRecordReview',
+                                        linkTarget: '_blank',
+                                        filterArray: filterArray,
+                                        scope: this,
+                                        success: function(dr){
+                                            this.doResize(target.getWidth() + 80);
+                                        }
+                                    }
+                                });
+                            }
+                        }]
+                    },{
+                        itemId: 'targetPanel',
+                        style: 'padding-top: 20px'
+                    }]
+                });
+
+                this.callParent(arguments);
+
+                this.on('afterrender', function(panel){
+                    this.originalWidth = Math.max(this.getWidth(), Ext4.getBody().getWidth());
+                }, this);
+            },
+
+            doResize: function(itemWidth){
+                var width2 = this.getWidth();
+                if (itemWidth > width2){
+                    this.setWidth(itemWidth);
+                    this.doLayout();
+                }
+                else if (itemWidth < width2) {
+                    if (this.originalWidth && width2 != this.originalWidth){
+                        this.setWidth(Math.max(this.originalWidth, itemWidth));
+                        this.doLayout();
+                    }
+                }
+            }
+        });
+
+        Ext4.create('EHR.panel.VetReviewPanel', {
+
+        }).render(webpart.wrapperDivId);
+    });
+</script>

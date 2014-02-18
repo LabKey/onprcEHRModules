@@ -143,8 +143,20 @@ public class ONPRC_EHRTriggerHelper
         Set<String> triggersChange = PageFlowUtil.set("code", "frequency", "route", "volume", "vol_units", "amount", "amount_units");
         for (String field : triggersChange)
         {
+            // this is a little ugly, but something upstream seems inconsistent about numbers as Integer vs. Double.
+            // this is a problem for equals(), so always convert Integers into Doubles
             Object current = row.get(field);
+            if (current instanceof Integer)
+            {
+                current = ((Integer)current).doubleValue();
+            }
+
             Object old = oldRow.get(field);
+            if (old instanceof Integer)
+            {
+                old = ((Integer)old).doubleValue();
+            }
+
             if ((current == null && old != null ) || (current != null && old == null ) || (current != null && old != null && !current.equals(old)))
             {
                 _log.info("change: " + field);

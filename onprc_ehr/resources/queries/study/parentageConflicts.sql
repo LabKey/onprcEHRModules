@@ -29,19 +29,19 @@ AND p.relationship != 'Surrogate Dam' and p.relationship != 'Foster Dam' and p.e
 GROUP BY p.Id, p.relationship
 HAVING COUNT(DISTINCT p.parent) > 1
 
-UNION ALL
-
-SELECT
-  p.Id,
-  p.relationship,
-  p.parent as parents,
-  group_concat(distinct p.method) as method,
-  'Duplicate Methods For The Same Parent' as type,
-  count(p.Id) as totalRecords
-
-FROM study.parentage p
-WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
-AND p.relationship != 'Surrogate Dam' and p.relationship != 'Foster Dam' and p.enddateCoalesced >= curdate()
-
-GROUP BY p.Id, p.relationship, p.parent
-HAVING COUNT(distinct p.method) > 1
+-- UNION ALL
+--
+-- SELECT
+--   p.Id,
+--   p.relationship,
+--   p.parent as parents,
+--   group_concat(distinct p.method) as method,
+--   'Duplicate Methods For The Same Parent' as type,
+--   count(p.Id) as totalRecords
+--
+-- FROM study.parentage p
+-- WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
+-- AND p.relationship != 'Surrogate Dam' and p.relationship != 'Foster Dam' and p.enddateCoalesced >= curdate()
+--
+-- GROUP BY p.Id, p.relationship, p.parent
+-- HAVING COUNT(distinct p.method) > 1

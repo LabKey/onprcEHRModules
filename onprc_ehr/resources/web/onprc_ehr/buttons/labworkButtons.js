@@ -74,8 +74,9 @@ EHR.DataEntryUtils.registerGridButton('PANELDELETE', function(config){
                     return false;
                 }
 
-                LDK.Assert.assertNotEmpty('No runId in clinpathRuns record', r.get('runid'));
-                runIds.push(r.get('runid'));
+                LDK.Assert.assertNotEmpty('No objectid in clinpathRuns record', r.get('objectid'));
+                if (r.get('objectid'))
+                    runIds.push(r.get('objectid').toLowerCase());
             }, this);
 
             //find children
@@ -92,7 +93,8 @@ EHR.DataEntryUtils.registerGridButton('PANELDELETE', function(config){
                         }
 
                         s.each(function(childRec){
-                            if (runIds.indexOf(childRec.get('runid')) != -1){
+                            var runid = childRec.get('runid') ? childRec.get('runid').toLowerCase() : null;
+                            if (runIds.indexOf(runid) != -1){
                                 childrenToDelete[s.storeId] = childrenToDelete[s.storeId] || [];
                                 childrenToDelete[s.storeId].push(childRec);
                                 totalChildren++;

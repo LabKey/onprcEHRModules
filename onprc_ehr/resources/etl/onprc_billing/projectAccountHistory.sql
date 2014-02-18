@@ -29,4 +29,4 @@ select
 		rpa.objectid
 	from Ref_ProjectAccounts rpa
   where rpa.ts > ?
-) t WHERE t.startdate >= '2010-01-01'
+) t WHERE t.startdate >= '2009-01-01'

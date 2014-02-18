@@ -2,6 +2,8 @@
     <columns>
         <column name="Id/demographics/history"/>
         <column name="Id"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
         <column name="Id/demographics/mostRecentHx"/>
         <!--all since last review-->
         <column name="mostRecentP2"/>
