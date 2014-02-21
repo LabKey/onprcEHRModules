@@ -227,6 +227,7 @@ onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.354-12.355
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.355-12.356.sql -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.356-12.357.sql -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.357-12.358.sql -text
+onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.358-12.359.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.30-12.301.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.301-12.302.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.302-12.303.sql -text
@@ -278,6 +279,7 @@ onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.354-12.355.
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.355-12.356.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.356-12.357.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.357-12.358.sql -text
+onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.358-12.359.sql -text
 onprc_billing/resources/schemas/onprc_billing.xml -text
 onprc_billing/resources/schemas/onprc_billing_public.template.xml -text
 onprc_billing/resources/scripts/onprc_billing/billing_triggers.js -text
