@@ -35,22 +35,22 @@ From IRIS_Production.dbo.Ref_SurgProcedure rsp
 
 
 --procedure comments
-TRUNCATE TABLE labkey.ehr_lookups.procedure_default_comments;
-INSERT INTO labkey.ehr_lookups."procedure_default_comments" (procedureid, comment)
-Select
-	--p0.ProcedureID,		--Ref_SurgProcedure
-	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
-	cast(coalesce(p0.LogText, '') as nvarchar(4000)) + cast(coalesce(p1.LogText, '') as nvarchar(4000)) + cast(coalesce(p2.LogText, '') as nvarchar(4000)) + cast(coalesce(p3.LogText, '') as nvarchar(4000)) + cast(coalesce(p4.LogText, '') as nvarchar(4000)) + cast(coalesce(p5.LogText, '') as nvarchar(4000)) as Comment
-
-From IRIS_Production.dbo.Ref_SurgLog p0
-LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure r on (p0.procedureid = r.procedureid)
-LEFT JOIN IRIS_Production.dbo.Ref_SurgLog p1 ON (p0.ProcedureID = p1.ProcedureID AND p1.LogPage = 1)
-LEFT JOIN IRIS_Production.dbo.Ref_SurgLog p2 ON (p0.ProcedureID = p2.ProcedureID AND p2.LogPage = 2)
-LEFT JOIN IRIS_Production.dbo.Ref_SurgLog p3 ON (p0.ProcedureID = p3.ProcedureID AND p2.LogPage = 3)
-LEFT JOIN IRIS_Production.dbo.Ref_SurgLog p4 ON (p0.ProcedureID = p4.ProcedureID AND p2.LogPage = 4)
-LEFT JOIN IRIS_Production.dbo.Ref_SurgLog p5 ON (p0.ProcedureID = p5.ProcedureID AND p2.LogPage = 5)
-
-WHERE p0.LogPage = 0
+-- TRUNCATE TABLE labkey.ehr_lookups.procedure_default_comments;
+-- INSERT INTO labkey.ehr_lookups."procedure_default_comments" (procedureid, comment)
+-- Select
+-- 	--p0.ProcedureID,		--Ref_SurgProcedure
+-- 	(SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
+-- 	cast(coalesce(p0.LogText, '') as nvarchar(4000)) + cast(coalesce(p1.LogText, '') as nvarchar(4000)) + cast(coalesce(p2.LogText, '') as nvarchar(4000)) + cast(coalesce(p3.LogText, '') as nvarchar(4000)) + cast(coalesce(p4.LogText, '') as nvarchar(4000)) + cast(coalesce(p5.LogText, '') as nvarchar(4000)) as Comment
+--
+-- From IRIS_Production.dbo.Ref_SurgLog p0
+-- LEFT JOIN IRIS_Production.dbo.Ref_SurgProcedure r on (p0.procedureid = r.procedureid)
+-- LEFT JOIN IRIS_Production.dbo.Ref_SurgLog p1 ON (p0.ProcedureID = p1.ProcedureID AND p1.LogPage = 1)
+-- LEFT JOIN IRIS_Production.dbo.Ref_SurgLog p2 ON (p0.ProcedureID = p2.ProcedureID AND p2.LogPage = 2)
+-- LEFT JOIN IRIS_Production.dbo.Ref_SurgLog p3 ON (p0.ProcedureID = p3.ProcedureID AND p2.LogPage = 3)
+-- LEFT JOIN IRIS_Production.dbo.Ref_SurgLog p4 ON (p0.ProcedureID = p4.ProcedureID AND p2.LogPage = 4)
+-- LEFT JOIN IRIS_Production.dbo.Ref_SurgLog p5 ON (p0.ProcedureID = p5.ProcedureID AND p2.LogPage = 5)
+--
+-- WHERE p0.LogPage = 0
 
 
 --procedure flags

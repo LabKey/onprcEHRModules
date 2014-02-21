@@ -55,12 +55,12 @@ SELECT
     WHEN s2.value ='F-YY004' THEN 'BCS'
     WHEN s2.value ='F-YY005' THEN 'BCS'
     WHEN s2.value ='F-YY006' THEN 'BCS'
-    WHEN s2.value ='F-Y3712' THEN 'Alopecia Store'
-    WHEN s2.value ='F-Y3714' THEN 'Alopecia Store'
-    WHEN s2.value ='F-Y3716' THEN 'Alopecia Store'
-    WHEN s2.value ='F-Y3718' THEN 'Alopecia Store'
-    WHEN s2.value ='F-Y3720' THEN 'Alopecia Store'
-    WHEN s2.value ='F-Y3722' THEN 'Alopecia Store'
+    WHEN s2.value ='F-Y3712' THEN 'Alopecia Score'
+    WHEN s2.value ='F-Y3714' THEN 'Alopecia Score'
+    WHEN s2.value ='F-Y3716' THEN 'Alopecia Score'
+    WHEN s2.value ='F-Y3718' THEN 'Alopecia Score'
+    WHEN s2.value ='F-Y3720' THEN 'Alopecia Score'
+    WHEN s2.value ='F-Y3722' THEN 'Alopecia Score'
   END as category,
   CASE
     WHEN s2.value ='F-YY002' THEN '1'

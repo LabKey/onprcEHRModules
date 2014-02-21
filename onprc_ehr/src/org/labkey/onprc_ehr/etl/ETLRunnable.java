@@ -1273,7 +1273,7 @@ public class ETLRunnable implements Runnable
             put("Blood Draws", new String[]{"Af_Blood", "Af_BloodData"});
             put("Cases", new String[]{"Af_Case", "Af_Qrf"});
             put("Chemistry Results", new String[]{"Cln_Biochemistry", "Cln_IStat"});
-            put("Clinical Encounters", new String[]{"Path_Biopsy", "Path_Autopsy", "Cln_Dx", "Sur_General", "Cln_DxSnomed", "Sur_Implants"});
+            put("Clinical Encounters", new String[]{"Path_Biopsy", "Path_Autopsy", "Cln_Dx", "Sur_General", "Cln_DxSnomed", "Sur_Implants", "Af_Weights"});
             put("Clinical Observations", new String[]{"Brd_Menstruations", "Cln_DxSnomed"});
             put("Clinical Remarks", new String[]{"Af_Case", "Cln_Dx", "Cln_DXRemarks"});
             put("Clinpath Runs", new String[]{"Cln_AntibioticSensHeader", "Cln_Biochemistry", "Cln_IStat", "Cln_OccultBlood", "Cln_Hematology", "Cln_CerebralspinalFluid", "Cln_MicrobiologyHeader", "Cln_RareTestHeader", "Cln_VirologyHeader", "Cln_SerologyHeader", "Cln_Urinalysis", "Cln_Parasitology"});
