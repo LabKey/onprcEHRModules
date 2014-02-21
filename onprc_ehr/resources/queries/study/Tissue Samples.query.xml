@@ -57,6 +57,9 @@
                     <column columnName="weight">
                         <columnTitle>Weight</columnTitle>
                     </column>
+                    <column columnName="noWeight">
+                        <columnTitle>No Weight</columnTitle>
+                    </column>
                     <column columnName="remark">
 
                     </column>

@@ -32,26 +32,26 @@ SELECT
 FROM study.clinRemarks c
 WHERE c.vetreview IS NULL
 
-UNION ALL
-
---observations
-SELECT
-  '[Edit]' as editCol,
-  c.Id,
-  c.project,
-  'Observation' as recordType,
-  c.category,
-  c.date,
-  observation as description,
-  c.remark,
-  c.performedby,
-  c.vetreviewdate,
-  c.objectid,
-  c.taskid,
-  'clinical_observations' as queryName,
-  CAST((c.lsid || '<>clinical_observations') as varchar(250)) as key
-FROM study.clinical_observations c
-WHERE c.vetreview IS NULL
+-- UNION ALL
+--
+-- --observations
+-- SELECT
+--   '[Edit]' as editCol,
+--   c.Id,
+--   c.project,
+--   'Observation' as recordType,
+--   c.category,
+--   c.date,
+--   observation as description,
+--   c.remark,
+--   c.performedby,
+--   c.vetreviewdate,
+--   c.objectid,
+--   c.taskid,
+--   'clinical_observations' as queryName,
+--   CAST((c.lsid || '<>clinical_observations') as varchar(250)) as key
+-- FROM study.clinical_observations c
+-- WHERE c.vetreview IS NULL
 
 UNION ALL
 
@@ -74,30 +74,30 @@ SELECT
 FROM study.encounters c
 WHERE c.vetreview IS NULL AND c.type != 'Surgery'
 
-UNION ALL
-
---drugs
-SELECT
-  '[Edit]' as editCol,
-  c.Id,
-  c.project,
-  'Treatment' as recordType,
-  c.category,
-  c.date,
-  (
-    ifnull(c.code.meaning, '') || chr(10) ||
-    ifnull(c.route, 'No route') || ', ' ||
-    ifnull(c.amountAndVolume, '')
-  ) as description,
-  c.remark,
-  c.performedby,
-  c.vetreviewdate,
-  c.objectid,
-  c.taskid,
-  'drug' as queryName,
-  CAST((c.lsid || '<>drug') as varchar(250)) as key
-FROM study.drug c
-WHERE c.vetreview IS NULL
+-- UNION ALL
+--
+-- --drugs
+-- SELECT
+--   '[Edit]' as editCol,
+--   c.Id,
+--   c.project,
+--   'Treatment' as recordType,
+--   c.category,
+--   c.date,
+--   (
+--     ifnull(c.code.meaning, '') || chr(10) ||
+--     ifnull(c.route, 'No route') || ', ' ||
+--     ifnull(c.amountAndVolume, '')
+--   ) as description,
+--   c.remark,
+--   c.performedby,
+--   c.vetreviewdate,
+--   c.objectid,
+--   c.taskid,
+--   'drug' as queryName,
+--   CAST((c.lsid || '<>drug') as varchar(250)) as key
+-- FROM study.drug c
+-- WHERE c.vetreview IS NULL
 
 UNION ALL
 
@@ -123,7 +123,7 @@ SELECT
   'treatment_order' as queryName,
   CAST((c.lsid || '<>treatment_order') as varchar(250)) as key
 FROM study.treatment_order c
-WHERE c.vetreview IS NULL
+WHERE c.vetreview IS NULL and c.category = 'Clinical'
 
 UNION ALL
 
@@ -144,7 +144,7 @@ SELECT
   'cases' as queryName,
   CAST((c.lsid || '<>cases') as varchar(250)) as key
 FROM study.cases c
-WHERE c.vetreview IS NULL
+WHERE c.vetreview IS NULL and c.category = 'Clinical'
 
 UNION ALL
 
@@ -165,4 +165,4 @@ SELECT
   'cases' as queryName,
   CAST((c.lsid || '<>cases') as varchar(250)) as key
 FROM study.cases c
-WHERE c.vetreview IS NULL and c.enddate IS NULL
+WHERE c.vetreview IS NULL and c.enddate IS NOT NULL and c.category = 'Clinical'

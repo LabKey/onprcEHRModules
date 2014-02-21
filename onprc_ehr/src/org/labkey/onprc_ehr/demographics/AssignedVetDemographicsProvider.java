@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 LabKey Corporation
+ * Copyright (c) 2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,33 +30,28 @@ import java.util.Set;
  * Date: 7/14/13
  * Time: 10:29 AM
  */
-public class ActiveAnimalGroupsDemographicsProvider extends AbstractListDemographicsProvider
+public class AssignedVetDemographicsProvider extends AbstractListDemographicsProvider
 {
-    public ActiveAnimalGroupsDemographicsProvider(Module owner)
+    public AssignedVetDemographicsProvider(Module owner)
     {
-        super("ehr", "animal_group_members", "activeAnimalGroups", owner);
+        super("study", "demographicsAssignedVet", "assignedVet", owner);
         _supportsQCState = false;
     }
 
     protected Set<FieldKey> getFieldKeys()
     {
         Set<FieldKey> keys = new HashSet<FieldKey>();
-        keys.add(FieldKey.fromString("rowid"));
         keys.add(FieldKey.fromString("Id"));
-        keys.add(FieldKey.fromString("date"));
-        keys.add(FieldKey.fromString("enddate"));
-        keys.add(FieldKey.fromString("groupId"));
-        keys.add(FieldKey.fromString("groupId/name"));
+        keys.add(FieldKey.fromString("assignedVet"));
+        keys.add(FieldKey.fromString("assignedVetId"));
+        keys.add(FieldKey.fromString("assignmentType"));
 
         return keys;
     }
 
     @Override
-    protected SimpleFilter getFilter(Collection<String> ids)
+    public boolean requiresRecalc(String schema, String query)
     {
-        SimpleFilter filter = super.getFilter(ids);
-        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
-
-        return filter;
+        return "study".equalsIgnoreCase(schema) && ("housing".equalsIgnoreCase(query) || "assignment".equalsIgnoreCase(query));
     }
 }

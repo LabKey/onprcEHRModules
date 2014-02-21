@@ -43,6 +43,7 @@ import org.labkey.onprc_ehr.dataentry.*;
 import org.labkey.onprc_ehr.demographics.ActiveAnimalGroupsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveFlagsDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.AssignedVetDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.HousingDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ParentsDemographicsProvider;
@@ -188,7 +189,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
             //ignore
         }
 
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Listing of Cages", this, DetailsURL.fromString("/query/executeQuery.view?executeQuery.view?schemaName=ehr_lookups&query.queryName=cage"), "Colony Management");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Listing of Cages", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=ehr_lookups&query.queryName=cage"), "Colony Management");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Cites Report", this, DetailsURL.fromString("/onprc_ehr/citesReport.view"), "Colony Management");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Consortium Statistics", this, DetailsURL.fromString("/onprc_ehr/consortiumReport.view"), "Colony Management");
 
@@ -223,7 +224,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SurgicalRoundsFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BehaviorRoundsFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(TreatmentsFormType.class, this));
-        EHRService.get().registerFormType(new DefaultDataEntryFormFactory.TaskFactory(this, "Clinical", "tb", "TB Tests", Collections.<FormSection>singletonList(new SimpleGridPanel("study", "tb", "TB Tests"))));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory.TaskFactory(this, "Clinical", "tb", "TB Tests", Collections.<FormSection>singletonList(new TBProcedureFormSection())));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PairingFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ProcessingFormType.class, this));
@@ -235,6 +236,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalReportFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalRemarkFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(MensFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(AssignmentFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(MatingFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PregnancyConfirmationFormType.class, this));
 
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawFormType.class, this));
@@ -255,12 +258,13 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerDemographicsProvider(new SourceDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new ActiveFlagsDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new TBDemographicsProvider(this));
-        EHRService.get().registerDemographicsProvider(new ActiveAnimalGroupsDemographicsProvider());
+        EHRService.get().registerDemographicsProvider(new ActiveAnimalGroupsDemographicsProvider(this));
+        EHRService.get().registerDemographicsProvider(new AssignedVetDemographicsProvider(this));
 
         //buttons
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "my_tasks");
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "tasks");
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr", "project", EHRProtocolEditPermission.class), "ehr", "animalUsage");
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr", "protocol_counts", EHRProtocolEditPermission.class), "ehr", "animalUsage");
 
         EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", BloodDrawFormType.NAME, new String[]{"Blood Draws"}), "study", "demographics");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Weight For Selected", "Weight", "weight", new String[]{"Weight"}), "study", "demographics");

@@ -27,8 +27,7 @@ public class GrossFindingsFormPanelSection extends SimpleFormPanelSection
 {
     public GrossFindingsFormPanelSection()
     {
-        super("ehr", "encounter_summaries", "Gross Findings");
-        setTemplateMode(TEMPLATE_MODE.NONE);
+        super("study", "grossFindings", "Gross Findings", false);
 
         addClientDependency(ClientDependency.fromFilePath("ehr/buttons/encounterButtons.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/EncounterChild.js"));

@@ -25,6 +25,8 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.*;
+import org.labkey.api.security.SecurityManager;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
@@ -39,6 +41,7 @@ public class NecropsyFormType extends EncounterForm
 {
     public static final String NAME = "Necropsies";
     public static final String LABEL = "Necropsy";
+    public static final String DEFAULT_GROUP = "DCM Pathology";
 
     public NecropsyFormType(DataEntryFormContext ctx, Module owner)
     {
@@ -49,10 +52,11 @@ public class NecropsyFormType extends EncounterForm
                 new AnimalDetailsFormSection(),
                 new GrossFindingsFormPanelSection(),
                 new PathologyFormSection("ehr", "encounter_participants", "Staff"),
-                new PathologyMedicationsFormSection("study", "Drug Administration", "Medications/Treatments"),
-                new PathologyFormSection("study", "tissue_samples", "Tissues/Weights"),
-                new PathologyFormSection("study", "tissueDistributions", "Tissue Distributions"),
-                new PathologyFormSection("study", "measurements", "Measurements"),
+                new PathologyNotesFormPanelSection(),
+                //new PathologyMedicationsFormSection("study", "Drug Administration", "Medications/Treatments"),
+                //new PathologyFormSection("study", "tissue_samples", "Tissues/Weights"),
+                //new PathologyTissueDistFormSection(),
+                //new PathologyFormSection("study", "measurements", "Measurements"),
                 new PathologyDiagnosesFormSection("study", "histology", "Histologic Findings"),
                 new PathologyDiagnosesFormSection("study", "pathologyDiagnoses", "Diagnoses")
         ));
@@ -88,5 +92,19 @@ public class NecropsyFormType extends EncounterForm
             return false;
 
         return super.canInsert();
+    }
+
+    @Override
+    protected Integer getDefaultAssignedTo()
+    {
+        UserPrincipal up = org.labkey.api.security.SecurityManager.getPrincipal(DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
+    }
+
+    @Override
+    protected Integer getDefaultReviewRequiredPrincipal()
+    {
+        UserPrincipal up = SecurityManager.getPrincipal(DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
     }
 }

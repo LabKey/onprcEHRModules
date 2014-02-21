@@ -39,7 +39,8 @@ SELECT
    END as sqFtStatus,
    t.heightStatus,
   t.weightExempt,
-  t.totalWeightExempt
+  t.totalWeightExempt,
+  t.totalHeightExempt,
 
 FROM (
 
@@ -64,7 +65,8 @@ SELECT
     group_concat(t0.mostRecentWeight) as weights,
     group_concat(t0.heightStatus, chr(10)) as heightStatus,
     group_concat(CASE WHEN t0.weightExemption IS NULL THEN NULL ELSE t0.Id END) as weightExempt,
-    sum(CASE WHEN t0.weightExemption IS NULL THEN 0 ELSE 1 END) as totalWeightExempt
+    sum(CASE WHEN t0.weightExemption IS NULL THEN 0 ELSE 1 END) as totalWeightExempt,
+    count(t0.heightExemption) as totalHeightExempt
 
 FROM (
 
@@ -78,6 +80,7 @@ SELECT
   c1.sqft as requiredSqFt,
   c1.height as requiredHeight,
   group_concat(c1.height) as heights,
+  f.heightExemption,
   CASE
     WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NULL) THEN ('ERROR: Insufficient height, ' || h.id ||' needs at least: ' || cast(c1.height AS varchar(50)))
     WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NOT NULL) THEN cast(('NOTE: Height Exemption: ' || h.Id) as varchar(500))

@@ -1336,75 +1336,6 @@
         </columns>
         <tableTitle>Problem List</tableTitle>
     </table>
-    <table tableName="tb" tableDbType="TABLE">
-        <columns>
-            <column columnName="Id">
-                <datatype>varchar</datatype>
-                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <importAliases>
-                    <importAlias>ptid</importAlias>
-                </importAliases>
-            </column>
-            <column columnName="date">
-                <datatype>timestamp</datatype>
-                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-            </column>
-            <column columnName="method">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="lot">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="dilution">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="eye">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="remark">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
-            </column>
-            <column columnName="description">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#Description</propertyURI>
-            </column>
-            <column columnName="objectid">
-                <datatype>entityid</datatype>
-                <propertyURI>urn:ehr.labkey.org/#ObjectId</propertyURI>
-                <isKeyField>true</isKeyField>
-            </column>
-            <column columnName="parentid">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#ParentId</propertyURI>
-            </column>
-            <column columnName="taskid">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
-            </column>
-            <column columnName="project">
-                <datatype>integer</datatype>
-                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
-            </column>
-			<column columnName="performedby">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
-            </column>
-            <column columnName="requestid">
-                <datatype>varchar</datatype>
-                <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
-            </column>
-            <column columnName="enddate">
-                <datatype>timestamp</datatype>
-                <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
-            </column>
-            <column columnName="result">
-                <datatype>varchar</datatype>
-            </column>
-        </columns>
-        <tableTitle>TB Tests</tableTitle>
-    </table>
     <table tableName="treatment_order" tableDbType="TABLE">
         <columns>
             <column columnName="Id">
@@ -1474,6 +1405,14 @@
             <column columnName="taskid">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
+            </column>
+            <column columnName="vetreview">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReview</propertyURI>
+            </column>
+            <column columnName="vetreviewdate">
+                <datatype>timestamp</datatype>
+                <propertyURI>urn:ehr.labkey.org/#VetReviewDate</propertyURI>
             </column>
 			<column columnName="performedby">
                 <datatype>varchar</datatype>
@@ -3013,6 +2952,9 @@
             <!--</column>-->
             <column columnName="weight">
                 <datatype>double</datatype>
+            </column>
+            <column columnName="noWeight">
+                <datatype>boolean</datatype>
             </column>
         </columns>
         <tableTitle>Tissue Samples</tableTitle>

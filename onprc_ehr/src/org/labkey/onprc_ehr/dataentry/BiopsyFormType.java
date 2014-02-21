@@ -24,6 +24,7 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.*;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
@@ -84,5 +85,19 @@ public class BiopsyFormType extends EncounterForm
             return false;
 
         return super.canInsert();
+    }
+
+    @Override
+    protected Integer getDefaultAssignedTo()
+    {
+        UserPrincipal up = org.labkey.api.security.SecurityManager.getPrincipal(NecropsyFormType.DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
+    }
+
+    @Override
+    protected Integer getDefaultReviewRequiredPrincipal()
+    {
+        UserPrincipal up = org.labkey.api.security.SecurityManager.getPrincipal(NecropsyFormType.DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
     }
 }

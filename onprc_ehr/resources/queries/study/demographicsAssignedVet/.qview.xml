@@ -6,9 +6,9 @@
         <column name="Id/curLocation/room"/>
         <column name="Id/curLocation/cage"/>
         <column name="Id/utilization/use"/>
-        <column name="assignedVets"/>
+        <column name="assignedVet"/>
         <column name="assignmentType"/>
-        <column name="protocol"/>
+        <column name="protocols"/>
         <column name="areas"/>
         <column name="Id/demographics/history"/>
     </columns>

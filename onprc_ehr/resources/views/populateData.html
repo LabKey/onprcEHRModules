@@ -336,6 +336,12 @@ Ext4.onReady(function(){
             queryName: 'att_score',
             pk: 'rowid'
         },{
+            label: 'Turgor Score',
+            populateFn: 'populateTurgorScore',
+            schemaName: 'ehr_lookups',
+            queryName: 'turgor_score',
+            pk: 'rowid'
+        },{
             label: 'Incision Score',
             populateFn: 'populateIncisionScore',
             schemaName: 'ehr_lookups',
@@ -2811,6 +2817,8 @@ Ext4.onReady(function(){
             ['E-YY547','Common Treatments',null],
             ['E-X0100','Common Treatments',null],
             ['E-X0500','Common Treatments',null],
+            ['E-87350','Common Treatments',null],
+            ['E-YY008','Common Treatments',null],
             ['T-YZ060','Pathology Codes',null],
             ['E-44550','Pathology Codes',null],
             ['M-31605','Pathology Codes',null],
@@ -5040,6 +5048,7 @@ Ext4.onReady(function(){
             ['serologyResultQualifier', 'Serology Result Qualifier', 'value'],
             ['app_score', 'Appetite Score', 'value'],
             ['att_score', 'Attitude Score', 'value'],
+            ['turgor_score', 'Turgor Score', 'value'],
             ['hyd_score', 'Hyd Score', 'value'],
             ['stool_score', 'Stool Score', 'value'],
             ['sib_score', 'SIB Score', 'value'],
@@ -5161,6 +5170,26 @@ Ext4.onReady(function(){
                 ['Unknown', 6],
                 ['Fasted', 7],
                 ['Nursing', 8]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateTurgorScore: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'turgor_score',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['Normal'],
+                ['Delayed']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5704,7 +5733,7 @@ Ext4.onReady(function(){
                 ['BCS', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
                 ['CRT', Ext4.encode({xtype: 'textfield', defaultValue: '1-2'})],
                 ['MM', Ext4.encode({xtype: 'textfield', defaultValue: 'Pink'})],
-                ['Turgor', Ext4.encode({xtype: 'textfield'})],
+                ['Turgor', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'turgor_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
                 ['Pain Score', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0, maxValue: 12})],
                 ['Other', Ext4.encode({xtype: 'textfield'})],
                 ['Menses', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'obs_mens', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
@@ -5983,8 +6012,6 @@ Ext4.onReady(function(){
             ['Procedure','Complete','', true],
             ['Procedure','Limited','', true],
             ['Procedure','Limited Visual','', true],
-            ['Pathology','Necropsy','', true],
-            ['Pathology','Biopsy','', true],
             ['Procedure','Aspiration gastric contents','', true],
             ['Procedure','Bottle feed','', true],
             ['Procedure','Cage change','', true],
@@ -6043,9 +6070,18 @@ Ext4.onReady(function(){
             ['Procedure', 'TB Test Serologic','', true],
             ['Procedure', 'TB Test Intradermal','', true],
 
-            //surgeries
+            //pathology
             ['Pathology','Biopsy',null,true,'',false,false,null,null,'',''],
-            ['Pathology','Necropsy',null,,'',false,false,null,null,'',''],
+            ['Pathology','Necropsy',null,false,'',false,false,null,null,'',''],
+            ['Pathology','Necropsy Grade 1: Fetus and Neonate Only',null,true,'',false,false,null,null,'',''],
+            ['Pathology','Necropsy Grade 2: Standard',null,true,'',false,false,null,null,'',''],
+            ['Pathology','Necropsy Grade 3: Complex Dissections',null,true,'',false,false,null,null,'',''],
+            ['Pathology','Necropsy & Histopathology Grade 1: Fetus and Neonate Only',null,true,'',false,false,null,null,'',''],
+            ['Pathology','Necropsy & Histopathology Grade 2: Standard',null,true,'',false,false,null,null,'',''],
+            ['Pathology','Necropsy & Histopathology Grade 3: Complex Dissections',null,true,'',false,false,null,null,'',''],
+            ['Pathology','Necropsy By Non-DCM Pathologist',null,true,'',false,false,null,null,'',''],
+
+            //surgeries
             ['Surgery','AAV Cisterna Magna Infusion and Sample Collection',null,true,'',false,false,7,3,'Analgeia - Carprofen','None'],
             ['Surgery','AAV Infusion and Sample Collection',null,true,'',false,false,0,3,'None','None'],
             ['Surgery','Abscess Incised and Drained',null,false,'',false,null,null,null,'',''],
@@ -6290,10 +6326,10 @@ Ext4.onReady(function(){
             ['Surgery','Herniorrhaphy Umbilical (NC)',null,false,'',true,null,null,null,'',''],
             ['Surgery','Herniorrhaphy, Incisional (NC)',null,false,'',false,null,null,null,'',''],
             ['Surgery','Homocysteine Study',null,false,'',false,null,null,null,'',''],
-            ['Surgery','Hormone Implant/Removal',null,true,'Hormone Implant/Removal',false,true,3,2,'None','None'],
-            //['Surgery','Hormone Implant Insertion',null,true,'Hormone Implant',false,true,3,2,null,null],
-            //['Surgery','Hormone Implant Removal',null,true,'Hormone Implant',false,true,3,2,null,null],
-            //['Surgery','Hormone Implant Insertion/Removal',null,true,'Hormone Implant',false,true,3,2,null,null],
+            ['Surgery','Hormone Implant/Removal',null,false,'Hormone Implant/Removal',false,true,3,2,'None','None'],
+            ['Surgery','Hormone Implant Insertion',null,true,'Hormone Implant',false,true,3,2,null,null],
+            ['Surgery','Hormone Implant Removal',null,true,'Hormone Implant',false,true,3,2,null,null],
+            ['Surgery','Hormone Implant Insertion/Removal',null,true,'Hormone Implant',false,true,3,2,null,null],
             ['Surgery','Hormone Implant/Removal (NC)',null,false,'',false,null,null,null,'',''],
             ['Surgery','Hormone Packet and Pellet Placement',null,true,'Hormone Packet and Pellet Placement',false,true,3,2,'None','None'],
             ['Surgery','Hourly Operating Room',null,true,'',false,false,0,0,'None','None'],
@@ -6867,7 +6903,7 @@ Ext4.onReady(function(){
             var fields = ('value').split(',');
             var data = [
                 ['Narrative'],
-                ['Gross Comments'],
+                ['Pathology Notes'],
                 ['Other']
             ];
 
@@ -7433,19 +7469,19 @@ Ext4.onReady(function(){
                 ['PDL ABSCN-8','E-YY331',3,'MMIA','agent'],
                 ['PDL STLV WB','E-YY331',5,'Western Blot','agent'],
                 ['SRV Virus Isolation','E-YY328',1,'Cell Culture CPE','agent'],
-                ['BASIC Chemistry Panel (Axthelm)','GLUC',1,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','BUN',2,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','CREAT',3,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','Na',4,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','K',5,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','TP',6,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','ALB',7,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','AST',8,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','ALT',9,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','ALKP',10,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','Amyl',11,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','TBili',12,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','Ca',13,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','ALB',1,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','ALKP',2,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','ALT',3,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','Amyl',4,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','TBili',5,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','BUN',6,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','Ca',7,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','Phos',8,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','CREAT',9,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','GLUC',10,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','Na',11,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','K',12,'','testid'],
+                ['BASIC Chemistry Panel (Axthelm)','TP',13,'','testid'],
                 ['BASIC Chemistry Panel (Axthelm)','Glob',14,'','testid']
             ];
 

@@ -22,7 +22,7 @@ select
   d.calculated_status
 from study.demographics d
 
-LEFT JOIN (select id, max(date) as lastDate from study.tb WHERE tb.qcstate.publicdata = true group by id) T2
+LEFT JOIN (select id, max(date) as lastDate from study.encounters e WHERE e.qcstate.publicdata = true AND e.procedureid.name IN (javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TB_TEST_INTRADERMAL'), javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TB_TEST_SEROLOGIC')) group by id) T2
 ON (d.id = t2.id)
 
 

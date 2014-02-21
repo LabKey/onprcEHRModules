@@ -11,6 +11,9 @@
                     <column columnName="assignedVet">
                         <columnTitle>Assigned Vet(s)</columnTitle>
                     </column>
+                    <column columnName="assignedVetId">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>

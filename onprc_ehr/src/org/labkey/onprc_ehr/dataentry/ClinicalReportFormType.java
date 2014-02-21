@@ -93,6 +93,14 @@ public class ClinicalReportFormType extends TaskForm
 
         ret.add("OPENCLINICALCASE");
 
+        int idx = ret.indexOf("REVIEW");
+        assert idx > -1;
+        ret.remove("REVIEW");
+        if (idx > -1)
+            ret.add(idx, "VET_REVIEW");
+        else
+            ret.add("VET_REVIEW");
+
         return ret;
     }
 

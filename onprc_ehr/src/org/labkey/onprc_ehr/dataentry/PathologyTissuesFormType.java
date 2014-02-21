@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
@@ -25,6 +26,8 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.PrincipalType;
+import org.labkey.api.security.UserPrincipal;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
@@ -45,10 +48,10 @@ public class PathologyTissuesFormType extends TaskForm
         super(ctx, owner, NAME, LABEL, "Pathology", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
-                new DrugAdministrationFormSection(),
-                new SimpleGridPanel("study", "tissue_samples", "Tissues/Weights"),
-                new SimpleGridPanel("study", "tissueDistributions", "Tissue Distributions"),
-                new SimpleGridPanel("study", "measurements", "Measurements")
+                new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+                new SimpleGridPanel("study", "tissue_samples", "Tissues/Weights", EHRService.FORM_SECTION_LOCATION.Tabs),
+                new TissueDistFormSection(),
+                new SimpleGridPanel("study", "measurements", "Measurements", EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
 
         for (FormSection s : this.getFormSections())
@@ -80,5 +83,19 @@ public class PathologyTissuesFormType extends TaskForm
             return false;
 
         return super.canInsert();
+    }
+
+    @Override
+    protected Integer getDefaultAssignedTo()
+    {
+        UserPrincipal up = org.labkey.api.security.SecurityManager.getPrincipal(NecropsyFormType.DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
+    }
+
+    @Override
+    protected Integer getDefaultReviewRequiredPrincipal()
+    {
+        UserPrincipal up = org.labkey.api.security.SecurityManager.getPrincipal(NecropsyFormType.DEFAULT_GROUP, getCtx().getContainer(), true);
+        return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
     }
 }

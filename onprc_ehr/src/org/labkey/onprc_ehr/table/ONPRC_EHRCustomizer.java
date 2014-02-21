@@ -170,11 +170,34 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             {
                 customizeAreaTable((AbstractTableInfo) table);
             }
+
+            //check for datasets
+            if (table instanceof DataSetTable)
+            {
+                customizeDataset((AbstractTableInfo)table);
+            }
         }
 
         if (matches(table, "study", "surgeryChecklist"))
         {
-            customizeSurgChecklistTable((AbstractTableInfo) table);
+            customizeSurgChecklistTable(table);
+        }
+    }
+
+    private void customizeDataset(AbstractTableInfo ti)
+    {
+        String name = "enteredSinceVetReview";
+        if (ti.getColumn(name) == null)
+        {
+            TableInfo obsRealTable = getRealTableForDataSet(ti, "Clinical Observations");
+            if (obsRealTable != null)
+            {
+                //clinical remarks entered since last vet review is a proxy for whether it needs to be reviewed again
+                SQLFragment sql = new SQLFragment("(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".date > COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), CAST('1/1/1900' as DATE)) THEN " + ti.getSqlDialect().getBooleanTRUE() + " ELSE " + ti.getSqlDialect().getBooleanFALSE() + " END)", ONPRC_EHRManager.VET_REVIEW);
+                ExprColumn remarkCol = new ExprColumn(ti, name, sql, JdbcType.BOOLEAN, ti.getColumn("Id"), ti.getColumn("date"));
+                remarkCol.setLabel("Entered Since Last Vet Review?");
+                ti.addColumn(remarkCol);
+            }
         }
     }
 
@@ -904,6 +927,33 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             latestHx.setDisplayWidth("200");
             ti.addColumn(latestHx);
         }
+
+        //vet review
+        String lastVetReview = "lastVetReview";
+        if (ti.getColumn(lastVetReview) == null)
+        {
+            TableInfo obsRealTable = getRealTableForDataSet(ti, "Clinical Observations");
+            TableInfo remarksTable = getRealTableForDataSet(ti, "Clinical Remarks");
+            if (obsRealTable != null && remarksTable != null)
+            {
+                SQLFragment obsSql = new SQLFragment("(SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId)", ONPRC_EHRManager.VET_REVIEW);
+                ExprColumn obsCol = new ExprColumn(ti, lastVetReview, obsSql, JdbcType.TIMESTAMP, ti.getColumn("Id"));
+                obsCol.setLabel("Last Vet Review");
+                ti.addColumn(obsCol);
+
+                String daysSinceLastReview = "daysSinceLastVetReview";
+                SQLFragment obsSql2 = new SQLFragment("(SELECT coalesce((" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "max(t.date)") + "), 999) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId)", ONPRC_EHRManager.VET_REVIEW);
+                ExprColumn obsCol2 = new ExprColumn(ti, daysSinceLastReview, obsSql2, JdbcType.INTEGER, ti.getColumn("Id"));
+                obsCol2.setLabel("Days Since Last Vet Review");
+                ti.addColumn(obsCol2);
+
+                //clinical remarks entered since last vet review is a proxy for whether it needs to be reviewed again
+                SQLFragment remarkSql = new SQLFragment("(SELECT count(*) FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.date >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), CAST('1/1/1900' as DATE)))", ONPRC_EHRManager.VET_REVIEW);
+                ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.INTEGER, ti.getColumn("Id"));
+                remarkCol.setLabel("Remarks Entered Since Last Vet Review");
+                ti.addColumn(remarkCol);
+            }
+        }
     }
 
     private void customizeMatingTable(AbstractTableInfo ti)
@@ -1194,6 +1244,11 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         externalId.setHidden(false);
         externalId.setLabel("eIACUC #");
 
+        ti.getColumn("first_approval").setHidden(true);
+        ti.getColumn("project_type").setHidden(true);
+        //ti.getColumn("ibc_approval_required").setHidden(false);
+        ti.getColumn("ibc_approval_num").setHidden(false);
+
         if (ti.getColumn("totalProjects") == null)
         {
             UserSchema us = getUserSchema(ti, "ehr");
@@ -1223,7 +1278,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         " END)";
                 SQLFragment sql = new SQLFragment(sqlString);
                 ExprColumn annualReviewDateCol = new ExprColumn(ti, annualReviewDate, sql, JdbcType.DATE, ti.getColumn("approve"));
-                annualReviewDateCol.setLabel("Annual Review Date");
+                annualReviewDateCol.setLabel("Annual Review Due Date");
                 ti.addColumn(annualReviewDateCol);
 
                 String daysUntilAnnual = "daysUntilAnnualReview";
@@ -1632,7 +1687,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String dateColSql = ds.getColumn("date").getValueSql(ExprColumn.STR_TABLE_ALIAS).toString();
         SQLFragment sql = new SQLFragment("CASE " +
             " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IS NULL THEN NULL " +
-            " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project NOT IN (select a.project FROM " + realTable.getSelectName() + " a WHERE a.participantid = " + idColSql + " AND CAST(a.date AS DATE) <= CAST(" + dateColSql + " as DATE) AND (a.enddate IS NULL OR a.enddate >= " + dateColSql + ")) THEN 'Y'" +
+            " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IN (select a.project FROM " + realTable.getSelectName() + " a WHERE a.participantid = " + idColSql + " AND CAST(a.date AS DATE) <= CAST(" + dateColSql + " as DATE) AND (a.enddate IS NULL OR a.enddate >= " + dateColSql + ")) THEN 'Y'" +
             " ELSE 'N' END");
         ExprColumn newCol = new ExprColumn(ds, name, sql, JdbcType.VARCHAR, ds.getColumn("Id"), ds.getColumn("date"), ds.getColumn("project"));
         newCol.setLabel("Is Assigned At Time?");
@@ -1693,8 +1748,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     return null;
                 }
 
-                ti.getColumn(pkCol.getSelectName()).setHidden(true);
-                ti.getColumn(pkCol.getSelectName()).setKeyField(true);
+                ti.getColumn(pkCol.getName()).setHidden(true);
+                ti.getColumn(pkCol.getName()).setKeyField(true);
 
                 ti.getColumn("projectsAtTime").setLabel("Center Projects At Time");
                 ti.getColumn("protocolsAtTime").setLabel("IACUC Protocols At Time");
@@ -1760,8 +1815,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     return null;
                 }
 
-                ti.getColumn(pkCol.getSelectName()).setHidden(true);
-                ti.getColumn(pkCol.getSelectName()).setKeyField(true);
+                ti.getColumn(pkCol.getName()).setHidden(true);
+                ti.getColumn(pkCol.getName()).setKeyField(true);
 
                 ti.getColumn("flagsAtTime").setLabel("Flags At Time");
 
@@ -1822,8 +1877,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     return null;
                 }
 
-                ti.getColumn(pkCol.getSelectName()).setHidden(true);
-                ti.getColumn(pkCol.getSelectName()).setKeyField(true);
+                ti.getColumn(pkCol.getName()).setHidden(true);
+                ti.getColumn(pkCol.getName()).setKeyField(true);
 
                 ti.getColumn("problemsAtTime").setLabel("Problems At Time");
 
@@ -1884,8 +1939,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     return null;
                 }
 
-                ti.getColumn(pkCol.getSelectName()).setHidden(true);
-                ti.getColumn(pkCol.getSelectName()).setKeyField(true);
+                ti.getColumn(pkCol.getName()).setHidden(true);
+                ti.getColumn(pkCol.getName()).setKeyField(true);
 
                 ti.getColumn("groupsAtTime").setLabel("Groups At Time");
 

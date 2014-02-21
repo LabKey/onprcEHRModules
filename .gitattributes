@@ -6,6 +6,7 @@ onprc_ehr/module.properties -text
 onprc_ehr/resources/etl/deprecated/Cases.sql -text
 onprc_ehr/resources/etl/deprecated/Parentage.sql -text
 onprc_ehr/resources/etl/deprecated/Problem[!!-~]List.sql -text
+onprc_ehr/resources/etl/deprecated/TB[!!-~]Tests.sql -text
 onprc_ehr/resources/etl/deprecated/billing.sql -text
 onprc_ehr/resources/etl/deprecated/invoiceRuns.sql -text
 onprc_ehr/resources/etl/deprecated/invoicedItems.sql -text
@@ -66,7 +67,6 @@ onprc_ehr/resources/etl/study/Parasitology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Pathology[!!-~]Diagnoses.sql -text
 onprc_ehr/resources/etl/study/PregnancyConfirmation.sql -text
 onprc_ehr/resources/etl/study/Serology[!!-~]Results.sql -text
-onprc_ehr/resources/etl/study/TB[!!-~]Tests.sql -text
 onprc_ehr/resources/etl/study/Tissue[!!-~]Distributions.sql -text
 onprc_ehr/resources/etl/study/Tissue[!!-~]Samples.sql -text
 onprc_ehr/resources/etl/study/Treatment[!!-~]Orders.sql -text
@@ -167,6 +167,7 @@ onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Procedures.qview.xml 
 onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Surgeries[!!-~]Plus[!!-~]Codes.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Surgeries[!!-~]Today.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/Surgeries.qview.xml -text
+onprc_ehr/resources/queries/study/Clinical[!!-~]Observations/.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Observations/Menses.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Remarks/Behavior[!!-~]Remarks.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Remarks/SOAP[!!-~]Note.qview.xml -text
@@ -739,6 +740,7 @@ onprc_ehr/resources/web/onprc_ehr/reports/Colony[!!-~]Census.xlsm -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeBloodStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeEncounterStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeLabworkStatusWindow.js -text
+onprc_ehr/resources/web/onprc_ehr/window/CopyTissuesWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/MarkLabworkDeliveredWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/VetRecordReviewWindow.js -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRController.java -text
@@ -748,6 +750,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/DiscardTaskButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/VetReviewRecordButton.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/AssignmentFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/AuxProcedureFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BehaviorRoundsFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BehaviorRoundsRemarksFormSection.java -text
@@ -773,6 +776,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/GrossFindingsFormPanelSection.java 
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkRequestFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MatingFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MedicationsQueryFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MensFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/NecropsyFormType.java -text
@@ -781,6 +785,8 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PairingFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PathologyDiagnosesFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PathologyFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PathologyMedicationsFormSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PathologyNotesFormPanelSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PathologyTissueDistFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PathologyTissuesFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PregnancyConfirmationFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ProcessingFormType.java -text
@@ -792,6 +798,8 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/SurgeryRequestFormSection.java -tex
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/SurgicalRoundsFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/SurgicalRoundsRemarksFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/TBDemographicsProvider.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/TBProcedureFormSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/TissueDistFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/TissueDistributionFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/TreatmentOrdersFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/TreatmentsFormType.java -text
@@ -800,6 +808,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/WeightFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ActiveAnimalGroupsDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ActiveCasesDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ActiveFlagsDemographicsProvider.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/demographics/AssignedVetDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/CagematesDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/HousingDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ParentsDemographicsProvider.java -text
@@ -833,11 +842,14 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/UnoccupiedRoomsNotification.java
 onprc_ehr/src/org/labkey/onprc_ehr/notification/WeightAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/query/ONPRC_EHRTriggerHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/table/ONPRC_EHRCustomizer.java -text
+onprc_ehr/tools/excelTemplates/Drug[!!-~]Formulary[!!-~]v6[!!-~].xlsx -text
+onprc_ehr/tools/excelTemplates/Form[!!-~]Templates[!!-~]v6.xlsx -text
 onprc_ehr/tools/excelTemplates/Labwork[!!-~]Panels.xlsx -text
 onprc_ehr/tools/excelTemplates/Labwork[!!-~]Reference[!!-~]Ranges.xlsx -text
 onprc_ehr/tools/excelTemplates/Labwork[!!-~]Testnames.xlsx -text
 onprc_ehr/tools/excelTemplates/PRIME[!!-~]Areas[!!-~]Combined.xlsx -text
 onprc_ehr/tools/excelTemplates/README.txt -text
+onprc_ehr/tools/excelTemplates/SNOMED[!!-~]Subset[!!-~]Codes.xlsx -text
 onprc_ehr/tools/installLabKey.sh -text
 onprc_ehr/tools/installLabKeyPipeline.sh -text
 onprc_ehr/tools/miscSqlScripts/deletedRecords.sql -text

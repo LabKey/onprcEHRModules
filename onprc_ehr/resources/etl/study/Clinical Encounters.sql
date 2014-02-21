@@ -437,3 +437,45 @@ where s2.value is not null and s2.value IN (
   'P-02310'
 )
 and s.ts > ?
+
+--add TB tests
+UNION ALL
+
+SELECT
+  cast(w.AnimalID as nvarchar(4000)) as Id,
+  w.date,
+  null as enddate,
+  'Procedure' as type,
+  null as caseno,
+  null as caseid,
+  null as performedBy,
+  (SELECT rowid FROM labkey.ehr_lookups.procedures WHERE category = 'Procedure' AND name = 'TB Test Intradermal') as procedureid,
+  (cast(w.objectid as varchar(38)) + '_tb') as objectid,
+  null as chargetype,
+  null as project,
+  null as remark
+
+FROM af_weights w
+where w.tbflag = 1 and w.ts > ?
+
+UNION ALL
+
+SELECT
+  cast(dx.AnimalID as nvarchar(4000)) as Id,
+  dx.date,
+  null as enddate,
+  'Procedure' as type,
+  null as caseno,
+  null as caseid,
+  null as performedBy,
+  (SELECT rowid FROM labkey.ehr_lookups.procedures WHERE category = 'Procedure' AND name = 'TB Test Intradermal') as procedureid,
+  cast(sno.objectid as varchar(36)) as objectid,
+  null as chargetype,
+  null as project,
+  null as remark
+
+FROM Cln_DXSnomed sno
+  LEFT JOIN Cln_DX dx ON (sno.DiagnosisID = dx.DiagnosisID)
+  LEFT JOIN af_weights w2 ON (w2.AnimalId = dx.AnimalID AND w2.Date = dx.Date and w2.TBFlag = 1)
+
+WHERE sno.Snomed = 'P-54268' AND w2.AnimalId IS NULL and sno.ts > ?

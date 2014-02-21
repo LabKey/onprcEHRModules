@@ -44,7 +44,10 @@ AND s2.value NOT IN (
   'F-Y3716',
   'F-Y3718',
   'F-Y3720',
-  'F-Y3722'
+  'F-Y3722',
+
+  --TB test
+  'P-54268'
 )
 and s.ts > ?
 

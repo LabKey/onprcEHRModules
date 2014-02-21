@@ -41,7 +41,7 @@ public class WeightFormType extends TaskForm
             new AnimalDetailsFormSection(),
             new WeightFormSection(),
             new DrugAdministrationFormSection(),
-            new SimpleGridPanel("study", "tb", "TB Tests")
+            new TBProcedureFormSection()
         ));
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Weight.js"));

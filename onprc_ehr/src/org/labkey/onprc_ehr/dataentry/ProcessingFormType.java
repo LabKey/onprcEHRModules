@@ -37,7 +37,7 @@ public class ProcessingFormType extends TaskForm
 
     public ProcessingFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Processing", "Processing", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Processing", "Colony Management", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "encounters", "Procedures"),
