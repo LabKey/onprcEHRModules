@@ -1,8 +1,8 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="mostRecentObservations" tableDbType="TABLE">
-                <tableTitle>Most Recent Observations</tableTitle>
+            <table tableName="mostRecentObservationsForCase" tableDbType="TABLE">
+                <tableTitle>Most Recent Observations For Case</tableTitle>
                 <titleColumn>observations</titleColumn>
             </table>
         </tables>

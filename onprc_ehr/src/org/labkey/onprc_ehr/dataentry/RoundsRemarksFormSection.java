@@ -78,8 +78,12 @@ public class RoundsRemarksFormSection extends SimpleFormSection
     {
         JSONObject ret = super.toJSON(ctx, includeFormElements);
 
-        ret.put("serverStoreSort", "Id/curLocation/room,Id/curLocation/cage,Id");
-
         return ret;
+    }
+
+    @Override
+    protected String getServerSort()
+    {
+        return "Id/curLocation/room,Id/curLocation/cage,Id";
     }
 }

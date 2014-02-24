@@ -38,6 +38,7 @@ import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
+import org.labkey.onprc_ehr.buttons.VetReviewButton;
 import org.labkey.onprc_ehr.buttons.VetReviewRecordButton;
 import org.labkey.onprc_ehr.dataentry.*;
 import org.labkey.onprc_ehr.demographics.ActiveAnimalGroupsDemographicsProvider;
@@ -279,6 +280,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeEncounterStatusWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/ChangeEncounterStatusWindow.js"))), "study", "encounters");
         EHRService.get().registerTbarButton(new ChangeQCStateButton(this, "Mark Delivered", "ONPRC_EHR.window.MarkLabworkDeliveredWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/MarkLabworkDeliveredWindow.js"))), "study", "clinpathRuns");
         EHRService.get().registerTbarButton(new VetReviewRecordButton(this), "study", "vetRecordReview");
+        EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "cases");
+        EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "demographics");
     }
 
     @Override

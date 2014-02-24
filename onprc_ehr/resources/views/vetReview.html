@@ -16,42 +16,51 @@
                         border: false
                     },
                     items: [{
-                        width: 400,
+                        width: 1000,
                         items: [{
-                            xtype: 'ehr-vetfieldcombo',
-                            width: 400,
-                            labelWidth: 180,
-                            fieldLabel: 'Choose Vet (blank for all or unassigned)',
-                            itemId: 'userField'
-                        }],
-                        buttons: [{
-                            text: 'Submit',
-                            scope: this,
-                            handler: function(btn){
-                                var panel = btn.up('#outerPanel');
-                                var displayName = panel.down('#userField').getDisplayValue();
+                            html: 'This is designed to show any SOAPs entered for a given animal since the last date a vet review was entered.  Most of these notes will pertain to open cases, but this is not necessarily the case.',
+                            style: 'padding-bottom: 20px;',
+                            border: false
+                        },{
+                            layout: 'hbox',
+                            border: false,
+                            items: [{
+                                xtype: 'ehr-vetfieldcombo',
+                                width: 400,
+                                fieldLabel: 'Choose Vet (blank for all)',
+                                itemId: 'userField'
+                            },{
+                                xtype: 'button',
+                                style: 'margin-left: 10px;margin-top: 4px;',
+                                text: 'Submit',
+                                scope: this,
+                                handler: function(btn){
+                                    var panel = btn.up('#outerPanel');
+                                    var userName = panel.down('#userField').getDisplayValue();
+                                    var filterArray = [];
+                                    filterArray.push(LABKEY.Filter.create('totalRemarksEnteredSinceReview', 0, LABKEY.Filter.Types.GT));
 
-                                var filterArray = [];
-                                if (displayName){
-                                    filterArray.push(LABKEY.Filter.create('Id/assignedVet/assignedVet', displayName, LABKEY.Filter.Types.CONTAINS));
-                                }
-
-                                var target = panel.down('#targetPanel');
-                                target.removeAll();
-                                target.add({
-                                    xtype: 'ldk-querypanel',
-                                    queryConfig: {
-                                        schemaName: 'study',
-                                        queryName: 'vetRecordReview',
-                                        linkTarget: '_blank',
-                                        filterArray: filterArray,
-                                        scope: this,
-                                        success: function(dr){
-                                            this.doResize(target.getWidth() + 80);
-                                        }
+                                    if (userName){
+                                        filterArray.push(LABKEY.Filter.create('Id/assignedVet/assignedVet', userName, LABKEY.Filter.Types.CONTAINS));
                                     }
-                                });
-                            }
+
+                                    var target = panel.down('#targetPanel');
+                                    target.removeAll();
+                                    target.add({
+                                        xtype: 'ldk-querypanel',
+                                        queryConfig: {
+                                            schemaName: 'study',
+                                            queryName: 'demographics',
+                                            viewName: 'Vet Review',
+                                            filterArray: filterArray,
+                                            scope: this,
+                                            success: function(dr){
+                                                this.doResize(target.getWidth() + 80);
+                                            }
+                                        }
+                                    });
+                                }
+                            }]
                         }]
                     },{
                         itemId: 'targetPanel',

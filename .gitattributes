@@ -188,6 +188,7 @@ onprc_ehr/resources/queries/study/Demographics/Single[!!-~]Housed.qview.xml -tex
 onprc_ehr/resources/queries/study/Demographics/Snapshot.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Transfer[!!-~]Info.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Utilization.qview.xml -text
+onprc_ehr/resources/queries/study/Demographics/Vet[!!-~]Review.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Weight[!!-~]Detail.qview.xml -text
 onprc_ehr/resources/queries/study/Diagnostics.js -text
 onprc_ehr/resources/queries/study/Diet.js -text
@@ -510,8 +511,10 @@ onprc_ehr/resources/queries/study/microbiologyPivoted.sql -text
 onprc_ehr/resources/queries/study/morbidityAndMortalityData.query.xml -text
 onprc_ehr/resources/queries/study/morbidityAndMortalityData.sql -text
 onprc_ehr/resources/queries/study/morbidityAndMortalityData/.qview.xml -text
-onprc_ehr/resources/queries/study/mostRecentObservations.query.xml -text
-onprc_ehr/resources/queries/study/mostRecentObservations.sql -text
+onprc_ehr/resources/queries/study/mostRecentClinicalObservationsForAnimal.query.xml -text
+onprc_ehr/resources/queries/study/mostRecentClinicalObservationsForAnimal.sql -text
+onprc_ehr/resources/queries/study/mostRecentObservationsForCase.query.xml -text
+onprc_ehr/resources/queries/study/mostRecentObservationsForCase.sql -text
 onprc_ehr/resources/queries/study/notesPivoted.query.xml -text
 onprc_ehr/resources/queries/study/notesPivoted.sql -text
 onprc_ehr/resources/queries/study/offspringWithMother.query.xml -text
@@ -749,6 +752,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/DiscardTaskButton.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/buttons/VetReviewButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/VetReviewRecordButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/AssignmentFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/AuxProcedureFormType.java -text

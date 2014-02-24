@@ -77,8 +77,6 @@ public class LabworkFormSection extends SimpleGridPanel
     {
         JSONObject ret = super.toJSON(ctx, includeFormElements);
 
-        ret.put("serverStoreSort", "Id,runid,testid/sort_order");
-
         return ret;
     }
 }

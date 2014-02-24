@@ -47,6 +47,7 @@ import java.util.Map;
 public class ONPRC_EHRManager
 {
     private static ONPRC_EHRManager _instance = new ONPRC_EHRManager();
+    public static final String VetReviewStartDateProp = "VetReviewStartDate";
 
     @Queryable
     public static final String AUC_RESERVED = "AUC Reserved";

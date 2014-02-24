@@ -29,10 +29,6 @@
             tag: 'div',
             style: 'padding-bottom: 10px;',
             id: 'procedureFlags_' + webpart.wrapperDivId
-        },{
-            tag: 'div',
-            style: 'padding-bottom: 10px;',
-            id: 'procedureCharges_' + webpart.wrapperDivId
         }]
 
         var el = Ext4.get(webpart.wrapperDivId);
@@ -45,25 +41,7 @@
                 queryName: 'procedures',
                 filterArray: [
                     LABKEY.Filter.create('rowid', procedureId, LABKEY.Filter.Types.EQUAL)
-                ],
-                listeners: {
-                    scope: this,
-                    load: function(store){
-                        if (store.getCount() == 1){
-                            var rec = store.getAt(0);
-                            var name = rec.get('name');
-                            LDK.Assert.assertNotEmpty('Name field was empty', name);
-
-                            LDK.Utils.getReadOnlyQWP({
-                                title: 'Default Charges',
-                                schemaName: 'onprc_billing',
-                                queryName: 'chargeRates',
-                                viewName: 'Active Rates',
-                                filters: [LABKEY.Filter.create('chargeId/name', name, LABKEY.Filter.Types.STARTS_WITH)]
-                            }).render('procedureCharges_' + webpart.wrapperDivId);
-                        }
-                    }
-                }
+                ]
             },
             title: 'Procedure Details',
             renderTo: 'procedureDetails_' + webpart.wrapperDivId

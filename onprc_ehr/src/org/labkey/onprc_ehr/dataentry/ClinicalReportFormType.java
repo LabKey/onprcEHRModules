@@ -27,6 +27,7 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.query.Queryable;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
@@ -39,6 +40,7 @@ import java.util.List;
  */
 public class ClinicalReportFormType extends TaskForm
 {
+    @Queryable
     public static final String NAME = "Clinical Report";
     public static final String LABEL = "Exams/Cases";
 

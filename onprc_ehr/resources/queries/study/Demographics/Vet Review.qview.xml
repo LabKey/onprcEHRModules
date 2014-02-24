@@ -1,0 +1,25 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="true">
+    <columns>
+        <column name="history"/>
+        <column name="Id"/>
+        <column name="mostRecentHx"/>
+        <!--<column name="latestP2"/>-->
+        <column name="remarksEnteredSinceReview"/>
+        <column name="mostRecentClinicalObservations/observations"/>
+        <column name="mostRecentClinicalObservations/date"/>
+
+        <column name="lastVetReview"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
+        <column name="Id/utilization/use"/>
+        <!--<column name="Id/assignedVet/assignedVet"/>-->
+        <column name="calculated_status">
+            <properties>
+                <property name="columnTitle" value="Status"/>
+            </properties>
+        </column>
+    </columns>
+    <sorts>
+        <sort column="Id" />
+    </sorts>
+</customView>

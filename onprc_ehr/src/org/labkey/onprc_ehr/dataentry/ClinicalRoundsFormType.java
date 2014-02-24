@@ -24,6 +24,7 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.query.Queryable;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
@@ -36,9 +37,12 @@ import java.util.List;
  */
 public class ClinicalRoundsFormType extends TaskForm
 {
+    @Queryable
+    public static final String NAME = "Clinical Rounds";
+
     public ClinicalRoundsFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, "Clinical Rounds", "Clinical Rounds", "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, NAME, "Clinical", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new ClinicalRoundsRemarksFormSection(),

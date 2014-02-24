@@ -50,9 +50,9 @@ public class SurgeryFormType extends EncounterForm
                 new ExtendedAnimalDetailsFormSection(),
                 new EncounterChildFormSection("ehr", "encounter_participants", "Staff", false),
                 new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true),
+                new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/WeightClientStore.js")), null),
                 new EncounterMedicationsFormSection("study", "Drug Administration", "Medications/Treatments Given", true),
                 new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
-                new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/WeightClientStore.js")), null),
                 new EncounterChildFormSection("study", "blood", "Blood Draws", false, "EHR.data.BloodDrawClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/window/AddScheduledBloodDrawsWindow.js"), ClientDependency.fromFilePath("ehr/data/BloodDrawClientStore.js")), null),
                 new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true),
                 new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/MiscChargesClientStore.js")), null)

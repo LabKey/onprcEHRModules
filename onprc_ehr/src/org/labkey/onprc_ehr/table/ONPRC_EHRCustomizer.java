@@ -15,10 +15,12 @@
  */
 package org.labkey.onprc_ehr.table;
 
+import org.apache.commons.beanutils.ConversionException;
 import org.apache.log4j.Logger;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.ConvertHelper;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DisplayColumn;
@@ -34,6 +36,8 @@ import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
 import org.labkey.api.ldk.table.AbstractTableCustomizer;
+import org.labkey.api.module.ModuleLoader;
+import org.labkey.api.module.ModuleProperty;
 import org.labkey.api.query.AliasedColumn;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.ExprColumn;
@@ -52,6 +56,7 @@ import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
+import org.labkey.onprc_ehr.ONPRC_EHRModule;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 
 import java.io.IOException;
@@ -184,6 +189,33 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         }
     }
 
+    private Date getDefaultVetReviewDate(Container c)
+    {
+        ModuleProperty mp = ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class).getModuleProperties().get(ONPRC_EHRManager.VetReviewStartDateProp);
+        String dateValue = mp.getEffectiveValue(c);
+        Date defaultDate = null;
+        if (dateValue != null)
+        {
+            try
+            {
+                defaultDate = ConvertHelper.convert(dateValue, Date.class);
+            }
+            catch (ConversionException e)
+            {
+                _log.error("Invalid date for ModuleProperty: " + dateValue);
+            }
+        }
+
+        if (defaultDate == null)
+        {
+            Calendar cal = Calendar.getInstance();
+            cal.set(1900, 1, 1);
+            defaultDate = cal.getTime();
+        }
+
+        return defaultDate;
+    }
+
     private void customizeDataset(AbstractTableInfo ti)
     {
         String name = "enteredSinceVetReview";
@@ -193,7 +225,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             if (obsRealTable != null)
             {
                 //clinical remarks entered since last vet review is a proxy for whether it needs to be reviewed again
-                SQLFragment sql = new SQLFragment("(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".date > COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), CAST('1/1/1900' as DATE)) THEN " + ti.getSqlDialect().getBooleanTRUE() + " ELSE " + ti.getSqlDialect().getBooleanFALSE() + " END)", ONPRC_EHRManager.VET_REVIEW);
+                SQLFragment sql = new SQLFragment("(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".date > COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) THEN " + ti.getSqlDialect().getBooleanTRUE() + " ELSE " + ti.getSqlDialect().getBooleanFALSE() + " END)", ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
                 ExprColumn remarkCol = new ExprColumn(ti, name, sql, JdbcType.BOOLEAN, ti.getColumn("Id"), ti.getColumn("date"));
                 remarkCol.setLabel("Entered Since Last Vet Review?");
                 ti.addColumn(remarkCol);
@@ -924,7 +956,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             );
             ExprColumn latestHx = new ExprColumn(ti, hxName, sql, JdbcType.VARCHAR, idCol);
             latestHx.setLabel("Most Recent Hx");
-            latestHx.setDisplayWidth("200");
+            latestHx.setDisplayWidth("150");
             ti.addColumn(latestHx);
         }
 
@@ -948,11 +980,32 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 ti.addColumn(obsCol2);
 
                 //clinical remarks entered since last vet review is a proxy for whether it needs to be reviewed again
-                SQLFragment remarkSql = new SQLFragment("(SELECT count(*) FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.date >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), CAST('1/1/1900' as DATE)))", ONPRC_EHRManager.VET_REVIEW);
-                ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.INTEGER, ti.getColumn("Id"));
-                remarkCol.setLabel("Remarks Entered Since Last Vet Review");
-                ti.addColumn(remarkCol);
+                SQLFragment totalRemarkSql = new SQLFragment("(SELECT count(*) FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.date >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?))", ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
+                ExprColumn totalRemarkCol = new ExprColumn(ti, "totalRemarksEnteredSinceReview", totalRemarkSql, JdbcType.INTEGER, ti.getColumn("Id"));
+                totalRemarkCol.setLabel("# Remarks Entered Since Last Vet Review");
+                ti.addColumn(totalRemarkCol);
+
+                //date part not supported in postgres
+                if (ti.getSqlDialect().isSqlServer())
+                {
+                    SQLFragment groupConatSql = new SQLFragment(ti.getSqlDialect().concatenate("CAST(" + ti.getSqlDialect().getDatePart(Calendar.MONTH, "cr.date") + " AS VARCHAR)", "'/'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.DATE, "cr.date") + " AS VARCHAR)", "': '", getChr(ti) + "(10)", "CASE WHEN cr.description IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("COALESCE(cr.description, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.remark IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Remark: '",  "COALESCE(cr.remark, '')", getChr(ti) + "(10)") + " END"));
+                    SQLFragment remarkSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(groupConatSql, false, true, ti.getSqlDialect().concatenate(getChr(ti) + "(10)", getChr(ti) + "(10)")) + " as expr1 FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.date >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category != ?))", ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), "Surgery");
+                    ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.VARCHAR, ti.getColumn("Id"), ti.getColumn("date"));
+                    remarkCol.setLabel("Remarks Entered Since Last Vet Review");
+                    remarkCol.setDisplayWidth("200");
+                    ti.addColumn(remarkCol);
+                }
             }
+        }
+
+        if (ti.getColumn("mostRecentClinicalObservations") == null)
+        {
+            UserSchema us = getStudyUserSchema(ti);
+            ColumnInfo col17 = getWrappedCol(us, ti, "mostRecentClinicalObservations", "mostRecentClinicalObservationsForAnimal", "Id", "Id");
+            col17.setLabel("Most Recent Clinical Observations");
+            col17.setDescription("Displays the most recent set of clinical observations for this animal");
+            col17.setDisplayWidth("150");
+            ti.addColumn(col17);
         }
     }
 
@@ -1129,7 +1182,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn("mostRecentObservations") == null)
         {
             UserSchema us = getStudyUserSchema(ti);
-            ColumnInfo col17 = getWrappedCol(us, ti, "mostRecentObservations", "mostRecentObservations", "objectid", "caseid");
+            ColumnInfo col17 = getWrappedCol(us, ti, "mostRecentObservations", "mostRecentObservationsForCase", "objectid", "caseid");
             col17.setLabel("Most Recent Observations");
             col17.setDescription("Displays the most recent set of observations associated with this case");
             col17.setDisplayWidth("150");
