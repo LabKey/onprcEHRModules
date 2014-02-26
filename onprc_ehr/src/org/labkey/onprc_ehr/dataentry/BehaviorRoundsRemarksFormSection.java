@@ -39,6 +39,7 @@ public class BehaviorRoundsRemarksFormSection extends RoundsRemarksFormSection
         setConfigSources(Collections.singletonList("Task"));
 
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddClinicalCasesWindow.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/AddSurgicalCasesWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddBehaviorCasesWindow.js"));
     }
 

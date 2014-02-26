@@ -24,6 +24,9 @@
                         <columnTitle># Research Treatments</columnTitle>
                         <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=treatment_order&amp;query.Id~eq=${Id}&amp;query.isActive~eq=true&amp;query.category~eq=Research</url>
                     </column>
+                    <column columnName="activeTreatments">
+                        <displayWidth>250</displayWidth>
+                    </column>
                     <column columnName="lastModification">
                         <columnTitle>Date of Last Modification</columnTitle>
                     </column>

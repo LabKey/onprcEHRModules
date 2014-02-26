@@ -37,7 +37,9 @@ import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.onprc_ehr.buttons.ChangeProjectedReleaseDateButton;
 import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
+import org.labkey.onprc_ehr.buttons.ProtocolEditButton;
 import org.labkey.onprc_ehr.buttons.VetReviewButton;
 import org.labkey.onprc_ehr.buttons.VetReviewRecordButton;
 import org.labkey.onprc_ehr.dataentry.*;
@@ -90,7 +92,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.353;
+        return 12.354;
     }
 
     public boolean hasScripts()
@@ -265,7 +267,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //buttons
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "my_tasks");
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "tasks");
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr", "protocol_counts", EHRProtocolEditPermission.class), "ehr", "animalUsage");
+        EHRService.get().registerMoreActionsButton(new ProtocolEditButton(this, "ehr", "protocol_counts"), "ehr", "animalUsage");
 
         EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", BloodDrawFormType.NAME, new String[]{"Blood Draws"}), "study", "demographics");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Weight For Selected", "Weight", "weight", new String[]{"Weight"}), "study", "demographics");
@@ -282,6 +284,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerTbarButton(new VetReviewRecordButton(this), "study", "vetRecordReview");
         EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "cases");
         EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "demographics");
+        EHRService.get().registerMoreActionsButton(new ChangeProjectedReleaseDateButton(this), "study", "assignment");
     }
 
     @Override

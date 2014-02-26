@@ -69,6 +69,8 @@ public class ComplianceNotification extends ColonyAlertsNotification
         StringBuilder msg = new StringBuilder();
 
         doAssignmentChecks(c, u, msg);
+        assignmentsNotAllowed(c, u, msg);
+        overlappingProtocolCounts(c, u, msg);
 
         bloodDrawsOverLimit(c, u, msg);
 

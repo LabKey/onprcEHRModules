@@ -13,6 +13,7 @@
         <column name="qcstate" />
         <column name="taskid" />
         <column name="requestid" />
+        <column name="chargetype" />
     </columns>
     <sorts>
         <sort column="date" descending="true"/>

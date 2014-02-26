@@ -14,6 +14,15 @@
                     <column columnName="assignedVetId">
                         <isHidden>true</isHidden>
                     </column>
+                    <column columnName="areas">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="rooms">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="protocols">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>

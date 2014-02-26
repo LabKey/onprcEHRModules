@@ -8,7 +8,9 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: bimber
@@ -35,5 +37,14 @@ public class AssignmentFormType extends TaskForm
             return false;
 
         return super.canInsert();
+    }
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> defaultButtons = new ArrayList<String>();
+        defaultButtons.add("SUBMIT");
+
+        return defaultButtons;
     }
 }

@@ -147,6 +147,10 @@ onprc_ehr/resources/queries/ehr_lookups/species/.qview.xml -text
 onprc_ehr/resources/queries/onprc_ehr/investigators/.qview.xml -text
 onprc_ehr/resources/queries/onprc_ehr/investigators/Active[!!-~]Investigators.qview.xml -text
 onprc_ehr/resources/queries/onprc_ehr/vet_assignment.query.xml -text
+onprc_ehr/resources/queries/onprc_ehr/vet_assignment/.qview.xml -text
+onprc_ehr/resources/queries/onprc_ehr/vet_assignment_summary.query.xml -text
+onprc_ehr/resources/queries/onprc_ehr/vet_assignment_summary.sql -text
+onprc_ehr/resources/queries/onprc_ehr/vet_assignment_summary/.qview.xml -text
 onprc_ehr/resources/queries/study/Animal[!!-~]Record[!!-~]Flags.js -text
 onprc_ehr/resources/queries/study/Animal[!!-~]Record[!!-~]Flags.query.xml -text
 onprc_ehr/resources/queries/study/Animal[!!-~]Record[!!-~]Flags/.qview.xml -text
@@ -637,6 +641,7 @@ onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.333-12.334.sql -te
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.335-12.336.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.350-12.351.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.352-12.353.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.353-12.354.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text
@@ -649,6 +654,7 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.333-12.334.sql -tex
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.335-12.336.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.350-12.351.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.352-12.353.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.353-12.354.sql -text
 onprc_ehr/resources/schemas/onprc_ehr.xml -text
 onprc_ehr/resources/scripts/onprc_ehr/etl.js -text
 onprc_ehr/resources/scripts/onprc_ehr/onprc_triggers.js -text
@@ -751,7 +757,9 @@ onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRManager.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/buttons/ChangeProjectedReleaseDateButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/DiscardTaskButton.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/buttons/ProtocolEditButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/VetReviewButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/VetReviewRecordButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/AssignmentFormType.java -text
@@ -783,6 +791,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkRequestFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MatingFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MedicationsQueryFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MensFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MiscChargesFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/NecropsyFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PairingFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PairingFormType.java -text

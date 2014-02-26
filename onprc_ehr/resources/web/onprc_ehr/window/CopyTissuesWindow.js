@@ -50,7 +50,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
             xtype: 'ehr-simplecombo',
             fieldLabel: 'Recipient',
             itemId: 'recipientField',
-            valueField: 'rowid',
+            valueField: 'rowId',
             displayField: 'lastName',
             schemaName: 'onprc_ehr',
             queryName: 'tissue_recipients',
@@ -94,7 +94,8 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
         LABKEY.Query.selectRows({
             schemaName: 'study',
             queryName: 'tissueDistributions',
-            columns: 'tissue,tissue/meaning,project,project/displayName,project/investigatorId/lastName,date,parentid',
+            columns: 'Id,tissue,tissue/meaning,project,project/displayName,project/investigatorId/lastName,recipient,recipient/lastname,dateOnly,parentid',
+            requiredVersion: 9.1,
             filterArray: filterArray,
             failure: LDK.Utils.getErrorCallback(),
             success: this.onLoad,
@@ -109,15 +110,43 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
             return;
         }
 
+        //first build a map showing each combination of codes
         var tissueMap = {};
         Ext4.Array.forEach(results.rows, function(r){
             var row = new LDK.SelectRowsRow(r);
-            console.log(r);
+            var key = [row.getValue('recipient/lastName'), row.getValue('Id'), row.getValue('dateOnly'), row.getValue('parentid')].join('<>');
 
-            var key = '';
+            if (!tissueMap[key]){
+                tissueMap[key] = {
+                    rows: [],
+                    orderedCodes: []
+                };
+            }
 
-
+            tissueMap[key].rows.push(row);
+            if (tissueMap[key].orderedCodes.indexOf(row.getValue('tissue')) == -1){
+                tissueMap[key].orderedCodes.push(row.getValue('tissue'));
+            }
         }, this);
+
+        console.log(tissueMap);
+
+        //then find all distinct combinations and present these
+        var distinctCombinations = {};
+        for (var key in tissueMap){
+            var obj = tissueMap[key];
+
+            if (!distinctCombinations[obj.orderedCodes.join(';')]){
+                distinctCombinations[obj.orderedCodes.join(';')] = {
+                    orderedCodes: obj.orderedCodes,
+                    rows: []
+                }
+            }
+
+            distinctCombinations[obj.orderedCodes.join(';')].rows.push(obj);
+        }
+
+        console.log(distinctCombinations);
     }
 });
 

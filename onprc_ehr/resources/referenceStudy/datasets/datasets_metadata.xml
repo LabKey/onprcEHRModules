@@ -1321,6 +1321,9 @@
             <column columnName="category">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="subcategory">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="project">
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
@@ -2226,8 +2229,8 @@
             <column columnName="projectedReleaseCondition">
                 <datatype>integer</datatype>
             </column>
-            <column columnName="feeType">
-                <datatype>integer</datatype>
+            <column columnName="assignmentType">
+                <datatype>varchar</datatype>
             </column>
         </columns>
         <tableTitle>Assignment</tableTitle>

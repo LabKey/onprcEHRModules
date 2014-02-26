@@ -33,6 +33,5 @@ public class SimpleGridPanel extends SimpleFormSection
     public SimpleGridPanel(String schemaName, String queryName, String label, EHRService.FORM_SECTION_LOCATION location)
     {
         super(schemaName, queryName, label, "ehr-gridpanel", location);
-        setSupportFormSort(true);
     }
 }

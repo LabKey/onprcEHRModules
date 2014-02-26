@@ -784,7 +784,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 ti.addColumn(roundsCol);
 
                 String daysSinceLastRounds = "daysSinceLastRounds";
-                SQLFragment roundsSql2 = new SQLFragment(ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category != ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId AND " + ExprColumn.STR_TABLE_ALIAS + ".objectid = t.caseid), " + ExprColumn.STR_TABLE_ALIAS + ".date)"), ONPRC_EHRManager.VET_REVIEW);
+                SQLFragment roundsSql2 = new SQLFragment("COALESCE(" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category != ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId AND " + ExprColumn.STR_TABLE_ALIAS + ".objectid = t.caseid), " + ExprColumn.STR_TABLE_ALIAS + ".date)") + ", 999)", ONPRC_EHRManager.VET_REVIEW);
                 ExprColumn roundsCol2 = new ExprColumn(ti, daysSinceLastRounds, roundsSql2, JdbcType.INTEGER, ti.getColumn("Id"), ti.getColumn("objectid"), ti.getColumn("date"));
                 roundsCol2.setLabel("Days Since Last Rounds Observations");
                 ti.addColumn(roundsCol2);

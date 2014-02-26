@@ -41,8 +41,8 @@ public class ClinicalRemarkFormType extends TaskForm
         super(ctx, owner, NAME, "Bulk Clinical Entry", "Clinical", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
-                new SimpleGridPanel("study", "Clinical Remarks", "SOAPs"),
                 new SimpleGridPanel("study", "encounters", "Procedures"),
+                new SimpleGridPanel("study", "Clinical Remarks", "SOAPs"),
                 new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Body),
                 new DrugAdministrationFormSection(),
                 new TreatmentOrdersFormSection(),

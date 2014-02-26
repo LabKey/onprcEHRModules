@@ -15,17 +15,30 @@
  */
 SELECT
   d.Id,
-  COALESCE(a.vetNames, h.vetNames) as assignedVet,
-  COALESCE(a.vetUserIds, h.vetUserIds) as assignedVetId,
+  COALESCE(c.vetNames, a.vetNames, h.vetNames) as assignedVet,
+  COALESCE(c.vetUserIds, a.vetUserIds, h.vetUserIds) as assignedVetId,
   CASE
+    WHEN c.vetNames IS NOT NULL THEN 'Active Case'
     WHEN a.vetNames IS NOT NULL THEN 'Assignment'
-    WHEN h.vetNames IS NOT NULL THEN 'Location'
+    --WHEN room.vetNames IS NOT NULL THEN 'Room'
+    WHEN h.vetNames IS NOT NULL THEN 'Area'
     ELSE 'None'
   END as assignmentType,
   a.protocols,
-  h.areas
+  h.areas,
+  h.rooms
 
 FROM study.demographics d
+
+LEFT JOIN (
+  SELECT
+    c.Id,
+    group_concat(distinct c.assignedvet.UserId.DisplayName) as vetNames,
+    CAST(group_concat(distinct c.assignedvet) as varchar(200)) as vetUserIds
+  FROM study.cases c
+  WHERE c.isOpen = true
+  GROUP BY c.Id
+) c ON (c.Id = d.Id)
 
 LEFT JOIN (
   SELECT
@@ -44,10 +57,23 @@ LEFT JOIN (
     h.Id,
     group_concat(distinct CAST(v.userId.userId.displayName as varchar(120))) as vetNames,
     group_concat(distinct v.userId) as vetUserIds,
-    group_concat(distinct h.room.area) as areas
+    group_concat(distinct h.room.area) as areas,
+    group_concat(distinct h.room) as rooms
 
   FROM study.housing h
   JOIN onprc_ehr.vet_assignment v ON (v.area = h.room.area)
   WHERE h.enddateTimeCoalesced >= now() OR h.enddate = h.Id.demographics.death
   GROUP BY h.Id
 ) h ON (h.Id = d.Id)
+
+-- LEFT JOIN (
+--   SELECT
+--     h.Id,
+--     group_concat(distinct CAST(v.userId.userId.displayName as varchar(120))) as vetNames,
+--     group_concat(distinct v.userId) as vetUserIds
+--
+--   FROM study.housing h
+--   JOIN onprc_ehr.vet_assignment v ON (v.room = h.room)
+--   WHERE h.enddateTimeCoalesced >= now() OR h.enddate = h.Id.demographics.death
+--   GROUP BY h.Id
+-- ) room ON (room.Id = d.Id)

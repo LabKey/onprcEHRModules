@@ -10,6 +10,7 @@
         <column name="assignmentType"/>
         <column name="protocols"/>
         <column name="areas"/>
+        <column name="rooms"/>
         <column name="Id/demographics/history"/>
     </columns>
 </customView>

@@ -51,7 +51,8 @@ public class PathologyTissuesFormType extends TaskForm
                 new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new SimpleGridPanel("study", "tissue_samples", "Tissues/Weights", EHRService.FORM_SECTION_LOCATION.Tabs),
                 new TissueDistFormSection(),
-                new SimpleGridPanel("study", "measurements", "Measurements", EHRService.FORM_SECTION_LOCATION.Tabs)
+                new SimpleGridPanel("study", "measurements", "Measurements", EHRService.FORM_SECTION_LOCATION.Tabs),
+                new MiscChargesFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
 
         for (FormSection s : this.getFormSections())

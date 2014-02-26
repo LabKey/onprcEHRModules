@@ -46,10 +46,10 @@ public class BehaviorRoundsFormType extends TaskForm
 
         for (FormSection s : this.getFormSections())
         {
-            s.addConfigSource("BehaviorRounds");
+            s.addConfigSource("BehaviorDefaults");
         }
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BehaviorRounds.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BehaviorDefaults.js"));
     }
 
     @Override

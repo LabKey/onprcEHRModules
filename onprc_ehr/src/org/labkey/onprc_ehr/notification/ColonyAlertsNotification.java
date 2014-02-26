@@ -172,8 +172,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         duplicateAssignments(c, u, msg);
         protocolsWithFutureApproveDates(c, u, msg);
         protocolsOverLimit(c, u, msg);
-        assignmentsNotAllowed(c, u, msg);
-        overlappingProtocolCounts(c, u, msg);
         assignmentsProjectedToday(c, u, msg);
         assignmentsProjectedTomorrow(c, u, msg);
         protocolsWithAnimalsExpiringSoon(c, u, msg);
@@ -191,6 +189,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("daysElapsed"), 30, CompareType.GTE);
         filter.addCondition(FieldKey.fromString("category"), "Assign Alias", CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("value"), ONPRC_EHRManager.AUC_RESERVED, CompareType.NEQ_OR_NULL);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("flags"), filter, null);
         long count = ts.getRowCount();
@@ -212,26 +211,22 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals which are flagged as " + ONPRC_EHRManager.AUC_RESERVED + " or " + ONPRC_EHRManager.PENDING_ASSIGNMENT + " , yet they are actively assigned to another project.  This may indicate the assignment candidate flags need to be removed.</b><br>\n");
-            //TODO: switch to toQueryString() once core bug corrected
-            String filterString = "query.Id/activeAssignments/projects~containsoneof=" + ONPRC_EHRManager.AUC_RESERVED + ";" + ONPRC_EHRManager.PENDING_ASSIGNMENT + "&query.Id/activeAssignments/numActiveAssignments~gt=0";
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&" + filterString + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
 
     protected void candidatesWithGroups(final Container c, User u, final StringBuilder msg)
     {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/activeAnimalGroups/groups"), ONPRC_EHRManager.AUC_RESERVED + ";" + ONPRC_EHRManager.PENDING_SOCIAL_GROUP, CompareType.CONTAINS_ONE_OF);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/activeAnimalGroups/groups"), ONPRC_EHRManager.PENDING_SOCIAL_GROUP, CompareType.CONTAINS);
         filter.addCondition(FieldKey.fromString("Id/activeAnimalGroups/totalGroups"), 0, CompareType.GT);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("demographics"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animals which are flagged as " + ONPRC_EHRManager.AUC_RESERVED + " or " + ONPRC_EHRManager.PENDING_SOCIAL_GROUP + ", yet they are actively assigned to an animal group.  This may indicate the assignment candidate flags need to be removed.</b><br>\n");
-            //TODO: switch to toQueryString() once core bug corrected
-            String filterString = "query.Id/activeAnimalGroups/groups~containsoneof=" + ONPRC_EHRManager.AUC_RESERVED + ";" + ONPRC_EHRManager.PENDING_SOCIAL_GROUP + "&query.Id/activeAnimalGroups/totalGroups~gt=0";
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&" + filterString + "'>Click here to view them</a><br>\n\n");
+            msg.append("<b>WARNING: There are " + count + " animals which are flagged as " + ONPRC_EHRManager.PENDING_SOCIAL_GROUP + ", yet they are actively assigned to an animal group.  This may indicate the assignment candidate flags need to be removed.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -1527,9 +1522,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void getU42Assignments(Container c, User u, final StringBuilder msg)
     {
         String U42 = ONPRC_EHRManager.U42_PROJECT;
-        TableInfo ti = getStudySchema(c, u).getTable("assignment");
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("project/name"), U42, CompareType.EQUAL);
+        TableInfo ti = getStudySchema(c, u).getTable("demographics");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/activeAssignments/projects"), U42, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room/housingType/value"), "Cage Location", CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/area"), "Hospital", CompareType.NEQ_OR_NULL);
 
@@ -1554,8 +1548,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         if (level != null)
         {
-            msg.append("<b>" + level + ": There are " + count + " animals assigned to U42 (" + U42 + ") that are housed in cage locations, excluding the hospital area.</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/curLocation/room/housingType/value~eq=Cage Location&query.Id/curLocation/area~neqornull=Hospital&query.Id/utilization/use~contains=" + U42 + "'>Click here to view them</a><br>\n");
+            msg.append("<b>" + level + ": There are " + count + " animals single-assigned to U42 (" + U42 + ") that are housed in cage locations, excluding the hospital area.</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/curLocation/room/housingType/value~eq=Cage Location&query.Id/curLocation/area~neqornull=Hospital&query.Id/activeAssignments/projects~eq=" + U42 + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
