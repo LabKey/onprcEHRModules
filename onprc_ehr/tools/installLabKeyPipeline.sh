@@ -51,3 +51,5 @@ su labkey -c 'svn update /usr/local/labkey/svn/trunk/pipeline_code/'
 
 echo "cleaning up installers, leaving 5 most recent"
 ls -tr | grep '^LabKey.*\.gz$' | head -n -5 | xargs rm
+
+/usr/local/labkey/svn/trunk/pipeline_code/sequence_tools_install.sh -d /usr/local/labkey
