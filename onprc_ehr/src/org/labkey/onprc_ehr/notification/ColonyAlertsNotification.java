@@ -1011,7 +1011,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         params.put("RequirementSet", requirementSet);
         QueryService.get().bindNamedParameters(sql, params);
 
-        List<Object> newParams = sql.getParams();
+        List<Object> newParams = new ArrayList<>(sql.getParams());
         newParams.add(filterTerm);
         sql = new SQLFragment("SELECT * FROM " + sql.getSQL() + " WHERE t.status = ?", newParams);
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
