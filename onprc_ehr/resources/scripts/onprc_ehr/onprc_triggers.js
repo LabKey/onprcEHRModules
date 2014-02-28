@@ -119,7 +119,7 @@ exports.init = function(EHR){
             return;
         }
 
-        if (row && oldRow){
+        if (row && oldRow && row.category != 'Research'){
             EHR.Assert.assertNotEmpty('triggerHelper is null', triggerHelper);
 
             var date = triggerHelper.onTreatmentOrderChange(row, oldRow);

@@ -162,7 +162,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long total = ts.getRowCount();
         if (total > 0)
         {
-            msg.append("<b>There are " + total + " animals with temporary separations, but no record is either a reunite or permanent separation.  These may need attention.</b><p>");
+            msg.append("<b>There are " + total + " animals with temporary separations, but there is no record of either a reunite or permanent separation since that separation.  These may need attention.</b><p>");
             String url = getExecuteQueryUrl(c, "study", "pairingSeparations", null);
             msg.append("<a href='" + url + "'>Click here to view them</a>");
             msg.append("<hr>");

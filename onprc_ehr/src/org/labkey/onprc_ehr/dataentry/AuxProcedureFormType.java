@@ -43,8 +43,9 @@ public class AuxProcedureFormType extends TaskForm
             new SimpleGridPanel("study", "encounters", "Procedures"),
             new BloodDrawFormSection(false),
             new WeightFormSection(),
-            new DrugAdministrationFormSection())
-        );
+            new DrugAdministrationFormSection(),
+            new TreatmentOrdersFormSection()
+        ));
 
         for (FormSection s : getFormSections())
         {

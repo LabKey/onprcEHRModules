@@ -764,6 +764,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/buttons/VetReviewButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/VetReviewRecordButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/AssignmentFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/AuxProcedureFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BehaviorExamFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BehaviorRoundsFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BehaviorRoundsRemarksFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BiopsyFormType.java -text
@@ -855,6 +856,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/UnoccupiedRoomsNotification.java
 onprc_ehr/src/org/labkey/onprc_ehr/notification/WeightAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/query/ONPRC_EHRTriggerHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/table/ONPRC_EHRCustomizer.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/table/VetReviewDisplayColumn.java -text
 onprc_ehr/tools/excelTemplates/Drug[!!-~]Formulary[!!-~]v6[!!-~].xlsx -text
 onprc_ehr/tools/excelTemplates/Form[!!-~]Templates[!!-~]v6.xlsx -text
 onprc_ehr/tools/excelTemplates/Labwork[!!-~]Panels.xlsx -text

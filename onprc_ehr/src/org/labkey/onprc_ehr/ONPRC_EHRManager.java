@@ -73,6 +73,8 @@ public class ONPRC_EHRManager
     public static final String TB_TEST_INTRADERMAL = "TB Test Intradermal";
     @Queryable
     public static final String TB_TEST_SEROLOGIC = "TB Test Serologic";
+    @Queryable
+    public static final String SURGERY_SOAP_CATEGORY = "Surgery";
 
     private ONPRC_EHRManager()
     {

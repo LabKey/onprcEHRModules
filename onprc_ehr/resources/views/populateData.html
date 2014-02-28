@@ -354,6 +354,18 @@ Ext4.onReady(function(){
             queryName: 'hyd_score',
             pk: 'rowid'
         },{
+            label: 'Mens Score',
+            populateFn: 'populateMensScore',
+            schemaName: 'ehr_lookups',
+            queryName: 'mens_score',
+            pk: 'rowid'
+        },{
+            label: 'CQS Score',
+            populateFn: 'populateCQSScore',
+            schemaName: 'ehr_lookups',
+            queryName: 'cqs_score',
+            pk: 'rowid'
+        },{
             label: 'Stool Score',
             populateFn: 'populateStoolScore',
             schemaName: 'ehr_lookups',
@@ -2496,104 +2508,6 @@ Ext4.onReady(function(){
             ['E-YYY93','Drugs and Procedures',null],
             ['E-YY836','Drugs and Procedures',null],
             ['E-Y7590','Drugs and Procedures',null],
-            ['M-01400','Procedures',null],
-            ['T-8Y330','Procedures',null],
-            ['T-8Y300','Procedures',null],
-            ['P-Y5530','Procedures',null],
-            ['P-34550','Procedures',null],
-            ['P-17800','Procedures',null],
-            ['F-79020','Procedures',null],
-            ['P-YY841','Procedures',null],
-            ['P-YY880','Procedures',null],
-            ['P-Y3060','Procedures',null],
-            ['P-Y1620','Procedures',null],
-            ['T-83000','Procedures',null],
-            ['P-1210C','Procedures',null],
-            ['P-Y3040','Procedures',null],
-            ['F-Y0215','Procedures',null],
-            ['F-Y0225','Procedures',null],
-            ['F-Y0220','Procedures',null],
-            ['P-X1550','Procedures',null],
-            ['P-X7200','Procedures',null],
-            ['P-17800','Procedures',null],
-            ['P-X0820','Procedures',null],
-            ['P-X1000','Procedures',null],
-            ['P-X0650','Procedures',null],
-            ['P-X0900','Procedures',null],
-            ['P-YY500','Procedures',null],
-            ['T-89010','Procedures',null],
-            ['P-95700','Procedures',null],
-            ['T-89000','Procedures',null],
-            ['P-40370','Procedures',null],
-            ['P-yy780','Procedures',null],
-            ['P-Y3230','Procedures',null],
-            ['P-X9770','Procedures',null],
-            ['P-40375','Procedures',null],
-            ['P-X9770','Procedures',null],
-            ['P-12550','Procedures',null],
-            ['P-1920X','Procedures',null],
-            ['P-1927X','Procedures',null],
-            ['P-1924X','Procedures',null],
-            ['P-YY770','Procedures',null],
-            ['P-71630','Procedures',null],
-            ['p-x5200','Procedures',null],
-            ['P-YY838','Procedures',null],
-            ['P-YY843','Procedures',null],
-            ['P-YY835','Procedures',null],
-            ['F-30980','Procedures',null],
-            ['M-00100','Procedures',null],
-            ['T-87800','Procedures',null],
-            ['T-87020','Procedures',null],
-            ['T-87010','Procedures',null],
-            ['P-02360','Procedures',null],
-            ['P-02400','Procedures',null],
-            ['T-88100','Procedures',null],
-            ['F-31020','Procedures',null],
-            ['F-31030','Procedures',null],
-            ['F-31040','Procedures',null],
-            ['P-00110','Procedures',null],
-            ['M-28000','Procedures',null],
-            ['P-10850','Procedures',null],
-            ['P-Y3192','Procedures',null],
-            ['P-Y3090','Procedures',null],
-            ['P-Y3025','Procedures',null],
-            ['P-Y3189','Procedures',null],
-            ['P-Y3035','Procedures',null],
-            ['P-Y3185','Procedures',null],
-            ['P-Y3080','Procedures',null],
-            ['P-Y3082','Procedures',null],
-            ['P-Y3050','Procedures',null],
-            ['P-Y3030','Procedures',null],
-            ['P-Y3160','Procedures',null],
-            ['P-Y3170','Procedures',null],
-            ['P-Y3025','Procedures',null],
-            ['P-Y3180','Procedures',null],
-            ['P-Y3020','Procedures',null],
-            ['P-Y3190','Procedures',null],
-            ['P-Y3010','Procedures',null],
-            ['P-Y3000','Procedures',null],
-            ['P-Y3070','Procedures',null],
-            ['P-Y3070','Procedures',null],
-            ['P-Y3075','Procedures',null],
-            ['P-Y3075','Procedures',null],
-            ['P-Y3130','Procedures',null],
-            ['P-2037X','Procedures',null],
-            ['P-Y5540','Procedures',null],
-            ['P-1926x','Procedures',null],
-            ['P-12090','Procedures',null],
-            ['P-Y3100','Procedures',null],
-            ['P-X9751','Procedures',null],
-            ['P-X9750','Procedures',null],
-            ['T-82900','Procedures',null],
-            ['T-82000','Procedures',null],
-            ['P-2035X','Procedures',null],
-            ['P-YY787','Procedures',null],
-            ['P-YY790','Procedures',null],
-            ['P-YY791','Procedures',null],
-            ['P-YY789','Procedures',null],
-            ['P-YY788','Procedures',null],
-            ['P-Y3110','Procedures',null],
-            ['T-88400','Procedures',null],
             ['F-30980','Diagnostic Codes',null],
             ['M-00100','Diagnostic Codes',null],
             ['F-31020','Diagnostic Codes',null],
@@ -5048,6 +4962,8 @@ Ext4.onReady(function(){
             ['stool_score', 'Stool Score', 'value'],
             ['sib_score', 'SIB Score', 'value'],
             ['incision_score', 'Incision Score', 'value'],
+            ['cqs_score', 'Coat Quality Score', 'value'],
+            ['mens_score', 'Mens Score', 'value'],
             ['tissue_sample_type', 'Tissue Distribution Sample Type', 'value'],
             ['tissue_distribution_category', 'Tissue Distribution Request Category', 'value'],
             ['project_use_category', 'Center Project Use Categories', 'value'],
@@ -5377,6 +5293,49 @@ Ext4.onReady(function(){
                 ['Poor', 5],
                 ['Unknown', 6],
                 ['N/A', 7]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateMensScore: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'mens_score',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value,sort_order').split(',');
+
+            var data = [
+                ['M', 1],
+                ['H', 2],
+                ['L', 2],
+                ['S', 3]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateCQSScore: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'cqs_score',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value,sort_order').split(',');
+
+            var data = [
+                ['Normal', 1],
+                ['Patchy', 2],
+                ['Bald', 3]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5725,13 +5684,14 @@ Ext4.onReady(function(){
 
             var data = [
                 ['Alopecia Score', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', displayField: 'value', valueField: 'value'})],
+                ['CQS', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'cqs_score', displayField: 'value', valueField: 'value'})],
                 ['BCS', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
                 ['CRT', Ext4.encode({xtype: 'textfield', defaultValue: '1-2'})],
                 ['MM', Ext4.encode({xtype: 'textfield', defaultValue: 'Pink'})],
                 ['Turgor', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'turgor_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
                 ['Pain Score', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0, maxValue: 12})],
                 ['Other', Ext4.encode({xtype: 'textfield'})],
-                ['Menses', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'obs_mens', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
+                ['Menses', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'mens_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
                 ['App', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'app_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
                 ['Att', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'att_score', displayField: 'value', valueField: 'value'})],
                 ['Hyd', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'hyd_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
@@ -6007,6 +5967,10 @@ Ext4.onReady(function(){
             ['Procedure','Complete','', true],
             ['Procedure','Limited','', true],
             ['Procedure','Limited Visual','', true],
+            ['Procedure','Amniotic Fluid Drawn','', true],
+            ['Procedure','Amniotic Inoculation','', true],
+            ['Procedure','Animal Inoculation','', true],
+            ['Procedure','Apply Dressing','', true],
             ['Procedure','Aspiration gastric contents','', true],
             ['Procedure','Bottle feed','', true],
             ['Procedure','Cage change','', true],
@@ -13315,7 +13279,6 @@ Ext4.onReady(function(){
                 ['Agents'],
                 ['Antibiotics'],
                 ['Culture Source'],
-                ['Procedures'],
                 ['Pathology Codes'],
                 ['Hormone Implants'],
                 ['Common Treatments'],
@@ -14438,6 +14401,9 @@ Ext4.onReady(function(){
                 ['rectal', ' '],
                 ['Spillage', ' '],
                 ['SQ', ' '],
+                ['OU', ' '],
+                ['OD', ' '],
+                ['OS', ' '],
                 ['topical', ' '],
                 ['topical (eye)', ' '],
                 ['topical (skin)', ' ']

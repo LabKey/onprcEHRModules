@@ -41,12 +41,17 @@ public class BehaviorRoundsFormType extends TaskForm
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new BehaviorRoundsRemarksFormSection(),
-            new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
+            new ClinicalObservationsFormSection()
         ));
 
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("BehaviorDefaults");
+
+            if (s instanceof ClinicalObservationsFormSection)
+            {
+                ((ClinicalObservationsFormSection)s).setHidden(true);
+            }
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BehaviorDefaults.js"));

@@ -20,7 +20,7 @@ SELECT
   TIMESTAMPDIFF('SQL_TSI_DAY', p1.date, curdate()) as daysSinceEvent
 
 FROM study.pairings p1
-LEFT JOIN study.pairings p2 ON (p1.Id = p2.Id AND p2.date > p1.date AND p2.eventtype IN ('Reunite', 'Permanent separation'))
+LEFT JOIN study.pairings p2 ON (p1.Id = p2.Id AND p2.date > p1.date AND p2.eventtype IN ('Reunite', 'Permanent separation', 'Extended temporary separation'))
 WHERE p1.eventType = 'Temporary separation' AND TIMESTAMPDIFF('SQL_TSI_DAY', p1.date, curdate()) > 7 AND p2.Id IS NULL
 AND p1.Id.demographics.calculated_status = 'Alive'
 

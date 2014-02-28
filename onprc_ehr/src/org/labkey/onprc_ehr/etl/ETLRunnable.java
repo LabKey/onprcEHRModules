@@ -513,7 +513,7 @@ public class ETLRunnable implements Runnable
                 //NOTE: the purpose of this switch is to allow alternate keyfields, such as
                 ColumnInfo filterColumn = targetTable.getColumn("objectid");
                 ColumnInfo pkColumn = targetTable.getPkColumns().get(0);
-                if(filterColumn == null)
+                if (filterColumn == null)
                 {
                     log.info("objectid column not found for table: " + targetTable.getName() + ", using " + pkColumn.getName() + " instead");
                     filterColumn = pkColumn;
