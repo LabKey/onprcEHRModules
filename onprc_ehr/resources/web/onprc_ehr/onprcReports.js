@@ -476,10 +476,20 @@ EHR.reports.reproSummary = function(panel, tab){
                                             Id: id,
                                             StartDate: startDate.format('Y/m/d'),
                                             NumMonths: numMonths
-                                        }
+                                        },
+                                        scope: this,
+                                        success: onSuccess
                                     })
                                 });
                             }, this);
+
+                            var totalDr = toAdd.length;
+                            function onSuccess(dr){
+                                totalDr--;
+                                if (totalDr == 0){
+                                    tab.doLayout.defer(250, tab);
+                                }
+                            }
 
                             if (toAdd.length){
                                 target.add(toAdd);

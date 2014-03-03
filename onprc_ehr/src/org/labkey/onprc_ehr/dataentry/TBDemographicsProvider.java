@@ -21,6 +21,7 @@ import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,8 +60,17 @@ public class TBDemographicsProvider extends AbstractListDemographicsProvider
     @Override
     public boolean requiresRecalc(String schema, String query)
     {
-        return ("study".equalsIgnoreCase(schema) && "TB Tests".equalsIgnoreCase(query)) ||
-                ("study".equalsIgnoreCase(schema) && "TB".equalsIgnoreCase(query)) ||
+        return ("study".equalsIgnoreCase(schema) && "Clinical Encounters".equalsIgnoreCase(query)) ||
+                ("study".equalsIgnoreCase(schema) && "Encounters".equalsIgnoreCase(query)) ||
+                ("study".equalsIgnoreCase(schema) && "Animal Record Flags".equalsIgnoreCase(query)) ||
+                ("study".equalsIgnoreCase(schema) && "Flags".equalsIgnoreCase(query)) ||
                 ("study".equalsIgnoreCase(schema) && "Demographics".equalsIgnoreCase(query));
+    }
+
+    @Override
+    public Collection<FieldKey> getSkippedFieldKeys()
+    {
+        //for now, simply skip the whole provider.  it maybe possible to avoid caching the time-sensitive components.
+        return Collections.singleton(FieldKey.fromString("tb"));
     }
 }

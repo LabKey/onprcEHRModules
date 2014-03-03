@@ -55,6 +55,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
             schemaName: 'onprc_ehr',
             queryName: 'tissue_recipients',
             matchFieldWidth: false,
+            forceSelection: true,
             sortFields: 'lastName',
             filterArray: [LABKEY.Filter.create('dateDisabled', null, LABKEY.Filter.Types.ISBLANK)],
             width: 400

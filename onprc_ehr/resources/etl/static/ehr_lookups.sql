@@ -304,4 +304,4 @@ getdate() as created,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
 getdate() as modified,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
-from iris_production.dbo.ref_pool where (ShortDescription = 'Condition' or poolcode = 207) and DateDisabled is null;
+from iris_production.dbo.ref_pool where (ShortDescription = 'Condition' or poolcode = 207) and DateDisabled is null and PoolCode != 203;
