@@ -7,7 +7,8 @@
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>veterinarians</fkTable>
-                            <fkColumnName>userid</fkColumnName>
+                            <fkColumnName>UserId</fkColumnName>
+                            <fkDisplayColumnName>DisplayName</fkDisplayColumnName>
                         </fk>
                     </column>
                 </columns>

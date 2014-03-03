@@ -414,10 +414,6 @@ EHR.reports.reproSummary = function(panel, tab){
         var filterArray = panel.getFilterArray(tab);
         var title = panel.getTitleSuffix();
 
-        //set to 1 year in past
-        var startDate = Ext4.Date.add(new Date(), Ext4.Date.YEAR, -1);
-        startDate.setDate(1);
-
         tab.add({
             xtype: 'panel',
             ownerTabbedPanel: panel,
@@ -437,60 +433,59 @@ EHR.reports.reproSummary = function(panel, tab){
                         border: false
                     },
                     items: [{
-                        xtype: 'datefield',
-                        fieldLabel: 'Start Date',
-                        itemId: 'startDate',
-                        style: 'margin-right: 10px;',
-                        value: startDate
-                    },{
                         xtype: 'numberfield',
                         itemId: 'numMonths',
-                        fieldLabel: '# Months',
+                        fieldLabel: '# Months To Show',
+                        labelWidth: 130,
                         style: 'margin-left: 10px;',
                         hideTrigger: true,
                         value: 13
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 10px',
+                        border: true,
+                        text: 'Submit/Reload',
+                        handler: function(btn){
+                            var panel = btn.up('#reproSummary');
+                            var numMonths = panel.down('#numMonths').getValue();
+                            if (Ext4.isEmpty(numMonths)){
+                                Ext4.Msg.alert('Error', 'Must provide the number of months');
+                                return;
+                            }
+
+                            //set to 1 year in past
+                            var startDate = new Date();
+                            startDate.setDate(1);
+                            startDate = Ext4.Date.add(startDate, Ext4.Date.MONTH, (-1 * numMonths) + 1);
+
+                            var target = panel.down('#target');
+                            target.removeAll();
+
+                            var toAdd = [];
+
+                            Ext4.Array.forEach(subjects, function(id){
+                                toAdd.push({
+                                    xtype: 'ldk-querypanel',
+                                    style: 'margin-bottom:20px;',
+                                    queryConfig: panel.ownerTabbedPanel.getQWPConfig({
+                                        schemaName: 'study',
+                                        queryName: 'reproSummaryByMonth',
+                                        title: 'Repro Summary: ' + id,
+                                        sort: 'year,monthNum',
+                                        parameters: {
+                                            Id: id,
+                                            StartDate: startDate.format('Y/m/d'),
+                                            NumMonths: numMonths
+                                        }
+                                    })
+                                });
+                            }, this);
+
+                            if (toAdd.length){
+                                target.add(toAdd);
+                            }
+                        }
                     }]
-                }],
-                buttonAlign: 'left',
-                buttons: [{
-                    text: 'Submit/Reload',
-                    handler: function(btn){
-                        var panel = btn.up('#reproSummary');
-                        var startDate = panel.down('#startDate').getValue();
-                        var numMonths = panel.down('#numMonths').getValue();
-
-                        if (Ext4.isEmpty(startDate) || Ext4.isEmpty(numMonths)){
-                            Ext4.Msg.alert('Error', 'Must provide a start date and number of months');
-                            return;
-                        }
-
-                        var target = panel.down('#target');
-                        target.removeAll();
-
-                        var toAdd = [];
-
-                        Ext4.Array.forEach(subjects, function(id){
-                            toAdd.push({
-                                xtype: 'ldk-querypanel',
-                                style: 'margin-bottom:20px;',
-                                queryConfig: panel.ownerTabbedPanel.getQWPConfig({
-                                    schemaName: 'study',
-                                    queryName: 'reproSummaryByMonth',
-                                    title: 'Repro Summary: ' + id,
-                                    sort: 'year,monthNum',
-                                    parameters: {
-                                        Id: id,
-                                        StartDate: startDate,
-                                        NumMonths: numMonths
-                                    }
-                                })
-                            });
-                        }, this);
-
-                        if (toAdd.length){
-                            target.add(toAdd);
-                        }
-                    }
                 }]
             },{
                 border: false,

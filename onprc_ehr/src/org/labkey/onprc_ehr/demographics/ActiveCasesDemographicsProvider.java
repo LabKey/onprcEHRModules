@@ -49,7 +49,7 @@ public class ActiveCasesDemographicsProvider extends AbstractListDemographicsPro
         keys.add(FieldKey.fromString("category"));
         keys.add(FieldKey.fromString("allProblemCategories"));
         keys.add(FieldKey.fromString("assignedvet"));
-        keys.add(FieldKey.fromString("assignedvet/UserId/DisplayName"));
+        keys.add(FieldKey.fromString("assignedvet/DisplayName"));
         keys.add(FieldKey.fromString("performedby"));
         keys.add(FieldKey.fromString("remark"));
         keys.add(FieldKey.fromString("isActive"));

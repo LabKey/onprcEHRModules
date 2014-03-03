@@ -10,7 +10,7 @@
         <column name="date"/>
         <column name="allProblemCategories"/>
         <column name="Id/curLocation/daysInRoom"/>
-        <column name="assignedvet/UserId/DisplayName">
+        <column name="assignedvet/DisplayName">
             <properties>
                 <property name="columnTitle" value="Assigned Vet"/>
             </properties>

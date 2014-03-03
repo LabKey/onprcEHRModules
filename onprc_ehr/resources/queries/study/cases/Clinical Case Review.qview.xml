@@ -14,7 +14,7 @@
         <column name="allProblemCategories"/>
         <column name="lastVetReview"/>
         <column name="Id/utilization/use"/>
-        <column name="assignedvet/UserId/DisplayName">
+        <column name="assignedvet/DisplayName">
             <properties>
                 <property name="columnTitle" value="Assigned Vet"/>
             </properties>

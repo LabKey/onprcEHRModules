@@ -33,7 +33,7 @@ FROM study.demographics d
 LEFT JOIN (
   SELECT
     c.Id,
-    group_concat(distinct c.assignedvet.UserId.DisplayName) as vetNames,
+    group_concat(distinct c.assignedvet.DisplayName) as vetNames,
     CAST(group_concat(distinct c.assignedvet) as varchar(200)) as vetUserIds
   FROM study.cases c
   WHERE c.isOpen = true
@@ -43,7 +43,7 @@ LEFT JOIN (
 LEFT JOIN (
   SELECT
     a.Id,
-    group_concat(distinct CAST(v.userId.userId.displayName as varchar(120))) as vetNames,
+    group_concat(distinct CAST(v.userId.displayName as varchar(120))) as vetNames,
     CAST(group_concat(distinct v.userId) as varchar(200)) as vetUserIds,
     group_concat(distinct a.project.protocol.displayName) as protocols
   FROM study.assignment a
@@ -55,7 +55,7 @@ LEFT JOIN (
 LEFT JOIN (
   SELECT
     h.Id,
-    group_concat(distinct CAST(v.userId.userId.displayName as varchar(120))) as vetNames,
+    group_concat(distinct CAST(v.userId.displayName as varchar(120))) as vetNames,
     group_concat(distinct v.userId) as vetUserIds,
     group_concat(distinct h.room.area) as areas,
     group_concat(distinct h.room) as rooms
@@ -69,7 +69,7 @@ LEFT JOIN (
 -- LEFT JOIN (
 --   SELECT
 --     h.Id,
---     group_concat(distinct CAST(v.userId.userId.displayName as varchar(120))) as vetNames,
+--     group_concat(distinct CAST(v.userId.displayName as varchar(120))) as vetNames,
 --     group_concat(distinct v.userId) as vetUserIds
 --
 --   FROM study.housing h

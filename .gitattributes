@@ -855,6 +855,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/TreatmentAlertsNotification.java
 onprc_ehr/src/org/labkey/onprc_ehr/notification/UnoccupiedRoomsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/WeightAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/query/ONPRC_EHRTriggerHelper.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/table/FixedWidthDisplayColumn.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/table/ONPRC_EHRCustomizer.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/table/VetReviewDisplayColumn.java -text
 onprc_ehr/tools/excelTemplates/Drug[!!-~]Formulary[!!-~]v6[!!-~].xlsx -text

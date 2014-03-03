@@ -146,15 +146,15 @@ public class ONPRC_EHRTriggerHelper
             // this is a little ugly, but something upstream seems inconsistent about numbers as Integer vs. Double.
             // this is a problem for equals(), so always convert Integers into Doubles
             Object current = row.get(field);
-            if (current instanceof Integer)
+            if (current instanceof Number)
             {
-                current = ((Integer)current).doubleValue();
+                current = ((Number)current).doubleValue();
             }
 
             Object old = oldRow.get(field);
-            if (old instanceof Integer)
+            if (old instanceof Number)
             {
-                old = ((Integer)old).doubleValue();
+                old = ((Number)old).doubleValue();
             }
 
             if ((current == null && old != null ) || (current != null && old == null ) || (current != null && old != null && !current.equals(old)))

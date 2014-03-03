@@ -104,7 +104,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
         keys.add(FieldKey.fromString("Id/curLocation/room"));
         keys.add(FieldKey.fromString("Id/curLocation/cage"));
         keys.add(FieldKey.fromString("daysSinceLastRounds"));
-        keys.add(FieldKey.fromString("assignedvet/UserId/DisplayName"));
+        keys.add(FieldKey.fromString("assignedvet/DisplayName"));
         keys.add(FieldKey.fromString("allProblemCategories"));
         final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, keys);
 
@@ -126,7 +126,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("Id/curLocation/room")), "None") + "</td>");
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("Id/curLocation/cage")), "") + "</td>");
                     msg.append("<td>" + rs.getString(FieldKey.fromString("Id")) + "</td>");
-                    msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("assignedvet/UserId/DisplayName")), "None") + "</td>");
+                    msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("assignedvet/DisplayName")), "None") + "</td>");
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("allProblemCategories")), "None") + "</td>");
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("daysSinceLastRounds")), "") + "</td>");
                     msg.append("</tr>");
@@ -155,7 +155,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
         keys.add(FieldKey.fromString("Id/curLocation/room"));
         keys.add(FieldKey.fromString("Id/curLocation/cage"));
         keys.add(FieldKey.fromString("daysSinceLastVetReview"));
-        keys.add(FieldKey.fromString("assignedvet/UserId/DisplayName"));
+        keys.add(FieldKey.fromString("assignedvet/DisplayName"));
         keys.add(FieldKey.fromString("allProblemCategories"));
         final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, keys);
 
@@ -177,7 +177,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("Id/curLocation/room")), "None") + "</td>");
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("Id/curLocation/cage")), "") + "</td>");
                     msg.append("<td>" + rs.getString(FieldKey.fromString("Id")) + "</td>");
-                    msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("assignedvet/UserId/DisplayName")), "None") + "</td>");
+                    msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("assignedvet/DisplayName")), "None") + "</td>");
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("allProblemCategories")), "None") + "</td>");
                     msg.append("<td>" + safeAppend(rs.getString(FieldKey.fromString("daysSinceLastVetReview")), "") + "</td>");
                     msg.append("</tr>");

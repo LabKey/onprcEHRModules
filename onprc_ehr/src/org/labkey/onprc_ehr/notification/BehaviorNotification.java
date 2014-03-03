@@ -150,7 +150,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long total = ts.getRowCount();
         msg.append("<b>Single Housed Animals:</b><p>");
         msg.append("There are " + total + " animals that have been single housed for at least 30 days.  ");
-        String url = getExecuteQueryUrl(c, "study", "demographicsDaysAlone", null) + "&query.cagemates~eq=0&query.sort=-DaysAlone";
+        String url = getExecuteQueryUrl(c, "study", "demographicsDaysAlone", null, filter) + "&query.sort=-DaysAlone";
         msg.append("<a href='" + url + "'>Click here to view them</a>");
         msg.append("<hr>");
     }
@@ -162,7 +162,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long total = ts.getRowCount();
         if (total > 0)
         {
-            msg.append("<b>There are " + total + " animals with temporary separations, but there is no record of either a reunite or permanent separation since that separation.  These may need attention.</b><p>");
+            msg.append("<b>There are " + total + " animals with temporary separations, but there is no subsequent pairing observation to indicate a reunite, permanent separation, new pair formation, etc.  These may need attention.</b><p>");
             String url = getExecuteQueryUrl(c, "study", "pairingSeparations", null);
             msg.append("<a href='" + url + "'>Click here to view them</a>");
             msg.append("<hr>");
