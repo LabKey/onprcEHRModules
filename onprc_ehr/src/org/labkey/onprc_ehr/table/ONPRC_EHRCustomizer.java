@@ -1810,6 +1810,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 TableInfo ti = qd.getTable(errors, true);
                 if (errors.size() > 0)
                 {
+                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + us.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
@@ -1877,6 +1878,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 TableInfo ti = qd.getTable(errors, true);
                 if (errors.size() > 0)
                 {
+                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + us.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
@@ -1939,6 +1941,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 TableInfo ti = qd.getTable(errors, true);
                 if (errors.size() > 0)
                 {
+                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + us.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
@@ -2001,6 +2004,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 TableInfo ti = qd.getTable(errors, true);
                 if (errors.size() > 0)
                 {
+                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + us.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
