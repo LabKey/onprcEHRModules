@@ -440,8 +440,8 @@ public class LegacyDataManager
                 Container workbook = resolveWorkbookFromId(expt, ctx.getUser(), ctx.getContainer());
                 String runName = "Expt: " + expt;
 
-                ExpRun[] existingRuns = ExperimentService.get().getExpRuns(workbook, protocol, null);
-                if (existingRuns.length > 0)
+                List<? extends ExpRun> existingRuns = ExperimentService.get().getExpRuns(workbook, protocol, null);
+                if (!existingRuns.isEmpty())
                 {
                     for (ExpRun r : existingRuns)
                     {
@@ -976,8 +976,8 @@ public class LegacyDataManager
                 runProps.put("runDate", exptDate);
                 runProps.put("purpose", projDescription);
 
-                ExpRun[] existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
-                if (existingRuns.length > 0)
+                List<? extends ExpRun> existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
+                if (!existingRuns.isEmpty())
                 {
                     for (ExpRun r : existingRuns)
                     {
@@ -1184,8 +1184,8 @@ public class LegacyDataManager
                 runProps.put("runDate", exptDate);
                 runPropMap.put(runName, runProps);
 
-                ExpRun[] existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
-                if (existingRuns.length > 0)
+                List<? extends ExpRun> existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
+                if (!existingRuns.isEmpty())
                 {
                     for (ExpRun r : existingRuns)
                     {
@@ -1324,8 +1324,8 @@ public class LegacyDataManager
                 Integer exptId = rs.getInt("expid");
                 String runName = "GRIP SSP Data" + (exptId == null ? "" : ": Expt " + exptId);
 
-                ExpRun[] existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
-                if (existingRuns.length > 0)
+                List<? extends ExpRun> existingRuns = ExperimentService.get().getExpRuns(ctx.getContainer(), protocol, null);
+                if (!existingRuns.isEmpty())
                 {
                     for (ExpRun r : existingRuns)
                     {
