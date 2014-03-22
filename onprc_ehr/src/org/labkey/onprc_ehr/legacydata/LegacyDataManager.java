@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.legacydata;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,7 +42,6 @@ import org.labkey.api.exp.api.ExpRun;
 import org.labkey.api.exp.api.ExperimentJSONConverter;
 import org.labkey.api.exp.api.ExperimentService;
 import org.labkey.api.files.FileContentService;
-import org.labkey.api.gwt.client.util.StringUtils;
 import org.labkey.api.laboratory.LaboratoryService;
 import org.labkey.api.laboratory.assay.AssayImportMethod;
 import org.labkey.api.laboratory.assay.AssayParser;
@@ -67,7 +67,6 @@ import org.labkey.api.view.ViewContext;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;

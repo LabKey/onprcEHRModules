@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.notification;
 
+import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
@@ -23,7 +24,6 @@ import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
-import org.labkey.api.gwt.client.util.StringUtils;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryDefinition;
@@ -151,7 +151,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
                 String groupLocation = rs.getString(FieldKey.fromString("groupId/majorityLocation/majorityLocation"));
                 String category = rs.getString(FieldKey.fromString("category"));
                 String url2 = url + "&query.groupId/name~eq=" + groupName + "&query.category~eq=" + category;
-                msg.append("<tr><td>").append(groupName).append("</td><td>").append(StringUtils.nullToEmpty(groupLocation)).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(NumberFormat.getInstance().format(rs.getDouble(FieldKey.fromString("pctWithProblem"))) + "%").append("</a>").append("</td></tr>");
+                msg.append("<tr><td>").append(groupName).append("</td><td>").append(StringUtils.trimToEmpty(groupLocation)).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(NumberFormat.getInstance().format(rs.getDouble(FieldKey.fromString("pctWithProblem"))) + "%").append("</a>").append("</td></tr>");
             }
 
             if (idx > 0)

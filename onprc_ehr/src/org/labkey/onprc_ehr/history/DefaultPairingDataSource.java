@@ -15,9 +15,8 @@
  */
 package org.labkey.onprc_ehr.history;
 
+import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.data.Results;
-import org.labkey.api.ehr.history.AbstractDataSource;
-import org.labkey.api.gwt.client.util.StringUtils;
 import org.labkey.api.util.PageFlowUtil;
 
 import java.sql.SQLException;
