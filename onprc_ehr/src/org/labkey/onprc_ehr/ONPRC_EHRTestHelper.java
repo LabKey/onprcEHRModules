@@ -28,7 +28,6 @@ import org.labkey.api.security.User;
 import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,29 +55,21 @@ public class ONPRC_EHRTestHelper
         if (study == null)
             return;
 
-        try
-        {
-            TableInfo bloodDraws = getStudySchema(c, u).getTable("Blood Draws");
-            if (bloodDraws == null)
-                return;
+        TableInfo bloodDraws = getStudySchema(c, u).getTable("Blood Draws");
+        if (bloodDraws == null)
+            return;
 
-            //insert dummy records
-            Map<String, Object> record = new HashMap<>();
-            Table.insert(u, bloodDraws, record);
+        //insert dummy records
+        Map<String, Object> record = new HashMap<>();
+        Table.insert(u, bloodDraws, record);
 
-            //run query
-            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ);
-            filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-            TableSelector ts = new TableSelector(bloodDraws, filter, null);
+        //run query
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ);
+        filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
+        TableSelector ts = new TableSelector(bloodDraws, filter, null);
 
-            //verify results
-            //TODO
-        }
-        catch (SQLException e)
-        {
-
-        }
-
+        //verify results
+        //TODO
     }
 
     private UserSchema getStudySchema(Container c, User u)
