@@ -64,6 +64,7 @@ onprc_billing/resources/queries/onprc_billing/chargeRateExemptions/.qview.xml -t
 onprc_billing/resources/queries/onprc_billing/chargeRateExemptions/Active[!!-~]Items.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/chargeRates/.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/chargeRates/Active[!!-~]Rates.qview.xml -text
+onprc_billing/resources/queries/onprc_billing/chargeableItems.js -text
 onprc_billing/resources/queries/onprc_billing/chargeableItems/.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/chargeableItems/Active[!!-~]Items.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/chargesIBS.query.xml -text
@@ -230,6 +231,7 @@ onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.355-12.356
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.356-12.357.sql -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.357-12.358.sql -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.358-12.359.sql -text
+onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.359-12.360.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.30-12.301.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.301-12.302.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.302-12.303.sql -text
@@ -282,6 +284,7 @@ onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.355-12.356.
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.356-12.357.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.357-12.358.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.358-12.359.sql -text
+onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.359-12.360.sql -text
 onprc_billing/resources/schemas/onprc_billing.xml -text
 onprc_billing/resources/schemas/onprc_billing_public.template.xml -text
 onprc_billing/resources/scripts/onprc_billing/billing_triggers.js -text
@@ -300,16 +303,21 @@ onprc_billing/resources/views/invoicedItemDetails.html -text
 onprc_billing/resources/views/invoicedItemDetails.view.xml -text
 onprc_billing/resources/web/onprc_billing/BillingUtils.js -text
 onprc_billing/resources/web/onprc_billing/buttons/financeButtons.js -text
+onprc_billing/resources/web/onprc_billing/panel/ChargesAdvancedInstructionPanel.js -text
 onprc_billing/resources/web/onprc_billing/panel/ChargesInstructionPanel.js -text
+onprc_billing/resources/web/onprc_billing/window/ChangeBillDateWindow.js -text
 onprc_billing/resources/web/onprc_billing/window/ReverseChargeWindow.js -text
 onprc_billing/src/org/labkey/onprc_billing/ONPRC_BillingController.java -text
 onprc_billing/src/org/labkey/onprc_billing/ONPRC_BillingManager.java -text
 onprc_billing/src/org/labkey/onprc_billing/ONPRC_BillingModule.java -text
 onprc_billing/src/org/labkey/onprc_billing/ONPRC_BillingSchema.java -text
+onprc_billing/src/org/labkey/onprc_billing/button/ChangeBillDateButton.java -text
 onprc_billing/src/org/labkey/onprc_billing/button/ChargeEditButton.java -text
 onprc_billing/src/org/labkey/onprc_billing/button/ProjectEditButton.java -text
 onprc_billing/src/org/labkey/onprc_billing/dataentry/ChargesAdvancedFormType.java -text
+onprc_billing/src/org/labkey/onprc_billing/dataentry/ChargesAdvancedInstructionFormSection.java -text
 onprc_billing/src/org/labkey/onprc_billing/dataentry/ChargesFormSection.java -text
+onprc_billing/src/org/labkey/onprc_billing/dataentry/ChargesFormType.java -text
 onprc_billing/src/org/labkey/onprc_billing/dataentry/ChargesInstructionFormSection.java -text
 onprc_billing/src/org/labkey/onprc_billing/notification/FinanceNotification.java -text
 onprc_billing/src/org/labkey/onprc_billing/pipeline/BillingPipelineJob.java -text
