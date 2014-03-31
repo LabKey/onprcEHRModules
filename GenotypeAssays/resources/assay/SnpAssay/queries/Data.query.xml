@@ -32,6 +32,9 @@
                             <fkColumnName>rowid</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="strand">
+                        <columnTitle>Strand</columnTitle>
+                    </column>
                     <column columnName="position">
                         <columnTitle>Position</columnTitle>
                         <measure>false</measure>

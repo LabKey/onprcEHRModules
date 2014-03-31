@@ -48,6 +48,10 @@ GenotypeAssays/resources/assay/SnpAssay/queries/Data.query.xml -text
 GenotypeAssays/resources/assay/SnpAssay/queries/Data/.qview.xml -text
 GenotypeAssays/resources/assay/SnpAssay/queries/Runs.query.xml -text
 GenotypeAssays/resources/assay/SnpAssay/queries/Runs/.qview.xml -text
+GenotypeAssays/resources/assay/SnpAssay/queries/snpConflicts.query.xml -text
+GenotypeAssays/resources/assay/SnpAssay/queries/snpConflicts.sql -text
+GenotypeAssays/resources/assay/SnpAssay/queries/snpSummary.query.xml -text
+GenotypeAssays/resources/assay/SnpAssay/queries/snpSummary.sql -text
 GenotypeAssays/resources/assay/SnpAssay/views/upload.html -text
 GenotypeAssays/resources/assay/SnpAssay/views/upload.view.xml -text
 GenotypeAssays/resources/module.xml -text
