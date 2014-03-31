@@ -23,6 +23,7 @@ import org.labkey.api.ehr.dataentry.FormElement;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,5 +56,14 @@ public class PathologyFormSection extends EncounterChildFormSection
         }
 
         return ret;
+    }
+
+    @Override
+    public List<String> getTbarMoreActionButtons()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.add("DUPLICATE");
+
+        return defaultButtons;
     }
 }

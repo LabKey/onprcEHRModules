@@ -8,7 +8,7 @@ require("ehr/triggers").initScript(this);
 
 function onUpsert(helper, scriptErrors, row, oldRow){
     //if the animal is not at the center, automatically set the enddate
-    if (!helper.isETL() && !row.enddate){
+    if (!helper.isETL() && row.Id && !row.enddate){
         EHR.Server.Utils.findDemographics({
             participant: row.Id,
             helper: helper,

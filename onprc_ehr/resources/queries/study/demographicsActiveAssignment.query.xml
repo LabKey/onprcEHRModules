@@ -25,6 +25,11 @@
                         <columnTitle># Research Assignments</columnTitle>
                         <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true&amp;query.project/isResearch~eq=1</url>
                     </column>
+                    <column columnName="numResourceAssignments">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <columnTitle># Resource Assignments</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true&amp;query.project/isResource~eq=1</url>
+                    </column>
                     <column columnName="numU24U42Assignments">
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                         <columnTitle># U24/U42 Assignments</columnTitle>
@@ -36,6 +41,7 @@
                     </column>
                     <column columnName="vets">
                         <columnTitle>Resonsible Vet(s)</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                 </columns>
             </table>

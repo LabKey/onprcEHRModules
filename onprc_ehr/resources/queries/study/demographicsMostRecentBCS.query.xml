@@ -1,15 +1,15 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="encountersWithSnomed" tableDbType="TABLE">
+            <table tableName="demographicsMostRecentBCS" tableDbType="NOT_IN_DB">
+                <tableTitle>Most Recent BCS</tableTitle>
                 <columns>
-                    <column columnName="objectid">
-                        <isHidden>true</isHidden>
-                    </column>
-                    <column columnName="caseid">
+                    <column columnName="Id">
+                        <isKeyField>true</isKeyField>
                         <isHidden>true</isHidden>
                     </column>
                 </columns>
+                <titleColumn>score</titleColumn>
             </table>
         </tables>
     </metadata>

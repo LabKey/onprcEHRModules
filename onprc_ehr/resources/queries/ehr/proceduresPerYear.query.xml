@@ -12,7 +12,7 @@
                             query.project/protocol~eq=${protocol}&amp;
                             query.date~dategte=${date}&amp;
                             query.date~datelte=${enddate}&amp;
-                            query.procedureid~eq=${procedureid}
+                            query.procedureid/shortName~eq=${procedureName}
                         </url>
                     </column>
                     <column columnName="date">

@@ -50,8 +50,18 @@ public class AssignedVetDemographicsProvider extends AbstractListDemographicsPro
     }
 
     @Override
+    public Collection<FieldKey> getFieldKeysToTest()
+    {
+        //for now, simply skip the whole provider.  because different records can be active from day to day, this makes validation tricky
+        Set<FieldKey> keys = new HashSet<>(super.getFieldKeysToTest());
+        keys.remove(FieldKey.fromString(_propName));
+
+        return keys;
+    }
+
+    @Override
     public boolean requiresRecalc(String schema, String query)
     {
-        return "study".equalsIgnoreCase(schema) && ("housing".equalsIgnoreCase(query) || "assignment".equalsIgnoreCase(query));
+        return "study".equalsIgnoreCase(schema) && ("housing".equalsIgnoreCase(query) || "assignment".equalsIgnoreCase(query) || "cases".equalsIgnoreCase(query));
     }
 }

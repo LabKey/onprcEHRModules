@@ -97,7 +97,7 @@ From IRIS_Production.dbo.Ref_Toys WHERE ToyType = 1; --active only
 --geographic origins
 TRUNCATE TABLE labkey.ehr_lookups.geographic_origins;
 INSERT INTO labkey.ehr_lookups.geographic_origins (meaning)
-SELECT upper(GeographicName) as meaning From IRIS_Production.dbo.Ref_ISISGeographic;
+SELECT upper(ltrim(rtrim(GeographicName))) as meaning From IRIS_Production.dbo.Ref_ISISGeographic;
 
 
 
@@ -305,3 +305,20 @@ getdate() as created,
 getdate() as modified,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
 from iris_production.dbo.ref_pool where (ShortDescription = 'Condition' or poolcode = 207) and DateDisabled is null and PoolCode != 203;
+
+
+TRUNCATE TABLE ehr_lookups.flag_values;
+insert into ehr_lookups.flag_values (category, value,code,datedisabled,container,created,createdby,modified,modifiedby)
+select
+LTRIM(rtrim(shortDescription)) as category,
+LTRIM(rtrim(description)) as value,
+PoolCode as code,
+DateDisabled as datedisabled,
+(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
+getdate() as created,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
+getdate() as modified,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
+
+from IRIS_Production.dbo.Ref_Pool
+WHERE ShortDescription not in ('CBG', 'EBG', 'HBG', 'PBG', 'STG', 'SBG', 'JBG', 'CCBG', 'CTG', 'Origin');

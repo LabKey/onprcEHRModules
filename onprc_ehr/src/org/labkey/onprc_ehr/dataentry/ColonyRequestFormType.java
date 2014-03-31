@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 LabKey Corporation
+ * Copyright (c) 2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,37 +20,39 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
-import org.labkey.api.ehr.dataentry.TaskForm;
-import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.PrincipalType;
+import org.labkey.api.security.SecurityManager;
+import org.labkey.api.security.UserPrincipal;
+import org.labkey.api.view.template.ClientDependency;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * User: bimber
  * Date: 7/29/13
  * Time: 5:03 PM
  */
-public class BloodDrawRequestFormType extends RequestForm
+public class ColonyRequestFormType extends RequestForm
 {
-    public BloodDrawRequestFormType(DataEntryFormContext ctx, Module owner)
+    public static final String NAME = "Colony Services Request";
+    public static final String DEFAULT_GROUP = "Colony Services";
+
+    public ColonyRequestFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, "Blood Draw Request", "Blood Draw Requests", "Requests", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, NAME, "Requests", Arrays.<FormSection>asList(
                 new RequestFormSection(),
+                //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),
-                new BloodDrawFormSection(false)
+                new BloodDrawFormSection(false),
+                new DrugAdministrationRequestFormSection()
         ));
-    }
 
-    @Override
-    protected List<String> getButtonConfigs()
-    {
-        List<String> defaultButtons = super.getButtonConfigs();
-        defaultButtons.add("APPROVE");
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/model/sources/ASB_Services.js"));
 
-        return defaultButtons;
+        for (FormSection s : getFormSections())
+        {
+            s.addConfigSource("ASB_Services");
+        }
     }
 }

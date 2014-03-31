@@ -9,6 +9,8 @@
         <column name="requestcategory"/>
         <column name="sampletype"/>
         <column name="QCState"/>
+        <column name="taskid"/>
+        <column name="formSort"/>
     </columns>
     <sorts>
         <sort column="date" descending="true"/>

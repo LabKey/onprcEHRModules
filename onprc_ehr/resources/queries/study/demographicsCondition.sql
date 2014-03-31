@@ -15,8 +15,10 @@
  */
 SELECT
   f.id,
-  group_concat(f.value, chr(10)) as condition
+  group_concat(f.value, chr(10)) as condition,
+  group_concat(c.code, ',') as codes
 
 FROM study.flags f
+LEFT JOIN ehr_lookups.animal_condition c ON (f.value = c.meaning)
 WHERE f.isActive = true AND f.category = 'Condition'
 GROUP BY f.id

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.labkey.onprc_ehr.dataentry;
+package org.labkey.onprc_ehr.demographics;
 
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.ehr.demographics.AbstractListDemographicsProvider;
@@ -40,7 +40,7 @@ public class TBDemographicsProvider extends AbstractListDemographicsProvider
 
     protected Set<FieldKey> getFieldKeys()
     {
-        Set<FieldKey> keys = new HashSet<FieldKey>();
+        Set<FieldKey> keys = new HashSet<>();
         keys.add(FieldKey.fromString("Id"));
         keys.add(FieldKey.fromString("MostRecentTBDate"));
         keys.add(FieldKey.fromString("MonthsSinceLastTB"));
@@ -68,9 +68,12 @@ public class TBDemographicsProvider extends AbstractListDemographicsProvider
     }
 
     @Override
-    public Collection<FieldKey> getSkippedFieldKeys()
+    public Collection<FieldKey> getFieldKeysToTest()
     {
         //for now, simply skip the whole provider.  it maybe possible to avoid caching the time-sensitive components.
-        return Collections.singleton(FieldKey.fromString("tb"));
+        Set<FieldKey> keys = new HashSet<>(getFieldKeys());
+        keys.remove(FieldKey.fromString("tb"));
+
+        return keys;
     }
 }

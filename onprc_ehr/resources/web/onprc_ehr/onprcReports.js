@@ -411,6 +411,16 @@ EHR.reports.reproSummary = function(panel, tab){
             return;
         }
 
+        if (subjects.length > 25){
+            tab.add({
+                html: 'This report can only be used on 25 or fewer animals at a time.',
+                border: false,
+                style: 'padding-bottom: 10px;'
+            });
+
+            return;
+        }
+
         var filterArray = panel.getFilterArray(tab);
         var title = panel.getTitleSuffix();
 

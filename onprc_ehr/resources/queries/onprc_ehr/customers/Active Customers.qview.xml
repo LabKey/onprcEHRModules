@@ -1,0 +1,9 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <sorts>
+        <sort column="lastName" />
+        <sort column="firstName" />
+    </sorts>
+    <filters>
+        <filter column="dateDisabled" operator="isblank" value=""/>
+    </filters>
+</customView>

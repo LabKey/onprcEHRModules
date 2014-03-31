@@ -37,6 +37,7 @@ public class ActiveCasesDemographicsProvider extends AbstractListDemographicsPro
         super("study", "Cases", "activeCases", module);
     }
 
+    @Override
     protected Set<FieldKey> getFieldKeys()
     {
         Set<FieldKey> keys = new HashSet<FieldKey>();
@@ -54,6 +55,16 @@ public class ActiveCasesDemographicsProvider extends AbstractListDemographicsPro
         keys.add(FieldKey.fromString("remark"));
         keys.add(FieldKey.fromString("isActive"));
         keys.add(FieldKey.fromString("isOpen"));
+
+        return keys;
+    }
+
+    @Override
+    public Collection<FieldKey> getFieldKeysToTest()
+    {
+        //for now, simply skip the whole provider.  because different records can be active from day to day, this makes validation tricky
+        Set<FieldKey> keys = new HashSet<>(getFieldKeys());
+        keys.remove(FieldKey.fromString(_propName));
 
         return keys;
     }

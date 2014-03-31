@@ -1,15 +1,24 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="matings" tableDbType="TABLE">
+            <table tableName="matings" tableDbType="TABLE" useColumnOrder="true">
                 <tableUrl />
                 <insertUrl />
                 <importUrl />
                 <updateUrl />
                 <deleteUrl />
                 <columns>
+                    <column columnName="Id">
+
+                    </column>
                     <column columnName="date">
+                        <columnTitle>Mating Start</columnTitle>
                         <formatString>yyyy-MM-dd</formatString>
+                    </column>
+                    <column columnName="enddate">
+                        <columnTitle>Mating End</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                        <isHidden>false</isHidden>
                     </column>
                     <column columnName="project">
                         <isHidden>true</isHidden>

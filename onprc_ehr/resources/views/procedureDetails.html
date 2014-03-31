@@ -7,6 +7,7 @@
         }
 
         var procedureId = LABKEY.ActionURL.getParameter('procedureId');
+        var canEdit = EHR.Security.hasProcedureManagementPermission();
 
         var webpart = <%=webpartContext%>;
         var domSpec = [{
@@ -29,26 +30,52 @@
             tag: 'div',
             style: 'padding-bottom: 10px;',
             id: 'procedureFlags_' + webpart.wrapperDivId
-        }]
+        }];
 
         var el = Ext4.get(webpart.wrapperDivId);
         Ext4.DomHelper.append(el, domSpec);
 
-        Ext4.create('LDK.panel.DetailsPanel', {
-            showBackBtn: false,
-            store: {
-                schemaName: 'ehr_lookups',
-                queryName: 'procedures',
-                filterArray: [
-                    LABKEY.Filter.create('rowid', procedureId, LABKEY.Filter.Types.EQUAL)
-                ]
-            },
+        Ext4.create('LDK.panel.WebpartPanel', {
             title: 'Procedure Details',
+            border: false,
+            items: [{
+                xtype: 'labkey-detailspanel',
+                showTitle: false,
+                border: false,
+                showBackBtn: false,
+                store: {
+                    schemaName: 'ehr_lookups',
+                    queryName: 'procedures',
+                    filterArray: [
+                        LABKEY.Filter.create('rowid', procedureId, LABKEY.Filter.Types.EQUAL)
+                    ]
+                }
+            },{
+                xtype: 'button',
+                text: 'Manage Definition',
+                style: 'margin-bottom: 10px;',
+                hidden: !canEdit,
+                menu: [{
+                    text: 'Edit Details',
+                    scope: this,
+                    handler: function(btn){
+                        window.location = LABKEY.ActionURL.buildURL('ldk', 'manageRecord', null, {schemaName: 'ehr_lookups', queryName: 'procedures', keyField: 'rowid', key: procedureId})
+                    }
+                },{
+                    text: 'Copy From Procedure',
+                    scope: this,
+                    handler: function(btn){
+                        Ext4.create('EHR.window.ManageProcedureWindow', {
+                            procedureId: procedureId
+                        }).show();
+                    }
+                }]
+            }],
             renderTo: 'procedureDetails_' + webpart.wrapperDivId
         });
 
         LDK.Utils.getReadOnlyQWP({
-            title: 'Default Summary',
+            title: 'Default Narrative',
             schemaName: 'ehr_lookups',
             queryName: 'procedure_default_comments',
             filters: [LABKEY.Filter.create('procedureId', procedureId, LABKEY.Filter.Types.EQUAL)]

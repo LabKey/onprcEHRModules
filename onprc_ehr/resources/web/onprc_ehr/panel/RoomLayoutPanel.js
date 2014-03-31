@@ -23,15 +23,63 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
             multi.add(LABKEY.Query.selectRows, {
                 schemaName: 'ehr_lookups',
-                queryName: 'cage',
-                filterArray: filters,
-                requiredVersion: 9.1,
-                sort: 'room/sort_order,cagePosition/sort_order',
-                columns: 'room,cage,cage_type,cage_type/sqft,cage_type/height,cage_type/cageslots,divider,cagePosition/row,cagePosition/columnIdx,cagePosition/sort_order,totalAnimals/animals,divider/countAsSeparate,divider/countAsPaired,divider/displaychar,divider/bgcolor,divider/border_style,divider/short_description',
+                queryName: 'divider_types',
                 scope: this,
                 failure: LDK.Utils.getErrorCallback(),
                 success: function(results){
-                    ret.cageResults = results;
+                    ret.dividerMap = {};
+
+                    if (results && results.rows && results.rows.length){
+                        Ext4.Array.forEach(results.rows, function(r){
+                            ret.dividerMap[r.rowid] = r;
+                        }, this);
+                    }
+                }
+            });
+
+            multi.add(LABKEY.Query.selectRows, {
+                schemaName: 'ehr_lookups',
+                queryName: 'cage_type',
+                scope: this,
+                failure: LDK.Utils.getErrorCallback(),
+                success: function(results){
+                    ret.cageTypeMap = {};
+
+                    if (results && results.rows && results.rows.length){
+                        Ext4.Array.forEach(results.rows, function(r){
+                            ret.cageTypeMap[r.cagetype] = r;
+                        }, this);
+                    }
+                }
+            });
+
+            multi.add(LABKEY.Query.selectRows, {
+                schemaName: 'ehr_lookups',
+                queryName: 'cage',
+                filterArray: filters,
+                sort: 'room/sort_order,cagePosition/sort_order',
+                columns: 'location,room,cage,cage_type,divider,cagePosition/row,cagePosition/columnIdx,cagePosition/sort_order,totalAnimals/animals,status',
+                scope: this,
+                failure: LDK.Utils.getErrorCallback(),
+                success: function(results){
+                    ret.cageStore = Ext4.create('Ext.data.ArrayStore', {
+                        fields: [
+                            {name: 'location', type: 'string'},
+                            {name: 'room', type: 'string'},
+                            {name: 'cage', type: 'string'},
+                            {name: 'cage_type', type: 'string'},
+                            {name: 'status', type: 'string'},
+                            {name: 'divider', type: 'int'},
+                            {name: 'cagePosition/row', type: 'string'},
+                            {name: 'cagePosition/columnIdx', type: 'int'},
+                            {name: 'cagePosition/sort_order', type: 'int'},
+                            {name: 'totalAnimals/animals', type: 'string'}
+                        ]
+                    });
+
+                    Ext4.Array.forEach(results.rows, function(r){
+                        ret.cageStore.add(ret.cageStore.createModel(r));
+                    }, this);
                 }
             });
 
@@ -80,7 +128,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
         getRoomItems: function(config){
             var toAdd = [];
 
-            if (!config.cageResults || !config.cageResults.rows || !config.cageResults.rows.length){
+            if (!config.cageStore || !config.cageStore.getCount()){
                 toAdd.push({
                     html: 'No cages found'
                 });
@@ -90,7 +138,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                     toAdd.push({
                         border: false,
                         style: 'margin-bottom: 10px;',
-                        html: 'NOTE: Click on either the cage or divider for more information.  A yellow divider indicates the cages are paired.  A black divider indicates the cages are separate.  Cages are colored green when they are empty.'
+                        html: 'NOTE: Click on either the cage or divider for more information.  A yellow divider indicates the cages are paired.  A black divider indicates the cages are separate.  Cages are colored green when they are empty.  Yellow cages have been flagged as unavailable.'
                     });
                 }
 
@@ -98,16 +146,15 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                 var colIdxs = {};
                 var maxCageMap = {};
                 var invertedMap = {};
-                Ext4.each(config.cageResults.rows, function(r){
-                    var row = new LDK.SelectRowsRow(r);
-                    var room = row.getValue('room');
+                config.cageStore.each(function(row){
+                    var room = row.get('room');
                     var maxCage = maxCageMap[room] || 0;
-                    var letter = row.getValue('cagePosition/row');
+                    var letter = row.get('cagePosition/row');
                     var letterNum = ONPRC.panel.RoomLayoutPanel.getRowNumber(letter);
                     var isInverted = config.doRowInversion ? (Math.round(letterNum / 4) == 1) : false;
                     invertedMap[letter] = isInverted;
 
-                    var col = row.getValue('cagePosition/columnIdx');
+                    var col = row.get('cagePosition/columnIdx');
 
                     var cageMap = roomMap[room] || {};
 
@@ -133,7 +180,6 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                 Ext4.each(rooms, function(room, roomIdx){
                     if (roomIdx == 0 && !config.printMode){
-                        //TODO
                         toAdd.push(ONPRC.panel.RoomLayoutPanel.getButtonCfgs(config));
                         toAdd.push({
                             style: 'margin-bottom: 20px;',
@@ -203,7 +249,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                         for (var colIdx = 1;colIdx<=maxCage;colIdx++){
                             var row = cages[colIdx];
                             if (row){
-                                var animals = row.getDisplayValue('totalAnimals/animals');
+                                var animals = row.get('totalAnimals/animals');
                                 if (!Ext4.isArray(animals)){
                                     animals = animals || '';
                                     animals = animals.replace(/\n/g, ',');
@@ -241,8 +287,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     }, this);
                                 }
 
-                                var isSeparate = row.getValue('divider/countAsSeparate');
-                                var isPaired = row.getValue('divider/countAsPaired');
+                                var isSeparate = config.dividerMap[row.get('divider')].countAsSeparate;
+                                var isPaired = config.dividerMap[row.get('divider')].countAsPaired;
 
                                 var lb = colIdx == 1 ? 2 : 0;
                                 var rb = colIdx == maxCage ? 2 : 0;
@@ -255,11 +301,12 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 var bgColor = '';
                                 var emptyCageColor = '#00EE00';
                                 var prevCage = (colIdx > 1) ? cages[colIdx - 1] : null;
-                                var cageType = row.getValue('cage_type');
-                                var cageAnimals = row.getValue('totalAnimals/animals');
+                                var cageType = row.get('cage_type');
+                                var status = row.get('status');
+                                var cageAnimals = row.get('totalAnimals/animals');
                                 if (prevCage){
-                                    var prevIsSeparate = prevCage.getValue('divider/countAsSeparate');
-                                    var prevAnimals = prevCage.getValue('totalAnimals/animals');
+                                    var prevIsSeparate = config.dividerMap[prevCage.get('divider')].countAsSeparate;
+                                    var prevAnimals = prevCage.get('totalAnimals/animals');
 
                                     if (!prevIsSeparate && !Ext4.isEmpty(cageAnimals))
                                         bgColor = 'red';
@@ -279,7 +326,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 }
                                 else {
                                     //flag cage if empty
-                                    if (Ext4.isEmpty(row.getValue('totalAnimals/animals'))){
+                                    if (Ext4.isEmpty(row.get('totalAnimals/animals'))){
                                         bgColor = emptyCageColor;
                                     }
 
@@ -290,16 +337,21 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         else
                                             bgColor = 'grey';
                                     }
+                                    else if (status == 'Unavailable')
+                                    {
+                                        bgColor = 'yellow';
+                                    }
                                 }
 
                                 //TODO: do something smarter
-                                var type = row.getDisplayValue('cage_type');
+                                var type = row.get('cage_type');
                                 var suffix = '';
                                 if (type.match(/^Tunnel/))
                                     suffix = 'TU';
                                 else if (type.match(/^Tall/) || type.match(/[0-9]T$/))
                                     suffix = 'T';
 
+                                var cageType = config.cageTypeMap[row.get('cage_type')] || {};
                                 rowItems.push({
                                     border: false,
                                     style: {
@@ -321,7 +373,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         border: false
                                     },
                                     items: [{
-                                        html: cageType == 'No Cage' ? 'No Cage' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (row.getValue('cage_type/sqft') ? ' (' + (row.getValue('cage_type/sqft') / row.getValue('cage_type/cageslots'))+ suffix + ')' : '') + '</span>'),
+                                        html: cageType == 'No Cage' ? 'No Cage' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') + '</span>'),
                                         bodyStyle: {
                                             'background-color': 'transparent'
                                         },
@@ -348,10 +400,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 });
 
                                 if (colIdx < maxCage){
-                                    var divider = row.getDisplayValue('divider');
-                                    var dividerColor = row.getValue('divider/bgcolor');
-                                    var dividerBorderStyle = row.getValue('divider/border_style') || 'none';
-                                    var dividerText = ''; //row.getValue('divider/short_description');
+                                    var divider = config.dividerMap[row.get('divider')].divider;
+                                    var dividerColor = config.dividerMap[row.get('divider')].bgcolor;
+                                    var dividerBorderStyle = config.dividerMap[row.get('divider')].border_style || 'none';
+                                    var dividerText = ''; //config.dividerMap[row.get('divider')].short_description;
 
                                     rowItems.push({
                                         cageRec: row,
@@ -545,12 +597,14 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
     },
 
     refresh: function(){
+        console.log('r')
         this.onDataLoad(this.cachedData);
     },
 
     onDataLoad: function(ret){
         this.cachedData = ret;
         ret.roomPanel = this;
+        ret.cageStore.on('datachanged', this.refresh, this, {single: true});
 
         var toAdd = ONPRC.panel.RoomLayoutPanel.getRoomItems(ret);
 
@@ -571,19 +625,131 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
     extend: 'Ext.window.Window',
 
     initComponent: function(){
+        this.hasEditPermission = EHR.Security.hasLocationEditorPermission();
+        var buttons = [{
+            text: 'Close',
+            handler: function(btn){
+                btn.up('window').destroy();
+            }
+        }];
+
+        if (this.hasEditPermission){
+            buttons.unshift({
+                text: 'Edit',
+                boundRecord: this.cageRec,
+                handler: function(btn){
+                    btn.up('window').close();
+
+                    Ext4.create('Ext.window.Window', {
+                        modal: true,
+                        closeAction: 'destroy',
+                        title: 'Edit Cage/Divider',
+                        bodyStyle: 'padding: 5px;',
+                        width: 400,
+                        boundRecord: btn.boundRecord,
+                        defaults: {
+                            width: 380
+                        },
+                        items: [{
+                            xtype: 'combo',
+                            fieldLabel: 'Cage Type',
+                            displayField: 'cagetype',
+                            valueField: 'cagetype',
+                            value: btn.boundRecord.get('cage_type'),
+                            itemId: 'cageType',
+                            store: {
+                                type: 'labkey-store',
+                                schemaName: 'ehr_lookups',
+                                queryName: 'cage_type',
+                                autoLoad: true,
+                                sort: 'cagetype'
+                            }
+                        },{
+                            xtype: 'combo',
+                            fieldLabel: 'Divider Type',
+                            displayField: 'divider',
+                            valueField: 'rowid',
+                            value: btn.boundRecord.get('divider'),
+                            itemId: 'divider',
+                            store: {
+                                type: 'labkey-store',
+                                schemaName: 'ehr_lookups',
+                                queryName: 'divider_types',
+                                autoLoad: true,
+                                sort: 'divider'
+                            }
+                        },{
+                            xtype: 'combo',
+                            fieldLabel: 'Status',
+                            displayField: 'value',
+                            valueField: 'value',
+                            value: btn.boundRecord.get('status'),
+                            itemId: 'cageStatus',
+                            store: {
+                                type: 'labkey-store',
+                                schemaName: 'ehr_lookups',
+                                queryName: 'cage_status',
+                                autoLoad: true,
+                                sort: 'value'
+                            }
+                        }],
+                        buttons: [{
+                            text: 'Submit',
+                            handler: function(btn){
+                                var win = btn.up('window');
+                                var cageType = win.down('#cageType');
+                                var divider = win.down('#divider');
+                                var cageStatus = win.down('#cageStatus');
+                                if (!cageType.getValue() || !divider.getValue()){
+                                    Ext4.Msg.alert('Error', 'Must enter both cage type and divider');
+                                    return;
+                                }
+
+                                var boundRecord = win.boundRecord;
+                                win.close();
+                                Ext4.Msg.wait('Saving...');
+
+                                LABKEY.Query.updateRows({
+                                    schemaName: 'ehr_lookups',
+                                    queryName: 'cage',
+                                    rows: [{
+                                        location: boundRecord.get('location'),
+                                        cage_type: cageType.getValue(),
+                                        divider: divider.getValue(),
+                                        status: cageStatus.getValue()
+                                    }],
+                                    scope: this,
+                                    failure: LDK.Utils.getErrorCallback(),
+                                    success: function(results){
+                                        Ext4.Msg.hide();
+                                        boundRecord.set({
+                                            cage_type: cageType.getValue(),
+                                            divider: divider.getValue(),
+                                            status: cageStatus.getValue()
+                                        });
+                                        boundRecord.store.fireEvent('datachanged', boundRecord.store);
+                                    }
+                                });
+                            }
+                        },{
+                            text: 'Cancel',
+                            handler: function(btn){
+                                btn.up('window').close();
+                            }
+                        }]
+                    }).show();
+                }
+            });
+        }
+
         Ext4.apply(this, {
-            title: 'Cage: ' + this.cageRec.getDisplayValue('cage'),
+            title: 'Cage: ' + this.cageRec.get('cage'),
             bodyStyle: 'padding: 5px;',
             width: 400,
             defaults: {
                 width: 360
             },
-            buttons: [{
-                text: 'Close',
-                handler: function(btn){
-                    btn.up('window').destroy();
-                }
-            }],
+            buttons: buttons,
             items: this.getItems()
         });
 
@@ -596,37 +762,49 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Room',
-            value: this.cageRec.getDisplayValue('room')
+            value: this.cageRec.get('room')
         });
 
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Cage',
-            value: this.cageRec.getDisplayValue('cage')
+            value: this.cageRec.get('cage')
         });
 
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Cage Type',
-            value: this.cageRec.getDisplayValue('cage_type')
+            value: this.cageRec.get('cage_type')
         });
 
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Sq Ft.',
-            value: this.cageRec.getDisplayValue('cage_type/sqft')
+            value: this.roomPanel.cageTypeMap[this.cageRec.get('cage_type')].sqft
         });
 
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Height',
-            value: this.cageRec.getDisplayValue('cage_type/height')
+            value: this.roomPanel.cageTypeMap[this.cageRec.get('cage_type')].height
         });
 
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Cage Slots',
-            value: this.cageRec.getDisplayValue('cage_type/cageslots')
+            value: this.roomPanel.cageTypeMap[this.cageRec.get('cage_type')].cageslots
+        });
+
+        items.push({
+            xtype: 'displayfield',
+            fieldLabel: 'Divider',
+            value: this.roomPanel.dividerMap[this.cageRec.get('divider')].divider
+        });
+
+        items.push({
+            xtype: 'displayfield',
+            fieldLabel: 'Status',
+            value: this.cageRec.get('status')
         });
 
         return items;
@@ -637,20 +815,22 @@ Ext4.define('ONPRC.window.CageDividerDetailsWindow', {
     extend: 'Ext.window.Window',
 
     initComponent: function(){
+        var buttons = [{
+            text: 'Close',
+            handler: function(btn){
+                btn.up('window').destroy();
+            }
+        }];
+
         Ext4.apply(this, {
             bodyStyle: 'padding: 5px;',
-            title: 'Cage Divider: ' + this.cageRec.getDisplayValue('cage'),
+            title: 'Cage Divider: ' + this.cageRec.get('cage'),
             items: this.getItems(),
             width: 400,
             defaults: {
                 width: 360
             },
-            buttons: [{
-                text: 'Close',
-                handler: function(btn){
-                    btn.up('window').destroy();
-                }
-            }]
+            buttons: buttons
         });
 
         this.callParent(arguments);
@@ -662,19 +842,19 @@ Ext4.define('ONPRC.window.CageDividerDetailsWindow', {
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Room',
-            value: this.cageRec.getDisplayValue('room')
+            value: this.cageRec.get('room')
         });
 
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Cage',
-            value: this.cageRec.getDisplayValue('cage')
+            value: this.cageRec.get('cage')
         });
 
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Divider Type',
-            value: this.cageRec.getDisplayValue('divider')
+            value: this.cageRec.get('divider')
         });
 
         return items;

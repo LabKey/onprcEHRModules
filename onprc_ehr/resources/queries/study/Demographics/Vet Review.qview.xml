@@ -1,6 +1,6 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="true">
     <columns>
-        <column name="history"/>
+        <column name="Id/clinicalActions"/>
         <column name="Id"/>
         <column name="mostRecentHx"/>
         <!--<column name="latestP2"/>-->

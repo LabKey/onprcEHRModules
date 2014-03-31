@@ -63,7 +63,7 @@ Ext4.onReady(function (){
                             name: 'View Active Animal Assignments',
                             url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Assignment', 'query.viewName': 'Active Assignments', 'query.project/protocol/displayName~eq': sr.getValue('displayName')})
                         },{
-                            name: 'View All Animals Assigned To This Project Protocol Over A Date Range',
+                            name: 'View All Animals Assigned To This Protocol Over A Date Range',
                             url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentOverlapsById', 'query.param.Protocol': sr.getValue('displayName')})
                         },{
                             name: 'View Procedures Allowed Under This Protocol',

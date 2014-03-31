@@ -31,15 +31,26 @@ import java.util.List;
 public class DrugAdministrationFormSection extends SimpleFormSection
 {
     protected boolean _showAddTreatments = true;
+    public static final String LABEL = "Medications/Treatments Given";
 
     public DrugAdministrationFormSection()
     {
-        this(EHRService.FORM_SECTION_LOCATION.Body);
+        this(EHRService.FORM_SECTION_LOCATION.Body, LABEL);
+    }
+
+    public DrugAdministrationFormSection(String label)
+    {
+        this(EHRService.FORM_SECTION_LOCATION.Body, label);
     }
 
     public DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super("study", "Drug Administration", "Medications/Treatments Given", "ehr-gridpanel");
+        this(location, LABEL);
+    }
+
+    public DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION location, String label)
+    {
+        super("study", "Drug Administration", label, "ehr-gridpanel");
         setClientStoreClass("EHR.data.DrugAdministrationRunsClientStore");
         addClientDependency(ClientDependency.fromFilePath("ehr/data/DrugAdministrationRunsClientStore.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/SedationWindow.js"));

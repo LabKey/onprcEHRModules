@@ -52,7 +52,7 @@ public class PathologyTissuesFormType extends TaskForm
                 new SimpleGridPanel("study", "tissue_samples", "Tissues/Weights", EHRService.FORM_SECTION_LOCATION.Tabs),
                 new TissueDistFormSection(),
                 new SimpleGridPanel("study", "measurements", "Measurements", EHRService.FORM_SECTION_LOCATION.Tabs),
-                new MiscChargesFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
+                new MiscChargesByAccountFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
 
         for (FormSection s : this.getFormSections())
@@ -72,7 +72,7 @@ public class PathologyTissuesFormType extends TaskForm
     protected List<String> getMoreActionButtonConfigs()
     {
         List<String> ret = super.getMoreActionButtonConfigs();
-        ret.add("COPYFROMCASE");
+        ret.add("ENTERDEATH_FOR_TISSUES");
 
         return ret;
     }

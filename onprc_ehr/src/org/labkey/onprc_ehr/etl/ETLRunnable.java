@@ -1322,7 +1322,7 @@ public class ETLRunnable implements Runnable
         //"Clinical Encounters",
         //"Clinical Observations",
         //"Treatment Orders",
-        //"Drug Administration"
+        "Drug Administration"
     };
 
     private String validateEtlScript(Map<String, String> queries, UserSchema schema, boolean attemptRepair) throws BadConfigException, BatchValidationException

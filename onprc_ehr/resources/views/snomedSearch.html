@@ -33,22 +33,28 @@ Ext4.onReady(function (){
                 handler: function(btn){
                     var panel = btn.up('#snomedSearchPanel');
                     var target = panel.down('#target');
-                    var text = panel.down('#searchTerms').getValue();
+                    var text = Ext4.String.trim(panel.down('#searchTerms').getValue());
                     if (!text){
                         Ext4.Msg.alert('Error', 'Must enter at least one search term');
                         return;
                     }
 
-                    text = Ext4.String.trim(text);
                     text = text.replace(/(\r\n|\n|\r)+/gm, '\n');
                     if (text){
                         var tmp = [];
                         text = text.split('\n');
                         Ext4.Array.forEach(text, function(t){
-                            tmp.push(Ext4.String.trim(t));
+                            t = Ext4.String.trim(t);
+                            if (t)
+                                tmp.push(t);
                         }, this);
                         tmp = Ext4.Array.unique(tmp);
                         text = tmp;
+                    }
+
+                    if (!text.length){
+                        Ext4.Msg.alert('Error', 'Must enter at least 1 search term');
+                        return;
                     }
 
                     target.removeAll();
@@ -65,28 +71,19 @@ Ext4.onReady(function (){
                                     filterArray.push(LABKEY.Filter.create('meaning', term, LABKEY.Filter.Types.CONTAINS));
                                 }, this);
 
-                                LABKEY.Query.GetData.renderQueryWebPart({
-                                    source: {
-                                        type: 'query',
-                                        schemaName: 'ehr',
-                                        queryName: 'snomedBySet'
+                                new LABKEY.QueryWebPart({
+                                    renderTo: panel.renderTarget,
+                                    schemaName: 'ehr',
+                                    queryName: 'snomedBySet',
+                                    filters: filterArray,
+                                    frame: 'none',
+                                    timeout: 9999999,
+                                    scope: this,
+                                    sort: 'Id,date',
+                                    success: function(){
+                                        panel.doLayout();
+                                        Ext4.Msg.hide();
                                     },
-                                    columns: ['Id','date','caseno','codes','codesMeaning'],
-                                    webPartConfig: {
-                                        renderTo: panel.renderTarget,
-                                        frame: 'none',
-                                        timeout: 9999999,
-                                        scope: this,
-                                        sort: 'Id,date',
-                                        success: function(){
-                                            panel.doLayout();
-                                            Ext4.Msg.hide();
-                                        },
-                                        failure: LDK.Utils.getErrorCallback()
-                                    },
-                                    transforms: [{
-                                        filters: filterArray
-                                    }],
                                     failure: LDK.Utils.getErrorCallback()
                                 });
                             }

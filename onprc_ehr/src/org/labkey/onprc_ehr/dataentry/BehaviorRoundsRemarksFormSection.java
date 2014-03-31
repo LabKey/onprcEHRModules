@@ -37,10 +37,14 @@ public class BehaviorRoundsRemarksFormSection extends RoundsRemarksFormSection
     {
         super("Remarks", location);
         setConfigSources(Collections.singletonList("Task"));
+        setXtype("ehr-behaviorroundsremarksgridpanel");
 
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddClinicalCasesWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddSurgicalCasesWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddBehaviorCasesWindow.js"));
+
+        addClientDependency(ClientDependency.fromFilePath("ehr/grid/BehaviorRoundsRemarksGridPanel.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/plugin/BehaviorRemarksRowEditor.js"));
     }
 
     @Override

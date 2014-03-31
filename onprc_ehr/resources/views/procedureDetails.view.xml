@@ -1,5 +1,6 @@
 <view xmlns="http://labkey.org/data/xml/view" title="Procedure Details" frame="none">
     <dependencies>
         <dependency path="ehr.context" />
+        <dependency path="onprc_ehr/window/ManageProcedureWindow.js"/>
     </dependencies>
 </view>

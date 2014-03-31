@@ -87,7 +87,7 @@ UNION ALL
 
 SELECT
   t.id,
-  t.date,
+  TIMESTAMPADD('SQL_TSI_DAY', i.value, t.date) as date,
   'Matings' as category,
   CASE
     WHEN t.matingType.value = 'Timed Mating' THEN 'T'
@@ -100,6 +100,7 @@ SELECT
   convert(dayofmonth(t.date), integer) as day,
 
 FROM study.matings t
+LEFT JOIN ldk.integers i ON (i.value <= TIMESTAMPDIFF('SQL_TSI_DAY', t.date, COALESCE(t.enddate, t.date)))
 
 ) t1
 

@@ -84,8 +84,9 @@ public class ClinicalReportFormType extends TaskForm
         addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalReportStoreCollection.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalReport.js"));
-
+        addClientDependency(ClientDependency.fromFilePath("ehr/panel/ExamDataEntryPanel.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalReportChild.js"));
+        setJavascriptClass("EHR.panel.ExamDataEntryPanel");
     }
 
     @Override

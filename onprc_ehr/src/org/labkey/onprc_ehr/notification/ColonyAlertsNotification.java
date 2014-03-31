@@ -115,6 +115,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //assignments
         doAssignmentChecks(c, u, msg);
         getU42Assignments(c, u, msg);
+        doDuplicateResourceCheck(c, u, msg);
         doCandidateChecks(c, u, msg);
 
         //housing
@@ -175,6 +176,19 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         assignmentsProjectedToday(c, u, msg);
         assignmentsProjectedTomorrow(c, u, msg);
         protocolsWithAnimalsExpiringSoon(c, u, msg);
+    }
+
+    protected void doDuplicateResourceCheck(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/activeAssignments/numResourceAssignments"), 1, CompareType.GT);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("demographics"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " animals assigned to more than 1 center resource.  This will cause problems for lease fees and per diems.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", null) + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
     }
 
     protected void doCandidateChecks(final Container c, User u, final StringBuilder msg)

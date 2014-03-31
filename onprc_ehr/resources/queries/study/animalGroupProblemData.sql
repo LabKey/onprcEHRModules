@@ -19,6 +19,7 @@ SELECT
   t1.lsid,
   t1.groupId,
   t1.Id,
+  max(t1.date) as date,
   max(t1.date) as problemOpen,
   max(t1.enddate) as problemEnd,
   t1.category,

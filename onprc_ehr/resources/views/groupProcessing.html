@@ -199,6 +199,52 @@
 
                     window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
                 }
+            },{
+                html: '<hr><b>Clinical PE Information:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will produce a simple list of these animals, showing age, weight, etc.',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                itemId: 'clinicalPeBtn',
+                scope: this,
+                getUrlParams: function(){
+                    var groupName = this.up('panel').down('#groupName').getValue();
+                    var room = this.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'demographics',
+                        'query.Id/demographics/calculated_status~eq': 'Alive',
+                        //'query.columns': 'Id,gender,Id/age/yearAndDays,Id/mostRecentWeight/MostRecentWeight'
+                        'query.viewName': 'Clinical PE Form'
+                    };
+
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    return params;
+                },
+                menu: [{
+                    text: 'Open In Browser',
+                    scope: this,
+                    handler: function(item){
+                        var params = item.up('#clinicalPeBtn').getUrlParams();
+                        window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+                    }
+                },{
+                    text: 'Download To Excel',
+                    scope: this,
+                    handler: function(item){
+                        var params = item.up('#clinicalPeBtn').getUrlParams();
+                        window.open(LABKEY.ActionURL.buildURL('query', 'exportRowsXLSX', null, params))
+                    }
+                }]
             }]
         }).render(webpart.wrapperDivId);
     });

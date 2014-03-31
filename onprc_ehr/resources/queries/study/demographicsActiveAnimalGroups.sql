@@ -5,7 +5,7 @@
  */
 SELECT
   m.Id,
-  count(distinct m.rowid) as totalGroups,
+  count(distinct m.objectid) as totalGroups,
   group_concat(distinct m.name, chr(10)) as groups,
   group_concat(distinct m.majorityLocation, chr(10)) as majorityLocations
 
@@ -13,7 +13,7 @@ FROM (
 
 SELECT
   m.Id,
-  m.rowid,
+  m.objectid,
   m.groupId.name as name,
   m.groupId.majorityLocation.majorityLocation as majorityLocation
 FROM ehr.animal_group_members m
@@ -23,7 +23,7 @@ UNION ALL
 
 SELECT
   f.Id,
-  null as rowid, --so we exclude these when counting total groups
+  null as objectid, --so we exclude these when counting total groups
   f.value as name,
   null as majorityLocation
 FROM study.flags f

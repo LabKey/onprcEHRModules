@@ -39,7 +39,7 @@ public class SourceDemographicsProvider extends AbstractListDemographicsProvider
 
     protected Collection<FieldKey> getFieldKeys()
     {
-        Set<FieldKey> keys = new HashSet<FieldKey>();
+        Set<FieldKey> keys = new HashSet<>();
         keys.add(FieldKey.fromString("date"));
         keys.add(FieldKey.fromString("fromCenter"));
         keys.add(FieldKey.fromString("source"));

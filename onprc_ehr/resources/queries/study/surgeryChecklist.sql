@@ -14,16 +14,25 @@
  * limitations under the License.
  */
 SELECT
-  d.Id,
-  t.lastDate as labworkDate,
-  hr1.result as PLT,
-  hr2.result as HCT,
-  hr1.runId as runIdPLT,
-  hr2.runId as runIdHCT,
+  t.Id,
+  t.labworkDate,
+  t.PLT,
+  t.HCT,
+  t.runIdPLT,
+  t.runIdHCT,
   CASE
-    WHEN (hr2.result < 30 OR hr1.result < 50) THEN 'WARNING'
+    WHEN (t.HCT < 30 OR t.PLT < 50) THEN 'WARNING'
     ELSE null
-  END as status,
+  END as status
+FROM (
+SELECT
+  d.Id,
+  max(t.lastDate) as labworkDate,
+  max(CASE WHEN (hr1.testid = 'PLT') THEN hr1.result ELSE NULL END) as PLT,
+  max(CASE WHEN (hr1.testid = 'HCT') THEN hr1.result ELSE NULL END) as HCT,
+
+  max(CASE WHEN (hr1.testid = 'PLT') THEN hr1.runId ELSE NULL END) as runIdPLT,
+  max(CASE WHEN (hr1.testid = 'HCT') THEN hr1.runId ELSE NULL END) as runIdHCT,
 
 FROM study.demographics d
 LEFT JOIN (
@@ -32,7 +41,8 @@ LEFT JOIN (
   WHERE r.type = 'Hematology'
   GROUP BY r.id
 ) t ON (t.id = d.id)
-LEFT JOIN study.hematologyResults hr1 ON (hr1.id = d.id AND hr1.date = t.lastDate AND hr1.testid = 'PLT')
-LEFT JOIN study.hematologyResults hr2 ON (hr2.id = d.id AND hr2.date = t.lastDate AND hr2.testid = 'HCT')
+LEFT JOIN study.hematologyResults hr1 ON (hr1.id = d.id AND hr1.date = t.lastDate AND (hr1.testid = 'PLT' OR hr1.testid = 'HCT'))
 
 WHERE d.calculated_status = 'Alive'
+GROUP BY d.Id
+) t

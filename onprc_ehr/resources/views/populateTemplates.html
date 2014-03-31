@@ -306,6 +306,7 @@ Ext4.onReady(function(){
                         ['E-YYY60','PO','BID - AM/Night','7','8','100','mg/ml','25','mg/kg','','mL','0.1','','mg','','250','Standard'],
                         ['','IM','','0','8','5','mg/ml','0.1','mg/kg','','mL','0.05','','mg','','10','Standard'],
                         ['E-87600','PO','SID - AM','14','18','','','','tab/animal','','tablet(s)','0.25','','','','0.5','Standard'],
+                        ['E-YY914','PO','','','','100','mg/ml','','','','mL','','','mg','','250','Standard'],
                         ['E-YY782','PO','BID - AM/Night','3','6','','','','tab/animal','','tablet(s)','','','','','0.5','Standard'],
                         ['E-778X0','IM','BID - AM/Night','3','8','20','mg/ml','1','mg/kg','','mL','0.01','','mg','','10','Standard'],
                         ['E-08811','IM','','0','','','','0.01','mg/kg','','mL','0.01','','mg','','0.1','Standard'],
@@ -371,7 +372,9 @@ Ext4.onReady(function(){
                         ['E-70720','INH','SID - AM','1','0','','','','','','','','1.5','%','','','Standard'],
                         ['E-YY945','SQ','','','','','','4','mg/kg','','','','','','','','Standard'],
                         ['F-10470','INH','SID - AM','1','0','','','','','','','','1','L/min','','','Standard'],
-                        ['E-YY008','','','','','','','','','','','','','','','','Standard']
+                        ['E-YY008','','','','','','','','','','','','','','','','Standard'],
+                        ['E-87350','IV','','','','','','','','','mL','','','','','','Standard'],
+                        ['E-87255','PO','SID - AM','','','','','','','','mL','','','','','','Standard']
                     ];
 
                     var newRows = [];
@@ -492,16 +495,13 @@ Ext4.onReady(function(){
                     ['Clinical Observations', '{"category":"Incision","area":"Incision: Main","observation":"WNL"}']
                 ]
             },{
-                template: ['BSU Rounds', 'Section', 'Clinical Observations', '', ''],
+                template: ['BSU Observations', 'Section', 'Clinical Observations', '', ''],
                 records: [
-                    ['Clinical Observations', '{"category":"BCS","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"Alopecia Score","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"SIB Score","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"CQS","area":"N/A"}'],
-                    ['Clinical Observations', '{"category":"Stool","area":"N/A","observation":"F"}'],
-                    ['Clinical Observations', '{"category":"App","area":"N/A","observation":"Good"}'],
-                    ['Clinical Observations', '{"category":"Att","area":"N/A","observation":"BAR"}'],
-                    ['Clinical Observations', '{"category":"Pain Score","area":"N/A","observation":"0"}'],
-                    ['Clinical Observations', '{"category":"Hyd","area":"N/A","observation":"Good"}']
+                    ['Clinical Observations', '{"category":"Fecal Smear","area":"N/A","observation":""}'],
+                    ['Clinical Observations', '{"category":"Behaviors","area":"N/A","observation":""}']
                 ]
             },{
                 template: ['CBC and Chem', 'Section', 'blood', '', ''],
@@ -649,7 +649,7 @@ Ext4.onReady(function(){
                 records: [['Clinical Remarks', '{"s":"Sedated for diagnostic physical examination, BAR prior to sedation.","o":"","a":"Appears _________","p":"(Enter actions)","p2":"(Enter plan)"}']]
             },{
                 template: ['Complete Exam', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for physical examinatioin, BAR prior to sedation.","o":"","a":"No significant findings noted on physical examination. ","p":"(Enter actions)","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for physical examination, BAR prior to sedation.","o":"","a":"No significant findings noted on physical examination. ","p":"(Enter actions)","p2":"(Enter plan)"}']]
             },{
                 template: ['Limited Exam', 'Section', 'Clinical Remarks', '', ''],
                 records: [['Clinical Remarks', '{"s":"Limited examination, BAR prior to sedation.","o":"","a":"Appears _________","p":"(Enter actions)","p2":"(Enter plan)"}']]
@@ -660,9 +660,8 @@ Ext4.onReady(function(){
 
             //necropsy
             templateRows = templateRows.concat([{
-                template: ['Pentobarbitol / Ketamine', 'Section', 'Drug Administration', '', ''],
+                template: ['Pentobarbitol', 'Section', 'Drug Administration', '', ''],
                 records: [
-                    ['Drug Administration', '{"code":"E-70590"}'],
                     ['Drug Administration', '{"code":"E-78840"}']
                 ]
             }]);
@@ -671,11 +670,14 @@ Ext4.onReady(function(){
             templateRows = templateRows.concat([{
                 template: ['Diarrhea 1st Day Cage', 'Section', 'Drug Administration', '', ''],
                 records: [
+                    ['Drug Administration', '{"code":"E-80410"}']
                 ]
             },{
                 template: ['Diarrhea 1st Day Colony', 'Section', 'Drug Administration', '', ''],
                 records: [
                     ['Drug Administration', '{"code":"E-87350"}'],
+                    ['Drug Administration', '{"code":"E-YY008"}'],
+
                     ['Drug Administration', '{"code":"E-87250"}'],
                     ['Drug Administration', '{"code":"E-82270"}'],
 
@@ -686,11 +688,16 @@ Ext4.onReady(function(){
                 template: ['Diarrhea Dysentery', 'Section', 'Drug Administration', '', ''],
                 records: [
                     ['Drug Administration', '{"code":"E-87350"}'],
+                    ['Drug Administration', '{"code":"E-YY008"}'],
                     ['Drug Administration', '{"code":"E-87250"}'],
                     ['Drug Administration', '{"code":"E-82270"}'],
 
                     ['Drug Administration', '{"code":"E-YY883"}'],
-                    ['Drug Administration', '{"code":"E-70590"}']
+                    ['Drug Administration', '{"code":"E-70590"}'],
+
+                    ['Drug Administration', '{"code":"E-YY045"}'],
+                    ['Drug Administration', '{"code":"E-719Y5"}']
+
                 ]
             },{
                 template: ['Digit Amputation', 'Section', 'Drug Administration', '', ''],
@@ -699,6 +706,7 @@ Ext4.onReady(function(){
                     ['Drug Administration', '{"code":"E-779X0"}'],
 
 
+                    ['Drug Administration', '{"code":"E-YY792"}'],
                     ['Drug Administration', '{"code":"E-YY750"}'],
                     ['Drug Administration', '{"code":"E-YY728"}'],
 
@@ -729,7 +737,10 @@ Ext4.onReady(function(){
                     ['Drug Administration', '{"code":"E-82270"}'],
                     ['Drug Administration', '{"code":"E-YY792"}'],
                     ['Drug Administration', '{"code":"E-721X0"}'],
+                    ['Drug Administration', '{"code":"E-87350"}'],
+                    ['Drug Administration', '{"code":"E-YY008"}'],
 
+                    ['Drug Administration', '{"code":"E-85151"}'],
                     ['Drug Administration', '{"code":"E-70590"}']
                 ]
             },{
@@ -986,16 +997,19 @@ Ext4.onReady(function(){
             templateRows = templateRows.concat([{
                 template: ['Diarrhea 1st Day Cage', 'Section', 'Treatment Orders', '', ''],
                 records: [	['Treatment Orders', '{"code":"E-80410"}']
+
                 ]
             },{
                 template: ['Diarrhea 1st Day Colony', 'Section', 'Treatment Orders', '', ''],
                 records: [	['Treatment Orders', '{"code":"E-80410"}'],
 
 
+                    ['Treatment Orders', '{"code":"E-87255"}'],
 
-                    ['Treatment Orders', '{"code":"E-YY045"}'],
-                    ['Treatment Orders', '{"code":"E-YY045"}']
 
+
+                    ['Treatment Orders', '{"code":"E-YY870"}'],
+                    ['Treatment Orders', '{"code":"E-YY670"}']
                 ]
             },{
                 template: ['Diarrhea Dysentery', 'Section', 'Treatment Orders', '', ''],
@@ -1004,11 +1018,12 @@ Ext4.onReady(function(){
 
 
                     ['Treatment Orders', '{"code":"E-719Y5"}'],
+                    ['Treatment Orders', '{"code":"E-YY670"}'],
 
 
                     ['Treatment Orders', '{"code":"E-YY870"}'],
                     ['Treatment Orders', '{"code":"E-87251"}'],
-                    ['Treatment Orders', '{"code":"E-X0310"}']
+                    ['Treatment Orders', '{"code":"E-87255"}']
                 ]
             },{
                 template: ['Digit Amputation', 'Section', 'Treatment Orders', '', ''],
@@ -1045,8 +1060,13 @@ Ext4.onReady(function(){
 
 
 
-                    ['Treatment Orders', '{"code":"E-X1200"}']
+                    ['Treatment Orders', '{"code":"E-X1200"}'],
 
+                    ['Treatment Orders', '{"code":"E-YY535"}'],
+                    ['Treatment Orders', '{"code":"E-YY732"}'],
+                    ['Treatment Orders', '{"code":"E-72170"}'],
+                    ['Treatment Orders', '{"code":"E-YY792"}'],
+                    ['Treatment Orders', '{"code":"E-50150"}']
                 ]
             },{
                 template: ['Sedation', 'Section', 'Treatment Orders', '', ''],
@@ -1115,7 +1135,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28100","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1142,7 +1162,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-77100","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-77500","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-79100","noWeight":true,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen"}']
+                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen Tissue"}']
                 ]
             },{
                 template: ['Standard - Female', 'Section', 'tissue_samples', '', ''],
@@ -1152,7 +1172,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28100","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1180,7 +1200,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-83000","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-86100","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-81000","noWeight":true,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen"}']
+                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen Tissue"}']
                 ]
             },{
                 template: ['Short - Male', 'Section', 'tissue_samples', '', ''],
@@ -1191,7 +1211,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28800","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1203,7 +1223,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-96000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-98000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X2000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen"}']
+                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen Tissue"}']
                 ]
             },{
                 template: ['Short - Female', 'Section', 'tissue_samples', '', ''],
@@ -1214,7 +1234,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28800","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1226,7 +1246,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-96000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-98000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X2000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen"}']
+                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen Tissue"}']
                 ]
             },{
                 template: ['Long - Male', 'Section', 'tissue_samples', '', ''],
@@ -1237,7 +1257,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28800","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1278,9 +1298,9 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-55000","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-55100","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X9440","noWeight":true,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-X1000","noWeight":true,"preparation":"Frozen"}'],
+                    ['tissue_samples', '{"tissue":"T-X1000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X7410","noWeight":true,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen"}']
+                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen Tissue"}']
                 ]
             },{
                 template: ['Long - Female', 'Section', 'tissue_samples', '', ''],
@@ -1291,7 +1311,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28800","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1333,9 +1353,9 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-55000","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-55100","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X9440","noWeight":true,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-X1000","noWeight":true,"preparation":"Frozen"}'],
+                    ['tissue_samples', '{"tissue":"T-X1000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X7410","noWeight":true,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen"}']
+                    ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen Tissue"}']
                 ]
             });
 

@@ -10,6 +10,7 @@ d.gender,
 'Offspring' as Relationship,
 
 d2.id  AS Offspring,
+d2.birth,
 
 d.qcstate
 

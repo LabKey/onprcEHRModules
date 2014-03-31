@@ -45,6 +45,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
             xtype: 'ehr-projectfield',
             fieldLabel: 'Project',
             itemId: 'projectField',
+            hidden: true,
             width: 400
         },{
             xtype: 'ehr-simplecombo',
@@ -53,7 +54,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
             valueField: 'rowId',
             displayField: 'lastName',
             schemaName: 'onprc_ehr',
-            queryName: 'tissue_recipients',
+            queryName: 'customers',
             matchFieldWidth: false,
             forceSelection: true,
             sortFields: 'lastName',
@@ -64,6 +65,11 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
             fieldLabel: 'Date Limit',
             itemId: 'dateField',
             value: Ext4.Date.add(new Date(), Ext4.Date.YEAR, -1)
+        },{
+            xtype: 'checkbox',
+            checked: true,
+            itemId: 'bulkEdit',
+            fieldLabel: 'Bulk Edit?'
         },{
             xtype: 'container',
             itemId: 'results',
@@ -105,7 +111,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
         LABKEY.Query.selectRows({
             schemaName: 'study',
             queryName: 'tissueDistributions',
-            columns: 'Id,tissue,tissue/meaning,project,project/displayName,project/investigatorId/lastName,recipient,recipient/lastname,dateOnly,parentid',
+            columns: 'Id,tissue,tissue/meaning,project,project/displayName,project/investigatorId/lastName,recipient,recipient/lastname,dateOnly,parentid,sampletype,remark,requestcategory',
             sort: '-dateOnly,formSort',
             requiredVersion: 9.1,
             filterArray: filterArray,
@@ -132,8 +138,11 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
             if (!tissueMap[key]){
                 tissueMap[key] = {
                     rows: [],
+                    orderedDisplayKeys: [],
                     orderedCodes: [],
                     recipients: [],
+                    requestcategories: [],
+                    codeDetails: {},
                     recipientIds: [],
                     titles: []
                 };
@@ -144,12 +153,36 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
             }
 
             tissueMap[key].rows.push(row);
+            var displayKey = [row.getValue('tissue/meaning'), row.getValue('tissue'), row.getValue('requestcategory'), row.getValue('sampletype'), row.getValue('remark')].join('<>');
+            if (tissueMap[key].orderedDisplayKeys.indexOf(displayKey) == -1){
+                tissueMap[key].orderedDisplayKeys.push(displayKey);
+            }
+
             if (tissueMap[key].orderedCodes.indexOf(row.getValue('tissue')) == -1){
                 tissueMap[key].orderedCodes.push(row.getValue('tissue'));
             }
 
             if (tissueMap[key].recipients.indexOf(row.getValue('recipient/lastName')) == -1){
                 tissueMap[key].recipients.push(row.getValue('recipient/lastName'));
+            }
+
+            if (tissueMap[key].requestcategories.indexOf(row.getValue('requestcategory')) == -1){
+                tissueMap[key].requestcategories.push(row.getValue('requestcategory'));
+            }
+
+            if (!tissueMap[key].codeDetails[row.getValue('tissue')]){
+                tissueMap[key].codeDetails[row.getValue('tissue')] = {
+                    remark: [],
+                    sampletype: []
+                }
+            }
+
+            if (row.getValue('remark') && tissueMap[key].codeDetails[row.getValue('tissue')].remark.indexOf(row.getValue('remark')) == -1){
+                tissueMap[key].codeDetails[row.getValue('tissue')].remark.push(row.getValue('remark'));
+            }
+
+            if (row.getValue('sampletype') && tissueMap[key].codeDetails[row.getValue('tissue')].sampletype.indexOf(row.getValue('sampletype')) == -1){
+                tissueMap[key].codeDetails[row.getValue('tissue')].sampletype.push(row.getValue('sampletype'));
             }
 
             if (tissueMap[key].recipientIds.indexOf(row.getValue('recipient')) == -1){
@@ -166,11 +199,14 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
         var distinctCombinations = {};
         for (var key in tissueMap){
             var obj = tissueMap[key];
-            var codeStr = Ext4.Array.clone(obj.orderedCodes).sort().join(';');
+            var codeStr = Ext4.Array.clone(obj.orderedDisplayKeys).sort().join(';');
             if (!distinctCombinations[codeStr]){
                 distinctCombinations[codeStr] = {
+                    orderedDisplayKeys: obj.orderedDisplayKeys,
                     orderedCodes: obj.orderedCodes,
                     recipients: [],
+                    requestcategories: [],
+                    codeDetails: {},
                     recipientIds: [],
                     titles: [],
                     rows: []
@@ -181,6 +217,24 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
 
             distinctCombinations[codeStr].recipients = distinctCombinations[codeStr].recipients.concat(obj.recipients);
             distinctCombinations[codeStr].recipients = Ext4.Array.unique(distinctCombinations[codeStr].recipients);
+
+            distinctCombinations[codeStr].requestcategories = distinctCombinations[codeStr].requestcategories.concat(obj.requestcategories);
+            distinctCombinations[codeStr].requestcategories = Ext4.Array.unique(distinctCombinations[codeStr].requestcategories);
+
+            for (var code in obj.codeDetails){
+                if (!distinctCombinations[codeStr].codeDetails[code]){
+                    distinctCombinations[codeStr].codeDetails[code] = {
+                        remark: [],
+                        sampletype: []
+                    }
+                }
+
+                distinctCombinations[codeStr].codeDetails[code].remark = distinctCombinations[codeStr].codeDetails[code].remark.concat(obj.codeDetails[code].remark);
+                distinctCombinations[codeStr].codeDetails[code].remark = Ext4.Array.unique(distinctCombinations[codeStr].codeDetails[code].remark);
+
+                distinctCombinations[codeStr].codeDetails[code].sampletype = distinctCombinations[codeStr].codeDetails[code].sampletype.concat(obj.codeDetails[code].sampletype);
+                distinctCombinations[codeStr].codeDetails[code].sampletype = Ext4.Array.unique(distinctCombinations[codeStr].codeDetails[code].sampletype);
+            }
 
             distinctCombinations[codeStr].recipientIds = distinctCombinations[codeStr].recipientIds.concat(obj.recipientIds);
             distinctCombinations[codeStr].recipientIds = Ext4.Array.unique(distinctCombinations[codeStr].recipientIds);
@@ -200,8 +254,22 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
             }, this);
             html += '<br>';
 
-            Ext4.Array.forEach(tc.orderedCodes, function(code){
-                html += this.snomedMap[code] + ' (' + code + ')<br>'
+            Ext4.Array.forEach(tc.orderedDisplayKeys, function(key){
+                var tokens = key.split('<>');
+                html += tokens[0] + ' (' + tokens[1] + ')';
+                if (tokens[2]){
+                    html += ', ' + tokens[2];
+                }
+
+                if (tokens[3]){
+                    html += ', ' + tokens[3];
+                }
+
+                if (tokens[4]){
+                    html += ', ' + tokens[4];
+                }
+
+                html += '<br>';
             }, this);
 
             toAdd.push({
@@ -212,21 +280,38 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
                     text: 'Use This Set',
                     handler: function(btn){
                         var panel = btn.up('panel');
-                        var codes = panel.orderedCodes;
-                        var recipientId = panel.recipientIds.length == 1 ? panel.recipientIds[0] : null;
+                        var codes = panel.setDetails.orderedDisplayKeys;
+                        var recipientId = panel.setDetails.recipientIds.length == 1 ? panel.setDetails.recipientIds[0] : null;
                         var win = btn.up('window');
 
                         var toAdd = [];
-                        Ext4.Array.forEach(codes, function(c){
+                        Ext4.Array.forEach(codes, function(key){
+                            var tokens = key.split('<>');
                             toAdd.push(win.targetStore.createModel({
-                                tissue: c,
-                                recipient: recipientId
+                                tissue: tokens[1],
+                                recipient: recipientId,
+                                requestcategory: tokens[2],
+                                remark: tokens[4],
+                                sampletype: tokens[3]
                             }));
                         }, this);
 
                         if (toAdd.length){
-                            win.targetStore.add(toAdd);
-                            win.close();
+                            var doBulkEdit = win.down('#bulkEdit').getValue();
+                            if (doBulkEdit){
+                                Ext4.create('EHR.window.BulkEditWindow', {
+                                    suppressConfirmMsg: true,
+                                    records: toAdd,
+                                    targetStore: win.targetStore,
+                                    formConfig: win.formConfig
+                                }).show();
+
+                                win.close();
+                            }
+                            else {
+                                win.targetStore.add(toAdd);
+                                win.close();
+                            }
                         }
                     }
                 },{
@@ -235,7 +320,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
                     style: 'padding-top: 10px;'
                 }],
                 orderedCodes: tc.orderedCodes,
-                recipientIds: tc.recipientIds
+                setDetails: tc
             });
         };
 
@@ -269,7 +354,8 @@ EHR.DataEntryUtils.registerGridButton('COPY_TISSUES', function(config){
             LDK.Assert.assertNotEmpty('Unable to find gridpanel in COPY_TISSUES button', grid);
 
             Ext4.create('ONPRC_EHR.window.CopyTissuesWindow', {
-                targetStore: grid.store
+                targetStore: grid.store,
+                formConfig: grid.formConfig
             }).show();
         }
     }, config);

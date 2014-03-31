@@ -11,6 +11,9 @@
                             <fkDisplayColumnName>DisplayName</fkDisplayColumnName>
                         </fk>
                     </column>
+                    <column columnName="protocols">
+                        <columnTitle>Active IACUC Protocols</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>

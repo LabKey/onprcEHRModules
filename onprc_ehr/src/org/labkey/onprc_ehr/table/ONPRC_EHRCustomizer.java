@@ -28,13 +28,14 @@ import org.labkey.api.data.DisplayColumnFactory;
 import org.labkey.api.data.JdbcType;
 import org.labkey.api.data.RenderContext;
 import org.labkey.api.data.SQLFragment;
-import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
+import org.labkey.api.ehr.EHRQCState;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
+import org.labkey.api.ldk.LDKService;
 import org.labkey.api.ldk.table.AbstractTableCustomizer;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.module.ModuleProperty;
@@ -49,7 +50,6 @@ import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
-import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.study.DataSet;
 import org.labkey.api.study.DataSetTable;
 import org.labkey.api.study.Study;
@@ -57,17 +57,13 @@ import org.labkey.api.study.StudyService;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
-import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -107,17 +103,21 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             {
                 customizeCageObservations((AbstractTableInfo) table);
             }
+            else if (matches(table, "onprc_ehr", "housing_transfer_requests"))
+            {
+                customizeHousingRequests((AbstractTableInfo) table);
+            }
             else if (matches(table, "study", "Demographics"))
             {
-                customizeDemographicsTable((AbstractTableInfo)table);
+                customizeDemographicsTable((AbstractTableInfo) table);
             }
             else if (matches(table, "study", "treatment_order"))
             {
-                customizeTreatmentOrdersTable((AbstractTableInfo)table);
+                customizeTreatmentOrdersTable((AbstractTableInfo) table);
             }
             else if (matches(table, "study", "Clinpath Runs") || matches(table, "study", "clinpathRuns"))
             {
-                customizeClinpathRunsTable((AbstractTableInfo)table);
+                customizeClinpathRunsTable((AbstractTableInfo) table);
             }
             else if (matches(table, "study", "Birth"))
             {
@@ -153,7 +153,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
             else if (matches(table, "ehr_lookups", "treatment_frequency"))
             {
-                customizeTreatmentFrequency((AbstractTableInfo)table);
+                customizeTreatmentFrequency((AbstractTableInfo) table);
             }
             else if (matches(table, "ehr", "tasks") || matches(table, "ehr", "my_tasks"))
             {
@@ -240,14 +240,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void addCalculatedCols(AbstractTableInfo ds, String dateColName)
     {
-        UserSchema us = getStudyUserSchema(ds);
-        if (us != null && !isDemographicsTable(ds))
+        UserSchema ehrSchema = getEHRUserSchema(ds, "study");
+        if (ehrSchema != null && !isDemographicsTable(ds))
         {
-            appendAssignmentAtTimeCol(us, ds, dateColName);
-            appendGroupsAtTimeCol(us, ds, dateColName);
-            appendProblemsAtTimeCol(us, ds, dateColName);
-            appendFlagsAtTimeCol(us, ds, dateColName);
-            appendIsAssignedAtTimeCol(us, ds, dateColName);
+            appendAssignmentAtTimeCol(ehrSchema, ds, dateColName);
+            appendGroupsAtTimeCol(ehrSchema, ds, dateColName);
+            appendProblemsAtTimeCol(ehrSchema, ds, dateColName);
+            appendFlagsAtTimeCol(ehrSchema, ds, dateColName);
+            appendIsAssignedAtTimeCol(ehrSchema, ds, dateColName);
         }
     }
 
@@ -262,9 +262,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 UserSchema us = getEHRUserSchema(ti, "ehr");
                 if (us != null)
                 {
-                    if (project.getJavaClass().equals(Integer.class))
+                    if (project.getJdbcType().getJavaClass().equals(Integer.class))
                         project.setFk(new QueryForeignKey(us, us.getContainer(), "project", "project", "displayName"));
-                    else if (project.getJavaClass().equals(String.class))
+                    else if (project.getJdbcType().getJavaClass().equals(String.class))
                         project.setFk(new QueryForeignKey(us, us.getContainer(), "project", "displayName", "displayName"));
                 }
             }
@@ -288,6 +288,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (account != null && !ti.getName().equalsIgnoreCase("accounts"))
         {
             account.setLabel("Alias");
+            account.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
             if (ti instanceof DataSetTable)
             {
                 account.setHidden(true);
@@ -351,7 +352,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 found = true;
                 investigator.setLabel("Investigator");
 
-                if (!ti.getName().equalsIgnoreCase("investigators") && investigator.getJavaClass().equals(Integer.class))
+                if (!ti.getName().equalsIgnoreCase("investigators") && investigator.getJdbcType().getJavaClass().equals(Integer.class))
                 {
                     UserSchema us = getEHRUserSchema(ti, "onprc_ehr");
                     if (us != null){
@@ -707,6 +708,31 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             col17.setDescription("Calculates the most recent TB date for this animal, time since TB and the last eye TB tested");
             ds.addColumn(col17);
         }
+
+        if (ds.getColumn("mostRecentBCS") == null)
+        {
+            ColumnInfo col17 = getWrappedIdCol(us, ds, "mostRecentBCS", "demographicsMostRecentBCS");
+            col17.setLabel("Body Condition Score");
+            col17.setDescription("Calculates the most recent BCS for each animal");
+            ds.addColumn(col17);
+        }
+
+        if (ds.getColumn("clinicalActions") == null)
+        {
+            ColumnInfo col17 = new AliasedColumn("clinicalActions", ds.getColumn("Id"));
+            col17.setLabel("Clinical Actions");
+            col17.setHidden(true);
+            col17.setDescription("This column displays a menu with direct access to manage treatments, cases, etc");
+            col17.setDisplayColumnFactory(new DisplayColumnFactory()
+            {
+                @Override
+                public DisplayColumn createRenderer(ColumnInfo colInfo)
+                {
+                    return new ClinicalActionsDisplayColumn(colInfo);
+                }
+            });
+            ds.addColumn(col17);
+        }
     }
 
     private void customizeCasesTable(AbstractTableInfo ti)
@@ -722,7 +748,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             if (realTable == null)
                 return;
 
-            SQLFragment sql = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment("pl.category"), true, true, getChr(ti) + "(10)") + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND (pl.enddate IS NULL OR pl.enddate > {fn now()}))");
+            SQLFragment sql = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("pl.category", "CASE WHEN pl.subcategory IS NULL THEN '' ELSE (" + ti.getSqlDialect().concatenate("': '", "pl.subcategory") + ") END")), true, true, getChr(ti) + "(10)") + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND (pl.enddate IS NULL OR pl.enddate > {fn now()}))");
             ExprColumn newCol = new ExprColumn(ti, problemCategories, sql, JdbcType.VARCHAR, ti.getColumn("objectid"));
             newCol.setLabel("Active Master Problem(s)");
             ti.addColumn(newCol);
@@ -862,6 +888,11 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 ti.addColumn(wrapped);
             }
         }
+
+        if (ti.getColumn("cond") != null)
+        {
+            ti.getColumn("cond").setHidden(true);
+        }
     }
 
     private void customizeClinpathRunsTable(AbstractTableInfo ti)
@@ -987,29 +1018,34 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 obsCol2.setLabel("Days Since Last Vet Review");
                 ti.addColumn(obsCol2);
 
-                //clinical remarks entered since last vet review is a proxy for whether it needs to be reviewed again
-                SQLFragment totalRemarkSql = new SQLFragment("(SELECT count(*) FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.date <= {fn now()} AND cr.date >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category != ?))", ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.SURGERY_SOAP_CATEGORY);
-                ExprColumn totalRemarkCol = new ExprColumn(ti, "totalRemarksEnteredSinceReview", totalRemarkSql, JdbcType.INTEGER, ti.getColumn("Id"));
-                totalRemarkCol.setLabel("# Remarks Entered Since Last Vet Review");
-                ti.addColumn(totalRemarkCol);
 
-                //date part not supported in postgres
-                if (ti.getSqlDialect().isSqlServer())
+                //clinical remarks entered since last vet review is a proxy for whether it needs to be reviewed again
+                EHRQCState completedQCState = EHRService.get().getQCStates(ti.getUserSchema().getContainer()).get(EHRService.QCSTATES.Completed.name());
+                if (completedQCState != null)
                 {
-                    SQLFragment groupConatSql = new SQLFragment(ti.getSqlDialect().concatenate("CAST(" + ti.getSqlDialect().getDatePart(Calendar.MONTH, "cr.date") + " AS VARCHAR)", "'/'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.DATE, "cr.date") + " AS VARCHAR)", "': '", getChr(ti) + "(10)", "CASE WHEN cr.description IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("COALESCE(cr.description, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.remark IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Remark: '",  "COALESCE(cr.remark, '')", getChr(ti) + "(10)") + " END", "'<>'", "cr.objectid", "'<:>'"));
-                    SQLFragment remarkSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(groupConatSql, false, true, ti.getSqlDialect().concatenate(getChr(ti) + "(10)", getChr(ti) + "(10)")) + " as expr1 FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.date <= {fn now()} AND (cr.category IS NULL or cr.category != ? or cr.category != ?) AND cr.date >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?))", ONPRC_EHRManager.REPLACED_SOAP, ONPRC_EHRManager.SURGERY_SOAP_CATEGORY, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
-                    ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.VARCHAR, ti.getColumn("Id"), ti.getColumn("date"));
-                    remarkCol.setLabel("Remarks Entered Since Last Vet Review");
-                    remarkCol.setDisplayWidth("200");
-                    remarkCol.setDisplayColumnFactory(new DisplayColumnFactory()
+                    SQLFragment totalRemarkSql = new SQLFragment("(SELECT count(*) FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ?))", completedQCState.getRowId(), ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY);
+                    ExprColumn totalRemarkCol = new ExprColumn(ti, "totalRemarksEnteredSinceReview", totalRemarkSql, JdbcType.INTEGER, ti.getColumn("Id"));
+                    totalRemarkCol.setLabel("# Remarks Entered Since Last Vet Review");
+                    ti.addColumn(totalRemarkCol);
+
+                    //date part not supported in postgres
+                    if (ti.getSqlDialect().isSqlServer())
                     {
-                        @Override
-                        public DisplayColumn createRenderer(ColumnInfo colInfo)
+                        SQLFragment groupConatSql = new SQLFragment(ti.getSqlDialect().concatenate("LEFT(CONVERT(VARCHAR, cr.date, 120), 10)", "'<>'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.MONTH, "cr.date") + " AS VARCHAR)", "'/'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.DATE, "cr.date") + " AS VARCHAR)", "': '", getChr(ti) + "(10)", "CASE WHEN cr.description IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("COALESCE(cr.description, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.remark IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Remark: '",  "COALESCE(cr.remark, '')", getChr(ti) + "(10)") + " END", "'<>'", "cr.objectid", "'<:>'"));
+                        SQLFragment remarkSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(groupConatSql, false, true, ti.getSqlDialect().concatenate(getChr(ti) + "(10)", getChr(ti) + "(10)")) + " as expr1 FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized <= {fn now()} AND (cr.category IS NULL or cr.category = ?) AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?))", completedQCState.getRowId(), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
+                        ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.VARCHAR, ti.getColumn("Id"), ti.getColumn("date"));
+                        remarkCol.setLabel("Remarks Entered Since Last Vet Review");
+                        remarkCol.setDisplayWidth("200");
+                        remarkCol.setDisplayColumnFactory(new DisplayColumnFactory()
                         {
-                            return new VetReviewDisplayColumn(colInfo);
-                        }
-                    });
-                    ti.addColumn(remarkCol);
+                            @Override
+                            public DisplayColumn createRenderer(ColumnInfo colInfo)
+                            {
+                                return new VetReviewDisplayColumn(colInfo);
+                            }
+                        });
+                        ti.addColumn(remarkCol);
+                    }
                 }
             }
         }
@@ -1175,15 +1211,6 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         todaysRemarks.setDisplayWidth("200");
         ti.addColumn(todaysRemarks);
 
-//        SQLFragment rmSql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
-//                " r WHERE "
-//                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-//                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date AND (r.category != ? OR r.category IS NULL))", ONPRC_EHRManager.REPLACED_SOAP);
-//        ExprColumn remarksOnOpenDate = new ExprColumn(ti, "remarksOnOpenDate", rmSql2, JdbcType.VARCHAR, objectId);
-//        remarksOnOpenDate.setLabel("Remarks Entered On Open Date");
-//        remarksOnOpenDate.setDisplayWidth("200");
-//        ti.addColumn(remarksOnOpenDate);
-
         //TODO: convert to a real column
         SQLFragment assesmentSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.a"), true, false, chr + "(10)") + " FROM " + realTable.getSelectName() +
                 " r WHERE "
@@ -1258,14 +1285,30 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ti.addColumn(updateCol);
         }
 
+        ColumnInfo updateTaskId = ti.getColumn("updateTaskId");
+        if (updateTaskId == null)
+        {
+            updateTaskId = new WrappedColumn(ti.getColumn("rowid"), "updateTaskId");
+            ti.addColumn(updateTaskId);
+        }
+
         if (ti.getUserSchema().getContainer().hasPermission(ti.getUserSchema().getUser(), EHRDataEntryPermission.class))
+        {
             updateCol.setURL(DetailsURL.fromString("/ehr/dataEntryForm.view?formType=${formtype}&taskid=${taskid}"));
+            updateTaskId.setURL(DetailsURL.fromString("/ehr/dataEntryForm.view?formType=${formtype}&taskid=${taskid}"));
+        }
         else
+        {
             updateCol.setURL(detailsURL);
+            updateTaskId.setURL(detailsURL);
+        }
 
         updateCol.setLabel("Title");
         updateCol.setHidden(true);
         updateCol.setDisplayWidth("150");
+
+        updateTaskId.setLabel("Task Id");
+        updateTaskId.setHidden(true);
     }
 
     private void customizeRequests(AbstractTableInfo ti)
@@ -1390,6 +1433,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     private void customizeProjects(AbstractTableInfo ti)
     {
         ti.setTitleColumn("displayName");
+        LDKService.get().applyNaturalSort(ti, "displayName");
 
         ti.getColumn("inves").setHidden(true);
         ti.getColumn("inves2").setHidden(true);
@@ -1428,6 +1472,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             col2.setLabel("Is U24/U42?");
             col2.setHidden(true);
             ti.addColumn(col2);
+
+            SQLFragment sql3 = new SQLFragment("(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".use_category = 'Center Resource' THEN 1 ELSE 0 END)");
+            ExprColumn col3 = new ExprColumn(ti, "isResource", sql3, JdbcType.INTEGER, useCol);
+            col3.setLabel("Is Resource?");
+            col3.setHidden(true);
+            ti.addColumn(col3);
         }
     }
 
@@ -1568,6 +1618,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             joinToCage.setHidden(true);
         }
+
+        table.getColumn("length").setHidden(true);
+        table.getColumn("width").setHidden(true);
+        table.getColumn("height").setHidden(true);
 
         String name = "availability";
         if (table.getColumn(name) == null)
@@ -1732,17 +1786,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         return (pks.size() != 1) ? null : pks.get(0);
     }
 
-    private void appendIsAssignedAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)
+    private void appendIsAssignedAtTimeCol(UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
     {
-        Container ehrContainer = EHRService.get().getEHRStudyContainer(ds.getUserSchema().getContainer());
-        if (ehrContainer == null)
-            return;
-
         String name = "isAssignedAtTime";
         if (ds.getColumn(name) != null)
             return;
 
-        if (ds.getColumn("Id") == null || ds.getColumn("date") == null || ds.getColumn("project") == null)
+        if (ds.getColumn("Id") == null || ds.getColumn(dateColName) == null || ds.getColumn("project") == null)
             return;
 
         if (matches(ds, "study", "assignment"))
@@ -1753,7 +1803,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             return;
 
         String idColSql = ds.getColumn("Id").getValueSql(ExprColumn.STR_TABLE_ALIAS).toString();
-        String dateColSql = ds.getColumn("date").getValueSql(ExprColumn.STR_TABLE_ALIAS).toString();
+        String dateColSql = ds.getColumn(dateColName).getValueSql(ExprColumn.STR_TABLE_ALIAS).toString();
         SQLFragment sql = new SQLFragment("CASE " +
             " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IS NULL THEN NULL " +
             " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IN (select a.project FROM " + realTable.getSelectName() + " a WHERE a.participantid = " + idColSql + " AND CAST(a.date AS DATE) <= CAST(" + dateColSql + " as DATE) AND (a.enddate IS NULL OR a.enddate >= " + dateColSql + ")) THEN 'Y'" +
@@ -1762,9 +1812,22 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         newCol.setLabel("Is Assigned At Time?");
         newCol.setDescription("Displays whether the animal is assigned to the selected project on the date of each record");
         ds.addColumn(newCol);
+
+        SQLFragment sql2 = new SQLFragment("CASE " +
+                " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IS NULL THEN NULL " +
+                " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IN (" +
+                    "select p2.project FROM " + realTable.getSelectName() + " a " +
+                    "JOIN ehr.project p ON (p.container = ? AND p.project = a.project) " +
+                    "JOIN ehr.project p2 ON (p2.container = ? AND p.protocol = p2.protocol AND (p.project = p2.project OR p2.enddate IS NULL or p2.enddate >= {fn curdate()})) " +
+                "WHERE a.participantid = " + idColSql + " AND CAST(a.date AS DATE) <= CAST(" + dateColSql + " as DATE) AND (a.enddate IS NULL OR a.enddate >= " + dateColSql + ")) THEN 'Y'" +
+                " ELSE 'N' END", ehrSchema.getContainer().getId(), ehrSchema.getContainer().getId());
+        ExprColumn newCol2 = new ExprColumn(ds, "isAssignedToProtocolAtTime", sql2, JdbcType.VARCHAR, ds.getColumn("Id"), ds.getColumn("date"), ds.getColumn("project"));
+        newCol2.setLabel("Is Assigned To Protocol At Time?");
+        newCol2.setDescription("Displays whether the animal is assigned to the provided IACUC protocol on the date of each record");
+        ds.addColumn(newCol2);
     }
 
-    private void appendAssignmentAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)
+    private void appendAssignmentAtTimeCol(UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
     {
         String name = "assignmentAtTime";
         if (ds.getColumn(name) != null)
@@ -1777,12 +1840,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ds.getColumn("Id") == null)
             return;
 
-        if (!hasTable(ds, "study", "assignment"))
+        if (!hasTable(ds, "study", "assignment", ehrSchema.getContainer()))
             return;
 
         final String tableName = ds.getName();
         final String queryName = ds.getPublicName();
         final String schemaName = ds.getPublicSchemaName();
+        final UserSchema targetSchema = ds.getUserSchema();
+        final String ehrPath = ehrSchema.getContainer().getPath();
 
         WrappedColumn col = new WrappedColumn(pkCol, name);
         col.setLabel("Assignments At Time");
@@ -1793,7 +1858,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             public TableInfo getLookupTableInfo()
             {
                 String name = tableName + "_assignmentsAtTime";
-                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
                 qd.setSql("SELECT\n" +
                         "sd." + pkCol.getSelectName() + ",\n" +
                         "group_concat(DISTINCT h.project.displayName, chr(10)) as projectsAtTime,\n" +
@@ -1801,7 +1866,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         "group_concat(DISTINCT h.project.investigatorId.lastName, chr(10)) as investigatorsAtTime,\n" +
                         "group_concat(DISTINCT h.project.name, chr(10)) as projectNumbersAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
-                        "JOIN study.assignment h\n" +
+                        "JOIN \"" + ehrPath + "\".study.assignment h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
                         "group by sd." + pkCol.getSelectName());
                 qd.setIsTemporary(true);
@@ -1810,7 +1875,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 TableInfo ti = qd.getTable(errors, true);
                 if (errors.size() > 0)
                 {
-                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + us.getContainer().getPath());
+                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
@@ -1835,7 +1900,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ds.addColumn(col);
     }
 
-    private void appendFlagsAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)
+    private void appendFlagsAtTimeCol(final UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
     {
         String name = "flagsAtTime";
         if (ds.getColumn(name) != null)
@@ -1848,12 +1913,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ds.getColumn("Id") == null)
             return;
 
-        if (!hasTable(ds, "study", "flags"))
+        if (!hasTable(ds, "study", "flags", ehrSchema.getContainer()))
             return;
 
         final String tableName = ds.getName();
         final String queryName = ds.getPublicName();
         final String schemaName = ds.getPublicSchemaName();
+        final UserSchema targetSchema = ds.getUserSchema();
+        final String ehrPath = ehrSchema.getContainer().getPath();
 
         WrappedColumn col = new WrappedColumn(pkCol, name);
         col.setLabel("Flags At Time");
@@ -1864,12 +1931,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             public TableInfo getLookupTableInfo()
             {
                 String name = tableName + "_flagsAtTime";
-                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
                 qd.setSql("SELECT\n" +
                         "sd." + pkCol.getSelectName() + ",\n" +
                         "group_concat(DISTINCT h.value, chr(10)) as flagsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
-                        "JOIN study.flags h\n" +
+                        "JOIN \"" + ehrPath + "\".study.flags h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
                         "group by sd." + pkCol.getSelectName());
                 qd.setIsTemporary(true);
@@ -1878,7 +1945,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 TableInfo ti = qd.getTable(errors, true);
                 if (errors.size() > 0)
                 {
-                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + us.getContainer().getPath());
+                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
@@ -1898,7 +1965,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ds.addColumn(col);
     }
 
-    private void appendProblemsAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)
+    private void appendProblemsAtTimeCol(final UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
     {
         final String colName = "problemsAtTime";
         if (ds.getColumn(colName) != null)
@@ -1911,12 +1978,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ds.getColumn("Id") == null)
             return;
 
-        if (!hasTable(ds, "study", "problem"))
+        if (!hasTable(ds, "study", "problem", ehrSchema.getContainer()))
             return;
 
         final String tableName = ds.getName();
         final String queryName = ds.getPublicName();
         final String schemaName = ds.getPublicSchemaName();
+        final UserSchema targetSchema = ds.getUserSchema();
+        final String ehrPath = ehrSchema.getContainer().getPath();
 
         WrappedColumn col = new WrappedColumn(pkCol, colName);
         col.setLabel("Problems At Time");
@@ -1927,12 +1996,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             public TableInfo getLookupTableInfo()
             {
                 String name = tableName + "_" + colName;
-                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
                 qd.setSql("SELECT\n" +
                         "sd." + pkCol.getSelectName() + ",\n" +
                         "group_concat(DISTINCT h.category, chr(10)) as problemsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
-                        "JOIN study.\"Problem List\" h\n" +
+                        "JOIN \"" + ehrPath + "\".study.\"Problem List\" h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
                         "group by sd." + pkCol.getSelectName());
                 qd.setIsTemporary(true);
@@ -1941,7 +2010,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 TableInfo ti = qd.getTable(errors, true);
                 if (errors.size() > 0)
                 {
-                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + us.getContainer().getPath());
+                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
@@ -1961,7 +2030,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ds.addColumn(col);
     }
 
-    private void appendGroupsAtTimeCol(final UserSchema us, AbstractTableInfo ds, final String dateColName)
+    private void appendGroupsAtTimeCol(final UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
     {
         final String colName = "groupsAtTime";
         if (ds.getColumn(colName) != null)
@@ -1974,12 +2043,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ds.getColumn("Id") == null)
             return;
 
-        if (!hasTable(ds, "ehr", "animal_group_members"))
+        if (!hasTable(ds, "ehr", "animal_group_members", ehrSchema.getContainer()))
             return;
 
         final String tableName = ds.getName();
         final String queryName = ds.getPublicName();
         final String schemaName = ds.getPublicSchemaName();
+        final UserSchema targetSchema = ds.getUserSchema();
+        final String ehrPath = ehrSchema.getContainer().getPath();
 
         WrappedColumn col = new WrappedColumn(pkCol, colName);
         col.setLabel("Groups At Time");
@@ -1990,12 +2061,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             public TableInfo getLookupTableInfo()
             {
                 String name = tableName + "_" + colName;
-                QueryDefinition qd = QueryService.get().createQueryDef(us.getUser(), us.getContainer(), us, name);
+                QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
                 qd.setSql("SELECT\n" +
                         "sd." + pkCol.getSelectName() + ",\n" +
                         "group_concat(DISTINCT h.groupId.name, chr(10)) as groupsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
-                        "JOIN ehr.animal_group_members h\n" +
+                        "JOIN \"" + ehrPath + "\".ehr.animal_group_members h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced))\n" +
                         "group by sd." + pkCol.getSelectName());
                 qd.setIsTemporary(true);
@@ -2004,7 +2075,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 TableInfo ti = qd.getTable(errors, true);
                 if (errors.size() > 0)
                 {
-                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + us.getContainer().getPath());
+                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
@@ -2022,6 +2093,22 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         });
 
         ds.addColumn(col);
+    }
+
+    private void customizeHousingRequests(AbstractTableInfo ti)
+    {
+        String name = "existingAnimals";
+        if (ti.getColumn(name) == null)
+        {
+            TableInfo housing = getRealTableForDataSet(ti, "housing");
+            if (housing != null)
+            {
+                SQLFragment sql = new SQLFragment("(SELECT CASE WHEN count(h.participantid) > 8 THEN '>8 Animals' ELSE " + ti.getSqlDialect().getGroupConcat(new SQLFragment("h.participantid"), true, true, "', '") + " END as expr FROM studydataset." + housing.getName() + " h WHERE h.room = " + ExprColumn.STR_TABLE_ALIAS + ".room AND ((h.enddate IS NULL AND h.date <= {fn now()} AND h.cage IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".cage IS NULL) OR (h.cage = " + ExprColumn.STR_TABLE_ALIAS + ".cage)))");
+                ExprColumn newCol = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("room"), ti.getColumn("cage"));
+                newCol.setLabel("Animals Housed In Destination");
+                ti.addColumn(newCol);
+            }
+        }
     }
 
     private void customizeCageObservations(AbstractTableInfo ti)
@@ -2048,9 +2135,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         }
     }
 
-    private boolean hasTable (AbstractTableInfo ti, String schemaName, String queryName)
+    private boolean hasTable(AbstractTableInfo ti, String schemaName, String queryName, Container targetContainer)
     {
-        UserSchema us = getUserSchema(ti, schemaName);
+        UserSchema us = getUserSchema(ti, schemaName, targetContainer);
         if (us == null)
             return false;
 

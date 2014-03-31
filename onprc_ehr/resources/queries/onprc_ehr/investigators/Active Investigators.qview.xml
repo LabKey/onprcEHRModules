@@ -4,6 +4,6 @@
         <sort column="firstName" />
     </sorts>
     <filters>
-        <filter column="datedisabled" operator="isnonblank" value=""/>
+        <filter column="datedisabled" operator="isblank" value=""/>
     </filters>
 </customView>

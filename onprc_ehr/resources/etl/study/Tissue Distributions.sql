@@ -18,7 +18,7 @@ Select
   td.Date,
   s3.Value as Origination,
 
-  (select rowid from labkey.onprc_ehr.tissue_recipients r where r.objectid = tr.objectid) as recipient,
+  (select rowid from labkey.onprc_ehr.customers r where r.objectid = tr.objectid) as recipient,
 --ptd.Recipient,						--Ref_TissueRecipients
   ptd.Organ as tissue,							--Ref_Snomed
   sno.Description as tissueMeaning,

@@ -11,6 +11,7 @@
         </column>
         <column name="account"/>
         <column name="account/fiscalAuthority"/>
+        <column name="account/projectNumber"/>
         <column name="startdate"/>
         <column name="enddate"/>
         <column name="use_category"/>

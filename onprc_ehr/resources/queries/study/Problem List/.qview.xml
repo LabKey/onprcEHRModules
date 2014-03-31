@@ -4,6 +4,7 @@
         <column name="date"/>
         <column name="enddate"/>
         <column name="category"/>
+        <column name="subcategory"/>
         <column name="remark"/>
     </columns>
     <sorts>

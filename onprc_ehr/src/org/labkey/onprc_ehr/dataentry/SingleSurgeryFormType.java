@@ -15,15 +15,13 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.ExtendedAnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
-import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
-import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.security.PrincipalType;
@@ -55,14 +53,16 @@ public class SingleSurgeryFormType extends EncounterForm
                 new EncounterMedicationsFormSection("study", "Drug Administration", "Medications/Treatments Given", true),
                 new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
                 new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/WeightClientStore.js")), null),
-                new EncounterChildFormSection("study", "blood", "Blood Draws", false, "EHR.data.BloodDrawClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/window/AddScheduledBloodDrawsWindow.js"), ClientDependency.fromFilePath("ehr/data/BloodDrawClientStore.js")), null),
+                new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
                 new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true),
                 new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/MiscChargesClientStore.js")), null)
         ));
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Surgery.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/OpenSurgeryCasesWindow.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/panel/SurgeryDataEntryPanel.js"));
         setDisplayReviewRequired(true);
+        setJavascriptClass("EHR.panel.SurgeryDataEntryPanel");
 
         for (FormSection s : this.getFormSections())
         {

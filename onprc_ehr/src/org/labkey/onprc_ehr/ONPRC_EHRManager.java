@@ -19,6 +19,7 @@ import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
+import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.RuntimeSQLException;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Table;
@@ -33,9 +34,13 @@ import org.labkey.api.query.Queryable;
 import org.labkey.api.security.User;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +80,8 @@ public class ONPRC_EHRManager
     public static final String TB_TEST_SEROLOGIC = "TB Test Serologic";
     @Queryable
     public static final String SURGERY_SOAP_CATEGORY = "Surgery";
+    @Queryable
+    public static final String CLINICAL_SOAP_CATEGORY = "Clinical";
 
     private ONPRC_EHRManager()
     {
@@ -84,6 +91,47 @@ public class ONPRC_EHRManager
     public static ONPRC_EHRManager get()
     {
         return _instance;
+    }
+
+    private String LOCK_PROP_KEY = getClass().getName() + "||animalLock";
+    private final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    public void lockAnimalCreation(Container c, User u, Boolean lock)
+    {
+        PropertyManager.PropertyMap map = PropertyManager.getWritableProperties(c, LOCK_PROP_KEY, true);
+        map.put("lockedBy", u.getDisplayName(u));
+        map.put("locked", lock.toString());
+        map.put("lockDate", _dateFormat.format(new Date()));
+
+        PropertyManager.saveProperties(map);
+    }
+
+    public Map<String, Object> getAnimalLockProperties(Container c)
+    {
+        Map<String, String> props = PropertyManager.getProperties(c, LOCK_PROP_KEY);
+        Map<String, Object> ret = new HashMap<>();
+        if (props != null && !props.isEmpty())
+        {
+            if (props.containsKey("lockedBy"))
+                ret.put("lockedBy", props.get("lockedBy"));
+
+            if (props.containsKey("locked"))
+                ret.put("locked", Boolean.parseBoolean(props.get("locked")));
+
+            if (props.containsKey("lockDate"))
+            {
+                try
+                {
+                    ret.put("lockDate", _dateFormat.parse(props.get("lockDate")));
+                }
+                catch (ParseException e)
+                {
+                    //ignore
+                }
+            }
+        }
+
+        return ret;
     }
 }
 

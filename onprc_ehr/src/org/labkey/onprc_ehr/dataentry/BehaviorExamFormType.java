@@ -20,13 +20,11 @@ import org.labkey.api.ehr.dataentry.AbstractFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.ExtendedAnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
-import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRBehaviorEntryPermission;
-import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.Queryable;
 import org.labkey.api.view.template.ClientDependency;
@@ -50,15 +48,47 @@ public class BehaviorExamFormType extends TaskForm
         super(ctx, owner, NAME, LABEL, "BSU", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new ExtendedAnimalDetailsFormSection(),
-                new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Body)
+                new SimpleFormPanelSection("study", "Clinical Remarks", "SOAP", false, EHRService.FORM_SECTION_LOCATION.Tabs),
+                new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+                new BSUTreatmentFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
+
+        setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NO_ID);
 
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("BehaviorDefaults");
+
+            if (!s.getName().equals("Clinical Remarks"))
+                s.addConfigSource("ClinicalReportChild");
+
+            if (s instanceof SimpleFormSection && !s.getName().equals("tasks"))
+                s.setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NO_ID);
+
+            if (s instanceof AbstractFormSection)
+            {
+                ((AbstractFormSection)s).setAllowBulkAdd(false);
+            }
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BehaviorDefaults.js"));
+        setStoreCollectionClass("EHR.data.ClinicalReportStoreCollection");
+        addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalReportStoreCollection.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalReport.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/panel/ExamDataEntryPanel.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalReportChild.js"));
+        setJavascriptClass("EHR.panel.ExamDataEntryPanel");
+    }
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+
+        ret.add("OPENBEHAVIORCASE");
+
+        return ret;
     }
 
     @Override

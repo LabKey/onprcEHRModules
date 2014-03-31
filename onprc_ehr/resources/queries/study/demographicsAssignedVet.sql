@@ -15,13 +15,15 @@
  */
 SELECT
   d.Id,
-  COALESCE(c.vetNames, a.vetNames, h.vetNames) as assignedVet,
-  COALESCE(c.vetUserIds, a.vetUserIds, h.vetUserIds) as assignedVetId,
+  COALESCE(c.vetNames, h.highPriRoomVetNames, h.highPriAreaVetNames, a.vetNames, h.roomVetNames, h.areaVetNames) as assignedVet,
+  --COALESCE(c.vetUserIds, h.highPriRoomVetUserIds, h.highPriAreaVetUserIds, a.vetUserIds, h.roomVetUserIds, h.areaVetUserIds) as assignedVetId,
   CASE
-    WHEN c.vetNames IS NOT NULL THEN 'Active Case'
-    WHEN a.vetNames IS NOT NULL THEN 'Assignment'
-    --WHEN room.vetNames IS NOT NULL THEN 'Room'
-    WHEN h.vetNames IS NOT NULL THEN 'Area'
+    WHEN (c.vetNames IS NOT NULL) THEN 'Active Case'
+    WHEN (h.highPriRoomVetNames IS NOT NULL) THEN 'Room (Priority)'
+    WHEN (h.highPriAreaVetNames IS NOT NULL) THEN 'Area (Priority)'
+    WHEN (a.vetNames IS NOT NULL) THEN 'Assignment'
+    WHEN (h.roomVetNames IS NOT NULL) THEN 'Room'
+    WHEN (h.areaVetNames IS NOT NULL) THEN 'Area'
     ELSE 'None'
   END as assignmentType,
   a.protocols,
@@ -55,25 +57,21 @@ LEFT JOIN (
 LEFT JOIN (
   SELECT
     h.Id,
-    group_concat(distinct CAST(v.userId.displayName as varchar(120))) as vetNames,
-    group_concat(distinct v.userId) as vetUserIds,
+    group_concat(distinct CASE WHEN (v.area IS NOT NULL) THEN CAST(v.userId.displayName as varchar(120)) ELSE NULL END) as areaVetNames,
+    group_concat(distinct CASE WHEN (v.room IS NOT NULL) THEN CAST(v.userId.displayName as varchar(120)) ELSE NULL END) as roomVetNames,
+    group_concat(distinct CASE WHEN (v.area IS NOT NULL and v.priority = true) THEN CAST(v.userId.displayName as varchar(120)) ELSE NULL END) as highPriAreaVetNames,
+    group_concat(distinct CASE WHEN (v.room IS NOT NULL and v.priority = true) THEN CAST(v.userId.displayName as varchar(120)) ELSE NULL END) as highPriRoomVetNames,
+
+    group_concat(distinct CASE WHEN (v.area IS NOT NULL) THEN v.userId ELSE NULL END) as areaVetUserIds,
+    group_concat(distinct CASE WHEN (v.room IS NOT NULL) THEN v.userId ELSE NULL END) as roomVetUserIds,
+    group_concat(distinct CASE WHEN (v.area IS NOT NULL and v.priority = true) THEN v.userId ELSE NULL END) as highPriAreaVetUserIds,
+    group_concat(distinct CASE WHEN (v.room IS NOT NULL and v.priority = true) THEN v.userId ELSE NULL END) as highPriRoomVetUserIds,
+
     group_concat(distinct h.room.area) as areas,
     group_concat(distinct h.room) as rooms
 
   FROM study.housing h
-  JOIN onprc_ehr.vet_assignment v ON (v.area = h.room.area)
+  JOIN onprc_ehr.vet_assignment v ON (v.area = h.room.area OR v.room = h.room)
   WHERE h.enddateTimeCoalesced >= now() OR h.enddate = h.Id.demographics.death
   GROUP BY h.Id
 ) h ON (h.Id = d.Id)
-
--- LEFT JOIN (
---   SELECT
---     h.Id,
---     group_concat(distinct CAST(v.userId.displayName as varchar(120))) as vetNames,
---     group_concat(distinct v.userId) as vetUserIds
---
---   FROM study.housing h
---   JOIN onprc_ehr.vet_assignment v ON (v.room = h.room)
---   WHERE h.enddateTimeCoalesced >= now() OR h.enddate = h.Id.demographics.death
---   GROUP BY h.Id
--- ) room ON (room.Id = d.Id)

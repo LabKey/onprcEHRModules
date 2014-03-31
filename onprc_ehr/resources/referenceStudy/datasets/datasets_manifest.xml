@@ -80,6 +80,9 @@
         <dataset name="iStat" id="5026" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
+        <dataset name="anesthesia" id="5030" category="Clinical" type="Standard" showByDefault="false">
+            <tags/>
+        </dataset>
         <dataset name="clinpathRuns" id="1073" category="ClinPath" type="Standard">
             <tags/>
         </dataset>

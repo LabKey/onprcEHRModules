@@ -17,16 +17,16 @@
 SELECT * FROM (
 select
     rpa.projectid as project,
-		rpa.ohsuaccountnumber as account,
+		ltrim(rtrim(rpa.ohsuaccountnumber)) as account,
 		CASE
 			WHEN (rpa.aliasstartdate >= rpa.DateCreated) THEN CAST(rpa.aliasstartdate AS DATE)
 			ELSE CAST(rpa.DateCreated  AS DATE)
 		END as startdate,
-		CASE
-			WHEN (rpa.AliasExpirationDate >= rpa.DateDisabled) THEN CAST(rpa.DateDisabled AS DATE)
-			ELSE CAST(rpa.AliasExpirationDate AS DATE)
-		END as enddate,
+		COALESCE(CASE
+			WHEN (rpa.AliasExpirationDate >= rpa.DateDisabled) THEN CAST(dateadd(d, -1, rpa.DateDisabled) AS DATE)
+			ELSE CAST(Dateadd(d, -1,rpa.AliasExpirationDate) AS DATE)
+		END, CAST('2015/04/30' as date)) as enddate,
 		rpa.objectid
 	from Ref_ProjectAccounts rpa
   where rpa.ts > ?
-) t WHERE t.startdate >= '2009-01-01'
+) t WHERE t.startdate >= '2009-01-01' and ltrim(rtrim(t.account)) IS NOT NULL and ltrim(rtrim(t.account)) != ''

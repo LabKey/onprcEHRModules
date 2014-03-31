@@ -1,0 +1,1 @@
+ALTER TABLE onprc_ehr.vet_assignment add priority integer;

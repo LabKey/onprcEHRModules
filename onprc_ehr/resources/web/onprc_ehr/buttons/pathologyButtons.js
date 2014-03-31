@@ -66,3 +66,125 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH', {
         }, this);
     }
 });
+
+EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH_FOR_TISSUES', {
+    text: 'Enter/Manage Death',
+    name: 'enterdeath',
+    itemId: 'enterdeath',
+    tooltip: 'Click to enter the death record for this animal',
+    handler: function(btn){
+        var panel = btn.up('ehr-dataentrypanel');
+        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in ENTERDEATH button', panel);
+
+        var ids = [];
+
+        panel.storeCollection.clientStores.each(function(clientStore){
+            if (clientStore.getFields().get('Id')){
+                clientStore.each(function(r){
+                    if (r.get('Id')){
+                        ids.push(r.get('Id'));
+                    }
+                }, this);
+            }
+        }, this);
+
+        ids = Ext4.unique(ids);
+        if (!ids.length){
+            Ext4.Msg.alert('Error', 'No animals have been entered in this form');
+            return;
+        }
+        else if (ids.length > 1){
+            var data = [];
+            Ext4.Array.forEach(ids, function(id){
+                data.push({
+                    value: id
+                })
+            }, this);
+
+            Ext4.create('Ext.window.Window', {
+                title: 'Choose Animal',
+                width: 350,
+                modal: true,
+                closeAction: 'destroy',
+                bodyStyle: 'padding: 5px;',
+                doLoad: doLoad,
+                defaults: {
+                    border: false
+                },
+                items: [{
+                    html: 'There are multiple animals in this form. Please choose one below',
+                    style: 'padding-bottom: 10px;'
+                },{
+                    xtype: 'combo',
+                    fieldLabel: 'Choose Id',
+                    valueField: 'value',
+                    displayField: 'value',
+                    width: 300,
+                    itemId: 'animalField',
+                    store: {
+                        proxy: {
+                            type: 'memory'
+                        },
+                        type: 'json',
+                        fields: ['value'],
+                        data: data
+                    }
+                }],
+                buttons: [{
+                    text: 'Submit',
+                    scope: this,
+                    handler: function(btn){
+                        var id = btn.up('window').down('#animalField').getValue();
+                        if (!id){
+                            Ext4.Msg.alert('Error', 'Must choose an animal');
+                            return;
+                        }
+
+                        var win = btn.up('window');
+                        win.doLoad(id);
+                        win.close();
+                    }
+                },{
+                    text: 'Close',
+                    handler: function(btn){
+                        btn.up('window').close();
+                    }
+                }]
+            }).show();
+        }
+        else {
+            doLoad(ids[0]);
+        }
+
+        function doLoad(animalId){
+            Ext4.Msg.wait('Loading...');
+            EHR.DemographicsCache.getDemographics(animalId, function(ids, ret){
+                Ext4.Msg.hide();
+
+                var ar = ret[animalId];
+                if (!ar){
+                    Ext4.Msg.alert('Error', 'Unable to find a demographics record for animal: ' + animalId);
+                    return;
+                }
+
+                var objectid = null;
+                if (ar.getDeathInfo() && ar.getDeathInfo().length){
+                    objectid = ar.getDeathInfo()[0].objectid;
+                }
+
+                Ext4.create('EHR.window.ManageRecordWindow', {
+                    schemaName: 'study',
+                    queryName: 'deaths',
+                    pkCol: 'objectid',
+                    pkValue: objectid || LABKEY.Utils.generateUUID(),
+                    extraMetaData: {
+                        Id: {
+                            defaultValue: animalId,
+                            editable: false
+                        }
+                    }
+                }).show();
+            }, this);
+        }
+    }
+});

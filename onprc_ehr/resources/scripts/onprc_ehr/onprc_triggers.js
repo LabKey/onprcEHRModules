@@ -6,6 +6,7 @@
 var console = require("console");
 var LABKEY = require("labkey");
 var ETL = require("onprc_ehr/etl").EHR.ETL;
+var onprc_utils = require("onprc_ehr/utils").ONPRC_EHR.Utils;
 var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
 
 exports.init = function(EHR){
@@ -33,6 +34,36 @@ exports.init = function(EHR){
         if (row.enddate && !row.releaseCondition){
             EHR.Server.Utils.addError(scriptErrors, 'releaseCondition', 'Must provide the release condition when the release date is set', 'WARN');
         }
+
+        //update condition on release
+        if (!helper.isETL() && helper.getEvent() == 'update' && oldRow){
+            if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData){
+                if (row.releaseCondition){
+                    triggerHelper.updateAnimalCondition(row.Id, row.date, row.releaseCondition);
+                }
+            }
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Assignment', function(scriptErrors, helper, row, oldRow){
+        if (!helper.isETL() && row.Id && row.assignCondition){
+            triggerHelper.updateAnimalCondition(row.Id, row.date, row.assignCondition);
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr', 'animal_group_members', function(helper, scriptErrors, row, oldRow){
+        if (!helper.isETL() && row.Id && row.groupid && !row.enddate){
+            var msg = triggerHelper.getOverlappingGroupAssignments(row.Id, row.objectid);
+            if (msg){
+                EHR.Server.Utils.addError(scriptErrors, 'groupId', msg, 'INFO');
+            }
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Birth', function(scriptErrors, helper, row, oldRow){
+        if (!helper.isETL()){
+            triggerHelper.doBirthTriggers(row.Id, row.date, row.dam);
+        }
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Drug Administration', function(helper, scriptErrors, row, oldRow){
@@ -54,8 +85,8 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Treatment Orders', function(helper, scriptErrors, row){
-        if (row.date && ((new Date()).getTime() - row.date.getTime()) > 3600000){  //one hour in past
-            EHR.Server.Utils.addError(scriptErrors, 'date', 'Note: you are ordering a treatment that starts in the past', 'INFO');
+        if (row.date && ((new Date()).getTime() - row.date.getTime()) > 43200000){  //12 hours in past
+            EHR.Server.Utils.addError(scriptErrors, 'date', 'You are ordering a treatment that starts in the past', 'INFO');
         }
     });
 
@@ -64,6 +95,28 @@ exports.init = function(EHR){
             if (row.chargetype == 'No Charge' && !helper.getJavaHelper().isDefaultProject(row.project))
                 EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'You have chosen \'No Charge\' with a project that does not support this.  You may need to choose \'Research\' instead (which is not billed)', 'INFO');
         }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Housing', function(helper, scriptErrors, row){
+        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row);
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Housing', function(scriptErrors, helper, row, oldRow){
+        if (!helper.isETL() && row && row.parentid){
+            triggerHelper.markHousingTransfersComplete(row.parentid);
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'onprc_ehr', 'housing_transfer_requests', function(helper, scriptErrors, row){
+        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row);
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Arrival', function(helper, scriptErrors, row){
+        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, 'initialRoom', 'initialCage');
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Birth', function(helper, scriptErrors, row){
+        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Treatment Orders', function(scriptErrors, helper, row, oldRow){
@@ -111,6 +164,18 @@ exports.init = function(EHR){
         if (!row.amount && !row.volume){
             EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
             EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+        }
+
+        if (row.frequency){
+            if (!triggerHelper.isTreatmentFrequencyActive(row.frequency)){
+                EHR.Server.Utils.addError(scriptErrors, 'frequency', 'This frequency has been disabled.  Please select a different option', 'INFO');
+            }
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Treatment Orders', function(helper, errors, row, oldRow){
+        if (row.frequency && row.objectid){
+            triggerHelper.cleanTreatmentFrequencyTimes(row.frequency, row.objectid);
         }
     });
 

@@ -31,5 +31,6 @@ public class MiscChargesFormSection extends SimpleGridPanel
         setClientStoreClass("EHR.data.MiscChargesClientStore");
         addClientDependency(ClientDependency.fromFilePath("ehr/data/MiscChargesClientStore.js"));
         setLocation(location);
+        setSupportFormSort(false);
     }
 }

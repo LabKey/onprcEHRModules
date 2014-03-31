@@ -37,15 +37,22 @@ public class PregnancyConfirmationFormType extends TaskForm
 
     public PregnancyConfirmationFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Pregnancy Confirmation", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Pregnancies / Pregnancy Tests", "Colony Management", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
-            new SimpleGridPanel("study", "pregnancyConfirmation", "Pregnancy Confirmations")
+            new ClinicalEncountersFormSection(),
+            new SimpleGridPanel("study", "pregnancyConfirmation", "Pregnancies"),
+            new DrugAdministrationFormSection()
         ));
+
+        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/PregnancyConfirmation.js"));
 
         for (FormSection s : getFormSections())
         {
             s.addConfigSource("Task");
+            s.addConfigSource("ClinicalDefaults");
+            s.addConfigSource("PregnancyConfirmation");
         }
     }
 

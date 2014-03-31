@@ -2,6 +2,6 @@
     <sorts>
         <sort column="Id"/>
         <sort column="year" descending="true"/>
-        <sort column="procedureid/name"/>
+        <sort column="procedureName"/>
     </sorts>
 </customView>

@@ -54,11 +54,12 @@ public class VetReviewDisplayColumn extends DataColumn
 
                 out.write(delim);
                 delim = "<br><br>";
-                String text = StringUtils.trimToNull(tokens[0]);
+                //String key = StringUtils.trimToNull(tokens[0]);
+                String text = StringUtils.trimToNull(tokens[1]);
                 if (text != null)
                     text = text.replaceAll("\\r?\\n", "<br>");
 
-                out.write("<a style=\"max-width: 500px;\" onclick=\"EHR.panel.ClinicalManagementPanel.replaceSoap({objectid: " + PageFlowUtil.jsString(StringUtils.trimToNull(tokens[1])) + ", scope: this, callback: function(){console.log(this);this.style.setProperty('text-decoration', 'line-through');}});\">");
+                out.write("<a style=\"max-width: 500px;\" onclick=\"EHR.panel.ClinicalManagementPanel.replaceSoap({objectid: " + PageFlowUtil.jsString(StringUtils.trimToNull(tokens[2])) + ", scope: this, callback: function(){EHR.panel.ClinicalManagementPanel.updateVetColumn(this, arguments[0], arguments[1]);}});\">");
                 out.write(text);
                 out.write("</a>");
             }

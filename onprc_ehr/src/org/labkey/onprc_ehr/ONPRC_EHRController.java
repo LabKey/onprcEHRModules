@@ -820,4 +820,39 @@ public class ONPRC_EHRController extends SpringActionController
             return msgs;
         }
     }
+
+    @RequiresPermissionClass(AdminPermission.class)
+    public class GetAnimalLockAction extends ApiAction<Object>
+    {
+        public ApiResponse execute(Object form, BindException errors)
+        {
+            return new ApiSimpleResponse(ONPRC_EHRManager.get().getAnimalLockProperties(getContainer()));
+        }
+    }
+
+    @RequiresPermissionClass(AdminPermission.class)
+    public class SetAnimalLockAction extends ApiAction<LockAnimalForm>
+    {
+        public ApiResponse execute(LockAnimalForm form, BindException errors)
+        {
+            ONPRC_EHRManager.get().lockAnimalCreation(getContainer(), getUser(), form.isLock());
+
+            return new ApiSimpleResponse(ONPRC_EHRManager.get().getAnimalLockProperties(getContainer()));
+        }
+    }
+
+    public static class LockAnimalForm
+    {
+        private boolean _lock;
+
+        public boolean isLock()
+        {
+            return _lock;
+        }
+
+        public void setLock(boolean lock)
+        {
+            _lock = lock;
+        }
+    }
 }

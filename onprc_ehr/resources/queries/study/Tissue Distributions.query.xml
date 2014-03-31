@@ -28,7 +28,7 @@
                         <columnTitle>Recipient</columnTitle>
                         <fk>
                             <fkDbSchema>onprc_ehr</fkDbSchema>
-                            <fkTable>tissue_recipients</fkTable>
+                            <fkTable>customers</fkTable>
                             <fkColumnName>rowid</fkColumnName>
                         </fk>
                     </column>

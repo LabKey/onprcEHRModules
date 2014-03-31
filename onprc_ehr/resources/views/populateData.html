@@ -143,6 +143,12 @@ Ext4.onReady(function(){
             queryName: 'istat_tests',
             pk: 'rowid'
         },{
+//            label: 'Anesthesia Tests',
+//            populateFn: 'populateAnesthesiaTests',
+//            schemaName: 'ehr_lookups',
+//            queryName: 'anesthesia_tests',
+//            pk: 'rowid'
+//        },{
             label: 'Urinalysis Qual Results',
             populateFn: 'populateUrinalysisQualResults',
             schemaName: 'ehr_lookups',
@@ -220,6 +226,12 @@ Ext4.onReady(function(){
             populateFn: 'populateDrugCategories',
             schemaName: 'ehr_lookups',
             queryName: 'drug_categories',
+            pk: 'rowid'
+        },{
+            label: 'Notes Category',
+            populateFn: 'populateNotesCategory',
+            schemaName: 'ehr_lookups',
+            queryName: 'notes_category',
             pk: 'rowid'
         },{
             label: 'Blood Draw Tube Type',
@@ -324,6 +336,12 @@ Ext4.onReady(function(){
             queryName: 'pairingSeparationReason',
             pk: 'rowid'
         },{
+            label: 'Procedure Drug Templates',
+            populateFn: 'populateProcedureDrugTemplates',
+            schemaName: 'ehr_lookups',
+            queryName: 'procedure_drug_templates',
+            pk: 'rowid'
+        },{
             label: 'App Score',
             populateFn: 'populateAppScore',
             schemaName: 'ehr_lookups',
@@ -366,6 +384,18 @@ Ext4.onReady(function(){
             queryName: 'cqs_score',
             pk: 'rowid'
         },{
+            label: 'Behavior Types',
+            populateFn: 'populateBehaviorTypes',
+            schemaName: 'ehr_lookups',
+            queryName: 'behavior_types',
+            pk: 'rowid'
+        },{
+            label: 'Customer Affiliation',
+            populateFn: 'populateCustomerAffiliation',
+            schemaName: 'ehr_lookups',
+            queryName: 'customer_affiliation',
+            pk: 'rowid'
+        },{
             label: 'Stool Score',
             populateFn: 'populateStoolScore',
             schemaName: 'ehr_lookups',
@@ -400,6 +430,12 @@ Ext4.onReady(function(){
             populateFn: 'populateTissueDistributionCategory',
             schemaName: 'ehr_lookups',
             queryName: 'tissue_distribution_category',
+            pk: 'rowid'
+        },{
+            label: 'Cage Status',
+            populateFn: 'populateCageStatus',
+            schemaName: 'ehr_lookups',
+            queryName: 'cage_status',
             pk: 'rowid'
         },{
             label: 'Tissue Distribution Sample Type',
@@ -486,6 +522,12 @@ Ext4.onReady(function(){
             queryName: 'problem_list_category',
             pk: 'rowid'
         },{
+            label: 'Problem List Sub-Category',
+            populateFn: 'populateProblemListSubCategory',
+            schemaName: 'ehr_lookups',
+            queryName: 'problem_list_subcategory',
+            pk: 'rowid'
+        },{
             label: 'Drug Outcome',
             populateFn: 'populateDrugOutcome',
             schemaName: 'ehr_lookups',
@@ -528,7 +570,20 @@ Ext4.onReady(function(){
             queryName: 'treatment_frequency_times',
             pk: 'rowid'
         },{
+            label: 'Assignment Release Type',
+            populateFn: 'populateAssignmentReleaseType',
+            schemaName: 'ehr_lookups',
+            queryName: 'assignmentReleaseType',
+            pk: 'rowid'
+        },{
+            label: 'Animal Group Release Type',
+            populateFn: 'populateGroupReleaseType',
+            schemaName: 'ehr_lookups',
+            queryName: 'animalGroupReleaseType',
+            pk: 'rowid'
+        },{
             label: 'Procedures',
+            doSkip: true,
             populateFn: 'populateProcedures',
             schemaName: 'ehr_lookups',
             queryName: 'procedures',
@@ -952,7 +1007,6 @@ Ext4.onReady(function(){
             ['E-86145','Drugs and Procedures',null],
             ['E-86147','Drugs and Procedures',null],
             ['E-86470','Drugs and Procedures',null],
-            ['E-87200','Drugs and Procedures',null],
             ['E-87240','Drugs and Procedures',null],
             ['E-87255','Drugs and Procedures',null],
             ['E-87260','Drugs and Procedures',null],
@@ -976,7 +1030,6 @@ Ext4.onReady(function(){
             ['E-98200','Drugs and Procedures',null],
             ['E-C255X','Drugs and Procedures',null],
             ['E-X0000','Drugs and Procedures',null],
-            ['E-X0220','Drugs and Procedures',null],
             ['E-X0407','Drugs and Procedures',null],
             ['E-X0409','Drugs and Procedures',null],
             ['E-X0460','Drugs and Procedures',null],
@@ -1691,6 +1744,7 @@ Ext4.onReady(function(){
             ['E-YY392','Organisms',null],
             ['E-YY440','Organisms',null],
             ['E-YY827','Organisms',null],
+            ['M-YY630','Organisms',null],
             ['D-01880','Agents',null],
             ['D-05210','Agents',null],
             ['E-17710','Agents',null],
@@ -2523,7 +2577,6 @@ Ext4.onReady(function(){
             ['F-31000','Diagnostic Codes',null],
             ['F-85760','Diagnostic Codes',null],
             ['P-02400','Diagnostic Codes',null],
-            ['E-87200','Common Treatments',null],
             ['E-78840','Common Treatments',null],
             ['E-70315','Common Treatments',null],
             ['E-07237','Common Treatments',null],
@@ -2601,7 +2654,6 @@ Ext4.onReady(function(){
             ['E-85824','Common Treatments',null],
             ['E-86040','Common Treatments',null],
             ['E-87250','Common Treatments',null],
-            ['E-87251','Common Treatments',null],
             ['E-87270','Common Treatments',null],
             ['E-87600','Common Treatments',null],
             ['E-87601','Common Treatments',null],
@@ -2708,27 +2760,33 @@ Ext4.onReady(function(){
             ['E-X0500','Common Treatments',null],
             ['E-87350','Common Treatments',null],
             ['E-YY008','Common Treatments',null],
-            ['P-Y4110','Common Treatments','Implant: EfMent'],
-            ['P-Y4120','Common Treatments','Implant: Blinded'],
-            ['P-Y4130','Common Treatments','Implant: BL (blank)'],
-            ['P-Y4140','Common Treatments','Implant: E1'],
-            ['P-Y4150','Common Treatments','Implant: E2'],
-            ['P-Y4160','Common Treatments','Implant: P4'],
-            ['P-Y4170','Common Treatments','Implant: T4'],
-            ['P-Y4180','Common Treatments','Implant: Cholesterol'],
-            ['P-Y4190','Common Treatments','Implant: T4 + Cholesterol'],
-            ['P-Y4195','Common Treatments','Implant: Other'],
-            ['E-YY889','Common Treatments','Ferumoxytol'],
-            ['P-Y4110','Hormone Implants','Implant: EfMent'],
-            ['P-Y4120','Hormone Implants','Implant: Blinded'],
-            ['P-Y4130','Hormone Implants','Implant: BL (blank)'],
-            ['P-Y4140','Hormone Implants','Implant: E1'],
-            ['P-Y4150','Hormone Implants','Implant: E2'],
-            ['P-Y4160','Hormone Implants','Implant: P4'],
-            ['P-Y4170','Hormone Implants','Implant: T4'],
-            ['P-Y4180','Hormone Implants','Implant: Cholesterol'],
-            ['P-Y4190','Hormone Implants','Implant: T4 + Cholesterol'],
-            ['P-Y4195','Hormone Implants','Implant: Other'],
+            ['P-Y4110','Common Treatments',null],
+            ['P-Y4120','Common Treatments',null],
+            ['P-Y4130','Common Treatments',null],
+            ['P-Y4140','Common Treatments',null],
+            ['P-Y4150','Common Treatments',null],
+            ['P-Y4160','Common Treatments',null],
+            ['P-Y4170','Common Treatments',null],
+            ['P-Y4180','Common Treatments',null],
+            ['P-Y4190','Common Treatments',null],
+            ['P-Y4195','Common Treatments',null],
+            ['E-YY889','Common Treatments',null],
+            ['E-YY914','Common Treatments',null],
+            ['E-YY795','Common Treatments',null],
+            ['E-71190','Common Treatments',null],
+            ['E-YY008','Common Treatments',null],
+            ['E-YY383','Common Treatments',null],
+            ['E-YY668','Common Treatments',null],
+            ['P-Y4110','Hormone Implants',null],
+            ['P-Y4120','Hormone Implants',null],
+            ['P-Y4130','Hormone Implants',null],
+            ['P-Y4140','Hormone Implants',null],
+            ['P-Y4150','Hormone Implants',null],
+            ['P-Y4160','Hormone Implants',null],
+            ['P-Y4170','Hormone Implants',null],
+            ['P-Y4180','Hormone Implants',null],
+            ['P-Y4190','Hormone Implants',null],
+            ['P-Y4195','Hormone Implants',null],
             ['T-YZ060','Pathology Codes',null],
             ['E-44550','Pathology Codes',null],
             ['M-31605','Pathology Codes',null],
@@ -4845,7 +4903,13 @@ Ext4.onReady(function(){
             ['T-12750','Pathology Codes',null],
             ['T-X6080','Pathology Codes',null],
             ['F-13166','Pathology Codes',null],
-            ['M-88303','Pathology Codes',null]
+            ['M-88303','Pathology Codes',null],
+            ['E-E1010','Behavior',null],
+            ['E-E1020','Behavior',null],
+            ['E-E1030','Behavior',null],
+            ['E-E1040','Behavior',null],
+            ['E-E1050','Behavior',null],
+            ['E-E1060','Behavior',null]
         ],
 
         deleteSnomedSubsets: function(){
@@ -4942,7 +5006,8 @@ Ext4.onReady(function(){
             ['drugReason', 'Drug Reason', 'value'],
             ['serologyMethod', 'Serology Methods', 'value'],
             ['TransferReason', 'Transfer Reasons', null],
-            ['assignmentType', 'Assignment Types', null],
+            ['assignmentReleaseType', 'Assignment Release Types', 'value'],
+            ['animalGroupReleaseType', 'Animal Group Release Types', 'value'],
             ['observation_types', 'Observation Types', 'value'],
             ['observation_areas', 'Observation Areas', 'value'],
             ['drugOutcome', 'Drug Administration Outcomes', 'value'],
@@ -4950,6 +5015,7 @@ Ext4.onReady(function(){
             ['labworkChargeType', 'Labwork Charge Types', 'value'],
             ['bloodChargeType', 'Blood Charge Types', 'value'],
             ['procedureChargeType', 'Procedure Charge Types', 'value'],
+            ['notes_category', 'DCM Notes Category', 'value'],
             ['blood_draw_reason', 'Blood Draw Reason', 'value'],
             ['encounter_roles', 'Encounter Roles', 'value'],
             ['parentageRelationship', 'Parentage Relationship', 'value'],
@@ -4966,8 +5032,13 @@ Ext4.onReady(function(){
             ['mens_score', 'Mens Score', 'value'],
             ['tissue_sample_type', 'Tissue Distribution Sample Type', 'value'],
             ['tissue_distribution_category', 'Tissue Distribution Request Category', 'value'],
+            ['cage_status', 'Cage Status', 'value'],
             ['project_use_category', 'Center Project Use Categories', 'value'],
-            ['project_type', 'Center Project Types', 'value']
+            ['project_type', 'Center Project Types', 'value'],
+            ['procedure_drug_templates', 'Procedure Drug Templates', 'value'],
+            ['behavior_types', 'Behavior Types', 'value'],
+            ['problem_list_subcategory', 'Problem List Subcategory', 'value'],
+            ['customer_affiliation', 'Customer Affiliation', 'value']
         ],
 
         populateProjectUseCategory: function(){
@@ -5055,6 +5126,68 @@ Ext4.onReady(function(){
             var data = [
                 ['Intradermal'],
                 ['Serological']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateProcedureDrugTemplates: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'procedure_drug_templates',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value,sort_order').split(',');
+
+            var data = [
+                ['None'],
+                ['Analgesia - Standard'],
+                ['Analgesia - Biopsies'],
+                ['Analgeia - Carprofen'],
+                ['Antibiotics - Cefazolin 5d'],
+                ['Antibiotics - Cefazolin 3d'],
+                ['Antibiotics - Cefazolin 2d'],
+                ['Antibiotics - Enrofloxacin 5d'],
+                ['Antibiotics - Cefazolin 3 doses']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateProblemListSubCategory: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'problem_list_subcategory',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value,category').split(',');
+
+            var data = [
+                ['Weight Loss', 'Weight Management'],
+                ['Weight Gain', 'Weight Management'],
+                ['Dental', 'GI-Other'],
+                ['Vomiting', 'GI-Other'],
+                ['Liver', 'GI-Other'],
+                ['Alopecia', 'Behavioral'],
+                ['SIB', 'Behavioral'],
+                ['Stereotypy', 'Behavioral'],
+                ['Feces smear', 'Behavioral'],
+                ['Eye poke', 'Behavioral'],
+                ['Urine drink', 'Behavioral'],
+                ['Copraphagy', 'Behavioral'],
+                ['Minor Laceration/Abrasion', 'Wound'],
+                ['Digit Amputation', 'Wound'],
+                ['Muscle Wound, Minor', 'Wound'],
+                ['Muscle Wound, Major', 'Wound'],
+                ['Rhabdomyolysis', 'Wound']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5209,7 +5342,28 @@ Ext4.onReady(function(){
                 ['External'],
                 ['Affiliate'],
                 ['OHSU'],
+                ['ONPRC Tissue Bank'],
+                ['OHSU/ONPRC Tissue Bank'],
                 ['Collaborator']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateCageStatus: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'cage_status',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+            var data = [
+                ['Normal'],
+                ['Unavailable']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5320,6 +5474,54 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
+        populateCustomerAffiliation: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'customer_affiliation',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['ONPRC'],
+                ['Affiliate'],
+                ['External'],
+                ['Assigned'],
+                ['Collaborator'],
+                ['ONPRC Tissue Bank'],
+                ['OHSU']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateBehaviorTypes: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'behavior_types',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['Urine drinking'],
+                ['Eye poke'],
+                ['Copraphagy'],
+                ['Stereotypy'],
+                ['Other']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
         populateCQSScore: function(){
             this.pendingInserts++;
             //records for task forms:
@@ -5333,9 +5535,10 @@ Ext4.onReady(function(){
             var fields = ('value,sort_order').split(',');
 
             var data = [
-                ['Normal', 1],
+                ['Thin', 1],
                 ['Patchy', 2],
-                ['Bald', 3]
+                ['Bald', 3],
+                ['Normal', 4]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5670,6 +5873,47 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
+        populateAssignmentReleaseType: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'assignmentReleaseType',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['Normal'],
+                ['IACUC Excluded'],
+                ['No Change'],
+                ['IACUC Excluded / No Charge']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateGroupReleaseType: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'animalGroupReleaseType',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['Normal']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
         populateObservationTypes: function(){
             this.pendingInserts++;
             //records for task forms:
@@ -5680,29 +5924,32 @@ Ext4.onReady(function(){
                 success: this.onSuccess,
                 failure: this.onError
             };
-            var fields = ('value,description').split(',');
+            var fields = ('value,category,description').split(',');
 
             var data = [
-                ['Alopecia Score', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', displayField: 'value', valueField: 'value'})],
-                ['CQS', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'cqs_score', displayField: 'value', valueField: 'value'})],
-                ['BCS', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
-                ['CRT', Ext4.encode({xtype: 'textfield', defaultValue: '1-2'})],
-                ['MM', Ext4.encode({xtype: 'textfield', defaultValue: 'Pink'})],
-                ['Turgor', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'turgor_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
-                ['Pain Score', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0, maxValue: 12})],
-                ['Other', Ext4.encode({xtype: 'textfield'})],
-                ['Menses', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'mens_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
-                ['App', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'app_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
-                ['Att', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'att_score', displayField: 'value', valueField: 'value'})],
-                ['Hyd', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'hyd_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
-                ['Stool', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'stool_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
-                ['Incision', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'incision_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
-                ['Observations', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'normal_abnormal', displayField: 'state', valueField: 'state'})],
-                ['Temp', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0})],
-                ['Pulse', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0})],
-                ['Resp', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0})],
-                ['Vet Attention', Ext4.encode({xtype: 'textfield', value: 'Review Needed'})],
-                ['Reviewed', Ext4.encode({xtype: 'textfield'})]
+                ['Alopecia Score', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', displayField: 'value', valueField: 'value'})],
+                ['SIB Score', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'sib_score', displayField: 'value', valueField: 'value'})],
+                ['CQS', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'cqs_score', displayField: 'value', valueField: 'value'})],
+                ['BCS', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
+                ['CRT', null, Ext4.encode({xtype: 'textfield', defaultValue: '1-2'})],
+                ['MM', null, Ext4.encode({xtype: 'textfield', defaultValue: 'Pink'})],
+                ['Turgor', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'turgor_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
+                ['Pain Score', null, Ext4.encode({xtype: 'ldk-numberfield', minValue: 0, maxValue: 12})],
+                ['Other', null, Ext4.encode({xtype: 'textfield'})],
+                ['Menses', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'mens_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
+                ['App', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'app_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
+                ['Att', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'att_score', displayField: 'value', valueField: 'value'})],
+                ['Hyd', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'hyd_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
+                ['Stool', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'stool_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
+                ['Incision', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'incision_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
+                ['Observations', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'normal_abnormal', displayField: 'state', valueField: 'state'})],
+                ['Temp', null, Ext4.encode({xtype: 'ldk-numberfield', minValue: 0})],
+                ['Pulse', null, Ext4.encode({xtype: 'ldk-numberfield', minValue: 0})],
+                ['Resp', null, Ext4.encode({xtype: 'ldk-numberfield', minValue: 0})],
+                ['Vet Attention', null, Ext4.encode({xtype: 'textfield', value: 'Review Needed'})],
+                ['Reviewed', null, Ext4.encode({xtype: 'textfield'})],
+                ['Behaviors', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'behavior_types', displayField: 'value', valueField: 'value'})],
+                ['Fecal Smear', 'Behavior', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0, maxValue: 4})]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -6015,6 +6262,7 @@ Ext4.onReady(function(){
             ['Procedure','Tattoo','', true],
             ['Procedure','Transporting','', true],
             ['Procedure','Ultrasonic guidance of amniocentesis','', true],
+            ['Procedure','Ultrasound - Pregnancy','Patient sedated for ultrasound exam, BAR prior to sedation.  Fetus is/is not in vertex position. fHR is WNL. Placental attachment WNL.  BPD is XXX with an estimated GD XXXX, no indication of fetal distress, fetus in position for normal delivery.  Follow-up US scheduled for XXXXXX', true],
             ['Procedure','Ultrasound - Uterus','', true],
             ['Procedure','Ultrasound - Ovaries','', true],
             ['Procedure','Vag Swab Cltn(by Lab)','', true],
@@ -7042,7 +7290,8 @@ Ext4.onReady(function(){
             var data = [
                 ['No Charge', 'No Charge'],
                 ['DCM: CMU', 'DCM: CMU'],
-                ['DCM: RFO', 'DCM: RFO'],
+                ['DCM: ASB Services', 'DCM: ASB Services'],
+                ['DCM: Colony Services', 'DCM: Colony Services'],
                 ['DCM: Surgery', 'DCM: Surgery'],
                 ['Research Staff', 'Research Staff']
             ];
@@ -7137,7 +7386,9 @@ Ext4.onReady(function(){
                 ['CSF Total Protein',true,'Clinpath','Misc Tests','T-X1000',''],
                 ['Other Clinpath',false,'Clinpath','Misc Tests','',''],
                 ['Other SPF Surveillance',false,'SPF Surveillance Lab','Misc Tests','',''],
-                ['BASIC Chemistry Panel (Axthelm)',false,'Research Staff','Biochemistry','T-0X500','']
+                ['BASIC Chemistry Panel (Axthelm)',false,'Research Staff','Biochemistry','T-0X500',''],
+                ['Calcium, total',false,'Clinpath','Biochemistry','T-0X500',''],
+                ['Calcium, ionized',false,'Clinpath','Biochemistry','T-0X500','']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -7309,8 +7560,8 @@ Ext4.onReady(function(){
                 ['Chemistry panel with high density lipoprotein send out','ALT',21,'','testid'],
                 ['Chemistry panel with high density lipoprotein send out','Fe',22,'','testid'],
                 ['Chemistry panel with high density lipoprotein send out','HDL',23,'','testid'],
-                ['Clotting Panel','Prothrombin time',1,'','testid'],
-                ['Clotting Panel','Activated partial thromboplastin time',2,'','testid'],
+                ['Clotting panel','PT',1,'','testid'],
+                ['Clotting panel','APTT',2,'','testid'],
                 ['C-Reactive Protein','C-Reactive Protein',1,'','testid'],
                 ['Glycosolated hemoglobin  (HGBA1C)','Glycosolated hemoglobin  (HGBA1C)',1,'','testid'],
                 ['HDL','HDL',1,'','testid'],
@@ -7441,7 +7692,9 @@ Ext4.onReady(function(){
                 ['BASIC Chemistry Panel (Axthelm)','Na',11,'','testid'],
                 ['BASIC Chemistry Panel (Axthelm)','K',12,'','testid'],
                 ['BASIC Chemistry Panel (Axthelm)','TP',13,'','testid'],
-                ['BASIC Chemistry Panel (Axthelm)','Glob',14,'','testid']
+                ['BASIC Chemistry Panel (Axthelm)','Glob',14,'','testid'],
+                ['Calcium, total','Ca',1,'','testid'],
+                ['Calcium, ionized','Ca, ionized',1,'','testid']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -7561,7 +7814,10 @@ Ext4.onReady(function(){
             var data = [
                 ['No Charge', 'No Charge'],
                 ['Surgery Staff', 'Surgery Staff'],
-                ['Clinical Staff', 'Clinical Staff'],
+                ['Clinic Staff', 'Clinic Staff'],
+                //['DCM: Colony Services', 'DCM: Colony Services'],
+                //['DCM: ASB Services', 'DCM: ASB Services'],
+                //['DCM: CMU', 'DCM: CMU'],
                 ['Research Staff', 'Research Staff']
             ];
 
@@ -7660,6 +7916,44 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
+        populateNotesCategory: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'notes_category',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['BSU Notes'],
+                ['BSU Observations'],
+                ['Clinical ADR'],
+                ['Clinical Notes'],
+                ['Genetics Notes'],
+                ['Group Candidate'],
+                ['Group Notes'],
+                ['Notes Pertaining to DAR'],
+                ['Pending Project Assignment'],
+                ['Pending Sales Assignment'],
+                ['PI Future Project Interest'],
+                ['Reproductive Status - Female Only'],
+                ['SCM Additional Procedures Required'],
+                ['SCM BSU Release'],
+                ['SCM Keeper'],
+                ['SCM New Housing'],
+                ['SCM New Social Group'],
+                ['SCM Project Candidate'],
+                ['SCM Release Following Treatment'],
+                ['SCM Revisit']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
         populateClinpathTypes: function(){
             this.pendingInserts++;
             //records for task forms:
@@ -7677,6 +7971,7 @@ Ext4.onReady(function(){
                 ['Biochemistry'],
                 ['Hematology'],
                 ['iSTAT'],
+                ['Anesthesia'],
                 ['Misc Tests'],
                 ['Microbiology'],
                 ['Parasitology'],
@@ -7782,8 +8077,7 @@ Ext4.onReady(function(){
                 ['serology' ,'Lab Results' ,'query' ,'Serology' ,'true' ,'' ,'study' ,'Serology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of serology tests'],
                 //['virology' ,'Lab Results' ,'query' ,'Virology' ,'true' ,'' ,'study' ,'Virology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the results of serology and isolation virology tests for pathogens such as HBV'],
                 ['clinCases' ,'Clinical' ,'query' ,'Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Clinical Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each case opend for this animal, including surergies, exams, procedures, etc.'],
-                ['snomedTags' ,'Clinical' ,'query' ,'SNOMED Codes' ,'true' ,'' ,'study' ,'encountersWithSnomed', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report lists all SNOMED codes used in the animal\'s record'],
-                //['encountersWithSnomed' ,'Pathology' ,'query' ,'SNOMED Codes  - Individual' ,'true' ,'' ,'study' ,'encountersWithSnomed', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report lists all SNOMED codes used in the animal\'s record'],
+                ['snomedTags' ,'Clinical' ,'query' ,'SNOMED Codes' ,'true' ,'' ,'ehr' ,'snomed_tags', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report lists all SNOMED codes used in the animal\'s record'],
                 //['encountersWithSnomedBySet' ,'Pathology' ,'query' ,'SNOMED Codes - Grouped' ,'true' ,'' ,'study' ,'encountersWithSnomedBySet', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report lists all SNOMED codes used in the animal\'s record'],
 
                 ['surgery' ,'Surgery' ,'query' ,'Surgeries' ,'true' ,'' ,'study' ,'Clinical Encounters', 'Surgeries', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surgeries, exams, procedures, etc.'],
@@ -7838,7 +8132,7 @@ Ext4.onReady(function(){
                 //['pregnancies' ,'Colony Management' ,'query' ,'Pregnancies' ,'true' ,'' ,'study' ,'Pregnancies', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of known pregnancies, including conception dates and sire, where available'],
                 //['dnaBank' ,'Genetics' ,'query' ,'DNA Bank' ,'true' ,'' ,'DNABank' ,'Samples', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the inbreeding coefficient of each animal, where pedigree data is available. The inbreeding coefficient is the kinship coefficient between the individual\'s parents. It measures the probability that the two alleles of a gene are identical by descent in the same individual (autozygosity). It is zero if the individual is not inbred.'],
 
-                //['TB' ,'Lab Results' ,'query' ,'TB Tests' ,'true' ,'' ,'study' ,'TB Tests', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'TB Test results'],
+                ['TB' ,'Lab Results' ,'query' ,'TB Test Dates' ,'true' ,'' ,'study' ,'encounters', 'TB Tests', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'TB Test results'],
                 ['snapshot' ,'General' ,'js' ,'Snapshot' ,'true' ,'' ,'study' ,'onprcSnapshot', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
                 ['clinSnapshot' ,'Clinical' ,'js' ,'Clinical Snapshot' ,'true' ,'' ,'study' ,'onprcSnapshot', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
                 ['arrivalDeparture' ,'General' ,'js' ,'Arrival/Departure' ,'true' ,'' ,'study' ,'arrivalDeparture', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Displays arrival and departure dates'],
@@ -13257,7 +13551,15 @@ Ext4.onReady(function(){
                 ['P-Y4170','Implant: T4'],
                 ['P-Y4180','Implant: Cholesterol'],
                 ['P-Y4190','Implant: T4 + Cholesterol'],
-                ['P-Y4195','Implant: Other']
+                ['P-Y4195','Implant: Other'],
+                ['M-YY630','Stenotrophomas maltophilia'],
+                ['E-YY914', 'Metformin, Oral (100 mg/ml)'],
+                ['E-E1010','Enrichment: Foraging enrichment'],
+                ['E-E1020','Enrichment: Food treat'],
+                ['E-E1030','Enrichment: Puzzle feeder'],
+                ['E-E1040','Enrichment: Destructible item'],
+                ['E-E1050','Enrichment: Toy enrichment'],
+                ['E-E1060','Enrichment: Cognitive enrichment']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -13291,7 +13593,8 @@ Ext4.onReady(function(){
                 ['Parasitology Sampletype'],
                 ['Lab Sample Types'],
                 ['Parasitology Results'],
-                ['Toys']
+                ['Toys'],
+                ['Behavior']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -13384,6 +13687,26 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
+        populateAnesthesiaTests: function(){
+            this.pendingInserts++;
+
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'anesthesia_tests',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('testid,name,units,alertOnAbnormal,alertOnAny,includeInPanel,sort_order').split(',');
+            var data = [
+                ['Na', 'Sodium', null, false, false, true, 1],
+                ['K', 'Potassium', null, false, false, true, 2],
+                ['Cl', 'Chlorine', null, false, false, true, 3]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
         populateChemistryTests: function(){
             this.pendingInserts++;
 
@@ -13426,7 +13749,8 @@ Ext4.onReady(function(){
                 ['VLDL/CHOL', 'VLDL/Cholesterol Ratio', null, null, true, false, false, null],
                 ['Glob', 'Globulin', 'g/dl', null, true, false, false, null],
                 ['DBili', 'Direct Bilirubin', 'mg/dl', null, true, false, false, null],
-                ['A/G Ratio', 'A/G Ratio', null, null, true, false, false, null]
+                ['A/G Ratio', 'A/G Ratio', null, null, true, false, false, null],
+                ['Ca, ionized', 'Calcium, ionized', 'mg/dL', null, true, false, true, null]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -13772,7 +14096,9 @@ Ext4.onReady(function(){
                 ['ZINC PROTOPORPHYRIN', '', null, false, false, false, null],
                 ['CSF WBC', '', 'cells/mm3', false, false, false, null],
                 ['CSF Neut', '', '%', false, false, false, null],
-                ['CSF Lymph', '', '%', false, false, false, null]
+                ['CSF Lymph', '', '%', false, false, false, null],
+                ['PT', 'Partial Thromboplastin Time', null, false, false, false, null],
+                ['APTT', 'Activated Partial Thromboplastin Time', 'sec', false, false, false, null]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -14393,6 +14719,7 @@ Ext4.onReady(function(){
                 ['intracorneal', 'Intracorneal'],
                 ['intracranial', ' '],
                 ['IP', 'intraperitoneal'],
+                ['ID', ' '],
                 ['IT', ' '],
                 ['IV', ' '],
                 ['IVAG', ' '],

@@ -24,6 +24,7 @@ SELECT
   COALESCE(count(distinct a.projectName), 0) as totalProjects,
   COALESCE(count(a.lsid), 0) as numActiveAssignments,
   COALESCE(SUM(a.isResearch), 0) as numResearchAssignments,
+  COALESCE(SUM(a.isResource), 0) as numResourceAssignments,
   COALESCE(SUM(a.isU24U42), 0) as numU24U42Assignments,
   COALESCE(SUM(a.isProvisional), 0) as numProvisionalAssignments
 
@@ -35,10 +36,10 @@ SELECT
   a.project.protocol.displayName as protocolDisplayName,
   a.project.investigatorId.lastName as lastName,
   a.project.investigatorId.division as division,
-  a.project.investigatorId.assignedVet.lastName as assignedVet,
   a.project.name as projectName,
   a.lsid,
   a.project.isResearch as isResearch,
+  a.project.isResource as isResource,
   a.project.isU24U42 as isU24U42,
   0 as isProvisional,
   cast(a.project.investigatorId.lastName || ' [' || a.project.name || ']' as varchar) as projectString
@@ -54,10 +55,10 @@ SELECT
   f.value as protocolDisplayName,
   f.value as lastName,
   f.value as division,
-  null as assignedVet,
   f.value as projectName,
   null as lsid,  --we do not want these counted in total assignments
   0 as isResearch,
+  0 as isResource,
   0 as isU24U42,
   CASE WHEN f.Id IS NULL THEN 0 ELSE 1 END as isProvisional,
   f.value as projectString

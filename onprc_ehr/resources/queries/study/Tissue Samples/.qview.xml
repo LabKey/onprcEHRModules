@@ -8,8 +8,8 @@
         <column name="preparation"/>
         <column name="quantity"/>
         <column name="weight"/>
-
-        <!--<column name="diagnosis"/>-->
+        <column name="QCState"/>
+        <column name="taskid"/>
     </columns>
    <sorts>
        <sort column="date" descending="true"/>

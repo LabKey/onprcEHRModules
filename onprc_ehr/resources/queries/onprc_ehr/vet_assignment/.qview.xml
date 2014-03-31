@@ -4,6 +4,7 @@
         <column name="protocol" />
         <column name="area" />
         <column name="room" />
+        <column name="priority" />
     </columns>
     <sorts>
         <sort column="userId/UserId/DisplayName"/>
