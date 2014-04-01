@@ -102,18 +102,18 @@ public class RocheE411ImportMethod extends DefaultImportMethod
 
         JSONObject runMeta = getJsonObject(meta, "Run");
         JSONObject json = getJsonObject(runMeta, "instrument");
-        json.put("value", "Roche E411");
+        json.put("defaultValue", "Roche E411");
         runMeta.put("instrument", json);
 
         json = getJsonObject(runMeta, "method");
-        json.put("value", "Electrochemiluminescence");
+        json.put("defaultValue", "Electrochemiluminescence");
         runMeta.put("method", json);
 
         meta.put("Run", runMeta);
 
         JSONObject resultMeta = getJsonObject(meta, "Results");
         json = getJsonObject(resultMeta, "sampleType");
-        json.put("value", "Serum");
+        json.put("defaultValue", "Serum");
         json.put("setGlobally", false);
         resultMeta.put("sampleType", json);
         meta.put("Results", resultMeta);

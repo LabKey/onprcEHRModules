@@ -80,11 +80,12 @@ public class HormoneAssayDataProvider extends AbstractAssayDataProvider
         JSONObject json = getJsonObject(resultMeta, "testName");
         json.put("nullable", true);
         json.put("allowBlank", true);
+        json.put("required", false);
         json.put("hidden", true);
         resultMeta.put("testName", json);
 
         json = getJsonObject(resultMeta, "sampleType");
-        json.put("value", "Serum");
+        json.put("defaultValue", "Serum");
         resultMeta.put("sampleType", json);
 
         domainMeta.put("Results", resultMeta);

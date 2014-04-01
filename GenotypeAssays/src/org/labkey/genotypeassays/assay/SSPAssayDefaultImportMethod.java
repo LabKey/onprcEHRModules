@@ -42,7 +42,7 @@ public class SSPAssayDefaultImportMethod extends DefaultAssayImportMethod
 
         JSONObject sampleType = getJsonObject(resultsMeta, "sampleType");
         sampleType.put("setGlobally", true);
-        sampleType.put("value", "gDNA");
+        sampleType.put("defaultValue", "gDNA");
         resultsMeta.put("sampleType", sampleType);
 
         meta.put("Results", resultsMeta);
