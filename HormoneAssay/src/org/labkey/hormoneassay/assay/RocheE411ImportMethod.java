@@ -1,5 +1,6 @@
 package org.labkey.hormoneassay.assay;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
@@ -26,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -159,47 +161,41 @@ public class RocheE411ImportMethod extends DefaultImportMethod
         {
             ParserErrors errors = context.getErrors();
 
-            Map<Integer, Integer> testColumnMap = new HashMap<Integer, Integer>();
+            Map<Integer, Integer> testColumnMap = new HashMap<>();
 
-            Map<String, Integer> headerMap = new HashMap<String, Integer>();
+            Map<String, Integer> headerMap = new HashMap<>();
             headerMap.put("well", 3);
             headerMap.put(SAMPLE_IDENTIFIER, 6);
             headerMap.put("RunDate", 7);
             headerMap.put("PreDilution", 16); //dilution performed by user
 
-            BufferedReader reader = null;
-
-            try
+            try (StringWriter sw = new StringWriter(); CSVWriter out = new CSVWriter(sw, '\t'))
             {
-                reader = new BufferedReader(new FileReader(context.getFile()));
-                StringBuilder sb = new StringBuilder();
-
                 //append header:
-                sb.append("originalRowIdx").append("\t");
+                List<String> headerRow = new ArrayList<>();
+                headerRow.add("originalRowIdx");
                 for (String field : headerMap.keySet())
                 {
-                    sb.append(field).append("\t");
+                    headerRow.add(field);
                 }
 
-                sb.append("testId").append("\t");
-                sb.append("testName").append("\t");
-                sb.append("result").append("\t");
-                sb.append("units").append("\t");
-                sb.append("qcflag").append("\t");
-                sb.append("dilution").append("\t");
-                sb.append("category").append("\t");
-                sb.append(System.getProperty("line.separator"));
+                headerRow.add("testId");
+                headerRow.add("testName");
+                headerRow.add("result");
+                headerRow.add("units");
+                headerRow.add("qcflag");
+                headerRow.add("dilution");
+                headerRow.add("category");
+                out.writeNext(headerRow.toArray(new String[headerRow.size()]));
 
-                String line;
                 int idx = 0;
-                while (null != (line = reader.readLine()))
+                for (List<String> cells : getFileLines(context.getFile()))
                 {
                     idx++;
 
+                    String line = StringUtils.trimToNull(StringUtils.join(cells, "\n"));
                     if (StringUtils.isEmpty(line))
                         continue;
-
-                    String[] cells = line.split("\t");
 
                     //process testIDs and header
                     if (idx == 1)
@@ -233,7 +229,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
                     {
                         //find the type of sample
                         String category = "";
-                        Integer type = Integer.parseInt(cells[0]);
+                        Integer type = Integer.parseInt(cells.get(0));
                         if (type == 3)
                         {
                             category = "Pos Control";
@@ -242,62 +238,59 @@ public class RocheE411ImportMethod extends DefaultImportMethod
                         //this row could contain many test results
                         for (Integer start : testColumnMap.keySet())
                         {
-                            if (start >= cells.length)
+                            if (start >= cells.size())
                                 continue;
 
-                            if (StringUtils.isEmpty(cells[start]))
+                            if (StringUtils.isEmpty(cells.get(start)))
                                 continue;
 
                             //append fields shared across all tests
-                            sb.append(idx).append("\t");
+                            List<String> toAdd = new ArrayList<>();
+                            toAdd.add(String.valueOf(idx));
 
                             for (String field : headerMap.keySet())
                             {
-                                sb.append(cells[headerMap.get(field)]).append("\t");
+                                toAdd.add(cells.get(headerMap.get(field)));
                             }
 
                             //then the fields specific ot this test
-                            int testId = testColumnMap.get(start);
-                            sb.append(testId).append("\t");
-                            sb.append(resolveTestId(testId)).append("\t");
+                            Integer testId = testColumnMap.get(start);
+                            toAdd.add(testId.toString());
+                            toAdd.add(resolveTestId(testId));
 
                             //result
                             int cellIdx = start;
-                            sb.append(cells[cellIdx]).append("\t");
+                            toAdd.add(cells.get(cellIdx));
 
                             //units
                             cellIdx = start + 1;
-                            if (cells.length > cellIdx)
-                                sb.append(cells[cellIdx]).append("\t");
+                            if (cells.size() > cellIdx)
+                                toAdd.add(cells.get(cellIdx));
 
                             //d_alm (qcflag)
                             cellIdx = start + 2;
-                            if (cells.length > cellIdx)
-                                sb.append(cells[cellIdx]).append("\t");
+                            if (cells.size() > cellIdx)
+                                toAdd.add(cells.get(cellIdx));
 
                             //dilution
                             cellIdx = start + 4;
-                            if (cells.length > cellIdx)
-                                sb.append(cells[cellIdx]).append("\t");
+                            if (cells.size() > cellIdx)
+                                toAdd.add(cells.get(cellIdx));
 
                             //category
-                            sb.append(category).append("\t");
+                            toAdd.add(category);
 
-                            sb.append(System.getProperty("line.separator"));
+                            out.writeNext(toAdd.toArray(new String[toAdd.size()]));
                         }
                     }
                 }
 
-                return sb.toString();
+                return sw.toString();
             }
             catch (IOException e)
             {
                 context.getErrors().addError(e.getMessage());
                 throw context.getErrors().getErrors();
-            }
-            finally
-            {
-                try { if (reader != null) reader.close(); } catch (IOException e) {}
             }
         }
 
@@ -340,9 +333,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
         @Override
         protected List<Map<String, Object>> processRows(List<Map<String, Object>> rows, ImportContext context) throws BatchValidationException
         {
-            //rows = super.processRows(rows, context);
-
-            _blankMap = new HashMap<String, List<Map<String, Object>>>();
+            _blankMap = new HashMap<>();
 
             List<Map<String, Object>> newRows = new ArrayList<Map<String, Object>>();
             ParserErrors errors = context.getErrors();

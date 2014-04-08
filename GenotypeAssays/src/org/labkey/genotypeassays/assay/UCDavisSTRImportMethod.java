@@ -1,6 +1,7 @@
 package org.labkey.genotypeassays.assay;
 
 import au.com.bytecode.opencsv.CSVParser;
+import au.com.bytecode.opencsv.CSVWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.data.Container;
 import org.labkey.api.laboratory.assay.AssayImportMethod;
@@ -16,6 +17,7 @@ import org.labkey.api.view.ViewContext;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -81,34 +83,27 @@ public class UCDavisSTRImportMethod extends DefaultGenotypeAssaysImportMethod
         protected String readRawFile(ImportContext context) throws BatchValidationException
         {
             ParserErrors errors = context.getErrors();
-            BufferedReader reader = null;
-
-            try
+            try (StringWriter sw = new StringWriter(); CSVWriter out = new CSVWriter(sw, '\t'))
             {
-                reader = new BufferedReader(new FileReader(context.getFile()));
-                StringBuilder sb = new StringBuilder();
-
-                String line;
                 int idx = 0;
-                String delim = "\t";
-                List<Integer> header = new ArrayList<Integer>();
+                List<Integer> header = new ArrayList<>();
 
-                sb.append("Subject Id").append(delim);
-                sb.append("Marker").append(delim);
-                sb.append("Result").append(delim);
-                sb.append("Comment").append(System.getProperty("line.separator"));
+                List<String> headerRow = new ArrayList<>();
+                headerRow.add("Subject Id");
+                headerRow.add("Marker");
+                headerRow.add("Result");
+                headerRow.add("Comment");
+                out.writeNext(headerRow.toArray(new String[headerRow.size()]));
 
-                CSVParser parser = new CSVParser();
-                while (null != (line = reader.readLine()))
+                for (List<String> cells : getFileLines(context.getFile()))
                 {
                     idx++;
 
-                    if (line == null || StringUtils.trimToNull(line.replaceAll(",", "")) == null)
+                    if (cells.size() == 0)
                         continue;
 
-                    String[] cells = parser.parseLine(line);
-
-                    if (cells.length == 0)
+                    String line = StringUtils.trimToNull(StringUtils.join(cells, "\n"));
+                    if (line == null || StringUtils.trimToNull(line.replaceAll(",", "")) == null)
                         continue;
 
                     if (idx == 1)
@@ -125,14 +120,14 @@ public class UCDavisSTRImportMethod extends DefaultGenotypeAssaysImportMethod
                     }
                     else
                     {
-                        String subjectId = cells[0];
+                        String subjectId = cells.get(0);
                         if (StringUtils.isEmpty(subjectId))
                         {
                             errors.addError("Line " + idx + ": Missing subject Id");
                             continue;
                         }
 
-                        String comment = cells[5];
+                        String comment = cells.get(5);
                         if (StringUtils.isEmpty(comment))
                         {
                             comment = null;
@@ -140,7 +135,7 @@ public class UCDavisSTRImportMethod extends DefaultGenotypeAssaysImportMethod
 
                         for (Integer resultCol : header)
                         {
-                            String value = cells[resultCol];
+                            String value = cells.get(resultCol);
                             if (StringUtils.isEmpty(value))
                                 continue;
 
@@ -203,13 +198,14 @@ public class UCDavisSTRImportMethod extends DefaultGenotypeAssaysImportMethod
 
                                 for (Integer i : integers)
                                 {
-                                    sb.append(subjectId).append(delim);
-                                    sb.append(marker).append(delim);
-                                    sb.append(i);
+                                    List<String> toAdd = new ArrayList<>();
+                                    toAdd.add(subjectId);
+                                    toAdd.add(marker);
+                                    toAdd.add(String.valueOf(i));
                                     if (comment != null)
-                                        sb.append(delim).append(comment);
+                                        toAdd.add(comment);
 
-                                    sb.append(System.getProperty("line.separator"));
+                                    out.writeNext(toAdd.toArray(new String[toAdd.size()]));
                                 }
                             }
                         }
@@ -218,16 +214,12 @@ public class UCDavisSTRImportMethod extends DefaultGenotypeAssaysImportMethod
 
                 errors.confirmNoErrors();
 
-                return sb.toString();
+                return sw.toString();
             }
             catch (IOException e)
             {
                 errors.addError(e.getMessage());
                 throw errors.getErrors();
-            }
-            finally
-            {
-                try { if (reader != null) reader.close(); } catch (IOException e) {}
             }
         }
     }

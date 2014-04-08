@@ -60,12 +60,14 @@ GenotypeAssays/resources/schemas/dbscripts/postgresql/genotypeassays-0.02-0.03.s
 GenotypeAssays/resources/schemas/dbscripts/sqlserver/genotypeassays-0.00-0.01.sql -text
 GenotypeAssays/resources/schemas/dbscripts/sqlserver/genotypeassays-0.02-0.03.sql -text
 GenotypeAssays/resources/schemas/genotypeassays.xml -text
+GenotypeAssays/resources/web/genotypeassays/data/BeadStudioExample.xlsx -text
 GenotypeAssays/resources/web/genotypeassays/data/UCDavis.txt -text
 GenotypeAssays/resources/web/genotypeassays/window/CacheResultsWindow.js -text
 GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysController.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysManager.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysModule.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysSchema.java -text
+GenotypeAssays/src/org/labkey/genotypeassays/assay/BeadStudioImportMethod.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/assay/DefaultGenotypeAssaysImportMethod.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/assay/DefaultSnpAssayImportMethod.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/assay/GenotypeAssayDataProvider.java -text
