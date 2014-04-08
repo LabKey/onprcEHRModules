@@ -2,15 +2,6 @@
     <columns>
         <column name="Id"/>
         <column name="date"/>
-        <column name="room/area">
-            <properties>
-                <property name="columnTitle" value="Destination Area"/>
-            </properties>
-        </column>
-        <column name="room"/>
-        <column name="cage"/>
-        <column name="reason"/>
-        <column name="remark"/>
         <column name="Id/curLocation/room">
             <properties>
                 <property name="columnTitle" value="Current Room"/>
@@ -21,6 +12,15 @@
                 <property name="columnTitle" value="Current Cage"/>
             </properties>
         </column>
+        <column name="room/area">
+            <properties>
+                <property name="columnTitle" value="Destination Area"/>
+            </properties>
+        </column>
+        <column name="room"/>
+        <column name="cage"/>
+        <column name="reason"/>
+        <column name="remark"/>
         <column name="existingAnimals"/>
         <column name="QCState"/>
     </columns>

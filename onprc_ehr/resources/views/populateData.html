@@ -228,6 +228,12 @@ Ext4.onReady(function(){
             queryName: 'drug_categories',
             pk: 'rowid'
         },{
+            label: 'Blood Sample Type',
+            populateFn: 'populateBloodSampleType',
+            schemaName: 'ehr_lookups',
+            queryName: 'blood_sample_type',
+            pk: 'rowid'
+        },{
             label: 'Notes Category',
             populateFn: 'populateNotesCategory',
             schemaName: 'ehr_lookups',
@@ -4909,7 +4915,11 @@ Ext4.onReady(function(){
             ['E-E1030','Behavior',null],
             ['E-E1040','Behavior',null],
             ['E-E1050','Behavior',null],
-            ['E-E1060','Behavior',null]
+            ['E-E1060','Behavior',null],
+            ['P-YY510','Behavior',null],
+            ['P-YY520','Behavior',null],
+            ['P-YY530','Behavior',null],
+            ['P-YY540','Behavior',null]
         ],
 
         deleteSnomedSubsets: function(){
@@ -4995,6 +5005,7 @@ Ext4.onReady(function(){
             ['pairingEventType', 'Pairing Event Types', 'value'],
             ['tb_method', 'TB Test Methods', 'value'],
             ['microbiologyQuantity', 'Microbiology Quantity', 'value'],
+            ['blood_sample_type', 'Blood Sample Types', 'value'],
             ['pairingHousingType', 'Pairing Housing Types', 'value'],
             ['pairingOutcome', 'Pairing Outcomes', 'value'],
             ['pairingGoal', 'Pairing Goal', 'value'],
@@ -5908,7 +5919,12 @@ Ext4.onReady(function(){
             var fields = ('value').split(',');
 
             var data = [
-                ['Normal']
+                ['Normal'],
+                ['Project Assignment'],
+                ['Behavior'],
+                ['Other'],
+                ['Medical'],
+                ['Disband'],
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5982,6 +5998,9 @@ Ext4.onReady(function(){
                 ['TID',800,'AM'],
                 ['TID',1200,'Noon'],
                 ['TID',1600,'PM'],
+                ['TID - AM/PM/Night',800,'AM'],
+                ['TID - AM/PM/Night',1400,'PM'],
+                ['TID - AM/PM/Night',2000,'Night'],
                 ['QID - Four times a day',800,'AM'],
                 ['QID - Four times a day',1200,'Noon'],
                 ['QID - Four times a day',1600,'PM'],
@@ -6059,6 +6078,12 @@ Ext4.onReady(function(){
                     active: false
                 },
                 'TID': {
+                    intervalindays: 1,
+                    shortname: 'TID',
+                    sort_order: 6,
+                    active: true
+                },
+                'TID - AM/PM/Night': {
                     intervalindays: 1,
                     shortname: 'TID',
                     sort_order: 6,
@@ -7916,6 +7941,26 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
+        populateBloodSampleType: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'blood_sample_type',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['Whole Blood'],
+                ['Bone Marrow']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
         populateNotesCategory: function(){
             this.pendingInserts++;
             //records for task forms:
@@ -7964,19 +8009,19 @@ Ext4.onReady(function(){
                 success: this.onSuccess,
                 failure: this.onError
             };
-            var fields = ('value').split(',');
+            var fields = ('value,category').split(',');
 
             var data = [
-                ['Antibiotic Sensitivity'],
-                ['Biochemistry'],
-                ['Hematology'],
-                ['iSTAT'],
-                ['Anesthesia'],
-                ['Misc Tests'],
-                ['Microbiology'],
-                ['Parasitology'],
-                ['Serology/Virology'],
-                ['Urinalysis']
+                ['Antibiotic Sensitivity', 'antibioticSensitivity'],
+                ['Biochemistry', 'chemistryResults'],
+                ['Hematology', 'hematologyResults'],
+                ['iSTAT', 'iStat'],
+                ['Anesthesia', 'anesthesia'],
+                ['Misc Tests', 'miscTests'],
+                ['Microbiology', 'microbiology'],
+                ['Parasitology', 'parasitologyResults'],
+                ['Serology/Virology', 'serology'],
+                ['Urinalysis', 'urinalysisResults']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -13559,7 +13604,11 @@ Ext4.onReady(function(){
                 ['E-E1030','Enrichment: Puzzle feeder'],
                 ['E-E1040','Enrichment: Destructible item'],
                 ['E-E1050','Enrichment: Toy enrichment'],
-                ['E-E1060','Enrichment: Cognitive enrichment']
+                ['E-E1060','Enrichment: Cognitive enrichment'],
+                ['P-YY510','Visual Barrier'],
+                ['P-YY520','Socialization'],
+                ['P-YY530','Relocation'],
+                ['P-YY540','Human interaction']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));

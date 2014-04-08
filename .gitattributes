@@ -24,6 +24,7 @@ onprc_ehr/resources/etl/ehr/protocol_counts.sql -text
 onprc_ehr/resources/etl/ehr/snomed_tags.sql -text
 onprc_ehr/resources/etl/ehr/treatment_times.sql -text
 onprc_ehr/resources/etl/ehr_lookups/cage.sql -text
+onprc_ehr/resources/etl/mergesync/orderssynced.sql -text
 onprc_ehr/resources/etl/onprc_billing/miscCharges.sql -text
 onprc_ehr/resources/etl/onprc_billing/projectAccountHistory.sql -text
 onprc_ehr/resources/etl/pending/Anesthesia.sql -text
@@ -787,6 +788,7 @@ onprc_ehr/resources/web/onprc_ehr/window/ChangeLabworkStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/CopyTissuesWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ManageFlagsWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ManageProcedureWindow.js -text
+onprc_ehr/resources/web/onprc_ehr/window/MarkAnimalGroupCompletedWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/MarkAssignmentCompletedWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/MarkLabworkDeliveredWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/VetRecordReviewWindow.js -text
@@ -796,6 +798,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRModule.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRUserSchema.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/buttons/AnimalGroupCompletedButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/AssignmentCompletedButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/ChangeProjectedReleaseDateButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/DiscardTaskButton.java -text

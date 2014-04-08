@@ -94,6 +94,7 @@ public class ETLRunnable implements Runnable
     private final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
     private Map<String, String> ehrQueries;
     private Map<String, String> ehrLookupsQueries;
+    private Map<String, String> mergesyncQueries;
     private Map<String, String> staticQueries;
     private Map<String, String> studyQueries;
     private Map<String, String> billingQueries;
@@ -115,6 +116,7 @@ public class ETLRunnable implements Runnable
         this.ehrLookupsQueries = loadQueries(getResource("ehr_lookups").list());
         this.studyQueries = loadQueries(getResource("study").list());
         this.billingQueries = loadQueries(getResource("onprc_billing").list());
+        this.mergesyncQueries = loadQueries(getResource("mergesync").list());
     }
 
     @Override
@@ -211,10 +213,20 @@ public class ETLRunnable implements Runnable
                     log.info(String.format("table onprc_billing.%s rowversion was %s", tableName, version));
                 }
 
+                for (String tableName : mergesyncQueries.keySet())
+                {
+                    long lastTs = getLastTimestamp(tableName);
+                    byte[] lastRow = getLastVersion(tableName);
+                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    log.info(String.format("table mergesync.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                    log.info(String.format("table mergesync.%s rowversion was %s", tableName, version));
+                }
+
                 UserSchema ehrSchema = QueryService.get().getUserSchema(user, container, "ehr");
                 UserSchema ehrLookupsSchema = QueryService.get().getUserSchema(user, container, "ehr_lookups");
                 UserSchema billingSchema = QueryService.get().getUserSchema(user, container, "onprc_billing");
                 UserSchema studySchema = QueryService.get().getUserSchema(user, container, "study");
+                UserSchema mergeSyncSchema = QueryService.get().getUserSchema(user, container, "mergesync");
 
                 try
                 {
@@ -223,6 +235,11 @@ public class ETLRunnable implements Runnable
                     int ehrLookupsErrors = merge(user, container, ehrLookupsQueries, ehrLookupsSchema);
                     int datasetErrors = merge(user, container, studyQueries, studySchema);
                     int billingErrors = merge(user, container, billingQueries, billingSchema);
+
+                    if (mergeSyncSchema != null)
+                    {
+                        int mergesyncErrors = merge(user, container, mergesyncQueries, mergeSyncSchema);
+                    }
 
                     truncateEtlRuns();
 
@@ -1156,6 +1173,7 @@ public class ETLRunnable implements Runnable
             UserSchema ehrLookupsSchema = QueryService.get().getUserSchema(user, container, "ehr_lookups");
             UserSchema billingSchema = QueryService.get().getUserSchema(user, container, "onprc_billing");
             UserSchema studySchema = QueryService.get().getUserSchema(user, container, "study");
+            UserSchema mergesyncSchema = QueryService.get().getUserSchema(user, container, "mergesync");
 
             StringBuilder sb = new StringBuilder();
             String result = validateEtlScript(ehrQueries, ehrSchema, attemptRepair);
@@ -1186,6 +1204,14 @@ public class ETLRunnable implements Runnable
             if (result != null)
             {
                 sb.append("Validating ONPRC_Billing Schema:<br>");
+                sb.append(result);
+                sb.append("<hr>");
+            }
+
+            result = validateEtlScript(mergesyncQueries, mergesyncSchema, attemptRepair);
+            if (result != null)
+            {
+                sb.append("Validating Merge Sync Schema:<br>");
                 sb.append(result);
                 sb.append("<hr>");
             }
@@ -1307,6 +1333,8 @@ public class ETLRunnable implements Runnable
             put("Urinalysis Results", new String[]{"Cln_Urinalysis"});
             put("Virology Results", new String[]{"Cln_VirologyData", "Cln_VirologyHeader", "Cln_SerologyData", "Cln_SerologyHeader"});
             put("Weight", new String[]{"Af_Weights", "Sur_general", "Af_Death"});
+
+            put("orderssynced", new String[]{"IRIS_Lis_TransactionlogMaster"});
         }
     };
 

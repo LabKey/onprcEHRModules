@@ -104,6 +104,11 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
             ret.addAll(set);
         }
 
+        if (!ret.isEmpty())
+        {
+            _log.info("Triggered additional housing updates for: " + StringUtils.join(ret, ";'"));
+        }
+
         return ret;
     }
 

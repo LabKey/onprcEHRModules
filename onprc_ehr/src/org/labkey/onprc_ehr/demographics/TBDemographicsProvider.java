@@ -68,11 +68,11 @@ public class TBDemographicsProvider extends AbstractListDemographicsProvider
     }
 
     @Override
-    public Collection<FieldKey> getFieldKeysToTest()
+    public Collection<String> getKeysToTest()
     {
         //for now, simply skip the whole provider.  it maybe possible to avoid caching the time-sensitive components.
-        Set<FieldKey> keys = new HashSet<>(getFieldKeys());
-        keys.remove(FieldKey.fromString("tb"));
+        Set<String> keys = new HashSet<>(super.getKeysToTest());
+        keys.remove(_propName);
 
         return keys;
     }

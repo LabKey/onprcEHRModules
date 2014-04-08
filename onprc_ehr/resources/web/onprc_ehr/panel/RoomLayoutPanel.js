@@ -173,9 +173,9 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                 }, this);
 
                 var rooms = Ext4.Object.getKeys(roomMap).sort();
-                var dividerWidth = 8;
+                var dividerWidth = 4;
                 var height = 115;
-                var cageWidth = 65;
+                var cageWidth = 60;
                 var hasCages = false;
 
                 Ext4.each(rooms, function(room, roomIdx){
@@ -320,8 +320,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     if (cageType == 'No Cage'){
                                         if (!Ext4.isEmpty(cageAnimals))
                                             bgColor = 'red';
-                                        else
-                                            bgColor = '';
+                                        else {
+                                            //NOTE: this used to use no color.  i'm not sure why
+                                            bgColor = 'grey';
+                                        }
                                     }
                                 }
                                 else {

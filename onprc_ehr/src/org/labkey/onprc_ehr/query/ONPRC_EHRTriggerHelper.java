@@ -338,6 +338,7 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
+    //NOTE: we probably do not want to cache this outside this transaction, unless we can keep it accurate
     private Map<String, List<Map<String, Object>>> _cachedCages = new HashMap<>();
 
     public String validateCage(String room, String cage)
@@ -349,7 +350,7 @@ public class ONPRC_EHRTriggerHelper
             {
                 if (!(Boolean)row.get("isAvailable"))
                 {
-                    return "This cage is not available";
+                    return "This cage is not available based the current cage/divider configuration";
                 }
                 else if ("Unavailable".equals(row.get("status")))
                 {

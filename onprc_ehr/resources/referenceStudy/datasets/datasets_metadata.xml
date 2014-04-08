@@ -853,6 +853,9 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
+            <column columnName="sampletype">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="chargetype">
                 <datatype>varchar</datatype>
             </column>
@@ -2563,6 +2566,12 @@
             <column columnName="cage">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="divider">
+                <datatype>integer</datatype>
+            </column>
+            <column columnName="housingCondition">
+                <datatype>integer</datatype>
+            </column>
             <column columnName="objectid">
                 <datatype>entityid</datatype>
                 <propertyURI>urn:ehr.labkey.org/#ObjectId</propertyURI>
@@ -2676,6 +2685,9 @@
             <column columnName="enddate">
                 <datatype>timestamp</datatype>
                 <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
+            </column>
+            <column columnName="actiondate">
+                <datatype>timestamp</datatype>
             </column>
             <column columnName="category">
                 <datatype>varchar</datatype>

@@ -55,4 +55,13 @@ public class AuxProcedureFormType extends TaskForm
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ResearchProcedures.js"));
         setDisplayReviewRequired(true);
     }
+
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> defaultButtons = super.getMoreActionButtonConfigs();
+        defaultButtons.add("COPY_TASK");
+
+        return defaultButtons;
+    }
 }

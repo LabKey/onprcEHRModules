@@ -42,6 +42,7 @@ import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.onprc_ehr.buttons.AnimalGroupCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentCompletedButton;
 import org.labkey.onprc_ehr.buttons.ChangeProjectedReleaseDateButton;
 import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
@@ -298,7 +299,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "onprc_ehr", "customers", ONPRC_EHRCustomerEditPermission.class), "onprc_ehr", "customers");
         EHRService.get().registerMoreActionsButton(new MarkCompletedButton(this, "study", "flags", "End Flags"), "study", "flags");
         EHRService.get().registerMoreActionsButton(new MarkCompletedButton(this, "study", "notes", "End Notes"), "study", "notes");
-        EHRService.get().registerMoreActionsButton(new MarkCompletedButton(this, "ehr", "animal_group_members", "End Group Assignments"), "ehr", "animal_group_members");
+        EHRService.get().registerMoreActionsButton(new AnimalGroupCompletedButton(this), "ehr", "animal_group_members");
         EHRService.get().registerMoreActionsButton(new AssignmentCompletedButton(this), "study", "assignment");
 
         EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", BloodDrawFormType.NAME, new String[]{"Blood Draws"}), "study", "demographics");

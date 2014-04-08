@@ -40,19 +40,15 @@ public class BehaviorRoundsFormType extends TaskForm
         super(ctx, owner, "BSU Rounds", "BSU Rounds", "BSU", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
-            new BehaviorRoundsRemarksFormSection(),
-            new ClinicalObservationsFormSection()
+            new BehaviorRoundsRemarksFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+            new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+            new BSUTreatmentFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
 
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("BehaviorDefaults");
             s.addConfigSource("BehaviorRounds");
-
-            if (s instanceof ClinicalObservationsFormSection)
-            {
-                ((ClinicalObservationsFormSection)s).setHidden(true);
-            }
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BehaviorDefaults.js"));

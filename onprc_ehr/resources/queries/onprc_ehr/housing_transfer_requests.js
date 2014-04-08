@@ -55,3 +55,9 @@ function onInit(event, helper){
         helper.setProperty('housingInTransaction', housingInTransaction);
     });
 }
+
+function onUpsert(helper, scriptErrors, row, oldRow){
+    if (row.cage){
+        row.cage = row.cage.toUpperCase();
+    }
+}
