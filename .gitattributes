@@ -29,10 +29,14 @@ mergesync/resources/schemas/dbscripts/postgresql/mergesync-0.00-0.01.sql -text
 mergesync/resources/schemas/dbscripts/postgresql/mergesync-0.01-0.02.sql -text
 mergesync/resources/schemas/dbscripts/postgresql/mergesync-0.02-0.03.sql -text
 mergesync/resources/schemas/dbscripts/postgresql/mergesync-0.03-0.04.sql -text
+mergesync/resources/schemas/dbscripts/postgresql/mergesync-0.04-0.05.sql -text
+mergesync/resources/schemas/dbscripts/postgresql/mergesync-0.05-0.06.sql -text
 mergesync/resources/schemas/dbscripts/sqlserver/mergesync-0.00-0.01.sql -text
 mergesync/resources/schemas/dbscripts/sqlserver/mergesync-0.01-0.02.sql -text
 mergesync/resources/schemas/dbscripts/sqlserver/mergesync-0.02-0.03.sql -text
 mergesync/resources/schemas/dbscripts/sqlserver/mergesync-0.03-0.04.sql -text
+mergesync/resources/schemas/dbscripts/sqlserver/mergesync-0.04-0.05.sql -text
+mergesync/resources/schemas/dbscripts/sqlserver/mergesync-0.05-0.06.sql -text
 mergesync/resources/schemas/mergesync.xml -text
 mergesync/resources/scripts/mergesync/mergesync.js -text
 mergesync/resources/views/begin.html -text
@@ -42,6 +46,7 @@ mergesync/src/org/labkey/mergesync/MergeSyncManager.java -text
 mergesync/src/org/labkey/mergesync/MergeSyncModule.java -text
 mergesync/src/org/labkey/mergesync/MergeSyncRunner.java -text
 mergesync/src/org/labkey/mergesync/MergeSyncSchema.java -text
+mergesync/src/org/labkey/mergesync/MergeSyncTableCustomizer.java -text
 mergesync/src/org/labkey/mergesync/MergeSyncUserSchema.java -text
 mergesync/src/org/labkey/mergesync/RequestSyncHelper.java -text
 ogasync/build.xml -text
@@ -427,6 +432,7 @@ onprc_ssu/src/org/labkey/onprc_ssu/ONPRC_SSUSchema.java -text
 onprc_ssu/src/org/labkey/onprc_ssu/notification/SSU_Notification.java -text
 sla/SLA.iml -text
 sla/module.properties -text
+sla/resources/etl/sla/allowableAnimals.sql -text
 sla/resources/etl/sla/census.sql -text
 sla/resources/etl/sla/purchase.sql -text
 sla/resources/etl/sla/purchasedetails.sql -text
@@ -434,12 +440,15 @@ sla/resources/etl/sla/requestors.sql -text
 sla/resources/etl/sla/vendors.sql -text
 sla/resources/folderTypes/SLA.folderType.xml -text
 sla/resources/module.xml -text
+sla/resources/queries/sla/allowableAnimals.js -text
 sla/resources/schemas/dbscripts/postgresql/sla-0.00-13.21.sql -text
 sla/resources/schemas/dbscripts/postgresql/sla-13.21-13.22.sql -text
 sla/resources/schemas/dbscripts/postgresql/sla-13.22-13.23.sql -text
+sla/resources/schemas/dbscripts/postgresql/sla-13.23-13.24.sql -text
 sla/resources/schemas/dbscripts/sqlserver/sla-0.00-13.21.sql -text
 sla/resources/schemas/dbscripts/sqlserver/sla-13.21-13.22.sql -text
 sla/resources/schemas/dbscripts/sqlserver/sla-13.22-13.23.sql -text
+sla/resources/schemas/dbscripts/sqlserver/sla-13.23-13.24.sql -text
 sla/resources/schemas/sla.xml -text
 sla/resources/views/begin.html -text
 sla/resources/views/begin.view.xml -text
