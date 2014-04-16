@@ -195,18 +195,30 @@ public class BeadStudioImportMethod extends DefaultSnpAssayImportMethod
 
                     Long position = ((Double)Double.parseDouble(positionStr)).longValue();
 
-                    String snp = cells.get(18);
-                    if (StringUtils.isEmpty(snp))
+                    String alleleA = cells.get(3);
+                    String alleleB = cells.get(4);
+                    if (StringUtils.isEmpty(alleleA) && StringUtils.isEmpty(alleleB))
                     {
-                        errors.addError("Line " + idx + ": Missing SNP");
+                        errors.addError("Line " + idx + ": Missing SNPs");
                         continue;
                     }
-                    snp = snp.replaceAll("\\[|\\]", "");
+
+                    String snp = "";
+                    if (!StringUtils.isEmpty(alleleA))
+                        snp += alleleA;
+
+                    if (!StringUtils.isEmpty(alleleB))
+                    {
+                        if (!StringUtils.isEmpty(snp))
+                            snp += "/";
+
+                        snp += alleleB;
+                    }
 
                     toAdd = new ArrayList<>();
                     toAdd.add(subjectId);
                     toAdd.add(snpName);
-                    toAdd.add(chr.toString());
+                    toAdd.add("Chr " + chr.toString());
                     toAdd.add(strand);
                     toAdd.add(position.toString());
                     toAdd.add(snp);
