@@ -169,7 +169,22 @@ Ext4.define('ONPRC_EHR.window.ManageFlagsWindow', {
             params: params,
             scope: this,
             success: LABKEY.Utils.getCallbackWrapper(this.successHandler, this),
-            failure: LDK.Utils.getErrorCallback()
+            failure: LDK.Utils.getErrorCallback({
+                showAlertOnError: false,
+                scope: this,
+                callback: function(response){
+                    var msg;
+                    if (response && response.responseText){
+                        var json = Ext4.decode(response.responseText);
+                        if (json && json.exception){
+                            msg = json.exception;
+                        }
+                    }
+
+                    msg = msg || 'There was an error saving the data';
+                    Ext4.Msg.alert('Error', msg);
+                }
+            })
         });
     },
 

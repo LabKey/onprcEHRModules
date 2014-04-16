@@ -122,10 +122,10 @@
         <dataset name="grossFindings" id="5028" category="Pathology" type="Standard" showByDefault="false">
             <tags/>
         </dataset>
-        <dataset name="pathologyDiagnoses" id="1005" category="Pathology" type="Standard">
+        <dataset name="pathologyDiagnoses" id="1005" category="Pathology" type="Standard" showByDefault="false">
             <tags/>
         </dataset>
-        <dataset name="histology" id="1070" category="Pathology" type="Standard">
+        <dataset name="histology" id="1070" category="Pathology" type="Standard" showByDefault="false">
             <tags/>
         </dataset>
         <dataset name="tissue_samples" id="1071" showByDefault="false" category="Pathology" type="Standard">

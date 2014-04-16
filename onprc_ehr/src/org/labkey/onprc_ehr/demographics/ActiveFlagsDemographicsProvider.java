@@ -64,4 +64,14 @@ public class ActiveFlagsDemographicsProvider extends AbstractListDemographicsPro
 
         return filter;
     }
+
+    @Override
+    public Collection<String> getKeysToTest()
+    {
+        //for now, simply skip the whole provider.  because different records can be active from day to day, this makes validation tricky
+        Set<String> keys = new HashSet<>(super.getKeysToTest());
+        keys.remove(_propName);
+
+        return keys;
+    }
 }

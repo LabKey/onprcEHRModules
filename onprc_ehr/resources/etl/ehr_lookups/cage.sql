@@ -38,7 +38,7 @@ Select
 	END as cagetype,
 
 	--s2.Value as CageDivider,
-	(select cd.rowid from labkey.ehr_lookups.divider_types cd where cd.divider = s2.value) as cageDivider,
+	(select cd.rowid from labkey.ehr_lookups.divider_types cd where cd.divider = CASE WHEN s2.value = 'Pairing Divider (No Divider)' THEN 'No Divider' ELSE s2.value END) as cageDivider,
 	--row.CagePosition,
 	row.objectid
 
@@ -53,7 +53,5 @@ and row.status = 1
 AND row.ts > ?
 
 ) t
-
+where t.cage is not null
 GROUP BY location, room, cage
-
---WHERE location IN ('AN RM 21', 'AN RM 33', 'AN RM 34')

@@ -19,6 +19,12 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                 defaultValue: 'DCM: ASB Services',
                 hidden: true
             }
+        },
+        'study.drug': {
+            chargetype: {
+                defaultValue: 'DCM: ASB Services',
+                hidden: true
+            }
         }
     }
 });

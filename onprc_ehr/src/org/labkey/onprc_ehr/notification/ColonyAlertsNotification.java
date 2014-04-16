@@ -32,7 +32,9 @@ import org.labkey.api.data.Sort;
 import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.module.Module;
+import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryDefinition;
 import org.labkey.api.query.QueryException;
@@ -45,7 +47,6 @@ import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.ResultSetUtil;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
-import org.springframework.beans.MutablePropertyValues;
 import org.springframework.validation.BindException;
 
 import java.io.IOException;
@@ -134,7 +135,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //blood draws
         bloodDrawsOnDeadAnimals(c, u, msg);
         bloodDrawsOverLimit(c, u, msg);
-        findNonApprovedDraws(c, u, msg);
 
         //misc
         demographicsWithoutGender(c, u, msg);
@@ -1204,7 +1204,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         cal.add(Calendar.DATE, -3);
 
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive");
-        filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ);
+        filter.addCondition(FieldKey.fromString("qcstate/label"), EHRService.QCSTATES.RequestDenied.getLabel(), CompareType.NEQ_OR_NULL);
 
         filter.addCondition(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_GTE);
         filter.addCondition(FieldKey.fromString("BloodRemaining/availableBlood"), 0, CompareType.LT);
@@ -1220,7 +1220,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " blood draws within the past 3 days exceeding the allowable volume.  Note: this warning may include draws scheduled on that day, but have not actually been performed.  Click the IDs below to see more information:</b><br><br>");
+            msg.append("<b>WARNING: There are " + count + " blood draws within the past 3 days exceeding the allowable volume.  Note: this warning may include draws scheduled in the future, but have not actually been performed.  Click the IDs below to see more information:</b><br><br>");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
             {
                 public void exec(ResultSet object) throws SQLException
@@ -1243,199 +1243,119 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     /**
-     * we find any blood draws where the animal is not assigned to that project
+     * we find any requests where the animal is not assigned to that project
      */
-    protected void bloodDrawsNotAssignedToProject(Container c, User u, final StringBuilder msg)
+    protected void requestsNotAssignedToProject(Container c, User u, String queryName, String label, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive");
-        filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ);
+        filter.addCondition(FieldKey.fromString("qcstate/label"), EHRService.QCSTATES.RequestDenied.getLabel(), CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-        filter.addCondition(FieldKey.fromString("projectStatus"), null, CompareType.NONBLANK);
+        filter.addCondition(FieldKey.fromString("requestid"), null, CompareType.NONBLANK);
+        filter.addCondition(FieldKey.fromString("isAssignedToProtocolAtTime"), "Y", CompareType.NEQ_OR_NULL);
 
-        MutablePropertyValues mpv = new MutablePropertyValues();
-        mpv.addPropertyValue("schemaName", "study");
-        mpv.addPropertyValue("query.queryName", "BloodSchedule");
-
-        BindException errors = new NullSafeBindException(new Object(), "command");
         UserSchema us = QueryService.get().getUserSchema(u, c, "study");
-        QuerySettings qs = us.getSettings(mpv, "query");
-        qs.setBaseFilter(filter);
-        QueryView view = new QueryView(us, qs, errors);
-        Results rs = null;
-        try
+        TableInfo ti = us.getTable(queryName);
+        TableSelector ts = new TableSelector(ti, filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
         {
-            rs = view.getResults();
-            int total = 0;
-            //calculate row count
-            while (rs.next())
-            {
-                total++;
-            }
-
-            if (total > 0)
-            {
-
-                msg.append("<b>WARNING: There are " + total + " blood draws scheduled today or in the future where the animal is not assigned to the project.</b><br>");
-
-                do
-                {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
-                }
-                while (rs.next());
-
-                msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BloodSchedule", null) + "&query.projectStatus~isnonblank&query.Id/DataSet/Demographics/calculated_status~eq=Alive&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
-                msg.append("<hr>\n");
-            }
-            else
-            {
-                msg.append("All blood draws today and in the future have a valid project for the animal.<br>");
-                msg.append("<hr>\n");
-            }
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeSQLException(e);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
+            msg.append("<b>WARNING: There are " + count + " " + label + " requests scheduled today or in the future where the animal is not assigned to the project.</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", queryName, "Requests", filter) + "'>Click here to view them</a><br>\n");
+            msg.append("<hr>\n");
         }
     }
 
     /**
      * find any blood draws not yet approved
      */
-    protected void findNonApprovedDraws(Container c, User u, final StringBuilder msg)
+    protected void findNonApprovedRequests(Container c, User u, String queryName, String label, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive");
-        filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Pending");
+        filter.addCondition(FieldKey.fromString("qcstate/label"), EHRService.QCSTATES.RequestPending.getLabel());
         filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Blood Draws"), filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable(queryName), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " blood draws requested that have not been approved or denied yet.</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "blood", null) + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n");
+            msg.append("WARNING: The following " + count + " " + label + " requests that have not been approved or denied yet:<br><br>");
+            final Map<String, Integer> counts = new TreeMap<>();
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet rs) throws SQLException
+                {
+                    String chargeType = rs.getString("chargeType") == null ? "Not Assigned" : rs.getString("chargeType");
+                    Integer count = counts.get(chargeType);
+                    if (count == null)
+                        count = 0;
+
+                    count++;
+                    counts.put(chargeType, count);
+                }
+            });
+
+            for (String chargeType : counts.keySet())
+            {
+                String otherFilter = "&query.chargetype~" + (chargeType == "Not Assigned" ? "isblank" : "eq=" + chargeType);
+                msg.append(chargeType + ": ").append("<a href='" + getExecuteQueryUrl(c, "study", queryName, "Requests", filter) + otherFilter + "'>" + counts.get(chargeType) + " </a><br>\n");
+            }
+
             msg.append("<hr>\n");
         }
     }
 
     /*
-     * we find any incomplete blood draws scheduled today, by area
+     * we find any incomplete requests scheduled today
      */
-    protected void incompleteDraws(Container c, User u, final StringBuilder msg)
+    protected void incompleteRequests(Container c, User u, String queryName, String label, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive");
-        filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_EQUAL);
-        filter.addCondition(FieldKey.fromString("qcstate/label"), "Completed", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("requestid"), null, CompareType.NONBLANK);
+        filter.addCondition(FieldKey.fromString("qcstate/label"), EHRService.QCSTATES.RequestDenied.getLabel(), CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("qcstate/label"), EHRService.QCSTATES.Completed.getLabel(), CompareType.NEQ_OR_NULL);
 
-        MutablePropertyValues mpv = new MutablePropertyValues();
-        mpv.addPropertyValue("schemaName", "study");
-        mpv.addPropertyValue("query.queryName", "BloodSchedule");
-        mpv.addPropertyValue("query.columns", "drawStatus,daterequested,project,date,project/protocol,taskid,projectStatus,tube_vol,tube_type,chargetype,num_tubes,Id/curLocation/area,Id/curLocation/room,Id/curLocation/cage,additionalServices,remark,Id,quantity,qcstate,qcstate/Label,requestid");
-
-        BindException errors = new NullSafeBindException(new Object(), "command");
         UserSchema us = QueryService.get().getUserSchema(u, c, "study");
-        QuerySettings qs = us.getSettings(mpv, "query");
-        qs.setBaseFilter(filter);
-        QueryView view = new QueryView(us, qs, errors);
-        Results rs = null;
-        try
+        TableInfo ti = us.getTable(queryName);
+        Set<FieldKey> fks = PageFlowUtil.set(FieldKey.fromString("chargetype"), FieldKey.fromString("qcstate"), FieldKey.fromString("qcstate/Label"));
+        final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, fks);
+        TableSelector ts = new TableSelector(ti, cols.values(), filter, null);
+
+        long count = ts.getRowCount();
+        if (count == 0)
         {
-            rs = view.getResults();
-            if (!rs.next())
+            msg.append("There are no " + label + " requests scheduled for " + AbstractEHRNotification._dateFormat.format(new Date()) + " that have not already been performed.\n");
+        }
+        else
+        {
+            final String NOT_ASSIGNED = "Not Assigned";
+            final Map<String, Integer> summary = new HashMap<>();
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
-                msg.append("There are no blood draws scheduled for " + AbstractEHRNotification._dateFormat.format(new Date()) + ".\n");
-            }
-            else
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, cols);
+                    String chargeType = rs.getString("chargetype") == null ? NOT_ASSIGNED : rs.getString("chargetype");
+                    Integer count = summary.get(chargeType);
+                    if (count == null)
+                        count = 0;
+
+                    count++;
+
+                    summary.put(chargeType, count);
+                }
+            });
+
+            msg.append("The following " + label + " requests are scheduled for " + _dateFormat.format(new Date()) + ", but have not been marked complete:<p>\n");
+            for (String chargeType : summary.keySet())
             {
-                Integer complete = 0;
-                Integer incomplete = 0;
-
-                Map<String, Map<String, Map<String, Object>>> summary = new HashMap<>();
-
-                do
-                {
-                    if(rs.getString(FieldKey.fromString("qcstate/Label")) != null && rs.getString(FieldKey.fromString("qcstate/Label")).equals("Completed")){
-                        complete++;
-                    }
-                    else
-                    {
-                        String area = rs.getString(FieldKey.fromParts("Id/curLocation/area"));
-                        String room = rs.getString(FieldKey.fromParts("Id/curLocation/room"));
-
-                        Map<String, Map<String, Object>> areaNode = summary.get(area);
-                        if (areaNode == null)
-                            areaNode = new HashMap<>();
-
-                        Map<String, Object> roomNode = areaNode.get(room);
-                        if (roomNode == null)
-                        {
-                            roomNode = new HashMap<>();
-                            roomNode.put("complete", 0);
-                            roomNode.put("incomplete", 0);
-                            roomNode.put("cagesHtml", new StringBuilder());
-                        }
-
-                        roomNode.put("incomplete", ((Integer)roomNode.get("incomplete") + 1));
-
-                        StringBuilder b = (StringBuilder)roomNode.get("cagesHtml");
-                        b.append("<tr><td>" + AbstractEHRNotification._dateTimeFormat.format(rs.getDate("daterequested")) + "</td><td>" +  rs.getString("Id") + "</td><td>" + (rs.getString("tube_vol")==null ? "" : rs.getString("tube_vol") + " mL") + "</td><td>" + (rs.getString("tube_type")==null ? "" : rs.getString("tube_type")) + "</td><td>" + (rs.getString("num_tubes")==null ? "" : rs.getString("num_tubes")) + "</td><td>" + (rs.getString("quantity")==null ? "" : rs.getString("quantity") + " mL") + "</td><td>" + (rs.getString("additionalServices")==null ? "" : rs.getString("additionalServices")) + "</td><td>" + (rs.getString(FieldKey.fromString("chargetype"))==null ? "" : rs.getString(FieldKey.fromString("billedby/title"))) + "</td></tr>\n");
-
-                        areaNode.put(room, roomNode);
-                        summary.put(area, areaNode);
-                    }
-                }
-                while (rs.next());
-
-                String url = "<a href='" + getExecuteQueryUrl(c, "study", "BloodSchedule", null) + "&query.date~dateeq=" + _dateFormat.format(new Date()) + "&query.Id/DataSet/Demographics/calculated_status~eq=Alive'>Click here to view them</a></p>\n";
-                msg.append("There are " + (incomplete + complete) + " scheduled blood draws for " + _dateFormat.format(new Date()) + ".  " + complete + " have been completed.  " + url + "<p>\n");
-
-                if(incomplete == 0)
-                {
-                    msg.append("All scheduled blood draws have been marked complete as of $datetimestr.<p>\n");
-                }
-                else
-                {
-                    msg.append("The following blood draws have not been marked complete as of $datetimestr:<p>\n");
-
-                    for (String area : summary.keySet())
-                    {
-                        msg.append("<b>" + area + ":</b><br>\n");
-                        Map<String, Map<String, Object>> areaNode = summary.get(area);
-
-                        for (String room: areaNode.keySet())
-                        {
-                            Map<String, Object> roomNode = areaNode.get(room);
-                            msg.append(room + ": " + (Integer)roomNode.get("incomplete") + "<br>\n");
-                            msg.append("<table border=1 style='border-collapse: collapse;'><tr><td>Time Requested</td><td>Id</td><td>Tube Vol</td><td>Tube Type</td><td># Tubes</td><td>Total Quantity</td><td>Additional Services</td><td>Assigned To</td></tr>\n");
-                            msg.append((StringBuilder)roomNode.get("cageHtml"));
-                            msg.append("</table><p>\n");
-                        }
-
-                        msg.append("<p>\n");
-                    }
-                }
+                msg.append(chargeType + ": ");
+                msg.append("<a href='" + getExecuteQueryUrl(c, "study", queryName, "Requests", filter) + (NOT_ASSIGNED.equals(chargeType) ? "&query.chargetype~isblank" : "&query.chargetype~eq=" + chargeType) + "'>" + summary.get(chargeType) + "</a><br>\n");
             }
-            msg.append("<hr>\n");
         }
-        catch (SQLException e)
-        {
-            throw new RuntimeSQLException(e);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
-        }
+
+        msg.append("<hr>\n");
     }
 
     /**
@@ -1444,14 +1364,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void bloodDrawsOnDeadAnimals(Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
-        filter.addCondition(FieldKey.fromString("qcstate/label"), "Request: Denied", CompareType.NEQ);
+        filter.addCondition(FieldKey.fromString("qcstate/label"), EHRService.QCSTATES.RequestDenied.getLabel(), CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Blood Draws"), filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("blood"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " current or scheduled blood draws for animals not currently at the center.</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Blood Draws", null) + "&query.date~dategte=" + _dateFormat.format(new Date()) + "&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "blood", null) + "&query.date~dategte=" + _dateFormat.format(new Date()) + "&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
@@ -1491,9 +1411,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                         summary = summary.replaceAll("\n", " / ");
                     }
 
+                    DetailsURL groupUrl = DetailsURL.fromString("/ehr/animalGroupDetails.view", c);
+                    String groupUrlString = AppProps.getInstance().getBaseServerUrl() + groupUrl.getActionURL().toString();
+                    groupUrlString += "groupId=" + rs.getInt("groupId");
+
                     String group = rs.getString(FieldKey.fromString("groupId/name"));
                     String url2 = url + "&query.groupId/name~eq=" + group;
-                    msg.append("<tr><td style='vertical-align:top;'><a href='" + url2 + "'>" + group + ":</a></td><td><a href='" + url2 + "'>" + summary + "</a></td></tr>\n");
+                    msg.append("<tr><td style='vertical-align:top;'><a href='" + groupUrlString + "'>" + group + ":</a></td><td><a href='" + url2 + "'>" + summary + "</a></td></tr>\n");
                 }
             });
             msg.append("</table>\n");
@@ -1575,7 +1499,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/age/ageInDays"), 180, CompareType.LTE);
         filter.addCondition(FieldKey.fromString("Id/demographics/calculated_status"), "Alive", CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 191", CompareType.NEQ);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 191", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("withMother"), 0, CompareType.EQUAL);
 
         TableInfo ti = getStudySchema(c, u).getTable("infantsSeparateFromMother");

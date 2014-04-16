@@ -2,7 +2,8 @@
 
 Ext4.onReady(function (){
     if (!LABKEY.ActionURL.getParameter('room')){
-        alert('Must Provide Location'); return false;
+        alert('Must Provide Location');
+        return false;
     }
 
     var webpart = <%=webpartContext%>;
@@ -30,6 +31,25 @@ Ext4.onReady(function (){
     Ext4.DomHelper.append(el, domSpec);
 
     var filterArray = [LABKEY.Filter.create('room', LABKEY.ActionURL.getParameter('room'), LABKEY.Filter.Types.EQUAL)];
+    var buttons = null;
+    if (EHR.Security.hasLocationEditorPermission()){
+        buttons = [{
+            text: 'More Actions',
+            menu: [{
+                text: 'Bulk Edit Cages',
+                hrefTarget: '_blank',
+                href: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', null, {schemaName: 'ehr_lookups', 'query.queryName': 'cage', 'query.cage~room': room})
+            },{
+                text: 'Housing Transfer Request',
+                hrefTarget: '_blank',
+                href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {formType: 'housing_request'})
+            },{
+                text: 'Housing Transfer',
+                hrefTarget: '_blank',
+                href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {formType: 'housing'})
+            }]
+        }]
+    }
 
     Ext4.create('LDK.panel.DetailsPanel', {
         store: {
@@ -39,7 +59,10 @@ Ext4.onReady(function (){
         },
         title: 'Room Details',
         renderTo: 'cageDetails_' + webpart.wrapperDivId,
-        showBackBtn: false
+        showBackBtn: false,
+        detailsConfig: {
+            buttons: buttons
+        }
     });
 
     Ext4.create('ONPRC.panel.RoomLayoutPanel', {

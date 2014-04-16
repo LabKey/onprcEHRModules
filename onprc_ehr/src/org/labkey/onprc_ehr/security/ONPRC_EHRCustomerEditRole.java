@@ -35,7 +35,7 @@ public class ONPRC_EHRCustomerEditRole extends AbstractRole
 {
     public ONPRC_EHRCustomerEditRole()
     {
-        super("ONPRC EHR Customer Editor", "This role is used to track vets, which grants those users additional editing permissions and is used to populate the table ehr_lookups.veternarians.",
+        super("ONPRC EHR Customer Editor", "This role is to track which users can edit the tabke onprc_ehr.customers.",
                 ReadPermission.class,
                 InsertPermission.class,
                 UpdatePermission.class,

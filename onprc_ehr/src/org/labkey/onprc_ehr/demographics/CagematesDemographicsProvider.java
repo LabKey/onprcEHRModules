@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * User: bimber
@@ -60,56 +61,46 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
     {
         List<Map<String, Object>> oldList = originalProps == null ? null : (List)originalProps.get(_propName);
         List<Map<String, Object>> newList = newProps == null ? null : (List)newProps.get(_propName);
-        Set<String> ret = new HashSet<>();
+        Set<String> ret = new TreeSet<>();
 
-        if (oldList == null && newList == null)
+        List<String> oldAnimals = oldList == null || oldList.isEmpty() ? Collections.<String>emptyList() : toList(oldList.get(0).get("animals"));
+        List<String> newAnimals = newList == null || newList.isEmpty() ? Collections.<String>emptyList() : toList(newList.get(0).get("animals"));
+        if (oldAnimals.equals(newAnimals))
         {
+            _log.info("cagemates before/after move are identical, no changes needed");
             return Collections.emptySet();
         }
-        else if (oldList == null && newList != null && !newList.isEmpty())
-        {
-            Map<String, Object> list = newList.get(0);
-            List<String> newAnimals = list.get("animals") == null ? null : Arrays.asList(StringUtils.split((String)list.get("animals"), ", "));
-            if (newAnimals != null)
-            {
-                newAnimals.remove(id);
-                ret.addAll(newAnimals);
-            }
-        }
-        else if (oldList != null && newList == null && !oldList.isEmpty())
-        {
-            Map<String, Object> list = oldList.get(0);
-            List<String> oldAnimals = list.get("animals") == null ? null : Arrays.asList(StringUtils.split((String) list.get("animals"), ", "));
-            if (oldAnimals != null)
-            {
-                oldAnimals.remove(id);
-                ret.addAll(oldAnimals);
-            }
-        }
-        else if (oldList != null && newList != null)
-        {
-            Map<String, Object> list = oldList.get(0);
-            List<String> oldAnimals = list.get("animals") == null ? null : Arrays.asList(StringUtils.split((String) list.get("animals"), ", "));
 
-            Map<String, Object> list2 = newList.get(0);
-            List<String> newAnimals = list2.get("animals") == null ? null : Arrays.asList(StringUtils.split((String) list2.get("animals"), ", "));
-
-            Set<String> set = new HashSet<>();
-            if (oldAnimals != null)
-                set.addAll(oldAnimals);
-
-            if (newAnimals != null)
-                set.addAll(newAnimals);
-            set.remove(id);
-            ret.addAll(set);
-        }
+        ret.addAll(oldAnimals);
+        ret.addAll(newAnimals);
+        ret.remove(id);
 
         if (!ret.isEmpty())
         {
-            _log.info("Triggered additional housing updates for: " + StringUtils.join(ret, ";'"));
+            _log.info(id + ": Triggered additional housing updates for " + ret.size() + " ids: " + StringUtils.join(ret, ";"));
         }
 
         return ret;
+    }
+
+    private List<String> toList(Object input)
+    {
+        if (input == null)
+            return Collections.emptyList();
+
+        if (input instanceof  List)
+        {
+            return (List)input;
+        }
+        else if (input instanceof String)
+        {
+            return Arrays.asList(StringUtils.split((String) input, ", "));
+        }
+        else
+        {
+            _log.error("Unknown type: " + input.getClass().getName() + ", " + input);
+            return Collections.emptyList();
+        }
     }
 
     @Override

@@ -224,6 +224,7 @@ onprc_ehr/resources/queries/study/Gross[!!-~]Findings.js -text
 onprc_ehr/resources/queries/study/Gross[!!-~]Findings.query.xml -text
 onprc_ehr/resources/queries/study/Gross[!!-~]Findings/.qview.xml -text
 onprc_ehr/resources/queries/study/Histology.query.xml -text
+onprc_ehr/resources/queries/study/Histology/.qview.xml -text
 onprc_ehr/resources/queries/study/Matings.js -text
 onprc_ehr/resources/queries/study/Matings.query.xml -text
 onprc_ehr/resources/queries/study/Matings/.qview.xml -text
@@ -665,6 +666,7 @@ onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.353-12.354.sql -te
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.354-12.355.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.355-12.356.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.356-12.357.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.357-12.358.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text
@@ -681,6 +683,7 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.353-12.354.sql -tex
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.354-12.355.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.355-12.356.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.356-12.357.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.357-12.358.sql -text
 onprc_ehr/resources/schemas/onprc_ehr.xml -text
 onprc_ehr/resources/scripts/onprc_ehr/etl.js -text
 onprc_ehr/resources/scripts/onprc_ehr/onprc_triggers.js -text
@@ -907,11 +910,8 @@ onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultEnrichmentDataSource.java -tex
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultPairingDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultSnomedDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/legacydata/LegacyDataManager.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/notification/AbnormalLabResultsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/AbstractEHRNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/BehaviorNotification.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/notification/BloodAdminAlertsNotification.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/notification/BloodAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ClinicalAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ClinicalRoundsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsLiteNotification.java -text
@@ -919,8 +919,8 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsNotification.java -t
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyMgmtNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ComplianceNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ETLNotification.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/notification/LabResultSummaryNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/LabTestScheduleNotifications.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/notification/RequestAdminNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/RoutineClinicalTestsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/TMBNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/TreatmentAlertsNotification.java -text

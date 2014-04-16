@@ -19,6 +19,12 @@ EHR.model.DataModelManager.registerMetadata('Clinic_Services', {
                 defaultValue: 'DCM: Clinic Services',
                 hidden: true
             }
+        },
+        'study.drug': {
+            chargetype: {
+                defaultValue: 'DCM: Clinic Services',
+                hidden: true
+            }
         }
     }
 });

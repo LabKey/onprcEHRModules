@@ -45,13 +45,4 @@ public class GeneralRequestFormType extends RequestForm
                 new DrugAdministrationFormSection()
         ));
     }
-
-    @Override
-    protected List<String> getButtonConfigs()
-    {
-        List<String> defaultButtons = super.getButtonConfigs();
-        defaultButtons.add("APPROVE");
-
-        return defaultButtons;
-    }
 }

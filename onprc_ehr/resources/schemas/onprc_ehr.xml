@@ -282,6 +282,15 @@
             <ns:column columnName="cage">
                 <ns:columnTitle>Destination Cage</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="divider">
+                <ns:columnTitle>Divider</ns:columnTitle>
+                <ns:fk>
+                    <ns:fkDbSchema>ehr_lookups</ns:fkDbSchema>
+                    <ns:fkTable>divider_types</ns:fkTable>
+                    <ns:fkColumnName>rowid</ns:fkColumnName>
+                    <ns:fkDisplayColumnName>divider</ns:fkDisplayColumnName>
+                </ns:fk>
+            </ns:column>
             <ns:column columnName="reason">
                 <ns:columnTitle>Reason For Move</ns:columnTitle>
                 <!--<ns:fk>-->
@@ -292,6 +301,9 @@
             </ns:column>
             <ns:column columnName="remark">
                 <ns:columnTitle>Special Instructions</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="formSort">
+                <ns:isHidden>true</ns:isHidden>
             </ns:column>
             <ns:column columnName="QCState">
                 <ns:columnTitle>Status</ns:columnTitle>

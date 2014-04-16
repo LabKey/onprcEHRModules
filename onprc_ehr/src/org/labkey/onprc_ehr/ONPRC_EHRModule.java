@@ -66,7 +66,6 @@ import org.labkey.onprc_ehr.etl.ETLAuditProvider;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
 import org.labkey.onprc_ehr.notification.BehaviorNotification;
-import org.labkey.onprc_ehr.notification.BloodAlertsNotification;
 import org.labkey.onprc_ehr.notification.ClinicalAlertsNotification;
 import org.labkey.onprc_ehr.notification.ClinicalRoundsNotification;
 import org.labkey.onprc_ehr.notification.ColonyAlertsLiteNotification;
@@ -74,6 +73,7 @@ import org.labkey.onprc_ehr.notification.ColonyAlertsNotification;
 import org.labkey.onprc_ehr.notification.ColonyMgmtNotification;
 import org.labkey.onprc_ehr.notification.ComplianceNotification;
 import org.labkey.onprc_ehr.notification.ETLNotification;
+import org.labkey.onprc_ehr.notification.RequestAdminNotification;
 import org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification;
 import org.labkey.onprc_ehr.notification.TMBNotification;
 import org.labkey.onprc_ehr.notification.TreatmentAlertsNotification;
@@ -105,7 +105,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.357;
+        return 12.358;
     }
 
     public boolean hasScripts()
@@ -116,13 +116,13 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     protected void init()
     {
         addController(CONTROLLER_NAME, ONPRC_EHRController.class);
+
+        RoleManager.registerRole(new ONPRC_EHRCustomerEditRole());
     }
 
     @Override
     protected void doStartupAfterSpringConfig(ModuleContext moduleContext)
     {
-        RoleManager.registerRole(new ONPRC_EHRCustomerEditRole());
-
         ETL.init(1);
         DetailsURL details = DetailsURL.fromString("/onprc_ehr/etlAdmin.view", ContainerManager.getSharedContainer());
         AdminConsole.addLink(AdminConsole.SettingsLinkType.Management, "ehr etl admin", details.getActionURL());
@@ -133,9 +133,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         registerEHRResources();
 
         NotificationService ns = NotificationService.get();
-        //ns.registerNotification(new AbnormalLabResultsNotification());
         ns.registerNotification(new TreatmentAlertsNotification(this));
-        ns.registerNotification(new BloodAlertsNotification(this));
+        ns.registerNotification(new RequestAdminNotification(this));
         ns.registerNotification(new ColonyAlertsLiteNotification(this));
         ns.registerNotification(new ColonyAlertsNotification(this));
         ns.registerNotification(new ColonyMgmtNotification(this));
@@ -308,6 +307,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerTbarButton(new HousingTransferButton(this), "onprc_ehr", "housing_transfer_requests");
 
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Blood Draws", BloodDrawFormType.NAME), "study", "blood");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Treatments/Medications", TreatmentsFormType.NAME), "study", "drug");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Labwork", LabworkFormType.NAME), "study", "clinpathRuns");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Surgeries", SurgeryFormType.NAME), "study", "surgery");
 

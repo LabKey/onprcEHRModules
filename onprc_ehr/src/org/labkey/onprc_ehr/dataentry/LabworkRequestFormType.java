@@ -48,7 +48,7 @@ public class LabworkRequestFormType extends RequestForm
     protected List<String> getButtonConfigs()
     {
         List<String> defaultButtons = super.getButtonConfigs();
-        defaultButtons.add("APPROVE");
+        //defaultButtons.add("APPROVE");
 
         return defaultButtons;
     }

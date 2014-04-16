@@ -24,9 +24,44 @@ exports.init = function(EHR){
         });
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Assignment', function(event, helper){
+        helper.setScriptOptions({
+            doStandardProtocolCountValidation: false
+        });
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Tissue Samples', function(helper, scriptErrors, row, oldRow){
         if (!row.weight && !row.noWeight){
             EHR.Server.Utils.addError(scriptErrors, 'weight', 'A weight is required unless \'No Weight\' is checked', 'WARN');
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Animal Record Flags', function(helper, scriptErrors, row, oldRow){
+        if (row.category == 'Condition' && row.Id && !row.enddate && row.value){
+            var msg = triggerHelper.validateHousingConditionInsert(row.Id, row.value, row.objectid);
+            if (msg){
+                EHR.Server.Utils.addError(scriptErrors, 'value', msg, 'ERROR');
+            }
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Assignment', function(helper, scriptErrors, row, oldRow){
+        //check number of allowed animals at assign/approve time.  use different behavior than core EHR
+        if (!helper.isETL() && !helper.isQuickValidation() &&
+            //this is designed to always perform the check on imports, but also updates where the Id was changed
+                !(oldRow && oldRow.Id && oldRow.Id==row.Id) &&
+                row.Id && row.project && row.date
+                ){
+            var assignmentsInTransaction = helper.getProperty('assignmentsInTransaction');
+            assignmentsInTransaction = assignmentsInTransaction || [];
+
+            var msgs = triggerHelper.verifyProtocolCounts(row.Id, row.project, assignmentsInTransaction);
+            if (msgs){
+                msgs = msgs.split("<>");
+                for (var i=0;i<msgs.length;i++){
+                    EHR.Server.Utils.addError(scriptErrors, 'project', msgs[i], 'WARN');
+                }
+            }
         }
     });
 

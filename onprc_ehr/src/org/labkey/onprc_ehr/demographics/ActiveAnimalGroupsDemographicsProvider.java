@@ -40,7 +40,7 @@ public class ActiveAnimalGroupsDemographicsProvider extends AbstractListDemograp
 
     protected Set<FieldKey> getFieldKeys()
     {
-        Set<FieldKey> keys = new HashSet<FieldKey>();
+        Set<FieldKey> keys = new HashSet<>();
         keys.add(FieldKey.fromString("rowid"));
         keys.add(FieldKey.fromString("Id"));
         keys.add(FieldKey.fromString("date"));
@@ -58,5 +58,15 @@ public class ActiveAnimalGroupsDemographicsProvider extends AbstractListDemograp
         filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
 
         return filter;
+    }
+
+    @Override
+    public Collection<String> getKeysToTest()
+    {
+        //for now, simply skip the whole provider.  because different records can be active from day to day, this makes validation tricky
+        Set<String> keys = new HashSet<>(super.getKeysToTest());
+        keys.remove(_propName);
+
+        return keys;
     }
 }

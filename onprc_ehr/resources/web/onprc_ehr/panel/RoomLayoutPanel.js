@@ -173,9 +173,9 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                 }, this);
 
                 var rooms = Ext4.Object.getKeys(roomMap).sort();
-                var dividerWidth = 4;
+                var dividerWidth = 3;
                 var height = 115;
-                var cageWidth = 60;
+                var cageWidth = 65;
                 var hasCages = false;
 
                 Ext4.each(rooms, function(room, roomIdx){
@@ -287,8 +287,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     }, this);
                                 }
 
-                                var isSeparate = config.dividerMap[row.get('divider')].countAsSeparate;
-                                var isPaired = config.dividerMap[row.get('divider')].countAsPaired;
+                                var dividerInfo = config.dividerMap[row.get('divider')] || {};
+                                LDK.Assert.assertNotEmpty('No divider info for cage: ' + row.get('location'), config.dividerMap[row.get('divider')]);
+                                var isSeparate = !!dividerInfo.countAsSeparate;
+                                var isPaired = !!dividerInfo.countAsPaired;
 
                                 var lb = colIdx == 1 ? 2 : 0;
                                 var rb = colIdx == maxCage ? 2 : 0;
@@ -305,7 +307,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 var status = row.get('status');
                                 var cageAnimals = row.get('totalAnimals/animals');
                                 if (prevCage){
-                                    var prevIsSeparate = config.dividerMap[prevCage.get('divider')].countAsSeparate;
+                                    var prevDividerInfo = config.dividerMap[prevCage.get('divider')] || {};
+                                    LDK.Assert.assertNotEmpty('No divider info for previous cage: ' + prevCage.get('location'), config.dividerMap[prevCage.get('divider')]);
+
+                                    var prevIsSeparate = prevDividerInfo.countAsSeparate;
                                     var prevAnimals = prevCage.get('totalAnimals/animals');
 
                                     if (!prevIsSeparate && !Ext4.isEmpty(cageAnimals))
@@ -345,15 +350,9 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     }
                                 }
 
-                                //TODO: do something smarter
                                 var type = row.get('cage_type');
-                                var suffix = '';
-                                if (type.match(/^Tunnel/))
-                                    suffix = 'TU';
-                                else if (type.match(/^Tall/) || type.match(/[0-9]T$/))
-                                    suffix = 'T';
-
                                 var cageType = config.cageTypeMap[row.get('cage_type')] || {};
+                                var suffix = cageType.abbreviation || '';
                                 rowItems.push({
                                     border: false,
                                     style: {
@@ -375,7 +374,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         border: false
                                     },
                                     items: [{
-                                        html: cageType == 'No Cage' ? 'No Cage' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') + '</span>'),
+                                        html: row.get('cage_type') == 'No Cage' ? 'No Cage' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') + '</span>'),
                                         bodyStyle: {
                                             'background-color': 'transparent'
                                         },
@@ -402,10 +401,13 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 });
 
                                 if (colIdx < maxCage){
-                                    var divider = config.dividerMap[row.get('divider')].divider;
-                                    var dividerColor = config.dividerMap[row.get('divider')].bgcolor;
-                                    var dividerBorderStyle = config.dividerMap[row.get('divider')].border_style || 'none';
-                                    var dividerText = ''; //config.dividerMap[row.get('divider')].short_description;
+                                    var dividerInfo = config.dividerMap[row.get('divider')] || {};
+                                    LDK.Assert.assertNotEmpty('No divider info for cage: ' + row.get('location'), config.dividerMap[row.get('divider')]);
+
+                                    var divider = dividerInfo.divider || 'Unknown';
+                                    var dividerColor = dividerInfo.bgcolor;
+                                    var dividerBorderStyle = dividerInfo.border_style || 'none';
+                                    var dividerText = ''; //dividerInfo.short_description;
 
                                     rowItems.push({
                                         cageRec: row,
@@ -423,27 +425,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             'background-color': dividerColor
                                         },
                                         width: divider != 'Solid Divider' ? dividerWidth : null,
-                                        minHeight: height,
-                                        listeners: {
-                                            scope: this,
-                                            afterrender: Ext4.Function.pass(function(row, config, dividerText, cmp){
-                                                cmp.getEl().on('click', function(el){
-                                                    Ext4.create('ONPRC.window.CageDividerDetailsWindow', {
-                                                        roomPanel: config,
-                                                        cageRec: row
-                                                    }).show();
-                                                }, this);
-
-                                                if (dividerText){
-                                                    Ext4.create('Ext.draw.Text', {
-                                                        renderTo: cmp.body,
-                                                        degrees: 90,
-                                                        text: dividerText,
-                                                        width: height
-                                                    });
-                                                }
-                                            }, [row, config, dividerText], config)
-                                        }
+                                        minHeight: height
                                     });
                                 }
                             }
@@ -599,7 +581,6 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
     },
 
     refresh: function(){
-        console.log('r')
         this.onDataLoad(this.cachedData);
     },
 
@@ -807,56 +788,6 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
             xtype: 'displayfield',
             fieldLabel: 'Status',
             value: this.cageRec.get('status')
-        });
-
-        return items;
-    }
-});
-
-Ext4.define('ONPRC.window.CageDividerDetailsWindow', {
-    extend: 'Ext.window.Window',
-
-    initComponent: function(){
-        var buttons = [{
-            text: 'Close',
-            handler: function(btn){
-                btn.up('window').destroy();
-            }
-        }];
-
-        Ext4.apply(this, {
-            bodyStyle: 'padding: 5px;',
-            title: 'Cage Divider: ' + this.cageRec.get('cage'),
-            items: this.getItems(),
-            width: 400,
-            defaults: {
-                width: 360
-            },
-            buttons: buttons
-        });
-
-        this.callParent(arguments);
-    },
-
-    getItems: function(){
-        var items = [];
-
-        items.push({
-            xtype: 'displayfield',
-            fieldLabel: 'Room',
-            value: this.cageRec.get('room')
-        });
-
-        items.push({
-            xtype: 'displayfield',
-            fieldLabel: 'Cage',
-            value: this.cageRec.get('cage')
-        });
-
-        items.push({
-            xtype: 'displayfield',
-            fieldLabel: 'Divider Type',
-            value: this.cageRec.get('divider')
         });
 
         return items;

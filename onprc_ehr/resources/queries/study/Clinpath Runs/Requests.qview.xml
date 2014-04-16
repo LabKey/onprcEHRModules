@@ -17,6 +17,7 @@
         <column name="requestid" />
         <column name="requestid/createdby"/>
         <column name="taskid" />
+        <column name="mergeSyncInfo/automaticresults" />
     </columns>
     <sorts>
         <sort column="date" descending="true"/>

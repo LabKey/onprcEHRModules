@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
@@ -42,8 +43,9 @@ public class TreatmentsFormType extends TaskForm
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new DrugAdministrationFormSection(),
-            new TreatmentOrdersFormSection())
-        );
+            new TreatmentOrdersFormSection(),
+            new MiscChargesFormSection(EHRService.FORM_SECTION_LOCATION.Body)
+        ));
     }
 
     @Override

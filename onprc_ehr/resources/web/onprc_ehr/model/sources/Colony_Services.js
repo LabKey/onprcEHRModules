@@ -19,6 +19,12 @@ EHR.model.DataModelManager.registerMetadata('Colony_Services', {
                 defaultValue: 'DCM: Colony Services',
                 hidden: true
             }
+        },
+        'study.drug': {
+            chargetype: {
+                defaultValue: 'DCM: Colony Services',
+                hidden: true
+            }
         }
     }
 });

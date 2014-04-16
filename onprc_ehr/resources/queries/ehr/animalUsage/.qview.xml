@@ -1,4 +1,4 @@
-<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Groups">
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
    <sorts>
        <sort column="protocol"/>
        <sort column="project"/>

@@ -20,6 +20,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
+import org.labkey.api.collections.CaseInsensitiveHashSet;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
@@ -35,7 +36,9 @@ import org.labkey.api.data.SqlExecutor;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.ehr.EHRDemographicsService;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.demographics.AnimalRecord;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.query.BatchValidationException;
 import org.labkey.api.query.DuplicateKeyException;
@@ -49,6 +52,7 @@ import org.labkey.api.security.UserManager;
 import org.labkey.api.study.DataSetTable;
 import org.labkey.api.util.GUID;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.util.Pair;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 import org.labkey.onprc_ehr.dataentry.LabworkRequestFormType;
@@ -77,6 +81,16 @@ public class ONPRC_EHRTriggerHelper
     private User _user = null;
     private static final Logger _log = Logger.getLogger(ONPRC_EHRTriggerHelper.class);
     private Map<String, TableInfo> _cachedTables = new HashMap<>();
+
+    private List<Map<String, Object>> _cachedCageSizeRecords = null;
+    private Map<String, Map<String, Object>> _cachedRooms = new HashMap<>();
+    private Map<Integer, Pair<String, String>> _cachedProtocols = new HashMap<>();
+
+    //NOTE: we probably do not want to cache this outside this transaction, unless we can keep it accurate
+    private Map<String, List<Map<String, Object>>> _cachedCages = new HashMap<>();
+    private Map<Integer, Boolean> _cachedFrequencies = new HashMap<>();
+    private Map<Integer, List<Integer>> _cachedFrequencyTimes = new HashMap<>();
+    private Map<String, Integer> _cachedConditionCodes = new HashMap<>();
 
     public ONPRC_EHRTriggerHelper(int userId, String containerId)
     {
@@ -186,8 +200,6 @@ public class ONPRC_EHRTriggerHelper
         return !(enddate == null || enddate.after(new Date()));
     }
     
-    private Map<Integer, List<Integer>> _cachedFrequencyTimes = new HashMap<>();
-
     private List<Integer> getEarliestFrequencyHours(int frequency)
     {
         if (!_cachedFrequencyTimes.containsKey(frequency))
@@ -301,8 +313,6 @@ public class ONPRC_EHRTriggerHelper
         se.execute(sql);
     }
 
-    private Map<Integer, Boolean> _cachedFrequencies = new HashMap<>();
-
     public boolean isTreatmentFrequencyActive(Integer frequency)
     {
         if (frequency == null)
@@ -337,9 +347,6 @@ public class ONPRC_EHRTriggerHelper
             se.execute(new SQLFragment("DELETE FROM ehr.treatment_times WHERE treatmentid = ?", objectid));
         }
     }
-
-    //NOTE: we probably do not want to cache this outside this transaction, unless we can keep it accurate
-    private Map<String, List<Map<String, Object>>> _cachedCages = new HashMap<>();
 
     public String validateCage(String room, String cage)
     {
@@ -461,8 +468,6 @@ public class ONPRC_EHRTriggerHelper
         return ret.isEmpty() ? null : StringUtils.join(ret, ";");
     }
 
-    private Map<String, Map<String, Object>> _cachedRooms = new HashMap<>();
-
     private Map<String, Object> getRoomDetails(final String room)
     {
         Map<String, Object> roomObj = _cachedRooms.get(room);
@@ -575,8 +580,6 @@ public class ONPRC_EHRTriggerHelper
         return null;
     }
 
-    private List<Map<String, Object>> _cachedCageSizeRecords = null;
-
     private List<Map<String, Object>> getCageSizeRecords()
     {
         if (_cachedCageSizeRecords == null)
@@ -683,10 +686,34 @@ public class ONPRC_EHRTriggerHelper
 
                 animalGroups.getUpdateService().insertRows(getUser(), getContainer(), Arrays.asList(row), new BatchValidationException(), getExtraContext());
             }
+
+            //look at assignment and copy center resources from dam
+            //also breeding groups
+            TableInfo assignment = getTableInfo("study", "assignment");
+            SimpleFilter assignmentFilter = new SimpleFilter(FieldKey.fromString("Id"), dam);
+            assignmentFilter.addCondition(FieldKey.fromString("isActive"), true);
+            assignmentFilter.addCondition(FieldKey.fromString("project/displayName"), PageFlowUtil.set(ONPRC_EHRManager.U42_PROJECT, ONPRC_EHRManager.U24_PROJECT), CompareType.IN);
+
+            TableSelector ts3 = new TableSelector(assignment, Collections.singleton("project"), assignmentFilter, null);
+            List<Integer> assignmentList = ts3.getArrayList(Integer.class);
+            List<Map<String, Object>> assignmentToAdd = new ArrayList<>();
+            for (Integer project : assignmentList)
+            {
+                Map<String, Object> row = new CaseInsensitiveHashMap<>();
+                row.put("Id", id);
+                row.put("date", date);
+                row.put("project", project);
+                row.put("assignCondition", getConditionCodeForMeaning("Nonrestricted"));
+                row.put("projectedReleaseCondition", getConditionCodeForMeaning("Nonrestricted"));
+
+                assignmentToAdd.add(row);
+            }
+
+            assignment.getUpdateService().insertRows(getUser(), getContainer(), assignmentToAdd, new BatchValidationException(), getExtraContext());
         }
     }
 
-    public void updateAnimalCondition(String id, Date date, Integer condition)
+    public void updateAnimalCondition(String id, Date date, Integer condition) throws BatchValidationException
     {
         TableInfo ti = getTableInfo("ehr_lookups", "animal_condition");
         TableSelector ts = new TableSelector(ti, Collections.singleton("meaning"), new SimpleFilter(FieldKey.fromString("code"), condition), null);
@@ -699,5 +726,171 @@ public class ONPRC_EHRTriggerHelper
         {
             _log.error("Unable to find condition matching: " + condition);
         }
+    }
+
+    public String verifyProtocolCounts(final String id, Integer project, final List<Map<String, Object>> recordsInTransaction)
+    {
+        if (id == null)
+        {
+            return null;
+        }
+
+        AnimalRecord ar = EHRDemographicsService.get().getAnimal(getContainer(), id);
+        if (ar.getSpecies() == null)
+        {
+            return "Unknown species: " + id;
+        }
+        final String species = ar.getSpecies();
+
+        final Pair<String, String> protocolPair = getProtocolForProject(project);
+        if (protocolPair == null)
+        {
+            return "Unable to find protocol associated with project: " + project;
+        }
+
+        //find the total animals previously used by this protocols/species
+        TableInfo ti = QueryService.get().getUserSchema(getUser(), getContainer(), "ehr").getTable("animalUsage");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("species"), ar.getSpecies(), CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("protocol"), protocolPair.first);
+        filter.addCondition(FieldKey.fromString("enddateCoalesced"), "+0d", CompareType.DATE_GTE);
+        TableSelector ts = new TableSelector(ti, filter, null);
+        final List<String> errors = new ArrayList<>();
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Integer totalAllowed = rs.getInt("totalAnimals");
+                Set<String> animals = new CaseInsensitiveHashSet();
+                String animalString = rs.getString("animals");
+                if (animalString != null)
+                {
+                    animals.addAll(Arrays.asList(StringUtils.split(animalString, ",")));
+                }
+
+                animals.add(id);
+
+                if (recordsInTransaction != null && recordsInTransaction.size() > 0)
+                {
+                    for (Map<String, Object> r : recordsInTransaction)
+                    {
+                        String id = (String)r.get("Id");
+                        Number project = (Number)r.get("project");
+                        if (id == null || project == null)
+                        {
+                            continue;
+                        }
+
+                        Pair<String, String> rowProtocol = getProtocolForProject(project.intValue());
+                        if (rowProtocol == null || !rowProtocol.equals(protocolPair.first))
+                        {
+                            continue;
+                        }
+
+                        //find species
+                        AnimalRecord ar = EHRDemographicsService.get().getAnimal(getContainer(), id);
+                        if (ar.getSpecies() == null || !species.equals(ar.getSpecies()))
+                        {
+                            continue;
+                        }
+
+                        animals.add(id);
+                    }
+                }
+
+                Integer remaining = totalAllowed - animals.size();
+                if (remaining < 0)
+                {
+                    errors.add("There are not enough spaces on protocol: " + protocolPair.second + ". Allowed: " + totalAllowed + ", used: " + animals.size());
+                }
+            }
+        });
+
+        return StringUtils.join(errors, "<>");
+    }
+
+    public Pair<String, String> getProtocolForProject(final Integer project)
+    {
+        if (project == null)
+            return null;
+
+        if (!_cachedProtocols.containsKey(project))
+        {
+            TableInfo ti = getTableInfo("ehr", "project");
+            final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("protocol"), FieldKey.fromString("protocol/displayName")));
+            TableSelector ts = new TableSelector(ti, cols.values(), new SimpleFilter(FieldKey.fromString("project"), project), null);
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, cols);
+                    if (rs.getString(FieldKey.fromString("protocol")) != null)
+                        _cachedProtocols.put(project, Pair.of(rs.getString(FieldKey.fromString("protocol")), rs.getString(FieldKey.fromString("protocol/displayName"))));
+                }
+            });
+
+            if (!_cachedProtocols.containsKey(project))
+                _cachedProtocols.put(project, null);
+        }
+
+        return _cachedProtocols.get(project);
+    }
+
+    public Integer getConditionCodeForMeaning(final String meaning)
+    {
+        if (meaning == null)
+            return null;
+
+        if (!_cachedConditionCodes.containsKey(meaning))
+        {
+            TableInfo ti = getTableInfo("ehr_lookups", "animal_condition");
+            TableSelector ts = new TableSelector(ti, Collections.singleton("code"), new SimpleFilter(FieldKey.fromString("meaning"), meaning), null);
+            List<Integer> ret = ts.getArrayList(Integer.class);
+            if (ret != null && !ret.isEmpty())
+            {
+                _cachedConditionCodes.put(meaning, ret.get(0));
+            }
+            else
+            {
+                _cachedConditionCodes.put(meaning, null);
+            }
+        }
+
+        return _cachedConditionCodes.get(meaning);
+    }
+
+    public String validateHousingConditionInsert(String id, String value, String objectId)
+    {
+        Integer code = getConditionCodeForMeaning(value);
+        if (code == null)
+            return null;
+
+        Integer oldCode = null;
+
+        //find existing active flags of the same category
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("category"), "Condition");
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id"), id, CompareType.EQUAL);
+        //filter.addCondition(FieldKey.fromString("objectid"), objectId, CompareType.NEQ_OR_NULL);
+
+        TableInfo flagsTable = getTableInfo("study", "Animal Record Flags");
+        TableSelector ts = new TableSelector(flagsTable, PageFlowUtil.set("value"), filter, null);
+        List<String> values = ts.getArrayList(String.class);
+        if (values != null && !values.isEmpty())
+        {
+            for (String v : values)
+            {
+                oldCode = getConditionCodeForMeaning(v);
+                break;
+            }
+        }
+
+        if (oldCode != null && code < oldCode)
+        {
+            return "Cannot change condition to a lower code.  Animal is already: " + oldCode;
+        }
+
+        return null;
     }
 }

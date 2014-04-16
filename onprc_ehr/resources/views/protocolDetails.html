@@ -77,6 +77,9 @@ Ext4.onReady(function (){
                         },{
                             name: 'View Any Assignments To This Protocol The Do Not Match Allowable Animals',
                             url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'assignmentsNotAllowed', 'query.protocol/displayName~eq': sr.getValue('displayName')})
+                        },{
+                            name: 'View The Number of Small Lab Animals Allowed Under This Protocol',
+                            url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'sla', 'query.queryName': 'allowableAnimals', 'query.protocol/displayName~eq': sr.getValue('displayName')})
                         }]
                     }]
                 }]
@@ -114,7 +117,7 @@ Ext4.onReady(function (){
     }).render('protocolProjects_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
-        title: 'Allowable Animals',
+        title: 'Allowable NHPs',
         schemaName: 'ehr',
         queryName: 'animalUsage',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],

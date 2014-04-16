@@ -65,6 +65,8 @@ public class ONPRC_EHRManager
     @Queryable
     public static final String U42_PROJECT = "0492-02";
     @Queryable
+    public static final String U24_PROJECT = "0492-03";
+    @Queryable
     public static final String TMB_PROJECT = "0300";
     @Queryable
     public static final String VET_USER_GROUP = "DCM Veterinarians";
