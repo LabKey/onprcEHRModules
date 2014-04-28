@@ -13683,7 +13683,7 @@ Ext4.onReady(function(){
             insertConfig.success = function(results){
                 console.log('lookup set records inserted');
 
-                LABKEY.Ajax.request({
+                Ext4.Ajax.request({
                     url: LABKEY.ActionURL.buildURL('admin', 'caches', '/'),
                     method:  'post',
                     params: {

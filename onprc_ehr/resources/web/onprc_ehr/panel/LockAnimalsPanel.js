@@ -43,7 +43,7 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
             this.dataEntryPanel = query[0];
         }
 
-        LABKEY.Ajax.request({
+        Ext4.Ajax.request({
             url: LABKEY.ActionURL.buildURL('onprc_ehr', 'getAnimalLock'),
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
@@ -66,7 +66,7 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
     },
 
     lockRecords: function(btn){
-        LABKEY.Ajax.request({
+        Ext4.Ajax.request({
             url: LABKEY.ActionURL.buildURL('onprc_ehr', 'setAnimalLock'),
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
