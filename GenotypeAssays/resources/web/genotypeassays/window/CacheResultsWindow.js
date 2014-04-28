@@ -107,7 +107,7 @@ Ext4.define('GenotypeAssays.window.CacheResultsWindow', {
         }
 
         Ext4.Msg.wait('Saving...');
-        LABKEY.Ajax.request({
+        Ext4.Ajax.request({
             url: LABKEY.ActionURL.buildURL('genotypeassays', 'cacheAnalyses', null, {analysisIds: analysisIds, protocolId: protocol, pctThreshold: pctThreshold}),
             method: 'post',
             timeout: 10000000,
