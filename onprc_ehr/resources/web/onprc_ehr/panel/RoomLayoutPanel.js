@@ -19,7 +19,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
             var ret = {};
             var multi = new LABKEY.MultiRequest();
             var filters = [].concat(filterArray);
-            filters.push(LABKEY.Filter.create('room/housingType/value', 'Cage Location'));
+            filters.push(LABKEY.Filter.create('room/housingType/value', 'Cage Location;Group Location', LABKEY.Filter.Types.EQUALS_ONE_OF));
+            filters.push(LABKEY.Filter.create('cage', null, LABKEY.Filter.Types.NONBLANK));
 
             multi.add(LABKEY.Query.selectRows, {
                 schemaName: 'ehr_lookups',

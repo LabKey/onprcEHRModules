@@ -51,7 +51,7 @@ exports.init = function(EHR){
             //this is designed to always perform the check on imports, but also updates where the Id was changed
                 !(oldRow && oldRow.Id && oldRow.Id==row.Id) &&
                 row.Id && row.project && row.date
-                ){
+        ){
             var assignmentsInTransaction = helper.getProperty('assignmentsInTransaction');
             assignmentsInTransaction = assignmentsInTransaction || [];
 
@@ -59,9 +59,23 @@ exports.init = function(EHR){
             if (msgs){
                 msgs = msgs.split("<>");
                 for (var i=0;i<msgs.length;i++){
-                    EHR.Server.Utils.addError(scriptErrors, 'project', msgs[i], 'WARN');
+                    EHR.Server.Utils.addError(scriptErrors, 'project', msgs[i], 'INFO');
                 }
             }
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'ehr', 'project', function(helper, scriptErrors, row){
+        if (!row.project){
+            row.project = triggerHelper.getNextProjectId();
+            console.log('setting projectId: ' + row.project);
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'ehr', 'protocol', function(helper, scriptErrors, row){
+        if (!row.protocol){
+            row.protocol = triggerHelper.getNextProtocolId();
+            console.log('setting protocol: ' + row.protocol);
         }
     });
 
@@ -73,8 +87,8 @@ exports.init = function(EHR){
         //update condition on release
         if (!helper.isETL() && helper.getEvent() == 'update' && oldRow){
             if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData){
-                if (row.releaseCondition){
-                    triggerHelper.updateAnimalCondition(row.Id, row.date, row.releaseCondition);
+                if (row.releaseCondition && row.enddate){
+                    triggerHelper.updateAnimalCondition(row.Id, row.enddate, row.releaseCondition);
                 }
             }
         }
@@ -132,26 +146,46 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Housing', function(helper, scriptErrors, row){
-        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row);
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Housing', function(helper, scriptErrors, row, oldRow){
+        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Housing', function(scriptErrors, helper, row, oldRow){
-        if (!helper.isETL() && row && row.parentid){
-            triggerHelper.markHousingTransfersComplete(row.parentid);
+        if (!helper.isETL() && row){
+            //mark associated requests complete
+            if (row.parentid){
+                triggerHelper.markHousingTransfersComplete(row.parentid);
+            }
+
+            //also attempt to update dividers
+            if (row.divider && row.room && row.cage){
+                var map = helper.getProperty('housingInTransaction');
+                var rows = [];
+                for (var id in map){
+                    rows = rows.concat(map[id]);
+                }
+
+                var msgs = triggerHelper.updateDividers(row.Id, row.room, row.cage, row.divider, helper.isValidateOnly(), rows);
+                if (msgs){
+                    msgs = msgs.split("<>");
+                    for (var i=0;i<msgs.length;i++){
+                        EHR.Server.Utils.addError(scriptErrors, 'divider', msgs[i], 'INFO');
+                    }
+                }
+            }
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'onprc_ehr', 'housing_transfer_requests', function(helper, scriptErrors, row){
-        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row);
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'onprc_ehr', 'housing_transfer_requests', function(helper, scriptErrors, row, oldRow){
+        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow);
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Arrival', function(helper, scriptErrors, row){
-        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, 'initialRoom', 'initialCage');
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Arrival', function(helper, scriptErrors, row, oldRow){
+        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, 'initialRoom', 'initialCage');
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Birth', function(helper, scriptErrors, row){
-        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row);
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Birth', function(helper, scriptErrors, row, oldRow){
+        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Treatment Orders', function(scriptErrors, helper, row, oldRow){

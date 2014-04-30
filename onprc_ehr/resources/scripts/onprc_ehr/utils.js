@@ -12,7 +12,7 @@ exports.ONPRC_EHR = ONPRC_EHR;
 
 ONPRC_EHR.Utils = new function(){
     return {
-        doHousingCheck: function(EHR, helper, scriptErrors, triggerHelper, row, roomField, cageField){
+        doHousingCheck: function(EHR, helper, scriptErrors, triggerHelper, row, oldRow, roomField, cageField){
             roomField = roomField || 'room';
             cageField = cageField || 'cage';
 
@@ -39,7 +39,12 @@ ONPRC_EHR.Utils = new function(){
                         }
                     }
 
+                    var cagemates = triggerHelper.getAnimalsAfterMove(row[roomField], row[cageField], housingRecords);
+                    cagemates = cagemates ? cagemates.split(';') : [];
+                    cagemates = cagemates.sort();
+
                     var previousCagemates = [];
+                    var oldLocationsSupportsCages = true;
                     var ar = helper.getJavaHelper().getDemographicRecord(row.Id);
                     if (ar != null){
                         var cm = ar.getProps().cagemates;
@@ -50,14 +55,14 @@ ONPRC_EHR.Utils = new function(){
                                 previousCagemates = previousCagemates.sort();
                             }
                         }
+
+                        if (ar.getCurrentRoom()){
+                            oldLocationsSupportsCages = triggerHelper.isCageRequired(ar.getCurrentRoom());
+                        }
                     }
 
-                    var cagemates = triggerHelper.getAnimalsAfterMove(row[roomField], row[cageField], housingRecords);
-                    cagemates = cagemates ? cagemates.split(';') : [];
-                    cagemates = cagemates.sort();
-
                     //alert if pairs are broken
-                    if (previousCagemates.length){
+                    if (oldLocationsSupportsCages && previousCagemates.length){
                         var separated = [];
                         for (var i=0;i<previousCagemates.length;i++){
                             if (cagemates.indexOf(previousCagemates[i]) == -1){

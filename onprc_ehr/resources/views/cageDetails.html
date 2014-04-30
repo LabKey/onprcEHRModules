@@ -38,7 +38,7 @@ Ext4.onReady(function (){
             menu: [{
                 text: 'Bulk Edit Cages',
                 hrefTarget: '_blank',
-                href: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', null, {schemaName: 'ehr_lookups', 'query.queryName': 'cage', 'query.cage~room': room})
+                href: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', null, {schemaName: 'ehr_lookups', 'query.queryName': 'cage', 'query.room~eq': room})
             },{
                 text: 'Housing Transfer Request',
                 hrefTarget: '_blank',

@@ -387,15 +387,6 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @AdminConsoleAction
-    public class ShowEtlErrorsAction extends ExportAction
-    {
-        public void export(Object o, HttpServletResponse response, BindException errors) throws Exception
-        {
-            showLogFile(response, 0, getLogFile("ehr-etl-errors.log"));
-        }
-    }
-
-    @AdminConsoleAction
     public class ShowEtlLogAction extends ExportAction
     {
         public void export(Object o, HttpServletResponse response, BindException errors) throws Exception

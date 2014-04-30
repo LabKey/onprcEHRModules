@@ -39,6 +39,7 @@ public class LabworkRequestFormType extends RequestForm
     {
         super(ctx, owner, NAME, LABEL, "Requests", Arrays.<FormSection>asList(
                 new RequestFormSection(),
+                new LabworkRequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),
                 new ClinpathRunsFormSection(true)
         ));

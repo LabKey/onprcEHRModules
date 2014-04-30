@@ -6,6 +6,12 @@
 
 require("ehr/triggers").initScript(this);
 
+function onInit(event, helper){
+    helper.setScriptOptions({
+        allowFutureDates: true
+    });
+}
+
 function onUpsert(helper, scriptErrors, row, oldRow){
     //if the animal is not at the center, automatically set the enddate
     if (!helper.isETL() && row.Id && !row.enddate){

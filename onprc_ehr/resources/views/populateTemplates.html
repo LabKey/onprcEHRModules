@@ -368,13 +368,14 @@ Ext4.onReady(function(){
                         ['E-X0470','PO','SID - AM','3','4','','','1','','','mL','1','','','','','Standard'],
                         ['E-X0409','PO','SID - AM','3','4','','','1','','','','','','','','','Standard'],
                         ['E-70000','IM','','','','','','','','','','','1','U','','','Standard'],
-                        ['E-78840','IV','','','','','','25','mg/kg','','','','','','','','Standard'],
+                        ['E-78840','IV','','','','','','25','mg/kg','','mL','','','','','','Standard'],
                         ['E-70720','INH','SID - AM','1','0','','','','','','','','1.5','%','','','Standard'],
                         ['E-YY945','SQ','','','','','','4','mg/kg','','','','','','','','Standard'],
                         ['F-10470','INH','SID - AM','1','0','','','','','','','','1','L/min','','','Standard'],
                         ['E-YY008','','','','','','','','','','','','','','','','Standard'],
                         ['E-87350','IV','','','','','','','','','mL','','','','','','Standard'],
-                        ['E-87255','PO','SID - AM','','','','','','','','mL','','','','','','Standard']
+                        ['E-87255','PO','SID - AM','','','','','','','','mL','','','','','','Standard'],
+                        ['E-YY670','PO','BID - AM/PM','','','','','','','','cube','','','','','','Standard']
                     ];
 
                     var newRows = [];
@@ -420,7 +421,7 @@ Ext4.onReady(function(){
                     ['Clinical Observations', '{"category":"Temp","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"Pulse","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"Resp","area":"N/A"}'],
-                    ['Clinical Observations', '{"category":"MM","area":"N/A","observation":"Pink"}'],
+                    ['Clinical Observations', '{"category":"MM","area":"N/A","observation":"Pink/moist"}'],
                     ['Clinical Observations', '{"category":"CRT","area":"N/A","observation":"1-2"}'],
                     ['Clinical Observations', '{"category":"Turgor","area":"N/A","observation":"Normal"}'],
                     ['Clinical Observations', '{"category":"BCS","area":"N/A"}'],
@@ -440,7 +441,7 @@ Ext4.onReady(function(){
                     ['Clinical Observations', '{"category":"Temp","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"Pulse","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"Resp","area":"N/A"}'],
-                    ['Clinical Observations', '{"category":"MM","area":"N/A","observation":"Pink"}'],
+                    ['Clinical Observations', '{"category":"MM","area":"N/A","observation":"Pink/moist"}'],
                     ['Clinical Observations', '{"category":"CRT","area":"N/A","observation":"1-2"}'],
                     ['Clinical Observations', '{"category":"Turgor","area":"N/A","observation":"Normal"}'],
                     ['Clinical Observations', '{"category":"BCS","area":"N/A"}'],
@@ -471,10 +472,11 @@ Ext4.onReady(function(){
                     ['Clinical Observations', '{"category":"Temp","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"Pulse","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"Resp","area":"N/A"}'],
-                    ['Clinical Observations', '{"category":"MM","area":"N/A","observation":"Pink"}'],
+                    ['Clinical Observations', '{"category":"MM","area":"N/A","observation":"Pink/moist"}'],
                     ['Clinical Observations', '{"category":"CRT","area":"N/A","observation":"1-2"}'],
                     ['Clinical Observations', '{"category":"Turgor","area":"N/A","observation":"Normal"}'],
-                    ['Clinical Observations', '{"category":"BCS","area":"N/A"}']
+                    ['Clinical Observations', '{"category":"BCS","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"Alopecia Score","area":"N/A"}']
                 ]
             },{
                 template: ['Limited Visual Exam', 'Section', 'Clinical Observations', '', ''],
@@ -499,7 +501,6 @@ Ext4.onReady(function(){
                 records: [
                     ['Clinical Observations', '{"category":"Alopecia Score","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"SIB Score","area":"N/A"}'],
-                    ['Clinical Observations', '{"category":"CQS","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"Fecal Smear","area":"N/A","observation":""}'],
                     ['Clinical Observations', '{"category":"Behaviors","area":"N/A","observation":""}']
                 ]
@@ -577,85 +578,85 @@ Ext4.onReady(function(){
                 records: [['Clinical Remarks', '{"s":"Wounds noted during routine processing, BAR prior to sedation.","o":"","a":"Minor wound from physical trauma.","p":"Administered Pen G, ketoprofen. Clipped and cleaned wound, lavaged with sterile saline. Freshened wound edges. Apposed subcutaneous tissue with ____ and skin with ____. ","p2":"Monitor in social group."}']]
             },{
                 template: ['Digit Amputation', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Presented for wound to (location), BAR prior to sedation.","o":"","a":"Amputation of XXX due to physical trauma. ","p":"Local anesthetic was administered and the skin aseptically prepared. A tourniquet was placed and the area aspetically draped. A transverse encircling incision (inverse Y) was made at the _____ intraphalangeal joint. The flexor and extensor tendons, ligaments and joint capsule were transected. Distal arteries and veins were ligated with ____. The digit associated sesamoid bones were disarticulated. The subcutaneous tissues were apposed over the end of the bone with _____ and simple interrupted sutures. The skin was apposed with approximating sutures. The tourniquet was removed and a dry/dry bandage placed. .   ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Presented for wound to (location), BAR prior to sedation.","o":"","a":"Amputation of XXX due to physical trauma. ","p":"Local anesthetic was administered and the skin aseptically prepared. A tourniquet was placed and the area aspetically draped. A transverse encircling incision (inverse Y) was made at the _____ intraphalangeal joint. The flexor and extensor tendons, ligaments and joint capsule were transected. Distal arteries and veins were ligated with ____. The digit associated sesamoid bones were disarticulated. The subcutaneous tissues were apposed over the end of the bone with _____ and simple interrupted sutures. The skin was apposed with approximating sutures. The tourniquet was removed and a dry/dry bandage placed. .   "}']]
             },{
                 template: ['Surgical Repair', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"\\nInteg/MS: removed bandage, lavaged wound, appears ready for primary closure.\\n","a":"Wound ready for primary closure","p":"Intubated with ____  ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Placed line block of 0.5% bupivacaine and 2% lidocaine. Prepared skin with PVI, aseptically draped. (Insert surgical description) Lavaged, closed subcutaneous tissue with 4-0 Monocryl SI. Freshened skin edges, closed skin with 4-0 Monocryl SI. Administered buprenorphine IM. Good recovery.","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"\\nInteg/MS: removed bandage, lavaged wound, appears ready for primary closure.\\n","a":"Wound ready for primary closure","p":"Intubated with ____  ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Placed line block of 0.5% bupivacaine and 2% lidocaine. Prepared skin with PVI, aseptically draped. (Insert surgical description) Lavaged, closed subcutaneous tissue with 4-0 Monocryl SI. Freshened skin edges, closed skin with 4-0 Monocryl SI. Administered buprenorphine IM. Good recovery."}']]
             },{
                 template: ['Tendon Repair', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"\\nInteg/MS: removed bandage, lavaged wound, appears ready for primary closure.\\n","a":"Wound ready for primary closure","p":"Intubated with ___ ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Prepared skin with PVI, lavaged with sterile saline. Prepared skin with PVI, aseptically draped. Incised over the caudolateral surface of the tendon, 5 cm. Identified the (insert names) muscles. Freshened edges and apposed tendon with 2-0 PDS with a far-near near-far pattern. Lavaged, closed fascia with 3-0 Monocryl SI. Freshened skin edges, closed with 3-0 Monocryl SI. Placed a padded bandage and fiberglas cast. Administered analgesics. Good recovery.","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"\\nInteg/MS: removed bandage, lavaged wound, appears ready for primary closure.\\n","a":"Wound ready for primary closure","p":"Intubated with ___ ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Prepared skin with PVI, lavaged with sterile saline. Prepared skin with PVI, aseptically draped. Incised over the caudolateral surface of the tendon, 5 cm. Identified the (insert names) muscles. Freshened edges and apposed tendon with 2-0 PDS with a far-near near-far pattern. Lavaged, closed fascia with 3-0 Monocryl SI. Freshened skin edges, closed with 3-0 Monocryl SI. Placed a padded bandage and fiberglas cast. Administered analgesics. Good recovery."}']]
             },{
                 template: ['Achilles Tendon Repair', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"\\nInteg/MS: removed bandage, lavaged wound, appears ready for primary closure.\\n","a":"Wound ready for primary closure","p":"Intubated with ___ ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Prepared skin with PVI, lavaged with sterile saline. Prepared skin with PVI, aseptically draped. Incised over the caudolateral surface of the tendon, 5 cm. Identified the gastronemius, superficial digital flexor, and common tendon. Freshened tendon edges and apposed with 2-0 PDS with a far-near near-far pattern. Lavaged, closed fascia with 3-0 Monocryl SI. Freshened skin edges, closed with 3-0 Monocryl SI. Placed a padded bandage and fiberglas cast. Administered analgesics. Good recovery from anesthesia. ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"\\nInteg/MS: removed bandage, lavaged wound, appears ready for primary closure.\\n","a":"Wound ready for primary closure","p":"Intubated with ___ ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Prepared skin with PVI, lavaged with sterile saline. Prepared skin with PVI, aseptically draped. Incised over the caudolateral surface of the tendon, 5 cm. Identified the gastronemius, superficial digital flexor, and common tendon. Freshened tendon edges and apposed with 2-0 PDS with a far-near near-far pattern. Lavaged, closed fascia with 3-0 Monocryl SI. Freshened skin edges, closed with 3-0 Monocryl SI. Placed a padded bandage and fiberglas cast. Administered analgesics. Good recovery from anesthesia. "}']]
             },{
                 template: ['Enucleation', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"","a":"O_ requires enucleation.","p":"The skin clipped, cleaned, aseptically prepared, and sterilely draped. An incision was made 1-2 cm laterally from the junction of the upper and lower eyelid margins. Using thumb forceps, the conjunctiva was grasped near the limbus. A 360 degree perilimbal incision was made. Using curved Metzenbaum’s, s the conjunctiva, Tenon’s capsule, and extraocular muscle were separated from the sclera. The lacrimal gland was excised. Once the globe attachments were freed, the globe was gently retracted. The optic nerve was served with curved Metzendaum scissors. Hemorrhage was controlled with gentle pressure. Approximagely 3-4 mm of the eyelid margins were removed, to the medial canthus. The angularis oculi vein located superficial and medial to the medial canthal tendon was avoided. The conjunctiva, orbital septum and Tenon’s capsule were closed with 3-0 ________. The subcutaneous tissue was apposed with 4-0 _______. The lid margins were closed with _______. ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"BAR prior to sedation.","o":"","a":"O_ requires enucleation.","p":"The skin clipped, cleaned, aseptically prepared, and sterilely draped. An incision was made 1-2 cm laterally from the junction of the upper and lower eyelid margins. Using thumb forceps, the conjunctiva was grasped near the limbus. A 360 degree perilimbal incision was made. Using curved Metzenbaum’s, s the conjunctiva, Tenon’s capsule, and extraocular muscle were separated from the sclera. The lacrimal gland was excised. Once the globe attachments were freed, the globe was gently retracted. The optic nerve was served with curved Metzendaum scissors. Hemorrhage was controlled with gentle pressure. Approximagely 3-4 mm of the eyelid margins were removed, to the medial canthus. The angularis oculi vein located superficial and medial to the medial canthal tendon was avoided. The conjunctiva, orbital septum and Tenon’s capsule were closed with 3-0 ________. The subcutaneous tissue was apposed with 4-0 _______. The lid margins were closed with _______. "}']]
             },{
                 template: ['Partial Therapeutic Caudectomy', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for partial therapeutic caudectomy, BAR prior to sedation.","o":"","a":"Distal ___ cm of tail ready for amputation.","p":"The distal tail is wrapped with gauze and tape and the skin is aseptically prepared. A tourniquet is placed proximal to the transaction site. Determine the desired intravertebral transaction site and ake a double V incision in the skin distal to the site. The V is oriented to create dorsal and ventral skin flaps that are longer than the desired tail length. Identify and ligate the medial and lateral caudal arteries and veins just proximal to the incision site. Incise the soft tissue just distal to the intervertebral space and disarticulate the distal tail. If bleeding occurs, place a circumferential ligature around the distal end of the remaining tail or re-ligate the caudal vessels. Appose subcutaneous tissue and muscle over the exposed vertebrae with interrupted approximating sutures. Appose the skin edges with approximating sutures. ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for partial therapeutic caudectomy, BAR prior to sedation.","o":"","a":"Distal ___ cm of tail ready for amputation.","p":"The distal tail is wrapped with gauze and tape and the skin is aseptically prepared. A tourniquet is placed proximal to the transaction site. Determine the desired intravertebral transaction site and ake a double V incision in the skin distal to the site. The V is oriented to create dorsal and ventral skin flaps that are longer than the desired tail length. Identify and ligate the medial and lateral caudal arteries and veins just proximal to the incision site. Incise the soft tissue just distal to the intervertebral space and disarticulate the distal tail. If bleeding occurs, place a circumferential ligature around the distal end of the remaining tail or re-ligate the caudal vessels. Appose subcutaneous tissue and muscle over the exposed vertebrae with interrupted approximating sutures. Appose the skin edges with approximating sutures. "}']]
             },{
                 template: ['Complete Therapeutic Caudectomy', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for complete therapeutic caudectomy, BAR prior to sedation.","o":"","a":"Therapeutic caudectomy required.","p":"A tourniquet was placed proximal to the transaction site but not tightened.The skin is clipped and cleaned, and the desired intravertebral transection site identified. A local block is placed proximal to the site. The skin was prepared with PVI, and aseptically draped. The tourniquet was tightened by the anesthetist. A  double V incision was made on the skin distal to the site. The V was oriented to create dorsal and ventral skin flaps that are longer than the desired tail length. The medial and lateral caudal arteries and veins just proximal to the incision site were identified and ligated. The soft tissue just distal to the intervertebral space was incised and the distal tail disarticulate. Bleeding was controlled with direct pressure (or circumferential ligature around the distal end of the remaining tail or re-ligate the caudal vessels). Subcutaneous tissue and muscle were apposed over the exposed vertebrae with interrupted approximating sutures of ______. The skin edges were apposed with _________. ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for complete therapeutic caudectomy, BAR prior to sedation.","o":"","a":"Therapeutic caudectomy required.","p":"A tourniquet was placed proximal to the transaction site but not tightened.The skin is clipped and cleaned, and the desired intravertebral transection site identified. A local block is placed proximal to the site. The skin was prepared with PVI, and aseptically draped. The tourniquet was tightened by the anesthetist. A  double V incision was made on the skin distal to the site. The V was oriented to create dorsal and ventral skin flaps that are longer than the desired tail length. The medial and lateral caudal arteries and veins just proximal to the incision site were identified and ligated. The soft tissue just distal to the intervertebral space was incised and the distal tail disarticulate. Bleeding was controlled with direct pressure (or circumferential ligature around the distal end of the remaining tail or re-ligate the caudal vessels). Subcutaneous tissue and muscle were apposed over the exposed vertebrae with interrupted approximating sutures of ______. The skin edges were apposed with _________. "}']]
             },{
                 template: ['Rhabdomyolysis', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Presented for extensive crush trauma, QAR prior to sedation.","o":"MS: Ultrasound of muscles demonstrates","a":"Extensive crush trauma, r/o rhabdomyolysis.","p":"","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Presented for extensive crush trauma, QAR prior to sedation.","o":"MS: Ultrasound of muscles demonstrates","a":"Extensive crush trauma, r/o rhabdomyolysis.","p":""}']]
             },{
                 template: ['Repeat iSTAT', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for repeat iSTAT, BAR prior to sedation.","o":"iSTAT:","a":"Diarrhea of unknown etiology.","p":"Collected ____ cc\'s blood for iSTAT.  iSTAT abnormalities: (enter abnormalities and plan). ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for repeat iSTAT, BAR prior to sedation.","o":"iSTAT:","a":"Diarrhea of unknown etiology.","p":"Collected ____ cc\'s blood for iSTAT.  iSTAT abnormalities: (enter abnormalities and plan). "}']]
             },{
                 template: ['Bone Marrow Biopsy', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for bone marrow biopsy, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The skin over the (iliac crest, trochanteric fossa of the femur, or craniodorsal humerus) was aseptically prepared. A skin incision was made using a scalpel blade.  A bone marrow biopsy needle was inserted through the cortex. Following removal of the stylet, ____ cc’s of marrow was aspirated. The stylet was replaced, and the needle removed. Direct pressurewais applied to the site for 30-60 seconds following removal of the needle. The skin incision was closed with tissue adhesive.","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for bone marrow biopsy, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The skin over the (iliac crest, trochanteric fossa of the femur, or craniodorsal humerus) was aseptically prepared. A skin incision was made using a scalpel blade.  A bone marrow biopsy needle was inserted through the cortex. Following removal of the stylet, ____ cc’s of marrow was aspirated. The stylet was replaced, and the needle removed. Direct pressurewais applied to the site for 30-60 seconds following removal of the needle. The skin incision was closed with tissue adhesive."}']]
             },{
                 template: ['Lymph Node Biopsy', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for lymph node biopsy, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The area over the (axillary or inguinal nodes) was clipped and cleaned, prepared with PVI, and aseptically draped. The skin over the lymph node was stabilized, and an incision made over the node. The node was removed from surrounding tissue using blunt dissection and vessels were ligated with _______. Following removal of the node, the surgery site was closed using a two-layer closure and _____. Sample sites will include axillary and inguinal nodes. Typically, all four sites may be used. ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for lymph node biopsy, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The area over the (axillary or inguinal nodes) was clipped and cleaned, prepared with PVI, and aseptically draped. The skin over the lymph node was stabilized, and an incision made over the node. The node was removed from surrounding tissue using blunt dissection and vessels were ligated with _______. Following removal of the node, the surgery site was closed using a two-layer closure and _____. Sample sites will include axillary and inguinal nodes. Typically, all four sites may be used. "}']]
             },{
                 template: ['Gastric lavage', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for gastric lavage, BAR prior to sedation.","o":"","a":"Inadequate caloric intake, gastric lavage for nutritional support.","p":"Prior to lavage, the ET tube was checked to ensure the cuff was adequately inflated. The patient was placed in lateral recumbancy, with the head slightly lower than the abdomen. The distance from the nose to the last rib was measured, and marked on a 10 Fr, fenestrated gastric tube. The sterile tube was lubricated, then gently passed down the esophagus. Tube placement was confirmed by aspiration of gastric contents. Warm, sterile saline (5-10 ml/kg) was infused into the stomach. Samples were collected for culture and cytology.  The gastric tube was kinked at the oral end and gently withdrawn. ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for gastric lavage, BAR prior to sedation.","o":"","a":"Inadequate caloric intake, gastric lavage for nutritional support.","p":"Prior to lavage, the ET tube was checked to ensure the cuff was adequately inflated. The patient was placed in lateral recumbancy, with the head slightly lower than the abdomen. The distance from the nose to the last rib was measured, and marked on a 10 Fr, fenestrated gastric tube. The sterile tube was lubricated, then gently passed down the esophagus. Tube placement was confirmed by aspiration of gastric contents. Warm, sterile saline (5-10 ml/kg) was infused into the stomach. Samples were collected for culture and cytology.  The gastric tube was kinked at the oral end and gently withdrawn. "}']]
             },{
                 template: ['Skin biopsy', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for skin biopsy, BAR prior to sedation.","o":"","a":"Skin lesions, etiology unknown.","p":"","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for skin biopsy, BAR prior to sedation.","o":"","a":"Skin lesions, etiology unknown.","p":""}']]
             },{
                 template: ['Tb Test Results', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Cageside observation, BAR.","o":"","a":"Normal","p":"(Enter actions)","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Cageside observation, BAR.","o":"","a":"Normal","p":"(Enter actions)"}']]
             },{
                 template: ['Arthrocentesis with Intraarticular injection', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for arthrocentesis with intraarticular injection, BAR prior to sedation.","o":"","a":"Arthritis of (joint or joints).","p":"The skin was clipped with #40 clipper blades,  aseptically prepared and draped. Synovial fluid for cytology and culture was sterilely collected using a 22 g needles attached to a 3 cc syringe. Following sample collection, the joint was injected with 0.1 cc of 0.5% bupivacaine and 0.5 cc/1 mg dexamethasone.","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for arthrocentesis with intraarticular injection, BAR prior to sedation.","o":"","a":"Arthritis of (joint or joints).","p":"The skin was clipped with #40 clipper blades,  aseptically prepared and draped. Synovial fluid for cytology and culture was sterilely collected using a 22 g needles attached to a 3 cc syringe. Following sample collection, the joint was injected with 0.1 cc of 0.5% bupivacaine and 0.5 cc/1 mg dexamethasone."}']]
             },{
                 template: ['Arthrocentesis   ', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for arthrocentesis, BAR prior to sedation.","o":"","a":"Arthritis of (joint or joints).","p":"The skin was clipped with #40 clipper blades,  aseptically prepared and draped. Synovial fluid for cytology and culture was sterilely collected using a 22 g needles attached to a 3 cc syringe. ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for arthrocentesis, BAR prior to sedation.","o":"","a":"Arthritis of (joint or joints).","p":"The skin was clipped with #40 clipper blades,  aseptically prepared and draped. Synovial fluid for cytology and culture was sterilely collected using a 22 g needles attached to a 3 cc syringe. "}']]
             },{
                 template: ['Radiographs', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for radiographs, BAR prior to sedation.","o":"","a":"","p":"Following sedation, (View) and (view) of the (area) were taken. ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for radiographs, BAR prior to sedation.","o":"","a":"","p":"Following sedation, (View) and (view) of the (area) were taken. "}']]
             },{
                 template: ['Hepatic Biopsy', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for ultrasound-guided percutaneous hepatic biopsy, BAR prior to sedation.","o":"","a":"Hepatopathy.","p":"Administered 0.5 cc/0.15 mg buprenorphine IM, 0.1 cc bupivicaine and 0.1 cc lidocaine at site. Prepared skin aseptically, stabe incision with #11 blade, 18 g x 1 cm hepatic biopsy, sample submitted to pathology. Good recovery from anesthesia, monitored post procedure then returned to social group.","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for ultrasound-guided percutaneous hepatic biopsy, BAR prior to sedation.","o":"","a":"Hepatopathy.","p":"Administered 0.5 cc/0.15 mg buprenorphine IM, 0.1 cc bupivicaine and 0.1 cc lidocaine at site. Prepared skin aseptically, stabe incision with #11 blade, 18 g x 1 cm hepatic biopsy, sample submitted to pathology. Good recovery from anesthesia, monitored post procedure then returned to social group."}']]
             },{
                 template: ['Cerebral Spinal Fluid Collection from the lumbar region', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for CSF collection, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The patient was placed in lateral recumbency. The area was clipped, cleaned, prepared, and aseptically draped. The lumbar spine was gently flexed to open the interarcuate space between L4 and L5. The spinous process caudal to this space was palpated, and the needle inserted at the caudal lateral edge of the spinous process.  The needle was gently advanced until the vertebral arch was encountered, then walked cranially to the interarcuate space. The needle was advanced through the ligament and spinal canal and (sample volume) was collected. The needle was retracted following fluid collection.","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for CSF collection, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The patient was placed in lateral recumbency. The area was clipped, cleaned, prepared, and aseptically draped. The lumbar spine was gently flexed to open the interarcuate space between L4 and L5. The spinous process caudal to this space was palpated, and the needle inserted at the caudal lateral edge of the spinous process.  The needle was gently advanced until the vertebral arch was encountered, then walked cranially to the interarcuate space. The needle was advanced through the ligament and spinal canal and (sample volume) was collected. The needle was retracted following fluid collection."}']]
             },{
                 template: ['Cerebral Spinal Fluid Collection from cistem magnum', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for CSF collection, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The patient was placed in lateral recumbancy. The skin from the occipital protuberance to the level of C3 was clipped, cleaned, and aseptically draped,. The neck was flexed 90 to 100 degrees at the cisternal region. Care was taken to keep the head parallel to the table. The wings of the atlas were palpated to ensure superimposition. Collection was done (puncture may be made in the center of the triangle formed by the wings of the atlas and the occiput. Alternatively, a midline puncture, halfway between the occiput and the cranial end of the spinous process of C2). The needle was inserted at 90 degrees, and gradually advanced through the various tissue layers. Dura penetration was confirmed by observation of CSF in the hub of the needle. Samples (volume and type) were collected and the needle was gently withdrawn. ","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for CSF collection, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The patient was placed in lateral recumbancy. The skin from the occipital protuberance to the level of C3 was clipped, cleaned, and aseptically draped,. The neck was flexed 90 to 100 degrees at the cisternal region. Care was taken to keep the head parallel to the table. The wings of the atlas were palpated to ensure superimposition. Collection was done (puncture may be made in the center of the triangle formed by the wings of the atlas and the occiput. Alternatively, a midline puncture, halfway between the occiput and the cranial end of the spinous process of C2). The needle was inserted at 90 degrees, and gradually advanced through the various tissue layers. Dura penetration was confirmed by observation of CSF in the hub of the needle. Samples (volume and type) were collected and the needle was gently withdrawn. "}']]
             },{
                 template: ['Nasal Flush', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for nasal flush, BAR prior to sedation.","o":"","a":"Nasal discharge, etiology unknown","p":"The patient was anesthetized and intubated with a cuffed _____ ID ET tube. Gauze sponges were placed in the oral pharynx and around the tube. The distance from the external nares to the medial canthus was measured, and mark the catheter. Sterile saline was infused (for a diagnostic flush, infuse 5-10 cc’s of sterile saline, then collect the residual fluid and submit for culture and cytology. For therapeutic flush, use a a 35 cc syringe and infuse 150 to 300 cc’s of saline into the nasal cavity). An otoscope was used to visualize the proximal nasal passages during the procedure.","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for nasal flush, BAR prior to sedation.","o":"","a":"Nasal discharge, etiology unknown","p":"The patient was anesthetized and intubated with a cuffed _____ ID ET tube. Gauze sponges were placed in the oral pharynx and around the tube. The distance from the external nares to the medial canthus was measured, and mark the catheter. Sterile saline was infused (for a diagnostic flush, infuse 5-10 cc’s of sterile saline, then collect the residual fluid and submit for culture and cytology. For therapeutic flush, use a a 35 cc syringe and infuse 150 to 300 cc’s of saline into the nasal cavity). An otoscope was used to visualize the proximal nasal passages during the procedure."}']]
             },{
                 template: ['Bronchioalveolar Lavage', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for bronchioavlveolar lavage, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The monkey was positioned in dorsal recumbency and a pulse oximeter attached.  The bronchoscope was then passed through the oral cavity and into the trachea using a laryngoscope.  An oral speculum was then positioned between the upper and lower incisors to prevent damage to the bronchoscope.  The bronchoscope was advanced near the carina where 1ml of 1% lidocaine was introduced through the working channel of the scope.  The bronchoscope was then advanced into the right main stem bronchus and through approximately three bifurcations of the bronchi.  Next, bronchoalveolar lavage was performed by infusing three to five 10ml aliquots of normal saline followed by immediate aspiration of the saline infusate after each 10ml infusion.  The procedure was repeated in the left lung.  The bronchoscope was removed.","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for bronchioavlveolar lavage, BAR prior to sedation.","o":"","a":"Stable for research support procedure.","p":"The monkey was positioned in dorsal recumbency and a pulse oximeter attached.  The bronchoscope was then passed through the oral cavity and into the trachea using a laryngoscope.  An oral speculum was then positioned between the upper and lower incisors to prevent damage to the bronchoscope.  The bronchoscope was advanced near the carina where 1ml of 1% lidocaine was introduced through the working channel of the scope.  The bronchoscope was then advanced into the right main stem bronchus and through approximately three bifurcations of the bronchi.  Next, bronchoalveolar lavage was performed by infusing three to five 10ml aliquots of normal saline followed by immediate aspiration of the saline infusate after each 10ml infusion.  The procedure was repeated in the left lung.  The bronchoscope was removed."}']]
             },{
                 template: ['Technician Exam', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for technicain examination, BAR prior to sedation.","o":"","a":"No significant findings noted on physical examination. ","p":"(Enter actions)","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for technicain examination, BAR prior to sedation.","o":"","a":"No significant findings noted on physical examination. ","p":"(Enter actions)"}']]
             },{
                 template: ['Diagnostic Exam', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for diagnostic physical examination, BAR prior to sedation.","o":"","a":"Appears _________","p":"(Enter actions)","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for diagnostic physical examination, BAR prior to sedation.","o":"","a":"Appears _________","p":"(Enter actions)"}']]
             },{
                 template: ['Complete Exam', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Sedated for physical examination, BAR prior to sedation.","o":"","a":"No significant findings noted on physical examination. ","p":"(Enter actions)","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Sedated for physical examination, BAR prior to sedation.","o":"","a":"No significant findings noted on physical examination. ","p":"(Enter actions)"}']]
             },{
                 template: ['Limited Exam', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Limited examination, BAR prior to sedation.","o":"","a":"Appears _________","p":"(Enter actions)","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Limited examination, BAR prior to sedation.","o":"","a":"Appears _________","p":"(Enter actions)"}']]
             },{
                 template: ['Limited Visual Exam', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Cageside observation, BAR.","o":"","a":"Appears _________","p":"(Enter actions)","p2":"(Enter plan)"}']]
+                records: [['Clinical Remarks', '{"s":"Cageside observation, BAR.","o":"","a":"Appears _________","p":"(Enter actions)"}']]
             }]);
 
             //necropsy
@@ -663,6 +664,17 @@ Ext4.onReady(function(){
                 template: ['Pentobarbitol', 'Section', 'Drug Administration', '', ''],
                 records: [
                     ['Drug Administration', '{"code":"E-78840"}']
+                ]
+            }]);
+
+            //opthalmic sedation
+            templateRows = templateRows.concat([{
+                template: ['Ophthalmic Imaging Sedation', 'Section', 'Drug Administration', '', ''],
+                records: [
+                    ['Drug Administration', '{"code":"E-YY992"}'], //tilemide
+                    ['Drug Administration', '{"code":"E-75970", "route": "OU", "volume":2, "vol_units": "drop(s)"}'], //Tropicamide
+                    ['Drug Administration', '{"code":"E-YY847", "route": "OU", "volume":2, "vol_units": "drop(s)"}'], //Phenylephrine, 2.5%
+                    ['Drug Administration', '{"code":"E-YY862", "route": "OU", "amount":1, "amount_units": "Unit"}'] //Erythromicin Opthalmic Ointment
                 ]
             }]);
 
@@ -1135,7 +1147,6 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28100","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1147,6 +1158,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-96000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-98000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X2000","noWeight":null,"preparation":"Wet Tissue"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-08710","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-08810","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-08510","noWeight":true,"preparation":"Wet Tissue"}'],
@@ -1172,7 +1184,6 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28100","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1184,6 +1195,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-96000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-98000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X2000","noWeight":null,"preparation":"Wet Tissue"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-08710","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-08810","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-08510","noWeight":true,"preparation":"Wet Tissue"}'],
@@ -1211,7 +1223,6 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28800","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1223,6 +1234,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-96000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-98000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X2000","noWeight":null,"preparation":"Wet Tissue"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen Tissue"}']
                 ]
             },{
@@ -1234,7 +1246,6 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28800","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1246,6 +1257,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-96000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-98000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X2000","noWeight":null,"preparation":"Wet Tissue"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-0X500","noWeight":true,"preparation":"Frozen Tissue"}']
                 ]
             },{
@@ -1257,7 +1269,6 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28800","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1271,6 +1282,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-96000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-98000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X2000","noWeight":null,"preparation":"Wet Tissue"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-01000","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-13000","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-06000","noWeight":true,"preparation":"Wet Tissue"}'],
@@ -1311,7 +1323,6 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-28800","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-32000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-56000","noWeight":null,"preparation":"Wet Tissue"}'],
-                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-59000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71020","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-71010","noWeight":null,"preparation":"Wet Tissue"}'],
@@ -1325,6 +1336,7 @@ Ext4.onReady(function(){
                     ['tissue_samples', '{"tissue":"T-96000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-98000","noWeight":null,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-X2000","noWeight":null,"preparation":"Wet Tissue"}'],
+                    ['tissue_samples', '{"tissue":"T-56000","noWeight":true,"preparation":"Frozen Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-01000","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-13000","noWeight":true,"preparation":"Wet Tissue"}'],
                     ['tissue_samples', '{"tissue":"T-06000","noWeight":true,"preparation":"Wet Tissue"}'],

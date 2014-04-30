@@ -100,7 +100,7 @@ SELECT
 	Method as MethodInt  ,
 	Hemoglobin as Result,
   null as qual_result,
-	'Hg' as TestId,
+	'HGB' as TestId,
 	cln.ts as rowversion,
   cln.remarks,
 	cln.objectid
@@ -226,7 +226,7 @@ SELECT
 	Method as MethodInt  ,
 	MPMN as Result,
   null as qual_result,
-	'Neut' as TestId,
+	'NEUT%' as TestId,
 	cln.ts as rowversion,
   cln.remarks,
 	cln.objectid
@@ -262,7 +262,7 @@ SELECT
 	Method as MethodInt  ,
 	Lymphocyte as Result,
   null as qual_result,
-	'Lymph' as TestId,
+	'LYMPH%' as TestId,
 	cln.ts as rowversion,
   cln.remarks,
 	cln.objectid
@@ -280,7 +280,7 @@ SELECT
 	Method as MethodInt  ,
 	Monocyte as Result,
   null as qual_result,
-	'Mono' as TestId,
+	'MONO%' as TestId,
 	cln.ts as rowversion,
   cln.remarks,
 	cln.objectid
@@ -298,7 +298,7 @@ SELECT
 	Method as MethodInt  ,
 	Eosinophil as Result,
   null as qual_result,
-	'EO' as TestId,
+	'EOS%' as TestId,
 	cln.ts as rowversion,
   cln.remarks,
 	cln.objectid
@@ -316,7 +316,7 @@ SELECT
 	Method as MethodInt  ,
 	Basophil as Result,
   null as qual_result,
-	'BAS' as TestId,
+	'BASO%' as TestId,
 	cln.ts as rowversion,
   cln.remarks,
 	cln.objectid

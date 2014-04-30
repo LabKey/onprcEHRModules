@@ -12,7 +12,7 @@
         <column name="servicerequested" />
         <column name="servicerequested/chargetype" />
         <column name="tissue" />
-        <column name="instructions" />
+        <column name="remark" />
         <column name="QCState" />
         <column name="requestid" />
         <column name="requestid/createdby"/>

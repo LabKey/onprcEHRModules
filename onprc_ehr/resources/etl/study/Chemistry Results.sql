@@ -50,7 +50,7 @@ SELECT
 	Method as MethodInt  ,
 	Glucose as Result,
 	null as resultString,
-	'GLUC' as TestId,
+	'GLU' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -84,7 +84,7 @@ SELECT
 	Method as MethodInt  ,
 	Creatinine as Result,
 	null as resultString,
-	'CREAT' as TestId,
+	'CREA' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -101,7 +101,7 @@ SELECT
 	Method as MethodInt  ,
 	Sodium as Result,
 	null as resultString,
-	'Na' as TestId,
+	'NA' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -135,7 +135,7 @@ SELECT
 	Method as MethodInt  ,
 	Chloride as Result,
 	null as resultString,
-	'Cl' as TestId,
+	'CL' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -220,7 +220,7 @@ SELECT
 	Method as MethodInt  ,
 	Phosphorus as Result,
 	null as resultString,
-	'Phos' as TestId,
+	'PHOS' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -407,7 +407,7 @@ SELECT
 	Method as MethodInt  ,
 	TotalBilirubin as Result,
 	null as resultString,
-	'Tbili' as TestId,
+	'TBIL' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -424,7 +424,7 @@ SELECT
 	Method as MethodInt  ,
 	DirectBilirubin as Result,
 	null as resultString,
-	'DBili' as TestId,
+	'DBIL' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -594,7 +594,7 @@ SELECT
 	Method as MethodInt  ,
 	MG as Result,
 	null as resultString,
-	'Mg' as TestId,
+	'MG' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 

@@ -44,11 +44,7 @@
         <column name="Id/curLocation/area"/>
         <column name="Id/curLocation/room"/>
         <column name="Id/curLocation/cage"/>
-        <column name="Id/activeNotes/Notes Pertaining To DAR::valueField"/>
-        <!--TODO: why failing assert?-->
-        <column name="Id/activeNotes/Pending Project Assignment::valueField"/>
-        <column name="Id/activeNotes/Pending Sales Assignment::valueField"/>
-        <column name="Id/activeNotes/PI Future Project Interest::valueField"/>
+        <column name="Id/activeNoteList/notes"/>
         <column name="history"/>
     </columns>
     <filters>

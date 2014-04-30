@@ -1,4 +1,18 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="protocol"/>
+        <column name="project"/>
+        <column name="species"/>
+        <column name="gender"/>
+        <column name="start"/>
+        <column name="enddate"/>
+        <column name="totalAssignments"/>
+        <column name="allowed"/>
+        <column name="totalAnimals"/>
+        <column name="totalRemaining"/>
+        <column name="pctUsed"/>
+        <column name="isActive"/>
+    </columns>
    <sorts>
        <sort column="protocol"/>
        <sort column="project"/>

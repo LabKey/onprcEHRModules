@@ -1366,6 +1366,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("qcstate/label"), EHRService.QCSTATES.RequestDenied.getLabel(), CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
+        filter.addCondition(FieldKey.fromString("taskid"), null, CompareType.ISBLANK);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("blood"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)

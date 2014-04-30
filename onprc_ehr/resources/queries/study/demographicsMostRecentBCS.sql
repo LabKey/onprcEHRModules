@@ -7,7 +7,7 @@
 select
   co.Id,
   max(co2.maxDate) as date,
-  avg(CAST(co.observation AS DOUBLE)) as score
+  group_concat(DISTINCT co.observation) as score
 from study.clinical_observations co
 join (
   SELECT

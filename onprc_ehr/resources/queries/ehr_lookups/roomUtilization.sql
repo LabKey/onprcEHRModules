@@ -14,7 +14,16 @@ SELECT
 
 
 FROM ehr_lookups.rooms r
-LEFT JOIN ehr_lookups.cage c ON (r.room = c.room)
+LEFT JOIN (
+	SELECT c.room, c.cage
+	FROM ehr_lookups.cage c
+	WHERE cage is not null
+
+    --allow for rooms w/o cages
+	UNION ALL
+	SELECT r.room, null as cage
+	FROM ehr_lookups.rooms r
+) c on (r.room = c.room)
 LEFT JOIN study.housing h ON (r.room=h.room AND (c.cage=h.cage OR (c.cage is null and h.cage is null)) AND COALESCE(h.enddate, now()) >= now())
 LEFT JOIN ehr_lookups.availableCagesByRoom cbr ON (cbr.room = r.room)
 WHERE r.datedisabled is null

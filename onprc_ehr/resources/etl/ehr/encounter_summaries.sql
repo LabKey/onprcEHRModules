@@ -16,7 +16,7 @@
 Select
     cast(pat.AnimalID as nvarchar(4000)) as Id,
 	pat.Date,
-	null as category,
+	'Summary Comments' as category,
 	l.LogText as remark,
 	--l.SequenceNo,
 
@@ -32,7 +32,7 @@ UNION ALL
 Select
     cast(pat.AnimalID as nvarchar(4000)) as Id,
 	pat.Date,
-	null as category,
+	'Summary Comments' as category,
 	l.LogText as remark,
 	--l.SequenceNo,
 
@@ -87,7 +87,7 @@ UNION ALL
 Select
     cast(im.AnimalID as nvarchar(4000)) as Id,
 	im.Date,
-	null as category,
+	'Narrative' as category,
 	im.Comments AS remark,
 
 	max(cast(im.objectid as varchar(38))) as parentid,

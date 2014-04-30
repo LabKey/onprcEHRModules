@@ -67,7 +67,7 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
         List<String> newAnimals = newList == null || newList.isEmpty() ? Collections.<String>emptyList() : toList(newList.get(0).get("animals"));
         if (oldAnimals.equals(newAnimals))
         {
-            _log.info("cagemates before/after move are identical, no changes needed");
+            _log.info("cagemates before/after move are identical, no changes needed.  list size: " + oldAnimals.size());
             return Collections.emptySet();
         }
 

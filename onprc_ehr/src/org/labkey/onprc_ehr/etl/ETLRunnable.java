@@ -98,6 +98,7 @@ public class ETLRunnable implements Runnable
     private Map<String, String> staticQueries;
     private Map<String, String> studyQueries;
     private Map<String, String> billingQueries;
+    private Map<String, String> slaQueries;
 
     private final static Logger log = Logger.getLogger(ETLRunnable.class);
     private static final int UPSERT_BATCH_SIZE = 1000;
@@ -117,6 +118,7 @@ public class ETLRunnable implements Runnable
         this.studyQueries = loadQueries(getResource("study").list());
         this.billingQueries = loadQueries(getResource("onprc_billing").list());
         this.mergesyncQueries = loadQueries(getResource("mergesync").list());
+        this.slaQueries = loadQueries(getResource("sla").list());
     }
 
     @Override
@@ -222,11 +224,21 @@ public class ETLRunnable implements Runnable
                     log.info(String.format("table mergesync.%s rowversion was %s", tableName, version));
                 }
 
+                for (String tableName : slaQueries.keySet())
+                {
+                    long lastTs = getLastTimestamp(tableName);
+                    byte[] lastRow = getLastVersion(tableName);
+                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    log.info(String.format("table sla.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
+                    log.info(String.format("table sla.%s rowversion was %s", tableName, version));
+                }
+
                 UserSchema ehrSchema = QueryService.get().getUserSchema(user, container, "ehr");
                 UserSchema ehrLookupsSchema = QueryService.get().getUserSchema(user, container, "ehr_lookups");
                 UserSchema billingSchema = QueryService.get().getUserSchema(user, container, "onprc_billing");
                 UserSchema studySchema = QueryService.get().getUserSchema(user, container, "study");
                 UserSchema mergeSyncSchema = QueryService.get().getUserSchema(user, container, "mergesync");
+                UserSchema slaSchema = QueryService.get().getUserSchema(user, container, "sla");
 
                 try
                 {
@@ -239,6 +251,11 @@ public class ETLRunnable implements Runnable
                     if (mergeSyncSchema != null)
                     {
                         int mergesyncErrors = merge(user, container, mergesyncQueries, mergeSyncSchema);
+                    }
+
+                    if (slaSchema != null)
+                    {
+                        int slaErrors = merge(user, container, slaQueries, slaSchema);
                     }
 
                     truncateEtlRuns();
@@ -1174,6 +1191,7 @@ public class ETLRunnable implements Runnable
             UserSchema billingSchema = QueryService.get().getUserSchema(user, container, "onprc_billing");
             UserSchema studySchema = QueryService.get().getUserSchema(user, container, "study");
             UserSchema mergesyncSchema = QueryService.get().getUserSchema(user, container, "mergesync");
+            UserSchema slaSchema = QueryService.get().getUserSchema(user, container, "sla");
 
             StringBuilder sb = new StringBuilder();
             String result = validateEtlScript(ehrQueries, ehrSchema, attemptRepair);
@@ -1216,6 +1234,13 @@ public class ETLRunnable implements Runnable
                 sb.append("<hr>");
             }
 
+            result = validateEtlScript(slaQueries, slaSchema, attemptRepair);
+            if (result != null)
+            {
+                sb.append("Validating SLA Schema:<br>");
+                sb.append(result);
+                sb.append("<hr>");
+            }
             return sb.toString();
         }
         catch (Exception e)
@@ -1335,6 +1360,7 @@ public class ETLRunnable implements Runnable
             put("Weight", new String[]{"Af_Weights", "Sur_general", "Af_Death"});
 
             put("orderssynced", new String[]{"IRIS_Lis_TransactionlogMaster"});
+            put("allowableAnimals", new String[]{"IACUC_SLAYearly", "IACUC_SLAAnimals", "Ref_ProjectsIACUC"});
         }
     };
 

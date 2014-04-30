@@ -57,7 +57,7 @@ Select
       WHEN s1.value = 'Sold' THEN 'Shipped'
       else s1.value
     END as calculated_status,
-    t.geographic_origin,
+    COALESCE(t.geographic_origin, aq.geographic_origin) as geographic_origin,
 
 	--TODO: most of these should get moved into study.notes
 	PregnancyDate as PregnancyDate ,
@@ -123,4 +123,15 @@ GROUP BY q.AnimalID, q.Species
 
 ) t ON (t.animalid = cast(afq.animalid AS nvarchar(4000)))
 
-WHERE (afq.ts > ? or b.ts > ? or t.ts > ? or gr.ts > ?)
+LEFT JOIN (
+  select
+    AnimalID,
+    max(RefIs.GeographicName) as geographic_origin,
+    max(afc.ts) as maxTs
+  from Af_Acquisition afc
+  LEFT JOIN Ref_IsisGeographic RefIs ON (Afc.GeographicOrigin = RefIs.GeographicCode)
+  WHERE afc.GeographicOrigin > 0
+  GROUP BY afc.AnimalId
+) aq ON (t.animalid = cast(aq.animalid AS nvarchar(4000)))
+
+WHERE (afq.ts > ? or b.ts > ? or t.ts > ? or gr.ts > ? or aq.maxTs > ?)

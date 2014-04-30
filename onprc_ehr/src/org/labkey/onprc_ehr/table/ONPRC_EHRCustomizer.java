@@ -613,6 +613,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ds.addColumn(col2);
         }
 
+        if (ds.getColumn("activeNoteList") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "activeNoteList", "demographicsActiveNotes");
+            col.setLabel("Active Notes");
+            col.setDescription("This provides a columm summarizing all active DCM notes per animal");
+            ds.addColumn(col);
+        }
+
         if (ds.getColumn("demographicsActiveAssignment") == null)
         {
             ColumnInfo col21 = getWrappedIdCol(us, ds, "activeAssignments", "demographicsActiveAssignment");
@@ -753,7 +761,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             newCol.setLabel("Active Master Problem(s)");
             ti.addColumn(newCol);
 
-            SQLFragment sql2 = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment("pl.category"), true, true, getChr(ti) + "(10)") + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)");
+            SQLFragment sql2 = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("pl.category", "CASE WHEN pl.subcategory IS NULL THEN '' ELSE (" + ti.getSqlDialect().concatenate("': '", "pl.subcategory") + ") END")), true, true, getChr(ti) + "(10)") + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)");
             ExprColumn newCol2 = new ExprColumn(ti, "allProblemCategories", sql2, JdbcType.VARCHAR, ti.getColumn("objectid"));
             newCol2.setLabel("All Master Problem(s)");
             ti.addColumn(newCol2);

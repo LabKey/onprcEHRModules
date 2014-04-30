@@ -94,6 +94,18 @@ public class NecropsyFormType extends EncounterForm
         return super.canInsert();
     }
 
+    /**
+     * The intent is to prevent read access to the majority of users
+     */
+    @Override
+    public boolean canRead()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRPathologyEntryPermission.class))
+            return false;
+
+        return super.canInsert();
+    }
+
     @Override
     protected Integer getDefaultAssignedTo()
     {

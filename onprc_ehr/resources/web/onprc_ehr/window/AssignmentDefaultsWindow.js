@@ -53,7 +53,7 @@ Ext4.define('ONPRC_EHR.window.AssignmentDefaultsWindow', {
 
         var ids = [];
         var projects = [];
-        this.targetStore.each(function(r){
+        this.targetGrid.store.each(function(r){
             if (r.get('Id')){
                 ids.push(r.get('Id'));
             }
@@ -131,9 +131,9 @@ Ext4.define('ONPRC_EHR.window.AssignmentDefaultsWindow', {
     onComplete: function(){
         Ext4.Msg.hide();
 
-        this.targetStore.suspendEvents();
+        this.targetGrid.store.suspendEvents();
         var changed = false;
-        this.targetStore.each(function(r){
+        this.targetGrid.store.each(function(r){
             if (r.get('Id') && this.conditionData[r.get('Id')]){
                 r.set('assignCondition', this.conditionData[r.get('Id')]);
                 changed = true;
@@ -145,9 +145,10 @@ Ext4.define('ONPRC_EHR.window.AssignmentDefaultsWindow', {
             }
         }, this);
 
-        this.targetStore.resumeEvents();
+        this.targetGrid.store.resumeEvents();
         if (changed){
-            this.targetStore.fireEvent('datachanged', this.targetStore);
+            this.targetGrid.store.fireEvent('datachanged', this.targetGrid.store);
+            this.targetGrid.getView().refresh();
         }
 
         this.close();
@@ -164,7 +165,7 @@ EHR.DataEntryUtils.registerGridButton('SET_ASSIGNMENT_DEFAULTS', function(config
             LDK.Assert.assertNotEmpty('Unable to find gridpanel in SET_ASSIGNMENT_DEFAULTS button', grid);
 
             Ext4.create('ONPRC_EHR.window.AssignmentDefaultsWindow', {
-                targetStore: grid.store
+                targetGrid: grid
             }).show();
         }
     }, config);

@@ -22,7 +22,7 @@
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>snomed</fkTable>
-                            <fkColumnName>Code</fkColumnName>
+                            <fkColumnName>code</fkColumnName>
                         </fk>
                     </column>
                     <column columnName="organism">
@@ -30,7 +30,7 @@
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>snomed</fkTable>
-                            <fkColumnName>Code</fkColumnName>
+                            <fkColumnName>code</fkColumnName>
                         </fk>
                     </column>
                     <column columnName="quantity">

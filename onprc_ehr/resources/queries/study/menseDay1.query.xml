@@ -1,0 +1,17 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="menseDay1" tableDbType="NOT_IN_DB">
+                <tableTitle>Mense Cycle Starts</tableTitle>
+                <columns>
+                    <column columnName="previousMens">
+                        <columnTitle>Previous Mens</columnTitle>
+                    </column>
+                    <column columnName="daysSinceLastMens">
+                        <columnTitle>Days Since Last Mens</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

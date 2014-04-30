@@ -223,6 +223,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Offspring Over 250 Days, Still In Cage With Dam", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=offspringWithMother&query.viewName=Offspring Over 250 Days"), "Reproductive Management");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Pregnant Animals (based on ultrasounds only)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=pregnantAnimals"), "Reproductive Management");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Pregnant Animals (including PEs)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPregnancy"), "Reproductive Management");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Mense Data With Cycle Date", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=menseData"), "Reproductive Management");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummary"), "Pathology");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "SNOMED Search", this, DetailsURL.fromString("/onprc_ehr/snomedSearch.view"), "Pathology");
