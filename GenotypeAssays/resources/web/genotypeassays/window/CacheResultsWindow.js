@@ -18,7 +18,7 @@ Ext4.define('GenotypeAssays.window.CacheResultsWindow', {
     },
 
     initComponent: function(){
-        LABKEY.ExtAdapter.apply(this, {
+        Ext4.apply(this, {
             modal: true,
             title: 'Cache Results',
             bodyStyle: 'padding: 5px;',
