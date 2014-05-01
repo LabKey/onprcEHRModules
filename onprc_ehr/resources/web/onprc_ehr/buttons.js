@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-LABKEY.ExtAdapter.ns('ONPRC_EHR');
+Ext4.ns('ONPRC_EHR');
 
 ONPRC_EHR.Buttons = new function(){
 

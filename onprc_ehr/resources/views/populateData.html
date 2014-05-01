@@ -6,7 +6,7 @@ Ext4.onReady(function(){
         extend: 'Ext.panel.Panel',        
     
         initComponent: function(){
-            LABKEY.ExtAdapter.apply(this, {
+            Ext4.apply(this, {
                 defaults: {
                     style: 'padding: 10px;'
                 },
@@ -7036,7 +7036,7 @@ Ext4.onReady(function(){
                             var key = row.category + '||' + row.name;
                             if (procedureMap[key]){
                                 procedureMap[key]._found = true;
-                                row = LABKEY.ExtAdapter.apply(row, procedureMap[key]);
+                                row = Ext4.apply(row, procedureMap[key]);
                                 toUpdate.push(row);
                             }
                             else {

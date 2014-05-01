@@ -108,9 +108,9 @@ ONPRC_EHR.Buttons.markTransferComplete = function(dataRegionName){
                                 'housing': rows
                             };
 
-                            var newForm = LABKEY.ExtAdapter.DomHelper.append(document.getElementsByTagName('body')[0],
+                            var newForm = Ext4.DomHelper.append(document.getElementsByTagName('body')[0],
                                     '<form method="POST" action="' + LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {formType: 'housing'}) + '">' +
-                                            '<input type="hidden" name="initialData" value="' + LABKEY.ExtAdapter.htmlEncode(Ext4.encode(initialData)) + '" />' +
+                                            '<input type="hidden" name="initialData" value="' + Ext4.htmlEncode(Ext4.encode(initialData)) + '" />' +
                                             '</form>');
                             newForm.submit();
                         }

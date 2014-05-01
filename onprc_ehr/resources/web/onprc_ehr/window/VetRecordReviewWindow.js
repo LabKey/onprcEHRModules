@@ -23,7 +23,7 @@ Ext4.define('ONPRC_EHR.window.VetRecordReviewWindow', {
     },
 
     initComponent: function(){
-        LABKEY.ExtAdapter.apply(this, {
+        Ext4.apply(this, {
             title: 'Mark Reviewed',
             modal: true,
             closeAction: 'destroy',

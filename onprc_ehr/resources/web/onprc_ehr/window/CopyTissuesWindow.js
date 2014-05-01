@@ -7,7 +7,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
     extend: 'Ext.window.Window',
 
     initComponent: function(){
-        LABKEY.ExtAdapter.apply(this, {
+        Ext4.apply(this, {
             modal: true,
             closeAction: 'destroy',
             bodyStyle: 'padding: 5px;',

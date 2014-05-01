@@ -7,7 +7,7 @@ Ext4.define('EHR.window.ManageProcedureWindow', {
     extend: 'Ext.window.Window',
 
     initComponent: function(){
-        LABKEY.ExtAdapter.apply(this, {
+        Ext4.apply(this, {
             title: 'Copy From Procedure',
             width: 500,
             bodyStyle: 'padding: 5px;',
@@ -341,7 +341,7 @@ Ext4.define('EHR.window.ManageProcedureWindow', {
             Ext4.Array.forEach(this.createCommands, function(c){
                 this.pendingInserts++;
 
-                LABKEY.Query.insertRows(LABKEY.ExtAdapter.apply({
+                LABKEY.Query.insertRows(Ext4.apply({
                     failure: LDK.Utils.getErrorCallback(),
                     scope: this,
                     success: this.onInsertComplete
