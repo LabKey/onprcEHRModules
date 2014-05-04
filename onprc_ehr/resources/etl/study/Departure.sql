@@ -16,8 +16,7 @@
 Select
 	cast(afd.AnimalID as nvarchar(4000)) as Id,
 	afd.Date as Date,
-	--afd.ISISDestination as desintationId,
-	isis.InstitutionName as destination,
+	isis.InstitutionCode as destination,
 	
 	case
 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN

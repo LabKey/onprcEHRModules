@@ -130,16 +130,18 @@ Ext4.define('ONPRC_EHR.window.AssignmentDefaultsWindow', {
 
     onComplete: function(){
         Ext4.Msg.hide();
+        var condition = this.down('#conditionField').getValue();
+        var projectedRelease = this.down('#projectedReleaseField').getValue();
 
         this.targetGrid.store.suspendEvents();
         var changed = false;
         this.targetGrid.store.each(function(r){
-            if (r.get('Id') && this.conditionData[r.get('Id')]){
+            if (condition && r.get('Id') && this.conditionData[r.get('Id')]){
                 r.set('assignCondition', this.conditionData[r.get('Id')]);
                 changed = true;
             }
 
-            if (r.get('project') && this.projectData[r.get('project')]){
+            if (projectedRelease && r.get('project') && this.projectData[r.get('project')]){
                 r.set('projectedRelease', this.projectData[r.get('project')]);
                 changed = true;
             }

@@ -9,8 +9,8 @@
                             schemaName=study&amp;
                             query.queryName=Animal Record Flags&amp;
                             query.viewName=Active Flags&amp;
-                            query.category~eq=${category}&amp;
-                            query.value~eq=${value}&amp;
+                            query.flag/category~eq=${category}&amp;
+                            query.flag/value~eq=${value}&amp;
                         </url>
                     </column>
                 </columns>

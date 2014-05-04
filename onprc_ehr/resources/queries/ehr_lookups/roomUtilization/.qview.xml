@@ -6,6 +6,8 @@
             </properties>
         </column>
         <column name="room"/>
+        <column name="room/housingCondition"/>
+        <column name="room/housingType"/>
         <column name="AvailableCages" />
         <column name="CagesUsed"/>
         <column name="CagesEmpty"/>

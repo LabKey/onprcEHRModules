@@ -5,8 +5,11 @@ onprc_ehr/distributions/test_onprc.xml -text
 onprc_ehr/module.properties -text
 onprc_ehr/resources/etl/deprecated/Assignment.sql -text
 onprc_ehr/resources/etl/deprecated/Cases.sql -text
+onprc_ehr/resources/etl/deprecated/Notes.sql -text
 onprc_ehr/resources/etl/deprecated/Parentage.sql -text
+onprc_ehr/resources/etl/deprecated/PregnancyConfirmation.sql -text
 onprc_ehr/resources/etl/deprecated/Problem[!!-~]List.sql -text
+onprc_ehr/resources/etl/deprecated/Serology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/deprecated/TB[!!-~]Tests.sql -text
 onprc_ehr/resources/etl/deprecated/billing.sql -text
 onprc_ehr/resources/etl/deprecated/invoiceRuns.sql -text
@@ -25,8 +28,8 @@ onprc_ehr/resources/etl/ehr/protocol_counts.sql -text
 onprc_ehr/resources/etl/ehr/snomed_tags.sql -text
 onprc_ehr/resources/etl/ehr/treatment_times.sql -text
 onprc_ehr/resources/etl/ehr_lookups/cage.sql -text
+onprc_ehr/resources/etl/ehr_lookups/flag_values.sql -text
 onprc_ehr/resources/etl/mergesync/orderssynced.sql -text
-onprc_ehr/resources/etl/onprc_billing/miscCharges.sql -text
 onprc_ehr/resources/etl/onprc_billing/projectAccountHistory.sql -text
 onprc_ehr/resources/etl/pending/Anesthesia.sql -text
 onprc_ehr/resources/etl/pending/Sur_AnesthesiaLogData.sql -text
@@ -65,11 +68,8 @@ onprc_ehr/resources/etl/study/Matings.sql -text
 onprc_ehr/resources/etl/study/Measurements.sql -text
 onprc_ehr/resources/etl/study/Microbiology.sql -text
 onprc_ehr/resources/etl/study/Misc[!!-~]Tests.sql -text
-onprc_ehr/resources/etl/study/Notes.sql -text
 onprc_ehr/resources/etl/study/Parasitology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Pathology[!!-~]Diagnoses.sql -text
-onprc_ehr/resources/etl/study/PregnancyConfirmation.sql -text
-onprc_ehr/resources/etl/study/Serology[!!-~]Results.sql -text
 onprc_ehr/resources/etl/study/Tissue[!!-~]Distributions.sql -text
 onprc_ehr/resources/etl/study/Tissue[!!-~]Samples.sql -text
 onprc_ehr/resources/etl/study/Treatment[!!-~]Orders.sql -text
@@ -336,6 +336,10 @@ onprc_ehr/resources/queries/study/cases/All[!!-~]Surgery[!!-~]Cases.qview.xml -t
 onprc_ehr/resources/queries/study/cases/Clinical[!!-~]Case[!!-~]Review.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Surgery[!!-~]Case[!!-~]Review.qview.xml -text
 onprc_ehr/resources/queries/study/cases/With[!!-~]Initial[!!-~]Housing.qview.xml -text
+onprc_ehr/resources/queries/study/casesOpenOnDate.query.xml -text
+onprc_ehr/resources/queries/study/casesOpenOnDate.sql -text
+onprc_ehr/resources/queries/study/casesOpenOnDate/.qview.xml -text
+onprc_ehr/resources/queries/study/casesOpenOnDate/Behavior[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/chemMisc.query.xml -text
 onprc_ehr/resources/queries/study/chemMisc.sql -text
 onprc_ehr/resources/queries/study/chemMisc/.qview.xml -text
@@ -793,6 +797,7 @@ onprc_ehr/resources/web/onprc_ehr/panel/RoomLayoutPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/reports/Colony[!!-~]Census.xlsm -text
 onprc_ehr/resources/web/onprc_ehr/window/AnesthesiaRowWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/AssignmentDefaultsWindow.js -text
+onprc_ehr/resources/web/onprc_ehr/window/BehaviorCasesWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeBloodStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeEncounterStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeLabworkStatusWindow.js -text

@@ -73,6 +73,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * User: bimber
@@ -99,6 +100,8 @@ public class ONPRC_EHRTriggerHelper
     private Map<Integer, List<Integer>> _cachedFrequencyTimes = new HashMap<>();
     private Map<String, Integer> _cachedConditionCodes = new HashMap<>();
     private Map<Integer, DividerRecord> _cachedDividerRecords = new HashMap<>();
+
+    private static final String NONRESTRICTED = "Nonrestricted";
 
     public ONPRC_EHRTriggerHelper(int userId, String containerId)
     {
@@ -356,14 +359,14 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public String validateCage(String room, String cage)
+    public String validateCage(String room, String cage, boolean hasDivider)
     {
         List<CageRecord> cages = getCagesForRoom(room);
         for (CageRecord row : cages)
         {
-            if (cage.equalsIgnoreCase((String) row.getCage()))
+            if (cage.equalsIgnoreCase(row.getCage()))
             {
-                if (!row.isAvailable())
+                if (!row.isAvailable() && !hasDivider)
                 {
                     return "This cage is not available based the current cage/divider configuration";
                 }
@@ -392,6 +395,7 @@ public class ONPRC_EHRTriggerHelper
                     FieldKey.fromString("cage_type"),
                     FieldKey.fromString("cage_type/sqft"),
                     FieldKey.fromString("cage_type/height"),
+                    FieldKey.fromString("cage_type/cageslots"),
                     FieldKey.fromString("divider"),
                     FieldKey.fromString("divider/divider"),
                     FieldKey.fromString("status"),
@@ -418,7 +422,7 @@ public class ONPRC_EHRTriggerHelper
         return _cachedCages.get(room);
     }
 
-    private class CageRecord
+    public static class CageRecord
     {
         private String _room;
         private String _cage;
@@ -430,8 +434,9 @@ public class ONPRC_EHRTriggerHelper
         private String _status;
         private String _lowerCage;
         private Boolean _isAvailable;
-        private Integer _row;
+        private String _row;
         private Integer _columnIdx;
+        private Integer _cageslots;
 
         public CageRecord(Results results) throws SQLException
         {
@@ -440,12 +445,13 @@ public class ONPRC_EHRTriggerHelper
             _cageType = results.getString(FieldKey.fromString("cage_type"));
             _sqFt = results.getDouble(FieldKey.fromString("cage_type/sqft"));
             _height = results.getDouble(FieldKey.fromString("cage_type/height"));
+            _cageslots = results.getInt(FieldKey.fromString("cage_type/cageslots"));
             _divider = results.getInt(FieldKey.fromString("divider"));
             _dividerName = results.getString(FieldKey.fromString("divider/divider"));
             _status = results.getString(FieldKey.fromString("status"));
             _lowerCage = results.getString(FieldKey.fromString("availability/lowerCage"));
             _isAvailable = results.getBoolean(FieldKey.fromString("availability/isAvailable"));
-            _row = results.getInt(FieldKey.fromString("cagePosition/row"));
+            _row = results.getString(FieldKey.fromString("cagePosition/row"));
             _columnIdx = results.getInt(FieldKey.fromString("cagePosition/columnIdx"));
         }
 
@@ -499,7 +505,7 @@ public class ONPRC_EHRTriggerHelper
             return _isAvailable;
         }
 
-        private Integer getRow()
+        private String getRow()
         {
             return _row;
         }
@@ -508,9 +514,19 @@ public class ONPRC_EHRTriggerHelper
         {
             return _columnIdx;
         }
+
+        private Boolean getAvailable()
+        {
+            return _isAvailable;
+        }
+
+        private Integer getCageslots()
+        {
+            return _cageslots;
+        }
     }
 
-    private class DividerRecord
+    public static class DividerRecord
     {
         private Integer _rowId;
         private String _divider;
@@ -518,57 +534,62 @@ public class ONPRC_EHRTriggerHelper
         private Boolean _countAsPaired;
         private Boolean _isMoveable;
 
-        protected DividerRecord()
+        public DividerRecord()
         {
 
         }
 
-        private Integer getRowId()
+        public Integer getRowId()
         {
             return _rowId;
         }
 
-        private void setRowId(Integer rowId)
+        public void setRowId(Integer rowId)
         {
             _rowId = rowId;
         }
 
-        private String getDivider()
+        public String getDivider()
         {
             return _divider;
         }
 
-        private void setDivider(String divider)
+        public void setDivider(String divider)
         {
             _divider = divider;
         }
 
-        private Boolean getCountAsSeparate()
+        public Boolean getCountAsSeparate()
         {
             return _countAsSeparate;
         }
 
-        private void setCountAsSeparate(Boolean countAsSeparate)
+        public void setCountAsSeparate(Boolean countAsSeparate)
         {
             _countAsSeparate = countAsSeparate;
         }
 
-        private Boolean getCountAsPaired()
+        public Boolean getCountAsPaired()
         {
             return _countAsPaired;
         }
 
-        private void setCountAsPaired(Boolean countAsPaired)
+        public void setCountAsPaired(Boolean countAsPaired)
         {
             _countAsPaired = countAsPaired;
         }
 
-        private Boolean getMoveable()
+        public Boolean getMoveable()
         {
             return _isMoveable;
         }
 
-        private void setIsMoveable(Boolean moveable)
+        public void setIsMoveable(Boolean moveable)
+        {
+            _isMoveable = moveable;
+        }
+
+        public void setMoveable(Boolean moveable)
         {
             _isMoveable = moveable;
         }
@@ -597,7 +618,7 @@ public class ONPRC_EHRTriggerHelper
 
         for (CageRecord map : cages)
         {
-            if (cage.equalsIgnoreCase((String) map.getCage()))
+            if (cage.equalsIgnoreCase(map.getCage()))
             {
                 return map;
             }
@@ -833,6 +854,24 @@ public class ONPRC_EHRTriggerHelper
         return null;
     }
 
+    public Integer getHousingType(String room)
+    {
+        Map<String, Object> roomRec = getRoomDetails(room);
+        if (roomRec == null)
+            return null;
+
+        return (Integer)roomRec.get("housingType");
+    }
+
+    public Integer getHousingCondition(String room)
+    {
+        Map<String, Object> roomRec = getRoomDetails(room);
+        if (roomRec == null)
+            return null;
+
+        return (Integer)roomRec.get("housingCondition");
+    }
+
     private List<Map<String, Object>> getCageSizeRecords()
     {
         if (_cachedCageSizeRecords == null)
@@ -862,7 +901,7 @@ public class ONPRC_EHRTriggerHelper
         return _cachedCageSizeRecords;
     }
 
-    public void markHousingTransfersComplete(String objectid) throws Exception
+    public void markHousingTransferRequestsComplete(String objectid) throws Exception
     {
         TableInfo ti = getTableInfo(ONPRC_EHRSchema.SCHEMA_NAME, ONPRC_EHRSchema.TABLE_HOUSING_TRANFER_REQUESTS);
         Map<String, Object> toUpdate = new CaseInsensitiveHashMap<>();
@@ -899,9 +938,47 @@ public class ONPRC_EHRTriggerHelper
         return null;
     }
 
+    // search by either code or value
+    private String getFlag(String category, String value, Integer code, boolean activeOnly)
+    {
+        TableInfo flagValues = getTableInfo("ehr_lookups", "flag_values");
+        SimpleFilter flagFilter = new SimpleFilter(FieldKey.fromString("category"), category);
+
+        if (value != null)
+            flagFilter.addCondition(FieldKey.fromString("value"), value);
+
+        if (code != null)
+            flagFilter.addCondition(FieldKey.fromString("code"), code);
+
+        if (activeOnly)
+            flagFilter.addCondition(FieldKey.fromString("datedisabled"), null, CompareType.ISBLANK);
+
+        TableSelector ts = new TableSelector(flagValues, Collections.singleton("objectid"), flagFilter, null);
+
+        List<String> ret = ts.getArrayList(String.class);
+        if (ret == null || ret.isEmpty())
+        {
+            return null;
+        }
+        else if (ret.size() > 1)
+        {
+            _log.error("duplicate flags found for: " + category + " / " + value);
+        }
+
+        return ret.get(0);
+    }
+
     public void doBirthTriggers(String id, Date date, String dam) throws Exception
     {
-        EHRService.get().ensureFlagActive(getUser(), getContainer(), "Condition", "Nonrestricted", date, null, Collections.singletonList(id), false);
+        String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
+        if (nonRestrictedFlag != null)
+        {
+            EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, date, null, Collections.singletonList(id), false);
+        }
+        else
+        {
+            _log.error("Unable to find active flag for condition nonrestricted");
+        }
 
         if (dam != null)
         {
@@ -909,13 +986,13 @@ public class ONPRC_EHRTriggerHelper
             TableInfo flags = getTableInfo("study", "flags");
             SimpleFilter flagFilter = new SimpleFilter(FieldKey.fromString("Id"), dam);
             flagFilter.addCondition(FieldKey.fromString("isActive"), true);
-            flagFilter.addCondition(FieldKey.fromString("category"), "SPF");
+            flagFilter.addCondition(FieldKey.fromString("flag/category"), "SPF");
 
-            TableSelector ts = new TableSelector(flags, Collections.singleton("value"), flagFilter, null);
+            TableSelector ts = new TableSelector(flags, Collections.singleton("flag"), flagFilter, null);
             List<String> flagList = ts.getArrayList(String.class);
             if (flagList != null && flagList.size() == 1)
             {
-                EHRService.get().ensureFlagActive(getUser(), getContainer(), "SPF", flagList.get(0), date, null, Collections.singletonList(id), false);
+                EHRService.get().ensureFlagActive(getUser(), getContainer(), flagList.get(0), date, null, Collections.singletonList(id), false);
             }
 
             //also breeding groups
@@ -956,8 +1033,8 @@ public class ONPRC_EHRTriggerHelper
                 row.put("Id", id);
                 row.put("date", date);
                 row.put("project", project);
-                row.put("assignCondition", getConditionCodeForMeaning("Nonrestricted"));
-                row.put("projectedReleaseCondition", getConditionCodeForMeaning("Nonrestricted"));
+                row.put("assignCondition", getConditionCodeForMeaning(NONRESTRICTED));
+                row.put("projectedReleaseCondition", getConditionCodeForMeaning(NONRESTRICTED));
 
                 assignmentToAdd.add(row);
             }
@@ -968,12 +1045,10 @@ public class ONPRC_EHRTriggerHelper
 
     public void updateAnimalCondition(String id, Date enddate, Integer condition) throws BatchValidationException
     {
-        TableInfo ti = getTableInfo("ehr_lookups", "animal_condition");
-        TableSelector ts = new TableSelector(ti, Collections.singleton("meaning"), new SimpleFilter(FieldKey.fromString("code"), condition), null);
-        List<String> ret = ts.getArrayList(String.class);
-        if (ret != null && ret.size() == 1)
+        String flag = getFlag("condition", null, condition, true);
+        if (flag != null)
         {
-            EHRService.get().ensureFlagActive(getUser(), getContainer(), "Condition", ret.get(0), enddate, null, Collections.singletonList(id), true);
+            EHRService.get().ensureFlagActive(getUser(), getContainer(), flag, enddate, null, Collections.singletonList(id), true);
         }
         else
         {
@@ -1115,45 +1190,47 @@ public class ONPRC_EHRTriggerHelper
         return _cachedProtocols.get(project);
     }
 
-    public Integer getConditionCodeForMeaning(final String meaning)
+    public Integer getConditionCodeForMeaning(final String flag)
     {
-        if (meaning == null)
+        if (flag == null)
             return null;
 
-        if (!_cachedConditionCodes.containsKey(meaning))
+        if (!_cachedConditionCodes.containsKey(flag))
         {
-            TableInfo ti = getTableInfo("ehr_lookups", "animal_condition");
-            TableSelector ts = new TableSelector(ti, Collections.singleton("code"), new SimpleFilter(FieldKey.fromString("meaning"), meaning), null);
+            TableInfo ti = getTableInfo("ehr_lookups", "flag_values");
+            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("objectid"), flag);
+            filter.addCondition(FieldKey.fromString("category"), "Condition");
+            TableSelector ts = new TableSelector(ti, Collections.singleton("code"), filter, null);
             List<Integer> ret = ts.getArrayList(Integer.class);
             if (ret != null && !ret.isEmpty())
             {
-                _cachedConditionCodes.put(meaning, ret.get(0));
+                _cachedConditionCodes.put(flag, ret.get(0));
             }
             else
             {
-                _cachedConditionCodes.put(meaning, null);
+                _cachedConditionCodes.put(flag, null);
             }
         }
 
-        return _cachedConditionCodes.get(meaning);
+        return _cachedConditionCodes.get(flag);
     }
 
-    public String validateHousingConditionInsert(String id, String value, String objectId)
+    public String validateHousingConditionInsert(String id, String flag, String objectId)
     {
-        Integer code = getConditionCodeForMeaning(value);
+        //NOTE: there is no good way to test whether this flag has category=Condition, so test all
+        Integer code = getConditionCodeForMeaning(flag);
         if (code == null)
             return null;
 
         Integer oldCode = null;
 
         //find existing active flags of the same category
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("category"), "Condition");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("flag/category"), "Condition");
         filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("Id"), id, CompareType.EQUAL);
-        //filter.addCondition(FieldKey.fromString("objectid"), objectId, CompareType.NEQ_OR_NULL);
 
         TableInfo flagsTable = getTableInfo("study", "Animal Record Flags");
-        TableSelector ts = new TableSelector(flagsTable, PageFlowUtil.set("value"), filter, null);
+        TableSelector ts = new TableSelector(flagsTable, PageFlowUtil.set("flag"), filter, null);
         List<String> values = ts.getArrayList(String.class);
         if (values != null && !values.isEmpty())
         {
@@ -1174,58 +1251,111 @@ public class ONPRC_EHRTriggerHelper
 
     public String updateDividers(String id, String room, String cage, Integer divider, boolean isValidateOnly, List<Map<String, Object>> rowsInTransaction)
     {
+        CageRecord cr = getCagesRecord(room, cage);
+        if (cr == null)
+        {
+            return "Unknown cage: " + cage;
+        }
+
+        if (cr.getCageslots() != 2)
+        {
+            return "Divider changes are only supported for doubles";
+        }
+
+        DividerRecord targetDivider = getDividerRecord(divider);
+        if (targetDivider == null)
+        {
+            _log.error("Unknown divider: " + divider);
+            return null;
+        }
+
         //first gather all animals currently housed, by cage
         Map<String, Set<String>> animalMap = getAnimalLocationsAfterMove(room, rowsInTransaction);
         Set<String> errors = new HashSet<>();
 
-        //also build list of dividers and changes
+        //also build list of existing dividers and changes
         Map<String, Integer> cageDividerMap = new HashMap<>();
+        Map<String, Integer> dividerChanges = new HashMap<>();
         for (CageRecord cageRec : getCagesForRoom(room))
         {
             cageDividerMap.put(cageRec.getCage(), cageRec.getDivider());
         }
 
-        Map<String, Set<Integer>> dividerChanges = new HashMap<>();
-        for (Map<String, Object> row : rowsInTransaction)
+        //then any changes
+        String lowestCage = getLowestCageForUnit(room, cage);
+        if (!cageDividerMap.containsKey(lowestCage))
         {
-            if (row.get("cage") == null || row.get("room") == null || !room.equalsIgnoreCase((String) row.get("room")))
-                continue;
+            _log.error("Unknown cage: " + lowestCage);
+            return null;
+        }
 
-            String effectiveCage = getEffectiveCageForDivider((String) row.get("room"), (String) row.get("cage"), (Integer) row.get("divider"));
-            if (!cageDividerMap.containsKey(effectiveCage))
+        //this coveres pairing dividers or no divider
+        if (!targetDivider.getCountAsSeparate())
+        {
+            //we always want to change the divider associated with the lower cage
+            if (!targetDivider.equals(cageDividerMap.get(lowestCage)))
             {
-                _log.error("Unknown cage: " + effectiveCage);
+                dividerChanges.put(lowestCage, targetDivider.getRowId());
             }
-            else if (cageDividerMap.get(effectiveCage).equals(row.get("divider")))
-            {
-                Set<Integer> changedCages = dividerChanges.get(cage);
-                if (changedCages == null)
-                    changedCages = new HashSet<>();
-                changedCages.add((Integer)row.get("divider"));
-                if (changedCages.size() > 1)
-                    errors.add("Conflicting divider changes");
+        }
+        else
+        {
 
-                dividerChanges.put(cage, changedCages);
-                cageDividerMap.put(cage, (Integer)row.get("divider"));
-            }
         }
 
         return errors.isEmpty() ? null : StringUtils.join(errors, "<>");
     }
 
-    private String getEffectiveCageForDivider(String room, String cage, Integer targetDivider)
+    // returns the lowest cage for this unit, based on cage slots
+    private String getLowestCageForUnit(String room, String cage)
     {
         // the purpose is to determine whether we need to adjust the divider toward the right or left
-        //
         CageRecord cageRec = getCagesRecord(room, cage);
-        return null;
+
+        Map<Integer, CageRecord> cagesInRow = new TreeMap<>();
+        for (CageRecord cr : getCagesForRoom(room))
+        {
+            if (cr.getRow() != null && cr.getRow().equals(cageRec.getRow()))
+            {
+                cagesInRow.put(cr.getColumnIdx(), cr);
+            }
+        }
+
+        // iterate the row to determine the lowest cage of this unit
+        // currently we assume the cage in question is a double, but there may be other cages below it
+        int positionInCage = 0;
+        CageRecord lowestCage = null;
+        for (Integer col : cagesInRow.keySet())
+        {
+            if (lowestCage == null || positionInCage % lowestCage.getCageslots() == 0)
+            {
+                lowestCage = cagesInRow.get(col);
+            }
+
+            if (col == cageRec.getColumnIdx())
+            {
+                break;
+            }
+
+            positionInCage++;
+        }
+
+        if (lowestCage == null)
+        {
+            _log.error("unable to find effective cage for: " + cageRec.getCage());
+            return null;
+        }
+
+        _log.info("original cage: " + cageRec.getCage() + ", effective: " + lowestCage.getCage());
+
+        return lowestCage.getCage();
     }
 
     public Integer getNextProjectId()
     {
         if (_nextProjectId == null)
         {
-            SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT max(project) as expr FROM ehr.project");
+            SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT COALESCE(max(project), 0) as expr FROM ehr.project");
             List<Integer> ret = ss.getArrayList(Integer.class);
             _nextProjectId = ret.isEmpty() ? 0 : ret.get(0);
         }
@@ -1253,7 +1383,7 @@ public class ONPRC_EHRTriggerHelper
                 throw new IllegalArgumentException("ONPRC_EHR Module is only supported on either postgres or sqlserver");
             }
 
-            SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT max(CAST(protocol as INTEGER)) as expr FROM ehr.protocol WHERE " + suffix);
+            SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT COALESCE(max(CAST(protocol as INTEGER)), 0) as expr FROM ehr.protocol WHERE " + suffix);
             List<Integer> ret = ss.getArrayList(Integer.class);
             _nextProtocolId = ret.isEmpty() ? 0 : ret.get(0);
         }

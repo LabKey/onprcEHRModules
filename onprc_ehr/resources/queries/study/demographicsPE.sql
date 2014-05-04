@@ -44,7 +44,7 @@ LEFT JOIN (
   SELECT
     f.Id
   FROM study.flags f
-  WHERE f.isActive = true AND f.category = 'Condition' AND f.value = 'Clinically Restricted'
+  WHERE f.isActive = true AND f.flag.category = 'Condition' AND f.flag.value = 'Clinically Restricted'
   GROUP BY f.Id
 ) f ON (f.Id = d.Id)
 

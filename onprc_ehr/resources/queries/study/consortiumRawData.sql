@@ -64,7 +64,7 @@ SELECT
   sum(CASE WHEN a.project.use_category = 'Research' THEN 1 ELSE 0 END) as totalResearchAssignments,
   sum(CASE WHEN a.project.use_category = 'U42' THEN 1 ELSE 0 END) as isU42,
   sum(CASE WHEN a.project.use_category = 'U24' THEN 1 ELSE 0 END) as isU24,
-  group_concat(DISTINCT f.value, chr(10)) as spfStatus,
+  group_concat(DISTINCT f.flag.value, chr(10)) as spfStatus,
 
 FROM study.housingOverlaps h
 
@@ -80,7 +80,7 @@ LEFT JOIN study.flags f ON (
   h.Id = f.Id AND
   f.dateOnly <= CAST(EndDate as date) AND
   f.enddateCoalesced >= CAST(StartDate as date) AND
-  f.category = 'SPF'
+  f.flag.category = 'SPF'
 )
 
 GROUP BY h.Id

@@ -21,7 +21,8 @@ Select
 	--Aft.CageID as  TransferCageID ,
 	l2.Location as room,
 	rtrim(ltrim(rtrim(r2.row) + convert(char(2), r2.Cage))) As cage,
-
+    (select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s3.Field and l.value = s3.Value) as housingType,
+	(select l.rowid FROM labkey.ehr_lookups.lookups l where l.set_name = s4.Field and l.value = s4.Value) as housingCondition,
 	--Reason as ReasonInt,
         s1.Value as Reason,
 
@@ -51,6 +52,9 @@ left join  Sys_Parameters s2 on (s2.Flag = Rt.Deptcode And S2.Field = 'Departmen
 left join  Sys_Parameters s1 on ( AfT.Reason = s1.Flag And s1.Field = 'TransferReason')
 left join  Ref_RowCage r2 on  (r2.CageID = aft.CageID)
 left join  Ref_Location l2 on (r2.LocationID = l2.LocationId)
+left join  Sys_Parameters s3 on ( l2.LocationType = s3.Flag And s3.Field = 'LocationType')
+left join  Sys_Parameters s4 on ( l2.LocationDefinition = s4.Flag And s4.Field = 'LocationDefinition')
+
 left join Af_Qrf q on (q.animalid = aft.animalid)
 
 WHERE (aft.ts > ? OR q.ts > ?) and l2.Location != 'No Location'

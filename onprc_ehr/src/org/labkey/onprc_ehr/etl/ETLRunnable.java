@@ -1361,6 +1361,8 @@ public class ETLRunnable implements Runnable
 
             put("orderssynced", new String[]{"IRIS_Lis_TransactionlogMaster"});
             put("allowableAnimals", new String[]{"IACUC_SLAYearly", "IACUC_SLAAnimals", "Ref_ProjectsIACUC"});
+
+            put("flag_values", new String[]{"Ref_Pool"});
         }
     };
 

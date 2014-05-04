@@ -22,11 +22,11 @@ FROM study.demographics d
 LEFT JOIN (
   SELECT
     f.Id,
-    group_concat(distinct f.value, chr(10)) as viralStatus,
-    count(distinct f.value) as total
+    group_concat(distinct f.flag.value, chr(10)) as viralStatus,
+    count(distinct f.flag.value) as total
 
   FROM study.flags f
-  WHERE f.isActive = true AND f.category = 'SPF' and f.id.dataset.demographics.calculated_status = 'Alive'
+  WHERE f.isActive = true AND f.flag.category = 'SPF' and f.id.dataset.demographics.calculated_status = 'Alive'
 
   GROUP BY f.id
 ) t ON (d.id = t.id)

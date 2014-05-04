@@ -11,11 +11,19 @@
                     <column columnName="Id">
 
                     </column>
+                    <column columnName="date">
+                        <columnTitle>Date Added</columnTitle>
+                    </column>
+                    <column columnName="enddate">
+                        <columnTitle>Date Removed</columnTitle>
+                        <isHidden>false</isHidden>
+                    </column>
                     <column columnName="project">
                         <isHidden>true</isHidden>
                     </column>
                     <column columnName="category">
                         <columnTitle>Category</columnTitle>
+                        <isHidden>true</isHidden>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>flag_categories</fkTable>
@@ -25,19 +33,20 @@
                     </column>
                     <column columnName="flag">
                         <columnTitle>Flag</columnTitle>
-                        <isHidden>true</isHidden>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>flag_values</fkTable>
+                            <fkColumnName>objectid</fkColumnName>
+                            <fkDisplayColumnName>value</fkDisplayColumnName>
+                        </fk>
                     </column>
                     <column columnName="value">
                         <columnTitle>Value</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
-                    <column columnName="date">
-                        <columnTitle>Date Added</columnTitle>
+                    <column columnName="performedby">
+                        <columnTitle>Entered By</columnTitle>
                     </column>
-                    <column columnName="enddate">
-                        <columnTitle>Date Removed</columnTitle>
-                        <isHidden>false</isHidden>
-                    </column>
-
                 </columns>
             </table>
         </tables>

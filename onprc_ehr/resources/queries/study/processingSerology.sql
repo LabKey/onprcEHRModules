@@ -96,9 +96,9 @@ LEFT JOIN (
 LEFT JOIN (
   SELECT
     f.Id,
-    group_concat(f.value) as spfStatus,
+    group_concat(f.flag.value) as spfStatus,
   FROM study.flags f
-  WHERE f.isActive = true AND f.category = 'SPF'
+  WHERE f.isActive = true AND f.flag.category = 'SPF'
   GROUP BY f.Id
 ) spf ON (spf.Id = d.Id)
 

@@ -183,9 +183,9 @@ AND t.organism.meaning != 'ETIOLOGIC AGENT NOT IDENTIFIED,(NEGATIVE)'
 LEFT JOIN (
   SELECT
     f1.id,
-    group_concat(DISTINCT f1.value) as viralStatus
+    group_concat(DISTINCT f1.flag.value) as viralStatus
   FROM study.flags f1 WHERE
-    f1.value like 'SPF%' AND
+    f1.flag.value like 'SPF%' AND
     f1.date <= EndDate AND
     f1.enddateCoalesced >= StartDate
   GROUP BY f1.id
@@ -194,9 +194,9 @@ LEFT JOIN (
 LEFT JOIN (
   SELECT
     f2.id,
-    group_concat(DISTINCT f2.value) as viralStatus,
+    group_concat(DISTINCT f2.flag.value) as viralStatus,
   FROM study.flags f2 WHERE
-    f2.value like 'SPF%' AND
+    f2.flag.value like 'SPF%' AND
     f2.date <= EndDate AND
     f2.enddateCoalesced >= EndDate
   GROUP BY f2.id

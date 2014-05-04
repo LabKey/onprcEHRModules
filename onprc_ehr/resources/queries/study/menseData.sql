@@ -29,7 +29,7 @@ FROM (
 
 SELECT
   o.Id,
-  o.dateOnly as date,
+  CAST(o.dateOnly AS TIMESTAMP) as date,
   o.observation,
   (SELECT max(md.date) as expr FROM study.menseDay1 md WHERE md.Id = o.Id AND md.date <= o.dateOnly) as cycleStart
 

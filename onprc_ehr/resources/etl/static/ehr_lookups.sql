@@ -306,19 +306,93 @@ getdate() as modified,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
 from iris_production.dbo.ref_pool where (ShortDescription = 'Condition' or poolcode = 207) and DateDisabled is null and PoolCode != 203;
 
-
-TRUNCATE TABLE ehr_lookups.flag_values;
-insert into ehr_lookups.flag_values (category, value,code,datedisabled,container,created,createdby,modified,modifiedby)
+--append custom flags
+insert into ehr_lookups.flag_values (category, value,code,datedisabled,objectid,container,created,createdby,modified,modifiedby)
 select
-LTRIM(rtrim(shortDescription)) as category,
-LTRIM(rtrim(description)) as value,
-PoolCode as code,
-DateDisabled as datedisabled,
+'Genetics' as category,
+'DNA Bank Blood Draw Collected' as value,
+null as code,
+null as datedisabled,
+NEWID() as objectid,
 (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
 getdate() as created,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
 getdate() as modified,
 (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
 
-from IRIS_Production.dbo.Ref_Pool
-WHERE ShortDescription not in ('CBG', 'EBG', 'HBG', 'PBG', 'STG', 'SBG', 'JBG', 'CCBG', 'CTG', 'Origin');
+WHERE NOT EXISTS (SELECT rowid FROM labkey.ehr_lookups.flag_values WHERE 'Genetics' = category AND 'DNA Bank Blood Draw Collected' = value);
+
+insert into ehr_lookups.flag_values (category, value,code,datedisabled,objectid,container,created,createdby,modified,modifiedby)
+select
+'Genetics' as category,
+'DNA Bank Blood Draw Needed' as value,
+null as code,
+null as datedisabled,
+NEWID() as objectid,
+(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
+getdate() as created,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
+getdate() as modified,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
+
+WHERE NOT EXISTS (SELECT rowid FROM labkey.ehr_lookups.flag_values WHERE 'Genetics' = category AND 'DNA Bank Blood Draw Needed' = value);
+
+insert into ehr_lookups.flag_values (category, value,code,datedisabled,objectid,container,created,createdby,modified,modifiedby)
+select
+'Genetics' as category,
+'MHC Blood Draw Collected' as value,
+null as code,
+null as datedisabled,
+NEWID() as objectid,
+(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
+getdate() as created,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
+getdate() as modified,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
+
+WHERE NOT EXISTS (SELECT rowid FROM labkey.ehr_lookups.flag_values WHERE 'Genetics' = category AND 'MHC Blood Draw Collected' = value);
+
+insert into ehr_lookups.flag_values (category, value,code,datedisabled,objectid,container,created,createdby,modified,modifiedby)
+select
+'Genetics' as category,
+'MHC Blood Draw Needed' as value,
+null as code,
+null as datedisabled,
+NEWID() as objectid,
+(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
+getdate() as created,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
+getdate() as modified,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
+
+WHERE NOT EXISTS (SELECT rowid FROM labkey.ehr_lookups.flag_values WHERE 'Genetics' = category AND 'MHC Blood Draw Needed' = value);
+
+insert into ehr_lookups.flag_values (category, value,code,datedisabled,objectid,container,created,createdby,modified,modifiedby)
+select
+'Genetics' as category,
+'Parentage Blood Draw Collected' as value,
+null as code,
+null as datedisabled,
+NEWID() as objectid,
+(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
+getdate() as created,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
+getdate() as modified,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
+
+WHERE NOT EXISTS (SELECT rowid FROM labkey.ehr_lookups.flag_values WHERE 'Genetics' = category AND 'Parentage Blood Draw Collected' = value);
+
+insert into ehr_lookups.flag_values (category, value,code,datedisabled,objectid,container,created,createdby,modified,modifiedby)
+select
+'Genetics' as category,
+'Parentage Blood Draw Needed' as value,
+null as code,
+null as datedisabled,
+NEWID() as objectid,
+(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
+getdate() as created,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
+getdate() as modified,
+(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
+
+WHERE NOT EXISTS (SELECT rowid FROM labkey.ehr_lookups.flag_values WHERE 'Genetics' = category AND 'Parentage Blood Draw Needed' = value);

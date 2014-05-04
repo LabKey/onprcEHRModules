@@ -5,7 +5,7 @@
                 <tableTitle>Animals With Duplicate Active Flags</tableTitle>
                 <columns>
                     <column columnName="totalFlags">
-                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=flags&amp;query.isActive~eq=true&amp;query.Id~eq=${Id}&amp;query.category~eq=${category}</url>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=flags&amp;query.isActive~eq=true&amp;query.Id~eq=${Id}&amp;query.flag/category~eq=${category}</url>
                     </column>
                 </columns>
             </table>

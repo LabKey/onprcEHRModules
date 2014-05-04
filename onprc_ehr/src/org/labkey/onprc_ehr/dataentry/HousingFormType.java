@@ -21,6 +21,8 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
+import org.labkey.api.ehr.security.EHRHousingTransferPermission;
+import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -44,5 +46,14 @@ public class HousingFormType extends UnsaveableTask
                 new AnimalDetailsFormSection(),
                 new HousingFormSection("study", "housing", "Housing Transfers")
         ));
+    }
+
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRHousingTransferPermission.class))
+            return false;
+
+        return super.canInsert();
     }
 }

@@ -25,6 +25,7 @@ import org.labkey.api.ehr.security.EHRBehaviorEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class BehaviorRoundsFormType extends TaskForm
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BehaviorDefaults.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BehaviorRounds.js"));
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/BehaviorCasesWindow.js"));
     }
 
     @Override
@@ -62,5 +64,14 @@ public class BehaviorRoundsFormType extends TaskForm
             return false;
 
         return super.canInsert();
+    }
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> defaultButtons = super.getButtonConfigs();
+        defaultButtons.add("BEHAVIOR_CASES");
+
+        return defaultButtons;
     }
 }

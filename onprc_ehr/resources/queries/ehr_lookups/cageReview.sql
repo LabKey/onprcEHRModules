@@ -96,9 +96,9 @@ JOIN study.housing h ON (h.room = pc.room AND pc.cage = h.cage AND h.enddateTime
 LEFT JOIN (
   SELECT
     f.id,
-    min(f.value) as heightExemption
+    min(f.flag.value) as heightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.category = 'Cage Exemptions' and (f.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_HEIGHT_EXEMPTION_FLAG') OR f.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_MEDICAL_EXEMPTION_FLAG'))
+  WHERE f.isActive = true AND f.flag.category = 'Cage Exemptions' and (f.flag.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_HEIGHT_EXEMPTION_FLAG') OR f.flag.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_MEDICAL_EXEMPTION_FLAG'))
   GROUP BY f.Id
 ) f on (f.Id = h.Id)
 
@@ -106,9 +106,9 @@ LEFT JOIN (
 LEFT JOIN (
   SELECT
     f.id,
-    min(f.value) as weightExemption
+    min(f.flag.value) as weightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.category = 'Cage Exemptions' and (f.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_WEIGHT_EXEMPTION_FLAG') or f.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_MEDICAL_EXEMPTION_FLAG'))
+  WHERE f.isActive = true AND f.flag.category = 'Cage Exemptions' and (f.flag.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_WEIGHT_EXEMPTION_FLAG') or f.flag.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_MEDICAL_EXEMPTION_FLAG'))
   GROUP BY f.Id
 ) wf on (wf.Id = h.Id)
 

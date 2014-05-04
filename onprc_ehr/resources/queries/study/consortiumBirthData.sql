@@ -12,7 +12,7 @@ SELECT
   max(b.bornDead) as bornDead,
   max(b.diedBeforeOneYear) as diedBeforeOneYear,
 
-  group_concat(DISTINCT f.value, chr(10)) as spfStatus,
+  group_concat(DISTINCT f.flag.value, chr(10)) as spfStatus,
   group_concat(DISTINCT a.project.displayName, chr(10)) as projects,
   group_concat(DISTINCT a.project.title, chr(10)) as projectTitles,
   group_concat(DISTINCT a.project.use_category, chr(10)) as utilization,
@@ -37,7 +37,7 @@ LEFT JOIN study.flags f ON (
   b.Id = f.Id AND
   f.dateOnly <= CAST(timestampadd('SQL_TSI_DAY', 30, b.birth) as date) AND
   f.enddateCoalesced >= CAST(b.birth as date) AND
-  f.category = 'SPF'
+  f.flag.category = 'SPF'
 )
 
 GROUP BY b.Id, b.birth

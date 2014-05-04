@@ -1497,6 +1497,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             col.setFk(new QueryForeignKey(us, null, "roomsAssignment", "room", "room"));
             ti.addColumn(col);
         }
+
+        ti.getColumn("housingCondition").setNullable(false);
+        ti.getColumn("housingType").setNullable(false);
     }
 
     private ColumnInfo getWrappedIdCol(UserSchema us, AbstractTableInfo ds, String name, String queryName)
@@ -1934,7 +1937,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
                 qd.setSql("SELECT\n" +
                         "sd." + pkCol.getSelectName() + ",\n" +
-                        "group_concat(DISTINCT h.value, chr(10)) as flagsAtTime\n" +
+                        "group_concat(DISTINCT h.flag.value, chr(10)) as flagsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".study.flags h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +

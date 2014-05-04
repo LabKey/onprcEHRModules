@@ -37,10 +37,10 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Animal Record Flags', function(helper, scriptErrors, row, oldRow){
-        if (row.category == 'Condition' && row.Id && !row.enddate && row.value){
-            var msg = triggerHelper.validateHousingConditionInsert(row.Id, row.value, row.objectid);
+        if (row.flag && row.Id && !row.enddate){
+            var msg = triggerHelper.validateHousingConditionInsert(row.Id, row.flag, row.objectid);
             if (msg){
-                EHR.Server.Utils.addError(scriptErrors, 'value', msg, 'ERROR');
+                EHR.Server.Utils.addError(scriptErrors, 'flag', msg, 'ERROR');
             }
         }
     });
@@ -84,6 +84,10 @@ exports.init = function(EHR){
             EHR.Server.Utils.addError(scriptErrors, 'releaseCondition', 'Must provide the release condition when the release date is set', 'WARN');
         }
 
+        if (row.enddate && !row.releaseType){
+            EHR.Server.Utils.addError(scriptErrors, 'releaseType', 'Must provide the release type when the release date is set', 'WARN');
+        }
+
         //update condition on release
         if (!helper.isETL() && helper.getEvent() == 'update' && oldRow){
             if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData){
@@ -91,6 +95,13 @@ exports.init = function(EHR){
                     triggerHelper.updateAnimalCondition(row.Id, row.enddate, row.releaseCondition);
                 }
             }
+        }
+
+        // we want to record the date a record was marked endded, in addition to the actual end itself
+        // NOTE: we only do this when both enddate and releaseType are entered
+        if (!row.enddatefinalized && row.enddate && row.releaseCondition && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData){
+            console.log('setting enddatefinalized');
+            row.enddatefinalized = new Date();
         }
     });
 
@@ -110,9 +121,7 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Birth', function(scriptErrors, helper, row, oldRow){
-        if (!helper.isETL()){
-            triggerHelper.doBirthTriggers(row.Id, row.date, row.dam);
-        }
+        triggerHelper.doBirthTriggers(row.Id, row.date, row.dam);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Drug Administration', function(helper, scriptErrors, row, oldRow){
@@ -148,30 +157,24 @@ exports.init = function(EHR){
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Housing', function(helper, scriptErrors, row, oldRow){
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow);
+
+        //also attempt to update dividers
+        onprc_utils.doUpdateDividers(row, helper, triggerHelper, false);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Housing', function(scriptErrors, helper, row, oldRow){
         if (!helper.isETL() && row){
             //mark associated requests complete
             if (row.parentid){
-                triggerHelper.markHousingTransfersComplete(row.parentid);
+                triggerHelper.markHousingTransferRequestsComplete(row.parentid);
             }
 
             //also attempt to update dividers
-            if (row.divider && row.room && row.cage){
-                var map = helper.getProperty('housingInTransaction');
-                var rows = [];
-                for (var id in map){
-                    rows = rows.concat(map[id]);
-                }
+            onprc_utils.doUpdateDividers(row, helper, triggerHelper, helper.isValidateOnly());
 
-                var msgs = triggerHelper.updateDividers(row.Id, row.room, row.cage, row.divider, helper.isValidateOnly(), rows);
-                if (msgs){
-                    msgs = msgs.split("<>");
-                    for (var i=0;i<msgs.length;i++){
-                        EHR.Server.Utils.addError(scriptErrors, 'divider', msgs[i], 'INFO');
-                    }
-                }
+            if (row.room){
+                row.housingCondition = row.housingCondition || triggerHelper.getHousingCondition(row.room);
+                row.housingType = row.housingType || triggerHelper.getHousingType(row.room);
             }
         }
     });

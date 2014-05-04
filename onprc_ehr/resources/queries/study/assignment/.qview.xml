@@ -30,6 +30,9 @@
         <column name="date"/>
         <column name="enddate"/>
         <column name="projectedRelease"/>
+        <column name="assignCondition"/>
+        <column name="projectedReleaseCondition"/>
+        <column name="releaseCondition"/>
         <column name="qcstate" />
         <column name="taskid" />
     </columns>

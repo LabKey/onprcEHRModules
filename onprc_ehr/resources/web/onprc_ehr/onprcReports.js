@@ -645,3 +645,38 @@ EHR.reports.onprcFullClinicalHistory = function(panel, tab){
 EHR.reports.onprcClinicalHistory = function(panel, tab){
     EHR.reports.clinicalHistory(panel, tab, true);
 };
+
+EHR.reports.behaviorCases = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    filterArray.nonRemovable = filterArray.nonRemovable || [];
+    filterArray.nonRemovable.push(LABKEY.Filter.create('category', 'Behavior'));
+
+    var title = panel.getTitleSuffix();
+
+    tab.add({
+        xtype: 'ldk-linkbutton',
+        text: 'Click Here To View Cases On A Different Date',
+        linkTarget: '_blank',
+        linkCls: 'labkey-text-link',
+        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'casesOpenOnDate', 'query.viewName': 'Behavior Cases'}),
+        style: 'margin-bottom: 20px;'
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'casesOpenOnDate',
+            title: 'Behavior Cases' + title,
+            titleField: 'Id',
+            sort: '-date',
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable,
+            parameters: {
+                Date: new Date().format('Y-m-d')
+            }
+        })
+    });
+
+}

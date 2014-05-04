@@ -115,6 +115,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //assignments
         doAssignmentChecks(c, u, msg);
+        assignmentsWithoutReleaseCondition(c, u, msg);
         getU42Assignments(c, u, msg);
         doDuplicateResourceCheck(c, u, msg);
         doCandidateChecks(c, u, msg);
@@ -1596,6 +1597,23 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + count + " offspring over " + limit + " days old that are still in cage with their mother</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "offspringWithMother", null) + "&query.room/housingType/value~eq=Cage Location&query.ageInDays~gte=" + limit + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void assignmentsWithoutReleaseCondition(final Container c, User u, final StringBuilder msg)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -60);
+
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddate"), null, CompareType.NONBLANK);
+        filter.addCondition(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_GTE);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("assignment"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " assignment records ended since " + _dateFormat.format(cal.getTime()) + " that lack a release condition.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "assignment", null, filter) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }

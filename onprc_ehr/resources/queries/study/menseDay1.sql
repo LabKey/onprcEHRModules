@@ -25,9 +25,9 @@ FROM (
 
 SELECT
   o.Id,
-  o.dateOnly as date,
+  CAST(o.dateOnly AS DATE) as date,
   o.observation,
-  (SELECT max(CAST(o2.date as date)) as expr FROM study.clinical_observations o2 WHERE o2.Id = o.Id AND o2.category = 'Menses' and o2.date < o.date) as previousMens
+  (SELECT CAST(max(CAST(o2.date as date)) AS TIMESTAMP) as expr FROM study.clinical_observations o2 WHERE o2.Id = o.Id AND o2.category = 'Menses' and o2.date < o.date) as previousMens
 
 FROM study.clinical_observations o
 WHERE o.category = 'Menses'

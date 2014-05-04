@@ -17,7 +17,7 @@
 Select
 	cast(p.AnimalID as nvarchar(4000)) as Id,
 	--p.PoolCode as PoolCode,    ----- Ref_Pool
-	rtrim(ltrim(rp.ShortDescription)) AS flag,
+	rp.objectid AS flag,
 	rtrim(ltrim(rp.ShortDescription)) AS category,
 	rp.Description as value,
 

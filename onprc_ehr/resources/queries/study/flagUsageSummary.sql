@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 SELECT
-  f.category,
-  f.value,
+  f.flag.category as category,
+  f.flag.value as value,
   count(DISTINCT f.Id) as distinctAnimals,
   count(f.Id) as totalRecords
 
 FROM study."Animal Record Flags" f
 WHERE f.isActive = true
-GROUP BY f.category, f.value
+GROUP BY f.flag.category, f.flag.value

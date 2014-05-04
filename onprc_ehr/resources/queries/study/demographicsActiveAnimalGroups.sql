@@ -24,10 +24,10 @@ UNION ALL
 SELECT
   f.Id,
   null as objectid, --so we exclude these when counting total groups
-  f.value as name,
+  f.flag.value as name,
   null as majorityLocation
 FROM study.flags f
-WHERE f.isActive = true AND f.value IN ('Pending Social Group', 'AUC Reserved')
+WHERE f.isActive = true AND f.flag.category = 'Assign Alias' AND f.flag.value IN ('Pending Social Group', 'AUC Reserved')
 
 ) m
 GROUP BY m.id

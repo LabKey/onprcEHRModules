@@ -220,7 +220,7 @@ SELECT
     projectId,
 	'Hematology' as category,
     CASE
-      WHEN ManualDiff = 1 THEN 'CBC with manual differential'
+      WHEN ManualDiff = 1 THEN 'WBC differential'
       WHEN ManualDiff = 2 THEN 'Reticulocyte count'
       ELSE 'CBC with automated differential'
     END as servicerequested,

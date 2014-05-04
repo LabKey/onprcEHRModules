@@ -59,13 +59,13 @@ UNION ALL
 
 SELECT
 f.Id,
-f.value as name,
+f.flag.value as name,
 null as category,
 null as fundingCategory,
 null as assignment
 
 FROM study.flags f
-WHERE f.isActive = true AND f.category = 'Assign Alias'
+WHERE f.isActive = true AND f.flag.category = 'Assign Alias'
 
 ) t
 

@@ -13,7 +13,7 @@ Ext4.define('ONPRC_EHR.window.ManageFlagsWindow', {
 
     initComponent: function(){
         this.ehrCtx = EHR.Utils.getEHRContext();
-        if(!this.ehrCtx){
+        if (!this.ehrCtx){
             alert('EHRStudyContainer has not been set in this folder');
             return;
         }
@@ -52,42 +52,19 @@ Ext4.define('ONPRC_EHR.window.ManageFlagsWindow', {
                     fieldLabel: 'Effective Date',
                     value: new Date()
                 },{
-                    xtype: 'labkey-combo',
-                    fieldLabel: 'Category',
-                    itemId: 'flagCategory',
-                    displayField: 'category',
-                    valueField: 'category',
-                    store: {
-                        type: 'labkey-store',
-                        schemaName: 'ehr_lookups',
-                        queryName: 'flag_categories',
-                        autoLoad: true
-                    },
-                    listeners: {
-                        change: function(field, val){
-                            var field = field.up('window').down('#flagValue');
-                            if (val){
-                                field.store.filterArray = [
-                                    LABKEY.Filter.create('category', val, LABKEY.Filter.Types.EQUAL),
-                                    LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)
-                                ];
-                                field.store.load();
-                            }
-
-                            field.setDisabled(!val);
-                        }
-                    }
-                },{
-                    xtype: 'labkey-combo',
+                    xtype: 'combo',
                     fieldLabel: 'Flag',
                     itemId: 'flagValue',
                     displayField: 'value',
-                    valueField: 'value',
-                    disabled: true,
+                    valueField: 'objectid',
                     caseSensitive: false,
                     anyMatch: true,
+                    triggerAction: 'all',
+                    queryMode: 'local',
+                    matchFieldWidth: false,
+                    typeAhead: true,
                     listConfig: {
-                        innerTpl: '{[(values.category ? "<b>" + values.category + ":</b> " : "") + values.value]}',
+                        innerTpl: '{[(values.category ? "<b>" + values.category + ":</b> " : "") + values.value + (values.code ? " (" + values.code + ")" : "")]}',
                         getInnerTpl: function(){
                             return this.innerTpl;
                         }
@@ -96,7 +73,8 @@ Ext4.define('ONPRC_EHR.window.ManageFlagsWindow', {
                         type: 'labkey-store',
                         schemaName: 'ehr_lookups',
                         queryName: 'flag_values',
-                        sort: 'category,value',
+                        columns: 'objectid,category,code,value',
+                        sort: 'category,code,value',
                         autoLoad: true
                     }
                 },{
@@ -124,7 +102,7 @@ Ext4.define('ONPRC_EHR.window.ManageFlagsWindow', {
 
     onSubmit: function(btn){
         var date = this.down('#dateField').getValue();
-        if(!date){
+        if (!date){
             alert('Must enter a date');
             return;
         }
@@ -146,13 +124,6 @@ Ext4.define('ONPRC_EHR.window.ManageFlagsWindow', {
         var remark = this.down('#remarkField').getValue();
         if (remark)
             params.remark = remark;
-
-        var category = this.down('#flagCategory').getValue();
-        if (!category){
-            alert('Must choose a category');
-            return;
-        }
-        params.category = category;
 
         var flag = this.down('#flagValue').getValue();
         if (!flag){
@@ -203,13 +174,13 @@ Ext4.define('ONPRC_EHR.window.ManageFlagsWindow', {
         buttonHandler: function(dataRegionName){
             var dataRegion = LABKEY.DataRegions[dataRegionName];
             var checked = dataRegion.getChecked();
-            if(!checked || !checked.length){
+            if (!checked || !checked.length){
                 alert('No records selected');
                 return;
             }
 
             var ctx = EHR.Utils.getEHRContext();
-            if(!ctx){
+            if (!ctx){
                 alert('EHRStudyContainer has not been set in this folder');
                 return;
             }

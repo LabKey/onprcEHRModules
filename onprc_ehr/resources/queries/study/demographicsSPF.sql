@@ -15,8 +15,8 @@
  */
 SELECT
   f.id,
-  group_concat(f.value, chr(10)) as status
+  group_concat(f.flag.value, chr(10)) as status
 
 FROM study.flags f
-WHERE f.isActive = true AND f.category = 'SPF'
+WHERE f.isActive = true AND f.flag.category = 'SPF'
 GROUP BY f.id

@@ -75,8 +75,9 @@ Ext4.onReady(function(){
             },
             items: [
                 {name: 'Records Needing Vet Review', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/vetReview.view'},
-                {name: 'Open Clinical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:cases'},
-                {name: 'Open Surgical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgicalCases'},
+                {name: 'Active Behavior Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:behaviorCases'},
+                {name: 'Active Clinical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:cases'},
+                {name: 'Active Surgical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgicalCases'},
                 {name: 'Clinical Medication Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:clinMedicationSchedule'},
                 {name: 'Surgical Medication Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgMedicationSchedule'},
                 {name: 'Printable Reports', url: LABKEY.ActionURL.buildURL('onprc_ehr', 'printableReports', ctx['EHRStudyContainer'])}
@@ -132,7 +133,7 @@ Ext4.onReady(function(){
                 {name: 'Manage Requests', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/serviceRequests.view'},
                 //{name: 'ASB Services Request', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=ASB Service Request'},
                 //{name: 'Colony Services Request', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=Colony Service Request'},
-                {name: 'Request Labwork (except CBC/Chem)', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=Labwork Request'}
+                {name: 'Request Labwork', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=Labwork Request'}
             ]
         }]
     };

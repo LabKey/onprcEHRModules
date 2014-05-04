@@ -26,7 +26,7 @@ ONPRC_EHR.Utils = new function(){
                 }
 
                 if (row[roomField] && row[cageField]){
-                    var cageMsg = triggerHelper.validateCage(row[roomField], row[cageField]);
+                    var cageMsg = triggerHelper.validateCage(row[roomField], row[cageField], !!row.divider);
                     if (cageMsg){
                         EHR.Server.Utils.addError(scriptErrors, cageField, cageMsg, 'WARN');
                     }
@@ -102,6 +102,24 @@ ONPRC_EHR.Utils = new function(){
                 }
 
                 //TODO: alert if there are pending requests for this Id
+            }
+        },
+
+        doUpdateDividers: function(row, helper, triggerHelper, shouldCommit){
+            if (row.divider && row.room && row.cage){
+                var map = helper.getProperty('housingInTransaction');
+                var rows = [];
+                for (var id in map){
+                    rows = rows.concat(map[id]);
+                }
+
+                var msgs = triggerHelper.updateDividers(row.Id, row.room, row.cage, row.divider, shouldCommit && helper.isValidateOnly(), rows);
+                if (msgs){
+                    msgs = msgs.split("<>");
+                    for (var i=0;i<msgs.length;i++){
+                        EHR.Server.Utils.addError(scriptErrors, 'divider', msgs[i], 'INFO');
+                    }
+                }
             }
         }
     }

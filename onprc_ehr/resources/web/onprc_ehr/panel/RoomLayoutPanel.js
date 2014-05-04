@@ -209,7 +209,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                         var rowItems = [];
                         var isInverted = invertedMap[ri] === true;
 
-                        if ((ONPRC.panel.RoomLayoutPanel.getRowNumber(ri) % 4) == 0){
+                        if ((rowIdx % 4) == 0){
                             if (rowIdx > 0){
                                 currentSection = [];
                                 rowBlocks.push({
@@ -239,7 +239,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                             table = ONPRC.panel.RoomLayoutPanel.getRowBlockCfg(maxCage);
                             currentSection.push(table);
                         }
-                        else if(rowIdx > 0 && (ONPRC.panel.RoomLayoutPanel.getRowNumber(ri) % 2) == 0){
+                        else if(rowIdx > 0 && (rowIdx % 2) == 0){
                             currentSection.push({
                                 border: false,
                                 height: 30
@@ -609,7 +609,7 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
     extend: 'Ext.window.Window',
 
     initComponent: function(){
-        this.hasEditPermission = EHR.Security.hasLocationEditorPermission();
+        this.hasEditPermission = EHR.Security.hasHousingEditorPermission();
         var buttons = [{
             text: 'Close',
             handler: function(btn){

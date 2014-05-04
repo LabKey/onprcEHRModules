@@ -15,14 +15,14 @@
  */
 SELECT
 f.id,
-COALESCE(f.category, 'Other') as flags,
-group_concat(f.value, chr(10)) as valueField
+COALESCE(f.flag.category, 'Other') as flags,
+group_concat(f.flag.value, chr(10)) as valueField
 
 FROM study.flags f
 
-WHERE f.isActive = true and f.category is not null
+WHERE f.isActive = true and f.flag.category is not null
 
-GROUP BY f.id, COALESCE(f.category, 'Other')
+GROUP BY f.id, COALESCE(f.flag.category, 'Other')
 
 PIVOT valueField by flags
 

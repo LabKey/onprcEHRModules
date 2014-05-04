@@ -16,7 +16,7 @@
 SELECT
   f.id,
   st.code.meaning as agent,
-  f.flag,
+  f.flag.value as flag,
   max(st.interval) as testInterval,
   max(s.date) as lastTestDate,
   --min(timestampdiff('SQL_TSI_MONTH', s.date, now())) as monthsSinceTest,
@@ -27,7 +27,7 @@ SELECT
     ELSE (max(st.interval) - min(age_in_months(s.date, now())))
   END as monthsUntilDue,
 FROM study.flags f
-JOIN onprc_ehr.serology_test_schedule st ON (st.flag = f.value)
+JOIN onprc_ehr.serology_test_schedule st ON (st.flag = f.flag.value)
 LEFT JOIN study.serology s ON (f.id = s.id AND s.agent = st.code)
 
 WHERE f.isActive = true

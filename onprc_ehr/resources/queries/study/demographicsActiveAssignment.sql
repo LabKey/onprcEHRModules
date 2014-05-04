@@ -51,20 +51,20 @@ UNION ALL
 
 SELECT
   d.id,
-  f.value as displayName,
-  f.value as protocolDisplayName,
-  f.value as lastName,
-  f.value as division,
-  f.value as projectName,
+  f.flag.value as displayName,
+  f.flag.value as protocolDisplayName,
+  f.flag.value as lastName,
+  f.flag.value as division,
+  f.flag.value as projectName,
   null as lsid,  --we do not want these counted in total assignments
   0 as isResearch,
   0 as isResource,
   0 as isU24U42,
   CASE WHEN f.Id IS NULL THEN 0 ELSE 1 END as isProvisional,
-  f.value as projectString
+  f.flag.value as projectString
 
 FROM study.demographics d
-JOIN study.flags f ON (f.id = d.id AND f.isActive = true AND f.category = 'Assign Alias')
+JOIN study.flags f ON (f.id = d.id AND f.isActive = true AND f.flag.category = 'Assign Alias')
 
 ) a
 

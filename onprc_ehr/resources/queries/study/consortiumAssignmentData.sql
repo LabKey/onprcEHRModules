@@ -9,7 +9,7 @@ PARAMETERS(StartDate TIMESTAMP, EndDate TIMESTAMP)
 SELECT
   ao.Id,
   cast(ao.date as timestamp) as date,
-  group_concat(DISTINCT f.value, chr(10)) as spfStatus,
+  group_concat(DISTINCT f.flag.value, chr(10)) as spfStatus,
   ao.project,
 
   --overlapping projects
@@ -34,7 +34,7 @@ LEFT JOIN study.flags f ON (
   ao.Id = f.Id AND
   f.dateOnly <= CAST(ao.date as DATE) AND
   f.enddateCoalesced >= CAST(ao.date as DATE) AND
-  f.category = 'SPF'
+  f.flag.category = 'SPF'
 )
 
 GROUP BY ao.lsid, ao.Id, ao.date, ao.project
