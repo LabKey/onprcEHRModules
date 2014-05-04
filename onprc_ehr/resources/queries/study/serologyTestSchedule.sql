@@ -32,6 +32,6 @@ LEFT JOIN study.serology s ON (f.id = s.id AND s.agent = st.code)
 
 WHERE f.isActive = true
 
-GROUP BY f.id, f.flag, st.code.meaning
+GROUP BY f.id, f.flag.value, st.code.meaning
 
 --PIVOT lastTestDate, monthsSinceTest, monthsUntilDue by agent

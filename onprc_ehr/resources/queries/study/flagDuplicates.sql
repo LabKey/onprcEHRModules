@@ -17,7 +17,7 @@ SELECT
   f.id,
   f.flag.category as category,
   group_concat(f.flag.value, chr(10)) as values,
-  count(f.value) as totalFlags
+  count(f.flag.value) as totalFlags
 
 FROM study.flags f
 JOIN ehr_lookups.flag_categories fc ON (f.flag.category = fc.category)
