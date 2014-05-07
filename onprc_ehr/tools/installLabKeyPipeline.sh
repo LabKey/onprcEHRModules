@@ -38,7 +38,7 @@ tar -xf $TAR
 DIR=`echo $TAR | sed -e "s/.tar$//"`
 echo "DIR: $DIR"
 cd $DIR
-./manual-upgrade.sh -u labkey -n 6.0 -c /usr/local/tomcat -l /usr/local/labkey
+./manual-upgrade.sh -u labkey -c /usr/local/tomcat -l /usr/local/labkey
 service labkeyPipeline start
 cd ../
 echo "Removing folder: $DIR"
