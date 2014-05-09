@@ -17,7 +17,7 @@
                         <columnTitle>Distinct Results</columnTitle>
                         <url>/query/executeQuery.view?
                             schemaName=${schemaName}&amp;
-                            query.queryName=snpSummary&amp;
+                            query.queryName=Data&amp;
                             query.subjectId~eq=${subjectId}&amp;
                             query.marker~eq=${marker}&amp;
                             query.ref_nt_name~eq=${ref_nt_name}&amp;

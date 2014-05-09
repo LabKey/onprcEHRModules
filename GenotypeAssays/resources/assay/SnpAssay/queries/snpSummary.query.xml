@@ -19,7 +19,6 @@
                             schemaName=${schemaName}&amp;
                             query.queryName=Data&amp;
                             query.subjectId~eq=${subjectId}&amp;
-                            query.run~eq=${run}&amp;
                             query.marker~eq=${marker}&amp;
                             query.ref_nt_name~eq=${ref_nt_name}&amp;
                             query.position~eq=${position}

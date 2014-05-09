@@ -4,13 +4,12 @@ SELECT
   s.ref_nt_name,
   s.position,
   s.category,
-  GROUP_CONCAT(DISTINCT s.alleles, chr(10)) as allles,
-  COUNT(DISTINCT s.alleles) as distinctResults,
-  COUNT(s.run) as totalRuns,
-  SUM(totalResults) as totalDataPoints
+  GROUP_CONCAT(DISTINCT s.nt, chr(10)) as allles,
+  COUNT(DISTINCT s.nt) as distinctResults,
+  count(*) as totalDataPoints
 
-FROM snpSummary s
+FROM Data s
 
 GROUP BY s.subjectId, s.marker, s.ref_nt_name, s.position, s.category
 
-HAVING COUNT(DISTINCT s.alleles) > 1
+HAVING COUNT(DISTINCT s.nt) > 1
