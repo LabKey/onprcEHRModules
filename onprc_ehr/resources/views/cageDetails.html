@@ -36,6 +36,13 @@ Ext4.onReady(function (){
         buttons = [{
             text: 'More Actions',
             menu: [{
+                text: 'Copy Cages From Other Room',
+                handler: function(){
+                    Ext4.create('ONPRC_EHR.window.RoomBulkChangeWindow', {
+                        room: room
+                    }).show();
+                }
+            },{
                 text: 'Bulk Edit Cages',
                 hrefTarget: '_blank',
                 href: LABKEY.ActionURL.buildURL('ldk', 'updateQuery', null, {schemaName: 'ehr_lookups', 'query.queryName': 'cage', 'query.room~eq': room})

@@ -72,7 +72,7 @@ public class ComplianceNotification extends ColonyAlertsNotification
         assignmentsNotAllowed(c, u, msg);
         overlappingProtocolCounts(c, u, msg);
 
-        bloodDrawsOverLimit(c, u, msg);
+        bloodDrawsOverLimit(c, u, msg, 21);
 
         return msg.toString();
     }

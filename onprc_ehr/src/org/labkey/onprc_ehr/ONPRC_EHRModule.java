@@ -44,6 +44,7 @@ import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.AnimalGroupCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentCompletedButton;
+import org.labkey.onprc_ehr.buttons.BulkEditRequestsButton;
 import org.labkey.onprc_ehr.buttons.ChangeProjectedReleaseDateButton;
 import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
 import org.labkey.onprc_ehr.buttons.HousingTransferButton;
@@ -249,6 +250,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(TBFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PairingFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IStatFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ProcessingFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SurgeryFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SingleSurgeryFormType.class, this));
@@ -267,6 +269,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(HousingFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(MatingFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PregnancyConfirmationFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ParentageFormType.class, this));
 
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(AuxProcedureFormType.class, this));
@@ -274,6 +277,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ColonyRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(HousingRequestFormType.class, this));
+
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodRequestBulkEditFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(DrugRequestBulkEditFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestBulkEditFormType.class, this));
+
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(RecordAmendmentFormType.class, this));
 
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
@@ -328,6 +337,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "demographics");
         EHRService.get().registerMoreActionsButton(new ManageFlagsButton(this), "study", "demographics");
         EHRService.get().registerMoreActionsButton(new ChangeProjectedReleaseDateButton(this), "study", "assignment");
+
+        EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, BloodRequestBulkEditFormType.NAME), "study", "blood");
+        EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, DrugRequestBulkEditFormType.NAME), "study", "drug");
+        EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, LabworkRequestBulkEditFormType.NAME), "study", "clinpathRuns");
 
         EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource());
     }

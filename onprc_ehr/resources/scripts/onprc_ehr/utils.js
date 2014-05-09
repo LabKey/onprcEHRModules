@@ -105,7 +105,7 @@ ONPRC_EHR.Utils = new function(){
             }
         },
 
-        doUpdateDividers: function(row, helper, triggerHelper, shouldCommit){
+        doUpdateDividers: function(EHR, row, helper, scriptErrors, triggerHelper, shouldCommit){
             if (row.divider && row.room && row.cage){
                 var map = helper.getProperty('housingInTransaction');
                 var rows = [];
@@ -113,7 +113,7 @@ ONPRC_EHR.Utils = new function(){
                     rows = rows.concat(map[id]);
                 }
 
-                var msgs = triggerHelper.updateDividers(row.Id, row.room, row.cage, row.divider, shouldCommit && helper.isValidateOnly(), rows);
+                var msgs = triggerHelper.updateDividers(row.Id, row.room, row.cage, row.divider, (shouldCommit && helper.isValidateOnly()), rows);
                 if (msgs){
                     msgs = msgs.split("<>");
                     for (var i=0;i<msgs.length;i++){

@@ -96,6 +96,7 @@ Ext4.define('ONPRC_EHR.window.MarkAnimalGroupCompletedWindow', {
         var checked = dataRegion.getChecked();
 
         LABKEY.Query.selectRows({
+            method: 'POST',
             schemaName: this.schemaName,
             queryName: this.queryName,
             columns: this.pkColName + ',' + this.targetField,
@@ -126,7 +127,7 @@ Ext4.define('ONPRC_EHR.window.MarkAnimalGroupCompletedWindow', {
         Ext4.Array.forEach(data.rows, function(row){
             if (!row[this.targetField]){
                 var obj = {
-                    releaseType: releaseType,
+                    releaseType: releaseType
                 };
                 obj[this.targetField] = date;
                 obj[this.pkColName] = row[this.pkColName];

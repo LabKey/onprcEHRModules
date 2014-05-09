@@ -99,6 +99,7 @@ public class ONPRC_EHRTriggerHelper
     private Map<Integer, Boolean> _cachedFrequencies = new HashMap<>();
     private Map<Integer, List<Integer>> _cachedFrequencyTimes = new HashMap<>();
     private Map<String, Integer> _cachedConditionCodes = new HashMap<>();
+    private Map<String, Integer> _cachedConditionCodeMeanings = new HashMap<>();
     private Map<Integer, DividerRecord> _cachedDividerRecords = new HashMap<>();
 
     private static final String NONRESTRICTED = "Nonrestricted";
@@ -752,7 +753,9 @@ public class ONPRC_EHRTriggerHelper
                     FieldKey.fromString("room"),
                     FieldKey.fromString("area"),
                     FieldKey.fromString("housingType/value"),
-                    FieldKey.fromString("housingCondition/value")
+                    FieldKey.fromString("housingCondition/value"),
+                    FieldKey.fromString("housingType"),
+                    FieldKey.fromString("housingCondition")
             ));
             TableSelector ts = new TableSelector(roomsTable, cols.values(), new SimpleFilter(FieldKey.fromString("room"), room), null);
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
@@ -766,6 +769,8 @@ public class ONPRC_EHRTriggerHelper
                     map.put("area", results.getString(FieldKey.fromString("area")));
                     map.put("housingType", results.getString(FieldKey.fromString("housingType/value")));
                     map.put("housingCondition", results.getString(FieldKey.fromString("housingCondition/value")));
+                    map.put("housingTypeInt", results.getInt(FieldKey.fromString("housingType")));
+                    map.put("housingConditionInt", results.getInt(FieldKey.fromString("housingCondition")));
 
                     _cachedRooms.put(room, map);
                 }
@@ -860,7 +865,7 @@ public class ONPRC_EHRTriggerHelper
         if (roomRec == null)
             return null;
 
-        return (Integer)roomRec.get("housingType");
+        return (Integer)roomRec.get("housingTypeInt");
     }
 
     public Integer getHousingCondition(String room)
@@ -869,7 +874,7 @@ public class ONPRC_EHRTriggerHelper
         if (roomRec == null)
             return null;
 
-        return (Integer)roomRec.get("housingCondition");
+        return (Integer)roomRec.get("housingConditionInt");
     }
 
     private List<Map<String, Object>> getCageSizeRecords()
@@ -921,7 +926,7 @@ public class ONPRC_EHRTriggerHelper
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
 
-        if (objectid != null)
+        if (!StringUtils.isEmpty(objectid))
             filter.addCondition(FieldKey.fromString("objectid"), objectid, CompareType.NEQ_OR_NULL);
 
         Set<FieldKey> fks = new HashSet<>();
@@ -1000,25 +1005,42 @@ public class ONPRC_EHRTriggerHelper
             SimpleFilter groupFilter = new SimpleFilter(FieldKey.fromString("Id"), dam);
             groupFilter.addCondition(FieldKey.fromString("isActive"), true);
 
-            TableSelector ts2 = new TableSelector(animalGroups, Collections.singleton("groupId"), groupFilter, null);
+            TableSelector ts2 = new TableSelector(animalGroups, Collections.singleton("groupid"), groupFilter, null);
             List<Integer> groupList = ts2.getArrayList(Integer.class);
             if (groupList != null && groupList.size() == 1)
             {
-                Map<String, Object> row = new CaseInsensitiveHashMap<>();
-                row.put("Id", id);
-                row.put("date", date);
-                row.put("groupId", groupList.get(0));
-                row.put("container", getContainer().getId());
-                row.put("created", new Date());
-                row.put("createdby", getUser().getUserId());
-                row.put("modified", new Date());
-                row.put("modifiedby", getUser().getUserId());
+                SimpleFilter groupFilter2 = new SimpleFilter(FieldKey.fromString("Id"), id);
+                groupFilter2.addCondition(FieldKey.fromString("isActive"), true);
+                groupFilter2.addCondition(FieldKey.fromString("groupid"), groupList.get(0));
+                TableSelector existingGroupTs = new TableSelector(animalGroups, Collections.singleton("groupid"), groupFilter2, null);
+                if (existingGroupTs.exists())
+                {
+                    _log.info("infant: " + id + " is already assigned to animal group " + groupList.get(0) + ", so birth trigger will not re-add");
+                }
+                else
+                {
+                    _log.info("adding animal group " + groupList.get(0) + " to infant: " + id + ", based on dam: " + dam);
+                    Map<String, Object> row = new CaseInsensitiveHashMap<>();
+                    row.put("Id", id);
+                    row.put("date", date);
+                    row.put("groupid", groupList.get(0));
+                    row.put("objectid", new GUID());
+                    row.put("container", getContainer().getId());
+                    row.put("created", new Date());
+                    row.put("createdby", getUser().getUserId());
+                    row.put("modified", new Date());
+                    row.put("modifiedby", getUser().getUserId());
 
-                animalGroups.getUpdateService().insertRows(getUser(), getContainer(), Arrays.asList(row), new BatchValidationException(), getExtraContext());
+                    BatchValidationException errors = new BatchValidationException();
+                    animalGroups.getUpdateService().insertRows(getUser(), getContainer(), Arrays.asList(row), errors, getExtraContext());
+                    if (errors.hasErrors())
+                    {
+                        _log.error(errors.getMessage(), errors);
+                    }
+                }
             }
 
             //look at assignment and copy center resources from dam
-            //also breeding groups
             TableInfo assignment = getTableInfo("study", "assignment");
             SimpleFilter assignmentFilter = new SimpleFilter(FieldKey.fromString("Id"), dam);
             assignmentFilter.addCondition(FieldKey.fromString("isActive"), true);
@@ -1026,20 +1048,42 @@ public class ONPRC_EHRTriggerHelper
 
             TableSelector ts3 = new TableSelector(assignment, Collections.singleton("project"), assignmentFilter, null);
             List<Integer> assignmentList = ts3.getArrayList(Integer.class);
-            List<Map<String, Object>> assignmentToAdd = new ArrayList<>();
-            for (Integer project : assignmentList)
+            if (!assignmentList.isEmpty())
             {
-                Map<String, Object> row = new CaseInsensitiveHashMap<>();
-                row.put("Id", id);
-                row.put("date", date);
-                row.put("project", project);
-                row.put("assignCondition", getConditionCodeForMeaning(NONRESTRICTED));
-                row.put("projectedReleaseCondition", getConditionCodeForMeaning(NONRESTRICTED));
+                //check for existing assignments for this animal
+                SimpleFilter existingAssignFilter = new SimpleFilter(FieldKey.fromString("Id"), id);
+                existingAssignFilter.addCondition(FieldKey.fromString("isActive"), true);
+                existingAssignFilter.addCondition(FieldKey.fromString("project"), assignmentList, CompareType.IN);
+                TableSelector existingAssignTs = new TableSelector(assignment, Collections.singleton("project"), existingAssignFilter, null);
+                List<Integer> existingAssignmentList = existingAssignTs.getArrayList(Integer.class);
 
-                assignmentToAdd.add(row);
+                List<Map<String, Object>> assignmentToAdd = new ArrayList<>();
+                for (Integer project : assignmentList)
+                {
+                    if (existingAssignmentList.contains(project))
+                    {
+                        _log.info(id + " is already assigned to project " + project + ", so it will not be reassigned in birth trigger");
+                        continue;
+                    }
+
+                    _log.info("adding assignment for project " + project + " to infant: " + id + ", based on dam: " + dam);
+                    Map<String, Object> row = new CaseInsensitiveHashMap<>();
+                    row.put("Id", id);
+                    row.put("date", date);
+                    row.put("project", project);
+                    row.put("assignCondition", getConditionCodeForMeaning(NONRESTRICTED));
+                    row.put("projectedReleaseCondition", getConditionCodeForMeaning(NONRESTRICTED));
+
+                    assignmentToAdd.add(row);
+                }
+
+                BatchValidationException errors = new BatchValidationException();
+                assignment.getUpdateService().insertRows(getUser(), getContainer(), assignmentToAdd, errors, getExtraContext());
+                if (errors.hasErrors())
+                {
+                    _log.error(errors.getMessage(), errors);
+                }
             }
-
-            assignment.getUpdateService().insertRows(getUser(), getContainer(), assignmentToAdd, new BatchValidationException(), getExtraContext());
         }
     }
 
@@ -1190,7 +1234,7 @@ public class ONPRC_EHRTriggerHelper
         return _cachedProtocols.get(project);
     }
 
-    public Integer getConditionCodeForMeaning(final String flag)
+    public Integer getConditionCodeByFlag(final String flag)
     {
         if (flag == null)
             return null;
@@ -1215,10 +1259,38 @@ public class ONPRC_EHRTriggerHelper
         return _cachedConditionCodes.get(flag);
     }
 
+    public Integer getConditionCodeForMeaning(final String meaning)
+    {
+        if (meaning == null)
+            return null;
+
+        if (!_cachedConditionCodeMeanings.containsKey(meaning))
+        {
+            TableInfo ti = getTableInfo("ehr_lookups", "flag_values");
+            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("value"), meaning);
+            filter.addCondition(FieldKey.fromString("category"), "Condition");
+            TableSelector ts = new TableSelector(ti, Collections.singleton("code"), filter, null);
+            List<Integer> ret = ts.getArrayList(Integer.class);
+            if (ret != null && !ret.isEmpty())
+            {
+                _cachedConditionCodeMeanings.put(meaning, ret.get(0));
+            }
+            else
+            {
+                _cachedConditionCodeMeanings.put(meaning, null);
+            }
+        }
+
+        return _cachedConditionCodeMeanings.get(meaning);
+    }
+
+    /**
+     * This will ensure we do not downgrade the condition code for an animal
+     */
     public String validateHousingConditionInsert(String id, String flag, String objectId)
     {
         //NOTE: there is no good way to test whether this flag has category=Condition, so test all
-        Integer code = getConditionCodeForMeaning(flag);
+        Integer code = getConditionCodeByFlag(flag);
         if (code == null)
             return null;
 
@@ -1249,7 +1321,7 @@ public class ONPRC_EHRTriggerHelper
         return null;
     }
 
-    public String updateDividers(String id, String room, String cage, Integer divider, boolean isValidateOnly, List<Map<String, Object>> rowsInTransaction)
+    public String updateDividers(String id, String room, String cage, Integer divider, boolean isValidateOnly, List<Map<String, Object>> rowsInTransaction) throws Exception
     {
         CageRecord cr = getCagesRecord(room, cage);
         if (cr == null)
@@ -1289,21 +1361,45 @@ public class ONPRC_EHRTriggerHelper
             return null;
         }
 
-        //this coveres pairing dividers or no divider
-        if (!targetDivider.getCountAsSeparate())
+        //we always want to change the divider associated with the lower cage
+        if (!targetDivider.getRowId().equals(cageDividerMap.get(lowestCage)))
         {
-            //we always want to change the divider associated with the lower cage
-            if (!targetDivider.equals(cageDividerMap.get(lowestCage)))
-            {
-                dividerChanges.put(lowestCage, targetDivider.getRowId());
-            }
+            dividerChanges.put(lowestCage, targetDivider.getRowId());
         }
-        else
-        {
 
+        for (String changingCage : dividerChanges.keySet())
+        {
+            _log.info("Divider change: " + changingCage + " / " + dividerChanges.get(changingCage));
+            if (isValidateOnly)
+            {
+                errors.add("This will change the divider for cage: " + changingCage);
+            }
+            else
+            {
+                changeDivider(room, changingCage, dividerChanges.get(changingCage));
+            }
         }
 
         return errors.isEmpty() ? null : StringUtils.join(errors, "<>");
+    }
+
+    private void changeDivider(String room, String cage, Integer divider) throws Exception
+    {
+        TableInfo cageTable = getTableInfo("ehr_lookups", "cage");
+        List<Map<String, Object>> rows = new ArrayList<>();
+        List<Map<String, Object>> oldKeys = new ArrayList<>();
+
+        String location = room + "-" + cage;
+        Map<String, Object> row = new CaseInsensitiveHashMap<>();
+        row.put("location", location);
+        row.put("divider", divider);
+        rows.add(row);
+
+        Map<String, Object> keyRow = new CaseInsensitiveHashMap<>();
+        keyRow.put("location", location);
+        oldKeys.add(keyRow);
+
+        cageTable.getUpdateService().updateRows(getUser(), getContainer(), rows, oldKeys, getExtraContext());
     }
 
     // returns the lowest cage for this unit, based on cage slots

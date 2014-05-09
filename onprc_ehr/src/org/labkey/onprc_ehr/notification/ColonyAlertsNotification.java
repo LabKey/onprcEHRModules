@@ -135,7 +135,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //blood draws
         bloodDrawsOnDeadAnimals(c, u, msg);
-        bloodDrawsOverLimit(c, u, msg);
+        bloodDrawsOverLimit(c, u, msg, 3);
 
         //misc
         demographicsWithoutGender(c, u, msg);
@@ -1144,7 +1144,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animals assigned to groups, where the animal is currently at the housed center.</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " animals assigned to groups, where the animal is not currently housed at the center.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animal_group_members", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -1198,11 +1198,11 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     /**
      * we find any blood draws over the allowable limit
      */
-    protected void bloodDrawsOverLimit(final Container c, User u, final StringBuilder msg)
+    protected void bloodDrawsOverLimit(final Container c, User u, final StringBuilder msg, int daysInPast)
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.DATE, -3);
+        cal.add(Calendar.DATE, (-1 * daysInPast));
 
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/DataSet/Demographics/calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("qcstate/label"), EHRService.QCSTATES.RequestDenied.getLabel(), CompareType.NEQ_OR_NULL);
@@ -1219,9 +1219,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         TableSelector ts = new TableSelector(ti, columns.values(), filter, null);
         long count = ts.getRowCount();
+        final Set<String> lines = new HashSet<>();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " blood draws within the past 3 days exceeding the allowable volume.  Note: this warning may include draws scheduled in the future, but have not actually been performed.  Click the IDs below to see more information:</b><br><br>");
+            msg.append("<b>WARNING: There are " + count + " blood draws within the past " + daysInPast + " day(s) exceeding the allowable volume.  Note: this warning may include draws scheduled in the future, but have not actually been performed.  Click the IDs below to see more information:</b><br><br>");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
             {
                 public void exec(ResultSet object) throws SQLException
@@ -1235,9 +1236,15 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
                     //String url = getParticipantURL(c, rs.getString(getStudy(c).getSubjectColumnName()));
                     String url = getExecuteQueryUrl(c, "study", "Blood Draws", "With Blood Volume") + "&query.Id~eq=" + rs.getString(getStudy(c).getSubjectColumnName());
-                    msg.append("<a href='" + url + "'>" + text.toString() + "</a><br>\n");
+                    lines.add("<a href='" + url + "'>" + text.toString() + "</a><br>\n");
                 }
             });
+
+            //simple way to enforce uniqueness
+            for (String line : lines)
+            {
+                msg.append(line);
+            }
 
             msg.append("<hr>\n");
         }
@@ -1608,6 +1615,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddate"), null, CompareType.NONBLANK);
         filter.addCondition(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_GTE);
+        filter.addCondition(FieldKey.fromString("releaseCondition"), null, CompareType.ISBLANK);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("assignment"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)

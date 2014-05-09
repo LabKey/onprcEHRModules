@@ -23,8 +23,8 @@ SELECT
   c.description,
   c.problemCategories,
   c.remark,
-  c.mostrecentP2,
-  c.isActive,
+  c.mostRecentP2,
+  c.isActive
 
 FROM study.cases c
 WHERE c.isActive = true AND c.category = 'Clinical'

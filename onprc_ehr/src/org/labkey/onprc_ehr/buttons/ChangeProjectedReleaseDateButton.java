@@ -36,9 +36,6 @@ public class ChangeProjectedReleaseDateButton extends MarkCompletedButton
     {
         ColumnInfo col = ti.getColumn("enddate");
         String xtype = "datefield";
-        if (col != null && col.getFormat().contains("HH"))
-            xtype = "xdatetime";
-
         String pkColName = null;
         if (ti.getPkColumnNames() != null && ti.getPkColumnNames().size() == 1)
         {

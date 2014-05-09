@@ -667,16 +667,38 @@ EHR.reports.behaviorCases = function(panel, tab){
         style: 'margin-bottom:20px;',
         queryConfig: panel.getQWPConfig({
             schemaName: 'study',
-            queryName: 'casesOpenOnDate',
+            queryName: 'cases',
+            viewName: 'Active Behavior Cases',
             title: 'Behavior Cases' + title,
             titleField: 'Id',
             sort: '-date',
             filters: filterArray.nonRemovable,
-            removeableFilters: filterArray.removable,
-            parameters: {
-                Date: new Date().format('Y-m-d')
-            }
+            removeableFilters: filterArray.removable
         })
     });
 
+}
+
+EHR.reports.surgeryCasesClosedToday = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    filterArray.removable = filterArray.removable || [];
+    filterArray.removable.push(LABKEY.Filter.create('category', 'Surgery'));
+    filterArray.removable.push(LABKEY.Filter.create('enddate', new Date(), LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL));
+
+    var title = panel.getTitleSuffix();
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'cases',
+            viewName: 'With Initial Housing',
+            title: 'Cases Closed Today' + title,
+            titleField: 'Id',
+            sort: '-date',
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable
+        })
+    });
 }

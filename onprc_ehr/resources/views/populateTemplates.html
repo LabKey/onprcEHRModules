@@ -57,36 +57,6 @@ Ext4.onReady(function(){
                 });
             }, this);
 
-            items[0].items.push({
-                xtype: 'button',
-                text: 'Populate All',
-                scope: this,
-                handler: function(){
-                    this.down('#ehr_msg').update('');
-                    Ext4.each(this.tables, function(table){
-                        if (!table.doSkip)
-                            this[table.populateFn]();
-                        else
-                            console.log('skipping: ' + table.label)
-                    }, this);
-                }
-            });
-            items[0].items.push({
-                xtype: 'button',
-                text: 'Delete All',
-                scope: this,
-                handler: function(){
-                    this.pendingDeletes = 0;
-
-                    Ext4.each(this.tables, function(table){
-                        if (!table.doSkip)
-                            this.deleteHandler(table);
-                        else
-                            console.log('skipping: ' + table.label);
-                    }, this);
-                }
-            });
-
             return items;
         },
 
@@ -474,6 +444,16 @@ Ext4.onReady(function(){
                     ['Clinical Observations', '{"category":"Resp","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"MM","area":"N/A","observation":"Pink/moist"}'],
                     ['Clinical Observations', '{"category":"CRT","area":"N/A","observation":"1-2"}'],
+                    ['Clinical Observations', '{"category":"Turgor","area":"N/A","observation":"Normal"}']
+                ]
+            },{
+                template: ['Processing Vitals', 'Section', 'Clinical Observations', '', ''],
+                records: [
+                    ['Clinical Observations', '{"category":"Temp","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"Pulse","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"Resp","area":"N/A"}'],
+                    ['Clinical Observations', '{"category":"MM","area":"N/A","observation":"Pink/moist"}'],
+                    ['Clinical Observations', '{"category":"CRT","area":"N/A","observation":"1-2"}'],
                     ['Clinical Observations', '{"category":"Turgor","area":"N/A","observation":"Normal"}'],
                     ['Clinical Observations', '{"category":"BCS","area":"N/A"}'],
                     ['Clinical Observations', '{"category":"Alopecia Score","area":"N/A"}']
@@ -551,10 +531,10 @@ Ext4.onReady(function(){
             //the SOAPs
             templateRows = templateRows.concat([{
                 template: ['Epistaxis', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Animal reported for epistaxis, BAR.","o":"Epistaxis (reported by area technician) (observed)","a":"Epistaxis of unknown etiology","p":"","p2":"Monitor and record and recurrence of epistaxis."}']]
+                records: [['Clinical Remarks', '{"s":"Animal reported for epistaxis, BAR.","o":"Epistaxis (reported by area technician) (observed)","a":"Epistaxis of unknown etiology","p":""}']]
             },{
                 template: ['Vomit', 'Section', 'Clinical Remarks', '', ''],
-                records: [['Clinical Remarks', '{"s":"Animal reported for vomiting, BAR.","o":"Cageside examination. Vomitus in cage pan","a":"Vomitus of unknown etiology\\nHistory of chronic vomiting","p":"","p2":""}']]
+                records: [['Clinical Remarks', '{"s":"Animal reported for vomiting, BAR.","o":"Cageside examination. Vomitus in cage pan","a":"Vomitus of unknown etiology\\nHistory of chronic vomiting","p":""}']]
             },{
                 template: ['Diarrhea 1st Day Cage', 'Section', 'Clinical Remarks', '', ''],
                 records: [['Clinical Remarks', '{"s":"Animal reported for diarrhea, BAR.","o":"Cage side examination. XX stool in cagepan, animal appears/does not appear hydrated, is/is not eating.","a":"Diarrhea of unknown etiology.","p":"Start GI protectants, review clinical history.","p2":"Monitor hydration and stool quality."}']]

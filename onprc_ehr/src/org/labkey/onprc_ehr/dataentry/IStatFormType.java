@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 LabKey Corporation
+ * Copyright (c) 2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,10 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
-import org.labkey.api.ehr.security.EHRHousingTransferPermission;
-import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
+import org.labkey.api.ehr.security.EHRLabworkEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,28 +32,25 @@ import java.util.List;
  * Date: 7/29/13
  * Time: 5:03 PM
  */
-public class HousingFormType extends UnsaveableTask
+public class IStatFormType extends TaskForm
 {
-    public static final String NAME = "housing";
+    public static final String NAME = "iStat";
 
-    public HousingFormType(DataEntryFormContext ctx, Module owner)
+    public IStatFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Housing Transfers", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "iStat Results", "Lab Results", Arrays.<FormSection>asList(
                 new TaskFormSection(),
-                new AnimalDetailsFormSection(),
-                new HousingFormSection("study", "housing", "Housing Transfers")
+                new IStatPanelForm(),
+                new LabworkFormSection("study", "iStat", "iStat", true)
         ));
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/HousingDataEntryPanel.js"));
-        setJavascriptClass("ONPRC_EHR.panel.HousingDataEntryPanel");
-    }
+        for (FormSection s : getFormSections())
+        {
+            s.addConfigSource("Labwork");
+            s.addConfigSource("iStat");
+        }
 
-    @Override
-    protected boolean canInsert()
-    {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRHousingTransferPermission.class))
-            return false;
-
-        return super.canInsert();
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/model/sources/iStat.js"));
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/IStatImportWindow.js"));
     }
 }

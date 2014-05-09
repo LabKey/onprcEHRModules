@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 LabKey Corporation
+ * Copyright (c) 2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 --insert procedures, only if not already present
-INSERT INTO labkey.ehr_lookups.procedures (name, category, active, major)
-Select
-	ProcedureName as name,
-	'Surgery' as category,
-	CASE
-	  WHEN Status = 1 THEN 1
-      ELSE 0
-    END as active,					-- 1 = active, 0 = inactive
-	--rsp.DisplayOrder,
-	--Category as CategoryInt,
-	CASE
-	  WHEN s1.Value = 'Major Surgery' then 1
-	  ELSE 0
-    END as major
-From IRIS_Production.dbo.Ref_SurgProcedure rsp
-	left join IRIS_Production.dbo.Sys_Parameters s1 on (s1.Field = 'SurgeryCategory' and rsp.Category = s1.Flag)
-	LEFT JOIN labkey.ehr_lookups.procedures p ON (rsp.ProcedureName = p.name)
-	WHERE p.name IS NULL
+-- INSERT INTO labkey.ehr_lookups.procedures (name, category, active, major)
+-- Select
+-- 	ProcedureName as name,
+-- 	'Surgery' as category,
+-- 	CASE
+-- 	  WHEN Status = 1 THEN 1
+--       ELSE 0
+--     END as active,					-- 1 = active, 0 = inactive
+-- 	--rsp.DisplayOrder,
+-- 	--Category as CategoryInt,
+-- 	CASE
+-- 	  WHEN s1.Value = 'Major Surgery' then 1
+-- 	  ELSE 0
+--     END as major
+-- From IRIS_Production.dbo.Ref_SurgProcedure rsp
+-- 	left join IRIS_Production.dbo.Sys_Parameters s1 on (s1.Field = 'SurgeryCategory' and rsp.Category = s1.Flag)
+-- 	LEFT JOIN labkey.ehr_lookups.procedures p ON (rsp.ProcedureName = p.name)
+-- 	WHERE p.name IS NULL
 
 
 --procedure comments
@@ -54,33 +54,33 @@ From IRIS_Production.dbo.Ref_SurgProcedure rsp
 
 
 --procedure flags
-TRUNCATE TABLE labkey.ehr_lookups.procedure_default_flags;
-INSERT INTO labkey.ehr_lookups.procedure_default_flags (procedureId, flag, value)
-Select
-  (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
-  'BreedImpair' as flag,
-  'Y' as value
+-- TRUNCATE TABLE labkey.ehr_lookups.procedure_default_flags;
+-- INSERT INTO labkey.ehr_lookups.procedure_default_flags (procedureId, flag, value)
+-- Select
+--   (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
+--   'BreedImpair' as flag,
+--   'Y' as value
+--
+-- FROM IRIS_Production.dbo.Ref_SurgProcedure r
+-- WHERE BreedImpairFlag = 1;
 
-FROM IRIS_Production.dbo.Ref_SurgProcedure r
-WHERE BreedImpairFlag = 1;
+-- INSERT INTO labkey.ehr_lookups.procedure_default_flags (procedureId, flag, value)
+-- Select
+--   (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
+--   'USDASurvival' as flag,
+--   'Y' as value
+--
+-- FROM IRIS_Production.dbo.Ref_SurgProcedure r
+-- WHERE USDASurvivalFlag = 1;
 
-INSERT INTO labkey.ehr_lookups.procedure_default_flags (procedureId, flag, value)
-Select
-  (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
-  'USDASurvival' as flag,
-  'Y' as value
-
-FROM IRIS_Production.dbo.Ref_SurgProcedure r
-WHERE USDASurvivalFlag = 1;
-
-INSERT INTO labkey.ehr_lookups.procedure_default_flags (procedureId, flag, value)
-Select
-  (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
-  'Vessel Surgery' as flag,
-  'Y' as value
-
-FROM IRIS_Production.dbo.Ref_SurgProcedure r
-WHERE VesselID = 1;
+-- INSERT INTO labkey.ehr_lookups.procedure_default_flags (procedureId, flag, value)
+-- Select
+--   (SELECT rowid from labkey.ehr_lookups.procedures p WHERE p.name = r.procedureName) as procedureid,
+--   'Vessel Surgery' as flag,
+--   'Y' as value
+--
+-- FROM IRIS_Production.dbo.Ref_SurgProcedure r
+-- WHERE VesselID = 1;
 
 --NOTE: due to additions in PRIMe, these are no longer synced
 -- --procedure medications

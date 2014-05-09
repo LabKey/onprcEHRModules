@@ -96,7 +96,7 @@ public class BiopsyFormType extends EncounterForm
         if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRPathologyEntryPermission.class))
             return false;
 
-        return super.canInsert();
+        return super.canRead();
     }
 
     @Override

@@ -510,11 +510,17 @@ Ext4.onReady(function(){
             queryName: 'volume_units',
             pk: 'unit'
         },{
-            label: 'Amount  Units',
+            label: 'Amount Units',
             populateFn: 'populateAmountUnits',
             schemaName: 'ehr_lookups',
             queryName: 'amount_units',
             pk: 'unit'
+        },{
+            label: 'Flag Categories',
+            populateFn: 'populateFlagCategories',
+            schemaName: 'ehr_lookups',
+            queryName: 'flag_categories',
+            pk: 'category'
         },{
             label: 'Route',
             populateFn: 'populateRoute',
@@ -2651,6 +2657,7 @@ Ext4.onReady(function(){
             ['E-82340','Common Treatments',null],
             ['E-82345','Common Treatments',null],
             ['E-82870','Common Treatments',null],
+            ['E-85361','Common Treatments',null],
             ['E-84215','Common Treatments',null],
             ['E-84840','Common Treatments',null],
             ['E-85151','Common Treatments',null],
@@ -2785,6 +2792,7 @@ Ext4.onReady(function(){
             ['E-YY008','Common Treatments',null],
             ['E-YY383','Common Treatments',null],
             ['E-YY668','Common Treatments',null],
+            ['E-YY856','Common Treatments',null],
             ['P-Y4110','Hormone Implants',null],
             ['P-Y4120','Hormone Implants',null],
             ['P-Y4130','Hormone Implants',null],
@@ -6284,6 +6292,7 @@ Ext4.onReady(function(){
             ['Procedure','Remove animal appendage from cage','', true],
             ['Procedure','Sedation','', true],
             ['Procedure','Sex determination','', true],
+            ['Procedure','Skin biopsy','', true],
             ['Procedure','Spec Clltn: Urine cystocentesis','', true],
             ['Procedure','SPF Surveillance','', true],
             ['Procedure','Swivel-Tether change','', true],
@@ -7416,7 +7425,8 @@ Ext4.onReady(function(){
                 ['Other SPF Surveillance',false,'SPF Surveillance Lab','Misc Tests','',''],
                 ['BASIC Chemistry Panel (Axthelm)',false,'Research Staff','Biochemistry','T-0X500',''],
                 ['Calcium, total',false,'Clinpath','Biochemistry','T-0X500',''],
-                ['Calcium, ionized',false,'Clinpath','Biochemistry','T-0X500','']
+                ['Calcium, ionized',false,'Clinpath','Biochemistry','T-0X500',''],
+                ['iSTAT',false,'','iSTAT',null,'']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -7723,6 +7733,8 @@ Ext4.onReady(function(){
                 ['BASIC Chemistry Panel (Axthelm)','K',12,'','testid'],
                 ['BASIC Chemistry Panel (Axthelm)','TP',13,'','testid'],
                 ['BASIC Chemistry Panel (Axthelm)','Glob',14,'','testid'],
+                ['Bile Acids Pre-prandial','Bile Acids Pre-prandial',1,'','testid'],
+                ['Bile Acids Post-prandial','Bile Acids Post-prandial',1,'','testid'],
                 ['Calcium, total','Ca',1,'','testid'],
                 ['Calcium, ionized','Ca, ionized',1,'','testid']
             ];
@@ -8221,6 +8233,7 @@ Ext4.onReady(function(){
                 ['behaviorCases' ,'Behavior' ,'js' ,'Behavior Cases' ,'true' ,'' ,'study' ,'behaviorCases', 'Active Behavior Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active behavior cases'],
                 //['enrichment' ,'Behavior' ,'query' ,'Enrichment' ,'true' ,'' ,'study' ,'Enrichment', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 ['surgicalCases' ,'Daily Reports' ,'query' ,'Active Surgery Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Surgery Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active surgery cases'],
+                ['surgeryCasesClosedToday' ,'Surgery' ,'js' ,'Surgery Cases Closed Today' ,'true' ,'' ,'study' ,'surgeryCasesClosedToday', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays surgery cases closed today'],
                 ['activeFlags' ,'General' ,'query' ,'Active Flags' ,'true' ,'' ,'study' ,'Animal Record Flags', 'Active Flags', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active flags for this animals'],
                 ['surgicalCases2' ,'Surgery' ,'query' ,'Surgery Cases' ,'true' ,'' ,'study' ,'Cases', 'Active Surgery Cases', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active surgery cases'],
                 //['diet' ,'Colony Management' ,'query' ,'Diet' ,'true' ,'' ,'study' ,'Diet', 'Active Diets', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays active diets'],
@@ -13756,9 +13769,17 @@ Ext4.onReady(function(){
             };
             var fields = ('testid,name,units,alertOnAbnormal,alertOnAny,includeInPanel,sort_order').split(',');
             var data = [
-                ['Na', 'Sodium', null, false, false, true, 1],
-                ['K', 'Potassium', null, false, false, true, 2],
-                ['Cl', 'Chlorine', null, false, false, true, 3]
+                ['HR', 'HR', null, false, false, true, null],
+                ['RR', 'RR', null, false, false, true, null],
+                ['Temp', 'Temp', null, false, false, true, null],
+                ['SPO2', 'SPO2', null, false, false, true, null],
+                ['Vaporizer %', 'Vaporizer %', null, false, false, true, null],
+                ['O2 Flow (L/min)', 'O2 Flow (L/min)', null, false, false, true, null],
+                ['IBP S/D', 'IBP S/D', null, false, false, true, null],
+                ['IBP MAP', 'IBP MAP', null, false, false, true, null],
+                ['NIBP S/D', 'NIBP S/D', null, false, false, true, null],
+                ['NIBP MAP', 'NIBP MAP', null, false, false, true, null],
+                ['EtCo2', 'EtCo2', null, false, false, true, null]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -13807,7 +13828,11 @@ Ext4.onReady(function(){
                 ['Glob', 'Globulin', 'g/dl', null, true, false, false, null],
                 ['DBIL', 'Direct Bilirubin', 'mg/dl', null, true, false, false, null],
                 ['A/G Ratio', 'A/G Ratio', null, null, true, false, false, null],
-                ['Ca, ionized', 'Calcium, ionized', 'mg/dL', null, true, false, true, null]
+                ['Ca, ionized', 'Calcium, ionized', 'mg/dL', null, true, false, true, null],
+                ['A/P', 'Albumin/Protein Ratio', null, null, true, false, false, null],
+                ['A/G ratio', 'Albumin Globulin Ratio', null, null, true, false, false, null],
+                ['B/C', 'BUN/Creatinine Ratio', 'ratio', null, true, false, false, null],
+                ['CPK', 'Creatine phosphokinase', 'U/L', null, true, false, false, null]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -14674,6 +14699,42 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
+        populateFlagCategories: function(){
+            this.pendingInserts++;
+
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'flag_categories',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('category,enforceUnique,omitFromOverview,doHighlight').split(',');
+            var data = [
+                ['Alert',false,false,true],
+                ['Assign Alias',true,false,true],
+                ['ATG',false,false,false],
+                ['BSU',false,false,false],
+                ['Cage Exemptions',false,false,false],
+                ['Candidate',false,false,false],
+                ['Condition',true,false,false],
+                ['Flag',false,false,false],
+                ['Genetics',false,true,false],
+                ['PTG',false,false,false],
+                ['SPF',true,false,false],
+                ['TB',false,false,false],
+                ['TMB',false,false,false],
+                ['Clinical',false,false,false],
+                ['Group 2011',false,false,false],
+                ['Housing Tier',false,false,false],
+                ['NHPR Note',false,false,false],
+                ['Origin',false,false,false],
+                ['Repro Note',false,false,false],
+                ['Surveillance',false,false,false]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
 
         populateDosageUnits: function(){
             this.pendingInserts++;

@@ -21,6 +21,7 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
 import org.labkey.api.module.Module;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +44,10 @@ public class LabworkRequestFormType extends RequestForm
                 new AnimalDetailsFormSection(),
                 new ClinpathRunsFormSection(true)
         ));
+
+        addClientDependency(ClientDependency.fromModuleName("MergeSync"));
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/LabworkRequestDataEntryPanel.js"));
+        setJavascriptClass("ONPRC_EHR.panel.LabworkRequestDataEntryPanel");
     }
 
     @Override

@@ -640,6 +640,8 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                             displayField: 'cagetype',
                             valueField: 'cagetype',
                             value: btn.boundRecord.get('cage_type'),
+                            //many users can edit dividers, but not all can edit cage type
+                            hidden: !EHR.Security.hasLocationEditorPermission(),
                             itemId: 'cageType',
                             store: {
                                 type: 'labkey-store',
@@ -668,6 +670,7 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                             displayField: 'value',
                             valueField: 'value',
                             value: btn.boundRecord.get('status'),
+                            hidden: !EHR.Security.hasLocationEditorPermission(),
                             itemId: 'cageStatus',
                             store: {
                                 type: 'labkey-store',
@@ -684,8 +687,13 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                                 var cageType = win.down('#cageType');
                                 var divider = win.down('#divider');
                                 var cageStatus = win.down('#cageStatus');
-                                if (!cageType.getValue() || !divider.getValue()){
-                                    Ext4.Msg.alert('Error', 'Must enter both cage type and divider');
+                                if (!EHR.Security.hasLocationEditorPermission() && !cageType.getValue()){
+                                    Ext4.Msg.alert('Error', 'Must enter the cage type');
+                                    return;
+                                }
+
+                                if (!divider.getValue()){
+                                    Ext4.Msg.alert('Error', 'Must enter the divider type');
                                     return;
                                 }
 

@@ -24,6 +24,13 @@ exports.init = function(EHR){
         });
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Clinpath Runs', function(event, helper){
+        helper.setScriptOptions({
+            allowDeadIds: false,
+            allowAnyId: false
+        });
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Assignment', function(event, helper){
         helper.setScriptOptions({
             doStandardProtocolCountValidation: false
@@ -159,7 +166,13 @@ exports.init = function(EHR){
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow);
 
         //also attempt to update dividers
-        onprc_utils.doUpdateDividers(row, helper, triggerHelper, false);
+        var msgs = onprc_utils.doUpdateDividers(EHR, row, helper, scriptErrors, triggerHelper, true);
+        if (msgs){
+            msgs = msgs.split("<>");
+            for (var i=0;i<msgs.length;i++){
+                EHR.Server.Utils.addError(scriptErrors, 'divider', msgs[i], 'INFO');
+            }
+        }
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Housing', function(scriptErrors, helper, row, oldRow){
@@ -170,7 +183,13 @@ exports.init = function(EHR){
             }
 
             //also attempt to update dividers
-            onprc_utils.doUpdateDividers(row, helper, triggerHelper, helper.isValidateOnly());
+            var msgs = onprc_utils.doUpdateDividers(EHR, row, helper, scriptErrors, triggerHelper, helper.isValidateOnly());
+            if (msgs){
+                msgs = msgs.split("<>");
+                for (var i=0;i<msgs.length;i++){
+                    EHR.Server.Utils.addError(scriptErrors, 'divider', msgs[i], 'INFO');
+                }
+            }
 
             if (row.room){
                 row.housingCondition = row.housingCondition || triggerHelper.getHousingCondition(row.room);

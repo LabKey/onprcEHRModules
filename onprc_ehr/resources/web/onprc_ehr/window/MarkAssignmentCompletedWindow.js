@@ -118,6 +118,7 @@ Ext4.define('ONPRC_EHR.window.MarkAssignmentCompletedWindow', {
         var checked = dataRegion.getChecked();
 
         LABKEY.Query.selectRows({
+            method: 'POST',
             schemaName: this.schemaName,
             queryName: this.queryName,
             columns: this.pkColName + ',' + this.targetField + ',' + 'projectedReleaseCondition',

@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 --source
-TRUNCATE TABLE labkey.ehr_lookups.source;
-INSERT into labkey.ehr_lookups.source (code, meaning, SourceCity, SourceState, SourceCountry)
-	select InstitutionCode, InstitutionName, InstitutionCity, InstitutionState, InstitutionCountry  from IRIS_Production.dbo.Ref_ISISInstitution;
+-- TRUNCATE TABLE labkey.ehr_lookups.source;
+-- INSERT into labkey.ehr_lookups.source (code, meaning, SourceCity, SourceState, SourceCountry)
+-- 	select InstitutionCode, InstitutionName, InstitutionCity, InstitutionState, InstitutionCountry  from IRIS_Production.dbo.Ref_ISISInstitution;
 
 --antibiotic subset
-DELETE FROM labkey.ehr_lookups.snomed_subsets WHERE subset = 'Antibiotics';
-INSERT INTO labkey.ehr_lookups.snomed_subsets (container, subset) VALUES ((SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC'), 'Antibiotics');
-
-DELETE FROM labkey.ehr_lookups.snomed_subset_codes WHERE primaryCategory = 'Antibiotics';
-DELETE FROM labkey.ehr_lookups.snomed_subset_codes WHERE primarycategory = 'Antibiotic';
-INSERT INTO labkey.ehr_lookups.snomed_subset_codes (primaryCategory, code, container, modified, created, modifiedby, createdby)
-Select
-'Antibiotics' as primaryCategory,
-AntibioticCode as code,
-(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
-getdate() as modified,
-getdate() as created,
-(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
-(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby
-From IRIS_Production.dbo.Ref_Antibiotics WHERE DateDisabled IS NULL;
+-- DELETE FROM labkey.ehr_lookups.snomed_subsets WHERE subset = 'Antibiotics';
+-- INSERT INTO labkey.ehr_lookups.snomed_subsets (container, subset) VALUES ((SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC'), 'Antibiotics');
+--
+-- DELETE FROM labkey.ehr_lookups.snomed_subset_codes WHERE primaryCategory = 'Antibiotics';
+-- DELETE FROM labkey.ehr_lookups.snomed_subset_codes WHERE primarycategory = 'Antibiotic';
+-- INSERT INTO labkey.ehr_lookups.snomed_subset_codes (primaryCategory, code, container, modified, created, modifiedby, createdby)
+-- Select
+-- 'Antibiotics' as primaryCategory,
+-- AntibioticCode as code,
+-- (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
+-- getdate() as modified,
+-- getdate() as created,
+-- (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
+-- (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby
+-- From IRIS_Production.dbo.Ref_Antibiotics WHERE DateDisabled IS NULL;
 
 --buildings
-TRUNCATE TABLE labkey.ehr_lookups.buildings;
-INSERT INTO labkey.ehr_lookups.buildings (name, description)
-SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE datedisabled IS NULL;
+-- TRUNCATE TABLE labkey.ehr_lookups.buildings;
+-- INSERT INTO labkey.ehr_lookups.buildings (name, description)
+-- SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE datedisabled IS NULL;
 
 -- --species
 -- TRUNCATE TABLE labkey.ehr_lookups.species;
@@ -51,8 +51,8 @@ SELECT buildingname, description FROM IRIS_Production.dbo.ref_building WHERE dat
 -- UPDATE labkey.ehr_lookups.species SET blood_per_kg = 65 WHERE common = 'CYNOMOLGUS MACAQUE';
 -- UPDATE labkey.ehr_lookups.species SET max_draw_pct = 0.125;
 
-UPDATE labkey.ehr_lookups.species
-SET cites_code = (SELECT min(SpeciesCode) FROM IRIS_Production.dbo.ref_species WHERE Active = 1 AND species.common = ref_species.CommonName)
+-- UPDATE labkey.ehr_lookups.species
+-- SET cites_code = (SELECT min(SpeciesCode) FROM IRIS_Production.dbo.ref_species WHERE Active = 1 AND species.common = ref_species.CommonName)
 
 --snomed
 --TRUNCATE TABLE labkey.ehr_lookups.snomed;
@@ -78,37 +78,37 @@ GROUP BY SnomedCode;
 -- INSERT INTO labkey.ehr_lookups.gender_codes (code, meaning, origgender) VALUES ('u', 'Unknown', null);
 
 --toys subset
-DELETE FROM labkey.ehr_lookups.snomed_subsets WHERE subset = 'Toys';
-INSERT INTO labkey.ehr_lookups.snomed_subsets (subset) VALUES ('Toys');
-
-DELETE FROM labkey.ehr_lookups.snomed_subset_codes WHERE primaryCategory = 'Toys';
-INSERT INTO labkey.ehr_lookups.snomed_subset_codes (primaryCategory, code, container, modified, created, modifiedby, createdby)
-Select
-'Toys' as primaryCategory,
-ToyCode as code,
-(SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
-getdate() as modified,
-getdate() as created,
-(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
-(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby
-From IRIS_Production.dbo.Ref_Toys WHERE ToyType = 1; --active only
+-- DELETE FROM labkey.ehr_lookups.snomed_subsets WHERE subset = 'Toys';
+-- INSERT INTO labkey.ehr_lookups.snomed_subsets (subset) VALUES ('Toys');
+--
+-- DELETE FROM labkey.ehr_lookups.snomed_subset_codes WHERE primaryCategory = 'Toys';
+-- INSERT INTO labkey.ehr_lookups.snomed_subset_codes (primaryCategory, code, container, modified, created, modifiedby, createdby)
+-- Select
+-- 'Toys' as primaryCategory,
+-- ToyCode as code,
+-- (SELECT c.entityid from labkey.core.containers c LEFT JOIN labkey.core.Containers c2 on (c.Parent = c2.EntityId) WHERE c.name = 'EHR' and c2.name = 'ONPRC') as container,
+-- getdate() as modified,
+-- getdate() as created,
+-- (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby,
+-- (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby
+-- From IRIS_Production.dbo.Ref_Toys WHERE ToyType = 1; --active only
 
 
 --geographic origins
-TRUNCATE TABLE labkey.ehr_lookups.geographic_origins;
-INSERT INTO labkey.ehr_lookups.geographic_origins (meaning)
-SELECT upper(ltrim(rtrim(GeographicName))) as meaning From IRIS_Production.dbo.Ref_ISISGeographic;
+-- TRUNCATE TABLE labkey.ehr_lookups.geographic_origins;
+-- INSERT INTO labkey.ehr_lookups.geographic_origins (meaning)
+-- SELECT upper(ltrim(rtrim(GeographicName))) as meaning From IRIS_Production.dbo.Ref_ISISGeographic;
 
 
 
 --treatment frequency
-INSERT INTO labkey.ehr_lookups.treatment_frequency 
-(meaning)
-SELECT 
-	value
-FROM IRIS_Production.dbo.Sys_Parameters s3 
-LEFT JOIN labkey.ehr_lookups.treatment_frequency f ON (s3.Value = f.meaning)
-WHERE s3.Field = 'MedicationFrequency' AND f.meaning IS NULL;
+-- INSERT INTO labkey.ehr_lookups.treatment_frequency
+-- (meaning)
+-- SELECT
+-- 	value
+-- FROM IRIS_Production.dbo.Sys_Parameters s3
+-- LEFT JOIN labkey.ehr_lookups.treatment_frequency f ON (s3.Value = f.meaning)
+-- WHERE s3.Field = 'MedicationFrequency' AND f.meaning IS NULL;
 
 
 
@@ -228,83 +228,83 @@ WHERE s3.Field = 'MedicationFrequency' AND f.meaning IS NULL;
 --   where s2.field = 'CageDivider' and s2.DateDisabled IS NULL and d.divider is null;
 
 
-DELETE FROM labkey.ehr_lookups.lookups where set_name = 'housing_reason'
-and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'TRANSFERREASON');
+-- DELETE FROM labkey.ehr_lookups.lookups where set_name = 'housing_reason'
+-- and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'TRANSFERREASON');
 
-INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
-select
-'housing_reason' as setname,
-s.Value as value,
-s.DisplayOrder as sort_order
+-- INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
+-- select
+-- 'housing_reason' as setname,
+-- s.Value as value,
+-- s.DisplayOrder as sort_order
+--
+-- from iris_production.dbo.Sys_Parameters s
+-- where s.Field = 'TRANSFERREASON'
+-- and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'housing_reason');
 
-from iris_production.dbo.Sys_Parameters s
-where s.Field = 'TRANSFERREASON'
-and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'housing_reason');
+-- DELETE FROM labkey.ehr_lookups.lookups where set_name = 'birth_type'
+-- and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'BirthType');
 
-DELETE FROM labkey.ehr_lookups.lookups where set_name = 'birth_type'
-and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'BirthType');
+-- INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
+-- select
+-- 'birth_type' as setname,
+-- s.Value as value,
+-- s.DisplayOrder as sort_order
+--
+-- from iris_production.dbo.Sys_Parameters s
+-- where s.Field = 'BirthType'
+-- and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'birth_type');
 
-INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
-select
-'birth_type' as setname,
-s.Value as value,
-s.DisplayOrder as sort_order
-
-from iris_production.dbo.Sys_Parameters s
-where s.Field = 'BirthType'
-and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'birth_type');
-
-DELETE FROM labkey.ehr_lookups.lookups where set_name = 'birth_condition'
-and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'BirthCondition');
-
-INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
-select
-'birth_condition' as setname,
-s.Value as value,
-s.DisplayOrder as sort_order
-
-from iris_production.dbo.Sys_Parameters s
-where s.Field = 'BirthCondition'
-and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'birth_condition');
-
-
-DELETE FROM labkey.ehr_lookups.lookups where set_name = 'death_cause'
-and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'Deathcause');
-
-INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
-select
-'death_cause' as setname,
-s.Value as value,
-s.DisplayOrder as sort_order
-
-from iris_production.dbo.Sys_Parameters s
-where s.Field = 'Deathcause'
-and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'death_cause');
+-- DELETE FROM labkey.ehr_lookups.lookups where set_name = 'birth_condition'
+-- and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'BirthCondition');
+--
+-- INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
+-- select
+-- 'birth_condition' as setname,
+-- s.Value as value,
+-- s.DisplayOrder as sort_order
+--
+-- from iris_production.dbo.Sys_Parameters s
+-- where s.Field = 'BirthCondition'
+-- and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'birth_condition');
 
 
-DELETE FROM labkey.ehr_lookups.lookups where set_name = 'problem_list_category'
-and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'MasterProblemList');
+-- DELETE FROM labkey.ehr_lookups.lookups where set_name = 'death_cause'
+-- and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'Deathcause');
+--
+-- INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
+-- select
+-- 'death_cause' as setname,
+-- s.Value as value,
+-- s.DisplayOrder as sort_order
+--
+-- from iris_production.dbo.Sys_Parameters s
+-- where s.Field = 'Deathcause'
+-- and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'death_cause');
 
-INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
-select
-'problem_list_category' as setname,
-s.Value as value,
-s.DisplayOrder as sort_order
 
-from iris_production.dbo.Sys_Parameters s
-where s.Field = 'MasterProblemList'
-and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'problem_list_category');
+-- DELETE FROM labkey.ehr_lookups.lookups where set_name = 'problem_list_category'
+-- and value not in (select value from iris_production.dbo.Sys_Parameters s where s.Field = 'MasterProblemList');
+--
+-- INSERT INTO labkey.ehr_lookups.lookups (set_name, value, sort_order)
+-- select
+-- 'problem_list_category' as setname,
+-- s.Value as value,
+-- s.DisplayOrder as sort_order
+--
+-- from iris_production.dbo.Sys_Parameters s
+-- where s.Field = 'MasterProblemList'
+-- and s.value not in (select value from labkey.ehr_lookups.lookups WHERE set_name = 'problem_list_category');
 
-TRUNCATE TABLE labkey.ehr_lookups.animal_condition;
-INSERT INTO labkey.ehr_lookups.animal_condition (code, meaning, created, createdby, modified, modifiedby)
-select
-PoolCode as code,
-Description as meaning,
-getdate() as created,
-(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
-getdate() as modified,
-(SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
-from iris_production.dbo.ref_pool where (ShortDescription = 'Condition' or poolcode = 207) and DateDisabled is null and PoolCode != 203;
+-- TRUNCATE TABLE labkey.ehr_lookups.animal_condition;
+-- INSERT INTO labkey.ehr_lookups.animal_condition (code, meaning, created, createdby, modified, modifiedby)
+-- select
+-- PoolCode as code,
+-- Description as meaning,
+-- getdate() as created,
+-- (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as createdby,
+-- getdate() as modified,
+-- (SELECT userid from labkey.core.principals WHERE Name = 'onprcitsupport@ohsu.edu') as modifiedby
+-- from iris_production.dbo.ref_pool where (ShortDescription = 'Condition' or poolcode = 207) and DateDisabled is null and PoolCode != 203;
 
 --append custom flags
 insert into ehr_lookups.flag_values (category, value,code,datedisabled,objectid,container,created,createdby,modified,modifiedby)

@@ -106,7 +106,7 @@ public class RequestAdminNotification extends ColonyAlertsNotification
         msg.append("This email is designed to summarize pending or scheduled requests, including potential problems with these requests like animals lacking assignment or blood draws that would place the animal above the allowable amount.  It was run on: " + AbstractEHRNotification._dateFormat.format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
 
         bloodDrawsOnDeadAnimals(c, u, msg);
-        bloodDrawsOverLimit(c, u, msg);
+        bloodDrawsOverLimit(c, u, msg, 1);
         incompleteRequests(c, u, "blood", "Blood Draw", msg);
         incompleteRequests(c, u, "drug", "Injection", msg);
         requestsNotAssignedToProject(c, u, "blood", "Blood Draw", msg);

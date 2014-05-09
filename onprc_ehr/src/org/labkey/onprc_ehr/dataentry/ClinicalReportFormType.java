@@ -53,9 +53,9 @@ public class ClinicalReportFormType extends TaskForm
                 new SimpleFormPanelSection("study", "Clinical Remarks", "SOAP", false, EHRService.FORM_SECTION_LOCATION.Tabs),
                 new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new SimpleGridPanel("study", "encounters", "Procedures", EHRService.FORM_SECTION_LOCATION.Tabs),
+                new WeightFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new TreatmentOrdersFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
-                new WeightFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new SimpleGridPanel("study", "blood", "Blood Draws", EHRService.FORM_SECTION_LOCATION.Tabs),
                 new SimpleGridPanel("ehr", "snomed_tags", "Diagnostic Codes", EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
