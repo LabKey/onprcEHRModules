@@ -24,8 +24,10 @@ mergesync/build.xml -text
 mergesync/module.properties -text
 mergesync/resources/module.xml -text
 mergesync/resources/queries/mergesync/merge_results/.qview.xml -text
+mergesync/resources/queries/mergesync/merge_runs.query.xml -text
 mergesync/resources/queries/mergesync/merge_runs/.qview.xml -text
 mergesync/resources/queries/mergesync/orderssynced.query.xml -text
+mergesync/resources/queries/mergesync/orderssynced/.qview.xml -text
 mergesync/resources/schemas/dbscripts/postgresql/mergesync-0.00-0.01.sql -text
 mergesync/resources/schemas/dbscripts/postgresql/mergesync-0.01-0.02.sql -text
 mergesync/resources/schemas/dbscripts/postgresql/mergesync-0.02-0.03.sql -text
@@ -48,6 +50,7 @@ mergesync/resources/views/begin.html -text
 mergesync/resources/views/begin.view.xml -text
 mergesync/resources/views/instructions.html -text
 mergesync/resources/views/instructions.view.xml -text
+mergesync/resources/web/mergesync/mergeButtons.js -text
 mergesync/src/org/labkey/mergesync/MergeSyncController.java -text
 mergesync/src/org/labkey/mergesync/MergeSyncManager.java -text
 mergesync/src/org/labkey/mergesync/MergeSyncModule.java -text
@@ -388,6 +391,8 @@ onprc_billing/src/org/labkey/onprc_billing/query/BillingAuditProvider.java -text
 onprc_billing/src/org/labkey/onprc_billing/query/BillingAuditViewFactory.java -text
 onprc_billing/src/org/labkey/onprc_billing/query/BillingTriggerHelper.java -text
 onprc_billing/src/org/labkey/onprc_billing/query/ONPRC_EHRBillingUserSchema.java -text
+onprc_billing/src/org/labkey/onprc_billing/security/ONPRCAliasEditorPermission.java -text
+onprc_billing/src/org/labkey/onprc_billing/security/ONPRCAliasEditorRole.java -text
 onprc_billing/src/org/labkey/onprc_billing/security/ONPRCBillingAdminPermission.java -text
 onprc_billing/src/org/labkey/onprc_billing/security/ONPRCBillingAdminRole.java -text
 onprc_billing/src/org/labkey/onprc_billing/security/ONPRCChargeEntryPermission.java -text
