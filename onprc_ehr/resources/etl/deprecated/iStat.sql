@@ -133,7 +133,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	Glu as ResultString,
-	'Gluc' as TestId,
+	'Glu' as TestId,
 
 	cln.ts as rowversion,
 	cln.objectid
@@ -232,7 +232,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	AnGap as ResultString ,
-	'An Gap' as TestId,
+	'AnGap' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 
@@ -249,7 +249,7 @@ SELECT
 	Method as MethodInt  ,
 	null as result,
 	Hgb as ResultString,
-	'Hg' as TestId,
+	'Hb' as TestId,
 	cln.ts as rowversion,
 	cln.objectid
 

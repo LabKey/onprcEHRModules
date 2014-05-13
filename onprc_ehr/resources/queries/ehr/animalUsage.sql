@@ -23,6 +23,7 @@ SELECT
   pc2.totalAssignments,
   pc.allowed,
   pc2.totalAnimals,
+  pc2.excludedAnimals,
   pc2.animals,
   CASE
     WHEN pc.allowed > 0 THEN (pc.allowed - pc2.totalAnimals)
@@ -41,7 +42,12 @@ SELECT
 FROM ehr.protocol p
 LEFT JOIN ehr.protocol_counts pc ON (p.protocol = pc.protocol OR pc.project.protocol = p.protocol)
 LEFT JOIN (
-  SELECT pc.rowid, count(a.lsid) as totalAssignments, count(DISTINCT a.Id) as totalAnimals, group_concat(DISTINCT a.Id) as animals
+  SELECT
+    pc.rowid,
+    count(a.lsid) as totalAssignments,
+    count(DISTINCT CASE WHEN (a.releaseType IS NULL OR a.releaseType NOT LIKE '%IACUC Excluded%') THEN a.Id ELSE null END) as totalAnimals,
+    count(DISTINCT CASE WHEN (a.releaseType IS NULL OR a.releaseType NOT LIKE '%IACUC Excluded%') THEN null ELSE a.Id END) as excludedAnimals,
+    group_concat(DISTINCT CASE WHEN (a.releaseType IS NULL OR a.releaseType NOT LIKE '%IACUC Excluded%') THEN a.Id ELSE null END) as animals
   FROM ehr.protocol_counts pc
   JOIN study.assignment a ON (
     (a.dateOnly < pc.enddateCoalesced AND a.enddateCoalesced >= pc.start) AND

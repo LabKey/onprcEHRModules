@@ -203,8 +203,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("daysElapsed"), 30, CompareType.GTE);
-        filter.addCondition(FieldKey.fromString("category"), "Assign Alias", CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("value"), ONPRC_EHRManager.AUC_RESERVED, CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("flag/category"), "Assign Alias", CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("flag/value"), ONPRC_EHRManager.AUC_RESERVED, CompareType.NEQ_OR_NULL);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("flags"), filter, null);
         long count = ts.getRowCount();

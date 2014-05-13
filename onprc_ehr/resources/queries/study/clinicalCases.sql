@@ -46,4 +46,4 @@ SELECT
   null as isActive,
 
 FROM study.demographicsCurrentLocation d
-WHERE d.area = 'Hospital' AND d.Id.activecases.categories NOT LIKE 'Clinical'
+WHERE d.area = 'Hospital' AND d.Id.activecases.categories NOT LIKE '%Clinical%'

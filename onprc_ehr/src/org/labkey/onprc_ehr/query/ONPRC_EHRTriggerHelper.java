@@ -973,8 +973,11 @@ public class ONPRC_EHRTriggerHelper
         return ret.get(0);
     }
 
-    public void doBirthTriggers(String id, Date date, String dam) throws Exception
+    public void doBirthTriggers(String id, Date date, String dam, String birthCondition) throws Exception
     {
+        //is the infant is dead, terminate the assignments
+        Date enddate = Arrays.asList("Born Dead", "Terminated At Birth").contains(birthCondition) ? date : null;
+
         String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
         if (nonRestrictedFlag != null)
         {
@@ -995,7 +998,8 @@ public class ONPRC_EHRTriggerHelper
 
             TableSelector ts = new TableSelector(flags, Collections.singleton("flag"), flagFilter, null);
             List<String> flagList = ts.getArrayList(String.class);
-            if (flagList != null && flagList.size() == 1)
+            //only add the condition code if the animal is still living
+            if (flagList != null && flagList.size() == 1 && enddate == null)
             {
                 EHRService.get().ensureFlagActive(getUser(), getContainer(), flagList.get(0), date, null, Collections.singletonList(id), false);
             }
@@ -1023,6 +1027,7 @@ public class ONPRC_EHRTriggerHelper
                     Map<String, Object> row = new CaseInsensitiveHashMap<>();
                     row.put("Id", id);
                     row.put("date", date);
+                    row.put("enddate", enddate);
                     row.put("groupid", groupList.get(0));
                     row.put("objectid", new GUID());
                     row.put("container", getContainer().getId());
@@ -1070,6 +1075,7 @@ public class ONPRC_EHRTriggerHelper
                     Map<String, Object> row = new CaseInsensitiveHashMap<>();
                     row.put("Id", id);
                     row.put("date", date);
+                    row.put("enddate", enddate);
                     row.put("project", project);
                     row.put("assignCondition", getConditionCodeForMeaning(NONRESTRICTED));
                     row.put("projectedReleaseCondition", getConditionCodeForMeaning(NONRESTRICTED));

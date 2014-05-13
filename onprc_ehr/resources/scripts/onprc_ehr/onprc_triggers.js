@@ -128,7 +128,7 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Birth', function(scriptErrors, helper, row, oldRow){
-        triggerHelper.doBirthTriggers(row.Id, row.date, row.dam);
+        triggerHelper.doBirthTriggers(row.Id, row.date, row.dam, row.cond);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Drug Administration', function(helper, scriptErrors, row, oldRow){

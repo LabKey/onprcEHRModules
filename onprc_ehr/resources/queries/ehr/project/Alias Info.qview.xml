@@ -20,6 +20,7 @@
         <column name="account/budgetStartDate"/>
         <column name="account/budgetEndDate"/>
         <column name="account/investigatorId"/>
+        <column name="account/aliasType"/>
     </columns>
     <sorts>
         <sort column="name" />
