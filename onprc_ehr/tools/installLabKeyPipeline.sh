@@ -26,8 +26,9 @@ if [ $# -eq 0 ]; then
 fi
 
 GZ=$1
+LABKEY_DIR=/usr/local/labkey
 echo "Installing LabKey using: $GZ"
-service labkeyPipeline stop
+service labkeyRemotePipeline stop
 
 cd /usr/local/src
 echo "Unzipping $GZ"
@@ -38,18 +39,25 @@ tar -xf $TAR
 DIR=`echo $TAR | sed -e "s/.tar$//"`
 echo "DIR: $DIR"
 cd $DIR
-./manual-upgrade.sh -u labkey -c /usr/local/tomcat -l /usr/local/labkey
-service labkeyPipeline start
+./manual-upgrade.sh -u labkey -c /usr/local/tomcat -l ${LABKEY_DIR}
+service labkeyRemotePipeline start
 cd ../
 echo "Removing folder: $DIR"
 rm -Rf $DIR
 echo "GZipping distribution"
 gzip $TAR
 
-echo "Updating pipeline code"
-su labkey -c 'svn update /usr/local/labkey/svn/trunk/pipeline_code/'
+#checkout pipeline code from svn
+if [[ ! -e ${LABKEY_DIR}/svn ]];
+then
+    echo "Checking out pipeline code"
+    su labkey -c "svn co --username cpas --password cpas --no-auth-cache https://hedgehog.fhcrc.org/tor/stedi/trunk/externalModules/labModules/SequenceAnalysis/pipeline_code ${LABKEY_DIR}/svn/trunk/pipeline_code/"
+else
+    echo "Updating pipeline code"
+    su labkey -c "svn update ${LABKEY_DIR}/svn/trunk/pipeline_code/"
+fi
 
 echo "cleaning up installers, leaving 5 most recent"
 ls -tr | grep '^LabKey.*\.gz$' | head -n -5 | xargs rm
 
-/usr/local/labkey/svn/trunk/pipeline_code/sequence_tools_install.sh -d /usr/local/labkey
+${LABKEY_DIR}/svn/trunk/pipeline_code/sequence_tools_install.sh -d ${LABKEY_DIR}
