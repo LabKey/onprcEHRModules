@@ -45,7 +45,7 @@
                     ssrsFolder = '/' + ssrsFolder  + '/' + 'CITESReport';
 
                     url += ssrsFolder + '&' + LABKEY.ActionURL.queryString({
-                        SessionID: LABKEY.Security.currentUser.sessionid,
+                        SessionID: LABKEY.Utils.getSessionID(),
                         HostName: location.hostname,
                         AnimalID: val
                     });

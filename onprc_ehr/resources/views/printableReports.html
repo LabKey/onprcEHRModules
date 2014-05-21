@@ -609,7 +609,7 @@
 
             getParams: function(supressErrors, skipRoomsIfAllSelected){
                 var params = {
-                    SessionId: LABKEY.Security.currentUser.sessionid,
+                    SessionId: LABKEY.Utils.getSessionID(),
                     HostName: location.hostname
                 };
 
