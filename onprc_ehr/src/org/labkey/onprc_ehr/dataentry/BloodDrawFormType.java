@@ -39,7 +39,7 @@ public class BloodDrawFormType extends TaskForm
         super(ctx, owner, NAME, NAME, "Clinical", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
-            new BloodDrawFormSection(true),
+            new BloodDrawFormSection(false),
             new WeightFormSection(),
             new DrugAdministrationFormSection())
         );

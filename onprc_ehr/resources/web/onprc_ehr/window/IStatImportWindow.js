@@ -67,7 +67,7 @@ Ext4.define('ONPRC_EHR.window.IStatImportWindow', {
         for (var i=1;i<idRow.length;i++){
             var runRow = {};
             runRow.Id = idRow[i];
-            runRow.date = dateRow[i];
+            runRow.date = LDK.ConvertUtils.parseDate(dateRow[i]);
             runRow.objectid = LABKEY.Utils.generateUUID();
             runRow.servicerequested = 'iSTAT';
             runsToCreate.push(this.runStore.createModel(runRow));
@@ -78,7 +78,7 @@ Ext4.define('ONPRC_EHR.window.IStatImportWindow', {
                 resultRow.Id = runRow.Id;
                 resultRow.date = runRow.date;
                 resultRow.objectid = LABKEY.Utils.generateUUID();
-                resultRow.runid = resultRow.objectid;
+                resultRow.runid = runRow.objectid;
 
                 if (parsed[j].length < i){
                     Ext4.Msg.alert('Error', 'The length result line ' + (j + 1) + ' is less than the header line.');

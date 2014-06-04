@@ -775,6 +775,9 @@
             <column columnName="conception">
                 <datatype>timestamp</datatype>
             </column>
+            <column columnName="conceptualDay">
+                <datatype>integer</datatype>
+            </column>
             <column columnName="type">
                 <datatype>varchar</datatype>
             </column>
@@ -966,6 +969,9 @@
                 <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
             </column>
             <column columnName="chargetype">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="assistingstaff">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="requestid">
@@ -2220,6 +2226,9 @@
             <column columnName="birth">
                 <datatype>timestamp</datatype>
             </column>
+            <column columnName="estimated">
+                <datatype>boolean</datatype>
+            </column>
             <column columnName="initialRoom">
                 <datatype>varchar</datatype>
             </column>
@@ -2248,6 +2257,9 @@
                 <datatype>integer</datatype>
             </column>
             <column columnName="originalId">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="arrivalId">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="cites">
@@ -2334,6 +2346,62 @@
         </columns>
         <tableTitle>Assignment</tableTitle>
     </table>
+    <table tableName="animal_group_members" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="enddate">
+                <datatype>timestamp</datatype>
+                <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
+            </column>
+            <column columnName="groupId">
+                <datatype>integer</datatype>
+            </column>
+            <column columnName="remark">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
+            </column>
+            <column columnName="description">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Description</propertyURI>
+            </column>
+            <column columnName="objectid">
+                <datatype>entityid</datatype>
+                <propertyURI>urn:ehr.labkey.org/#ObjectId</propertyURI>
+                <isKeyField>true</isKeyField>
+            </column>
+            <column columnName="parentid">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#ParentId</propertyURI>
+            </column>
+            <column columnName="taskid">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
+            </column>
+            <column columnName="performedby">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
+            </column>
+            <column columnName="requestid">
+                <datatype>varchar</datatype>
+                <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
+            </column>
+            <column columnName="releaseType">
+                <datatype>varchar</datatype>
+            </column>
+        </columns>
+        <tableTitle>Animal Group Members</tableTitle>
+    </table>
     <table tableName="deaths" tableDbType="TABLE">
         <columns>
             <column columnName="Id">
@@ -2404,6 +2472,9 @@
             </column>
             <column columnName="notAtCenter">
                 <datatype>boolean</datatype>
+            </column>
+            <column columnName="finalCondition">
+                <datatype>integer</datatype>
             </column>
         </columns>
         <tableTitle>Deaths</tableTitle>
@@ -2834,6 +2905,9 @@
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
             </column>
+            <column columnName="formSort">
+                <datatype>integer</datatype>
+            </column>
         </columns>
         <tableTitle>Pathology Diagnoses</tableTitle>
     </table>
@@ -2911,6 +2985,9 @@
             </column>
             <column columnName="trimmed_by">
                 <datatype>varchar</datatype>
+            </column>
+            <column columnName="formSort">
+                <datatype>integer</datatype>
             </column>
         </columns>
         <tableTitle>Histology</tableTitle>

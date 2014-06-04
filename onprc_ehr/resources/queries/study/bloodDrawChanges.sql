@@ -38,7 +38,7 @@ FROM (
       b.dateOnly,
       b.quantity,
     FROM study.blood b
-    WHERE b.dateOnly >= timestampadd('SQL_TSI_DAY', -1 * DATE_INTERVAL, curdate())
+    WHERE b.dateOnly > timestampadd('SQL_TSI_DAY', -1 * DATE_INTERVAL, curdate())
 
     UNION ALL
 

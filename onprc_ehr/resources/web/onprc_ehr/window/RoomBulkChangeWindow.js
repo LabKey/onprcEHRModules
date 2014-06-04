@@ -12,7 +12,7 @@ Ext4.define('ONPRC_EHR.window.RoomBulkChangeWindow', {
     initComponent: function(){
         Ext4.apply(this, {
             modal: true,
-            closeAction: 'hide',
+            closeAction: 'destroy',
             title: 'Copy Cages From Room',
             bodyStyle: 'padding: 5px;',
             width: 400,
@@ -99,8 +99,7 @@ Ext4.define('ONPRC_EHR.window.RoomBulkChangeWindow', {
                 rows: toDelete
             });
         }
-console.log(toDelete)
-console.log(toInsert);
+
         if (toInsert.length){
             commands.push({
                 command: 'insert',

@@ -40,7 +40,7 @@ public class ClinicRequestFormType extends RequestForm
                 new RequestFormSection(),
                 //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),
-                new BloodDrawFormSection(false),
+                new BloodDrawFormSection(true),
                 new DrugAdministrationRequestFormSection(),
                 new SurgeryRequestFormSection()
         ));

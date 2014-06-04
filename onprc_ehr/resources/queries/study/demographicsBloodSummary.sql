@@ -44,7 +44,7 @@ SELECT
     FROM study.blood bd
     WHERE bd.id = d.id
         AND bd.qcstate.publicdata = true
-        AND bd.dateOnly >= cast(TIMESTAMPADD('SQL_TSI_DAY', -1 * d.species.blood_draw_interval, now()) as date)
+        AND bd.dateOnly > cast(TIMESTAMPADD('SQL_TSI_DAY', -1 * d.species.blood_draw_interval, now()) as date)
         AND bd.dateOnly <= cast(curdate() as date)
   ), 0) AS bloodPrevious,
 
@@ -54,7 +54,7 @@ SELECT
     FROM study.blood bd
     WHERE bd.id = d.id
         AND (bd.qcstate.publicdata = true OR bd.qcstate.metadata.DraftData = true)
-        AND bd.dateOnly <= cast(TIMESTAMPADD('SQL_TSI_DAY', d.species.blood_draw_interval, curdate()) as date)
+        AND bd.dateOnly < cast(TIMESTAMPADD('SQL_TSI_DAY', d.species.blood_draw_interval, curdate()) as date)
         AND bd.dateOnly >= cast(curdate() as date)
   ), 0) AS bloodFuture
 

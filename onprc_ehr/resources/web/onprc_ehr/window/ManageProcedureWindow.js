@@ -12,7 +12,7 @@ Ext4.define('EHR.window.ManageProcedureWindow', {
             width: 500,
             bodyStyle: 'padding: 5px;',
             modal: true,
-            closeAction: 'hide',
+            closeAction: 'destroy',
             defaults: {
                 border: false
             },

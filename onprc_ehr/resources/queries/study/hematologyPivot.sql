@@ -6,6 +6,7 @@
 SELECT
 b.id,
 b.date,
+group_concat(distinct servicerequested, chr(10)) as servicerequested,
 --b.runId,
 b.method,
 b.chargetype,
@@ -22,6 +23,7 @@ SELECT
   b.testId,
   b.method,
   b.runid.chargetype as chargetype,
+  b.runid.servicerequested as servicerequested,
   coalesce(b.runId, b.objectid) as runId,
   b.remark,
   b.runId.remark as runRemark,
@@ -35,7 +37,7 @@ WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 
 ) b
 
-GROUP BY b.id, b.date, b.runId, b.remark, b.testId, b.method, b.chargetype, b.runRemark
+GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.chargetype
 PIVOT results BY testId IN
 (select testid from ehr_lookups.hematology_tests t WHERE t.includeInPanel = true)
 

@@ -53,7 +53,7 @@ SELECT
 
 FROM study.demographics d
 
-JOIN ehr.animal_group_members gm ON (
+JOIN study.animal_group_members gm ON (
     gm.dateOnly <= EndDate AND gm.enddateCoalesced >= StartDate
     AND (
       --find records for this animal that overlap its birth

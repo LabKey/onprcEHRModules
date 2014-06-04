@@ -41,7 +41,7 @@ public class GeneralRequestFormType extends RequestForm
         super(ctx, owner, "Service Request", "Service Requests", "Requests", Arrays.<FormSection>asList(
                 new RequestFormSection(),
                 new AnimalDetailsFormSection(),
-                new BloodDrawFormSection(false),
+                new BloodDrawFormSection(true),
                 new DrugAdministrationFormSection()
         ));
     }

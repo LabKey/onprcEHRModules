@@ -10,9 +10,9 @@
  */
 Ext4.define('ONPRC_EHR.window.MarkAnimalGroupCompletedWindow', {
     extend: 'Ext.window.Window',
-    schemaName: 'ehr',
+    schemaName: 'study',
     queryName: 'animal_group_members',
-    pkColName: 'objectid',
+    pkColName: 'lsid',
     targetField: 'enddate',
 
     statics: {

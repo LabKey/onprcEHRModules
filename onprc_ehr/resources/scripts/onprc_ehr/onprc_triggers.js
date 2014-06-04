@@ -27,7 +27,8 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Clinpath Runs', function(event, helper){
         helper.setScriptOptions({
             allowDeadIds: false,
-            allowAnyId: false
+            //this was changed to allow merge records to insert, even if we lack a demographics record
+            allowAnyId: true
         });
     });
 
@@ -42,6 +43,17 @@ exports.init = function(EHR){
             EHR.Server.Utils.addError(scriptErrors, 'weight', 'A weight is required unless \'No Weight\' is checked', 'WARN');
         }
     });
+
+    //TODO: enable with charges
+//    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Clinical Encounters', function(helper, scriptErrors, row, oldRow){
+//        if (row.chargetype == 'Research Staff' && !row.assistingstaff && row.procedureid && triggerHelper.requiresAssistingStaff(row.procedureid)){
+//            EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'If choosing Research Staff, you must enter the assisting staff.', 'WARN');
+//        }
+//
+//        if (row.chargetype != 'Research Staff' && row.assistingstaff){
+//            EHR.Server.Utils.addError(scriptErrors, 'assistingstaff', 'This field will be ignored unless Research Staff is selected, and should be blank.', 'WARN');
+//        }
+//    });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Animal Record Flags', function(helper, scriptErrors, row, oldRow){
         if (row.flag && row.Id && !row.enddate){
@@ -118,7 +130,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr', 'animal_group_members', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'animal_group_members', function(helper, scriptErrors, row, oldRow){
         if (!helper.isETL() && row.Id && row.groupid && !row.enddate){
             var msg = triggerHelper.getOverlappingGroupAssignments(row.Id, row.objectid);
             if (msg){
@@ -172,6 +184,25 @@ exports.init = function(EHR){
             for (var i=0;i<msgs.length;i++){
                 EHR.Server.Utils.addError(scriptErrors, 'divider', msgs[i], 'INFO');
             }
+        }
+
+        //dont allow open ended housing for non-living animals
+        if (!row.enddate && row.Id){
+            EHR.Server.Utils.findDemographics({
+                participant: row.Id,
+                helper: helper,
+                scope: this,
+                callback: function(data){
+                    if (data){
+                        if (data.calculated_status == 'Unknown' || !data.calculated_status){
+                            EHR.Server.Utils.addError(scriptErrors, 'enddate', 'There is no record of this animal, cannot enter an open ended housing record', 'WARN');
+                        }
+                        else if (data.calculated_status != 'Alive'){
+                            EHR.Server.Utils.addError(scriptErrors, 'enddate', 'This animal is not listed as alive, cannot enter an open ended housing record', 'WARN');
+                        }
+                    }
+                }
+            });
         }
     });
 

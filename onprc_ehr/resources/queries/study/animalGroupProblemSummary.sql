@@ -30,7 +30,7 @@ FROM (
 SELECT
   t1.groupId,
   t1.category,
-  (select count(distinct m.id) FROM ehr.animal_group_members m WHERE (m.date <= max(t1.EndDate) AND m.enddateCoalesced >= max(t1.StartDate) AND m.groupId = t1.groupId) GROUP BY m.groupId) as totalIds,
+  (select count(distinct m.id) FROM study.animal_group_members m WHERE (m.date <= max(t1.EndDate) AND m.enddateCoalesced >= max(t1.StartDate) AND m.groupId = t1.groupId) GROUP BY m.groupId) as totalIds,
   count(distinct t1.problemId) as totalIdWithProblems,
   count(t1.problemId) as totalProblems,
 

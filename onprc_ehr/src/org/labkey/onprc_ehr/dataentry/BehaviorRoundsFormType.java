@@ -41,8 +41,7 @@ public class BehaviorRoundsFormType extends TaskForm
         super(ctx, owner, "BSU Rounds", "BSU Rounds", "BSU", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
-            new BehaviorRoundsRemarksFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
-            new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+            new BehaviorRoundsObservationsFormSection(),
             new BSUTreatmentFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
 

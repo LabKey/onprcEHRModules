@@ -137,5 +137,8 @@
         <dataset name="pairings" id="5024" showByDefault="true" category="Colony Management" demographicData="false" type="Standard">
             <tags/>
         </dataset>
+        <dataset name="animal_group_members" id="5031" showByDefault="true" category="Colony Management" demographicData="false" type="Standard">
+            <tags/>
+        </dataset>
     </datasets>
 </datasets>

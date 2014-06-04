@@ -5,7 +5,7 @@
                 <tableTitle>Animals With Duplicate Animal Groups</tableTitle>
                 <columns>
                     <column columnName="totalGroups">
-                        <url>/query/executeQuery.view?schemaName=ehr&amp;query.queryName=animal_group_members&amp;query.isActive~eq=true&amp;query.Id~eq=${Id}</url>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=animal_group_members&amp;query.isActive~eq=true&amp;query.Id~eq=${Id}</url>
                     </column>
                 </columns>
             </table>

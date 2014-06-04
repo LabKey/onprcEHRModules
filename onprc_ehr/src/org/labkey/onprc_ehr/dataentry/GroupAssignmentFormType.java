@@ -18,11 +18,7 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
-import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.api.ehr.security.EHRAnimalGroupEditPermission;
-import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
-import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
 
 import java.util.ArrayList;
@@ -43,16 +39,7 @@ public class GroupAssignmentFormType extends UnsaveableTask
         super(ctx, owner, NAME, "Animal Group Assignment", "Colony Management", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
-                new SimpleGridPanel("ehr", "animal_group_members", "Group Assignments")
+                new SimpleGridPanel("study", "animal_group_members", "Group Assignments")
         ));
-    }
-
-    @Override
-    protected boolean canInsert()
-    {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRAnimalGroupEditPermission.class))
-            return false;
-
-        return super.canInsert();
     }
 }

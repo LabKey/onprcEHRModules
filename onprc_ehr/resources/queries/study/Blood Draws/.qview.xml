@@ -9,6 +9,7 @@
        <column name="additionalServices" />
        <column name="remark" />
        <column name="sampletype" />
+       <column name="reason"/>
        <column name="chargetype" />
        <column name="qcstate" />
        <column name="taskid" />

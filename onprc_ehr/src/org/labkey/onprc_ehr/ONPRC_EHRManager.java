@@ -86,6 +86,16 @@ public class ONPRC_EHRManager
     public static final String SURGERY_SOAP_CATEGORY = "Surgery";
     @Queryable
     public static final String CLINICAL_SOAP_CATEGORY = "Clinical";
+    @Queryable
+    public static final String INFANT_PER_DIEM = "Per Diem Infants < 181 Days";
+    @Queryable
+    public static final String QUARANTINE_PER_DIEM = "Per Diem Quarantine";
+    @Queryable
+    public static final Integer INFANT_PER_DIEM_AGE = 181;
+    @Queryable
+    public static final String NURSERY_AREA = "Nursery Area";
+    @Queryable
+    public static final Double BASE_SUBSIDY = 0.47;
 
     private ONPRC_EHRManager()
     {
@@ -99,13 +109,14 @@ public class ONPRC_EHRManager
 
     private String LOCK_PROP_KEY = getClass().getName() + "||animalLock";
     private final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final static SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
     public void lockAnimalCreation(Container c, User u, Boolean lock)
     {
         PropertyManager.PropertyMap map = PropertyManager.getWritableProperties(c, LOCK_PROP_KEY, true);
         map.put("lockedBy", u.getDisplayName(u));
         map.put("locked", lock.toString());
-        map.put("lockDate", _dateFormat.format(new Date()));
+        map.put("lockDate", _dateTimeFormat.format(new Date()));
 
         PropertyManager.saveProperties(map);
     }
@@ -126,7 +137,7 @@ public class ONPRC_EHRManager
             {
                 try
                 {
-                    ret.put("lockDate", _dateFormat.parse(props.get("lockDate")));
+                    ret.put("lockDate", _dateTimeFormat.parse(props.get("lockDate")));
                 }
                 catch (ParseException e)
                 {

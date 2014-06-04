@@ -34,7 +34,7 @@ WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 
 ) b
 
-GROUP BY b.id, b.date, b.testId, b.method, b.remark, b.runRemark
+GROUP BY b.id, b.date, b.testId, b.method
 PIVOT results BY testId IN
 (select testid from ehr_lookups.chemistry_tests t WHERE t.includeInPanel = true order by sort_order)
 

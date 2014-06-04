@@ -16,7 +16,7 @@ SELECT
   m.objectid,
   m.groupId.name as name,
   m.groupId.majorityLocation.majorityLocation as majorityLocation
-FROM ehr.animal_group_members m
+FROM study.animal_group_members m
 WHERE m.isActive = true
 
 UNION ALL

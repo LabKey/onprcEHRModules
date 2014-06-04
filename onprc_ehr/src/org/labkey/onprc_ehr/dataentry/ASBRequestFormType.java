@@ -44,7 +44,7 @@ public class ASBRequestFormType extends RequestForm
                 new RequestFormSection(),
                 //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),
-                new BloodDrawFormSection(false),
+                new BloodDrawFormSection(true),
                 new DrugAdministrationRequestFormSection()
         ));
 

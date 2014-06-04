@@ -22,10 +22,12 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.buttons.ChangeQCStateButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromIdsButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromRecordsButton;
+import org.labkey.api.ehr.buttons.EHRShowEditUIButton;
 import org.labkey.api.ehr.buttons.MarkCompletedButton;
 import org.labkey.api.ehr.buttons.ReassignRequestButton;
 import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
 import org.labkey.api.ehr.dataentry.SingleQueryFormProvider;
+import org.labkey.api.ehr.security.EHRDataAdminPermission;
 import org.labkey.api.ehr.security.EHRVeternarianPermission;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.buttons.ShowEditUIButton;
@@ -65,6 +67,8 @@ import org.labkey.onprc_ehr.demographics.TBDemographicsProvider;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLAuditProvider;
 import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
+import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
+import org.labkey.onprc_ehr.history.DefaultAnimalGroupsEndDataSource;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
 import org.labkey.onprc_ehr.notification.BehaviorNotification;
 import org.labkey.onprc_ehr.notification.ClinicalAlertsNotification;
@@ -259,6 +263,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PathologyTissuesFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalReportFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalRemarkFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(DeathFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(MensFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(AssignmentFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(GroupAssignmentFormType.class, this));
@@ -308,8 +313,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "onprc_ehr", "customers", ONPRC_EHRCustomerEditPermission.class), "onprc_ehr", "customers");
         EHRService.get().registerMoreActionsButton(new MarkCompletedButton(this, "study", "flags", "End Flags"), "study", "flags");
         EHRService.get().registerMoreActionsButton(new MarkCompletedButton(this, "study", "notes", "End Notes"), "study", "notes");
-        EHRService.get().registerMoreActionsButton(new AnimalGroupCompletedButton(this), "ehr", "animal_group_members");
+        EHRService.get().registerMoreActionsButton(new AnimalGroupCompletedButton(this), "study", "animal_group_members");
         EHRService.get().registerMoreActionsButton(new AssignmentCompletedButton(this), "study", "assignment");
+
+        EHRShowEditUIButton editBtn = new EHRShowEditUIButton(this, "ehr_lookups", "flag_values", "Manage List of Flags", EHRDataAdminPermission.class);
+        editBtn.setCopyFilters(false);
+        EHRService.get().registerMoreActionsButton(editBtn, "study", "flags");
 
         EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", BloodDrawFormType.NAME, new String[]{"Blood Draws"}), "study", "demographics");
         //EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Weight For Selected", "Weight", "weight", new String[]{"Weight"}), "study", "demographics");
@@ -328,9 +337,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "drug");
         EHRService.get().registerTbarButton(new ChangeQCStateButton(this, "Mark Delivered", "ONPRC_EHR.window.MarkLabworkDeliveredWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/MarkLabworkDeliveredWindow.js"))), "study", "clinpathRuns");
 
-        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this), "study", "blood");
-        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this), "study", "drug");
-        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this), "study", "encounters");
+        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "blood_charge_unit"), "study", "blood");
+        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "medication_charge_unit"), "study", "drug");
+        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "procedure_charge_unit"), "study", "encounters");
 
         EHRService.get().registerTbarButton(new VetReviewRecordButton(this), "study", "vetRecordReview");
         EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "cases");
@@ -343,6 +352,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, LabworkRequestBulkEditFormType.NAME), "study", "clinpathRuns");
 
         EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource());
+        EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource());
+        EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsEndDataSource());
+
     }
 
     @Override

@@ -1,0 +1,26 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id" />
+        <column name="date" />
+        <column name="Id/activeAssignments/projects">
+            <properties>
+                <property name="columnTitle" value="Active Assignments"/>
+            </properties>
+        </column>
+        <column name="project" />
+        <column name="project/investigatorid" />
+        <column name="chargetype" />
+        <column name="procedureid"/>
+
+        <column name="remark"/>
+        <column name="qcstate" />
+        <column name="taskid" />
+        <column name="requestid" />
+        <column name="requestid/createdby"/>
+        <column name="isAssignedToProtocolAtTime" />
+    </columns>
+    <sorts>
+        <sort column="date" descending="false"/>
+        <sort column="Id" descending="true"/>
+    </sorts>
+</customView>

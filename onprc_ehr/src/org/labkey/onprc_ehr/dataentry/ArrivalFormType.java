@@ -39,7 +39,8 @@ public class ArrivalFormType extends UnsaveableTask
                 new TaskFormSection(),
                 new DocumentArchiveFormSection(),
                 new AnimalDetailsFormSection(),
-                new NewAnimalFormSection("study", "arrival", "Arrivals")
+                new NewAnimalFormSection("study", "arrival", "Arrivals"),
+                new WeightFormSection()
         ));
     }
 }

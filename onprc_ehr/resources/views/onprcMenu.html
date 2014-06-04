@@ -71,7 +71,9 @@
                 },
                 listeners: {
                     collapse: function(panel){
-                        LABKEY.HoverPopup._visiblePopup.extPopup.sync();
+                        if (LABKEY.HoverPopup && LABKEY.HoverPopup._visiblePopup && LABKEY.HoverPopup._visiblePopup.extPopup){
+                            LABKEY.HoverPopup._visiblePopup.extPopup.sync();
+                        }
                     },
                     beforeexpand: function(panel){
                         this.up('#menuPanel').items.each(function(i){

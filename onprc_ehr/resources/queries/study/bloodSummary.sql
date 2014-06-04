@@ -22,11 +22,13 @@ SELECT
   cast(t.previousBlood as double) as previousBlood,
   cast((t.lastWeight * t.blood_per_kg * t.max_draw_pct) as double) as allowableBlood,
   cast(((t.lastWeight * t.blood_per_kg * t.max_draw_pct) - t.previousBlood) as double) as availableBlood,
+  TIMESTAMPADD('SQL_TSI_DAY', (1 + (-1 * 21)), CAST(t.date AS DATE)) as minDate
 
 FROM (
 
 SELECT
   t0.*,
+  --TODO: date only
   (select avg(w2.weight) as lastWeight FROM study.weight w2 WHERE w2.id = t0.id AND w2.date = t0.lastWeightDate) as lastWeight
 FROM (
 
@@ -45,6 +47,7 @@ JOIN study."Blood Draws" b ON (d.id = b.id)
 JOIN (
   SELECT
     b.lsid,
+    --TODO: date only
     max(w.date) as lastWeightDate
   FROM study.blood b
   JOIN study.weight w ON (w.id = b.id AND w.date <= b.date)

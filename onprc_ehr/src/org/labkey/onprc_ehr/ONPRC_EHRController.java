@@ -35,6 +35,7 @@ import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.files.FileContentService;
 import org.labkey.api.pipeline.PipeRoot;
 import org.labkey.api.pipeline.PipelineJobException;
@@ -644,6 +645,9 @@ public class ONPRC_EHRController extends SpringActionController
             if (types.contains("snp"))
                 LegacyDataManager.getInstance().importSNPData(getViewContext(), false);
 
+            if (types.contains("animal_group_members"))
+                LegacyDataManager.getInstance().importAnimalGroupMembers(getViewContext());
+
             return true;
         }
 
@@ -812,7 +816,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermissionClass(ReadPermission.class)
     public class GetAnimalLockAction extends ApiAction<Object>
     {
         public ApiResponse execute(Object form, BindException errors)
@@ -821,7 +825,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermissionClass(EHRDataEntryPermission.class)
     public class SetAnimalLockAction extends ApiAction<LockAnimalForm>
     {
         public ApiResponse execute(LockAnimalForm form, BindException errors)

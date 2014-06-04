@@ -10,7 +10,7 @@
                     </column>
                     <column columnName="totalRooms">
                         <columnTitle>Total Rooms</columnTitle>
-                        <url>/query/executeQuery.view?schemaName=ehr&amp;query.queryName=animal_group_members&amp;query.groupId~eq=${groupId}&amp;query.enddateCoalesced~dategte=-0d</url>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=animal_group_members&amp;query.groupId~eq=${groupId}&amp;query.enddateCoalesced~dategte=-0d</url>
                     </column>
                 </columns>
                 <buttonBarOptions includeStandardButtons="true">

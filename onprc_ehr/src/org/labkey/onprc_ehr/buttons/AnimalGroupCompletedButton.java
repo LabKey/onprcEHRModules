@@ -27,7 +27,7 @@ public class AnimalGroupCompletedButton extends MarkCompletedButton
 {
     public AnimalGroupCompletedButton(Module owner)
     {
-        super(owner, "ehr", "animal_group_members", "End Group Assignments");
+        super(owner, "study", "animal_group_members", "End Group Assignments");
 
         setClientDependencies(ClientDependency.fromFilePath("onprc_ehr/window/MarkAnimalGroupCompletedWindow.js"));
     }

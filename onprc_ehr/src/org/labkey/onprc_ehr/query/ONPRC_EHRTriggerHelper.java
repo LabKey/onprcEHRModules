@@ -91,6 +91,8 @@ public class ONPRC_EHRTriggerHelper
     private Map<String, Map<String, Object>> _cachedRooms = new HashMap<>();
     private Map<Integer, Pair<String, String>> _cachedProtocols = new HashMap<>();
     private Map<String, Map<String, Set<String>>> _cachedHousing = new HashMap<>();
+    private Map<Integer, String> _cachedProcedureCategories = new HashMap<>();
+
     private Integer _nextProjectId = null;
     private Integer _nextProtocolId = null;
 
@@ -373,7 +375,7 @@ public class ONPRC_EHRTriggerHelper
                 }
                 else if ("Unavailable".equals(row.getStatus()))
                 {
-                    return "This cage is not available";
+                    return "This cage has been flagged as Unavailable/Reserved";
                 }
 
                 return null;
@@ -785,7 +787,8 @@ public class ONPRC_EHRTriggerHelper
         Map<String, Object> roomMap = getRoomDetails(room);
         if (roomMap != null)
         {
-            return "Cage Location".equals(roomMap.get("housingType"));
+            //TODO: the surgery exclusion is a bit of a hack.  would be nice to handle this in the room definition table
+            return "Cage Location".equals(roomMap.get("housingType")) && !"Surgery".equalsIgnoreCase(room);
         }
 
         return false;
@@ -922,7 +925,7 @@ public class ONPRC_EHRTriggerHelper
 
     public String getOverlappingGroupAssignments(String id, String objectid)
     {
-        TableInfo ti = getTableInfo("ehr", "animal_group_members");
+        TableInfo ti = getTableInfo("study", "animal_group_members");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
 
@@ -985,7 +988,7 @@ public class ONPRC_EHRTriggerHelper
         }
         else
         {
-            _log.error("Unable to find active flag for condition nonrestricted");
+            _log.warn("Unable to find active flag for condition nonrestricted");
         }
 
         if (dam != null)
@@ -1005,16 +1008,20 @@ public class ONPRC_EHRTriggerHelper
             }
 
             //also breeding groups
-            TableInfo animalGroups = getTableInfo("ehr", "animal_group_members");
+            TableInfo animalGroups = getTableInfo("study", "animal_group_members");
             SimpleFilter groupFilter = new SimpleFilter(FieldKey.fromString("Id"), dam);
-            groupFilter.addCondition(FieldKey.fromString("isActive"), true);
+            //Note: match DOB, not current date
+            groupFilter.addCondition(FieldKey.fromString("date"), date, CompareType.DATE_LTE);
+            groupFilter.addCondition(FieldKey.fromString("enddateCoalesced"), date, CompareType.DATE_GTE);
 
             TableSelector ts2 = new TableSelector(animalGroups, Collections.singleton("groupid"), groupFilter, null);
             List<Integer> groupList = ts2.getArrayList(Integer.class);
             if (groupList != null && groupList.size() == 1)
             {
                 SimpleFilter groupFilter2 = new SimpleFilter(FieldKey.fromString("Id"), id);
-                groupFilter2.addCondition(FieldKey.fromString("isActive"), true);
+                //Note: match DOB, not current date
+                groupFilter2.addCondition(FieldKey.fromString("date"), date, CompareType.DATE_LTE);
+                groupFilter2.addCondition(FieldKey.fromString("enddateCoalesced"), date, CompareType.DATE_GTE);
                 groupFilter2.addCondition(FieldKey.fromString("groupid"), groupList.get(0));
                 TableSelector existingGroupTs = new TableSelector(animalGroups, Collections.singleton("groupid"), groupFilter2, null);
                 if (existingGroupTs.exists())
@@ -1048,7 +1055,9 @@ public class ONPRC_EHRTriggerHelper
             //look at assignment and copy center resources from dam
             TableInfo assignment = getTableInfo("study", "assignment");
             SimpleFilter assignmentFilter = new SimpleFilter(FieldKey.fromString("Id"), dam);
-            assignmentFilter.addCondition(FieldKey.fromString("isActive"), true);
+            //Note: match DOB, not current date
+            assignmentFilter.addCondition(FieldKey.fromString("date"), date, CompareType.DATE_LTE);
+            assignmentFilter.addCondition(FieldKey.fromString("enddateCoalesced"), date, CompareType.DATE_GTE);
             assignmentFilter.addCondition(FieldKey.fromString("project/displayName"), PageFlowUtil.set(ONPRC_EHRManager.U42_PROJECT, ONPRC_EHRManager.U24_PROJECT), CompareType.IN);
 
             TableSelector ts3 = new TableSelector(assignment, Collections.singleton("project"), assignmentFilter, null);
@@ -1057,7 +1066,9 @@ public class ONPRC_EHRTriggerHelper
             {
                 //check for existing assignments for this animal
                 SimpleFilter existingAssignFilter = new SimpleFilter(FieldKey.fromString("Id"), id);
-                existingAssignFilter.addCondition(FieldKey.fromString("isActive"), true);
+                //Note: match DOB, not current date
+                existingAssignFilter.addCondition(FieldKey.fromString("date"), date, CompareType.DATE_LTE);
+                existingAssignFilter.addCondition(FieldKey.fromString("enddateCoalesced"), date, CompareType.DATE_GTE);
                 existingAssignFilter.addCondition(FieldKey.fromString("project"), assignmentList, CompareType.IN);
                 TableSelector existingAssignTs = new TableSelector(assignment, Collections.singleton("project"), existingAssignFilter, null);
                 List<Integer> existingAssignmentList = existingAssignTs.getArrayList(Integer.class);
@@ -1493,5 +1504,26 @@ public class ONPRC_EHRTriggerHelper
         _nextProtocolId++;
 
         return _nextProtocolId;
+    }
+
+    public boolean requiresAssistingStaff(Integer procedureId)
+    {
+        if (procedureId == null)
+        {
+            return false;
+        }
+
+        if (!_cachedProcedureCategories.containsKey(procedureId))
+        {
+            TableInfo ti = getTableInfo("ehr_lookups", "procedures");
+            TableSelector ts = new TableSelector(ti, PageFlowUtil.set("category"), new SimpleFilter(FieldKey.fromString("rowid"), procedureId), null);
+            String category = ts.getObject(String.class);
+
+            _cachedProcedureCategories.put(procedureId, category);
+        }
+
+        String category = _cachedProcedureCategories.get(procedureId);
+
+        return "Surgery".equals(category);
     }
 }

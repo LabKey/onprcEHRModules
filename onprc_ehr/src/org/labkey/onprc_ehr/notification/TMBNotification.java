@@ -74,6 +74,7 @@ public class TMBNotification extends ColonyAlertsNotification
         matings30DaysAgo(c, u, msg);
         offspringWithMother(c, u, msg, 250);
         pregnantAnimals(c, u, msg);
+        incompleteBirthRecords(c, u, msg);
 
         return msg.toString();
     }

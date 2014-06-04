@@ -22,8 +22,8 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
-import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.module.ModuleLoader;
 
 import java.util.Arrays;
 
@@ -43,9 +43,14 @@ public class TreatmentsFormType extends TaskForm
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new DrugAdministrationFormSection(),
-            new TreatmentOrdersFormSection(),
-            new MiscChargesFormSection(EHRService.FORM_SECTION_LOCATION.Body)
+            new TreatmentOrdersFormSection()
         ));
+
+        if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
+        {
+            addSection(new MiscChargesFormSection(EHRService.FORM_SECTION_LOCATION.Body));
+        }
+
     }
 
     @Override

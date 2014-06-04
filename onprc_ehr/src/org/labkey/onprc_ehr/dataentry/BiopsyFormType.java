@@ -46,12 +46,12 @@ public class BiopsyFormType extends EncounterForm
                 new ClinicalEncountersFormPanelSection("Biopsy"),
                 new AnimalDetailsFormSection(),
                 new PathologyFormSection("ehr", "encounter_participants", "Staff"),
-                new PathologyMedicationsFormSection("study", "Drug Administration", "Medications/Treatments"),
+                //new PathologyMedicationsFormSection("study", "Drug Administration", "Medications/Treatments"),
                 new PathologyFormSection("study", "tissue_samples", "Tissues/Weights"),
-                new PathologyFormSection("study", "tissueDistributions", "Tissue Distributions"),
+                //new PathologyFormSection("study", "tissueDistributions", "Tissue Distributions"),
                 new PathologyFormSection("study", "measurements", "Measurements"),
-                new PathologyDiagnosesFormSection("study", "grossFindings", "Gross Findings"),
-                new PathologyDiagnosesFormSection("study", "histology", "Histologic Findings"),
+                //new PathologyDiagnosesFormSection("study", "grossFindings", "Gross Findings"),
+                //new PathologyDiagnosesFormSection("study", "histology", "Histologic Findings"),
                 new PathologyDiagnosesFormSection("study", "pathologyDiagnoses", "Diagnoses")
         ));
 

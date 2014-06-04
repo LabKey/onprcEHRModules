@@ -53,6 +53,7 @@ public class AuxProcedureFormType extends TaskForm
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ResearchProcedures.js"));
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/BulkBloodDrawWindow.js"));
         setDisplayReviewRequired(true);
     }
 
@@ -61,6 +62,7 @@ public class AuxProcedureFormType extends TaskForm
     {
         List<String> defaultButtons = super.getMoreActionButtonConfigs();
         defaultButtons.add("COPY_TASK");
+        defaultButtons.add("BULK_BLOOD_DRAW");
 
         return defaultButtons;
     }

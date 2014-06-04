@@ -17,6 +17,8 @@
        <column name="BloodRemaining/allowableBlood"/>
        <column name="BloodRemaining/previousBlood"/>
        <column name="BloodRemaining/availableBlood"/>
+       <column name="BloodRemaining/minDate"/>
+       <column name="sampletype"/>
    </columns>
    <sorts>
        <sort column="date" descending="true"/>

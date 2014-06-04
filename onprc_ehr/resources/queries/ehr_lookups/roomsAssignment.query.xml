@@ -8,8 +8,8 @@
                         <isKeyField>true</isKeyField>
                         <displayWidth>40</displayWidth>
                     </column>
-                    <column columnName="totalAssignedAnimals">
-                        <columnTitle>Total Assigned Animals</columnTitle>
+                    <column columnName="totalAssignments">
+                        <columnTitle>Total Assignments</columnTitle>
                         <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=assignment&amp;query.isActive~eq=true&amp;query.id/curLocation/room~eq=${room}</url>
                     </column>
                     <column columnName="projects">

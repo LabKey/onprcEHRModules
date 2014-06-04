@@ -52,7 +52,7 @@ SELECT
   a.groupId.category as category,
   cast('Breeding Group' as varchar(500)) as fundingCategory,
   null as assignment
-FROM ehr.animal_group_members a
+FROM study.animal_group_members a
 WHERE a.isActive = true
 
 UNION ALL

@@ -741,6 +741,23 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             });
             ds.addColumn(col17);
         }
+
+        if (ds.getColumn("historicAnimalGroups") == null)
+        {
+            ColumnInfo col22 = getWrappedIdCol(us, ds, "historicAnimalGroups", "demographicsAnimalGroups");
+            col22.setLabel("Animal Groups - Historic");
+            col22.setDescription("Displays all animal groups to which this animal has ever belonged");
+            ds.addColumn(col22);
+        }
+
+        if (ds.getColumn("animalGroupsPivoted") == null)
+        {
+            ColumnInfo agPivotCol = getWrappedIdCol(us, ds, "animalGroupsPivoted", "animalGroupsPivoted");
+            agPivotCol.setLabel("Active Group Summary");
+            agPivotCol.setHidden(true);
+            agPivotCol.setDescription("Displays the active groups for each animal");
+            ds.addColumn(agPivotCol);
+        }
     }
 
     private void customizeCasesTable(AbstractTableInfo ti)
@@ -2047,7 +2064,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ds.getColumn("Id") == null)
             return;
 
-        if (!hasTable(ds, "ehr", "animal_group_members", ehrSchema.getContainer()))
+        if (!hasTable(ds, "study", "animal_group_members", ehrSchema.getContainer()))
             return;
 
         final String tableName = ds.getName();
@@ -2070,7 +2087,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         "sd." + pkCol.getSelectName() + ",\n" +
                         "group_concat(DISTINCT h.groupId.name, chr(10)) as groupsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
-                        "JOIN \"" + ehrPath + "\".ehr.animal_group_members h\n" +
+                        "JOIN \"" + ehrPath + "\".study.animal_group_members h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced))\n" +
                         "group by sd." + pkCol.getSelectName());
                 qd.setIsTemporary(true);

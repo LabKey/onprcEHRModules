@@ -50,6 +50,7 @@ public class ClinicalObservationsFormSection extends SimpleFormSection
         setClientStoreClass("EHR.data.ClinicalObservationsClientStore");
 
         _allowAdd = allowAdd;
+        _allowRowEditing = false; //species behavior for value field does not work in forms
         setAllowBulkAdd(allowAdd);
     }
 

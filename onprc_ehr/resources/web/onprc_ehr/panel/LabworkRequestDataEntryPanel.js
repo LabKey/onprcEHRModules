@@ -20,7 +20,8 @@ Ext4.define('ONPRC_EHR.panel.LabworkRequestDataEntryPanel', {
         if (extraContext && extraContext.successURL){
             var mergeURL = LABKEY.getModuleProperty('MergeSync', 'MergeURL');
             if (mergeURL){
-                Ext4.Msg.confirm('Success', 'The requests have been synced to merge.  Do you want to open merge now?', function(val){
+                Ext4.Msg.confirm('Success', 'The requests have been synced to merge.  Do you want to open merge now?' +
+                        (!Ext4.isIE ? '  Note: merge does not work well in any browser besides IE, and you may want to switch to that browser.' : ''), function(val){
                     window.onbeforeunload = Ext4.emptyFn;
                     if (val == 'yes'){
                         window.location = mergeURL;

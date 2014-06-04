@@ -28,7 +28,7 @@ ONPRC_EHR.Utils = new function(){
                 if (row[roomField] && row[cageField]){
                     var cageMsg = triggerHelper.validateCage(row[roomField], row[cageField], !!row.divider);
                     if (cageMsg){
-                        EHR.Server.Utils.addError(scriptErrors, cageField, cageMsg, 'WARN');
+                        EHR.Server.Utils.addError(scriptErrors, cageField, cageMsg, 'INFO');
                     }
 
                     var map = helper.getProperty('housingInTransaction');

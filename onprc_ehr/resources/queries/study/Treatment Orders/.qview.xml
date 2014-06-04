@@ -17,6 +17,7 @@
        <column name="remark"/>
        <column name="reason"/>
        <column name="category"/>
+       <column name="taskid"/>
        <column name="history"/>
    </columns>
    <sorts>

@@ -30,7 +30,7 @@ JOIN (
     m.groupId,
     m.Id.curlocation.room,
     count(*) as total
-  FROM ehr.animal_group_members m
+  FROM study.animal_group_members m
   WHERE m.isActive = true
   GROUP BY m.groupId, m.Id.curlocation.room
   ) t1
@@ -42,7 +42,7 @@ JOIN (
      m.groupId,
      m.Id.curlocation.room,
      count(*) as total
-   FROM ehr.animal_group_members m
+   FROM study.animal_group_members m
    WHERE m.isActive = true
    GROUP BY m.groupId, m.Id.curlocation.room
 ) t2 ON (t2.groupId = t.groupId AND t.total = t2.total)

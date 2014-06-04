@@ -26,7 +26,7 @@ SELECT
   count(distinct gm.id) as totalAnimals,
   gm.Id.curLocation.room || ' (' || cast(count(distinct gm.id) as varchar) || ')' as roomSummary
 
-FROM ehr.animal_group_members gm
+FROM study.animal_group_members gm
 
 WHERE gm.enddateCoalesced >= curdate() and gm.Id.curLocation.area != 'Hospital'
 GROUP BY gm.groupId, gm.Id.curLocation.room

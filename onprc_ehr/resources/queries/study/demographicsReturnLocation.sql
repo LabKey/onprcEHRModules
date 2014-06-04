@@ -28,7 +28,7 @@ SELECT
 
 FROM study.demographics d
 
-LEFT JOIN ehr.animal_group_members gm ON (d.Id = gm.Id AND gm.isActive = true)
+LEFT JOIN study.animal_group_members gm ON (d.Id = gm.Id AND gm.isActive = true)
 
 LEFT JOIN study.demographicsCurrentLocation cl ON (cl.Id = d.Id)
 

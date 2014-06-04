@@ -55,6 +55,7 @@ public class DrugAdministrationFormSection extends SimpleFormSection
         addClientDependency(ClientDependency.fromFilePath("ehr/data/DrugAdministrationRunsClientStore.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/SedationWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledTreatmentsWindow.js"));
+        addClientDependency(ClientDependency.fromFilePath("ehr/window/RepeatSelectedWindow.js"));
 
         setLocation(location);
         setTabName("Medications");
@@ -79,6 +80,7 @@ public class DrugAdministrationFormSection extends SimpleFormSection
     public List<String> getTbarMoreActionButtons()
     {
         List<String> defaultButtons = super.getTbarMoreActionButtons();
+        defaultButtons.add("REPEAT_SELECTED");
 
         if (_showAddTreatments)
             defaultButtons.add("ADDTREATMENTS");

@@ -38,6 +38,7 @@ import org.labkey.api.util.PageFlowUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -104,6 +105,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
         singleHousedAnimals(c, u, msg);
         transfersYesterday(c, u, msg);
         pairIdConflicts(c, u , msg);
+
+        notesEndingToday(c, u, msg, Arrays.asList("BSU Notes"), null);
 
         saveValues(c, toSave);
 

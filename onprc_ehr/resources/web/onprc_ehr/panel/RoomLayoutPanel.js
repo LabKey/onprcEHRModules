@@ -331,6 +331,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'grey';
                                         }
                                     }
+                                    else if (status == 'Unavailable')
+                                    {
+                                        bgColor = 'yellow';
+                                    }
                                 }
                                 else {
                                     //flag cage if empty
@@ -661,6 +665,7 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                                 type: 'labkey-store',
                                 schemaName: 'ehr_lookups',
                                 queryName: 'divider_types',
+                                filterArray: [LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)],
                                 autoLoad: true,
                                 sort: 'divider'
                             }

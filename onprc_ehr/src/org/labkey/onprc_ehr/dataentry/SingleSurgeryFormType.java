@@ -24,6 +24,7 @@ import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.security.PrincipalType;
 import org.labkey.api.security.SecurityManager;
 import org.labkey.api.security.UserPrincipal;
@@ -54,9 +55,13 @@ public class SingleSurgeryFormType extends EncounterForm
                 new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
                 new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/WeightClientStore.js")), null),
                 new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
-                new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true),
-                new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/MiscChargesClientStore.js")), null)
+                new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true)
         ));
+
+        if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
+        {
+            addSection(new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/MiscChargesClientStore.js")), null));
+        }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Surgery.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/OpenSurgeryCasesWindow.js"));

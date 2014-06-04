@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.json.JSONObject;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
@@ -30,7 +31,9 @@ import org.labkey.api.security.SecurityManager;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: bimber
@@ -118,5 +121,16 @@ public class NecropsyFormType extends EncounterForm
     {
         UserPrincipal up = SecurityManager.getPrincipal(DEFAULT_GROUP, getCtx().getContainer(), true);
         return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
+    }
+
+    @Override
+    public JSONObject toJSON()
+    {
+        JSONObject ret = super.toJSON();
+        Map<String, Object> map = new HashMap<>();
+        map.put("allowDatesInDistantPast", true);
+        ret.put("extraContext", map);
+
+        return ret;
     }
 }

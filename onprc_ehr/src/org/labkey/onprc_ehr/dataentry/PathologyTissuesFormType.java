@@ -26,6 +26,7 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.security.PrincipalType;
 import org.labkey.api.security.UserPrincipal;
 import org.labkey.api.view.template.ClientDependency;
@@ -51,9 +52,13 @@ public class PathologyTissuesFormType extends TaskForm
                 new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new SimpleGridPanel("study", "tissue_samples", "Tissues/Weights", EHRService.FORM_SECTION_LOCATION.Tabs),
                 new TissueDistFormSection(),
-                new SimpleGridPanel("study", "measurements", "Measurements", EHRService.FORM_SECTION_LOCATION.Tabs),
-                new MiscChargesByAccountFormSection(EHRService.FORM_SECTION_LOCATION.Tabs)
+                new SimpleGridPanel("study", "measurements", "Measurements", EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
+
+        if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
+        {
+            addSection(new MiscChargesByAccountFormSection(EHRService.FORM_SECTION_LOCATION.Tabs));
+        }
 
         for (FormSection s : this.getFormSections())
         {

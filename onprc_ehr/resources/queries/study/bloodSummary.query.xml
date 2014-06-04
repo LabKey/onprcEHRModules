@@ -27,6 +27,9 @@
                         <columnTitle>Blood Volume Available After Draw</columnTitle>
                         <formatString>#.##</formatString>
                     </column>
+                    <column columnName="minDate">
+                        <columnTitle>Earliest Blood Draw Considered</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>

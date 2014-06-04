@@ -34,7 +34,8 @@ function onUpsert(helper, scriptErrors, row, oldRow){
 
 function onAfterInsert(helper, errors, row){
     //if this category enforces only a single active flag at once, enforce it
-    if (!helper.isETL() && row.Id && row.flag && !row.enddate && row.date && row.date.getTime() <= (new Date()).getTime()){
+    //note: if this flag has a future date, preemptively set enddate on flags, since isActive should handle this
+    if (!helper.isETL() && row.Id && row.flag && !row.enddate && row.date){
         helper.getJavaHelper().ensureSingleFlagCategoryActive(row.Id, row.flag, row.objectId, row.date);
     }
 }

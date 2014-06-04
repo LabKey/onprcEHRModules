@@ -27,29 +27,34 @@ import java.util.List;
  */
 public class BloodDrawFormSection extends SimpleGridPanel
 {
-    boolean _showAddScheduledBtn;
+    boolean _isRequest = false;
 
-    public BloodDrawFormSection(boolean showAddScheduledBtn)
+    public BloodDrawFormSection(boolean isRequest)
     {
-        this(showAddScheduledBtn, EHRService.FORM_SECTION_LOCATION.Body);
+        this(isRequest, EHRService.FORM_SECTION_LOCATION.Body);
     }
 
-    public BloodDrawFormSection(boolean showAddScheduledBtn, EHRService.FORM_SECTION_LOCATION location)
+    public BloodDrawFormSection(boolean isRequest, EHRService.FORM_SECTION_LOCATION location)
     {
         super("study", "blood", "Blood Draws", location);
         setClientStoreClass("EHR.data.BloodDrawClientStore");
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledBloodDrawsWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/data/BloodDrawClientStore.js"));
-        _showAddScheduledBtn = showAddScheduledBtn;
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/BloodBulkAddWindow.js"));
+        _isRequest = isRequest;
     }
 
     @Override
     public List<String> getTbarMoreActionButtons()
     {
         List<String> defaultButtons = super.getTbarMoreActionButtons();
+        defaultButtons.add("REPEAT_SELECTED");
 
-        if (_showAddScheduledBtn)
+        if (!_isRequest)
             defaultButtons.add(0, "ADDBLOODDRAWS");
+
+        if (_isRequest)
+            defaultButtons.add("BULK_ADD_BLOOD");
 
         return defaultButtons;
     }

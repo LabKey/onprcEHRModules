@@ -4,6 +4,9 @@
             <table tableName="hematologyPivot" tableDbType="TABLE">
                 <tableTitle>Hematology Results</tableTitle>
                 <columns>
+                    <column columnName="servicerequested">
+                        <columnTitle>Service Requested</columnTitle>
+                    </column>
                     <column columnName="resultOORIndicator">
                         <isHidden>true</isHidden>
                     </column>
@@ -27,7 +30,7 @@
                         </fk>
                     </column>
                     <column columnName="chargetype">
-                        <columnTitle>Charge Type</columnTitle>
+                        <columnTitle>Charge Unit</columnTitle>
                     </column>
                 </columns>
             </table>

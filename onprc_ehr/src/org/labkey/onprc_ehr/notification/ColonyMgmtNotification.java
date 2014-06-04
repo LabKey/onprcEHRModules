@@ -78,6 +78,7 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
         offspringWithMother(c, u, msg, 180);
         offspringWithMother(c, u, msg, 250);
         offspringWithMother(c, u, msg, 365);
+        incompleteBirthRecords(c, u, msg);
 
         //only send if there are alerts
         if (msg.length() > 0)

@@ -25,7 +25,9 @@ import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: bimber
@@ -57,6 +59,7 @@ public class ClinicalRemarkFormType extends TaskForm
         }
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/MassBleedWindow.js"));
     }
 
     @Override
@@ -66,5 +69,15 @@ public class ClinicalRemarkFormType extends TaskForm
             return false;
 
         return super.canInsert();
+    }
+
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getMoreActionButtonConfigs());
+        defaultButtons.add("MASS_BLEED");
+
+        return defaultButtons;
     }
 }

@@ -11,7 +11,6 @@
        <column name="CagesEmpty"/>
        <column name="pctUsed"/>
        <column name="TotalAnimals"/>
-       <column name="room/assignments/totalAssignedAnimals"/>
    </columns>
    <sorts>
        <sort column="room/area"/>

@@ -68,6 +68,7 @@ Ext4.define('ONPRC_EHR.window.MarkAssignmentCompletedWindow', {
                     type: 'labkey-store',
                     schemaName: 'ehr_lookups',
                     queryName: 'animal_condition',
+                    columns: 'code,meaning',
                     autoLoad: true,
                     sort: 'code'
                 }

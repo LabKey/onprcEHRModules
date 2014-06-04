@@ -22,7 +22,7 @@ select
   group_concat(distinct a.projectIdTotal, chr(10)) as projectIdCount,
   group_concat(distinct a.projectCageTotal, chr(10)) as projectCageCount,
 
-  sum(a.totalAnimals) as totalAssignedAnimals
+  sum(a.totalAnimals) as totalAssignments
 
 FROM (
 

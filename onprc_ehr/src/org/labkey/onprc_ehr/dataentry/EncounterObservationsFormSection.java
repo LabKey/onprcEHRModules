@@ -31,5 +31,6 @@ public class EncounterObservationsFormSection extends EncounterChildFormSection
 
         addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalObservationsClientStore.js"));
         setClientStoreClass("EHR.data.ClinicalObservationsClientStore");
+        _allowRowEditing = false; //species behavior for value field does not work in forms
     }
 }

@@ -57,7 +57,10 @@ public class VetReviewDisplayColumn extends DataColumn
                 //String key = StringUtils.trimToNull(tokens[0]);
                 String text = StringUtils.trimToNull(tokens[1]);
                 if (text != null)
+                {
                     text = text.replaceAll("\\r?\\n", "<br>");
+                    text = text.replaceAll("\\*\\*", "<span style=\"background-color: yellow;\">\\*\\*</span>");
+                }
 
                 out.write("<a style=\"max-width: 500px;\" onclick=\"EHR.panel.ClinicalManagementPanel.replaceSoap({objectid: " + PageFlowUtil.jsString(StringUtils.trimToNull(tokens[2])) + ", scope: this, callback: function(){EHR.panel.ClinicalManagementPanel.updateVetColumn(this, arguments[0], arguments[1]);}});\">");
                 out.write(text);

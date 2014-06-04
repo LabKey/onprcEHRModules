@@ -18,6 +18,7 @@
         <column name="Id"/>
         <column name="Id/utilization/use"/>
         <column name="species"/>
+        <column name="geographic_origin"/>
         <column name="gender"/>
         <column name="calculated_status">
             <properties>

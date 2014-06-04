@@ -34,7 +34,7 @@ public class ActiveAnimalGroupsDemographicsProvider extends AbstractListDemograp
 {
     public ActiveAnimalGroupsDemographicsProvider(Module owner)
     {
-        super("ehr", "animal_group_members", "activeAnimalGroups", owner);
+        super("study", "animal_group_members", "activeAnimalGroups", owner);
         _supportsQCState = false;
     }
 

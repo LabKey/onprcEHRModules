@@ -27,6 +27,7 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
+import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.SQLFragment;
@@ -37,6 +38,7 @@ import org.labkey.api.data.SqlExecutor;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.ehr.EHRDemographicsService;
 import org.labkey.api.exp.api.ExpProtocol;
 import org.labkey.api.exp.api.ExpRun;
 import org.labkey.api.exp.api.ExperimentJSONConverter;
@@ -1519,43 +1521,76 @@ public class LegacyDataManager
         {
             Table.update(u, realTable, row, row.get("lsid"));
         }
+    }
 
-// deprecated
-//        //surgical cases
-//        SimpleFilter surgFilter = new SimpleFilter(FieldKey.fromString("remarksOnOpenDate"), null, CompareType.NONBLANK);
-//        surgFilter.addCondition(FieldKey.fromString("category"), "Surgery");
-//        Map<FieldKey, ColumnInfo> surgCols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("lsid"), FieldKey.fromString("remark"), FieldKey.fromString("remarksOnOpenDate")));
-//        TableSelector surgTs = new TableSelector(ti, surgCols.values(), surgFilter, null);
-//
-//        final List<Map<String, Object>> surgToUpdate = new ArrayList<>();
-//        surgTs.forEach(new Selector.ForEachBlock<ResultSet>()
-//        {
-//            @Override
-//            public void exec(ResultSet rs) throws SQLException
-//            {
-//                Object ret = rs.getObject("remarksOnOpenDate");
-//                if (ret instanceof Clob)
-//                {
-//                    int length = new Long(((Clob) ret).length()).intValue();
-//                    ret = ((Clob) ret).getSubString(new Long(1), length);
-//                }
-//
-//                if (ret.equals(rs.getObject("remark")))
-//                {
-//                    return;
-//                }
-//
-//                Map<String, Object> row = new CaseInsensitiveHashMap<>();
-//                row.put("lsid", rs.getString("lsid"));
-//                row.put("remark", rs.getString("remarksOnOpenDate"));
-//                surgToUpdate.add(row);
-//            }
-//        });
-//
-//        _log.info("Updating " + surgToUpdate.size() + " surgical cases");
-//        for (Map<String, Object> row : surgToUpdate)
-//        {
-//            Table.update(u, realTable, row, row.get("lsid"));
-//        }
+    public void importAnimalGroupMembers(ViewContext vc) throws Exception
+    {
+        Container c = vc.getContainer();
+        User u = vc.getUser();
+
+        final List<Map<String, Object>> toImport = new ArrayList<>();
+
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "ehr").getTable("animal_group_members");
+        new TableSelector(ti).forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Map<String, Object> row = new CaseInsensitiveHashMap<>();
+                row.put("Id", rs.getString("Id"));
+                row.put("date", rs.getDate("date"));
+                row.put("enddate", rs.getDate("enddate"));
+                row.put("groupId", rs.getInt("groupId"));
+                row.put("remark", rs.getString("remark"));
+                row.put("taskid", rs.getString("taskid"));
+                row.put("objectid", rs.getString("objectid"));
+                row.put("releaseType", rs.getString("releaseType"));
+
+                toImport.add(row);
+            }
+        });
+
+        _log.info("total rows to insert: " + toImport.size());
+
+        int start = 0;
+        int batchSize = 1000;
+        Map<String, Object> ctx = new HashMap<>();
+        ctx.put("quickValidation", true);
+        ctx.put("dataSource", "etl");
+
+        TableInfo ds = QueryService.get().getUserSchema(u, c, "study").getTable("animal_group_members");
+        QueryUpdateService qus = ds.getUpdateService();
+        qus.setBulkLoad(true);
+        ExperimentService.get().ensureTransaction();
+        try
+        {
+            while (start < toImport.size())
+            {
+                List<Map<String, Object>> sublist = toImport.subList(start, Math.min(toImport.size(), start + batchSize));
+                start = start + batchSize;
+
+                //get demographics records as a batch ot save import time
+                Set<String> ids = new HashSet<>();
+                for (Map<String, Object> row : sublist)
+                {
+                    ids.add((String)row.get("Id"));
+                }
+                EHRDemographicsService.get().getAnimals(c, ids);
+
+                BatchValidationException errors = new BatchValidationException();
+                _log.info("processing " + batchSize + " rows");
+                qus.insertRows(u, c, sublist, errors, ctx);
+                ExperimentService.get().commitTransaction();
+
+                if (errors.hasErrors())
+                    throw errors;
+
+                ExperimentService.get().ensureTransaction();
+            }
+        }
+        finally
+        {
+            ExperimentService.get().closeTransaction();
+        }
     }
 }

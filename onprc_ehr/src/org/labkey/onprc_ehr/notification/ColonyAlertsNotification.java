@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.notification;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.labkey.api.action.NullSafeBindException;
 import org.labkey.api.data.Aggregate;
 import org.labkey.api.data.ColumnInfo;
@@ -139,9 +140,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //misc
         demographicsWithoutGender(c, u, msg);
+
+        incompleteBirthRecords(c, u, msg);
         birthRecordsWithoutDemographics(c, u, msg);
         deathRecordsWithoutDemographics(c, u, msg);
         infantsNotAssignedToDamGroup(c, u, msg);
+
+        //notes
+        notesEndingToday(c, u, msg, null, null);
 
         duplicateGroupMembership(c, u, msg);
         duplicateFlags(c, u, msg);
@@ -171,6 +177,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         deadAnimalsWithActiveAssignments(c, u, msg);
         assignmentsWithoutValidProtocol(c, u, msg);
+        assignmentsWithEndedProject(c, u, msg);
+        projectsWithExpiredProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);
         protocolsWithFutureApproveDates(c, u, msg);
         protocolsOverLimit(c, u, msg);
@@ -571,6 +579,43 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    protected void assignmentsWithEndedProject(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("activeAssignments/activeAssignments"), 0, CompareType.GT);
+        filter.addCondition(FieldKey.fromString("enddateCoalesced"), "-0d", CompareType.DATE_LT);
+        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("project"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " projects with active assignments that list an end date.  This is either an error in that project, or indicates these monkeys should be reassigned.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "project", null, filter) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    /**
+     * find any active assignment where the project lacks a valid protocol
+     */
+    protected void projectsWithExpiredProtocol(final Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getEHRSchema(c, u).getTable("project");
+        if (!ti.getSqlDialect().isSqlServer())
+        {
+            return;
+        }
+
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddateCoalesced"), "+0d", CompareType.DATE_GTE);
+        filter.addCondition(FieldKey.fromString("protocol/renewalDate"), new Date(), CompareType.DATE_LTE);
+        TableSelector ts = new TableSelector(ti, filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " active projects associated with an expired IACUC protocol.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "project", null, filter) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
     protected void duplicateAssignments(final Container c, User u, final StringBuilder msg)
     {
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("duplicateAssignments"));
@@ -786,6 +831,56 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + count + " birth records without a corresponding demographics record.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Birth", null) + "&query.Id/Dataset/Demographics/Id~isblank'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void incompleteBirthRecords(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(new SimpleFilter.OrClause(
+                //new CompareType.CompareClause(FieldKey.fromString("species"), CompareType.ISBLANK, null),
+                new CompareType.CompareClause(FieldKey.fromString("Id/demographics/gender"), CompareType.ISBLANK, null),
+                new CompareType.CompareClause(FieldKey.fromString("Id/demographics/species"), CompareType.ISBLANK, null),
+                new CompareType.CompareClause(FieldKey.fromString("Id/demographics/geographic_origin"), CompareType.ISBLANK, null)
+        ));
+        filter.addCondition(FieldKey.fromString("date"), "-30d", CompareType.DATE_GTE);
+
+        TableInfo ti = getStudySchema(c, u).getTable("Birth");
+        Set<FieldKey> keys = new HashSet<>();
+        keys.add(FieldKey.fromString("Id"));
+        keys.add(FieldKey.fromString("Id/demographics/gender/meaning"));
+        keys.add(FieldKey.fromString("Id/demographics/species"));
+        keys.add(FieldKey.fromString("Id/demographics/calculated_status"));
+        keys.add(FieldKey.fromString("Id/demographics/geographic_origin"));
+
+        final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, keys);
+        TableSelector ts = new TableSelector(ti, cols.values(), filter, new Sort(getStudy(c).getSubjectColumnName()));
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " birth records within the past 30 days lacking information:</b><br><br>\n");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr><td>Id</td><td>Status</td><td>Gender</td><td>Species</td><td>Geographic Origin</td></tr>");
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, cols);
+                    String url = getExecuteQueryUrl(c, "study", "demographics", null);
+                    url = url.replaceAll("executeQuery.view", "updateQuery.view");
+                    url = url.replaceAll("/query/", "/ehr/");
+
+                    msg.append("<tr>");
+                    msg.append("<td><a href=\"" + url + "&query.Id~eq=" + rs.getString("Id") + "\">" + rs.getString("Id") + "</a></td>");
+                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/calculated_status")) == null ? "Unknown" : rs.getString(FieldKey.fromString("Id/demographics/calculated_status"))) + "</td>");
+                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
+                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/species")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/species"))) + "</td>");
+                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/geographic_origin")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/geographic_origin"))) + "</td>");
+                    msg.append("</tr>");
+                }
+            });
+            msg.append("</table>");
             msg.append("<hr>\n\n");
         }
     }
@@ -1140,12 +1235,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
-        TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("animal_group_members"), filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("animal_group_members"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals assigned to groups, where the animal is not currently housed at the center.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animal_group_members", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "animal_group_members", null) + "&query.isActive~eq=true&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -1622,6 +1717,49 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + count + " assignment records ended since " + _dateFormat.format(cal.getTime()) + " that lack a release condition.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "assignment", null, filter) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void notesEndingToday(final Container c, User u, final StringBuilder msg, @Nullable List<String> includedCategories, @Nullable List<String> excludedCategories)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddate"), new Date(), CompareType.DATE_EQUAL);
+        if (includedCategories != null)
+        {
+            filter.addCondition(FieldKey.fromString("category"), includedCategories, CompareType.IN);
+        }
+
+        if (excludedCategories != null)
+        {
+            filter.addCondition(FieldKey.fromString("category"), excludedCategories, CompareType.NOT_IN);
+        }
+
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("notes"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>There are " + count + " notes ending today.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null, filter) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+
+        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("actiondate"), new Date(), CompareType.DATE_EQUAL);
+        if (includedCategories != null)
+        {
+            filter2.addCondition(FieldKey.fromString("category"), includedCategories, CompareType.IN);
+        }
+
+        if (excludedCategories != null)
+        {
+            filter2.addCondition(FieldKey.fromString("category"), excludedCategories, CompareType.NOT_IN);
+        }
+
+        TableSelector ts2 = new TableSelector(getStudySchema(c, u).getTable("notes"), filter2, null);
+        long count2 = ts2.getRowCount();
+        if (count2 > 0)
+        {
+            msg.append("<b>There are " + count + " notes with an action date of today.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null, filter2) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }

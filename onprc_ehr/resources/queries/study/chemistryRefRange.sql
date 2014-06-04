@@ -30,6 +30,7 @@ CASE
   WHEN c.result > r.ref_range_max
     THEN 'High'
 END as status,
+c.remark,
 c.taskid,
 c.runId,
 c.qcstate
@@ -51,6 +52,7 @@ FROM (
     c.id,
     c.date,
     c.runId,
+    c.remark,
     ROUND(CONVERT(age_in_months(c.id.dataset.demographics.birth, c.date), DOUBLE) / 12.0, 1) as ageAtTime
     FROM "Chemistry Results" c
     WHERE c.qcstate.publicdata = true

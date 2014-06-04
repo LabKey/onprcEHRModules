@@ -30,6 +30,7 @@ public class BSUTreatmentFormSection extends DrugAdministrationFormSection
         setLabel("Treatments Given");
         setTabName(getLabel());
         _showAddTreatments = false;
+        _showLocation = true;
     }
 
     @Override

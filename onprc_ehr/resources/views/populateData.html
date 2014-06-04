@@ -258,12 +258,6 @@ Ext4.onReady(function(){
             queryName: 'blood_tube_volumes',
             pk: 'volume'
         },{
-            label: 'Blood Charge Type',
-            populateFn: 'populateBloodChargeType',
-            schemaName: 'ehr_lookups',
-            queryName: 'bloodChargeType',
-            pk: 'rowid'
-        },{
             label: 'Parentage Methods',
             populateFn: 'populateParentageMethod',
             schemaName: 'ehr_lookups',
@@ -306,12 +300,6 @@ Ext4.onReady(function(){
             queryName: 'observation_areas',
             pk: 'rowid'
         },{
-            label: 'Procedure Charge Type',
-            populateFn: 'populateProcedureChargeType',
-            schemaName: 'ehr_lookups',
-            queryName: 'procedureChargeType',
-            pk: 'rowid'
-        },{
             label: 'Project Type',
             populateFn: 'populateProjectType',
             schemaName: 'ehr_lookups',
@@ -328,6 +316,12 @@ Ext4.onReady(function(){
             populateFn: 'populatePairingEventType',
             schemaName: 'ehr_lookups',
             queryName: 'pairingEventType',
+            pk: 'rowid'
+        },{
+            label: 'Fecal Score Type',
+            populateFn: 'populateFecalSmearScore',
+            schemaName: 'ehr_lookups',
+            queryName: 'fecal_smear_score',
             pk: 'rowid'
         },{
             label: 'TB Methods',
@@ -348,6 +342,12 @@ Ext4.onReady(function(){
             queryName: 'procedure_drug_templates',
             pk: 'rowid'
         },{
+//            label: 'Animal Condition',
+//            populateFn: 'populateConditionCodes',
+//            schemaName: 'ehr_lookups',
+//            queryName: 'animal_condition',
+//            pk: 'rowid'
+//        },{
             label: 'App Score',
             populateFn: 'populateAppScore',
             schemaName: 'ehr_lookups',
@@ -5036,8 +5036,6 @@ Ext4.onReady(function(){
             ['drugOutcome', 'Drug Administration Outcomes', 'value'],
             ['encounterSummaryCategory', 'Encounter Summary Category', 'value'],
             ['labworkChargeType', 'Labwork Charge Types', 'value'],
-            ['bloodChargeType', 'Blood Charge Types', 'value'],
-            ['procedureChargeType', 'Procedure Charge Types', 'value'],
             ['notes_category', 'DCM Notes Category', 'value'],
             ['blood_draw_reason', 'Blood Draw Reason', 'value'],
             ['encounter_roles', 'Encounter Roles', 'value'],
@@ -5060,6 +5058,7 @@ Ext4.onReady(function(){
             ['project_type', 'Center Project Types', 'value'],
             ['procedure_drug_templates', 'Procedure Drug Templates', 'value'],
             ['behavior_types', 'Behavior Types', 'value'],
+            ['fecal_smear_score', 'Fecal Smear Scores', 'value'],
             ['problem_list_subcategory', 'Problem List Subcategory', 'value'],
             ['customer_affiliation', 'Customer Affiliation', 'value']
         ],
@@ -5201,6 +5200,7 @@ Ext4.onReady(function(){
                 ['Liver', 'GI-Other'],
                 ['Alopecia', 'Behavioral'],
                 ['SIB', 'Behavioral'],
+                ['Other', 'Behavioral'],
                 ['Stereotypy', 'Behavioral'],
                 ['Fecal smear', 'Behavioral'],
                 ['Eye poking', 'Behavioral'],
@@ -5211,6 +5211,29 @@ Ext4.onReady(function(){
                 ['Muscle Wound, Minor', 'Wound'],
                 ['Muscle Wound, Major', 'Wound'],
                 ['Rhabdomyolysis', 'Wound']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateConditionCodes: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'animal_condition',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('code,value').split(',');
+
+            var data = [
+                ['201','Nonrestricted'],
+                ['202','Protocol Restricted'],
+                ['204','Surgically Restricted'],
+                ['206','Terminal'],
+                ['207','Clinically Restricted']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5517,6 +5540,29 @@ Ext4.onReady(function(){
                 ['Collaborator'],
                 ['ONPRC Tissue Bank'],
                 ['OHSU']
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateFecalSmearScore: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'fecal_smear_score',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+
+            var data = [
+                ['0'],
+                ['1'],
+                ['2'],
+                ['3'],
+                ['4']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -5976,7 +6022,7 @@ Ext4.onReady(function(){
                 ['Vet Attention', null, Ext4.encode({xtype: 'textfield', value: 'Review Needed'})],
                 ['Reviewed', null, Ext4.encode({xtype: 'textfield'})],
                 ['Behaviors', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'behavior_types', displayField: 'value', valueField: 'value'})],
-                ['Fecal Smear', 'Behavior', Ext4.encode({xtype: 'ldk-numberfield', minValue: 0, maxValue: 4})]
+                ['Fecal Smear', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'fecal_smear_score', displayField: 'value', valueField: 'value'})]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -7313,29 +7359,6 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
-        populateBloodChargeType: function(){
-            this.pendingInserts++;
-            //records for task forms:
-            var config = {
-                schemaName: 'ehr_lookups',
-                queryName: 'bloodChargeType',
-                rows: [],
-                success: this.onSuccess,
-                failure: this.onError
-            };
-            var fields = ('value,title').split(',');
-            var data = [
-                ['No Charge', 'No Charge'],
-                ['DCM: CMU', 'DCM: CMU'],
-                ['DCM: ASB Services', 'DCM: ASB Services'],
-                ['DCM: Colony Services', 'DCM: Colony Services'],
-                ['DCM: Surgery', 'DCM: Surgery'],
-                ['Research Staff', 'Research Staff']
-            ];
-
-            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
-        },
-
         populateLabworkServices: function(){
             this.pendingInserts++;
             //records for task forms:
@@ -7346,23 +7369,22 @@ Ext4.onReady(function(){
                 success: this.onSuccess,
                 failure: this.onError
             };
-            var fields = ('servicename,outsidelab,chargetype,dataset,tissue,collectionmethod').split(',');
+            var fields = ('servicename,outsidelab,chargetype,dataset,tissue,collectionmethod,method').split(',');
             var data = [
                 ['Antibiotic Sensitivity',false,'Clinpath','Antibiotic Sensitivity','',''],
                 ['Albumin',false,'Clinpath','Biochemistry','T-0X500',''],
                 ['Amylase',false,'Clinpath','Biochemistry','T-0X500',''],
-                ['BASIC Chemistry Panel in-house',false,'Clinpath','Biochemistry','T-0X500',''],
-                ['Comprehensive Chemistry panel in-house',false,'Clinpath','Biochemistry','T-0X500',''],
+                ['BASIC Chemistry Panel in-house',false,'Clinpath','Biochemistry','T-0X500','', 'Photometer'],
+                ['Comprehensive Chemistry panel in-house',false,'Clinpath','Biochemistry','T-0X500','', 'Photometer'],
                 ['Comprehensive Chemistry Panel Send Out',true,'Clinpath','Biochemistry','T-0X500',''],
                 ['Chemistry panel with high density lipoprotein send out',true,'Clinpath','Biochemistry','T-0X500',''],
-                ['HDL',false,'Clinpath','Biochemistry','T-0X500',''],
                 ['High-density lipoprotein & Low-density lipoprotein (HDL & LDL)',false,'Clinpath','Biochemistry','T-0X500',''],
                 ['LDL',false,'Clinpath','Biochemistry','T-0X500',''],
                 ['Lipase',true,'Clinpath','Biochemistry','T-0X500',''],
                 ['Lipid panel in-house: Cholesterol, Triglyceride, HDL, LDL',false,'Clinpath','Biochemistry','T-0X500',''],
                 ['Thyroid Panel',true,'Clinpath','Biochemistry','T-0X500',''],
                 //['CBC only, no differential',false,'Clinpath','Hematology','T-0X000',''],
-                ['CBC with automated differential',false,'Clinpath','Hematology','T-0X000',''],
+                ['CBC with automated differential',false,'Clinpath','Hematology','T-0X000','', 'Cell Counter'],
                 //['CBC with manual differential',false,'Clinpath','Hematology','T-0X000',''],
                 ['RBC Morphology',false,'Clinpath','Hematology','T-0X000',''],
                 ['Reticulocyte count',false,'Clinpath','Hematology','T-0X000',''],
@@ -7417,7 +7439,7 @@ Ext4.onReady(function(){
                 ['PDL STLV WB',false,'SPF Surveillance Lab','Serology/Virology','T-0X500','Venipuncture '],
                 ['Herpes B Status Confirmation',false,'SPF Surveillance Lab','Serology/Virology','T-0X500','Venipuncture '],
                 ['Urinalysis',false,'Clinpath','Urinalysis','T-7X100',''],
-                ['Specific Gravity',false,'Clinpath','Misc Tests','',''],
+                //['Specific Gravity',false,'Clinpath','Misc Tests','',''],
                 ['CSF analysis (WBC count & differential)',false,'Clinpath','Misc Tests','T-X1000',''],
                 ['CSF Glucose',true,'Clinpath','Misc Tests','T-X1000',''],
                 ['CSF Total Protein',true,'Clinpath','Misc Tests','T-X1000',''],
@@ -7637,7 +7659,7 @@ Ext4.onReady(function(){
                 ['WBC differential','NEUT%',3,'','testid'],
                 ['WBC differential','EOS%',4,'','testid'],
                 ['WBC differential','BASO%',5,'','testid'],
-                ['WBC differential','BANDS',6,'','testid'],
+                ['WBC differential','BAND%',6,'','testid'],
                 ['SPF Surveillance','Herpes B',1,'','testid'],
                 ['SPF Surveillance','SRV-2',2,'','testid'],
                 ['ESPF Surveillance - Monthly','E-32221',1,'ELISA','agent'],
@@ -7842,30 +7864,6 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
-        populateProcedureChargeType: function(){
-            this.pendingInserts++;
-            //records for task forms:
-            var config = {
-                schemaName: 'ehr_lookups',
-                queryName: 'procedureChargeType',
-                rows: [],
-                success: this.onSuccess,
-                failure: this.onError
-            };
-            var fields = ('value,title').split(',');
-            var data = [
-                ['No Charge', 'No Charge'],
-                ['Surgery Staff', 'Surgery Staff'],
-                ['Clinic Staff', 'Clinic Staff'],
-                //['DCM: Colony Services', 'DCM: Colony Services'],
-                //['DCM: ASB Services', 'DCM: ASB Services'],
-                //['DCM: CMU', 'DCM: CMU'],
-                ['Research Staff', 'Research Staff']
-            ];
-
-            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
-        },
-
         populateChemistryMethods: function(){
             this.pendingInserts++;
             //records for task forms:
@@ -7992,25 +7990,10 @@ Ext4.onReady(function(){
 
             var data = [
                 ['BSU Notes'],
-                ['BSU Observations'],
-                ['Clinical ADR'],
                 ['Clinical Notes'],
                 ['Genetics Notes'],
-                ['Group Candidate'],
-                ['Group Notes'],
                 ['Notes Pertaining to DAR'],
-                ['Pending Project Assignment'],
-                ['Pending Sales Assignment'],
-                ['PI Future Project Interest'],
-                ['Reproductive Status - Female Only'],
-                ['SCM Additional Procedures Required'],
-                ['SCM BSU Release'],
-                ['SCM Keeper'],
-                ['SCM New Housing'],
-                ['SCM New Social Group'],
-                ['SCM Project Candidate'],
-                ['SCM Release Following Treatment'],
-                ['SCM Revisit']
+                ['Reproductive Status - Female Only']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -8121,8 +8104,8 @@ Ext4.onReady(function(){
             var data = [
                 ['activeAssignments' ,'Assignments and Groups' ,'query' ,'Active Assignments' ,'true' ,'' ,'study' ,'Assignment', 'Active Assignments', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the active assignments for each animal'],
                 ['assignmentHistory' ,'Assignments and Groups' ,'query' ,'Assignment History' ,'true' ,'' ,'study' ,'Assignment', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows all assignments records for the animals'],
-                ['activeGroups' ,'Assignments and Groups' ,'query' ,'Active Groups' ,'true' ,'' ,'ehr' ,'animal_group_members', 'Active Members', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the active assignments for each animal'],
-                ['groupHistory' ,'Assignments and Groups' ,'query' ,'Group History' ,'true' ,'' ,'ehr' ,'animal_group_members', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows all assignments records for the animals'],
+                ['activeGroups' ,'Assignments and Groups' ,'query' ,'Active Groups' ,'true' ,'' ,'study' ,'animal_group_members', 'Active Members', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows the active assignments for each animal'],
+                ['groupHistory' ,'Assignments and Groups' ,'query' ,'Group History' ,'true' ,'' ,'study' ,'animal_group_members', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report shows all assignments records for the animals'],
 
                 ['microbiology' ,'Lab Results' ,'query' ,'Microbiology' ,'true' ,'' ,'study' ,'Microbiology Results', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 ['biochemistry' ,'Lab Results' ,'js' ,'Biochemistry' ,'true' ,'' ,'study' ,'bloodChemistry', '', '', 'date', 'false', 'false', '', '', 'Contains results of chemistry panels.  Can be displayed either by panel, or showing reference ranges'],
@@ -8148,7 +8131,7 @@ Ext4.onReady(function(){
                 ['procedureHistory' ,'Surgery' ,'query' ,'Procedure Summary' ,'true' ,'' ,'study' ,'proceduresPerYear', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surgeries, exams, procedures, etc.'],
                 ['surgeryChecklist' ,'Surgery' ,'query' ,'Surgery Checklist' ,'true' ,'' ,'study' ,'surgeryChecklist', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report provides information intended to be reviewed prior to surgeries.'],
                 ['clinObs' ,'Clinical' ,'query' ,'Observations' ,'true' ,'' ,'study' ,'Clinical Observations', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.'],
-                ['clinObsBsu' ,'Behavior' ,'query' ,'Observations' ,'true' ,'' ,'study' ,'Clinical Observations', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.'],
+                ['clinObsBsu' ,'Behavior' ,'query' ,'Observations' ,'true' ,'' ,'study' ,'Clinical Observations', 'BSU Observations', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.'],
                 ['clinremarks' ,'Clinical' ,'query' ,'Clinical Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the clinical remarks entered about each animal'],
                 ['behaviorRemarks' ,'Behavior' ,'query' ,'Behavior Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', 'Behavior Remarks', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the behavior remarks entered about each animal'],
                 ['pairings' ,'Behavior' ,'query' ,'Pairing Observations' ,'true' ,'' ,'study' ,'pairingSummary', '', '', 'date', 'false', 'false', '', '', 'This report contains records about pairings made using each animal'],
@@ -8208,8 +8191,8 @@ Ext4.onReady(function(){
                 //['majorEvents' ,'General' ,'query' ,'Major Events' ,'true' ,'' ,'study' ,'majorEvents', '', '', 'date', 'false', 'false', '', '', 'This report attempts to identify major events in the history of the animal, including births and major surgeries'],
                 ['notes' ,'General' ,'query' ,'Notes' ,'true' ,'' ,'study' ,'notes', 'Active Notes', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains non-clinical notes entered into the animal\'s record'],
                 ['biopsies' ,'Pathology' ,'query' ,'Biopsies' ,'true' ,'' ,'study' ,'Clinical Encounters', 'Biopsies', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains information about biopsies'],
-                //['histology' ,'Pathology' ,'query' ,'Histology' ,'true' ,'' ,'study' ,'Histology', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Histology records and associated diagnoses'],
-                ['pathologyDiagnoses' ,'Pathology' ,'query' ,'SNOMED Codes' ,'true' ,'' ,'study' ,'Pathology Diagnoses', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
+                //['histology' ,'Pathology' ,'query' ,'Histology' ,'true' ,'' ,'study' ,'histologyPublic', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Histology records and associated diagnoses'],
+                ['pathologyDiagnoses' ,'Pathology' ,'query' ,'SNOMED Codes' ,'true' ,'' ,'study' ,'pathologySnomeds', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 ['necropsies' ,'Pathology' ,'query' ,'Necropsies' ,'true' ,'' ,'study' ,'Clinical Encounters', 'Necropsies', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Contains information about necropsies'],
                 ['tissueSamples' ,'Pathology' ,'query' ,'Tissue Weights' ,'true' ,'' ,'study' ,'Tissue Samples', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains tissue weights obtained at necropsy'],
                 ['tissueMeasurements' ,'Pathology' ,'js' ,'Tissue Measurements' ,'true' ,'' ,'study' ,'measurementsPivoted', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains tissue measurements'],
@@ -13990,6 +13973,7 @@ Ext4.onReady(function(){
                 ['GRAM STAIN', '', null, false, false, false, null],
                 ['GRAMS STAIN', '', null, false, false, false, null],
                 ['GROSS BLOOD', '', null, false, false, false, null],
+                ['HbA1C', 'GLYCOSYLATED HGB', null, true, false, false, null],
                 ['HAIR CULTURE', '', null, false, false, false, null],
                 ['HDL', '', null, false, false, false, null],
                 ['HEAT INACTIV. ALK PHOS', '', null, false, false, false, null],
@@ -14200,7 +14184,7 @@ Ext4.onReady(function(){
             var data = [
                 ['WBC', 'White Blood Cells', '10^3/uL', true, false, true, 1],
                 ['NEUT%', 'Neutrophils', '%', true, false, true, 2],
-                ['Bands', 'Bands', null, true, false, true, 3],
+                ['BAND%', 'Bands', null, true, false, true, 3],
                 ['LYMPH%', 'Lymphocytes', '%', true, false, true, 4],
                 ['MONO%', 'Monocytes', '%', true, false, true, 5],
                 ['EOS%', 'Eosinophils', '%', true, false, true, 6],
@@ -14218,7 +14202,6 @@ Ext4.onReady(function(){
                 ['Anisocytosis', 'Anisocytosis', null, true, false, false, null],
                 ['GLOB', 'Globulin', 'g/dL', true, false, false, null],
                 ['GLUC', 'Glucose', null, true, false, false, null],
-                ['HbA1C', 'GLYCOSYLATED HGB', null, true, false, false, null],
                 ['Hypochromic RBC', 'Hypochromic RBC', null, true, false, false, null],
                 ['LUC', 'Large unstained cells', null, true, false, false, null],
                 ['Macrocytic RBC', 'Macrocytic RBC', null, true, false, false, null],
