@@ -78,6 +78,9 @@ ogasync/src/org/labkey/ogasync/OGASyncRunner.java -text
 onprc_billing/ONPRC_Billing.iml -text
 onprc_billing/module.properties -text
 onprc_billing/resources/module.xml -text
+onprc_billing/resources/queries/ehr_lookups/bloodChargeType.sql -text
+onprc_billing/resources/queries/ehr_lookups/medicationChargeType.sql -text
+onprc_billing/resources/queries/ehr_lookups/procedureChargeType.sql -text
 onprc_billing/resources/queries/onprc_billing/aliases.query.xml -text
 onprc_billing/resources/queries/onprc_billing/aliases/.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/aliases/Active[!!-~]Aliases.qview.xml -text
@@ -87,6 +90,9 @@ onprc_billing/resources/queries/onprc_billing/chargeRateExemptions/Active[!!-~]I
 onprc_billing/resources/queries/onprc_billing/chargeRates.js -text
 onprc_billing/resources/queries/onprc_billing/chargeRates/.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/chargeRates/Active[!!-~]Rates.qview.xml -text
+onprc_billing/resources/queries/onprc_billing/chargeUnitAccount/.qview.xml -text
+onprc_billing/resources/queries/onprc_billing/chargeUnits/.qview.xml -text
+onprc_billing/resources/queries/onprc_billing/chargeUnits/Active[!!-~]Items.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/chargeableItems.js -text
 onprc_billing/resources/queries/onprc_billing/chargeableItems/.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/chargeableItems/Active[!!-~]Items.qview.xml -text
@@ -109,10 +115,14 @@ onprc_billing/resources/queries/onprc_billing/invalidChargeRateEntries.query.xml
 onprc_billing/resources/queries/onprc_billing/invalidChargeRateEntries.sql -text
 onprc_billing/resources/queries/onprc_billing/invalidChargeRateExemptionEntries.query.xml -text
 onprc_billing/resources/queries/onprc_billing/invalidChargeRateExemptionEntries.sql -text
+onprc_billing/resources/queries/onprc_billing/invalidChargeUnitAccounts.query.xml -text
+onprc_billing/resources/queries/onprc_billing/invalidChargeUnitAccounts.sql -text
 onprc_billing/resources/queries/onprc_billing/invalidCreditAccountEntries.query.xml -text
 onprc_billing/resources/queries/onprc_billing/invalidCreditAccountEntries.sql -text
 onprc_billing/resources/queries/onprc_billing/invalidProjectAccountEntries.query.xml -text
 onprc_billing/resources/queries/onprc_billing/invalidProjectAccountEntries.sql -text
+onprc_billing/resources/queries/onprc_billing/invalidProjectMultiplierEntries.query.xml -text
+onprc_billing/resources/queries/onprc_billing/invalidProjectMultiplierEntries.sql -text
 onprc_billing/resources/queries/onprc_billing/invoiceRunMonthlySummary.query.xml -text
 onprc_billing/resources/queries/onprc_billing/invoiceRunMonthlySummary.sql -text
 onprc_billing/resources/queries/onprc_billing/invoiceRunMonthlySummary/.qview.xml -text
@@ -178,6 +188,8 @@ onprc_billing/resources/queries/onprc_billing/leaseFeeValidation2.query.xml -tex
 onprc_billing/resources/queries/onprc_billing/leaseFeeValidation2.sql -text
 onprc_billing/resources/queries/onprc_billing/leaseFees.query.xml -text
 onprc_billing/resources/queries/onprc_billing/leaseFees.sql -text
+onprc_billing/resources/queries/onprc_billing/medicationFeeDefinition/.qview.xml -text
+onprc_billing/resources/queries/onprc_billing/medicationFeeDefinition/Active.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/miscCharges.js -text
 onprc_billing/resources/queries/onprc_billing/miscCharges.query.xml -text
 onprc_billing/resources/queries/onprc_billing/miscCharges/.qview.xml -text
@@ -221,6 +233,8 @@ onprc_billing/resources/queries/onprc_billing/proceduresNotBilled.query.xml -tex
 onprc_billing/resources/queries/onprc_billing/proceduresNotBilled.sql -text
 onprc_billing/resources/queries/onprc_billing/projectAccountHistory.js -text
 onprc_billing/resources/queries/onprc_billing/projectAccountHistory/.qview.xml -text
+onprc_billing/resources/queries/onprc_billing/projectMultipliers/.qview.xml -text
+onprc_billing/resources/queries/onprc_billing/projectMultipliers/Active[!!-~]Items.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/publicInvoiceRuns.query.xml -text
 onprc_billing/resources/queries/onprc_billing/publicInvoiceRuns.sql -text
 onprc_billing/resources/queries/onprc_billing/publicInvoicedItems.query.xml -text
@@ -288,6 +302,10 @@ onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.358-12.359
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.359-12.360.sql -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.360-12.361.sql -text
 onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.361-12.362.sql -text
+onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.362-12.363.sql -text
+onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.363-12.364.sql -text
+onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.364-12.365.sql -text
+onprc_billing/resources/schemas/dbscripts/postgresql/onprc_billing-12.365-12.366.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.30-12.301.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.301-12.302.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.302-12.303.sql -text
@@ -343,6 +361,10 @@ onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.358-12.359.
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.359-12.360.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.360-12.361.sql -text
 onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.361-12.362.sql -text
+onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.362-12.363.sql -text
+onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.363-12.364.sql -text
+onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.364-12.365.sql -text
+onprc_billing/resources/schemas/dbscripts/sqlserver/onprc_billing-12.365-12.366.sql -text
 onprc_billing/resources/schemas/onprc_billing.xml -text
 onprc_billing/resources/schemas/onprc_billing_public.template.xml -text
 onprc_billing/resources/scripts/onprc_billing/billing_triggers.js -text
@@ -359,6 +381,8 @@ onprc_billing/resources/views/invoiceRunDetails.html -text
 onprc_billing/resources/views/invoiceRunDetails.view.xml -text
 onprc_billing/resources/views/invoicedItemDetails.html -text
 onprc_billing/resources/views/invoicedItemDetails.view.xml -text
+onprc_billing/resources/views/rateCalculation.html -text
+onprc_billing/resources/views/rateCalculation.view.xml -text
 onprc_billing/resources/web/onprc_billing/BillingUtils.js -text
 onprc_billing/resources/web/onprc_billing/buttons/financeButtons.js -text
 onprc_billing/resources/web/onprc_billing/model/sources/ChargesAdvanced.js -text
@@ -374,6 +398,7 @@ onprc_billing/src/org/labkey/onprc_billing/ONPRC_BillingSchema.java -text
 onprc_billing/src/org/labkey/onprc_billing/button/ChangeBillDateButton.java -text
 onprc_billing/src/org/labkey/onprc_billing/button/ChargeEditButton.java -text
 onprc_billing/src/org/labkey/onprc_billing/button/ProjectEditButton.java -text
+onprc_billing/src/org/labkey/onprc_billing/dataentry/AdjustmentFormSection.java -text
 onprc_billing/src/org/labkey/onprc_billing/dataentry/ChargesAdvancedFormType.java -text
 onprc_billing/src/org/labkey/onprc_billing/dataentry/ChargesAdvancedInstructionFormSection.java -text
 onprc_billing/src/org/labkey/onprc_billing/dataentry/ChargesFormSection.java -text
@@ -439,8 +464,6 @@ onprc_reports/ONPRC_Reports.iml -text
 onprc_reports/build.xml -text
 onprc_reports/module.properties -text
 onprc_reports/resources/queries/MHC_Data/MHC_Data_Pivoted/Common[!!-~]Alleles.qview.xml -text
-onprc_reports/resources/queries/laboratory/mhcSamples.query.xml -text
-onprc_reports/resources/queries/laboratory/mhcSamples.sql -text
 onprc_reports/resources/queries/laboratory/parentageSamples.query.xml -text
 onprc_reports/resources/queries/laboratory/parentageSamples.sql -text
 onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Animals.query.xml -text
@@ -448,6 +471,8 @@ onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Animals.sql -text
 onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Pivoted.sql -text
 onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Unified.query.xml -text
 onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Unified.sql -text
+onprc_reports/resources/queries/sequenceanalysis/mhcSamples.query.xml -text
+onprc_reports/resources/queries/sequenceanalysis/mhcSamples.sql -text
 onprc_reports/resources/queries/study/demographicsMHCTests.sql -text
 onprc_reports/resources/queries/study/processingBloodDraws.query.xml -text
 onprc_reports/resources/queries/study/processingBloodDraws.sql -text
@@ -459,6 +484,7 @@ onprc_reports/resources/queries/study/processingGeneticsBloodDraws/Need[!!-~]Blo
 onprc_reports/resources/schemas/DNABank.template.xml -text
 onprc_reports/resources/schemas/MHCResults.template.xml -text
 onprc_reports/resources/schemas/ParentageResults.template.xml -text
+onprc_reports/resources/schemas/ParentageSamples.template.xml -text
 onprc_reports/resources/schemas/ViralLoadResults.template.xml -text
 onprc_reports/src/org/labkey/onprc_reports/ONPRC_ReportsCustomizer.java -text
 onprc_reports/src/org/labkey/onprc_reports/ONPRC_ReportsManager.java -text
