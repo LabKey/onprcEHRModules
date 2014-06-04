@@ -21,6 +21,7 @@ public class SNPAssayDataProvider extends AbstractAssayDataProvider
 
         _importMethods.add(new DefaultSnpAssayImportMethod());
         _importMethods.add(new BeadStudioImportMethod());
+        _importMethods.add(new QuantStudioImportMethod());
     }
 
     @Override
