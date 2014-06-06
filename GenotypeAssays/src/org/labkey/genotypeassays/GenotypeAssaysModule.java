@@ -85,6 +85,7 @@ public class GenotypeAssaysModule extends ExtendedSimpleModule
         LaboratoryService.get().registerDataProvider(new SNPAssayDataProvider(this));
 
         LaboratoryService.get().registerAssayButton(new ChangeAssayResultStatusBtn(this), GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, "Data");
+        LaboratoryService.get().registerAssayButton(new ChangeAssayResultStatusBtn(this), GenotypeAssaysManager.SNP_ASSAY_PROVIDER, "Data");
 
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.SSP_ASSAY_PROVIDER, Arrays.asList("DataId:ASC", "include:primerPair,result,subjectId"));
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("result", "DataId"));
