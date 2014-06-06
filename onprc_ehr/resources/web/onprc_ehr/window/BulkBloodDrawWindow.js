@@ -257,6 +257,7 @@ Ext4.define('ONPRC_EHR.window.BulkBloodDrawWindow', {
             errors.push('Row ' + rowIdx + ': invalid date: ' + date);
         }
 
+        timeStr = Ext4.String.leftPad(timeStr, 5, '0'); //expect: HH:mm
         var ret = LDK.ConvertUtils.parseDate(date.format('Y-m-d') + ' ' + timeStr);
         if (!ret){
             errors.push('Row ' + rowIdx + ': invalid time: ' + timeStr);
@@ -270,15 +271,13 @@ Ext4.define('ONPRC_EHR.window.BulkBloodDrawWindow', {
             return null;
         }
 
-        projectName = Ext4.String.leftPad(projectName, 4, '0');
-
-        var recIdx = this.projectStore.find('name', projectName);
-        if (recIdx == -1){
+        var ret = EHR.DataEntryUtils.resolveProjectByName(this.projectStore, projectName);
+        if (!ret){
             errors.push('Row ' + rowIdx + ': unknown project ' + projectName);
-            return null;
         }
-
-        return this.projectStore.getAt(recIdx).get('project');
+        else {
+            return ret;
+        }
     },
 
     safeGet: function(parsed, a, b){

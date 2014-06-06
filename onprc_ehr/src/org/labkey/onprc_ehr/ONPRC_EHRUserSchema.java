@@ -21,6 +21,7 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
+import org.labkey.api.ehr.security.EHRProjectEditPermission;
 import org.labkey.api.ehr.security.EHRRequestPermission;
 import org.labkey.api.ehr.security.EHRVeternarianPermission;
 import org.labkey.api.ldk.table.CustomPermissionsTable;
@@ -59,6 +60,14 @@ public class ONPRC_EHRUserSchema extends SimpleUserSchema
             ti.addPermissionMapping(InsertPermission.class, ONPRC_EHRCustomerEditPermission.class);
             ti.addPermissionMapping(UpdatePermission.class, ONPRC_EHRCustomerEditPermission.class);
             ti.addPermissionMapping(DeletePermission.class, ONPRC_EHRCustomerEditPermission.class);
+            return ti;
+        }
+        else if (ONPRC_EHRSchema.TABLE_INVESTIGATORS.equalsIgnoreCase(name))
+        {
+            CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable).init();
+            ti.addPermissionMapping(InsertPermission.class, EHRProjectEditPermission.class);
+            ti.addPermissionMapping(UpdatePermission.class, EHRProjectEditPermission.class);
+            ti.addPermissionMapping(DeletePermission.class, EHRProjectEditPermission.class);
             return ti;
         }
         else if (ONPRC_EHRSchema.TABLE_HOUSING_TRANFER_REQUESTS.equalsIgnoreCase(name))

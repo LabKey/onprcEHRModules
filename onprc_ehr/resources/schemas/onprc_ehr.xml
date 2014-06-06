@@ -85,6 +85,7 @@
             </ns:column>
             <ns:column columnName="assignedVet">
                 <ns:columnTitle>Responsible Vet</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
                 <ns:fk>
                     <ns:fkDbSchema>core</ns:fkDbSchema>
                     <ns:fkTable>users</ns:fkTable>

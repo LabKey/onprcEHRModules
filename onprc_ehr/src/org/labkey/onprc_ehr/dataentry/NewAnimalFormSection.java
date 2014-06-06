@@ -15,6 +15,9 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.labkey.api.data.TableInfo;
+import org.labkey.api.ehr.EHRService;
+import org.labkey.api.query.FieldKey;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.List;
@@ -24,9 +27,12 @@ import java.util.List;
  */
 public class NewAnimalFormSection extends SimpleGridPanel
 {
-    public NewAnimalFormSection(String schemaName, String queryName, String label)
+    private boolean _allowSetSpecies = false;
+
+    public NewAnimalFormSection(String schemaName, String queryName, String label, boolean allowSetSpecies)
     {
         super(schemaName, queryName, label);
+        _allowSetSpecies = allowSetSpecies;
 
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AnimalIdSeriesWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/form/field/AnimalIdGeneratorField.js"));
@@ -42,5 +48,30 @@ public class NewAnimalFormSection extends SimpleGridPanel
         defaults.add("ANIMAL_ID_SERIES");
 
         return defaults;
+    }
+
+    @Override
+    protected List<FieldKey> getFieldKeys(TableInfo ti)
+    {
+        List<FieldKey> keys = super.getFieldKeys(ti);
+
+        if (_allowSetSpecies)
+        {
+            int insertIdx = 0;
+            for (FieldKey key : keys)
+            {
+                insertIdx++;
+
+                if ("gender".equals(key.getName()))
+                {
+                    break;
+                }
+            }
+
+            keys.add(insertIdx, FieldKey.fromString("Id/demographics/species"));
+            keys.add(insertIdx + 1, FieldKey.fromString("Id/demographics/geographic_origin"));
+        }
+
+        return keys;
     }
 }

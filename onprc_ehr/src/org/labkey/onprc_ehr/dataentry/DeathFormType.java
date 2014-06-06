@@ -23,6 +23,7 @@ public class DeathFormType extends UnsaveableTask
     public DeathFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, "Death", "Colony Management", Arrays.<FormSection>asList(
+                new DeathInstructionsFormSection(),
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "deaths", "Deaths")

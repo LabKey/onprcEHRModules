@@ -69,36 +69,36 @@ cross apply dbo.fn_splitter(s.SnomedCodes, ',') s2
 where s2.value is not null and s2.value != ''
 and s.ts > ?
 
-UNION ALL
-
-Select
-	cast(pa.AnimalID as nvarchar(4000)) as Id,
-	null as caseid,
-	d.objectid as recordid,
-	(cast(d.objectid as varchar(38)) + '-' + cast(s2.i as varchar(100)) + '-' + cast(s2.value as nvarchar(100))) as objectid,
-	coalesce(d.sequenceno, 0) as set_number,
-	s2.i as sort,
-	cast(s2.value as nvarchar(100)) as code
-
-From Path_AutopsyDiagnosis d
-left join Path_Autopsy pa on (d.AutopsyID = pa.AutopsyId)
-cross apply dbo.fn_splitter(d.SnomedCodes, ',') s2
-where s2.value is not null and s2.value != ''
-and d.ts > ?
-
-UNION ALL
-
-Select
-	cast(pa.AnimalID as nvarchar(4000)) as Id,
-	null as caseid,
-	d.objectid as recordid,
-	(cast(d.objectid as varchar(38)) + '-' + cast(s2.i as varchar(100)) + '-' + cast(s2.value as nvarchar(100))) as objectid,
-	coalesce(d.sequenceno, 0) as set_number,
-	s2.i as sort,
-	cast(s2.value as nvarchar(100)) as code	
-
-From Path_BiopsyDiagnosis d
-left join Path_Biopsy pa on (d.BiopsyID = pa.BiopsyId)
-cross apply dbo.fn_splitter(d.SnomedCodes, ',') s2
-where s2.value is not null and s2.value != ''
-and d.ts > ?
+-- UNION ALL
+--
+-- Select
+-- 	cast(pa.AnimalID as nvarchar(4000)) as Id,
+-- 	null as caseid,
+-- 	d.objectid as recordid,
+-- 	(cast(d.objectid as varchar(38)) + '-' + cast(s2.i as varchar(100)) + '-' + cast(s2.value as nvarchar(100))) as objectid,
+-- 	coalesce(d.sequenceno, 0) as set_number,
+-- 	s2.i as sort,
+-- 	cast(s2.value as nvarchar(100)) as code
+--
+-- From Path_AutopsyDiagnosis d
+-- left join Path_Autopsy pa on (d.AutopsyID = pa.AutopsyId)
+-- cross apply dbo.fn_splitter(d.SnomedCodes, ',') s2
+-- where s2.value is not null and s2.value != ''
+-- and d.ts > ?
+--
+-- UNION ALL
+--
+-- Select
+-- 	cast(pa.AnimalID as nvarchar(4000)) as Id,
+-- 	null as caseid,
+-- 	d.objectid as recordid,
+-- 	(cast(d.objectid as varchar(38)) + '-' + cast(s2.i as varchar(100)) + '-' + cast(s2.value as nvarchar(100))) as objectid,
+-- 	coalesce(d.sequenceno, 0) as set_number,
+-- 	s2.i as sort,
+-- 	cast(s2.value as nvarchar(100)) as code
+--
+-- From Path_BiopsyDiagnosis d
+-- left join Path_Biopsy pa on (d.BiopsyID = pa.BiopsyId)
+-- cross apply dbo.fn_splitter(d.SnomedCodes, ',') s2
+-- where s2.value is not null and s2.value != ''
+-- and d.ts > ?

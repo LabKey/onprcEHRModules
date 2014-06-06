@@ -37,7 +37,7 @@ public class ParentageFormType extends UnsaveableTask
         super(ctx, owner, NAME, "Parentage", "Colony Management", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
-                new NewAnimalFormSection("study", "parentage", "Parentage")
+                new SimpleGridPanel("study", "parentage", "Parentage")
         ));
     }
 }

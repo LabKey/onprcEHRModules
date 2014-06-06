@@ -3,7 +3,7 @@
        <column name="Id" />
        <column name="date" />
        <column name="cause" />
-       <column name="manner" />
+       <!--<column name="manner" />-->
        <column name="necropsy" />
        <column name="remark" />
        <column name="performedby" />

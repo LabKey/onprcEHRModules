@@ -976,6 +976,140 @@ public class ONPRC_EHRTriggerHelper
         return ret.get(0);
     }
 
+    public void updateReleaseCondition(String id, Date deathDate, Integer releaseCondition) throws Exception
+    {
+        if (releaseCondition == null)
+        {
+            return;
+        }
+
+        String flag = getFlag("condition", null, releaseCondition, true);
+        if (flag != null)
+        {
+            // if we need to add/remove flags, we will use 1 day prior to death
+            Calendar dayPrior = Calendar.getInstance();
+            dayPrior.setTime(deathDate);
+            dayPrior.add(Calendar.DATE, -1);
+
+            // if this is already the animal's active condition, no action needed.
+            // otherwise terminate the existing record and create new one
+            TableInfo flagsTable = getTableInfo("study", "flags");
+            SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("Id"), id);
+            filter1.addCondition(FieldKey.fromString("flag/category"), "Condition");
+            filter1.addCondition(FieldKey.fromString("date"), deathDate, CompareType.DATE_LT);
+            filter1.addCondition(new SimpleFilter.OrClause(new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GT, deathDate), new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)));
+
+            TableSelector ts1 = new TableSelector(flagsTable, PageFlowUtil.set("lsid", "flag", "date"), filter1, null);
+            boolean shouldCreate = false;
+            Collection<Map<String, Object>> ret = ts1.getMapCollection();
+            if (ret.isEmpty())
+            {
+                shouldCreate = true;
+            }
+            else
+            {
+                //we expect at most 1 active record, but this should work correctly even if that isnt the case
+                shouldCreate = true;
+                List<Map<String, Object>> toEnd = new ArrayList<>();
+                List<Map<String, Object>> toEndKeys = new ArrayList<>();
+                for (Map<String, Object> map : ret)
+                {
+                    if (flag.equals(map.get("flag")))
+                    {
+                        //we already have a record w/ this condition
+                        shouldCreate = false;
+                    }
+                    else
+                    {
+                        CaseInsensitiveHashMap row = new CaseInsensitiveHashMap();
+                        row.put("lsid", map.get("lsid"));
+                        row.put("enddate", maxDate((Date)map.get("date"), dayPrior.getTime()));
+                        toEnd.add(row);
+
+                        CaseInsensitiveHashMap keyRow = new CaseInsensitiveHashMap();
+                        keyRow.put("lsid", map.get("lsid"));
+                        toEndKeys.add(keyRow);
+                    }
+                }
+
+                //terminate rows
+                if (!toEnd.isEmpty())
+                {
+                    _log.info("ending existing condition flags on animal death");
+                    flagsTable.getUpdateService().updateRows(getUser(), getContainer(), toEnd, toEndKeys, getExtraContext());
+                }
+            }
+
+            if (shouldCreate)
+            {
+                //need to insert flag
+                _log.info("adding condition flag to set release condition following death for animal: " + id);
+                List<Map<String, Object>> rows = new ArrayList<>();
+                Map<String, Object> row = new CaseInsensitiveHashMap<>();
+                row.put("Id", id);
+                row.put("date", deathDate);
+                row.put("enddate", deathDate);
+                row.put("flag", flag);
+                row.put("performedby", getUser().getDisplayName(getUser()));
+                rows.add(row);
+
+                BatchValidationException errors = new BatchValidationException();
+                if (rows.size() > 0)
+                    flagsTable.getUpdateService().insertRows(getUser(), flagsTable.getUserSchema().getContainer(), rows, errors, getExtraContext());
+
+                if (errors.hasErrors())
+                    throw errors;
+            }
+        }
+    }
+
+    // Taken from DateUtils.  should remove if we upgrade core
+    private Date maxDate(Date d1, Date d2) {
+        if (d1 == null && d2 == null) return null;
+        if (d1 == null) return d2;
+        if (d2 == null) return d1;
+        return (d1.after(d2)) ? d1 : d2;
+    }
+
+    public void closeActiveAssignmentRecords(String id, Date deathDate, Integer releaseCondition) throws Exception
+    {
+        TableInfo assignmentTable = getTableInfo("study", "assignment");
+        SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("Id"), id);
+        filter1.addCondition(new SimpleFilter.OrClause(new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GT, deathDate), new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)));
+
+        TableSelector ts1 = new TableSelector(assignmentTable, PageFlowUtil.set("lsid"), filter1, null);
+        List<String> lsids = ts1.getArrayList(String.class);
+        if (!lsids.isEmpty())
+        {
+            List<Map<String, Object>> toEnd = new ArrayList<>();
+            List<Map<String, Object>> toEndKeys = new ArrayList<>();
+            for (String lsid : lsids)
+            {
+                CaseInsensitiveHashMap row = new CaseInsensitiveHashMap();
+                row.put("lsid", lsid);
+                row.put("enddate", deathDate);
+
+                if (releaseCondition != null)
+                {
+                    row.put("releaseCondition", releaseCondition);
+                }
+
+                toEnd.add(row);
+
+                CaseInsensitiveHashMap keyRow = new CaseInsensitiveHashMap();
+                keyRow.put("lsid", lsid);
+                toEndKeys.add(keyRow);
+            }
+
+            //terminate rows
+            if (!toEnd.isEmpty())
+            {
+                _log.info("ending " + toEnd.size() + " assignments due to animal death, using releaseCondition: " + releaseCondition);
+                assignmentTable.getUpdateService().updateRows(getUser(), getContainer(), toEnd, toEndKeys, getExtraContext());
+            }
+        }
+    }
+
     public void doBirthTriggers(String id, Date date, String dam, String birthCondition) throws Exception
     {
         //is the infant is dead, terminate the assignments

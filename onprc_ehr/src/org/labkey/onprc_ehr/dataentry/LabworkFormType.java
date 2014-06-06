@@ -45,12 +45,12 @@ public class LabworkFormType extends TaskForm
                 new AnimalDetailsFormSection(),
                 new LabworkFormSection("study", "chemistryResults", "Biochemistry", true),
                 new LabworkFormSection("study", "hematologyResults", "Hematology", true),
-                new LabworkFormSection("study", "microbiology", "Microbiology"),
-                new LabworkFormSection("study", "antibioticSensitivity", "Antibiotic Sensitivity"),
-                new LabworkFormSection("study", "parasitologyResults", "Parasitology"),
+                new LabworkFormSection("study", "microbiology", "Microbiology", true),
+                new LabworkFormSection("study", "antibioticSensitivity", "Antibiotic Sensitivity", true),
+                new LabworkFormSection("study", "parasitologyResults", "Parasitology", true),
                 new LabworkFormSection("study", "serology", "Serology/Virology"),
                 new LabworkFormSection("study", "urinalysisResults", "Urinalysis", true),
-                new LabworkFormSection("study", "miscTests", "Misc Tests")
+                new LabworkFormSection("study", "miscTests", "Misc Tests", true)
         ));
 
         for (FormSection s : getFormSections())

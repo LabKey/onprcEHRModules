@@ -123,6 +123,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             {
                 customizeBirthTable((AbstractTableInfo) table);
             }
+            else if (matches(table, "study", "Deaths"))
+            {
+                customizeDeathTable((AbstractTableInfo) table);
+            }
             else if (matches(table, "study", "Matings"))
             {
                 customizeMatingTable((AbstractTableInfo) table);
@@ -1113,6 +1117,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
                 ti.addColumn(wrapped);
             }
+        }
+    }
+
+    private void customizeDeathTable(AbstractTableInfo ti)
+    {
+        if (ti.getColumn("manner") != null)
+        {
+            ti.getColumn("manner").setHidden(true);
         }
     }
 

@@ -12,7 +12,7 @@ exports.ONPRC_EHR = ONPRC_EHR;
 
 ONPRC_EHR.Utils = new function(){
     return {
-        doHousingCheck: function(EHR, helper, scriptErrors, triggerHelper, row, oldRow, roomField, cageField){
+        doHousingCheck: function(EHR, helper, scriptErrors, triggerHelper, row, oldRow, roomField, cageField, alertOnPairSplit){
             roomField = roomField || 'room';
             cageField = cageField || 'cage';
 
@@ -62,7 +62,7 @@ ONPRC_EHR.Utils = new function(){
                     }
 
                     //alert if pairs are broken
-                    if (oldLocationsSupportsCages && previousCagemates.length){
+                    if (alertOnPairSplit !== false && oldLocationsSupportsCages && previousCagemates.length){
                         var separated = [];
                         for (var i=0;i<previousCagemates.length;i++){
                             if (cagemates.indexOf(previousCagemates[i]) == -1){

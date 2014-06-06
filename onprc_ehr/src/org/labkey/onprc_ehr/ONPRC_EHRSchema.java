@@ -32,6 +32,7 @@ public class ONPRC_EHRSchema
     public static final String TABLE_ETL_RUNS = "etl_runs";
     public static final String TABLE_VET_ASSIGNMENT = "vet_assignment";
     public static final String TABLE_CUSTOMERS = "customers";
+    public static final String TABLE_INVESTIGATORS = "investigators";
     public static final String TABLE_HOUSING_TRANFER_REQUESTS = "housing_transfer_requests";
 
     public static ONPRC_EHRSchema getInstance()

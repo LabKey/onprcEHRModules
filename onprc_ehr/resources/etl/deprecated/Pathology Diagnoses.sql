@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 LabKey Corporation
+ * Copyright (c) 2012-2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-select rowid, set_name, value, sort_order
-from ehr_lookups.lookups l
-where l.set_name = 'LocationType' AND date_disabled IS NULL
+Select
+	cast(pa.AnimalID as nvarchar(4000)) as Id,
+	pa.Date as date,
+	pa.objectid as parentid,
+	SequenceNo as sort_order,
+	d.objectid 
+
+From Path_AutopsyDiagnosis d
+join Path_Autopsy pa on (d.AutopsyID = pa.AutopsyId)
+
+WHERE d.ts > ?
+
+UNION ALL
+
+Select
+	cast(pa.AnimalID as nvarchar(4000)) as Id,
+	pa.Date as date,
+	pa.objectid as parentid,
+	SequenceNo,
+	d.objectid 
+
+From Path_biopsyDiagnosis d
+join Path_Biopsy pa on (d.BiopsyID = pa.BiopsyId)
+
+WHERE d.ts > ? or pa.ts > ?

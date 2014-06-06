@@ -14,93 +14,93 @@
  * limitations under the License.
  */
 
-Select
-    cast(AnimalID as nvarchar(4000)) as Id,
-	Date,
-	null as enddate,
-	'Biopsy' as type,
-    cast(BiopsyYear as nvarchar(4000)) + BiopsyFlag + BiopsyCode as caseno,
-    null as caseid,
+-- Select
+--     cast(AnimalID as nvarchar(4000)) as Id,
+-- 	Date,
+-- 	null as enddate,
+-- 	'Biopsy' as type,
+--     cast(BiopsyYear as nvarchar(4000)) + BiopsyFlag + BiopsyCode as caseno,
+--     null as caseid,
+--
+-- 	case
+-- 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+--         'Unassigned'
+-- 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+--         rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+-- 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+--         rt.LastName + ', ' + rt.FirstName
+-- 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+--         rt.LastName + ' (' + rt.Initials + ')'
+--       WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+--         null
+-- 	  else
+-- 	   rt.Initials
+--     END as performedBy,
+--     null as procedureId,
+--
+-- 	CAST(pat.objectid as varchar(38)) as objectid,
+--     null as chargetype,
+--   null as project,
+--   null as remark
+--
+-- From Path_Biopsy Pat
+--      left join Ref_Technicians Rt on (Pat.Pathologist = Rt.ID)
+--      left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
+--      left join Ref_Technicians Rt2 on (Pat.Prosector1 = Rt2.ID)
+--      left join Sys_Parameters s4 on (Rt2.Deptcode = s4.Flag And s4.Field = 'DepartmentCode')
+--      left join  Ref_Technicians Rt3 on (Pat.Prosector2 = Rt3.ID)
+--      left join Sys_Parameters s5 on (Rt3.Deptcode = s5.Flag And s5.Field = 'DepartmentCode')
+--      left join Ref_Technicians Rt4 on (Pat.Prosector3 = Rt4.ID)
+--      left join Sys_Parameters s6 on (Rt4.Deptcode = s6.Flag And s6.Field = 'DepartmentCode')
+--
+-- WHERE Pat.ts > ?
+--
+-- UNION ALL
 
-	case
-	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
-        'Unassigned'
-	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
-        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
-	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
-        rt.LastName + ', ' + rt.FirstName
-	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
-        rt.LastName + ' (' + rt.Initials + ')'
-      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
-        null
-	  else
-	   rt.Initials
-    END as performedBy,
-    null as procedureId,
-
-	CAST(pat.objectid as varchar(38)) as objectid,
-    null as chargetype,
-  null as project,
-  null as remark
-
-From Path_Biopsy Pat
-     left join Ref_Technicians Rt on (Pat.Pathologist = Rt.ID)
-     left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
-     left join Ref_Technicians Rt2 on (Pat.Prosector1 = Rt2.ID)
-     left join Sys_Parameters s4 on (Rt2.Deptcode = s4.Flag And s4.Field = 'DepartmentCode')
-     left join  Ref_Technicians Rt3 on (Pat.Prosector2 = Rt3.ID)
-     left join Sys_Parameters s5 on (Rt3.Deptcode = s5.Flag And s5.Field = 'DepartmentCode')
-     left join Ref_Technicians Rt4 on (Pat.Prosector3 = Rt4.ID)
-     left join Sys_Parameters s6 on (Rt4.Deptcode = s6.Flag And s6.Field = 'DepartmentCode')
-
-WHERE Pat.ts > ?
-
-UNION ALL
-
-Select
-	cast(PTT.AnimalID as nvarchar(4000)) as Id,
-	PTT.Date as Date ,
-	null as enddate,
-	'Necropsy' as type,
-	cast(PTT.PathYear as nvarchar(4000)) + PTT.PathFlag + PTT.PathCode as caseno,
-    null as caseid,
-
-    --the pathologist
-	case
-	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
-        'Unassigned'
-	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
-        rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
-	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
-        rt.LastName + ', ' + rt.FirstName
-	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
-        rt.LastName + ' (' + rt.Initials + ')'
-      WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
-        null
-	  else
-	   rt.Initials
-    END as performedBy,
-    null as procedureId,
-
-	CAST(PTT.objectid as varchar(38)) as objectid,
-    null as chargetype,
-    null as project,
-    null as remark
-
-From Path_Autopsy PTT
-left join Sys_Parameters s1 on (PTT.CauseofDeath = s1.flag And s1.Field = 'Deathcause')
-left join Sys_Parameters s2 on (PTT.Status = s2.flag And s2.field = 'AutopsyStatus')
-left join Ref_Technicians Rt on (PTT.Pathologist = Rt.ID)
-left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
-left join Ref_Technicians Rt2 on (PTT.Prosector1 = Rt2.ID)
-left join Sys_Parameters s4 on (Rt2.Deptcode = s4.Flag And s4.Field = 'DepartmentCode')
-left join Ref_Technicians Rt3 on (PTT.Prosector2 = Rt3.ID)
-left join Sys_Parameters s5 on (Rt3.Deptcode = s5.Flag And s5.Field = 'DepartmentCode')
-left join Ref_Technicians Rt4 on (PTT.Prosector3 = Rt4.ID)
-left join Sys_Parameters s6 on (Rt4.Deptcode = s6.Flag And s6.Field = 'DepartmentCode')
-WHERE ptt.ts > ?
-
-UNION ALL
+-- Select
+-- 	cast(PTT.AnimalID as nvarchar(4000)) as Id,
+-- 	PTT.Date as Date ,
+-- 	null as enddate,
+-- 	'Necropsy' as type,
+-- 	cast(PTT.PathYear as nvarchar(4000)) + PTT.PathFlag + PTT.PathCode as caseno,
+--     null as caseid,
+--
+--     --the pathologist
+-- 	case
+-- 	  WHEN rt.LastName = 'Unassigned' or rt.FirstName = 'Unassigned' THEN
+--         'Unassigned'
+-- 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 AND datalength(rt.Initials) > 0 THEN
+--         rt.LastName + ', ' + rt.FirstName + ' (' + rt.Initials + ')'
+-- 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.FirstName) > 0 THEN
+--         rt.LastName + ', ' + rt.FirstName
+-- 	  WHEN datalength(rt.LastName) > 0 AND datalength(rt.Initials) > 0 THEN
+--         rt.LastName + ' (' + rt.Initials + ')'
+--       WHEN datalength(rt.Initials) = 0 OR rt.initials = ' ' OR rt.lastname = ' none' THEN
+--         null
+-- 	  else
+-- 	   rt.Initials
+--     END as performedBy,
+--     null as procedureId,
+--
+-- 	CAST(PTT.objectid as varchar(38)) as objectid,
+--     null as chargetype,
+--     null as project,
+--     null as remark
+--
+-- From Path_Autopsy PTT
+-- left join Sys_Parameters s1 on (PTT.CauseofDeath = s1.flag And s1.Field = 'Deathcause')
+-- left join Sys_Parameters s2 on (PTT.Status = s2.flag And s2.field = 'AutopsyStatus')
+-- left join Ref_Technicians Rt on (PTT.Pathologist = Rt.ID)
+-- left join Sys_Parameters s3 on (s3.flag = Rt.Deptcode And s3.Field = 'Departmentcode')
+-- left join Ref_Technicians Rt2 on (PTT.Prosector1 = Rt2.ID)
+-- left join Sys_Parameters s4 on (Rt2.Deptcode = s4.Flag And s4.Field = 'DepartmentCode')
+-- left join Ref_Technicians Rt3 on (PTT.Prosector2 = Rt3.ID)
+-- left join Sys_Parameters s5 on (Rt3.Deptcode = s5.Flag And s5.Field = 'DepartmentCode')
+-- left join Ref_Technicians Rt4 on (PTT.Prosector3 = Rt4.ID)
+-- left join Sys_Parameters s6 on (Rt4.Deptcode = s6.Flag And s6.Field = 'DepartmentCode')
+-- WHERE ptt.ts > ?
+--
+-- UNION ALL
 
 --surgeries
 Select

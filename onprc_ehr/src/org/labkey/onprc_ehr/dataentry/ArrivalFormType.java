@@ -36,10 +36,11 @@ public class ArrivalFormType extends UnsaveableTask
     {
         super(ctx, owner, NAME, "Arrival", "Colony Management", Arrays.<FormSection>asList(
                 new LockAnimalsFormSection(),
+                new ArrivalInstructionsFormSection(),
                 new TaskFormSection(),
                 new DocumentArchiveFormSection(),
                 new AnimalDetailsFormSection(),
-                new NewAnimalFormSection("study", "arrival", "Arrivals"),
+                new NewAnimalFormSection("study", "arrival", "Arrivals", false),
                 new WeightFormSection()
         ));
     }

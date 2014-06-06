@@ -40,9 +40,10 @@ public class BirthFormType extends UnsaveableTask
     {
         super(ctx, owner, NAME, "Birth", "Colony Management", Arrays.<FormSection>asList(
                 new LockAnimalsFormSection(),
+                new BirthInstructionsFormSection(),
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
-                new NewAnimalFormSection("study", "birth", "Births")
+                new NewAnimalFormSection("study", "birth", "Births", true)
         ));
     }
 }
