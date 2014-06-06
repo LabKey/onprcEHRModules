@@ -74,7 +74,6 @@ onprc_ehr/resources/etl/study/Delivery.sql -text
 onprc_ehr/resources/etl/study/Demographics.sql -text
 onprc_ehr/resources/etl/study/Departure.sql -text
 onprc_ehr/resources/etl/study/Drug[!!-~]Administration.sql -text
-onprc_ehr/resources/etl/study/Tissue[!!-~]Distributions.sql -text
 onprc_ehr/resources/etl/study/Treatment[!!-~]Orders.sql -text
 onprc_ehr/resources/etl/study/Weight.sql -text
 onprc_ehr/resources/folderTypes/Data[!!-~]Analysis.foldertype.xml -text
