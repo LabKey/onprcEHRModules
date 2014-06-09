@@ -936,7 +936,30 @@ Ext4.onReady(function(){
             templateRows = templateRows.concat([{
                 template: ['Gross Findings', 'Section', 'grossFindings', '', ''],
                 records: [
-                    ['grossFindings', '{"remark":"External:\\nPresented is a    macaque, weighing  kg, in   BCS.\\nThe hair coat is\\n \\nBody Cavities:\\n__________ subcutaneous and visceral fat stores\\n \\nRespiratory System:\\n \\nCardiovascular System:\\n \\nHemopoietic System:\\n__________ amount of thymic tissue\\nSpleen, visceral and peripheral lymph nodes: no gross lesions\\nBone marrow not examined\\n \\nLiver and Pancreas:\\n \\nGastrointestinal Tract:\\nSalivary glands, esophagus: no gross lesions\\nStomach\\nContents:\\nMucosa: no gross lesions\\nSmall intestinal\\nContents:\\nMucosa: no gross lesions\\nLarge intestinal\\nContents:\\nMucosa: no gross lesions\\n \\nGenitourinary System:\\nKidneys, ureters, urinary bladder, reproductive tract: no gross lesions\\n \\nEndocrine System:\\n \\nMusculoskeletal System:\\nStifle, shoulder, coxofemoral joints: no gross lesions\\n \\nCentral Nervous System:\\nBrain: no gross lesions\\nSpinal cord: not examined\\n \\nSUMMARY OF GROSS FINDINGS"}']
+                    ['grossFindings', '{"remark":"External:\\nPresented is a    macaque, weighing  kg, in   BCS.\\nThe hair coat is\\n\\nBody Cavities:\\n__________ subcutaneous and visceral fat stores\\n\\nRespiratory System:\\n\\nCardiovascular System:\\n\\nHemopoietic System:\\n__________ amount of thymic tissue\\nSpleen, visceral and peripheral lymph nodes: no gross lesions\\nBone marrow not examined\\n\\nLiver and Pancreas:\\n\\nGastrointestinal Tract:\\nSalivary glands, esophagus: no gross lesions\\nStomach\\nContents:\\nMucosa: no gross lesions\\nSmall intestinal\\nContents:\\nMucosa: no gross lesions\\nLarge intestinal\\nContents:\\nMucosa: no gross lesions\\n\\nGenitourinary System:\\nKidneys, ureters, urinary bladder, reproductive tract: no gross lesions\\n\\nEndocrine System:\\n\\nMusculoskeletal System:\\nStifle, shoulder, coxofemoral joints: no gross lesions\\n\\nCentral Nervous System:\\nBrain: no gross lesions\\nSpinal cord: not examined\\n\\nSUMMARY OF GROSS FINDINGS\\n\\nMICROBIOLOGY"}']
+                ]
+            }]);
+
+            //gross findings, LMAC
+            templateRows = templateRows.concat([{
+                template: ['Gross Findings - LMAC', 'Section', 'grossFindings', '', ''],
+                records: [
+                    ['grossFindings', '{"remark":"External: \\n\\nBody condition score ; weight kg\\nHair coat\\nEyes, oral cavity: No gross lesions\\n\\nBody Cavities:\\n\\nSubcutaneous and visceral fat stores\\n\\nRespiratory System: \\n\\nCardiovascular System: \\n\\nHemopoietic System: \\nThymic tissue,\\nMesenteric lymph nodes\\nSpleen, other visceral and peripheral lymph nodes: No gross lesions\\nBone marrow not examined\\n\\nLiver, Gallbladder and Pancreas: \\n\\nGastrointestinal Tract:. \\nSubmandibular salivary gland, esophagus no gross lesions\\nEsophagus collected for Tissue Distribution Program, mucosa not examined, externally: No gross lesions\\nStomach\\nContents:\\nMucosa: No gross lesions\\nSmall intestine \\nContents:\\nMucosa: No gross lesions\\nLarge intestine\\nContents:\\nMucosa: No gross lesions\\n\\nGenitourinary System: \\n\\nKidneys, ureters, reproductive tract: No gross lesions\\nUrinary bladder contains ~ ; cystic mucosa: No gross lesions\\n\\nEndocrine System: \\n\\nNo gross lesions\\n\\nMusculoskeletal System: \\n\\nStifle, shoulder, coxofemoral joints: No gross lesions\\n\\nCentral Nervous System: \\n\\nBrain: No gross lesions\\nSpinal cord not examined\\n\\nSUMMARY OF GROSS FINDINGS\\n\\nMICROBIOLOGY"}']
+                ]
+            }]);
+
+            //path notes
+            templateRows = templateRows.concat([{
+                template: ['Gross Findings', 'Section', 'encounter_summaries', '', ''],
+                records: [
+                    ['encounter_summaries', '{"category":"Pathology Notes","remark":"CLINICAL HISTORY: This is a macaque, born at the ONPRC, currently assigned to IACUC “” under Dr. History includes\\n\\nThe animal is presented for necropsy under ketamine sedation, deeply anesthetized with sodium pentobarbital intravenously and exsanguinated via the abdominal aorta. \\n\\nCerebrospinal fluid is collected from the cisterna magna. The sample is clear and colorless.\\n\\nThe cephalic structures are perfused with saline followed by paraformaldehyde via the common trunk, brachiocephalic and right carotid arteries. \\n\\nTissues are collected for the assigned investigator and Tissue Distribution program.\\n\\nCOMMENTS: "}']
+                ]
+            }]);
+
+            templateRows = templateRows.concat([{
+                template: ['Gross Findings - LMAC', 'Section', 'encounter_summaries', '', ''],
+                records: [
+                    ['encounter_summaries', '{"category":"Pathology Notes","remark":"CLINICAL HISTORY: This animal had been identified as an underutilized resource and was submitted for necropsy for tissue distribution assigned to a short term protocol entitled, “.” She was submitted for necropsy for tissue distribution.\\n\\nCampylobacter coli and Shigella flexneri\\n\\npresented for necropsy under ketamine sedation, deeply anesthetized with sodium pentobarbital intravenously and exsanguinated via the abdominal aorta. \\nCerebrospinal fluid is collected from the cisterna magna. The sample is clear and colorless.\\nThe cephalic structures are perfused with saline followed by paraformaldehyde via the common trunk, brachiocephalic and right carotid arteries. \\n\\nTissues are collected for the Tissue Distribution program.\\n\\nCOMMENTS: "}']
                 ]
             }]);
 

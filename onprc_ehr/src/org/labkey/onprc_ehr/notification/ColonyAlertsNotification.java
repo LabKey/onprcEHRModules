@@ -1245,6 +1245,85 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    protected void surgeryCasesRecentlyClosed(final Container c, User u, final StringBuilder msg)
+    {
+        msg.append("<b>The following surgery cases were closed in the previous 24H:</b><br><br>");
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -100);
+
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_GTE);
+        filter.addCondition(FieldKey.fromString("category"), "Surgery");
+        filter.addCondition(FieldKey.fromString("Id/demographics/calculated_status"), "Alive");
+
+        Sort sort = new Sort("Id/curLocation/room");
+        sort.appendSortColumn(FieldKey.fromString("Id/curLocation/cage"), Sort.SortDirection.ASC, false);
+
+        Set<FieldKey> fks = new HashSet<>();
+        fks.add(FieldKey.fromString("Id"));
+        fks.add(FieldKey.fromString("Id/curLocation/room"));
+        fks.add(FieldKey.fromString("Id/curLocation/cage"));
+        fks.add(FieldKey.fromString("cagematesAtOpen/roomAtOpen"));
+        fks.add(FieldKey.fromString("cagematesAtOpen/cageAtOpen"));
+        fks.add(FieldKey.fromString("cagematesAtOpen/cagematesAtOpen"));
+        fks.add(FieldKey.fromString("cagematesAtOpen/cagemateCurrentLocations"));
+        fks.add(FieldKey.fromString("Id/activeAnimalGroups/groups"));
+
+        TableInfo ti = getStudySchema(c, u).getTable("cases");
+        final Map<FieldKey, ColumnInfo> columns = QueryService.get().getColumns(ti, fks);
+
+        TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
+        if (ts.exists())
+        {
+            msg.append("The following surgery cases were closed in the past 24H:<br>");
+            msg.append("<table border=1 style='border-collapse: collapse;'><tr><td>Id</td><td>Current Location</td><td>Location At Case Open</td><td>Cagemates At Open</td><td>Cagemate Current Location(s)</td><td>Active Groups</td></tr>");
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, columns);
+
+                    String currentLocation = rs.getString(FieldKey.fromString("Id/curLocation/room"));
+                    if (rs.getString(FieldKey.fromString("Id/curLocation/cage")) != null)
+                    {
+                        currentLocation += " " + rs.getString(FieldKey.fromString("Id/curLocation/cage"));
+                    }
+
+                    String previousLocation = rs.getString(FieldKey.fromString("cagematesAtOpen/roomAtOpen"));
+                    if (rs.getString(FieldKey.fromString("cagematesAtOpen/cageAtOpen")) != null)
+                    {
+                        previousLocation += " " + rs.getString(FieldKey.fromString("cagematesAtOpen/cageAtOpen"));
+                    }
+
+                    msg.append("<tr><td>").append(rs.getString(FieldKey.fromString("Id"))).append("</td>");
+                    msg.append("<td>").append(prepareStringForCell(currentLocation)).append("</td>");
+                    msg.append("<td>").append(prepareStringForCell(previousLocation)).append("</td>");
+
+                    msg.append("<td>").append(prepareStringForCell(rs.getString(FieldKey.fromString("cagematesAtOpen/cagematesAtOpen")))).append("</td>");
+                    msg.append("<td>").append(prepareStringForCell(rs.getString(FieldKey.fromString("cagematesAtOpen/cagemateCurrentLocations")))).append("</td>");
+                    msg.append("<td>").append(prepareStringForCell(rs.getString(FieldKey.fromString("Id/activeAnimalGroups/groups")))).append("</td>");
+                    msg.append("</tr>");
+                }
+            });
+
+            msg.append("</table><br>");
+        }
+    }
+
+    private String prepareStringForCell(String input)
+    {
+        if (StringUtils.trimToNull(input) == null)
+        {
+            return "";
+        }
+
+        input = input.replaceAll("\n", "<br>");
+
+        return input;
+    }
+
     protected void transfersYesterday(final Container c, User u, final StringBuilder msg)
     {
         msg.append("<b>Transfers yesterday:</b><br><br>");
@@ -1758,7 +1837,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count2 = ts2.getRowCount();
         if (count2 > 0)
         {
-            msg.append("<b>There are " + count + " notes with an action date of today.</b><br>\n");
+            msg.append("<b>There are " + count2 + " notes with an action date of today.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null, filter2) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }

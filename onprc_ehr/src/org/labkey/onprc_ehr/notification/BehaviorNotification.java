@@ -104,6 +104,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         changedPairs(c, u, msg);
         singleHousedAnimals(c, u, msg);
         transfersYesterday(c, u, msg);
+        surgeryCasesRecentlyClosed(c, u, msg);
         pairIdConflicts(c, u , msg);
 
         notesEndingToday(c, u, msg, Arrays.asList("BSU Notes"), null);

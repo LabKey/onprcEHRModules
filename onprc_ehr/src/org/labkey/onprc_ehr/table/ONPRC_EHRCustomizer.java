@@ -1380,7 +1380,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.getColumn("maxAnimals").setHidden(true);
         ti.getColumn("title").setScale(80);
         ti.getColumn("investigatorId").setHidden(false);
-        ti.getColumn("approve").setLabel("Initial Approval Date");
+        ti.getColumn("approve").setLabel("Initial IACUC Approval Date");
+        ti.getColumn("enddate").setLabel("Date Disabled");
+        ti.getColumn("enddate").setDescription("This shows the date this protocol was disabled.  This is most commonly when the IACUC expires; however, it is possible for a protocol to be disabled prior to a full 3-year period for other reasons");
         ColumnInfo externalId = ti.getColumn("external_id");
         externalId.setHidden(false);
         externalId.setLabel("eIACUC #");
@@ -1414,12 +1416,15 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         //if the protocol is already ended, or began more than 3 years ago, assume it is ended
                         " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
                         " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
+                        //when both dates are null, show null
+                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN NULL" +
                         //otherwise, show the next annual renewal date
-                        " ELSE {fn timestampadd(SQL_TSI_DAY, -1, {fn timestampadd(SQL_TSI_YEAR, {fn ceiling((" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + ") / 365.0)}, " + ExprColumn.STR_TABLE_ALIAS + ".approve)})}" +
+                        " ELSE {fn timestampadd(SQL_TSI_DAY, 364, COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)" + ")}" +
                         " END)";
                 SQLFragment sql = new SQLFragment(sqlString);
                 ExprColumn annualReviewDateCol = new ExprColumn(ti, annualReviewDate, sql, JdbcType.DATE, ti.getColumn("approve"));
-                annualReviewDateCol.setLabel("Annual Review Due Date");
+                annualReviewDateCol.setLabel("IACUC Annual Update Due Date");
+                annualReviewDateCol.setDescription("This column calculates the date when the next annual update is due.  This is 364 days after the last annual review, or blank if more than 3 years after the initial IACUC approval");
                 ti.addColumn(annualReviewDateCol);
 
                 String daysUntilAnnual = "daysUntilAnnualReview";
@@ -1427,11 +1432,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         // see above for logic behind this
                         " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
                         " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
+                        //when both date are null, it is due
+                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN 0" +
                         //NOTE: these expire 1 day prior to a full year, so use 364 instead of 365
-                        " ELSE 364 - ((" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + ") % 365)" +
+                        " ELSE 364 - (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)") + ")" +
                         " END)");
                 ExprColumn daysUntilAnnualCol = new ExprColumn(ti, daysUntilAnnual, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
-                daysUntilAnnualCol.setLabel("Days Until Annual Review");
+                daysUntilAnnualCol.setLabel("Days Until IACUC Annual Update");
+                daysUntilAnnualCol.setDescription("This column calculates the days until the next annual update is due.  This is 364 days after the last annual review, or blank if more than 3 years after the initial IACUC approval");
                 daysUntilAnnualCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
                 ti.addColumn(daysUntilAnnualCol);
             }
@@ -1443,7 +1451,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 String sqlString = "(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN {fn timestampadd(SQL_TSI_DAY, -1, {fn timestampadd(SQL_TSI_YEAR, 3, " + ExprColumn.STR_TABLE_ALIAS + ".approve)})} ELSE null END)";
                 SQLFragment sql = new SQLFragment(sqlString);
                 ExprColumn renewalCol = new ExprColumn(ti, renewalDate, sql, JdbcType.DATE, ti.getColumn("approve"));
-                renewalCol.setLabel("3-Yr Renewal Date");
+                renewalCol.setLabel("3-Yr Expiration Date");
                 ti.addColumn(renewalCol);
 
                 String daysUntil = "daysUntilRenewal";
@@ -1452,7 +1460,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         " THEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, sqlString, "{fn curdate()}") + ") - 1" +
                         " ELSE NULL END)");
                 ExprColumn daysUntilCol = new ExprColumn(ti, daysUntil, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
-                daysUntilCol.setLabel("Days Until 3-Yr Renewal");
+                daysUntilCol.setLabel("Days Until 3-Yr Expiration");
                 daysUntilCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
                 ti.addColumn(daysUntilCol);
             }
@@ -1470,9 +1478,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.getColumn("research").setHidden(true);
         ti.getColumn("avail").setHidden(true);
         ti.getColumn("contact_emails").setHidden(true);
+        ti.getColumn("projecttype").setHidden(true);
 
         ti.getColumn("project").setLabel("Project Id");
         ti.getColumn("project").setHidden(true);
+
+        ti.getColumn("startdate").setLabel("Project Start");
+        ti.getColumn("enddate").setLabel("Project End");
 
         ColumnInfo invest = ti.getColumn("investigatorId");
         invest.setHidden(false);

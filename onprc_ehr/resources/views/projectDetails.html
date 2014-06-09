@@ -29,6 +29,17 @@
         var el = Ext4.get(webpart.wrapperDivId);
         Ext4.DomHelper.append(el, domSpec);
 
+        var buttons = null;
+        if (EHR.Security.hasProjectEditorPermission()){
+            buttons = [{
+                text: 'More Actions',
+                menu: [{
+                    text: 'Edit Project Details',
+                    href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'project', project: project}) + '&returnUrl=' + LDK.Utils.getSrcURL()
+                }]
+            }]
+        }
+
         Ext4.create('LDK.panel.DetailsPanel', {
             store: {
                 schemaName: 'ehr',
@@ -38,7 +49,10 @@
                 ]
             },
             title: 'Project Details',
-            renderTo: 'projectDetails_' + webpart.wrapperDivId
+            renderTo: 'projectDetails_' + webpart.wrapperDivId,
+            detailsConfig: {
+                buttons: buttons
+            }
         });
 
 

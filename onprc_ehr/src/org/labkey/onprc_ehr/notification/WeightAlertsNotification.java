@@ -102,15 +102,26 @@ public class WeightAlertsNotification extends AbstractEHRNotification
     private void generateCombinedWeightTable(final Container c, User u, final StringBuilder msg)
     {
         StringBuilder sb = new StringBuilder();
-        Set<String> distinctIds = new HashSet<String>();
 
-        processWeights(c, u, sb, 0, 30, CompareType.LTE, -10, distinctIds);
-        consecutiveWeightDrops(c, u, sb, distinctIds);
+        //first weight drops
+        Set<String> dropDistinctIds = new HashSet<String>();
+        processWeights(c, u, sb, 0, 30, CompareType.LTE, -10, dropDistinctIds);
+        consecutiveWeightDrops(c, u, sb, dropDistinctIds);
 
-        if (distinctIds.size() > 0)
+        if (dropDistinctIds.size() > 0)
         {
-            String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(distinctIds), ";"));
-            sb.insert(0, "<b>WARNING: There are " + distinctIds.size() + " animals that experienced either a large weight loss, or 3 consecutive weight drops.</b>  <a href='" + url + "'>Click here to view this list</a>, or view the data below.<p><hr>");
+            String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(dropDistinctIds), ";"));
+            sb.insert(0, "<b>WARNING: There are " + dropDistinctIds.size() + " animals that experienced either a large weight loss, or 3 consecutive weight drops.</b>  <a href='" + url + "'>Click here to view this list</a>, or view the data below.<p><hr>");
+        }
+
+        //also weight gains
+        Set<String> gainDistinctIds = new HashSet<String>();
+        processWeights(c, u, sb, 0, 30, CompareType.GTE, 10, gainDistinctIds);
+
+        if (gainDistinctIds.size() > 0)
+        {
+            String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(gainDistinctIds), ";"));
+            sb.insert(0, "<b>WARNING: There are " + gainDistinctIds.size() + " animals that experienced large weight gain (>10%).</b>  <a href='" + url + "'>Click here to view this list</a>, or view the data below.<p><hr>");
         }
 
         msg.append(sb);

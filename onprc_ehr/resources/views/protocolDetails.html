@@ -89,6 +89,17 @@ Ext4.onReady(function (){
         }
     });
 
+    var buttons = null;
+    if (EHR.Security.hasProtocolEditorPermission()){
+        buttons = [{
+            text: 'More Actions',
+            menu: [{
+                text: 'Edit Protocol Details',
+                href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()
+            }]
+        }]
+    }
+
     Ext4.create('LDK.panel.DetailsPanel', {
         store: {
             schemaName: 'ehr',
@@ -98,7 +109,10 @@ Ext4.onReady(function (){
             ]
         },
         title: 'Protocol Details:',
-        renderTo: 'protocolDetails_' + webpart.wrapperDivId
+        renderTo: 'protocolDetails_' + webpart.wrapperDivId,
+        detailsConfig: {
+            buttons: buttons
+        }
     });
 
     LDK.Utils.getReadOnlyQWP({

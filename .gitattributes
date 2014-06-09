@@ -94,10 +94,12 @@ onprc_ehr/resources/queries/ehr/project/Alias[!!-~]Info.qview.xml -text
 onprc_ehr/resources/queries/ehr/projectNames.query.xml -text
 onprc_ehr/resources/queries/ehr/projectNames.sql -text
 onprc_ehr/resources/queries/ehr/protocol/.qview.xml -text
+onprc_ehr/resources/queries/ehr/protocol/With[!!-~]Expiration[!!-~]Dates.qview.xml -text
 onprc_ehr/resources/queries/ehr/protocolGroupsOverlapping.query.xml -text
 onprc_ehr/resources/queries/ehr/protocolGroupsOverlapping.sql -text
 onprc_ehr/resources/queries/ehr/protocolTotalProjects.query.xml -text
 onprc_ehr/resources/queries/ehr/protocolTotalProjects.sql -text
+onprc_ehr/resources/queries/ehr/protocol_counts.js -text
 onprc_ehr/resources/queries/ehr/snomedBySet.query.xml -text
 onprc_ehr/resources/queries/ehr/snomedBySet.sql -text
 onprc_ehr/resources/queries/ehr/snomedBySet/.qview.xml -text

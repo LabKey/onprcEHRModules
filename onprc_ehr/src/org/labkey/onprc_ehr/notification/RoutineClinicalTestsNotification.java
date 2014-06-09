@@ -35,6 +35,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -155,7 +157,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
     {
         final Map<String, Integer> areaMap = new TreeMap<>();
         final FieldKey areaKey = FieldKey.fromString("Id/curLocation/area");
-        final Map<FieldKey, ColumnInfo> fieldKeyMap = new HashMap<>();
+        final Map<FieldKey, ColumnInfo> fieldKeyMap = new LinkedHashMap<>();
         for (ColumnInfo col : cols)
         {
             fieldKeyMap.put(col.getFieldKey(), col);
@@ -186,7 +188,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
 
     protected Set<ColumnInfo> appendLocationCols(TableInfo ti)
     {
-        Set<ColumnInfo> cols = new HashSet<>();
+        Set<ColumnInfo> cols = new LinkedHashSet<>();
         cols.addAll(ti.getColumns());
 
         Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("Id/curLocation/area"), FieldKey.fromString("Id/curLocation/room"), FieldKey.fromString("Id/curLocation/cage")));

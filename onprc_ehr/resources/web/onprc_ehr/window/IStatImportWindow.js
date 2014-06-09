@@ -86,7 +86,10 @@ Ext4.define('ONPRC_EHR.window.IStatImportWindow', {
                 }
                 resultRow.testid = parsed[j][0];
                 var result = parsed[j][i];
-                result = Ext4.String.trim(result);
+                if (!Ext4.isEmpty(result)){
+                    result = Ext4.String.trim(result);
+                }
+
                 if (Ext4.isEmpty(result) || '<>' == result || '***' == result){
                     //skip
                 }

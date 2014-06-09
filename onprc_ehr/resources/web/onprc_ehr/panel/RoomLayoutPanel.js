@@ -755,6 +755,8 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
 
     getItems: function(){
         var items = [];
+        var cageType = this.roomPanel.cageTypeMap[this.cageRec.get('cage_type')] || {};
+        var dividerRec = this.roomPanel.dividerMap[this.cageRec.get('divider')] || {};
 
         items.push({
             xtype: 'displayfield',
@@ -777,25 +779,25 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Sq Ft.',
-            value: this.roomPanel.cageTypeMap[this.cageRec.get('cage_type')].sqft
+            value: cageType.sqft
         });
 
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Height',
-            value: this.roomPanel.cageTypeMap[this.cageRec.get('cage_type')].height
+            value: cageType.height
         });
 
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Cage Slots',
-            value: this.roomPanel.cageTypeMap[this.cageRec.get('cage_type')].cageslots
+            value: cageType.cageslots
         });
 
         items.push({
             xtype: 'displayfield',
             fieldLabel: 'Divider',
-            value: this.roomPanel.dividerMap[this.cageRec.get('divider')].divider
+            value: dividerRec.divider
         });
 
         items.push({
