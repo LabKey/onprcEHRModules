@@ -425,6 +425,8 @@ onprc_ehr/resources/queries/study/demographicsLabwork.sql -text
 onprc_ehr/resources/queries/study/demographicsLastMense.query.xml -text
 onprc_ehr/resources/queries/study/demographicsLastMense.sql -text
 onprc_ehr/resources/queries/study/demographicsLastMense/.qview.xml -text
+onprc_ehr/resources/queries/study/demographicsMostRecentAlopecia.query.xml -text
+onprc_ehr/resources/queries/study/demographicsMostRecentAlopecia.sql -text
 onprc_ehr/resources/queries/study/demographicsMostRecentBCS.query.xml -text
 onprc_ehr/resources/queries/study/demographicsMostRecentBCS.sql -text
 onprc_ehr/resources/queries/study/demographicsMostRecentTBDate.query.xml -text
@@ -829,6 +831,7 @@ onprc_ehr/resources/web/onprc_ehr/templates/Blood-Sedation[!!-~]Form.xlsx -text
 onprc_ehr/resources/web/onprc_ehr/templates/DCM[!!-~]Mass[!!-~]Processing[!!-~]Form.xlsx -text
 onprc_ehr/resources/web/onprc_ehr/window/AnesthesiaRowWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/AssignmentDefaultsWindow.js -text
+onprc_ehr/resources/web/onprc_ehr/window/AssignmentReleaseConditionWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/BehaviorCasesWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/BloodBulkAddWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/BulkBloodDrawWindow.js -text
@@ -853,6 +856,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRTestHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/ONPRC_EHRUserSchema.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/AnimalGroupCompletedButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/AssignmentCompletedButton.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/buttons/AssignmentReleaseConditionButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/BulkEditRequestsButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/ChangeProjectedReleaseDateButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/DiscardTaskButton.java -text

@@ -729,6 +729,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ds.addColumn(col17);
         }
 
+        if (ds.getColumn("mostRecentAlopeciaScore") == null)
+        {
+            ColumnInfo col17 = getWrappedIdCol(us, ds, "mostRecentAlopeciaScore", "demographicsMostRecentAlopecia");
+            col17.setLabel("Alopecia Score");
+            col17.setDescription("Calculates the most recent alopecia score for each animal");
+            ds.addColumn(col17);
+        }
+
         if (ds.getColumn("clinicalActions") == null)
         {
             ColumnInfo col17 = new AliasedColumn("clinicalActions", ds.getColumn("Id"));

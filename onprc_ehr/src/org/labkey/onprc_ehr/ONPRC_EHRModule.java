@@ -47,6 +47,7 @@ import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.AnimalGroupCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentCompletedButton;
+import org.labkey.onprc_ehr.buttons.AssignmentReleaseConditionButton;
 import org.labkey.onprc_ehr.buttons.BulkEditRequestsButton;
 import org.labkey.onprc_ehr.buttons.ChangeProjectedReleaseDateButton;
 import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
@@ -310,6 +311,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "tasks");
         EHRService.get().registerMoreActionsButton(new ProtocolEditButton(this, "ehr", "protocol_counts"), "ehr", "animalUsage");
         EHRService.get().registerMoreActionsButton(new EHRShowEditUIButton(this, "onprc_ehr", "investigators", EHRProjectEditPermission.class), "onprc_ehr", "investigators");
+        EHRService.get().registerMoreActionsButton(new EHRShowEditUIButton(this, "onprc_ehr", "investigators", "Edit Investigators", EHRProjectEditPermission.class), "ehr", "project");
+        EHRService.get().registerMoreActionsButton(new EHRShowEditUIButton(this, "onprc_ehr", "investigators", "Edit Investigators", EHRProjectEditPermission.class), "ehr", "protocol");
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "onprc_ehr", "vet_assignment", EHRVeternarianPermission.class), "onprc_ehr", "vet_assignment");
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "onprc_ehr", "vet_assignment", EHRVeternarianPermission.class), "onprc_ehr", "vet_assignment_summary");
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "onprc_ehr", "customers", ONPRC_EHRCustomerEditPermission.class), "onprc_ehr", "customers");
@@ -317,6 +320,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new MarkCompletedButton(this, "study", "notes", "End Notes"), "study", "notes");
         EHRService.get().registerMoreActionsButton(new AnimalGroupCompletedButton(this), "study", "animal_group_members");
         EHRService.get().registerMoreActionsButton(new AssignmentCompletedButton(this), "study", "assignment");
+        EHRService.get().registerMoreActionsButton(new AssignmentReleaseConditionButton(this), "study", "assignment");
 
         EHRShowEditUIButton editBtn = new EHRShowEditUIButton(this, "ehr_lookups", "flag_values", "Manage List of Flags", EHRDataAdminPermission.class);
         editBtn.setCopyFilters(false);

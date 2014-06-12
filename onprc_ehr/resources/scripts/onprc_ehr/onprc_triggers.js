@@ -95,7 +95,7 @@ exports.init = function(EHR){
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'ehr', 'protocol', function(helper, scriptErrors, row){
         if (!row.protocol){
-            row.protocol = triggerHelper.getNextProtocolId();
+            row.protocol = triggerHelper.getNextProtocolId().toString();
             console.log('setting protocol: ' + row.protocol);
         }
     });

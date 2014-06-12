@@ -99,7 +99,7 @@ public class TMBNotification extends ColonyAlertsNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>Alert: There are " + count + " animals known to be pregnant.</b><br>\n");
+            msg.append("<b>Alert: There are " + count + " animals known to be pregnant, based on pregnancy confirmations (ultrasound/hormone tests) only.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnantAnimals", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
