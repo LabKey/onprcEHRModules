@@ -82,7 +82,6 @@ public class QuantStudioImportMethod extends DefaultSnpAssayImportMethod
             try (StringWriter sw = new StringWriter(); CSVWriter out = new CSVWriter(sw, '\t'))
             {
                 int idx = 0;
-                boolean inData = false;
 
                 List<String> toAdd = new ArrayList<>();
                 toAdd.add("Subject Id");
@@ -126,10 +125,13 @@ public class QuantStudioImportMethod extends DefaultSnpAssayImportMethod
                         //this indicates we reached the end of the true results and hit the summary, which we ignore
                         break;
                     }
+                    else if ("Sample ID".equals(cells.get(0)))
+                    {
+                        //this is the header line
+                        continue;
+                    }
                     else
                     {
-                        inData = true;
-
                         if (cells.size() < 4)
                         {
                             errors.addError("Too few elements in line " + idx + ".  Expected 4, was: " + cells.size());
@@ -140,6 +142,12 @@ public class QuantStudioImportMethod extends DefaultSnpAssayImportMethod
                         if (StringUtils.isEmpty(subjectId))
                         {
                             errors.addError("Line " + idx + ": Missing subject Id");
+                            continue;
+                        }
+
+                        //no template controls
+                        if ("NTC1".equals(subjectId) || "NTC2".equals(subjectId))
+                        {
                             continue;
                         }
 
@@ -158,7 +166,7 @@ public class QuantStudioImportMethod extends DefaultSnpAssayImportMethod
                         }
 
                         String status_flag = null;
-                        if ("NOAMP".equalsIgnoreCase(allele))
+                        if ("NOAMP".equalsIgnoreCase(allele) || "UND".equalsIgnoreCase(allele) || "INV".equalsIgnoreCase(allele))
                         {
                             status_flag = "No Data";
                         }
