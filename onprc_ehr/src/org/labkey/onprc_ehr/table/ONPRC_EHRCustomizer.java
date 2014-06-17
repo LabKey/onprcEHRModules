@@ -904,7 +904,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         }
 
         String cagePosition = "cagePosition";
-        if (ti.getColumn(cagePosition) == null)
+        if (ti.getColumn(cagePosition) == null && ti.getColumn("cage") != null)
         {
             UserSchema us = getUserSchema(ti, "ehr_lookups");
             if (us != null)

@@ -23,7 +23,10 @@ SELECT
   CASE
     WHEN (t.cycleStart = t.date) THEN 'Y'
     ELSE null
-  END as isDay1
+  END as isDay1,
+  t.remark,
+  t.performedby,
+  t.taskid
 
 FROM (
 
@@ -31,7 +34,10 @@ SELECT
   o.Id,
   CAST(o.dateOnly AS TIMESTAMP) as date,
   o.observation,
-  (SELECT max(md.date) as expr FROM study.menseDay1 md WHERE md.Id = o.Id AND md.date <= o.dateOnly) as cycleStart
+  (SELECT max(md.date) as expr FROM study.menseDay1 md WHERE md.Id = o.Id AND md.date <= o.dateOnly) as cycleStart,
+  o.remark,
+  o.performedby,
+  o.taskid
 
 FROM study.clinical_observations o
 

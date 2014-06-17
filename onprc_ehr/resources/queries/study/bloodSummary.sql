@@ -28,8 +28,8 @@ FROM (
 
 SELECT
   t0.*,
-  --TODO: date only
-  (select avg(w2.weight) as lastWeight FROM study.weight w2 WHERE w2.id = t0.id AND w2.date = t0.lastWeightDate) as lastWeight
+  --NOTE: this uses date part only
+  (select avg(w2.weight) as lastWeight FROM study.weight w2 WHERE w2.id = t0.id AND w2.dateOnly = t0.lastWeightDate) as lastWeight
 FROM (
 
 SELECT
@@ -47,10 +47,10 @@ JOIN study."Blood Draws" b ON (d.id = b.id)
 JOIN (
   SELECT
     b.lsid,
-    --TODO: date only
-    max(w.date) as lastWeightDate
+    --NOTE: this uses date part only
+    max(w.dateOnly) as lastWeightDate
   FROM study.blood b
-  JOIN study.weight w ON (w.id = b.id AND w.date <= b.date)
+  JOIN study.weight w ON (w.id = b.id AND w.dateOnly <= b.dateOnly)
   GROUP BY b.lsid
 ) b2 on (b2.lsid = b.lsid)
 JOIN (

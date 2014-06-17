@@ -396,6 +396,27 @@ EHR.reports.potentialParents = function(panel, tab){
     })
 };
 
+EHR.reports.menseCycleLength = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    tab.add({
+        html: 'This report estimates cycle start dates for animals, along with the cycle length.  Please note, it infers Day 1 from the data and may not be accurate in all cases, such as animals with irregular cycle or near pregnancies.  Any mense observation at least 14 days after the previous mense observation is assumed to be the cycle start.  This report is only as good as the mens data collected in the system, which will be more complete for indoor versus outdoor animals.  It may be worth comparing these results with the Repro Summary tab, which contains additional information such as pregnancies.',
+        border: false,
+        style: 'padding-bottom: 20px;'
+    },{
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: panel.getQWPConfig({
+            schemaName: 'study',
+            queryName: 'menseCycleLength',
+            title: 'Estimated Cycle Starts' + title,
+            filters: filterArray.nonRemovable,
+            removeableFilters: filterArray.removable
+        })
+    });
+};
+
 EHR.reports.reproSummary = function(panel, tab){
     if (tab.filters.subjects){
         renderReproReport(tab.filters.subjects, tab);

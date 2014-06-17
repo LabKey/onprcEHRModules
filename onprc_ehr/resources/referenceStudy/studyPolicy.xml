@@ -13,7 +13,7 @@
         <ns:groupPermission groupName="Behavior Entry" securityType="PER_DATASET"/>
         <ns:groupPermission groupName="Bethea Lab" securityType="NONE"/>
         <ns:groupPermission groupName="Bioinformatics Core" securityType="NONE"/>
-        <ns:groupPermission groupName="Blood Requestors" securityType="PER_DATASET"/>
+        <ns:groupPermission groupName="Birth Entry" securityType="PER_DATASET"/>
         <ns:groupPermission groupName="Carbone Lab" securityType="NONE"/>
         <ns:groupPermission groupName="Chavez Lab" securityType="NONE"/>
         <ns:groupPermission groupName="Clinical Entry" securityType="PER_DATASET"/>
@@ -24,12 +24,13 @@
         <ns:groupPermission groupName="DCM BSU" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Cage Crew" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Clinical Technicians" securityType="NONE"/>
-        <ns:groupPermission groupName="DCM ClnPath" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM Clinpath" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Colony Management" securityType="NONE"/>
-        <ns:groupPermission groupName="DCM Genetics" securityType="PER_DATASET"/>
+        <ns:groupPermission groupName="DCM Genetics" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Lab Techs" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Lead Techs" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Management" securityType="NONE"/>
+        <ns:groupPermission groupName="DCM NHPR" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Operations" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Pathology" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Research Support" securityType="NONE"/>
@@ -38,9 +39,11 @@
         <ns:groupPermission groupName="DCM SSU" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Supervisors" securityType="NONE"/>
         <ns:groupPermission groupName="DCM Veterinarians" securityType="NONE"/>
+        <ns:groupPermission groupName="Death Entry" securityType="PER_DATASET"/>
         <ns:groupPermission groupName="DNA Bank" securityType="NONE"/>
         <ns:groupPermission groupName="EHR Data Entry" securityType="NONE"/>
         <ns:groupPermission groupName="EHR Readers" securityType="READ_ALL"/>
+        <ns:groupPermission groupName="EHR Requestors" securityType="PER_DATASET"/>
         <ns:groupPermission groupName="EHRS" securityType="NONE"/>
         <ns:groupPermission groupName="ELT" securityType="NONE"/>
         <ns:groupPermission groupName="Endocrine Core" securityType="NONE"/>
@@ -49,6 +52,7 @@
         <ns:groupPermission groupName="Finance" securityType="NONE"/>
         <ns:groupPermission groupName="Finance Admins" securityType="NONE"/>
         <ns:groupPermission groupName="Finance Issue Tracker" securityType="NONE"/>
+        <ns:groupPermission groupName="Flag Data Entry" securityType="PER_DATASET"/>
         <ns:groupPermission groupName="Frueh Lab" securityType="NONE"/>
         <ns:groupPermission groupName="Grant Lab" securityType="NONE"/>
         <ns:groupPermission groupName="Grigsby Lab" securityType="NONE"/>
@@ -78,6 +82,7 @@
         <ns:groupPermission groupName="ONPRC Users" securityType="READ_ALL"/>
         <ns:groupPermission groupName="ONPRC Visitors" securityType="NONE"/>
         <ns:groupPermission groupName="Other LDAP Synced Authorized Users" securityType="NONE"/>
+        <ns:groupPermission groupName="Parentage Entry" securityType="PER_DATASET"/>
         <ns:groupPermission groupName="Pathology Entry" securityType="PER_DATASET"/>
         <ns:groupPermission groupName="PI Billing" securityType="NONE"/>
         <ns:groupPermission groupName="Picker Lab" securityType="NONE"/>
@@ -112,15 +117,18 @@
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="antibioticSensitivity" groupName="Service Request Managers" role="NONE"/>
@@ -131,15 +139,18 @@
         <ns:datasetPermission datasetName="anesthesia" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="anesthesia" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="anesthesia" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="anesthesia" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="anesthesia" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="anesthesia" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="anesthesia" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="anesthesia" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="anesthesia" groupName="Service Request Managers" role="NONE"/>
@@ -150,15 +161,18 @@
         <ns:datasetPermission datasetName="animal_group_members" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="animal_group_members" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="animal_group_members" groupName="Birth Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="animal_group_members" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="animal_group_members" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="animal_group_members" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="animal_group_members" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="animal_group_members" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="animal_group_members" groupName="Service Request Managers" role="NONE"/>
@@ -169,15 +183,18 @@
         <ns:datasetPermission datasetName="grossFindings" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="grossFindings" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="grossFindings" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="grossFindings" groupName="Service Request Managers" role="NONE"/>
@@ -188,15 +205,18 @@
         <ns:datasetPermission datasetName="microbiology" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="microbiology" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="microbiology" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="microbiology" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="microbiology" groupName="Service Request Managers" role="NONE"/>
@@ -207,15 +227,18 @@
         <ns:datasetPermission datasetName="flags" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="flags" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="Birth Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="flags" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="flags" groupName="DCM Genetics" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
+        <ns:datasetPermission datasetName="flags" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="Flag Data Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="flags" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Service Request Managers" role="NONE"/>
@@ -226,15 +249,18 @@
         <ns:datasetPermission datasetName="delivery" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="delivery" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="delivery" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="delivery" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="delivery" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="delivery" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="delivery" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="delivery" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="delivery" groupName="Service Request Managers" role="NONE"/>
@@ -245,15 +271,18 @@
         <ns:datasetPermission datasetName="serology" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="serology" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="serology" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="serology" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="serology" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="serology" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="serology" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="serology" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="serology" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="serology" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="serology" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="serology" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="serology" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="serology" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="serology" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="serology" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="serology" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="serology" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="serology" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="serology" groupName="Service Request Managers" role="NONE"/>
@@ -264,15 +293,18 @@
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pregnancyConfirmation" groupName="Service Request Managers" role="NONE"/>
@@ -283,15 +315,18 @@
         <ns:datasetPermission datasetName="parentage" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="parentage" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="parentage" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="parentage" groupName="DCM Genetics" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
+        <ns:datasetPermission datasetName="parentage" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="parentage" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="parentage" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="parentage" groupName="Parentage Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="parentage" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parentage" groupName="Service Request Managers" role="NONE"/>
@@ -302,15 +337,18 @@
         <ns:datasetPermission datasetName="miscTests" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="miscTests" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="miscTests" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="miscTests" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="miscTests" groupName="Service Request Managers" role="NONE"/>
@@ -321,15 +359,18 @@
         <ns:datasetPermission datasetName="measurements" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="measurements" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="measurements" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="measurements" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="measurements" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="measurements" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="measurements" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="measurements" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="measurements" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="measurements" groupName="Service Request Managers" role="NONE"/>
@@ -340,15 +381,18 @@
         <ns:datasetPermission datasetName="cases" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="cases" groupName="Behavior Admins" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="cases" groupName="Behavior Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
-        <ns:datasetPermission datasetName="cases" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="cases" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="cases" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="cases" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="cases" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="cases" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="cases" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="cases" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="cases" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="cases" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="cases" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="cases" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="cases" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="cases" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="cases" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="cases" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="cases" groupName="Service Request Managers" role="NONE"/>
@@ -359,15 +403,18 @@
         <ns:datasetPermission datasetName="diet" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="diet" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="diet" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="diet" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="diet" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="diet" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="diet" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="diet" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="diet" groupName="Service Request Managers" role="NONE"/>
@@ -378,15 +425,18 @@
         <ns:datasetPermission datasetName="matings" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="matings" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="matings" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="matings" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="matings" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="matings" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="matings" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="matings" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="matings" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="matings" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="matings" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="matings" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="matings" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="matings" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="matings" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="matings" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="matings" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="matings" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="matings" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="matings" groupName="Service Request Managers" role="NONE"/>
@@ -397,15 +447,18 @@
         <ns:datasetPermission datasetName="enrichment" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Behavior Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Behavior Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
-        <ns:datasetPermission datasetName="enrichment" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="enrichment" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="enrichment" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="enrichment" groupName="Service Request Managers" role="NONE"/>
@@ -416,15 +469,18 @@
         <ns:datasetPermission datasetName="birth" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="birth" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="birth" groupName="Birth Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="birth" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="birth" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="birth" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="birth" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="birth" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="birth" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="birth" groupName="Service Request Managers" role="NONE"/>
@@ -435,15 +491,18 @@
         <ns:datasetPermission datasetName="blood" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="blood" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="blood" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="blood" groupName="Blood Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
+        <ns:datasetPermission datasetName="blood" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="blood" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="blood" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="blood" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="blood" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="blood" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="blood" groupName="EHR Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
+        <ns:datasetPermission datasetName="blood" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="blood" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="blood" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="blood" groupName="Labwork Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
         <ns:datasetPermission datasetName="blood" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="blood" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="blood" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="blood" groupName="Research Clinical Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="blood" groupName="Service Request Managers" role="org.labkey.ehr.security.EHRRequestAdminRole"/>
@@ -454,15 +513,18 @@
         <ns:datasetPermission datasetName="encounters" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="encounters" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="encounters" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="encounters" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="encounters" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="encounters" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="encounters" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="encounters" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="encounters" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="encounters" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="encounters" groupName="EHR Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
+        <ns:datasetPermission datasetName="encounters" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="encounters" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="encounters" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="encounters" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="encounters" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="encounters" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="encounters" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="encounters" groupName="Research Clinical Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="encounters" groupName="Service Request Managers" role="NONE"/>
@@ -473,15 +535,18 @@
         <ns:datasetPermission datasetName="clinical_observations" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Behavior Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Behavior Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
-        <ns:datasetPermission datasetName="clinical_observations" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="clinical_observations" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="clinical_observations" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Research Clinical Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="clinical_observations" groupName="Service Request Managers" role="NONE"/>
@@ -492,15 +557,18 @@
         <ns:datasetPermission datasetName="clinremarks" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="clinremarks" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="clinremarks" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="clinremarks" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinremarks" groupName="Service Request Managers" role="NONE"/>
@@ -511,15 +579,18 @@
         <ns:datasetPermission datasetName="drug" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="drug" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="drug" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="drug" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="drug" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="drug" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="drug" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="drug" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="drug" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="drug" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="drug" groupName="EHR Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
+        <ns:datasetPermission datasetName="drug" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="drug" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="drug" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="drug" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="drug" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="drug" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="drug" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="drug" groupName="Research Clinical Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="drug" groupName="Service Request Managers" role="org.labkey.ehr.security.EHRRequestAdminRole"/>
@@ -530,15 +601,18 @@
         <ns:datasetPermission datasetName="obs" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="obs" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="obs" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="obs" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="obs" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="obs" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="obs" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="obs" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="obs" groupName="Service Request Managers" role="NONE"/>
@@ -549,15 +623,18 @@
         <ns:datasetPermission datasetName="problem" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="problem" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="problem" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="problem" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="problem" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="problem" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="problem" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="problem" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="problem" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="problem" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="problem" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="problem" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="problem" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="problem" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="problem" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="problem" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="problem" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="problem" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="problem" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="problem" groupName="Service Request Managers" role="NONE"/>
@@ -568,15 +645,18 @@
         <ns:datasetPermission datasetName="tb" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tb" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="tb" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="tb" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="tb" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tb" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="tb" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="tb" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="tb" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="tb" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="tb" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="tb" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tb" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="tb" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tb" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="tb" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="tb" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tb" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tb" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tb" groupName="Service Request Managers" role="NONE"/>
@@ -587,15 +667,18 @@
         <ns:datasetPermission datasetName="treatment_order" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="treatment_order" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="treatment_order" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="treatment_order" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Research Clinical Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="treatment_order" groupName="Service Request Managers" role="NONE"/>
@@ -606,15 +689,18 @@
         <ns:datasetPermission datasetName="weight" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="weight" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="weight" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="weight" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="weight" groupName="Birth Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="weight" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="weight" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="weight" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="weight" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="weight" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="weight" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="weight" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="weight" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="weight" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="weight" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="weight" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="weight" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="weight" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="weight" groupName="Research Clinical Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="weight" groupName="Service Request Managers" role="NONE"/>
@@ -625,15 +711,18 @@
         <ns:datasetPermission datasetName="chemistryResults" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="chemistryResults" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="chemistryResults" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="chemistryResults" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="chemistryResults" groupName="Service Request Managers" role="NONE"/>
@@ -644,15 +733,18 @@
         <ns:datasetPermission datasetName="iStat" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="iStat" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="iStat" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="iStat" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="iStat" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="iStat" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="iStat" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="iStat" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="iStat" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="iStat" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="iStat" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="iStat" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="iStat" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="iStat" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="iStat" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="iStat" groupName="Service Request Managers" role="NONE"/>
@@ -663,15 +755,18 @@
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="clinpathRuns" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Clinical Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Clinical Entry Updaters" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="clinpathRuns" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="EHR Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Labwork Requestors" role="org.labkey.ehr.security.EHRRequestorRole"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="clinpathRuns" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="clinpathRuns" groupName="Service Request Managers" role="NONE"/>
@@ -682,15 +777,18 @@
         <ns:datasetPermission datasetName="hematologyResults" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="hematologyResults" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="hematologyResults" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="hematologyResults" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="hematologyResults" groupName="Service Request Managers" role="NONE"/>
@@ -701,15 +799,18 @@
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="parasitologyResults" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="parasitologyResults" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="parasitologyResults" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="parasitologyResults" groupName="Service Request Managers" role="NONE"/>
@@ -720,15 +821,18 @@
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="urinalysisResults" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="urinalysisResults" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="urinalysisResults" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="urinalysisResults" groupName="Service Request Managers" role="NONE"/>
@@ -739,15 +843,18 @@
         <ns:datasetPermission datasetName="arrival" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="arrival" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="arrival" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="arrival" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="arrival" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="arrival" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="arrival" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="arrival" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="arrival" groupName="Service Request Managers" role="NONE"/>
@@ -758,15 +865,18 @@
         <ns:datasetPermission datasetName="assignment" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="assignment" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="assignment" groupName="Birth Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="assignment" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="assignment" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="assignment" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="assignment" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="assignment" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="assignment" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Service Request Managers" role="NONE"/>
@@ -777,15 +887,18 @@
         <ns:datasetPermission datasetName="deaths" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="deaths" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="deaths" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="deaths" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="deaths" groupName="Death Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
+        <ns:datasetPermission datasetName="deaths" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="deaths" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="deaths" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="deaths" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="deaths" groupName="Service Request Managers" role="NONE"/>
@@ -796,15 +909,18 @@
         <ns:datasetPermission datasetName="demographics" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="demographics" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="demographics" groupName="Birth Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="demographics" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="demographics" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="demographics" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="demographics" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="demographics" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="demographics" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Service Request Managers" role="NONE"/>
@@ -815,15 +931,18 @@
         <ns:datasetPermission datasetName="departure" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="departure" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="departure" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="departure" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="departure" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="departure" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="departure" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="departure" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="departure" groupName="Service Request Managers" role="NONE"/>
@@ -834,15 +953,18 @@
         <ns:datasetPermission datasetName="housing" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="housing" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="housing" groupName="Birth Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="housing" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="housing" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="housing" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="housing" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="housing" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="housing" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="housing" groupName="Service Request Managers" role="NONE"/>
@@ -853,15 +975,18 @@
         <ns:datasetPermission datasetName="inbreeding" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="inbreeding" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="inbreeding" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="inbreeding" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="inbreeding" groupName="Service Request Managers" role="NONE"/>
@@ -872,15 +997,18 @@
         <ns:datasetPermission datasetName="notes" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="notes" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="notes" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="notes" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="notes" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="notes" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="notes" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Notes Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
+        <ns:datasetPermission datasetName="notes" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="notes" groupName="Service Request Managers" role="NONE"/>
@@ -891,15 +1019,18 @@
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pathologyDiagnoses" groupName="Service Request Managers" role="NONE"/>
@@ -910,15 +1041,18 @@
         <ns:datasetPermission datasetName="histology" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="histology" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="histology" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="histology" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="histology" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="histology" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="histology" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="histology" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="histology" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="histology" groupName="Service Request Managers" role="NONE"/>
@@ -929,15 +1063,18 @@
         <ns:datasetPermission datasetName="tissue_samples" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="tissue_samples" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="tissue_samples" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="tissue_samples" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissue_samples" groupName="Service Request Managers" role="NONE"/>
@@ -948,15 +1085,18 @@
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="tissueDistributions" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="tissueDistributions" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="tissueDistributions" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Pathology Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="tissueDistributions" groupName="Service Request Managers" role="NONE"/>
@@ -967,15 +1107,18 @@
         <ns:datasetPermission datasetName="pairings" groupName="Basic Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Behavior Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="pairings" groupName="Behavior Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
-        <ns:datasetPermission datasetName="pairings" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="pairings" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="pairings" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="pairings" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="pairings" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="pairings" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Labwork Admins" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Labwork Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="pairings" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="pairings" groupName="Service Request Managers" role="NONE"/>
@@ -986,15 +1129,18 @@
         <ns:datasetPermission datasetName="immunologyResults" groupName="Basic Labwork Entry" role="org.labkey.ehr.security.EHRBasicSubmitterRole"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Behavior Admins" role="NONE"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Behavior Entry" role="NONE"/>
-        <ns:datasetPermission datasetName="immunologyResults" groupName="Blood Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="Birth Entry" role="NONE"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="immunologyResults" groupName="DCM Genetics" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="EHR Requestors" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Labwork Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Labwork Entry" role="org.labkey.ehr.security.EHRFullSubmitterRole"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Labwork Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Notes Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="immunologyResults" groupName="Parentage Entry" role="NONE"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Pathology Entry" role="NONE"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Research Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="immunologyResults" groupName="Service Request Managers" role="NONE"/>

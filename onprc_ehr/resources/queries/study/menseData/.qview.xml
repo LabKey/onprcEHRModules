@@ -1,5 +1,6 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <sorts>
-        <sort column="common"/>
+        <sort column="Id"/>
+        <sort column="date" descending="true"/>
     </sorts>
 </customView>

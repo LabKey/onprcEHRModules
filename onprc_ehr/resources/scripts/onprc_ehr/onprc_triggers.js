@@ -26,6 +26,13 @@ exports.init = function(EHR){
         });
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Birth', function(event, helper){
+        //NOTE: births are sometimes not entered until processing, meaning they could be significantly in the past
+        helper.setScriptOptions({
+            allowDatesInDistantPast: true
+        });
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Clinpath Runs', function(event, helper){
         helper.setScriptOptions({
             allowDeadIds: false,

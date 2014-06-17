@@ -5129,7 +5129,8 @@ Ext4.onReady(function(){
                 ['Extended temporary separation'],
                 ['Permanent separation'],
                 ['Temporary separation'],
-                ['Pair Monitor']
+                ['Pair Monitor'],
+                ['General Comment']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -8137,6 +8138,7 @@ Ext4.onReady(function(){
                 ['clinremarks' ,'Clinical' ,'query' ,'Clinical Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the clinical remarks entered about each animal'],
                 ['behaviorRemarks' ,'Behavior' ,'query' ,'Behavior Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', 'Behavior Remarks', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the behavior remarks entered about each animal'],
                 ['pairings' ,'Behavior' ,'query' ,'Pairing Observations' ,'true' ,'' ,'study' ,'pairingSummary', '', '', 'date', 'false', 'false', '', '', 'This report contains records about pairings made using each animal'],
+                ['pairingHousingSummary' ,'Behavior' ,'query' ,'Pairing With Housing' ,'true' ,'' ,'study' ,'pairingHousingSummary', '', '', 'date', 'false', 'false', '', '', 'This report contains records about pairings made using each animal'],
                 ['roommateHistoryBSU' ,'Behavior' ,'query' ,'Cagemate History' ,'true' ,'' ,'study' ,'housingRoommates', 'Caged Housing Only', '', 'StartDate', 'false', 'false', '', 'qcstate/publicdata', 'This report displays all animals that shared a cage, including the start date, stop date and days co-housed'],
                 ['pairingHistory' ,'Behavior' ,'js' ,'Pairing History' ,'true' ,'' ,'study' ,'pairHistory', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report displays all animals that shared a cage, including the start date, stop date and days co-housed'],
 
@@ -8229,7 +8231,8 @@ Ext4.onReady(function(){
                 ['matingSuccessRates' ,'Reproductive Management' ,'query' ,'Mating Success Rates' ,'true' ,'' ,'study' ,'matingSuccessRates', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This displays a summary of matings'],
 
                 ['reproSummary' ,'Reproductive Management' ,'js' ,'Reproductive Summary' ,'true' ,'' ,'study' ,'reproSummary', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
-                ['menses' ,'Reproductive Management' ,'query' ,'Menses' ,'true' ,'' ,'study' ,'Clinical Observations', 'Menses', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
+                ['menseCycleLength' ,'Reproductive Management' ,'js' ,'Cycle Length' ,'true' ,'' ,'study' ,'menseCycleLength', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
+                ['menses' ,'Reproductive Management' ,'query' ,'Menses' ,'true' ,'' ,'study' ,'menseData', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 ['delivery' ,'Reproductive Management' ,'query' ,'Deliveries' ,'true' ,'' ,'study' ,'Delivery', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 //['delivery' ,'Reproductive Management' ,'js' ,'Deliveries' ,'true' ,'' ,'study' ,'Delivery', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', ''],
                 ['pregnancy' ,'Reproductive Management' ,'query' ,'Pregnancies' ,'true' ,'' ,'study' ,'Pregnancy Confirmations', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', '']

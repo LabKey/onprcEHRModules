@@ -329,13 +329,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void roomsWithMixedViralStatus(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
-        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "Containment", CompareType.DOES_NOT_CONTAIN);
+        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;ABSL3", CompareType.CONTAINS_NONE_OF);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("area,room"));
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding containment areas:</b><p></p>\n");
+            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding ABSL2+ and ABSL3 rooms:</b><p></p>\n");
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p/>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
@@ -1247,11 +1247,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     protected void surgeryCasesRecentlyClosed(final Container c, User u, final StringBuilder msg)
     {
-        msg.append("<b>The following surgery cases were closed in the previous 24H:</b><br><br>");
-
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.DATE, -100);
+        cal.add(Calendar.DATE, -2);
 
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_GTE);
         filter.addCondition(FieldKey.fromString("category"), "Surgery");
@@ -1276,7 +1274,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
         if (ts.exists())
         {
-            msg.append("The following surgery cases were closed in the past 24H:<br>");
+            msg.append("The following surgery cases were closed in the past 48H:<br>");
             msg.append("<table border=1 style='border-collapse: collapse;'><tr><td>Id</td><td>Current Location</td><td>Location At Case Open</td><td>Cagemates At Open</td><td>Cagemate Current Location(s)</td><td>Active Groups</td></tr>");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {

@@ -1073,40 +1073,48 @@ public class ONPRC_EHRTriggerHelper
 
     public void closeActiveAssignmentRecords(String id, Date deathDate, Integer releaseCondition) throws Exception
     {
-        TableInfo assignmentTable = getTableInfo("study", "assignment");
-        SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("Id"), id);
-        filter1.addCondition(new SimpleFilter.OrClause(new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GT, deathDate), new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)));
-
-        TableSelector ts1 = new TableSelector(assignmentTable, PageFlowUtil.set("lsid"), filter1, null);
-        List<String> lsids = ts1.getArrayList(String.class);
-        if (!lsids.isEmpty())
+        try
         {
-            List<Map<String, Object>> toEnd = new ArrayList<>();
-            List<Map<String, Object>> toEndKeys = new ArrayList<>();
-            for (String lsid : lsids)
-            {
-                CaseInsensitiveHashMap row = new CaseInsensitiveHashMap();
-                row.put("lsid", lsid);
-                row.put("enddate", deathDate);
+            TableInfo assignmentTable = getTableInfo("study", "assignment");
+            SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("Id"), id);
+            filter1.addCondition(new SimpleFilter.OrClause(new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GT, deathDate), new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)));
 
-                if (releaseCondition != null)
+            TableSelector ts1 = new TableSelector(assignmentTable, PageFlowUtil.set("lsid"), filter1, null);
+            List<String> lsids = ts1.getArrayList(String.class);
+            if (!lsids.isEmpty())
+            {
+                List<Map<String, Object>> toEnd = new ArrayList<>();
+                List<Map<String, Object>> toEndKeys = new ArrayList<>();
+                for (String lsid : lsids)
                 {
-                    row.put("releaseCondition", releaseCondition);
+                    CaseInsensitiveHashMap row = new CaseInsensitiveHashMap();
+                    row.put("lsid", lsid);
+                    row.put("enddate", deathDate);
+
+                    if (releaseCondition != null)
+                    {
+                        row.put("releaseCondition", releaseCondition);
+                    }
+
+                    toEnd.add(row);
+
+                    CaseInsensitiveHashMap keyRow = new CaseInsensitiveHashMap();
+                    keyRow.put("lsid", lsid);
+                    toEndKeys.add(keyRow);
                 }
 
-                toEnd.add(row);
-
-                CaseInsensitiveHashMap keyRow = new CaseInsensitiveHashMap();
-                keyRow.put("lsid", lsid);
-                toEndKeys.add(keyRow);
+                //terminate rows
+                if (!toEnd.isEmpty())
+                {
+                    _log.info("ending " + toEnd.size() + " assignments due to animal death, using releaseCondition: " + releaseCondition);
+                    assignmentTable.getUpdateService().updateRows(getUser(), getContainer(), toEnd, toEndKeys, getExtraContext());
+                }
             }
-
-            //terminate rows
-            if (!toEnd.isEmpty())
-            {
-                _log.info("ending " + toEnd.size() + " assignments due to animal death, using releaseCondition: " + releaseCondition);
-                assignmentTable.getUpdateService().updateRows(getUser(), getContainer(), toEnd, toEndKeys, getExtraContext());
-            }
+        }
+        catch (Exception e)
+        {
+            _log.error(e.getMessage(), e);
+            throw e;
         }
     }
 
@@ -1170,12 +1178,7 @@ public class ONPRC_EHRTriggerHelper
                     row.put("date", date);
                     row.put("enddate", enddate);
                     row.put("groupid", groupList.get(0));
-                    row.put("objectid", new GUID());
-                    row.put("container", getContainer().getId());
-                    row.put("created", new Date());
-                    row.put("createdby", getUser().getUserId());
-                    row.put("modified", new Date());
-                    row.put("modifiedby", getUser().getUserId());
+                    row.put("objectid", new GUID().toString());
 
                     BatchValidationException errors = new BatchValidationException();
                     animalGroups.getUpdateService().insertRows(getUser(), getContainer(), Arrays.asList(row), errors, getExtraContext());

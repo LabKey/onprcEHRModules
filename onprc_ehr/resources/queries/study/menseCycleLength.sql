@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 LabKey Corporation
+ * Copyright (c) 2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 SELECT
+ t2.Id,
+ t2.date,
+ t2.observation,
+ t2.previousMens,
+ t2.daysSinceLastMens,
+ t2.lastCycleStart,
+ TIMESTAMPDIFF('SQL_TSI_DAY', t2.lastCycleStart, t2.date) as cycleLength
+
+FROM (
+SELECT
 
   t.Id,
   t.date,
   t.observation,
   t.previousMens,
-  timestampdiff('SQL_TSI_DAY', t.previousMens, t.date) as daysSinceLastMens
+  t.daysSinceLastMens,
+  (SELECT max(t1.date) as expt FROM study.menseDay1 t1 WHERE t.Id = t.Id AND t1.date < t.date) as lastCycleStart
 
-FROM (
+FROM study.menseDay1 t
 
-SELECT
-  o.Id,
-  CAST(o.dateOnly AS TIMESTAMP) as date,
-  o.observation,
-  (SELECT CAST(max(CAST(o2.date as date)) AS TIMESTAMP) as expr FROM study.clinical_observations o2 WHERE o2.Id = o.Id AND o2.category = 'Menses' and o2.date < o.date) as previousMens
-
-FROM study.clinical_observations o
-WHERE o.category = 'Menses'
-
-) t
-
-WHERE (timestampdiff('SQL_TSI_DAY', t.previousMens, t.date)) > 14
+) t2

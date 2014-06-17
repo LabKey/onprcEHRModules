@@ -213,7 +213,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             for (Map<String, Object> row : rows)
             {
                 String animalUrl = getParticipantURL(c, (String)row.get("Id"));
-                msg.append("<tr><td><a href='" + animalUrl + "'>" + row.get("Id") + "</a></td><td>" + (row.get("animalsInCage1") == null ? "" : row.get("animalsInCage1")) + "</td><td>" + row.get("room1") + "</td><td>" + (row.get("cage1") == null ? "" : row.get("cage1")) + "</td><td>" + row.get("changeType") + "</td><td>" + row.get("room2") + "</td><td>" + (row.get("cage2") == null ? "" : row.get("cage2")) + "</td><td>" + row.get("pairObservations") + "</td></tr>");
+                msg.append("<tr><td><a href='" + animalUrl + "'>" + row.get("Id") + "</a></td><td>" + (row.get("animalsInCage1") == null ? "" : row.get("animalsInCage1")) + "</td><td>" + row.get("room1") + "</td><td>" + (row.get("cage1") == null ? "" : row.get("cage1")) + "</td><td>" + row.get("changeType") + "</td><td>" + (row.get("room2") == null ? "" : row.get("room2")) + "</td><td>" + (row.get("cage2") == null ? "" : row.get("cage2")) + "</td><td>" + row.get("pairObservations") + "</td></tr>");
             }
 
             msg.append("</table>");

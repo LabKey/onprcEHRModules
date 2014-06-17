@@ -27,11 +27,13 @@ SELECT
   d.lsid,
   d.id,
   d.species,
-  lastWeight.date as wdate,
+  --NOTE: this uses date part only
+  lastWeight.dateOnly as wdate,
   (SELECT AVG(w.weight) AS _expr
     FROM study.weight w
     WHERE w.id = d.id
-      AND w.date = lastWeight.date
+      --NOTE: this uses date part only
+      AND w.dateOnly = lastWeight.dateOnly
       AND w.qcstate.publicdata = true
   ) AS weight,
   d.species.blood_per_kg,
@@ -60,7 +62,8 @@ SELECT
 
 FROM
     study.demographics d
-    JOIN (SELECT w.id, MAX(date) as date FROM study.weight w WHERE w.qcstate.publicdata = true GROUP BY w.id) lastWeight ON (d.id = lastWeight.id)
+    --NOTE: this uses date part only
+    JOIN (SELECT w.id, MAX(dateOnly) as dateOnly FROM study.weight w WHERE w.qcstate.publicdata = true GROUP BY w.id) lastWeight ON (d.id = lastWeight.id)
 WHERE d.calculated_status = 'Alive'
 
 ) b
