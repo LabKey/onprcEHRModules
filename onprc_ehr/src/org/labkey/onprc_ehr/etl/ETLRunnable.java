@@ -157,7 +157,7 @@ public class ETLRunnable implements Runnable
             log.info("Begin incremental sync from external datasource.");
 
             // Push a fake ViewContext onto the HttpView stack
-            try (ViewContext.StackResetter resetter = ViewContext.pushMockViewContext(user, container, new ActionURL("onprc_ehr", "fake.view", container)))
+            try (ViewContext.StackResetter ignored = ViewContext.pushMockViewContext(user, container, new ActionURL("onprc_ehr", "fake.view", container)))
             {
                 QueryService.get().setEnvironment(QueryService.Environment.USER, user);
                 ETLAuditViewFactory.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0, 0, 0);
