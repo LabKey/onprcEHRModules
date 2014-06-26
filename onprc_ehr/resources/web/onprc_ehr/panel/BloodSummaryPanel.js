@@ -121,17 +121,17 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
                 cfg.items.push({
                     html: '<hr>'
                 });
-            }
 
-            if (!bds || !bds.length){
-                var maxDraw = dd.getValue('species/blood_per_kg') * dd.getValue('species/max_draw_pct') * dd.getValue('id/MostRecentWeight/mostRecentWeight');
-                cfg.items.push({
-                    html: 'There are no previous or future blood draws with the relevant timeframe.  The maximum amount of ' + Ext4.util.Format.round(maxDraw, 2) + ' mL can be drawn.',
-                    border: false
-                });
-            }
-            else {
-                cfg.items = cfg.items.concat(this.getGraphCfg(dd, bds));
+                if (!bds || !bds.length) {
+                    var maxDraw = dd.getValue('species/blood_per_kg') * dd.getValue('species/max_draw_pct') * dd.getValue('id/MostRecentWeight/mostRecentWeight');
+                    cfg.items.push({
+                        html: 'There are no previous or future blood draws with the relevant timeframe.  The maximum amount of ' + Ext4.util.Format.round(maxDraw, 2) + ' mL can be drawn.',
+                        border: false
+                    });
+                }
+                else {
+                    cfg.items = cfg.items.concat(this.getGraphCfg(dd, bds));
+                }
             }
 
             toAdd.push(cfg);

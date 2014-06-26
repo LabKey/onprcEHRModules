@@ -9,6 +9,7 @@
         <column name="Id/demographics/gender"/>
         <!--<column name="performedby"/>-->
         <column name="allProblemCategories"/>
+        <column name="mostRecentObservations/observations"/>
         <column name="caseHistory"/>
     </columns>
     <filters>
