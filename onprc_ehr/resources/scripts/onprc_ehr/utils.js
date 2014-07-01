@@ -79,16 +79,18 @@ ONPRC_EHR.Utils = new function(){
                         var weights = [];
                         for (var i=0;i<cagemates.length;i++){
                             var animal = cagemates[i];
-                            EHR.Server.Utils.findDemographics({
-                                participant: animal,
-                                helper: helper,
-                                scope: this,
-                                callback: function(data){
-                                    if (data && data.mostRecentWeight){
-                                        weights.push(data.mostRecentWeight);
+                            if (animal) {
+                                EHR.Server.Utils.findDemographics({
+                                    participant: animal,
+                                    helper: helper,
+                                    scope: this,
+                                    callback: function (data) {
+                                        if (data && data.mostRecentWeight) {
+                                            weights.push(data.mostRecentWeight);
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
 
                         var cageSizeMsgs = triggerHelper.verifyCageSize(row[roomField], row[cageField], weights);

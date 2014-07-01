@@ -384,10 +384,10 @@ Ext4.onReady(function(){
             queryName: 'mens_score',
             pk: 'rowid'
         },{
-            label: 'CQS Score',
-            populateFn: 'populateCQSScore',
+            label: 'Alopecia Type',
+            populateFn: 'populateAlopeciaType',
             schemaName: 'ehr_lookups',
-            queryName: 'cqs_score',
+            queryName: 'alopecia_type',
             pk: 'rowid'
         },{
             label: 'Behavior Types',
@@ -857,6 +857,7 @@ Ext4.onReady(function(){
             ['E-YY858','Drugs and Procedures',null],
             ['E-YY867','Drugs and Procedures',null],
             ['E-YY868','Drugs and Procedures',null],
+            ['E-YY871','Drugs and Procedures',null],
             ['E-YY887','Drugs and Procedures',null],
             ['E-YY905','Drugs and Procedures',null],
             ['E-YY922','Drugs and Procedures',null],
@@ -2465,6 +2466,7 @@ Ext4.onReady(function(){
             ['E-X0800','Diet',null],
             ['E-X1200','Diet',null],
             ['E-X1460','Diet',null],
+            ['E-YY069','Diet',null],
             ['E-YY670','Diet',null],
             ['E-YY745','Diet',null],
             ['E-YY867','Diet',null],
@@ -5051,7 +5053,7 @@ Ext4.onReady(function(){
             ['stool_score', 'Stool Score', 'value'],
             ['sib_score', 'SIB Score', 'value'],
             ['incision_score', 'Incision Score', 'value'],
-            ['cqs_score', 'Coat Quality Score', 'value'],
+            ['alopecia_type', 'Alopecia Type', 'value'],
             ['mens_score', 'Mens Score', 'value'],
             ['tissue_sample_type', 'Tissue Distribution Sample Type', 'value'],
             ['tissue_distribution_category', 'Tissue Distribution Request Category', 'value'],
@@ -5594,12 +5596,12 @@ Ext4.onReady(function(){
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
         },
 
-        populateCQSScore: function(){
+        populateAlopeciaType: function(){
             this.pendingInserts++;
             //records for task forms:
             var config = {
                 schemaName: 'ehr_lookups',
-                queryName: 'cqs_score',
+                queryName: 'alopecia_type',
                 rows: [],
                 success: this.onSuccess,
                 failure: this.onError
@@ -5610,7 +5612,11 @@ Ext4.onReady(function(){
                 ['Thin', 1],
                 ['Patchy', 2],
                 ['Bald', 3],
-                ['Normal', 4]
+                ['Thin and patchy', 4],
+                ['Thin and bald', 5],
+                ['Patchy and bald', 6],
+                ['Thin, patchy and bald', 7],
+                ['N/A', 8],
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -6005,7 +6011,7 @@ Ext4.onReady(function(){
             var data = [
                 ['Alopecia Score', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', displayField: 'value', valueField: 'value'})],
                 ['SIB Score', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'sib_score', displayField: 'value', valueField: 'value'})],
-                //['CQS', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'cqs_score', displayField: 'value', valueField: 'value'})],
+                ['Alopecia Type', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_type', displayField: 'value', valueField: 'value', sortFields: 'sort_order'})],
                 ['BCS', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
                 ['CRT', null, Ext4.encode({xtype: 'textfield', defaultValue: '1-2'})],
                 ['MM', null, Ext4.encode({xtype: 'textfield', defaultValue: 'Pink'})],
@@ -9790,6 +9796,7 @@ Ext4.onReady(function(){
                 ['E-YY055','Bismuth Subsalicylate liquid (17.5mg/ml)'],
                 ['E-YY060','MICONAZOLE NITRATE'],
                 ['E-YY065','Chloramphenicol, tab (250mg/tab)'],
+                ['E-YY069','Diet - FBR 20 699 FBZ Medicated'],
                 ['E-YY100','CERIUM - 141  (CE-141)'],
                 ['E-YY101','NIOBIUM - 95  (NI-95)'],
                 ['E-YY102','SCANDIUM - 46  (SC-46)'],
@@ -9955,6 +9962,7 @@ Ext4.onReady(function(){
                 ['E-YY868','Gentamycin sulfate ophthalmic solution 0.3%'],
                 ['E-YY869','Fibrin gel'],
                 ['E-YY870','ELECTROLYTE, ORAL (INFALYTE)'],
+                ['E-YY871','Probiotic, ultimate 10'],
                 ['E-YY873','Cyclosporine (modified), 50mg'],
                 ['E-YY875','VITAMIN TABLET (ZOO CHEWS)'],
                 ['E-YY876','VIDAYLIN WITH IRON'],
