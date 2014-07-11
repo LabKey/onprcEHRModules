@@ -406,10 +406,8 @@ public class ONPRC_EHRController extends SpringActionController
     {
         if (logFile.exists())
         {
-            FileInputStream fIn = null;
-            try
+            try (FileInputStream fIn = new FileInputStream(logFile))
             {
-                fIn = new FileInputStream(logFile);
                 //noinspection ResultOfMethodCallIgnored
                 fIn.skip(startingOffset);
                 OutputStream out = response.getOutputStream();
@@ -419,13 +417,6 @@ public class ONPRC_EHRController extends SpringActionController
                 while ((i = fIn.read(b)) != -1)
                 {
                     out.write(b, 0, i);
-                }
-            }
-            finally
-            {
-                if (fIn != null)
-                {
-                    fIn.close();
                 }
             }
         }
