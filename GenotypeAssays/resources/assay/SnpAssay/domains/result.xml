@@ -87,6 +87,12 @@
         <exp:Label>Ref NT</exp:Label>
     </exp:PropertyDescriptor>
     <exp:PropertyDescriptor>
+        <exp:Name>confidence</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#double</exp:RangeURI>
+        <exp:Label>Confidence</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
         <exp:Name>comment</exp:Name>
         <exp:Required>false</exp:Required>
         <exp:RangeURI>http://www.w3.org/2001/XMLSchema#multiLine</exp:RangeURI>

@@ -100,6 +100,7 @@ public class BeadStudioImportMethod extends DefaultSnpAssayImportMethod
                 toAdd.add("Strand");
                 toAdd.add("Position");
                 toAdd.add("NT");
+                toAdd.add("Confidence");
                 out.writeNext(toAdd.toArray(new String[toAdd.size()]));
 
                 for (List<String> cells : getFileLines(context.getFile()))
@@ -215,13 +216,16 @@ public class BeadStudioImportMethod extends DefaultSnpAssayImportMethod
                         snp += alleleB;
                     }
 
+                    String confidence = cells.get(5);
+
                     toAdd = new ArrayList<>();
                     toAdd.add(subjectId);
                     toAdd.add(snpName);
-                    toAdd.add("Chr " + chr.toString());
+                    toAdd.add("chr " + chr.toString());
                     toAdd.add(strand);
                     toAdd.add(position.toString());
                     toAdd.add(snp);
+                    toAdd.add(confidence);
                     out.writeNext(toAdd.toArray(new String[toAdd.size()]));
                 }
 
