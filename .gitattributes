@@ -525,6 +525,8 @@ onprc_ehr/resources/queries/study/iStatPivot.query.xml -text
 onprc_ehr/resources/queries/study/iStatPivot.sql -text
 onprc_ehr/resources/queries/study/iStatRefRange.query.xml -text
 onprc_ehr/resources/queries/study/iStatRefRange.sql -text
+onprc_ehr/resources/queries/study/infantSPFStatusDiscrepancies.query.xml -text
+onprc_ehr/resources/queries/study/infantSPFStatusDiscrepancies.sql -text
 onprc_ehr/resources/queries/study/infantsSeparateFromMother.query.xml -text
 onprc_ehr/resources/queries/study/infantsSeparateFromMother.sql -text
 onprc_ehr/resources/queries/study/kinshipAverage.query.xml -text

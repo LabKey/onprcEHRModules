@@ -47,6 +47,7 @@ import org.labkey.api.query.BatchValidationException;
 import org.labkey.api.query.DuplicateKeyException;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
+import org.labkey.api.query.InvalidKeyException;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.QueryUpdateServiceException;
 import org.labkey.api.query.UserSchema;
@@ -1118,21 +1119,33 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public void doBirthTriggers(String id, Date date, String dam, String birthCondition) throws Exception
+    public void doBirthTriggers(String id, Date date, String dam, String birthCondition, boolean isBecomingPublic) throws Exception
     {
         //is the infant is dead, terminate the assignments
         Date enddate = Arrays.asList("Born Dead", "Terminated At Birth").contains(birthCondition) ? date : null;
 
-        String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
-        if (nonRestrictedFlag != null)
+        //also check for a pre-existing death record:
+        Date deathDate = new TableSelector(getTableInfo("study", "deaths"), Collections.singleton("date"), new SimpleFilter(FieldKey.fromString("Id"), id), null).getObject(Date.class);
+        if (deathDate != null)
         {
-            EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, date, null, Collections.singletonList(id), false);
-        }
-        else
-        {
-            _log.warn("Unable to find active flag for condition nonrestricted");
+            enddate = deathDate;
         }
 
+        //note: we only want this to run the first time this record becomes public, not on subsequent updates
+        if (isBecomingPublic)
+        {
+            String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
+            if (nonRestrictedFlag != null)
+            {
+                EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, date, null, Collections.singletonList(id), false);
+            }
+            else
+            {
+                _log.warn("Unable to find active flag for condition nonrestricted");
+            }
+        }
+
+        //NOTE: we allow this to run the first time this record is public with a non-null dam.  this allows the record to be created without dam, then updated
         if (dam != null)
         {
             //match SPF status with mother

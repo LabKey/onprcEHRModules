@@ -21,7 +21,7 @@ SELECT
   coalesce(b.runId, b.objectid) as runId,
   --NOTE: removed to allow legacy runs to group into 1 row.  since we already group on Id/Date/Test, this should be ok
   --coalesce(b.taskId, b.runId) as groupingId,
-  b.method,
+  b.runid.method as method,
   b.remark,
   b.runId.remark as runRemark,
   b.resultoorindicator,

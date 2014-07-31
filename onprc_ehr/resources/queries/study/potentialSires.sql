@@ -24,7 +24,7 @@ SELECT
 FROM study.potentialConceptionLocations c
 
 --then find all males overlapping with these locations that also overlap with the conception window
-JOIN study.housing h ON (
+JOIN study.housing h ON ((
     h.Id.demographics.gender = 'm' AND
     h.room = c.room AND
     (h.cage = c.cage OR (h.cage IS NULL AND c.cage IS NULL)) AND
@@ -33,6 +33,9 @@ JOIN study.housing h ON (
 
 --note: this is to always include all observed sires
 OR h.Id = c.Id.birth.sire
+)
 
 WHERE timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, c.minDate) > 912.5 --(2.5 years)
+AND h.Id.demographics.species = c.Id.demographics.species
+
 GROUP BY c.Id, h.Id

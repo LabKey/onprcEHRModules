@@ -14,8 +14,8 @@
                         <columnTitle>Distinct Animals Assigned Over Interval</columnTitle>
                         <url>/query/executeQuery.view?schemaName=study&amp;
                             query.queryName=assignmentOverlapsById&amp;
-                            query.param.protocol=${protocol}&amp;
-                            query.param.project=${project}&amp;
+                            query.param.protocol=${protocol/displayName}&amp;
+                            query.param.project=${project/displayName}&amp;
                             query.param.StartDate=${start}&amp;
                             query.param.EndDate=${enddate}
                         </url>

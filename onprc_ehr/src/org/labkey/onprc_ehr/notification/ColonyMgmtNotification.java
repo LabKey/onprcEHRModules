@@ -74,6 +74,7 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
         transfersYesterday(c, u, msg);
         roomsWithMixedViralStatus(c, u, msg);
         livingAnimalsWithoutWeight(c, u, msg);
+        hospitalAnimalsWithoutCase(c, u, msg);
 
         offspringWithMother(c, u, msg, 180);
         offspringWithMother(c, u, msg, 250);

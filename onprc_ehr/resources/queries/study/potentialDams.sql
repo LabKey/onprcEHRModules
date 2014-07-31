@@ -35,5 +35,6 @@ JOIN study.housing h ON (
 )
 
 WHERE h.id.demographics.gender = 'f' and timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, b.date) > 912.5 --(2.5 years)
+AND h.Id.demographics.species = b.Id.demographics.species
 
 GROUP BY b.Id, b.date, b.room, b.cage, h.Id, h.Id.demographics.birth

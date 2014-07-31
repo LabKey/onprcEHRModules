@@ -255,22 +255,4 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
             msg.append("<hr>\n");
         }
     }
-
-    protected void hospitalAnimalsWithoutCase(final Container c, User u, final StringBuilder msg)
-    {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/curLocation/area"), "Hospital", CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("Id/curLocation/room/housingType/value"), "Cage Location", CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("Id/activeCases/categories"), "Clinical", CompareType.DOES_NOT_CONTAIN);
-
-        TableInfo ti = getStudySchema(c, u).getTable("demographics");
-
-        TableSelector ts = new TableSelector(ti, Collections.singleton(ti.getColumn("Id")), filter, null);
-        long count = ts.getRowCount();
-        if (count > 0)
-        {
-            msg.append("<b>WARNING: There are " + count + " animals in a room marked as hospital that do not have an open clinical case</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", "By Location", filter) + "'>Click here to view them</a><br>\n");
-            msg.append("<hr>\n");
-        }
-    }
 }

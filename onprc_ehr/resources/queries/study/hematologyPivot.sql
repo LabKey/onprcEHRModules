@@ -21,7 +21,7 @@ SELECT
   b.id,
   b.date,
   b.testId,
-  b.method,
+  b.runid.method as method,
   b.runid.chargetype as chargetype,
   b.runid.servicerequested as servicerequested,
   coalesce(b.runId, b.objectid) as runId,

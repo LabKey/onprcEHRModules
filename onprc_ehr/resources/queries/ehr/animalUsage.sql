@@ -20,6 +20,7 @@ SELECT
   coalesce(pc.gender.meaning, 'Male/Female') as gender,
   pc.start,
   pc.enddate,
+  pc.description,
   pc2.totalAssignments,
   pc.allowed,
   pc2.totalAnimals,

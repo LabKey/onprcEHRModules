@@ -42,6 +42,8 @@
                 <include name="sla.module" />
                 <include name="SequenceAnalysis.module" />
                 <include name="Viral_Load_Assay.module" />
+                <include name="jbrowse.module" />
+                <include name="blast.module" />
             </fileset>
         </copy>
     </target>

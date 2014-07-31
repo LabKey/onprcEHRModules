@@ -390,6 +390,18 @@ Ext4.onReady(function(){
             queryName: 'alopecia_type',
             pk: 'rowid'
         },{
+            label: 'Alopecia Score',
+            populateFn: 'populateAlopeciaScore',
+            schemaName: 'ehr_lookups',
+            queryName: 'alopecia_score',
+            pk: 'rowid'
+        },{
+            label: 'Alopecia Regrowth',
+            populateFn: 'populateAlopeciaRegrowth',
+            schemaName: 'ehr_lookups',
+            queryName: 'alopecia_regrowth',
+            pk: 'rowid'
+        },{
             label: 'Behavior Types',
             populateFn: 'populateBehaviorTypes',
             schemaName: 'ehr_lookups',
@@ -2665,8 +2677,6 @@ Ext4.onReady(function(){
             ['E-85151','Common Treatments',null],
             ['E-85182','Common Treatments',null],
             ['E-85262','Common Treatments',null],
-            ['E-85350','Common Treatments',null],
-            ['E-85360','Common Treatments',null],
             ['E-85760','Common Treatments',null],
             ['E-85824','Common Treatments',null],
             ['E-86040','Common Treatments',null],
@@ -5054,6 +5064,8 @@ Ext4.onReady(function(){
             ['sib_score', 'SIB Score', 'value'],
             ['incision_score', 'Incision Score', 'value'],
             ['alopecia_type', 'Alopecia Type', 'value'],
+            ['alopecia_score', 'Alopecia Type', 'value'],
+            ['alopecia_regrowth', 'Alopecia Regrowth', 'value'],
             ['mens_score', 'Mens Score', 'value'],
             ['tissue_sample_type', 'Tissue Distribution Sample Type', 'value'],
             ['tissue_distribution_category', 'Tissue Distribution Request Category', 'value'],
@@ -5617,6 +5629,54 @@ Ext4.onReady(function(){
                 ['Patchy and bald', 6],
                 ['Thin, patchy and bald', 7],
                 ['N/A', 8],
+                ['Not Evaluated', 9],
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateAlopeciaScore: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'alopecia_score',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value,sort_order,description').split(',');
+
+            var data = [
+                ['0',1,'Good haircoat'],
+                ['1',2,'Thinning of haircoat, without alopecia'],
+                ['2',3,'Few (1-3) small (less than 3cm in diameter) patches of alopecia.'],
+                ['3',4,'1-2 large (greater than 3cm in diameter) or numerous (> 3) small patches. *One portion of limb (ie. upper arm, lower leg) is equivalent to large patch'],
+                ['4',5,'Greater than 2 large patches or generalized alopecia'],
+                ['5',6,'More than 90% of body completely bald'],
+
+                ['Not Evaluated', 7,null]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateAlopeciaRegrowth: function(){
+            this.pendingInserts++;
+            //records for task forms:
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'alopecia_regrowth',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value,sort_order').split(',');
+
+            var data = [
+                ['Yes',1],
+                ['No',2],
+                ['Not Evaluated', 3]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -6012,6 +6072,7 @@ Ext4.onReady(function(){
                 ['Alopecia Score', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', displayField: 'value', valueField: 'value'})],
                 ['SIB Score', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'sib_score', displayField: 'value', valueField: 'value'})],
                 ['Alopecia Type', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_type', displayField: 'value', valueField: 'value', sortFields: 'sort_order'})],
+                ['Alopecia Regrowth', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_regrowth', displayField: 'value', valueField: 'value', sortFields: 'sort_order'})],
                 ['BCS', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
                 ['CRT', null, Ext4.encode({xtype: 'textfield', defaultValue: '1-2'})],
                 ['MM', null, Ext4.encode({xtype: 'textfield', defaultValue: 'Pink'})],
@@ -8191,7 +8252,8 @@ Ext4.onReady(function(){
                 ['TB' ,'Lab Results' ,'query' ,'TB Test Dates' ,'true' ,'' ,'study' ,'encounters', 'TB Tests', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'TB Test results'],
                 ['snapshot' ,'General' ,'js' ,'Snapshot' ,'true' ,'' ,'study' ,'onprcSnapshot', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
                 ['clinSnapshot' ,'Clinical' ,'js' ,'Clinical Snapshot' ,'true' ,'' ,'study' ,'onprcSnapshot', '', '', '', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a summary of the animal, including demographics, assignments and weight'],
-                ['arrivalDeparture' ,'General' ,'js' ,'Arrival/Departure' ,'true' ,'' ,'study' ,'arrivalDeparture', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Displays arrival and departure dates'],
+                ['arrival' ,'General' ,'query' ,'Arrivals' ,'true' ,'' ,'study' ,'arrival', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Displays arrival and departure dates'],
+                ['departure' ,'General' ,'query' ,'Departures' ,'true' ,'' ,'study' ,'departure', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'Displays arrival and departure dates'],
                 ['bloodDraws' ,'General' ,'query' ,'Blood Draw History' ,'true' ,'' ,'study' ,'Blood Draws', '', '', 'date', 'false', 'false', '', '', 'Contains records of blood draws.  '],
                 //['charges' ,'General' ,'query' ,'Charges' ,'true' ,'' ,'study' ,'Charges', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains a list of charges attached to the animal\'s record'],
                 ['currentBlood' ,'General' ,'js' ,'Current Blood' ,'true' ,'' ,'study' ,'currentBlood', '', '', 'date', 'false', 'false', '', '', 'This report contains a summary of the current available blood for each animal'],
@@ -8559,7 +8621,7 @@ Ext4.onReady(function(){
                 ['D-B6114','PULMONARY HEMORRHAGE'],
                 ['D-C1002','NORMOCYTIC NORMOCHROMIC ANEMIA'],
                 ['D-C1618','CARDIAC DILATATION'],
-                ['D-C2120','CARDIOMYPATHY, SECONDARY, DILATED'],
+                ['D-C2120','CARDIOMYOPATHY, SECONDARY, DILATED'],
                 ['D-C3080','CARDIOPULMONARY ARREST'],
                 ['D-C4021','PULMONARY INFARCTION'],
                 ['D-C4023','PULMONARY EMBOLISM'],
@@ -8883,8 +8945,8 @@ Ext4.onReady(function(){
                 ['E-18320','HEMOPHILUS SUIS'],
                 ['E-18390','HEMOPHILUS GALLINARUM'],
                 ['E-18480','HEMOPHILUS PISCIUM'],
-                ['E-18700','LACTOBACILLUS, NOS'],
-                ['E-18770','LACTOBACILLUS ACIDOPHILUS   (BACID)'],
+                ['E-18700','Probiotic, paste'],
+                ['E-18770','Probiotic, capsule'],
                 ['E-18840','LACTOBACILLUS FERMENTUM'],
                 ['E-19100','LEPTOSPIRA, NOS'],
                 ['E-19400','LISTERIA, NOS'],
@@ -13823,10 +13885,9 @@ Ext4.onReady(function(){
                 ['VLDL/CHOL', 'VLDL/Cholesterol Ratio', null, null, true, false, false, null],
                 ['Glob', 'Globulin', 'g/dl', null, true, false, false, null],
                 ['DBIL', 'Direct Bilirubin', 'mg/dl', null, true, false, false, null],
-                ['A/G Ratio', 'A/G Ratio', null, null, true, false, false, null],
                 ['Ca, ionized', 'Calcium, ionized', 'mg/dL', null, true, false, true, null],
                 ['A/P', 'Albumin/Protein Ratio', null, null, true, false, false, null],
-                ['A/G ratio', 'Albumin Globulin Ratio', null, null, true, false, false, null],
+                ['A/G Ratio', 'Albumin Globulin Ratio', null, null, true, false, false, null],
                 ['B/C', 'BUN/Creatinine Ratio', 'ratio', null, true, false, false, null],
                 ['CPK', 'Creatine phosphokinase', 'U/L', null, true, false, false, null]
             ];

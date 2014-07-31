@@ -53,16 +53,15 @@ exports.init = function(EHR){
         }
     });
 
-    //TODO: enable with charges
-//    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Clinical Encounters', function(helper, scriptErrors, row, oldRow){
-//        if (row.chargetype == 'Research Staff' && !row.assistingstaff && row.procedureid && triggerHelper.requiresAssistingStaff(row.procedureid)){
-//            EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'If choosing Research Staff, you must enter the assisting staff.', 'WARN');
-//        }
-//
-//        if (row.chargetype != 'Research Staff' && row.assistingstaff){
-//            EHR.Server.Utils.addError(scriptErrors, 'assistingstaff', 'This field will be ignored unless Research Staff is selected, and should be blank.', 'WARN');
-//        }
-//    });
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Clinical Encounters', function(helper, scriptErrors, row, oldRow){
+        if (row.chargetype == 'Research Staff' && !row.assistingstaff && row.procedureid && triggerHelper.requiresAssistingStaff(row.procedureid)){
+            EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'If choosing Research Staff, you must enter the assisting staff.', 'WARN');
+        }
+
+        if (row.chargetype != 'Research Staff' && row.assistingstaff){
+            EHR.Server.Utils.addError(scriptErrors, 'assistingstaff', 'This field will be ignored unless Research Staff is selected, and should be blank.', 'WARN');
+        }
+    });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Animal Record Flags', function(helper, scriptErrors, row, oldRow){
         if (row.flag && row.Id && !row.enddate){
@@ -148,8 +147,55 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Birth', function(scriptErrors, helper, row, oldRow){
-        triggerHelper.doBirthTriggers(row.Id, row.date, row.dam, row.cond);
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Birth', function(helper, errors, row, oldRow) {
+        //NOTE: we want to perform the birth updates if this row is becoming public, or if we're updating to set the dam for the first time
+        if (!helper.isValidateOnly() && (row._becomingPublicData || (oldRow && !oldRow.dam && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && row.dam))) {
+            triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null, row.cond || null, !!row._becomingPublicData);
+        }
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Birth', function(helper, scriptErrors, row, oldRow) {
+        //also allow changes here to update the demographics record
+        //this should only occur if editing a public record, not onBecomePublic
+        if (!helper.isValidateOnly() && row.Id && !helper.isGeneratedByServer() && oldRow && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData){
+            EHR.Server.Utils.findDemographics({
+                participant: row.Id,
+                helper: helper,
+                scope: this,
+                callback: function (data) {
+                    if (!data)
+                        return;
+
+                    var obj = {};
+                    var hasUpdates = false;
+
+                    if (row.gender && row.gender != data.gender) {
+                        obj.gender = row.gender;
+                        hasUpdates = true;
+                    }
+
+                    if (row['Id/demographics/species'] && row['Id/demographics/species'] != data.species) {
+                        obj.species = row['Id/demographics/species'];
+                        hasUpdates = true;
+                    }
+
+                    if (row['Id/demographics/geographic_origin'] && row['Id/demographics/geographic_origin'] != data.geographic_origin){
+                        obj.geographic_origin = row['Id/demographics/geographic_origin'];
+                        hasUpdates = true;
+                    }
+
+                    if (row.date && row.date.getTime() != (data.birth ? data.birth.getTime() : 0)) {
+                        obj.birth = row.date;
+                        hasUpdates = true;
+                    }
+
+                    if (hasUpdates){
+                        obj.Id = row.Id;
+                        helper.getJavaHelper().updateDemographicsRecord(row.Id, obj);
+                    }
+                }
+            });
+        }
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Deaths', function(scriptErrors, helper, row, oldRow){

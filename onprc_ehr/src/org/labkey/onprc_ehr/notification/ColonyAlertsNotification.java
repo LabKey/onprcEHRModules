@@ -133,6 +133,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         deadAnimalsWithActiveGroups(c, u, msg);
         deadAnimalsWithActiveTreatments(c, u, msg);
         deadAnimalsWithActiveProblems(c, u, msg);
+        hospitalAnimalsWithoutCase(c, u, msg);
 
         //blood draws
         bloodDrawsOnDeadAnimals(c, u, msg);
@@ -145,6 +146,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         birthRecordsWithoutDemographics(c, u, msg);
         deathRecordsWithoutDemographics(c, u, msg);
         infantsNotAssignedToDamGroup(c, u, msg);
+        infantsNotAssignedToDamSPF(c, u, msg);
 
         //notes
         notesEndingToday(c, u, msg, null, null);
@@ -558,6 +560,23 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + count + " infants born within the last 14 days that are not assigned to the same group as their dam on the date of birth.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "animalGroupInfantsNotAssigned", null) + "&query.matchesDamGroup~eq=false&query.birth~dategte=-14d'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void infantsNotAssignedToDamSPF(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("matchesDamStatus"), false, CompareType.EQUAL);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -14);
+        filter.addCondition(FieldKey.fromString("birth"), cal.getTime(), CompareType.DATE_GTE);
+
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("infantSPFStatusDiscrepancies"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " infants born within the last 14 days that do not have the same SPF status as their dam.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "infantSPFStatusDiscrepancies", null, filter) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -1838,6 +1857,24 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>There are " + count2 + " notes with an action date of today.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null, filter2) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void hospitalAnimalsWithoutCase(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/curLocation/area"), "Hospital", CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room/housingType/value"), "Cage Location", CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id/activeCases/categories"), "Clinical", CompareType.DOES_NOT_CONTAIN);
+
+        TableInfo ti = getStudySchema(c, u).getTable("demographics");
+
+        TableSelector ts = new TableSelector(ti, Collections.singleton(ti.getColumn("Id")), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " animals in a room marked as hospital that do not have an open clinical case</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", "By Location", filter) + "'>Click here to view them</a><br>\n");
+            msg.append("<hr>\n");
         }
     }
 }

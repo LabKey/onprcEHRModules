@@ -6,6 +6,7 @@
         <column name="gender"/>
         <column name="start"/>
         <column name="enddate"/>
+        <column name="description"/>
         <column name="totalAssignments"/>
         <column name="allowed"/>
         <column name="totalAnimals"/>

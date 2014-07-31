@@ -1,4 +1,4 @@
-<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Assignments">
     <columns>
         <column name="Id"/>
         <column name="Id/Dataset/Demographics/gender">
@@ -33,6 +33,7 @@
         <column name="assignCondition"/>
         <column name="projectedReleaseCondition"/>
         <column name="releaseCondition"/>
+        <column name="releaseType"/>
         <column name="qcstate" />
         <column name="taskid" />
     </columns>

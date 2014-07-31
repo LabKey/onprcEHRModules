@@ -276,6 +276,7 @@ Ext4.define('ONPRC_EHR.window.BulkBloodDrawWindow', {
             return null;
         }
 
+        projectName = Ext4.String.trim(projectName);
         var ret = EHR.DataEntryUtils.resolveProjectByName(this.projectStore, projectName);
         if (!ret){
             errors.push('Row ' + rowIdx + ': unknown project ' + projectName);
