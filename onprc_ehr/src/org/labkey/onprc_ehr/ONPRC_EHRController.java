@@ -28,7 +28,6 @@ import org.labkey.api.action.SimpleViewAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
-import org.labkey.api.data.DataRegionSelection;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.Selector;
@@ -37,23 +36,16 @@ import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.files.FileContentService;
-import org.labkey.api.pipeline.PipeRoot;
-import org.labkey.api.pipeline.PipelineJobException;
-import org.labkey.api.pipeline.PipelineService;
-import org.labkey.api.pipeline.PipelineValidationException;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
-import org.labkey.api.query.QueryAction;
-import org.labkey.api.query.QueryForm;
-import org.labkey.api.query.QueryService;
 import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.RequiresPermissionClass;
 import org.labkey.api.security.RequiresSiteAdmin;
 import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.ReadPermission;
-import org.labkey.api.security.permissions.UpdatePermission;
 import org.labkey.api.services.ServiceRegistry;
+import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HtmlView;
@@ -68,8 +60,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -79,7 +69,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -392,7 +381,7 @@ public class ONPRC_EHRController extends SpringActionController
     {
         public void export(Object o, HttpServletResponse response, BindException errors) throws Exception
         {
-            showLogFile(response, 0, getLogFile("ehr-etl.log"));
+            PageFlowUtil.streamLogFile(response, 0, getLogFile("ehr-etl.log"));
         }
     }
 
@@ -400,26 +389,6 @@ public class ONPRC_EHRController extends SpringActionController
     {
         File tomcatHome = new File(System.getProperty("catalina.home"));
         return new File(tomcatHome, "logs/" + name);
-    }
-
-    public void showLogFile(HttpServletResponse response, long startingOffset, File logFile) throws Exception
-    {
-        if (logFile.exists())
-        {
-            try (FileInputStream fIn = new FileInputStream(logFile))
-            {
-                //noinspection ResultOfMethodCallIgnored
-                fIn.skip(startingOffset);
-                OutputStream out = response.getOutputStream();
-                response.setContentType("text/plain");
-                byte[] b = new byte[4096];
-                int i;
-                while ((i = fIn.read(b)) != -1)
-                {
-                    out.write(b, 0, i);
-                }
-            }
-        }
     }
 
     @RequiresPermissionClass(AdminPermission.class)
