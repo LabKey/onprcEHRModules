@@ -1,28 +1,19 @@
 package org.labkey.genotypeassays.assay;
 
-import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVWriter;
-import com.oracle.jrockit.jfr.ContentType;
 import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ConvertHelper;
-import org.labkey.api.etl.DataIterator;
 import org.labkey.api.laboratory.assay.AssayImportMethod;
 import org.labkey.api.laboratory.assay.AssayParser;
 import org.labkey.api.laboratory.assay.DefaultAssayParser;
 import org.labkey.api.laboratory.assay.ImportContext;
 import org.labkey.api.laboratory.assay.ParserErrors;
 import org.labkey.api.query.BatchValidationException;
-import org.labkey.api.reader.DataLoader;
 import org.labkey.api.security.User;
 import org.labkey.api.settings.AppProps;
-import org.labkey.api.util.Path;
 import org.labkey.api.view.ViewContext;
-import org.labkey.api.webdav.WebdavResource;
-import org.labkey.api.webdav.WebdavService;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
