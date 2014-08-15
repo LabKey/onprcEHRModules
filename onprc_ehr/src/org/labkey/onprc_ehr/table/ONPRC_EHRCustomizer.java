@@ -1704,13 +1704,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (s == null)
             return null;
 
-        ds = s.getDataSetByLabel(label);
+        ds = s.getDatasetByLabel(label);
         if (ds == null)
         {
             // NOTE: this seems to happen during study import on TeamCity.  It does not seem to happen during normal operation
             _log.info("A dataset was requested that does not exist: " + label + " in container: " + ehrContainer.getPath());
             StringBuilder sb = new StringBuilder();
-            for (DataSet d : s.getDataSets())
+            for (DataSet d : s.getDatasets())
             {
                 sb.append(d.getName() + ", ");
             }

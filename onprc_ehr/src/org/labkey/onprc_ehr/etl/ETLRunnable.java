@@ -622,7 +622,7 @@ public class ETLRunnable implements Runnable
                     List<Object> searchParams = new ArrayList<>();
                     if (targetTable instanceof DataSetTable)
                     {
-                        if(((DataSetTable)targetTable).getDataSet().isDemographicData())
+                        if(((DataSetTable)targetTable).getDataset().isDemographicData())
                         {
                             log.info("table is demographics, filtering on Id");
                             isDemographics = true;
