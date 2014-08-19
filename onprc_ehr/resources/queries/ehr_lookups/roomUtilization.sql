@@ -7,9 +7,10 @@ SELECT
   r.room,
   count(DISTINCT c.cage) as TotalCages,
   max(cbr.availableCages) as AvailableCages,
+  max(cbr.markedUnavailable) as MarkedUnavailable,
   count(DISTINCT h.cage) as CagesUsed,
-  max(cbr.availableCages) - count(DISTINCT h.cage) as CagesEmpty,
-  round((CAST(count(DISTINCT h.cage) as double) / cast(max(cbr.availableCages) as double)) * 100, 1) as pctUsed,
+  max(cbr.availableCages) - count(DISTINCT h.cage) - max(cbr.markedUnavailable) as CagesEmpty,
+  round(((CAST(count(DISTINCT h.cage) as double) + max(cbr.markedUnavailable)) / cast(max(cbr.availableCages) as double)) * 100, 1) as pctUsed,
   count(DISTINCT h.id) as TotalAnimals,
 
 

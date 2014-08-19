@@ -43,7 +43,6 @@ import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.settings.AdminConsole;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.URLHelper;
-import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.AnimalGroupCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentCompletedButton;

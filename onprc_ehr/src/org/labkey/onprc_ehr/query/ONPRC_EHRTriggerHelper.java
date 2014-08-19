@@ -106,6 +106,7 @@ public class ONPRC_EHRTriggerHelper
     private Map<Integer, DividerRecord> _cachedDividerRecords = new HashMap<>();
 
     private static final String NONRESTRICTED = "Nonrestricted";
+    private static final String EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, EXPERIMENTAL";
 
     public ONPRC_EHRTriggerHelper(int userId, String containerId)
     {
@@ -977,93 +978,6 @@ public class ONPRC_EHRTriggerHelper
         return ret.get(0);
     }
 
-    public void updateReleaseCondition(String id, Date deathDate, Integer releaseCondition) throws Exception
-    {
-        if (releaseCondition == null)
-        {
-            return;
-        }
-
-        String flag = getFlag("condition", null, releaseCondition, true);
-        if (flag != null)
-        {
-            // if we need to add/remove flags, we will use 1 day prior to death
-            Calendar dayPrior = Calendar.getInstance();
-            dayPrior.setTime(deathDate);
-            dayPrior.add(Calendar.DATE, -1);
-
-            // if this is already the animal's active condition, no action needed.
-            // otherwise terminate the existing record and create new one
-            TableInfo flagsTable = getTableInfo("study", "flags");
-            SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("Id"), id);
-            filter1.addCondition(FieldKey.fromString("flag/category"), "Condition");
-            filter1.addCondition(FieldKey.fromString("date"), deathDate, CompareType.DATE_LT);
-            filter1.addCondition(new SimpleFilter.OrClause(new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GT, deathDate), new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)));
-
-            TableSelector ts1 = new TableSelector(flagsTable, PageFlowUtil.set("lsid", "flag", "date"), filter1, null);
-            boolean shouldCreate = false;
-            Collection<Map<String, Object>> ret = ts1.getMapCollection();
-            if (ret.isEmpty())
-            {
-                shouldCreate = true;
-            }
-            else
-            {
-                //we expect at most 1 active record, but this should work correctly even if that isnt the case
-                shouldCreate = true;
-                List<Map<String, Object>> toEnd = new ArrayList<>();
-                List<Map<String, Object>> toEndKeys = new ArrayList<>();
-                for (Map<String, Object> map : ret)
-                {
-                    if (flag.equals(map.get("flag")))
-                    {
-                        //we already have a record w/ this condition
-                        shouldCreate = false;
-                    }
-                    else
-                    {
-                        CaseInsensitiveHashMap row = new CaseInsensitiveHashMap();
-                        row.put("lsid", map.get("lsid"));
-                        row.put("enddate", maxDate((Date)map.get("date"), dayPrior.getTime()));
-                        toEnd.add(row);
-
-                        CaseInsensitiveHashMap keyRow = new CaseInsensitiveHashMap();
-                        keyRow.put("lsid", map.get("lsid"));
-                        toEndKeys.add(keyRow);
-                    }
-                }
-
-                //terminate rows
-                if (!toEnd.isEmpty())
-                {
-                    _log.info("ending existing condition flags on animal death");
-                    flagsTable.getUpdateService().updateRows(getUser(), getContainer(), toEnd, toEndKeys, getExtraContext());
-                }
-            }
-
-            if (shouldCreate)
-            {
-                //need to insert flag
-                _log.info("adding condition flag to set release condition following death for animal: " + id);
-                List<Map<String, Object>> rows = new ArrayList<>();
-                Map<String, Object> row = new CaseInsensitiveHashMap<>();
-                row.put("Id", id);
-                row.put("date", deathDate);
-                row.put("enddate", deathDate);
-                row.put("flag", flag);
-                row.put("performedby", getUser().getDisplayName(getUser()));
-                rows.add(row);
-
-                BatchValidationException errors = new BatchValidationException();
-                if (rows.size() > 0)
-                    flagsTable.getUpdateService().insertRows(getUser(), flagsTable.getUserSchema().getContainer(), rows, errors, getExtraContext());
-
-                if (errors.hasErrors())
-                    throw errors;
-            }
-        }
-    }
-
     // Taken from DateUtils.  should remove if we upgrade core
     private Date maxDate(Date d1, Date d2) {
         if (d1 == null && d2 == null) return null;
@@ -1072,7 +986,7 @@ public class ONPRC_EHRTriggerHelper
         return (d1.after(d2)) ? d1 : d2;
     }
 
-    public void closeActiveAssignmentRecords(String id, Date deathDate, Integer releaseCondition) throws Exception
+    public void closeActiveAssignmentRecords(String id, Date deathDate, String causeOfDeath) throws Exception
     {
         try
         {
@@ -1080,34 +994,38 @@ public class ONPRC_EHRTriggerHelper
             SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("Id"), id);
             filter1.addCondition(new SimpleFilter.OrClause(new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GT, deathDate), new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)));
 
-            TableSelector ts1 = new TableSelector(assignmentTable, PageFlowUtil.set("lsid"), filter1, null);
-            List<String> lsids = ts1.getArrayList(String.class);
-            if (!lsids.isEmpty())
+            TableSelector ts1 = new TableSelector(assignmentTable, PageFlowUtil.set("lsid", "projectedReleaseCondition"), filter1, null);
+            List<Map> rowMaps = ts1.getArrayList(Map.class);
+            if (!rowMaps.isEmpty())
             {
+                int terminalCode = getConditionCodeForMeaning("Terminal");
+
                 List<Map<String, Object>> toEnd = new ArrayList<>();
                 List<Map<String, Object>> toEndKeys = new ArrayList<>();
-                for (String lsid : lsids)
+                for (Map<String, Object> rowMap : rowMaps)
                 {
                     CaseInsensitiveHashMap row = new CaseInsensitiveHashMap();
-                    row.put("lsid", lsid);
+                    row.put("lsid", rowMap.get("lsid"));
                     row.put("enddate", deathDate);
 
-                    if (releaseCondition != null)
+
+                    //only update the release code automatically if experimentally euthanized and that assignment called for a terminal projected release.  otherwise leave blank and let error report catch it
+                    if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) && terminalCode == rowMap.get("projectedReleaseCondition"))
                     {
-                        row.put("releaseCondition", releaseCondition);
+                        row.put("releaseCondition", terminalCode);
                     }
 
                     toEnd.add(row);
 
                     CaseInsensitiveHashMap keyRow = new CaseInsensitiveHashMap();
-                    keyRow.put("lsid", lsid);
+                    keyRow.put("lsid", rowMap.get("lsid"));
                     toEndKeys.add(keyRow);
                 }
 
                 //terminate rows
                 if (!toEnd.isEmpty())
                 {
-                    _log.info("ending " + toEnd.size() + " assignments due to animal death, using releaseCondition: " + releaseCondition);
+                    _log.info("ending " + toEnd.size() + " assignments due to animal death");
                     assignmentTable.getUpdateService().updateRows(getUser(), getContainer(), toEnd, toEndKeys, getExtraContext());
                 }
             }
@@ -1675,5 +1593,23 @@ public class ONPRC_EHRTriggerHelper
         String category = _cachedProcedureCategories.get(procedureId);
 
         return "Surgery".equals(category);
+    }
+
+    public String getSpeciesForDam(String dam)
+    {
+        return new TableSelector(getTableInfo("study", "demographics"), PageFlowUtil.set("species"), new SimpleFilter(FieldKey.fromString("Id"), dam), null).getObject(String.class);
+    }
+
+    public void ensureQuarantineFlag(String id, Date date) throws BatchValidationException
+    {
+        String flag = getFlag("Surveillance", "Quarantine", null, true);
+        if (flag != null)
+        {
+            EHRService.get().ensureFlagActive(getUser(), getContainer(), flag, date, null, Collections.singletonList(id), false);
+        }
+        else
+        {
+            _log.warn("Unable to find active flag for Surveillance/Quarantine");
+        }
     }
 }

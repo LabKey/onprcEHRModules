@@ -55,19 +55,21 @@ foreach my $key (keys %$queries) {
     my $threshold = $$queries{$key}{'threshold'} + 0;
     my $sth = run_query($sql);
     while(my @row = $sth->fetchrow_array) {
-        my $message = $messageStr . "  Row values were: ";
+        my $message = $messageStr . "  Row values were: \n";
         foreach (@row) {
             $message .= trim($_) . ", ";
         }
         $message =~ s/, $//;
+        $message =~ s/\'/\\\'/g;
         $message .= "\n";
 
-        `echo '$message' >> $err_file`;
+        `echo \$'$message' >> $err_file`;
         $has_error = 1;
     }
 }
 
 if (!-e $err_file || $has_error){
+   `/bin/cat $err_file | mail -s 'PRIMe long running query' yourEmail\@server.edu`;
    `touch $err_file`;
 }
 

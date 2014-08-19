@@ -147,6 +147,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             {
                 customizeCasesTable((AbstractTableInfo) table);
             }
+            else if (matches(table, "study", "Clinical Encounters") || matches(table, "study", "encounters"))
+            {
+                customizeEncounters((AbstractTableInfo) table);
+            }
             else if (matches(table, "ehr", "project"))
             {
                 customizeProjects((AbstractTableInfo) table);
@@ -424,6 +428,31 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     private void customizeDateColumn(AbstractTableInfo ti)
     {
         EHRService.get().customizeDateColumn(ti, "date");
+    }
+
+    private void customizeEncounters(AbstractTableInfo ti)
+    {
+        String name = "afterHours";
+        if (ti.getColumn(name) == null)
+        {
+            SQLFragment sql = new SQLFragment("CASE " +
+                    //sat/sun are overtime
+                    //"WHEN " + ti.getSqlDialect().getDatePart(Calendar.DAY_OF_WEEK, ExprColumn.STR_TABLE_ALIAS + ".date") + " IN (1, 7) THEN 'Y' " +
+                    "WHEN {fn dayofweek(" + ExprColumn.STR_TABLE_ALIAS + ".date)}" + " IN (1, 7) THEN 'Y' " +
+                    //otherwise base off enddate
+                    //any time after 1600 is overtime
+                    "WHEN {fn hour(" + ExprColumn.STR_TABLE_ALIAS + ".date)}" + " >= 16 THEN 'Y' " +
+                    "WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN NULL " +
+                    "WHEN {fn hour(" + ExprColumn.STR_TABLE_ALIAS + ".enddate)}" + " >= 16 THEN 'Y' " +
+                    "ELSE null END"
+            );
+
+            ExprColumn newCol = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("date"), ti.getColumn("enddate"));
+            newCol.setLabel("Is After Hours?");
+            newCol.setDescription("This will flag any record where the date is on a weekend, or if the enddate is after 1600.  If the enddate is blank, records during the week will not get tagged as after-hours.");
+            newCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+            ti.addColumn(newCol);
+        }
     }
 
     private void customizeAnimalTable(AbstractTableInfo ds)

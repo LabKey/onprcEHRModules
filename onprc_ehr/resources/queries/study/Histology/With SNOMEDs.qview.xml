@@ -5,8 +5,7 @@
        <column name="tissue" />
        <column name="remark" />
        <column name="stain" />
-       <!--<column name="codes" />-->
-       
+       <column name="codes" />
    </columns>
    <sorts>
        <sort column="date" descending="true"/>

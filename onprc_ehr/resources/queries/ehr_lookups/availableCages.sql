@@ -33,8 +33,15 @@ lc.divider,
 CASE
   WHEN c.cage_type = 'No Cage' THEN false
   WHEN lc.divider.countAsSeparate = false THEN false
+  --NOTE: we want this to count as a potential cage, so include these
+  --WHEN (c.status IS NOT NULL AND c.status = 'Unavailable') then false
   ELSE true
-END as isAvailable
+END as isAvailable,
+
+CASE
+  WHEN (c.status IS NOT NULL AND c.status = 'Unavailable') then 1
+  ELSE 0
+END as isMarkedUnavailable
 
 FROM ehr_lookups.cage c
 --find the cage located to the left

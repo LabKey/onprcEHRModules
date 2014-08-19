@@ -10,9 +10,10 @@
                     <column columnName="location">
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                         <fk>
-                          <fkDbSchema>ehr_lookups</fkDbSchema>
-                          <fkTable>cage</fkTable>
-                          <fkColumnName>location</fkColumnName>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>cage</fkTable>
+                            <fkColumnName>location</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
                         </fk>
                     </column>
                     <column columnName="room">

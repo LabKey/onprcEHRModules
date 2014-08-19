@@ -179,6 +179,14 @@ exports.init = function(EHR){
                         hasUpdates = true;
                     }
 
+                    if (row.dam && !data.species && !obj.species){
+                        var damSpecies = triggerHelper.getSpeciesForDam(row.dam);
+                        if (damSpecies){
+                            obj.species = damSpecies;
+                            hasUpdates = true;
+                        }
+                    }
+
                     if (row['Id/demographics/geographic_origin'] && row['Id/demographics/geographic_origin'] != data.geographic_origin){
                         obj.geographic_origin = row['Id/demographics/geographic_origin'];
                         hasUpdates = true;
@@ -199,13 +207,9 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Deaths', function(scriptErrors, helper, row, oldRow){
-        if (row.Id && row.date && row.finalCondition){
-            triggerHelper.updateReleaseCondition(row.Id, row.date, row.finalCondition);
-        }
-
         if (row.Id && row.date){
-            //close assignment records.  if supplied, close using releaseCondition
-            triggerHelper.closeActiveAssignmentRecords(row.Id, row.date, (row.finalCondition || null));
+            //close assignment records.
+            triggerHelper.closeActiveAssignmentRecords(row.Id, row.date, (row.cause || null));
         }
     });
 
@@ -301,6 +305,12 @@ exports.init = function(EHR){
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Arrival', function(helper, scriptErrors, row, oldRow){
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, 'initialRoom', 'initialCage', false);
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Arrival', function(scriptErrors, helper, row, oldRow) {
+        if (row.Id && row.date) {
+            triggerHelper.ensureQuarantineFlag(row.Id, row.date);
+        }
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Birth', function(helper, scriptErrors, row, oldRow){

@@ -42,7 +42,10 @@ SELECT
   a.project.isResource as isResource,
   a.project.isU24U42 as isU24U42,
   0 as isProvisional,
-  cast(a.project.investigatorId.lastName || ' [' || a.project.name || ']' as varchar) as projectString
+  cast(CASE
+    WHEN a.project.investigatorId IS NOT NULL THEN (a.project.investigatorId.lastName || ' [' || a.project.name || ']')
+    ELSE a.project.name
+  END as varchar(500)) as projectString
 
 FROM study.demographics d
 LEFT JOIN study.assignment a ON (a.id = d.id AND a.isActive = true)

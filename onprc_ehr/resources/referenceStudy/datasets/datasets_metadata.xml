@@ -2473,9 +2473,6 @@
             <column columnName="notAtCenter">
                 <datatype>boolean</datatype>
             </column>
-            <column columnName="finalCondition">
-                <datatype>integer</datatype>
-            </column>
         </columns>
         <tableTitle>Deaths</tableTitle>
     </table>

@@ -8,6 +8,7 @@
        <column name="TotalCages" />
        <column name="AvailableCages" />
        <column name="CagesUsed"/>
+       <column name="MarkedUnavailable" />
        <column name="CagesEmpty"/>
        <column name="pctUsed"/>
        <column name="TotalAnimals"/>

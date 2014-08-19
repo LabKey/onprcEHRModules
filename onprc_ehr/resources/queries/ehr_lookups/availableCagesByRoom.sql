@@ -15,7 +15,8 @@
  */
 SELECT
 c.room,
-  count(*) as availableCages
+count(*) as availableCages,
+sum(c.isMarkedUnavailable) as markedUnavailable
 
 FROM ehr_lookups.availableCages c
 WHERE c.isAvailable = true

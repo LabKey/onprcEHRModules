@@ -15,20 +15,22 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.json.JSONObject;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
-import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
-import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
-import org.labkey.api.security.*;
+import org.labkey.api.security.PrincipalType;
+import org.labkey.api.security.UserPrincipal;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: bimber
@@ -111,5 +113,16 @@ public class BiopsyFormType extends EncounterForm
     {
         UserPrincipal up = org.labkey.api.security.SecurityManager.getPrincipal(NecropsyFormType.DEFAULT_GROUP, getCtx().getContainer(), true);
         return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
+    }
+
+    @Override
+    public JSONObject toJSON()
+    {
+        JSONObject ret = super.toJSON();
+        Map<String, Object> map = new HashMap<>();
+        map.put("allowDatesInDistantPast", true);
+        ret.put("extraContext", map);
+
+        return ret;
     }
 }

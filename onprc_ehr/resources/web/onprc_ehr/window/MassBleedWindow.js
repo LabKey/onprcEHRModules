@@ -129,8 +129,9 @@ Ext4.define('ONPRC_EHR.window.MassBleedWindow', {
 
         Ext4.Msg.wait('Processing...');
 
-        var rowIdx = 0;
-        for (var i=9;i<parsed.length;i++){
+        var offset = 9;
+        var rowIdx = offset; //report rowIdx including the header rows
+        for (var i=offset;i<parsed.length;i++){
             rowIdx++;
             var row = parsed[i];
             if (!row || row.length < 10){

@@ -10,6 +10,7 @@
         <column name="room/housingType"/>
         <column name="AvailableCages" />
         <column name="CagesUsed"/>
+        <column name="MarkedUnavailable" />
         <column name="CagesEmpty"/>
         <column name="pctUsed"/>
         <column name="TotalAnimals"/>

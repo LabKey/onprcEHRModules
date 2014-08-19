@@ -85,8 +85,9 @@ Ext4.define('ONPRC_EHR.window.BulkBloodDrawWindow', {
 
         Ext4.Msg.wait('Processing...');
 
-        var rowIdx = 0;
-        for (var i=4;i<parsed.length;i++){
+        var offset = 4;
+        var rowIdx = offset;
+        for (var i=offset;i<parsed.length;i++){
             rowIdx++;
             var row = parsed[i];
             if (!row || row.length < 7){

@@ -13,9 +13,11 @@
                     </column>
                     <column columnName="date">
                         <columnTitle>Date Added</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
                     </column>
                     <column columnName="enddate">
                         <columnTitle>Date Removed</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
                         <isHidden>false</isHidden>
                     </column>
                     <column columnName="project">

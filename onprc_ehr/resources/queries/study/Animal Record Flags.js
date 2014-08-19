@@ -8,7 +8,9 @@ require("ehr/triggers").initScript(this);
 
 function onInit(event, helper){
     helper.setScriptOptions({
-        allowFutureDates: true
+        allowFutureDates: true,
+        removeTimeFromDate: true,
+        removeTimeFromEndDate: true
     });
 }
 

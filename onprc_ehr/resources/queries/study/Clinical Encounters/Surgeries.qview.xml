@@ -15,6 +15,7 @@
         <column name="taskid" />
         <column name="requestid" />
         <column name="chargetype" />
+        <column name="assistingstaff" />
     </columns>
     <sorts>
         <sort column="date" descending="true"/>

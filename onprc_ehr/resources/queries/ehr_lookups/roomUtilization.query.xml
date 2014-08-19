@@ -34,6 +34,9 @@
                             query.sort=cage&amp;
                         </url>
                     </column>
+                    <column columnName="MarkedUnavailable">
+                        <columnTitle>Marked Unavailable</columnTitle>
+                    </column>
                     <column columnName="CagesUsed">
                         <columnTitle>Cages Used</columnTitle>
                         <displayWidth>40</displayWidth>
