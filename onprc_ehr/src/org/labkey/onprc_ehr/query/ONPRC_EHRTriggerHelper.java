@@ -1010,7 +1010,7 @@ public class ONPRC_EHRTriggerHelper
 
 
                     //only update the release code automatically if experimentally euthanized and that assignment called for a terminal projected release.  otherwise leave blank and let error report catch it
-                    if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) && terminalCode == rowMap.get("projectedReleaseCondition"))
+                    if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) && terminalCode == (Integer) rowMap.get("projectedReleaseCondition"))
                     {
                         row.put("releaseCondition", terminalCode);
                     }
