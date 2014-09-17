@@ -348,6 +348,12 @@ public class ONPRC_EHRTriggerHelper
             });
         }
 
+        if (!_cachedFrequencies.containsKey(frequency))
+        {
+            _log.error("unknown treatment frequency: " + frequency);
+            return false;
+        }
+
         return _cachedFrequencies.get(frequency);
     }
 
@@ -998,7 +1004,7 @@ public class ONPRC_EHRTriggerHelper
             List<Map> rowMaps = ts1.getArrayList(Map.class);
             if (!rowMaps.isEmpty())
             {
-                int terminalCode = getConditionCodeForMeaning("Terminal");
+                Integer terminalCode = getConditionCodeForMeaning("Terminal");
 
                 List<Map<String, Object>> toEnd = new ArrayList<>();
                 List<Map<String, Object>> toEndKeys = new ArrayList<>();
@@ -1055,7 +1061,8 @@ public class ONPRC_EHRTriggerHelper
             String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
             if (nonRestrictedFlag != null)
             {
-                EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, date, null, Collections.singletonList(id), false);
+                //only add initial status if born alive
+                EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, date, enddate, null, Collections.singletonList(id), false);
             }
             else
             {
@@ -1077,7 +1084,7 @@ public class ONPRC_EHRTriggerHelper
             //only add the condition code if the animal is still living
             if (flagList != null && flagList.size() == 1 && enddate == null)
             {
-                EHRService.get().ensureFlagActive(getUser(), getContainer(), flagList.get(0), date, null, Collections.singletonList(id), false);
+                EHRService.get().ensureFlagActive(getUser(), getContainer(), flagList.get(0), date, enddate, null, Collections.singletonList(id), false);
             }
 
             //also breeding groups

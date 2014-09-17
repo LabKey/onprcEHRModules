@@ -38,7 +38,8 @@ LEFT JOIN (
     group_concat(distinct c.assignedvet.DisplayName) as vetNames,
     CAST(group_concat(distinct c.assignedvet) as varchar(200)) as vetUserIds
   FROM study.cases c
-  WHERE c.isOpen = true
+  --WHERE c.isOpen = true
+  WHERE c.enddateCoalesced >= curdate() OR CAST(c.enddate AS DATE) = CAST(c.Id.demographics.death AS DATE)
   GROUP BY c.Id
 ) c ON (c.Id = d.Id)
 
@@ -50,7 +51,7 @@ LEFT JOIN (
     group_concat(distinct a.project.protocol.displayName) as protocols
   FROM study.assignment a
   JOIN onprc_ehr.vet_assignment v ON (a.project.protocol = v.protocol)
-  WHERE a.enddateCoalesced >= curdate() OR a.enddate = a.Id.demographics.death
+  WHERE a.enddateCoalesced >= curdate() OR CAST(a.enddateCoalesced AS DATE) = CAST(a.Id.demographics.death AS DATE)
   GROUP BY a.Id
 ) a ON (a.Id = d.Id)
 
@@ -72,6 +73,6 @@ LEFT JOIN (
 
   FROM study.housing h
   JOIN onprc_ehr.vet_assignment v ON (v.area = h.room.area OR v.room = h.room)
-  WHERE h.enddateTimeCoalesced >= now() OR h.enddate = h.Id.demographics.death
+  WHERE h.enddateTimeCoalesced >= now() OR CAST(h.enddateCoalesced AS DATE) = CAST(h.Id.demographics.death AS DATE)
   GROUP BY h.Id
 ) h ON (h.Id = d.Id)

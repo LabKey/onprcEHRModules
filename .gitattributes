@@ -272,6 +272,9 @@ onprc_ehr/resources/queries/study/Tissue[!!-~]Samples/.qview.xml -text
 onprc_ehr/resources/queries/study/Treatment[!!-~]Orders/.qview.xml -text
 onprc_ehr/resources/queries/study/Treatment[!!-~]Orders/Active[!!-~]Treatments.qview.xml -text
 onprc_ehr/resources/queries/study/Urinalysis[!!-~]Results/.qview.xml -text
+onprc_ehr/resources/queries/study/alopeciaData.query.xml -text
+onprc_ehr/resources/queries/study/alopeciaData.sql -text
+onprc_ehr/resources/queries/study/alopeciaData/.qview.xml -text
 onprc_ehr/resources/queries/study/animalGroupAverageKinship.query.xml -text
 onprc_ehr/resources/queries/study/animalGroupAverageKinship.sql -text
 onprc_ehr/resources/queries/study/animalGroupAverageKinship/.qview.xml -text
@@ -712,6 +715,7 @@ onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.354-12.355.sql -te
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.355-12.356.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.356-12.357.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.357-12.358.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.358-12.359.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text
@@ -729,6 +733,7 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.354-12.355.sql -tex
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.355-12.356.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.356-12.357.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.357-12.358.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.358-12.359.sql -text
 onprc_ehr/resources/schemas/onprc_ehr.xml -text
 onprc_ehr/resources/scripts/onprc_ehr/etl.js -text
 onprc_ehr/resources/scripts/onprc_ehr/onprc_triggers.js -text
@@ -896,12 +901,12 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BirthInstructionsFormSection.java -
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BloodDrawFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BloodDrawFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BloodRequestBulkEditFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/BulkClinicalEntryFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/CageObservationFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinicRequestFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinicalEncountersFormPanelSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinicalEncountersFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinicalObservationsFormSection.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinicalRemarkFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinicalReportFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinicalRoundsFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ClinicalRoundsRemarksFormSection.java -text

@@ -60,33 +60,26 @@ Ext4.onReady(function (){
                     target.removeAll();
                     Ext4.Msg.wait('Loading...');
 
-                    target.add({
-                        xtype: 'ldk-contentresizingpanel',
-                        terms: text,
-                        listeners: {
-                            scope: this,
-                            render: function(panel){
-                                var filterArray = [];
-                                Ext4.Array.forEach(panel.terms, function(term){
-                                    filterArray.push(LABKEY.Filter.create('meaning', term, LABKEY.Filter.Types.CONTAINS));
-                                }, this);
+                    var filterArray = [];
+                    Ext4.Array.forEach(text, function(term){
+                        filterArray.push(LABKEY.Filter.create('meaning', term, LABKEY.Filter.Types.CONTAINS));
+                    }, this);
 
-                                new LABKEY.QueryWebPart({
-                                    renderTo: panel.renderTarget,
-                                    schemaName: 'ehr',
-                                    queryName: 'snomedBySet',
-                                    filters: filterArray,
-                                    frame: 'none',
-                                    timeout: 9999999,
-                                    scope: this,
-                                    sort: 'Id,date',
-                                    success: function(){
-                                        panel.doLayout();
-                                        Ext4.Msg.hide();
-                                    },
-                                    failure: LDK.Utils.getErrorCallback()
-                                });
-                            }
+                    target.add({
+                        xtype: 'ldk-querypanel',
+                        queryConfig: {
+                            schemaName: 'ehr',
+                            queryName: 'snomedBySet',
+                            filters: filterArray,
+                            frame: 'none',
+                            timeout: 9999999,
+                            scope: this,
+                            sort: 'Id,date',
+                            success: function () {
+                                panel.doLayout();
+                                Ext4.Msg.hide();
+                            },
+                            failure: LDK.Utils.getErrorCallback()
                         }
                     });
                 }

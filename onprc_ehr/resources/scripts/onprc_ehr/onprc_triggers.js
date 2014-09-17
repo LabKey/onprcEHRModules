@@ -47,6 +47,12 @@ exports.init = function(EHR){
         });
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Deaths', function(event, helper){
+        helper.setScriptOptions({
+            allowDatesInDistantPast: true
+        });
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Tissue Samples', function(helper, scriptErrors, row, oldRow){
         if (!row.weight && !row.noWeight){
             EHR.Server.Utils.addError(scriptErrors, 'weight', 'A weight is required unless \'No Weight\' is checked', 'WARN');
@@ -127,8 +133,11 @@ exports.init = function(EHR){
         // we want to record the date a record was marked endded, in addition to the actual end itself
         // NOTE: we only do this when both enddate and releaseType are entered
         if (!row.enddatefinalized && row.enddate && row.releaseCondition && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData){
-            console.log('setting enddatefinalized');
+            //note: if ended in the future, defer to that date
             row.enddatefinalized = new Date();
+            if (row.enddate.getTime() > row.enddatefinalized.getTime()){
+                row.enddatefinalized = row.enddate;
+            }
         }
     });
 
@@ -156,7 +165,7 @@ exports.init = function(EHR){
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Birth', function(helper, scriptErrors, row, oldRow) {
         //also allow changes here to update the demographics record
-        //this should only occur if editing a public record, not onBecomePublic
+        //this should only occur if updating an already public record, not just for onBecomePublic, which is a one-time call
         if (!helper.isValidateOnly() && row.Id && !helper.isGeneratedByServer() && oldRow && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData){
             EHR.Server.Utils.findDemographics({
                 participant: row.Id,
@@ -195,6 +204,17 @@ exports.init = function(EHR){
                     if (row.date && row.date.getTime() != (data.birth ? data.birth.getTime() : 0)) {
                         obj.birth = row.date;
                         hasUpdates = true;
+                    }
+
+                    //update death date in demographics if born dead
+                    if (row.Id && row.date && !data.death && row.cond && ['Born Dead', 'Terminated At Birth'].indexOf(row.cond) > -1){
+                        obj.death = row.date;
+                        hasUpdates = true;
+
+                        //if this is the first time a birth condition was entered, treat this the same as when a death is entered
+                        if (oldRow && !oldRow.cond){
+                            helper.onDeathDeparture(row.Id, row.date);
+                        }
                     }
 
                     if (hasUpdates){

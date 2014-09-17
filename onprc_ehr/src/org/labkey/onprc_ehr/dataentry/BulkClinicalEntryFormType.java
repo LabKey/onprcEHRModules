@@ -34,11 +34,11 @@ import java.util.List;
  * Date: 7/29/13
  * Time: 5:03 PM
  */
-public class ClinicalRemarkFormType extends TaskForm
+public class BulkClinicalEntryFormType extends TaskForm
 {
-    public static final String NAME = "Clinical Remarks";
+    public static final String NAME = "Bulk Clinical Entry";
 
-    public ClinicalRemarkFormType(DataEntryFormContext ctx, Module owner)
+    public BulkClinicalEntryFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, "Bulk Clinical Entry", "Clinical", Arrays.<FormSection>asList(
                 new TaskFormSection(),

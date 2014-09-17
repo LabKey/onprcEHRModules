@@ -20,6 +20,7 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.permissions.Permission;
 
 import java.util.Arrays;
 
@@ -39,5 +40,24 @@ public class FlagsFormType extends UnsaveableTask
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "flags", "Flags")
         ));
+    }
+
+    @Override
+    protected boolean canInsert()
+    {
+        boolean canInsert = true;
+        for (FormSection section : getFormSections())
+        {
+            for (Class<? extends Permission> clazz : getAvailabilityPermissions())
+            {
+                if (!section.hasPermission(getCtx(), clazz))
+                {
+                    canInsert = false;
+                    break;
+                }
+            }
+        }
+
+        return canInsert;
     }
 }

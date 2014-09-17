@@ -2,6 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="snomedBySet" tableDbType="TABLE">
+                <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
                 <tableTitle>SNOMED Codes</tableTitle>
                 <columns>
                     <column columnName="codesMeaning">

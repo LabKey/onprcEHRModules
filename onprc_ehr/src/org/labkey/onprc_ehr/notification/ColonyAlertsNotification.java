@@ -145,6 +145,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         incompleteBirthRecords(c, u, msg);
         birthRecordsWithoutDemographics(c, u, msg);
         deathRecordsWithoutDemographics(c, u, msg);
+        demographicsDeathMismatch(c, u, msg);
         infantsNotAssignedToDamGroup(c, u, msg);
         infantsNotAssignedToDamSPF(c, u, msg);
 
@@ -1813,6 +1814,26 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + count + " assignment records ended since " + _dateFormat.format(cal.getTime()) + " that lack a release condition.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "assignment", null, filter) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void demographicsDeathMismatch(final Container c, User u, final StringBuilder msg)
+    {
+        String demographicsTable = getStudy(c).getDatasetByLabel("demographics").getDomain().getStorageTableName();
+        String deathTable = getStudy(c).getDatasetByLabel("deaths").getDomain().getStorageTableName();
+
+        SQLFragment sql = new SQLFragment("SELECT d1.participantid FROM studyDataset." + demographicsTable + " d1\n" +
+                "JOIN studyDataset." + deathTable + " d2 ON (d1.participantid = d2.participantid)\n" +
+                "where d1.death is null OR d1.death != d2.date"
+        );
+
+        SqlSelector ss = new SqlSelector(DbScope.getLabkeyScope(), sql);
+        List<String> ids = ss.getArrayList(String.class);
+        if (!ids.isEmpty())
+        {
+            msg.append("<b>WARNING: There are " + ids.size() + " demographics records where the death date does not match the death table.</b><br>\n");
+            msg.append(StringUtils.join(ids, "<br>"));
             msg.append("<hr>\n\n");
         }
     }
