@@ -197,6 +197,7 @@ onprc_ehr/resources/queries/study/Deaths/.qview.xml -text
 onprc_ehr/resources/queries/study/Delivery.js -text
 onprc_ehr/resources/queries/study/Delivery.query.xml -text
 onprc_ehr/resources/queries/study/Delivery/.qview.xml -text
+onprc_ehr/resources/queries/study/Demographics/Abstract.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Assignment[!!-~]Info.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/Blood[!!-~]Draws.qview.xml -text
 onprc_ehr/resources/queries/study/Demographics/By[!!-~]Investigator.qview.xml -text
