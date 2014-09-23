@@ -35,3 +35,20 @@ WHERE o.category = 'Menses'
 ) t
 
 WHERE (timestampdiff('SQL_TSI_DAY', t.previousMens, t.date)) > 14
+
+--alternate approach:
+-- SELECT
+--   o.Id,
+--   CAST(o.dateOnly AS TIMESTAMP) as date,
+--   o.observation,
+--   o2.dateOnly as previousMens,
+--   timestampdiff('SQL_TSI_DAY', o2.dateOnly, o.dateOnly) as daysSinceLastMens
+-- FROM study.clinical_observations o
+-- JOIN study.clinical_observations o2 ON (
+--   o2.Id = o.Id AND
+--   o2.category = 'Menses' AND
+--   o.category = 'Menses' AND
+--   o2.date < o.date AND
+--   (timestampdiff('SQL_TSI_DAY', o2.dateOnly, o.dateOnly)) > 14
+--   --o2.dateOnly < timestampadd('SQL_TSI_DAY', -14, o.dateOnly)
+-- )

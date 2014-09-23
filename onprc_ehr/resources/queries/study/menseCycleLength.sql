@@ -30,7 +30,7 @@ SELECT
   t.observation,
   t.previousMens,
   t.daysSinceLastMens,
-  (SELECT max(t1.date) as expr FROM study.menseDay1 t1 WHERE t.Id = t.Id AND t1.date < t.date) as lastCycleStart
+  (SELECT max(t1.date) as expr FROM study.menseDay1 t1 WHERE t1.Id = t.Id AND t1.date < t.date) as lastCycleStart
 
 FROM study.menseDay1 t
 

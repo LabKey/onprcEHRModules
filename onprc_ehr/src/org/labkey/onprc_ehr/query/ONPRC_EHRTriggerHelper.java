@@ -1031,7 +1031,7 @@ public class ONPRC_EHRTriggerHelper
                 //terminate rows
                 if (!toEnd.isEmpty())
                 {
-                    _log.info("ending " + toEnd.size() + " assignments due to animal death");
+                    _log.info("ending " + toEnd.size() + " assignments due to animal death on: " + deathDate.toString());
                     assignmentTable.getUpdateService().updateRows(getUser(), getContainer(), toEnd, toEndKeys, getExtraContext());
                 }
             }

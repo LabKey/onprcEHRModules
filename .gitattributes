@@ -567,6 +567,7 @@ onprc_ehr/resources/queries/study/medicalCullList.sql -text
 onprc_ehr/resources/queries/study/medicalCullList/.qview.xml -text
 onprc_ehr/resources/queries/study/menseCycleLength.query.xml -text
 onprc_ehr/resources/queries/study/menseCycleLength.sql -text
+onprc_ehr/resources/queries/study/menseCycleLength/.qview.xml -text
 onprc_ehr/resources/queries/study/menseData.query.xml -text
 onprc_ehr/resources/queries/study/menseData.sql -text
 onprc_ehr/resources/queries/study/menseData/.qview.xml -text
@@ -1011,6 +1012,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/RoutineClinicalTestsNotification
 onprc_ehr/src/org/labkey/onprc_ehr/notification/TMBNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/TreatmentAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/UnoccupiedRoomsNotification.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/notification/VetReviewNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/WeightAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/query/ONPRC_EHRTriggerHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/security/ONPRC_EHRCustomerEditPermission.java -text

@@ -32,7 +32,7 @@ import java.util.List;
  * Date: 7/29/13
  * Time: 5:03 PM
  */
-public class BirthFormType extends UnsaveableTask
+public class BirthFormType extends TaskForm
 {
     public static final String NAME = "birth";
 

@@ -34,7 +34,7 @@
         <column name="daysUntilNextExam"/>
         <column name="Id/labworkHistory/lastHematologyDate"/>
         <column name="Id/labworkHistory/lastBiochemistryDate"/>
-        <column name="isRestricted"/>
+        <column name="Id/currentCondition/condition"/>
     </columns>
     <sorts>
         <sort column="Id/curLocation/room"/>
