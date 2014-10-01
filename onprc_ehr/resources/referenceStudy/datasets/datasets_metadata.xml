@@ -766,10 +766,13 @@
             <column columnName="cage">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="cond">
+            <column columnName="date_type">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="origin">
+            <column columnName="birth_condition">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="teeth">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="conception">

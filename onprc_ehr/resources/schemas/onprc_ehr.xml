@@ -390,4 +390,24 @@
             </ns:item>
         </ns:buttonBarOptions>
     </ns:table>
+    <ns:table tableDbType="TABLE" tableName="birth_condition">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:insertUrl></ns:insertUrl>
+        <ns:updateUrl></ns:updateUrl>
+        <ns:importUrl></ns:importUrl>
+        <ns:deleteUrl></ns:deleteUrl>
+        <ns:columns>
+            <ns:column columnName="rowid"/>
+            <ns:column columnName="value"/>
+            <ns:column columnName="alive">
+                <ns:columnTitle>Counts as Alive?</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="description"/>
+            <ns:column columnName="container"/>
+            <ns:column columnName="createdby"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedby"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
 </ns:tables>

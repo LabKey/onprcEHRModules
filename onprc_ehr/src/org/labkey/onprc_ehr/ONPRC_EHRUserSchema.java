@@ -20,10 +20,10 @@ import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.TableInfo;
-import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.ehr.security.EHRProjectEditPermission;
 import org.labkey.api.ehr.security.EHRRequestPermission;
 import org.labkey.api.ehr.security.EHRVeternarianPermission;
+import org.labkey.api.ldk.table.ContainerScopedTable;
 import org.labkey.api.ldk.table.CustomPermissionsTable;
 import org.labkey.api.query.SimpleUserSchema;
 import org.labkey.api.security.User;
@@ -69,6 +69,10 @@ public class ONPRC_EHRUserSchema extends SimpleUserSchema
             ti.addPermissionMapping(UpdatePermission.class, EHRProjectEditPermission.class);
             ti.addPermissionMapping(DeletePermission.class, EHRProjectEditPermission.class);
             return ti;
+        }
+        else if (ONPRC_EHRSchema.TABLE_BIRTH_CONDITION.equalsIgnoreCase(name))
+        {
+            return new ContainerScopedTable(this, schemaTable, "value").init();
         }
         else if (ONPRC_EHRSchema.TABLE_HOUSING_TRANFER_REQUESTS.equalsIgnoreCase(name))
         {

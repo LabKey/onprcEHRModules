@@ -23,6 +23,7 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ConvertHelper;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.DbSchema;
+import org.labkey.api.data.DbSchemaType;
 import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.DisplayColumnFactory;
 import org.labkey.api.data.JdbcType;
@@ -1172,15 +1173,21 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void customizeBirthTable(AbstractTableInfo ti)
     {
+        ColumnInfo birthCondition = ti.getColumn("birth_condition");
+        if (birthCondition != null)
+        {
+            birthCondition.setLabel("Birth Condition");
+            UserSchema us = getUserSchema(ti, "onprc_ehr");
+            if (us != null)
+            {
+                birthCondition.setFk(new QueryForeignKey(us, null, "birth_condition", "value", "value"));
+            }
+        }
+
         ColumnInfo cond = ti.getColumn("cond");
         if (cond != null)
         {
-            cond.setLabel("Birth Condition");
-            UserSchema us = getUserSchema(ti, "ehr_lookups");
-            if (us != null)
-            {
-                cond.setFk(new QueryForeignKey(us, null, "birth_condition", "value", "value"));
-            }
+            cond.setHidden(true);
         }
 
         ColumnInfo dam = ti.getColumn("dam");
@@ -1755,7 +1762,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         else
         {
             String tableName = ds.getDomain().getStorageTableName();
-            DbSchema dbSchema = DbSchema.get("studydataset");
+            DbSchema dbSchema = DbSchema.get("studydataset", DbSchemaType.Provisioned);
             return dbSchema.getTable(tableName);
         }
     }
@@ -1772,7 +1779,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 if (domain != null)
                 {
                     String tableName = domain.getStorageTableName();
-                    dbSchema = DbSchema.get("studydataset");
+                    dbSchema = DbSchema.get("studydataset", DbSchemaType.Provisioned);
                     realTable = dbSchema.getTable(tableName);
                 }
             }

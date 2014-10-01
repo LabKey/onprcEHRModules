@@ -332,6 +332,8 @@ onprc_ehr/resources/queries/study/assignmentProblemData/.qview.xml -text
 onprc_ehr/resources/queries/study/assignmentProblemSummary.query.xml -text
 onprc_ehr/resources/queries/study/assignmentProblemSummary.sql -text
 onprc_ehr/resources/queries/study/assignmentProblemSummary/.qview.xml -text
+onprc_ehr/resources/queries/study/birthHousingDiscrepancies.query.xml -text
+onprc_ehr/resources/queries/study/birthHousingDiscrepancies.sql -text
 onprc_ehr/resources/queries/study/birthRateBySpecies.query.xml -text
 onprc_ehr/resources/queries/study/birthRateBySpecies.sql -text
 onprc_ehr/resources/queries/study/birthRateData.query.xml -text
@@ -718,6 +720,7 @@ onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.355-12.356.sql -te
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.356-12.357.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.357-12.358.sql -text
 onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.358-12.359.sql -text
+onprc_ehr/resources/schemas/dbscripts/postgresql/onprc_ehr-12.359-12.360.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.20-12.30.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.21-12.22.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.302-12.303.sql -text
@@ -736,6 +739,7 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.355-12.356.sql -tex
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.356-12.357.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.357-12.358.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.358-12.359.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.359-12.360.sql -text
 onprc_ehr/resources/schemas/onprc_ehr.xml -text
 onprc_ehr/resources/scripts/onprc_ehr/etl.js -text
 onprc_ehr/resources/scripts/onprc_ehr/onprc_triggers.js -text

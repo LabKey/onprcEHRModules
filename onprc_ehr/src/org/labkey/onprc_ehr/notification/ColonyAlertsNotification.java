@@ -17,7 +17,6 @@ package org.labkey.onprc_ehr.notification;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
-import org.labkey.api.action.NullSafeBindException;
 import org.labkey.api.data.Aggregate;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
@@ -25,7 +24,6 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
-import org.labkey.api.data.RuntimeSQLException;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
@@ -40,17 +38,12 @@ import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryDefinition;
 import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryService;
-import org.labkey.api.query.QuerySettings;
-import org.labkey.api.query.QueryView;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.util.ResultSetUtil;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
-import org.springframework.validation.BindException;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -148,6 +141,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         demographicsDeathMismatch(c, u, msg);
         infantsNotAssignedToDamGroup(c, u, msg);
         infantsNotAssignedToDamSPF(c, u, msg);
+        birthRecordsNotMatchingHousing(c, u, msg);
 
         //notes
         notesEndingToday(c, u, msg, null, null);
@@ -484,12 +478,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
-        filter.addCondition(FieldKey.fromString("Id/birth/cond/value"), "Born Dead;Terminated At Birth", CompareType.IN);
+        filter.addCondition(FieldKey.fromString("Id/birth/cond/alive"), false, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), filter, sort);
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animals listed as living, but have a birth type of 'Born Dead' or 'Terminated At Birth':</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " animals listed as living, but have a birth type indicating they were born dead:</b><br>\n");
 
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
@@ -498,7 +492,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null, filter) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -550,33 +544,52 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     protected void infantsNotAssignedToDamGroup(final Container c, User u, final StringBuilder msg)
     {
+        int duration = 30;
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("matchesDamGroup"), false, CompareType.EQUAL);
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -14);
+        cal.add(Calendar.DATE, -1 * duration);
         filter.addCondition(FieldKey.fromString("birth"), cal.getTime(), CompareType.DATE_GTE);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("animalGroupInfantsNotAssigned"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " infants born within the last 14 days that are not assigned to the same group as their dam on the date of birth.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "animalGroupInfantsNotAssigned", null) + "&query.matchesDamGroup~eq=false&query.birth~dategte=-14d'>Click here to view them</a><br>\n\n");
+            msg.append("<b>WARNING: There are " + count + " infants born within the last " + duration + " days that are not assigned to the same group as their dam on the date of birth.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "animalGroupInfantsNotAssigned", null) + "&query.matchesDamGroup~eq=false&query.birth~dategte=-" + duration + "d'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void birthRecordsNotMatchingHousing(final Container c, User u, final StringBuilder msg)
+    {
+        int duration = 30;
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1 * duration);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_GTE);
+
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("birthHousingDiscrepancies"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " birth records within the last " + duration + " days that list a room, but the housing record does not match this.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "birthHousingDiscrepancies", null, filter) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
 
     protected void infantsNotAssignedToDamSPF(final Container c, User u, final StringBuilder msg)
     {
+        int duration = 30;
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("matchesDamStatus"), false, CompareType.EQUAL);
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -14);
+        cal.add(Calendar.DATE, -1 * duration);
         filter.addCondition(FieldKey.fromString("birth"), cal.getTime(), CompareType.DATE_GTE);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("infantSPFStatusDiscrepancies"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " infants born within the last 14 days that do not have the same SPF status as their dam.</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " infants born within the last " + duration + " days that do not have the same SPF status as their dam.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "infantSPFStatusDiscrepancies", null, filter) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }

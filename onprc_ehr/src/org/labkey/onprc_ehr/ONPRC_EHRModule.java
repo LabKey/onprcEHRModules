@@ -16,8 +16,6 @@
 package org.labkey.onprc_ehr;
 
 import org.jetbrains.annotations.NotNull;
-import org.labkey.api.audit.AuditLogService;
-import org.labkey.api.data.ContainerManager;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.buttons.ChangeQCStateButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromIdsButton;
@@ -40,7 +38,6 @@ import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.QuerySchema;
 import org.labkey.api.resource.Resource;
 import org.labkey.api.security.roles.RoleManager;
-import org.labkey.api.settings.AdminConsole;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.template.ClientDependency;
@@ -66,9 +63,6 @@ import org.labkey.onprc_ehr.demographics.HousingDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ParentsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.SourceDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.TBDemographicsProvider;
-import org.labkey.onprc_ehr.etl.ETL;
-import org.labkey.onprc_ehr.etl.ETLAuditProvider;
-import org.labkey.onprc_ehr.etl.ETLAuditViewFactory;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsEndDataSource;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
@@ -79,7 +73,6 @@ import org.labkey.onprc_ehr.notification.ColonyAlertsLiteNotification;
 import org.labkey.onprc_ehr.notification.ColonyAlertsNotification;
 import org.labkey.onprc_ehr.notification.ColonyMgmtNotification;
 import org.labkey.onprc_ehr.notification.ComplianceNotification;
-import org.labkey.onprc_ehr.notification.ETLNotification;
 import org.labkey.onprc_ehr.notification.RequestAdminNotification;
 import org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification;
 import org.labkey.onprc_ehr.notification.TMBNotification;
@@ -113,7 +106,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.359;
+        return 12.360;
     }
 
     public boolean hasScripts()
@@ -131,13 +124,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     protected void doStartupAfterSpringConfig(ModuleContext moduleContext)
     {
-        ETL.init(1);
-        DetailsURL details = DetailsURL.fromString("/onprc_ehr/etlAdmin.view", ContainerManager.getSharedContainer());
-        AdminConsole.addLink(AdminConsole.SettingsLinkType.Management, "ehr etl admin", details.getActionURL());
-
-        AuditLogService.registerAuditType(new ETLAuditProvider());
-        AuditLogService.get().addAuditViewFactory(ETLAuditViewFactory.getInstance());
-
         registerEHRResources();
 
         NotificationService ns = NotificationService.get();
@@ -154,7 +140,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         ns.registerNotification(new TMBNotification(this));
         ns.registerNotification(new ClinicalAlertsNotification(this));
         ns.registerNotification(new UnoccupiedRoomsNotification(this));
-        ns.registerNotification(new ETLNotification(this));
         ns.registerNotification(new VetReviewNotification(this));
     }
 
@@ -365,13 +350,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource());
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsEndDataSource());
 
-    }
-
-    @Override
-    public void destroy()
-    {
-        ETL.stop();
-        super.destroy();
     }
 
     @Override

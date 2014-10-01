@@ -155,6 +155,18 @@ Ext4.onReady(function(){
             queryName: 'urinalysis_qualitative_results',
             pk: 'rowid'
         },{
+            label: 'Birth Condition',
+            populateFn: 'populateBirthCondition',
+            schemaName: 'onprc_ehr',
+            queryName: 'birth_condition',
+            pk: 'rowid'
+        },{
+            label: 'Birth Date Type',
+            populateFn: 'populateBirthDateType',
+            schemaName: 'ehr_lookups',
+            queryName: 'birth_date_type',
+            pk: 'rowid'
+        },{
             label: 'Urinalysis Tests',
             populateFn: 'populateUrinalysisTests',
             schemaName: 'ehr_lookups',
@@ -5077,7 +5089,8 @@ Ext4.onReady(function(){
             ['behavior_types', 'Behavior Types', 'value'],
             ['fecal_smear_score', 'Fecal Smear Scores', 'value'],
             ['problem_list_subcategory', 'Problem List Subcategory', 'value'],
-            ['customer_affiliation', 'Customer Affiliation', 'value']
+            ['customer_affiliation', 'Customer Affiliation', 'value'],
+            ['birth_date_type', 'Birth Date Type', 'value']
         ],
 
         populateProjectUseCategory: function(){
@@ -5630,7 +5643,7 @@ Ext4.onReady(function(){
                 ['Patchy and bald', 6],
                 ['Thin, patchy and bald', 7],
                 ['N/A', 8],
-                ['Not Evaluated', 9],
+                ['Not Evaluated', 9]
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));
@@ -14663,6 +14676,47 @@ Ext4.onReady(function(){
                 ['Casts', 'Casts', 'plpf', true, false, true, 16],
                 ['Cast-1', 'Cast Type 1', 'plpf', true, false, true, 17],
                 ['Cast-2', 'Cast Type 2', 'plpf', true, false, true, 18]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateBirthCondition: function(){
+            this.pendingInserts++;
+
+            var config = {
+                schemaName: 'onprc_ehr',
+                queryName: 'birth_condition',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value,alive').split(',');
+            var data = [
+                ['Born Dead/Not Born',false],
+                //['Incomplete Birth Info',false],
+                ['Live Birth',true],
+                ['Terminated At Birth',false]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateBirthDateType: function(){
+            this.pendingInserts++;
+
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'birth_date_type',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+            var data = [
+                ['Estimated'],
+                ['Actual'],
+                ['Unknown'],
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));

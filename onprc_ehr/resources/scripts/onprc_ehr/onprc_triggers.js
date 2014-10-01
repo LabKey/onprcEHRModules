@@ -12,7 +12,13 @@ var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY
 exports.init = function(EHR){
     EHR.ETL = ETL;
 
-    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.INIT, function(event, helper){
+    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.INIT, function(event, helper, EHR){
+        EHR.Server.Utils.isLiveBirth = function(birthCondition){
+            EHR.Assert.assertNotEmpty('triggerHelper is null', triggerHelper);
+
+            return !birthCondition ? true : triggerHelper.isBirthAlive(birthCondition);
+        };
+
         helper.setScriptOptions({
             cacheAccount: false,
             //NOTE: this deliberately omits assignment, since it will be handled separately
@@ -101,14 +107,12 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'ehr', 'project', function(helper, scriptErrors, row){
         if (!row.project){
             row.project = triggerHelper.getNextProjectId();
-            console.log('setting projectId: ' + row.project);
         }
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'ehr', 'protocol', function(helper, scriptErrors, row){
         if (!row.protocol){
             row.protocol = triggerHelper.getNextProtocolId().toString();
-            console.log('setting protocol: ' + row.protocol);
         }
     });
 
@@ -161,7 +165,7 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Birth', function(helper, errors, row, oldRow) {
         //NOTE: we want to perform the birth updates if this row is becoming public, or if we're updating to set the dam for the first time
         if (!helper.isValidateOnly() && (row._becomingPublicData || (oldRow && !oldRow.dam && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && row.dam))) {
-            triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null, row.cond || null, !!row._becomingPublicData);
+            triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null, row.birth_condition || null, !!row._becomingPublicData);
         }
     });
 
@@ -174,8 +178,7 @@ exports.init = function(EHR){
                 helper: helper,
                 scope: this,
                 callback: function (data) {
-                    if (!data)
-                        return;
+                    data = data || {};
 
                     var obj = {};
                     var hasUpdates = false;
@@ -203,18 +206,26 @@ exports.init = function(EHR){
                         hasUpdates = true;
                     }
 
+                    if (row.dam && !obj.geographic_origin){
+                        var damOrigin = triggerHelper.getGeographicOriginForDam(row.dam);
+                        if (damOrigin){
+                            obj.geographic_origin = damOrigin;
+                            hasUpdates = true;
+                        }
+                    }
+
                     if (row.date && row.date.getTime() != (data.birth ? data.birth.getTime() : 0)) {
                         obj.birth = row.date;
                         hasUpdates = true;
                     }
 
                     //update death date in demographics if born dead
-                    if (row.Id && row.date && !data.death && row.cond && ['Born Dead', 'Terminated At Birth'].indexOf(row.cond) > -1){
+                    if (row.Id && row.date && !data.death && !triggerHelper.isBirthAlive(row.birth_condition || null)){
                         obj.death = row.date;
                         hasUpdates = true;
 
                         //if this is the first time a birth condition was entered, treat this the same as when a death is entered
-                        if (oldRow && !oldRow.cond){
+                        if (oldRow && !oldRow.birth_condition){
                             helper.onDeathDeparture(row.Id, row.date);
                         }
                     }

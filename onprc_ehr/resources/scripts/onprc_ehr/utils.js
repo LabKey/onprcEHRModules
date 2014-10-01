@@ -99,6 +99,14 @@ ONPRC_EHR.Utils = new function(){
                                 EHR.Server.Utils.addError(scriptErrors, cageField, cageSizeMsgs[i], 'INFO');
                                 EHR.Server.Utils.addError(scriptErrors, 'Id', cageSizeMsgs[i], 'INFO');
                             }
+
+                            // note: if entering an animal in a small cage, we allow this enter due to the possibility of false positives blocking valid transfers
+                            // however, we require the user to enter a remark explaining this
+                            if (!row.remark){
+                                EHR.Server.Utils.addError(scriptErrors, cageField, 'You are required to enter a remark', 'INFO');
+                                EHR.Server.Utils.addError(scriptErrors, 'Id', 'You are required to enter a remark', 'INFO');
+                                EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required because of the case size errors.', 'WARN');
+                            }
                         }
                     }
                 }

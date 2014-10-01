@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 LabKey Corporation
+ * Copyright (c) 2013-2014 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 SELECT
-  m.lsid,
-  m.id,
-  m.date,
-  max(m.estDeliveryDate) as estDeliveryDate,
-  group_concat(m.confirmationType.value) as confirmationType,
-  count(distinct b.Id) as births,
-  min(b.date) as birthDate,
-  max(b.date) as maxBirthDate,
-  group_concat(distinct b.id) as offspring,
-  group_concat(distinct b.birth_condition) as birthCondition
+  b.Id,
+  b.date,
+  b.room,
+  b.cage
+FROM study.birth b
 
-FROM study.pregnancyConfirmation m
-LEFT JOIN study.Birth b ON (b.dam = m.id AND m.date < b.date AND TIMESTAMPDIFF('SQL_TSI_DAY', m.date, b.date) < 180)
-GROUP BY m.lsid, m.id, m.date
+LEFT JOIN study.housing h ON (
+  b.Id = h.Id AND
+  h.date <= b.date AND
+  h.enddateTimeCoalesced >= b.date AND
+  h.room = b.room AND
+  (h.cage = b.cage OR (h.cage IS NULL AND b.cage IS NULL))
+)
+
+WHERE b.room IS NOT NULL AND h.Id IS NULL
+

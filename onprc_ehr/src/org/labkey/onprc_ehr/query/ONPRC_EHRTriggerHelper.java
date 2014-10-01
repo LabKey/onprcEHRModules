@@ -16,10 +16,8 @@
 package org.labkey.onprc_ehr.query;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.collections.CaseInsensitiveHashSet;
 import org.labkey.api.data.ColumnInfo;
@@ -27,6 +25,7 @@ import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
+import org.labkey.api.data.DbSchemaType;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
@@ -36,7 +35,6 @@ import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
 import org.labkey.api.data.SqlExecutor;
 import org.labkey.api.data.SqlSelector;
-import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.EHRDemographicsService;
@@ -44,12 +42,9 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.demographics.AnimalRecord;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.query.BatchValidationException;
-import org.labkey.api.query.DuplicateKeyException;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
-import org.labkey.api.query.InvalidKeyException;
 import org.labkey.api.query.QueryService;
-import org.labkey.api.query.QueryUpdateServiceException;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
@@ -59,14 +54,12 @@ import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.Pair;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
-import org.labkey.onprc_ehr.dataentry.LabworkRequestFormType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -93,6 +86,7 @@ public class ONPRC_EHRTriggerHelper
     private Map<Integer, Pair<String, String>> _cachedProtocols = new HashMap<>();
     private Map<String, Map<String, Set<String>>> _cachedHousing = new HashMap<>();
     private Map<Integer, String> _cachedProcedureCategories = new HashMap<>();
+    private Map<String, Boolean> _cachedBirthConditions = null;
 
     private Integer _nextProjectId = null;
     private Integer _nextProtocolId = null;
@@ -309,7 +303,7 @@ public class ONPRC_EHRTriggerHelper
                 if (domain != null)
                 {
                     String tableName = domain.getStorageTableName();
-                    dbSchema = DbSchema.get("studydataset");
+                    dbSchema = DbSchema.get("studydataset", DbSchemaType.Provisioned);
                     realTable = dbSchema.getTable(tableName);
                 }
             }
@@ -1046,7 +1040,7 @@ public class ONPRC_EHRTriggerHelper
     public void doBirthTriggers(String id, Date date, String dam, String birthCondition, boolean isBecomingPublic) throws Exception
     {
         //is the infant is dead, terminate the assignments
-        Date enddate = Arrays.asList("Born Dead", "Terminated At Birth").contains(birthCondition) ? date : null;
+        Date enddate = isBirthAlive(birthCondition) ? null : date;
 
         //also check for a pre-existing death record:
         Date deathDate = new TableSelector(getTableInfo("study", "deaths"), Collections.singleton("date"), new SimpleFilter(FieldKey.fromString("Id"), id), null).getObject(Date.class);
@@ -1082,7 +1076,7 @@ public class ONPRC_EHRTriggerHelper
             TableSelector ts = new TableSelector(flags, Collections.singleton("flag"), flagFilter, null);
             List<String> flagList = ts.getArrayList(String.class);
             //only add the condition code if the animal is still living
-            if (flagList != null && flagList.size() == 1 && enddate == null)
+            if (flagList != null && flagList.size() == 1)
             {
                 EHRService.get().ensureFlagActive(getUser(), getContainer(), flagList.get(0), date, enddate, null, Collections.singletonList(id), false);
             }
@@ -1326,6 +1320,35 @@ public class ONPRC_EHRTriggerHelper
         return _cachedProtocols.get(project);
     }
 
+    public boolean isBirthAlive(String condition)
+    {
+        if (condition == null)
+        {
+            return true;
+        }
+
+        if (_cachedBirthConditions == null)
+        {
+            _cachedBirthConditions = new HashMap<>();
+
+            TableInfo ti = getTableInfo("onprc_ehr", "birth_condition");
+            TableSelector ts = new TableSelector(ti);
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet rs) throws SQLException
+                {
+                    if (rs.getString("value") != null && rs.getObject("alive") != null)
+                    {
+                        _cachedBirthConditions.put(rs.getString("value"), rs.getBoolean("alive"));
+                    }
+                }
+            });
+        }
+
+        return _cachedBirthConditions.containsKey(condition) ? _cachedBirthConditions.get(condition) : true;
+    }
+
     public Integer getConditionCodeByFlag(final String flag)
     {
         if (flag == null)
@@ -1560,7 +1583,7 @@ public class ONPRC_EHRTriggerHelper
             String suffix = "";
             if (DbScope.getLabkeyScope().getSqlDialect().isPostgreSQL())
             {
-                suffix = "protocol ~ '^([0-9]+)$";
+                suffix = "protocol ~ '^([0-9]+)$'";
             }
             else if (DbScope.getLabkeyScope().getSqlDialect().isSqlServer())
             {
@@ -1605,6 +1628,11 @@ public class ONPRC_EHRTriggerHelper
     public String getSpeciesForDam(String dam)
     {
         return new TableSelector(getTableInfo("study", "demographics"), PageFlowUtil.set("species"), new SimpleFilter(FieldKey.fromString("Id"), dam), null).getObject(String.class);
+    }
+
+    public String getGeographicOriginForDam(String dam)
+    {
+        return new TableSelector(getTableInfo("study", "demographics"), PageFlowUtil.set("geographic_origin"), new SimpleFilter(FieldKey.fromString("Id"), dam), null).getObject(String.class);
     }
 
     public void ensureQuarantineFlag(String id, Date date) throws BatchValidationException

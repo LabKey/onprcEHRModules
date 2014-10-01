@@ -75,9 +75,9 @@ Ext4.define('ONPRC_EHR.window.CreateProjectWindow', {
                                 'project': rows
                             };
 
-                            var newForm = LABKEY.ExtAdapter.DomHelper.append(document.getElementsByTagName('body')[0],
+                            Ext4.DomHelper.append(document.getElementsByTagName('body')[0],
                                             '<form method="POST" action="' + LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'project', project: ''}) + '&returnUrl=' + LDK.Utils.getSrcURL() + '">' +
-                                            '<input type="hidden" name="initialData" value="' + LABKEY.ExtAdapter.htmlEncode(Ext4.encode(initialData)) + '" />' +
+                                            '<input type="hidden" name="initialData" value="' + Ext4.htmlEncode(Ext4.encode(initialData)) + '" />' +
                                             '</form>');
                             newForm.submit();
                         }

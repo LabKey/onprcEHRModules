@@ -67,6 +67,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
     {
         StringBuilder msg = new StringBuilder();
 
+        remarksWithoutAssignedVet(c, u, msg);
         vetRecordsUnderReview(c, u, msg);
         animalsWithoutAssignedVet(c, u, msg);
 
@@ -76,7 +77,19 @@ public class VetReviewNotification extends ColonyAlertsNotification
     public void vetRecordsUnderReview(Container c, User u, final StringBuilder msg)
     {
         int duration = 7;
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("earliestRemarkSinceReview"), "-" + duration + "d", CompareType.DATE_LTE);
+        doRemarkQuery(c, u, msg, filter, "ALERT: The following animals that have remarks entered at least " + duration + " days ago, but have not yet been reviewed.");
+    }
 
+    public void remarksWithoutAssignedVet(Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/assignedVet/assignedVet"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("totalRemarksEnteredSinceReview"), 0, CompareType.GT);
+        doRemarkQuery(c, u, msg, filter, "ALERT: The following animals that have remarks entered, but the animal is not currently assigned to a vet.");
+    }
+
+    public void doRemarkQuery(Container c, User u, final StringBuilder msg, SimpleFilter filter, String header)
+    {
         TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("demographics");
         final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, PageFlowUtil.set(
                 FieldKey.fromString("Id"),
@@ -86,11 +99,10 @@ public class VetReviewNotification extends ColonyAlertsNotification
                 FieldKey.fromString("Id/assignedVet/assignedVet")
         ));
 
-        TableSelector ts = new TableSelector(ti, cols.values(), new SimpleFilter(FieldKey.fromString("earliestRemarkSinceReview"), "-" + duration + "d", CompareType.DATE_LTE), new Sort("Id"));
-
+        TableSelector ts = new TableSelector(ti, cols.values(), filter, new Sort("Id"));
         final List<String> rows = new ArrayList<>();
         final String urlBase = getExecuteQueryUrl(c, "study", "demographics", "Vet Review") + "&query.Id~eq=";
-                ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
         {
             @Override
             public void exec(ResultSet object) throws SQLException
@@ -109,7 +121,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
 
         if (!rows.isEmpty())
         {
-            msg.append("<b>ALERT: There are " + rows.size() + " animals that have remarks entered at least " + duration + " days ago, but have not yet been reviewed.</b><br>\n");
+            msg.append("<b>" + header + "</b><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'><tr><td>Id</td><td>Assigned Vet</td><td>Oldest Remark Needing Review</td><td>Last Vet Review</td><td>Status</td></tr>");
             for (String row : rows)
             {

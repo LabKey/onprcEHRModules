@@ -27,6 +27,7 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
+import org.labkey.api.data.DbSchemaType;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
@@ -1486,7 +1487,7 @@ public class LegacyDataManager
             throw new IllegalArgumentException("Unable to find cases table");
         }
 
-        TableInfo realTable = DbSchema.get("studydataset").getTable(ti.getDomain().getStorageTableName());
+        TableInfo realTable = DbSchema.get("studydataset", DbSchemaType.Provisioned).getTable(ti.getDomain().getStorageTableName());
 
         //clinical cases
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("assessmentOnOpenDate"), null, CompareType.NONBLANK);
