@@ -424,6 +424,22 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         customizeDateColumn(ti);
 
+        addNaturalSort(ti, "cage");
+        addNaturalSort(ti, "cage1");
+        addNaturalSort(ti, "cage2");
+
+        addNaturalSort(ti, "room");
+        addNaturalSort(ti, "room1");
+        addNaturalSort(ti, "room2");
+    }
+
+    private void addNaturalSort(AbstractTableInfo ti, String columnName)
+    {
+        ColumnInfo column = ti.getColumn(columnName);
+        if (column != null)
+        {
+            LDKService.get().applyNaturalSort(ti, columnName);
+        }
     }
 
     private void customizeDateColumn(AbstractTableInfo ti)

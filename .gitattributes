@@ -189,6 +189,7 @@ onprc_ehr/resources/queries/study/Clinical[!!-~]Encounters/TB[!!-~]Tests.qview.x
 onprc_ehr/resources/queries/study/Clinical[!!-~]Observations/.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Observations/BSU[!!-~]Observations.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Observations/Menses.qview.xml -text
+onprc_ehr/resources/queries/study/Clinical[!!-~]Remarks/.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Remarks/Behavior[!!-~]Remarks.qview.xml -text
 onprc_ehr/resources/queries/study/Clinical[!!-~]Remarks/SOAP[!!-~]Note.qview.xml -text
 onprc_ehr/resources/queries/study/Clinpath[!!-~]Runs/.qview.xml -text
