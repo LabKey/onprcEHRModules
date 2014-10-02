@@ -2971,19 +2971,10 @@
             <column columnName="stain">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="trimdate">
-                <datatype>timestamp</datatype>
-            </column>
             <column columnName="qualifier">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="trim_remarks">
-                <datatype>varchar</datatype>
-            </column>
             <column columnName="pathologist">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="trimmed_by">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="formSort">
