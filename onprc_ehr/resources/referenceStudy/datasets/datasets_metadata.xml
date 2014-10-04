@@ -2974,9 +2974,6 @@
             <column columnName="qualifier">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="pathologist">
-                <datatype>varchar</datatype>
-            </column>
             <column columnName="formSort">
                 <datatype>integer</datatype>
             </column>

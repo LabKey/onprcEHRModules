@@ -464,6 +464,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     "ELSE null END"
             );
 
+            assert ti.getColumn("date") != null;
+            assert ti.getColumn("enddate") != null;
             ExprColumn newCol = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("date"), ti.getColumn("enddate"));
             newCol.setLabel("Is After Hours?");
             newCol.setDescription("This will flag any record where the date is on a weekend, or if the enddate is after 1600.  If the enddate is blank, records during the week will not get tagged as after-hours.");

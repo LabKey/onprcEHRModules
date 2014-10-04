@@ -280,7 +280,7 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Housing', function(helper, scriptErrors, row, oldRow){
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow);
 
-        //also attempt to update dividers
+        //TODO: why are we duplicating this block?
         var msgs = onprc_utils.doUpdateDividers(EHR, row, helper, scriptErrors, triggerHelper, true);
         if (msgs){
             msgs = msgs.split("<>");
@@ -306,6 +306,10 @@ exports.init = function(EHR){
                     }
                 }
             });
+        }
+
+        if (row.birth_date_type == 'Undetermined'){
+            EHR.Server.Utils.addError(scriptErrors, 'birth_date_type', 'You can save records with Undetermined; however, you will need to change this before finalizing the form', 'WARN');
         }
     });
 

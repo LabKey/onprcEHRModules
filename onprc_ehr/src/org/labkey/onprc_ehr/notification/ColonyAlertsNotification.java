@@ -139,6 +139,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         birthRecordsWithoutDemographics(c, u, msg);
         deathRecordsWithoutDemographics(c, u, msg);
         demographicsDeathMismatch(c, u, msg);
+        demographicsBirthMismatch(c, u, msg);
         infantsNotAssignedToDamGroup(c, u, msg);
         infantsNotAssignedToDamSPF(c, u, msg);
         birthRecordsNotMatchingHousing(c, u, msg);
@@ -478,7 +479,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
-        filter.addCondition(FieldKey.fromString("Id/birth/cond/alive"), false, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("Id/birth/birth_condition/alive"), false, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), filter, sort);
         long count = ts.getRowCount();
         if (count > 0)
@@ -1846,6 +1847,26 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (!ids.isEmpty())
         {
             msg.append("<b>WARNING: There are " + ids.size() + " demographics records where the death date does not match the death table.</b><br>\n");
+            msg.append(StringUtils.join(ids, "<br>"));
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void demographicsBirthMismatch(final Container c, User u, final StringBuilder msg)
+    {
+        String demographicsTable = getStudy(c).getDatasetByLabel("demographics").getDomain().getStorageTableName();
+        String deathTable = getStudy(c).getDatasetByLabel("birth").getDomain().getStorageTableName();
+
+        SQLFragment sql = new SQLFragment("SELECT d1.participantid FROM studyDataset." + demographicsTable + " d1\n" +
+                "JOIN studyDataset." + deathTable + " d2 ON (d1.participantid = d2.participantid)\n" +
+                "where d1.birth is null OR d1.birth != d2.date"
+        );
+
+        SqlSelector ss = new SqlSelector(DbScope.getLabkeyScope(), sql);
+        List<String> ids = ss.getArrayList(String.class);
+        if (!ids.isEmpty())
+        {
+            msg.append("<b>WARNING: There are " + ids.size() + " demographics records where the birth date does not match the birth table.</b><br>\n");
             msg.append(StringUtils.join(ids, "<br>"));
             msg.append("<hr>\n\n");
         }
