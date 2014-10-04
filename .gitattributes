@@ -12,6 +12,9 @@ GeneticsCore/resources/queries/study/parentageFlagSummary.sql -text
 GeneticsCore/resources/views/begin.html -text
 GeneticsCore/resources/views/begin.view.xml -text
 GeneticsCore/resources/views/begin.webpart.xml -text
+GeneticsCore/resources/views/geneticsMenu.html -text
+GeneticsCore/resources/views/geneticsMenu.view.xml -text
+GeneticsCore/resources/views/geneticsMenu.webpart.xml -text
 GeneticsCore/resources/web/geneticscore/buttons.js -text
 GeneticsCore/resources/web/geneticscore/window/ManageFlagsWindow.js -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreController.java -text
