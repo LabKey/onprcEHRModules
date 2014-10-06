@@ -26,6 +26,7 @@ import org.labkey.api.data.SqlExecutor;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.exp.api.ExpProtocol;
 import org.labkey.api.exp.api.ExperimentService;
+import org.labkey.api.security.CSRF;
 import org.labkey.api.security.RequiresPermissionClass;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.security.permissions.UpdatePermission;
@@ -107,6 +108,7 @@ public class GenotypeAssaysController extends SpringActionController
     }
 
     @RequiresPermissionClass(UpdatePermission.class)
+    @CSRF
     public class CacheAnalysesAction extends ApiAction<CacheAnalysesForm>
     {
         public ApiResponse execute(CacheAnalysesForm form, BindException errors)

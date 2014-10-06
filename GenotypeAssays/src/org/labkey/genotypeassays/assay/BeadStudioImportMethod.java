@@ -207,7 +207,7 @@ public class BeadStudioImportMethod extends DefaultSnpAssayImportMethod
                         snp += alleleB;
                     }
 
-                    String confidence = cells.get(16);
+                    String confidence = cells.get(5);
                     if ("NaN".equals(confidence))
                     {
                         confidence = "";
