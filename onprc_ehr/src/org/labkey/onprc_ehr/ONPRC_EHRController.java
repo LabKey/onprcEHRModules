@@ -39,6 +39,7 @@ import org.labkey.api.files.FileContentService;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.AdminConsoleAction;
+import org.labkey.api.security.CSRF;
 import org.labkey.api.security.RequiresPermissionClass;
 import org.labkey.api.security.RequiresSiteAdmin;
 import org.labkey.api.security.User;
@@ -86,6 +87,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermissionClass(AdminPermission.class)
+    @CSRF
     public class GetEtlDetailsAction extends ApiAction<Object>
     {
         public ApiResponse execute(Object form, BindException errors)
@@ -115,6 +117,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermissionClass(ReadPermission.class)
+    @CSRF
     public class GetNavItemsAction extends ApiAction<Object>
     {
         public ApiResponse execute(Object form, BindException errors)
@@ -194,6 +197,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermissionClass(AdminPermission.class)
+    @CSRF
     public class SetEtlDetailsAction extends ApiAction<EtlAdminForm>
     {
         public ApiResponse execute(EtlAdminForm form, BindException errors)
@@ -777,6 +781,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermissionClass(ReadPermission.class)
+    @CSRF
     public class GetAnimalLockAction extends ApiAction<Object>
     {
         public ApiResponse execute(Object form, BindException errors)
@@ -786,6 +791,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermissionClass(EHRDataEntryPermission.class)
+    @CSRF
     public class SetAnimalLockAction extends ApiAction<LockAnimalForm>
     {
         public ApiResponse execute(LockAnimalForm form, BindException errors)

@@ -134,7 +134,7 @@ Ext4.define('ONPRC_EHR.window.ManageFlagsWindow', {
 
         Ext4.Msg.wait('Saving...');
 
-        Ext4.Ajax.request({
+        LABKEY.Ajax.request({
             url: LABKEY.ActionURL.buildURL('ehr', 'manageFlags', this.ehrCtx.EHRStudyContainer),
             method: 'POST',
             params: params,
