@@ -49,6 +49,7 @@ import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
 import org.labkey.api.study.DataSetTable;
+import org.labkey.api.study.StudyService;
 import org.labkey.api.util.GUID;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.Pair;
@@ -303,7 +304,7 @@ public class ONPRC_EHRTriggerHelper
                 if (domain != null)
                 {
                     String tableName = domain.getStorageTableName();
-                    dbSchema = DbSchema.get("studydataset", DbSchemaType.Provisioned);
+                    dbSchema = StudyService.get().getDatasetSchema();
                     realTable = dbSchema.getTable(tableName);
                 }
             }

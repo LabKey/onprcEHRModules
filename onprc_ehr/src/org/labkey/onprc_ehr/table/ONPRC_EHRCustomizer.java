@@ -1780,7 +1780,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         else
         {
             String tableName = ds.getDomain().getStorageTableName();
-            DbSchema dbSchema = DbSchema.get("studydataset", DbSchemaType.Provisioned);
+            DbSchema dbSchema = StudyService.get().getDatasetSchema();
             return dbSchema.getTable(tableName);
         }
     }
@@ -1790,15 +1790,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         TableInfo realTable = null;
         if (targetTable instanceof FilteredTable)
         {
-            DbSchema dbSchema;
             if (targetTable instanceof DataSetTable)
             {
                 Domain domain = ((FilteredTable)targetTable).getDomain();
                 if (domain != null)
                 {
                     String tableName = domain.getStorageTableName();
-                    dbSchema = DbSchema.get("studydataset", DbSchemaType.Provisioned);
-                    realTable = dbSchema.getTable(tableName);
+                    realTable = StudyService.get().getDatasetSchema().getTable(tableName);
                 }
             }
             else if (targetTable.getSchema() != null)
