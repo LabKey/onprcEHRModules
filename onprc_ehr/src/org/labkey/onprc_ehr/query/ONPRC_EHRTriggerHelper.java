@@ -1175,7 +1175,7 @@ public class ONPRC_EHRTriggerHelper
 
     public void updateAnimalCondition(String id, Date enddate, Integer condition) throws BatchValidationException
     {
-        String flag = getFlag("condition", null, condition, true);
+        String flag = getFlag("Condition", null, condition, true);
         if (flag != null)
         {
             EHRService.get().ensureFlagActive(getUser(), getContainer(), flag, enddate, null, Collections.singletonList(id), true);

@@ -3,7 +3,7 @@
 Ext4.onReady(function(){
     var webpart = <%=webpartContext%>;
     Ext4.define('ONPRC_EHR.panel.PopulateDataPanel', {
-        extend: 'Ext.panel.Panel',        
+        extend: 'Ext.panel.Panel',
     
         initComponent: function(){
             Ext4.apply(this, {
@@ -814,6 +814,8 @@ Ext4.onReady(function(){
             ['E-X0500','Drugs and Procedures',null],
             ['E-X1200','Drugs and Procedures',null],
             ['E-X1460','Drugs and Procedures',null],
+            ['E-Y1384','Drugs and Procedures',null],
+            ['E-Y1385','Drugs and Procedures',null],
             ['E-Y7410','Drugs and Procedures',null],
             ['E-Y7440','Drugs and Procedures',null],
             ['E-Y7884','Drugs and Procedures',null],
@@ -8216,6 +8218,7 @@ Ext4.onReady(function(){
                 ['clinObsBsu' ,'Behavior' ,'query' ,'Observations' ,'true' ,'' ,'study' ,'Clinical Observations', 'BSU Observations', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.'],
                 ['clinremarks' ,'Clinical' ,'query' ,'Clinical Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', '', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the clinical remarks entered about each animal'],
                 ['behaviorRemarks' ,'Behavior' ,'query' ,'Behavior Remarks' ,'true' ,'' ,'study' ,'Clinical Remarks', 'Behavior Remarks', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the behavior remarks entered about each animal'],
+                ['drug','Behavior' ,'query' ,'Behavior Treatments' ,'true' ,'' ,'study' ,'Drug Administration', 'Behavior Treatments', '', 'date', 'false', 'false', '', 'qcstate/publicdata', 'This report contains the behavior treatments entered about each animal'],
                 ['pairings' ,'Behavior' ,'query' ,'Pairing Observations' ,'true' ,'' ,'study' ,'pairingSummary', '', '', 'date', 'false', 'false', '', '', 'This report contains records about pairings made using each animal'],
                 ['pairingHousingSummary' ,'Behavior' ,'query' ,'Pairing With Housing' ,'true' ,'' ,'study' ,'pairingHousingSummary', '', '', 'date', 'false', 'false', '', '', 'This report contains records about pairings made using each animal'],
                 ['roommateHistoryBSU' ,'Behavior' ,'query' ,'Cagemate History' ,'true' ,'' ,'study' ,'housingRoommates', 'Caged Housing Only', '', 'StartDate', 'false', 'false', '', 'qcstate/publicdata', 'This report displays all animals that shared a cage, including the start date, stop date and days co-housed'],
@@ -9786,6 +9789,8 @@ Ext4.onReady(function(){
                 ['E-Y1381','Helicobacter pylori'],
                 ['E-Y1382','Helicobacter, NOS'],
                 ['E-Y1383','Helicobacter heilmannii'],
+                ['E-Y1384','PGL1001'],
+                ['E-Y1385','PGL1001 Placebo'],
                 ['E-Y2100','Ureaplasma parvum'],
                 ['E-Y2770','EUTHANASIA SOLUTION'],
                 ['E-Y2775','Insulin1unit/ml'],

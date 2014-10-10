@@ -220,6 +220,7 @@ onprc_ehr/resources/queries/study/Diet.query.xml -text
 onprc_ehr/resources/queries/study/Diet/.qview.xml -text
 onprc_ehr/resources/queries/study/Diet/Active[!!-~]Diets.qview.xml -text
 onprc_ehr/resources/queries/study/Drug[!!-~]Administration/.qview.xml -text
+onprc_ehr/resources/queries/study/Drug[!!-~]Administration/Behavior[!!-~]Treatments.qview.xml -text
 onprc_ehr/resources/queries/study/Drug[!!-~]Administration/Requests.qview.xml -text
 onprc_ehr/resources/queries/study/Enrichment.js -text
 onprc_ehr/resources/queries/study/Enrichment.query.xml -text
@@ -850,6 +851,7 @@ onprc_ehr/resources/web/onprc_ehr/panel/RoomLayoutPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/reports/Colony[!!-~]Census.xlsm -text
 onprc_ehr/resources/web/onprc_ehr/templates/Blood-Sedation[!!-~]Form.xlsx -text
 onprc_ehr/resources/web/onprc_ehr/templates/DCM[!!-~]Mass[!!-~]Processing[!!-~]Form.xlsx -text
+onprc_ehr/resources/web/onprc_ehr/window/AddFemaleAnimalsWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/AnesthesiaRowWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/AssignmentDefaultsWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/AssignmentReleaseConditionWindow.js -text
@@ -948,6 +950,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkRequestInstructionsFormSecti
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LockAnimalsFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MatingFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MedicationsQueryFormSection.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MensFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MensFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MiscChargesByAccountFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MiscChargesFormSection.java -text
@@ -1022,6 +1025,8 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/WeightAlertsNotification.java -t
 onprc_ehr/src/org/labkey/onprc_ehr/query/ONPRC_EHRTriggerHelper.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/security/ONPRC_EHRCustomerEditPermission.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/security/ONPRC_EHRCustomerEditRole.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/security/ONPRC_EHRTransferRequestPermission.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/security/ONPRC_EHRTransferRequestRole.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/table/ClinicalActionsDisplayColumn.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/table/FixedWidthDisplayColumn.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/table/ONPRC_EHRCustomizer.java -text

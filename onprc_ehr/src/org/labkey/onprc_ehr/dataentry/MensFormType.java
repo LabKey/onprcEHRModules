@@ -40,7 +40,7 @@ public class MensFormType extends TaskForm
         super(ctx, owner, NAME, "Menses", "Colony Management", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
-            new ClinicalObservationsFormSection()
+            new MensFormSection()
         ));
 
         addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Menses.js"));

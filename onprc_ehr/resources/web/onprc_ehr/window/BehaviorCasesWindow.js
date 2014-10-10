@@ -77,7 +77,7 @@ Ext4.define('EHR.window.BehaviorCasesWindow', {
             Ext4.Msg.alert('Error', 'No Cases Found');
             return;
         }
-        var reviewDate = Ext4.Date.add(new Date(), Ext4.Date.DAY, 14);
+        var reviewDate = Ext4.Date.clearTime(Ext4.Date.add(new Date(), Ext4.Date.DAY, 14));
         Ext4.Array.forEach(results.rows, function(row, rowIdx){
             toAdd.push({
                 xtype: 'displayfield',
@@ -101,19 +101,43 @@ Ext4.define('EHR.window.BehaviorCasesWindow', {
 
         if (toAdd.length){
             toAdd = [{
-                html: 'Id'
+                html: 'Id',
+                style: 'padding-top: 10px;'
             },{
                 html: 'Review Date',
                 width: 120
             }].concat(toAdd);
 
             this.add({
-                html: 'This helper allows you to close cases for review in bulk.  In order to skip a given animal, leave the date field blank.',
+                html: 'This helper allows you to close cases for review in bulk.  In order to skip a given animal, leave the date field blank.  Use the \'Change All\' field to set the review date for all cases.',
                 style: 'padding-bottom: 10px;',
                 border: false
             });
 
-            this.add({
+            this.add([{
+                xtype: 'datefield',
+                fieldLabel: 'Change All:',
+                itemId: 'changeAll',
+                width: 300,
+                minDate: Ext4.Date.clearTime(new Date()),
+                listeners: {
+                    change: function (field, val) {
+                        if (!val) {
+                            return;
+                        }
+
+                        var fields = field.up('window').query('field[fieldName=date]');
+                        Ext4.Array.forEach(fields, function (f) {
+                            f.setValue(val);
+                        }, this);
+
+                        field.setValue(null);
+                    }
+                }
+            },{
+                html: '<hr>',
+                border: false
+            },{
                 defaults: {
                     style: 'margin-right: 5px;',
                     border: false
@@ -124,7 +148,7 @@ Ext4.define('EHR.window.BehaviorCasesWindow', {
                     columns: columns
                 },
                 items: toAdd
-            });
+            }]);
         }
         else {
             this.add({

@@ -20,10 +20,8 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
-import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.api.ehr.security.EHRRequestPermission;
 import org.labkey.api.module.Module;
-import org.labkey.api.view.template.ClientDependency;
+import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestPermission;
 
 import java.util.Arrays;
 
@@ -49,6 +47,6 @@ public class HousingRequestFormType extends RequestForm
     @Override
     protected boolean canInsert()
     {
-        return getCtx().getContainer().hasPermission(getCtx().getUser(), EHRRequestPermission.class);
+        return getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_EHRTransferRequestPermission.class);
     }
 }

@@ -61,7 +61,8 @@ JOIN (
   JOIN study.blood b2 ON (b1.id = b2.id AND b2.dateOnly > TIMESTAMPADD('SQL_TSI_DAY', (-1 * 21), b1.dateOnly) AND b2.dateOnly <= b1.dateOnly)
   GROUP BY b1.lsid
 ) b3 ON (b3.lsid = b.lsid)
-WHERE d.calculated_status = 'Alive'
+--NOTE: include all
+--WHERE d.calculated_status = 'Alive'
 
 ) t0
 

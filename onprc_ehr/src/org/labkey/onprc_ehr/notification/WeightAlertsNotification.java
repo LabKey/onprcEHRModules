@@ -214,7 +214,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
             public void exec(ResultSet object) throws SQLException
             {
                 Results rs = new ResultsImpl(object, columns);
-                String area = rs.getString(areaKey);
+                String area = rs.getString(areaKey) == null ? "" : rs.getString(areaKey);
                 Map<String, List<Map<String, Object>>> areaMap = summary.get(area);
                 if (areaMap == null)
                 {
@@ -222,7 +222,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                     summary.put(area, areaMap);
                 }
 
-                String room = rs.getString(roomKey);
+                String room = rs.getString(roomKey) == null ? "" : rs.getString(roomKey);
                 List<Map<String, Object>> roomList = areaMap.get(room);
                 if (roomList == null)
                 {

@@ -31,39 +31,41 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH', {
         }
 
         Ext4.Msg.wait('Loading...');
-        EHR.DemographicsCache.getDemographics(animalId, function(ids, ret){
-            Ext4.Msg.hide();
+        LABKEY.Query.selectRows({
+            schemaName: 'study',
+            queryName: 'deaths',
+            filterArray: [LABKEY.Filter.create('Id', animalId)],
+            columns: 'Id,objectid',
+            scope: this,
+            failure: LDK.Utils.getErrorCallback(),
+            success: function (results) {
+                Ext4.Msg.hide();
 
-            var ar = ret[animalId];
-            if (!ar){
-                Ext4.Msg.alert('Error', 'Unable to find a demographics record for animal: ' + animalId);
-                return;
-            }
-
-            var objectid = null;
-            if (ar.getDeathInfo() && ar.getDeathInfo().length){
-                objectid = ar.getDeathInfo()[0].objectid;
-            }
-
-            Ext4.create('EHR.window.ManageRecordWindow', {
-                schemaName: 'study',
-                queryName: 'deaths',
-                pkCol: 'objectid',
-                pkValue: objectid || LABKEY.Utils.generateUUID(),
-                extraMetaData: {
-                    Id: {
-                        defaultValue: animalId,
-                        editable: false
-                    },
-                    caseno: {
-                        defaultValue: caseno
-                    },
-                    parentid: {
-                        defaultValue: parentid
-                    }
+                var objectid = null;
+                if (results && results.rows && results.rows.length) {
+                    objectid = results.rows[0].objectid;
                 }
-            }).show();
-        }, this);
+
+                Ext4.create('EHR.window.ManageRecordWindow', {
+                    schemaName: 'study',
+                    queryName: 'deaths',
+                    pkCol: 'objectid',
+                    pkValue: objectid || LABKEY.Utils.generateUUID(),
+                    extraMetaData: {
+                        Id: {
+                            defaultValue: animalId,
+                            editable: false
+                        },
+                        necropsy: {
+                            defaultValue: caseno
+                        },
+                        parentid: {
+                            defaultValue: parentid
+                        }
+                    }
+                }).show();
+            }
+        });
     }
 });
 

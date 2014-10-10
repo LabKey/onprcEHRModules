@@ -82,6 +82,7 @@ import org.labkey.onprc_ehr.notification.VetReviewNotification;
 import org.labkey.onprc_ehr.notification.WeightAlertsNotification;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
+import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
 import java.net.URISyntaxException;
@@ -119,6 +120,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         addController(CONTROLLER_NAME, ONPRC_EHRController.class);
 
         RoleManager.registerRole(new ONPRC_EHRCustomerEditRole());
+        RoleManager.registerRole(new ONPRC_EHRTransferRequestRole());
     }
 
     @Override
@@ -305,8 +307,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "onprc_ehr", "vet_assignment", EHRVeternarianPermission.class), "onprc_ehr", "vet_assignment");
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "onprc_ehr", "vet_assignment", EHRVeternarianPermission.class), "onprc_ehr", "vet_assignment_summary");
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "onprc_ehr", "customers", ONPRC_EHRCustomerEditPermission.class), "onprc_ehr", "customers");
-        EHRService.get().registerMoreActionsButton(new MarkCompletedButton(this, "study", "flags", "End Flags"), "study", "flags");
-        EHRService.get().registerMoreActionsButton(new MarkCompletedButton(this, "study", "notes", "End Notes"), "study", "notes");
+        EHRService.get().registerMoreActionsButton(new MarkCompletedButton(this, "study", "flags", "End Flags", true), "study", "flags");
+        EHRService.get().registerMoreActionsButton(new MarkCompletedButton(this, "study", "notes", "End Notes", true), "study", "notes");
         EHRService.get().registerMoreActionsButton(new AnimalGroupCompletedButton(this), "study", "animal_group_members");
         EHRService.get().registerMoreActionsButton(new AssignmentCompletedButton(this), "study", "assignment");
         EHRService.get().registerMoreActionsButton(new AssignmentReleaseConditionButton(this), "study", "assignment");
