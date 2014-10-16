@@ -62,7 +62,8 @@ SELECT
     WHERE draws.id = bd.id
       AND draws.dateOnly > bd.minDate
       AND draws.dateOnly <= bd.dateOnly
-      AND (draws.qcstate.metadata.DraftData = true OR draws.qcstate.publicdata = true)
+      --NOTE: this has been changed to include penidng/non-approved draws
+      AND draws.countsAgainstVolume = true
   ), 0) AS BloodPrevious,
 
   COALESCE(
@@ -71,7 +72,8 @@ SELECT
     WHERE draws.id = bd.id
       AND draws.dateOnly < bd.maxDate
       AND draws.dateOnly >= bd.dateOnly
-      AND (draws.qcstate.metadata.DraftData = true OR draws.qcstate.publicdata = true)
+      --NOTE: this has been changed to include penidng/non-approved draws
+      AND draws.countsAgainstVolume = true
   ), 0) AS BloodFuture
 
 FROM study.bloodDrawChanges bd

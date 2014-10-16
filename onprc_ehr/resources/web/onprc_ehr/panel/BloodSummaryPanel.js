@@ -300,14 +300,31 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
             xtype: 'ldk-querypanel',
             style: 'margin-bottom: 10px;',
             queryConfig: LDK.Utils.getReadOnlyQWPConfig({
-                title: 'Recent Blood Draws: ' + subject,
+                title: 'Recent/Scheduled Blood Draws: ' + subject,
                 schemaName: 'study',
                 queryName: 'bloodDrawsByDay',
                 allowHeaderLock: false,
-                frame: 'none',
+                //frame: 'none',
                 filters: [
                     LABKEY.Filter.create('Id', subject, LABKEY.Filter.Types.EQUAL),
                     LABKEY.Filter.create('date', '-' + (dd.getValue('species/blood_draw_interval') * 2) + 'd', LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL)
+                ],
+                sort: '-date'
+            })
+        });
+
+        toAdd.push({
+            xtype: 'ldk-querypanel',
+            style: 'margin-bottom: 10px;',
+            queryConfig: LDK.Utils.getReadOnlyQWPConfig({
+                title: 'Pending/Not-Yet-Approved Blood Draws: ' + subject,
+                schemaName: 'study',
+                queryName: 'blood',
+                allowHeaderLock: false,
+                //frame: 'none',
+                filters: [
+                    LABKEY.Filter.create('Id', subject, LABKEY.Filter.Types.EQUAL),
+                    LABKEY.Filter.create('countsAgainstVolume', false, LABKEY.Filter.Types.EQUAL)
                 ],
                 sort: '-date'
             })

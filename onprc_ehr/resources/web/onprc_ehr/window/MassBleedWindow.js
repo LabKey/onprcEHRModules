@@ -431,7 +431,6 @@ EHR.DataEntryUtils.registerDataEntryFormButton('MASS_BLEED', {
     text: 'DCM Mass Bleed Form',
     name: 'massbleed',
     itemId: 'massbleed',
-    hidden: !EHR.Security.isDataAdmin(),
     tooltip: 'Click to import using the DCM Mass Bleed excel template',
     handler: function(btn){
         var panel = btn.up('ehr-dataentrypanel');

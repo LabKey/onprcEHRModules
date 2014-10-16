@@ -45,7 +45,8 @@ SELECT
     SUM(bd.quantity) AS quantity
     FROM study.blood bd
     WHERE bd.id = d.id
-        AND (bd.qcstate.publicdata = true OR bd.qcstate.metadata.DraftData = true) --NOTE: this does mean non-completed past requests will count against blood
+        --NOTE: this has been changed in the DB to include penidng/non-approved draws
+        AND (bd.countsAgainstVolume = true) --NOTE: this does mean non-completed past requests will count against blood
         AND bd.dateOnly > cast(TIMESTAMPADD('SQL_TSI_DAY', -1 * d.species.blood_draw_interval, now()) as date)
         AND bd.dateOnly <= cast(curdate() as date)
   ), 0) AS bloodPrevious,
@@ -55,7 +56,8 @@ SELECT
     SUM(bd.quantity) AS quantity
     FROM study.blood bd
     WHERE bd.id = d.id
-        AND (bd.qcstate.publicdata = true OR bd.qcstate.metadata.DraftData = true)
+        --NOTE: this has been changed to include penidng/non-approved draws
+        AND (bd.countsAgainstVolume = true)
         AND bd.dateOnly < cast(TIMESTAMPADD('SQL_TSI_DAY', d.species.blood_draw_interval, curdate()) as date)
         AND bd.dateOnly >= cast(curdate() as date)
   ), 0) AS bloodFuture

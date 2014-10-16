@@ -748,6 +748,12 @@
             <column columnName="gender">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="species">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="geographic_origin">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="weight">
                 <datatype>double</datatype>
             </column>
@@ -803,9 +809,6 @@
             <column columnName="taskid">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
-            </column>
-            <column columnName="estimated">
-                <datatype>boolean</datatype>
             </column>
             <column columnName="project">
                 <datatype>integer</datatype>

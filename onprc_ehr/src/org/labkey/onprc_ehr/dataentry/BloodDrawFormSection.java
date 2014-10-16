@@ -53,8 +53,7 @@ public class BloodDrawFormSection extends SimpleGridPanel
         if (!_isRequest)
             defaultButtons.add(0, "ADDBLOODDRAWS");
 
-        if (_isRequest)
-            defaultButtons.add("BULK_ADD_BLOOD");
+        defaultButtons.add("BULK_ADD_BLOOD");
 
         return defaultButtons;
     }

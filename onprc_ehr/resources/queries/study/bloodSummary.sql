@@ -42,6 +42,7 @@ SELECT
   d.species.blood_per_kg,
   d.species.max_draw_pct,
   b3.quantity as previousBlood,
+  b3.quantityWithoutPending as previousBloodWithoutPending
 FROM study.demographics d
 JOIN study."Blood Draws" b ON (d.id = b.id)
 JOIN (
@@ -56,7 +57,9 @@ JOIN (
 JOIN (
   SELECT
     b1.lsid,
-    sum(b2.quantity) as quantity
+    --NOTE: this has been changed to include penidng/non-approved draws
+    sum(b2.quantity) as quantity,
+    sum(CASE WHEN (b2.countsAgainstVolume = true) THEN b2.quantity ELSE 0 END) as quantityWithoutPending,
   FROM study.blood b1
   JOIN study.blood b2 ON (b1.id = b2.id AND b2.dateOnly > TIMESTAMPADD('SQL_TSI_DAY', (-1 * 21), b1.dateOnly) AND b2.dateOnly <= b1.dateOnly)
   GROUP BY b1.lsid

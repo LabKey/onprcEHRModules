@@ -38,7 +38,8 @@ SELECT
     WHEN (pc.start IS NULL and p.enddateTimeCoalesced >= now()) THEN true
     WHEN (pc.start <= now() AND pc.enddateTimeCoalesced >= now()) THEN true
     ELSE false
-  END as isActive
+  END as isActive,
+  p.container
 
 FROM ehr.protocol p
 LEFT JOIN ehr.protocol_counts pc ON (p.protocol = pc.protocol OR pc.project.protocol = p.protocol)

@@ -188,8 +188,8 @@ exports.init = function(EHR){
                         hasUpdates = true;
                     }
 
-                    if (row['Id/demographics/species'] && row['Id/demographics/species'] != data.species) {
-                        obj.species = row['Id/demographics/species'];
+                    if (row.species && row.species != data.species) {
+                        obj.species = row.species;
                         hasUpdates = true;
                     }
 
@@ -201,8 +201,8 @@ exports.init = function(EHR){
                         }
                     }
 
-                    if (row['Id/demographics/geographic_origin'] && row['Id/demographics/geographic_origin'] != data.geographic_origin){
-                        obj.geographic_origin = row['Id/demographics/geographic_origin'];
+                    if (row.geographic_origin && row.geographic_origin != data.geographic_origin){
+                        obj.geographic_origin = row.geographic_origin;
                         hasUpdates = true;
                     }
 

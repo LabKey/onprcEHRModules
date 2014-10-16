@@ -24,6 +24,9 @@
                         <columnTitle>Percent Used</columnTitle>
                         <formatString>0.##</formatString>
                     </column>
+                    <column columnName="container">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>

@@ -19,6 +19,7 @@
        <column name="BloodRemaining/availableBlood"/>
        <column name="BloodRemaining/minDate"/>
        <column name="sampletype"/>
+       <column name="QCState"/>
    </columns>
    <sorts>
        <sort column="date" descending="true"/>

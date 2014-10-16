@@ -12,6 +12,10 @@
                         <columnTitle>Drawn in Previous 21 Days (inclusive)</columnTitle>
                         <formatString>#.##</formatString>
                     </column>
+                    <column columnName="previousBloodWithoutPending">
+                        <columnTitle>Drawn in Previous 21 Days (including without non-approved requests)</columnTitle>
+                        <formatString>#.##</formatString>
+                    </column>
                     <column columnName="lastWeight">
                         <columnTitle>Latest Weight For This Draw</columnTitle>
                         <formatString>#.##</formatString>

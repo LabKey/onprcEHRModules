@@ -40,6 +40,7 @@ public class SurgicalRoundsRemarksFormSection extends RoundsRemarksFormSection
 
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddClinicalCasesWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddSurgicalCasesWindow.js"));
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/BulkChangeCasesWindow.js"));
 
         _showLocation = true;
     }
@@ -49,6 +50,7 @@ public class SurgicalRoundsRemarksFormSection extends RoundsRemarksFormSection
     {
         List<String> defaultButtons = super.getTbarButtons();
         defaultButtons.add(0, "ADDSURGICALCASES");
+        defaultButtons.add("BULK_CHANGE_CASES");
 
         return defaultButtons;
     }

@@ -43,7 +43,7 @@ public class BirthFormType extends TaskForm
                 new BirthInstructionsFormSection(),
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
-                new NewAnimalFormSection("study", "birth", "Births", true)
+                new NewAnimalFormSection("study", "birth", "Births", false)
         ));
     }
 }

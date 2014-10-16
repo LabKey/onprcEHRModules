@@ -8,12 +8,12 @@
  */
 Ext4.define('EHR.window.BehaviorCasesWindow', {
     extend: 'Ext.window.Window',
-    width: 400,
     minHeight: 200,
 
     initComponent: function(){
         Ext4.apply(this, {
             modal: true,
+            width: 500,
             closeAction: 'destroy',
             title: 'Manage Cases',
             bodyStyle: 'padding: 5px;',
@@ -58,7 +58,7 @@ Ext4.define('EHR.window.BehaviorCasesWindow', {
             LABKEY.Query.selectRows({
                 schemaName: 'study',
                 queryName: 'cases',
-                columns: 'Id,lsid',
+                columns: 'Id,lsid,allProblemCategories',
                 filterArray: [LABKEY.Filter.create('objectid', Ext4.Object.getValues(idMap).join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF)],
                 scope: this,
                 sort: 'Id',
@@ -70,7 +70,7 @@ Ext4.define('EHR.window.BehaviorCasesWindow', {
 
     onLoad: function(results){
         var toAdd = [];
-        var columns = 2;
+        var columns = 3;
 
         Ext4.Msg.hide();
         if (!results || !results.rows && !results.rows.length){
@@ -83,7 +83,15 @@ Ext4.define('EHR.window.BehaviorCasesWindow', {
                 xtype: 'displayfield',
                 value: row.Id,
                 fieldName: 'Id',
-                width: 120,
+                width: 100,
+                rowIdx: rowIdx
+            });
+
+            toAdd.push({
+                xtype: 'displayfield',
+                value: row.allProblemCategories,
+                fieldName: 'problems',
+                width: 160,
                 rowIdx: rowIdx
             });
 
@@ -104,6 +112,9 @@ Ext4.define('EHR.window.BehaviorCasesWindow', {
                 html: 'Id',
                 style: 'padding-top: 10px;'
             },{
+                html: 'Problem(s)',
+                width: 120
+            },{
                 html: 'Review Date',
                 width: 120
             }].concat(toAdd);
@@ -115,25 +126,30 @@ Ext4.define('EHR.window.BehaviorCasesWindow', {
             });
 
             this.add([{
-                xtype: 'datefield',
-                fieldLabel: 'Change All:',
-                itemId: 'changeAll',
-                width: 300,
-                minDate: Ext4.Date.clearTime(new Date()),
-                listeners: {
-                    change: function (field, val) {
-                        if (!val) {
-                            return;
-                        }
+                layout: 'hbox',
+                border: false,
+                items: [{
+                    xtype: 'datefield',
+                    itemId: 'changeAll',
+                    minDate: Ext4.Date.clearTime(new Date()),
+                    width: 200
+                },{
+                    xtype: 'button',
+                    style: 'margin-left: 10px;',
+                    text: 'Change All',
+                    handler: function (btn) {
+                        var win = btn.up('window');
+                        var field = win.down('#changeAll');
+                        var val = field.getValue();
 
-                        var fields = field.up('window').query('field[fieldName=date]');
+                        var fields = win.query('field[fieldName=date]');
                         Ext4.Array.forEach(fields, function (f) {
                             f.setValue(val);
                         }, this);
 
                         field.setValue(null);
                     }
-                }
+                }]
             },{
                 html: '<hr>',
                 border: false

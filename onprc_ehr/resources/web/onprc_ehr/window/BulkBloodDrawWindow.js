@@ -301,7 +301,6 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BULK_BLOOD_DRAW', {
     text: 'Bulk Blood/Sedation Form',
     name: 'bulkBloodDraw',
     itemId: 'bulkBloodDraw',
-    hidden: !EHR.Security.isDataAdmin(),
     tooltip: 'Click to import using a Bulk Blood/Sedation excel template',
     handler: function(btn){
         var panel = btn.up('ehr-dataentrypanel');
