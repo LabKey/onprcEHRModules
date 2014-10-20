@@ -11,7 +11,7 @@
        <column name="room" />
        <column name="cage" />
        <column name="birth_condition" />
-       <column name="origin" />
+       <column name="teeth" />
        <column name="conception" />
        <column name="type" />
        <column name="remark" />

@@ -29,4 +29,5 @@ LEFT JOIN study.housing h ON (
 )
 
 WHERE b.room IS NOT NULL AND h.Id IS NULL
+AND b.qcstate.publicdata = true
 

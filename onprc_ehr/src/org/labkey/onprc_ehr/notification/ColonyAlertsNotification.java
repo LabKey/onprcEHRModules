@@ -859,11 +859,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void birthRecordsWithoutDemographics(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/Id"), null, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("qcstate/PublicData"), true, CompareType.EQUAL);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Birth"), Collections.singleton(getStudy(c).getSubjectColumnName()), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " birth records without a corresponding demographics record.</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " finalized birth records without a corresponding demographics record.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Birth", null) + "&query.Id/Dataset/Demographics/Id~isblank'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -878,6 +879,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 new CompareType.CompareClause(FieldKey.fromString("Id/demographics/geographic_origin"), CompareType.ISBLANK, null)
         ));
         filter.addCondition(FieldKey.fromString("date"), "-30d", CompareType.DATE_GTE);
+        filter.addCondition(FieldKey.fromString("qcstate/PublicData"), true, CompareType.EQUAL);
 
         TableInfo ti = getStudySchema(c, u).getTable("Birth");
         Set<FieldKey> keys = new HashSet<>();
@@ -892,7 +894,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " birth records within the past 30 days lacking information:</b><br><br>\n");
+            msg.append("<b>WARNING: There are " + count + " finalized birth records within the past 30 days lacking information:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr><td>Id</td><td>Status</td><td>Gender</td><td>Species</td><td>Geographic Origin</td></tr>");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
