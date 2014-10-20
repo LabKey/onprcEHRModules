@@ -18,18 +18,12 @@ package org.labkey.genotypeassays;
 
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.data.Container;
-import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.laboratory.LaboratoryService;
 import org.labkey.api.laboratory.button.ChangeAssayResultStatusBtn;
 import org.labkey.api.ldk.ExtendedSimpleModule;
-import org.labkey.api.module.DefaultModule;
+import org.labkey.api.ldk.LDKService;
 import org.labkey.api.module.ModuleContext;
-import org.labkey.api.module.SimpleModule;
-import org.labkey.api.query.DefaultSchema;
-import org.labkey.api.query.QuerySchema;
-import org.labkey.api.query.QueryService;
-import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.genotypeassays.assay.GenotypeAssayDataProvider;
 import org.labkey.genotypeassays.assay.SNPAssayDataProvider;
@@ -91,7 +85,7 @@ public class GenotypeAssaysModule extends ExtendedSimpleModule
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("result", "DataId"));
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("RowId", "DataId"));
 
-        LaboratoryService.get().registerQueryButton(new CacheAnalysesButton(this), "sequenceanalysis", "sequence_analyses");
+        LDKService.get().registerQueryButton(new CacheAnalysesButton(this), "sequenceanalysis", "sequence_analyses");
     }
 
     @Override
