@@ -65,6 +65,15 @@ exports.init = function(EHR){
         }
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Clinical Observations', function(helper, scriptErrors, row, oldRow){
+        if (row.category && LABKEY.ExtAdapter.isDefined(row.observation)){
+            var msg = triggerHelper.validateObservation(row.category, row.observation)
+            if (msg){
+                EHR.Server.Utils.addError(scriptErrors, 'observation', msg, 'WARN');
+            }
+        }
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Clinical Encounters', function(helper, scriptErrors, row, oldRow){
         if (row.chargetype == 'Research Staff' && !row.assistingstaff && row.procedureid && triggerHelper.requiresAssistingStaff(row.procedureid)){
             EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'If choosing Research Staff, you must enter the assisting staff.', 'WARN');

@@ -41,6 +41,7 @@
         <ns:groupPermission groupName="DCM Veterinarians" securityType="NONE"/>
         <ns:groupPermission groupName="Death Entry" securityType="PER_DATASET"/>
         <ns:groupPermission groupName="DNA Bank" securityType="NONE"/>
+        <ns:groupPermission groupName="Document Archive Reader(NHP Resources)" securityType="NONE"/>
         <ns:groupPermission groupName="EHR Data Entry" securityType="NONE"/>
         <ns:groupPermission groupName="EHR Readers" securityType="READ_ALL"/>
         <ns:groupPermission groupName="EHR Requestors" securityType="PER_DATASET"/>
@@ -59,6 +60,7 @@
         <ns:groupPermission groupName="Grove Lab" securityType="NONE"/>
         <ns:groupPermission groupName="Guests" securityType="NONE"/>
         <ns:groupPermission groupName="Haigwood Lab" securityType="NONE"/>
+        <ns:groupPermission groupName="Hansen Lab" securityType="NONE"/>
         <ns:groupPermission groupName="Hennebold Lab" securityType="NONE"/>
         <ns:groupPermission groupName="Hessell Lab" securityType="NONE"/>
         <ns:groupPermission groupName="HR" securityType="NONE"/>
@@ -231,7 +233,7 @@
         <ns:datasetPermission datasetName="flags" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="flags" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="flags" groupName="Death Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="flags" groupName="EHR Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="flags" groupName="Flag Data Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="flags" groupName="Labwork Admins" role="NONE"/>
@@ -869,7 +871,7 @@
         <ns:datasetPermission datasetName="assignment" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="assignment" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="assignment" groupName="Death Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="assignment" groupName="EHR Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="assignment" groupName="Labwork Admins" role="NONE"/>
@@ -913,7 +915,7 @@
         <ns:datasetPermission datasetName="demographics" groupName="Clinical Entry" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Clinical Entry Updaters" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Data Admins" role="org.labkey.ehr.security.EHRDataAdminRole"/>
-        <ns:datasetPermission datasetName="demographics" groupName="Death Entry" role="NONE"/>
+        <ns:datasetPermission datasetName="demographics" groupName="Death Entry" role="org.labkey.ehr.security.EHRFullUpdaterRole"/>
         <ns:datasetPermission datasetName="demographics" groupName="EHR Requestors" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Flag Data Entry" role="NONE"/>
         <ns:datasetPermission datasetName="demographics" groupName="Labwork Admins" role="NONE"/>

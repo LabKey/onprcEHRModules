@@ -1648,4 +1648,58 @@ public class ONPRC_EHRTriggerHelper
             _log.warn("Unable to find active flag for Surveillance/Quarantine");
         }
     }
+
+    public String validateObservation(String category, String observation)
+    {
+        if (category == null || observation == null)
+        {
+            return null;
+        }
+
+        Set<String> allowable = getAllowableObservations(category);
+
+        //NOTE: this this has an empty set, assume anything is allowed
+        if (!allowable.isEmpty() && !allowable.contains(observation))
+        {
+            return "The observation: " + observation + " is not allowed for " + category;
+        }
+
+        return null;
+    }
+
+    private Map<String, Set<String>> _cachedObservations = new HashMap<>();
+
+    private @NotNull Set<String> getAllowableObservations(String category)
+    {
+        if (!_cachedObservations.containsKey(category))
+        {
+            TableInfo ti = getTableInfo("onprc_ehr", "observation_types");
+            TableSelector ts = new TableSelector(ti, PageFlowUtil.set("schemaName", "queryName", "valuecolumn"), new SimpleFilter(FieldKey.fromString("value"), category), null);
+            Map<String, Object> record = ts.getObject(Map.class);
+
+            Set<String> allowable;
+            if (record != null && record.get("schemaname") != null && record.get("queryname") != null && record.get("valuecolumn") != null)
+            {
+                TableInfo valuesTable = getTableInfo((String)record.get("schemaname"), (String)record.get("queryname"));
+                if (valuesTable != null)
+                {
+                    allowable = new CaseInsensitiveHashSet();
+                    TableSelector ts2 = new TableSelector(valuesTable, PageFlowUtil.set((String)record.get("valuecolumn")), null, null);
+                    allowable.addAll(ts2.getArrayList(String.class));
+                }
+                else
+                {
+                    allowable = Collections.emptySet();
+                }
+            }
+            else
+            {
+                allowable = Collections.emptySet();
+            }
+
+            _cachedObservations.put(category, allowable);
+        }
+
+        return _cachedObservations.get(category);
+    }
 }

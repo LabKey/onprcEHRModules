@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Exported from WNPRC LabKey Server at https://ehr.primate.wisc.edu/project/WNPRC/EHR/begin.view by bimber@wisc.edu on Sat Jul 28 21:51:31 CDT 2012-->
 <study archiveVersion="11.31" label="Primate Electronic Health Record" timepointType="CONTINUOUS" subjectNounSingular="Animal" subjectNounPlural="Animals" subjectColumnName="Id" description="" descriptionRendererType="TEXT_WITH_LINKS" investigator="" grant="" startDate="1990-01-01-06:00" securityType="ADVANCED_WRITE" xmlns="http://labkey.org/study/xml">
   <!--<lists dir="lists"/>-->
   <!--<views dir="views"/>-->

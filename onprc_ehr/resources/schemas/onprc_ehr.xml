@@ -410,4 +410,30 @@
             <ns:column columnName="modified"/>
         </ns:columns>
     </ns:table>
+    <ns:table tableDbType="TABLE" tableName="observation_types">
+        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:insertUrl></ns:insertUrl>
+        <ns:updateUrl></ns:updateUrl>
+        <ns:importUrl></ns:importUrl>
+        <ns:deleteUrl></ns:deleteUrl>
+        <ns:columns>
+            <ns:column columnName="value"/>
+            <ns:column columnName="category"/>
+            <ns:column columnName="editorconfig"/>
+            <ns:column columnName="schemaName">
+                <ns:description>Schema Name To Be Used In Validation of Allowable Values</ns:description>
+            </ns:column>
+            <ns:column columnName="queryName">
+                <ns:description>Query Name To Be Used In Validation of Allowable Values</ns:description>
+            </ns:column>
+            <ns:column columnName="valueColumn">
+                <ns:description>The column in the target table that provides the list of alowable values</ns:description>
+            </ns:column>
+
+            <ns:column columnName="createdby"/>
+            <ns:column columnName="created"/>
+            <ns:column columnName="modifiedby"/>
+            <ns:column columnName="modified"/>
+        </ns:columns>
+    </ns:table>
 </ns:tables>

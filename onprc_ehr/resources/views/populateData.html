@@ -155,6 +155,12 @@ Ext4.onReady(function(){
             queryName: 'urinalysis_qualitative_results',
             pk: 'rowid'
         },{
+            label: 'Birth Type',
+            populateFn: 'populateBirthType',
+            schemaName: 'ehr_lookups',
+            queryName: 'birth_type',
+            pk: 'rowid'
+        },{
             label: 'Birth Condition',
             populateFn: 'populateBirthCondition',
             schemaName: 'onprc_ehr',
@@ -5060,7 +5066,6 @@ Ext4.onReady(function(){
             ['TransferReason', 'Transfer Reasons', null],
             ['assignmentReleaseType', 'Assignment Release Types', 'value'],
             ['animalGroupReleaseType', 'Animal Group Release Types', 'value'],
-            ['observation_types', 'Observation Types', 'value'],
             ['observation_areas', 'Observation Areas', 'value'],
             ['drugOutcome', 'Drug Administration Outcomes', 'value'],
             ['encounterSummaryCategory', 'Encounter Summary Category', 'value'],
@@ -6076,20 +6081,20 @@ Ext4.onReady(function(){
             this.pendingInserts++;
             //records for task forms:
             var config = {
-                schemaName: 'ehr_lookups',
+                schemaName: 'onprc_ehr',
                 queryName: 'observation_types',
                 rows: [],
                 success: this.onSuccess,
                 failure: this.onError
             };
-            var fields = ('value,category,description').split(',');
+            var fields = ('value,category,editorconfig,schemaName,queryName,valueColumn').split(',');
 
             var data = [
-                ['Alopecia Score', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', displayField: 'value', valueField: 'value'})],
-                ['SIB Score', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'sib_score', displayField: 'value', valueField: 'value'})],
-                ['Alopecia Type', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_type', displayField: 'value', valueField: 'value', sortFields: 'sort_order'})],
-                ['Alopecia Regrowth', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_regrowth', displayField: 'value', valueField: 'value', sortFields: 'sort_order'})],
-                ['BCS', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', displayField: 'value', valueField: 'value'})],
+                ['Alopecia Score', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_score', forceSelection: true, displayField: 'value', valueField: 'value'}), 'ehr_lookups', 'alopecia_score', 'value'],
+                ['SIB Score', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'sib_score', forceSelection: true, displayField: 'value', valueField: 'value'}), 'ehr_lookups', 'sib_score', 'value'],
+                ['Alopecia Type', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_type', forceSelection: true, displayField: 'value', valueField: 'value', sortFields: 'sort_order'}), 'ehr_lookups', 'alopecia_type', 'value'],
+                ['Alopecia Regrowth', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'alopecia_regrowth', forceSelection: true, displayField: 'value', valueField: 'value', sortFields: 'sort_order'}), 'ehr_lookups', 'alopecia_regrowth', 'value'],
+                ['BCS', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'bcs_score', forceSelection: true, displayField: 'value', valueField: 'value'}), 'ehr_lookups', 'bcs_score', 'value'],
                 ['CRT', null, Ext4.encode({xtype: 'textfield', defaultValue: '1-2'})],
                 ['MM', null, Ext4.encode({xtype: 'textfield', defaultValue: 'Pink'})],
                 ['Turgor', null, Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'turgor_score', displayField: 'value', sortFields: 'sort_order', valueField: 'value'})],
@@ -14700,8 +14705,32 @@ Ext4.onReady(function(){
             var data = [
                 ['Born Dead/Not Born',false],
                 //['Incomplete Birth Info',false],
-                ['Live Birth',true],
-                ['Terminated At Birth',false]
+                ['Live Birth',true]
+                //['Terminated At Birth',false]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateBirthType: function(){
+            this.pendingInserts++;
+
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'birth_type',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('value').split(',');
+            var data = [
+                ['Vaginal'],
+                ['C-Section'],
+                ['No Delivery - Fetus Resorbed'],
+                ['No Delivery - Fetus Recovered'],
+                ['No Delivery - Number Assigned In Utero'],
+                ['Fetus Not Recovered'],
+                ['Other']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));

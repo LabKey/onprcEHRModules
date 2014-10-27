@@ -148,6 +148,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             {
                 customizeCasesTable((AbstractTableInfo) table);
             }
+            else if (matches(table, "study", "Clinical Observations") || matches(table, "study", "clinical_observations"))
+            {
+                customizeClinicalObservations((AbstractTableInfo) table);
+            }
             else if (matches(table, "study", "Clinical Encounters") || matches(table, "study", "encounters"))
             {
                 customizeEncounters((AbstractTableInfo) table);
@@ -2226,6 +2230,19 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.getColumn("userid").setHidden(true);
         ti.getColumn("feces").setHidden(true);
         ti.getColumn("no_observations").setHidden(true);
+    }
+
+    private void customizeClinicalObservations(AbstractTableInfo ti)
+    {
+        ColumnInfo categoryCol = ti.getColumn("category");
+        if (categoryCol != null)
+        {
+            UserSchema us = getUserSchema(ti, "onprc_ehr");
+            if (us != null)
+            {
+                categoryCol.setFk(new QueryForeignKey(us, null, "observation_types", "value", "value", true));
+            }
+        }
     }
 
     private void customizeAnimalGroups(AbstractTableInfo ti)
