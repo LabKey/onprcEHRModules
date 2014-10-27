@@ -510,6 +510,8 @@ onprc_ssu/module.properties -text
 onprc_ssu/resources/queries/onprc_ssu/schedule.js -text
 onprc_ssu/resources/queries/onprc_ssu/schedule/.qview.xml -text
 onprc_ssu/resources/queries/onprc_ssu/schedule/Checklist.qview.xml -text
+onprc_ssu/resources/queries/onprc_ssu/surgeriesNotInEncounters.query.xml -text
+onprc_ssu/resources/queries/onprc_ssu/surgeriesNotInEncounters.sql -text
 onprc_ssu/resources/schemas/dbscripts/postgresql/onprc_ssu-13.20-13.21.sql -text
 onprc_ssu/resources/schemas/dbscripts/postgresql/onprc_ssu-13.21-13.22.sql -text
 onprc_ssu/resources/schemas/dbscripts/postgresql/onprc_ssu-13.22-13.23.sql -text
