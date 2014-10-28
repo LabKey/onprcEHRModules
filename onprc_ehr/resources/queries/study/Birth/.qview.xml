@@ -3,7 +3,7 @@
        <column name="Id" />
        <column name="date" />
        <column name="date_type" />
-       <column name="gender" />
+       <column name="Id/demographics/gender" />
        <column name="weight" />
        <column name="wdate" />
        <column name="dam" />

@@ -181,7 +181,7 @@ Ext4.onReady(function(){
         },{
             label: 'Observation Types',
             populateFn: 'populateObservationTypes',
-            schemaName: 'ehr_lookups',
+            schemaName: 'onprc_ehr',
             queryName: 'observation_types',
             pk: 'rowid'
         },{
@@ -6112,7 +6112,7 @@ Ext4.onReady(function(){
                 ['Resp', null, Ext4.encode({xtype: 'ldk-numberfield', minValue: 0})],
                 ['Vet Attention', null, Ext4.encode({xtype: 'textfield', value: 'Review Needed'})],
                 ['Reviewed', null, Ext4.encode({xtype: 'textfield'})],
-                ['Behaviors', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'behavior_types', displayField: 'value', valueField: 'value'})],
+                ['Behaviors', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'behavior_types', displayField: 'value', valueField: 'value'}), 'ehr_lookups', 'behavior_types', 'value'],
                 ['Fecal Smear', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'fecal_smear_score', displayField: 'value', valueField: 'value'})]
             ];
 

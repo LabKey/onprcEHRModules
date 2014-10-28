@@ -1841,7 +1841,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         SQLFragment sql = new SQLFragment("SELECT d1.participantid FROM studyDataset." + demographicsTable + " d1\n" +
                 "JOIN studyDataset." + deathTable + " d2 ON (d1.participantid = d2.participantid)\n" +
-                "where d1.death is null OR d1.death != d2.date"
+                "where d1.death is null OR CAST(d1.death AS DATE) != CAST(d2.date AS DATE)"
         );
 
         SqlSelector ss = new SqlSelector(DbScope.getLabkeyScope(), sql);
@@ -1861,7 +1861,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         SQLFragment sql = new SQLFragment("SELECT d1.participantid FROM studyDataset." + demographicsTable + " d1\n" +
                 "JOIN studyDataset." + deathTable + " d2 ON (d1.participantid = d2.participantid)\n" +
-                "where d1.birth is null OR d1.birth != d2.date"
+                "where d1.birth is null OR CAST(d1.birth AS DATE) != CAST(d2.date AS DATE)"
         );
 
         SqlSelector ss = new SqlSelector(DbScope.getLabkeyScope(), sql);
