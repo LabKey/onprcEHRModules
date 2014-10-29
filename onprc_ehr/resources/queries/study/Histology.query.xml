@@ -23,6 +23,9 @@
                     <column columnName="slideNum">
                         <columnTitle>Slide Number</columnTitle>
                     </column>
+                    <column columnName="sort_order">
+                        <columnTitle>Sort Order</columnTitle>
+                    </column>
                     <column columnName="tissue">
                         <columnTitle>Organ/Tissue</columnTitle>
                         <fk>

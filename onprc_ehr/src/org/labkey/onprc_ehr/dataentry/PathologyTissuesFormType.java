@@ -21,6 +21,7 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
+import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
@@ -50,9 +51,9 @@ public class PathologyTissuesFormType extends TaskForm
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
-                new SimpleGridPanel("study", "tissue_samples", "Tissues/Weights", EHRService.FORM_SECTION_LOCATION.Tabs),
+                new SimpleFormSection("study", "tissue_samples", "Tissues/Weights", "onprc_ehr-dragdropgridpanel", EHRService.FORM_SECTION_LOCATION.Tabs),
                 new TissueDistFormSection(),
-                new SimpleGridPanel("study", "measurements", "Measurements", EHRService.FORM_SECTION_LOCATION.Tabs)
+                new SimpleFormSection("study", "measurements", "Measurements", "onprc_ehr-dragdropgridpanel", EHRService.FORM_SECTION_LOCATION.Tabs)
         ));
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
@@ -71,6 +72,8 @@ public class PathologyTissuesFormType extends TaskForm
         addClientDependency(ClientDependency.fromFilePath("ehr/form/field/PathologyCaseNoField.js"));
         addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/pathologyButtons.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromCaseWindow.js"));
+
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/grid/DragDropGridPanel.js"));
     }
 
     @Override

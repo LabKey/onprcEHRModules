@@ -17,6 +17,9 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * User: bimber
  * Date: 12/28/13
@@ -30,5 +33,18 @@ public class PathologyDiagnosesFormSection extends PathologyFormSection
 
         setClientStoreClass("EHR.data.PathologyDiagnosesStore");
         addClientDependency(ClientDependency.fromFilePath("ehr/data/PathologyDiagnosesStore.js"));
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/grid/DragDropGridPanel.js"));
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/pathologyButtons.js"));
+        setXtype("onprc_ehr-dragdropgridpanel");
+    }
+
+    @Override
+    public List<String> getTbarMoreActionButtons()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getTbarMoreActionButtons());
+        defaultButtons.add("RESET_SORT_ORDER");
+
+        return defaultButtons;
     }
 }

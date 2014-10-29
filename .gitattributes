@@ -485,6 +485,9 @@ onprc_ehr/resources/queries/study/demographicsUtilization.query.xml -text
 onprc_ehr/resources/queries/study/demographicsUtilization.sql -text
 onprc_ehr/resources/queries/study/demographicsViralStatus.query.xml -text
 onprc_ehr/resources/queries/study/demographicsViralStatus.sql -text
+onprc_ehr/resources/queries/study/drugsUnified.query.xml -text
+onprc_ehr/resources/queries/study/drugsUnified.sql -text
+onprc_ehr/resources/queries/study/drugsUnified/.qview.xml -text
 onprc_ehr/resources/queries/study/duplicateCases.query.xml -text
 onprc_ehr/resources/queries/study/duplicateCases.sql -text
 onprc_ehr/resources/queries/study/encountersWithSnomedBySet.query.xml -text
@@ -834,6 +837,7 @@ onprc_ehr/resources/web/onprc_ehr/buttons/labworkButtons.js -text
 onprc_ehr/resources/web/onprc_ehr/buttons/pathologyButtons.js -text
 onprc_ehr/resources/web/onprc_ehr/data/sources/ONPRCDefaults.js -text
 onprc_ehr/resources/web/onprc_ehr/data/sources/Processing.js -text
+onprc_ehr/resources/web/onprc_ehr/grid/DragDropGridPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/ASB_Services.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/Clinical_Services.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/Colony_Services.js -text

@@ -1,9 +1,11 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
+        <!--<column name="type"/>-->
         <column name="Id"/>
         <column name="date"/>
         <column name="enddate"/>
         <column name="project"/>
+        <column name="frequency"/>
         <column name="code"/>
         <column name="code/code">
             <properties>
@@ -14,7 +16,6 @@
         <column name="route"/>
         <column name="remark"/>
         <column name="performedby"/>
-        <!--<column name="HeaderDate"/>-->
         <column name="qcstate" />
         <column name="taskid" />
         <column name="requestid" />

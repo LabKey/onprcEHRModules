@@ -1385,6 +1385,9 @@
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
             </column>
+            <column columnName="chargetype">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="code">
                 <datatype>varchar</datatype>
             </column>
@@ -1469,9 +1472,6 @@
                 <datatype>varchar</datatype>
             </column>
             <column columnName="category">
-                <datatype>varchar</datatype>
-            </column>
-            <column columnName="meaning">
                 <datatype>varchar</datatype>
             </column>
         </columns>
@@ -2928,8 +2928,8 @@
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
             </column>
-            <column columnName="slideNum">
-                <datatype>varchar</datatype>
+            <column columnName="sort_order">
+                <datatype>integer</datatype>
             </column>
             <column columnName="tissue">
                 <datatype>varchar</datatype>

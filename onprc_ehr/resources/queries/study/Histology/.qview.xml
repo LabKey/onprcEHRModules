@@ -2,6 +2,7 @@
    <columns>
        <column name="Id" />
        <column name="date" />
+       <column name="sort_order" />
        <column name="tissue" />
        <column name="remark" />
        <column name="stain" />

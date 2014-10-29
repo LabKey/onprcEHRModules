@@ -190,3 +190,33 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH_FOR_TISSUES', {
         }
     }
 });
+
+EHR.DataEntryUtils.registerGridButton('RESET_SORT_ORDER', function(config){
+    return Ext4.Object.merge({
+        text: 'Reset Sort Order',
+        tooltip: 'Click to reset the sort order on this grid, updating all records to match the order in which they are currently displayed',
+        handler: function(btn){
+            Ext4.Msg.confirm('Reset Sort Order', 'This will reset the sort order column on all rows to match the order in which they are currently displayed.  Do you want to proceed?', function(val){
+                if (val == 'yes') {
+                    //NOTE: batch changes so we dont overwhelm PathologyDiagnosesStore with updates
+                    var grid = btn.up('gridpanel');
+                    var changed = [];
+                    grid.store.each(function (rec, idx) {
+                        if (rec.get('sort_order') !== (idx + 1)) {
+                            changed.push(rec);
+                            rec.beginEdit();
+                            rec.set('sort_order', (idx + 1));
+                            rec.endEdit(true);
+                        }
+                    }, this);
+
+                    if (changed.length) {
+                        Ext4.Array.forEach(changed, function (r) {
+                            grid.store.fireEvent('update', grid.store, r);
+                        }, this);
+                    }
+                }
+            }, this);
+        }
+    }, config);
+});
