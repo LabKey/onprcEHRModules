@@ -59,7 +59,6 @@ SELECT
   t1.enddate,
   --t1.duration,
   t1.project,
-  t1.meaning,
   t1.code,
 
   t1.volume,
