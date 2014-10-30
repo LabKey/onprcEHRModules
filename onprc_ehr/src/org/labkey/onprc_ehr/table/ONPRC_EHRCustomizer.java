@@ -1014,8 +1014,15 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ti.addColumn(col);
         }
 
-        ti.getColumn("meaning").setHidden(true);
-        ti.getColumn("qualifier").setHidden(true);
+        if (ti.getColumn("meaning") != null)
+        {
+            ti.getColumn("meaning").setHidden(true);
+        }
+
+        if (ti.getColumn("qualifier") != null)
+        {
+            ti.getColumn("qualifier").setHidden(true);
+        }
     }
 
     private void customizeTreatmentFrequency(AbstractTableInfo ti)

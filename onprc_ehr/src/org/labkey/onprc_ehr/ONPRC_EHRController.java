@@ -36,6 +36,7 @@ import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.files.FileContentService;
+import org.labkey.api.pipeline.PipelineStatusUrls;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.AdminConsoleAction;
@@ -814,6 +815,34 @@ public class ONPRC_EHRController extends SpringActionController
         public void setLock(boolean lock)
         {
             _lock = lock;
+        }
+    }
+
+    @RequiresPermissionClass(AdminPermission.class)
+    public class ValidateDataSetColsAction extends ConfirmAction<Object>
+    {
+        public void validateCommand(Object form, Errors errors)
+        {
+
+        }
+
+        public URLHelper getSuccessURL(Object form)
+        {
+            return PageFlowUtil.urlProvider(PipelineStatusUrls.class).urlBegin(getContainer());
+        }
+
+        public ModelAndView getConfirmView(Object form, BindException errors) throws Exception
+        {
+            List<String> msgs = ONPRC_EHRManager.get().validateDatasetCols(getContainer(), getUser());
+
+            return new HtmlView("This action will compare the columns in the study datasets against those expected in the reference XML file.  " + (msgs.isEmpty() ? "No problems were found." : "The following discrepancies were found:<br><br> " + StringUtils.join(msgs, "<br>")));
+        }
+
+        public boolean handlePost(Object form, BindException errors) throws Exception
+        {
+            //TODO: consider automatically fixing?
+
+            return true;
         }
     }
 }

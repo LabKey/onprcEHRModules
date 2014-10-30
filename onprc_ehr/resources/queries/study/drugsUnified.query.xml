@@ -15,11 +15,11 @@
 
                     </column>
                     <column columnName="date">
-                        <columnTitle>Begin Date</columnTitle>
+                        <columnTitle>Start Date</columnTitle>
                         <formatString>yyyy-MM-dd HH:mm</formatString>
                     </column>
                     <column columnName="enddate">
-                        <columnTitle>End Time</columnTitle>
+                        <columnTitle>End Date</columnTitle>
                         <formatString>yyyy-MM-dd H:mm</formatString>
                         <isHidden>false</isHidden>
                     </column>

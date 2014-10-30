@@ -15,16 +15,40 @@
  */
 package org.labkey.onprc_ehr;
 
+import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.xmlbeans.XmlException;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.TableInfo;
+import org.labkey.api.module.Module;
+import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.query.Queryable;
+import org.labkey.api.resource.FileResource;
 import org.labkey.api.security.User;
+import org.labkey.api.study.DataSet;
+import org.labkey.api.study.Study;
+import org.labkey.api.study.StudyService;
+import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.util.Path;
+import org.labkey.data.xml.ColumnType;
+import org.labkey.data.xml.TableType;
+import org.labkey.data.xml.TablesDocument;
+import org.labkey.data.xml.TablesType;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * User: bimber
@@ -124,6 +148,68 @@ public class ONPRC_EHRManager
                 catch (ParseException e)
                 {
                     //ignore
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    public List<String> validateDatasetCols(Container c, User u) throws IOException, XmlException
+    {
+        Study s = StudyService.get().getStudy(c);
+        if (s == null)
+        {
+            return Collections.emptyList();
+        }
+
+        Module module = ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class);
+        FileResource resource = (FileResource)module.getModuleResolver().lookup(Path.parse("referenceStudy/datasets/datasets_metadata.xml"));
+        File xml = resource.getFile();
+
+        TablesDocument doc = TablesDocument.Factory.parse(xml);
+        TablesType tablesXml = doc.getTables();
+
+        Map<String, Set<String>> datasetMap = new HashMap<>();
+        for (TableType tableXml : tablesXml.getTableArray())
+        {
+            String datasetName = tableXml.getTableName();
+            Set<String> colsExpected = new TreeSet<>();
+            TableType.Columns cols = tableXml.getColumns();
+            for (ColumnType ct : cols.getColumnArray())
+            {
+                colsExpected.add(ct.getColumnName());
+            }
+
+            datasetMap.put(datasetName, colsExpected);
+        }
+
+
+        List<String> ret = new ArrayList<>();
+        Set<String> skipped = PageFlowUtil.set("Container", "Created", "CreatedBy", "Dataset", "Modified", "ModifiedBy", "ParticipantSequenceNum", "SequenceNum", "_key", "lsid", "qcstate", "sourcelsid");
+        for (DataSet ds : s.getDatasets())
+        {
+            TableInfo ti = ds.getTableInfo(u);
+            Set<String> names = new TreeSet<>(ti.getColumnNameSet());
+
+            if (!datasetMap.containsKey(ds.getName()))
+            {
+                ret.add("No expected columns found for dataset: " + ds.getName());
+            }
+            else
+            {
+                Set<String> diff = new HashSet<>(Sets.difference(names, datasetMap.get(ds.getName())));
+                diff.removeAll(skipped);
+                if (!diff.isEmpty())
+                {
+                    ret.add("columns not expected in dataset " + ds.getName() + ": " + StringUtils.join(diff, ", "));
+                }
+
+                Set<String> diff2 = new HashSet<>(Sets.difference(datasetMap.get(ds.getName()), names));
+                diff2.removeAll(skipped);
+                if (!diff2.isEmpty())
+                {
+                    ret.add("columns missing from dataset " + ds.getName() + ": " + StringUtils.join(diff2, ", "));
                 }
             }
         }

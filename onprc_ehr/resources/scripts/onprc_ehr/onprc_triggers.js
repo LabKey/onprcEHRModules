@@ -307,9 +307,12 @@ exports.init = function(EHR){
                 callback: function(data){
                     if (data){
                         if (data.calculated_status == 'Unknown' || !data.calculated_status){
-                            EHR.Server.Utils.addError(scriptErrors, 'enddate', 'There is no record of this animal, cannot enter an open ended housing record', 'WARN');
+                            //NOTE: if the animal exists in the birth table, allow it
+                            if (!data.hasBirthRecord) {
+                                EHR.Server.Utils.addError(scriptErrors, 'enddate', 'There is no record of this animal, cannot enter an open ended housing record', 'WARN');
+                            }
                         }
-                        else if (data.calculated_status != 'Alive'){
+                        else if (data.calculated_status != 'Alive' && !data.hasBirthRecord){
                             EHR.Server.Utils.addError(scriptErrors, 'enddate', 'This animal is not listed as alive, cannot enter an open ended housing record', 'WARN');
                         }
                     }
@@ -352,6 +355,12 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Arrival', function(helper, scriptErrors, row, oldRow){
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, 'initialRoom', 'initialCage', false);
     });
+
+//    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Parentage', function(helper, errors, row, oldRow){
+//        if (row.Id && row.parent && row.relationship && row.method && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData) {
+//            onprc_utils.updateParentage(row.Id, row.parent, row.relationship, row.method);
+//        }
+//    });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Arrival', function(scriptErrors, helper, row, oldRow) {
         if (row.Id && row.date) {
