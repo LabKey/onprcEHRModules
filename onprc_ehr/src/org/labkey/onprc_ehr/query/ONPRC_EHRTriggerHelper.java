@@ -1071,15 +1071,20 @@ public class ONPRC_EHRTriggerHelper
             //match SPF status with mother
             TableInfo flags = getTableInfo("study", "flags");
             SimpleFilter flagFilter = new SimpleFilter(FieldKey.fromString("Id"), dam);
-            flagFilter.addCondition(FieldKey.fromString("isActive"), true);
+            //Note: match DOB, not current date
+            flagFilter.addCondition(FieldKey.fromString("date"), date, CompareType.DATE_LTE);
+            flagFilter.addCondition(FieldKey.fromString("enddateCoalesced"), date, CompareType.DATE_GTE);
             flagFilter.addCondition(FieldKey.fromString("flag/category"), "SPF");
 
             TableSelector ts = new TableSelector(flags, Collections.singleton("flag"), flagFilter, null);
             List<String> flagList = ts.getArrayList(String.class);
-            //only add the condition code if the animal is still living
-            if (flagList != null && flagList.size() == 1)
+            if (flagList.size() == 1)
             {
                 EHRService.get().ensureFlagActive(getUser(), getContainer(), flagList.get(0), date, enddate, null, Collections.singletonList(id), false);
+            }
+            else if (flagList.size() > 1)
+            {
+                _log.error("dam has more than 1 active SPF flag: " + dam);
             }
 
             //also breeding groups
@@ -1091,7 +1096,7 @@ public class ONPRC_EHRTriggerHelper
 
             TableSelector ts2 = new TableSelector(animalGroups, Collections.singleton("groupid"), groupFilter, null);
             List<Integer> groupList = ts2.getArrayList(Integer.class);
-            if (groupList != null && groupList.size() == 1)
+            if (groupList.size() == 1)
             {
                 SimpleFilter groupFilter2 = new SimpleFilter(FieldKey.fromString("Id"), id);
                 //Note: match DOB, not current date
@@ -1701,5 +1706,34 @@ public class ONPRC_EHRTriggerHelper
         }
 
         return _cachedObservations.get(category);
+    }
+
+    public void updateParentage(String id, String parent, String relationship, String method)
+    {
+        Set<String> allowableMethods = new CaseInsensitiveHashSet("Genetic", "Provisional Genetic");
+        if (!allowableMethods.contains(method))
+        {
+            return;
+        }
+
+        String targetField;
+        switch (relationship)
+        {
+            case "Dam":
+                targetField = "dam";
+                break;
+            case "Sire":
+                targetField = "sire";
+                break;
+            default:
+                return;
+        }
+
+        String existingDemographicsVal = new TableSelector(getTableInfo("study", "demographics"), PageFlowUtil.set(targetField), new SimpleFilter(FieldKey.fromString("Id"), id), null).getObject(String.class);
+        if (parent.equals(existingDemographicsVal))
+        {
+            _log.info("updating " + targetField + " on demographics for animal: " + id + " from parentage");
+        }
+
     }
 }

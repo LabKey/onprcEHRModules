@@ -1152,6 +1152,18 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             col17.setDisplayWidth("150");
             ti.addColumn(col17);
         }
+
+        ColumnInfo birthCol = ti.getColumn("birth");
+        if (birthCol != null)
+        {
+            birthCol.setFormat("yyyy-MM-dd HH:mm");
+        }
+
+        ColumnInfo deathCol = ti.getColumn("death");
+        if (deathCol != null)
+        {
+            deathCol.setFormat("yyyy-MM-dd HH:mm");
+        }
     }
 
     private void customizeMatingTable(AbstractTableInfo ti)
