@@ -113,6 +113,8 @@ onprc_billing/resources/queries/onprc_billing/creditAccount.js -text
 onprc_billing/resources/queries/onprc_billing/creditAccount/.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/creditAccount/Active[!!-~]Items.qview.xml -text
 onprc_billing/resources/queries/onprc_billing/dataAccess/.qview.xml -text
+onprc_billing/resources/queries/onprc_billing/duplicateAliases.query.xml -text
+onprc_billing/resources/queries/onprc_billing/duplicateAliases.sql -text
 onprc_billing/resources/queries/onprc_billing/duplicateChargeableItems.query.xml -text
 onprc_billing/resources/queries/onprc_billing/duplicateChargeableItems.sql -text
 onprc_billing/resources/queries/onprc_billing/fiscalAuthorities/.qview.xml -text
