@@ -335,9 +335,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "drug");
         EHRService.get().registerTbarButton(new ChangeQCStateButton(this, "Mark Delivered", "ONPRC_EHR.window.MarkLabworkDeliveredWindow", Collections.singleton(ClientDependency.fromFilePath("onprc_ehr/window/MarkLabworkDeliveredWindow.js"))), "study", "clinpathRuns");
 
-        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "blood_charge_unit"), "study", "blood");
-        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "medication_charge_unit"), "study", "drug");
-        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "procedure_charge_unit"), "study", "encounters");
+        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "bloodChargeType"), "study", "blood");
+        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "medicationChargeType"), "study", "drug");
+        EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "procedureChargeType"), "study", "encounters");
 
         EHRService.get().registerTbarButton(new VetReviewRecordButton(this), "study", "vetRecordReview");
         EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "cases");
