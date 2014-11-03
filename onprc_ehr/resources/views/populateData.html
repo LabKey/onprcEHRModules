@@ -612,6 +612,12 @@ Ext4.onReady(function(){
             queryName: 'treatment_frequency_times',
             pk: 'rowid'
         },{
+            label: 'Georgraphic Origins',
+            populateFn: 'populateGeographicOrigins',
+            schemaName: 'ehr_lookups',
+            queryName: 'geographic_origins',
+            pk: 'rowid'
+        },{
             label: 'Assignment Release Type',
             populateFn: 'populateAssignmentReleaseType',
             schemaName: 'ehr_lookups',
@@ -6114,6 +6120,53 @@ Ext4.onReady(function(){
                 ['Reviewed', null, Ext4.encode({xtype: 'textfield'})],
                 ['Behaviors', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'behavior_types', displayField: 'value', valueField: 'value'}), 'ehr_lookups', 'behavior_types', 'value'],
                 ['Fecal Smear', 'Behavior', Ext4.encode({xtype: 'ehr-simplecombo', schemaName: 'ehr_lookups', queryName: 'fecal_smear_score', displayField: 'value', valueField: 'value'})]
+            ];
+
+            LABKEY.Query.insertRows(this.makeObject(config, data, fields));
+        },
+
+        populateGeographicOrigins: function(){
+            this.pendingInserts++;
+            var config = {
+                schemaName: 'ehr_lookups',
+                queryName: 'geographic_origins',
+                rows: [],
+                success: this.onSuccess,
+                failure: this.onError
+            };
+            var fields = ('meaning').split(',');
+            var data = [
+                ['AFRICA'],
+                ['ARABIAN PENINSULA'],
+                ['ARGENTINA'],
+                ['BOLIVIA'],
+                ['BRAZIL'],
+                ['CAMBODIA'],
+                ['CARIBBEAN'],
+                ['CELEBES IS./INDONES'],
+                ['CENTRAL AFRICA'],
+                ['CENTRAL AMERICA'],
+                ['CHINA'],
+                ['COLUMBIA'],
+                ['CONGO'],
+                ['EAST AFRICA'],
+                ['EQUADOR'],
+                ['GHANA'],
+                ['INDIA'],
+                ['INDONESIA'],
+                ['JAPAN'],
+                ['KENYA'],
+                ['MALAGASY REPUBLIC'],
+                ['MAURITIUS, REPUBLIC OF'],
+                ['NIGERIA'],
+                ['ORIGIN UNKNOWN'],
+                ['PERU'],
+                ['PHILIPPINES'],
+                ['RUSSIA'],
+                ['SOUTH AMERICA'],
+                ['SPAIN'],
+                ['THIALAND'],
+                ['USA']
             ];
 
             LABKEY.Query.insertRows(this.makeObject(config, data, fields));

@@ -86,7 +86,7 @@ exports.init = function(EHR){
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Animal Record Flags', function(helper, scriptErrors, row, oldRow){
         if (row.flag && row.Id && !row.enddate){
-            var msg = triggerHelper.validateHousingConditionInsert(row.Id, row.flag, row.objectid);
+            var msg = triggerHelper.validateHousingConditionInsert(row.Id, row.flag, row.objectid || null);
             if (msg){
                 EHR.Server.Utils.addError(scriptErrors, 'flag', msg, 'ERROR');
             }
@@ -103,7 +103,8 @@ exports.init = function(EHR){
             var assignmentsInTransaction = helper.getProperty('assignmentsInTransaction');
             assignmentsInTransaction = assignmentsInTransaction || [];
 
-            var msgs = triggerHelper.verifyProtocolCounts(row.Id, row.project, assignmentsInTransaction);
+            //NOTE: include date to allow future assignment dates
+            var msgs = triggerHelper.verifyProtocolCounts(row.Id, row.project, row.date, assignmentsInTransaction);
             if (msgs){
                 msgs = msgs.split("<>");
                 for (var i=0;i<msgs.length;i++){

@@ -2,6 +2,7 @@
     <columns>
         <column name="Id"/>
         <column name="Id/demographics/species"/>
+        <column name="Id/spfStatus/status"/>
         <column name="Id/age/yearAndDays"/>
         <column name="Id/utilization/use"/>
         <column name="Id/curLocation/room"/>

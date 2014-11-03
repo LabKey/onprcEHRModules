@@ -1,0 +1,1 @@
+ALTER TABLE onprc_ehr.serology_test_schedule ADD species VARCHAR(100);

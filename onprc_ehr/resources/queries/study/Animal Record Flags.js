@@ -32,6 +32,13 @@ function onUpsert(helper, scriptErrors, row, oldRow){
         });
 
     }
+
+    if (!helper.isETL() && row.Id && row.date && row.flag){
+        var active = helper.getJavaHelper().getOverlappingFlags(row.Id, row.flag, row.objectid || null, row.date);
+        if (active > 0){
+            EHR.Server.Utils.addError(scriptErrors, 'flag', 'There are already ' + active + ' active flag(s) of the same type spanning this date.', 'INFO');
+        }
+    }
 }
 
 function onAfterInsert(helper, errors, row){

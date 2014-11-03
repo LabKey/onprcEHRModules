@@ -107,7 +107,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.362;
+        return 12.363;
     }
 
     public boolean hasScripts()

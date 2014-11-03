@@ -232,7 +232,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animals which are flagged as " + ONPRC_EHRManager.AUC_RESERVED + " or " + ONPRC_EHRManager.PENDING_ASSIGNMENT + " , yet they are actively assigned to another project.  This may indicate the assignment candidate flags need to be removed.</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " animals which are flagged as " + ONPRC_EHRManager.AUC_RESERVED + " or " + ONPRC_EHRManager.PENDING_ASSIGNMENT + ", yet they are actively assigned to another project.  This may indicate the assignment candidate flags need to be removed.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -1081,13 +1081,18 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         cal.setTime(new Date());
         cal.add(Calendar.YEAR, -1);
 
-        //TODO: discuss w/ Josh
         UserSchema us = getStudySchema(c, u);
         QueryDefinition qd = us.getQueryDefForTable("HousingCheck");
         List<QueryException> errors = new ArrayList<>();
         TableInfo ti = qd.getTable(us, errors, true);
-        SQLFragment sql = ti.getFromSQL("t");
-        sql = new SQLFragment("SELECT * FROM " + sql.getSQL(), cal.getTime(), cal.getTime(), cal.getTime());
+
+        SQLFragment sql = ti.getFromSQL("hc");
+        Map<String, Object> params = new HashMap<>();
+        params.put("MINDATE", cal.getTime());
+        QueryService.get().bindNamedParameters(sql, params);
+        sql = new SQLFragment("SELECT * FROM " + sql.getSQL(), sql.getParams());
+        QueryService.get().bindNamedParameters(sql, params);
+
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
         long total = ss.getRowCount();
 

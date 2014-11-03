@@ -1073,7 +1073,10 @@ public class ONPRC_EHRTriggerHelper
             SimpleFilter flagFilter = new SimpleFilter(FieldKey.fromString("Id"), dam);
             //Note: match DOB, not current date
             flagFilter.addCondition(FieldKey.fromString("date"), date, CompareType.DATE_LTE);
-            flagFilter.addCondition(FieldKey.fromString("enddateCoalesced"), date, CompareType.DATE_GTE);
+            flagFilter.addClause(new SimpleFilter.OrClause(
+                    new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, date),
+                    new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)
+            ));
             flagFilter.addCondition(FieldKey.fromString("flag/category"), "SPF");
 
             TableSelector ts = new TableSelector(flags, Collections.singleton("flag"), flagFilter, null);
@@ -1092,7 +1095,10 @@ public class ONPRC_EHRTriggerHelper
             SimpleFilter groupFilter = new SimpleFilter(FieldKey.fromString("Id"), dam);
             //Note: match DOB, not current date
             groupFilter.addCondition(FieldKey.fromString("date"), date, CompareType.DATE_LTE);
-            groupFilter.addCondition(FieldKey.fromString("enddateCoalesced"), date, CompareType.DATE_GTE);
+            groupFilter.addClause(new SimpleFilter.OrClause(
+                    new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, date),
+                    new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)
+            ));
 
             TableSelector ts2 = new TableSelector(animalGroups, Collections.singleton("groupid"), groupFilter, null);
             List<Integer> groupList = ts2.getArrayList(Integer.class);
@@ -1101,7 +1107,10 @@ public class ONPRC_EHRTriggerHelper
                 SimpleFilter groupFilter2 = new SimpleFilter(FieldKey.fromString("Id"), id);
                 //Note: match DOB, not current date
                 groupFilter2.addCondition(FieldKey.fromString("date"), date, CompareType.DATE_LTE);
-                groupFilter2.addCondition(FieldKey.fromString("enddateCoalesced"), date, CompareType.DATE_GTE);
+                groupFilter2.addClause(new SimpleFilter.OrClause(
+                        new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, date),
+                        new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)
+                ));
                 groupFilter2.addCondition(FieldKey.fromString("groupid"), groupList.get(0));
                 TableSelector existingGroupTs = new TableSelector(animalGroups, Collections.singleton("groupid"), groupFilter2, null);
                 if (existingGroupTs.exists())
@@ -1132,7 +1141,10 @@ public class ONPRC_EHRTriggerHelper
             SimpleFilter assignmentFilter = new SimpleFilter(FieldKey.fromString("Id"), dam);
             //Note: match DOB, not current date
             assignmentFilter.addCondition(FieldKey.fromString("date"), date, CompareType.DATE_LTE);
-            assignmentFilter.addCondition(FieldKey.fromString("enddateCoalesced"), date, CompareType.DATE_GTE);
+            assignmentFilter.addClause(new SimpleFilter.OrClause(
+                    new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, date),
+                    new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)
+            ));
             assignmentFilter.addCondition(FieldKey.fromString("project/displayName"), PageFlowUtil.set(ONPRC_EHRManager.U42_PROJECT, ONPRC_EHRManager.U24_PROJECT), CompareType.IN);
 
             TableSelector ts3 = new TableSelector(assignment, Collections.singleton("project"), assignmentFilter, null);
@@ -1143,7 +1155,10 @@ public class ONPRC_EHRTriggerHelper
                 SimpleFilter existingAssignFilter = new SimpleFilter(FieldKey.fromString("Id"), id);
                 //Note: match DOB, not current date
                 existingAssignFilter.addCondition(FieldKey.fromString("date"), date, CompareType.DATE_LTE);
-                existingAssignFilter.addCondition(FieldKey.fromString("enddateCoalesced"), date, CompareType.DATE_GTE);
+                existingAssignFilter.addClause(new SimpleFilter.OrClause(
+                        new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, date),
+                        new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)
+                ));
                 existingAssignFilter.addCondition(FieldKey.fromString("project"), assignmentList, CompareType.IN);
                 TableSelector existingAssignTs = new TableSelector(assignment, Collections.singleton("project"), existingAssignFilter, null);
                 List<Integer> existingAssignmentList = existingAssignTs.getArrayList(Integer.class);
@@ -1192,7 +1207,7 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public String verifyProtocolCounts(final String id, Integer project, final List<Map<String, Object>> recordsInTransaction)
+    public String verifyProtocolCounts(final String id, Integer project, Date assignDate, final List<Map<String, Object>> recordsInTransaction)
     {
         if (id == null)
         {
@@ -1216,7 +1231,11 @@ public class ONPRC_EHRTriggerHelper
         TableInfo ti = QueryService.get().getUserSchema(getUser(), getContainer(), "ehr").getTable("animalUsage");
         SimpleFilter filter = new SimpleFilter();
         filter.addCondition(FieldKey.fromString("protocol"), protocolPair.first);
-        filter.addCondition(FieldKey.fromString("enddateCoalesced"), "+0d", CompareType.DATE_GTE);
+        //note: support assignment dates in the future
+        filter.addClause(new SimpleFilter.OrClause(
+                new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, assignDate),
+                new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)
+        ));
         final String MALE_FEMALE = "Male/Female";
         filter.addCondition(FieldKey.fromString("gender"), PageFlowUtil.set(ar.getGenderMeaning(), MALE_FEMALE), CompareType.IN);
 
@@ -1429,7 +1448,7 @@ public class ONPRC_EHRTriggerHelper
         {
             for (String v : values)
             {
-                oldCode = getConditionCodeForMeaning(v);
+                oldCode = getConditionCodeByFlag(v);
                 break;
             }
         }

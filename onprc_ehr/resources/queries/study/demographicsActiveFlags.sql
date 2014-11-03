@@ -15,7 +15,7 @@
  */
 SELECT
   f1.Id,
-  group_concat(f1.flag, chr(10)) as flags
+  group_concat(DISTINCT f1.flag, chr(10)) as flags
 
 FROM (
 SELECT

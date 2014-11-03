@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 SELECT
-  f.id,
+  d.Id,
   st.code.meaning as agent,
-  f.flag.value as flag,
   max(st.interval) as testInterval,
   max(s.date) as lastTestDate,
-  --min(timestampdiff('SQL_TSI_MONTH', s.date, now())) as monthsSinceTest,
   min(age_in_months(s.date, now())) as monthsSinceTest,
   CASE
     WHEN max(s.date) IS NULL THEN 0
-    --ELSE (max(st.interval) - min(timestampdiff('SQL_TSI_MONTH', s.date, now())))
     ELSE (max(st.interval) - min(age_in_months(s.date, now())))
   END as monthsUntilDue,
-FROM study.flags f
-JOIN onprc_ehr.serology_test_schedule st ON (st.flag = f.flag.value)
-LEFT JOIN study.serology s ON (f.id = s.id AND s.agent = st.code)
+FROM study.demographics d
+JOIN onprc_ehr.serology_test_schedule st ON (
+  (st.species IS NULL OR d.species = st.species)
+  AND (st.flag IS NULL OR (d.Id.spfStatus.status IS NOT NULL AND d.Id.spfStatus.status LIKE ('%' || st.flag || '%')))
+)
+LEFT JOIN study.serology s ON (d.Id = s.id AND s.agent = st.code)
 
-WHERE f.isActive = true
-
-GROUP BY f.id, f.flag.value, st.code.meaning
+GROUP BY d.Id, st.code.meaning
 
 --PIVOT lastTestDate, monthsSinceTest, monthsUntilDue by agent
