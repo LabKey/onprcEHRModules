@@ -258,9 +258,11 @@ Ext4.define('ONPRC_EHR.window.BulkBloodDrawWindow', {
             return null;
         }
 
+        var orig = date;
         date = LDK.ConvertUtils.parseDate(date);
         if (!date){
-            errors.push('Row ' + rowIdx + ': invalid date: ' + date);
+            errors.push('Row ' + rowIdx + ': invalid date format: ' + orig);
+            return null;
         }
 
         timeStr = Ext4.String.leftPad(timeStr, 5, '0'); //expect: HH:mm

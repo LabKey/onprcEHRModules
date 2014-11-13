@@ -141,6 +141,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         deathRecordsWithoutDemographics(c, u, msg);
         demographicsDeathMismatch(c, u, msg);
         demographicsBirthMismatch(c, u, msg);
+        demographicsBirthDetailsMismatch(c, u, msg);
         infantsNotAssignedToDamGroup(c, u, msg);
         infantsNotAssignedToDamSPF(c, u, msg);
         birthRecordsNotMatchingHousing(c, u, msg);
@@ -1875,6 +1876,29 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (!ids.isEmpty())
         {
             msg.append("<b>WARNING: There are " + ids.size() + " demographics records where the birth date does not match the birth table.</b><br>\n");
+            msg.append(StringUtils.join(ids, "<br>"));
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void demographicsBirthDetailsMismatch(final Container c, User u, final StringBuilder msg)
+    {
+        String demographicsTable = getStudy(c).getDatasetByLabel("demographics").getDomain().getStorageTableName();
+        String birthTable = getStudy(c).getDatasetByLabel("birth").getDomain().getStorageTableName();
+
+        SQLFragment sql = new SQLFragment("SELECT d1.participantid FROM studyDataset." + demographicsTable + " d1\n" +
+                "JOIN studyDataset." + birthTable + " d2 ON (d1.participantid = d2.participantid)\n" +
+                "where " +
+                    "(COALESCE(d1.species, '') != COALESCE(d2.species, '')) OR " +
+                    "(COALESCE(d1.gender, '') != COALESCE(d2.gender, '')) OR" +
+                    "(COALESCE(d1.geographic_origin, '') != COALESCE(d2.geographic_origin, ''))"
+        );
+
+        SqlSelector ss = new SqlSelector(DbScope.getLabkeyScope(), sql);
+        List<String> ids = ss.getArrayList(String.class);
+        if (!ids.isEmpty())
+        {
+            msg.append("<b>WARNING: There are " + ids.size() + " demographics records where the species, gender or geographic origin listed in the birth table does not match the value listed in the birth table.  This is a relatively minor issue not visible to any users, but should be investigated.</b><br>\n");
             msg.append(StringUtils.join(ids, "<br>"));
             msg.append("<hr>\n\n");
         }

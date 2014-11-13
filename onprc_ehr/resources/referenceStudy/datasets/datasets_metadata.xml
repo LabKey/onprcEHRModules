@@ -1084,6 +1084,9 @@
                 <datatype>timestamp</datatype>
                 <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
             </column>
+            <column columnName="formSort">
+                <datatype>integer</datatype>
+            </column>
         </columns>
         <tableTitle>Clinical Observations</tableTitle>
     </table>

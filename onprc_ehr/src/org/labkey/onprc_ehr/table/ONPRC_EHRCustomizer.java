@@ -454,7 +454,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     private void customizeEncounters(AbstractTableInfo ti)
     {
         String name = "afterHours";
-        if (ti.getColumn(name) == null)
+        if (ti.getColumn(name) == null && ti.getColumn("date") != null && ti.getColumn("enddate") != null)
         {
             SQLFragment sql = new SQLFragment("CASE " +
                     //sat/sun are overtime
@@ -468,8 +468,6 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     "ELSE null END"
             );
 
-            assert ti.getColumn("date") != null : "study.encounters lacks date column";
-            assert ti.getColumn("enddate") != null : "study.encounters lacks enddate column";
             ExprColumn newCol = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("date"), ti.getColumn("enddate"));
             newCol.setLabel("Is After Hours?");
             newCol.setDescription("This will flag any record where the date is on a weekend, or if the enddate is after 1600.  If the enddate is blank, records during the week will not get tagged as after-hours.");

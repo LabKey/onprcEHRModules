@@ -354,13 +354,13 @@ onprc_ehr/resources/queries/study/caseHousingAtOpen.query.xml -text
 onprc_ehr/resources/queries/study/caseHousingAtOpen.sql -text
 onprc_ehr/resources/queries/study/caseHousingAtOpen/.qview.xml -text
 onprc_ehr/resources/queries/study/cases/.qview.xml -text
-onprc_ehr/resources/queries/study/cases/Active[!!-~]Behavior[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Clinical[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Active[!!-~]Surgery[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/All[!!-~]Behavior[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/All[!!-~]Clinical[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/All[!!-~]Surgery[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Clinical[!!-~]Case[!!-~]Review.qview.xml -text
+onprc_ehr/resources/queries/study/cases/Open[!!-~]Behavior[!!-~]Cases.qview.xml -text
 onprc_ehr/resources/queries/study/cases/Surgery[!!-~]Case[!!-~]Review.qview.xml -text
 onprc_ehr/resources/queries/study/cases/With[!!-~]Initial[!!-~]Housing.qview.xml -text
 onprc_ehr/resources/queries/study/casesOpenOnDate.query.xml -text

@@ -23,6 +23,7 @@ SELECT
   o.caseid,
   c.category as caseCategory,
   c.isActive as caseIsActive,
+  c.isOpen as caseIsOpen,
   o.taskid
 
 FROM study.clinical_observations o

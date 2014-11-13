@@ -50,7 +50,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH', {
                     schemaName: 'study',
                     queryName: 'deaths',
                     pkCol: 'objectid',
-                    pkValue: objectid || LABKEY.Utils.generateUUID(),
+                    pkValue: objectid || LABKEY.Utils.generateUUID().toUpperCase(),
                     extraMetaData: {
                         Id: {
                             defaultValue: animalId,
@@ -178,7 +178,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH_FOR_TISSUES', {
                     schemaName: 'study',
                     queryName: 'deaths',
                     pkCol: 'objectid',
-                    pkValue: objectid || LABKEY.Utils.generateUUID(),
+                    pkValue: objectid || LABKEY.Utils.generateUUID().toUpperCase(),
                     extraMetaData: {
                         Id: {
                             defaultValue: animalId,

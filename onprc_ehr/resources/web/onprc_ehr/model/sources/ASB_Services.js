@@ -24,6 +24,11 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
             chargetype: {
                 defaultValue: 'DCM: ASB Services',
                 hidden: true
+            },
+            code: {
+                editorConfig: {
+                    defaultSubset: 'Drugs and Procedures'
+                }
             }
         }
     }

@@ -27,9 +27,10 @@ public class BehaviorRoundsObservationsFormSection extends ClinicalObservationsF
 {
     public BehaviorRoundsObservationsFormSection()
     {
-        super(EHRService.FORM_SECTION_LOCATION.Tabs);
+        super(EHRService.FORM_SECTION_LOCATION.Tabs, false);
 
         _showLocation = true;
+        setAllowBulkAdd(false);
 
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddClinicalCasesWindow.js"));
         addClientDependency(ClientDependency.fromFilePath("ehr/window/AddSurgicalCasesWindow.js"));

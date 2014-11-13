@@ -5,15 +5,15 @@
         <column name="Id/curLocation/cage"/>
         <column name="Id/utilization/use"/>
         <column name="date"/>
+        <column name="reviewdate"/>
         <column name="Id/demographics/species"/>
         <column name="Id/demographics/gender"/>
-        <!--<column name="performedby"/>-->
         <column name="allProblemCategories"/>
         <column name="mostRecentObservations/observations"/>
         <column name="caseHistory"/>
     </columns>
     <filters>
-        <filter column="isActive" operator="eq" value="true"/>
+        <filter column="isOpen" operator="eq" value="true"/>
         <filter column="category" operator="eq" value="Behavior"/>
     </filters>
     <sorts>

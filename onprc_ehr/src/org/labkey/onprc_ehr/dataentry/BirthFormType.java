@@ -45,5 +45,7 @@ public class BirthFormType extends TaskForm
                 new AnimalDetailsFormSection(),
                 new NewAnimalFormSection("study", "birth", "Births", false)
         ));
+
+        setDisplayReviewRequired(true);
     }
 }

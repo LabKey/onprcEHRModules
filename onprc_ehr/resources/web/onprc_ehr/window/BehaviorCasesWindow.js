@@ -39,27 +39,28 @@ Ext4.define('EHR.window.BehaviorCasesWindow', {
     },
 
     getCaseDetails: function(){
-        var idMap = [];
+        var caseIds = [];
         this.dataEntryPanel.storeCollection.clientStores.each(function(cs){
             if (cs.getFields().get('caseid')){
                 cs.each(function(rec){
                     if (rec.get('Id') && rec.get('caseid')){
-                        idMap[rec.get('Id')] = rec.get('caseid');
+                        caseIds.push(rec.get('caseid'));
                     }
                 }, this);
             }
         }, this);
 
-        if (Ext4.Object.isEmpty(idMap)){
+        if (!caseIds.length){
             Ext4.Msg.alert('Error', 'No Cases To Manage');
         }
         else {
+            caseIds = Ext4.unique(caseIds);
             Ext4.Msg.wait('Loading...');
             LABKEY.Query.selectRows({
                 schemaName: 'study',
                 queryName: 'cases',
                 columns: 'Id,lsid,allProblemCategories',
-                filterArray: [LABKEY.Filter.create('objectid', Ext4.Object.getValues(idMap).join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF)],
+                filterArray: [LABKEY.Filter.create('objectid', caseIds.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF)],
                 scope: this,
                 sort: 'Id',
                 failure: LDK.Utils.getErrorCallback(),

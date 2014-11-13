@@ -24,6 +24,11 @@ EHR.model.DataModelManager.registerMetadata('Colony_Services', {
             chargetype: {
                 defaultValue: 'DCM: Colony Services',
                 hidden: true
+            },
+            code: {
+                editorConfig: {
+                    defaultSubset: 'Drugs and Procedures'
+                }
             }
         }
     }

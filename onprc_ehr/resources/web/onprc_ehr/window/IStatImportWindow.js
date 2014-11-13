@@ -68,7 +68,7 @@ Ext4.define('ONPRC_EHR.window.IStatImportWindow', {
             var runRow = {};
             runRow.Id = idRow[i];
             runRow.date = LDK.ConvertUtils.parseDate(dateRow[i]);
-            runRow.objectid = LABKEY.Utils.generateUUID();
+            runRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
             runRow.servicerequested = 'iSTAT';
             runsToCreate.push(this.runStore.createModel(runRow));
 
@@ -77,7 +77,7 @@ Ext4.define('ONPRC_EHR.window.IStatImportWindow', {
                 var resultRow = {};
                 resultRow.Id = runRow.Id;
                 resultRow.date = runRow.date;
-                resultRow.objectid = LABKEY.Utils.generateUUID();
+                resultRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
                 resultRow.runid = runRow.objectid;
 
                 if (parsed[j].length < i){

@@ -186,7 +186,7 @@ public class ONPRC_EHRManager
 
 
         List<String> ret = new ArrayList<>();
-        Set<String> skipped = PageFlowUtil.set("Container", "Created", "CreatedBy", "Dataset", "Modified", "ModifiedBy", "ParticipantSequenceNum", "SequenceNum", "_key", "lsid", "qcstate", "sourcelsid");
+        Set<String> skipped = PageFlowUtil.set("Container", "Created", "CreatedBy", "Dataset", "Modified", "ModifiedBy", "ParticipantSequenceNum", "SequenceNum", "_key", "lsid", "qcstate", "sourcelsid", "formSort", "project");
         for (DataSet ds : s.getDatasets())
         {
             TableInfo ti = ds.getTableInfo(u);
