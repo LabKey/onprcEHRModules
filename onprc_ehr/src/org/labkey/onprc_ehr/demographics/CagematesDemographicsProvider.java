@@ -17,14 +17,11 @@ package org.labkey.onprc_ehr.demographics;
 
 import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.data.Container;
-import org.labkey.api.ehr.EHRDemographicsService;
 import org.labkey.api.ehr.demographics.AbstractListDemographicsProvider;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -67,7 +64,10 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
         List<String> newAnimals = newList == null || newList.isEmpty() ? Collections.<String>emptyList() : toList(newList.get(0).get("animals"));
         if (oldAnimals.equals(newAnimals))
         {
-            _log.info(id + ": cagemates before/after move are identical, no changes needed.  list size: " + oldAnimals.size());
+            if (!oldAnimals.isEmpty())
+            {
+                _log.info(id + ": cagemates before/after move are identical, no changes needed.  list size: " + oldAnimals.size());
+            }
             return Collections.emptySet();
         }
 
