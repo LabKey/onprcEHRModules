@@ -65,9 +65,23 @@ exports.init = function(EHR){
         }
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr', 'tasks', function(helper, scriptErrors, row, oldRow){
+        row.objectid = row.objectid || LABKEY.Utils.generateUUID().toUpperCase();
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr', 'requests', function(helper, scriptErrors, row, oldRow){
+        row.objectid = row.objectid || LABKEY.Utils.generateUUID().toUpperCase();
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr', 'encounter_summaries', function(helper, scriptErrors, row, oldRow){
+        row.objectid = row.objectid || LABKEY.Utils.generateUUID().toUpperCase();
+    });
+
+    //note: encounter_participants objectid handled by the query's trigger script
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Clinical Observations', function(helper, scriptErrors, row, oldRow){
         if (row.category && LABKEY.ExtAdapter.isDefined(row.observation)){
-            var msg = triggerHelper.validateObservation(row.category, row.observation)
+            var msg = triggerHelper.validateObservation(row.category, row.observation);
             if (msg){
                 EHR.Server.Utils.addError(scriptErrors, 'observation', msg, 'WARN');
             }

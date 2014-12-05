@@ -999,7 +999,7 @@ public class ONPRC_EHRTriggerHelper
             List<Map> rowMaps = ts1.getArrayList(Map.class);
             if (!rowMaps.isEmpty())
             {
-                Integer terminalCode = getConditionCodeForMeaning("Terminal");
+                final Integer terminalCode = getConditionCodeForMeaning("Terminal");
 
                 List<Map<String, Object>> toEnd = new ArrayList<>();
                 List<Map<String, Object>> toEndKeys = new ArrayList<>();
@@ -1013,7 +1013,44 @@ public class ONPRC_EHRTriggerHelper
                     //only update the release code automatically if experimentally euthanized and that assignment called for a terminal projected release.  otherwise leave blank and let error report catch it
                     if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) && terminalCode == (Integer) rowMap.get("projectedReleaseCondition"))
                     {
-                        row.put("releaseCondition", terminalCode);
+                        //if already 207 or higher, dont attmept to downgrade
+                        TableInfo flagTable = getTableInfo("study", "flags");
+                        SimpleFilter flagFilter = new SimpleFilter(FieldKey.fromString("Id"), id);
+                        flagFilter.addCondition(new SimpleFilter.OrClause(new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, deathDate), new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)));
+                        flagFilter.addCondition(FieldKey.fromString("flag/category"), "Condition");
+
+                        final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(flagTable, PageFlowUtil.set(FieldKey.fromString("flag/value"), FieldKey.fromString("flag/code")));
+                        TableSelector flagTs = new TableSelector(flagTable, colMap.values(), flagFilter, null);
+                        final List<Integer> foundCodes = new ArrayList<>();
+                        if (flagTs.exists())
+                        {
+                            flagTs.forEach(new Selector.ForEachBlock<ResultSet>()
+                            {
+                                @Override
+                                public void exec(ResultSet object) throws SQLException
+                                {
+                                    Results rs = new ResultsImpl(object, colMap);
+                                    if (rs.getObject(FieldKey.fromString("flag/code")) != null)
+                                    {
+                                        Integer codeInt = rs.getInt(FieldKey.fromString("flag/code"));
+                                        if (codeInt > terminalCode)
+                                        {
+                                            foundCodes.add(codeInt);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+
+                        if (foundCodes.isEmpty())
+                        {
+                            row.put("releaseCondition", terminalCode);
+                        }
+                        else
+                        {
+                            Collections.sort(foundCodes);
+                            row.put("releaseCondition", foundCodes.get(foundCodes.size() - 1));
+                        }
                     }
 
                     toEnd.add(row);
@@ -1180,6 +1217,10 @@ public class ONPRC_EHRTriggerHelper
                     row.put("project", project);
                     row.put("assignCondition", getConditionCodeForMeaning(NONRESTRICTED));
                     row.put("projectedReleaseCondition", getConditionCodeForMeaning(NONRESTRICTED));
+                    if (enddate != null)
+                    {
+                        row.put("releaseCondition", getConditionCodeForMeaning(NONRESTRICTED));
+                    }
 
                     assignmentToAdd.add(row);
                 }

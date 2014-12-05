@@ -6,6 +6,7 @@
         <column name="Id/utilization/use"/>
         <column name="date"/>
         <column name="reviewdate"/>
+        <column name="isActive"/>
         <column name="Id/demographics/species"/>
         <column name="Id/demographics/gender"/>
         <column name="allProblemCategories"/>

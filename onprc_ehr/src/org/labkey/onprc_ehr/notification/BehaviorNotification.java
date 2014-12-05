@@ -123,8 +123,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("Id"), filter, null);
         long total = ts.getRowCount();
         msg.append("<b>Behavior Cases:</b><p>");
-        msg.append("There are " + total + " active behavior cases.  ");
-        String url = getExecuteQueryUrl(c, "study", "cases", "Active Behavior Cases");
+        msg.append("There are " + total + " active behavior cases (this does not include cases closed for review).  ");
+        String url = getExecuteQueryUrl(c, "study", "cases", "Open Behavior Cases") + "&query.isActive=true";
         msg.append("<a href='" + url + "'>Click here to view them</a>");
         msg.append("<hr>");
     }
