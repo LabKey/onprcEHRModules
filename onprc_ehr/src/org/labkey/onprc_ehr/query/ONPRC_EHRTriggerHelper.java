@@ -25,7 +25,6 @@ import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
-import org.labkey.api.data.DbSchemaType;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
@@ -278,7 +277,7 @@ public class ONPRC_EHRTriggerHelper
 
         TableInfo treatmentOrders = getTableInfo("study", "Treatment Orders");
         BatchValidationException errors = new BatchValidationException();
-        List<Map<String, Object>> createdRows = treatmentOrders.getUpdateService().insertRows(getUser(), getContainer(), Arrays.asList(toCreate), errors, getExtraContext());
+        List<Map<String, Object>> createdRows = treatmentOrders.getUpdateService().insertRows(getUser(), getContainer(), Arrays.asList(toCreate), errors, null, getExtraContext());
 
         //also update records in drugs table
         if (!createdRows.isEmpty())
@@ -922,7 +921,7 @@ public class ONPRC_EHRTriggerHelper
         Map<String, Object> oldKeys = new CaseInsensitiveHashMap<>();
         oldKeys.put("objectid", objectid);
 
-        List<Map<String, Object>> updatedRows = ti.getUpdateService().updateRows(getUser(), getContainer(), Arrays.asList(toUpdate), Arrays.asList(oldKeys), getExtraContext());
+        List<Map<String, Object>> updatedRows = ti.getUpdateService().updateRows(getUser(), getContainer(), Arrays.asList(toUpdate), Arrays.asList(oldKeys), null, getExtraContext());
         _log.info("transfer request rows updated: " + updatedRows.size());
     }
 
@@ -1064,7 +1063,7 @@ public class ONPRC_EHRTriggerHelper
                 if (!toEnd.isEmpty())
                 {
                     _log.info("ending " + toEnd.size() + " assignments due to animal death on: " + deathDate.toString());
-                    assignmentTable.getUpdateService().updateRows(getUser(), getContainer(), toEnd, toEndKeys, getExtraContext());
+                    assignmentTable.getUpdateService().updateRows(getUser(), getContainer(), toEnd, toEndKeys, null, getExtraContext());
                 }
             }
         }
@@ -1165,7 +1164,7 @@ public class ONPRC_EHRTriggerHelper
                     row.put("objectid", new GUID().toString());
 
                     BatchValidationException errors = new BatchValidationException();
-                    animalGroups.getUpdateService().insertRows(getUser(), getContainer(), Arrays.asList(row), errors, getExtraContext());
+                    animalGroups.getUpdateService().insertRows(getUser(), getContainer(), Arrays.asList(row), errors, null, getExtraContext());
                     if (errors.hasErrors())
                     {
                         _log.error(errors.getMessage(), errors);
@@ -1226,7 +1225,7 @@ public class ONPRC_EHRTriggerHelper
                 }
 
                 BatchValidationException errors = new BatchValidationException();
-                assignment.getUpdateService().insertRows(getUser(), getContainer(), assignmentToAdd, errors, getExtraContext());
+                assignment.getUpdateService().insertRows(getUser(), getContainer(), assignmentToAdd, errors, null, getExtraContext());
                 if (errors.hasErrors())
                 {
                     _log.error(errors.getMessage(), errors);
@@ -1580,7 +1579,7 @@ public class ONPRC_EHRTriggerHelper
         keyRow.put("location", location);
         oldKeys.add(keyRow);
 
-        cageTable.getUpdateService().updateRows(getUser(), getContainer(), rows, oldKeys, getExtraContext());
+        cageTable.getUpdateService().updateRows(getUser(), getContainer(), rows, oldKeys, null, getExtraContext());
     }
 
     // returns the lowest cage for this unit, based on cage slots

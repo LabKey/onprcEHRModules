@@ -27,8 +27,6 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
-import org.labkey.api.data.DbSchemaType;
-import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.SQLFragment;
@@ -721,7 +719,7 @@ public class LegacyDataManager
                     QueryUpdateService update = peptideTable.getUpdateService();
                     update.setBulkLoad(true);
                     BatchValidationException errors = new BatchValidationException();
-                    List<Map<String,Object>> inserted = update.insertRows(u, c, rows, errors, new HashMap<String, Object>());
+                    List<Map<String,Object>> inserted = update.insertRows(u, c, rows, errors, null, new HashMap<String, Object>());
                     if (errors.hasErrors())
                     {
                         throw errors;
@@ -744,7 +742,7 @@ public class LegacyDataManager
                     QueryUpdateService update = peptidePoolTable.getUpdateService();
                     update.setBulkLoad(true);
                     BatchValidationException errors = new BatchValidationException();
-                    List<Map<String,Object>> inserted = update.insertRows(u, c, poolRows, errors, new HashMap<String, Object>());
+                    List<Map<String,Object>> inserted = update.insertRows(u, c, poolRows, errors, null, new HashMap<String, Object>());
                     if (errors.hasErrors())
                     {
                         throw errors;
@@ -776,7 +774,7 @@ public class LegacyDataManager
                     QueryUpdateService update = peptidePoolMembersTable.getUpdateService();
                     update.setBulkLoad(true);
                     BatchValidationException errors = new BatchValidationException();
-                    List<Map<String,Object>> inserted = update.insertRows(u, c, toInsert, errors, new HashMap<String, Object>());
+                    List<Map<String,Object>> inserted = update.insertRows(u, c, toInsert, errors, null, new HashMap<String, Object>());
                     if (errors.hasErrors())
                     {
                         throw errors;
@@ -1581,7 +1579,7 @@ public class LegacyDataManager
 
                 BatchValidationException errors = new BatchValidationException();
                 _log.info("processing " + batchSize + " rows");
-                qus.insertRows(u, c, sublist, errors, ctx);
+                qus.insertRows(u, c, sublist, errors, null, ctx);
                 ExperimentService.get().commitTransaction();
 
                 if (errors.hasErrors())
