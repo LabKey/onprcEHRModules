@@ -15,17 +15,14 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.api.ehr.security.EHRLabworkEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * User: bimber
@@ -50,7 +47,7 @@ public class IStatFormType extends TaskForm
             s.addConfigSource("iStat");
         }
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/model/sources/iStat.js"));
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/IStatImportWindow.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/iStat.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/IStatImportWindow.js"));
     }
 }

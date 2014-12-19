@@ -34,8 +34,8 @@ public class ClinpathRunsFormSection extends SimpleGridPanel
     {
         super("study", "Clinpath Runs", "Panels / Services", EHRService.FORM_SECTION_LOCATION.Body);
         setClientStoreClass("EHR.data.ClinpathRunsClientStore");
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/labworkButtons.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinpathRunsClientStore.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/labworkButtons.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/data/ClinpathRunsClientStore.js"));
 
         _isRequest = isRequest;
     }

@@ -30,8 +30,8 @@ public class PathologyNotesFormPanelSection extends SimpleFormPanelSection
     {
         super("ehr", "encounter_summaries", "Notes", false);
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/buttons/encounterButtons.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/EncounterChild.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/buttons/encounterButtons.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/EncounterChild.js"));
         setLocation(EHRService.FORM_SECTION_LOCATION.Tabs);
 
         addConfigSource("Encounter");

@@ -47,7 +47,7 @@ public class AnesthesiaFormType extends TaskForm
             s.addConfigSource("Anesthesia");
         }
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Anesthesia.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Anesthesia.js"));
     }
 
     @Override

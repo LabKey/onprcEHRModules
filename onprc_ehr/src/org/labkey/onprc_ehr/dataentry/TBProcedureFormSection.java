@@ -26,7 +26,7 @@ public class TBProcedureFormSection extends SimpleGridPanel
     {
         super("study", "encounters", "TB Tests");
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/TBProcedure.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/TBProcedure.js"));
         addConfigSource("TBProcedure");
     }
 }

@@ -44,7 +44,7 @@ public class WeightFormType extends TaskForm
             new TBProcedureFormSection()
         ));
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Weight.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Weight.js"));
 
         for (FormSection s : getFormSections())
         {

@@ -45,8 +45,8 @@ public class PregnancyConfirmationFormType extends TaskForm
             new DrugAdministrationFormSection()
         ));
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/PregnancyConfirmation.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/PregnancyConfirmation.js"));
 
         for (FormSection s : getFormSections())
         {

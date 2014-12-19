@@ -29,7 +29,7 @@ public class AssignmentReleaseConditionButton extends MarkCompletedButton
     {
         super(owner, "study", "assignment", "Set Release Condition");
 
-        setClientDependencies(ClientDependency.fromFilePath("onprc_ehr/window/AssignmentReleaseConditionWindow.js"));
+        setClientDependencies(ClientDependency.fromPath("onprc_ehr/window/AssignmentReleaseConditionWindow.js"));
     }
 
     @Override

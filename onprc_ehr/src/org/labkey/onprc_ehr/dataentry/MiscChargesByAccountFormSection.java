@@ -27,7 +27,7 @@ public class MiscChargesByAccountFormSection extends MiscChargesFormSection
     {
         super(location);
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BillingByAccount.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/BillingByAccount.js"));
         addConfigSource("BillingByAccount");
     }
 }

@@ -20,7 +20,6 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.security.EHRCompletedInsertPermission;
 import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.module.Module;
-import org.labkey.api.security.permissions.DeletePermission;
 import org.labkey.api.view.template.ClientDependency;
 
 /**
@@ -34,7 +33,7 @@ public class HousingTransferButton extends SimpleButtonConfigFactory
     {
         super(owner, "Mark Transfers Completed", "ONPRC_EHR.Buttons.markTransferComplete(dataRegionName);");
 
-        setClientDependencies(ClientDependency.fromFilePath("onprc_ehr/buttons/housingTransferButton.js"));
+        setClientDependencies(ClientDependency.fromPath("onprc_ehr/buttons/housingTransferButton.js"));
     }
 
     public boolean isAvailable(TableInfo ti)

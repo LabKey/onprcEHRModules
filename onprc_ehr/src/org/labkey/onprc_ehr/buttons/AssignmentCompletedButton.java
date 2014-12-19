@@ -15,11 +15,9 @@
  */
 package org.labkey.onprc_ehr.buttons;
 
-import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.ehr.buttons.MarkCompletedButton;
 import org.labkey.api.module.Module;
-import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.template.ClientDependency;
 
 /**
@@ -31,7 +29,7 @@ public class AssignmentCompletedButton extends MarkCompletedButton
     {
         super(owner, "study", "assignment", "End Assignments");
 
-        setClientDependencies(ClientDependency.fromFilePath("onprc_ehr/window/MarkAssignmentCompletedWindow.js"));
+        setClientDependencies(ClientDependency.fromPath("onprc_ehr/window/MarkAssignmentCompletedWindow.js"));
     }
 
     @Override

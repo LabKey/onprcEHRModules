@@ -35,10 +35,10 @@ public class EncounterChildFormSection extends SimpleGridPanel
         super(schemaName, queryName, label, EHRService.FORM_SECTION_LOCATION.Tabs);
         _allowAddDefaults = allowAddDefaults;
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/buttons/encounterButtons.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/EncounterChild.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/EncounterAddRecordWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/AddProcedureDefaultsWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/buttons/encounterButtons.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/EncounterChild.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/EncounterAddRecordWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/AddProcedureDefaultsWindow.js"));
 
         addConfigSource("Encounter");
         addConfigSource("EncounterChild");

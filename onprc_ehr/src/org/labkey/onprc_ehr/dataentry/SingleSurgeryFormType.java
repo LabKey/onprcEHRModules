@@ -45,7 +45,7 @@ public class SingleSurgeryFormType extends EncounterForm
     public SingleSurgeryFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, "Surgery", "Surgery", Arrays.<FormSection>asList(
-                new NonStoreFormSection("Instructions", "Instructions", "ehr-surgeryinstructionspanel", Arrays.asList(ClientDependency.fromFilePath("ehr/panel/SurgeryInstructionsPanel.js"))),
+                new NonStoreFormSection("Instructions", "Instructions", "ehr-surgeryinstructionspanel", Arrays.asList(ClientDependency.fromPath("ehr/panel/SurgeryInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ClinicalEncountersFormPanelSection("Surgery"),
                 new ExtendedAnimalDetailsFormSection(),
@@ -53,19 +53,19 @@ public class SingleSurgeryFormType extends EncounterForm
                 new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true),
                 new EncounterMedicationsFormSection("study", "Drug Administration", "Medications/Treatments Given", true),
                 new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
-                new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/WeightClientStore.js")), null),
+                new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.fromPath("ehr/data/WeightClientStore.js")), null),
                 new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
                 new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true)
         ));
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
         {
-            addSection(new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.fromFilePath("ehr/data/MiscChargesClientStore.js")), null));
+            addSection(new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.fromPath("ehr/data/MiscChargesClientStore.js")), null));
         }
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Surgery.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/OpenSurgeryCasesWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/panel/SurgeryDataEntryPanel.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Surgery.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/OpenSurgeryCasesWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/panel/SurgeryDataEntryPanel.js"));
         setDisplayReviewRequired(true);
         setJavascriptClass("EHR.panel.SurgeryDataEntryPanel");
 

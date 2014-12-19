@@ -19,7 +19,6 @@ import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Collections;
-import java.util.List;
 
 /**
  * User: bimber
@@ -32,8 +31,8 @@ public class PairingFormSection extends SimpleFormSection
     {
         super("study", "pairings", "Pairing Observations", "ehr-gridpanel");
         setConfigSources(Collections.singletonList("Task"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/form/field/LowestCageField.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/data/PairingClientStore.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/form/field/LowestCageField.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/data/PairingClientStore.js"));
         setClientStoreClass("EHR.data.PairingClientStore");
     }
 }

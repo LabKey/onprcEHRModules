@@ -71,13 +71,13 @@ public class BehaviorExamFormType extends TaskForm
             }
         }
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BehaviorDefaults.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/BehaviorDefaults.js"));
         setStoreCollectionClass("EHR.data.ClinicalReportStoreCollection");
-        addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalReportStoreCollection.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalReport.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/panel/ExamDataEntryPanel.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalReportChild.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/data/ClinicalReportStoreCollection.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalReport.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/panel/ExamDataEntryPanel.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalReportChild.js"));
         setJavascriptClass("EHR.panel.ExamDataEntryPanel");
     }
 

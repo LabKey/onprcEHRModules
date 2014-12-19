@@ -46,7 +46,7 @@ public class LabworkRequestFormType extends RequestForm
         ));
 
         addClientDependency(ClientDependency.fromModuleName("MergeSync"));
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/LabworkRequestDataEntryPanel.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/panel/LabworkRequestDataEntryPanel.js"));
         setJavascriptClass("ONPRC_EHR.panel.LabworkRequestDataEntryPanel");
     }
 

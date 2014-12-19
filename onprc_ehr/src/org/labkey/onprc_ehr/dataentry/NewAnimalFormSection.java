@@ -16,7 +16,6 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.data.TableInfo;
-import org.labkey.api.ehr.EHRService;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -34,8 +33,8 @@ public class NewAnimalFormSection extends SimpleGridPanel
         super(schemaName, queryName, label);
         _allowSetSpecies = allowSetSpecies;
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/AnimalIdSeriesWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/form/field/AnimalIdGeneratorField.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/AnimalIdSeriesWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/form/field/AnimalIdGeneratorField.js"));
     }
 
     @Override

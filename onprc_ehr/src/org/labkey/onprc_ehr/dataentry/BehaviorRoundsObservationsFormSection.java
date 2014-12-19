@@ -32,9 +32,9 @@ public class BehaviorRoundsObservationsFormSection extends ClinicalObservationsF
         _showLocation = true;
         setAllowBulkAdd(false);
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/AddClinicalCasesWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/AddSurgicalCasesWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/AddBehaviorCasesWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/AddClinicalCasesWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/AddSurgicalCasesWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/AddBehaviorCasesWindow.js"));
     }
 
     @Override

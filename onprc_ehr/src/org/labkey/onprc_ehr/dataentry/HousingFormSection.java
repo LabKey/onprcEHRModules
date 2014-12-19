@@ -28,10 +28,10 @@ public class HousingFormSection extends SimpleGridPanel
     {
         super(schema, query, label);
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/RoomTransferWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/RoomTransferWindow.js"));
         setClientStoreClass("EHR.data.HousingClientStore");
-        addClientDependency(ClientDependency.fromFilePath("ehr/data/HousingClientStore.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/buttons/housingButtons.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/data/HousingClientStore.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/buttons/housingButtons.js"));
         setTemplateMode(TEMPLATE_MODE.NONE);
     }
 

@@ -31,7 +31,7 @@ public class VetReviewRecordButton extends SimpleButtonConfigFactory
     public VetReviewRecordButton(Module owner)
     {
         super(owner, "Mark Records Reviewed", "ONPRC_EHR.window.VetRecordReviewWindow.buttonHandler(dataRegionName);");
-        setClientDependencies(ClientDependency.fromModuleName("ehr"), ClientDependency.fromFilePath("onprc_ehr/window/VetRecordReviewWindow.js"));
+        setClientDependencies(ClientDependency.fromModuleName("ehr"), ClientDependency.fromPath("onprc_ehr/window/VetRecordReviewWindow.js"));
         setInsertPosition(-1);
     }
 

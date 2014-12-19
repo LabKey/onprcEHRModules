@@ -21,9 +21,6 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
 import org.labkey.api.module.Module;
-import org.labkey.api.security.PrincipalType;
-import org.labkey.api.security.SecurityManager;
-import org.labkey.api.security.UserPrincipal;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
@@ -48,7 +45,7 @@ public class ColonyRequestFormType extends RequestForm
                 new DrugAdministrationRequestFormSection()
         ));
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/model/sources/ASB_Services.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/ASB_Services.js"));
 
         for (FormSection s : getFormSections())
         {

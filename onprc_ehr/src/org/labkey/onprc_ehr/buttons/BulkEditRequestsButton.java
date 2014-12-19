@@ -17,15 +17,11 @@ package org.labkey.onprc_ehr.buttons;
 
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ehr.buttons.MarkCompletedButton;
 import org.labkey.api.ehr.security.EHRRequestAdminPermission;
 import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.module.Module;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.template.ClientDependency;
-
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 
 /**
 
@@ -38,7 +34,7 @@ public class BulkEditRequestsButton extends SimpleButtonConfigFactory
     {
         super(owner, "Bulk Edit Requests", "ONPRC_EHR.Buttons.bulkEditRequestHandler();");
 
-        setClientDependencies(PageFlowUtil.set(ClientDependency.fromFilePath("onprc_ehr/buttons/bulkEditRequestButtons.js")));
+        setClientDependencies(PageFlowUtil.set(ClientDependency.fromPath("onprc_ehr/buttons/bulkEditRequestButtons.js")));
         _formType = formType;
     }
 

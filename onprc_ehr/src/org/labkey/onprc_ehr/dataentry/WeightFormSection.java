@@ -18,8 +18,6 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.view.template.ClientDependency;
 
-import java.util.List;
-
 /**
  * User: bimber
  * Date: 7/7/13
@@ -36,7 +34,7 @@ public class WeightFormSection extends SimpleGridPanel
     {
         super("study", "Weight", "Weights", location);
         setClientStoreClass("EHR.data.WeightClientStore");
-        addClientDependency(ClientDependency.fromFilePath("ehr/data/WeightClientStore.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/data/WeightClientStore.js"));
 
         _showLocation = true;
     }

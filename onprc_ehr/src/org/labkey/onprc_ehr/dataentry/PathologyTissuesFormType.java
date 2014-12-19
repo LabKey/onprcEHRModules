@@ -18,14 +18,11 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
-import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
-import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
-import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.security.PrincipalType;
@@ -67,13 +64,13 @@ public class PathologyTissuesFormType extends TaskForm
             s.addConfigSource("Necropsy");
         }
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Pathology.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Necropsy.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/form/field/PathologyCaseNoField.js"));
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/pathologyButtons.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromCaseWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Pathology.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Necropsy.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/form/field/PathologyCaseNoField.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/pathologyButtons.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/CopyFromCaseWindow.js"));
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/grid/DragDropGridPanel.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/grid/DragDropGridPanel.js"));
     }
 
     @Override

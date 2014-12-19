@@ -28,7 +28,7 @@ public class BehaviorRemarksFormSection extends SimpleGridPanel
     {
         super("study", "Clinical Remarks", "SOAPs");
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyBehaviorExamWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/CopyBehaviorExamWindow.js"));
     }
 
     @Override

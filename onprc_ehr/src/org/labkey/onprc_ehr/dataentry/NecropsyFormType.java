@@ -21,8 +21,6 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
-import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
-import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
@@ -49,7 +47,7 @@ public class NecropsyFormType extends EncounterForm
     public NecropsyFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, LABEL, "Pathology", Arrays.<FormSection>asList(
-                new NonStoreFormSection("Instructions", "Instructions", "ehr-necropsyinstructionspanel", Arrays.asList(ClientDependency.fromFilePath("ehr/panel/NecropsyInstructionsPanel.js"))),
+                new NonStoreFormSection("Instructions", "Instructions", "ehr-necropsyinstructionspanel", Arrays.asList(ClientDependency.fromPath("ehr/panel/NecropsyInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ClinicalEncountersFormPanelSection("Necropsy"),
                 new AnimalDetailsFormSection(),
@@ -71,11 +69,11 @@ public class NecropsyFormType extends EncounterForm
             s.addConfigSource("Necropsy");
         }
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Pathology.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Necropsy.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/form/field/PathologyCaseNoField.js"));
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/pathologyButtons.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromCaseWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Pathology.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Necropsy.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/form/field/PathologyCaseNoField.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/pathologyButtons.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/CopyFromCaseWindow.js"));
     }
 
     @Override

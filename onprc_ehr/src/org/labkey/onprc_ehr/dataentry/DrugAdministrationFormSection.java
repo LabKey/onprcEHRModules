@@ -19,8 +19,6 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,10 +50,10 @@ public class DrugAdministrationFormSection extends SimpleFormSection
     {
         super("study", "Drug Administration", label, "ehr-gridpanel");
         setClientStoreClass("EHR.data.DrugAdministrationRunsClientStore");
-        addClientDependency(ClientDependency.fromFilePath("ehr/data/DrugAdministrationRunsClientStore.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/SedationWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/AddScheduledTreatmentsWindow.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/RepeatSelectedWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/data/DrugAdministrationRunsClientStore.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/SedationWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/AddScheduledTreatmentsWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/RepeatSelectedWindow.js"));
 
         setLocation(location);
         setTabName("Medications");

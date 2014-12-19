@@ -19,7 +19,6 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.security.EHRCompletedUpdatePermission;
-import org.labkey.api.ehr.security.EHRVeternarianPermission;
 import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
@@ -34,7 +33,7 @@ public class ManageFlagsButton extends SimpleButtonConfigFactory
     public ManageFlagsButton(Module owner)
     {
         super(owner, "Manage Flags", "ONPRC_EHR.window.ManageFlagsWindow.buttonHandler(dataRegionName);");
-        setClientDependencies(ClientDependency.fromModuleName("ehr"), ClientDependency.fromFilePath("onprc_ehr/window/ManageFlagsWindow.js"));
+        setClientDependencies(ClientDependency.fromModuleName("ehr"), ClientDependency.fromPath("onprc_ehr/window/ManageFlagsWindow.js"));
         setInsertPosition(-1);
     }
 

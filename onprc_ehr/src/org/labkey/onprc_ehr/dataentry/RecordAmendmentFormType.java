@@ -15,8 +15,6 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
@@ -50,8 +48,8 @@ public class RecordAmendmentFormType extends TaskForm
             s.addConfigSource("RecordAmendment");
         }
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/RecordAmendment.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/RecordAmendment.js"));
     }
 
     @Override

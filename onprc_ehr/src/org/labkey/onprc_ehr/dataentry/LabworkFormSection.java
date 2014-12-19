@@ -16,10 +16,8 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.json.JSONObject;
-import org.labkey.api.data.Container;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
-import org.labkey.api.security.User;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.ArrayList;
@@ -42,10 +40,10 @@ public class LabworkFormSection extends SimpleGridPanel
     public LabworkFormSection(String schemaName, String queryName, String label, boolean allowPanelEdit)
     {
         super(schemaName, queryName, label, EHRService.FORM_SECTION_LOCATION.Tabs);
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/labworkButtons.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/LabworkChild.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/data/LabworkResultsStore.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/LabworkPanelEditWindow.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/labworkButtons.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/LabworkChild.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/data/LabworkResultsStore.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/LabworkPanelEditWindow.js"));
         setClientStoreClass("EHR.data.LabworkResultsStore");
         addConfigSource("LabworkChild");
         setTemplateMode(TEMPLATE_MODE.NONE);

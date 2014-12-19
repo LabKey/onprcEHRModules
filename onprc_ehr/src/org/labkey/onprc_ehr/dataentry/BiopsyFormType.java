@@ -64,11 +64,11 @@ public class BiopsyFormType extends EncounterForm
             s.addConfigSource("Biopsy");
         }
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Pathology.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Biopsy.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/form/field/PathologyCaseNoField.js"));
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/pathologyButtons.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/CopyFromCaseWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Pathology.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Biopsy.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/form/field/PathologyCaseNoField.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/pathologyButtons.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/CopyFromCaseWindow.js"));
     }
 
     @Override

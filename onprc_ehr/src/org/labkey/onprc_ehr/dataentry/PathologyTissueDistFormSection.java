@@ -15,11 +15,6 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.labkey.api.data.ColumnInfo;
-import org.labkey.api.data.TableInfo;
-import org.labkey.api.ehr.dataentry.DataEntryFormContext;
-import org.labkey.api.ehr.dataentry.FormElement;
-import org.labkey.api.query.FieldKey;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.List;
@@ -35,7 +30,7 @@ public class PathologyTissueDistFormSection extends EncounterChildFormSection
     {
         super("study", "tissueDistributions", "Tissue Distributions", false);
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/CopyTissuesWindow.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/CopyTissuesWindow.js"));
     }
 
     @Override

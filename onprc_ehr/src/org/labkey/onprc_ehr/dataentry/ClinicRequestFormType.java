@@ -45,7 +45,7 @@ public class ClinicRequestFormType extends RequestForm
                 new SurgeryRequestFormSection()
         ));
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/model/sources/Clinical_Services.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/Clinical_Services.js"));
 
         for (FormSection s : getFormSections())
         {

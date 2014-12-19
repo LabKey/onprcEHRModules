@@ -16,7 +16,6 @@
 package org.labkey.onprc_ehr.buttons;
 
 import org.labkey.api.data.TableInfo;
-import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.ehr.security.EHRVeternarianPermission;
 import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.module.Module;
@@ -32,7 +31,7 @@ public class VetReviewButton extends SimpleButtonConfigFactory
     public VetReviewButton(Module owner)
     {
         super(owner, "Mark Vet Review", "EHR.window.VetReviewWindow.buttonHandler(dataRegionName);");
-        setClientDependencies(ClientDependency.fromFilePath("ehr/window/VetReviewWindow.js"));
+        setClientDependencies(ClientDependency.fromPath("ehr/window/VetReviewWindow.js"));
     }
 
     public boolean isAvailable(TableInfo ti)

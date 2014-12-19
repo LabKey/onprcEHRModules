@@ -28,7 +28,6 @@ import org.labkey.api.query.Queryable;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * User: bimber
@@ -64,8 +63,8 @@ public class ClinicalRoundsFormType extends TaskForm
             s.setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NONE);
         }
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalRounds.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalRounds.js"));
     }
 
     @Override

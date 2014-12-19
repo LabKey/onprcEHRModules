@@ -43,7 +43,7 @@ public class MensFormType extends TaskForm
             new MensFormSection()
         ));
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/Menses.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Menses.js"));
 
         for (FormSection s : getFormSections())
         {

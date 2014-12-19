@@ -47,7 +47,7 @@ public class ClinicalReportFormType extends TaskForm
     public ClinicalReportFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, LABEL, "Clinical", Arrays.<FormSection>asList(
-                new NonStoreFormSection("Instructions", "Instructions", "ehr-examinstructionspanel", Arrays.asList(ClientDependency.fromFilePath("ehr/panel/ExamInstructionsPanel.js"))),
+                new NonStoreFormSection("Instructions", "Instructions", "ehr-examinstructionspanel", Arrays.asList(ClientDependency.fromPath("ehr/panel/ExamInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ExtendedAnimalDetailsFormSection(),
                 new SimpleFormPanelSection("study", "Clinical Remarks", "SOAP", false, EHRService.FORM_SECTION_LOCATION.Tabs),
@@ -81,11 +81,11 @@ public class ClinicalReportFormType extends TaskForm
         }
 
         setStoreCollectionClass("EHR.data.ClinicalReportStoreCollection");
-        addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalReportStoreCollection.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalReport.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/panel/ExamDataEntryPanel.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalReportChild.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/data/ClinicalReportStoreCollection.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalReport.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/panel/ExamDataEntryPanel.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalReportChild.js"));
         setJavascriptClass("EHR.panel.ExamDataEntryPanel");
     }
 

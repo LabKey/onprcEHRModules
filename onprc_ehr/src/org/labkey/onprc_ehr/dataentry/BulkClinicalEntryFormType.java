@@ -58,8 +58,8 @@ public class BulkClinicalEntryFormType extends TaskForm
             s.addConfigSource("ClinicalDefaults");
         }
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/ClinicalDefaults.js"));
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/MassBleedWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/MassBleedWindow.js"));
     }
 
     @Override

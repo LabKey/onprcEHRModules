@@ -44,7 +44,7 @@ public class BloodDrawFormType extends TaskForm
             new DrugAdministrationFormSection())
         );
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/BloodDraw.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/BloodDraw.js"));
 
         for (FormSection s : getFormSections())
         {

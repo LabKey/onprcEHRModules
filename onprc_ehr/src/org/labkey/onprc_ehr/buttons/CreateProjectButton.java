@@ -16,8 +16,6 @@
 package org.labkey.onprc_ehr.buttons;
 
 import org.labkey.api.data.TableInfo;
-import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ehr.security.EHRCompletedInsertPermission;
 import org.labkey.api.ehr.security.EHRProjectEditPermission;
 import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.module.Module;
@@ -34,7 +32,7 @@ public class CreateProjectButton extends SimpleButtonConfigFactory
     {
         super(owner, "Create Project For Protocol", "ONPRC_EHR.window.CreateProjectWindow.buttonHandler(dataRegionName);");
 
-        setClientDependencies(ClientDependency.fromFilePath("onprc_ehr/window/CreateProjectWindow.js"));
+        setClientDependencies(ClientDependency.fromPath("onprc_ehr/window/CreateProjectWindow.js"));
     }
 
     public boolean isAvailable(TableInfo ti)

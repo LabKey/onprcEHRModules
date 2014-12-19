@@ -32,8 +32,8 @@ public class ClinicalEncountersFormSection extends SimpleFormSection
     public ClinicalEncountersFormSection()
     {
         super("study", "encounters", "Procedures", "ehr-gridpanel", EHRService.FORM_SECTION_LOCATION.Body);
-        addClientDependency(ClientDependency.fromFilePath("ehr/buttons/encounterButtons.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/data/ClinicalEncountersClientStore.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/buttons/encounterButtons.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/data/ClinicalEncountersClientStore.js"));
         setClientStoreClass("EHR.data.ClinicalEncountersClientStore");
         setTemplateMode(TEMPLATE_MODE.NONE);
     }

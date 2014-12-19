@@ -17,7 +17,6 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.TableInfo;
-import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormElement;
 import org.labkey.api.query.FieldKey;
@@ -37,8 +36,8 @@ public class PathologyFormSection extends EncounterChildFormSection
     {
         super(schemaName, queryName, label, false);
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/form/field/SnomedCodesEditor.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/grid/SnomedColumn.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/form/field/SnomedCodesEditor.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/grid/SnomedColumn.js"));
     }
 
     @Override

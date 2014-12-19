@@ -21,12 +21,9 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
 import org.labkey.api.module.Module;
-import org.labkey.api.security.*;
-import org.labkey.api.security.SecurityManager;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * User: bimber
@@ -48,7 +45,7 @@ public class ASBRequestFormType extends RequestForm
                 new DrugAdministrationRequestFormSection()
         ));
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/model/sources/ASB_Services.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/ASB_Services.js"));
 
         for (FormSection s : getFormSections())
         {

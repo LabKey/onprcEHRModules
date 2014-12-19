@@ -34,7 +34,7 @@ public class LabworkRequestInstructionsFormSection extends AbstractFormSection
     {
         super("LabworkRequestInstructions", "Instructions", "onprc-labworkrequestinstructionspanel");
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/LabworkRequestInstructionsPanel.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/panel/LabworkRequestInstructionsPanel.js"));
     }
 
     @Override

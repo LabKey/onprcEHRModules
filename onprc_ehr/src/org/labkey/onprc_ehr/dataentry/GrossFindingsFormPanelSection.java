@@ -29,9 +29,9 @@ public class GrossFindingsFormPanelSection extends SimpleFormPanelSection
     {
         super("study", "grossFindings", "Gross Findings", false);
 
-        addClientDependency(ClientDependency.fromFilePath("ehr/buttons/encounterButtons.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/EncounterChild.js"));
-        addClientDependency(ClientDependency.fromFilePath("ehr/window/EncounterAddRecordWindow.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/buttons/encounterButtons.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/model/sources/EncounterChild.js"));
+        addClientDependency(ClientDependency.fromPath("ehr/window/EncounterAddRecordWindow.js"));
 
         addConfigSource("Encounter");
         addConfigSource("EncounterChild");
