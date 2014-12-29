@@ -150,7 +150,7 @@ public class ONPRC_EHRController extends SpringActionController
                 ehr.add(json);
 
                 json = new JSONObject();
-                json.put("name", "Animal Search");
+                json.put("name", "ONPRC Animal Search");
                 json.put("path", ehrContainer.getPath());
                 json.put("url", new ActionURL("ehr", "animalSearch", ehrContainer).toString());
                 json.put("canRead", ehrContainer.hasPermission(getUser(), ReadPermission.class));

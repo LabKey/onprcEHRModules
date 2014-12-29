@@ -59,7 +59,7 @@
             </selectors>
             <preferredWebParts>
                 <webPart>
-                    <name>Animal Search</name>
+                    <name>ONPRC Animal Search</name>
                     <location>body</location>
                 </webPart>
             </preferredWebParts>
