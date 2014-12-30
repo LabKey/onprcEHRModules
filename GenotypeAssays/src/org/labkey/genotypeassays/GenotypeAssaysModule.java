@@ -22,13 +22,11 @@ import org.labkey.api.data.DbSchema;
 import org.labkey.api.laboratory.LaboratoryService;
 import org.labkey.api.laboratory.button.ChangeAssayResultStatusBtn;
 import org.labkey.api.ldk.ExtendedSimpleModule;
-import org.labkey.api.ldk.LDKService;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.genotypeassays.assay.GenotypeAssayDataProvider;
 import org.labkey.genotypeassays.assay.SNPAssayDataProvider;
 import org.labkey.genotypeassays.assay.SSPAssayDataProvider;
-import org.labkey.genotypeassays.buttons.CacheAnalysesButton;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -84,8 +82,6 @@ public class GenotypeAssaysModule extends ExtendedSimpleModule
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.SSP_ASSAY_PROVIDER, Arrays.asList("DataId:ASC", "include:primerPair,result,subjectId"));
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("result", "DataId"));
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("RowId", "DataId"));
-
-        LDKService.get().registerQueryButton(new CacheAnalysesButton(this), "sequenceanalysis", "sequence_analyses");
     }
 
     @Override
