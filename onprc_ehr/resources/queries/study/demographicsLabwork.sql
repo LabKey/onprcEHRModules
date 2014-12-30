@@ -15,12 +15,11 @@
  */
 SELECT
   d.id,
-  max(h.date) as lastHematologyDate,
-  max(bc.date) as lastBiochemistryDate
+  max(CASE WHEN h.type = 'Hematology' THEN h.date ELSE null END) as lastHematologyDate,
+  max(CASE WHEN h.type = 'Biochemistry' THEN h.date ELSE null END) as lastBiochemistryDate
 
 FROM study.demographics d
-LEFT JOIN study.clinpathRuns h ON (d.id = h.id AND h.type = 'Hematology')
-LEFT JOIN study.clinpathRuns bc ON (d.id = bc.id AND bc.type = 'Biochemistry')
+LEFT JOIN study.clinpathRuns h ON (d.id = h.id AND (h.type = 'Hematology' OR h.type = 'Biochemistry'))
 WHERE d.calculated_status = 'Alive'
 GROUP BY d.id
 

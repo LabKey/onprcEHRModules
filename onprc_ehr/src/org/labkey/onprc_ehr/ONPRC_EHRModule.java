@@ -73,6 +73,7 @@ import org.labkey.onprc_ehr.notification.ColonyAlertsLiteNotification;
 import org.labkey.onprc_ehr.notification.ColonyAlertsNotification;
 import org.labkey.onprc_ehr.notification.ColonyMgmtNotification;
 import org.labkey.onprc_ehr.notification.ComplianceNotification;
+import org.labkey.onprc_ehr.notification.DataValidationNotification;
 import org.labkey.onprc_ehr.notification.RequestAdminNotification;
 import org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification;
 import org.labkey.onprc_ehr.notification.TMBNotification;
@@ -143,6 +144,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         ns.registerNotification(new ClinicalAlertsNotification(this));
         ns.registerNotification(new UnoccupiedRoomsNotification(this));
         ns.registerNotification(new VetReviewNotification(this));
+        ns.registerNotification(new DataValidationNotification(this));
     }
 
     private void registerEHRResources()

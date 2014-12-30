@@ -129,3 +129,66 @@ EHR.DataEntryUtils.registerGridButton('PANELDELETE', function(config){
         }
     }, config);
 });
+
+EHR.DataEntryUtils.registerDataEntryFormButton('LABWORK_SUBMIT', {
+    text: 'Submit Final',
+    name: 'submit',
+    requiredQC: 'Completed',
+    targetQC: 'Completed',
+    errorThreshold: 'INFO',
+    successURL: LABKEY.ActionURL.getParameter('srcURL') || LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
+    disabled: true,
+    itemId: 'submitBtn',
+    handler: function(btn){
+        var panel = btn.up('ehr-dataentrypanel');
+        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in LABWORK_SUBMIT button', panel);
+
+        //iterate all panels and make sure we have at least 1 result entered
+        var clinpathRunsStore = panel.storeCollection.getClientStoreByName('Clinpath Runs') || panel.storeCollection.getClientStoreByName('clinpathRuns');
+        LDK.Assert.assertNotEmpty('Unable to find clinpathRunsStore from LABWORK_SUBMIT button', clinpathRunsStore);
+
+        var missingResults = [];
+        clinpathRunsStore.each(function(r){
+            var runId = r.get('objectid');
+            var found = false;
+            panel.storeCollection.clientStores.each(function(cs){
+                if (!cs.getFields().get('runid')){
+                    return;
+                }
+
+                if (cs.storeId.match('-clinpathRuns$') || cs.storeId.match('-Clinpath Runs$')){
+                    return;
+                }
+
+                cs.each(function(cr){
+                    if (cr.get('runid') == runId){
+                        found = true;
+                        return false;
+                    }
+                }, this);
+
+                if (found){
+                    return false;
+                }
+            }, this);
+
+            if (!found){
+                missingResults.push(r);
+            }
+        }, this);
+
+        var msg = 'You are about to finalize this form.  Do you want to do this?';
+        if (missingResults.length){
+            msg  = 'You are about the finalize this form, but the following panels do not have results entered.  Do you want to finalize anyway?<br>';
+            Ext4.Array.forEach(missingResults, function(r){
+                msg += '<br>' + (r.get('Id') || 'No Animal Entered') + ': ' + (r.get('servicerequested') || 'No Service Entered');
+            }, this);
+        }
+
+        Ext4.Msg.confirm('Finalize Form', msg, function (v) {
+            if (v == 'yes')
+                this.onSubmit(btn);
+        }, this);
+    },
+    disableOn: 'WARN'
+});

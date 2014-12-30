@@ -5,7 +5,7 @@
         <column name="Id/curLocation/cage"/>
         <column name="todaysP2"/>
         <column name="yesterdaysP2"/>
-        <column name="latestHx"/>
+        <column name="Id/demographics/mostRecentHx"/>
         <column name="Id/utilization/use"/>
         <column name="date"/>
         <column name="allProblemCategories"/>

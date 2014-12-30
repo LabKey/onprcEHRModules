@@ -1027,6 +1027,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsLiteNotification.jav
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyMgmtNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ComplianceNotification.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/notification/DataValidationNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ETLNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/LabTestScheduleNotifications.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/RequestAdminNotification.java -text

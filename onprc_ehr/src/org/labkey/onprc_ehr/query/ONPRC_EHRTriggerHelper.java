@@ -1013,34 +1013,7 @@ public class ONPRC_EHRTriggerHelper
                     if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) && terminalCode == (Integer) rowMap.get("projectedReleaseCondition"))
                     {
                         //if already 207 or higher, dont attmept to downgrade
-                        TableInfo flagTable = getTableInfo("study", "flags");
-                        SimpleFilter flagFilter = new SimpleFilter(FieldKey.fromString("Id"), id);
-                        flagFilter.addCondition(new SimpleFilter.OrClause(new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, deathDate), new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)));
-                        flagFilter.addCondition(FieldKey.fromString("flag/category"), "Condition");
-
-                        final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(flagTable, PageFlowUtil.set(FieldKey.fromString("flag/value"), FieldKey.fromString("flag/code")));
-                        TableSelector flagTs = new TableSelector(flagTable, colMap.values(), flagFilter, null);
-                        final List<Integer> foundCodes = new ArrayList<>();
-                        if (flagTs.exists())
-                        {
-                            flagTs.forEach(new Selector.ForEachBlock<ResultSet>()
-                            {
-                                @Override
-                                public void exec(ResultSet object) throws SQLException
-                                {
-                                    Results rs = new ResultsImpl(object, colMap);
-                                    if (rs.getObject(FieldKey.fromString("flag/code")) != null)
-                                    {
-                                        Integer codeInt = rs.getInt(FieldKey.fromString("flag/code"));
-                                        if (codeInt > terminalCode)
-                                        {
-                                            foundCodes.add(codeInt);
-                                        }
-                                    }
-                                }
-                            });
-                        }
-
+                        List<Integer> foundCodes = findHigherActiveConditonCodes(id, deathDate, terminalCode);
                         if (foundCodes.isEmpty())
                         {
                             row.put("releaseCondition", terminalCode);
@@ -1234,16 +1207,65 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public void updateAnimalCondition(String id, Date enddate, Integer condition) throws BatchValidationException
+    private List<Integer> findHigherActiveConditonCodes(String id, Date date, final Integer targetCondition)
     {
-        String flag = getFlag("Condition", null, condition, true);
-        if (flag != null)
+        TableInfo flagTable = getTableInfo("study", "flags");
+        SimpleFilter flagFilter = new SimpleFilter(FieldKey.fromString("Id"), id);
+        flagFilter.addCondition(new SimpleFilter.OrClause(new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, date), new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)));
+        flagFilter.addCondition(FieldKey.fromString("flag/category"), "Condition");
+
+        final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(flagTable, PageFlowUtil.set(FieldKey.fromString("flag/value"), FieldKey.fromString("flag/code")));
+        TableSelector flagTs = new TableSelector(flagTable, colMap.values(), flagFilter, null);
+        final List<Integer> foundCodes = new ArrayList<>();
+        if (flagTs.exists())
         {
-            EHRService.get().ensureFlagActive(getUser(), getContainer(), flag, enddate, null, Collections.singletonList(id), true);
+            flagTs.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, colMap);
+                    if (rs.getObject(FieldKey.fromString("flag/code")) != null)
+                    {
+                        Integer codeInt = rs.getInt(FieldKey.fromString("flag/code"));
+                        if (codeInt > targetCondition)
+                        {
+                            foundCodes.add(codeInt);
+                        }
+                    }
+                }
+            });
         }
-        else
+
+        return foundCodes;
+    }
+
+    public String checkForConditionDowngrade(String id, Date date, final Integer condition)
+    {
+        List<Integer> foundCodes = findHigherActiveConditonCodes(id, date, condition);
+        if (!foundCodes.isEmpty())
         {
-            _log.error("Unable to find condition matching: " + condition);
+            return "Animal already has a higher condition code (" + (StringUtils.join(foundCodes, ","))+ "), cannot choose a lower code unless the existing code is removed or disabled";
+        }
+
+        return null;
+    }
+
+    public void updateAnimalCondition(String id, Date enddate, final Integer condition) throws BatchValidationException
+    {
+        //if the animal already has an active higher code, dont attmept to downgrade
+        List<Integer> foundCodes = findHigherActiveConditonCodes(id, enddate, condition);
+        if (foundCodes.isEmpty())
+        {
+            String flag = getFlag("Condition", null, condition, true);
+            if (flag != null)
+            {
+                EHRService.get().ensureFlagActive(getUser(), getContainer(), flag, enddate, null, Collections.singletonList(id), true);
+            }
+            else
+            {
+                _log.error("Unable to find condition matching: " + condition);
+            }
         }
     }
 
@@ -1794,5 +1816,23 @@ public class ONPRC_EHRTriggerHelper
             _log.info("updating " + targetField + " on demographics for animal: " + id + " from parentage");
         }
 
+    }
+
+    public String validateCaseNo(String caseNo, String type, String objectid)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("caseno"), caseNo);
+        filter.addCondition(FieldKey.fromString("type"), type);
+        if (objectid != null)
+        {
+            filter.addCondition(FieldKey.fromString("objectid"), objectid, CompareType.NEQ_OR_NULL);
+        }
+
+        if (new TableSelector(getTableInfo("study", "encounters"), filter, null).exists())
+        {
+            return "There is already an existing case with the number: " + caseNo;
+        }
+
+
+        return null;
     }
 }

@@ -22,8 +22,10 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRLabworkEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: bimber
@@ -54,6 +56,8 @@ public class LabworkFormType extends TaskForm
         {
             s.addConfigSource("Labwork");
         }
+
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/labworkButtons.js"));
     }
 
     @Override
@@ -63,5 +67,21 @@ public class LabworkFormType extends TaskForm
             return false;
 
         return super.canInsert();
+    }
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+
+        int idx = ret.indexOf("SUBMIT");
+        assert idx > -1;
+        ret.remove("SUBMIT");
+        if (idx > -1)
+            ret.add(idx, "LABWORK_SUBMIT");
+        else
+            ret.add("LABWORK_SUBMIT");
+
+        return ret;
     }
 }

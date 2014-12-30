@@ -119,6 +119,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         livingAnimalsWithoutHousing(c, u, msg);
         livingAnimalsBornDead(c, u, msg);
         nonContiguousHousing(c, u, msg);
+        roomsWithoutInfo(c, u, msg);
+        multipleHousingRecords(c, u, msg);
+        deadAnimalsWithActiveHousing(c, u, msg);
 
         //clinical
         deadAnimalsWithActiveCases(c, u, msg);

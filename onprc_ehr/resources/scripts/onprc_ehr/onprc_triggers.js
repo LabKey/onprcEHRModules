@@ -96,6 +96,13 @@ exports.init = function(EHR){
         if (row.chargetype != 'Research Staff' && row.assistingstaff){
             EHR.Server.Utils.addError(scriptErrors, 'assistingstaff', 'This field will be ignored unless Research Staff is selected, and should be blank.', 'WARN');
         }
+
+        if (row.type && row.caseno){
+            var msg = triggerHelper.validateCaseNo(row.caseno, row.type, row.objectid || null);
+            if (msg){
+                EHR.Server.Utils.addError(scriptErrors, 'caseno', msg, 'WARN');
+            }
+        }
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Animal Record Flags', function(helper, scriptErrors, row, oldRow){
@@ -155,7 +162,13 @@ exports.init = function(EHR){
         if (!helper.isETL() && helper.getEvent() == 'update' && oldRow){
             if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData){
                 if (row.releaseCondition && row.enddate){
-                    triggerHelper.updateAnimalCondition(row.Id, row.enddate, row.releaseCondition);
+                    var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.enddate, row.releaseCondition);
+                    if (msg){
+                        EHR.Server.Utils.addError(scriptErrors, 'releaseCondition', msg, 'INFO');
+                    }
+                    else {
+                        triggerHelper.updateAnimalCondition(row.Id, row.enddate, row.releaseCondition);
+                    }
                 }
             }
         }
@@ -167,6 +180,14 @@ exports.init = function(EHR){
             row.enddatefinalized = new Date();
             if (row.enddate.getTime() > row.enddatefinalized.getTime()){
                 row.enddatefinalized = row.enddate;
+            }
+        }
+
+        //check for condition downgrade for assign condition
+        if (!helper.isETL() && row.Id && row.assignCondition){
+            var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.date, row.assignCondition);
+            if (msg){
+                EHR.Server.Utils.addError(scriptErrors, 'assignCondition', msg, 'INFO');
             }
         }
     });
