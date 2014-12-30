@@ -3,6 +3,7 @@ GeneticsCore/GeneticsCore.iml -text
 GeneticsCore/build.xml -text
 GeneticsCore/module.properties -text
 GeneticsCore/resources/module.xml -text
+GeneticsCore/resources/queries/sequenceanalysis/sequence_analyses/SBT[!!-~]Information.qview.xml -text
 GeneticsCore/resources/queries/study/dnaFlagSummary.query.xml -text
 GeneticsCore/resources/queries/study/dnaFlagSummary.sql -text
 GeneticsCore/resources/queries/study/mhcFlagSummary.query.xml -text
@@ -18,10 +19,15 @@ GeneticsCore/resources/views/geneticsMenu.webpart.xml -text
 GeneticsCore/resources/views/sbtReview.html -text
 GeneticsCore/resources/views/sbtReview.view.xml -text
 GeneticsCore/resources/web/geneticscore/buttons.js -text
+GeneticsCore/resources/web/geneticscore/window/ChangeReadsetStatusWindow.js -text
 GeneticsCore/resources/web/geneticscore/window/ManageFlagsWindow.js -text
+GeneticsCore/resources/web/geneticscore/window/PublishResultsWindow.js -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreController.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreManager.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreModule.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/GeneticsTableCustomizer.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/button/ChangeReadsetStatusButton.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/button/PublishSBTResultsButton.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/button/SBTReviewButton.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/notification/GeneticsCoreNotification.java -text
 /README.txt -text
