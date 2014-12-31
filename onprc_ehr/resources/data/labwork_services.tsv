@@ -1,0 +1,78 @@
+servicename	outsidelab	chargetype	dataset	tissue	collectionmethod	method
+Antibiotic Sensitivity	false	Clinpath	Antibiotic Sensitivity		
+Albumin	false	Clinpath	Biochemistry	T-0X500	
+Amylase	false	Clinpath	Biochemistry	T-0X500	
+BASIC Chemistry Panel in-house	false	Clinpath	Biochemistry	T-0X500		Photometer
+Comprehensive Chemistry panel in-house	false	Clinpath	Biochemistry	T-0X500		Photometer
+Comprehensive Chemistry Panel Send Out	true	Clinpath	Biochemistry	T-0X500	
+Chemistry panel with high density lipoprotein send out	true	Clinpath	Biochemistry	T-0X500	
+Chemistry Acquisitioned, SNBL	true	Not Billable	Biochemistry	T-0X500	
+Chemistry Acquisitioned Animals	true	Not Billable	Biochemistry	T-0X500	
+High-density lipoprotein & Low-density lipoprotein (HDL & LDL)	false	Clinpath	Biochemistry	T-0X500	
+LDL	false	Clinpath	Biochemistry	T-0X500	
+Lipase	true	Clinpath	Biochemistry	T-0X500	
+Lipid panel in-house: Cholesterol, Triglyceride, HDL, LDL	false	Clinpath	Biochemistry	T-0X500	
+Thyroid Panel	true	Clinpath	Biochemistry	T-0X500	
+CBC with automated differential	false	Clinpath	Hematology	T-0X000		Cell Counter
+RBC Morphology	false	Clinpath	Hematology	T-0X000	
+Reticulocyte count	false	Clinpath	Hematology	T-0X000	
+WBC differential	false	Clinpath	Hematology	T-0X000	
+Anaerobic Culture	false	Clinpath	Microbiology		
+Fecal culture	false	Clinpath	Microbiology		
+General culture	false	Clinpath	Microbiology		
+Yersinia culture	false	Clinpath	Microbiology		
+BAL Fluid Analysis with Cytology	true	Clinpath	Misc Tests	T-27000	
+Bile Acids Post-prandial	true	Clinpath	Misc Tests	T-0X500	
+Bile Acids Pre-prandial	true	Clinpath	Misc Tests	T-0X500	
+Clotting panel	true	Clinpath	Misc Tests	T-0X400	
+C-Reactive Protein	true	Clinpath	Misc Tests	T-0X500	
+Cytology Send out	true	Clinpath	Misc Tests		
+Dermatophyte test medium culture	false	Clinpath	Misc Tests		
+Exam for Yeast	false	Clinpath	Misc Tests		
+Fungus Culture	true	Clinpath	Misc Tests		
+Glycosolated hemoglobin  (HGBA1C)	true	Clinpath	Misc Tests	T-0X000	
+Gram Stain	false	Clinpath	Misc Tests		
+Malaria Screen	false	Clinpath	Misc Tests	T-0X000	
+Miscellaneous in-house	false	Clinpath	Misc Tests		
+Miscellaneous send out	true	Clinpath	Misc Tests		
+Occult Blood	false	Clinpath	Misc Tests	T-6Y100	
+Phenobarbital	true	Clinpath	Misc Tests	T-0X500	
+Protein Electrophoresis-Total Protein	true	Clinpath	Misc Tests		
+Vitamin D (1,25 Dihydroxy)	true	Clinpath	Misc Tests	T-0X500	
+Vitamin D (250H)	true	Clinpath	Misc Tests	T-0X500	
+Fecal parasite exam	false	Clinpath	Parasitology	T-6Y100	
+SPF Surveillance - Annual	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+ESPF Surveillance - Monthly	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+ESPF Surveillance - Quarterly	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+Japanese Macaque Surveillance	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+Compromised SPF Surveillance	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+SRV	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+Herpes B	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+Filovirus	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+Primagam for TB	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+SRV Virus Isolation	false	SPF Surveillance Lab	Serology/Virology	T-0X000	Venipuncture 
+Herpes B Post-Exposure Follow-Up Serology	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+PDL PCR	false	SPF Surveillance Lab	Serology/Virology	T-0X000	Venipuncture 
+Herpes B Post-Exposure Baseline Virology	false	SPF Surveillance Lab	Serology/Virology		Swab
+Herpes B Post-Exposure Baseline Serology	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+Terminal Serum Surveillance	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+Intuitive Basic Array	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+Intuitive Expanded Array	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+PDL ABSCN-5	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+PDL ABSCN-8	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+PDL SRV1 WB	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+PDL SRV2 WB	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+PDL SRV5 WB	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+PDL SIV WB	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+PDL STLV WB	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+Herpes B Status Confirmation	false	SPF Surveillance Lab	Serology/Virology	T-0X500	Venipuncture 
+Urinalysis	false	Clinpath	Urinalysis	T-7X100	
+CSF analysis (WBC count & differential)	false	Clinpath	Misc Tests	T-X1000	
+CSF Glucose	true	Clinpath	Misc Tests	T-X1000	
+CSF Total Protein	true	Clinpath	Misc Tests	T-X1000	
+Other Clinpath	false	Clinpath	Misc Tests		
+Other SPF Surveillance	false	SPF Surveillance Lab	Misc Tests		
+BASIC Chemistry Panel (Axthelm)	false	Research Staff	Biochemistry	T-0X500	
+Calcium, total	false	Clinpath	Biochemistry	T-0X500	
+Calcium, ionized	false	Clinpath	Biochemistry	T-0X500	
+iSTAT	false		iSTAT		

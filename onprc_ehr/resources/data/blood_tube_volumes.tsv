@@ -1,0 +1,8 @@
+volume	tube_types
+0.5	EDTA
+2	EDTA,No Additive
+3	EDTA,Glass
+3.5	SST
+4	Heparin,No Additive,Glass,STT
+5	SST,Glass,STT
+6	EDTA,Heparin,No Additive

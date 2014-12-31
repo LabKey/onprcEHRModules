@@ -1,0 +1,8 @@
+value	sort_order
+Good	1
+Good-Fair	2
+Fair	3
+Fair-Poor	4
+Poor	5
+Unknown	6
+N/A	7

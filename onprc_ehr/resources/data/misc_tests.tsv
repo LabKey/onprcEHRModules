@@ -1,0 +1,332 @@
+testid	name	units	aliases	alertOnAbnormal	alertOnAny	includeInPanel	sort_order
+% SAT			false	false	false	
+% SATURATION			false	false	false	
+20.71SOL			false	false	false	
+3+ BLOOD			false	false	false	
+4 HOUR			false	false	false	
+661			false	false	false	
+8 HOUR			false	false	false	
+A/G Ratio			false	false	false	
+ABNORMAL IgG-NO DETECTABLE LIGHT CHAIN			false	false	false	
+ACID FAST STAIN			false	false	false	
+ADRENOCORTICOTROPIC HORMONE (ACTH)			false	false	false	
+ALBUMIN			false	false	false	
+ALBUMIN 42.8%   ALPHA 1 -7.0%			false	false	false	
+ALK PHOS  TOTAL			false	false	false	
+Alkaline Phos isoenzyme-Bone			false	false	false	
+Alkaline Phos isoenzyme-Intestine			false	false	false	
+Alkaline Phos isoenzyme-Liver			false	false	false	
+Alkaline Phos Total			false	false	false	
+ALPHA 1			false	false	false	
+ALPHA 1 GLOBULIN			false	false	false	
+ALPHA 2			false	false	false	
+ALPHA 2 GLOBULIN			false	false	false	
+AMP TICAR TIRMETH-SULFA CEFAZOLIN CEPHAL			false	false	false	
+AMP/SULB  AZTRE CIPROFL IMPEN MEZLO NORF			false	false	false	
+AMYLASE			false	false	false	
+ANA (ANTINUCLEAR ANTIBODIES)			false	false	false	
+ANAEROBIC CULTURE			false	false	false	
+ANTIBODY SCREEN			false	false	false	
+ANTIMICROSOMAL			false	false	false	
+ANTINUCLEAR ANTIBODIES			false	false	false	
+ANTITHYROGLOBULIN			false	false	false	
+APPEARANCE			false	false	false	
+ARTERIAL BLOOD GASES			false	false	false	
+B CELLS			false	false	false	
+BENCE JONES PROTEIN  [IEP]			false	false	false	
+BETA  13.2%			false	false	false	
+Beta Globulin			false	false	false	
+Bile Acids Post-prandial			false	false	false	
+Bile Acids Pre-prandial			false	false	false	
+BILIRUBIN			false	false	false	
+BLOOD			false	false	false	
+BUN			false	false	false	
+BUN DIPSTICK			false	false	false	
+Calcitonin			false	false	false	
+CD20			false	false	false	
+CD26			false	false	false	
+CD4			false	false	false	
+CD4/CD8			false	false	false	
+CD8			false	false	false	
+CEFTIZOXIME CEFTRIAXONE GENT TOBRA			false	false	false	
+CELL COUNT			false	false	false	
+CELL COUNT  DIFFERENTIAL			false	false	false	
+CELL COUNT (WBC)			false	false	false	
+CELL COUNT = 1.2			false	false	false	
+CELL DIFFERENTIAL			false	false	false	
+CELL SORTING			false	false	false	
+CHOL./HDL RATIO			false	false	false	
+CHOL/HDL			false	false	false	
+CHOL/HDL RATIO			false	false	false	
+CHOL/HDL RTIO			false	false	false	
+CLOSTRIDIUM DIFFICILE TOXIN			false	false	false	
+CLOTTING TIME			false	false	false	
+COLD AGGLUTININ			false	false	false	
+COMMENT: CSF CLOUDY & BLOODY			false	false	false	
+CONTROL			false	false	false	
+CORTISOL			false	false	false	
+CORTISOL TOTAL SERUM			false	false	false	
+CPK			false	false	false	
+CPK TOTAL			false	false	false	
+CPK-1			false	false	false	
+CPK-1 [BB]			false	false	false	
+CPK-1(BB)			false	false	false	
+CPK-2			false	false	false	
+CPK-2 [MB]			false	false	false	
+CPK-2(MB)			false	false	false	
+CPK-3			false	false	false	
+CPK-3 [MM]			false	false	false	
+CPK-3(MM)			false	false	false	
+C-Reactive Protein		mg/L	false	false	false	
+Creatine Kinase			false	false	false	
+CREATININE			false	false	false	
+CRYPTOSPORIDIA			false	false	false	
+CRYPTOSPORIDIUM EXAMINATION SENT OUT			false	false	false	
+CSF CELL COUNT			false	false	false	
+CSF Glucose			false	false	false	
+CSF PROTEIN			false	false	false	
+CSF SEDIMENT			false	false	false	
+CSF Total Protein			false	false	false	
+CULTURE			false	false	false	
+CYTOLOGY			false	false	false	
+CYTOLOGY OF BILE			false	false	false	
+CYTOLOGY OF LUMP ON THIGH			false	false	false	
+CYTOLOGY OF MASS			false	false	false	
+CYTOMEGALOVIRUS			false	false	false	
+D1FFERENTIAL			false	false	false	
+DARKFEILD MICROSCOPY FOR LEPTOSPIRA SP.			false	false	false	
+DEXTROSTIX GLUCOSE			false	false	false	
+DIFF			false	false	false	
+DIFF QUIK STAIN FOR FUNGUS			false	false	false	
+DIFFERENTIAL			false	false	false	
+DIFFERENTIAL WBC			false	false	false	
+DIHYDROTESTOSTERONE			false	false	false	
+DIPSTICK BLOOD			false	false	false	
+DIPSTICK PROTEIN			false	false	false	
+DIRECT COOMBS			false	false	false	
+E-2 (ESTROGEN)			false	false	false	
+ECTOPARASITE EXAM			false	false	false	
+ERYTHROPOIETIN			false	false	false	
+ESTRADIOL			false	false	false	
+EXAM FOR FUNGAL HYPHEA			false	false	false	
+EXAM FOR YEAST			false	false	false	
+F			false	false	false	
+FACS ANALYSIS			false	false	false	
+FECAL GRAM STAIN			false	false	false	
+FERRITIN			false	false	false	
+FIBRIN DEGRADATION PRODUCTS			false	false	false	
+FIBRINOGEN			false	false	false	
+FREE T4			false	false	false	
+FREE T-4			false	false	false	
+FREE THYROXINE			false	false	false	
+FREE THYROXINE INDEX			false	false	false	
+Fructosamine, serum			false	false	false	
+FTI			false	false	false	
+FUNGAL CULTURE			false	false	false	
+FUNGUS CULTURE			false	false	false	
+FUNGUS CULTURE ON HAIR			false	false	false	
+FUNGUS CULTURE ON SKIN			false	false	false	
+GALLSTONE ANALYSIS			false	false	false	
+GAMMA			false	false	false	
+GAMMA GLOBULIN			false	false	false	
+Gastrin			false	false	false	
+Giardia			false	false	false	
+GLUCOSE			false	false	false	
+GLUCOSE BY DEXTROSTIX			false	false	false	
+GLUCOSE&PROTEIN			false	false	false	
+GLYCOSYLATED HEMOGLOBIN			false	false	false	
+GRAM STAIN			false	false	false	
+GRAMS STAIN			false	false	false	
+GROSS BLOOD			false	false	false	
+HbA1C	GLYCOSYLATED HGB		true	false	false	
+HAIR CULTURE			false	false	false	
+HDL			false	false	false	
+HEAT INACTIV. ALK PHOS			false	false	false	
+HEAT INACTIVATED ALK PHOS			false	false	false	
+Helicobacter by PCR			false	false	false	
+HEMOSIDERIN			false	false	false	
+HISTOLOGY			false	false	false	
+HUMAN GROWTH HORMONE			false	false	false	
+Ig A			false	false	false	
+Ig G			false	false	false	
+Ig M			false	false	false	
+IgA			false	false	false	
+IgG			false	false	false	
+IgG ANTIBODY			false	false	false	
+IGM			false	false	false	
+IMMUNOGLOBULIN A			false	false	false	
+IMMUNOGLOBULIN G			false	false	false	
+IMMUNOGLOBULIN M			false	false	false	
+INDIRECT COOMBS			false	false	false	
+Insulin, fasting			false	false	false	
+Intact PTH			false	false	false	
+IRON			false	false	false	
+KETONE & BILIRUBIN DIPSTICK			false	false	false	
+KNOTT'S TEST FOR MICROFILARIA			false	false	false	
+KOH PREP			false	false	false	
+L E PREP			false	false	false	
+L.E. PREP			false	false	false	
+LDH-1			false	false	false	
+LDH-2			false	false	false	
+LDH-3			false	false	false	
+LDH-4			false	false	false	
+LDL			false	false	false	
+LE PREP			false	false	false	
+LEAD			false	false	false	
+Leptospirosis Ab			false	false	false	
+LIPASE			false	false	false	
+Malaria Screen			false	false	false	
+Measles Titer			false	false	false	
+MICROSCOPIC			false	false	false	
+Mitogen reacticity: Con A			false	false	false	
+Mitogen reacticity: PHA			false	false	false	
+Mitogen reactivity: Con A			false	false	false	
+Mitogen reactivity: PHA			false	false	false	
+Mitogen reactivity: Tet Tox			false	false	false	
+Mitogen reactivity:Con A			false	false	false	
+Mitogen reactivity:PHA			false	false	false	
+Mitogen reactivity:Tet Tox			false	false	false	
+Mitogen reactivity; Con A			false	false	false	
+Mitogen reactivity; PHA			false	false	false	
+NITROSONAPTHOL			false	false	false	
+NO WBC COUNT DUE TO PRESENCE OF BLOOD			false	false	false	
+NORMAL			false	false	false	
+NOTE: DIFFERENTIAL AND TOTAL PROTIEN DON			false	false	false	
+O HOUR			false	false	false	
+Occult Blood			false	false	false	
+OCCULT BLOOD ON VOMITUS			false	false	false	
+ORAL SMEAR FOR CANDIDA			false	false	false	
+OSMOTIC FRAGILITY			false	false	false	
+OSMOTIC FRAGILITY CONTROL			false	false	false	
+OTHER OBSERVATIONS			false	false	false	
+p.H.			false	false	false	
+P4			false	false	false	
+P-4			false	false	false	
+P-4 (PROGESTERONE)			false	false	false	
+PACKED RBC VOLUME			false	false	false	
+PACKED WBC VOLUME			false	false	false	
+PARATHYROID HORMONE			false	false	false	
+PERCENT LYMPHS			false	false	false	
+PERCENT NEUTROPHILS			false	false	false	
+PERCENT SATURATION			false	false	false	
+pH			false	false	false	
+Phenobarbital			false	false	false	
+PIPER TICAR/CA AMIK CEFOTOX CEFTAZIDIME			false	false	false	
+Plasma ACTH			false	false	false	
+Prima TB STAT Assay			false	false	false	
+PROGESTERONE (P4)			false	false	false	
+PROLACTIN			false	false	false	
+protein			false	false	false	
+PROTEIN ELECTROPHORESIS - TOTAL PROTEIN			false	false	false	
+Protein/Creatinine			false	false	false	
+PROTOZOA			false	false	false	
+PSEUDOCHOLINESTERASE			false	false	false	
+PT(Prothrombin Time)			false	false	false	
+PTH			false	false	false	
+PTT (Activated partial thromboplastin time)			false	false	false	
+QQQQQQQQQQQ			false	false	false	
+RA FACTOR			false	false	false	
+RBC			false	false	false	
+RBC cell count			false	false	false	
+RBC COUNT			false	false	false	
+RBCS PRESENT			false	false	false	
+REACTION TO ADENOVIRUS			false	false	false	
+REACTION TO H. SAIMIRI			false	false	false	
+REACTION TO H. TAMARINUS			false	false	false	
+REACTION TO INFLUENZA B			false	false	false	
+REACTION TO PARAINFLUENZA 1			false	false	false	
+REACTION TO PARAINFLUENZA 3			false	false	false	
+RED CELL FRAGILITY			false	false	false	
+REFERENCE RANGE			false	false	false	
+RHEUMATOID FACTOR			false	false	false	
+RIA T3			false	false	false	
+SATURATION			false	false	false	
+SEDIMENT CYTOLOGY			false	false	false	
+Selenium			false	false	false	
+SERUM IRON			false	false	false	
+Serum Osmolality			false	false	false	
+SGPT			false	false	false	
+SKIN &HAIR CULTURE FUNGUS CULTURE			false	false	false	
+SPEC. GRAVITY			false	false	false	
+SPECIFIC GRAVITY			false	false	false	
+T 3 uptake			false	false	false	
+T CELLS			false	false	false	
+T3			false	false	false	
+T-3			false	false	false	
+T3  UPTAKE			false	false	false	
+T3 RIA			false	false	false	
+T3 UPTAKE			false	false	false	
+T-3 UPTAKE			false	false	false	
+T3(TRIIODOTHRONINE)  TOTAL			false	false	false	
+T4			false	false	false	
+T-4			false	false	false	
+T-4 (RIA)			false	false	false	
+T-4 BY RIA			false	false	false	
+T4 RIA			false	false	false	
+T-4 RIA			false	false	false	
+T7			false	false	false	
+T7(FTI)			false	false	false	
+T8			false	false	false	
+TATAL IRON BINDING CAPACITY			false	false	false	
+TB TEST			false	false	false	
+TESTOSTERONE			false	false	false	
+THYROID AB  ANTIMICROSOMAL			false	false	false	
+THYROXINE			false	false	false	
+THYROXINE  RIA			false	false	false	
+THYROXINE (RIA)			false	false	false	
+THYROXINE BY RIA			false	false	false	
+THYROXINE RIA			false	false	false	
+TIBC			false	false	false	
+TOTAL ALK PHOS			false	false	false	
+TOTAL CELL COUNT			false	false	false	
+TOTAL CELLS			false	false	false	
+TOTAL CPK			false	false	false	
+TOTAL GLUCOSE			false	false	false	
+TOTAL IRON BINDING CAPACITY			false	false	false	
+TOTAL LDH			false	false	false	
+TOTAL LDH=1056   LDH-1			false	false	false	
+TOTAL LDH=195  LDH-1			false	false	false	
+TOTAL LDH=509   LDH-1			false	false	false	
+TOTAL LDH=750   LDH-1			false	false	false	
+TOTAL PROTEIN			false	false	false	
+TOTAL PROTIEN			false	false	false	
+TOTAL T4			false	false	false	
+TOTAL T-4			false	false	false	
+TOTAL WBC			false	false	false	
+TOTAL WBC COUNT			false	false	false	
+TOXOPLASMOSIS			false	false	false	
+TP			false	false	false	
+TREE THYROXINE INDEX (T7)			false	false	false	
+TRIGLYCERIDE LEVEL FROM CHEM SCREED			false	false	false	
+TRIGLYCERIDE(TRUE VALUE)			false	false	false	
+TRIIODOTHYRONINE			false	false	false	
+TRIIODOTHYRONINE (RIA)			false	false	false	
+Troponin l			false	false	false	
+TSH			false	false	false	
+URINE DIPSTICK			false	false	false	
+URINE ELECTROPHORESIS  TOTAL PROTEIN			false	false	false	
+VENOUS BLOOD GASES			false	false	false	
+Vitamin B1			false	false	false	
+Vitamin B12			false	false	false	
+Vitamin D			false	false	false	
+Vitamin D (1,25 Dihydroxy)			false	false	false	
+Vitamin D (250H)			false	false	false	
+VLDL			false	false	false	
+WBC			false	false	false	
+WBC cell count			false	false	false	
+WBC COUNT			false	false	false	
+WBC DIFF			false	false	false	
+WBC DIFFERENTAIL			false	false	false	
+WBC DIFFERENTIAL			false	false	false	
+WC COUNT			false	false	false	
+WHITE CELL COUNT			false	false	false	
+WHITE COUNT			false	false	false	
+WRIGHTS STAIN			false	false	false	
+YEAST CULTURE			false	false	false	
+Zinc			false	false	false	
+ZINC PROTOPORPHYRIN			false	false	false	
+CSF WBC		cells/mm3	false	false	false	
+CSF Neut		%	false	false	false	
+CSF Lymph		%	false	false	false	
+PT	Partial Thromboplastin Time		false	false	false	
+APTT	Activated Partial Thromboplastin Time	sec	false	false	false	

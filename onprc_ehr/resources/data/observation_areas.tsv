@@ -1,0 +1,17 @@
+value	title	sort_order
+N/A	N/A	1
+Whole Body	Whole Body	2
+Abdomen	Abdomen	3
+Thorax	Thorax	4
+EENT	EENT	5
+Integ	Integ	6
+MS	MS	7
+Oral	Oral	8
+PLN	PLN	9
+U/G	U/G	10
+Other	Other	11
+Incision: Main	Incision: Main	12
+Incision: Scope	Incision: Scope	13
+Incision: L-Port	Incision: L-Port	14
+Incision: R-Port	Incision: R-Port	15
+Incision: All	Incision: All	16

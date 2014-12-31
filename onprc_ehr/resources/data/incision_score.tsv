@@ -1,0 +1,26 @@
+value	sort_order
+WNL	1
+Inflammation: Minor	2
+Inflammation: Mild	3
+Inflammation: Moderate	4
+Inflammation: Severe	5
+Bruising: Minor	6
+Bruising: Mild	7
+Bruising: Moderate	8
+Bruising: Severe	9
+Granulation Present	10
+Hematoma Present	11
+Seroma Present	12
+Discharge: Purulent	13
+Discharge: Caseous	14
+Discharge: Serous	15
+Discharge: Serosanguinous	16
+Sutures: Patient appears to be picking at Sutures, sutures intact	17
+Sutures: Partially Removed	18
+Sutures: Removed	19
+Sutures: Tag Present	20
+Incision Not Visible: Infant	21
+Incision Not Visible: Jacket	22
+Incision Not Visible: Posture	23
+Incision Not Visible: No Incision	24
+None	25

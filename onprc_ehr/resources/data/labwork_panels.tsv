@@ -1,0 +1,338 @@
+servicename	testname	sortorder	method	testfieldname
+Albumin	ALB			testid
+Amylase	Amyl			testid
+Antibiotic Sensitivity	E-72720	1		antibiotic
+Antibiotic Sensitivity	E-72682	2		antibiotic
+Antibiotic Sensitivity	E-Y7240	3		antibiotic
+Antibiotic Sensitivity	E-721X0	4		antibiotic
+Antibiotic Sensitivity	E-72040	5		antibiotic
+Antibiotic Sensitivity	E-719Y3	6		antibiotic
+Antibiotic Sensitivity	E-719Y1	7		antibiotic
+Antibiotic Sensitivity	E-72045	8		antibiotic
+Antibiotic Sensitivity	E-72360	9		antibiotic
+Antibiotic Sensitivity	E-72600	10		antibiotic
+Antibiotic Sensitivity	E-71875	11		antibiotic
+Antibiotic Sensitivity	E-72500	12		antibiotic
+Urinalysis	Color	1		testid
+Urinalysis	App	2		testid
+Urinalysis	SpecGrav	3		testid
+Urinalysis	Urobili	4		testid
+Urinalysis	Prot	5		testid
+Urinalysis	pH	6		testid
+Urinalysis	Blood	7		testid
+Urinalysis	Ket	8		testid
+Urinalysis	Bili	9		testid
+Urinalysis	Glu	10		testid
+Urinalysis	RBC	11		testid
+Urinalysis	WBC	12		testid
+Urinalysis	Epith	13		testid
+Urinalysis	Bact	14		testid
+Urinalysis	Cast-1	15		testid
+Urinalysis	Cast-2	16		testid
+Urinalysis	Crystals	17		testid
+Urinalysis	Casts	18		testid
+Urinalysis	Other	19		testid
+CBC only, no differential	WBC	1		testid
+CBC only, no differential	HCT	2		testid
+CBC only, no differential	RBC	3		testid
+CBC only, no differential	HGB	4		testid
+CBC only, no differential	MCV	5		testid
+CBC only, no differential	PLT	6		testid
+CBC with automated differential	WBC	1		testid
+CBC with automated differential	RBC	2		testid
+CBC with automated differential	HGB	3		testid
+CBC with automated differential	HCT	4		testid
+CBC with automated differential	MCV	5		testid
+CBC with automated differential	MCH	6		testid
+CBC with automated differential	PLT	7		testid
+CBC with automated differential	NEUT%	8		testid
+CBC with automated differential	NEUT#	9		testid
+CBC with automated differential	LYMPH%	10		testid
+CBC with automated differential	LYMPH#	11		testid
+CBC with automated differential	MONO%	12		testid
+CBC with automated differential	MONO#	13		testid
+CBC with automated differential	EOS%	14		testid
+CBC with automated differential	EOS#	15		testid
+CBC with automated differential	BASO%	16		testid
+CBC with automated differential	BASO#	17		testid
+CBC with automated differential	RDW	18		testid
+CBC with automated differential	MPV	19		testid
+CBC with manual differential	WBC	1		testid
+CBC with manual differential	RBC	2		testid
+CBC with manual differential	HGB	3		testid
+CBC with manual differential	HCT	4		testid
+CBC with manual differential	MCV	5		testid
+CBC with manual differential	MCH	6		testid
+CBC with manual differential	PLT	7		testid
+CBC with manual differential	NEUT%	8		testid
+CBC with manual differential	NEUT#	9		testid
+CBC with manual differential	LYMPH%	10		testid
+CBC with manual differential	LYMPH#	11		testid
+CBC with manual differential	MONO%	12		testid
+CBC with manual differential	MONO#	13		testid
+CBC with manual differential	EOS%	14		testid
+CBC with manual differential	EOS#	15		testid
+CBC with manual differential	BASO%	16		testid
+CBC with manual differential	BASO#	17		testid
+CBC with manual differential	RDW	18		testid
+CBC with manual differential	MPV	19		testid
+CSF analysis (WBC count & differential)	WBC	1		testid
+CSF analysis (WBC count & differential)	NEUT%	2		testid
+CSF analysis (WBC count & differential)	LYMPH%	3		testid
+CSF Glucose	CSF Glucose	1		testid
+CSF Total Protein	CSF Total Protein	1		testid
+BASIC Chemistry Panel in-house	GLU	1		testid
+BASIC Chemistry Panel in-house	BUN	2		testid
+BASIC Chemistry Panel in-house	CREA	3		testid
+BASIC Chemistry Panel in-house	NA	4		testid
+BASIC Chemistry Panel in-house	K	5		testid
+BASIC Chemistry Panel in-house	TP	6		testid
+BASIC Chemistry Panel in-house	ALB	7		testid
+BASIC Chemistry Panel in-house	AST	8		testid
+BASIC Chemistry Panel in-house	ALT	9		testid
+BASIC Chemistry Panel in-house	ALKP	10		testid
+Bile Acids Pre-prandial	Bile Acids Pre-prandial	1		testid
+Bile Acids Post-prandial	Bile Acids Post-prandial	1		testid
+Comprehensive Chemistry panel in-house	GLU	1		testid
+Comprehensive Chemistry panel in-house	BUN	2		testid
+Comprehensive Chemistry panel in-house	CREA	3		testid
+Comprehensive Chemistry panel in-house	NA	4		testid
+Comprehensive Chemistry panel in-house	K	5		testid
+Comprehensive Chemistry panel in-house	CL	6		testid
+Comprehensive Chemistry panel in-house	PHOS	7		testid
+Comprehensive Chemistry panel in-house	MG	8		testid
+Comprehensive Chemistry panel in-house	TP	9		testid
+Comprehensive Chemistry panel in-house	ALB	10		testid
+Comprehensive Chemistry panel in-house	AST	11		testid
+Comprehensive Chemistry panel in-house	ALT	12		testid
+Comprehensive Chemistry panel in-house	ALKP	13		testid
+Comprehensive Chemistry panel in-house	GGT	14		testid
+Comprehensive Chemistry panel in-house	TBIL	15		testid
+Comprehensive Chemistry panel in-house	CHOL	16		testid
+Comprehensive Chemistry panel in-house	TRIG	17		testid
+Comprehensive Chemistry Panel Send Out	GLU	1		testid
+Comprehensive Chemistry Panel Send Out	BUN	2		testid
+Comprehensive Chemistry Panel Send Out	CREA	3		testid
+Comprehensive Chemistry Panel Send Out	NA	4		testid
+Comprehensive Chemistry Panel Send Out	K	5		testid
+Comprehensive Chemistry Panel Send Out	CL	6		testid
+Comprehensive Chemistry Panel Send Out	Ca	7		testid
+Comprehensive Chemistry Panel Send Out	PHOS	8		testid
+Comprehensive Chemistry Panel Send Out	TP	9		testid
+Comprehensive Chemistry Panel Send Out	ALB	10		testid
+Comprehensive Chemistry Panel Send Out	Glob	11		testid
+Comprehensive Chemistry Panel Send Out	A/G Ratio	12		testid
+Comprehensive Chemistry Panel Send Out	TRIG	13		testid
+Comprehensive Chemistry Panel Send Out	CHOL	14		testid
+Comprehensive Chemistry Panel Send Out	TBIL	15		testid
+Comprehensive Chemistry Panel Send Out	DBIL	16		testid
+Comprehensive Chemistry Panel Send Out	GGT	17		testid
+Comprehensive Chemistry Panel Send Out	ALKP	18		testid
+Comprehensive Chemistry Panel Send Out	LDH	19		testid
+Comprehensive Chemistry Panel Send Out	AST	20		testid
+Comprehensive Chemistry Panel Send Out	ALT	21		testid
+Comprehensive Chemistry Panel Send Out	Fe	22		testid
+Chemistry panel with high density lipoprotein send out	GLU	1		testid
+Chemistry panel with high density lipoprotein send out	BUN	2		testid
+Chemistry panel with high density lipoprotein send out	CREA	3		testid
+Chemistry panel with high density lipoprotein send out	NA	4		testid
+Chemistry panel with high density lipoprotein send out	K	5		testid
+Chemistry panel with high density lipoprotein send out	CL	6		testid
+Chemistry panel with high density lipoprotein send out	Ca	7		testid
+Chemistry panel with high density lipoprotein send out	PHOS	8		testid
+Chemistry panel with high density lipoprotein send out	TP	9		testid
+Chemistry panel with high density lipoprotein send out	ALB	10		testid
+Chemistry panel with high density lipoprotein send out	Glob	11		testid
+Chemistry panel with high density lipoprotein send out	A/G Ratio	12		testid
+Chemistry panel with high density lipoprotein send out	TRIG	13		testid
+Chemistry panel with high density lipoprotein send out	CHOL	14		testid
+Chemistry panel with high density lipoprotein send out	DBIL	15		testid
+Chemistry panel with high density lipoprotein send out	TBIL	16		testid
+Chemistry panel with high density lipoprotein send out	GGT	17		testid
+Chemistry panel with high density lipoprotein send out	ALKP	18		testid
+Chemistry panel with high density lipoprotein send out	LDH	19		testid
+Chemistry panel with high density lipoprotein send out	AST	20		testid
+Chemistry panel with high density lipoprotein send out	ALT	21		testid
+Chemistry panel with high density lipoprotein send out	Fe	22		testid
+Chemistry panel with high density lipoprotein send out	HDL	23		testid
+Chemistry Acquisitioned Animals	A/G Ratio	1		testid
+Chemistry Acquisitioned Animals	ALB	2		testid
+Chemistry Acquisitioned Animals	ALKP	3		testid
+Chemistry Acquisitioned Animals	ALT	4		testid
+Chemistry Acquisitioned Animals	Amyl	5		testid
+Chemistry Acquisitioned Animals	AST	6		testid
+Chemistry Acquisitioned Animals	B/C	7		testid
+Chemistry Acquisitioned Animals	BUN	8		testid
+Chemistry Acquisitioned Animals	Ca	9		testid
+Chemistry Acquisitioned Animals	CHOL	10		testid
+Chemistry Acquisitioned Animals	CPK	11		testid
+Chemistry Acquisitioned Animals	CL	12		testid
+Chemistry Acquisitioned Animals	CREA	13		testid
+Chemistry Acquisitioned Animals	GGT	14		testid
+Chemistry Acquisitioned Animals	Glob	15		testid
+Chemistry Acquisitioned Animals	GLU	16		testid
+Chemistry Acquisitioned Animals	K	17		testid
+Chemistry Acquisitioned Animals	Lip	18		testid
+Chemistry Acquisitioned Animals	MG	19		testid
+Chemistry Acquisitioned Animals	NA	20		testid
+Chemistry Acquisitioned Animals	Na/K	21		testid
+Chemistry Acquisitioned Animals	PHOS	22		testid
+Chemistry Acquisitioned Animals	TBIL	23		testid
+Chemistry Acquisitioned Animals	TP	24		testid
+Chemistry Acquisitioned Animals	TRIG	25		testid
+Chemistry Acquisitioned, SNBL	ALB	1		testid
+Chemistry Acquisitioned, SNBL	ALKP	2		testid
+Chemistry Acquisitioned, SNBL	ALT	3		testid
+Chemistry Acquisitioned, SNBL	AST	4		testid
+Chemistry Acquisitioned, SNBL	TBIL	5		testid
+Chemistry Acquisitioned, SNBL	BUN	6		testid
+Chemistry Acquisitioned, SNBL	Ca	7		testid
+Chemistry Acquisitioned, SNBL	CHOL	8		testid
+Chemistry Acquisitioned, SNBL	CPK	9		testid
+Chemistry Acquisitioned, SNBL	CREA	10		testid
+Chemistry Acquisitioned, SNBL	GGT	11		testid
+Chemistry Acquisitioned, SNBL	GLU	12		testid
+Chemistry Acquisitioned, SNBL	PHOS	13		testid
+Chemistry Acquisitioned, SNBL	LDH	14		testid
+Chemistry Acquisitioned, SNBL	TP	15		testid
+Chemistry Acquisitioned, SNBL	TRIG	16		testid
+Chemistry Acquisitioned, SNBL	Glob	17		testid
+Chemistry Acquisitioned, SNBL	A/G Ratio	18		testid
+Chemistry Acquisitioned, SNBL	NA	19		testid
+Chemistry Acquisitioned, SNBL	K	20		testid
+Chemistry Acquisitioned, SNBL	CL	21		testid
+Clotting panel	PT	1		testid
+Clotting panel	APTT	2		testid
+C-Reactive Protein	C-Reactive Protein	1		testid
+Glycosolated hemoglobin  (HGBA1C)	Glycosolated hemoglobin  (HGBA1C)	1		testid
+HDL	HDL	1		testid
+High-density lipoprotein & Low-density lipoprotein (HDL & LDL)	HDL	1		testid
+High-density lipoprotein & Low-density lipoprotein (HDL & LDL)	LDL	2		testid
+LDL	LDL	1		testid
+Lipase	Lipase	1		testid
+Lipid panel in-house: Cholesterol, Triglyceride, HDL, LDL	CHOL	1		testid
+Lipid panel in-house: Cholesterol, Triglyceride, HDL, LDL	TRIG	2		testid
+Lipid panel in-house: Cholesterol, Triglyceride, HDL, LDL	HDL	3		testid
+Lipid panel in-house: Cholesterol, Triglyceride, HDL, LDL	LDL	4		testid
+Malaria Screen	Malaria	1		testid
+Occult Blood	Occult Blood	1		testid
+Phenobarbital	Phenobarbital	1		testid
+Protein Electrophoresis-Total Protein	Protein Electrophoresis-Total Protein	1		testid
+RBC Morphology	POIK	1		testid
+RBC Morphology	POLY	2		testid
+RBC Morphology	HYPO	3		testid
+RBC Morphology	ANISO	4		testid
+RBC Morphology	MICRO	5		testid
+RBC Morphology	MACRO	6		testid
+RBC Morphology	COMMENTS	7		testid
+Reticulocyte count	Reticulocyte count	1		testid
+Specific Gravity	Specific Gravity	1		testid
+Thyroid Panel	Free T3	1		testid
+Thyroid Panel	Free T4	2		testid
+Thyroid Panel	TSH	3		testid
+Vitamin D (1,25 Dihydroxy)	Vitamin D (1,25 Dihydroxy)	1		testid
+Vitamin D (250H)	Vitamin D (250H)	1		testid
+WBC count	WBC count	1		testid
+WBC differential	LYMPH%	1		testid
+WBC differential	MONO%	2		testid
+WBC differential	NEUT%	3		testid
+WBC differential	EOS%	4		testid
+WBC differential	BASO%	5		testid
+WBC differential	BAND%	6		testid
+SPF Surveillance	Herpes B	1		testid
+SPF Surveillance	SRV-2	2		testid
+ESPF Surveillance - Monthly	E-32221	1	ELISA	agent
+ESPF Surveillance - Quarterly	E-32221	1	Microarray	agent
+Intuitive Expanded Array	E-32221	1	Microarray	agent
+PDL ABSCN-8	E-32221	7	MMIA	agent
+Filovirus	E-YY381	1	ELISA	agent
+ESPF Surveillance - Quarterly	E-32120	5	Microarray	agent
+ESPF Surveillance - Quarterly	E-YY515	9	Microarray	agent
+Intuitive Expanded Array	E-YY515	9	Microarray	agent
+SPF Surveillance - Annual	E-32140	1	ELISA	agent
+ESPF Surveillance - Quarterly	E-32140	4	Microarray	agent
+Compromised SPF Surveillance	E-32140	1	ELISA	agent
+Herpes B	E-32140	1	ELISA	agent
+Herpes B Post-Exposure Follow-Up Serology	E-32140	1	ELISA	agent
+Herpes B Post-Exposure Follow-Up Serology	E-32140	2	Western Blot	agent
+Herpes B Post-Exposure Follow-Up Serology	E-32140	3	Recombinant ELISA	agent
+Herpes B Post-Exposure Baseline Virology	E-32140	1	Cell Culture CPE	agent
+Herpes B Post-Exposure Baseline Virology	E-32140	2	Cell Culture CPE	agent
+Herpes B Post-Exposure Baseline Virology	E-32140	3	Cell Culture CPE	agent
+Herpes B Post-Exposure Baseline Virology	E-32140	4	Cell Culture CPE	agent
+Herpes B Post-Exposure Baseline Virology	E-32140	5	Cell Culture CPE	agent
+Herpes B Post-Exposure Baseline Serology	E-32140	1	ELISA	agent
+Herpes B Post-Exposure Baseline Serology	E-32140	2	Western Blot	agent
+Herpes B Post-Exposure Baseline Serology	E-32140	3	Recombinant ELISA	agent
+Intuitive Basic Array	E-32140	4	Microarray	agent
+Intuitive Expanded Array	E-32140	4	Microarray	agent
+PDL ABSCN-5	E-32140	4	MMIA	agent
+PDL ABSCN-8	E-32140	5	MMIA	agent
+Herpes B Status Confirmation	E-32140	1	ELISA	agent
+Herpes B Status Confirmation	E-32140	2	Western Blot	agent
+Herpes B Status Confirmation	E-32140	3	Recombinant ELISA	agent
+ESPF Surveillance - Quarterly	E-33710	6	Microarray	agent
+Intuitive Basic Array	E-33710	6	Microarray	agent
+Intuitive Expanded Array	E-33710	6	Microarray	agent
+PDL ABSCN-5	E-33710	5	MMIA	agent
+PDL ABSCN-8	E-33710	6	MMIA	agent
+Primagam for TB	E-20010	1	Interferon-Gamma Mycobacterium Testing (Primagam)	agent
+ESPF Surveillance - Monthly	E-32218	2	ELISA	agent
+ESPF Surveillance - Quarterly	E-32218	10	Microarray	agent
+PDL PCR	E-32218	4	PCR	agent
+Intuitive Expanded Array	E-32218	10	Microarray	agent
+PDL ABSCN-8	E-32218	8	MMIA	agent
+ESPF Surveillance - Quarterly	E-YY351	7	Microarray	agent
+PDL PCR	E-YY351	5	PCR	agent
+Intuitive Basic Array	E-YY351	7	Microarray	agent
+Intuitive Expanded Array	E-YY351	7	Microarray	agent
+PDL ABSCN-5	E-YY351	1	MMIA	agent
+PDL ABSCN-8	E-YY351	1	MMIA	agent
+PDL SIV WB	E-YY351	4	Western Blot	agent
+ESPF Surveillance - Monthly	E-YY370	3	ELISA	agent
+ESPF Surveillance - Quarterly	E-YY370	8	Microarray	agent
+PDL PCR	E-YY370	2	PCR	agent
+Intuitive Expanded Array	E-YY370	8	Microarray	agent
+PDL ABSCN-8	E-YY370	4	MMIA	agent
+PDL PCR	E-YY328	1	PCR	agent
+PDL ABSCN-5	E-YY328	2	MMIA	agent
+PDL ABSCN-8	E-YY328	2	MMIA	agent
+PDL SRV1 WB	E-Y3283	1	Western Blot	agent
+SPF Surveillance - Annual	E-Y3284	2	IF-MEMBRANE	agent
+ESPF Surveillance - Quarterly	E-Y3284	2	Microarray	agent
+Japanese Macaque Surveillance	E-Y3284	1	IF-MEMBRANE	agent
+SRV	E-Y3284	1	IF-MEMBRANE	agent
+Herpes B Post-Exposure Baseline Serology	E-Y3284	4	IF-MEMBRANE	agent
+Intuitive Basic Array	E-Y3284	2	Microarray	agent
+Intuitive Expanded Array	E-Y3284	2	Microarray	agent
+PDL SRV2 WB	E-Y3284	2	Western Blot	agent
+ESPF Surveillance - Quarterly	E-Y3287	1	Microarray	agent
+Intuitive Basic Array	E-Y3287	1	Microarray	agent
+Intuitive Expanded Array	E-Y3287	1	Microarray	agent
+PDL SRV5 WB	E-Y3287	3	Western Blot	agent
+ESPF Surveillance - Quarterly	E-YY331	3	Microarray	agent
+PDL PCR	E-YY331	3	PCR	agent
+Intuitive Basic Array	E-YY331	3	Microarray	agent
+Intuitive Expanded Array	E-YY331	3	Microarray	agent
+PDL ABSCN-5	E-YY331	3	MMIA	agent
+PDL ABSCN-8	E-YY331	3	MMIA	agent
+PDL STLV WB	E-YY331	5	Western Blot	agent
+SRV Virus Isolation	E-YY328	1	Cell Culture CPE	agent
+BASIC Chemistry Panel (Axthelm)	ALB	1		testid
+BASIC Chemistry Panel (Axthelm)	ALKP	2		testid
+BASIC Chemistry Panel (Axthelm)	ALT	3		testid
+BASIC Chemistry Panel (Axthelm)	Amyl	4		testid
+BASIC Chemistry Panel (Axthelm)	TBIL	5		testid
+BASIC Chemistry Panel (Axthelm)	BUN	6		testid
+BASIC Chemistry Panel (Axthelm)	CA	7		testid
+BASIC Chemistry Panel (Axthelm)	PHOS	8		testid
+BASIC Chemistry Panel (Axthelm)	CREA	9		testid
+BASIC Chemistry Panel (Axthelm)	GLU	10		testid
+BASIC Chemistry Panel (Axthelm)	NA	11		testid
+BASIC Chemistry Panel (Axthelm)	K	12		testid
+BASIC Chemistry Panel (Axthelm)	TP	13		testid
+BASIC Chemistry Panel (Axthelm)	Glob	14		testid
+Bile Acids Pre-prandial	Bile Acids Pre-prandial	1		testid
+Bile Acids Post-prandial	Bile Acids Post-prandial	1		testid
+Calcium, total	Ca	1		testid
+Calcium, ionized	Ca, ionized	1		testid

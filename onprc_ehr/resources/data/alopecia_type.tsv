@@ -1,0 +1,10 @@
+value	sort_order
+Thin	1
+Patchy	2
+Bald	3
+Thin and patchy	4
+Thin and bald	5
+Patchy and bald	6
+Thin, patchy and bald	7
+N/A	8
+Not Evaluated	9

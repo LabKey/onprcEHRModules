@@ -1,0 +1,44 @@
+value	description
+Light Yellow	Color	1
+Yellow	Color	2
+Dark Yellow	Color	3
+Colorless	Color	4
+Amber	Color	5
+Light Amber	Color	6
+Brown	Color	7
+Orange	Color	8
+Pink	Color	9
+Red	Color	10
+Straw	Color	11
+White	Color	12
+Clear	App	13
+Cloudy	App	14
+Slightly Cloudy	App	15
+Very Cloudy	App	16
+Hazy	App	17
+Turbid	App	18
+Normal	Urobili	19
+Negative	Prot,Blood,Ket,Bili,Glu,Urobili,Bact	19
+Trace	Prot,Blood,Ket,Bili,Glu,Urobili,Bact	20
+1+	Prot,Blood,Ket,Bili,Glu,Urobili,Bact	21
+2+	Prot,Blood,Ket,Bili,Glu,Urobili,Bact	22
+3+	Prot,Blood,Ket,Bili,Glu,Urobili,Bact	23
+4+	Prot,Blood,Ket,Bili,Glu,Urobili,Bact	24
+Granular	Casts,Cast-1,Cast-2	25
+Hyaline	Casts,Cast-1,Cast-2	26
+RBC	Casts,Cast-1,Cast-2	27
+Waxy	Casts,Cast-1,Cast-2	28
+WBC	Casts,Cast-1,Cast-2	29
+Amorphous phosphates	Crystals	1
+Amorphous urates	Crystals	2
+Calcium oxalates	Crystals	3
+Tyrosine	Crystals	4
+Leucine	Crystals	5
+Uric acid	Crystals	6
+Hippuric acid	Crystals	7
+Triple phosphates	Crystals	8
+Calcium carbonates	Crystals	9
+Calcium phosphates	Crystals	10
+Ammonium urates	Crystals	11
+Sulfa	Crystals	12
+Cystine	Crystals	13

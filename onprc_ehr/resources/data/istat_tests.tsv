@@ -1,0 +1,17 @@
+testid	name	units	alertOnAbnormal	alertOnAny	includeInPanel	sort_order
+Na	Sodium		false	false	true	1
+K	Potassium		false	false	true	2
+Cl	Chlorine		false	false	true	3
+tCO2			false	false	true	4
+BUN	Blood urea nitrogen		false	false	true	5
+Glu	Glucose		false	false	true	6
+HCT	Hematocrit		false	false	true	7
+pH	pH		false	false	true	8
+pO2	pO2		false	false	true	9
+SO2	SO2		false	false	true	10
+pCO2			false	false	true	11
+HCO3			false	false	true	12
+BE			false	false	true	13
+AnGap	Hematocrit		false	false	true	14
+Hb	Hemoglobin		false	false	true	15
+Lact	Lactate		false	false	true	16

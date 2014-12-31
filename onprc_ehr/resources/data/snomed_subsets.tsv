@@ -1,0 +1,18 @@
+subset	description
+Agents	This subset populates the drop-down on the serology results entry form
+Antibiotics	This subset populates the drop-down on the antibiotic results entry form
+Culture Source	
+Pathology Codes	This subset contains the most commonly used codes in pathology diagnoses
+Hormone Implants	This subset contains codes corresponding to hormone implants
+Common Treatments	This subset is used to populate the code drop-down on most clinical entry forms.  It should contain the most commonly used drugs/treatments.
+Diagnostic Codes	
+Diet	Any medication order falling into this subset will appear only the diet daily sheet, instead of the regular clinical medication sheet.
+Drugs and Procedures	This subset populates the drop-down on the Aux Procedures form.  It will be similar to common treamtents, but likely contains a broader list.
+Measurements	This subset populates the drop-down on the pathology measurements form
+Organ/Tissue	This subset populates the tissue drop-down on the clinpath, serology and pathology forms
+Organisms	This subset populates the drop-down on the microbiology and parasitology forms
+Parasitology Sampletype	
+Lab Sample Types	
+Parasitology Results	
+Toys	
+Behavior	
