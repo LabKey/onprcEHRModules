@@ -155,17 +155,14 @@ public class ONPRC_EHRManager
         return ret;
     }
 
-    public List<String> validateDatasetCols(Container c, User u) throws IOException, XmlException
+    //NOTE: consider moving this to either EHRService, or somewhere within the core
+    public List<String> validateDatasetCols(Container c, User u, File xml) throws IOException, XmlException
     {
         Study s = StudyService.get().getStudy(c);
         if (s == null)
         {
             return Collections.emptyList();
         }
-
-        Module module = ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class);
-        FileResource resource = (FileResource)module.getModuleResolver().lookup(Path.parse("referenceStudy/datasets/datasets_metadata.xml"));
-        File xml = resource.getFile();
 
         TablesDocument doc = TablesDocument.Factory.parse(xml);
         TablesType tablesXml = doc.getTables();

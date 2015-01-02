@@ -892,8 +892,6 @@ onprc_ehr/resources/views/labsPage.view.xml -text
 onprc_ehr/resources/views/labsPage.webpart.xml -text
 onprc_ehr/resources/views/manageHousing.html -text
 onprc_ehr/resources/views/manageHousing.view.xml -text
-onprc_ehr/resources/views/moreReports.html -text
-onprc_ehr/resources/views/moreReports.view.xml -text
 onprc_ehr/resources/views/onprcLandingPage.html -text
 onprc_ehr/resources/views/onprcLandingPage.view.xml -text
 onprc_ehr/resources/views/onprcLandingPage.webpart.xml -text

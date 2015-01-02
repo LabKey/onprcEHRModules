@@ -36,9 +36,12 @@ import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.files.FileContentService;
+import org.labkey.api.module.Module;
+import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.pipeline.PipelineStatusUrls;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
+import org.labkey.api.resource.FileResource;
 import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.CSRF;
 import org.labkey.api.security.RequiresPermissionClass;
@@ -48,6 +51,7 @@ import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.services.ServiceRegistry;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.util.Path;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HtmlView;
@@ -833,7 +837,12 @@ public class ONPRC_EHRController extends SpringActionController
 
         public ModelAndView getConfirmView(Object form, BindException errors) throws Exception
         {
-            List<String> msgs = ONPRC_EHRManager.get().validateDatasetCols(getContainer(), getUser());
+            //NOTE: consider allowing moduleName as a URL param?
+            Module module = ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class);
+            FileResource resource = (FileResource)module.getModuleResolver().lookup(Path.parse("referenceStudy/datasets/datasets_metadata.xml"));
+            File xml = resource.getFile();
+
+            List<String> msgs = ONPRC_EHRManager.get().validateDatasetCols(getContainer(), getUser(), xml);
 
             return new HtmlView("This action will compare the columns in the study datasets against those expected in the reference XML file.  " + (msgs.isEmpty() ? "No problems were found." : "The following discrepancies were found:<br><br> " + StringUtils.join(msgs, "<br>")));
         }
