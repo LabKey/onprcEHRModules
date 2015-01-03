@@ -27,6 +27,7 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
+import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.SQLFragment;
@@ -712,99 +713,84 @@ public class LegacyDataManager
             sb.append("Peptide pools with members to add: " + poolMembers.size()).append("<br>");
             if (!validateOnly)
             {
-                ExperimentService.get().ensureTransaction();
-
-                if (rows.size() > 0)
+                try (DbScope.Transaction transaction = ExperimentService.get().ensureTransaction())
                 {
-                    QueryUpdateService update = peptideTable.getUpdateService();
-                    update.setBulkLoad(true);
-                    BatchValidationException errors = new BatchValidationException();
-                    List<Map<String,Object>> inserted = update.insertRows(u, c, rows, errors, null, new HashMap<String, Object>());
-                    if (errors.hasErrors())
+                    if (rows.size() > 0)
                     {
-                        throw errors;
+                        QueryUpdateService update = peptideTable.getUpdateService();
+                        update.setBulkLoad(true);
+                        BatchValidationException errors = new BatchValidationException();
+                        List<Map<String, Object>> inserted = update.insertRows(u, c, rows, errors, null, new HashMap<String, Object>());
+                        if (errors.hasErrors())
+                        {
+                            throw errors;
+                        }
+
+                        sb.append("peptides created: " + inserted.size()).append("<br>");
                     }
 
-                    sb.append("peptides created: " + inserted.size()).append("<br>");
-                }
-
-                if (poolsToCreate.size() > 0)
-                {
-                    List<Map<String, Object>> poolRows = new ArrayList<>();
-                    for (String name : poolsToCreate.values())
+                    if (poolsToCreate.size() > 0)
                     {
-                        Map<String, Object> row = new HashMap<>();
-                        row.put("pool_name", StringUtils.trimToNull(name));
-                        row.put("container", c.getId());
-                        poolRows.add(row);
-                    }
-
-                    QueryUpdateService update = peptidePoolTable.getUpdateService();
-                    update.setBulkLoad(true);
-                    BatchValidationException errors = new BatchValidationException();
-                    List<Map<String,Object>> inserted = update.insertRows(u, c, poolRows, errors, null, new HashMap<String, Object>());
-                    if (errors.hasErrors())
-                    {
-                        throw errors;
-                    }
-
-                    sb.append("peptide pools created: " + inserted.size()).append("<br>");
-                }
-
-                ExperimentService.get().commitTransaction();
-
-                if (poolMembers.size() > 0)
-                {
-                    List<Map<String, Object>> toInsert = new ArrayList<>();
-                    for (String poolName : poolMembers.keySet())
-                    {
-                        Integer poolId = getPoolId(c, poolName, peptidePoolTable);
-                        if (poolId == null)
-                            throw new RuntimeException("Unable to find RowId for pool: " + poolName);
-
-                        for (String aaseq : poolMembers.get(poolName))
+                        List<Map<String, Object>> poolRows = new ArrayList<>();
+                        for (String name : poolsToCreate.values())
                         {
                             Map<String, Object> row = new HashMap<>();
-                            row.put("poolid", poolId);
-                            row.put("sequence", aaseq);
-                            toInsert.add(row);
+                            row.put("pool_name", StringUtils.trimToNull(name));
+                            row.put("container", c.getId());
+                            poolRows.add(row);
                         }
+
+                        QueryUpdateService update = peptidePoolTable.getUpdateService();
+                        update.setBulkLoad(true);
+                        BatchValidationException errors = new BatchValidationException();
+                        List<Map<String, Object>> inserted = update.insertRows(u, c, poolRows, errors, null, new HashMap<String, Object>());
+                        if (errors.hasErrors())
+                        {
+                            throw errors;
+                        }
+
+                        sb.append("peptide pools created: " + inserted.size()).append("<br>");
                     }
 
-                    QueryUpdateService update = peptidePoolMembersTable.getUpdateService();
-                    update.setBulkLoad(true);
-                    BatchValidationException errors = new BatchValidationException();
-                    List<Map<String,Object>> inserted = update.insertRows(u, c, toInsert, errors, null, new HashMap<String, Object>());
-                    if (errors.hasErrors())
+                    if (poolMembers.size() > 0)
                     {
-                        throw errors;
-                    }
+                        List<Map<String, Object>> toInsert = new ArrayList<>();
+                        for (String poolName : poolMembers.keySet())
+                        {
+                            Integer poolId = getPoolId(c, poolName, peptidePoolTable);
+                            if (poolId == null)
+                                throw new RuntimeException("Unable to find RowId for pool: " + poolName);
 
-                    sb.append("peptide pools members added: " + inserted.size()).append("<br>");
+                            for (String aaseq : poolMembers.get(poolName))
+                            {
+                                Map<String, Object> row = new HashMap<>();
+                                row.put("poolid", poolId);
+                                row.put("sequence", aaseq);
+                                toInsert.add(row);
+                            }
+                        }
+
+                        QueryUpdateService update = peptidePoolMembersTable.getUpdateService();
+                        update.setBulkLoad(true);
+                        BatchValidationException errors = new BatchValidationException();
+                        List<Map<String,Object>> inserted = update.insertRows(u, c, toInsert, errors, null, new HashMap<String, Object>());
+                        if (errors.hasErrors())
+                        {
+                            throw errors;
+                        }
+
+                        sb.append("peptide pools members added: " + inserted.size()).append("<br>");
+
+                        transaction.commit();
+                    }
                 }
             }
 
             return sb.toString();
         }
-        catch (QueryUpdateServiceException e)
+        catch (QueryUpdateServiceException | BatchValidationException | SQLException | DuplicateKeyException e)
         {
             throw new RuntimeException(e);
-        }
-        catch (BatchValidationException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (DuplicateKeyException e)
-        {
-            throw new RuntimeException(e);
-        }
-        finally
-        {
-            ExperimentService.get().closeTransaction();
         }
     }
 
@@ -1561,36 +1547,29 @@ public class LegacyDataManager
         TableInfo ds = QueryService.get().getUserSchema(u, c, "study").getTable("animal_group_members");
         QueryUpdateService qus = ds.getUpdateService();
         qus.setBulkLoad(true);
-        ExperimentService.get().ensureTransaction();
-        try
+        while (start < toImport.size())
         {
-            while (start < toImport.size())
+            try (DbScope.Transaction transaction = ExperimentService.get().ensureTransaction())
             {
                 List<Map<String, Object>> sublist = toImport.subList(start, Math.min(toImport.size(), start + batchSize));
                 start = start + batchSize;
 
-                //get demographics records as a batch ot save import time
+                //get demographics records as a batch to save import time
                 Set<String> ids = new HashSet<>();
                 for (Map<String, Object> row : sublist)
                 {
-                    ids.add((String)row.get("Id"));
+                    ids.add((String) row.get("Id"));
                 }
                 EHRDemographicsService.get().getAnimals(c, ids);
 
                 BatchValidationException errors = new BatchValidationException();
                 _log.info("processing " + batchSize + " rows");
                 qus.insertRows(u, c, sublist, errors, null, ctx);
-                ExperimentService.get().commitTransaction();
+                transaction.commit();
 
                 if (errors.hasErrors())
                     throw errors;
-
-                ExperimentService.get().ensureTransaction();
             }
-        }
-        finally
-        {
-            ExperimentService.get().closeTransaction();
         }
     }
 }
