@@ -37,9 +37,10 @@ public class ManageFlagsButton extends SimpleButtonConfigFactory
         setInsertPosition(-1);
     }
 
-    public boolean isAvailable(TableInfo ti)
+    @Override
+    public boolean isVisible(TableInfo ti)
     {
-        if (!super.isAvailable(ti))
+        if (!super.isVisible(ti))
         {
             return false;
         }
