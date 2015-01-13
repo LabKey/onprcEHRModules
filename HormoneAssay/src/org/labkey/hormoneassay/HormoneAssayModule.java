@@ -32,6 +32,7 @@ import java.util.Set;
 public class HormoneAssayModule extends ExtendedSimpleModule
 {
     public static final String NAME = "HormoneAssay";
+
     @Override
     public String getName()
     {
@@ -51,6 +52,7 @@ public class HormoneAssayModule extends ExtendedSimpleModule
     }
 
     @Override
+    @NotNull
     protected Collection<WebPartFactory> createWebPartFactories()
     {
         return Collections.emptyList();
@@ -71,6 +73,7 @@ public class HormoneAssayModule extends ExtendedSimpleModule
     }
 
     @Override
+    @NotNull
     public Collection<String> getSummary(Container c)
     {
         return Collections.emptyList();
