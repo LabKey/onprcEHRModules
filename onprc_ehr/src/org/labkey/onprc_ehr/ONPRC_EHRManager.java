@@ -124,7 +124,7 @@ public class ONPRC_EHRManager
         map.put("locked", lock.toString());
         map.put("lockDate", _dateTimeFormat.format(new Date()));
 
-        PropertyManager.saveProperties(map);
+        map.save();
     }
 
     public Map<String, Object> getAnimalLockProperties(Container c)
