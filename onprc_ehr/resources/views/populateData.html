@@ -624,6 +624,48 @@ Ext4.onReady(function(){
             queryName: 'normal_abnormal',
             pk: 'state'
         },{
+            label: 'BCS Score',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'bcs_score',
+            pk: 'rowid'
+        },{
+            label: 'Clinpath Collection Method',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'clinpath_collection_method',
+            pk: 'rowid'
+        },{
+            label: 'Death Cause',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'death_cause',
+            pk: 'rowid'
+        },{
+            label: 'Death Manner',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'death_manner',
+            pk: 'rowid'
+        },{
+            label: 'Encounter Types',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'encounter_types',
+            pk: 'rowid'
+        },{
+            label: 'Histology Stain',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'histology_stain',
+            pk: 'rowid'
+        },{
+            label: 'Housing Reason',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'housing_reason',
+            pk: 'rowid'
+        },{
             label: 'Clinpath Types',
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',

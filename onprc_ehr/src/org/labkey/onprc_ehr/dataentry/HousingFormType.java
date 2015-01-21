@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.json.JSONObject;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
@@ -53,5 +54,19 @@ public class HousingFormType extends UnsaveableTask
             return false;
 
         return super.canInsert();
+    }
+
+    @Override
+    public JSONObject toJSON()
+    {
+        JSONObject ret = super.toJSON();
+
+        //this form involves extra work on save, so relax warning thresholds to reduce error logging
+        ret.put("perRowWarningThreshold", 0.5);
+        ret.put("totalTransactionWarningThrehsold", 60);
+        ret.put("perRowValidationWarningThrehsold", 6);
+        ret.put("totalValidationTransactionWarningThrehsold", 60);
+
+        return ret;
     }
 }

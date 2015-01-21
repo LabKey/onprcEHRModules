@@ -60,6 +60,8 @@ public class BulkClinicalEntryFormType extends TaskForm
 
         addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
         addClientDependency(ClientDependency.fromPath("onprc_ehr/window/MassBleedWindow.js"));
+        //Added 1-6-2015 Blasa
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/BulkStrokeRoundsWindow.js"));
     }
 
     @Override
@@ -77,6 +79,9 @@ public class BulkClinicalEntryFormType extends TaskForm
         List<String> defaultButtons = new ArrayList<>();
         defaultButtons.addAll(super.getMoreActionButtonConfigs());
         defaultButtons.add("MASS_BLEED");
+
+        // Added 1-6-2015 Blasa
+        defaultButtons.add("STROKE_ROUNDS")  ;
 
         return defaultButtons;
     }

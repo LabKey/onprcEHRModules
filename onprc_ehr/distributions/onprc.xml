@@ -44,6 +44,7 @@
                 <include name="Viral_Load_Assay.module" />
                 <include name="jbrowse.module" />
                 <include name="blast.module" />
+                <include name="variantdb.module" />
             </fileset>
         </copy>
     </target>

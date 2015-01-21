@@ -1,0 +1,14 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="procedureNames" tableDbType="TABLE">
+                <tableTitle>Procedure Names</tableTitle>
+                <columns>
+                    <column columnName="procedureName">
+                        <isKeyField>true</isKeyField>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

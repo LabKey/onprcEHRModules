@@ -94,7 +94,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
             if (matches(table, "study", "Animal"))
             {
-                customizeAnimalTable((AbstractTableInfo)table);
+                customizeAnimalTable((AbstractTableInfo) table);
             }
             else if (matches(table, "ehr", "animal_groups"))
             {
@@ -103,6 +103,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             else if (matches(table, "ehr", "cage_observations"))
             {
                 customizeCageObservations((AbstractTableInfo) table);
+            }
+            else if (matches(table, "ehr", "protocolProcedures"))
+            {
+                customizeProtocolProcedures((AbstractTableInfo) table);
             }
             else if (matches(table, "onprc_ehr", "housing_transfer_requests"))
             {
@@ -2248,6 +2252,25 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.getColumn("userid").setHidden(true);
         ti.getColumn("feces").setHidden(true);
         ti.getColumn("no_observations").setHidden(true);
+    }
+
+    private void customizeProtocolProcedures(AbstractTableInfo ti)
+    {
+        ColumnInfo procedureName = ti.getColumn("procedureName");
+        if (procedureName != null)
+        {
+            UserSchema us = getUserSchema(ti, "ehr_lookups");
+            if (us != null)
+            {
+                procedureName.setFk(new QueryForeignKey(us, null, "procedureNames", "procedureName", "procedureName", true));
+            }
+            procedureName.setNullable(false);
+        }
+
+        ti.getColumn("code").setHidden(true);
+        ti.getColumn("project").setHidden(true);
+        ti.getColumn("frequency").setHidden(true);
+        ti.getColumn("rowid").setHidden(true);
     }
 
     private void customizeClinicalObservations(AbstractTableInfo ti)

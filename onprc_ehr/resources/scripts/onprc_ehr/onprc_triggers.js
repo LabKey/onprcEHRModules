@@ -184,7 +184,7 @@ exports.init = function(EHR){
         }
 
         //check for condition downgrade for assign condition
-        if (!helper.isETL() && row.Id && row.assignCondition){
+        if (!helper.isETL() && row.Id && row.date && row.assignCondition){
             var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.date, row.assignCondition);
             if (msg){
                 EHR.Server.Utils.addError(scriptErrors, 'assignCondition', msg, 'INFO');
