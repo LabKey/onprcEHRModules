@@ -2,8 +2,7 @@ setname	label	keyfield	titleColumn
 PregnancyConfirm	Pregnancy Confirmation Types	
 housingDefinition	Housing Definition	
 housingTypes	Housing Types	
-DeliveryMode	Delivery Types	
-AcquistionType	Acquistion Types	
+AcquistionType	Acquistion Types
 RearingType	Rearing Types	
 MatingType	Mating Types	
 pairingEventType	Pairing Event Types	value
@@ -68,15 +67,15 @@ urinalysis_method	Urinalysis Method Field Values	value
 urinalysis_qualitative_results	Urinalysis Qualitative Result Field Values	value
 bcs_score	BCS Score Field Values	value
 avail_codes Availability Code Field Values	value
-status_codes	Status Code Field Values	value	title
-snomed_qualifiers	SNOMED Code Qualifiers	value	title
-housing_reason	Housing Reason Field Values	value	title
-housing_condition_codes	Housing Condition Field Values	value	title
-histology_stain	Histology Stain Field Values	value	title
-encounter_types	Encounter Types	value	title
-DeliveryMode	Delivery Mode Field Values	value	title
-DeliveryType	Delivery Type Field Values	value	title
-death_manner	Death Manner	value	title
-death_cause	Death Cause	value	title
-ConfirmationType	Pregnancy Confirmation Type	value	title
-clinpath_collection_method	Clinpath Collection Method	value	title
+status_codes	Status Code Field Values	value
+snomed_qualifiers	SNOMED Code Qualifiers	value
+housing_reason	Housing Reason Field Values	value
+housing_condition_codes	Housing Condition Field Values	value
+histology_stain	Histology Stain Field Values	value
+encounter_types	Encounter Types	value
+DeliveryMode	Delivery Mode Field Values	value
+DeliveryType	Delivery Type Field Values	value
+death_manner	Death Manner	value
+death_cause	Death Cause	value
+ConfirmationType	Pregnancy Confirmation Type	value
+clinpath_collection_method	Clinpath Collection Method	value
