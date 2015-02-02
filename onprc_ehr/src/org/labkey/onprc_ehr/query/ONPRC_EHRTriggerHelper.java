@@ -47,7 +47,7 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
-import org.labkey.api.study.DataSetTable;
+import org.labkey.api.study.DatasetTable;
 import org.labkey.api.study.StudyService;
 import org.labkey.api.util.GUID;
 import org.labkey.api.util.PageFlowUtil;
@@ -297,7 +297,7 @@ public class ONPRC_EHRTriggerHelper
         if (targetTable instanceof FilteredTable)
         {
             DbSchema dbSchema;
-            if (targetTable instanceof DataSetTable)
+            if (targetTable instanceof DatasetTable)
             {
                 Domain domain = ((FilteredTable)targetTable).getDomain();
                 if (domain != null)

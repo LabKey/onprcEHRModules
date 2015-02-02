@@ -23,7 +23,6 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ConvertHelper;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.DbSchema;
-import org.labkey.api.data.DbSchemaType;
 import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.DisplayColumnFactory;
 import org.labkey.api.data.JdbcType;
@@ -51,8 +50,8 @@ import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
-import org.labkey.api.study.DataSet;
-import org.labkey.api.study.DataSetTable;
+import org.labkey.api.study.Dataset;
+import org.labkey.api.study.DatasetTable;
 import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
 import org.labkey.api.util.PageFlowUtil;
@@ -194,7 +193,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
 
             //check for datasets
-            if (table instanceof DataSetTable)
+            if (table instanceof DatasetTable)
             {
                 customizeDataset((AbstractTableInfo)table);
             }
@@ -238,7 +237,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String name = "enteredSinceVetReview";
         if (ti.getColumn(name) == null)
         {
-            TableInfo obsRealTable = getRealTableForDataSet(ti, "Clinical Observations");
+            TableInfo obsRealTable = getRealTableForDataset(ti, "Clinical Observations");
             if (obsRealTable != null)
             {
                 //clinical remarks entered since last vet review is a proxy for whether it needs to be reviewed again
@@ -306,7 +305,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             account.setLabel("Alias");
             account.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-            if (ti instanceof DataSetTable)
+            if (ti instanceof DatasetTable)
             {
                 account.setHidden(true);
             }
@@ -835,7 +834,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String problemCategories = "problemCategories";
         if (ti.getColumn(problemCategories) == null)
         {
-            TableInfo realTable = getRealTableForDataSet(ti, "Problem List");
+            TableInfo realTable = getRealTableForDataset(ti, "Problem List");
             if (realTable == null)
                 return;
 
@@ -879,7 +878,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String lastVetReview = "lastVetReview";
         if (ti.getColumn(lastVetReview) == null)
         {
-            TableInfo obsRealTable = getRealTableForDataSet(ti, "Clinical Observations");
+            TableInfo obsRealTable = getRealTableForDataset(ti, "Clinical Observations");
             if (obsRealTable != null)
             {
                 SQLFragment obsSql = new SQLFragment("(SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId)", ONPRC_EHRManager.VET_REVIEW);
@@ -1061,7 +1060,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String hxName = "mostRecentHx";
         if (ti.getColumn(hxName) == null)
         {
-            TableInfo realTable = getRealTableForDataSet(ti, "Clinical Remarks");
+            TableInfo realTable = getRealTableForDataset(ti, "Clinical Remarks");
             if (realTable == null)
             {
                 _log.warn("Unable to find real table for clin remarks");
@@ -1093,8 +1092,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String lastVetReview = "lastVetReview";
         if (ti.getColumn(lastVetReview) == null)
         {
-            TableInfo obsRealTable = getRealTableForDataSet(ti, "Clinical Observations");
-            TableInfo remarksTable = getRealTableForDataSet(ti, "Clinical Remarks");
+            TableInfo obsRealTable = getRealTableForDataset(ti, "Clinical Observations");
+            TableInfo remarksTable = getRealTableForDataset(ti, "Clinical Remarks");
             if (obsRealTable != null && remarksTable != null)
             {
                 SQLFragment obsSql = new SQLFragment("(SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId)", ONPRC_EHRManager.VET_REVIEW);
@@ -1253,7 +1252,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn(hxName) != null)
             return;
 
-        TableInfo realTable = getRealTableForDataSet(ti, "Clinical Remarks");
+        TableInfo realTable = getRealTableForDataset(ti, "Clinical Remarks");
         if (realTable == null)
         {
             _log.warn("Unable to find real table for clin remarks");
@@ -1361,7 +1360,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn(name) != null)
             return;
 
-        TableInfo realTable = getRealTableForDataSet(ti, "Clinical Encounters");
+        TableInfo realTable = getRealTableForDataset(ti, "Clinical Encounters");
         if (realTable == null)
         {
             _log.warn("Unable to find real table for clin encounters");
@@ -1778,13 +1777,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         }
     }
 
-    private TableInfo getRealTableForDataSet(AbstractTableInfo ti, String label)
+    private TableInfo getRealTableForDataset(AbstractTableInfo ti, String label)
     {
         Container ehrContainer = EHRService.get().getEHRStudyContainer(ti.getUserSchema().getContainer());
         if (ehrContainer == null)
             return null;
 
-        DataSet ds;
+        Dataset ds;
         Study s = StudyService.get().getStudy(ehrContainer);
         if (s == null)
             return null;
@@ -1795,7 +1794,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             // NOTE: this seems to happen during study import on TeamCity.  It does not seem to happen during normal operation
             _log.info("A dataset was requested that does not exist: " + label + " in container: " + ehrContainer.getPath());
             StringBuilder sb = new StringBuilder();
-            for (DataSet d : s.getDatasets())
+            for (Dataset d : s.getDatasets())
             {
                 sb.append(d.getName() + ", ");
             }
@@ -1816,7 +1815,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         TableInfo realTable = null;
         if (targetTable instanceof FilteredTable)
         {
-            if (targetTable instanceof DataSetTable)
+            if (targetTable instanceof DatasetTable)
             {
                 Domain domain = ((FilteredTable)targetTable).getDomain();
                 if (domain != null)
@@ -1934,7 +1933,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (matches(ds, "study", "assignment"))
             return;
 
-        TableInfo realTable = getRealTableForDataSet(ds, "Assignment");
+        TableInfo realTable = getRealTableForDataset(ds, "Assignment");
         if (realTable == null)
             return;
 
@@ -2236,7 +2235,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String name = "existingAnimals";
         if (ti.getColumn(name) == null)
         {
-            TableInfo housing = getRealTableForDataSet(ti, "housing");
+            TableInfo housing = getRealTableForDataset(ti, "housing");
             if (housing != null)
             {
                 SQLFragment sql = new SQLFragment("(SELECT CASE WHEN count(h.participantid) > 8 THEN '>8 Animals' ELSE " + ti.getSqlDialect().getGroupConcat(new SQLFragment("h.participantid"), true, true, "', '") + " END as expr FROM studydataset." + housing.getName() + " h WHERE h.room = " + ExprColumn.STR_TABLE_ALIAS + ".room AND ((h.enddate IS NULL AND h.date <= {fn now()} AND h.cage IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".cage IS NULL) OR (h.cage = " + ExprColumn.STR_TABLE_ALIAS + ".cage)))");

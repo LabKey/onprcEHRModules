@@ -823,7 +823,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermissionClass(AdminPermission.class)
-    public class ValidateDataSetColsAction extends ConfirmAction<Object>
+    public class ValidateDatasetColsAction extends ConfirmAction<Object>
     {
         public void validateCommand(Object form, Errors errors)
         {

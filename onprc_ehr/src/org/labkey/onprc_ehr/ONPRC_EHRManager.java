@@ -21,16 +21,12 @@ import org.apache.xmlbeans.XmlException;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.TableInfo;
-import org.labkey.api.module.Module;
-import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.query.Queryable;
-import org.labkey.api.resource.FileResource;
 import org.labkey.api.security.User;
-import org.labkey.api.study.DataSet;
+import org.labkey.api.study.Dataset;
 import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.util.Path;
 import org.labkey.data.xml.ColumnType;
 import org.labkey.data.xml.TableType;
 import org.labkey.data.xml.TablesDocument;
@@ -184,7 +180,7 @@ public class ONPRC_EHRManager
 
         List<String> ret = new ArrayList<>();
         Set<String> skipped = PageFlowUtil.set("Container", "Created", "CreatedBy", "Dataset", "Modified", "ModifiedBy", "ParticipantSequenceNum", "SequenceNum", "_key", "lsid", "qcstate", "sourcelsid", "formSort", "project");
-        for (DataSet ds : s.getDatasets())
+        for (Dataset ds : s.getDatasets())
         {
             TableInfo ti = ds.getTableInfo(u);
             Set<String> names = new TreeSet<>(ti.getColumnNameSet());
