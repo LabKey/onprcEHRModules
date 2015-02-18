@@ -323,6 +323,10 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Housing', function(helper, scriptErrors, row, oldRow){
+        if (row.cage){
+            row.cage = row.cage.toUpperCase();
+        }
+
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow);
 
         //TODO: why are we duplicating this block?
