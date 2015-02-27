@@ -75,7 +75,7 @@ Ext4.define('ONPRC_EHR.window.CreateProjectWindow', {
                                 'project': rows
                             };
 
-                            Ext4.DomHelper.append(document.getElementsByTagName('body')[0],
+                            var newForm = Ext4.DomHelper.append(document.getElementsByTagName('body')[0],
                                             '<form method="POST" action="' + LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'project', project: ''}) + '&returnUrl=' + LDK.Utils.getSrcURL() + '">' +
                                             '<input type="hidden" name="initialData" value="' + Ext4.htmlEncode(Ext4.encode(initialData)) + '" />' +
                                             '</form>');

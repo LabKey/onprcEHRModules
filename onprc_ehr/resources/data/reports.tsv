@@ -69,8 +69,8 @@ citesReview	Colony Management	query	Cites Review	true		study	demographics	Cites 
 kinship	Genetics	js	Kinship	true		ehr	kinshipSummary				false	false		qcstate/publicdata	This report shows the kinship coefficient between every animal in the colony. The kinship coefficient is a measure of relatedness between two individuals. It represents the probability that two genes, sampled at random from each individual are identical (e.g. the kinship coefficient between a parent and an offspring is 0.25).
 #mensCalendar	Colony Management	query	Menses Calendar	TRUE		study	mensCalendar				FALSE	FALSE		qcstate/publicdata	This report shows a calendar view of the mens observations entered by daily obs.
 pedigree	Genetics	js	Pedigree	true		study	pedigree				false	false		qcstate/publicdata	This report displays pedigree data for animals, including parents, grandparents, siblings and offspring
-mhcData	Genetics	query	MHC Typing	true		MHC_Data	MHC_Data_Unified				false	false			
-mhcDataPivoted	Genetics	query	MHC Typing By Allele	true		MHC_Data	MHC_Data_Pivoted	Common Alleles			false	false			
+mhcData	Genetics	query	MHC Typing - Summary	true		MHC_Data	MHC_Data_Unified				false	false
+mhcDataPivoted	Genetics	query	MHC Typing - Detailed	true		MHC_Data	MHC_Data_Pivoted	Common Alleles			false	false
 siblings	Reproductive Management	query	Siblings	true		study	demographicsSiblings				false	false		qcstate/publicdata	This report displays pedigree data for animals, including parents, grandparents, siblings and offspring
 offspring	Reproductive Management	query	Offspring	true		study	demographicsOffspring				false	false		qcstate/publicdata	This report displays pedigree data for animals, including parents, grandparents, siblings and offspring
 pedigreePlot	Genetics	report	Pedigree Plot	true		study	pedigree		module:EHR/schemas/study/Pedigree/Pedigree.r		false	false		qcstate/publicdata	This report will generate a pedigree plot for the selected animal

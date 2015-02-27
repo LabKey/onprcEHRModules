@@ -224,7 +224,9 @@ Ext4.define('ONPRC_EHR.window.MassBleedWindow', {
                     quantity: row[i]
                 };
 
-                obj.reason = ['0492', '0492-01'].indexOf(obj.project) == -1 ? 'Research' : 'Clinical';
+               // obj.reason = ['0492', '0492-01'].indexOf(obj.project) == -1 ? 'Research' : 'Clinical'
+                // Updarted 2-25-2015 Blasa
+                obj.reason = ['0492', '0492-01'].indexOf(obj.project) == -1 ? 'Clinical' : 'Research';
 
                 if (!this.checkRequired(['Id', 'date', 'project', 'quantity'], obj, errors, rowIdx)){
                     recordMap.blood.push(obj);
