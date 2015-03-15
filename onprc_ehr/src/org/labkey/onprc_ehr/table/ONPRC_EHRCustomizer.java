@@ -1937,11 +1937,11 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (realTable == null)
             return;
 
-        String idColSql = ds.getColumn("Id").getValueSql(ExprColumn.STR_TABLE_ALIAS).toString();
-        String dateColSql = ds.getColumn(dateColName).getValueSql(ExprColumn.STR_TABLE_ALIAS).toString();
+        SQLFragment idColSql = ds.getColumn("Id").getValueSql(ExprColumn.STR_TABLE_ALIAS);
+        SQLFragment dateColSql = ds.getColumn(dateColName).getValueSql(ExprColumn.STR_TABLE_ALIAS);
         SQLFragment sql = new SQLFragment("CASE " +
             " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IS NULL THEN NULL " +
-            " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IN (select a.project FROM " + realTable.getSelectName() + " a WHERE a.participantid = " + idColSql + " AND CAST(a.date AS DATE) <= CAST(" + dateColSql + " as DATE) AND (a.enddate IS NULL OR a.enddate >= " + dateColSql + ")) THEN 'Y'" +
+            " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IN (select a.project FROM " + realTable.getSelectName() + " a WHERE a.participantid = ").append(idColSql).append(" AND CAST(a.date AS DATE) <= CAST(").append(dateColSql).append(" as DATE) AND (a.enddate IS NULL OR a.enddate >= " + dateColSql + ")) THEN 'Y'" +
             " ELSE 'N' END");
         ExprColumn newCol = new ExprColumn(ds, name, sql, JdbcType.VARCHAR, ds.getColumn("Id"), ds.getColumn("date"), ds.getColumn("project"));
         newCol.setLabel("Is Assigned At Time?");
@@ -1954,8 +1954,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     "select p2.project FROM " + realTable.getSelectName() + " a " +
                     "JOIN ehr.project p ON (p.container = ? AND p.project = a.project) " +
                     "JOIN ehr.project p2 ON (p2.container = ? AND p.protocol = p2.protocol AND (p.project = p2.project OR p2.enddate IS NULL or p2.enddate >= {fn curdate()})) " +
-                "WHERE a.participantid = " + idColSql + " AND CAST(a.date AS DATE) <= CAST(" + dateColSql + " as DATE) AND (a.enddate IS NULL OR a.enddate >= " + dateColSql + ")) THEN 'Y'" +
-                " ELSE 'N' END", ehrSchema.getContainer().getId(), ehrSchema.getContainer().getId());
+                "WHERE a.participantid = ").append(idColSql).append(" AND CAST(a.date AS DATE) <= CAST(").append(dateColSql).append(" as DATE) AND (a.enddate IS NULL OR a.enddate >= ").append(dateColSql).append(")) THEN 'Y'" +
+                " ELSE 'N' END")
+            .add(ehrSchema.getContainer().getId())
+            .add(ehrSchema.getContainer().getId());
         ExprColumn newCol2 = new ExprColumn(ds, "isAssignedToProtocolAtTime", sql2, JdbcType.VARCHAR, ds.getColumn("Id"), ds.getColumn("date"), ds.getColumn("project"));
         newCol2.setLabel("Is Assigned To Protocol At Time?");
         newCol2.setDescription("Displays whether the animal is assigned to the provided IACUC protocol on the date of each record");
