@@ -1941,7 +1941,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         SQLFragment dateColSql = ds.getColumn(dateColName).getValueSql(ExprColumn.STR_TABLE_ALIAS);
         SQLFragment sql = new SQLFragment("CASE " +
             " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IS NULL THEN NULL " +
-            " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IN (select a.project FROM " + realTable.getSelectName() + " a WHERE a.participantid = ").append(idColSql).append(" AND CAST(a.date AS DATE) <= CAST(").append(dateColSql).append(" as DATE) AND (a.enddate IS NULL OR a.enddate >= " + dateColSql + ")) THEN 'Y'" +
+            " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".project IN (select a.project FROM " + realTable.getSelectName() + " a WHERE a.participantid = ").append(idColSql).append(" AND CAST(a.date AS DATE) <= CAST(").append(dateColSql).append(" as DATE) AND (a.enddate IS NULL OR a.enddate >= ").append(dateColSql).append(")) THEN 'Y'" +
             " ELSE 'N' END");
         ExprColumn newCol = new ExprColumn(ds, name, sql, JdbcType.VARCHAR, ds.getColumn("Id"), ds.getColumn("date"), ds.getColumn("project"));
         newCol.setLabel("Is Assigned At Time?");
