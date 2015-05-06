@@ -32,7 +32,8 @@ Ext4.onReady(function(){
                 items: []
             },{
                 border: false,
-                itemId: 'ehr_msg'
+                id: 'msgbox',
+                itemId: 'msgbox'
             }];
 
             Ext4.each(this.tables, function(table){
@@ -41,7 +42,7 @@ Ext4.onReady(function(){
                     text: 'Populate ' + table.label,
                     scope: this,
                     handler: function(){
-                        this.down('#ehr_msg').update('');
+                        this.down('#msgbox').update('');
                         this[table.populateFn].call(this);
                     }
                 });
@@ -51,7 +52,7 @@ Ext4.onReady(function(){
                     text: 'Delete Data From ' + table.label,
                     scope: this,
                     handler: function(){
-                        this.down('#ehr_msg').update('');
+                        this.down('#msgbox').update('');
                         this.deleteHandler(table);
                     }
                 });
@@ -97,7 +98,7 @@ Ext4.onReady(function(){
                                 console.log('success deleting rows: '+queryName);
                                 this.pendingDeletes--;
                                 if (this.pendingDeletes==0){
-                                    this.down('#ehr_msg').update('Delete Complete');
+                                    this.down('#msgbox').update('Delete Complete');
                                 }
                             },
                             failure: LDK.Utils.getErrorCallback()
@@ -107,7 +108,7 @@ Ext4.onReady(function(){
                         console.log('nothing to delete: '+queryName);
                         this.pendingDeletes--;
                         if (this.pendingDeletes==0){
-                            this.down('#ehr_msg').update('Delete Complete');
+                            this.down('#msgbox').update('Delete Complete');
                         }
                     }
                 },
@@ -1750,7 +1751,7 @@ Ext4.onReady(function(){
             console.log('Success: '+result.queryName);
 
             if (this.pendingInserts==0){
-                this.down('#ehr_msg').update('Populate Complete');
+                this.down('#msgbox').update('Populate Complete');
             }
         },
 
@@ -1761,7 +1762,7 @@ Ext4.onReady(function(){
             console.log(result);
 
             if (this.pendingInserts==0){
-                this.down('#ehr_msg').update('Populate Complete');
+                this.down('#msgbox').update('Populate Complete');
             }
         }        
     });
