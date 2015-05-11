@@ -48,8 +48,8 @@ import org.labkey.api.laboratory.LaboratoryService;
 import org.labkey.api.laboratory.assay.AssayImportMethod;
 import org.labkey.api.laboratory.assay.AssayParser;
 import org.labkey.api.module.FolderType;
+import org.labkey.api.module.FolderTypeManager;
 import org.labkey.api.module.Module;
-import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.query.BatchValidationException;
 import org.labkey.api.query.DuplicateKeyException;
 import org.labkey.api.query.FieldKey;
@@ -118,7 +118,7 @@ public class LegacyDataManager
         if (exptTable == null)
             throw new RuntimeException("Unable to find experiments table");
 
-        final FolderType exptFolderType = ModuleLoader.getInstance().getFolderType("Expt Workbook");
+        final FolderType exptFolderType = FolderTypeManager.get().getFolderType("Expt Workbook");
 
         DbSchema coreSchema = DbSchema.get("core");
         final TableInfo containersTable = coreSchema.getTable("containers");
