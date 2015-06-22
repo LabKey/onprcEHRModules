@@ -113,12 +113,14 @@ public class ONPRC_EHRManager
     private final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final static SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
-    public void lockAnimalCreation(Container c, User u, Boolean lock)
+    public void lockAnimalCreation(Container c, User u, Boolean lock, Integer startingId, Integer idCount)
     {
         PropertyManager.PropertyMap map = PropertyManager.getWritableProperties(c, LOCK_PROP_KEY, true);
         map.put("lockedBy", u.getDisplayName(u));
         map.put("locked", lock.toString());
         map.put("lockDate", _dateTimeFormat.format(new Date()));
+        map.put("startingId", (startingId == null ? null : startingId.toString()));
+        map.put("idCount", (idCount == null ? null : idCount.toString()));
 
         map.save();
     }
@@ -146,6 +148,12 @@ public class ONPRC_EHRManager
                     //ignore
                 }
             }
+
+            if (props.containsKey("startingId"))
+                ret.put("startingId", Integer.parseInt(props.get("startingId")));
+
+            if (props.containsKey("idCount"))
+                ret.put("idCount", Integer.parseInt(props.get("idCount")));
         }
 
         return ret;

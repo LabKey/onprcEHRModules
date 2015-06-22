@@ -954,6 +954,7 @@ onprc_ehr/resources/web/onprc_ehr/panel/IconPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/LabworkRequestDataEntryPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/LabworkRequestInstructionsPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/LockAnimalsPanel.js -text
+onprc_ehr/resources/web/onprc_ehr/panel/NewAnimalDataEntryPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/RequestInstructionsPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/RoomLayoutPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/reports/Colony[!!-~]Census.xlsm -text

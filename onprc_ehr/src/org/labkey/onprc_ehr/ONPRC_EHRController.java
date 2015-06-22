@@ -801,7 +801,7 @@ public class ONPRC_EHRController extends SpringActionController
     {
         public ApiResponse execute(LockAnimalForm form, BindException errors)
         {
-            ONPRC_EHRManager.get().lockAnimalCreation(getContainer(), getUser(), form.isLock());
+            ONPRC_EHRManager.get().lockAnimalCreation(getContainer(), getUser(), form.isLock(), form.getStartingId(), form.getIdCount());
 
             return new ApiSimpleResponse(ONPRC_EHRManager.get().getAnimalLockProperties(getContainer()));
         }
@@ -810,6 +810,8 @@ public class ONPRC_EHRController extends SpringActionController
     public static class LockAnimalForm
     {
         private boolean _lock;
+        private Integer _startingId;
+        private Integer _idCount;
 
         public boolean isLock()
         {
@@ -819,6 +821,26 @@ public class ONPRC_EHRController extends SpringActionController
         public void setLock(boolean lock)
         {
             _lock = lock;
+        }
+
+        public Integer getIdCount()
+        {
+            return _idCount;
+        }
+
+        public void setIdCount(Integer idCount)
+        {
+            _idCount = idCount;
+        }
+
+        public Integer getStartingId()
+        {
+            return _startingId;
+        }
+
+        public void setStartingId(Integer startingId)
+        {
+            _startingId = startingId;
         }
     }
 

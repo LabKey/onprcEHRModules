@@ -45,6 +45,7 @@
                 <include name="jbrowse.module" />
                 <include name="blast.module" />
                 <include name="variantdb.module" />
+                <include name="galaxyintegration.module" />
             </fileset>
         </copy>
     </target>

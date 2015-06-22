@@ -20,9 +20,10 @@
 # usage: ./installLabKey.sh ${distribution}
 #
 
+GZ=$1
 if [ $# -eq 0 ]; then
-    echo "Must supply the name of a valid GZ archive"
-    exit 2
+    wget -r --trust-server-names --no-check-certificate http://teamcity.labkey.org/guestAuth/repository/download/LabkeyONPRC151_Installers/.lastSuccessful/onprc/LabKey15.1ONPRC-{build.number}-onprc-bin.tar.gz
+    GZ=$(ls -tr | grep '^LabKey.*\.gz$' | tail -n -1)
 fi
 
 GZ=$1

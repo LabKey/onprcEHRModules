@@ -23,6 +23,7 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +49,9 @@ public class BirthFormType extends TaskForm
         ));
 
         setDisplayReviewRequired(true);
+        setJavascriptClass("ONPRC_EHR.panel.NewAnimalDataEntryPanel");
+
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/NewAnimalDataEntryPanel.js"));
     }
 
     @Override

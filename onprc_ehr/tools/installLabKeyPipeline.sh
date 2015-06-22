@@ -20,17 +20,18 @@
 # usage: ./installLabKeyPipeline.sh ${distribution}
 #
 
+GZ=$1
 if [ $# -eq 0 ]; then
-    echo "Must supply the name of a valid GZ archive"
-    exit 2
+    wget -r --trust-server-names --no-check-certificate http://teamcity.labkey.org/guestAuth/repository/download/LabkeyONPRC151_Installers/.lastSuccessful/onprc/LabKey15.1ONPRC-{build.number}-onprc-bin.tar.gz
+    mv ./teamcity.labkey.org/guestAuth/repository/download/LabkeyONPRC151_Installers/.lastSuccessful/onprc/*.gz ./
+    rm -Rf ./teamcity.labkey.org
+    GZ=$(ls -tr | grep '^LabKey.*\.gz$' | tail -n -1)
 fi
 
-GZ=$1
 LABKEY_DIR=/usr/local/labkey
 echo "Installing LabKey using: $GZ"
 service labkeyRemotePipeline stop
 
-cd /usr/local/src
 echo "Unzipping $GZ"
 gunzip $GZ
 TAR=`echo $GZ | sed -e "s/.gz$//"`
@@ -48,16 +49,16 @@ echo "GZipping distribution"
 gzip $TAR
 
 #checkout pipeline code from svn
-if [[ ! -e ${LABKEY_DIR}/svn ]];
+if [ ! -e ${LABKEY_DIR}/svn ];
 then
     echo "Checking out pipeline code"
     su labkey -c "svn co --username cpas --password cpas --no-auth-cache https://hedgehog.fhcrc.org/tor/stedi/trunk/externalModules/labModules/SequenceAnalysis/pipeline_code ${LABKEY_DIR}/svn/trunk/pipeline_code/"
 else
     echo "Updating pipeline code"
-    su labkey -c "svn update ${LABKEY_DIR}/svn/trunk/pipeline_code/"
+    su labkey -c "svn update --username cpas --password cpas --no-auth-cache ${LABKEY_DIR}/svn/trunk/pipeline_code/"
 fi
 
-echo "cleaning up installers, leaving 5 most recent"
-ls -tr | grep '^LabKey.*\.gz$' | head -n -5 | xargs rm
+echo "cleaning up installers, leaving 3 most recent"
+ls -tr | grep '^LabKey.*\.gz$' | head -n -3 | xargs rm
 
-${LABKEY_DIR}/svn/trunk/pipeline_code/sequence_tools_install.sh -d ${LABKEY_DIR}
+${LABKEY_DIR}/svn/trunk/pipeline_code/sequence_tools_install.sh -d ${LABKEY_DIR} -u labkey
