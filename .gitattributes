@@ -85,6 +85,7 @@ onprc_ehr/resources/data/sib_score.tsv -text
 onprc_ehr/resources/data/snomed.tsv -text
 onprc_ehr/resources/data/snomed_subset_codes.tsv -text
 onprc_ehr/resources/data/snomed_subsets.tsv -text
+onprc_ehr/resources/data/species.tsv -text
 onprc_ehr/resources/data/stool_score.tsv -text
 onprc_ehr/resources/data/tb_method.tsv -text
 onprc_ehr/resources/data/tissue_condition.tsv -text

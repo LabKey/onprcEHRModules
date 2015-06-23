@@ -197,6 +197,12 @@ Ext4.onReady(function(){
             queryName: 'birth_type',
             pk: 'rowid'
         },{
+            label: 'Species',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'species',
+            pk: 'common'
+        },{
             label: 'Birth Condition',
             populateFn: 'populateFromFile',
             schemaName: 'onprc_ehr',
