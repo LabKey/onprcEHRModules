@@ -277,7 +277,8 @@ exports.init = function(EHR){
 
                     if (hasUpdates){
                         obj.Id = row.Id;
-                        helper.getJavaHelper().updateDemographicsRecord(row.Id, obj);
+                        var demographicsUpdates = [obj];
+                        helper.getJavaHelper().updateDemographicsRecord(demographicsUpdates);
                     }
                 }
             });
