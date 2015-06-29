@@ -115,21 +115,13 @@ public class ETLAuditProvider extends AbstractAuditTypeProvider implements Audit
         return legacyNames;
     }
 
-    @Override
-    public TableInfo createTableInfo(UserSchema userSchema)
-    {
-        Domain domain = getDomain();
 
-        DefaultAuditTypeTable table = new DefaultAuditTypeTable(this, domain, userSchema)
-        {
-            @Override
-            public List<FieldKey> getDefaultVisibleColumns()
-            {
-                return defaultVisibleColumns;
-            }
-        };
-        return table;
+    @Override
+    public List<FieldKey> getDefaultVisibleColumns()
+    {
+        return defaultVisibleColumns;
     }
+
 
     @Override
     public <K extends AuditTypeEvent> Class<K> getEventClass()
