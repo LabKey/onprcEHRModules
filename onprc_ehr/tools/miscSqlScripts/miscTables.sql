@@ -174,6 +174,7 @@ FROM Ref_SurgProcedure
 WHERE PersonHours > 0;
 
 
+
 --investigators
 --geographic origins
 TRUNCATE TABLE labkey.ehr_lookups.geographic_origins;
