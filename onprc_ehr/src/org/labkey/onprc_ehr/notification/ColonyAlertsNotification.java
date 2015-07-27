@@ -815,7 +815,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void protocolsWithAnimalsExpiringSoon(final Container c, User u, final StringBuilder msg)
     {
-        if (!DbScope.getLabkeyScope().getSqlDialect().isSqlServer())
+        if (!DbScope.getLabKeyScope().getSqlDialect().isSqlServer())
         {
             return;
         }
@@ -1854,7 +1854,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 "where d1.death is null OR CAST(d1.death AS DATE) != CAST(d2.date AS DATE)"
         );
 
-        SqlSelector ss = new SqlSelector(DbScope.getLabkeyScope(), sql);
+        SqlSelector ss = new SqlSelector(DbScope.getLabKeyScope(), sql);
         List<String> ids = ss.getArrayList(String.class);
         if (!ids.isEmpty())
         {
@@ -1874,7 +1874,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 "where d1.birth is null OR CAST(d1.birth AS DATE) != CAST(d2.date AS DATE)"
         );
 
-        SqlSelector ss = new SqlSelector(DbScope.getLabkeyScope(), sql);
+        SqlSelector ss = new SqlSelector(DbScope.getLabKeyScope(), sql);
         List<String> ids = ss.getArrayList(String.class);
         if (!ids.isEmpty())
         {
@@ -1897,7 +1897,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     "(COALESCE(d1.geographic_origin, '') != COALESCE(d2.geographic_origin, ''))"
         );
 
-        SqlSelector ss = new SqlSelector(DbScope.getLabkeyScope(), sql);
+        SqlSelector ss = new SqlSelector(DbScope.getLabKeyScope(), sql);
         List<String> ids = ss.getArrayList(String.class);
         if (!ids.isEmpty())
         {

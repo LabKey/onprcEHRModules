@@ -1668,11 +1668,11 @@ public class ONPRC_EHRTriggerHelper
         if (_nextProtocolId == null)
         {
             String suffix = "";
-            if (DbScope.getLabkeyScope().getSqlDialect().isPostgreSQL())
+            if (DbScope.getLabKeyScope().getSqlDialect().isPostgreSQL())
             {
                 suffix = "protocol ~ '^([0-9]+)$'";
             }
-            else if (DbScope.getLabkeyScope().getSqlDialect().isSqlServer())
+            else if (DbScope.getLabKeyScope().getSqlDialect().isSqlServer())
             {
                 suffix = "protocol NOT LIKE '%[^0-9]%'";
             }
