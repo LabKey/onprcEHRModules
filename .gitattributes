@@ -31,6 +31,7 @@ GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreModule.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsTableCustomizer.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/analysis/MethylationRateComparison.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/button/ChangeReadsetStatusButton.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/button/PublishSBTHaplotypesButton.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/button/PublishSBTResultsButton.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/button/SBTReviewButton.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/notification/GeneticsCoreNotification.java -text
