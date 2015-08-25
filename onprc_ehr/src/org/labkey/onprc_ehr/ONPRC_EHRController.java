@@ -44,7 +44,7 @@ import org.labkey.api.query.FieldKey;
 import org.labkey.api.resource.FileResource;
 import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.CSRF;
-import org.labkey.api.security.RequiresPermissionClass;
+import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.RequiresSiteAdmin;
 import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.AdminPermission;
@@ -91,7 +91,7 @@ public class ONPRC_EHRController extends SpringActionController
         setActionResolver(_actionResolver);
     }
 
-    @RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermission(AdminPermission.class)
     @CSRF
     public class GetEtlDetailsAction extends ApiAction<Object>
     {
@@ -121,7 +121,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(ReadPermission.class)
+    @RequiresPermission(ReadPermission.class)
     @CSRF
     public class GetNavItemsAction extends ApiAction<Object>
     {
@@ -201,7 +201,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermission(AdminPermission.class)
     @CSRF
     public class SetEtlDetailsAction extends ApiAction<EtlAdminForm>
     {
@@ -400,7 +400,7 @@ public class ONPRC_EHRController extends SpringActionController
         return new File(tomcatHome, "logs/" + name);
     }
 
-    @RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermission(AdminPermission.class)
     public class RunEHRTestsAction extends SimpleViewAction<RunEHRTestsForm>
     {
         public void validateCommand(RunEHRTestsForm form, Errors errors)
@@ -457,7 +457,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermission(AdminPermission.class)
     public class RunEtlAction extends RedirectAction<Object>
     {
         public boolean doAction(Object form, BindException errors) throws Exception
@@ -477,7 +477,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermission(AdminPermission.class)
     public class ValidateEtlAction extends ConfirmAction<ValidateEtlSyncForm>
     {
         public boolean handlePost(ValidateEtlSyncForm form, BindException errors) throws Exception
@@ -539,7 +539,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermission(AdminPermission.class)
     public class LegacyDataImportAction extends ConfirmAction<LegacyDataImportForm>
     {
         public void validateCommand(LegacyDataImportForm form, Errors errors)
@@ -641,7 +641,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermission(AdminPermission.class)
     public class PopulateCaseHistoryAction extends ConfirmAction<Object>
     {
         public void validateCommand(Object form, Errors errors)
@@ -785,7 +785,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(ReadPermission.class)
+    @RequiresPermission(ReadPermission.class)
     @CSRF
     public class GetAnimalLockAction extends ApiAction<Object>
     {
@@ -795,7 +795,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(EHRDataEntryPermission.class)
+    @RequiresPermission(EHRDataEntryPermission.class)
     @CSRF
     public class SetAnimalLockAction extends ApiAction<LockAnimalForm>
     {
@@ -844,7 +844,7 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    @RequiresPermissionClass(AdminPermission.class)
+    @RequiresPermission(AdminPermission.class)
     public class ValidateDatasetColsAction extends ConfirmAction<Object>
     {
         public void validateCommand(Object form, Errors errors)
