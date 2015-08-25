@@ -27,7 +27,7 @@ import org.labkey.api.data.TableInfo;
 import org.labkey.api.exp.api.ExpProtocol;
 import org.labkey.api.exp.api.ExperimentService;
 import org.labkey.api.security.CSRF;
-import org.labkey.api.security.RequiresPermissionClass;
+import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.security.permissions.UpdatePermission;
 import org.labkey.api.util.Pair;
@@ -50,7 +50,7 @@ public class GenotypeAssaysController extends SpringActionController
         setActionResolver(_actionResolver);
     }
 
-    @RequiresPermissionClass(ReadPermission.class)
+    @RequiresPermission(ReadPermission.class)
     public class MigrateLegacySSPAction extends ConfirmAction<Object>
     {
         public void validateCommand(Object form, Errors errors)
