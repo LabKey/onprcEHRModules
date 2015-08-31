@@ -52,7 +52,11 @@ public class DrugAdministrationFormSection extends SimpleFormSection
         setClientStoreClass("EHR.data.DrugAdministrationRunsClientStore");
         addClientDependency(ClientDependency.fromPath("ehr/data/DrugAdministrationRunsClientStore.js"));
         addClientDependency(ClientDependency.fromPath("ehr/window/SedationWindow.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/AddScheduledTreatmentsWindow.js"));
+        //Modified 4-2-2015 Blasa
+        addClientDependency(ClientDependency.fromPath("/onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"));
+        //Modified 6-23-2015 Blasa
+        addClientDependency(ClientDependency.fromPath("/onprc_ehr/form/field/SnomedTreatmentCombo.js"));
+
         addClientDependency(ClientDependency.fromPath("ehr/window/RepeatSelectedWindow.js"));
 
         setLocation(location);

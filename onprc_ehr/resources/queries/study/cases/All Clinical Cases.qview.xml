@@ -4,6 +4,7 @@
         <column name="Id/curLocation/room"/>
         <column name="Id/curLocation/cage"/>
         <column name="date"/>
+        <column name="reviewdate"/>
         <column name="enddate"/>
         <column name="allProblemCategories"/>
         <column name="assignedvet/DisplayName">

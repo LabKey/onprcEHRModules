@@ -24,6 +24,7 @@ import org.labkey.api.ehr.security.EHRLabworkEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,7 +58,11 @@ public class LabworkFormType extends TaskForm
             s.addConfigSource("Labwork");
         }
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/labworkButtons.js"));
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/labworkButtons.js"));
+        //Added 3-25-2015 Blasa
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/BulkSerologyVirologyWindow.js"));
+        //Added 4-6-2015 Blasa
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/BulkSerologyScanWindow.js"));
     }
 
     @Override
@@ -68,6 +73,19 @@ public class LabworkFormType extends TaskForm
 
         return super.canInsert();
     }
+
+    //Added 3-25-2015 Blasa
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getMoreActionButtonConfigs()) ;
+        defaultButtons.add("SEROLOGY_IMPORT");
+        defaultButtons.add("SEROLOGY_SCAN_IMPORT");
+
+        return defaultButtons;
+    }
+
 
     @Override
     protected List<String> getButtonConfigs()

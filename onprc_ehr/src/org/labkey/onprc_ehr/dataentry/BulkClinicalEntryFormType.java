@@ -62,6 +62,8 @@ public class BulkClinicalEntryFormType extends TaskForm
         addClientDependency(ClientDependency.fromPath("onprc_ehr/window/MassBleedWindow.js"));
         //Added 1-6-2015 Blasa
         addClientDependency(ClientDependency.fromPath("onprc_ehr/window/BulkStrokeRoundsWindow.js"));
+        //Added 1-6-2015 Blasa
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/BulkStrokeRoundsWindow.js"));
     }
 
     @Override

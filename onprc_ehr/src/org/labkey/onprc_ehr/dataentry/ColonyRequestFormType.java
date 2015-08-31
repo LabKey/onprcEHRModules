@@ -41,8 +41,8 @@ public class ColonyRequestFormType extends RequestForm
                 new RequestFormSection(),
                 //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),
-                new BloodDrawFormSection(true),
-                new DrugAdministrationRequestFormSection()
+                new BloodDrawFormSection(true)
+               // new DrugAdministrationRequestFormSection() Removed 6/17/2015 GJONES ISsue 1820
         ));
 
         addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/ASB_Services.js"));

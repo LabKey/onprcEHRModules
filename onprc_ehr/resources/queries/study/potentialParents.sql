@@ -14,34 +14,22 @@
  * limitations under the License.
  */
 SELECT
-  d1.id,
-  d1.date as birth,
-
-  h.id as potentialParent,
-  h.id.demographics.gender as parentGender,
-  CASE
-    WHEN h.id.demographics.gender = 'm' THEN 'Potential Sire'
-    WHEN h.id.demographics.gender = 'f' THEN 'Potential Dam'
-    ELSE 'Unknown'
-  END as category,
+DISTINCT t.Id, t.parent, t.category
 
 FROM (
 
 SELECT
+  d.Id,
+  d.potentialDam as parent,
+  'Potential Dam' as category
+FROM study.potentialDams d
 
-  d.id,
-  d.date,
-  timestampadd('SQL_TSI_DAY', -190, d.date) as minDate,
-  timestampadd('SQL_TSI_DAY', -155, d.date) as maxDate,
-  d.room,
+UNION ALL
 
-FROM study.birth d
+SELECT
+  s.Id,
+  s.potentialSire as parent,
+  'Potential Sire' as category
+FROM study.potentialSires s
 
-) d1
-
-LEFT JOIN study.housing h ON (h.date <= d1.maxDate AND h.enddateCoalesced >= d1.minDate AND d1.room = h.room)
-
---UNION ALL
-
--- TODO: account for animal groups
-
+) t

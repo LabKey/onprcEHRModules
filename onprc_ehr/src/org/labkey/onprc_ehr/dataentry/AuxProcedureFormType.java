@@ -40,7 +40,8 @@ public class AuxProcedureFormType extends TaskForm
         super(ctx, owner, NAME, NAME, "Research", Arrays.<FormSection>asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
-            new SimpleGridPanel("study", "encounters", "Procedures"),
+          //  new SimpleGridPanel("study", "encounters", "Procedures" ),
+            new ClinicalEncountersFormSection(),   //Added 5-4-2015  Blasa
             new BloodDrawFormSection(false),
             new WeightFormSection(),
             new DrugAdministrationFormSection(),

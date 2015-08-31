@@ -35,7 +35,9 @@ public class ClinicalEncountersFormSection extends SimpleFormSection
         addClientDependency(ClientDependency.fromPath("ehr/buttons/encounterButtons.js"));
         addClientDependency(ClientDependency.fromPath("ehr/data/ClinicalEncountersClientStore.js"));
         setClientStoreClass("EHR.data.ClinicalEncountersClientStore");
-        setTemplateMode(TEMPLATE_MODE.NONE);
+        //Modified 8-24-2015 Blasa Shows Template menus
+      //  setTemplateMode(TEMPLATE_MODE.NONE);
+
     }
 
     @Override
@@ -51,6 +53,9 @@ public class ClinicalEncountersFormSection extends SimpleFormSection
             defaultButtons.remove("DELETERECORD");
         }
         defaultButtons.add(idx, "ENCOUNTERDELETE");
+
+        //Added 6-25-2015
+        defaultButtons.add(idx, "TEMPLATE");
 
         return defaultButtons;
     }

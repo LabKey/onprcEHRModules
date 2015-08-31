@@ -296,6 +296,7 @@ EHR.reports.potentialParents = function(panel, tab){
     tab.add({
         border: false,
         style: 'padding-bottom: 20px;',
+        bodyStyle: 'padding: 5px;',
         html: 'This report calculates potential parents for the selected animal(s).  The potential parents are determined as follows:' +
             '<br><br>' +
             '<ul style="margin-left: 20px">' +
@@ -312,6 +313,7 @@ EHR.reports.potentialParents = function(panel, tab){
         items: [{
             itemId: 'filterArea',
             style: 'padding-bottom: 10px;',
+            bodyStyle: 'padding: 5px;',
             border: false,
             defaults: {
                 border: false
@@ -322,8 +324,8 @@ EHR.reports.potentialParents = function(panel, tab){
                     border: false
                 },
                 items: [{
-                    html: 'Choose Conception Range (Days Prior To Birth):',
-                    style: 'padding-bottom: 10px;'
+                html: 'Choose Conception Range (Days Prior To Birth):',
+                style: 'padding-bottom: 10px;'
                 },{
                     xtype: 'numberfield',
                     hideTrigger: true,
@@ -340,6 +342,11 @@ EHR.reports.potentialParents = function(panel, tab){
                     hideTrigger: true,
                     value: 180
                 }]
+            },{
+                xtype: 'checkbox',
+                fieldLabel: 'Combine Dams/Sires Into Single Table',
+                labelWidth: 275,
+                itemId: 'singleTable'
             }],
             buttonAlign: 'left',
             buttons: [{
@@ -348,6 +355,7 @@ EHR.reports.potentialParents = function(panel, tab){
                     var panel = btn.up('#potentialParents');
                     var rangeMin = panel.down('#rangeMin').getValue();
                     var rangeMax = panel.down('#rangeMax').getValue();
+                    var singleTable = panel.down('#singleTable').getValue();
 
                     if (Ext4.isEmpty(rangeMin) || Ext4.isEmpty(rangeMax)){
                         Ext4.Msg.alert('Error', 'Must provide a range');
@@ -357,33 +365,53 @@ EHR.reports.potentialParents = function(panel, tab){
                     var target = panel.down('#target');
                     target.removeAll();
 
-                    target.add({
-                        xtype: 'ldk-querypanel',
-                        style: 'margin-bottom:20px;',
-                        queryConfig: panel.ownerTabbedPanel.getQWPConfig({
-                            schemaName: 'study',
-                            queryName: 'potentialDams',
-                            title: "Potential Dams" + title,
-                            filters: filterArray.nonRemovable,
-                            removeableFilters: filterArray.removable
-                        })
-                    });
+                    if (singleTable){
+                        target.add({
+                            xtype: 'ldk-querypanel',
+                            style: 'margin-bottom:20px;',
+                            queryConfig: panel.ownerTabbedPanel.getQWPConfig({
+                                schemaName: 'study',
+                                queryName: 'potentialParents',
+                                title: "Potential Parents" + title,
+                                filters: filterArray.nonRemovable,
+                                removeableFilters: filterArray.removable,
+                                parameters: {
+                                    RangeMin: rangeMin,
+                                    RangeMax: rangeMax
+                                }
+                            })
+                        });
+                    }
+                    else
+                    {
+                        target.add({
+                            xtype: 'ldk-querypanel',
+                            style: 'margin-bottom:20px;',
+                            queryConfig: panel.ownerTabbedPanel.getQWPConfig({
+                                schemaName: 'study',
+                                queryName: 'potentialDams',
+                                title: "Potential Dams" + title,
+                                filters: filterArray.nonRemovable,
+                                removeableFilters: filterArray.removable
+                            })
+                        });
 
-                    target.add({
-                        xtype: 'ldk-querypanel',
-                        style: 'margin-bottom:20px;',
-                        queryConfig: panel.ownerTabbedPanel.getQWPConfig({
-                            schemaName: 'study',
-                            queryName: 'potentialSires',
-                            title: "Potential Sires" + title,
-                            filters: filterArray.nonRemovable,
-                            removeableFilters: filterArray.removable,
-                            parameters: {
-                                RangeMin: rangeMin,
-                                RangeMax: rangeMax
-                            }
-                        })
-                    });
+                        target.add({
+                            xtype: 'ldk-querypanel',
+                            style: 'margin-bottom:20px;',
+                            queryConfig: panel.ownerTabbedPanel.getQWPConfig({
+                                schemaName: 'study',
+                                queryName: 'potentialSires',
+                                title: "Potential Sires" + title,
+                                filters: filterArray.nonRemovable,
+                                removeableFilters: filterArray.removable,
+                                parameters: {
+                                    RangeMin: rangeMin,
+                                    RangeMax: rangeMax
+                                }
+                            })
+                        });
+                    }
                 }
             }]
         },{

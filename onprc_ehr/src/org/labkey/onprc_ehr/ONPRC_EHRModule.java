@@ -39,7 +39,9 @@ import org.labkey.api.query.QuerySchema;
 import org.labkey.api.resource.Resource;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.settings.AppProps;
+import org.labkey.api.util.ReturnURLString;
 import org.labkey.api.util.URLHelper;
+import org.labkey.api.util.UnexpectedException;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.AnimalGroupCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentCompletedButton;
@@ -78,6 +80,8 @@ import org.labkey.onprc_ehr.notification.RequestAdminNotification;
 import org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification;
 import org.labkey.onprc_ehr.notification.TMBNotification;
 import org.labkey.onprc_ehr.notification.TreatmentAlertsNotification;
+import org.labkey.onprc_ehr.notification.TreatmentAlertsPostOpsNotification;
+import org.labkey.onprc_ehr.notification.TreatmentAlertsPostOpsNotificationSecondary;
 import org.labkey.onprc_ehr.notification.UnoccupiedRoomsNotification;
 import org.labkey.onprc_ehr.notification.VetReviewNotification;
 import org.labkey.onprc_ehr.notification.WeightAlertsNotification;
@@ -131,6 +135,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         NotificationService ns = NotificationService.get();
         ns.registerNotification(new TreatmentAlertsNotification(this));
+        //Added 6-23-2015 Blasa
+        ns.registerNotification(new TreatmentAlertsPostOpsNotification(this));
+        //Added 7-21-2015 Additional Scheduled for 8:30pm
+        ns.registerNotification(new TreatmentAlertsPostOpsNotificationSecondary(this));
+
+
         ns.registerNotification(new RequestAdminNotification(this));
         ns.registerNotification(new ColonyAlertsLiteNotification(this));
         ns.registerNotification(new ColonyAlertsNotification(this));
@@ -156,11 +166,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         assert r != null;
         EHRService.get().registerTriggerScript(this, r);
 
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/BloodSummaryPanel.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/onprcReports.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/Utils.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/EHROverrides.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/data/sources/ONPRCDefaults.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/BloodSummaryPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/onprcReports.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/Utils.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/EHROverrides.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromFilePath("onprc_ehr/data/sources/ONPRCDefaults.js"), this);
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Commonly Used Queries");
@@ -195,6 +205,24 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Weight Loss Report", this, DetailsURL.fromString("/ldk/runNotification.view?key=org.labkey.onprc_ehr.notification.WeightAlertsNotification"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Weight Change Data", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsWeightChange&query.viewName=By Location"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Alerts Report", this, DetailsURL.fromString("/ldk/runNotification.view?key=org.labkey.onprc_ehr.notification.ClinicalAlertsNotification"), "Clinical");
+
+        //Added 5-11-2015 New report for Lois Colgin
+        try
+        {
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Laboratory Test Summary", this, new URLHelper("http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fPrimeLaboratory+Report&rs:Command=Render")
+            {
+                // SSRS is picky about the URI-encoding of the query parameters
+                @Override
+                public String toString()
+                {
+                    return "http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fPrimeLaboratory+Report&rs:Command=Render";
+                }
+            }, "Clinical Pathology");
+        }
+        catch (URISyntaxException e)
+        {
+            throw new UnexpectedException(e);
+        }
 
         try
         {

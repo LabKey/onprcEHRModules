@@ -57,7 +57,12 @@ public class ClinicalReportFormType extends TaskForm
                 new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new TreatmentOrdersFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new SimpleGridPanel("study", "blood", "Blood Draws", EHRService.FORM_SECTION_LOCATION.Tabs),
-                new SimpleGridPanel("ehr", "snomed_tags", "Diagnostic Codes", EHRService.FORM_SECTION_LOCATION.Tabs)
+                new SimpleGridPanel("ehr", "snomed_tags", "Diagnostic Codes", EHRService.FORM_SECTION_LOCATION.Tabs),
+                //Added 5-23-2015   Blasa
+                new SimpleGridPanel("study", "housing", "Housing Transfers",EHRService.FORM_SECTION_LOCATION.Tabs)
+                //Removed temporarily  7-2-2015   Blasa
+               // new SimpleGridPanel("study", "encounters", "TB Tests",EHRService.FORM_SECTION_LOCATION.Tabs)
+
         ));
 
         setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NO_ID);
@@ -67,6 +72,9 @@ public class ClinicalReportFormType extends TaskForm
         {
             s.addConfigSource("ClinicalDefaults");
             s.addConfigSource("ClinicalReport");
+
+            //Removed temporarily  7-2-2015   Blasa
+           // s.addConfigSource("TBProcedure");
 
             if (!s.getName().equals("Clinical Remarks"))
                 s.addConfigSource("ClinicalReportChild");
@@ -87,6 +95,14 @@ public class ClinicalReportFormType extends TaskForm
         addClientDependency(ClientDependency.fromPath("ehr/panel/ExamDataEntryPanel.js"));
         addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalReportChild.js"));
         setJavascriptClass("EHR.panel.ExamDataEntryPanel");
+
+        //Added 4-3-2015 Blasa
+        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/HousingDataEntryPanel.js"));
+        setJavascriptClass("ONPRC_EHR.panel.HousingDataEntryPanel");
+
+        //Removed temporarily  7-2-2015   Blasa
+       // addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/TBProcedure.js"));
+
     }
 
     @Override
