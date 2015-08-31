@@ -529,6 +529,7 @@ onprc_reports/resources/schemas/DNABank.template.xml -text
 onprc_reports/resources/schemas/MHCResults.template.xml -text
 onprc_reports/resources/schemas/ParentageResults.template.xml -text
 onprc_reports/resources/schemas/ParentageSamples.template.xml -text
+onprc_reports/resources/schemas/ParentageSnpResults.template.xml -text
 onprc_reports/resources/schemas/ViralLoadResults.template.xml -text
 onprc_reports/src/org/labkey/onprc_reports/ONPRC_ReportsCustomizer.java -text
 onprc_reports/src/org/labkey/onprc_reports/ONPRC_ReportsManager.java -text
@@ -564,6 +565,9 @@ sla/resources/etl/sla/requestors.sql -text
 sla/resources/etl/sla/vendors.sql -text
 sla/resources/folderTypes/SLA.folderType.xml -text
 sla/resources/module.xml -text
+sla/resources/queries/sla/SLACageSize.sql -text
+sla/resources/queries/sla/SLACageType.sql -text
+sla/resources/queries/sla/SLAMostRecentCensus.sql -text
 sla/resources/queries/sla/allowableAnimals.js -text
 sla/resources/schemas/dbscripts/postgresql/sla-0.00-13.21.sql -text
 sla/resources/schemas/dbscripts/postgresql/sla-13.21-13.22.sql -text
@@ -577,6 +581,7 @@ sla/resources/schemas/dbscripts/sqlserver/sla-13.22-13.23.sql -text
 sla/resources/schemas/dbscripts/sqlserver/sla-13.23-13.24.sql -text
 sla/resources/schemas/dbscripts/sqlserver/sla-13.24-13.25.sql -text
 sla/resources/schemas/dbscripts/sqlserver/sla-13.25-13.26.sql -text
+sla/resources/schemas/dbscripts/sqlserver/sla-13.26-13.27.sql -text
 sla/resources/schemas/sla.xml -text
 sla/resources/views/begin.html -text
 sla/resources/views/begin.view.xml -text
