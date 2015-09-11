@@ -325,6 +325,7 @@ onprc_ehr/resources/queries/study/Drug[!!-~]Administration/Requests.qview.xml -t
 onprc_ehr/resources/queries/study/Enrichment.js -text
 onprc_ehr/resources/queries/study/Enrichment.query.xml -text
 onprc_ehr/resources/queries/study/Enrichment/.qview.xml -text
+onprc_ehr/resources/queries/study/Flag_Remarks.sql -text
 onprc_ehr/resources/queries/study/Gross[!!-~]Findings.js -text
 onprc_ehr/resources/queries/study/Gross[!!-~]Findings.query.xml -text
 onprc_ehr/resources/queries/study/Gross[!!-~]Findings/.qview.xml -text
