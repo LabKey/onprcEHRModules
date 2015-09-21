@@ -975,6 +975,20 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             ti.getColumn("cond").setHidden(true);
         }
+
+        if (ti.getColumn("previousLocation") == null)
+        {
+            UserSchema us = getStudyUserSchema(ti);
+            if (us != null)
+            {
+                ColumnInfo lsidCol = ti.getColumn("lsid");
+                ColumnInfo col = ti.addColumn(new WrappedColumn(lsidCol, "previousLocation"));
+                col.setLabel("Previous Location");
+                col.setUserEditable(false);
+                col.setIsUnselectable(true);
+                col.setFk(new QueryForeignKey(us, null, "housingPreviousLocation", "lsid", "location"));
+            }
+        }
     }
 
     private void customizeClinpathRunsTable(AbstractTableInfo ti)
@@ -1721,12 +1735,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 @Override
                 public DisplayColumn createRenderer(final ColumnInfo colInfo)
                 {
-                    return new DataColumn(colInfo){
+                    return new DataColumn(colInfo)
+                    {
 
                         public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
                         {
-                            String runId = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdHCT"));
-                            String id = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
+                            String runId = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdHCT"));
+                            String id = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
                             out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
                         }
 
@@ -1991,7 +2006,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         col.setReadOnly(true);
         col.setIsUnselectable(true);
         col.setUserEditable(false);
-        col.setFk(new LookupForeignKey(){
+        col.setFk(new LookupForeignKey()
+        {
             public TableInfo getLookupTableInfo()
             {
                 String name = tableName + "_assignmentsAtTime";
