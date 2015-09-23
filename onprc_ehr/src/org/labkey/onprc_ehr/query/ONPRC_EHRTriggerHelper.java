@@ -1544,7 +1544,7 @@ public class ONPRC_EHRTriggerHelper
         }
 
         //first gather all animals currently housed, by cage
-        Map<String, Set<String>> animalMap = getAnimalLocationsAfterMove(room, rowsInTransaction);
+        //Map<String, Set<String>> animalMap = getAnimalLocationsAfterMove(room, rowsInTransaction);
         Set<String> errors = new HashSet<>();
 
         //also build list of existing dividers and changes
