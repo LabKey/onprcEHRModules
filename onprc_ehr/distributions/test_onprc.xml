@@ -3,7 +3,7 @@
 <project default="usage">
 
     <target name="distribution" unless="dist.all">
-        <antcall target="prepare_dist_files" />
+        <antcall target="gather_modules" />
         <ant antfile="${basedir}/build.xml" target="package_redistributables">
             <property name="dist_sub.dir" value="test" />
             <property name="skip.windowsInstaller" value="true" />
@@ -13,16 +13,8 @@
         </ant>
     </target>
 
-    <target name="prepare_dist_files">
-        <antcall target="gather_extended_distributions_modules" />
-        <antcall target="gather_modules" />
-    </target>
-
-    <target name="gather_extended_distributions_modules">
-        <ant antfile="${dist.xml}/../onprc.xml" target="prepare_dist_files" />
-    </target>
-
     <target name="gather_modules">
+        <ant antfile="${dist.xml}/../onprc.xml" target="gather_modules" />
         <copy todir="${dist.modules.dir}">
             <filelist dir="${staging.modules.dir}">
                 <file name="dumbster.module" />
