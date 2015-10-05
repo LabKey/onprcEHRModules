@@ -11,7 +11,7 @@ SELECT
   s.testName,
   s.run,
   max(s.result) as result,
-
+  max(RowId) as rowId
 FROM (
   SELECT
     s.subjectId,
@@ -24,7 +24,8 @@ FROM (
     CASE
       WHEN s.resultOORIndicator IS NULL THEN cast(s.result as varchar)
       ELSE (s.resultOORIndicator || cast(s.result as varchar))
-    END as result
+    END as result,
+    s.RowId
   FROM Data s
 ) s
 

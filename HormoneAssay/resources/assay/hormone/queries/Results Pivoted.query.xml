@@ -14,6 +14,10 @@
                   <column columnName="result">
                       <formatString>0.##</formatString>
                   </column>
+                  <column columnName="rowId">
+                      <isKeyField>true</isKeyField>
+                      <isHidden>true</isHidden>
+                  </column>
               </columns>
           </table>
       </tables>
