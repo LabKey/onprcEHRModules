@@ -82,9 +82,6 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
         btn.setText(locked ? 'Unlock Entry' : 'Lock Entry');
         btn.locked = !locked;
 
-        var overrideBtn = this.down('#overrideBtn');
-        overrideBtn.setVisible(locked);
-
         this.togglePanelItems(locked);
     },
 
