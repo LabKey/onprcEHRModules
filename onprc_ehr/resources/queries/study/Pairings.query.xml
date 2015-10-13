@@ -16,7 +16,7 @@
                     </column>
                     <column columnName="lowestcage">
                         <columnTitle>Pair Id</columnTitle>
-                        <description>This is used to identifythe lowest cage number of the pair.  It is used to determine which animals in the group are considered part of the pair.</description>
+                        <description>This is used to identify the lowest cage number of the pair.  It is used to determine which animals in the group are considered part of the pair.</description>
                     </column>
                     <column columnName="pairid">
                         <columnTitle>Pair ID</columnTitle>
