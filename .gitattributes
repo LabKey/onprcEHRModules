@@ -43,6 +43,7 @@ onprc_ehr/resources/data/encounter_roles.tsv -text
 onprc_ehr/resources/data/encounter_types.tsv -text
 onprc_ehr/resources/data/fecal_smear_score.tsv -text
 onprc_ehr/resources/data/flag_categories.tsv -text
+onprc_ehr/resources/data/gender_codes.tsv -text
 onprc_ehr/resources/data/geographic_origins.tsv -text
 onprc_ehr/resources/data/hematology_method.tsv -text
 onprc_ehr/resources/data/hematology_tests.tsv -text
@@ -85,6 +86,7 @@ onprc_ehr/resources/data/sib_score.tsv -text
 onprc_ehr/resources/data/snomed.tsv -text
 onprc_ehr/resources/data/snomed_subset_codes.tsv -text
 onprc_ehr/resources/data/snomed_subsets.tsv -text
+onprc_ehr/resources/data/source.tsv -text
 onprc_ehr/resources/data/species.tsv -text
 onprc_ehr/resources/data/stool_score.tsv -text
 onprc_ehr/resources/data/tb_method.tsv -text

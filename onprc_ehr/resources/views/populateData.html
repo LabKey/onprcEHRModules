@@ -714,6 +714,17 @@ Ext4.onReady(function(){
             queryName: 'animalGroupReleaseType',
             pk: 'rowid'
         },{
+            label: 'Source',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'source',
+            pk: 'code'
+        },{ label: 'Gender Codes',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'gender_codes',
+            pk: 'code'
+        },{
             label: 'Procedures',
             doSkip: true,
             populateFn: 'populateProcedures',
