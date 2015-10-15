@@ -90,7 +90,7 @@ SELECT
 
 FROM ehr_lookups.connectedCages pc
 
-JOIN study.housing h ON (h.room = pc.room AND pc.cage = h.cage AND h.enddateTimeCoalesced >= now())
+JOIN study.housing h ON (h.room = pc.room AND pc.cage = h.cage AND h.isActive = true)
 
 --height flags
 LEFT JOIN (
