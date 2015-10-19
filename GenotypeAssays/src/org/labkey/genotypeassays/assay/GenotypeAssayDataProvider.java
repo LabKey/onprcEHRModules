@@ -3,7 +3,7 @@ package org.labkey.genotypeassays.assay;
 import org.json.JSONObject;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
-import org.labkey.api.ldk.NavItem;
+import org.labkey.api.laboratory.NavItem;
 import org.labkey.api.laboratory.SimpleSettingsItem;
 import org.labkey.api.laboratory.assay.AbstractAssayDataProvider;
 import org.labkey.api.laboratory.assay.DefaultAssayImportMethod;
