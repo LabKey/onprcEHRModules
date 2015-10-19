@@ -1167,8 +1167,6 @@ onprc_ehr/tools/excelTemplates/Labwork[!!-~]Testnames.xlsx -text
 onprc_ehr/tools/excelTemplates/PRIME[!!-~]Areas[!!-~]Combined.xlsx -text
 onprc_ehr/tools/excelTemplates/README.txt -text
 onprc_ehr/tools/excelTemplates/SNOMED[!!-~]Subset[!!-~]Codes.xlsx -text
-onprc_ehr/tools/installLabKey.sh -text
-onprc_ehr/tools/installLabKeyPipeline.sh -text
 onprc_ehr/tools/miscSqlScripts/deletedRecords.sql -text
 onprc_ehr/tools/miscSqlScripts/miscTables.sql -text
 onprc_ehr/tools/miscSqlScripts/qcStates.sql -text
