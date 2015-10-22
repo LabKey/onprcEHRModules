@@ -124,7 +124,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long total = ts.getRowCount();
         msg.append("<b>Behavior Cases:</b><p>");
         msg.append("There are " + total + " active behavior cases (this does not include cases closed for review).  ");
-        String url = getExecuteQueryUrl(c, "study", "cases", "Open Behavior Cases") + "&query.isActive=true";
+        String url = getExecuteQueryUrl(c, "study", "cases", "Open Behavior Cases") + "&query.isActive~eq=true";
         msg.append("<a href='" + url + "'>Click here to view them</a>");
         msg.append("<hr>");
     }

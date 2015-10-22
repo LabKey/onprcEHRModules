@@ -38,6 +38,7 @@
                 <include name="blast.module" />
                 <include name="variantdb.module" />
                 <include name="galaxyintegration.module" />
+                <include name="omerointegration.module" />
             </fileset>
         </copy>
     </target>
