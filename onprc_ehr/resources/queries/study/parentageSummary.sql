@@ -21,7 +21,7 @@ SELECT
   p.method
 
 FROM study.parentage p
-WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
+WHERE p.qcstate.publicdata = true and p.isActive = true
 
 UNION ALL
 
