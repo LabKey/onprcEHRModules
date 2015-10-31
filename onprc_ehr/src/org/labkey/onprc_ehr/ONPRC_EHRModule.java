@@ -68,6 +68,7 @@ import org.labkey.onprc_ehr.demographics.TBDemographicsProvider;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsEndDataSource;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
+import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
 import org.labkey.onprc_ehr.notification.BehaviorNotification;
 import org.labkey.onprc_ehr.notification.ClinicalAlertsNotification;
 import org.labkey.onprc_ehr.notification.ClinicalRoundsNotification;
@@ -383,6 +384,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource());
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsEndDataSource());
 
+        EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
     }
 
     @Override
