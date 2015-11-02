@@ -38,7 +38,7 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
 {
     public CagematesDemographicsProvider(Module module)
     {
-        super("study", "demographicsPaired", "cagemates", module);
+        super(module, "study", "demographicsPaired", "cagemates");
         _supportsQCState = false;
     }
 

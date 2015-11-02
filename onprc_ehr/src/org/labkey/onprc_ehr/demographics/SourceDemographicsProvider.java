@@ -33,7 +33,7 @@ public class SourceDemographicsProvider extends AbstractListDemographicsProvider
 {
     public SourceDemographicsProvider(Module module)
     {
-        super("study", "demographicsSource", "source", module);
+        super(module, "study", "demographicsSource", "source");
         _supportsQCState = false;
     }
 

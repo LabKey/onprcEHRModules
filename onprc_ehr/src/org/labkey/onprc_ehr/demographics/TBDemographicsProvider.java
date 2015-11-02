@@ -34,7 +34,7 @@ public class TBDemographicsProvider extends AbstractListDemographicsProvider
 {
     public TBDemographicsProvider(Module module)
     {
-        super("study", "demographicsMostRecentTBDate", "tb", module);
+        super(module, "study", "demographicsMostRecentTBDate", "tb");
         _supportsQCState = false;
     }
 

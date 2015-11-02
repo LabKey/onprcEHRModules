@@ -34,7 +34,7 @@ public class ActiveFlagsDemographicsProvider extends AbstractListDemographicsPro
 {
     public ActiveFlagsDemographicsProvider(Module module)
     {
-        super("study", "Animal Record Flags", "activeFlags", module);
+        super(module, "study", "Animal Record Flags", "activeFlags");
     }
 
     protected Set<FieldKey> getFieldKeys()

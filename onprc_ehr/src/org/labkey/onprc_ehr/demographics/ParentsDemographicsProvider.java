@@ -32,7 +32,7 @@ public class ParentsDemographicsProvider extends AbstractListDemographicsProvide
 {
     public ParentsDemographicsProvider(Module module)
     {
-        super("study", "parentageSummary", "parents", module);
+        super(module, "study", "parentageSummary", "parents");
         _supportsQCState = false;
     }
 

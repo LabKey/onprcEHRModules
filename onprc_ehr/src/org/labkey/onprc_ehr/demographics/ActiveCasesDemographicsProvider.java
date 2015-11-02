@@ -34,7 +34,7 @@ public class ActiveCasesDemographicsProvider extends AbstractListDemographicsPro
 {
     public ActiveCasesDemographicsProvider(Module module)
     {
-        super("study", "Cases", "activeCases", module);
+        super(module, "study", "Cases", "activeCases");
     }
 
     @Override

@@ -33,7 +33,7 @@ public class HousingDemographicsProvider extends AbstractListDemographicsProvide
 {
     public HousingDemographicsProvider(Module module)
     {
-        super("study", "demographicsCurrentLocation", "activeHousing", module);
+        super(module, "study", "demographicsCurrentLocation", "activeHousing");
         _supportsQCState = false;
     }
 

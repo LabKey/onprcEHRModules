@@ -34,7 +34,7 @@ public class AssignedVetDemographicsProvider extends AbstractListDemographicsPro
 {
     public AssignedVetDemographicsProvider(Module owner)
     {
-        super("study", "demographicsAssignedVet", "assignedVet", owner);
+        super(owner, "study", "demographicsAssignedVet", "assignedVet");
         _supportsQCState = false;
     }
 
