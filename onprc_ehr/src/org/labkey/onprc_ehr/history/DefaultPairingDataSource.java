@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.history;
 
 import org.apache.commons.lang3.StringUtils;
+import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.util.PageFlowUtil;
 
@@ -35,7 +36,7 @@ public class DefaultPairingDataSource extends AbstractEHRDataSource
     }
 
     @Override
-    protected String getHtml(Results rs, boolean redacted) throws SQLException
+    protected String getHtml(Container c, Results rs, boolean redacted) throws SQLException
     {
         StringBuilder sb = new StringBuilder();
 

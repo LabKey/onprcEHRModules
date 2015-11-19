@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.history;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.jetbrains.annotations.NotNull;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
@@ -57,7 +58,7 @@ public class DefaultSnomedDataSource extends AbstractEHRDataSource
     }
 
     @Override
-    protected List<HistoryRow> processRows(TableSelector ts, final boolean redacted, final Collection<ColumnInfo> cols)
+    protected List<HistoryRow> processRows(Container c, TableSelector ts, final boolean redacted, final Collection<ColumnInfo> cols)
     {
         final Map<String, List<Map<String, Object>>> idMap = new HashMap<>();
         ts.forEach(new Selector.ForEachBlock<ResultSet>()
@@ -171,13 +172,14 @@ public class DefaultSnomedDataSource extends AbstractEHRDataSource
     }
 
     @Override
-    protected String getHtml(Results rs, boolean redacted) throws SQLException
+    protected String getHtml(Container c, Results rs, boolean redacted) throws SQLException
     {
         throw new UnsupportedOperationException("This should not be called");
     }
 
     @Override
-    protected List<HistoryRow> getRows(Container c, User u, SimpleFilter filter, boolean redacted)
+    protected @NotNull
+    List<HistoryRow> getRows(Container c, User u, SimpleFilter filter, boolean redacted)
     {
         filter.addCondition(FieldKey.fromString("recordid"), null, CompareType.ISBLANK);
 
