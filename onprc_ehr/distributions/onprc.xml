@@ -39,6 +39,7 @@
                 <include name="variantdb.module" />
                 <include name="galaxyintegration.module" />
                 <include name="omerointegration.module" />
+                <include name="htcondorconnector.module" />
             </fileset>
         </copy>
     </target>
