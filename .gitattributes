@@ -1121,7 +1121,6 @@ onprc_ehr/src/org/labkey/onprc_ehr/demographics/SourceDemographicsProvider.java 
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/TBDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETL.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditProvider.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditViewFactory.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/AbstractEHRDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultAnimalGroupsDataSource.java -text

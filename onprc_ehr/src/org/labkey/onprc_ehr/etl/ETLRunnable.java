@@ -161,7 +161,7 @@ public class ETLRunnable implements Runnable
             try (ViewContext.StackResetter ignored = ViewContext.pushMockViewContext(user, container, new ActionURL("onprc_ehr", "fake.view", container)))
             {
                 QueryService.get().setEnvironment(QueryService.Environment.USER, user);
-                ETLAuditViewFactory.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0, 0, 0);
+                ETLAuditProvider.addAuditEntry(container, user, "START", "Starting EHR synchronization", 0, 0, 0, 0);
 
                 for (String datasetName : studyQueries.keySet())
                 {
@@ -247,7 +247,7 @@ public class ETLRunnable implements Runnable
 
                     log.info("End incremental sync run.");
 
-                    ETLAuditViewFactory.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, ehrLookupsErrors, datasetErrors, billingErrors);
+                    ETLAuditProvider.addAuditEntry(container, user, "FINISH", "Finishing EHR synchronization", ehrErrors, ehrLookupsErrors, datasetErrors, billingErrors);
                 }
                 catch (BatchValidationException e)
                 {
@@ -263,7 +263,7 @@ public class ETLRunnable implements Runnable
                 // to smooth over any transient issues like the remote datasource
                 // being temporarily unavailable.
                 log.error("Fatal incremental sync error", x);
-                ETLAuditViewFactory.addAuditEntry(container, user, "FATAL ERROR", "Fatal error during EHR synchronization", 0, 0, 0, 0);
+                ETLAuditProvider.addAuditEntry(container, user, "FATAL ERROR", "Fatal error during EHR synchronization", 0, 0, 0, 0);
 
             }
             finally
