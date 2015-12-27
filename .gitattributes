@@ -456,7 +456,6 @@ onprc_billing/src/org/labkey/onprc_billing/pipeline/BillingPipelineJobSupport.ja
 onprc_billing/src/org/labkey/onprc_billing/pipeline/BillingPipelineProvider.java -text
 onprc_billing/src/org/labkey/onprc_billing/pipeline/BillingTask.java -text
 onprc_billing/src/org/labkey/onprc_billing/query/BillingAuditProvider.java -text
-onprc_billing/src/org/labkey/onprc_billing/query/BillingAuditViewFactory.java -text
 onprc_billing/src/org/labkey/onprc_billing/query/BillingTriggerHelper.java -text
 onprc_billing/src/org/labkey/onprc_billing/query/ONPRC_EHRBillingUserSchema.java -text
 onprc_billing/src/org/labkey/onprc_billing/security/ONPRCAliasEditorPermission.java -text
@@ -600,7 +599,6 @@ sla/src/org/labkey/sla/dataentry/CensusFormSection.java -text
 sla/src/org/labkey/sla/dataentry/CensusFormType.java -text
 sla/src/org/labkey/sla/etl/ETL.java -text
 sla/src/org/labkey/sla/etl/ETLAuditProvider.java -text
-sla/src/org/labkey/sla/etl/ETLAuditViewFactory.java -text
 sla/src/org/labkey/sla/etl/ETLRunnable.java -text
 sla/src/org/labkey/sla/security/SLAEntryPermission.java -text
 sla/src/org/labkey/sla/security/SLAEntryRole.java -text
