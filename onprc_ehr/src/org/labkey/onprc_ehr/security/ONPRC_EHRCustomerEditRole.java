@@ -25,28 +25,24 @@ import org.labkey.api.security.permissions.DeletePermission;
 import org.labkey.api.security.permissions.InsertPermission;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.security.permissions.UpdatePermission;
+import org.labkey.api.security.roles.AbstractModuleScopedRole;
 import org.labkey.api.security.roles.AbstractRole;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
 /**
 
  */
-public class ONPRC_EHRCustomerEditRole extends AbstractRole
+public class ONPRC_EHRCustomerEditRole extends AbstractModuleScopedRole
 {
     public ONPRC_EHRCustomerEditRole()
     {
         super("ONPRC EHR Customer Editor", "This role is to track which users can edit the table onprc_ehr.customers.",
+                ONPRC_EHRModule.class,
                 ReadPermission.class,
                 InsertPermission.class,
                 UpdatePermission.class,
                 DeletePermission.class,
                 ONPRC_EHRCustomerEditPermission.class
         );
-    }
-
-    @Override
-    public boolean isApplicable(SecurityPolicy policy, SecurableResource resource)
-    {
-        return resource instanceof Container ? ((Container)resource).getActiveModules().contains(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)) : false;
     }
 }
