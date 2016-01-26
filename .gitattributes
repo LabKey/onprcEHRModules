@@ -5,6 +5,11 @@ GeneticsCore/distributions/prime-seq-modules.xml -text
 GeneticsCore/module.properties -text
 GeneticsCore/resources/external/amplicon_standard_curve.R -text
 GeneticsCore/resources/module.xml -text
+GeneticsCore/resources/queries/sequenceanalysis/alignment_summary_by_lineage/.qview.xml -text
+GeneticsCore/resources/queries/sequenceanalysis/alignment_summary_by_lineage/With[!!-~]Haplotype[!!-~]Matches.qview.xml -text
+GeneticsCore/resources/queries/sequenceanalysis/alignment_summary_grouped/.qview.xml -text
+GeneticsCore/resources/queries/sequenceanalysis/alignment_summary_grouped/With[!!-~]Haplotype[!!-~]Matches.qview.xml -text
+GeneticsCore/resources/queries/sequenceanalysis/sequence_analyses/.qview.xml -text
 GeneticsCore/resources/queries/sequenceanalysis/sequence_analyses/SBT[!!-~]Information.qview.xml -text
 GeneticsCore/resources/queries/study/dnaFlagSummary.query.xml -text
 GeneticsCore/resources/queries/study/dnaFlagSummary.sql -text
@@ -24,6 +29,7 @@ GeneticsCore/resources/views/sbtReview.html -text
 GeneticsCore/resources/views/sbtReview.view.xml -text
 GeneticsCore/resources/web/geneticscore/buttons.js -text
 GeneticsCore/resources/web/geneticscore/window/ChangeReadsetStatusWindow.js -text
+GeneticsCore/resources/web/geneticscore/window/EditAlignmentsWindow.js -text
 GeneticsCore/resources/web/geneticscore/window/ManageFlagsWindow.js -text
 GeneticsCore/resources/web/geneticscore/window/PublishResultsWindow.js -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreController.java -text
@@ -518,6 +524,8 @@ onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Unified.query.xml -tex
 onprc_reports/resources/queries/sequenceanalysis/MHC_Data_Unified.sql -text
 onprc_reports/resources/queries/sequenceanalysis/mhcSamples.query.xml -text
 onprc_reports/resources/queries/sequenceanalysis/mhcSamples.sql -text
+onprc_reports/resources/queries/study/demographicsDNABank.query.xml -text
+onprc_reports/resources/queries/study/demographicsDNABank.sql -text
 onprc_reports/resources/queries/study/demographicsMHCTests.sql -text
 onprc_reports/resources/queries/study/processingBloodDraws.query.xml -text
 onprc_reports/resources/queries/study/processingBloodDraws.sql -text
@@ -526,6 +534,8 @@ onprc_reports/resources/queries/study/processingGeneticsBloodDraws.query.xml -te
 onprc_reports/resources/queries/study/processingGeneticsBloodDraws.sql -text
 onprc_reports/resources/queries/study/processingGeneticsBloodDraws/.qview.xml -text
 onprc_reports/resources/queries/study/processingGeneticsBloodDraws/Need[!!-~]Blood[!!-~]Draws.qview.xml -text
+onprc_reports/resources/queries/study/samples.query.xml -text
+onprc_reports/resources/queries/study/samples.sql -text
 onprc_reports/resources/schemas/DNABank.template.xml -text
 onprc_reports/resources/schemas/MHCResults.template.xml -text
 onprc_reports/resources/schemas/ParentageResults.template.xml -text
