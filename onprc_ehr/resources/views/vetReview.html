@@ -60,7 +60,7 @@
                                             filterArray: filterArray,
                                             scope: this,
                                             success: function(dr){
-                                                var itemWidth = Ext4.get('dataregion_'+dr.id).getSize().width + 150;
+                                                var itemWidth = Ext4.get(dr.domId).getSize().width + 150;
                                                 this.doResize(itemWidth);
                                             }
                                         }
