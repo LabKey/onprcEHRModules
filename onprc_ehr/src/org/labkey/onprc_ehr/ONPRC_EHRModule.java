@@ -39,7 +39,6 @@ import org.labkey.api.query.QuerySchema;
 import org.labkey.api.resource.Resource;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.settings.AppProps;
-import org.labkey.api.util.ReturnURLString;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.util.UnexpectedException;
 import org.labkey.api.view.template.ClientDependency;
