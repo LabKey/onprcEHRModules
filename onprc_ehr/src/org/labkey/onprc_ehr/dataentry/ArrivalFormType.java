@@ -19,18 +19,22 @@ import org.json.JSONObject;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * User: bimber
  * Date: 7/29/13
  * Time: 5:03 PM
  */
-public class ArrivalFormType extends UnsaveableTask
+public class ArrivalFormType extends TaskForm
 {
     public static final String NAME = "arrival";
 
@@ -46,9 +50,9 @@ public class ArrivalFormType extends UnsaveableTask
                 new WeightFormSection()
         ));
 
-        setJavascriptClass("ONPRC_EHR.panel.NewAnimalDataEntryPanel");
+        //setJavascriptClass("ONPRC_EHR.panel.NewAnimalDataEntryPanel");
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/NewAnimalDataEntryPanel.js"));
+        //addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/NewAnimalDataEntryPanel.js"));
     }
 
     @Override
@@ -61,7 +65,20 @@ public class ArrivalFormType extends UnsaveableTask
         ret.put("totalTransactionWarningThrehsold", 60);
         ret.put("perRowValidationWarningThrehsold", 6);
         ret.put("totalValidationTransactionWarningThrehsold", 60);
-
         return ret;
     }
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+
+        List<String> defaultButtons = new ArrayList<String>();
+
+        defaultButtons.add("BIRTHARRIVALFINAL");
+        defaultButtons.add("BIRTHARRIVALREVIEW");
+
+        return defaultButtons;
+    }
+
 }

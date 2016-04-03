@@ -7,6 +7,7 @@ SELECT
 b.Id,
 b.date,
 b.method,
+b.chargetype,       ---Added 9-14-2015 Blasa
 group_concat(distinct b.remark, chr(10)) as remark,
 group_concat(distinct b.runRemark, chr(10)) as runRemark,
 b.testId,
@@ -22,6 +23,7 @@ SELECT
   --NOTE: removed to allow legacy runs to group into 1 row.  since we already group on Id/Date/Test, this should be ok
   --coalesce(b.taskId, b.runId) as groupingId,
   b.runid.method as method,
+  b.runid.chargetype as chargetype,    ---Added 9-14-2015 Blasa
   b.remark,
   b.runId.remark as runRemark,
   b.resultoorindicator,
@@ -35,7 +37,7 @@ WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 ) b
 
 --Updated 6-3-2015 Blasa
-GROUP BY b.runid,b.id, b.date, b.testId, b.method
+GROUP BY b.runid,b.id, b.date, b.testId, b.method, b.chargetype
 
 
 PIVOT results BY testId IN

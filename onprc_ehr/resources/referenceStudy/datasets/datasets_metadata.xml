@@ -79,6 +79,9 @@
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
             </column>
+            <column columnName="servicerequest">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="tissue">
                 <datatype>varchar</datatype>
             </column>

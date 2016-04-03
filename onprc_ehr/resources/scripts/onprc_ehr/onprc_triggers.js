@@ -104,6 +104,17 @@ exports.init = function(EHR){
             }
         }
     });
+      //Added 1-12-2016  Blasa  Menses TMB Records
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Clinical Observations', function(helper, scriptErrors, row, oldRow){
+
+        if (row.Id && row.category == 'Menses' ){
+            var msg = triggerHelper.sendMenseNotifications(row.Id);
+            if (msg){
+                EHR.Server.Utils.addError(scriptErrors, 'category', msg, 'ERROR');
+            }
+        }
+
+    });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Animal Record Flags', function(helper, scriptErrors, row, oldRow){
         if (row.flag && row.Id && !row.enddate){
@@ -111,8 +122,20 @@ exports.init = function(EHR){
             if (msg){
                 EHR.Server.Utils.addError(scriptErrors, 'flag', msg, 'ERROR');
             }
+
         }
     });
+
+    //Added 9-2-2015  Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study',  'Animal Record Flags', function(helper, scriptErrors, row, oldRow){
+
+    if (row.Id ){
+        var msg = triggerHelper.sendCullListNotifications(row.Id,row.date, row.flag);
+        if (msg){
+            EHR.Server.Utils.addError(scriptErrors, 'category', msg, 'ERROR');
+        }
+    }
+});
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Assignment', function(helper, scriptErrors, row, oldRow){
         //check number of allowed animals at assign/approve time.  use different behavior than core EHR

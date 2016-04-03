@@ -3,6 +3,7 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="chemPivot" tableDbType="TABLE">
                 <tableTitle>Chemistry Results</tableTitle>
+
                 <columns>
                     <column columnName="resultOORIndicator">
                         <isHidden>true</isHidden>
@@ -16,6 +17,9 @@
                             <fkTable>animal</fkTable>
                             <fkColumnName>Id</fkColumnName>
                         </fk>
+                    </column>
+                    <column columnName="chargetype">
+                        <columnTitle>Testing Performed By</columnTitle>
                     </column>
                 </columns>
             </table>

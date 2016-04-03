@@ -30,7 +30,7 @@
                         </fk>
                     </column>
                     <column columnName="chargetype">
-                        <columnTitle>Charge Unit</columnTitle>
+                        <columnTitle>Testing Performed By</columnTitle>
                     </column>
                 </columns>
             </table>

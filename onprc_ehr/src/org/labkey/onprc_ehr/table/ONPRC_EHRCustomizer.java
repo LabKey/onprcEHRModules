@@ -22,7 +22,6 @@ import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ConvertHelper;
 import org.labkey.api.data.DataColumn;
-import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.DisplayColumnFactory;
 import org.labkey.api.data.JdbcType;
@@ -33,6 +32,7 @@ import org.labkey.api.data.WrappedColumn;
 import org.labkey.api.ehr.EHRQCState;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
+import org.labkey.api.exp.api.StorageProvisioner;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
 import org.labkey.api.ldk.LDKService;
@@ -377,6 +377,16 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 }
                 investigator.setLabel("Investigator");
             }
+        }
+
+        ColumnInfo financialAnalyst = ti.getColumn("financialanalyst");
+        if (financialAnalyst != null)
+        {
+            UserSchema us = getUserSchema(ti, "onprc_billing_public");
+            if (us != null){
+                financialAnalyst.setFk(new QueryForeignKey(us, null, "fiscalAuthorities", "rowid", "lastName"));
+            }
+            financialAnalyst.setLabel("Financial Authority");
         }
 
         ColumnInfo fiscalAuthority = ti.getColumn("fiscalAuthority");
@@ -1819,9 +1829,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         }
         else
         {
-            String tableName = ds.getDomain().getStorageTableName();
-            DbSchema dbSchema = StudyService.get().getDatasetSchema();
-            return dbSchema.getTable(tableName);
+            return StorageProvisioner.createTableInfo(ds.getDomain());
         }
     }
 
@@ -1835,8 +1843,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 Domain domain = ((FilteredTable)targetTable).getDomain();
                 if (domain != null)
                 {
-                    String tableName = domain.getStorageTableName();
-                    realTable = StudyService.get().getDatasetSchema().getTable(tableName);
+                    realTable = StorageProvisioner.createTableInfo(domain);
                 }
             }
             else if (targetTable.getSchema() != null)

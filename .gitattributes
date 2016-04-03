@@ -245,6 +245,7 @@ onprc_ehr/resources/queries/ehr_lookups/roomsByInvestigator/.qview.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomsByProject.query.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomsByProject.sql -text
 onprc_ehr/resources/queries/ehr_lookups/species/.qview.xml -text
+onprc_ehr/resources/queries/onprc_ehr/Tumescence_Score.sql -text
 onprc_ehr/resources/queries/onprc_ehr/customers.js -text
 onprc_ehr/resources/queries/onprc_ehr/customers.query.xml -text
 onprc_ehr/resources/queries/onprc_ehr/customers/.qview.xml -text
@@ -946,11 +947,17 @@ onprc_ehr/resources/web/onprc_ehr/data/sources/Processing.js -text
 onprc_ehr/resources/web/onprc_ehr/form/field/SnomedTreatmentCombo.js -text
 onprc_ehr/resources/web/onprc_ehr/grid/DragDropGridPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/ASB_Services.js -text
+onprc_ehr/resources/web/onprc_ehr/model/sources/Birth_Entry.js -text
+onprc_ehr/resources/web/onprc_ehr/model/sources/ClinicalProcedures.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/Clinical_Services.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/Colony_Services.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/iStat.js -text
+onprc_ehr/resources/web/onprc_ehr/model/sources/labworkPanel.js -text
+onprc_ehr/resources/web/onprc_ehr/model/sources/labworkTestPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/onprcReports.js -text
+onprc_ehr/resources/web/onprc_ehr/panel/AddScheduledTreatmentPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/AnimalGroupDetailsPanel.js -text
+onprc_ehr/resources/web/onprc_ehr/panel/ApplyFormTemplatePanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/ArrivalInstructionsPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/AssignmentFilterType.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/BirthInstructionsPanel.js -text
@@ -985,6 +992,7 @@ onprc_ehr/resources/web/onprc_ehr/window/BulkStrokeRoundsWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeBloodStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeEncounterStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeLabworkStatusWindow.js -text
+onprc_ehr/resources/web/onprc_ehr/window/CopyFromRunsTemplateWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/CopyTissuesWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/CreateProjectWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/IStatImportWindow.js -text
@@ -1074,6 +1082,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkRequestFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LabworkRequestInstructionsFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/LockAnimalsFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MatingFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MedSignoffFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MedicationsQueryFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MensFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MensFormType.java -text
@@ -1125,6 +1134,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/AbstractEHRDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultAnimalGroupsDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultAnimalGroupsEndDataSource.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultAnimalRecordFlagDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultEnrichmentDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultPairingDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultSnomedDataSource.java -text
@@ -1138,9 +1148,11 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsLiteNotification.jav
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyAlertsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyMgmtNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ComplianceNotification.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/notification/CullListNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/DataValidationNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ETLNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/LabTestScheduleNotifications.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/notification/MensesTMBNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/RequestAdminNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/RoutineClinicalTestsNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/TMBNotification.java -text

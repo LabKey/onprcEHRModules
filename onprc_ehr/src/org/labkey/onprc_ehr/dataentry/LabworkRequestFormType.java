@@ -45,6 +45,14 @@ public class LabworkRequestFormType extends RequestForm
                 new ClinpathRunsFormSection(true)
         ));
 
+        for (FormSection s : getFormSections())
+        {
+                 s.addConfigSource("LabworkPanel");
+
+        }
+            //Added 2-8-2016 Blasa
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/labworkPanel.js"));
+
         addClientDependency(ClientDependency.fromModuleName("MergeSync"));
         addClientDependency(ClientDependency.fromPath("onprc_ehr/panel/LabworkRequestDataEntryPanel.js"));
         setJavascriptClass("ONPRC_EHR.panel.LabworkRequestDataEntryPanel");

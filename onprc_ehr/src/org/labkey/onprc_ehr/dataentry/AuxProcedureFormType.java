@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
@@ -38,6 +39,10 @@ public class AuxProcedureFormType extends TaskForm
     public AuxProcedureFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, NAME, "Research", Arrays.<FormSection>asList(
+                //Added 2-24-2016  Blasa
+            new NonStoreFormSection("Apply Form Template", "Apply Form Template", "onprc-applyformtemplatepanel", Arrays.asList(ClientDependency.fromPath("/onprc_ehr/panel/ApplyFormTemplatePanel.js"))),
+
+
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
           //  new SimpleGridPanel("study", "encounters", "Procedures" ),
@@ -56,6 +61,16 @@ public class AuxProcedureFormType extends TaskForm
         addClientDependency(ClientDependency.fromPath("ehr/model/sources/ResearchProcedures.js"));
         addClientDependency(ClientDependency.fromPath("onprc_ehr/window/BulkBloodDrawWindow.js"));
         setDisplayReviewRequired(true);
+    }
+    //Added 2-24-2016  Blasa
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+
+        ret.add("APPLYFORMTEMPLATE");
+
+        return ret;
     }
 
     @Override

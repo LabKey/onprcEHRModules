@@ -56,13 +56,21 @@ public class LabworkFormType extends TaskForm
         for (FormSection s : getFormSections())
         {
             s.addConfigSource("Labwork");
+            s.addConfigSource("LabworkPanel");
+            s.addConfigSource("LabworkTestPanel");
         }
+             //Added 2-2-2016  Blasa
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/CopyFromRunsTemplateWindow.js"));
+            //Added 2-5-2016 Blasa
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/labworkTestPanel.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/labworkPanel.js"));
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/buttons/labworkButtons.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/labworkButtons.js"));
+
         //Added 3-25-2015 Blasa
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/BulkSerologyVirologyWindow.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/BulkSerologyVirologyWindow.js"));
         //Added 4-6-2015 Blasa
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/BulkSerologyScanWindow.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/BulkSerologyScanWindow.js"));
     }
 
     @Override

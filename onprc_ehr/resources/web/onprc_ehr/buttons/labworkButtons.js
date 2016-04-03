@@ -7,7 +7,7 @@ EHR.DataEntryUtils.registerGridButton('COPYFROMCLINPATHRUNS', function(config){
     return Ext4.Object.merge({
         text: 'Copy From Above',
         xtype: 'button',
-        tooltip: 'Click to copy records from the clinpath runs section',
+        tooltip: 'Click to copy records from the Panel/Services section',
         handler: function(btn){
             var grid = btn.up('grid');
             LDK.Assert.assertNotEmpty('Unable to find grid in COPYFROMCLINPATHRUNS button', grid);
@@ -18,8 +18,9 @@ EHR.DataEntryUtils.registerGridButton('COPYFROMCLINPATHRUNS', function(config){
             var store = panel.storeCollection.getClientStoreByName('Clinpath Runs');
             LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in COPYFROMCLINPATHRUNS button', store);
 
+            //Modified 2-2-2016  Blasa
             if (store){
-                Ext4.create('EHR.window.CopyFromRunsWindow', {
+                Ext4.create('ONPRC_EHR.window.CopyFromRunsTemplateWindow', {
                     targetGrid: grid,
                     dataset: grid.title,
                     runsStore: store

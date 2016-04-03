@@ -61,6 +61,10 @@
             if (!foundCages){
                 Ext4.Msg.alert('No Cages', 'No cages found for the selected rooms');
             }
+            else {
+                // Hack to improve printing in Chrome
+                if (Ext4.isChrome) { Ext4.get(webpart.wrapperDivId).setStyle({zoom: '150%'}); };
+            }
 
         }, this);
     });

@@ -121,7 +121,9 @@ Ext4.onReady(function(){
                 style: 'font-weight: bold;'
             },
             items: [
-                {name: 'Enter Data', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/enterData.view'}
+                {name: 'Enter Data / Task Review', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/enterData.view'},
+
+                {name: 'Post Op Med Verification', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=medsignoff'}
             ]
         },{
             header: 'Service Requests',

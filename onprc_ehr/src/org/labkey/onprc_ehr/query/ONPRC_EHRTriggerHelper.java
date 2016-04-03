@@ -39,7 +39,10 @@ import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.EHRDemographicsService;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.demographics.AnimalRecord;
+import org.labkey.api.exp.api.StorageProvisioner;
 import org.labkey.api.exp.property.Domain;
+import org.labkey.api.ldk.notification.NotificationService;
+import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.query.BatchValidationException;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
@@ -47,19 +50,28 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
+import org.labkey.api.security.UserPrincipal;
+import org.labkey.api.settings.AppProps;
 import org.labkey.api.study.DatasetTable;
 import org.labkey.api.study.StudyService;
 import org.labkey.api.util.GUID;
+import org.labkey.api.util.MailHelper;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.Pair;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
+import org.labkey.onprc_ehr.ONPRC_EHRModule;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
+import org.labkey.onprc_ehr.notification.CullListNotification;
+import org.labkey.onprc_ehr.notification.MensesTMBNotification;
 
+import javax.mail.Address;
+import javax.mail.Message;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -180,18 +192,34 @@ public class ONPRC_EHRTriggerHelper
             {
                 current = ((Number)current).doubleValue();
             }
+            else if (current instanceof String)
+            {
+                current = StringUtils.trimToNull((String)current);
+            }
 
             Object old = oldRow.get(field);
             if (old instanceof Number)
             {
                 old = ((Number)old).doubleValue();
             }
+            else if (old instanceof String)
+            {
+                old = StringUtils.trimToNull((String)old);
+            }
 
-            if ((current == null && old != null ) || (current != null && old == null ) || (current != null && old != null && !current.equals(old)))
+            if ((current == null && old != null ) || (current != null && old != null && !current.equals(old)))
             {
                 _log.info("change: " + field);
                 hasChanged = true;
             }
+            // filling in units after the fact has been causing some unnecessary splitting of records.
+            // it is unlikely any record w/ a previous null value for any of the fields being tested would represent a genuine need to split records.
+            // if code, frequency, route, etc were originally null and then filled out, we're not contradicting previous information.  most of these can never be null anyway.
+            //else if (current != null && old == null)
+            //{
+            //    _log.info("change: " + field);
+            //    hasChanged = true;
+            //}
         }
 
         if (hasChanged && hasTreatmentBeenGiven((Date)oldRow.get("date"), (Integer)oldRow.get("frequency")) && !hasTerminated((Date)oldRow.get("enddate")))
@@ -209,7 +237,7 @@ public class ONPRC_EHRTriggerHelper
     {
         return !(enddate == null || enddate.after(new Date()));
     }
-    
+
     private List<Integer> getEarliestFrequencyHours(int frequency)
     {
         if (!_cachedFrequencyTimes.containsKey(frequency))
@@ -302,9 +330,7 @@ public class ONPRC_EHRTriggerHelper
                 Domain domain = ((FilteredTable)targetTable).getDomain();
                 if (domain != null)
                 {
-                    String tableName = domain.getStorageTableName();
-                    dbSchema = StudyService.get().getDatasetSchema();
-                    realTable = dbSchema.getTable(tableName);
+                    realTable = StorageProvisioner.createTableInfo(domain);
                 }
             }
             else if (targetTable.getSchema() != null)
@@ -327,7 +353,7 @@ public class ONPRC_EHRTriggerHelper
     {
         if (frequency == null)
             return true;
-        
+
         if (!_cachedFrequencies.containsKey(frequency))
         {
             TableInfo ti = getTableInfo("ehr_lookups", "treatment_frequency");
@@ -1835,4 +1861,171 @@ public class ONPRC_EHRTriggerHelper
 
         return null;
     }
+
+    //Added 1-12-2016 Blasa
+    public void sendMenseNotifications(String id)
+    {
+        boolean _isType207 = false;
+
+        if (!NotificationService.get().isServiceEnabled())
+        {
+            _log.info("notification service is not enabled, will not send Menses notification.");
+            return;
+        }
+
+        String subject = "Menses TMB Notification: ";
+
+        Set<UserPrincipal> recipients = NotificationService.get().getRecipients(new MensesTMBNotification(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)), getContainer());
+
+        if (recipients.size() == 0)
+        {
+            _log.warn("No recipients, Menses TMB notification");
+            return;
+        }
+
+        final StringBuilder html = new StringBuilder();
+
+        html.append("<b>Recently Updated TMB Menses Observations:</b><p>");
+        TableInfo ti = getTableInfo("study", "clinical_observations");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("id"), id);
+        filter.addCondition(FieldKey.fromString("category"), "Menses", CompareType.EQUAL);   // Menses
+
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("category"), filter, null);  // Menses
+        List<String> ret = ts.getArrayList(String.class);
+
+        if (ret != null && !ret.isEmpty())
+        {
+            TableInfo t2 = getTableInfo("study", "assignment");
+            SimpleFilter filters = new SimpleFilter(FieldKey.fromString("id"), id);
+            filters.addCondition(FieldKey.fromString("project"), 559, CompareType.EQUAL);   // Breeders
+            filters.addCondition(FieldKey.fromString("enddateCoalesced"), new Date(), CompareType.DATE_GTE);
+            TableSelector ts2 = new TableSelector(t2, PageFlowUtil.set("project"), filters, null);  //
+            List<Integer> ret2 = ts2.getArrayList(Integer.class);
+
+            if (ret2 != null && !ret2.isEmpty())
+            {
+                for (Integer jcode : ret2)
+                {
+                    //Iacuc 0300 Project Id 559
+                    if (jcode == 559)
+                    {
+                        html.append(id + "<p> ");
+
+                        //Provide url link to allow users to view Menses report
+                        html.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + "/ehr/ONPRC/EHR/animalHistory.view#subjects:" + id + "&inputType:singleSubject&showReport:1&activeReport:menses" + "'>");
+                        html.append("Click here to view Menses Report</a>.  <p>");
+                        sendMessage(subject, html.toString(), recipients);
+                    }
+                    break;
+                }
+            }
+
+        }
+    }
+
+
+
+    //Added 9-2-2015 Blasa
+    public void sendCullListNotifications(String id, String date, String flag)
+    {
+        boolean _isType207 = false;
+
+        if (!NotificationService.get().isServiceEnabled())
+        {
+            _log.info("notification service is not enabled, will not send Cull notification.");
+            return;
+        }
+
+        String subject = "Cull/UnderUtilized Notification: ";
+
+        Set<UserPrincipal> recipients = NotificationService.get().getRecipients(new CullListNotification(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)), getContainer());
+
+        if (recipients.size() == 0)
+        {
+            _log.warn("No recipients, Cull notification");
+            return;
+        }
+
+        final StringBuilder html = new StringBuilder();
+
+        TableInfo ti = getTableInfo("ehr_lookups", "flag_values");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("objectid"), flag);
+        filter.addCondition(FieldKey.fromString("category"), "Type207", CompareType.EQUAL);   // Type207
+
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("code"), filter, null);  // 908 or 909
+        List<Integer> ret = ts.getArrayList(Integer.class);
+        if (ret != null && !ret.isEmpty())
+        {
+            for (Integer scode : ret)
+            {
+                //Underutilized Animals code 908
+                if (scode == 908)
+                {
+                    html.append("<b>Recently Updated Underutilized Animals:</b><p>");
+                    html.append(id + "<p> ");
+                    html.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + "/ehr/ONPRC/EHR/participantView.view?participantId=" + id + "&activeReport:activeFlags#subjects:" + id + "&inputType:singleSubject&showReport:1&activeReport:activeFlags" + "'>");
+
+                    html.append("Click here to view this animal's Active Flag's history</a>.  <p>");
+
+                }
+                //Cull Animals code 909
+                if (scode == 909)
+                {
+                    html.append("<b>Recently Updated Cull Animals:</b><p>");
+                    html.append(id + "<p> ");
+                    html.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + "/ehr/ONPRC/EHR/participantView.view?participantId=" + id + "&activeReport:activeFlags#subjects:" + id + "&inputType:singleSubject&showReport:1&activeReport:activeFlags" + "'>");
+
+                    html.append("Click here to view this animal's Active Flag's history</a>.  <p>");
+
+                }
+
+                //Provide url link to allow users to edit Cull listings
+                html.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + "/project/ONPRC/EHR/begin.view?pageId=Frequency%20Used%20Reports" + "'>");
+                html.append("Click here to view and Edit Cull/Underutilzed Report</a>.  <p>");
+                sendMessage(subject, html.toString(), recipients);
+                break;
+            }
+        }
+
+    }
+        //Added 9-2-2015  Blasa
+    private void sendMessage(String subject, String bodyHtml, Collection<UserPrincipal> recipients)
+    {
+        try
+        {
+            MailHelper.MultipartMessage msg = MailHelper.createMultipartMessage();
+            msg.setFrom(NotificationService.get().getReturnEmail(getContainer()));
+            msg.setSubject(subject);
+
+            List<String> emails = new ArrayList<>();
+            for (UserPrincipal u : recipients)
+            {
+                List<Address> addresses = NotificationService.get().getEmailsForPrincipal(u);
+                if (addresses != null)
+                {
+                    for (Address a : addresses)
+                    {
+                        if (a.toString() != null)
+                            emails.add(a.toString());
+                    }
+                }
+            }
+
+            if (emails.size() == 0)
+            {
+                _log.warn("No emails, unable to send EHR trigger script email");
+                return;
+            }
+
+            msg.setRecipients(Message.RecipientType.TO, StringUtils.join(emails, ","));
+            msg.setEncodedHtmlContent(bodyHtml);
+
+            MailHelper.send(msg, getUser(), getContainer());
+        }
+        catch (Exception e)
+        {
+            _log.error("Unable to send email from EHR trigger script", e);
+        }
+    }
+
 }

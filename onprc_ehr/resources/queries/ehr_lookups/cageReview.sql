@@ -98,7 +98,7 @@ LEFT JOIN (
     f.id,
     min(f.flag.value) as heightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.flag.category = 'Cage Exemptions' and (f.flag.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_HEIGHT_EXEMPTION_FLAG') OR f.flag.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_MEDICAL_EXEMPTION_FLAG'))
+  WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.value = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.CAGE_HEIGHT_EXEMPTION_FLAG') OR f.flag.value = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.CAGE_MEDICAL_EXEMPTION_FLAG'))
   GROUP BY f.Id
 ) f on (f.Id = h.Id)
 
@@ -108,7 +108,7 @@ LEFT JOIN (
     f.id,
     min(f.flag.value) as weightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.flag.category = 'Cage Exemptions' and (f.flag.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_WEIGHT_EXEMPTION_FLAG') or f.flag.value = javaConstant('org.labkey.ehr.EHRManager.CAGE_MEDICAL_EXEMPTION_FLAG'))
+  WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.value = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.CAGE_WEIGHT_EXEMPTION_FLAG') or f.flag.value = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.CAGE_MEDICAL_EXEMPTION_FLAG'))
   GROUP BY f.Id
 ) wf on (wf.Id = h.Id)
 

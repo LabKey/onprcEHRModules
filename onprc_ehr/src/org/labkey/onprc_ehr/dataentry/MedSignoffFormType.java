@@ -28,28 +28,27 @@ import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * User: bimber
  * Date: 7/29/13
  * Time: 5:03 PM
  */
-public class TreatmentsFormType extends TaskForm
+public class MedSignoffFormType extends TaskForm
 {
-    public static final String NAME = "treatments";
-    public static final String LABEL = "Medications/Diet";
+    public static final String NAME = "medsignoff";
+    public static final String LABEL = "Post Op Meds Sign Off";
 
-    public TreatmentsFormType(DataEntryFormContext ctx, Module owner)
+    public MedSignoffFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, LABEL, "Clinical", Arrays.<FormSection>asList(
             new TaskFormSection(),
                  //Added 2-19-2016  Blasa
-           // new NonStoreFormSection("Treatment Template Helper", "Treatment Template Helper", "onprc_AddScheduledTreatmentPanel", Arrays.asList(ClientDependency.fromPath("/onprc_ehr/panel/AddScheduledTreatmentPanel.js"))),
+            new NonStoreFormSection("Treatment Template Helper", "Treatment Template Helper", "onprc_AddScheduledTreatmentPanel", Arrays.asList(ClientDependency.fromPath("/onprc_ehr/panel/AddScheduledTreatmentPanel.js"))),
 
             new AnimalDetailsFormSection(),
-            new DrugAdministrationFormSection(),
-            new TreatmentOrdersFormSection()
+            new DrugAdministrationFormSection()
+           /* new TreatmentOrdersFormSection()*/
         ));
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))

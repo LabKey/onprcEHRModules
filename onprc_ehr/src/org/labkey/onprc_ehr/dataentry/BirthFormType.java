@@ -47,12 +47,19 @@ public class BirthFormType extends TaskForm
                 new AnimalDetailsFormSection(),
                 new NewAnimalFormSection("study", "birth", "Births", false)
         ));
+           //Added 2-23-2016:
+        for (FormSection s : this.getFormSections())
+        {
+            s.addConfigSource("Birth_Entry");
+        }
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/Birth_Entry.js"));
 
         setDisplayReviewRequired(true);
-        setJavascriptClass("ONPRC_EHR.panel.NewAnimalDataEntryPanel");
 
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/NewAnimalDataEntryPanel.js"));
+        //setJavascriptClass("ONPRC_EHR.panel.NewAnimalDataEntryPanel");
+        //addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/NewAnimalDataEntryPanel.js"));
     }
+
 
     @Override
     public JSONObject toJSON()
@@ -67,4 +74,39 @@ public class BirthFormType extends TaskForm
 
         return ret;
     }
+
+    /*@Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+
+        // Replace the standard submit
+        int idx = ret.indexOf("CLOSE");
+
+        assert idx > -1;
+        ret.remove("CLOSE");
+        if (idx > -1)
+            ret.add(idx, "BIRTH_CLOSE");
+        else
+            ret.add("BIRTH_CLOSE");
+
+        return ret;
+    }
+*/
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+
+        List<String> defaultButtons = new ArrayList<String>();
+        defaultButtons.add("SAVEDRAFT");
+        defaultButtons.add("BIRTHARRIVALCLOSE");
+        defaultButtons.add("BIRTHARRIVALREVIEW");
+        defaultButtons.add("BIRTHARRIVALRELOAD");
+        defaultButtons.add("BIRTHARRIVALFINAL");
+
+        return defaultButtons;
+    }
+
 }

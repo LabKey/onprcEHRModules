@@ -43,6 +43,7 @@ import org.labkey.api.exp.api.ExpProtocol;
 import org.labkey.api.exp.api.ExpRun;
 import org.labkey.api.exp.api.ExperimentJSONConverter;
 import org.labkey.api.exp.api.ExperimentService;
+import org.labkey.api.exp.api.StorageProvisioner;
 import org.labkey.api.files.FileContentService;
 import org.labkey.api.laboratory.LaboratoryService;
 import org.labkey.api.laboratory.assay.AssayImportMethod;
@@ -1472,7 +1473,7 @@ public class LegacyDataManager
             throw new IllegalArgumentException("Unable to find cases table");
         }
 
-        TableInfo realTable = StudyService.get().getDatasetSchema().getTable(ti.getDomain().getStorageTableName());
+        TableInfo realTable = StorageProvisioner.createTableInfo(ti.getDomain());
 
         //clinical cases
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("assessmentOnOpenDate"), null, CompareType.NONBLANK);

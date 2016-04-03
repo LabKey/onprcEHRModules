@@ -1,28 +1,7 @@
-/**
- * Created by jonesga on 4/30/2015.
- */
-/*
- * Copyright (c) 2015 LabKey Corporation
- *
- * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
- */
-/*  Change Log
-    * 6/24/2015   Jones  changed to allow selection of time value instead of AM PM Value
-
-
-
-
-    * 3/25/2015 Gjones Rblasa
-    * We added a new drop down to allow the user to select a set of treatments to be added to Drug Table
-    * @class
-* Features
-    * This window will allow users to query the treatment schedule and add records to a task based on the scheduled treatments
-    * that match their criteria.  It is connected to the 'Add Treatments' button in the treatments form at ONPRC.
-    * Originally Named EHR.window.AddScheduledTreatmentsWindow'
- */
-Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
-    extend: 'Ext.window.Window',
-    alias: 'widget.AddScheduledTreatmentWindow',
+//Added 2-18-2016 Blasa
+Ext4.define('onprc_ehr.panel.AddScheduledTreatmentPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.onprc_AddScheduledTreatmentPanel',
 
     initComponent: function(){
         Ext4.applyIf(this, {
@@ -48,18 +27,18 @@ Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
                 maxValue: (new Date()),
                 itemId: 'dateField'
             },/*{
-                xtype: 'ehr-timeofdayfield',
-                itemId: 'timeField'
-            },*/
+             xtype: 'ehr-timeofdayfield',
+             itemId: 'timeField'
+             },*/
                 {
-             xtype: 'ehr-areafield',
-             multiSelect: true,
+                    xtype: 'ehr-areafield',
+                    multiSelect: true,
                     typeAhead: true,
                     itemId: 'areaField'
-             },/*{
-             xtype: 'ehr-roomfield',
-             itemId: 'roomField'
-             },*/{
+                },/*{
+                 xtype: 'ehr-roomfield',
+                 itemId: 'roomField'
+                 },*/{
                     xtype: 'checkcombo',
                     forceSelection: true,
                     multiSelect: true,
@@ -80,46 +59,21 @@ Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
                     }
                 },
                 {xtype: 'onprc-snomedtreatmentcombo',    //Modified 6-22-2015 Blasa
-                defaultSubset: 'Post Op Meds' ,
-                fieldLabel: 'Treatment(s)',
-                itemId: 'code'
-    },/*
-
-
-              {
-                    xtype: 'checkcombo',
-                    forceSelection: true,
-                    multiSelect: true,
-                    fieldLabel: 'Category',
-                    itemId: 'categoryField',
-                    displayField: 'category',
-                    valueField: 'category',
-                    store: {
-                        type: 'array',
-                        fields: ['category'],
-                        data: [
-                            ['Clinical'],
-                            ['Surgical'],
-                            ['Diet']
-                        ]
-                    }
-                },*/{
+                    defaultSubset: 'Post Op Meds' ,
+                    fieldLabel: 'Treatment(s)',
+                    itemId: 'code'
+                },{
                     xtype: 'textfield',
                     fieldLabel: 'Performed By',
                     value: LABKEY.Security.currentUser.displayName,
                     itemId: 'performedBy'
-                }],
+                },{
             buttons: [{
-                text:'Submit',
+                text: 'Submit',
                 itemId: 'submitBtn',
                 scope: this,
                 handler: this.getTreatments
-            },{
-                text: 'Close',
-                scope: this,
-                handler: function(btn){
-                    btn.up('window').close();
-                }
+                 }]
             }]
         });
 
@@ -127,40 +81,26 @@ Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
     },
 
     getFilterArray: function(){
-         var area = this.down('#areaField') ? this.down('#areaField').getValue() : null;
-        // var rooms = EHR.DataEntryUtils.ensureArray(this.down('#roomField').getValue()) || [];
-       var times = EHR.DataEntryUtils.ensureArray(this.down('#timeField').getValue()) || []; //changed .getTimeValue to .getValue and ssystem functions 6/24/2015 jones
+        var area = this.down('#areaField') ? this.down('#areaField').getValue() : null;
+
+        var times = EHR.DataEntryUtils.ensureArray(this.down('#timeField').getValue()) || []; //changed .getTimeValue to .getValue and ssystem functions 6/24/2015 jones
+
         // proposed change was to make it so they can only select 1 time slot.  THen we can change the filter to all it to retgrieve
         // any treatment order with the specified time that time of vertificatiopn is in a windos that is greater than or equyal to
         // treatmenttime - 30 ninutes.  This would allow an 8 AM med to be validated at 7:30
 
-
-       // var categories = EHR.DataEntryUtils.ensureArray(this.down('#categoryField').getValue()) || [];
-
         var codes = EHR.DataEntryUtils.ensureArray(this.down('#code').getValue()) || [];
-
         var date = (this.down('#dateField') ? this.down('#dateField').getValue() : new Date());
-
-        /*if (!area && !rooms.length){
-         alert('Must provide at least one room or an area');
-         return;
-         }*/
 
         var filterArray = [];
 
         filterArray.push(LABKEY.Filter.create('date', date.format('Y-m-d'), LABKEY.Filter.Types.DATE_EQUAL));
-        //filterArray.push(LABKEY.Filter.create('date', (new Date()).format('Y-m-d H:i'), LABKEY.Filter.Types.LTE));  //exclude treatments in the future
         filterArray.push(LABKEY.Filter.create('taskid', null, LABKEY.Filter.Types.ISBLANK));
         filterArray.push(LABKEY.Filter.create('treatmentStatus', null, LABKEY.Filter.Types.ISBLANK));
-              //Modified 7-4-2015 Blasa
-        if (area)
-         filterArray.push(LABKEY.Filter.create('Id/curLocation/area', area.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
-        /*
-         if (rooms.length)
-         filterArray.push(LABKEY.Filter.create('Id/curLocation/room', rooms.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
 
-        if (categories.length)
-            filterArray.push(LABKEY.Filter.create('category', categories.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));*/
+        //Modified 7-4-2015 Blasa
+        if (area)
+            filterArray.push(LABKEY.Filter.create('Id/curLocation/area', area.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
 
         if (times && times.length)      //changed time of day to time  6/23/2015 jones
             filterArray.push(LABKEY.Filter.create('time', times.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
@@ -180,7 +120,7 @@ Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
 
         var date = (this.down('#dateField') ? this.down('#dateField').getValue() : new Date());
         Ext4.Msg.wait("Loading...");
-        this.hide();
+       // this.hide();
 
         //find distinct animals matching criteria
         LABKEY.Query.selectRows({
@@ -207,11 +147,11 @@ Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
             return;
         }
 
-        LDK.Assert.assertNotEmpty('Unable to find targetStore in AddScheduledTreatmentsWindow', this.targetStore);
+        var targetStore = this.dataEntryPanel.storeCollection.getClientStoreByName('Drug Administration');
+        LDK.Assert.assertNotEmpty('Unable to find targetStore in AddScheduledTreatmentPanel',  targetStore);
 
         var records = [];
         var performedby = this.down('#performedBy').getValue();
-
 
         Ext4.Array.each(results.rows, function(sr){
             var row = new LDK.SelectRowsRow(sr);
@@ -221,16 +161,16 @@ Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
             var date = row.date;
             var treatmentTime = row.datetime;
 
-            // NOTE: the following block has been disabled.
-            // we always use the scheduled time, rather than the current time
-            // we could also consider putting a toggle on the window to switch behavior
-//            var date = new Date();
-//
-//            //if retroactively entering (more than 2 hours after the scheduled time), we take the time that record was scheduled to be administered.  otherwise we use the current time
-//           if ((date.getTime() - row.date.getTime()) > (1000 * 60 * 60 * 2))
-//                date = row.date;
+            /* NOTE: the following block has been disabled.
+             we always use the scheduled time, rather than the current time
+             we could also consider putting a toggle on the window to switch behavior
+               var date = new Date();
 
-            records.push(this.targetStore.createModel({
+            if retroactively entering (more than 2 hours after the scheduled time), we take the time that record was scheduled to be administered.  otherwise we use the current time
+           if ((date.getTime() - row.date.getTime()) > (1000 * 60 * 60 * 2))
+                date = row.date;       */
+
+            records.push(targetStore.createModel({
                 Id: row.getValue('Id'),
                 date: treatmentTime,
                 project: row.getValue('project'),
@@ -254,31 +194,11 @@ Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
             }));
         }, this);
 
-        this.targetStore.add(records);
+        targetStore.add(records);
 
         Ext4.Msg.hide();
     }
 });
 
-EHR.DataEntryUtils.registerGridButton('ADDTREATMENTS', function(config){
-    return Ext4.Object.merge({
-        text: 'Add Scheduled Treatments',
-        tooltip: 'Click to automatically add scheduled treatments',
-        handler: function(btn){
-            var grid = btn.up('gridpanel');
-            if(!grid.store || !grid.store.hasLoaded()){
-                console.log('no store or store hasnt loaded');
-                return;
-            }
 
-            var cellEditing = grid.getPlugin('cellediting');
-            if(cellEditing)
-                cellEditing.completeEdit();
-
-            Ext4.create('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
-                targetStore: grid.store
-            }).show();
-        }
-    }, config);
-});
 

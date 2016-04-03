@@ -43,7 +43,9 @@ public class BulkClinicalEntryFormType extends TaskForm
         super(ctx, owner, NAME, "Bulk Clinical Entry", "Clinical", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
-                new SimpleGridPanel("study", "encounters", "Procedures"),
+
+                //Added 6-5-2015  Blasa
+                new ClinicalEncountersFormSection(),
                 new SimpleGridPanel("study", "Clinical Remarks", "SOAPs"),
                 new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Body),
                 new DrugAdministrationFormSection(),
@@ -56,14 +58,16 @@ public class BulkClinicalEntryFormType extends TaskForm
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("ClinicalDefaults");
+            //Added 6-4-2015 Blasa
+            s.addConfigSource("ClinicalProcedures");
         }
 
         addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
         addClientDependency(ClientDependency.fromPath("onprc_ehr/window/MassBleedWindow.js"));
         //Added 1-6-2015 Blasa
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/BulkStrokeRoundsWindow.js"));
-        //Added 1-6-2015 Blasa
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/window/BulkStrokeRoundsWindow.js"));
+       addClientDependency(ClientDependency.fromPath("onprc_ehr/window/BulkStrokeRoundsWindow.js"));
+        //Added 6-4-2015 Blasa
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/ClinicalProcedures.js"));
     }
 
     @Override

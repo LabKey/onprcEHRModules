@@ -99,6 +99,13 @@ public class ONPRC_EHRManager
     @Queryable
     public static final Double BASE_SUBSIDY = 0.47;
 
+    @Queryable
+    public static final String CAGE_HEIGHT_EXEMPTION_FLAG = "Obese, or Pregnant";
+    @Queryable
+    public static final String CAGE_WEIGHT_EXEMPTION_FLAG = "Obese, or Pregnant";
+    @Queryable
+    public static final String CAGE_MEDICAL_EXEMPTION_FLAG = "Medical";
+
     private ONPRC_EHRManager()
     {
 

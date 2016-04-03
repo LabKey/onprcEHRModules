@@ -587,6 +587,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         int duration = 30;
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("matchesDamStatus"), false, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("dam"), null, CompareType.NONBLANK);
+
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1 * duration);
         filter.addCondition(FieldKey.fromString("birth"), cal.getTime(), CompareType.DATE_GTE);
