@@ -245,7 +245,6 @@ onprc_ehr/resources/queries/ehr_lookups/roomsByInvestigator/.qview.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomsByProject.query.xml -text
 onprc_ehr/resources/queries/ehr_lookups/roomsByProject.sql -text
 onprc_ehr/resources/queries/ehr_lookups/species/.qview.xml -text
-onprc_ehr/resources/queries/onprc_ehr/Tumescence_Score.sql -text
 onprc_ehr/resources/queries/onprc_ehr/customers.js -text
 onprc_ehr/resources/queries/onprc_ehr/customers.query.xml -text
 onprc_ehr/resources/queries/onprc_ehr/customers/.qview.xml -text
