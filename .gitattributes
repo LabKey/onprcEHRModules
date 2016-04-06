@@ -1121,7 +1121,6 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/WeightFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/WeightFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ActiveAnimalGroupsDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ActiveCasesDemographicsProvider.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/demographics/ActiveFlagsDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/AssignedVetDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/CagematesDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/HousingDemographicsProvider.java -text
