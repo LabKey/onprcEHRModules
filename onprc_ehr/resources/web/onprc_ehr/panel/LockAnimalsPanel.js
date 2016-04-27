@@ -37,8 +37,6 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
             }]
         });
 
-
-        var locked_person;
         this.callParent(arguments);
 
         var query = Ext4.ComponentQuery.query('ehr-dataentrypanel');
@@ -84,13 +82,16 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
         //If the screen is locked by some one: display the Locked details
         if (results.locked)  {
 
-            locked_person = results.lockedBy;
+            this.locked_person = results.lockedBy;
             target.add({
                 html: ['Locked By: ' + results.lockedBy, 'Locked On: ' + results.lockDate ].join('<br>'),
                 // html: ['Locked By: ' + results.lockedBy, 'Locked On: ' + results.lockDate , 'Current user Displayname: '+ LABKEY.Security.currentUser.displayName ].join('<br>'),
                 style: 'padding-bottom: 10px;',
                 border: false
             });
+        }
+        else {
+            this.locked_person = null;
         }
 
         this.togglePanel(!!results.locked);
@@ -125,9 +126,15 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
         up.items.each(function(item){
             if (item.getId() != this.getId())
             {
+
+                // If locked person is not defined then enforce locking before data entry
+                if(!Ext4.isDefined(this.locked_person) || !this.locked_person) {
+                    item.setDisabled(!locked);
+                    btn.setDisabled(locked);
+                }
                 // Changed by Lakshmi: If the locked person is not the person who is logged in, then lock the entire screen
                 //If the locked person is same as the loggedin person, enable the entire screen
-                if (locked_person != LABKEY.Security.currentUser.displayName )
+                else if (this.locked_person != LABKEY.Security.currentUser.displayName )
                 {
                     item.setDisabled(locked); ///Disable all data entry fields on the screen
                     btn.setDisabled(locked); //Disable the "Unlock Entry" button for other users
@@ -139,10 +146,10 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
 
                 }
                 //If the locked person is the loggedin person, Lock the screen. ie the Birth screen is always locked when you open it first time.
-                if (locked_person == LABKEY.Security.currentUser.displayName)  // || LABKEY.Security.currentUser.isAdmin )
+                else if (this.locked_person == LABKEY.Security.currentUser.displayName)  // || LABKEY.Security.currentUser.isAdmin )
                 {
                     item.setDisabled(!locked);
-                    //btn.setDisabled(!locked);
+                    btn.setDisabled(!locked);
                 }
 
             }
@@ -171,7 +178,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BIRTHARRIVALCLOSE', {
             url: LABKEY.ActionURL.buildURL('onprc_ehr', 'setAnimalLock'),
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
-            success: LABKEY.Utils.getCallbackWrapper(new function() {
+            success: LABKEY.Utils.getCallbackWrapper(function() {
                 var panel = btn.up('ehr-dataentrypanel');
                 panel.onSubmit(btn);
             }, this),
@@ -203,7 +210,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BIRTHARRIVALFINAL', {
             url: LABKEY.ActionURL.buildURL('onprc_ehr', 'setAnimalLock'),
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
-            success: LABKEY.Utils.getCallbackWrapper(new function() {
+            success: LABKEY.Utils.getCallbackWrapper(function() {
                 var panel = btn.up('ehr-dataentrypanel');
                 //panel.onSubmit(btn);
                 Ext4.Msg.confirm('Finalize Birth/Arrival Form', 'You are about to finalize this form.  Do you want to proceed?', function(v){
@@ -238,7 +245,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BIRTHARRIVALRELOAD', {
             url: LABKEY.ActionURL.buildURL('onprc_ehr', 'setAnimalLock'),
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
-            success: LABKEY.Utils.getCallbackWrapper(new function() {
+            success: LABKEY.Utils.getCallbackWrapper(function() {
                 var panel = btn.up('ehr-dataentrypanel');
                 //panel.onSubmit(btn);
                 Ext4.Msg.confirm('Finalize Birth/Arrival Form', 'You are about to finalize and reload this form.  Do you want to proceed?', function(v){
@@ -270,7 +277,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BIRTHARRIVALREVIEW', {
             url: LABKEY.ActionURL.buildURL('onprc_ehr', 'setAnimalLock'),
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
-            success: LABKEY.Utils.getCallbackWrapper(new function() {
+            success: LABKEY.Utils.getCallbackWrapper(function() {
                 var panel = btn.up('ehr-dataentrypanel');
                 Ext4.create('EHR.window.SubmitForReviewWindow', {
                     dataEntryPanel: panel,
