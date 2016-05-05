@@ -176,6 +176,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         assert r != null;
         EHRService.get().registerTriggerScript(this, r);
 
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("Ext4"), this);
         EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/BloodSummaryPanel.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/onprcReports.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/Utils.js"), this);

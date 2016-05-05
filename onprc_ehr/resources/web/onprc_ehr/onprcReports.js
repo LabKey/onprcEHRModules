@@ -214,7 +214,7 @@ EHR.reports.medicationSchedule = function(panel, tab, viewName){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
 
-    var date = (new Date()).format('Y-m-d');
+    var date = Ext4.Date.format(new Date(), 'Y-m-d');
     tab.add({
         xtype: 'ldk-querypanel',
         style: 'margin-bottom:20px;',
@@ -255,13 +255,13 @@ EHR.reports.bloodSchedule = function(panel, tab, viewName){
             removeableFilters: filterArray.removable
         })
     });
-}
+};
 
 EHR.reports.pairHistory = function(panel, tab, viewName){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
 
-    var date = (new Date()).add(Date.YEAR, -5).format('Y-m-d');
+    var date = Ext4.Date.format(Ext4.Date.add(new Date(), Ext4.Date.YEAR, -5), 'Y-m-d');
     tab.add({
         html: 'This report summarizes all animals paired in a cage in the past 5 years, along with any pairing comments entered during this time period.  Note: periods of group housing are not displayed on this report.',
         border: false,
@@ -280,7 +280,7 @@ EHR.reports.pairHistory = function(panel, tab, viewName){
             }
         })
     });
-}
+};
 
 EHR.reports.underConstruction = function(panel, tab){
     tab.add({
@@ -533,7 +533,7 @@ EHR.reports.reproSummary = function(panel, tab){
                                         sort: 'year,monthNum',
                                         parameters: {
                                             Id: id,
-                                            StartDate: startDate.format('Y/m/d'),
+                                            StartDate: Ext4.Date.format(startDate, 'Y/m/d'),
                                             NumMonths: numMonths
                                         },
                                         scope: this,
@@ -725,8 +725,7 @@ EHR.reports.behaviorCases = function(panel, tab){
             removeableFilters: filterArray.removable
         })
     });
-
-}
+};
 
 EHR.reports.surgeryCasesClosedToday = function(panel, tab){
     var filterArray = panel.getFilterArray(tab);
@@ -750,4 +749,4 @@ EHR.reports.surgeryCasesClosedToday = function(panel, tab){
             removeableFilters: filterArray.removable
         })
     });
-}
+};
