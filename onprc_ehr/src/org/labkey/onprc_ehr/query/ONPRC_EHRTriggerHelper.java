@@ -327,7 +327,7 @@ public class ONPRC_EHRTriggerHelper
             DbSchema dbSchema;
             if (targetTable instanceof DatasetTable)
             {
-                Domain domain = ((FilteredTable)targetTable).getDomain();
+                Domain domain = targetTable.getDomain();
                 if (domain != null)
                 {
                     realTable = StorageProvisioner.createTableInfo(domain);
@@ -1036,7 +1036,7 @@ public class ONPRC_EHRTriggerHelper
 
 
                     //only update the release code automatically if experimentally euthanized and that assignment called for a terminal projected release.  otherwise leave blank and let error report catch it
-                    if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) && terminalCode == (Integer) rowMap.get("projectedReleaseCondition"))
+                    if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) && terminalCode == rowMap.get("projectedReleaseCondition"))
                     {
                         //if already 207 or higher, dont attmept to downgrade
                         List<Integer> foundCodes = findHigherActiveConditonCodes(id, deathDate, terminalCode);

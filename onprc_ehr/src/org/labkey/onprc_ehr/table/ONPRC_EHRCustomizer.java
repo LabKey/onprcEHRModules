@@ -1840,7 +1840,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             if (targetTable instanceof DatasetTable)
             {
-                Domain domain = ((FilteredTable)targetTable).getDomain();
+                Domain domain = targetTable.getDomain();
                 if (domain != null)
                 {
                     realTable = StorageProvisioner.createTableInfo(domain);
