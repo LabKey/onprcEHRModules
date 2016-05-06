@@ -36,7 +36,7 @@ public class HousingRequestFormType extends RequestForm
 
     public HousingRequestFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Housing Transfer Request", "Requests", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Housing Transfer Request", "Requests", Arrays.asList(
                 new RequestFormSection(),
                 //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),

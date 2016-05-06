@@ -38,7 +38,7 @@ public class GeneralRequestFormType extends RequestForm
 {
     public GeneralRequestFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, "Service Request", "Service Requests", "Requests", Arrays.<FormSection>asList(
+        super(ctx, owner, "Service Request", "Service Requests", "Requests", Arrays.asList(
                 new RequestFormSection(),
                 new AnimalDetailsFormSection(),
                 new BloodDrawFormSection(true),

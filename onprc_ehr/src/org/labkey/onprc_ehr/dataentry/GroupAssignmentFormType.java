@@ -36,7 +36,7 @@ public class GroupAssignmentFormType extends UnsaveableTask
 
     public GroupAssignmentFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Animal Group Assignment", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Animal Group Assignment", "Colony Management", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "animal_group_members", "Group Assignments")

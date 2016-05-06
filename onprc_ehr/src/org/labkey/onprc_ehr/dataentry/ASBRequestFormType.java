@@ -37,7 +37,7 @@ public class ASBRequestFormType extends RequestForm
 
     public ASBRequestFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, NAME, "Requests", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, NAME, "Requests", Arrays.asList(
                 new RequestFormSection(),
                 //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),

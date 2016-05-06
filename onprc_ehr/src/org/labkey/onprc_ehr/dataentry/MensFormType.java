@@ -37,7 +37,7 @@ public class MensFormType extends TaskForm
 
     public MensFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Menses", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Menses", "Colony Management", Arrays.asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new MensFormSection()

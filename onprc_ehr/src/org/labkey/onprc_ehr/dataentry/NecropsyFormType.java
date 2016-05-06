@@ -46,7 +46,7 @@ public class NecropsyFormType extends EncounterForm
 
     public NecropsyFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, LABEL, "Pathology", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, LABEL, "Pathology", Arrays.asList(
                 new NonStoreFormSection("Instructions", "Instructions", "ehr-necropsyinstructionspanel", Arrays.asList(ClientDependency.fromPath("ehr/panel/NecropsyInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ClinicalEncountersFormPanelSection("Necropsy"),

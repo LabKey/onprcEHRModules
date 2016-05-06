@@ -37,7 +37,7 @@ public class BehaviorRoundsFormType extends TaskForm
 {
     public BehaviorRoundsFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, "BSU Rounds", "BSU Rounds", "BSU", Arrays.<FormSection>asList(
+        super(ctx, owner, "BSU Rounds", "BSU Rounds", "BSU", Arrays.asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new BehaviorRoundsObservationsFormSection(),

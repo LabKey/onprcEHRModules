@@ -60,8 +60,8 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
         List<Map<String, Object>> newList = newProps == null ? null : (List)newProps.get(_propName);
         Set<String> ret = new TreeSet<>();
 
-        List<String> oldAnimals = oldList == null || oldList.isEmpty() ? Collections.<String>emptyList() : toList(oldList.get(0).get("animals"));
-        List<String> newAnimals = newList == null || newList.isEmpty() ? Collections.<String>emptyList() : toList(newList.get(0).get("animals"));
+        List<String> oldAnimals = oldList == null || oldList.isEmpty() ? Collections.emptyList() : toList(oldList.get(0).get("animals"));
+        List<String> newAnimals = newList == null || newList.isEmpty() ? Collections.emptyList() : toList(newList.get(0).get("animals"));
         if (oldAnimals.equals(newAnimals))
         {
             if (!oldAnimals.isEmpty())

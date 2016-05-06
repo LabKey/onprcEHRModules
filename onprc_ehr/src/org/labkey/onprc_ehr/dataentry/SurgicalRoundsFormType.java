@@ -38,7 +38,7 @@ public class SurgicalRoundsFormType extends TaskForm
 {
     public SurgicalRoundsFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, "Surgical Rounds", "Surgical Rounds", "Surgery", Arrays.<FormSection>asList(
+        super(ctx, owner, "Surgical Rounds", "Surgical Rounds", "Surgery", Arrays.asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new SurgicalRoundsRemarksFormSection(),

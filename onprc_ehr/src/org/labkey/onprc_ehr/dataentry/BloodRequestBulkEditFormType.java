@@ -31,7 +31,7 @@ public class BloodRequestBulkEditFormType extends BulkEditFormType
 
     public BloodRequestBulkEditFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Blood Draw Requests", "Clinical", "lsid", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Blood Draw Requests", "Clinical", "lsid", Arrays.asList(
             new BloodDrawFormSection(true)
         ));
     }

@@ -41,7 +41,7 @@ public class MedSignoffFormType extends TaskForm
 
     public MedSignoffFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, LABEL, "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, LABEL, "Clinical", Arrays.asList(
             new TaskFormSection(),
                  //Added 2-19-2016  Blasa
             new NonStoreFormSection("Treatment Template Helper", "Treatment Template Helper", "onprc_AddScheduledTreatmentPanel", Arrays.asList(ClientDependency.fromPath("/onprc_ehr/panel/AddScheduledTreatmentPanel.js"))),

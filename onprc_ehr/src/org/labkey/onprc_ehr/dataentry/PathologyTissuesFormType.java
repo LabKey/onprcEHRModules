@@ -44,7 +44,7 @@ public class PathologyTissuesFormType extends TaskForm
 
     public PathologyTissuesFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, LABEL, "Pathology", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, LABEL, "Pathology", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),

@@ -35,7 +35,7 @@ public class FlagsFormType extends UnsaveableTask
 
     public FlagsFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Flags", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Flags", "Colony Management", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "flags", "Flags")

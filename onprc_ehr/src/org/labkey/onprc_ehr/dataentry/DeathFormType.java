@@ -37,7 +37,7 @@ public class DeathFormType extends UnsaveableTask
 
     public DeathFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Death", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Death", "Colony Management", Arrays.asList(
                 new DeathInstructionsFormSection(),
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),

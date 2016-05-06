@@ -34,7 +34,7 @@ public class CageObservationFormType extends TaskForm
 {
     public CageObservationFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, "Cage Observations", "Cage Observations", "BSU", Arrays.<FormSection>asList(
+        super(ctx, owner, "Cage Observations", "Cage Observations", "BSU", Arrays.asList(
             new TaskFormSection(),
             new SimpleGridPanel("ehr", "cage_observations", "Cage Observations"),
             new SimpleGridPanel("study", "Clinical Observations", "Animal Observations")

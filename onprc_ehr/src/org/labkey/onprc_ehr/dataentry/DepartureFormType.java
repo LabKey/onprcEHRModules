@@ -38,7 +38,7 @@ public class DepartureFormType extends UnsaveableTask
 
     public DepartureFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Departure", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Departure", "Colony Management", Arrays.asList(
                 new TaskFormSection(),
                 new DocumentArchiveFormSection(),
                 new AnimalDetailsFormSection(),

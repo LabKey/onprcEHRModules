@@ -32,7 +32,7 @@ public class DCMNotesFormType extends UnsaveableTask
 
     public DCMNotesFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "DCM Notes", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "DCM Notes", "Colony Management", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "notes", "DCM Notes")

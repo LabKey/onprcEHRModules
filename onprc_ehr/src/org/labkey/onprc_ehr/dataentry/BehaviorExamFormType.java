@@ -45,7 +45,7 @@ public class BehaviorExamFormType extends TaskForm
 
     public BehaviorExamFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, LABEL, "BSU", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, LABEL, "BSU", Arrays.asList(
                 new TaskFormSection(),
                 new ExtendedAnimalDetailsFormSection(),
                 new SimpleFormPanelSection("study", "Clinical Remarks", "SOAP", false, EHRService.FORM_SECTION_LOCATION.Tabs),

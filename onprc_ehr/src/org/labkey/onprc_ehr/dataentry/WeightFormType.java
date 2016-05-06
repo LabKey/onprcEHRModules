@@ -36,7 +36,7 @@ public class WeightFormType extends TaskForm
 
     public WeightFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Weights", "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Weights", "Clinical", Arrays.asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new WeightFormSection(),

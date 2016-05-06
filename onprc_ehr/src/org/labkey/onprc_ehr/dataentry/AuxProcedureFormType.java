@@ -38,7 +38,7 @@ public class AuxProcedureFormType extends TaskForm
 
     public AuxProcedureFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, NAME, "Research", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, NAME, "Research", Arrays.asList(
                 //Added 2-24-2016  Blasa
             new NonStoreFormSection("Apply Form Template", "Apply Form Template", "onprc-applyformtemplatepanel", Arrays.asList(ClientDependency.fromPath("/onprc_ehr/panel/ApplyFormTemplatePanel.js"))),
 

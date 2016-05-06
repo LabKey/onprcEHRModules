@@ -31,7 +31,7 @@ public class LabworkRequestBulkEditFormType extends BulkEditFormType
 
     public LabworkRequestBulkEditFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Labwork Requests", "Clinical", "lsid", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Labwork Requests", "Clinical", "lsid", Arrays.asList(
                 new ClinpathRunsFormSection(true)
         ));
     }

@@ -35,7 +35,7 @@ public class AnesthesiaFormType extends TaskForm
 
     public AnesthesiaFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, NAME + " Monitoring", "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, NAME + " Monitoring", "Clinical", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "encounters", "Procedures"),

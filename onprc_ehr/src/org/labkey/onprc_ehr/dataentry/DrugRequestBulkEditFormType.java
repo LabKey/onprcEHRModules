@@ -30,7 +30,7 @@ public class DrugRequestBulkEditFormType extends BulkEditFormType
     public static final String NAME = "DrugBulkEdit";
     public DrugRequestBulkEditFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, "DrugBulkEdit", "Medication/Injection Requests", "Clinical", "lsid", Arrays.<FormSection>asList(
+        super(ctx, owner, "DrugBulkEdit", "Medication/Injection Requests", "Clinical", "lsid", Arrays.asList(
                 new DrugAdministrationRequestFormSection()
         ));
     }

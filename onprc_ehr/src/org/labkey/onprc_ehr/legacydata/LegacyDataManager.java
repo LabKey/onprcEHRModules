@@ -190,7 +190,7 @@ public class LegacyDataManager
                                 {
                                     sb.append("creating workbook for: " + exptId).append("<br>");
                                     workbook = ContainerManager.createContainer(c, null, title, description, Container.TYPE.workbook, u);
-                                    workbook.setFolderType(exptFolderType, Collections.<Module>emptySet());
+                                    workbook.setFolderType(exptFolderType, Collections.emptySet());
 
                                     //NOTE: we create the container using the provided user so we ensure permissions are right
                                     //however, we update these containers after the fact to poke in the user from mysql, if it mapped

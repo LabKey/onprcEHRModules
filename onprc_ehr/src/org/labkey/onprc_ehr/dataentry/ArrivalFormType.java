@@ -40,7 +40,7 @@ public class ArrivalFormType extends TaskForm
 
     public ArrivalFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Arrival", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Arrival", "Colony Management", Arrays.asList(
                 new LockAnimalsFormSection(),
                 new ArrivalInstructionsFormSection(),
                 new TaskFormSection(),

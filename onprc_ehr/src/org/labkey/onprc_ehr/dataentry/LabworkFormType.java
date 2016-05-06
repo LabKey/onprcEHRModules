@@ -39,7 +39,7 @@ public class LabworkFormType extends TaskForm
 
     public LabworkFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Lab Results", "Lab Results", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Lab Results", "Lab Results", Arrays.asList(
                 new TaskFormSection(),
                 new ClinpathRunsFormSection(false),
                 new AnimalDetailsFormSection(),

@@ -37,7 +37,7 @@ public class RecordAmendmentFormType extends TaskForm
 
     public RecordAmendmentFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Record Amendment", "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Record Amendment", "Clinical", Arrays.asList(
                 new TaskFormSection(),
                 new SimpleFormPanelSection("study", "Clinical Remarks", "Amendment", false)
         ));

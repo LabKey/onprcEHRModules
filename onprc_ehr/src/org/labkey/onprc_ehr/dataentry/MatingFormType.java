@@ -37,7 +37,7 @@ public class MatingFormType extends TaskForm
 
     public MatingFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Matings", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Matings", "Colony Management", Arrays.asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new SimpleGridPanel("study", "matings", "Matings")

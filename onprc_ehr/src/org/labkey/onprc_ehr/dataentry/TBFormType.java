@@ -35,7 +35,7 @@ public class TBFormType extends TaskForm
 
     public TBFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "TB Tests", "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "TB Tests", "Clinical", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new TBProcedureFormSection()

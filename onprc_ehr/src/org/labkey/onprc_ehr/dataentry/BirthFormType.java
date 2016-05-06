@@ -40,7 +40,7 @@ public class BirthFormType extends TaskForm
 
     public BirthFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Birth", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Birth", "Colony Management", Arrays.asList(
                 new LockAnimalsFormSection(),
                 new BirthInstructionsFormSection(),
                 new TaskFormSection(),

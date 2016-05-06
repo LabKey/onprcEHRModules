@@ -35,7 +35,7 @@ public class IStatFormType extends TaskForm
 
     public IStatFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "iStat Results", "Lab Results", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "iStat Results", "Lab Results", Arrays.asList(
                 new TaskFormSection(),
                 new IStatPanelForm(),
                 new LabworkFormSection("study", "iStat", "iStat", true)

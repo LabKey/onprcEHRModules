@@ -44,7 +44,7 @@ public class SingleSurgeryFormType extends EncounterForm
 
     public SingleSurgeryFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Surgery", "Surgery", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Surgery", "Surgery", Arrays.asList(
                 new NonStoreFormSection("Instructions", "Instructions", "ehr-surgeryinstructionspanel", Arrays.asList(ClientDependency.fromPath("ehr/panel/SurgeryInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ClinicalEncountersFormPanelSection("Surgery"),

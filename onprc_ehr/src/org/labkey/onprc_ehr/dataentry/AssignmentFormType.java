@@ -38,7 +38,7 @@ public class AssignmentFormType extends UnsaveableTask
 
     public AssignmentFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Project Assignment", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Project Assignment", "Colony Management", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new AssignmentFormSection()

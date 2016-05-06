@@ -37,7 +37,7 @@ public class HousingFormType extends UnsaveableTask
 
     public HousingFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Housing Transfers", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Housing Transfers", "Colony Management", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new HousingFormSection("study", "housing", "Housing Transfers")

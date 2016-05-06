@@ -37,7 +37,7 @@ public class PregnancyConfirmationFormType extends TaskForm
 
     public PregnancyConfirmationFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Pregnancies / Pregnancy Tests", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Pregnancies / Pregnancy Tests", "Colony Management", Arrays.asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new ClinicalEncountersFormSection(),

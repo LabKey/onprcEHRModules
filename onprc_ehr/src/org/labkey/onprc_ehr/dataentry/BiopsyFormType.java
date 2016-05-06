@@ -43,7 +43,7 @@ public class BiopsyFormType extends EncounterForm
 
     public BiopsyFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, NAME, "Pathology", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, NAME, "Pathology", Arrays.asList(
                 new TaskFormSection(),
                 new ClinicalEncountersFormPanelSection("Biopsy"),
                 new AnimalDetailsFormSection(),

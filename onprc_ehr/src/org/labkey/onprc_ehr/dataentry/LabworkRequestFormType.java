@@ -38,7 +38,7 @@ public class LabworkRequestFormType extends RequestForm
 
     public LabworkRequestFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, LABEL, "Requests", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, LABEL, "Requests", Arrays.asList(
                 new RequestFormSection(),
                 new LabworkRequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),

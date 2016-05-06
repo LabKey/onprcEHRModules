@@ -36,7 +36,7 @@ public class BloodDrawFormType extends TaskForm
 
     public BloodDrawFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, NAME, "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, NAME, "Clinical", Arrays.asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new BloodDrawFormSection(false),

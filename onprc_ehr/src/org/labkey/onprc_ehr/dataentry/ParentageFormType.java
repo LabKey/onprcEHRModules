@@ -34,7 +34,7 @@ public class ParentageFormType extends UnsaveableTask
 
     public ParentageFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Parentage", "Colony Management", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Parentage", "Colony Management", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "parentage", "Parentage")

@@ -40,7 +40,7 @@ public class BulkClinicalEntryFormType extends TaskForm
 
     public BulkClinicalEntryFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Bulk Clinical Entry", "Clinical", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Bulk Clinical Entry", "Clinical", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
 

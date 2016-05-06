@@ -35,7 +35,7 @@ public class TissueDistributionFormType extends TaskForm
 
     public TissueDistributionFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Tissue Distributions", "Pathology", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Tissue Distributions", "Pathology", Arrays.asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new SimpleGridPanel("study", "tissueDistributions", "Tissue Distributions"))

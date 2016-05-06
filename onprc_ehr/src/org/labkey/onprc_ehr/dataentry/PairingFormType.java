@@ -36,7 +36,7 @@ public class PairingFormType extends TaskForm
 
     public PairingFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Pairing Observations", "BSU", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Pairing Observations", "BSU", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new PairingFormSection()
