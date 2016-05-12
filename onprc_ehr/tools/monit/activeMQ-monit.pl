@@ -17,7 +17,7 @@
 # NOTE: you must enable stomp in activemq.xml by adding the following to the <transportConnectors> tag:
 # <transportConnector name="stomp" uri="stomp://localhost:61613"/>
 #
-# B.Connolly @ LabKey Software 
+# B.Connolly @ LabKey
 # B.Bimber @ 
 #
  
