@@ -30,6 +30,7 @@ import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.security.User;
+import org.labkey.api.util.PageFlowUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -154,6 +155,10 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
                         totals.put(incomplete, totals.get(incomplete) + 1);
 
                         String area = rs.getString(FieldKey.fromString("Id/curLocation/area"));
+                        if (area == null)
+                        {
+                            area = "<Unknown Area>";
+                        }
                         Integer areaVal = totalByArea.containsKey(area) ? totalByArea.get(area) : 0;
                         areaVal++;
 
@@ -176,7 +181,7 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
 
                 for (String area : totalByArea.keySet())
                 {
-                    msg.append("<tr><td><b>" + area + ":</b></td><td><a href='" + url + "&query.Id/curLocation/area~eq=" + area + "'>" + totalByArea.get(area) + "</a></td></tr>\n");
+                    msg.append("<tr><td><b>" + PageFlowUtil.filter(area) + ":</b></td><td><a href='" + url + "&query.Id/curLocation/area~eq=" + PageFlowUtil.filter(area) + "'>" + totalByArea.get(area) + "</a></td></tr>\n");
                 }
 
                 msg.append("</table><p>\n");
