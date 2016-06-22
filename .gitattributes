@@ -45,6 +45,7 @@ GeneticsCore/src/org/labkey/GeneticsCore/notification/GeneticsCoreNotification.j
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BlastPipelineJobResourceAllocator.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/SequenceJobResourceAllocator.java -text
 GeneticsCore/tools/installLabkey.sh -text
+GeneticsCore/tools/javaWrapper.sh -text
 GeneticsCore/tools/pipelineConfig/fergie2/pipelineConfig.xml -text
 GeneticsCore/tools/pipelineConfig/fergie2/remoteMuleConfig.xml -text
 GeneticsCore/tools/pipelineConfig/hoolock/pipelineConfig.xml -text
