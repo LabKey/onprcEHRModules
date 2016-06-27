@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.history;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
@@ -23,17 +24,14 @@ import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
-import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.history.HistoryRow;
 import org.labkey.api.ehr.history.HistoryRowImpl;
-import org.labkey.api.gwt.client.util.StringUtils;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,42 +59,37 @@ public class DefaultSnomedDataSource extends AbstractEHRDataSource
     protected List<HistoryRow> processRows(Container c, TableSelector ts, final boolean redacted, final Collection<ColumnInfo> cols)
     {
         final Map<String, List<Map<String, Object>>> idMap = new HashMap<>();
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
-        {
-            @Override
-            public void exec(ResultSet rs) throws SQLException
+        ts.forEach(rs -> {
+            Results results = new ResultsImpl(rs, cols);
+
+            String html = getLine(results, redacted);
+            if (!StringUtils.isEmpty(html))
             {
-                Results results = new ResultsImpl(rs, cols);
+                Map<String, Object> rowMap = new CaseInsensitiveHashMap<>();
 
-                String html = getLine(results, redacted);
-                if (!StringUtils.isEmpty(html))
-                {
-                    Map<String, Object> rowMap = new CaseInsensitiveHashMap<>();
+                rowMap.put("subjectId", results.getString(FieldKey.fromString(_subjectIdField)));
+                rowMap.put("date", results.getTimestamp(getDateField()));
+                rowMap.put("categoryText", getCategoryText(results));
+                rowMap.put("categoryGroup", getPrimaryGroup(results));
+                rowMap.put("categoryColor", getCategoryColor(results));
+                //rowMap.put("qcStateLabel", results.getString(FieldKey.fromString("qcState/Label")));
+                //rowMap.put("publicData", results.getBoolean(FieldKey.fromString("qcState/PublicData")));
+                rowMap.put("code", getCategoryText(results));
+                rowMap.put("meaning", getPrimaryGroup(results));
+                rowMap.put("taskId", results.getString(FieldKey.fromString("taskId")));
+                rowMap.put("taskRowId", results.getInt(FieldKey.fromString("taskId/rowid")));
+                rowMap.put("formType", results.getString(FieldKey.fromString("taskId/formtype")));
+                rowMap.put("objectId", results.getString(FieldKey.fromString("objectId")));
+                rowMap.put("html", html);
 
-                    rowMap.put("subjectId", results.getString(FieldKey.fromString(_subjectIdField)));
-                    rowMap.put("date", results.getTimestamp(getDateField()));
-                    rowMap.put("categoryText", getCategoryText(results));
-                    rowMap.put("categoryGroup", getPrimaryGroup(results));
-                    rowMap.put("categoryColor", getCategoryColor(results));
-                    //rowMap.put("qcStateLabel", results.getString(FieldKey.fromString("qcState/Label")));
-                    //rowMap.put("publicData", results.getBoolean(FieldKey.fromString("qcState/PublicData")));
-                    rowMap.put("code", getCategoryText(results));
-                    rowMap.put("meaning", getPrimaryGroup(results));
-                    rowMap.put("taskId", results.getString(FieldKey.fromString("taskId")));
-                    rowMap.put("taskRowId", results.getInt(FieldKey.fromString("taskId/rowid")));
-                    rowMap.put("formType", results.getString(FieldKey.fromString("taskId/formtype")));
-                    rowMap.put("objectId", results.getString(FieldKey.fromString("objectId")));
-                    rowMap.put("html", html);
+                Date roundedDate = DateUtils.truncate((Date) rowMap.get("date"), Calendar.DATE);
+                String key = results.getString(FieldKey.fromString("taskid")) + "||" + rowMap.get("Id") + "||" + roundedDate.toString();
+                List<Map<String, Object>> obsRows = idMap.get(key);
+                if (obsRows == null)
+                    obsRows = new ArrayList<>();
 
-                    Date roundedDate = DateUtils.truncate((Date) rowMap.get("date"), Calendar.DATE);
-                    String key = results.getString(FieldKey.fromString("taskid")) + "||" + rowMap.get("Id") + "||" + roundedDate.toString();
-                    List<Map<String, Object>> obsRows = idMap.get(key);
-                    if (obsRows == null)
-                        obsRows = new ArrayList<>();
-
-                    obsRows.add(rowMap);
-                    idMap.put(key, obsRows);
-                }
+                obsRows.add(rowMap);
+                idMap.put(key, obsRows);
             }
         });
 
