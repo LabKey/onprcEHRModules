@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.query;
 
+import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +25,7 @@ import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
+import org.labkey.api.data.ConvertHelper;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
@@ -1717,25 +1719,35 @@ public class ONPRC_EHRTriggerHelper
         return _nextProtocolId;
     }
 
-    public boolean requiresAssistingStaff(Integer procedureId)
+    public boolean requiresAssistingStaff(Object procedureText)
     {
-        if (procedureId == null)
+        if (procedureText == null)
         {
             return false;
         }
 
-        if (!_cachedProcedureCategories.containsKey(procedureId))
+        try
         {
-            TableInfo ti = getTableInfo("ehr_lookups", "procedures");
-            TableSelector ts = new TableSelector(ti, PageFlowUtil.set("category"), new SimpleFilter(FieldKey.fromString("rowid"), procedureId), null);
-            String category = ts.getObject(String.class);
+            Integer procedureId = ConvertHelper.convert(procedureText, Integer.class);
+            if (!_cachedProcedureCategories.containsKey(procedureId))
+            {
+                TableInfo ti = getTableInfo("ehr_lookups", "procedures");
+                TableSelector ts = new TableSelector(ti, PageFlowUtil.set("category"), new SimpleFilter(FieldKey.fromString("rowid"), procedureId), null);
+                String category = ts.getObject(String.class);
 
-            _cachedProcedureCategories.put(procedureId, category);
+                _cachedProcedureCategories.put(procedureId, category);
+            }
+
+            String category = _cachedProcedureCategories.get(procedureId);
+
+            return "Surgery".equals(category);
+        }
+        catch (ConversionException e)
+        {
+            _log.warn("unable to convert procedureId to integer: [" + procedureText + "]", new Exception());
         }
 
-        String category = _cachedProcedureCategories.get(procedureId);
-
-        return "Surgery".equals(category);
+        return false;
     }
 
     public String getSpeciesForDam(String dam)
