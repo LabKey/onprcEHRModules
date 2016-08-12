@@ -63,7 +63,8 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
         return "The report is designed to identify potential problems with the colony, focused on housing.";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         final StringBuilder msg = new StringBuilder();
 

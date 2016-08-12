@@ -64,7 +64,8 @@ public class ETLNotification extends AbstractEHRNotification
         return "The report is designed to provide a nightly validation of the ETL sync.  It will provide a list of any records missing from PRIMe or that need to be deleted";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder sb = new StringBuilder();
         try

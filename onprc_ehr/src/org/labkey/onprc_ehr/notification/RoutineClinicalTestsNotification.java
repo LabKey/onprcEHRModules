@@ -83,7 +83,8 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         return "The report is designed to provide a weekly summary of routine and preventative care due across the colony, such as TB tests, physical exams, and weights";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder sb = new StringBuilder();
         Date now = new Date();

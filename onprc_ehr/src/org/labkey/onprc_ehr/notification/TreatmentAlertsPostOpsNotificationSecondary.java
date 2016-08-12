@@ -72,7 +72,8 @@ public class TreatmentAlertsPostOpsNotificationSecondary extends AbstractEHRNoti
         return "Evenings at 8:50 PM";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
 

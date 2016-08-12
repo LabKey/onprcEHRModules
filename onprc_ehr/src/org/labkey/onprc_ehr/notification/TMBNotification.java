@@ -67,7 +67,8 @@ public class TMBNotification extends ColonyAlertsNotification
         return "The report is designed to provide a daily summary of TMB and Reproductive Management alerts";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
 

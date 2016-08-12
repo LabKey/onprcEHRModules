@@ -61,7 +61,7 @@ public class MensesTMBNotification extends AbstractEHRNotification
     }
 
     @Override
-    public String getMessage(Container c, User u)
+    public String getMessageBodyHTML(Container c, User u)
     {
         //this is used as a placeholder so we can use it to track the list of subscribed users
         return null ;

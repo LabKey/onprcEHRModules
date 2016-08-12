@@ -80,7 +80,8 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
         return "The report is designed alert if there are any animals without rounds observations entered or lacking vet review";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
 

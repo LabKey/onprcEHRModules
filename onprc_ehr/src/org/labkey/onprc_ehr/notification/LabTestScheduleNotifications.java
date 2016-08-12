@@ -79,7 +79,8 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         return "The report provides alerts related to the lab test schedule.";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         final StringBuilder msg = new StringBuilder();
 

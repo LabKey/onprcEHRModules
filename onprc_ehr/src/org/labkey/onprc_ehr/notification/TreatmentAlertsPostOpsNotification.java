@@ -73,7 +73,8 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
         return "daily at 9AM,1PM, 5PM";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
 

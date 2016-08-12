@@ -87,7 +87,8 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         return "The report is designed alert for any rooms or animals groups with high incidence of clinical problems";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
 

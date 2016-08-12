@@ -63,7 +63,8 @@ public class DataValidationNotification extends ColonyAlertsNotification
         return "The report is designed to identify potential problems with the EHR data.  It is similar to Colony Alerts, except it is limited to alerts that indicate a true problem in the data itself.";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         final StringBuilder msg = new StringBuilder();
 

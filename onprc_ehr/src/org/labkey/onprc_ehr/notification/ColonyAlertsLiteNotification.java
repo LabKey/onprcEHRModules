@@ -63,7 +63,8 @@ public class ColonyAlertsLiteNotification extends ColonyAlertsNotification
         return "The report is designed to identify potential problems with the colony, primarily related to weights, housing and assignments.  It runs a subset of the alerts from Colony Alerts and will send an email only if problems are found.";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         final StringBuilder msg = new StringBuilder();
 

@@ -64,7 +64,7 @@ public class ComplianceNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getMessage(Container c, User u)
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
 

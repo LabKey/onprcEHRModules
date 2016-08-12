@@ -97,7 +97,8 @@ public class RequestAdminNotification extends ColonyAlertsNotification
         return "daily at 7AM and 3PM";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
 

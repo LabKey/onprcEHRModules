@@ -78,7 +78,7 @@ public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getMessage(Container c, User u)
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
 

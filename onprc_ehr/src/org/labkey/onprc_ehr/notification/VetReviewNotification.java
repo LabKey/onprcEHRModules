@@ -78,7 +78,8 @@ public class VetReviewNotification extends ColonyAlertsNotification
         return "The report is designed notify vets of any records needing review";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
 

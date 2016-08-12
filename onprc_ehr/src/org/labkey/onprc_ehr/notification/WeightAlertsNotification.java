@@ -84,7 +84,8 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         return "every Monday, at 9:15 AM";
     }
 
-    public String getMessage(Container c, User u)
+    @Override
+    public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
 
