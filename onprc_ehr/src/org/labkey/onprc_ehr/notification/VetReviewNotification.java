@@ -55,7 +55,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Vet Alerts: " + _dateTimeFormat.format(new Date());
     }

@@ -59,7 +59,7 @@ public class TreatmentAlertsPostOpsNotificationSecondary extends AbstractEHRNoti
         return "This runs every evening at 8:50PM  if there are treatments scheduled that have not yet been marked complete";
     }
 
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Daily Treatment PostOpsMed Alerts: " + _dateTimeFormat.format(new Date());
     }

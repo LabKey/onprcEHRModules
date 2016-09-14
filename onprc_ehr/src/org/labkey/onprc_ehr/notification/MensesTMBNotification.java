@@ -37,7 +37,7 @@ public class MensesTMBNotification extends AbstractEHRNotification
     }
 
     @Override
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "TMB Menses Notification: " + _dateTimeFormat.format(new Date());
     }

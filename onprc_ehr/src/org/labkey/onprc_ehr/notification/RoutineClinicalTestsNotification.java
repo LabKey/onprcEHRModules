@@ -33,8 +33,6 @@ import org.labkey.api.util.PageFlowUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -60,7 +58,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Routine Or Preventative Care Alerts: " + _dateTimeFormat.format(new Date());
     }

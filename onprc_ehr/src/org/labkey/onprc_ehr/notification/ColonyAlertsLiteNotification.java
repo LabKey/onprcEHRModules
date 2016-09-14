@@ -40,7 +40,7 @@ public class ColonyAlertsLiteNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Colony Alerts: " + AbstractEHRNotification._dateTimeFormat.format(new Date());
     }

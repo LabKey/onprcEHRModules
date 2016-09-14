@@ -44,7 +44,7 @@ public class TMBNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "TMB Alerts: " + _dateTimeFormat.format(new Date());
     }

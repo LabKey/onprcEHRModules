@@ -67,7 +67,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         return "This will send an email to alert of any animals with significant weight changes";
     }
 
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Weight Drop Alerts: " + _dateTimeFormat.format(new Date());
     }

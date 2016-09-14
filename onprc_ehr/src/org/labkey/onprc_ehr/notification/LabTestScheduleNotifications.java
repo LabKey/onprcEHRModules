@@ -36,9 +36,7 @@ import org.springframework.validation.BindException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * User: bbimber
@@ -57,7 +55,7 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         return "Lab Schedule Alerts";
     }
 
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Lab Test Schedule Alerts: " + AbstractEHRNotification._dateTimeFormat.format(new Date());
     }

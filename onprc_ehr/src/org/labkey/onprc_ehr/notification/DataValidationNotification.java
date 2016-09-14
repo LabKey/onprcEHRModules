@@ -40,7 +40,7 @@ public class DataValidationNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "EHR Data Validation Alerts: " + _dateTimeFormat.format(new Date());
     }

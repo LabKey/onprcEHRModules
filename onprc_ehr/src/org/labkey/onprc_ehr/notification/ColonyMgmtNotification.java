@@ -40,7 +40,7 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Colony Management Alerts: " + _dateTimeFormat.format(new Date());
     }

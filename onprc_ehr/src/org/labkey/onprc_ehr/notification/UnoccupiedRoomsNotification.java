@@ -31,9 +31,7 @@ import org.labkey.api.util.PageFlowUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * User: bimber
@@ -54,7 +52,7 @@ public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Unoccupied Rooms: " + _dateTimeFormat.format(new Date());
     }

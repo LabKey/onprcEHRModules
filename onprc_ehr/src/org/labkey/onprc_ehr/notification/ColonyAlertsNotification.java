@@ -77,7 +77,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         return "Colony Alerts";
     }
 
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Daily Colony Alerts: " + AbstractEHRNotification._dateTimeFormat.format(new Date());
     }

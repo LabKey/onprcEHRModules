@@ -15,7 +15,6 @@
  */
 package org.labkey.onprc_ehr.notification;
 
-import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
@@ -57,7 +56,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Clinical Alerts: " + _dateTimeFormat.format(new Date());
     }

@@ -64,7 +64,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
     }
 
     @Override
-    public String getEmailSubject()
+    public String getEmailSubject(Container c)
     {
         return "Clinical Alerts: " + _dateTimeFormat.format(new Date());
     }
