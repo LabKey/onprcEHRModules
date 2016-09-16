@@ -17,11 +17,11 @@
         );
 
         function getIconHtml(url, iconUrl, text){
-            return '<div class="ehr-tool-icon-wrapper-lg">' +
-                    '<div class="ehr-tool-icon-lg tool-icon">' +
-                    '<a href="' + url + '"><img src="' + iconUrl + '">' + text + '</a>' +
+            return '<a href="' + url + '"><div class="ehr-tool-icon-wrapper-lg tool-icon">' +
+                    '<div class="ehr-tool-icon-lg">' +
+                    '<img src="' + iconUrl + '">' + text  +
                     '</div>' +
-            '</div>';
+            '</div></a>';
         }
     });
 </script>
