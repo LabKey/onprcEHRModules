@@ -46,6 +46,7 @@
                             <fkDbSchema>laboratory</fkDbSchema>
                             <fkTable>samplecategory</fkTable>
                             <fkColumnName>category</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
                         </fk>
                         <measure>false</measure>
                         <dimension>true</dimension>
