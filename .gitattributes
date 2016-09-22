@@ -4,6 +4,7 @@ GeneticsCore/build.xml -text
 GeneticsCore/distributions/prime-seq-modules.xml -text
 GeneticsCore/module.properties -text
 GeneticsCore/resources/external/amplicon_standard_curve.R -text
+GeneticsCore/resources/external/run_wilcox.R -text
 GeneticsCore/resources/module.xml -text
 GeneticsCore/resources/queries/sequenceanalysis/alignment_summary_by_lineage/.qview.xml -text
 GeneticsCore/resources/queries/sequenceanalysis/alignment_summary_by_lineage/With[!!-~]Haplotype[!!-~]Matches.qview.xml -text
@@ -29,9 +30,14 @@ GeneticsCore/resources/views/geneticsMenu.view.xml -text
 GeneticsCore/resources/views/geneticsMenu.webpart.xml -text
 GeneticsCore/resources/views/methylationComparison.html -text
 GeneticsCore/resources/views/methylationComparison.view.xml -text
+GeneticsCore/resources/views/methylationRateComparison.html -text
+GeneticsCore/resources/views/methylationRateComparison.view.xml -text
 GeneticsCore/resources/views/sbtReview.html -text
 GeneticsCore/resources/views/sbtReview.view.xml -text
 GeneticsCore/resources/web/geneticscore/buttons.js -text
+GeneticsCore/resources/web/geneticscore/field/ItemSelector.css -text
+GeneticsCore/resources/web/geneticscore/field/ItemSelector.js -text
+GeneticsCore/resources/web/geneticscore/field/MultiSelect.js -text
 GeneticsCore/resources/web/geneticscore/panel/HaplotypePanel.js -text
 GeneticsCore/resources/web/geneticscore/window/ChangeReadsetStatusWindow.js -text
 GeneticsCore/resources/web/geneticscore/window/EditAlignmentsWindow.js -text
@@ -43,6 +49,7 @@ GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreManager.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreModule.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsTableCustomizer.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/analysis/MethylationRateComparison.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/analysis/MethylationRateComparisonHandler.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/button/ChangeReadsetStatusButton.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/button/HaplotypeReviewButton.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/button/PublishSBTHaplotypesButton.java -text
