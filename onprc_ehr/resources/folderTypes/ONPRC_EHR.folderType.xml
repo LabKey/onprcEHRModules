@@ -51,7 +51,7 @@
         </folderTab>
         <folderTab>
             <name>animalSearch</name>
-            <caption>Search Animals</caption>
+            <caption>Animal Search</caption>
             <selectors>
                 <selector>
                     <view>animalSearch</view>
