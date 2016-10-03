@@ -4,7 +4,7 @@ GeneticsCore/build.xml -text
 GeneticsCore/distributions/prime-seq-modules.xml -text
 GeneticsCore/module.properties -text
 GeneticsCore/resources/external/amplicon_standard_curve.R -text
-GeneticsCore/resources/external/run_wilcox.R -text
+GeneticsCore/resources/external/methylationComparison.R -text
 GeneticsCore/resources/module.xml -text
 GeneticsCore/resources/queries/sequenceanalysis/alignment_summary_by_lineage/.qview.xml -text
 GeneticsCore/resources/queries/sequenceanalysis/alignment_summary_by_lineage/With[!!-~]Haplotype[!!-~]Matches.qview.xml -text
@@ -62,6 +62,7 @@ GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BisSnpIndelRealignerStep.java 
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BisSnpIndelRealignerWrapper.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BisulfiteGenotyperWrapper.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BlastPipelineJobResourceAllocator.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/pipeline/ExacloudResourceSettings.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/SequenceJobResourceAllocator.java -text
 GeneticsCore/tools/installLabkey.sh -text
 GeneticsCore/tools/javaWrapper.sh -text
