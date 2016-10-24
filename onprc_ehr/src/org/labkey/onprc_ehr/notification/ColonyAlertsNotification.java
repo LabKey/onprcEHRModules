@@ -994,7 +994,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void overlappingProtocolCounts(final Container c, User u, final StringBuilder msg)
     {
         TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("protocolGroupsOverlapping"));
-        Map<String, List<Aggregate.Result>> results = ts.getAggregates(Arrays.asList(new Aggregate(FieldKey.fromString("protocol"), Aggregate.Type.COUNT, null, true), new Aggregate(FieldKey.fromString("project"), Aggregate.Type.COUNT, null, true)));
+        Map<String, List<Aggregate.Result>> results = ts.getAggregates(Arrays.asList(new Aggregate(FieldKey.fromString("protocol"), Aggregate.BaseType.COUNT, null, true), new Aggregate(FieldKey.fromString("project"), Aggregate.BaseType.COUNT, null, true)));
         Long totalProtocol = (Long)(results.get("protocol").get(0).getValue());
         Long totalProject = (Long)(results.get("project").get(0).getValue());
 
