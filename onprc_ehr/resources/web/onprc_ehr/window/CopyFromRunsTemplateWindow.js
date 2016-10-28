@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2015-2016 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 //  Created 2-2-2016  Blasa
 
 Ext4.define('ONPRC_EHR.window.CopyFromRunsTemplateWindow', {
