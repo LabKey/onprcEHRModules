@@ -66,12 +66,6 @@ GeneticsCore/src/org/labkey/GeneticsCore/pipeline/ExacloudResourceSettings.java 
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/SequenceJobResourceAllocator.java -text
 GeneticsCore/tools/installLabkey.sh -text
 GeneticsCore/tools/javaWrapper.sh -text
-GeneticsCore/tools/pipelineConfig/fergie2/pipelineConfig.xml -text
-GeneticsCore/tools/pipelineConfig/fergie2/remoteMuleConfig.xml -text
-GeneticsCore/tools/pipelineConfig/hoolock/pipelineConfig.xml -text
-GeneticsCore/tools/pipelineConfig/hoolock/remoteMuleConfig.xml -text
-GeneticsCore/tools/pipelineConfig/prcLabkey4/pipelineConfig.xml -text
-GeneticsCore/tools/pipelineConfig/prcLabkey4/remoteMuleConfig.xml -text
 GeneticsCore/webapp/WEB-INF/geneticscoreContext.xml -text
 /README.txt -text
 mergesync/MergeSync.iml -text
