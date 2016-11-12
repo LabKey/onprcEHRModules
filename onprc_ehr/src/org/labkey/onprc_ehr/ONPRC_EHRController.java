@@ -59,7 +59,6 @@ import org.labkey.api.view.NavTree;
 import org.labkey.api.view.UnauthorizedException;
 import org.labkey.onprc_ehr.etl.ETL;
 import org.labkey.onprc_ehr.etl.ETLRunnable;
-import org.labkey.onprc_ehr.legacydata.LegacyDataManager;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -70,7 +69,6 @@ import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -538,135 +536,6 @@ public class ONPRC_EHRController extends SpringActionController
         public void setAttemptRepair(boolean attemptRepair)
         {
             _attemptRepair = attemptRepair;
-        }
-    }
-
-    @RequiresPermission(AdminPermission.class)
-    public class LegacyDataImportAction extends ConfirmAction<LegacyDataImportForm>
-    {
-        public void validateCommand(LegacyDataImportForm form, Errors errors)
-        {
-
-        }
-
-        @Override
-        public ModelAndView getConfirmView(LegacyDataImportForm form, BindException errors) throws Exception
-        {
-            StringBuilder sb = new StringBuilder();
-            if (form.getTypes() == null || form.getTypes().length == 0)
-            {
-                errors.reject(ERROR_MSG, "No import types provided");
-                return new HtmlView("No import types provided");
-            }
-
-            List<String> types = new ArrayList<>();
-            types.addAll(Arrays.asList(form.getTypes()));
-
-            sb.append("This action is highly experimental and should be used at your own risk.  It is designed to bulk upload existing folders into workbooks. <br><br>");
-
-            if (types.contains("expt"))
-                sb.append(LegacyDataManager.getInstance().importSachaExperiments(getUser(), getContainer(), true)).append("<hr>");
-
-            if (types.contains("peptides"))
-                sb.append(LegacyDataManager.getInstance().importSachaPeptides(getUser(), getContainer(), true)).append("<hr>");
-
-            if (types.contains("elispot"))
-                sb.append(LegacyDataManager.getInstance().importElispotResults(getViewContext(), true)).append("<hr>");
-
-            if (types.contains("mhc"))
-                sb.append(LegacyDataManager.getInstance().importMHCData(getViewContext(), true)).append("<hr>");
-
-            if (types.contains("str"))
-                sb.append(LegacyDataManager.getInstance().importGenotypeData(getViewContext(), true)).append("<hr>");
-
-            if (types.contains("snp"))
-                sb.append(LegacyDataManager.getInstance().importSNPData(getViewContext(), true)).append("<hr>");
-
-            sb.append("<br>Do you want to continue?");
-
-            return new HtmlView(sb.toString());
-        }
-
-        public boolean handlePost(LegacyDataImportForm form, BindException errors) throws Exception
-        {
-            if (form.getTypes() == null || form.getTypes().length == 0)
-            {
-                errors.reject(ERROR_MSG, "No import types provided");
-                return false;
-            }
-
-            List<String> types = new ArrayList<>();
-            types.addAll(Arrays.asList(form.getTypes()));
-
-            if (types.contains("expt"))
-                LegacyDataManager.getInstance().importSachaExperiments(getUser(), getContainer(), false);
-
-            if (types.contains("peptides"))
-                LegacyDataManager.getInstance().importSachaPeptides(getUser(), getContainer(), false);
-
-            if (types.contains("elispot"))
-                LegacyDataManager.getInstance().importElispotResults(getViewContext(), false);
-
-            if (types.contains("mhc"))
-                LegacyDataManager.getInstance().importMHCData(getViewContext(), false);
-
-            if (types.contains("str"))
-                LegacyDataManager.getInstance().importGenotypeData(getViewContext(), false);
-
-            if (types.contains("snp"))
-                LegacyDataManager.getInstance().importSNPData(getViewContext(), false);
-
-            if (types.contains("animal_group_members"))
-                LegacyDataManager.getInstance().importAnimalGroupMembers(getViewContext());
-
-            return true;
-        }
-
-        public URLHelper getSuccessURL(LegacyDataImportForm form)
-        {
-            return getContainer().getStartURL(getUser());
-        }
-    }
-
-    public static class LegacyDataImportForm
-    {
-        private String[] _types;
-
-        public String[] getTypes()
-        {
-            return _types;
-        }
-
-        public void setTypes(String[] types)
-        {
-            _types = types;
-        }
-    }
-
-    @RequiresPermission(AdminPermission.class)
-    public class PopulateCaseHistoryAction extends ConfirmAction<Object>
-    {
-        public void validateCommand(Object form, Errors errors)
-        {
-
-        }
-
-        @Override
-        public ModelAndView getConfirmView(Object form, BindException errors) throws Exception
-        {
-            return new HtmlView("This will update the cases table to set the remarks column based on the IRIS Hx fields.  Do you want to continue?");
-        }
-
-        public boolean handlePost(Object form, BindException errors) throws Exception
-        {
-            LegacyDataManager.getInstance().populateHxColumn(getContainer(), getUser());
-
-            return true;
-        }
-
-        public ActionURL getSuccessURL(Object form)
-        {
-            return getContainer().getStartURL(getUser());
         }
     }
 

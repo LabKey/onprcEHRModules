@@ -1137,7 +1137,6 @@ onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultEnrichmentDataSource.java -tex
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultPairingDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultSnomedDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/ONPRCUrinalysisLabworkType.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/legacydata/LegacyDataManager.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/AbstractEHRNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/BehaviorNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ClinicalAlertsNotification.java -text
