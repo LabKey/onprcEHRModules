@@ -17,27 +17,22 @@ package org.labkey.onprc_ehr.notification;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.Results;
-import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.ldk.notification.AbstractNotification;
-import org.labkey.api.ldk.notification.Notification;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.Module;
-import org.labkey.api.module.ModuleLoader;
-import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
-import org.labkey.api.settings.AppProps;
+import org.labkey.api.settings.LookAndFeelProperties;
 import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
-import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -50,8 +45,6 @@ import java.util.Map;
 abstract public class AbstractEHRNotification extends AbstractNotification
 {
     protected final static Logger log = Logger.getLogger(AbstractEHRNotification.class);
-    protected final static SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
-    protected final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     protected final static SimpleDateFormat _timeFormat = new SimpleDateFormat("kk:mm");
     protected static final String lastSave = "lastSave";
 
@@ -61,6 +54,16 @@ abstract public class AbstractEHRNotification extends AbstractNotification
     }
 
     protected NotificationService _ns = NotificationService.get();
+
+    public DateFormat getDateFormat(Container c)
+    {
+        return new SimpleDateFormat(LookAndFeelProperties.getInstance(c).getDefaultDateFormat());
+    }
+
+    public DateFormat getDateTimeFormat(Container c)
+    {
+        return new SimpleDateFormat(LookAndFeelProperties.getInstance(c).getDefaultDateTimeFormat());
+    }
 
     public boolean isAvailable(Container c)
     {
@@ -134,7 +137,7 @@ abstract public class AbstractEHRNotification extends AbstractNotification
         map.save();
     }
 
-    protected String getParameterUrlString(Map<String, Object> params)
+    protected String getParameterUrlString(Container c, Map<String, Object> params)
     {
         StringBuilder sb = new StringBuilder();
         for (String key : params.keySet())
@@ -142,7 +145,7 @@ abstract public class AbstractEHRNotification extends AbstractNotification
             sb.append("&query.param.").append(key).append("=");
             if (params.get(key) instanceof Date)
             {
-                sb.append(_dateFormat.format(params.get(key)));
+                sb.append(getDateFormat(c).format(params.get(key)));
             }
             else
             {

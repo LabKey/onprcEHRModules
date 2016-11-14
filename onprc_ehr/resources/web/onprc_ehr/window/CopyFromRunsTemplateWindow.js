@@ -143,7 +143,7 @@ Ext4.define('ONPRC_EHR.window.CopyFromRunsTemplateWindow', {
                 width: 60
             });
             toAdd.push({
-                html: r.get('date').format('Y-m-d-H:i'),         //Modified 2-5-2015  to include date hour minutes
+                html: r.get('date').format(LABKEY.extDefaultDateTimeFormat),         //Modified 2-5-2015  to include date hour minutes
                 width: 100
             });
             toAdd.push({

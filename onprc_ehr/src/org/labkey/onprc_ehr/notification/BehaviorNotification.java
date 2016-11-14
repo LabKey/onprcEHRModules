@@ -67,7 +67,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Behavior Alerts: " + _dateTimeFormat.format(new Date());
+        return "Behavior Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -203,7 +203,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         if (rows.size() > 0)
         {
             msg.append("<b>There are " + rows.size() + " animals with differences in pairing since the previous day.  Note, this considers full pairs vs. non-full pairs only (ie. grooming contact is treated as non-paired).  It considers housing at midnight of the days in question.</b>  ");
-            String url = getExecuteQueryUrl(c, "study", "pairDifferences", null) + "&query.changeType~isnonblank&query.changeType~neq=Group Members Changed&query.param.Date1=" + _dateFormat.format(date1.getTime()) + "&query.param.Date2=" + _dateFormat.format(date2.getTime());
+            String url = getExecuteQueryUrl(c, "study", "pairDifferences", null) + "&query.changeType~isnonblank&query.changeType~neq=Group Members Changed&query.param.Date1=" + getDateFormat(c).format(date1.getTime()) + "&query.param.Date2=" + getDateFormat(c).format(date2.getTime());
 
             msg.append("<a href='" + url + "'>Click here to view them</a><p>");
 
@@ -237,7 +237,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("category", "totalAnimals"), null, new Sort("category"));
         msg.append("<b>Housing summary:</b><p>");
         msg.append("<table border=1 style='border-collapse: collapse;'>");
-        msg.append("<tr style='font-weight: bold;'><td>Category</td><td># Animals</td><td>Previous Value " + (lastRunDate == null ? "" : "(" + _dateFormat.format(lastRunDate) + ")") + "</td></tr>");
+        msg.append("<tr style='font-weight: bold;'><td>Category</td><td># Animals</td><td>Previous Value " + (lastRunDate == null ? "" : "(" + getDateFormat(c).format(lastRunDate) + ")") + "</td></tr>");
         final String urlBase = getExecuteQueryUrl(c, "study", "demographics", "By Location");
 
         ts.forEach(new Selector.ForEachBlock<ResultSet>()

@@ -5,13 +5,6 @@
                 <tableTitle>Microbiology Results</tableTitle>
                 <tableUrl />
                 <columns>
-                    <column columnName="Id">
-
-                    </column>
-                    <column columnName="date">
-                        <formatString>yyyy-MM-dd HH:mm</formatString>
-                    </column>
-
                     <column columnName="servicerequest">
                          <columnTitle>Service Request</columnTitle>
                     </column>
@@ -28,9 +21,6 @@
                             <fkTable>snomed</fkTable>
                             <fkColumnName>code</fkColumnName>
                         </fk>
-                    </column>
-                    <column columnName="servicerequest">
-                        <columnTitle>Service Requested</columnTitle>
                     </column>
                     <column columnName="organism">
                         <columnTitle>Organism</columnTitle>

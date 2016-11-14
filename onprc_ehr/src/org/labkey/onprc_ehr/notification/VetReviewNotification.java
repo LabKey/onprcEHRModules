@@ -57,7 +57,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Vet Alerts: " + _dateTimeFormat.format(new Date());
+        return "Vet Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -128,8 +128,8 @@ public class VetReviewNotification extends ColonyAlertsNotification
                 rows.add("<tr><td>" +
                         "<a href='" + urlBase + rs.getString(FieldKey.fromString("Id")) + "'>" + rs.getString(FieldKey.fromString("Id")) + "</a></td>" +
                         "<td>" + (rs.getString(FieldKey.fromString("Id/assignedVet/assignedVet")) == null ? "NONE" : rs.getString(FieldKey.fromString("Id/assignedVet/assignedVet"))) + "</td>" +
-                        "<td>" + _dateFormat.format(rs.getDate(FieldKey.fromString("earliestRemarkSinceReview"))) + "</td>" +
-                        "<td>" + (rs.getDate(FieldKey.fromString("lastVetReview")) == null ? "Never" : _dateFormat.format(rs.getDate(FieldKey.fromString("lastVetReview")))) + "</td>" +
+                        "<td>" + getDateFormat(c).format(rs.getDate(FieldKey.fromString("earliestRemarkSinceReview"))) + "</td>" +
+                        "<td>" + (rs.getDate(FieldKey.fromString("lastVetReview")) == null ? "Never" : getDateFormat(c).format(rs.getDate(FieldKey.fromString("lastVetReview")))) + "</td>" +
                         "<td>" + rs.getString(FieldKey.fromString("calculated_status")) + "</td>" +
                         "</tr>");
             }

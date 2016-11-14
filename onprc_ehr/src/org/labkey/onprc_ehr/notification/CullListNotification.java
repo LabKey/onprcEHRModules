@@ -41,7 +41,7 @@ public class CullListNotification extends AbstractEHRNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Cull/Underutilized Notification: " + _dateTimeFormat.format(new Date());
+        return "Cull/Underutilized Notification: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override

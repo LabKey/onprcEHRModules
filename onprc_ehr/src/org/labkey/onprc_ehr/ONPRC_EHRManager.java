@@ -23,6 +23,7 @@ import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.query.Queryable;
 import org.labkey.api.security.User;
+import org.labkey.api.settings.LookAndFeelProperties;
 import org.labkey.api.study.Dataset;
 import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
@@ -117,15 +118,13 @@ public class ONPRC_EHRManager
     }
 
     private String LOCK_PROP_KEY = getClass().getName() + "||animalLock";
-    private final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private final static SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
     public void lockAnimalCreation(Container c, User u, Boolean lock, Integer startingId, Integer idCount)
     {
         PropertyManager.PropertyMap map = PropertyManager.getWritableProperties(c, LOCK_PROP_KEY, true);
         map.put("lockedBy", u.getDisplayName(u));
         map.put("locked", lock.toString());
-        map.put("lockDate", _dateTimeFormat.format(new Date()));
+        map.put("lockDate", new SimpleDateFormat(LookAndFeelProperties.getInstance(c).getDefaultDateTimeFormat()).format(new Date()));
         map.put("startingId", (startingId == null ? null : startingId.toString()));
         map.put("idCount", (idCount == null ? null : idCount.toString()));
 
@@ -148,7 +147,7 @@ public class ONPRC_EHRManager
             {
                 try
                 {
-                    ret.put("lockDate", _dateTimeFormat.parse(props.get("lockDate")));
+                    ret.put("lockDate", new SimpleDateFormat(LookAndFeelProperties.getInstance(c).getDefaultDateTimeFormat()).parse(props.get("lockDate")));
                 }
                 catch (ParseException e)
                 {

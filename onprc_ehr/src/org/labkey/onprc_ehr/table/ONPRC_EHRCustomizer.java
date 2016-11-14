@@ -50,6 +50,7 @@ import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
+import org.labkey.api.settings.LookAndFeelProperties;
 import org.labkey.api.study.Dataset;
 import org.labkey.api.study.DatasetTable;
 import org.labkey.api.study.Study;
@@ -1182,13 +1183,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ColumnInfo birthCol = ti.getColumn("birth");
         if (birthCol != null)
         {
-            birthCol.setFormat("yyyy-MM-dd HH:mm");
+            birthCol.setFormat(LookAndFeelProperties.getInstance(ti.getUserSchema().getContainer()).getDefaultDateTimeFormat());
         }
 
         ColumnInfo deathCol = ti.getColumn("death");
         if (deathCol != null)
         {
-            deathCol.setFormat("yyyy-MM-dd HH:mm");
+            deathCol.setFormat(LookAndFeelProperties.getInstance(ti.getUserSchema().getContainer()).getDefaultDateTimeFormat());
         }
     }
 

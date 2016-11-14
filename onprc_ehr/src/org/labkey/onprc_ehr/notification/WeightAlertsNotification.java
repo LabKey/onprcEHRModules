@@ -69,7 +69,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
     public String getEmailSubject(Container c)
     {
-        return "Weight Drop Alerts: " + _dateTimeFormat.format(new Date());
+        return "Weight Drop Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
         //Find today's date
         Date now = new Date();
-        msg.append("This email contains alerts of significant weight changes.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
+        msg.append("This email contains alerts of significant weight changes.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
 
         getLivingWithoutWeight(c, u, msg);
 
@@ -201,11 +201,11 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
         Calendar date = Calendar.getInstance();
         date.add(Calendar.DATE, -30);
-        filter.addCondition(FieldKey.fromString("LatestWeightDate"), _dateFormat.format(date.getTime()), CompareType.DATE_GTE);
+        filter.addCondition(FieldKey.fromString("LatestWeightDate"), getDateFormat(c).format(date.getTime()), CompareType.DATE_GTE);
 
         TableSelector ts = new TableSelector(ti, columns.values(), filter, null);
 
-        msg.append("<b>Weights since " + _dateFormat.format(date.getTime()) + " representing changes of " + (pct > 0 ? "+" : "") + pct + "% in the past " + max + " days:</b><p>");
+        msg.append("<b>Weights since " + getDateFormat(c).format(date.getTime()) + " representing changes of " + (pct > 0 ? "+" : "") + pct + "% in the past " + max + " days:</b><p>");
         final Set<String> distinctAnimals = new HashSet<String>();
 
         final Map<String, Map<String, List<Map<String, Object>>>> summary = new TreeMap<>();
@@ -283,8 +283,8 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                         msg.append("<td>").append(map.get("OpenProblems") == null ? "" : map.get("OpenProblems")).append("</td>");
                         msg.append("<td>").append(map.get("peDate") == null ? "" : map.get("peDate")).append("</td>");
 
-                        msg.append("<td>").append(_dateTimeFormat.format(map.get("LatestWeightDate"))).append("<br>");
-                        msg.append(_dateTimeFormat.format(map.get("date"))).append("</td>");
+                        msg.append("<td>").append(getDateTimeFormat(c).format(map.get("LatestWeightDate"))).append("<br>");
+                        msg.append(getDateTimeFormat(c).format(map.get("date"))).append("</td>");
 
                         msg.append("<td>").append(map.get("IntervalInDays")).append("</td>");
 
@@ -343,7 +343,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         {
             final Set<String> animalIds = new HashSet<>();
 
-            msg.append("<b>WARNING: The following animals have a weight entered since " + _dateFormat.format(date.getTime()) + " representing 3 consecutive weight drops with a total drop of more than 3%:</b><br><br>\n");
+            msg.append("<b>WARNING: The following animals have a weight entered since " + getDateFormat(c).format(date.getTime()) + " representing 3 consecutive weight drops with a total drop of more than 3%:</b><br><br>\n");
 
             final StringBuilder tableMsg = new StringBuilder();
             tableMsg.append("<table border=1><tr><td>Room</td><td>Cage</td><td>Id</td><td>Investigator(s)</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Date</td><td>Interval (days)</td><td>Weight (kg)</td><td>% Change</td></tr>");
@@ -365,9 +365,9 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                     tableMsg.append("<td>").append(getValue(results, "Id/openProblems/problems")).append("</td>");
                     tableMsg.append("<td>").append(getValue(results, "Id/physicalExamHistory/daysSinceExam")).append("</td>");
 
-                    tableMsg.append("<td>").append(getDateValue(results, "date")).append("<br>");
-                    tableMsg.append(getDateValue(results, "prevDate1")).append("<br>");
-                    tableMsg.append(getDateValue(results, "prevDate2"));
+                    tableMsg.append("<td>").append(getDateValue(c, results, "date")).append("<br>");
+                    tableMsg.append(getDateValue(c, results, "prevDate1")).append("<br>");
+                    tableMsg.append(getDateValue(c, results, "prevDate2"));
                     tableMsg.append("</td>");
 
                     tableMsg.append("<td>");
@@ -417,9 +417,9 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         return val == null ? "" : val;
     }
 
-    private String getDateValue(Results rs, String dateProp) throws SQLException
+    private String getDateValue(Container c, Results rs, String dateProp) throws SQLException
     {
         Date dateVal = rs.getDate(FieldKey.fromString(dateProp));
-        return dateVal == null ? "" : _dateFormat.format(dateVal);
+        return dateVal == null ? "" : getDateFormat(c).format(dateVal);
     }
 }

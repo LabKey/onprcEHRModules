@@ -54,7 +54,7 @@ public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Unoccupied Rooms: " + _dateTimeFormat.format(new Date());
+        return "Unoccupied Rooms: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override

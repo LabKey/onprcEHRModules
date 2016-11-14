@@ -60,7 +60,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Routine Or Preventative Care Alerts: " + _dateTimeFormat.format(new Date());
+        return "Routine Or Preventative Care Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
     {
         StringBuilder sb = new StringBuilder();
         Date now = new Date();
-        sb.append("This email contains a series of alerts and warnings about routine and preventative care due for the colony.  It was run on: " + AbstractEHRNotification._dateFormat.format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
+        sb.append("This email contains a series of alerts and warnings about routine and preventative care due for the colony.  It was run on: " + getDateFormat(c).format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
 
         getTbAlerts(sb, c, u);
         getPEAlerts(sb, c, u);

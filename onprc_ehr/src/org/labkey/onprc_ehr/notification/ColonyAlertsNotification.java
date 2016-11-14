@@ -79,7 +79,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     public String getEmailSubject(Container c)
     {
-        return "Daily Colony Alerts: " + AbstractEHRNotification._dateTimeFormat.format(new Date());
+        return "Daily Colony Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //Find today's date
         Date now = new Date();
-        msg.append("This email contains a series of automatic alerts about the colony.  It was run on: " + AbstractEHRNotification._dateFormat.format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
+        msg.append("This email contains a series of automatic alerts about the colony.  It was run on: " + getDateFormat(c).format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
 
         //assignments
         doAssignmentChecks(c, u, msg);
@@ -709,7 +709,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " finalized records with future dates.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "StudyData", null) + "&query.date~dategt=" + AbstractEHRNotification._dateFormat.format(date) + "&query.qcstate/PublicData~eq=true&query.dataset/label~notin=" + datasets + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "StudyData", null) + "&query.date~dategt=" + getDateFormat(c).format(date) + "&query.qcstate/PublicData~eq=true&query.dataset/label~notin=" + datasets + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -726,7 +726,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Deaths"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         if (ts.getRowCount() > 0)
         {
-            msg.append("Deaths since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + ":<br><br>\n");
+            msg.append("Deaths since " + getDateFormat(c).format(cal.getTime()) + ":<br><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
@@ -734,7 +734,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Deaths", null) + "&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Deaths", null) + "&query.date~dategte=" + getDateFormat(c).format(cal.getTime()) + "'>Click here to view them</a><p>\n");
         }
     }
 
@@ -766,7 +766,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Birth"), filter, new Sort(getStudy(c).getSubjectColumnName()));
         if (ts.getRowCount() > 0)
         {
-            msg.append("Births since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + ":<br><br>\n");
+            msg.append("Births since " + getDateFormat(c).format(cal.getTime()) + ":<br><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
@@ -774,7 +774,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Birth", null) + "&query.date~dategte=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Birth", null) + "&query.date~dategte=" + getDateFormat(c).format(cal.getTime()) + "'>Click here to view them</a><p>\n");
         }
     }
 
@@ -791,7 +791,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>ALERT: There are " + count + " assignments with a projected release date for tomorrow.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.projectedRelease~dateeq=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.projectedRelease~dateeq=" + getDateFormat(c).format(cal.getTime()) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -808,7 +808,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>ALERT: There are " + count + " assignments with a projected release date for today or earlier that have not already been ended.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.projectedRelease~datelte=" + AbstractEHRNotification._dateFormat.format(date) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Assignment", null) + "&query.projectedRelease~datelte=" + getDateFormat(c).format(date) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -1046,7 +1046,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 {
                     msg.append(rs.getString(getStudy(c).getSubjectColumnName()));
                     if (rs.getDate("birth") == null)
-                        msg.append(" (" + AbstractEHRNotification._dateFormat.format(rs.getDate("birth")) + ")");
+                        msg.append(" (" + getDateFormat(c).format(rs.getDate("birth")) + ")");
 
                     msg.append("<br>\n");
                 }
@@ -1070,7 +1070,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
                 public void exec(ResultSet rs) throws SQLException
                 {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + " (" + AbstractEHRNotification._dateFormat.format(rs.getDate("date"))+ ")" + "<br>\n");
+                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + " (" + getDateFormat(c).format(rs.getDate("date"))+ ")" + "<br>\n");
                 }
             });
 
@@ -1105,8 +1105,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         if (total > 0)
         {
-            msg.append("<b>WARNING: There are " + total + " housing records since " + AbstractEHRNotification._dateFormat.format(cal.getTime()) + " that do not have a contiguous previous or next record.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "HousingCheck", null) + "&query.param.MINDATE=" + AbstractEHRNotification._dateFormat.format(cal.getTime()) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<b>WARNING: There are " + total + " housing records since " + getDateFormat(c).format(cal.getTime()) + " that do not have a contiguous previous or next record.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "HousingCheck", null) + "&query.param.MINDATE=" + getDateFormat(c).format(cal.getTime()) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -1400,7 +1400,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 roomMap.put(room, count);
             }
 
-            String formatted = _dateFormat.format(cal.getTime());
+            String formatted = getDateFormat(c).format(cal.getTime());
             msg.append("The following transfers took place on " + formatted + ".  <a href='" + (getExecuteQueryUrl(c, "study", "Housing", null) + "&query.date~dateeq=" + formatted) + "'>click here to view them</a><br>");
             msg.append("<table border=1 style='border-collapse: collapse;'><tr><td>Room</td><td>Total</td></tr>");
             for (String room : roomMap.keySet())
@@ -1453,7 +1453,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     StringBuilder text = new StringBuilder();
                     text.append(rs.getString(getStudy(c).getSubjectColumnName()));
                     Double amount = -1.0 * rs.getDouble(FieldKey.fromString("BloodRemaining/availableBlood"));
-                    text.append(": ").append(DecimalFormat.getNumberInstance().format(amount)).append(" mL overdrawn on ").append(_dateFormat.format(rs.getDate(FieldKey.fromString("date"))));
+                    text.append(": ").append(DecimalFormat.getNumberInstance().format(amount)).append(" mL overdrawn on ").append(getDateFormat(c).format(rs.getDate(FieldKey.fromString("date"))));
 
                     //String url = getParticipantURL(c, rs.getString(getStudy(c).getSubjectColumnName()));
                     String url = getExecuteQueryUrl(c, "study", "Blood Draws", "With Blood Volume") + "&query.Id~eq=" + rs.getString(getStudy(c).getSubjectColumnName());
@@ -1553,7 +1553,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count == 0)
         {
-            msg.append("There are no " + label + " requests scheduled for " + AbstractEHRNotification._dateFormat.format(new Date()) + " that have not already been performed.\n");
+            msg.append("There are no " + label + " requests scheduled for " + getDateFormat(c).format(new Date()) + " that have not already been performed.\n");
         }
         else
         {
@@ -1576,7 +1576,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
 
-            msg.append("The following " + label + " requests are scheduled for " + _dateFormat.format(new Date()) + ", but have not been marked complete:<p>\n");
+            msg.append("The following " + label + " requests are scheduled for " + getDateFormat(c).format(new Date()) + ", but have not been marked complete:<p>\n");
             for (String chargeType : summary.keySet())
             {
                 msg.append(chargeType + ": ");
@@ -1601,7 +1601,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " current or scheduled blood draws for animals not currently at the center.</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "blood", null) + "&query.date~dategte=" + _dateFormat.format(new Date()) + "&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "blood", null) + "&query.date~dategte=" + getDateFormat(c).format(new Date()) + "&query.Id/DataSet/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
@@ -1787,8 +1787,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " drug entries since " + _dateFormat.format(cal.getTime()) + " for ketamine or telazol using mgs listing an amount less than " + minValue +"</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Drug Administration", null) + "&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~lt=" + minValue + "'>Click here to view them</a><br>\n");
+            msg.append("<b>WARNING: There are " + count + " drug entries since " + getDateFormat(c).format(cal.getTime()) + " for ketamine or telazol using mgs listing an amount less than " + minValue +"</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Drug Administration", null) + "&query.created~dategte=" + getDateFormat(c).format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~lt=" + minValue + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
 
@@ -1804,8 +1804,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count2 = ts2.getRowCount();
         if (count2 > 0)
         {
-            msg.append("<b>WARNING: There are " + count2 + " drug entries since " + _dateFormat.format(cal.getTime()) + " for ketamine or telazol using mgs listing an amount greater than " + maxValue + "</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Drug Administration", null) + "&query.created~dategte=" + _dateFormat.format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~gt=" + maxValue + "'>Click here to view them</a><br>\n");
+            msg.append("<b>WARNING: There are " + count2 + " drug entries since " + getDateFormat(c).format(cal.getTime()) + " for ketamine or telazol using mgs listing an amount greater than " + maxValue + "</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Drug Administration", null) + "&query.created~dategte=" + getDateFormat(c).format(cal.getTime()) + "&query.code/meaning~containsoneof=ketamine;telazol&query.amount_units~contains=mg&query.qcstate/PublicData~eq=true&query.amount~gt=" + maxValue + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
@@ -1841,7 +1841,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " assignment records ended since " + _dateFormat.format(cal.getTime()) + " that lack a release condition.</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " assignment records ended since " + getDateFormat(c).format(cal.getTime()) + " that lack a release condition.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "assignment", null, filter) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }

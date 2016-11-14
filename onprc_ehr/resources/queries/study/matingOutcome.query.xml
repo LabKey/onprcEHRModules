@@ -6,7 +6,6 @@
                 <columns>
                     <column columnName="births">
                         <columnTitle>Births Within 180 Days</columnTitle>
-                        <!--<formatString>yyyy-MM-dd</formatString>-->
                     </column>
                     <column columnName="confirmations">
                         <columnTitle>Pregnancy Confirmations Within 180 Days</columnTitle>

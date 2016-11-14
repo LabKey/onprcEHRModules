@@ -42,7 +42,7 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Colony Management Alerts: " + _dateTimeFormat.format(new Date());
+        return "Colony Management Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
         //only send if there are alerts
         if (msg.length() > 0)
         {
-            msg.insert(0, "This email contains a series of automatic alerts for colony management and husbandry.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
+            msg.insert(0, "This email contains a series of automatic alerts for colony management and husbandry.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
         }
 
         return msg.toString();

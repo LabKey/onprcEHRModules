@@ -42,7 +42,7 @@ public class DataValidationNotification extends ColonyAlertsNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "EHR Data Validation Alerts: " + _dateTimeFormat.format(new Date());
+        return "EHR Data Validation Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -116,7 +116,7 @@ public class DataValidationNotification extends ColonyAlertsNotification
         //only send if there are alerts
         if (msg.length() > 0)
         {
-            msg.insert(0, "This email contains a series of automatic alerts designed to identify problems in the EHR data.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
+            msg.insert(0, "This email contains a series of automatic alerts designed to identify problems in the EHR data.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
         }
 
         return msg.toString();

@@ -13,7 +13,6 @@
                     </column>
                     <column columnName="date">
                         <columnTitle>Observation Date</columnTitle>
-                        <formatString>yyyy-MM-dd</formatString>
                     </column>
                 </columns>
             </table>

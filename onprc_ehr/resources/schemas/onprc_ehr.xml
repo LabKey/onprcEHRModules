@@ -4,7 +4,6 @@
         <columns>
             <column columnName="rowid"/>
             <column columnName="date">
-                <formatString>yyyy-MM-dd HH:mm</formatString>
             </column>
             <column columnName="queryname">
                 <columnTitle>queryName</columnTitle>

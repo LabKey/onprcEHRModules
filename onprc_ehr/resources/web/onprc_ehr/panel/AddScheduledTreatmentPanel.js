@@ -99,7 +99,7 @@ Ext4.define('onprc_ehr.panel.AddScheduledTreatmentPanel', {
 
         var filterArray = [];
 
-        filterArray.push(LABKEY.Filter.create('date', date.format('Y-m-d'), LABKEY.Filter.Types.DATE_EQUAL));
+        filterArray.push(LABKEY.Filter.create('date', date.format(LABKEY.extDefaultDateFormat), LABKEY.Filter.Types.DATE_EQUAL));
         filterArray.push(LABKEY.Filter.create('taskid', null, LABKEY.Filter.Types.ISBLANK));
         filterArray.push(LABKEY.Filter.create('treatmentStatus', null, LABKEY.Filter.Types.ISBLANK));
 
@@ -134,7 +134,7 @@ Ext4.define('onprc_ehr.panel.AddScheduledTreatmentPanel', {
             queryName: 'treatmentSchedule',
             parameters: {
                 NumDays: 1,
-                StartDate: date.format('Y-m-d')
+                StartDate: date.format(LABKEY.extDefaultDateFormat)
             },
             sort: 'date,Id/curlocation/room_sortValue,Id/curlocation/cage_sortValue,Id',
             columns: 'primaryKey,lsid,treatmentid,Id,date,project,meaning,code,qualifier,route,concentration,conc_units,amount,amount_units,dosage,dosage_units,volume,vol_units,remark,category,chargetype',

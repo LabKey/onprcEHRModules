@@ -66,7 +66,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Clinical Alerts: " + _dateTimeFormat.format(new Date());
+        return "Clinical Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -138,7 +138,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
             int idx = 0;
             while (rs.next())
             {
-                String url = getExecuteQueryUrl(c, "study", "animalGroupProblemSummary", null) + " &query.param.StartDate=" + _dateFormat.format(cal.getTime())+ "&query.param.EndDate=" + _dateFormat.format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other";
+                String url = getExecuteQueryUrl(c, "study", "animalGroupProblemSummary", null) + " &query.param.StartDate=" + getDateFormat(c).format(cal.getTime())+ "&query.param.EndDate=" + getDateFormat(c).format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other";
                 if (idx == 0)
                 {
                     msg.append("<b>WARNING: The following animal groups have a high incidence of clinical problems (>" + threshold + "% of animals) in the past " + interval + " days:</b><br>\n");
@@ -206,7 +206,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
             int idx = 0;
             while (rs.next())
             {
-                String url = getExecuteQueryUrl(c, "study", "roomProblemSummary", null) + "&query.param.StartDate=" + _dateFormat.format(cal.getTime())+ "&query.param.EndDate=" + _dateFormat.format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other&query.room/area~neq=Hospital&query.totalIdWithProblems~gt=2";
+                String url = getExecuteQueryUrl(c, "study", "roomProblemSummary", null) + "&query.param.StartDate=" + getDateFormat(c).format(cal.getTime())+ "&query.param.EndDate=" + getDateFormat(c).format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other&query.room/area~neq=Hospital&query.totalIdWithProblems~gt=2";
                 if (idx == 0)
                 {
                     msg.append("<b>WARNING: The following non-hospital rooms have a high incidence of clinical problems (>" + threshold + "% of animals, with at least 2 animals afflicted) in the past " + interval + " days:</b><br>\n");

@@ -189,7 +189,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
                 tissueMap[key].recipientIds.push(row.getValue('recipient'));
             }
 
-            var title = row.getValue('recipient/lastName') + ' (' + row.getFormattedDateValue('dateOnly', 'Y-m-d') + ')';
+            var title = row.getValue('recipient/lastName') + ' (' + row.getFormattedDateValue('dateOnly', LABKEY.extDefaultDateFormat) + ')';
             if (tissueMap[key].titles.indexOf(title) == -1){
                 tissueMap[key].titles.push(title);
             }

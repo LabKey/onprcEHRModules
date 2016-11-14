@@ -42,7 +42,7 @@ public class ColonyAlertsLiteNotification extends ColonyAlertsNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Colony Alerts: " + AbstractEHRNotification._dateTimeFormat.format(new Date());
+        return "Colony Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ColonyAlertsLiteNotification extends ColonyAlertsNotification
         //if msg.legnth == 0, notification service wont send the message
         if (msg.length() > 0)
         {
-            msg.insert(0, "This email contains a series of automatic alerts about the colony.  It was run on: " + AbstractEHRNotification._dateFormat.format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
+            msg.insert(0, "This email contains a series of automatic alerts about the colony.  It was run on: " + getDateFormat(c).format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
         }
 
         return msg.toString();

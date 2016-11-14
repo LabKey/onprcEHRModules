@@ -65,7 +65,7 @@ public class TreatmentAlertsNotification extends AbstractEHRNotification
 
     public String getEmailSubject(Container c)
     {
-        return "Daily Treatment Alerts: " + _dateTimeFormat.format(new Date());
+        return "Daily Treatment Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class TreatmentAlertsNotification extends AbstractEHRNotification
 
         //Find today's date
         Date now = new Date();
-        msg.append("This email contains any treatments not marked as completed.  It was run on: " + _dateFormat.format(now) + " at " + _timeFormat.format(now) + ".<p>");
+        msg.append("This email contains any treatments not marked as completed.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
 
         //findTreatmentsWithoutProject(c, u, msg);
         processTreatments(c, u, msg, new Date());
@@ -143,11 +143,11 @@ public class TreatmentAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(ti, colMap.values(), filter, new Sort("Id/curLocation/area,Id/curLocation/room"));
         ts.setNamedParameters(params);
 
-        String url = getExecuteQueryUrl(c, "study", "treatmentSchedule", null) + "&" + filter.toQueryString("query") + getParameterUrlString(params);
+        String url = getExecuteQueryUrl(c, "study", "treatmentSchedule", null) + "&" + filter.toQueryString("query") + getParameterUrlString(c, params);
         long total = ts.getRowCount();
         if (total == 0)
         {
-            msg.append("There are no treatments scheduled on " + _dateFormat.format(maxDate) + " on or before " + _timeFormat.format(maxDate) + ". Treatments could be added after this email was sent, so please <a href='" + url + "'>click here to check online</a> closer to the time.<hr>\n");
+            msg.append("There are no treatments scheduled on " + getDateFormat(c).format(maxDate) + " on or before " + _timeFormat.format(maxDate) + ". Treatments could be added after this email was sent, so please <a href='" + url + "'>click here to check online</a> closer to the time.<hr>\n");
         }
         else
         {
@@ -187,7 +187,7 @@ public class TreatmentAlertsNotification extends AbstractEHRNotification
 
             if (totals.get(incomplete) == 0)
             {
-                msg.append("All treatments scheduled prior to " + _timeFormat.format(maxDate) + " have been marked complete as of " + _dateTimeFormat.format(curDate) + ".<p>\n");
+                msg.append("All treatments scheduled prior to " + _timeFormat.format(maxDate) + " have been marked complete as of " + getDateTimeFormat(c).format(curDate) + ".<p>\n");
             }
             else
             {

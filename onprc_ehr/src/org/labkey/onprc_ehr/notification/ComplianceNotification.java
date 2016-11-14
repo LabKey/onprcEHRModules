@@ -42,7 +42,7 @@ public class ComplianceNotification extends ColonyAlertsNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Compliance Alerts: " + _dateTimeFormat.format(new Date());
+        return "Compliance Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override

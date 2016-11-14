@@ -21,9 +21,9 @@ EHR.model.DataModelManager.registerMetadata('LabworkTestPanel', {
         'study.hematologyResults': {           //Added 3-14-2016 Blasa
             date: {
                 xtype: 'xdatetime',
-                extFormat: 'Y-m-d H:i',
+                extFormat: LABKEY.extDefaultDateTimeFormat,
                 editorConfig: {
-                    dateFormat: 'Y-m-d',
+                    dateFormat: LABKEY.extDefaultDateFormat,
                     timeFormat: 'H:i'
                 }
             }
@@ -31,9 +31,9 @@ EHR.model.DataModelManager.registerMetadata('LabworkTestPanel', {
         'study.chemistryResults': {           //Added 3-14-2016 Blasa
             date: {
                 xtype: 'xdatetime' ,
-                extFormat: 'Y-m-d H:i',
+                extFormat: LABKEY.extDefaultDateTimeFormat,
                 editorConfig: {
-                    dateFormat: 'Y-m-d',
+                    dateFormat: LABKEY.extDefaultDateFormat,
                     timeFormat: 'H:i'
                 }
              }
@@ -41,9 +41,9 @@ EHR.model.DataModelManager.registerMetadata('LabworkTestPanel', {
         'study.urinalysisResults': {        //Added 3-14-2016 Blasa
             date: {
                 xtype: 'xdatetime',
-                extFormat: 'Y-m-d H:i',
+                extFormat: LABKEY.extDefaultDateTimeFormat,
                 editorConfig: {
-                    dateFormat: 'Y-m-d',
+                    dateFormat: LABKEY.extDefaultDateFormat,
                     timeFormat: 'H:i'
                 }
             }
@@ -51,9 +51,9 @@ EHR.model.DataModelManager.registerMetadata('LabworkTestPanel', {
         'study.antibioticSensitivity': {      //Added 3-14-2016 Blasa
             date: {
                 xtype: 'xdatetime',
-                extFormat: 'Y-m-d H:i',
+                extFormat: LABKEY.extDefaultDateTimeFormat,
                 editorConfig: {
-                    dateFormat: 'Y-m-d',
+                    dateFormat: LABKEY.extDefaultDateFormat,
                     timeFormat: 'H:i'
                 }
             }
@@ -61,9 +61,9 @@ EHR.model.DataModelManager.registerMetadata('LabworkTestPanel', {
         'study.parasitologyResults': {      //Added 3-14-2016 Blasa
             date: {
                 xtype: 'xdatetime',
-                extFormat: 'Y-m-d H:i',
+                extFormat: LABKEY.extDefaultDateTimeFormat,
                 editorConfig: {
-                    dateFormat: 'Y-m-d',
+                    dateFormat: LABKEY.extDefaultDateFormat,
                     timeFormat: 'H:i'
                 }
             }

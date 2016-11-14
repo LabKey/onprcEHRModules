@@ -43,7 +43,7 @@ public class ETLNotification extends AbstractEHRNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "ETL Validation: " + _dateTimeFormat.format(new Date());
+        return "ETL Validation: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override

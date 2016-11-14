@@ -148,7 +148,7 @@ Ext4.onReady(function (){
                             width: labelWidth
                         });
                         tableConfig.items.push({
-                            html: new Date(json.timestamps[query]).format('Y-m-d H:i'),
+                            html: new Date(json.timestamps[query]).format(LABKEY.extDefaultDateTimeFormat),
                             width: 150
                         });
                         tableConfig.items.push({
@@ -170,7 +170,7 @@ Ext4.onReady(function (){
                                             if (!rec)
                                                 return rec;
 
-                                            return Ext4.isString(rec) ? rec : new Date(rec).format('Y-m-d h:i');
+                                            return Ext4.isString(rec) ? rec : new Date(rec).format(LABKEY.extDefaultDateTimeFormat);
                                         }
                                     }
                                 },

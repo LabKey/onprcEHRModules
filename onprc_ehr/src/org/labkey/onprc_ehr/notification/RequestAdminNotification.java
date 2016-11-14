@@ -58,7 +58,7 @@ public class RequestAdminNotification extends ColonyAlertsNotification
 
     public String getEmailSubject(Container c)
     {
-        return "DCM Service Request Alerts: " + AbstractEHRNotification._dateTimeFormat.format(new Date());
+        return "DCM Service Request Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -79,7 +79,7 @@ public class RequestAdminNotification extends ColonyAlertsNotification
 
         //Find today's date
         Date now = new Date();
-        msg.append("This email is designed to summarize pending or scheduled requests, including potential problems with these requests like animals lacking assignment or blood draws that would place the animal above the allowable amount.  It was run on: " + AbstractEHRNotification._dateFormat.format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
+        msg.append("This email is designed to summarize pending or scheduled requests, including potential problems with these requests like animals lacking assignment or blood draws that would place the animal above the allowable amount.  It was run on: " + getDateFormat(c).format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
 
         bloodDrawsOnDeadAnimals(c, u, msg);
         bloodDrawsOverLimit(c, u, msg, 1);

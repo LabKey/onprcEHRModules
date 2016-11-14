@@ -98,7 +98,7 @@ Ext4.define('ONPRC_EHR.window.BulkChangeCasesWindow', {
 
             toAdd.push({
                 xtype: 'displayfield',
-                value: LDK.ConvertUtils.parseDate(caseRow.date).format('Y-m-d')
+                value: LDK.ConvertUtils.parseDate(caseRow.date).format(LABKEY.extDefaultDateFormat)
             });
 
             toAdd.push({

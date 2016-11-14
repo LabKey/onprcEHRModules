@@ -329,7 +329,7 @@ Ext4.define('ONPRC_EHR.window.BulkStrokeRoundsWindow', {
         }
 
         timeStr = Ext4.String.leftPad(timeStr, 5, '0'); //expect: HH:mm
-        var ret = LDK.ConvertUtils.parseDate(date.format('Y-m-d') + ' ' + timeStr);
+        var ret = LDK.ConvertUtils.parseDate(date.format(LABKEY.extDefaultDateFormat) + ' ' + timeStr);
         if (!ret){
             errors.push('Row ' + rowIdx + ': invalid time: ' + timeStr);
         }

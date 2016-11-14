@@ -12,7 +12,6 @@
                         </fk>
                     </column>
                     <column columnName="date">
-                        <formatString>yyyy-MM-dd HH:mm</formatString>
                         <columnTitle>Date</columnTitle>
                         <nullable>false</nullable>
                         <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>

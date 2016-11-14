@@ -57,7 +57,7 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
 
     public String getEmailSubject(Container c)
     {
-        return "Lab Test Schedule Alerts: " + AbstractEHRNotification._dateTimeFormat.format(new Date());
+        return "Lab Test Schedule Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -1);
 
-        msg.append("This email contains clinpath results entered since: " + AbstractEHRNotification._dateTimeFormat.format(cal.getTime()) + ".<p>");
+        msg.append("This email contains clinpath results entered since: " + getDateTimeFormat(c).format(cal.getTime()) + ".<p>");
 
         requestsSubmittedSinceLastEmail(c, u, msg);
         requestsNotYetApproved(c, u, msg);
@@ -119,7 +119,7 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         try
         {
             rs = view.getResults();
-            msg.append("<b>Clinpath requests created since the last time this email was sent on " + AbstractEHRNotification._dateTimeFormat.format(lastRun) + ":</b><p>\n");
+            msg.append("<b>Clinpath requests created since the last time this email was sent on " + getDateTimeFormat(c).format(lastRun) + ":</b><p>\n");
             int total = 0;
             while (rs.next())
             {
@@ -238,7 +238,7 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
             if (total > 0)
             {
                 msg.append("<b>WARNING: There are " + total + " requests that were requested for today or earlier, but have not been marked complete.</b><br>");
-                msg.append("<p><a href='" +  getExecuteQueryUrl(c, "study", "Clinpath Runs", null) + "&query.qcstate/label~neq=Completed&query.date~datelte=" + AbstractEHRNotification._dateFormat.format(new Date()) + "'>Click here to view them</a><br>\n");
+                msg.append("<p><a href='" +  getExecuteQueryUrl(c, "study", "Clinpath Runs", null) + "&query.qcstate/label~neq=Completed&query.date~datelte=" + getDateFormat(c).format(new Date()) + "'>Click here to view them</a><br>\n");
                 msg.append("<hr>\n");
             }
             else
