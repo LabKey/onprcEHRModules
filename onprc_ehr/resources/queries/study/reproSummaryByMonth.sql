@@ -16,15 +16,34 @@
 PARAMETERS(ID CHAR)
 
 SELECT
-  coalesce(t2.id, ID) as Id,
-  m.year,
-  m.monthname,
-  m.monthnum @hidden,
-  t2.day,
-  group_concat(DISTINCT t2.isPregnant) as isPregnant,
-  group_concat(DISTINCT t2.value, chr(10)) as value,
+  pvt.*,
+  grp.isPregnant
+FROM
+  (SELECT
+    coalesce(t2.id, ID) as Id,
+    m.year,
+    m.monthname,
+    m.monthnum,
+    t2.day,
+    --group_concat(DISTINCT t2.isPregnant) as isPregnant,
+    group_concat(DISTINCT t2.value, chr(10)) as value,
 
-FROM ldk.monthRange m
-LEFT JOIN study.reproSummaryRawData t2 ON (m.year = t2.year AND m.monthNum = t2.monthNum AND t2.Id = ID)
-GROUP BY m.year, m.monthname, m.monthnum, t2.day, t2.id
-PIVOT value BY day IN (SELECT value FROM ldk.integers i WHERE i.value > 0 AND i.value <=31 ORDER BY i.value)
+    FROM ldk.monthRange m
+    LEFT JOIN study.reproSummaryRawData t2 ON (m.year = t2.year AND m.monthNum = t2.monthNum AND t2.Id = ID)
+    GROUP BY m.year, m.monthname, m.monthnum, t2.day, t2.id
+    PIVOT value BY day IN (SELECT value FROM ldk.integers i WHERE i.value > 0 AND i.value <=31 ORDER BY i.value))pvt
+
+LEFT OUTER JOIN
+
+(SELECT
+    coalesce(t2.id, ID) as Id,
+    m.year,
+    m.monthname,
+    m.monthnum,
+    group_concat(DISTINCT t2.isPregnant) as isPregnant
+
+    FROM ldk.monthRange m
+    LEFT JOIN study.reproSummaryRawData t2 ON (m.year = t2.year AND m.monthNum = t2.monthNum AND t2.Id = ID)
+    GROUP BY m.year, m.monthname, m.monthnum, t2.id) grp
+
+ON pvt.id = grp.id AND pvt.monthnum = grp.monthnum AND pvt.year = grp.year

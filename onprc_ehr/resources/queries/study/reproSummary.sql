@@ -14,15 +14,32 @@
  * limitations under the License.
  */
 SELECT
-  t2.id,
-  t2.year,
-  t2.monthname,
-  t2.monthnum @hidden,
-  t2.day,
-  group_concat(DISTINCT t2.isPregnant) as isPregnant,
-  group_concat(DISTINCT t2.value, chr(10)) as value,
+  pvt.*,
+  grp.isPregnant
+FROM
+  (SELECT
+    t2.id,
+    t2.year,
+    t2.monthname,
+    t2.monthnum,
+    t2.day,
+    group_concat(DISTINCT t2.value, chr(10)) as value,
 
-FROM study.reproSummaryRawData t2
+  FROM study.reproSummaryRawData t2
 
-GROUP BY t2.year, t2.monthname, t2.monthnum, t2.day, t2.id
-PIVOT value BY day IN (SELECT value FROM ldk.integers i WHERE i.value > 0 AND i.value <=31 ORDER BY i.value)
+  GROUP BY t2.year, t2.monthname, t2.monthnum, t2.day, t2.id
+  PIVOT value BY day IN (SELECT value FROM ldk.integers i WHERE i.value > 0 AND i.value <=31 ORDER BY i.value)) pvt
+
+  LEFT OUTER JOIN
+
+  (SELECT
+    group_concat(DISTINCT t2.isPregnant) as isPregnant,
+    t2.id,
+    t2.year,
+    t2.monthname,
+    t2.monthnum
+
+    FROM study.reproSummaryRawData t2
+    GROUP BY t2.year, t2.monthname, t2.monthnum, t2.id) grp
+
+ON pvt.id = grp.id AND pvt.year = grp.year AND pvt.monthnum = grp.monthnum
