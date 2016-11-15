@@ -27,12 +27,10 @@ import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
-import org.labkey.api.settings.LookAndFeelProperties;
 import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -54,16 +52,6 @@ abstract public class AbstractEHRNotification extends AbstractNotification
     }
 
     protected NotificationService _ns = NotificationService.get();
-
-    public DateFormat getDateFormat(Container c)
-    {
-        return new SimpleDateFormat(LookAndFeelProperties.getInstance(c).getDefaultDateFormat());
-    }
-
-    public DateFormat getDateTimeFormat(Container c)
-    {
-        return new SimpleDateFormat(LookAndFeelProperties.getInstance(c).getDefaultDateTimeFormat());
-    }
 
     public boolean isAvailable(Container c)
     {
