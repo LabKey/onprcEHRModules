@@ -13,6 +13,7 @@
                     </column>
                     <column columnName="date">
                         <columnTitle>Observation Date</columnTitle>
+                        <formatString>Date</formatString>
                     </column>
                 </columns>
             </table>

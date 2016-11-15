@@ -29,6 +29,7 @@
                     </column>
                     <column columnName="StartDate">
                         <columnTitle>Treatment Start Date</columnTitle>
+                        <formatString>DateTime</formatString>
                     </column>
                     <column columnName="code">
                         <nullable>false</nullable>

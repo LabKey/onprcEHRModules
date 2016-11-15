@@ -4,6 +4,9 @@
             <table tableName="matingsExpanded" tableDbType="TABLE">
                 <tableTitle>Matings</tableTitle>
                 <columns>
+                    <column columnName="date">
+                        <formatString>Date</formatString>
+                    </column>
                     <column columnName="partner">
                         <columnTitle>Partner</columnTitle>
                         <fk>

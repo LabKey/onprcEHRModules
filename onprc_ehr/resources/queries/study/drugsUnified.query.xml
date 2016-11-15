@@ -11,6 +11,7 @@
                         <shownInDetailsView>false</shownInDetailsView>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
+                    <column columnName="Id"/>
                     <column columnName="date">
                         <columnTitle>Start Date</columnTitle>
                     </column>

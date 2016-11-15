@@ -6,9 +6,11 @@
                 <columns>
                     <column columnName="earliestOverlap">
                         <columnTitle>Earliest Overlap</columnTitle>
+                        <formatString>Date</formatString>
                     </column>
                     <column columnName="mostRecentOverlap">
                         <columnTitle>Most Recent Overlap</columnTitle>
+                        <formatString>Date</formatString>
                     </column>
                     <column columnName="pairid">
                         <isHidden>true</isHidden>

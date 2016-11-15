@@ -5,6 +5,8 @@
                 <tableTitle>Microbiology Results</tableTitle>
                 <tableUrl />
                 <columns>
+                    <column columnName="Id"/>
+                    <column columnName="date"/>
                     <column columnName="servicerequest">
                          <columnTitle>Service Request</columnTitle>
                     </column>
