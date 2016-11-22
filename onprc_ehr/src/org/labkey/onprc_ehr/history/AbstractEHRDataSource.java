@@ -15,11 +15,8 @@
  */
 package org.labkey.onprc_ehr.history;
 
-import org.labkey.api.data.Container;
 import org.labkey.api.ehr.history.AbstractDataSource;
-import org.labkey.api.module.ModuleLoader;
-import org.labkey.api.security.User;
-import org.labkey.onprc_ehr.ONPRC_EHRModule;
+import org.labkey.api.module.Module;
 
 /**
  * User: bimber
@@ -28,24 +25,13 @@ import org.labkey.onprc_ehr.ONPRC_EHRModule;
  */
 abstract public class AbstractEHRDataSource extends AbstractDataSource
 {
-    public AbstractEHRDataSource(String schema, String query)
+    public AbstractEHRDataSource(Module module, String schema, String query)
     {
-        super(schema, query);
+        super(schema, query, module);
     }
 
-    public AbstractEHRDataSource(String schema, String query, String categoryText, String categoryGroup)
+    public AbstractEHRDataSource(String schema, String query, String categoryText, String categoryGroup, Module module)
     {
-        super(schema, query, categoryText, categoryGroup);
-    }
-
-    @Override
-    public boolean isAvailable(Container c, User u)
-    {
-        if (!c.getActiveModules().contains(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)))
-        {
-            return false;
-        }
-
-        return super.isAvailable(c, u);
+        super(schema, query, categoryText, categoryGroup, module);
     }
 }

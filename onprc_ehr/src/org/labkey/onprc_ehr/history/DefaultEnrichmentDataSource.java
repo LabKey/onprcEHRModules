@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.history;
 
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
+import org.labkey.api.module.Module;
 import org.labkey.api.util.PageFlowUtil;
 
 import java.sql.SQLException;
@@ -29,9 +30,9 @@ import java.util.Set;
  */
 public class DefaultEnrichmentDataSource extends AbstractEHRDataSource
 {
-    public DefaultEnrichmentDataSource()
+    public DefaultEnrichmentDataSource(Module module)
     {
-        super("study", "Enrichment", "Enrichment", "Behavior");
+        super("study", "Enrichment", "Enrichment", "Behavior", module);
     }
 
     @Override

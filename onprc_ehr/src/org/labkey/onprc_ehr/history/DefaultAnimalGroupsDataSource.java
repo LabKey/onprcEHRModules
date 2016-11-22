@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.history;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.ehr.history.AbstractDataSource;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.util.PageFlowUtil;
 
@@ -31,9 +32,9 @@ import java.util.Set;
  */
 public class DefaultAnimalGroupsDataSource extends AbstractDataSource
 {
-    public DefaultAnimalGroupsDataSource()
+    public DefaultAnimalGroupsDataSource(Module module)
     {
-        super("study", "animal_group_members", "Added To Group", "Animal Groups");
+        super("study", "animal_group_members", "Added To Group", "Animal Groups", module);
     }
 
     @Override

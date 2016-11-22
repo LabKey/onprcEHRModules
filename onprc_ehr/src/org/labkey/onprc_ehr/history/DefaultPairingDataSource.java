@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.history;
 import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
+import org.labkey.api.module.Module;
 import org.labkey.api.util.PageFlowUtil;
 
 import java.sql.SQLException;
@@ -30,9 +31,9 @@ import java.util.Set;
  */
 public class DefaultPairingDataSource extends AbstractEHRDataSource
 {
-    public DefaultPairingDataSource()
+    public DefaultPairingDataSource(Module module)
     {
-        super("study", "pairings", "Pairing", "Behavior");
+        super("study", "pairings", "Pairing", "Behavior", module);
     }
 
     @Override

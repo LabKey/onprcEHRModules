@@ -393,11 +393,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, DrugRequestBulkEditFormType.NAME), "study", "drug");
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, LabworkRequestBulkEditFormType.NAME), "study", "clinpathRuns");
 
-        EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource());
-        EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource());
-        EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsEndDataSource());
+        EHRService.get().registerOptionalClinicalHistoryResources(this);
+        EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource(this));
+        EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource(this));
+        EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsEndDataSource(this));
         //R.Blasa   3-4-2015
-        EHRService.get().registerHistoryDataSource(new DefaultAnimalRecordFlagDataSource());
+        EHRService.get().registerHistoryDataSource(new DefaultAnimalRecordFlagDataSource(this));
 
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
     }

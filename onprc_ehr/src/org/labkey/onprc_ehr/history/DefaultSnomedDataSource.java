@@ -28,6 +28,7 @@ import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.history.HistoryRow;
 import org.labkey.api.ehr.history.HistoryRowImpl;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
@@ -49,9 +50,9 @@ import java.util.Set;
  */
 public class DefaultSnomedDataSource extends AbstractEHRDataSource
 {
-    public DefaultSnomedDataSource()
+    public DefaultSnomedDataSource(Module module)
     {
-        super("ehr", "snomed_tags", "Diagnostic Codes", "Clinical");
+        super("ehr", "snomed_tags", "Diagnostic Codes", "Clinical", module);
 
     }
 

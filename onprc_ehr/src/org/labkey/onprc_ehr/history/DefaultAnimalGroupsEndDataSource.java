@@ -22,6 +22,7 @@ import org.labkey.api.data.Results;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.ehr.history.HistoryRow;
 import org.labkey.api.ehr.history.AbstractDataSource;
+import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
@@ -37,9 +38,9 @@ import java.util.Set;
  */
 public class DefaultAnimalGroupsEndDataSource extends AbstractDataSource
 {
-    public DefaultAnimalGroupsEndDataSource()
+    public DefaultAnimalGroupsEndDataSource(Module module)
     {
-        super("study", "animal_group_members", "Removed From Group", "Animal Groups");
+        super("study", "animal_group_members", "Removed From Group", "Animal Groups", module);
     }
 
     @Override

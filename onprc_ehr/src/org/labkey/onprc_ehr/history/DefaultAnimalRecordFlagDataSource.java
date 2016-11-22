@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.history;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.ehr.history.AbstractDataSource;
+import org.labkey.api.module.Module;
 import org.labkey.api.util.PageFlowUtil;
 import java.sql.SQLException;
 import java.util.Set;
@@ -29,9 +30,9 @@ import java.util.Set;
  */
 public class DefaultAnimalRecordFlagDataSource extends AbstractDataSource
 {
-    public DefaultAnimalRecordFlagDataSource()
+    public DefaultAnimalRecordFlagDataSource(Module module)
     {
-        super("study", "Flag_Remarks", "Flag Alerts", "Alert");
+        super("study", "Flag_Remarks", "Flag Alerts", "Alert", module);
     }
 
     @Override
