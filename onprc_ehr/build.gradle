@@ -1,0 +1,16 @@
+import org.labkey.gradle.util.BuildUtils;
+
+dependencies
+{
+   BuildUtils.addLabKeyDependency(project: project, config: "compile", depProjectPath: ":externalModules:labModules:LDK", depProjectConfig: "apiCompile")
+   BuildUtils.addLabKeyDependency(project: project, config: "compile", depProjectPath: ":server:customModules:ehr", depProjectConfig: "apiCompile")
+   BuildUtils.addLabKeyDependency(project: project, config: "runtime", depProjectPath: ":externalModules:labModules:LDK")
+   BuildUtils.addLabKeyDependency(project: project, config: "runtime", depProjectPath: ":externalModules:onprcEHRModules:mergesync")
+   BuildUtils.addLabKeyDependency(project: project, config: "runtime", depProjectPath: ":externalModules:onprcEHRModules:GeneticsCore")
+   BuildUtils.addLabKeyDependency(project: project, config: "runtime", depProjectPath: ":externalModules:onprcEHRModules:ogasync")
+   BuildUtils.addLabKeyDependency(project: project, config: "runtime", depProjectPath: ":externalModules:onprcEHRModules:onprc_billing")
+   BuildUtils.addLabKeyDependency(project: project, config: "runtime", depProjectPath: ":externalModules:onprcEHRModules:onprc_billingpublic")
+   BuildUtils.addLabKeyDependency(project: project, config: "runtime", depProjectPath: ":externalModules:onprcEHRModules:onprc_reports")
+   BuildUtils.addLabKeyDependency(project: project, config: "runtime", depProjectPath: ":externalModules:onprcEHRModules:onprc_ssu")
+   BuildUtils.addLabKeyDependency(project: project, config: "runtime", depProjectPath: ":externalModules:onprcEHRModules:sla")
+}
