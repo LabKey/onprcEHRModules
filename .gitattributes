@@ -1,5 +1,6 @@
 * text=auto !eol
 GenotypeAssays/GenotypeAssays.iml -text
+GenotypeAssays/build.gradle -text
 GenotypeAssays/module.properties -text
 GenotypeAssays/resources/assay/GenotypeAssay/config.xml -text
 GenotypeAssays/resources/assay/GenotypeAssay/domains/batch.xml -text
@@ -82,6 +83,7 @@ GenotypeAssays/src/org/labkey/genotypeassays/assay/SSPPivotingImportMethod.java 
 GenotypeAssays/src/org/labkey/genotypeassays/assay/UCDavisSTRImportMethod.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/buttons/CacheAnalysesButton.java -text
 HormoneAssay/HormoneAssay.iml -text
+HormoneAssay/build.gradle -text
 HormoneAssay/module.properties -text
 HormoneAssay/resources/assay/hormone/config.xml -text
 HormoneAssay/resources/assay/hormone/domains/batch.xml -text
