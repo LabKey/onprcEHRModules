@@ -167,7 +167,7 @@ public class ETLRunnable implements Runnable
                 {
                     long lastTs = getLastTimestamp(datasetName);
                     byte[] lastRow = getLastVersion(datasetName);
-                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    String version = (lastRow == DEFAULT_VERSION ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII"));
 
                     log.info(String.format("table study.%s last synced %s", datasetName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
                     log.info(String.format("table study.%s rowversion was %s", datasetName, version));
@@ -177,7 +177,7 @@ public class ETLRunnable implements Runnable
                 {
                     long lastTs = getLastTimestamp(tableName);
                     byte[] lastRow = getLastVersion(tableName);
-                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    String version = (lastRow == DEFAULT_VERSION ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII"));
                     log.info(String.format("table ehr.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
                     log.info(String.format("table ehr.%s rowversion was %s", tableName, version));
                 }
@@ -186,7 +186,7 @@ public class ETLRunnable implements Runnable
                 {
                     long lastTs = getLastTimestamp(tableName);
                     byte[] lastRow = getLastVersion(tableName);
-                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    String version = (lastRow == DEFAULT_VERSION ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII"));
                     log.info(String.format("table ehr_lookups.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
                     log.info(String.format("table ehr_lookups.%s rowversion was %s", tableName, version));
                 }
@@ -195,7 +195,7 @@ public class ETLRunnable implements Runnable
                 {
                     long lastTs = getLastTimestamp(tableName);
                     byte[] lastRow = getLastVersion(tableName);
-                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    String version = (lastRow == DEFAULT_VERSION ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII"));
                     log.info(String.format("table onprc_billing.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
                     log.info(String.format("table onprc_billing.%s rowversion was %s", tableName, version));
                 }
@@ -204,7 +204,7 @@ public class ETLRunnable implements Runnable
                 {
                     long lastTs = getLastTimestamp(tableName);
                     byte[] lastRow = getLastVersion(tableName);
-                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    String version = (lastRow == DEFAULT_VERSION ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII"));
                     log.info(String.format("table mergesync.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
                     log.info(String.format("table mergesync.%s rowversion was %s", tableName, version));
                 }
@@ -213,7 +213,7 @@ public class ETLRunnable implements Runnable
                 {
                     long lastTs = getLastTimestamp(tableName);
                     byte[] lastRow = getLastVersion(tableName);
-                    String version = lastRow.equals(DEFAULT_VERSION) ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII");
+                    String version = (lastRow == DEFAULT_VERSION ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII"));
                     log.info(String.format("table sla.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
                     log.info(String.format("table sla.%s rowversion was %s", tableName, version));
                 }
