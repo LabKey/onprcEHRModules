@@ -39,6 +39,7 @@ import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.EHRDemographicsService;
+import org.labkey.api.ehr.EHRQCState;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.demographics.AnimalRecord;
 import org.labkey.api.exp.api.StorageProvisioner;
@@ -46,9 +47,11 @@ import org.labkey.api.exp.property.Domain;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.query.BatchValidationException;
+import org.labkey.api.query.DuplicateKeyException;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
 import org.labkey.api.query.QueryService;
+import org.labkey.api.query.QueryUpdateServiceException;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
@@ -60,16 +63,20 @@ import org.labkey.api.util.GUID;
 import org.labkey.api.util.MailHelper;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.Pair;
+//import org.labkey.ehr.demographics.EHRDemographicsServiceImpl;
+//import org.labkey.ehr.security.EHRSecurityManager;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 import org.labkey.onprc_ehr.notification.CullListNotification;
 import org.labkey.onprc_ehr.notification.MensesTMBNotification;
+import org.labkey.onprc_ehr.notification.ProtocolAlertsNotification;
 
 import javax.mail.Address;
 import javax.mail.Message;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -105,6 +112,7 @@ public class ONPRC_EHRTriggerHelper
     private Integer _nextProjectId = null;
     private Integer _nextProtocolId = null;
 
+
     //NOTE: we probably do not want to cache this outside this transaction, unless we can keep it accurate
     private Map<String, List<CageRecord>> _cachedCages = new HashMap<>();
     private Map<Integer, Boolean> _cachedFrequencies = new HashMap<>();
@@ -115,6 +123,7 @@ public class ONPRC_EHRTriggerHelper
 
     private static final String NONRESTRICTED = "Nonrestricted";
     private static final String EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, EXPERIMENTAL";
+
 
     public ONPRC_EHRTriggerHelper(int userId, String containerId)
     {
@@ -1037,20 +1046,13 @@ public class ONPRC_EHRTriggerHelper
                     row.put("enddate", deathDate);
 
 
-                    //only update the release code automatically if experimentally euthanized and that assignment called for a terminal projected release.  otherwise leave blank and let error report catch it
-                    if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) && terminalCode == rowMap.get("projectedReleaseCondition"))
+
+                    //Modified: 6-28-2016 R.Blasa     All experimetal and Euthenized  cause of death are automitaclly assigned 206 at  release
+                    if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) )
                     {
-                        //if already 207 or higher, dont attmept to downgrade
-                        List<Integer> foundCodes = findHigherActiveConditonCodes(id, deathDate, terminalCode);
-                        if (foundCodes.isEmpty())
-                        {
-                            row.put("releaseCondition", terminalCode);
-                        }
-                        else
-                        {
-                            Collections.sort(foundCodes);
-                            row.put("releaseCondition", foundCodes.get(foundCodes.size() - 1));
-                        }
+
+                            row.put("releaseCondition", 206);
+
                     }
 
                     toEnd.add(row);
@@ -1075,7 +1077,90 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public void doBirthTriggers(String id, Date date, String dam, String birthCondition, boolean isBecomingPublic) throws Exception
+    //Added on 10/5/2016, L.Kolli
+    public Map<String, Object> onAnimalArrival_AddDemographics(String id, Map<String, Object> row) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
+    {
+        Map<String, Object> demographicsProps = new HashMap<String, Object>();
+
+        for (String key : new String[]{"Id", "gender", "species", "dam", "sire", "origin", "source", "geographic_origin", "birth"})
+        {
+            if (row.containsKey(key))
+            {
+                demographicsProps.put(key, row.get(key));
+            }
+        }
+
+        //allow the potential for entry without birth date
+        demographicsProps.put("date", row.get("birth") != null ? row.get("birth") : row.get("date"));
+        demographicsProps.put("calculated_status", "Alive");
+        //createDemographicsRecord(id, demographicsProps);
+        return demographicsProps;
+    }
+
+    //Added on 10/5/2016, L.Kolli
+    public void onAnimalArrival_AddBirth(String id, Map<String, Object> row) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
+    {
+        if (row.get("birth") != null)
+        {
+            Map<String, Object> birthProps = new HashMap<>();
+            for (String key : new String[]{"Id", "dam", "sire"})
+            {
+                if (row.containsKey(key))
+                {
+                    birthProps.put(key, row.get(key));
+                }
+            }
+            birthProps.put("date", row.get("birth"));
+            birthProps.put("gender", row.get("gender"));
+            birthProps.put("species", row.get("species"));
+            birthProps.put("geographic_origin", row.get("geographic_origin"));
+
+            //Added: 10-14-2016 R.Blasa
+            birthProps.put("Arrival_Date", row.get("date"));
+
+            createBirthRecord_ONPRC(id, birthProps);
+        }
+    }
+
+    //Added on 09/30/2016, L.Kolli
+    public void createBirthRecord_ONPRC(String id, Map<String, Object> props) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
+    {
+        if (id == null) ///If AId is null, return
+            return;
+
+        //Check if the AId exists in the Birth table
+        TableInfo ti1 = getTableInfo("study", "birth");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
+
+        TableSelector ts = new TableSelector(ti1, filter, null);
+        if (ts.exists())
+        {
+            //Birth record found. Don't make duplicate entry
+            return;
+        }
+        else //Enter newly entered AnimalID into Birth table
+        {
+            TableInfo ti = getTableInfo("study", "birth");
+            Map<String, Object> row = new CaseInsensitiveHashMap<>();
+            row.putAll(props);
+            if (!row.containsKey("objectid"))
+            {
+                row.put("objectid", new GUID().toString());
+            }
+
+            List<Map<String, Object>> rows = new ArrayList<>();
+            rows.add(row);
+            BatchValidationException errors = new BatchValidationException();
+            ti.getUpdateService().insertRows(getUser(), getContainer(), rows, errors, null, getExtraContext());
+
+            if (errors.hasErrors())
+                throw errors;
+        }
+
+    }
+
+    //Modified: 10-13-2016 R.Blasa  to include passign Arrival date
+    public void doBirthTriggers(String id, Date date, String dam, Date Arrival_Date, String birthCondition, boolean isBecomingPublic) throws Exception
     {
         //is the infant is dead, terminate the assignments
         Date enddate = isBirthAlive(birthCondition) ? null : date;
@@ -1093,8 +1178,21 @@ public class ONPRC_EHRTriggerHelper
             String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
             if (nonRestrictedFlag != null)
             {
+                //Modified: 10-14-2016 R.Blasa
+                Date Arrival_date = null;
+                if (Arrival_Date != null)
+                {
+                    Arrival_date = Arrival_Date;
+
+                }
+                else
+                {
+                    Arrival_date = date;
+                }
+
+
                 //only add initial status if born alive
-                EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, date, enddate, null, Collections.singletonList(id), false);
+                EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, Arrival_date, enddate, null, Collections.singletonList(id), false);
             }
             else
             {
@@ -1909,7 +2007,7 @@ public class ONPRC_EHRTriggerHelper
         {
             TableInfo t2 = getTableInfo("study", "assignment");
             SimpleFilter filters = new SimpleFilter(FieldKey.fromString("id"), id);
-            filters.addCondition(FieldKey.fromString("project"), 559, CompareType.EQUAL);   // Breeders
+            filters.addCondition(FieldKey.fromString("project"), 559, CompareType.EQUAL);   // Breeders   Center Project 0300
             filters.addCondition(FieldKey.fromString("enddateCoalesced"), new Date(), CompareType.DATE_GTE);
             TableSelector ts2 = new TableSelector(t2, PageFlowUtil.set("project"), filters, null);  //
             List<Integer> ret2 = ts2.getArrayList(Integer.class);
@@ -2000,7 +2098,87 @@ public class ONPRC_EHRTriggerHelper
         }
 
     }
-        //Added 9-2-2015  Blasa
+
+    //Added 4-27-2016 Blasa
+    public void sendProtocolNotifications(String protocolid)
+    {
+
+        if (!NotificationService.get().isServiceEnabled())
+        {
+            _log.info("notification service is not enabled, will not send Protocol notification.");
+            return;
+        }
+
+        String subject = "Protocol Notification: ";
+
+        Set<UserPrincipal> recipients = NotificationService.get().getRecipients(new ProtocolAlertsNotification(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)), getContainer());
+
+        if (recipients.size() == 0)
+        {
+            _log.warn("No recipients, Protocol notification");
+            return;
+        }
+
+        final StringBuilder html = new StringBuilder();
+
+        TableInfo ti = getTableInfo("ehr", "protocol");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("protocol"), protocolid);
+        filter.addCondition(FieldKey.fromString("enddate"), true, CompareType.ISBLANK);
+        filter.addCondition(FieldKey.fromString("enddateCoalesced"), new Date(), CompareType.DATE_GTE);
+
+        Sort sort = new Sort("external_id");
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("external_id", "investigatorId", "approve"), filter, sort);
+
+        if (ts.getRowCount() == 0)
+        {
+            html.append("There are no Iacuc Protocols to display");
+            return;
+        }
+        else
+        {
+            //Create header information on the report
+            html.append("<table border=1 style='border-collapse: collapse;'>");
+            html.append("<tr style='font-weight: bold;'><td>Iacuc Protocol</td><td> Investigator</td><td>  Iacuc Approval Date</td></tr>\n");
+
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+               {
+
+                   @Override
+                   public void exec(ResultSet rs) throws SQLException
+                   {
+
+                       //Translate Investigator id to its true name
+                       TableInfo ti2 = getTableInfo("onprc_ehr", "investigators");
+                       SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("rowid"), rs.getString("investigatorId"));
+                       filter2.addCondition(FieldKey.fromString("datedisabled"), true, CompareType.ISBLANK);
+
+                       TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("lastname"), filter2, null);
+                       List<String> ret2 = ts2.getArrayList(String.class);
+                       if (ret2 != null && !ret2.isEmpty())
+                       {
+                           for (String Investname : ret2)
+                           {
+                               //html.append("<tr><td>" + (rs.getString("external_id") == null ? "" : rs.getString("external_id")) + "</td><td>" + Investname + "</td><td>" + rs.getString("approve") + "</td></tr>\n");
+                               html.append("<tr><td>" + (rs.getString("external_id") == null ? "" : rs.getString("external_id")) + "</td><td>  " + Investname + "   </td><td>" + rs.getString("approve") + "</td></tr>\n");
+                               break;
+                           }
+                       }
+                   }
+
+               }
+
+            );
+
+        }
+
+
+        html.append("</table>\n");
+
+        sendMessage(subject, html.toString(), recipients);
+
+    }
+
+      //Added 9-2-2015  Blasa
     private void sendMessage(String subject, String bodyHtml, Collection<UserPrincipal> recipients)
     {
         try

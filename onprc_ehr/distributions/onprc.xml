@@ -16,6 +16,8 @@
         <copy todir="${dist.modules.dir}">
             <fileset dir="${staging.modules.dir}">
                 <include name="ehr.module" />
+                <include name="eIACUC_ETL.module"/>
+                <include name="extscheduler.module"/>
                 <include name="EHR_ComplianceDB.module" />
                 <include name="elispot_assay.module"/>
                 <include name="flowassays.module" />
@@ -40,6 +42,8 @@
                 <include name="galaxyintegration.module" />
                 <include name="omerointegration.module" />
                 <include name="htcondorconnector.module" />
+                <include name="treatmentETL.module" />
+                <!--<include name="ONPRC_EHR_ComplianceDB.module" />-->
             </fileset>
         </copy>
     </target>

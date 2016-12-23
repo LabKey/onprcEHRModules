@@ -152,47 +152,7 @@ EHR.reports.iStat = function(panel, tab){
     });
 }
 
-EHR.reports.currentBlood = function(panel, tab){
-    var filterArray = panel.getFilterArray(tab);
-    var title = panel.getTitleSuffix();
 
-    tab.add({
-        html: 'This report summarizes the blood available for the animals below.  For more detail on this calculation, please see the PDF <a href="https://bridge.ohsu.edu/research/onprc/dcm/DCM%20Standard%20Operatiing%20Procedures/Blood%20Collection%20Volume%20Guidelines.pdf" target="_blank">here</a>.' +
-                '<br><br>If there have been recent blood draws for the animal, a graph will show the available blood over time.  On the graph, dots indicate dates when either blood was drawn or a previous blood draw fell off.  The horizontal lines indicate the maximum allowable blood that can be drawn on that date.',
-        border: false,
-        style: 'padding-bottom: 20px;'
-    });
-
-    tab.add({
-        xtype: 'ldk-querypanel',
-        style: 'margin-bottom: 10px;',
-        queryConfig: panel.getQWPConfig({
-            title: 'Summary',
-            schemaName: 'study',
-            queryName: 'Demographics',
-            viewName: 'Blood Draws',
-            filterArray: filterArray.removable.concat(filterArray.nonRemovable)
-        })
-    });
-
-    var subjects = tab.filters.subjects || [];
-
-    if (subjects.length){
-        tab.add({
-            xtype: 'onprc-bloodsummarypanel',
-            subjects: subjects
-        });
-    }
-    else
-    {
-        panel.resolveSubjectsFromHousing(tab, function(subjects, tab){
-            tab.add({
-                xtype: 'onprc-bloodsummarypanel',
-                subjects: subjects
-            });
-        }, this);
-    }
-};
 
 EHR.reports.clinMedicationSchedule = function(panel, tab){
     EHR.reports.medicationSchedule(panel, tab, 'Clinical Medications');
@@ -209,6 +169,95 @@ EHR.reports.surgMedicationSchedule = function(panel, tab){
 EHR.reports.incompleteTreatments = function(panel, tab){
     EHR.reports.medicationSchedule(panel, tab, 'Incomplete Treatments');
 };
+EHR.reports.currentBlood = function(panel, tab){
+    var  showActionsBtn = true;
+    tab.add({
+        html: 'This report summarizes the blood available for the animals below. The method field in the display shows which method was used for calculation.  BC represents calculation based on Body Condition Score and RF represent the use of the standard Fixed Ratio. For more detail on this calculation,  <a href="https://prime.ohsu.edu/_webdav/ONPRC/Admin/Compliance/Public/%40files/Research%20Support/RS-001-02%20NHP%20Blood%20Collection.pdf" target="_blank">Please see the PDF Here</a>.' +
+        '<br><br>There are 2 fields relating to blood value. One is Allowable Blood which is the calcuated max allowable value for the animal and Available Blood which represents current available minus any approved pending requests.' +
+        '<br><br>If there have been recent blood draws for the animal, a graph will show the available blood over time.  On the graph, dots indicate dates when either blood was drawn or a previous blood draw fell off.  The horizontal lines indicate the maximum allowable blood that can be drawn on that date.',
+        border: false,
+        style: 'padding-bottom: 20px;'
+    });
+    if (tab.filters.subjects){
+        renderSubjects(tab.filters.subjects, tab);
+    }
+    else
+    {
+        panel.resolveSubjectsFromHousing(tab, renderSubjects, this);
+    }
+
+    function renderSubjects(subjects, tab){
+
+        var toAdd = [];
+//
+        if (subjects.length < 2)
+        {
+            for (var i = 0; i < subjects.length; i++)
+            {
+                var str = subjects[i];
+                var filterArray = panel.getFilterArray(tab);
+                var title = panel.getTitleSuffix();
+                toAdd.push({
+                    xtype: 'onprc-bloodsummarypanel',
+                    subjects: subjects
+                }, {
+                    xtype: 'ldk-querypanel',
+
+                    style: 'margin-bottom:20px;',
+                    queryConfig: {
+                        title: 'Blood Draw Summary for:' + title,
+
+                        schemaName: 'study',
+                        queryName: 'currentBloodDraws',
+                        parameters: {
+                            //NOTE: this is currently hard-coded for perf.
+                            DATE_INTERVAL: 21
+                        },
+                        //  viewName: 'NewBloodCalc',
+                        filterArray: filterArray.removable.concat(filterArray.nonRemovable),
+                        success: function(results){
+                            // if(results.totalRows < 1)
+                            //     tab.add({
+                            //         html: 'Test of no records.',
+                            //         border: false,
+                            //          style: 'padding-bottom: 20px;'
+                            //      });
+                            //
+                            //
+                        }
+                    }
+                });
+            }
+        }
+        else {
+            toAdd.push({
+                html: 'Because more than 10 subjects were selected, the condensed report is being shown.  Note that you can click the animal ID to open this same report in a different tab, showing that animal in more detail or click the link labeled \'Display History\'.',
+                style: 'padding-bottom: 20px;',
+                border: false
+            });
+
+            var filterArray = panel.getFilterArray(tab);
+            var title = panel.getTitleSuffix();
+            toAdd.push({
+                xtype: 'ldk-querypanel',
+                style: 'margin-bottom:20px;',
+                queryConfig: {
+                    title: 'Overview' + title,
+                    schemaName: 'study',
+                    queryName: 'demographicsBloodSummary',//'demographicsBloodSummary',
+                 //   viewName: 'NewBloodCalc',
+            filterArray: filterArray.removable.concat(filterArray.nonRemovable)
+        }
+        });
+        }
+
+        if (toAdd.length)
+            tab.add(toAdd);
+    }
+
+};
+
+
 
 EHR.reports.medicationSchedule = function(panel, tab, viewName){
     var filterArray = panel.getFilterArray(tab);
@@ -683,16 +732,188 @@ EHR.reports.measurementsPivoted = function(panel, tab, viewName){
     });
 };
 
+//EHR.reports.onprcSnapshot = function(panel, tab){
+//    EHR.reports.snapshot(panel, tab, true);
+//};
+//Modified: 4-12-2016 R.Blasa
 EHR.reports.onprcSnapshot = function(panel, tab){
-    EHR.reports.snapshot(panel, tab, true);
+    var  showActionsBtn = true;
+    if (tab.filters.subjects){
+        renderSubjects(tab.filters.subjects, tab);
+    }
+    else
+    {
+        panel.resolveSubjectsFromHousing(tab, renderSubjects, this);
+    }
+
+    function renderSubjects(subjects, tab){
+        var toAdd = [];
+        if (!subjects.length){
+            toAdd.push({
+                html: 'No animals were found.',
+                border: false
+            });
+        }
+        else if (subjects.length < 10) {
+            for (var i=0;i<subjects.length;i++)
+            {
+                var str = subjects[i];
+                var idcolor = false;
+
+                if  (str.substr(0,2)== 'gp' || str.substr(0,3)== 'rbr') {
+                   idcolor = true;
+                }
+                toAdd.push({
+                    xtype: 'ldk-webpartpanel',
+                    //title: 'Overview: ' + subjects[i],   //Added 4-12-2016 Blasa
+                   // title: 'Overview: ' + '<span style="background-color:#77BC71">' + subjects[i]+ '</span>',
+                    //Added 4-12-2016 Blasa
+                    title: idcolor?'Overview: ' +  '<span style="color:#8B0000">' + subjects[i]+ '</span>':'Overview: ' + subjects[i],
+
+                    items: [{
+                        xtype: 'onprc_ehr-snapshotpanel',        //Redifined: 6-13-2016 R.Blas
+                        showExtendedInformation: true,
+                        showActionsButton: !!showActionsBtn,
+                        hrefTarget: '_blank',
+                        border: false,
+                        subjectId: subjects[i]
+                    }]
+                });
+
+                toAdd.push({
+                    border: false,
+                    height: 20
+                });
+
+                toAdd.push(EHR.reports.renderWeightData(panel, tab, subjects[i]));
+            }
+        }
+        else {
+            toAdd.push({
+                html: 'Because more than 10 subjects were selected, the condensed report is being shown.  Note that you can click the animal ID to open this same report in a different tab, showing that animal in more detail or click the link labeled \'Display History\'.',
+                style: 'padding-bottom: 20px;',
+                border: false
+            });
+
+            var filterArray = panel.getFilterArray(tab);
+            var title = panel.getTitleSuffix();
+            toAdd.push({
+                xtype: 'ldk-querypanel',
+                style: 'margin-bottom:20px;',
+                queryConfig: {
+                    title: 'Overview' + title,
+                    schemaName: 'study',
+                    queryName: 'demographics',
+                    viewName: 'Snapshot',
+                    filterArray: filterArray.removable.concat(filterArray.nonRemovable)
+                }
+            });
+        }
+
+        if (toAdd.length)
+            tab.add(toAdd);
+    }
+
 };
 
 EHR.reports.onprcFullClinicalHistory = function(panel, tab){
     EHR.reports.clinicalHistory(panel, tab, true, true);
 };
 
-EHR.reports.onprcClinicalHistory = function(panel, tab){
-    EHR.reports.clinicalHistory(panel, tab, true);
+//EHR.reports.onprcClinicalHistory = function(panel, tab){
+//    EHR.reports.clinicalHistory(panel, tab, true);
+//};
+
+//Modified  4-12-2016 R.Blasa
+EHR.reports.onprcClinicalHistory = function(panel, tab, showActionsBtn, includeAll)
+{
+    if (tab.filters.subjects)
+    {
+        renderSubjects(tab.filters.subjects, tab);
+    }
+    else
+    {
+        panel.resolveSubjectsFromHousing(tab, renderSubjects, this);
+    }
+
+    function renderSubjects(subjects, tab)
+    {
+        if (subjects.length > 10)
+        {
+            tab.add({
+                html: 'Because more than 10 subjects were selected, the condensed report is being shown.  Note that you can click the animal ID to open this same report in a different tab, showing that animal in more detail or click the link labeled \'Display History\'.',
+                style: 'padding-bottom: 20px;',
+                border: false
+            });
+
+            var filterArray = panel.getFilterArray(tab);
+            var title = panel.getTitleSuffix();
+            tab.add({
+                xtype: 'ldk-querypanel',
+                style: 'margin-bottom:20px;' ,
+                queryConfig: {
+                    title: 'Overview' + title,
+                    schemaName: 'study',
+                    queryName: 'demographics',
+                    viewName: 'Snapshot',
+                    filterArray: filterArray.removable.concat(filterArray.nonRemovable)
+                }
+            });
+
+            return;
+        }
+
+        if (!subjects.length)
+        {
+            tab.add({
+                html: 'No animals were found.',
+                border: false
+            });
+
+            return;
+        }
+
+        var minDate = includeAll ? null : Ext4.Date.add(new Date(), Ext4.Date.YEAR, -2);
+        var toAdd = [];
+        Ext4.each(subjects, function (s)
+        {
+            toAdd.push({
+                html: '<span style="font-size: large;"><b>Animal: ' + s + '</b></span>',
+                style: 'padding-bottom: 20px;',
+                border: false
+            });
+
+            toAdd.push({
+                xtype: 'onprc_ehr-smallformsnapshotpanel',     //Modified: 7-12-2016 R.Blasa
+                showActionsButton: !!showActionsBtn,
+                hrefTarget: '_blank',
+                border: false,
+                subjectId: s
+            });
+
+            toAdd.push({
+                html: '<b>Chronological History:</b><hr>',
+                style: 'padding-top: 5px;',
+                border: false
+            });
+
+            toAdd.push({
+                xtype: 'ehr-clinicalhistorypanel',
+                border: true,
+                subjectId: s,
+                autoLoadRecords: true,
+                minDate: minDate,
+                //maxGridHeight: 1000,
+                hrefTarget: '_blank',
+                style: 'margin-bottom: 20px;'
+            });
+        }, this);
+
+        if (toAdd.length)
+        {
+            tab.add(toAdd);
+        }
+    }
 };
 
 EHR.reports.behaviorCases = function(panel, tab){

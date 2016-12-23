@@ -24,7 +24,8 @@ SELECT
   c.problemCategories,
   c.remark,
   c.mostRecentP2,
-  c.isActive
+  c.isActive,
+  c.assignedvet
 
 FROM study.cases c
 WHERE c.isActive = true AND c.category = 'Clinical'
@@ -44,6 +45,7 @@ SELECT
   null as remark,
   null as mostrecentP2,
   null as isActive,
+  null as assignedVet
 
 FROM study.demographicsCurrentLocation d
 WHERE d.area = 'Hospital' AND (d.Id.activecases.categories NOT LIKE '%Clinical%' OR d.Id.activecases.categories IS NULL)

@@ -5,7 +5,9 @@
  */
 /**
  * @param subjects
- */
+*/
+//This will correcc the various panels and graphs to implement the new method of work
+//Need to change t
 Ext4.define('ONPRC.panel.BloodSummaryPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.onprc-bloodsummarypanel',
@@ -31,9 +33,12 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
 
         multi.add(LABKEY.Query.selectRows, {
             schemaName: 'study',
-            queryName: 'demographics',
+            queryName: 'demographicsBloodSummary',
+          //  viewName: 'newBloodCalc',
             filterArray: [LABKEY.Filter.create('id', this.subjects.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF)],
-            columns: 'id,species,species/blood_per_kg,species/max_draw_pct,species/blood_draw_interval,id/MostRecentWeight/mostRecentWeight,id/MostRecentWeight/mostRecentWeightDate,Id/demographics/calculated_status',
+     //       columns: 'id,species,species/blood_per_kg,species/max_draw_pct,species/blood_draw_interval,id/MostRecentWeight/mostRecentWeight,id/MostRecentWeight/mostRecentWeightDate,Id/demographics/calculated_status',
+           columns: 'id,Species,Gender,MostRecentBCS,BCSDate,mostRecentWeight,mostRecentWeightDate,blood_draw_interval,bloodPrevious,bloodFuture,blood_per_kg,FixedRateCalculation,TotalBloodVolume,AllowableBlood,AvailableBlood,Method,Id/demographics/calculated_status',
+
             requiredVersion: 9.1,
             sort: 'id',
             scope: this,
@@ -49,8 +54,8 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
 
         multi.add(LABKEY.Query.selectRows, {
             schemaName: 'study',
-            queryName: 'currentBloodDraws',
             sort: 'Id,date',
+            queryName: 'currentBloodDraws',
             filterArray: [LABKEY.Filter.create('Id', this.subjects.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF)],
             parameters: {
                 //NOTE: this is currently hard-coded for perf.

@@ -443,4 +443,111 @@
             <column columnName="modified"/>
         </columns>
     </table>
+
+    <table tableName="encounter_summaries_remarks" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Encounter Summaries Remarks</tableTitle>
+        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="Id">
+                <columnTitle>Id</columnTitle>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="date"/>
+            <column columnName="category">
+                <columnTitle>Category</columnTitle>
+            </column>
+            <column columnName="parentid"/>
+            <column columnName="taskid">
+                <columnTitle>Task Id</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>tasks</fkTable>
+                    <fkColumnName>taskid</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="schemaName">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="queryName">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="remark"/>
+            <column columnName="objectid"/>
+            <column columnName="formsort"/>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+
+    <table tableName="NHP_Training" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>NHP Training</tableTitle>
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="RowId">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="Id">
+                <columnTitle>Id</columnTitle>
+            </column>
+
+            <column columnName="date">
+                <columnTitle>Start Date</columnTitle>
+            </column>
+
+            <column columnName="training_Ending_Date">
+                <columnTitle>End Date</columnTitle>
+            </column>
+            <column columnName="training_type">
+                <columnTitle>Training Type</columnTitle>
+            </column>
+
+            <column columnName="reason">
+                <columnTitle>Training Reason</columnTitle>
+            </column>
+            <column columnName="training_results">
+                <columnTitle>Training Result</columnTitle>
+            </column>
+            <column columnName="remark"/>
+            <column columnName="taskid">
+                <columnTitle>Task Id</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>tasks</fkTable>
+                    <fkColumnName>taskid</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="qcstate"/>
+
+            <column columnName="formSort">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="performedby">
+                <columnTitle>Performed by</columnTitle>
+            </column>
+
+            <column columnName="objectid">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby"/>
+
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+            </column>
+        </columns>
+    </table>
 </tables>

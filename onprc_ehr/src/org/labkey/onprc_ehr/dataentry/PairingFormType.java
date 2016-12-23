@@ -22,6 +22,7 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRBehaviorEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
 
@@ -41,6 +42,15 @@ public class PairingFormType extends TaskForm
                 new AnimalDetailsFormSection(),
                 new PairingFormSection()
         ));
+
+        //Added 6-7-2016 R.Blasa
+        for (FormSection s : this.getFormSections())
+        {
+            s.addConfigSource("Pairing_Properties");
+        }
+
+        //Added 6-7-2016 R.Blasa
+        addClientDependency(ClientDependency.fromPath("/onprc_ehr/model/sources/Pairing_Properties.js"));
     }
 
     @Override

@@ -1,72 +1,171 @@
 /*
- * Copyright (c) 2010-2014 LabKey Corporation
+ * Copyright (c) 2013-2014 LabKey Corporation
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ * Research completed by Dr Ted Hobbs ONPRC has updated the process for calculating availaable blood
+ * The new research uses the Body Condition Score of DXA Scan to determine body fat.
+ *  the rule to be applied relates to Rheses Macaque Animals as follows:
+ ****If a BCS score is recorded that is within the last 365 days the frolumla to be applied is
+ ****TBV = (113.753 + (0.752 × BW) – (18.919 × BCS))*BW)
+ ***Total Available is TBV*.125
+ ****Else if either no BCS is available or it is older than 1 year, the current method based on standard Available AVolume with be Applied
+ ** A second process is availbale relating to DXA Scans but these are only performed by Researach Staff and not entered into PRIME
  */
-SELECT
-  t.lsid,
-  t.id,
-  t.date,
-  cast(t.lastWeight as double) as lastWeight,
-  t.lastWeightDate,
-  cast(t.previousBlood as double) as previousBlood,
-  cast((t.lastWeight * t.blood_per_kg * t.max_draw_pct) as double) as allowableBlood,
-  cast(((t.lastWeight * t.blood_per_kg * t.max_draw_pct) - t.previousBlood) as double) as availableBlood,
-  TIMESTAMPADD('SQL_TSI_DAY', (1 + (-1 * 21)), CAST(t.date AS DATE)) as minDate
-
-FROM (
-
-SELECT
-  t0.*,
-  --NOTE: this uses date part only
-  (select avg(w2.weight) as lastWeight FROM study.weight w2 WHERE w2.id = t0.id AND w2.dateOnly = t0.lastWeightDate) as lastWeight
-FROM (
 
 SELECT
   b.lsid,
   b.id,
-  b.quantity,
-  b.dateOnly,
-  b.date,
-  b2.lastWeightDate,
+  b.Species,
+  b.Gender,
+
+b.MostRecentBCS,
+b.BCSDate,
+b.weight as mostRecentWeight,
+  b.wdate as mostRecentWeightDate,
+  b.blood_draw_interval,
+  b.bloodPrevious,
+  b.bloodFuture,
+ b.species.blood_per_kg,
+round(b.bloodVolume,2) as FixedRateCalculation,
+round(b.TBV,2) as TotalBloodVolume,
+--round((b.TBV*.125),2) as AllowableBlood1,
+
+ Case
+	When species<> 'Rhesus Macaque'  --'Fixed Rate Process'
+	    Then  round((b.species.blood_per_kg  * b.id.MostRecentWeight.MostRecentWeight * b.max_draw_pct),2)
+	When
+		b.DaysSinceBCS > 365
+		Then   round((b.species.blood_per_kg  * b.id.MostRecentWeight.MostRecentWeight *  b.max_draw_pct),2)
+	When  b.MostRecentBCS is not null
+ 		Then round((b.TBV * .125),2)
+  Else round((b.species.blood_per_kg  * b.id.MostRecentWeight.MostRecentWeight *  b.max_draw_pct),2)
+	end As AllowableBlood,
+
+	Case
+	When species<> 'Rhesus Macaque'  --'Fixed Rate Process'
+	    Then
+	      Case
+          When (b.bloodPrevious>b.bloodFuture)
+            Then
+              round(((b.species.blood_per_kg  * b.id.MostRecentWeight.MostRecentWeight * b.max_draw_pct)-b.bloodPrevious),2)
+            ELSE
+              round(((b.species.blood_per_kg  * b.id.MostRecentWeight.MostRecentWeight * b.max_draw_pct)-b.bloodFuture),2)
+          End
+	    When
+	    	b.DaysSinceBCS > 365
+		    then
+            Case
+            When b.bloodPrevious > b.bloodFuture
+              Then
+                round(((b.species.blood_per_kg  * b.id.MostRecentWeight.MostRecentWeight * b.max_draw_pct)-b.bloodPrevious),2)
+              Else
+                round(((b.species.blood_per_kg  * b.id.MostRecentWeight.MostRecentWeight * b.max_draw_pct)-b.bloodFuture),2)
+            End
+--Available Blood is Allowable Blood minus the larger of Previous and Future
+		When
+			b.MostRecentBCS is not null THEN
+		      Case
+				When b.bloodPrevious > b.bloodFuture
+              Then
+                round(((b.TBV * .125)-b.bloodPrevious),2)
+              Else
+                round(((b.TBV * .125)-b.bloodFuture),2)
+            End
+
+
+--       Else
+
+
+
+
+ 	end As AvailableBlood,
+
+ Case
+	When species<> 'Rhesus Macaque'  Then 'FR'
+	When
+		b.DaysSinceBCS > 365
+		Then  'FR'
+	When
+	  b.MostRecentBCS is not null then
+		'BCS'
+	Else'FR'
+	end As Method
+
+
+FROM (
+
+SELECT
+  d.lsid,
+  d.id,
+  d.species,
+  d.gender,
+  --NOTE: this uses date part only
+  lastWeight.dateOnly as wdate,
+  (SELECT AVG(w.weight) AS _expr
+    FROM study.weight w
+    WHERE w.id = d.id
+      --NOTE: this uses date part only
+      AND w.dateOnly = lastWeight.dateOnly
+      AND w.qcstate.publicdata = true
+  ) AS weight,
   d.species.blood_per_kg,
-  d.species.max_draw_pct,
-  b3.quantity as previousBlood,
-  b3.quantityWithoutPending as previousBloodWithoutPending
-FROM study.demographics d
-JOIN study."Blood Draws" b ON (d.id = b.id)
-JOIN (
-  SELECT
-    b.lsid,
+  d.species.max_draw_pct ,
+  d.species.blood_draw_interval,
+  Cast(d.species.cites_Code as Float) as SpeciesCode,
+  bcs.score as MostRecentBCS,
+   bcs.date as BCSDate,
+  TIMESTAMPDIFF('SQL_TSI_DAY',bcs.date,Now()) as DaysSinceBCS,
+  --This ca;ciates tje tt
+   Case
+ 			when  TIMESTAMPDIFF('SQL_TSI_DAY',bcs.date,Now())  < 365 THEN round(cast (113.753 + ((0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * bcs.score))as double),2)
+ 			Else (d.species.blood_per_kg  * d.id.MostRecentWeight.MostRecentWeight)
+			END as TotalBloodAvailable,
+
+
+
+  COALESCE ((
+    SELECT
+    SUM(bd.quantity) AS quantity
+    FROM study.blood bd
+    WHERE bd.id = d.id
+        --NOTE: this has been changed in the DB to include penidng/non-approved draws
+        AND (bd.countsAgainstVolume = true) --NOTE: this does mean non-completed past requests will count against blood
+        AND bd.dateOnly > cast(TIMESTAMPADD('SQL_TSI_DAY', -1 * d.species.blood_draw_interval, now()) as date)
+        AND bd.dateOnly <= cast(curdate() as date)
+  ), 0) AS bloodPrevious,
+-- ***************New Calculation Base ***********************************************
+
+  -- blood volume (ml/kg)
+------113.753+(0.752*Wt)- (18.919*BCS)
+(113.753+(0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * bcs.score)) as BloodVolume,
+
+--TBV(mnl)
+-----weight * Blood Volume
+(d.id.MostRecentWeight.MostRecentWeight * (113.753+(0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * bcs.score))) as TBV,
+--Allowable BV
+-----TBV*.125
+
+
+--***********************Determines Previous and Future Blood********************************
+  COALESCE ((
+    SELECT
+    SUM(bd.quantity) AS quantity
+    FROM study.blood bd
+    WHERE bd.id = d.id
+        --NOTE: this has been changed to include penidng/non-approved draws
+        AND (bd.countsAgainstVolume = true)
+        AND bd.dateOnly < cast(TIMESTAMPADD('SQL_TSI_DAY', d.species.blood_draw_interval, curdate()) as date)
+        AND bd.dateOnly >= cast(curdate() as date)
+  ), 0) AS bloodFuture
+
+
+
+
+FROM
+    study.demographics d
     --NOTE: this uses date part only
-    max(w.dateOnly) as lastWeightDate
-  FROM study.blood b
-  JOIN study.weight w ON (w.id = b.id AND w.dateOnly <= b.dateOnly)
-  GROUP BY b.lsid
-) b2 on (b2.lsid = b.lsid)
-JOIN (
-  SELECT
-    b1.lsid,
-    --NOTE: this has been changed to include penidng/non-approved draws
-    sum(b2.quantity) as quantity,
-    sum(CASE WHEN (b2.countsAgainstVolume = true) THEN b2.quantity ELSE 0 END) as quantityWithoutPending,
-  FROM study.blood b1
-  JOIN study.blood b2 ON (b1.id = b2.id AND b2.dateOnly > TIMESTAMPADD('SQL_TSI_DAY', (-1 * 21), b1.dateOnly) AND b2.dateOnly <= b1.dateOnly)
-  GROUP BY b1.lsid
-) b3 ON (b3.lsid = b.lsid)
---NOTE: include all
---WHERE d.calculated_status = 'Alive'
+    JOIN (SELECT w.id, MAX(dateOnly) as dateOnly FROM study.weight w WHERE w.qcstate.publicdata = true GROUP BY w.id) lastWeight ON (d.id = lastWeight.id)
+    LEFT OUTER JOIN study.demographicsCurrentBCS bcs on bcs.id = d.id
+WHERE d.calculated_status = 'Alive'
 
-) t0
-
-) t
+) b

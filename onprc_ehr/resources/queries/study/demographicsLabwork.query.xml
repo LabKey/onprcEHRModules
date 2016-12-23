@@ -10,8 +10,14 @@
                     <column columnName="lastHematologyDate">
                         <columnTitle>Date of Last Hematology Panel</columnTitle>
                     </column>
+                    <column columnName="daysSinceCBCExam">
+                        <columnTitle>Days Since Last CBC Exam</columnTitle>
+                    </column>
                     <column columnName="lastBiochemistryDate">
                         <columnTitle>Date of Last Biochemistry Panel</columnTitle>
+                    </column>
+                    <column columnName="daysSinceCHEMExam">
+                        <columnTitle>Days Since Last CHEM Exam</columnTitle>
                     </column>
                 </columns>
             </table>

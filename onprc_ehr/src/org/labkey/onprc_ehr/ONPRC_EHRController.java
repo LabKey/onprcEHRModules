@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr;
 
+import com.sun.javafx.collections.MappingChange;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -131,6 +132,13 @@ public class ONPRC_EHRController extends SpringActionController
             resultProperties.put("admin", getSection("/ONPRC/Admin"));
             resultProperties.put("cores", getSection("/ONPRC/Core Facilities"));
             resultProperties.put("dcm", getSection("/ONPRC/DCM"));
+
+            //Created: 12-7-2016 -- Update by jones ga to change target
+            resultProperties.put("scheduler", getSection("/ONPRC/ResourceScheduler"));
+
+            //Added 6-5-2016 Blasa
+            resultProperties.put("sla", getSection("/ONPRC/SLA"));
+
 
             //for now, EHR is hard coded
             List<JSONObject> ehr = new ArrayList<>();
@@ -672,7 +680,14 @@ public class ONPRC_EHRController extends SpringActionController
     {
         public ApiResponse execute(LockAnimalForm form, BindException errors)
         {
-            ONPRC_EHRManager.get().lockAnimalCreation(getContainer(), getUser(), form.isLock(), form.getStartingId(), form.getIdCount());
+            ///Added by Lakshmi on 02/26/2015: This is server side validation code to check if the Birth/Arrival screens are locked or not.
+            //If already locked: show the lock results
+            //If not locked: Check if its locked and display the lock results instead of locking the screen again.
+            Map<String, Object> props = ONPRC_EHRManager.get().getAnimalLockProperties(getContainer());
+            if (!Boolean.TRUE.equals(props.get("locked") ) || (!form.isLock()) )
+            {
+                ONPRC_EHRManager.get().lockAnimalCreation(getContainer(), getUser(), form.isLock(), form.getStartingId(), form.getIdCount());
+            }
 
             return new ApiSimpleResponse(ONPRC_EHRManager.get().getAnimalLockProperties(getContainer()));
         }

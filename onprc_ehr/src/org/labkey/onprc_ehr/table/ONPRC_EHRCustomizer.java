@@ -1177,6 +1177,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             col17.setLabel("Most Recent Clinical Observations");
             col17.setDescription("Displays the most recent set of clinical observations for this animal");
             col17.setDisplayWidth("150");
+            col17.setDisplayColumnFactory(new ObservationDisplayColumnFactory());        //Added:9-8-2016 R.Blasa
             ti.addColumn(col17);
         }
 
@@ -2336,4 +2337,6 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         return us.getTableNames().contains(queryName);
     }
+
+
 }

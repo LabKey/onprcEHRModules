@@ -5,6 +5,7 @@
  */
 var console = require("console");
 var LABKEY = require("labkey");
+
 var ETL = require("onprc_ehr/etl").EHR.ETL;
 var onprc_utils = require("onprc_ehr/utils").ONPRC_EHR.Utils;
 var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
@@ -88,21 +89,43 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Clinical Encounters', function(helper, scriptErrors, row, oldRow){
-        if (row.chargetype == 'Research Staff' && !row.assistingstaff && row.procedureid && triggerHelper.requiresAssistingStaff(row.procedureid)){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Clinical Encounters', function(helper, scriptErrors, row, oldRow)
+    {
+        if (row.chargetype == 'Research Staff' && !row.assistingstaff && row.procedureid && triggerHelper.requiresAssistingStaff(row.procedureid))
+        {
             EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'If choosing Research Staff, you must enter the assisting staff.', 'WARN');
         }
 
-        if (row.chargetype != 'Research Staff' && row.assistingstaff){
+        if (row.chargetype != 'Research Staff' && row.assistingstaff)
+        {
             EHR.Server.Utils.addError(scriptErrors, 'assistingstaff', 'This field will be ignored unless Research Staff is selected, and should be blank.', 'WARN');
         }
 
-        if (row.type && row.caseno){
+        if (row.type && row.caseno)
+        {
             var msg = triggerHelper.validateCaseNo(row.caseno, row.type, row.objectid || null);
-            if (msg){
+            if (msg)
+            {
                 EHR.Server.Utils.addError(scriptErrors, 'caseno', msg, 'WARN');
             }
         }
+        //Modified: 10-17-2016 R.Blasa  flag procedure "ejaculation" for male gender
+        if (row.Id && row.procedureid == 734 )
+        {
+            EHR.Server.Utils.findDemographics({
+                participant: row.Id,
+                helper: helper,
+                scope: this,
+                callback: function (data)
+                {
+                    if (data)
+                    {
+                        if (data['gender/origGender'] && data['gender/origGender'] != 'm')
+                            EHR.Server.Utils.addError(scriptErrors, 'Id', 'This animal has to be a male', 'ERROR');
+                    }
+                }
+            });
+       }
     });
       //Added 1-12-2016  Blasa  Menses TMB Records
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Clinical Observations', function(helper, scriptErrors, row, oldRow){
@@ -136,6 +159,19 @@ exports.init = function(EHR){
         }
     }
 });
+
+
+    //Added 4-27-2016  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'protocol', function(helper, scriptErrors, row, oldRow){
+
+        if (row.protocol){
+            console.log("protocol data collected  " + row.protocol)
+            var msg = triggerHelper.sendProtocolNotifications(row.protocol);
+            if (msg){
+                EHR.Server.Utils.addError(scriptErrors, 'protocol', msg, 'ERROR');
+            }
+        }
+    });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Assignment', function(helper, scriptErrors, row, oldRow){
         //check number of allowed animals at assign/approve time.  use different behavior than core EHR
@@ -237,11 +273,11 @@ exports.init = function(EHR){
             }
         }
     });
-
+     //Modified: 10-13-2016 R.Blasa added arrival date parameter
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Birth', function(helper, errors, row, oldRow) {
         //NOTE: we want to perform the birth updates if this row is becoming public, or if we're updating to set the dam for the first time
         if (!helper.isValidateOnly() && (row._becomingPublicData || (oldRow && !oldRow.dam && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && row.dam))) {
-            triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null, row.birth_condition || null, !!row._becomingPublicData);
+            triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null,row.Arrival_Date || null, row.birth_condition || null, !!row._becomingPublicData);
         }
     });
 
@@ -339,6 +375,11 @@ exports.init = function(EHR){
             EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
             EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
         }
+        //Added: 10-14-2016 R.Blasa
+        if ((row.code == 'E-00070' || row.code == 'E-YY490'|| row.code == 'E-YYY45') && !row.remark){
+            EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required when entering this medication', 'WARN');
+        }
+
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Treatment Orders', function(helper, scriptErrors, row){
@@ -495,6 +536,10 @@ exports.init = function(EHR){
             if (!triggerHelper.isTreatmentFrequencyActive(row.frequency)){
                 EHR.Server.Utils.addError(scriptErrors, 'frequency', 'This frequency has been disabled.  Please select a different option', 'INFO');
             }
+        }
+        //Added: 10-14-2016 R.Blasa
+        if ((row.code == 'E-00070' || row.code == 'E-YY490'|| row.code == 'E-YYY45') && !row.remark){
+            EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required when entering this medication', 'WARN');
         }
     });
 

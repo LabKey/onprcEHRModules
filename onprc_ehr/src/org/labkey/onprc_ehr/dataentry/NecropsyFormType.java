@@ -54,6 +54,7 @@ public class NecropsyFormType extends EncounterForm
                 new GrossFindingsFormPanelSection(),
                 new PathologyFormSection("ehr", "encounter_participants", "Staff"),
                 new PathologyNotesFormPanelSection(),
+                new PathologyNotesFormPanelSection2(),
                 //new PathologyMedicationsFormSection("study", "Drug Administration", "Medications/Treatments"),
                 //new PathologyFormSection("study", "tissue_samples", "Tissues/Weights"),
                 //new PathologyTissueDistFormSection(),
@@ -67,9 +68,14 @@ public class NecropsyFormType extends EncounterForm
             s.addConfigSource("Encounter");
             s.addConfigSource("Pathology");
             s.addConfigSource("Necropsy");
+            //Added 5-25-2016 R.Blasa
+            s.addConfigSource("Necropsy_Notes");
         }
 
         addClientDependency(ClientDependency.fromPath("ehr/model/sources/Pathology.js"));
+        //Added 5-25-2016 R.Blasa
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/Pathology_Notes.js"));
+
         addClientDependency(ClientDependency.fromPath("ehr/model/sources/Necropsy.js"));
         addClientDependency(ClientDependency.fromPath("ehr/form/field/PathologyCaseNoField.js"));
         addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/pathologyButtons.js"));

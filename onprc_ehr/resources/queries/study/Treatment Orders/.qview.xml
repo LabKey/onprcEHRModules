@@ -16,6 +16,8 @@
        <column name="performedby"/>
        <column name="remark"/>
        <column name="reason"/>
+       <column name="modifiedby"/>
+       <column name="modified"/>
        <column name="category"/>
        <column name="taskid"/>
        <column name="history"/>

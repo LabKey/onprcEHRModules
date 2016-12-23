@@ -1,0 +1,9 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <sorts>
+        <sort column="date" descending="true"/>
+        <sort column="frequency" descending="true"/>
+    </sorts>
+    <filters>
+        <filter column="code" operator="in" value="E-00070;E-YY490;E-YYY45"/>
+    </filters>
+</customView>

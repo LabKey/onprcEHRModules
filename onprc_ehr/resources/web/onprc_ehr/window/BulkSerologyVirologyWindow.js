@@ -62,6 +62,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
             Ext4.Msg.alert('Error', 'Must paste the records into the textarea');
             return;
         }
+        var MasterHeaderObject = "";
 
         var parsed = LDK.Utils.CSVToArray(Ext4.String.trim(text), '\t');
         if (!parsed){
@@ -109,7 +110,13 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
 
             var cnt = i;
 
-            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt);
+            if ( Ext4.String.trim(row[3])== 1)
+            {
+                MasterHeaderObject = LABKEY.Utils.generateUUID().toUpperCase();
+            }
+
+
+            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt, MasterHeaderObject);
         }
 
         Ext4.Msg.hide();
@@ -155,7 +162,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,id, parsed, cnt)
+    processRow: function(row, recordMap, errors, rowIdx,id, parsed, cnt,MasterHeaderObject)
     {
 
         // Generate labwork Header information
@@ -180,7 +187,6 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
 
         if ( Ext4.String.trim(row[3])== 1)
         {
-            var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
             var tissueheader = "";
             if (row[0] && row[0].length >= 5) {
                 tissueheader = Ext4.String.trim(row[6].substr(row[6].length - 7, 7));
@@ -193,7 +199,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
                 chargeunit: chargeunit,
                 tissue: tissueheader,       // Tissue for main header    -- Optional
                 type: category,
-                objectid: HeaderObjectID,
+                objectid: MasterHeaderObject,
                 performedby: performedBy
 
             };
@@ -210,6 +216,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
         {
             var Resultsobjectid = LABKEY.Utils.generateUUID().toUpperCase();
 
+
             var obj = {
                 Id: id,
                 date: date,
@@ -220,7 +227,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
                 qualifier: Ext4.String.trim(row[11]),
                 remark: Ext4.String.trim(row[12]),
                 objectid: Resultsobjectid,
-                runid: HeaderObjectID,
+                runid: MasterHeaderObject,
                 performedby: performedBy
 
             };

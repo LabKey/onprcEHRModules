@@ -177,7 +177,10 @@ Ext4.define('onprc_ehr.panel.AddScheduledTreatmentPanel', {
 
             records.push(targetStore.createModel({
                 Id: row.getValue('Id'),
-                date: treatmentTime,
+
+
+               //Modified: 5-19-2016 R.Blasa
+                date: row.date,
                 project: row.getValue('project'),
                 code: row.getValue('code'),
                 qualifier: row.getValue('qualifier'),

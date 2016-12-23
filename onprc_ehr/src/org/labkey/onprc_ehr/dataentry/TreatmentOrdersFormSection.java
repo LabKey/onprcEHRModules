@@ -51,10 +51,11 @@ public class TreatmentOrdersFormSection extends DrugAdministrationFormSection
         return defaultButtons;
     }
 
+    //Modified: 11-8-2016 R.Blasa
     @Override
     public List<String> getTbarMoreActionButtons()
     {
-        List<String> defaultButtons = super.getTbarButtons();
+        List<String> defaultButtons = super.getTbarMoreActionButtons();
         defaultButtons.remove("REPEAT_SELECTED");
 
         return defaultButtons;

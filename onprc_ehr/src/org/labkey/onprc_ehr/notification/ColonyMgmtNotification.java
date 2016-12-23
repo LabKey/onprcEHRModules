@@ -77,6 +77,7 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
         livingAnimalsWithoutWeight(c, u, msg);
         hospitalAnimalsWithoutCase(c, u, msg);
 
+        offspringWithMother(c, u, msg, 150);
         offspringWithMother(c, u, msg, 180);
         offspringWithMother(c, u, msg, 250);
         offspringWithMother(c, u, msg, 365);

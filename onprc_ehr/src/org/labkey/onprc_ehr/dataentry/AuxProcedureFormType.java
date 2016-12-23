@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class AuxProcedureFormType extends TaskForm
 {
-    public static final String NAME = "Auxiliary Procedures";
+    public static final String NAME = "Research Procedures";
 
     public AuxProcedureFormType(DataEntryFormContext ctx, Module owner)
     {

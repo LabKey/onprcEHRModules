@@ -22,6 +22,23 @@
                 fieldLabel: 'Enter Animal Id(s)',
                 itemId: 'animalField'
             },{
+                //Modified 11-18-2016 R.Blasa
+                xtype: 'datefield',
+                fieldLabel: 'Starting Date',
+                itemId: 'minDate',
+                labelWidth: 80,
+                width: 200
+//                value: this.minDate
+            },{
+
+                xtype: 'datefield',
+                fieldLabel: 'Ending Date',
+                itemId: 'maxDate',
+                labelWidth: 80,
+                width: 200,
+                value: new Date()
+            },{
+
                 xtype: 'checkbox',
                 fieldLabel: 'Show Snapshot Only',
                 itemId: 'hideHistory'
@@ -37,6 +54,11 @@
                     var val = btn.up('panel').down('#animalField').getValue();
                     var redacted = btn.up('panel').down('#redacted').getValue();
                     var hideHistory = btn.up('panel').down('#hideHistory').getValue();
+
+                    //Modified: 11-18-2016 R.Blasa
+                    var mindate1 = btn.up('panel').down('#minDate').getValue();
+                    var maxdate1 = btn.up('panel').down('#maxDate').getValue();
+
 
 
                     if (val){
@@ -62,7 +84,9 @@
                             HostName: location.hostname,
                             'rs:ClearSession': true,
                             Redacted: redacted ? 'true' : 'false',
-                            AnimalId: val
+                            AnimalId: val,
+                            minDate: mindate1.format('Y-m-d'),      //Added: 11-18-2016 R.Blasa
+                            maxDate: maxdate1.format('Y-m-d')
                         });
 
                         //url += '&rs:Format=PDF'
@@ -75,6 +99,7 @@
                             redacted: redacted,
                             hideGridButtons: true,
                             hideHistory: hideHistory
+
                         });
                     }
                 }

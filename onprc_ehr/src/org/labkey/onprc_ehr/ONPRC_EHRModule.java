@@ -62,32 +62,16 @@ import org.labkey.onprc_ehr.demographics.AssignedVetDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.HousingDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ParentsDemographicsProvider;
+//import org.labkey.onprc_ehr.demographics.PregnancyConfirmDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.SourceDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.TBDemographicsProvider;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsEndDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalRecordFlagDataSource;
+import org.labkey.onprc_ehr.history.DefaultNHPTrainingDataSource;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
-import org.labkey.onprc_ehr.notification.BehaviorNotification;
-import org.labkey.onprc_ehr.notification.ClinicalAlertsNotification;
-import org.labkey.onprc_ehr.notification.ClinicalRoundsNotification;
-import org.labkey.onprc_ehr.notification.ColonyAlertsLiteNotification;
-import org.labkey.onprc_ehr.notification.ColonyAlertsNotification;
-import org.labkey.onprc_ehr.notification.ColonyMgmtNotification;
-import org.labkey.onprc_ehr.notification.ComplianceNotification;
-import org.labkey.onprc_ehr.notification.CullListNotification;
-import org.labkey.onprc_ehr.notification.DataValidationNotification;
-import org.labkey.onprc_ehr.notification.MensesTMBNotification;
-import org.labkey.onprc_ehr.notification.RequestAdminNotification;
-import org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification;
-import org.labkey.onprc_ehr.notification.TMBNotification;
-import org.labkey.onprc_ehr.notification.TreatmentAlertsNotification;
-import org.labkey.onprc_ehr.notification.TreatmentAlertsPostOpsNotification;
-import org.labkey.onprc_ehr.notification.TreatmentAlertsPostOpsNotificationSecondary;
-import org.labkey.onprc_ehr.notification.UnoccupiedRoomsNotification;
-import org.labkey.onprc_ehr.notification.VetReviewNotification;
-import org.labkey.onprc_ehr.notification.WeightAlertsNotification;
+import org.labkey.onprc_ehr.notification.*;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
@@ -101,7 +85,7 @@ import java.util.Collections;
 /**
  * User: bbimber
  * Date: 5/16/12
- * Time: 1:52 PM
+ * Time: 1:52 P
  */
 public class ONPRC_EHRModule extends ExtendedSimpleModule
 {
@@ -115,7 +99,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     public double getVersion()
     {
-        return 12.363;
+        return 12.379;
     }
 
     public boolean hasScripts()
@@ -149,6 +133,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //  //Added 1-12-2016 Blasa
         ns.registerNotification(new MensesTMBNotification(this));
+
+        //  //Added 4-1-2016 Blasa
+        ns.registerNotification(new ProtocolAlertsNotification(this));
+
+        //  //Added 8-31-2016 Blasa     --temporary removed this info
+        ns.registerNotification(new ClinicalRoundsTodayNotification(this));
 
 
         ns.registerNotification(new RequestAdminNotification(this));
@@ -184,6 +174,22 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/data/sources/ONPRCDefaults.js"), this);
         //Added 6-4-2015 Blasa
         EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/ClinicalProcedures.js"), this);
+
+        //Added 11-17-16 KOLLI
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/CohortField.js"), this);
+
+        //Added: 7-12-2016 R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/SnapshotPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/ClinicalActionsButton.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/window/ManageTreatmentsWindow.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/ManageTreatmentsPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/SmallFormSnapShotPanel.js"), this);
+
+        //Added: 8-24-2016
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/DemographicsRecord.js"), this);
+
+        //Added: 12-21-2016
+//        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/EnterDataPanel.js"), this);
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Commonly Used Queries");
@@ -314,6 +320,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(AuxProcedureFormType.class, this));
+
+        //Modified: 12-13-2016 R.Blasa
+//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ResearchRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ASBRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ColonyRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestFormType.class, this));
@@ -324,6 +333,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestBulkEditFormType.class, this));
 
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(RecordAmendmentFormType.class, this));
+
+        //Added: 10-19-2016 R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NHPTrainingFormType.class, this));
 
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
@@ -339,6 +351,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerDemographicsProvider(new TBDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new ActiveAnimalGroupsDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new AssignedVetDemographicsProvider(this));
+
+        //Created: 12-6-2016 R.Blasa
+        //  EHRService.get().registerDemographicsProvider(new PregnancyConfirmDemographicsProvider(this));
 
         //buttons
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "my_tasks");
@@ -401,6 +416,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerHistoryDataSource(new DefaultAnimalRecordFlagDataSource(this));
 
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
+        //R.Blasa   11-28-2016
+        EHRService.get().registerHistoryDataSource(new DefaultNHPTrainingDataSource(this));
     }
 
     @Override

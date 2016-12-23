@@ -10,7 +10,11 @@
                     </column>
                     <column columnName="observations">
                         <columnTitle>Latest Observations</columnTitle>
-                    </column>
+                        <displayColumnFactory>
+                            <className>org.labkey.onprc_ehr.table.ObservationDisplayColumnFactory</className>
+                        </displayColumnFactory>
+                     </column>
+
                     <column columnName="date">
                         <columnTitle>Observation Date</columnTitle>
                         <formatString>Date</formatString>

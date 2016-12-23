@@ -12,6 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 8/5/2016 updated based on new BCS Score calculations
+ ***updated to use the newer calculations and identify the method of calculation
  */
 
 SELECT
@@ -53,7 +55,9 @@ SELECT
   d.species.blood_per_kg,
   d.species.max_draw_pct,
   bd.blood_draw_interval,
-  (d.id.mostRecentWeight.MostRecentWeight * d.species.blood_per_kg * d.species.max_draw_pct) as allowableBlood,
+  bs.availableblood,
+  bs.allowableBlood,
+ -- (d.id.mostRecentWeight.MostRecentWeight * d.species.blood_per_kg * d.species.max_draw_pct) as allowableBlood,
   bd.minDate,
   bd.maxDate,
   COALESCE(
@@ -78,5 +82,6 @@ SELECT
 
 FROM study.bloodDrawChanges bd
 JOIN study.demographics d ON (d.id = bd.id)
+Join demographicsBloodSummary bs on (bs.id = bd.id)
 
 ) t

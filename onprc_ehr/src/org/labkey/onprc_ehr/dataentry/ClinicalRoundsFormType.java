@@ -43,7 +43,9 @@ public class ClinicalRoundsFormType extends TaskForm
     {
         super(ctx, owner, NAME, NAME, "Clinical", Arrays.asList(
             new TaskFormSection(),
-            new AnimalDetailsFormSection(),
+             //Added 5-9-2016 R.Blasa
+            new AnimalDetailsRoundsFormSection(),
+
             new ClinicalRoundsRemarksFormSection(),
             //NOTE: originally removed in order to enforce non-editable IDs
             //however, have been re-added apparently people do use them

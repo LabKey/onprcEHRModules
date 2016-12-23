@@ -96,9 +96,15 @@
             },{
                 title: 'Labs',
                 itemId: 'labs'
+            },{         //Added 5-28-2015 Blasa
+                title: 'SLA',
+                itemId: 'sla'
             },{
                 title: 'Cores & Resources',
                 itemId: 'cores'
+            },{  //Added 12-7-2016 Blasa
+                title: 'Resource Scheduler',
+                itemId: 'scheduler'
             }]
         });
         panel.render(div.id);
@@ -106,7 +112,7 @@
         ONPRC.Utils.getNavItems({
             scope: this,
             success: function(results){
-                Ext4.each(['labs', 'admin', 'cores', 'ehr', 'dcm'], function(name){
+                Ext4.each(['labs', 'admin', 'cores', 'ehr', 'dcm', 'sla', 'scheduler'], function(name){
                     if (results[name] && results[name].length){
                         var section = panel.down('#' + name).items.get(0);
                         var toAdd = [];
