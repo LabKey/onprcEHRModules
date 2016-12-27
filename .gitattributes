@@ -69,6 +69,7 @@ GeneticsCore/tools/installLabkey.sh -text
 GeneticsCore/tools/javaWrapper.sh -text
 GeneticsCore/webapp/WEB-INF/geneticscoreContext.xml -text
 /README.txt -text
+extscheduler/build.gradle -text
 extscheduler/extscheduler.iml -text
 extscheduler/module.properties -text
 extscheduler/resources/module.xml -text
