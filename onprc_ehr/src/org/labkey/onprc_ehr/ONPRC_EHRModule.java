@@ -175,9 +175,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added 6-4-2015 Blasa
         EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/ClinicalProcedures.js"), this);
 
-        //Added 11-17-16 KOLLI
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/CohortField.js"), this);
-
         //Added: 7-12-2016 R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/SnapshotPanel.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/ClinicalActionsButton.js"), this);
