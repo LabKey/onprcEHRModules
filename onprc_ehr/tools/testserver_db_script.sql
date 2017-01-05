@@ -70,20 +70,6 @@ WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties
 --	      AND Name = 'jdbcUrl'
 --;
 
--- turn off the ETL
-UPDATE    prop.Properties
-SET       Value = 0
-WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'onprc.ehr.org.labkey.onprc_ehr.etl.config'
-	      AND Name = 'runIntervalInMinutes'
-;
-
-UPDATE    prop.Properties
-SET       Value = 'false'
-WHERE     (SELECT s.Category FROM prop.PropertySets s WHERE s."Set" = Properties."Set") = 'onprc.ehr.org.labkey.onprc_ehr.etl.config'
-	      AND Name = 'etlStatus'
-;
-
-
 -- if R or other script paths differ
 
 --set the R program path

@@ -887,8 +887,6 @@ onprc_ehr/resources/views/dcmPage.view.xml -text
 onprc_ehr/resources/views/dcmPage.webpart.xml -text
 onprc_ehr/resources/views/ehrAdmin.html -text
 onprc_ehr/resources/views/ehrAdmin.view.xml -text
-onprc_ehr/resources/views/etlAdmin.html -text
-onprc_ehr/resources/views/etlAdmin.view.xml -text
 onprc_ehr/resources/views/exposureReport.html -text
 onprc_ehr/resources/views/exposureReport.view.xml -text
 onprc_ehr/resources/views/groupProcessing.html -text
@@ -1141,9 +1139,6 @@ onprc_ehr/src/org/labkey/onprc_ehr/demographics/HousingDemographicsProvider.java
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/ParentsDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/SourceDemographicsProvider.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/demographics/TBDemographicsProvider.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/etl/ETL.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLAuditProvider.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/etl/ETLRunnable.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/AbstractEHRDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultAnimalGroupsDataSource.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/history/DefaultAnimalGroupsEndDataSource.java -text
@@ -1164,7 +1159,6 @@ onprc_ehr/src/org/labkey/onprc_ehr/notification/ColonyMgmtNotification.java -tex
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ComplianceNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/CullListNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/DataValidationNotification.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/notification/ETLNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/LabTestScheduleNotifications.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/MensesTMBNotification.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/notification/ProtocolAlertsNotification.java -text

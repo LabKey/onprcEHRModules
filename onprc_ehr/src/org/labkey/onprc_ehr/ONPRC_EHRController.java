@@ -57,9 +57,6 @@ import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HtmlView;
 import org.labkey.api.view.NavTree;
-import org.labkey.api.view.UnauthorizedException;
-import org.labkey.onprc_ehr.etl.ETL;
-import org.labkey.onprc_ehr.etl.ETLRunnable;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -70,11 +67,9 @@ import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * User: bbimber
@@ -88,36 +83,6 @@ public class ONPRC_EHRController extends SpringActionController
     public ONPRC_EHRController()
     {
         setActionResolver(_actionResolver);
-    }
-
-    @RequiresPermission(AdminPermission.class)
-    @CSRF
-    public class GetEtlDetailsAction extends ApiAction<Object>
-    {
-        public ApiResponse execute(Object form, BindException errors)
-        {
-            Map<String, Object> resultProperties = new HashMap<>();
-            resultProperties.put("enabled", ETL.isEnabled());
-            resultProperties.put("active", ETL.isRunning());
-            resultProperties.put("scheduled", ETL.isScheduled());
-            resultProperties.put("nextSync", ETL.nextSync());
-            resultProperties.put("cannotTruncate", ETLRunnable.CANNOT_TRUNCATE);
-
-            String[] etlConfigKeys = {"labkeyUser", "labkeyContainer", "jdbcUrl", "jdbcDriver", "runIntervalInMinutes"};
-
-            resultProperties.put("configKeys", etlConfigKeys);
-            resultProperties.put("config", PropertyManager.getProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN));
-            resultProperties.put("rowversions", PropertyManager.getProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN));
-            Map<String, String> map = PropertyManager.getProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN);
-            Map<String, Date> timestamps = new TreeMap<>();
-            for (String key : map.keySet())
-            {
-                timestamps.put(key, new Date(Long.parseLong(map.get(key))));
-            }
-            resultProperties.put("timestamps", timestamps);
-
-            return new ApiSimpleResponse(resultProperties);
-        }
     }
 
     @RequiresPermission(ReadPermission.class)
@@ -206,98 +171,6 @@ public class ONPRC_EHRController extends SpringActionController
             }
 
             return ret;
-        }
-    }
-
-    @RequiresPermission(AdminPermission.class)
-    @CSRF
-    public class SetEtlDetailsAction extends ApiAction<EtlAdminForm>
-    {
-        public ApiResponse execute(EtlAdminForm form, BindException errors)
-        {
-            Map<String, Object> resultProperties = new HashMap<>();
-
-            PropertyManager.PropertyMap configMap = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
-
-            boolean shouldReschedule = false;
-            if (form.getLabkeyUser() != null)
-                configMap.put("labkeyUser", form.getLabkeyUser());
-
-            if (form.getLabkeyContainer() != null)
-                configMap.put("labkeyContainer", form.getLabkeyContainer());
-
-            if (form.getJdbcUrl() != null)
-                configMap.put("jdbcUrl", form.getJdbcUrl());
-
-            if (form.getJdbcDriver() != null)
-                configMap.put("jdbcDriver", form.getJdbcDriver());
-
-            if (form.getRunIntervalInMinutes() != null)
-            {
-                String oldValue = configMap.get("runIntervalInMinutes");
-                if (!form.getRunIntervalInMinutes().equals(oldValue))
-                    shouldReschedule = true;
-
-                configMap.put("runIntervalInMinutes", form.getRunIntervalInMinutes());
-            }
-
-            if (form.getEtlStatus() != null)
-                configMap.put("etlStatus", form.getEtlStatus().toString());
-
-            configMap.save();
-
-            PropertyManager.PropertyMap rowVersionMap = PropertyManager.getWritableProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN, true);
-            PropertyManager.PropertyMap timestampMap = PropertyManager.getWritableProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN, true);
-
-            if (form.getTimestamps() != null)
-            {
-                JSONObject json = new JSONObject(form.getTimestamps());
-                for (String key : rowVersionMap.keySet())
-                {
-                    if (json.get(key) != null)
-                    {
-                        //this key corresponds to the rowId of the row in the etl_runs table
-                        Integer value = json.getInt(key);
-                        if (value == -1)
-                        {
-                            rowVersionMap.put(key, null);
-                            timestampMap.put(key, null);
-                        }
-                        else
-                        {
-                            TableInfo ti = ONPRC_EHRSchema.getInstance().getSchema().getTable(ONPRC_EHRSchema.TABLE_ETL_RUNS);
-                            TableSelector ts = new TableSelector(ti, new SimpleFilter(FieldKey.fromString("rowid"), value), null);
-                            Map<String, Object>[] rows = ts.getMapArray();
-                            if (rows.length != 1)
-                                continue;
-
-                            rowVersionMap.put(key, (String)rows[0].get("rowversion"));
-                            Long date = ((Date)rows[0].get("date")).getTime();
-                            timestampMap.put(key, date.toString());
-                        }
-                    }
-                }
-                rowVersionMap.save();
-                timestampMap.save();
-            }
-
-            //if config was changed and the ETL is current scheduled to run, we need to restart it
-            if (form.getEtlStatus() && shouldReschedule)
-            {
-                ETL.stop();
-                ETL.start(0);
-            }
-            else
-            {
-                if (form.getEtlStatus())
-                    ETL.start(0);
-                else
-                    ETL.stop();
-            }
-
-            resultProperties.put("success", true);
-
-            return new ApiSimpleResponse(resultProperties);
         }
     }
 
@@ -462,88 +335,6 @@ public class ONPRC_EHRController extends SpringActionController
         public void setTests(String[] tests)
         {
             _tests = tests;
-        }
-    }
-
-    @RequiresPermission(AdminPermission.class)
-    public class RunEtlAction extends RedirectAction<Object>
-    {
-        public boolean doAction(Object form, BindException errors) throws Exception
-        {
-            ETL.run();
-            return true;
-        }
-
-        public void validateCommand(Object form, Errors errors)
-        {
-
-        }
-
-        public ActionURL getSuccessURL(Object form)
-        {
-            return DetailsURL.fromString("/onprc_ehr/etlAdmin.view", getContainer()).getActionURL();
-        }
-    }
-
-    @RequiresPermission(AdminPermission.class)
-    public class ValidateEtlAction extends ConfirmAction<ValidateEtlSyncForm>
-    {
-        public boolean handlePost(ValidateEtlSyncForm form, BindException errors) throws Exception
-        {
-            if (!getUser().isSiteAdmin())
-            {
-                throw new UnauthorizedException("Only site admins can view this page");
-            }
-
-            ETLRunnable runnable = new ETLRunnable();
-            runnable.validateEtlSync(form.isAttemptRepair());
-            return true;
-        }
-
-        public ModelAndView getConfirmView(ValidateEtlSyncForm form, BindException errors) throws Exception
-        {
-            if (!getUser().isSiteAdmin())
-            {
-                throw new UnauthorizedException("Only site admins can view this page");
-            }
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("The following text describes the results of comparing the EHR study with the MSSQL records from the production instance on the same server as this DB instance.  Clicking OK will cause the system to attempt to repair any differences.  Please do this very carefully.<br>");
-            sb.append("<br><br>");
-
-            ETLRunnable runnable = new ETLRunnable();
-            String msg = runnable.validateEtlSync(false);
-            if (msg != null)
-                sb.append(msg);
-            else
-                sb.append("There are no discrepancies<br>");
-
-            return new HtmlView(sb.toString());
-        }
-
-        public void validateCommand(ValidateEtlSyncForm form, Errors errors)
-        {
-
-        }
-
-        public ActionURL getSuccessURL(ValidateEtlSyncForm form)
-        {
-            return getContainer().getStartURL(getUser());
-        }
-    }
-
-    public static class ValidateEtlSyncForm
-    {
-        private boolean _attemptRepair = false;
-
-        public boolean isAttemptRepair()
-        {
-            return _attemptRepair;
-        }
-
-        public void setAttemptRepair(boolean attemptRepair)
-        {
-            _attemptRepair = attemptRepair;
         }
     }
 
