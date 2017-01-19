@@ -30,10 +30,6 @@ EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Even
 
         //Add Birth record
         triggerHelper.onAnimalArrival_AddBirth(row.id, row);
-
-        //Add Housing record if room provided
-        if (row.initialRoom){
-            helper.getJavaHelper().createHousingRecord(row.Id, row.date, null, row.initialRoom, (row.initialCage || null), null);
-        }
+        
     }
 });
