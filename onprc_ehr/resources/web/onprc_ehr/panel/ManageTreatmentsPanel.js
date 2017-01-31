@@ -230,18 +230,18 @@ Ext4.define('onprc_ehr.panel.ManageTreatmentsPanel', {
             },{
                 header: 'Date',
                 xtype: 'datecolumn',
-                width: 160,
+                width: 130,
                 format: 'Y-m-d H:i',
                 dataIndex: 'date'
             },{
                 header: 'End Date',
                 xtype: 'datecolumn',
-                width: 160,
+                width: 130,
                 format: 'Y-m-d H:i',
                 dataIndex: 'enddate'
             },{
                 header: 'Code',
-                width: 300,
+                width: 290,
                 dataIndex: 'code',
                 tdCls: 'ldk-wrap-text',
                 noWrap: false,
@@ -276,16 +276,16 @@ Ext4.define('onprc_ehr.panel.ManageTreatmentsPanel', {
                 }
             },{
                 header: 'Ordered By',
-                width: 160,
+                width: 110,
                 dataIndex: 'performedby'
             },{
                 header: 'Modified By',
-                width: 160,
+                width: 110,
                 dataIndex: 'modifiedby/DisplayName'
             },{
                 header: 'Modified Date',
                 xtype: 'datecolumn',
-                width: 160,
+                width: 130,
                 format: 'Y-m-d H:i',
                 dataIndex: 'modified'
             }]

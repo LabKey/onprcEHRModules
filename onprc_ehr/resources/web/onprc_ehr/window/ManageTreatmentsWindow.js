@@ -11,7 +11,7 @@
 Ext4.define('onprc_ehr.window.ManageTreatmentsWindow', {
     extend: 'Ext.window.Window',
 
-    width: 1500,
+    width: 1300,
     minHeight: 50,
 
     initComponent: function(){
