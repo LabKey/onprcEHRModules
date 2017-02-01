@@ -5,6 +5,9 @@ GeneticsCore/build.xml -text
 GeneticsCore/distributions/prime-seq-modules.xml -text
 GeneticsCore/module.properties -text
 GeneticsCore/resources/external/amplicon_standard_curve.R -text
+GeneticsCore/resources/external/comb-p/Dockerfile -text
+GeneticsCore/resources/external/comb-p/combpWrapper.sh -text
+GeneticsCore/resources/external/methylationBasicStats.R -text
 GeneticsCore/resources/external/methylationComparison.R -text
 GeneticsCore/resources/module.xml -text
 GeneticsCore/resources/queries/sequenceanalysis/alignment_summary_by_lineage/.qview.xml -text
@@ -61,8 +64,10 @@ GeneticsCore/src/org/labkey/GeneticsCore/pipeline/AbstractBisSnpWrapper.java -te
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BisSnpGenotyperAnalysis.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BisSnpIndelRealignerStep.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BisSnpIndelRealignerWrapper.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BismarkWrapper.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BisulfiteGenotyperWrapper.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/BlastPipelineJobResourceAllocator.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/pipeline/CombpRunner.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/ExacloudResourceSettings.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/pipeline/SequenceJobResourceAllocator.java -text
 GeneticsCore/tools/installLabkey.sh -text
