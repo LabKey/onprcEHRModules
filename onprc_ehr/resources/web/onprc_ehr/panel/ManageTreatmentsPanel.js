@@ -241,7 +241,7 @@ Ext4.define('onprc_ehr.panel.ManageTreatmentsPanel', {
                 dataIndex: 'enddate'
             },{
                 header: 'Code',
-                width: 290,
+                width: 280,
                 dataIndex: 'code',
                 tdCls: 'ldk-wrap-text',
                 noWrap: false,
