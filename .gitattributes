@@ -2,7 +2,9 @@
 onprc_ehr/ONPRC_EHR.iml -text
 onprc_ehr/build.gradle -text
 onprc_ehr/distributions/onprc.xml -text
+onprc_ehr/distributions/onprc/build.gradle -text
 onprc_ehr/distributions/test_onprc.xml -text
+onprc_ehr/distributions/test_onprc/build.gradle -text
 onprc_ehr/module.properties -text
 onprc_ehr/resources/data/ageclass.tsv -text
 onprc_ehr/resources/data/alopecia_regrowth.tsv -text

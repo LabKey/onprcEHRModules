@@ -1,0 +1,22 @@
+import org.labkey.gradle.plugin.Distribution
+import org.labkey.gradle.task.ModuleDistribution
+import org.labkey.gradle.util.BuildUtils
+import org.labkey.gradle.util.GroupNames
+
+apply plugin: 'org.labkey.distribution'
+
+Distribution.inheritDependencies(project, ":server:customModules:onprc_ehr:distributions:onprc")
+
+BuildUtils.addModuleDistributionDependencies(project, [":server:modules:dumbster",
+                                                       ":externalModules:labModules:GenotypeAssays"])
+project.task(
+        "distribution",
+        group: GroupNames.DISTRIBUTION,
+        type: ModuleDistribution,
+        {ModuleDistribution dist ->
+            dist.subDirName='test'
+            dist.includeTarGZArchive=true
+            dist.extraFileIdentifier='-test'
+            dist.versionPrefix="Test"
+        }
+)
