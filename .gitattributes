@@ -3,6 +3,7 @@ GeneticsCore/GeneticsCore.iml -text
 GeneticsCore/build.gradle -text
 GeneticsCore/build.xml -text
 GeneticsCore/distributions/prime-seq-modules.xml -text
+GeneticsCore/distributions/prime-seq-modules/build.gradle -text
 GeneticsCore/module.properties -text
 GeneticsCore/resources/external/amplicon_standard_curve.R -text
 GeneticsCore/resources/external/comb-p/Dockerfile -text
