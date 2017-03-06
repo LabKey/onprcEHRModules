@@ -921,6 +921,9 @@
             <column columnName="datefinalized">
                 <datatype>timestamp</datatype>
             </column>
+            <column columnName="billable">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Drug Administration</tableTitle>
     </table>
