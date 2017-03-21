@@ -263,6 +263,9 @@
             <column columnName="confirmationType">
                 <datatype>integer</datatype>
             </column>
+            <column columnName="gestation_days">
+                <datatype>integer</datatype>
+            </column>
             <column columnName="project">
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
@@ -822,6 +825,9 @@
             </column>
             <column columnName="datefinalized">
                 <datatype>timestamp</datatype>
+            </column>
+            <column columnName="assignedVet">
+                <datatype>varchar</datatype>
             </column>
         </columns>
         <tableTitle>Clinical Remarks</tableTitle>

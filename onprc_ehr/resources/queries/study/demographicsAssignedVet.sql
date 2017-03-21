@@ -15,22 +15,35 @@
  */
 SELECT
   d.Id,
-  COALESCE(c.vetNames, h.highPriRoomVetNames, h.highPriAreaVetNames, a.vetNames, h.roomVetNames, h.areaVetNames) as assignedVet,
+  COALESCE(n.assignedVet,c.vetNames, h.highPriRoomVetNames, h.highPriAreaVetNames, a1.vetName,a2.vetName, h.roomVetNames, h.areaVetNames) as assignedVet,
   --COALESCE(c.vetUserIds, h.highPriRoomVetUserIds, h.highPriAreaVetUserIds, a.vetUserIds, h.roomVetUserIds, h.areaVetUserIds) as assignedVetId,
   CASE
+    WHEN (n.status IS NOT null) THEN 'DECEASED NHP'
     WHEN (c.vetNames IS NOT NULL) THEN 'Active Case'
     WHEN (h.highPriRoomVetNames IS NOT NULL) THEN 'Room (Priority)'
     WHEN (h.highPriAreaVetNames IS NOT NULL) THEN 'Area (Priority)'
-    WHEN (a.vetNames IS NOT NULL) THEN 'Assignment'
+    WHEN (a1.vetName IS NOT NULL) THEN 'Research Assignment'
+    WHEN (a2.vetName IS NOT NULL) THEN 'Resource Assignment'
     WHEN (h.roomVetNames IS NOT NULL) THEN 'Room'
     WHEN (h.areaVetNames IS NOT NULL) THEN 'Area'
     ELSE 'None'
   END as assignmentType,
-  a.protocols,
+  a1.protocol as ResearchProtocol,
+  a2.protocol as ResourceProtocol,
   h.areas,
   h.rooms
 
 FROM study.demographics d
+
+LEFT JOIN (
+    Select
+    n.id,
+    vd.assignedVet,
+    'Deceased' as status
+    from study.deaths n left outer join study.vetAssignedDeceased vd on n.Id = vd.id
+
+)
+ n on (n.Id =d.id)
 
 LEFT JOIN (
   SELECT
@@ -43,17 +56,47 @@ LEFT JOIN (
   GROUP BY c.Id
 ) c ON (c.Id = d.Id)
 
+--LEFT JOIN(
+--Select cr.assignedVet
+--from study.clinremarks cr)
+--cr ON (cr.id = d.Id)
+--
+--need to insure we get the last record in Clinical Remarks for the animal.
+--
+--
+--
+--)
+
+
 LEFT JOIN (
-  SELECT
-    a.Id,
-    group_concat(distinct CAST(v.userId.displayName as varchar(120))) as vetNames,
-    CAST(group_concat(distinct v.userId) as varchar(200)) as vetUserIds,
-    group_concat(distinct a.project.protocol.displayName) as protocols
-  FROM study.assignment a
-  JOIN onprc_ehr.vet_assignment v ON (a.project.protocol = v.protocol)
-  WHERE a.enddateCoalesced >= curdate() OR CAST(a.enddateCoalesced AS DATE) = CAST(a.Id.demographics.lastDayAtCenter AS DATE)
-  GROUP BY a.Id
-) a ON (a.Id = d.Id)
+Select  a1.id,
+a1.vetAssigned as vetName,
+a1.protocol
+from researchAssigned a1)
+a1 ON (a1.Id = d.Id)
+
+LEFT JOIN (
+Select  a2.id,
+a2. vetAssigned as vetName,
+a2.protocol
+from resourceAssigned a2 )
+a2 ON (a2.Id = d.Id)
+
+
+
+
+--  SELECT
+--    a.Id,
+--    group_concat(distinct CAST(v.userId.displayName as varchar(120))) as vetNames,
+--    CAST(group_concat(distinct v.userId) as varchar(200)) as vetUserIds,
+--------    Need to only look at Vets on assignment as assigned vet for reseach protocols
+--        (Select distinct a2.project.protocol.displayname from study.assignment a2 where a2.project.protocol = v.protocol and a2.project.use_category.value = 'Research') as protocols
+----    group_concat.use_cagte(distinct a.project.protocol.displayName) as protocols
+--  FROM study.assignment a
+--  JOIN onprc_ehr.vet_assignment v ON (a.project.protocol = v.protocol)
+--  WHERE a.enddateCoalesced >= curdate() OR CAST(a.enddateCoalesced AS DATE) = CAST(a.Id.demographics.lastDayAtCenter AS DATE)
+--  GROUP BY a.Id,v.protocol
+
 
 LEFT JOIN (
   SELECT
@@ -75,4 +118,4 @@ LEFT JOIN (
   JOIN onprc_ehr.vet_assignment v ON (v.area = h.room.area OR v.room = h.room)
   WHERE h.enddateTimeCoalesced >= now() OR CAST(h.enddateCoalesced AS DATE) = CAST(h.Id.demographics.lastDayAtCenter AS DATE)
   GROUP BY h.Id
-) h ON (h.Id = d.Id)
+) h ON (h.Id = d.Id) --Where d.calculated_status = 'alive'

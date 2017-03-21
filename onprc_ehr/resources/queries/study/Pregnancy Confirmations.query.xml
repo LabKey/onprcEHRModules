@@ -9,7 +9,6 @@
                 <deleteUrl />
                 <columns>
                     <column columnName="Id">
-
                     </column>
                     <column columnName="date">
                         <columnTitle>Confirmation Date</columnTitle>
@@ -24,6 +23,9 @@
                     </column>
                     <column columnName="estDeliveryDate">
                         <columnTitle>Estimated Delivery Date</columnTitle>
+                    </column>
+                    <column columnName="gestation_days">
+                        <columnTitle>Gestation days</columnTitle>
                     </column>
                     <column columnName="sire">
                         <columnTitle>Sire</columnTitle>

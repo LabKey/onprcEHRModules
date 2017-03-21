@@ -525,7 +525,13 @@
                     <fkColumnName>taskid</fkColumnName>
                 </fk>
             </column>
-            <column columnName="qcstate"/>
+            <column columnName="qcstate">
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>qcstate</fkTable>
+                    <fkColumnName>RowId</fkColumnName>
+                </fk>
+            </column>
 
             <column columnName="formSort">
                 <isHidden>true</isHidden>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 LabKey Corporation
+ * Copyright (c) 2014 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+--remarks
 SELECT
-  p.Id,
-  p.date,
-  p.parent,
-  p.relationship,
-  p.method
+    d.id,
+    d.date,
+    r.date as RemarksDate,
+    r.assignedVet
 
-FROM study.parentage p
-WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
-
-UNION ALL
-
-SELECT
-  b.Id,
-  b.date,
-  b.dam,
-  'Dam' as relationship,
-  'Observed' as method
-
-FROM study.birth b
-WHERE b.dam is not null and b.qcstate.publicdata = true
+From deaths d join clinremarks r on d.id = r.id and d.date = r.date
+where r.assignedVet is not null

@@ -539,6 +539,15 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ds.addColumn(col);
         }
 
+//         Created: 1-3-2017  R.Blasa
+        if (ds.getColumn("activeTreatmentsGiven") == null)
+        {
+            ColumnInfo col = getWrappedIdCol(us, ds, "activeTreatmentsGiven", "demographicsTreatmentsGiven");
+            col.setLabel("Active Treatments Given");
+            col.setDescription("This provides a summary of active treatments Given for this animal");
+            ds.addColumn(col);
+        }
+
         if (ds.getColumn("returnLocation") == null)
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "returnLocation", "demographicsReturnLocation");
@@ -583,7 +592,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             ColumnInfo col = getWrappedIdCol(us, ds, "assignedVet", "demographicsAssignedVet");
             col.setLabel("Assigned Vet");
-            col.setDescription("Calculates the assigned veternarian, based on assignment and housing.");
+            col.setDescription("Calculates the assigned veterinarian, based on assignment and housing.");
             ds.addColumn(col);
         }
 

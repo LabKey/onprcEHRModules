@@ -52,6 +52,22 @@ EHR.DemographicsRecord = function(data){
             return data['assignedVet'];
         },
 
+        //Added 12--2016 R.Blasa
+        getPregnancyInfo: function(){
+            return data['gestationdays'];
+        },
+
+
+        //Added 2-21-2017 R.Blasa
+        getCagemateInfant: function(){
+            return data['cagemateinfant'];
+        },
+
+        //Added 3-10-2017 R.Blasa
+        getFosterChild: function(){
+            return data['fosterchild'];
+        },
+
         getCurrentLocation: function(){
             if (data['activeHousing'] && data['activeHousing'].length){
                 var ret = data['activeHousing'][0].room;

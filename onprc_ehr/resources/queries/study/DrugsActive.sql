@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 LabKey Corporation
+ * Copyright (c) 2014 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+--  Created: 3-1-2017 R.Blasa
 SELECT
-  p.Id,
-  p.date,
-  p.parent,
-  p.relationship,
-  p.method
+  t.Id,
+  t.date,
+  t.enddate,
+  t.project,
+  t.code,
+  t.code.code as SnomedCode,
+  t.amountAndVolume,
+  t.route,
+  t.remark,
+  t.performedby,
+  t.QCState,
+  t.taskid,
+  t.category
 
-FROM study.parentage p
-WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
 
-UNION ALL
 
-SELECT
-  b.Id,
-  b.date,
-  b.dam,
-  'Dam' as relationship,
-  'Observed' as method
+FROM study.drug t
+WHERE  (t.enddate is null or t.enddate >= now())
 
-FROM study.birth b
-WHERE b.dam is not null and b.qcstate.publicdata = true
+order by t.Id, t.date desc

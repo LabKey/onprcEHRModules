@@ -6,6 +6,7 @@
         <column name="sire"/>
         <column name="estDeliveryDate"/>
         <column name="confirmationType"/>
+        <column name="gestation_days"/>
         <column name="outcome/births"/>
         <column name="outcome/offspring"/>
         <column name="outcome/birthDate"/>

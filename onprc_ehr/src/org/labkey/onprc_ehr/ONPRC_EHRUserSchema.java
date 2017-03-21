@@ -31,6 +31,7 @@ import org.labkey.api.security.permissions.DeletePermission;
 import org.labkey.api.security.permissions.InsertPermission;
 import org.labkey.api.security.permissions.UpdatePermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
+import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 
 /**
 
@@ -49,9 +50,12 @@ public class ONPRC_EHRUserSchema extends SimpleUserSchema
         if (ONPRC_EHRSchema.TABLE_VET_ASSIGNMENT.equalsIgnoreCase(name))
         {
             CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable).init();
-            ti.addPermissionMapping(InsertPermission.class, EHRVeternarianPermission.class);
+          ti.addPermissionMapping(InsertPermission.class, EHRVeternarianPermission.class);
             ti.addPermissionMapping(UpdatePermission.class, EHRVeternarianPermission.class);
             ti.addPermissionMapping(DeletePermission.class, EHRVeternarianPermission.class);
+           ti.addPermissionMapping(InsertPermission.class, ONPRC_EHRCMUAdministrationPermission.class);
+            ti.addPermissionMapping(UpdatePermission.class, ONPRC_EHRCMUAdministrationPermission.class);
+            ti.addPermissionMapping(DeletePermission.class, ONPRC_EHRCMUAdministrationPermission.class);
             return ti;
         }
         else if (ONPRC_EHRSchema.TABLE_CUSTOMERS.equalsIgnoreCase(name))

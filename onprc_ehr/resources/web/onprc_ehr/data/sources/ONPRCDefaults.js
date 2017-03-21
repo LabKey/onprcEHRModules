@@ -20,7 +20,32 @@ EHR.model.DataModelManager.registerMetadata('Default', {
             quantity: {
                 xtype: 'numberfield'
             }
+        },
+
+        //Added: 1-27-2017  R.Blasa
+        'study.pregnancyConfirmation': {
+            gestation_days: {
+                columnConfig: {
+                    width: 100
+                }
+            }
+
         }
+
+    //    'study.Assignment' : {
+    //        Cohort: {
+    //            xtype: 'onprc-cohortfield',
+    //            editorConfig: {
+    //
+    //            },
+    //            shownInGrid: true,
+    //            useNull: true,
+    //            columnConfig: {
+    //                width: 500
+    //            }
+    //        }
+    //    }
+    //
     }
 });
 
@@ -38,4 +63,6 @@ EHR.model.DataModelManager.registerMetadata('Request', {
             }
         }
     }
+
+
 });

@@ -18,7 +18,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
     showLocationDuration: true,
     showActionsButton: true,
-    defaultLabelWidth: 120,
+    defaultLabelWidth: 150,
     border: false,
     doSuspendLayouts: true,  //note: this can make loading much quicker, but will cause problems when many snapshot panels load concurrently on the same page
 
@@ -137,6 +137,10 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                         xtype: 'displayfield',        //Added: 8-24-2016  R.blasa
                         fieldLabel: 'Assigned Vet',
                         name: 'assignedVets'
+                    },{
+                        xtype: 'displayfield',        //Added: 1-24-2016  R.Blasa
+                        fieldLabel: 'Estimated Pregnancy Delivery Date',
+                        name: 'pregnancyInfo'
                     }]
                 }]
             }]
@@ -216,7 +220,18 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
         this.appendAssignedVets(toSet, results.getAssignedVet());    //Added 8-23-2016 R.Blasa
 
-        if (this.showExtendedInformation){
+        this.appendPregnancyInfo(toSet, results.getPregnancyInfo());    //Added 1-24-2017 R.Blasa
+
+        //Added: 2-21-2017  R.Blasa
+        this.appendCagemateInfantResults(toSet, results.getCagemateInfant());
+
+
+            //Added: 3-10-2017  R.Blasa
+        this.appendFosterChildtResults(toSet, results.getFosterChild());
+
+
+
+            if (this.showExtendedInformation){
             this.appendBirthResults(toSet, results.getBirthInfo(), results.getBirth());
             this.appendDeathResults(toSet, results.getDeathInfo());
             this.appendParentageResults(toSet, results.getParents());
@@ -225,6 +240,33 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         this.getForm().setValues(toSet);
         this.afterLoad();
     },
+
+    //Modified: 1-25-2017  R.Blasa
+    //note: this should not get called if redacted
+    appendGroups: function(toSet, results){
+        toSet['groups'] = null;
+
+        if (this.redacted)
+            return;
+
+        var values = [];
+        if (results){
+            Ext4.each(results, function(row){
+                values.push(row['groupId/name']);
+            }, this);
+        }
+
+
+        //Modified: 2-14-2017  R.Blasa  Make animal group name as hyperlink
+        var text = values.length ? values.join('<br>') : 'None';
+        var url =  '<a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'animal_groups',
+                  'query.name~eq': values.length ? values.join(';') : 'None' }) + '" target="_blank">' + text  + '</a>';
+
+
+        toSet['groups'] = url;
+    },
+
+
     appendCases: function(toSet, results){
         var values = [];
         if (results){
@@ -259,7 +301,56 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         {
             toSet['assignedVets']   = results[0].assignedVet;
         }
+        else
+        {
+            toSet['assignedVets']  = 'None';
+        }
     },
+
+
+    //Added 1-24-2017 R.Blasa
+    appendPregnancyInfo: function(toSet, results){
+        if (results)
+        {
+             var sDate = LDK.ConvertUtils.parseDate(results[0].ExpectedDelivery);
+              toSet['pregnancyInfo']   = sDate.format('Y-m-d');
+        }
+        else
+        {
+            toSet['pregnancyInfo'] = 'None';
+        }
+    },
+
+    //Added: 2-21-2017  R.Blasa  Display Infant cage mate under 1 yr
+    appendCagemateInfantResults: function(toSet, results){
+
+        if (results)
+        {
+            toSet['cagemateinfant'] = results[0].InfantCageMate;
+        }
+        else
+        {
+            toSet['cagemateinfant'] = 'None';
+        }
+
+    },
+
+    //Added: 2-21-2017  R.Blasa  Display Infant cage mate under 1 yr
+    appendFosterChildtResults: function(toSet, results){
+
+        if (results)
+        {
+            toSet['fosterinfants'] = results[0].FosterChild;
+        }
+        else
+        {
+            toSet['fosterinfants'] = 'None';
+        }
+
+    },
+
+
+
     appendWeightResults: function(toSet, results){
         var text = [];
         if (results){
@@ -303,7 +394,9 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                 var relationship = row.relationship;
 
                 if (parent && relationship){
-                    var text = relationship + ' - ' + parent;
+
+                    var text =  parent + ' : ' + relationship;
+
 
                     if (!parentMap[text])
                         parentMap[text] = [];
@@ -311,15 +404,20 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                     var method = row.method;
                     if (method){
                         parentMap[text].push(method);
+
                     }
                 }
             }, this);
 
+
             var values = [];
+            //Modified: 2-15-2017  R.Blasa  Modified so that parentage information points to a snapshot report
             Ext4.Array.forEach(Ext4.Object.getKeys(parentMap).sort(), function(text){
                 parentMap[text] = Ext4.unique(parentMap[text]);
                 var method = parentMap[text].join(', ');
-                values.push('<a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'parentage', 'query.Id~eq': this.subjectId, 'query.isActive~eq': true}) + '" target="_blank">' + text + (method ? ' (' + method + ')' : '') + '</a>');
+
+               values.push('<a href="' + LABKEY.ActionURL.buildURL('ehr', 'animalHistory', null, {}) + '#subjects:' + text   + '&inputType:singleSubject&showReport:1&activeReport:clinSnapshot' + '" target="_blank">' + text  + (method ? ' (' + method + ')' : '') +'</a>');
+
             }, this);
 
             if (values.length)
@@ -328,6 +426,79 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         else {
             toSet['parents'] = 'No data';
         }
+    },
+
+    //Modified: 11-25-2016 R.Blasa
+    getExtendedItems: function(){
+        return [{
+            xtype: 'container',
+            name: 'additionalInformation',
+            style: 'padding-bottom: 10px;',
+            border: false,
+            defaults: {
+                border: false
+            },
+            items: [{
+                xtype: 'container',
+                html: '<b>Additional Information</b><hr>'
+            },{
+                layout: 'column',
+                defaults: {
+                    labelWidth: this.defaultLabelWidth
+                },
+                items: [{
+                    xtype: 'container',
+                    columnWidth: 0.5,
+                    border: false,
+                    defaults: {
+                        labelWidth: this.defaultLabelWidth,
+                        border: false,
+                        style: 'margin-right: 20px;'
+                    },
+                    items: [{
+                        xtype: 'displayfield',
+                        width: 350,
+                        fieldLabel: 'Geographic Origin',
+                        name: 'geographic_origin'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Birth',
+                        name: 'birth'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Death',
+                        name: 'death'
+                    }]
+                },{
+                    xtype: 'container',
+                    columnWidth: 0.5,
+                    defaults: {
+                        labelWidth: this.defaultLabelWidth
+                    },
+                    items: [{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Parent Information',
+                        name: 'parents'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Pairing Type',
+                        name: 'pairingType'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Cagemates',
+                        name: 'cagemates'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Cagemate Infant(Under 1yr)',
+                        name: 'cagemateinfant'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Foster Infant',
+                        name: 'fosterinfants'
+                    }]
+                }]
+            }]
+        }];
     },
 
     afterLoad: function(){

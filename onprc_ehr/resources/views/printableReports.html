@@ -22,7 +22,10 @@
 
             getItems: function(){
                 var items = [{
-                    html: 'This page provides reports to be printed by room or area.  After picking the location(s) using the drop downs below, hit the \'Print\' buttons below to print any of the reports<br><br><b>NOTE: For most reports, leave rooms/areas blank to print all. Vet control only applies to "Active by Clinical Cases by Vets".</b>',
+                    html: 'This page provides reports to be printed by room or area.  After picking the location(s) using the drop downs below, ' +
+                    'hit the \'Print\' buttons below to print any of the reports<br><br><b>NOTE:' +
+                    ' For most reports, leave rooms/areas blank to print all. <br> Vet control only applies to "Active by Clinical Cases by Vets". ' +
+                    '<br>Breeding Group control only applies to "Weights Sheets by Breeding Groups".</b>',
                     style: 'padding-bottom: 20px;'
                 },{
                     xtype: 'ehr-areafield',
@@ -47,17 +50,39 @@
                             areaField.reset();
                         }
                     }
-                },{
+                }, {
                     xtype: 'ehr-vetfieldcombo',  //Modified:11-9-2016 R.Blasa
                     itemId: 'userField',
                     width: 400,
                     fieldLabel: 'Choose Vet',
 //                    multiSelect: true,
                     listeners: {
-                        change: function(field){
+                        change: function (field)
+                        {
                             var VetField = field.up('panel').down('#userField');
 //                            VetField.reset();
                         }
+                    }
+
+                },{
+                    xtype: 'checkcombo',    //Added: 2-28-2017  R.Blasa
+                    itemId: 'animalGroup',
+                    displayField: 'name',
+                    valueField: 'name',
+                    width: 400,
+                    multiSelect: true,
+                    fieldLabel: 'Breeding Group',
+                    store: {
+                        type: 'labkey-store',
+//                        containerPath: ctx['EHRStudyContainer'],
+                        schemaName: 'ehr',
+                        queryName: 'animal_groups',
+                        viewName: 'Active Groups',
+                        columns: 'name, rowid',
+                        sort: 'name',
+                        filterArray: [LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK)],
+                        autoLoad: true
+
                     }
                 },{
                     html: '',
@@ -96,7 +121,6 @@
                         border: true,
                         getUrlString: function(){
                             var panel = this.up('#sheetPanel');
-//                            var userName = panel.down('#userField').getDisplayValue();
                             var userName = panel.down('#userField').getValue();
 
 
@@ -631,6 +655,76 @@
                         html: '<hr>',
                         style: 'padding-top: 10px;',
                         colspan: 4
+
+                    },{
+                        html: '<i>Weight Sheets by Breeding Groups:</i>'  //Added: 2-28-2017  R.Blasa
+                    },{
+                        style: 'padding-left: 5px;',
+                        html: ''
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Print Version',
+                        border: true,
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
+                            var field = panel.down('#animalGroup');
+
+                            var value = field.getValue() || [];
+                            value = Ext4.isArray(value) ? value: [value];
+
+                            var params = {
+                                SessionId: LABKEY.Utils.getSessionID(),
+                                HostName: location.hostname
+
+                            };
+                            if (!value)
+                                return;
+
+                            if (!Ext4.isEmpty(value))
+                                params.Groups = value;     //params.rooms is the parameter name
+
+
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'WeightSheetsGroup';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
+                    },{
+                        html: ''
+                    },{
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 4
                     },{
                         html: '<i>Room Utilization / Layout:</i>',
                         width: 200
@@ -734,6 +828,29 @@
                 //if (areas.length){
                 //    params.Areas = areas.join(';');
                 //}
+
+                return params;
+            },
+
+            getParamsgroup: function(supressErrors, skipRoomsIfAllSelected){
+                var params = {
+                    SessionId: LABKEY.Utils.getSessionID(),
+                    HostName: location.hostname
+
+                };
+
+
+
+                var roomFields = this.down('#animal_groups');
+                var rooms = roomFields.getValue() || [];
+                rooms = Ext4.isArray(rooms) ? rooms: [rooms];
+
+                params.rooms =rooms;
+
+                if (!rooms.length && !supressErrors){
+                    Ext4.Msg.alert('Error', 'Must select an Animal Group name');
+                    return;
+                }
 
                 return params;
             },
