@@ -56,6 +56,10 @@ GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreController.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreManager.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsCoreModule.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/GeneticsTableCustomizer.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/analysis/CombineMethylationRatesHandler.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/analysis/GFF3Codec.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/analysis/GFF3Feature.java -text
+GeneticsCore/src/org/labkey/GeneticsCore/analysis/GFF3FeatureImpl.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/analysis/MethylationRateComparison.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/analysis/MethylationRateComparisonHandler.java -text
 GeneticsCore/src/org/labkey/GeneticsCore/button/ChangeReadsetStatusButton.java -text
