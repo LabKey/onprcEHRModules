@@ -27,6 +27,14 @@ exports.init = function(EHR){
         });
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Arrival', function(event, helper, EHR) {
+        helper.setScriptOptions({
+            extraBirthFieldMappings: {
+                arrival_date: 'date'
+            }
+        });
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Treatment Orders', function(event, helper){
         helper.setScriptOptions({
             announceAllModifiedParticipants: true
@@ -277,7 +285,7 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Birth', function(helper, errors, row, oldRow) {
         //NOTE: we want to perform the birth updates if this row is becoming public, or if we're updating to set the dam for the first time
         if (!helper.isValidateOnly() && (row._becomingPublicData || (oldRow && !oldRow.dam && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && row.dam))) {
-            triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null,row.Arrival_Date || null, row.birth_condition || null, !!row._becomingPublicData);
+            triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null, row.arrival_date || null, row.birth_condition || null, !!row._becomingPublicData);
         }
     });
 

@@ -560,6 +560,9 @@
             <column columnName="type">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="arrival_date">
+                <datatype>timestamp</datatype>
+            </column>
             <column columnName="objectid">
                 <datatype>varchar</datatype>
                 <propertyURI>urn:ehr.labkey.org/#ObjectId</propertyURI>

@@ -274,7 +274,6 @@ onprc_ehr/resources/queries/study/Animal[!!-~]Record[!!-~]Flags.js -text
 onprc_ehr/resources/queries/study/Animal[!!-~]Record[!!-~]Flags.query.xml -text
 onprc_ehr/resources/queries/study/Antibiotic[!!-~]Sensitivity.js -text
 onprc_ehr/resources/queries/study/Antibiotic[!!-~]Sensitivity.query.xml -text
-onprc_ehr/resources/queries/study/Arrival.js -text
 onprc_ehr/resources/queries/study/Arrival/.qview.xml -text
 onprc_ehr/resources/queries/study/Birth/.qview.xml -text
 onprc_ehr/resources/queries/study/Blood[!!-~]Draws.query.xml -text

@@ -1097,70 +1097,8 @@ public class ONPRC_EHRTriggerHelper
         return demographicsProps;
     }
 
-    //Added on 10/5/2016, L.Kolli
-    public void onAnimalArrival_AddBirth(String id, Map<String, Object> row) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
-    {
-        if (row.get("birth") != null)
-        {
-            Map<String, Object> birthProps = new HashMap<>();
-            for (String key : new String[]{"Id", "dam", "sire"})
-            {
-                if (row.containsKey(key))
-                {
-                    birthProps.put(key, row.get(key));
-                }
-            }
-            birthProps.put("date", row.get("birth"));
-            birthProps.put("gender", row.get("gender"));
-            birthProps.put("species", row.get("species"));
-            birthProps.put("geographic_origin", row.get("geographic_origin"));
-
-            //Added: 10-14-2016 R.Blasa
-            birthProps.put("Arrival_Date", row.get("date"));
-
-            createBirthRecord_ONPRC(id, birthProps);
-        }
-    }
-
-    //Added on 09/30/2016, L.Kolli
-    public void createBirthRecord_ONPRC(String id, Map<String, Object> props) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
-    {
-        if (id == null) ///If AId is null, return
-            return;
-
-        //Check if the AId exists in the Birth table
-        TableInfo ti1 = getTableInfo("study", "birth");
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
-
-        TableSelector ts = new TableSelector(ti1, filter, null);
-        if (ts.exists())
-        {
-            //Birth record found. Don't make duplicate entry
-            return;
-        }
-        else //Enter newly entered AnimalID into Birth table
-        {
-            TableInfo ti = getTableInfo("study", "birth");
-            Map<String, Object> row = new CaseInsensitiveHashMap<>();
-            row.putAll(props);
-            if (!row.containsKey("objectid"))
-            {
-                row.put("objectid", new GUID().toString());
-            }
-
-            List<Map<String, Object>> rows = new ArrayList<>();
-            rows.add(row);
-            BatchValidationException errors = new BatchValidationException();
-            ti.getUpdateService().insertRows(getUser(), getContainer(), rows, errors, null, getExtraContext());
-
-            if (errors.hasErrors())
-                throw errors;
-        }
-
-    }
-
     //Modified: 10-13-2016 R.Blasa  to include passign Arrival date
-    public void doBirthTriggers(String id, Date date, String dam, Date Arrival_Date, String birthCondition, boolean isBecomingPublic) throws Exception
+    public void doBirthTriggers(String id, Date date, String dam, Date flagStartDate, String birthCondition, boolean isBecomingPublic) throws Exception
     {
         //is the infant is dead, terminate the assignments
         Date enddate = isBirthAlive(birthCondition) ? null : date;
@@ -1178,21 +1116,13 @@ public class ONPRC_EHRTriggerHelper
             String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
             if (nonRestrictedFlag != null)
             {
-                //Modified: 10-14-2016 R.Blasa
-                Date Arrival_date = null;
-                if (Arrival_Date != null)
+                if (flagStartDate == null)
                 {
-                    Arrival_date = Arrival_Date;
-
+                    flagStartDate = date;
                 }
-                else
-                {
-                    Arrival_date = date;
-                }
-
 
                 //only add initial status if born alive
-                EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, Arrival_date, enddate, null, Collections.singletonList(id), false);
+                EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, flagStartDate, enddate, null, Collections.singletonList(id), false);
             }
             else
             {
