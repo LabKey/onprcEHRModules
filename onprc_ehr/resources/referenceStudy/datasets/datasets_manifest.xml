@@ -29,6 +29,9 @@
         <dataset name="parentage" id="5025" category="Colony Management" type="Standard">
             <tags/>
         </dataset>
+        <dataset name="geneticAncestry" id="5029" category="Colony Management" type="Standard">
+            <tags/>
+        </dataset>
         <dataset name="miscTests" id="5013" category="ClinPath" type="Standard">
             <tags/>
         </dataset>
