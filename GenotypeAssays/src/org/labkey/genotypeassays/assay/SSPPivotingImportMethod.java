@@ -3,24 +3,19 @@ package org.labkey.genotypeassays.assay;
 import org.json.JSONObject;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.Container;
-import org.labkey.api.data.TableInfo;
-import org.labkey.api.data.TableSelector;
 import org.labkey.api.exp.api.ExpProtocol;
-import org.labkey.api.gwt.client.util.StringUtils;
+import org.labkey.api.laboratory.assay.AssayImportMethod;
+import org.labkey.api.laboratory.assay.AssayParser;
 import org.labkey.api.laboratory.assay.ImportContext;
 import org.labkey.api.laboratory.assay.ParserErrors;
 import org.labkey.api.laboratory.assay.PivotingAssayParser;
-import org.labkey.api.laboratory.assay.AssayImportMethod;
-import org.labkey.api.laboratory.assay.AssayParser;
 import org.labkey.api.laboratory.assay.PivotingImportMethod;
 import org.labkey.api.query.BatchValidationException;
 import org.labkey.api.security.User;
-import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.ViewContext;
 import org.labkey.genotypeassays.GenotypeAssaysSchema;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -80,12 +75,12 @@ public class SSPPivotingImportMethod extends PivotingImportMethod
             ListIterator<Map<String, Object>> rowsIter = rows.listIterator();
             ParserErrors errors = context.getErrors();
 
-            SSPImportHelper helper = new SSPImportHelper();
-            List<Map<String, Object>> newRows = new ArrayList<Map<String, Object>>();
+            SSPImportHelper helper = new SSPImportHelper(_protocol, _provider, _user, _container);
+            List<Map<String, Object>> newRows = new ArrayList<>();
 
             while (rowsIter.hasNext())
             {
-                Map<String, Object> row = new CaseInsensitiveHashMap(rowsIter.next());
+                Map<String, Object> row = new CaseInsensitiveHashMap<>(rowsIter.next());
                 appendPromotedResultFields(row, context);
 
                 helper.normalizeResultField(row, context);

@@ -68,8 +68,7 @@ public class SSPAssayDefaultImportMethod extends DefaultAssayImportMethod
         {
             ListIterator<Map<String, Object>> rowsIter = rows.listIterator();
             ParserErrors errors = context.getErrors();
-
-            SSPImportHelper helper = new SSPImportHelper();
+            SSPImportHelper helper = new SSPImportHelper(_protocol, _provider, _user, _container);
             List<Map<String, Object>> newRows = new ArrayList<Map<String, Object>>();
 
             while (rowsIter.hasNext())
