@@ -1,5 +1,4 @@
 * text=auto !eol
-onprc_ehr/ONPRC_EHR.iml -text
 onprc_ehr/build.gradle -text
 onprc_ehr/distributions/onprc.xml -text
 onprc_ehr/distributions/onprc/build.gradle -text
