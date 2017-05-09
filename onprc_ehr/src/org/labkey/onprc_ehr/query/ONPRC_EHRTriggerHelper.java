@@ -1827,7 +1827,7 @@ public class ONPRC_EHRTriggerHelper
         {
             TableInfo ti = getTableInfo("onprc_ehr", "observation_types");
             TableSelector ts = new TableSelector(ti, PageFlowUtil.set("schemaName", "queryName", "valuecolumn"), new SimpleFilter(FieldKey.fromString("value"), category), null);
-            Map<String, Object> record = ts.getObject(Map.class);
+            Map<String, Object> record = ts.getMap();
 
             Set<String> allowable;
             if (record != null && record.get("schemaname") != null && record.get("queryname") != null && record.get("valuecolumn") != null)
