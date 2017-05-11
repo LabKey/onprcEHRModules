@@ -1,5 +1,4 @@
 * text=auto !eol
-GeneticsCore/GeneticsCore.iml -text
 GeneticsCore/build.gradle -text
 GeneticsCore/build.xml -text
 GeneticsCore/distributions/prime-seq-modules.xml -text
@@ -83,7 +82,6 @@ GeneticsCore/tools/javaWrapper.sh -text
 GeneticsCore/webapp/WEB-INF/geneticscoreContext.xml -text
 /README.txt -text
 extscheduler/build.gradle -text
-extscheduler/extscheduler.iml -text
 extscheduler/module.properties -text
 extscheduler/resources/module.xml -text
 extscheduler/resources/queries/extscheduler/SchedulerUsers.sql -text
@@ -123,7 +121,6 @@ extscheduler/src/org/labkey/extscheduler/query/EventsQueryView.java -text
 extscheduler/src/org/labkey/extscheduler/query/EventsTable.java -text
 extscheduler/src/org/labkey/extscheduler/query/ExtSchedulerQuerySchema.java -text
 extscheduler/src/org/labkey/extscheduler/query/ResourcesTable.java -text
-mergesync/MergeSync.iml -text
 mergesync/build.gradle -text
 mergesync/build.xml -text
 mergesync/module.properties -text
@@ -173,7 +170,6 @@ mergesync/src/org/labkey/mergesync/RequestSyncHelper.java -text
 ogasync/build.gradle -text
 ogasync/build.xml -text
 ogasync/module.properties -text
-ogasync/ogaSync.iml -text
 ogasync/resources/queries/oga/ZGMS_PRIM_ALL_V.query.xml -text
 ogasync/resources/queries/oga/grantProjects.query.xml -text
 ogasync/resources/queries/oga/grantProjects.sql -text
@@ -187,7 +183,6 @@ ogasync/src/org/labkey/ogasync/OGASyncController.java -text
 ogasync/src/org/labkey/ogasync/OGASyncManager.java -text
 ogasync/src/org/labkey/ogasync/OGASyncModule.java -text
 ogasync/src/org/labkey/ogasync/OGASyncRunner.java -text
-onprc_billing/ONPRC_Billing.iml -text
 onprc_billing/build.gradle -text
 onprc_billing/module.properties -text
 onprc_billing/resources/module.xml -text
@@ -490,7 +485,6 @@ onprc_billing/src/org/labkey/onprc_billing/security/ONPRCChargesEntryRole.java -
 onprc_billing/src/org/labkey/onprc_billing/table/ChargeableItemsCustomizer.java -text
 onprc_billing/src/org/labkey/onprc_billing/table/ONPRC_BillingCustomizer.java -text
 onprc_billing/webapp/WEB-INF/onprc_billing/onprc_billingContext.xml -text
-onprc_billingpublic/ONPRC_BillingPublic.iml -text
 onprc_billingpublic/build.xml -text
 onprc_billingpublic/gradle.properties -text
 onprc_billingpublic/module.properties -text
@@ -538,7 +532,6 @@ onprc_billingpublic/resources/views/begin.view.xml -text
 onprc_billingpublic/resources/views/begin.webpart.xml -text
 onprc_billingpublic/src/org/labkey/onprc_billingpublic/ONPRC_BillingPublicController.java -text
 onprc_billingpublic/src/org/labkey/onprc_billingpublic/ONPRC_BillingPublicModule.java -text
-onprc_reports/ONPRC_Reports.iml -text
 onprc_reports/build.gradle -text
 onprc_reports/build.xml -text
 onprc_reports/module.properties -text
@@ -574,7 +567,6 @@ onprc_reports/resources/schemas/ViralLoadResults.template.xml -text
 onprc_reports/src/org/labkey/onprc_reports/ONPRC_ReportsCustomizer.java -text
 onprc_reports/src/org/labkey/onprc_reports/ONPRC_ReportsManager.java -text
 onprc_reports/src/org/labkey/onprc_reports/ONPRC_ReportsModule.java -text
-onprc_ssu/ONPRC_SSU.iml -text
 onprc_ssu/build.gradle -text
 onprc_ssu/module.properties -text
 onprc_ssu/resources/queries/onprc_ssu/schedule.js -text
@@ -594,7 +586,6 @@ onprc_ssu/src/org/labkey/onprc_ssu/ONPRC_SSUManager.java -text
 onprc_ssu/src/org/labkey/onprc_ssu/ONPRC_SSUModule.java -text
 onprc_ssu/src/org/labkey/onprc_ssu/ONPRC_SSUSchema.java -text
 onprc_ssu/src/org/labkey/onprc_ssu/notification/SSU_Notification.java -text
-sla/SLA.iml -text
 sla/build.gradle -text
 sla/module.properties -text
 sla/resources/etl/sla/census.sql -text
