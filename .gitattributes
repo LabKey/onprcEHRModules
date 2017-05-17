@@ -1,6 +1,5 @@
 * text=auto !eol
 GeneticsCore/build.gradle -text
-GeneticsCore/build.xml -text
 GeneticsCore/distributions/prime-seq-modules.xml -text
 GeneticsCore/distributions/prime-seq-modules/build.gradle -text
 GeneticsCore/module.properties -text
@@ -122,7 +121,6 @@ extscheduler/src/org/labkey/extscheduler/query/EventsTable.java -text
 extscheduler/src/org/labkey/extscheduler/query/ExtSchedulerQuerySchema.java -text
 extscheduler/src/org/labkey/extscheduler/query/ResourcesTable.java -text
 mergesync/build.gradle -text
-mergesync/build.xml -text
 mergesync/module.properties -text
 mergesync/resources/module.xml -text
 mergesync/resources/queries/mergesync/merge_results/.qview.xml -text
@@ -168,7 +166,6 @@ mergesync/src/org/labkey/mergesync/MergeSyncTableCustomizer.java -text
 mergesync/src/org/labkey/mergesync/MergeSyncUserSchema.java -text
 mergesync/src/org/labkey/mergesync/RequestSyncHelper.java -text
 ogasync/build.gradle -text
-ogasync/build.xml -text
 ogasync/module.properties -text
 ogasync/resources/queries/oga/ZGMS_PRIM_ALL_V.query.xml -text
 ogasync/resources/queries/oga/grantProjects.query.xml -text
@@ -485,8 +482,6 @@ onprc_billing/src/org/labkey/onprc_billing/security/ONPRCChargesEntryRole.java -
 onprc_billing/src/org/labkey/onprc_billing/table/ChargeableItemsCustomizer.java -text
 onprc_billing/src/org/labkey/onprc_billing/table/ONPRC_BillingCustomizer.java -text
 onprc_billing/webapp/WEB-INF/onprc_billing/onprc_billingContext.xml -text
-onprc_billingpublic/build.xml -text
-onprc_billingpublic/gradle.properties -text
 onprc_billingpublic/module.properties -text
 onprc_billingpublic/resources/queries/onprc_billing_public/NIHIndustryRates.query.xml -text
 onprc_billingpublic/resources/queries/onprc_billing_public/NIHIndustryRates.sql -text
@@ -533,7 +528,6 @@ onprc_billingpublic/resources/views/begin.webpart.xml -text
 onprc_billingpublic/src/org/labkey/onprc_billingpublic/ONPRC_BillingPublicController.java -text
 onprc_billingpublic/src/org/labkey/onprc_billingpublic/ONPRC_BillingPublicModule.java -text
 onprc_reports/build.gradle -text
-onprc_reports/build.xml -text
 onprc_reports/module.properties -text
 onprc_reports/resources/queries/MHC_Data/MHC_Data_Pivoted/Common[!!-~]Alleles.qview.xml -text
 onprc_reports/resources/queries/laboratory/parentageSamples.query.xml -text
