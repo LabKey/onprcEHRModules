@@ -1,6 +1,5 @@
 * text=auto !eol
 GeneticsCore/build.gradle -text
-GeneticsCore/distributions/prime-seq-modules.xml -text
 GeneticsCore/distributions/prime-seq-modules/build.gradle -text
 GeneticsCore/module.properties -text
 GeneticsCore/resources/external/amplicon_standard_curve.R -text
