@@ -520,37 +520,4 @@ public class ONPRC_EHRController extends SpringActionController
             _startingId = startingId;
         }
     }
-
-    @RequiresPermission(AdminPermission.class)
-    public class ValidateDatasetColsAction extends ConfirmAction<Object>
-    {
-        public void validateCommand(Object form, Errors errors)
-        {
-
-        }
-
-        public URLHelper getSuccessURL(Object form)
-        {
-            return PageFlowUtil.urlProvider(PipelineStatusUrls.class).urlBegin(getContainer());
-        }
-
-        public ModelAndView getConfirmView(Object form, BindException errors) throws Exception
-        {
-            //NOTE: consider allowing moduleName as a URL param?
-            Module module = ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class);
-            FileResource resource = (FileResource)module.getModuleResolver().lookup(Path.parse("referenceStudy/datasets/datasets_metadata.xml"));
-            File xml = resource.getFile();
-
-            List<String> msgs = ONPRC_EHRManager.get().validateDatasetCols(getContainer(), getUser(), xml);
-
-            return new HtmlView("This action will compare the columns in the study datasets against those expected in the reference XML file.  " + (msgs.isEmpty() ? "No problems were found." : "The following discrepancies were found:<br><br> " + StringUtils.join(msgs, "<br>")));
-        }
-
-        public boolean handlePost(Object form, BindException errors) throws Exception
-        {
-            //TODO: consider automatically fixing?
-
-            return true;
-        }
-    }
 }
