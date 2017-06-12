@@ -600,8 +600,6 @@ onprc_ehr/resources/queries/study/encounters/Surgeries[!!-~]Plus[!!-~]Codes.qvie
 onprc_ehr/resources/queries/study/encounters/Surgeries[!!-~]Today.qview.xml -text
 onprc_ehr/resources/queries/study/encounters/Surgeries.qview.xml -text
 onprc_ehr/resources/queries/study/encounters/TB[!!-~]Tests.qview.xml -text
-onprc_ehr/resources/queries/study/encountersWithSnomedBySet.query.xml -text
-onprc_ehr/resources/queries/study/encountersWithSnomedBySet.sql -text
 onprc_ehr/resources/queries/study/encountersWithSnomedBySet/.qview.xml -text
 onprc_ehr/resources/queries/study/flagDuplicates.query.xml -text
 onprc_ehr/resources/queries/study/flagDuplicates.sql -text
