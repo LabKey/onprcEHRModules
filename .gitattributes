@@ -657,9 +657,7 @@ onprc_ehr/resources/queries/study/kinshipAverage.query.xml -text
 onprc_ehr/resources/queries/study/kinshipAverage.sql -text
 onprc_ehr/resources/queries/study/latestObservationsForCase.query.xml -text
 onprc_ehr/resources/queries/study/latestObservationsForCase.sql -text
-onprc_ehr/resources/queries/study/matingOutcome.query.xml -text
 onprc_ehr/resources/queries/study/matingOutcome.sql -text
-onprc_ehr/resources/queries/study/matingSuccessRates.query.xml -text
 onprc_ehr/resources/queries/study/matingSuccessRates.sql -text
 onprc_ehr/resources/queries/study/matingSuccessRates/.qview.xml -text
 onprc_ehr/resources/queries/study/matingsExpanded.query.xml -text
