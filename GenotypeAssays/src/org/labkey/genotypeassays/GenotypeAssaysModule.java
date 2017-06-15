@@ -103,6 +103,6 @@ public class GenotypeAssaysModule extends ExtendedSimpleModule
     @NotNull
     public Set<DbSchema> getSchemasToTest()
     {
-        return Collections.singleton(DbSchema.get(SCHEMA_NAME));
+        return Collections.singleton(GenotypeAssaysSchema.getInstance().getSchema());
     }
 }
