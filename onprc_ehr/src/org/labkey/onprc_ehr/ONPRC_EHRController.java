@@ -27,8 +27,7 @@ import org.labkey.api.action.SimpleViewAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
-import org.labkey.api.data.DbSchema;
-import org.labkey.api.data.Selector;
+import org.labkey.api.data.CoreSchema;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
@@ -55,8 +54,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.lang.reflect.Method;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -377,68 +374,64 @@ public class ONPRC_EHRController extends SpringActionController
         private List<String> inspectWorkbooks(final boolean makeChanges)
         {
             final List<String> msgs = new ArrayList<>();
-            TableInfo containers = DbSchema.get("core").getTable("containers");
+            TableInfo containers = CoreSchema.getInstance().getTableInfoContainers();
             TableSelector ts = new TableSelector(containers, new SimpleFilter(FieldKey.fromString("type"), "workbook"), null);
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(rs ->
             {
-                @Override
-                public void exec(ResultSet rs) throws SQLException
+                try
                 {
-                    try
+                    Container workbook = ContainerManager.getForId(rs.getString("entityid"));
+                    FileContentService svc = ServiceRegistry.get().getService(FileContentService.class);
+                    File parentRoot = svc.getFileRoot(workbook.getParent());
+                    if (parentRoot != null)
                     {
-                        Container workbook = ContainerManager.getForId(rs.getString("entityid"));
-                        FileContentService svc = ServiceRegistry.get().getService(FileContentService.class);
-                        File parentRoot = svc.getFileRoot(workbook.getParent());
-                        if (parentRoot != null)
+                        File oldDirectory = new File(parentRoot, "workbook-" + workbook.getRowId());
+                        if (oldDirectory.exists())
                         {
-                            File oldDirectory = new File(parentRoot, "workbook-" + workbook.getRowId());
-                            if (oldDirectory.exists())
+                            File target = new File(parentRoot, workbook.getName());
+                            if (target.exists())
                             {
-                                File target = new File(parentRoot, workbook.getName());
-                                if (target.exists())
+                                int count = getChildFileCount(target);
+                                if (count == 0)
                                 {
-                                    int count = getChildFileCount(target);
-                                    if (count == 0)
+                                    msgs.add("no files in target, deleting: " + target.getPath() + ", and moving from: " + oldDirectory.getPath());
+                                    if (makeChanges)
                                     {
-                                        msgs.add("no files in target, deleting: " + target.getPath() + ", and moving from: " + oldDirectory.getPath());
-                                        if (makeChanges)
-                                        {
-                                            FileUtils.deleteDirectory(target);
-                                            FileUtils.moveDirectory(oldDirectory, target);
-                                            svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        msgs.add("has files, copy/merge from: " + oldDirectory.getPath() + ", to: " + target.getPath());
-                                        if (makeChanges)
-                                        {
-                                            FileUtils.copyDirectory(oldDirectory, target);
-                                            FileUtils.deleteDirectory(oldDirectory);
-                                            svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
-                                        }
+                                        FileUtils.deleteDirectory(target);
+                                        FileUtils.moveDirectory(oldDirectory, target);
+                                        svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
                                     }
                                 }
                                 else
                                 {
-                                    msgs.add("no existing folder, moving from: " + oldDirectory.getPath() + ", to: " + target.getPath());
+                                    msgs.add("has files, copy/merge from: " + oldDirectory.getPath() + ", to: " + target.getPath());
                                     if (makeChanges)
                                     {
-                                        FileUtils.moveDirectory(oldDirectory, target);
+                                        FileUtils.copyDirectory(oldDirectory, target);
+                                        FileUtils.deleteDirectory(oldDirectory);
                                         svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
                                     }
                                 }
                             }
                             else
                             {
-                                msgs.add("old directory does not exist: " + oldDirectory.getPath());
+                                msgs.add("no existing folder, moving from: " + oldDirectory.getPath() + ", to: " + target.getPath());
+                                if (makeChanges)
+                                {
+                                    FileUtils.moveDirectory(oldDirectory, target);
+                                    svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
+                                }
                             }
                         }
+                        else
+                        {
+                            msgs.add("old directory does not exist: " + oldDirectory.getPath());
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        throw new RuntimeException(e);
-                    }
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e);
                 }
             });
 
