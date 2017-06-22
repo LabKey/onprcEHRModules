@@ -683,6 +683,7 @@ onprc_ehr/resources/queries/study/measurementsPivotedRawData/.qview.xml -text
 onprc_ehr/resources/queries/study/medicalCullList.query.xml -text
 onprc_ehr/resources/queries/study/medicalCullList.sql -text
 onprc_ehr/resources/queries/study/medicalCullList/.qview.xml -text
+onprc_ehr/resources/queries/study/menseCycleLength.sql -text
 onprc_ehr/resources/queries/study/menseCycleLength/.qview.xml -text
 onprc_ehr/resources/queries/study/menseData.query.xml -text
 onprc_ehr/resources/queries/study/menseData.sql -text
