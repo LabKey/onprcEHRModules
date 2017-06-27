@@ -5,7 +5,7 @@
  */
 Ext4.define('ONPRC_EHR.panel.RequestInstructionsPanel', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.onprc-requestinstructionpanel',
+    alias: 'widget.onprc-requestinstructionspanel',
 
     initComponent: function(){
         Ext4.apply(this, {
