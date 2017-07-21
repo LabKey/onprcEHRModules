@@ -2313,7 +2313,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ColumnInfo categoryCol = ti.getColumn("category");
         if (categoryCol != null)
         {
-            UserSchema us = getUserSchema(ti, "onprc_ehr");
+            UserSchema us = getUserSchema(ti, "ehr");
             if (us != null)
             {
                 categoryCol.setFk(new QueryForeignKey(us, null, "observation_types", "value", "value", true));

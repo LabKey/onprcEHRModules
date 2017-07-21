@@ -417,32 +417,6 @@
             <column columnName="modified"/>
         </columns>
     </table>
-    <table tableDbType="TABLE" tableName="observation_types">
-        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
-        <insertUrl></insertUrl>
-        <updateUrl></updateUrl>
-        <importUrl></importUrl>
-        <deleteUrl></deleteUrl>
-        <columns>
-            <column columnName="value"/>
-            <column columnName="category"/>
-            <column columnName="editorconfig"/>
-            <column columnName="schemaName">
-                <description>Schema Name To Be Used In Validation of Allowable Values</description>
-            </column>
-            <column columnName="queryName">
-                <description>Query Name To Be Used In Validation of Allowable Values</description>
-            </column>
-            <column columnName="valueColumn">
-                <description>The column in the target table that provides the list of alowable values</description>
-            </column>
-
-            <column columnName="createdby"/>
-            <column columnName="created"/>
-            <column columnName="modifiedby"/>
-            <column columnName="modified"/>
-        </columns>
-    </table>
 
     <table tableName="encounter_summaries_remarks" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Encounter Summaries Remarks</tableTitle>

@@ -1825,7 +1825,7 @@ public class ONPRC_EHRTriggerHelper
     {
         if (!_cachedObservations.containsKey(category))
         {
-            TableInfo ti = getTableInfo("onprc_ehr", "observation_types");
+            TableInfo ti = getTableInfo("ehr", "observation_types");
             TableSelector ts = new TableSelector(ti, PageFlowUtil.set("schemaName", "queryName", "valuecolumn"), new SimpleFilter(FieldKey.fromString("value"), category), null);
             Map<String, Object> record = ts.getMap();
 

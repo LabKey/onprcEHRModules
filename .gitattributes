@@ -859,6 +859,7 @@ onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.361-12.362.sql -tex
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.362-12.363.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.371-12.372.sql -text
 onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-12.378-12.379.sql -text
+onprc_ehr/resources/schemas/dbscripts/sqlserver/onprc_ehr-17.20-17.21.sql -text
 onprc_ehr/resources/schemas/onprc_ehr.xml -text
 onprc_ehr/resources/scripts/onprc_ehr/etl.js -text
 onprc_ehr/resources/scripts/onprc_ehr/onprc_triggers.js -text
