@@ -501,7 +501,7 @@
             </column>
             <column columnName="qcstate">
                 <fk>
-                    <fkDbSchema>study</fkDbSchema>
+                    <fkDbSchema>core</fkDbSchema>
                     <fkTable>qcstate</fkTable>
                     <fkColumnName>RowId</fkColumnName>
                 </fk>

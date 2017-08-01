@@ -16,7 +16,7 @@
                     <column columnName="qcstate">
                         <columnTitle>Status</columnTitle>
                         <fk>
-                            <fkDbSchema>study</fkDbSchema>
+                            <fkDbSchema>core</fkDbSchema>
                             <fkTable>qcstate</fkTable>
                             <fkColumnName>RowId</fkColumnName>
                             <fkDisplayColumnName>Label</fkDisplayColumnName>
