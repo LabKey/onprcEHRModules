@@ -30,7 +30,7 @@ BuildUtils.addModuleDistributionDependencies(project, [":server:customModules:on
                                                        ":externalModules:labModules:laboratory",
                                                        ":externalModules:DISCVR:blast",
                                                        ":externalModules:DISCVR:galaxyintegration",
-                                                       ":externalModules:DISCVR:htcondorconnector",
+                                                       ":externalModules:DISCVR:cluster",
                                                        ":externalModules:DISCVR:jbrowse",
                                                        ":externalModules:DISCVR:omerointegration",
                                                        ":externalModules:DISCVR:variantdb"])
