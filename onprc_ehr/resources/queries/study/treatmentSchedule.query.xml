@@ -173,34 +173,20 @@
                     </column>
                 </columns>
                 <buttonBarOptions position="both" includeStandardButtons="false">
+                    <includeScript>ehr.context</includeScript>
                     <includeScript>/ehr/studyButtons.js</includeScript>
                     <onRender>EHR.DatasetButtons.moreActionsHandler</onRender>
                     <item text="Grid Views">
                         <originalText>Grid Views</originalText>
                     </item>
-                    <item text="Reports">
-                        <originalText>Reports</originalText>
-                    </item>
-                    <item text="Insert">
-                        <originalText>Insert</originalText>
-                    </item>
-                    <item text="Insert New Row">
-                        <originalText>Insert New Row</originalText>
+                    <item text="Charts">
+                        <originalText>Charts</originalText>
                     </item>
                     <item text="Export">
                         <originalText>Export</originalText>
                     </item>
                     <item text="Print">
                         <originalText>Print</originalText>
-                    </item>
-                    <item text="Import Bulk Data">
-                        <originalText>Import Bulk Data</originalText>
-                    </item>
-                    <item text="Paging">
-                        <originalText>Paging</originalText>
-                    </item>
-                    <item text="Delete">
-                        <originalText>Delete</originalText>
                     </item>
                     <item text="More Actions" insertPosition="end" >
                         <item text="Jump To History">
