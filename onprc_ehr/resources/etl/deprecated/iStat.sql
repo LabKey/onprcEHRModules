@@ -19,7 +19,7 @@ SELECT
 	--t.ClinicalKey ,
 	cast(t.Id as nvarchar(4000)) as Id,
 	t.DATE ,
-	--t.Specimen ,     --      Speciment database table
+	--t.Specimen ,     --      Specimen database table
 	--sp.Name,
 	--sp.SNOMEDCODE as snomed,
 	t.MethodInt  ,

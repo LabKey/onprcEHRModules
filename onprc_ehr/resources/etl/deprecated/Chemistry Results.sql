@@ -21,7 +21,7 @@ SELECT
 	t.DATE ,
   t.projectId as project,
 
-	--t.Specimen ,     --      Speciment database table
+	--t.Specimen ,     --      Specimen database table
 	--sp.Name,
 	--sp.SNOMEDCODE as snomed,
 	t.MethodInt  ,
@@ -46,7 +46,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Glucose as Result,
 	null as resultString,
@@ -63,7 +63,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	BUN as Result,
 	null as resultString,
@@ -80,7 +80,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Creatinine as Result,
 	null as resultString,
@@ -97,7 +97,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Sodium as Result,
 	null as resultString,
@@ -114,7 +114,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Potassium as Result,
 	null as resultString,
@@ -131,7 +131,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Chloride as Result,
 	null as resultString,
@@ -148,7 +148,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	TotalProtein as Result ,
 	null as resultString,
@@ -165,7 +165,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Albumin as Result,
 	null as resultString,
@@ -182,7 +182,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	AGRatio as Result,
 	null as resultString,
@@ -199,7 +199,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Calcium as Result,
 	null as resultString,
@@ -216,7 +216,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Phosphorus as Result,
 	null as resultString,
@@ -233,7 +233,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	UricAcid as Reuslt,
 	null as resultString,
@@ -250,7 +250,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Cholesterol as Result,
 	null as resultString,
@@ -267,7 +267,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Triglycerides as Result,
 	null as resultString,
@@ -284,7 +284,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	AlkPhosphotase as Result,
 	null as resultString,
@@ -301,7 +301,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	LDH as Result,
 	null as resultString,
@@ -318,7 +318,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	AST as Result,
 	null as resultString,
@@ -335,7 +335,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	ALT as Result,
 	null as resultString,
@@ -352,7 +352,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Iron as Result,
 	null as resultString,
@@ -369,7 +369,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	GGT as Result,
 	null as resultString,
@@ -386,7 +386,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Globulin as Result,
 	null as resultString,
@@ -403,7 +403,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	TotalBilirubin as Result,
 	null as resultString,
@@ -420,7 +420,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	DirectBilirubin as Result,
 	null as resultString,
@@ -437,7 +437,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	BunCreat as Result,
 	null as resultString,
@@ -454,7 +454,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	RefAmylase as Result,
 	null as resultString,
@@ -471,7 +471,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	RefLipase as Result,
 	null as resultString,
@@ -488,7 +488,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	RefCPK as Result,
 	null as resultString,
@@ -505,7 +505,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	HDL_CHOL as Result,
 	null as resultString,
@@ -522,7 +522,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	LDL as Result,
 	null as resultString,
@@ -539,7 +539,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	CHOL_HDL as Result,
 	null as resultString,
@@ -556,7 +556,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	LDL_HDL as Result,
 	null as resultString,
@@ -573,7 +573,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	CK as Result,
 	null as resultString,
@@ -590,7 +590,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	MG as Result,
 	null as resultString,
@@ -607,7 +607,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	CRP as Result,
 	null as resultString,
@@ -624,7 +624,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	LACT as Result,
 	null as resultString,
@@ -642,7 +642,7 @@ SELECT
 	AnimalID as Id  ,
 	DATE ,
   projectid,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	VLDL_Cholesterol as Result,
 	null as resultString,

@@ -19,7 +19,7 @@ SELECT
 	t.ClinicalKey ,
 	cast(t.Id as nvarchar(4000)) as Id,
 	t.DATE ,
-	--t.Specimen ,     --      Speciment database table
+	--t.Specimen ,     --      Specimen database table
   t.projectId as project,
 	--sp.Name,
 	--sp.SNOMEDCODE as snomed,
@@ -43,7 +43,7 @@ FROM (
 -- 	ClinicalKey ,
 -- 	AnimalID as Id  ,
 -- 	DATE ,
--- 	Specimen as Specimen ,     --      Speciment database table
+-- 	Specimen as Specimen ,     --      Specimen database table
 -- 	Method as MethodInt  ,
 -- 	ManualDiff as Result,
 -- 	'ManualDiff' as TestId,
@@ -60,7 +60,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	WBC as Result,
   null as qual_result,
@@ -78,7 +78,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	RBC as Result,
   null as qual_result,
@@ -96,7 +96,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Hemoglobin as Result,
   null as qual_result,
@@ -114,7 +114,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Hematocrit as Result,
   null as qual_result,
@@ -132,7 +132,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	MCV as Result,
   null as qual_result,
@@ -150,7 +150,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	MCH as Result,
   null as qual_result,
@@ -168,7 +168,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	MCHC as Result,
   null as qual_result,
@@ -186,7 +186,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	PlateletCount as Result,
   null as qual_result,
@@ -204,7 +204,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	TotalProtein as Result,
   null as qual_result,
@@ -222,7 +222,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	MPMN as Result,
   null as qual_result,
@@ -240,7 +240,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	IPMN as Result,
   null as qual_result,
@@ -258,7 +258,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Lymphocyte as Result,
   null as qual_result,
@@ -276,7 +276,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Monocyte as Result,
   null as qual_result,
@@ -294,7 +294,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Eosinophil as Result,
   null as qual_result,
@@ -312,7 +312,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Basophil as Result,
   null as qual_result,
@@ -330,7 +330,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	SEDRate as Result,
   null as qual_result,
@@ -348,7 +348,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	LUC as Result,
   null as qual_result,
@@ -366,7 +366,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	NRBC as Result,
   null as qual_result,
@@ -384,7 +384,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Reticulocyte as Result,
   null as qual_result,
@@ -402,7 +402,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	RBCHypochromic as Result,
   null as qual_result,
@@ -420,7 +420,7 @@ SELECT
   projectId,
   AnimalID as Id  ,
   DATE ,
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   Method as MethodInt  ,
   cast(RBC_Acanthocytes as double precision) as Result,
   null as qual_result,
@@ -438,7 +438,7 @@ SELECT
   projectId,
   AnimalID as Id  ,
   DATE ,
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   Method as MethodInt  ,
   cast(RBC_Poikilocytes as double precision) as Result,
   null as qual_result,
@@ -456,7 +456,7 @@ SELECT
   projectId,
   AnimalID as Id  ,
   DATE ,
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   Method as MethodInt  ,
   cast(RBC_Spherocytes as double precision) as Result,
   null as qual_result,
@@ -474,7 +474,7 @@ SELECT
   projectId,
   AnimalID as Id  ,
   DATE ,
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   Method as MethodInt  ,
   null as result,
   RBC_TargetCells as qual_result,
@@ -492,7 +492,7 @@ SELECT
   projectId,
   AnimalID as Id  ,
   DATE ,
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   Method as MethodInt  ,
   MPV as Result,
   null as qual_result,
@@ -510,7 +510,7 @@ SELECT
   projectId,
   AnimalID as Id  ,
   DATE ,
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   Method as MethodInt  ,
   RDW as Result,
   null as qual_result,
@@ -528,7 +528,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	RBCMicrocyte as Result,
   null as qual_result,
@@ -546,7 +546,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	RBCPolychromasia as Result,
   null as qual_result,
@@ -564,7 +564,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	RBCMacrocyte as Result,
   null as qual_result,
@@ -582,7 +582,7 @@ SELECT
   projectId,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	RBCAnisocytosis as Result,
   null as qual_result,

@@ -19,7 +19,7 @@ SELECT
 	--t.ClinicalKey ,
 	cast(t.Id as nvarchar(4000)) as Id,
 	t.DATE ,
-	--t.Specimen ,     --      Speciment database table
+	--t.Specimen ,     --      Specimen database table
 	--sp.Name,
 	--sp.SNOMEDCODE as snomed,
 	t.MethodInt  ,
@@ -42,7 +42,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -62,7 +62,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -82,7 +82,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -102,7 +102,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -122,7 +122,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -142,7 +142,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -162,7 +162,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -182,7 +182,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -202,7 +202,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -222,7 +222,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -242,7 +242,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	CASE WHEN RBCMin != -1 THEN RBCMin ELSE NULL END as result,
@@ -261,7 +261,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	CASE WHEN WBCMin != -1 THEN WBCMin ELSE null END as result,
@@ -280,7 +280,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	SpecificGravity as result,
@@ -299,7 +299,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	CASE WHEN EpitheliaMin != -1 THEN EpitheliaMin ELSE null END as result,
@@ -318,7 +318,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	PHValue as result,
@@ -337,7 +337,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	CASE WHEN CastsMin != -1 THEN CastsMin ELSE null END as result,
@@ -356,7 +356,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -375,7 +375,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,
@@ -394,7 +394,7 @@ SELECT
 	ClinicalKey ,
 	AnimalID as Id  ,
 	DATE ,
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	Collection as CollectionInt  ,
 	null as result,

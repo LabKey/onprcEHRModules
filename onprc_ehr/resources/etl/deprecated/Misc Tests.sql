@@ -178,7 +178,7 @@ SELECT
   null as category,
   cln.Technician as technicianId,
 
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   sp.name,
   sp.snomedcode,
   null as MethodInt,
@@ -208,7 +208,7 @@ SELECT
   null as category,
   cln.Technician as technicianId,
 
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   sp.name,
   sp.snomedcode,
   null as MethodInt,
@@ -238,7 +238,7 @@ SELECT
   null as category,
   cln.Technician as technicianId,
 
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   sp.name,
   sp.snomedcode,
   null as MethodInt,
@@ -268,7 +268,7 @@ SELECT
   null as category,
   cln.Technician as technicianId,
 
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   sp.name,
   sp.snomedcode,
   null as MethodInt,
@@ -298,7 +298,7 @@ SELECT
   null as category,
   cln.Technician as technicianId,
 
-  Specimen as Specimen ,     --      Speciment database table
+  Specimen as Specimen ,     --      Specimen database table
   sp.name,
   sp.snomedcode,
   null as MethodInt,

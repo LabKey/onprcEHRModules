@@ -116,7 +116,7 @@ SELECT
 	Initials as TechInitials,
         s4.Value as Department,
 
-	Specimen as Specimen ,     --      Speciment database table
+	Specimen as Specimen ,     --      Specimen database table
 	Method as MethodInt  ,
 	s2.Value as Method,
 	null as collectionMethod,
