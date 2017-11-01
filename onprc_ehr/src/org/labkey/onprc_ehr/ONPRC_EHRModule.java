@@ -28,20 +28,23 @@ import org.labkey.api.ehr.dataentry.SingleQueryFormProvider;
 import org.labkey.api.ehr.demographics.ActiveFlagsDemographicsProvider;
 import org.labkey.api.ehr.security.EHRDataAdminPermission;
 import org.labkey.api.ehr.security.EHRProjectEditPermission;
-import org.labkey.api.ehr.security.EHRVeternarianPermission;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.buttons.ShowEditUIButton;
 import org.labkey.api.ldk.notification.NotificationService;
+import org.labkey.api.module.AdminLinkManager;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.QuerySchema;
 import org.labkey.api.resource.Resource;
+import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.util.UnexpectedException;
+import org.labkey.api.view.ActionURL;
+import org.labkey.api.view.NavTree;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.AnimalGroupCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentCompletedButton;
@@ -442,6 +445,15 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
         //R.Blasa   11-28-2016
         EHRService.get().registerHistoryDataSource(new DefaultNHPTrainingDataSource(this));
+
+        AdminLinkManager.getInstance().addListener((adminNavTree, container, user) ->
+        {
+            if (container.hasPermission(user, AdminPermission.class) && container.getActiveModules().contains(ONPRC_EHRModule.this))
+            {
+                adminNavTree.addChild(new NavTree("EHR Admin Page", new ActionURL("onprc_ehr", "ehrAdmin", container)));
+            }
+        });
+
     }
 
     @Override
