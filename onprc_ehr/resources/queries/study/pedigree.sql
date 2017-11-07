@@ -22,6 +22,7 @@ END
 AS status,
 d.id.demographics.calculated_status as status_code,
 d.id.demographics.species,
+'' as Display,
 'Demographics' as source
 
 FROM study.demographicsParents d
