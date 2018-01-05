@@ -1,6 +1,6 @@
 <tables xmlns="http://labkey.org/data/xml">
     <table tableDbType="TABLE" tableName="etl_runs">
-        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <columns>
             <column columnName="rowid"/>
             <column columnName="date">
@@ -15,7 +15,7 @@
         </columns>
     </table>
     <table tableName="investigators" tableDbType="TABLE">
-        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <tableTitle>Investigators</tableTitle>
         <auditLogging>DETAILED</auditLogging>
         <titleColumn>lastName</titleColumn>
@@ -112,7 +112,7 @@
         </columns>
     </table>
     <table tableDbType="TABLE" tableName="serology_test_schedule">
-        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <tableTitle>Serology Test Schedule</tableTitle>
         <columns>
             <column columnName="rowid"/>
@@ -144,7 +144,7 @@
     </table>
     <table tableName="customers" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Customers</tableTitle>
-        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <titleColumn>lastName</titleColumn>
         <columns>
             <column columnName="rowId">
@@ -228,7 +228,7 @@
         </columns>
     </table>
     <table tableDbType="TABLE" tableName="vet_assignment" useColumnOrder="true">
-        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <tableTitle>Vet Assignment</tableTitle>
         <columns>
             <column columnName="rowid"/>
@@ -266,7 +266,7 @@
         </columns>
     </table>
     <table tableDbType="TABLE" tableName="housing_transfer_requests" useColumnOrder="true">
-        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <tableTitle>Housing Transfer Requests</tableTitle>
         <columns>
             <column columnName="Id">
@@ -395,7 +395,7 @@
         </buttonBarOptions>
     </table>
     <table tableDbType="TABLE" tableName="birth_condition">
-        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <insertUrl></insertUrl>
         <updateUrl></updateUrl>
         <importUrl></importUrl>
@@ -417,7 +417,7 @@
 
     <table tableName="encounter_summaries_remarks" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Encounter Summaries Remarks</tableTitle>
-        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>
         <columns>
             <column columnName="Id">

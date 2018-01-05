@@ -3,7 +3,7 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="alopeciaData" tableDbType="TABLE">
                 <tableTitle>Alopecia Summary</tableTitle>
-                <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <columns>
                     <column columnName="areas">
                         <columnTitle>Areas In Previous 30 Days</columnTitle>

@@ -3,7 +3,7 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="animalGroupProblemData" tableDbType="TABLE">
                 <tableTitle>Morbidity and Mortality For Animal Group Members</tableTitle>
-                <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <columns>
                     <column columnName="lsid">
                         <isHidden>true</isHidden>
