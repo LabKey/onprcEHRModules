@@ -1,7 +1,7 @@
 <tables xmlns="http://labkey.org/data/xml">
     <table tableName="assaytypes" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Genotyping Assay Types</tableTitle>
-        <javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
         <columns>
             <column columnName="name"/>
             <column columnName="description"/>
@@ -9,7 +9,7 @@
     </table>
     <table tableName="primer_pairs" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Primer Pairs</tableTitle>
-        <javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
         <pkColumnName>primername</pkColumnName>
         <columns>
             <column columnName="primername">
@@ -58,7 +58,7 @@
     </table>
     <table tableName="ssp_result_types" tableDbType="TABLE">
         <tableTitle>SSP Result Types</tableTitle>
-        <javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
         <pkColumnName>result</pkColumnName>
         <titleColumn>result</titleColumn>
         <columns>

@@ -19,7 +19,7 @@
 <tables xmlns="http://labkey.org/data/xml">
     <table tableName="rochee411_tests" tableDbType="TABLE">
         <tableTitle>Roche E411 Tests</tableTitle>
-        <javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
         <columns>
             <column columnName="test"/>
             <column columnName="code"/>
@@ -40,14 +40,14 @@
     </table>
     <table tableName="instruments" tableDbType="TABLE">
         <tableTitle>Hormone Assay Instruments</tableTitle>
-        <javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
         <columns>
             <column columnName="instrument"/>
         </columns>
     </table>
     <table tableName="assay_tests" tableDbType="TABLE">
         <tableTitle>Hormone Assay Tests</tableTitle>
-        <javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
         <columns>
             <column columnName="test"/>
             <column columnName="code"/>
@@ -56,7 +56,7 @@
     </table>
     <table tableName="diluents" tableDbType="TABLE">
         <tableTitle>Diluents</tableTitle>
-        <javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
         <columns>
             <column columnName="diluent"/>
         </columns>
