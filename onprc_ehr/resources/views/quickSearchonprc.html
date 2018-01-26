@@ -100,6 +100,11 @@
                         itemId: 'animalGroup',
                         displayField: 'name',
                         valueField: 'rowid',
+                        listeners: {
+                            scope: this,
+                            expand: this.onComboFieldExpand,
+                            collapse: this.onComboFieldCollapse
+                        },
                         store: {
                             type: 'labkey-store',
                             containerPath: ctx['EHRStudyContainer'],
@@ -146,6 +151,8 @@
                         style: this.FIELD_STYLE,
                         listeners: {
                             scope: this,
+                            expand: this.onComboFieldExpand,
+                            collapse: this.onComboFieldCollapse,
                             specialkey: function(field, e){
                                 if (!field.isExpanded && e.getKey() === e.ENTER){
                                     field.assertValue();
@@ -186,6 +193,8 @@
                         name: 'protocolField',
                         listeners: {
                             scope: this,
+                            expand: this.onComboFieldExpand,
+                            collapse: this.onComboFieldCollapse,
                             specialkey: function(field, e){
                                 if (!field.isExpanded && e.getKey() === e.ENTER){
                                     field.assertValue();
@@ -225,6 +234,8 @@
                         style: this.FIELD_STYLE,
                         listeners: {
                             scope: this,
+                            expand: this.onComboFieldExpand,
+                            collapse: this.onComboFieldCollapse,
                             specialkey: function(field, e){
                                 if (!field.isExpanded && e.getKey() === e.ENTER){
                                     var btn = field.up('panel').down('#roomBtn');
@@ -254,10 +265,31 @@
                     }]
                 });
 
-                if (this.hoverPart)
-                    this.mon(this.hoverPart, 'beforehide', this.onBeforeHide, this);
+//                if (this.hoverPart)
+//                    this.mon(this.hoverPart, 'beforehide', this.onBeforeHide, this);
 
                 this.callParent(arguments);
+            },
+
+            // Issue 32133: TODO in 18.1, move these lock/unlock menu helpers to a more global location
+            onComboFieldExpand: function(field, e) {
+                var toggleEl = this.getMenuToggleEl();
+                if (toggleEl != null) {
+                    toggleEl.addCls('menu-locked');
+                }
+            },
+
+            onComboFieldCollapse: function(field, e) {
+                var toggleEl = this.getMenuToggleEl();
+                if (toggleEl != null) {
+                    toggleEl.removeCls('menu-locked');
+                }
+            },
+
+            getMenuToggleEl: function() {
+                var webpartEl = Ext4.get(webpart.wrapperDivId),
+                        dropdownEl = webpartEl ? webpartEl.up('.dropdown') : null;
+                return dropdownEl != null ? dropdownEl.down('.dropdown-toggle') : null;
             },
 
             onBeforeHide: function(hover){
@@ -277,7 +309,7 @@
         });
 
         Ext4.create('onprc_ehr.panel.QuickSearchPanel', {
-            hoverPart: HoverNavigation.Parts[webpart.hoverPartName]
+//            hoverPart: HoverNavigation.Parts[webpart.hoverPartName]
         }).render(webpart.wrapperDivId);
     }
 
