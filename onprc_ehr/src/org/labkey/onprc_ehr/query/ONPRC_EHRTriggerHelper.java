@@ -1737,7 +1737,7 @@ public class ONPRC_EHRTriggerHelper
                 throw new IllegalArgumentException("ONPRC_EHR Module is only supported on either postgres or sqlserver");
             }
 
-            SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT COALESCE(max(CAST(protocol as INTEGER)), 0) as expr FROM ehr.protocol WHERE " + suffix);
+            SqlSelector ss = new SqlSelector(DbSchema.get("onprc_ehr"), "SELECT COALESCE(max(CAST(protocol as INTEGER)), 0) as expr FROM onprc_ehr.protocol WHERE " + suffix);
             List<Integer> ret = ss.getArrayList(Integer.class);
             _nextProtocolId = ret.isEmpty() ? 0 : ret.get(0);
         }
