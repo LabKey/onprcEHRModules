@@ -381,7 +381,7 @@ public class ONPRC_EHRController extends SpringActionController
                 try
                 {
                     Container workbook = ContainerManager.getForId(rs.getString("entityid"));
-                    FileContentService svc = ServiceRegistry.get().getService(FileContentService.class);
+                    FileContentService svc = FileContentService.get();
                     File parentRoot = svc.getFileRoot(workbook.getParent());
                     if (parentRoot != null)
                     {
