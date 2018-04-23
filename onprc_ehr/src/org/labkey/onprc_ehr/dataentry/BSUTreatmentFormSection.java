@@ -16,6 +16,8 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class BSUTreatmentFormSection extends DrugAdministrationFormSection
 {
     public BSUTreatmentFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super(location);
+        super(location, DrugAdministrationFormSection.LABEL, ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"));
         setLabel("Treatments Given");
         setTabName(getLabel());
         _showAddTreatments = false;

@@ -23,8 +23,11 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
+import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.dataentry.WeightFormSection;
+import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.Queryable;
@@ -54,7 +57,7 @@ public class ClinicalReportFormType extends TaskForm
                 new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new SimpleGridPanel("study", "encounters", "Procedures", EHRService.FORM_SECTION_LOCATION.Tabs),
                 new WeightFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
-                new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+                new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
                 new TreatmentOrdersFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new SimpleGridPanel("study", "blood", "Blood Draws", EHRService.FORM_SECTION_LOCATION.Tabs),
                 new SimpleGridPanel("ehr", "snomed_tags", "Diagnostic Codes", EHRService.FORM_SECTION_LOCATION.Tabs),

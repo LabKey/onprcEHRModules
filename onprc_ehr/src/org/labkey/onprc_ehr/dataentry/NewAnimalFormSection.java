@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.data.TableInfo;
+import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.view.template.ClientDependency;
 

@@ -20,6 +20,8 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.dataentry.WeightFormSection;
+import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -40,7 +42,7 @@ public class WeightFormType extends TaskForm
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new WeightFormSection(),
-            new DrugAdministrationFormSection(),
+            new DrugAdministrationFormSection(ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
             new TBProcedureFormSection()
         ));
 

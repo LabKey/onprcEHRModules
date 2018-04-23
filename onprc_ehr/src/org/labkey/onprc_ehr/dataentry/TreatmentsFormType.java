@@ -18,17 +18,15 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
-import org.labkey.api.ehr.dataentry.FormSection;
-import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * User: bimber
@@ -48,7 +46,7 @@ public class TreatmentsFormType extends TaskForm
            // new NonStoreFormSection("Treatment Template Helper", "Treatment Template Helper", "onprc_AddScheduledTreatmentPanel", Arrays.asList(ClientDependency.fromPath("/onprc_ehr/panel/AddScheduledTreatmentPanel.js"))),
 
             new AnimalDetailsFormSection(),
-            new DrugAdministrationFormSection(),
+            new DrugAdministrationFormSection(ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
             new TreatmentOrdersFormSection()
         ));
 

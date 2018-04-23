@@ -20,9 +20,8 @@
     * that match their criteria.  It is connected to the 'Add Treatments' button in the treatments form at ONPRC.
     * Originally Named EHR.window.AddScheduledTreatmentsWindow'
  */
-Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
+Ext4.define('ONPRC_EHR.window.AddScheduledTreatmentWindow', {
     extend: 'Ext.window.Window',
-    alias: 'widget.AddScheduledTreatmentWindow',
 
     initComponent: function(){
         Ext4.applyIf(this, {
@@ -51,41 +50,39 @@ Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
                 xtype: 'ehr-timeofdayfield',
                 itemId: 'timeField'
             },*/
-                {
-             xtype: 'ehr-areafield',
-             multiSelect: true,
-                    typeAhead: true,
-                    itemId: 'areaField'
+            {
+                 xtype: 'ehr-areafield',
+                 multiSelect: true,
+                typeAhead: true,
+                itemId: 'areaField'
              },/*{
-             xtype: 'ehr-roomfield',
-             itemId: 'roomField'
+                 xtype: 'ehr-roomfield',
+                 itemId: 'roomField'
              },*/{
-                    xtype: 'checkcombo',
-                    forceSelection: true,
-                    multiSelect: true,
-                    addAllSelector: true,
-                    fieldLabel: 'Treatment Time',
-                    itemId: 'timeField',
-                    displayField: 'treatmentTime',
-                    valueField: 'timeValue',
-                    store: {
-                        type: 'array',
-                        fields: ['timeValue','treatmentTime'],
-                        data: [
-                            ['800', '8:00 AM'],
-                            ['1200', '12:00 Noon'],
-                            ['1600', '4:00 PM'],
-                            ['2000', '8:00 PM']
-                        ]
-                    }
-                },
-                {xtype: 'onprc-snomedtreatmentcombo',    //Modified 6-22-2015 Blasa
+                xtype: 'checkcombo',
+                forceSelection: true,
+                multiSelect: true,
+                addAllSelector: true,
+                fieldLabel: 'Treatment Time',
+                itemId: 'timeField',
+                displayField: 'treatmentTime',
+                valueField: 'timeValue',
+                store: {
+                    type: 'array',
+                    fields: ['timeValue','treatmentTime'],
+                    data: [
+                        ['800', '8:00 AM'],
+                        ['1200', '12:00 Noon'],
+                        ['1600', '4:00 PM'],
+                        ['2000', '8:00 PM']
+                    ]
+                }
+            },{
+                xtype: 'ehr-snomedtreatmentcombo',
                 defaultSubset: 'Post Op Meds' ,
                 fieldLabel: 'Treatment(s)',
                 itemId: 'code'
-    },/*
-
-
+            },/*
               {
                     xtype: 'checkcombo',
                     forceSelection: true,
@@ -103,12 +100,13 @@ Ext4.define('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
                             ['Diet']
                         ]
                     }
-                },*/{
-                    xtype: 'textfield',
-                    fieldLabel: 'Performed By',
-                    value: LABKEY.Security.currentUser.displayName,
-                    itemId: 'performedBy'
-                }],
+                },*/
+            {
+                xtype: 'textfield',
+                fieldLabel: 'Performed By',
+                value: LABKEY.Security.currentUser.displayName,
+                itemId: 'performedBy'
+            }],
             buttons: [{
                 text:'Submit',
                 itemId: 'submitBtn',
@@ -274,7 +272,7 @@ EHR.DataEntryUtils.registerGridButton('ADDTREATMENTS', function(config){
             if(cellEditing)
                 cellEditing.completeEdit();
 
-            Ext4.create('onprc_ehr.window.ONPRC_AddScheduledTreatmentWindow', {
+            Ext4.create('ONPRC_EHR.window.AddScheduledTreatmentWindow', {
                 targetStore: grid.store
             }).show();
         }

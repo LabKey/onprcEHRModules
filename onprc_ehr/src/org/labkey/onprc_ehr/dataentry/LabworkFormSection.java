@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.dataentry;
 import org.json.JSONObject;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
+import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.ArrayList;

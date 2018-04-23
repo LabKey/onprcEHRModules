@@ -16,7 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ehr.dataentry.SimpleFormSection;
+import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class DrugAdministrationRequestFormSection extends DrugAdministrationForm
 {
     public DrugAdministrationRequestFormSection()
     {
-        super("Treatments/Medications");
+        super(EHRService.FORM_SECTION_LOCATION.Body, "Treatments/Medications", ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"));
 
         _showAddTreatments = false;
     }

@@ -17,11 +17,13 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AbstractFormSection;
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.BloodDrawFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.dataentry.WeightFormSection;
+import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.Queryable;
@@ -51,7 +53,7 @@ public class ClinicalRoundsFormType extends TaskForm
             //however, have been re-added apparently people do use them
             new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
             new WeightFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
-            new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+            new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
             new TreatmentOrdersFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
             new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, false)
         ));

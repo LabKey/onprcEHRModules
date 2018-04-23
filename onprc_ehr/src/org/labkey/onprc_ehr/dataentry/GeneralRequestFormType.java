@@ -16,18 +16,15 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.BloodDrawFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
-import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
-import org.labkey.api.ehr.dataentry.TaskForm;
-import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.module.Module;
+import org.labkey.api.view.template.ClientDependency;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * User: bimber
@@ -42,7 +39,7 @@ public class GeneralRequestFormType extends RequestForm
                 new RequestFormSection(),
                 new AnimalDetailsFormSection(),
                 new BloodDrawFormSection(true),
-                new DrugAdministrationFormSection()
+                new DrugAdministrationFormSection(ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"))
         ));
     }
 }

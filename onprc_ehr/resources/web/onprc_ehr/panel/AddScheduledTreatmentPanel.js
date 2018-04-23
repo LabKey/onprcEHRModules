@@ -63,7 +63,8 @@ Ext4.define('onprc_ehr.panel.AddScheduledTreatmentPanel', {
                         ]
                     }
                 },
-                {xtype: 'onprc-snomedtreatmentcombo',    //Modified 6-22-2015 Blasa
+                {
+                    xtype: 'ehr-snomedtreatmentcombo',
                     defaultSubset: 'Post Op Meds' ,
                     fieldLabel: 'Treatment(s)',
                     itemId: 'code'

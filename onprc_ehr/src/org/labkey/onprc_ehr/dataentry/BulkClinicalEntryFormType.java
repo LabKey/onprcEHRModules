@@ -19,8 +19,11 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
+import org.labkey.api.ehr.dataentry.WeightFormSection;
+import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
@@ -48,7 +51,7 @@ public class BulkClinicalEntryFormType extends TaskForm
                 new ClinicalEncountersFormSection(),
                 new SimpleGridPanel("study", "Clinical Remarks", "SOAPs"),
                 new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Body),
-                new DrugAdministrationFormSection(),
+                new DrugAdministrationFormSection(ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
                 new TreatmentOrdersFormSection(),
                 new WeightFormSection(),
                 new SimpleGridPanel("study", "blood", "Blood Draws"),
