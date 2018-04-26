@@ -1078,7 +1078,7 @@ public class ONPRC_EHRTriggerHelper
     }
 
     //Added on 10/5/2016, L.Kolli
-    public Map<String, Object> onAnimalArrival_AddDemographics(String id, Map<String, Object> row) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
+    public Map<String, Object> onAnimalArrival_AddDemographics(String id, Map<String, Object> row)
     {
         Map<String, Object> demographicsProps = new HashMap<String, Object>();
 

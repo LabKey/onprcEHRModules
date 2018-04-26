@@ -329,14 +329,14 @@ public class ONPRC_EHRController extends SpringActionController
     @RequiresSiteAdmin
     public class FixWorkbookPathsAction extends ConfirmAction<Object>
     {
-        public boolean handlePost(Object form, BindException errors) throws Exception
+        public boolean handlePost(Object form, BindException errors)
         {
             inspectWorkbooks(true);
 
             return true;
         }
 
-        public ModelAndView getConfirmView(Object form, BindException errors) throws Exception
+        public ModelAndView getConfirmView(Object form, BindException errors)
         {
             List<String> msgs = inspectWorkbooks(false);
 

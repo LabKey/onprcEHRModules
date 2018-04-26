@@ -166,7 +166,7 @@ public class DefaultSnomedDataSource extends AbstractEHRDataSource
     }
 
     @Override
-    protected String getHtml(Container c, Results rs, boolean redacted) throws SQLException
+    protected String getHtml(Container c, Results rs, boolean redacted)
     {
         throw new UnsupportedOperationException("This should not be called");
     }
