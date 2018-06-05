@@ -54,6 +54,7 @@ onprc_ehr/resources/data/lab_test_range.tsv -text
 onprc_ehr/resources/data/labworkChargeType.tsv -text
 onprc_ehr/resources/data/labwork_panels.tsv -text
 onprc_ehr/resources/data/labwork_services.tsv -text
+onprc_ehr/resources/data/labwork_types.tsv -text
 onprc_ehr/resources/data/lookup_sets.tsv -text
 onprc_ehr/resources/data/mens_score.tsv -text
 onprc_ehr/resources/data/misc_tests.tsv -text
@@ -98,6 +99,7 @@ onprc_ehr/resources/data/urinalysis_method.tsv -text
 onprc_ehr/resources/data/urinalysis_qualitative_results.tsv -text
 onprc_ehr/resources/data/urinalysis_tests.tsv -text
 onprc_ehr/resources/data/volume_units.tsv -text
+onprc_ehr/resources/data/weight_ranges.tsv -text
 onprc_ehr/resources/etl/deprecated/AntibioticSensitivity.sql -text
 onprc_ehr/resources/etl/deprecated/Arrival.sql -text
 onprc_ehr/resources/etl/deprecated/Assignment.sql -text

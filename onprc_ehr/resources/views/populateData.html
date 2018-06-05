@@ -44,6 +44,76 @@ Ext4.onReady(function(){
 
         getItems: function(){
             var tableItems = [];
+
+            tableItems.push({
+                xtype: 'button',
+                text: 'Populate Labwork Types',
+                scope: this,
+                handler: function(){
+                    this.pendingInserts++;
+                    document.getElementById('msgbox').innerHTML = '<div>Populating Labwork Types</div>';
+
+                    var config = {
+                        schemaName: 'ehr_lookups',
+                        queryName: 'labwork_types',
+                        moduleResource: '/data/labwork_types.tsv',
+                        success: this.onSuccess,
+                        failure: this.onError,
+                        scope: this
+                    };
+
+                    var origSuccess = config.success;
+                    config.success = function(results, xhr, c) {
+                        console.log('labwork types records inserted');
+
+                        LABKEY.Ajax.request({
+                            url: LABKEY.ActionURL.buildURL('admin', 'caches', '/'),
+                            method:  'post',
+                            params: {
+                                clearCaches: 1
+                            },
+                            scope: this,
+                            success: function(){
+                                console.log('cleared caches');
+                                results.queryName = 'labwork_types';
+                                origSuccess.call(config.scope, results, xhr, c);
+                            },
+                            failure: function(){
+                                console.error(arguments);
+                            }
+                        });
+                    };
+
+                    LABKEY.Ajax.request({
+                        url: LABKEY.ActionURL.buildURL("query", "import", config.containerPath, {
+                            module: 'ehr',
+                            moduleResource: config.moduleResource
+                        }),
+                        method: 'POST',
+                        timeout: 100000,
+                        success: LABKEY.Utils.getCallbackWrapper(config.success, config.scope),
+                        failure: LABKEY.Utils.getCallbackWrapper(config.failure, config.scope, true),
+                        jsonData: {
+                            schemaName: config.schemaName,
+                            queryName: config.queryName
+                        },
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                }
+            });
+
+            tableItems.push({
+                xtype: 'button',
+                text: 'Delete Data From Labwork Types',
+                scope: this,
+                handler: function(){
+                    document.getElementById('msgbox').innerHTML = '<div>Deleting Labwork Types...</div>';
+                    this.deleteHandler({schemaName: 'ehr_lookups', queryName: 'labwork_types'});
+                }
+            });
+
             var items = [{
                 layout: 'hbox',
                 border: false,
@@ -141,7 +211,7 @@ Ext4.onReady(function(){
             doSkip: true,
             populateFn: 'populateLookupSets',
             schemaName: 'ehr_lookups',
-            queryName: 'lookup_sets',
+            queryName: 'lookup_sets'
         },{
             label: 'Reports',
             populateFn: 'populateFromFile',
@@ -201,7 +271,7 @@ Ext4.onReady(function(){
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'species',
-            pk: 'common'
+            pk: 'rowid'
         },{
             label: 'Birth Condition',
             populateFn: 'populateFromFile',
@@ -304,7 +374,7 @@ Ext4.onReady(function(){
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'blood_draw_tube_type',
-            pk: 'type'
+            pk: 'rowid'
         },{
             label: 'Encounter Roles',
             populateFn: 'populateFromFile',
@@ -316,7 +386,7 @@ Ext4.onReady(function(){
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'blood_tube_volumes',
-            pk: 'volume'
+            pk: 'rowid'
         },{
             label: 'Parentage Methods',
             populateFn: 'populateFromFile',
@@ -346,7 +416,7 @@ Ext4.onReady(function(){
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'labwork_services',
-            pk: 'servicename'
+            pk: 'rowid'
         },{
             label: 'Labwork Panels',
             populateFn: 'populateFromFile',
@@ -556,7 +626,7 @@ Ext4.onReady(function(){
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'blood_draw_services',
-            pk: 'service'
+            pk: 'rowid'
         },{
             label: 'Blood Draw Reason',
             populateFn: 'populateFromFile',
@@ -568,37 +638,37 @@ Ext4.onReady(function(){
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'conc_units',
-            pk: 'unit'
+            pk: 'rowid'
         },{
             label: 'Dosage Units',
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'dosage_units',
-            pk: 'unit'
+            pk: 'rowid'
         },{
             label: 'Volume Units',
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'volume_units',
-            pk: 'unit'
+            pk: 'rowid'
         },{
             label: 'Amount Units',
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'amount_units',
-            pk: 'unit'
+            pk: 'rowid'
         },{
             label: 'Flag Categories',
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'flag_categories',
-            pk: 'category'
+            pk: 'rowid'
         },{
             label: 'Route',
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'routes',
-            pk: 'route'
+            pk: 'rowid'
         },{
             label: 'Problem List Category',
             populateFn: 'populateFromFile',
@@ -718,12 +788,18 @@ Ext4.onReady(function(){
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'source',
-            pk: 'code'
+            pk: 'rowid'
         },{ label: 'Gender Codes',
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'gender_codes',
-            pk: 'code'
+            pk: 'rowid'
+        }, {
+            label: 'Weight Ranges',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'weight_ranges',
+            pk: 'rowid'
         },{
             label: 'Procedures',
             doSkip: true,
@@ -810,184 +886,157 @@ Ext4.onReady(function(){
 
 
             this.pendingInserts++;
-            var dataMap = {
-                'BID - Two times a day': {
+            var dataMap = [
+                {
+                    meaning: 'BID - Two times a day',
                     intervalindays: 1,
                     shortname: 'BID',
                     active: false
                 },
-                'BID - AM/Night': {
+                {
+                    meaning: 'BID - AM/Night',
                     intervalindays: 1,
                     shortname: 'BID',
                     sort_order: 4,
                     active: true
                 },
-                'BID - AM/PM': {
+                {
+                    meaning: 'BID - AM/PM',
                     intervalindays: 1,
                     shortname: 'BID',
                     sort_order: 5,
                     active: true
                 },
-                'SID - Once a day': {
+                {
+                    meaning: 'SID - Once a day',
                     intervalindays: 1,
                     shortname: 'SID',
                     active: false
                 },
-                'SID - AM': {
+                {
+                    meaning: 'SID - AM',
                     intervalindays: 1,
                     shortname: 'SID',
                     sort_order: 1,
                     active: true
                 },
-                'SID - PM': {
+                {
+                    meaning: 'SID - PM',
                     intervalindays: 1,
                     shortname: 'SID',
                     sort_order: 2,
                     active: true
                 },
-                'SID - Night': {
+                {
+                    meaning: 'SID - Night',
                     intervalindays: 1,
                     shortname: 'SID',
                     sort_order: 3,
                     active: true
                 },
-                'SID - Custom': {
+                {
+                    meaning: 'SID - Custom',
                     intervalindays: 1,
                     shortname: 'SID',
                     sort_order: 12,
                     active: true
                 },
-                'TID - Three times a day': {
+                {
+                    meaning: 'TID - Three times a day',
                     intervalindays: 1,
                     shortname: 'TID',
                     active: false
                 },
-                'TID': {
+                {
+                    meaning: 'TID',
                     intervalindays: 1,
                     shortname: 'TID',
                     sort_order: 6,
                     active: true
                 },
-                'TID - AM/PM/Night': {
+                {
+                    meaning: 'TID - AM/PM/Night',
                     intervalindays: 1,
                     shortname: 'TID',
                     sort_order: 6,
                     active: true
                 },
-                'QID - Four times a day': {
+                {
+                    meaning: 'QID - Four times a day',
                     intervalindays: 1,
                     shortname: 'QID',
                     active: false
                 },
-                'QID': {
+                {
+                    meaning: 'QID',
                     intervalindays: 1,
                     shortname: 'QID',
                     sort_order: 7,
                     active: true
                 },
-                'CON': {
+                {
+                    meaning: 'CON',
                     intervalindays: 1,
                     active: false
                 },
-                'Q2H': {
+                {
+                    meaning: 'Q2H',
                     intervalindays: 1,
                     active: false
                 },
-                'Q4H': {
+                {
+                    meaning: 'Q4H',
                     intervalindays: 1,
                     active: false
                 },
-                'Q6H': {
+                {
+                    meaning: 'Q6H',
                     intervalindays: 1,
                     active: false
                 },
-                'EOD - Every other Day': {
+                {
+                    meaning: 'EOD - Every other Day',
                     intervalindays: 2,
                     sort_order: 8,
                     active: true
                 },
-                '1/w - One per Week': {
+                {
+                    meaning: '1/w - One per Week',
                     intervalindays: 7,
                     sort_order: 10,
                     active: true
                 },
-                'Once every six months': {
+                {
+                    meaning: 'Once every six months',
                     intervalindays: 180,
                     active: false
                 },
-                'Q1MO - Once a month': {
+                {
+                    meaning: 'Q1MO - Once a month',
                     intervalindays: 30,
                     active: false
                 },
-                'E3D - Every Three Days': {
+                {
+                    meaning: 'E3D - Every Three Days',
                     intervalindays: 3,
                     sort_order: 9,
                     active: false
                 },
-                'EOW - Every other Week': {
+                {
+                    meaning: 'EOW - Every other Week',
                     intervalindays: 14,
                     sort_order: 11,
                     active: true
                 }
-            };
+            ];
 
-            LABKEY.Query.selectRows({
+            console.log('pending inserts: ' + dataMap.length);
+            LABKEY.Query.insertRows({
                 schemaName: 'ehr_lookups',
                 queryName: 'treatment_frequency',
+                rows: dataMap,
                 scope: this,
-                success: function(results){
-                    var toUpdate = results.rows;
-                    var found = [];
-                    Ext4.each(toUpdate, function(row){
-                        found.push(row.meaning);
-                        var values = dataMap[row.meaning];
-                        if (values){
-                            Ext4.apply(row, values);
-                        }
-                        else {
-                            //console.log('Unknown treatment frequency: ' + row.meaning);
-                        }
-
-                        row.sort_order = row.sort_order || 999;
-                    }, this);
-
-                    LABKEY.Query.updateRows({
-                        schemaName: 'ehr_lookups',
-                        queryName: 'treatment_frequency',
-                        rows: toUpdate,
-                        scope: this,
-                        success: checkForUpdates,
-                        failure: this.onError
-                    });
-
-                    function checkForUpdates(){
-                        var toInsert = [];
-                        for (var meaning in dataMap){
-                            if (found.indexOf(meaning) == -1){
-                                dataMap[meaning].meaning = meaning;
-                                toInsert.push(dataMap[meaning]);
-                            }
-                        }
-
-                        if (toInsert.length){
-                            console.log('pending inserts: ' + toInsert.length);
-                            LABKEY.Query.insertRows({
-                                schemaName: 'ehr_lookups',
-                                queryName: 'treatment_frequency',
-                                rows: toInsert,
-                                scope: this,
-                                success: this.onSuccess,
-                                failure: this.onError
-                            });
-                        }
-                        else {
-                            this.onSuccess({
-                                schemaName: 'ehr_lookups',
-                                queryName: 'treatment_frequency'
-                            });
-                        }
-                    }
-                },
+                success: this.onSuccess,
                 failure: this.onError
             });
         },
