@@ -311,7 +311,6 @@ onprc_ehr/resources/queries/study/Gross[!!-~]Findings/.qview.xml -text
 onprc_ehr/resources/queries/study/Histology.query.xml -text
 onprc_ehr/resources/queries/study/Histology/.qview.xml -text
 onprc_ehr/resources/queries/study/Histology/With[!!-~]SNOMEDs.qview.xml -text
-onprc_ehr/resources/queries/study/Housing2.query.xml -text
 onprc_ehr/resources/queries/study/Matings.js -text
 onprc_ehr/resources/queries/study/Matings.query.xml -text
 onprc_ehr/resources/queries/study/Matings/.qview.xml -text
@@ -607,6 +606,7 @@ onprc_ehr/resources/queries/study/hospitalAnimals.sql -text
 onprc_ehr/resources/queries/study/hospitalAnimals/.qview.xml -text
 onprc_ehr/resources/queries/study/housedInUnavailableCages.query.xml -text
 onprc_ehr/resources/queries/study/housedInUnavailableCages.sql -text
+onprc_ehr/resources/queries/study/housing.query.xml -text
 onprc_ehr/resources/queries/study/housing/.qview.xml -text
 onprc_ehr/resources/queries/study/housingEffectiveCage.query.xml -text
 onprc_ehr/resources/queries/study/housingEffectiveCage.sql -text
