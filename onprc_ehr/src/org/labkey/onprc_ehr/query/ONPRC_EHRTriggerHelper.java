@@ -1559,7 +1559,7 @@ public class ONPRC_EHRTriggerHelper
         filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("Id"), id, CompareType.EQUAL);
 
-        TableInfo flagsTable = getTableInfo("study", "Animal Record Flags");
+        TableInfo flagsTable = getTableInfo("study", "flags");
         TableSelector ts = new TableSelector(flagsTable, PageFlowUtil.set("flag"), filter, null);
         List<String> values = ts.getArrayList(String.class);
         if (values != null && !values.isEmpty())

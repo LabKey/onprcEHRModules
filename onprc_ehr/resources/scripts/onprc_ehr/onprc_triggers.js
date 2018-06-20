@@ -35,7 +35,7 @@ exports.init = function(EHR){
         });
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Treatment Orders', function(event, helper){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'treatment_order', function(event, helper){
         helper.setScriptOptions({
             announceAllModifiedParticipants: true
         });
@@ -48,7 +48,7 @@ exports.init = function(EHR){
         });
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Clinpath Runs', function(event, helper){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'clinpathRuns', function(event, helper){
         helper.setScriptOptions({
             allowDeadIds: false,
             //this was changed to allow merge records to insert, even if we lack a demographics record
@@ -68,7 +68,7 @@ exports.init = function(EHR){
         });
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Tissue Samples', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'tissue_samples', function(helper, scriptErrors, row, oldRow){
         if (!row.weight && !row.noWeight){
             EHR.Server.Utils.addError(scriptErrors, 'weight', 'A weight is required unless \'No Weight\' is checked', 'WARN');
         }
@@ -88,7 +88,7 @@ exports.init = function(EHR){
 
     //note: encounter_participants objectid handled by the query's trigger script
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Clinical Observations', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'clinical_observations', function(helper, scriptErrors, row, oldRow){
         if (row.category && LABKEY.ExtAdapter.isDefined(row.observation)){
             var msg = triggerHelper.validateObservation(row.category, row.observation);
             if (msg){
@@ -97,7 +97,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Clinical Encounters', function(helper, scriptErrors, row, oldRow)
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow)
     {
         if (row.chargetype == 'Research Staff' && !row.assistingstaff && row.procedureid && triggerHelper.requiresAssistingStaff(row.procedureid))
         {
@@ -136,7 +136,7 @@ exports.init = function(EHR){
        }
     });
       //Added 1-12-2016  Blasa  Menses TMB Records
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Clinical Observations', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'clinical_observations', function(helper, scriptErrors, row, oldRow){
 
         if (row.Id && row.category == 'Menses' ){
             var msg = triggerHelper.sendMenseNotifications(row.Id);
@@ -147,7 +147,7 @@ exports.init = function(EHR){
 
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Animal Record Flags', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'flags', function(helper, scriptErrors, row, oldRow){
         if (row.flag && row.Id && !row.enddate){
             var msg = triggerHelper.validateHousingConditionInsert(row.Id, row.flag, row.objectid || null);
             if (msg){
@@ -158,7 +158,7 @@ exports.init = function(EHR){
     });
 
     //Added 9-2-2015  Blasa
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study',  'Animal Record Flags', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study',  'flags', function(helper, scriptErrors, row, oldRow){
 
     if (row.Id ){
         var msg = triggerHelper.sendCullListNotifications(row.Id,row.date, row.flag);
@@ -367,7 +367,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Drug Administration', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'drug', function(helper, scriptErrors, row, oldRow){
         if (row.outcome && row.outcome != 'Normal' && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required if a non-normal outcome is reported', 'WARN');
         }
@@ -390,13 +390,13 @@ exports.init = function(EHR){
 
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Treatment Orders', function(helper, scriptErrors, row){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'treatment_order', function(helper, scriptErrors, row){
         if (row.date && ((new Date()).getTime() - row.date.getTime()) > 43200000){  //12 hours in past
             EHR.Server.Utils.addError(scriptErrors, 'date', 'You are ordering a treatment that starts in the past', 'INFO');
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Blood Draws', function(helper, scriptErrors, row){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'blood', function(helper, scriptErrors, row){
         if (!helper.isETL() && row.project && row.chargetype){
             if (row.chargetype == 'No Charge' && !helper.getJavaHelper().isDefaultProject(row.project))
                 EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'You have chosen \'No Charge\' with a project that does not support this.  You may need to choose \'Research\' instead (which is not billed)', 'INFO');
@@ -493,7 +493,7 @@ exports.init = function(EHR){
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, null, null, false);
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Treatment Orders', function(scriptErrors, helper, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'treatment_order', function(scriptErrors, helper, row, oldRow){
         var fieldPairs = [
             ['dosage_units', 'dosage'],
             ['conc_units', 'concentration'],
@@ -510,7 +510,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Drug Administration', function(scriptErrors, helper, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'drug', function(scriptErrors, helper, row, oldRow){
         var fieldPairs = [
             ['dosage_units', 'dosage'],
             ['conc_units', 'concentration'],
@@ -527,7 +527,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Treatment Orders', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'treatment_order', function(helper, scriptErrors, row, oldRow){
         if (!row.code){
             EHR.Server.Utils.addError(scriptErrors, 'code', 'Must enter a treatment', 'WARN');
         }
@@ -551,13 +551,13 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Treatment Orders', function(helper, errors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'treatment_order', function(helper, errors, row, oldRow){
         if (row.frequency && row.objectid){
             triggerHelper.cleanTreatmentFrequencyTimes(row.frequency, row.objectid);
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPDATE, 'study', 'Treatment Orders', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPDATE, 'study', 'treatment_order', function(helper, scriptErrors, row, oldRow){
         if (helper.isETL() || helper.isValidateOnly()){
             return;
         }
@@ -572,7 +572,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Clinical Remarks', function(scriptErrors, helper, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'clinremarks', function(scriptErrors, helper, row, oldRow){
         if (helper.isETL() || helper.isValidateOnly()){
             return;
         }
