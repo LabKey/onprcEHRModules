@@ -23,7 +23,6 @@ import org.labkey.api.laboratory.LaboratoryService;
 import org.labkey.api.laboratory.button.ChangeAssayResultStatusBtn;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.module.ModuleContext;
-import org.labkey.api.security.User;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.genotypeassays.assay.GenotypeAssayDataProvider;
 import org.labkey.genotypeassays.assay.SNPAssayDataProvider;
@@ -88,7 +87,7 @@ public class GenotypeAssaysModule extends ExtendedSimpleModule
 
     @Override
     @NotNull
-    public Collection<String> getSummary(Container c, User user)
+    public Collection<String> getSummary(Container c)
     {
         return Collections.emptyList();
     }
