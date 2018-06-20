@@ -27,7 +27,7 @@ exports.init = function(EHR){
         });
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Arrival', function(event, helper, EHR) {
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'arrival', function(event, helper, EHR) {
         helper.setScriptOptions({
             extraBirthFieldMappings: {
                 arrival_date: 'date'
@@ -41,7 +41,7 @@ exports.init = function(EHR){
         });
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Birth', function(event, helper){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'birth', function(event, helper){
         //NOTE: births are sometimes not entered until processing, meaning they could be significantly in the past
         helper.setScriptOptions({
             allowDatesInDistantPast: true
@@ -56,13 +56,13 @@ exports.init = function(EHR){
         });
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Assignment', function(event, helper){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'assignment', function(event, helper){
         helper.setScriptOptions({
             doStandardProtocolCountValidation: false
         });
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Deaths', function(event, helper){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'deaths', function(event, helper){
         helper.setScriptOptions({
             allowDatesInDistantPast: true
         });
@@ -181,7 +181,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'Assignment', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
         //check number of allowed animals at assign/approve time.  use different behavior than core EHR
         if (!helper.isETL() && !helper.isQuickValidation() &&
             //this is designed to always perform the check on imports, but also updates where the Id was changed
@@ -214,7 +214,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Assignment', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
         // note: if this is automatically generated from death/departure, allow an incomplete record
         // alerts will flag these
         if (row.enddate && !row.releaseCondition && !helper.isGeneratedByServer()){
@@ -267,7 +267,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Assignment', function(scriptErrors, helper, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'assignment', function(scriptErrors, helper, row, oldRow){
         if (!helper.isETL() && row.Id && row.assignCondition){
             triggerHelper.updateAnimalCondition(row.Id, row.date, row.assignCondition);
         }
@@ -282,14 +282,14 @@ exports.init = function(EHR){
         }
     });
      //Modified: 10-13-2016 R.Blasa added arrival date parameter
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Birth', function(helper, errors, row, oldRow) {
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'birth', function(helper, errors, row, oldRow) {
         //NOTE: we want to perform the birth updates if this row is becoming public, or if we're updating to set the dam for the first time
         if (!helper.isValidateOnly() && (row._becomingPublicData || (oldRow && !oldRow.dam && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && row.dam))) {
             triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null, row.arrival_date || null, row.birth_condition || null, !!row._becomingPublicData);
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Birth', function(helper, scriptErrors, row, oldRow) {
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'birth', function(helper, scriptErrors, row, oldRow) {
         //also allow changes here to update the demographics record
         //this should only occur if updating an already public record, not just for onBecomePublic, which is a one-time call
         if (!helper.isValidateOnly() && row.Id && !helper.isGeneratedByServer() && oldRow && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData){
@@ -360,7 +360,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Deaths', function(scriptErrors, helper, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'deaths', function(scriptErrors, helper, row, oldRow){
         if (row.Id && row.date){
             //close assignment records.
             triggerHelper.closeActiveAssignmentRecords(row.Id, row.date, (row.cause || null));
@@ -403,7 +403,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Housing', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'housing', function(helper, scriptErrors, row, oldRow){
         if (row.cage){
             row.cage = row.cage.toUpperCase();
         }
@@ -446,7 +446,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Housing', function(scriptErrors, helper, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'housing', function(scriptErrors, helper, row, oldRow){
         if (!helper.isETL() && row){
             //mark associated requests complete
             if (row.parentid){
@@ -473,7 +473,7 @@ exports.init = function(EHR){
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow);
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Arrival', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'arrival', function(helper, scriptErrors, row, oldRow){
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, 'initialRoom', 'initialCage', false);
     });
 
@@ -483,13 +483,13 @@ exports.init = function(EHR){
 //        }
 //    });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'Arrival', function(scriptErrors, helper, row, oldRow) {
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'arrival', function(scriptErrors, helper, row, oldRow) {
         if (row.Id && row.date) {
             triggerHelper.ensureQuarantineFlag(row.Id, row.date);
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'Birth', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'birth', function(helper, scriptErrors, row, oldRow){
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, null, null, false);
     });
 
