@@ -39,6 +39,7 @@ import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
+import org.labkey.api.ehr.notification.AbstractEHRNotification;
 import org.apache.commons.lang3.StringUtils;
 
 

@@ -29,6 +29,7 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.ehr.notification.AbstractEHRNotification;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

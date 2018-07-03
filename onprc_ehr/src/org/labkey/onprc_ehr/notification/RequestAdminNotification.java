@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.notification;
 import org.labkey.api.data.Container;
 import org.labkey.api.module.Module;
 import org.labkey.api.security.User;
+import org.labkey.api.ehr.notification.AbstractEHRNotification;
 
 import java.util.Date;
 

@@ -30,6 +30,7 @@ import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.security.User;
+import org.labkey.api.ehr.notification.AbstractEHRNotification;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

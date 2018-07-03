@@ -30,6 +30,8 @@ import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.ResultSetUtil;
+import org.labkey.api.ehr.notification.AbstractEHRNotification;
+import org.labkey.api.ldk.notification.NotificationService;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.validation.BindException;
 
@@ -101,7 +103,7 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
      */
     private void requestsSubmittedSinceLastEmail(Container c, User u, StringBuilder msg)
     {
-        Date lastRun = new Date(_ns.getLastRun(this));
+        Date lastRun = new Date(NotificationService.get().getLastRun(this));
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("qcstate/label"), "Request: Pending");
         filter.addCondition(FieldKey.fromString("created"), lastRun, CompareType.GTE);
 
