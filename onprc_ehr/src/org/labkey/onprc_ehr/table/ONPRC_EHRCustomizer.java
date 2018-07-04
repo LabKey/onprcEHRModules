@@ -32,6 +32,7 @@ import org.labkey.api.data.WrappedColumn;
 import org.labkey.api.ehr.EHRQCState;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
+import org.labkey.api.ehr.table.AssignmentAtTimeForeignKey;
 import org.labkey.api.exp.api.StorageProvisioner;
 import org.labkey.api.exp.property.Domain;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
@@ -2013,61 +2014,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (!hasTable(ds, "study", "assignment", ehrSchema.getContainer()))
             return;
 
-        final String tableName = ds.getName();
-        final String queryName = ds.getPublicName();
-        final String schemaName = ds.getPublicSchemaName();
-        final UserSchema targetSchema = ds.getUserSchema();
-        final String ehrPath = ehrSchema.getContainer().getPath();
-
         WrappedColumn col = new WrappedColumn(pkCol, name);
         col.setLabel("Assignments At Time");
         col.setReadOnly(true);
         col.setIsUnselectable(true);
         col.setUserEditable(false);
-        col.setFk(new LookupForeignKey()
-        {
-            public TableInfo getLookupTableInfo()
-            {
-                String name = tableName + "_assignmentsAtTime";
-                QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
-                qd.setSql("SELECT\n" +
-                        "sd." + pkCol.getSelectName() + ",\n" +
-                        "group_concat(DISTINCT h.project.displayName, chr(10)) as projectsAtTime,\n" +
-                        "group_concat(DISTINCT h.project.protocol.displayName, chr(10)) as protocolsAtTime,\n" +
-                        "group_concat(DISTINCT h.project.investigatorId.lastName, chr(10)) as investigatorsAtTime,\n" +
-                        "group_concat(DISTINCT h.project.name, chr(10)) as projectNumbersAtTime\n" +
-                        "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
-                        "JOIN \"" + ehrPath + "\".study.assignment h\n" +
-                        "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
-                        "group by sd." + pkCol.getSelectName());
-                qd.setIsTemporary(true);
-
-                List<QueryException> errors = new ArrayList<>();
-                TableInfo ti = qd.getTable(errors, true);
-                if (errors.size() > 0)
-                {
-                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
-                    for (QueryException error : errors)
-                    {
-                        _log.error(error.getMessage(), error);
-                    }
-                    return null;
-                }
-
-                ti.getColumn(pkCol.getName()).setHidden(true);
-                ti.getColumn(pkCol.getName()).setKeyField(true);
-
-                ti.getColumn("projectsAtTime").setLabel("Center Projects At Time");
-                ti.getColumn("protocolsAtTime").setLabel("IACUC Protocols At Time");
-                ti.getColumn("investigatorsAtTime").setLabel("Investigators At Time");
-
-                ti.getColumn("projectNumbersAtTime").setLabel("Project Numbers At Time");
-                ti.getColumn("projectNumbersAtTime").setHidden(true);
-
-                return ti;
-            }
-        });
-
+        col.setFk(new AssignmentAtTimeForeignKey(ds, pkCol, ehrSchema, dateColName, "investigatorId.lastName"));
         ds.addColumn(col);
     }
 
