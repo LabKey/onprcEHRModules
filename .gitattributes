@@ -1036,7 +1036,6 @@ onprc_ehr/src/org/labkey/onprc_ehr/buttons/AssignmentReleaseConditionButton.java
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/BulkEditRequestsButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/ChangeProjectedReleaseDateButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/CreateProjectButton.java -text
-onprc_ehr/src/org/labkey/onprc_ehr/buttons/DiscardTaskButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/HousingTransferButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/ManageFlagsButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/ProtocolEditButton.java -text
