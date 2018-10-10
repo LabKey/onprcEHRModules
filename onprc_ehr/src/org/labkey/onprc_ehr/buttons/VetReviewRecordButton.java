@@ -16,7 +16,7 @@
 package org.labkey.onprc_ehr.buttons;
 
 import org.labkey.api.data.TableInfo;
-import org.labkey.api.ehr.security.EHRVeternarianPermission;
+import org.labkey.api.ehr.security.EHRVeterinarianPermission;
 import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
@@ -37,7 +37,7 @@ public class VetReviewRecordButton extends SimpleButtonConfigFactory
 
     public boolean isAvailable(TableInfo ti)
     {
-        return super.isAvailable(ti) && ti.getUserSchema().getContainer().hasPermission(ti.getUserSchema().getUser(), EHRVeternarianPermission.class);
+        return super.isAvailable(ti) && ti.getUserSchema().getContainer().hasPermission(ti.getUserSchema().getUser(), EHRVeterinarianPermission.class);
     }
 }
 

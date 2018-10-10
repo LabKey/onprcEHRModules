@@ -22,7 +22,7 @@ import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.ehr.security.EHRProjectEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestPermission;
-import org.labkey.api.ehr.security.EHRVeternarianPermission;
+import org.labkey.api.ehr.security.EHRVeterinarianPermission;
 import org.labkey.api.ldk.table.ContainerScopedTable;
 import org.labkey.api.ldk.table.CustomPermissionsTable;
 import org.labkey.api.query.SimpleUserSchema;
@@ -50,9 +50,9 @@ public class ONPRC_EHRUserSchema extends SimpleUserSchema
         if (ONPRC_EHRSchema.TABLE_VET_ASSIGNMENT.equalsIgnoreCase(name))
         {
             CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable).init();
-          ti.addPermissionMapping(InsertPermission.class, EHRVeternarianPermission.class);
-            ti.addPermissionMapping(UpdatePermission.class, EHRVeternarianPermission.class);
-            ti.addPermissionMapping(DeletePermission.class, EHRVeternarianPermission.class);
+          ti.addPermissionMapping(InsertPermission.class, EHRVeterinarianPermission.class);
+            ti.addPermissionMapping(UpdatePermission.class, EHRVeterinarianPermission.class);
+            ti.addPermissionMapping(DeletePermission.class, EHRVeterinarianPermission.class);
            ti.addPermissionMapping(InsertPermission.class, ONPRC_EHRCMUAdministrationPermission.class);
             ti.addPermissionMapping(UpdatePermission.class, ONPRC_EHRCMUAdministrationPermission.class);
             ti.addPermissionMapping(DeletePermission.class, ONPRC_EHRCMUAdministrationPermission.class);
