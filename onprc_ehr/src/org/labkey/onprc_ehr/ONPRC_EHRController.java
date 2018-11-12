@@ -35,13 +35,11 @@ import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.files.FileContentService;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.AdminConsoleAction;
-import org.labkey.api.security.CSRF;
 import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.RequiresSiteAdmin;
 import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.ReadPermission;
-import org.labkey.api.services.ServiceRegistry;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
@@ -74,7 +72,6 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(ReadPermission.class)
-    @CSRF
     public class GetNavItemsAction extends ApiAction<Object>
     {
         public ApiResponse execute(Object form, BindException errors)
@@ -440,7 +437,6 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(ReadPermission.class)
-    @CSRF
     public class GetAnimalLockAction extends ApiAction<Object>
     {
         public ApiResponse execute(Object form, BindException errors)
@@ -450,7 +446,6 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(EHRDataEntryPermission.class)
-    @CSRF
     public class SetAnimalLockAction extends ApiAction<LockAnimalForm>
     {
         public ApiResponse execute(LockAnimalForm form, BindException errors)
