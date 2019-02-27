@@ -117,17 +117,20 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
         return filterArray;
     },
 
-    validateReport: function(report){
+    validateReportForFilterType: function(report){
         return null;
     },
 
-    checkValid: function(){
+    isValid: function(){
         if (!this.down('#divisionField').getValue() && !this.down('#investigatorField').getValue()){
-            alert('Error: Must Choose A Division or an Investigator');
             return false;
         }
 
         return true;
+    },
+
+    getFilterInvalidMessage: function(){
+        return 'Error: Must Choose A Division or an Investigator';
     },
 
     getTitle: function(){
