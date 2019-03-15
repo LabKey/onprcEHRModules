@@ -31,13 +31,14 @@ import java.util.Arrays;
  * Date: 7/29/13
  * Time: 5:03 PM
  */
-public class FlagsFormType extends UnsaveableTask
+public class FlagsFormType extends SNPRCTaskForm
 {
     public static final String NAME = "flags";
+    public static final String LABEL = "Animal Attributes (Flags)";
 
     public FlagsFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Flags", "Colony Management", Arrays.asList(
+        super(ctx, owner, NAME, LABEL, "Colony Management", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "flags", "Flags")
@@ -47,19 +48,9 @@ public class FlagsFormType extends UnsaveableTask
     @Override
     protected boolean canInsert()
     {
-        boolean canInsert = true;
-        for (FormSection section : getFormSections())
-        {
-            for (Class<? extends Permission> clazz : getAvailabilityPermissions())
-            {
-                if (!section.hasPermission(getCtx(), clazz))
-                {
-                    canInsert = false;
-                    break;
-                }
-            }
-        }
-
-        return canInsert;
+//        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), SNPRC_ERHEditPermission.class))
+//            return false;
+//        else
+        return super.canInsert();
     }
 }
