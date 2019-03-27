@@ -84,8 +84,7 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
 
             this.locked_person = results.lockedBy;
             target.add({
-                html: ['Locked By: ' + results.lockedBy, 'Locked On: ' + results.lockDate ].join('<br>'),
-                // html: ['Locked By: ' + results.lockedBy, 'Locked On: ' + results.lockDate , 'Current user Displayname: '+ LABKEY.Security.currentUser.displayName ].join('<br>'),
+                html: ['Locked By: ' + Ext4.String.htmlEncode(results.lockedBy), 'Locked On: ' + Ext4.String.htmlEncode(results.lockDate)].join('<br>'),
                 style: 'padding-bottom: 10px;',
                 border: false
             });
