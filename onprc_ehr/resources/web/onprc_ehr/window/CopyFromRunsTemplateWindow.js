@@ -21,7 +21,7 @@ Ext4.define('ONPRC_EHR.window.CopyFromRunsTemplateWindow', {
                 border: false
             },
             items: [{
-                html: 'This helper allows you to populate test expected tests based on the panels requested above.  A list of the services requested and expected panels are below.',
+                html: 'This helper allows you to populate expected tests based on the panels requested above.  A list of the services requested and expected panels are below.',
                 style: 'margin-bottom: 10px;'
             },{
                 itemId: 'services',
@@ -147,11 +147,11 @@ Ext4.define('ONPRC_EHR.window.CopyFromRunsTemplateWindow', {
                 width: 100
             });
             toAdd.push({
-                html: r.get('servicerequested')
+                html: LABKEY.Utils.encodeHtml(r.get('servicerequested'))
             });
 
             toAdd.push({
-                html: r.get('performedby')                //Added 11-20-2015 Blasa
+                html: LABKEY.Utils.encodeHtml(r.get('performedby'))                //Added 11-20-2015 Blasa
             });
 
             var ignoreId = 'ignore_' + Ext4.id();

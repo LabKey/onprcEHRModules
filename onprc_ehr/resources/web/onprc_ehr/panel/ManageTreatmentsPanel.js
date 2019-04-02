@@ -277,11 +277,13 @@ Ext4.define('onprc_ehr.panel.ManageTreatmentsPanel', {
             },{
                 header: 'Ordered By',
                 width: 110,
-                dataIndex: 'performedby'
+                dataIndex: 'performedby',
+                renderer: 'htmlEncode'
             },{
                 header: 'Modified By',
                 width: 110,
-                dataIndex: 'modifiedby/DisplayName'
+                dataIndex: 'modifiedby/DisplayName',
+                renderer: 'htmlEncode'
             },{
                 header: 'Modified Date',
                 xtype: 'datecolumn',
