@@ -100,7 +100,7 @@ public class ClinicalReportFormType extends TaskForm
         setJavascriptClass("EHR.panel.ExamDataEntryPanel");
 
         //Added 4-3-2015 Blasa
-        addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/HousingDataEntryPanel.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/panel/HousingDataEntryPanel.js"));
         setJavascriptClass("ONPRC_EHR.panel.HousingDataEntryPanel");
 
         //Removed temporarily  7-2-2015   Blasa
