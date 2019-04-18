@@ -143,5 +143,8 @@
         <dataset name="animal_group_members" id="5031" showByDefault="true" category="Colony Management" demographicData="false" type="Standard">
             <tags/>
         </dataset>
+        <dataset name="organ_weights" id="5032" showByDefault="true" category="Pathology" demographicData="false" type="Standard">
+            <tags/>
+        </dataset>
     </datasets>
 </datasets>

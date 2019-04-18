@@ -2281,4 +2281,118 @@
         </columns>
         <tableTitle>Pairing Observations</tableTitle>
     </table>
+    <table tableName="organ_weights" tableDbType="TABLE">
+        <description>Organ Weights</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>Id</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <nullable>false</nullable>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <nullable>false</nullable>
+            </column>
+            <column columnName="tissue">
+                <datatype>varchar</datatype>
+                <columnTitle>Organ/Tissue</columnTitle>
+            </column>
+            <column columnName="remark">
+                <datatype>varchar</datatype>
+                <inputType>textarea</inputType>
+                <columnTitle>Remark</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
+            </column>
+            <column columnName="Description">
+                <datatype>varchar</datatype>
+                <inputType>textarea</inputType>
+                <columnTitle>Description</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Description</propertyURI>
+                <isHidden>true</isHidden>
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="objectid">
+                <datatype>entityid</datatype>
+                <columnTitle>Key</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#ObjectId</propertyURI>
+                <isHidden>true</isHidden>
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+                <isKeyField>true</isKeyField>
+            </column>
+            <column columnName="parentId">
+                <datatype>varchar</datatype>
+                <columnTitle>Parent Id</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#ParentId</propertyURI>
+                <isHidden>true</isHidden>
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="taskid">
+                <datatype>varchar</datatype>
+                <columnTitle>Taskid</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
+                <isHidden>true</isHidden>
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <columnTitle>Project</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+                <importAliases>
+                    <importAlias>pno</importAlias>
+                </importAliases>
+                <formatString>00000000</formatString>
+            </column>
+            <column columnName="account">
+                <datatype>varchar</datatype>
+                <columnTitle>Account</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Account</propertyURI>
+            </column>
+            <column columnName="performedby">
+                <datatype>varchar</datatype>
+                <columnTitle>Performed By</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
+            </column>
+            <column columnName="requestid">
+                <datatype>varchar</datatype>
+                <columnTitle>Requestid</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
+                <isHidden>true</isHidden>
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="enddate">
+                <datatype>timestamp</datatype>
+                <columnTitle>Enddate</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="weight">
+                <datatype>double</datatype>
+                <columnTitle>Weight</columnTitle>
+            </column>
+            <column columnName="qualifier">
+                <datatype>varchar</datatype>
+                <columnTitle>Qualifier</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>Organ Weights</tableTitle>
+    </table>
 </tables>
