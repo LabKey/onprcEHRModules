@@ -21,6 +21,7 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
+import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
@@ -60,7 +61,8 @@ public class NecropsyFormType extends EncounterForm
                 //new PathologyTissueDistFormSection(),
                 //new PathologyFormSection("study", "measurements", "Measurements"),
                 new PathologyDiagnosesFormSection("study", "histology", "Histologic Findings"),
-                new PathologyDiagnosesFormSection("study", "pathologyDiagnoses", "Diagnoses")
+                new PathologyDiagnosesFormSection("study", "pathologyDiagnoses", "Diagnoses"),
+                new SimpleFormSection("study", "tissue_samples", "Tissue Samples", "onprc_ehr-dragdropgridpanel")
         ));
 
         for (FormSection s : this.getFormSections())
