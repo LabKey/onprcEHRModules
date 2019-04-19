@@ -1107,6 +1107,8 @@ onprc_ehr/src/org/labkey/onprc_ehr/dataentry/MiscChargesFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/NHPTrainingFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/NHPTrainingFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/NecropsyFormType.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/NecropsyRequestForm.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/dataentry/NecropsyRequestInfoFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/NewAnimalFormSection.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/ONPRCBloodDrawFormType.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/dataentry/PairingFormSection.java -text

@@ -319,6 +319,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SurgeryFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SingleSurgeryFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyRequestForm.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BiopsyFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PathologyTissuesFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalReportFormType.class, this));
