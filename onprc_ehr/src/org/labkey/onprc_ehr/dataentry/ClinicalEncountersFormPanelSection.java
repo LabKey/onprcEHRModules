@@ -26,7 +26,13 @@ public class ClinicalEncountersFormPanelSection extends SimpleFormPanelSection
 {
     public ClinicalEncountersFormPanelSection(String label)
     {
-        super("study", "encounters", label);
+        this("study", "encounters", label, true);
+
+    }
+
+    public ClinicalEncountersFormPanelSection(String schemaName, String queryName, String label, boolean createRecordOnLoad)
+    {
+        super(schemaName, queryName, label, createRecordOnLoad);
         setTemplateMode(TEMPLATE_MODE.NONE);
     }
 }
