@@ -300,6 +300,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerActionOverride("cageDetails", this, "views/cageDetails.html");
         EHRService.get().registerActionOverride("animalSearch", this, "views/animalSearch.html");
         EHRService.get().registerActionOverride("animalHistory", this, "views/animalHistory.html");
+        EHRService.get().registerActionOverride("serviceRequests", this, "views/serviceRequests.html");
 
         //data entry
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(WeightFormType.class, this));

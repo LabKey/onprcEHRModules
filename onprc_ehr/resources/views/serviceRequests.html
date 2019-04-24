@@ -1,1 +1,14 @@
-PRIMe will ultimately allow ONPRC users to request services such as blood draws and surgeries online.  We anticipate that these features will start to become available toward the end of summer / early fall 2013
+<script type="text/javascript">
+
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        Ext4.create('ONPRC_EHR.panel.ServiceRequestsPanel', {
+
+        }).render(webpart.wrapperDivId);
+
+    });
+</script>

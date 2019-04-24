@@ -937,6 +937,7 @@ onprc_ehr/resources/views/quickSearchonprc.html -text
 onprc_ehr/resources/views/quickSearchonprc.view.xml -text
 onprc_ehr/resources/views/quickSearchonprc.webpart.xml -text
 onprc_ehr/resources/views/serviceRequests.html -text
+onprc_ehr/resources/views/serviceRequests.view.xml -text
 onprc_ehr/resources/views/snomedSearch.html -text
 onprc_ehr/resources/views/snomedSearch.view.xml -text
 onprc_ehr/resources/views/vetReview.html -text
@@ -987,6 +988,7 @@ onprc_ehr/resources/web/onprc_ehr/panel/LockAnimalsPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/ManageTreatmentsPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/NarrowSnapshotPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/NewAnimalDataEntryPanel.js -text
+onprc_ehr/resources/web/onprc_ehr/panel/ONPRCServiceRequestPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/RequestInstructionsPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/RoomLayoutPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/panel/SmallFormSnapshotPanel.js -text
