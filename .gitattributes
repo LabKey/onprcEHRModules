@@ -1014,6 +1014,7 @@ onprc_ehr/resources/web/onprc_ehr/window/ChangeEncounterStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ChangeLabworkStatusWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/CopyFromRunsTemplateWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/CopyTissuesWindow.js -text
+onprc_ehr/resources/web/onprc_ehr/window/CreateNecropsyRequestWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/CreateProjectWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/IStatImportWindow.js -text
 onprc_ehr/resources/web/onprc_ehr/window/ManageFlagsWindow.js -text
@@ -1037,6 +1038,7 @@ onprc_ehr/src/org/labkey/onprc_ehr/buttons/AssignmentCompletedButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/AssignmentReleaseConditionButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/BulkEditRequestsButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/ChangeProjectedReleaseDateButton.java -text
+onprc_ehr/src/org/labkey/onprc_ehr/buttons/CreateNecropsyRequestButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/CreateProjectButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/HousingTransferButton.java -text
 onprc_ehr/src/org/labkey/onprc_ehr/buttons/ManageFlagsButton.java -text
