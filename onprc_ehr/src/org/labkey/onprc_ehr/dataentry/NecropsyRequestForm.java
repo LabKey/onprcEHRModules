@@ -2,6 +2,7 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
+import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
@@ -26,7 +27,10 @@ public class NecropsyRequestForm extends RequestForm
                 new SimpleFormSection("study", "organ_weights", "Organ Weights", "onprc_ehr-dragdropgridpanel")
                 ));
         addClientDependency(ClientDependency.fromPath("onprc_ehr/grid/DragDropGridPanel.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/ClinicalEncounters.js"));
 
+        for (FormSection s : getFormSections())
+            s.addConfigSource("ClinicalEncounters");
     }
 
     @Override

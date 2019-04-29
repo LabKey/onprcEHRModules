@@ -959,6 +959,7 @@ onprc_ehr/resources/web/onprc_ehr/form/field/onprc_SlaCensusConfig.js -text
 onprc_ehr/resources/web/onprc_ehr/grid/DragDropGridPanel.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/ASB_Services.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/Birth_Entry.js -text
+onprc_ehr/resources/web/onprc_ehr/model/sources/ClinicalEncounters.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/ClinicalProcedures.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/Clinical_Services.js -text
 onprc_ehr/resources/web/onprc_ehr/model/sources/Colony_Services.js -text
