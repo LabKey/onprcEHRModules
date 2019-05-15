@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.table;
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.log4j.Logger;
 import org.labkey.api.data.AbstractTableInfo;
+import org.labkey.api.data.BaseColumnInfo;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ConvertHelper;
@@ -271,7 +272,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void customizeColumns(AbstractTableInfo ti)
     {
-        ColumnInfo project = ti.getColumn("project");
+        var project = ti.getMutableColumn("project");
         if (project != null)
         {
             project.setLabel("Center Project");
@@ -288,7 +289,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
         }
 
-        ColumnInfo projectName = ti.getColumn("projectName");
+        var projectName = ti.getMutableColumn("projectName");
         if (projectName != null)
         {
             projectName.setLabel("Center Project");
@@ -302,7 +303,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
         }
 
-        ColumnInfo account = ti.getColumn("account");
+        var account = ti.getMutableColumn("account");
         if (account != null && !ti.getName().equalsIgnoreCase("accounts"))
         {
             account.setLabel("Alias");
@@ -313,7 +314,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
         }
 
-        ColumnInfo protocolCol = ti.getColumn("protocol");
+        var protocolCol = ti.getMutableColumn("protocol");
         if (protocolCol != null)
         {
             //NOTE: we keep the lookup even on the protocol table, so we always use displayName to identify the column
@@ -326,19 +327,19 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             //protocolCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
         }
 
-        ColumnInfo room = ti.getColumn("room");
+        var room = ti.getMutableColumn("room");
         if (room != null)
         {
             room.setDisplayWidth("120");
         }
 
-        ColumnInfo location = ti.getColumn("location");
+        var location = ti.getMutableColumn("location");
         if (location != null)
         {
             location.setDisplayWidth("120");
         }
 
-        ColumnInfo snomed = ti.getColumn("snomed");
+        var snomed = ti.getMutableColumn("snomed");
         if (snomed != null)
         {
             UserSchema us = getEHRUserSchema(ti, "ehr_lookups");
@@ -348,7 +349,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             snomed.setLabel("SNOMED");
         }
 
-        ColumnInfo procedureId = ti.getColumn("procedureId");
+        var procedureId = ti.getMutableColumn("procedureId");
         if (procedureId != null)
         {
             UserSchema us = getEHRUserSchema(ti, "ehr_lookups");
@@ -364,7 +365,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             if (found)
                 continue; //a table should never contain both of these anyway
 
-            ColumnInfo investigator = ti.getColumn(field);
+            var investigator = ti.getMutableColumn(field);
             if (investigator != null)
             {
                 found = true;
@@ -381,7 +382,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
         }
 
-        ColumnInfo financialAnalyst = ti.getColumn("financialanalyst");
+        var financialAnalyst = ti.getMutableColumn("financialanalyst");
         if (financialAnalyst != null)
         {
             UserSchema us = getUserSchema(ti, "onprc_billing_public");
@@ -391,7 +392,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             financialAnalyst.setLabel("Financial Authority");
         }
 
-        ColumnInfo fiscalAuthority = ti.getColumn("fiscalAuthority");
+        var fiscalAuthority = ti.getMutableColumn("fiscalAuthority");
         if (fiscalAuthority != null)
         {
             UserSchema us = getUserSchema(ti, "onprc_billing_public");
@@ -411,7 +412,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
         }
 
-        ColumnInfo caseId = ti.getColumn("caseid");
+        var caseId = ti.getMutableColumn("caseid");
         if (caseId != null && !ti.getName().equalsIgnoreCase("cases"))
         {
             caseId.setLabel("Case");
@@ -423,19 +424,19 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
         }
 
-        ColumnInfo taskId = ti.getColumn("taskId");
+        var taskId = ti.getMutableColumn("taskId");
         if (taskId != null)
         {
             taskId.setURL(DetailsURL.fromString("/ehr/dataEntryFormDetails.view?formType=${taskid/formtype}&taskId=${taskid}"));
         }
 
-        ColumnInfo requestId = ti.getColumn("requestId");
+        var requestId = ti.getMutableColumn("requestId");
         if (requestId != null)
         {
             requestId.setURL(DetailsURL.fromString("/ehr/dataEntryFormDetails.view?formType=${requestId/formtype}&requestId=${requestId}"));
         }
 
-        ColumnInfo billedby = ti.getColumn("billedby");
+        var billedby = ti.getMutableColumn("billedby");
         if (billedby != null)
         {
             billedby.setLabel("Assigned To");
@@ -454,7 +455,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void addNaturalSort(AbstractTableInfo ti, String columnName)
     {
-        ColumnInfo column = ti.getColumn(columnName);
+        var column = ti.getMutableColumn(columnName);
         if (column != null)
         {
             LDKService.get().applyNaturalSort(ti, columnName);
@@ -503,14 +504,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (existingLocation != null)
             ds.removeColumn(existingLocation);
 
-        ColumnInfo col13 = getWrappedIdCol(us, ds, curLocation, "demographicsCurrentLocation");
+        var col13 = getWrappedIdCol(us, ds, curLocation, "demographicsCurrentLocation");
         col13.setLabel("Housing - Current");
         col13.setDescription("The calculates the current housing location for each living animal.");
         ds.addColumn(col13);
 
         if (ds.getColumn("activeFlags") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "activeFlags", "flagsPivoted");
+            var col = getWrappedIdCol(us, ds, "activeFlags", "flagsPivoted");
             col.setLabel("Active Flags By Category");
             col.setDescription("This provides columns to summarize active flags for the animal by category, such as medical alerts, viral status, etc.");
             ds.addColumn(col);
@@ -518,7 +519,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("Surgery") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "Surgery", "demographicsSurgery");
+            var col = getWrappedIdCol(us, ds, "Surgery", "demographicsSurgery");
             col.setLabel("Surgical History");
             col.setDescription("Calculates whether this animal has ever had any surgery or a surgery flagged as major");
             ds.addColumn(col);
@@ -526,7 +527,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("activeFlagList") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "activeFlagList", "demographicsActiveFlags");
+            var col = getWrappedIdCol(us, ds, "activeFlagList", "demographicsActiveFlags");
             col.setLabel("Active Flags");
             col.setDescription("This provides a columm summarizing all active flags per animal");
             ds.addColumn(col);
@@ -534,7 +535,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("activeTreatments") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "activeTreatments", "demographicsActiveTreatments");
+            var col = getWrappedIdCol(us, ds, "activeTreatments", "demographicsActiveTreatments");
             col.setLabel("Active Treatments");
             col.setDescription("This provides a summary of active treatments for this animal");
             ds.addColumn(col);
@@ -543,7 +544,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 //         Created: 1-3-2017  R.Blasa
         if (ds.getColumn("activeTreatmentsGiven") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "activeTreatmentsGiven", "demographicsTreatmentsGiven");
+            var col = getWrappedIdCol(us, ds, "activeTreatmentsGiven", "demographicsTreatmentsGiven");
             col.setLabel("Active Treatments Given");
             col.setDescription("This provides a summary of active treatments Given for this animal");
             ds.addColumn(col);
@@ -551,7 +552,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("returnLocation") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "returnLocation", "demographicsReturnLocation");
+            var col = getWrappedIdCol(us, ds, "returnLocation", "demographicsReturnLocation");
             col.setLabel("Housing - Return Location");
             col.setDescription("This calculates the most likely location to return this animal during a transfer");
             ds.addColumn(col);
@@ -559,7 +560,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("activePregnancies") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "activePregnancies", "demographicsPregnancy");
+            var col = getWrappedIdCol(us, ds, "activePregnancies", "demographicsPregnancy");
             col.setLabel("Pregnancies - Active");
             //col.setDescription("");
             ds.addColumn(col);
@@ -567,7 +568,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("kinshipAvg") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "kinshipAvg", "kinshipAverage");
+            var col = getWrappedIdCol(us, ds, "kinshipAvg", "kinshipAverage");
             col.setLabel("Kinship - Average");
             col.setDescription("Calculates the average kinship coefficient against all living animals, including the current animal");
             ds.addColumn(col);
@@ -575,7 +576,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("caseHistory") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "caseHistory", "demographicsCaseHistory");
+            var col = getWrappedIdCol(us, ds, "caseHistory", "demographicsCaseHistory");
             col.setLabel("Case History");
             col.setDescription("Summarizes all cases opened in the previous 6 months");
             ds.addColumn(col);
@@ -583,7 +584,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("problemHistory") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "problemHistory", "demographicsProblemHistory");
+            var col = getWrappedIdCol(us, ds, "problemHistory", "demographicsProblemHistory");
             col.setLabel("Clinical Problem History");
             col.setDescription("Summarizes all clinical problems for this animal over the previous 2 years");
             ds.addColumn(col);
@@ -591,7 +592,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("assignedVet") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "assignedVet", "demographicsAssignedVet");
+            var col = getWrappedIdCol(us, ds, "assignedVet", "demographicsAssignedVet");
             col.setLabel("Assigned Vet");
             col.setDescription("Calculates the assigned veterinarian, based on assignment and housing.");
             ds.addColumn(col);
@@ -599,7 +600,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("currentCondition") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "currentCondition", "demographicsCondition");
+            var col = getWrappedIdCol(us, ds, "currentCondition", "demographicsCondition");
             col.setLabel("Condition");
             //col.setDescription("");
             ds.addColumn(col);
@@ -607,7 +608,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("offspringUnder1Yr") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "offspringUnder1Yr", "demographicsTotalOffspringUnder1Yr");
+            var col = getWrappedIdCol(us, ds, "offspringUnder1Yr", "demographicsTotalOffspringUnder1Yr");
             col.setLabel("Offspring Under 1 Year");
             //col.setDescription("");
             ds.addColumn(col);
@@ -615,7 +616,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("lastMense") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "lastMense", "demographicsLastMense");
+            var col = getWrappedIdCol(us, ds, "lastMense", "demographicsLastMense");
             col.setLabel("Mense Data");
             //col.setDescription("");
             ds.addColumn(col);
@@ -623,7 +624,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("spfStatus") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "spfStatus", "demographicsSPF");
+            var col = getWrappedIdCol(us, ds, "spfStatus", "demographicsSPF");
             col.setLabel("SPF Status");
             //col.setDescription("");
             ds.addColumn(col);
@@ -631,7 +632,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("openProblems") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "openProblems", "demographicsActiveProblems");
+            var col = getWrappedIdCol(us, ds, "openProblems", "demographicsActiveProblems");
             col.setLabel("Open Problems");
             col.setDescription("This will display open problems for this animal");
             ds.addColumn(col);
@@ -639,7 +640,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("activeAnimalGroups") == null)
         {
-            ColumnInfo col21 = getWrappedIdCol(us, ds, "activeAnimalGroups", "demographicsActiveAnimalGroups");
+            var col21 = getWrappedIdCol(us, ds, "activeAnimalGroups", "demographicsActiveAnimalGroups");
             col21.setLabel("Animal Groups - Active");
             col21.setDescription("Displays the animal groups to which this animal currently belongs");
             ds.addColumn(col21);
@@ -647,7 +648,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("source") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "source", "demographicsSource");
+            var col = getWrappedIdCol(us, ds, "source", "demographicsSource");
             col.setLabel("Source");
             col.setDescription("Contains fields related to the source of the animal (ie. center vs. acquired), arrival date at the center, etc.");
             ds.addColumn(col);
@@ -655,7 +656,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("terminal") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "terminal", "demographicsTermination");
+            var col = getWrappedIdCol(us, ds, "terminal", "demographicsTermination");
             col.setLabel("Terminal Projects");
             col.setDescription("Summarizes whether the animal is assigned to terminal projects");
             ds.addColumn(col);
@@ -663,21 +664,21 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("activeCases") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "activeCases", "demographicsActiveCases");
+            var col = getWrappedIdCol(us, ds, "activeCases", "demographicsActiveCases");
             col.setLabel("Active Cases");
             ds.addColumn(col);
         }
 
         if (ds.getColumn("parents") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "parents", "demographicsParents");
+            var col = getWrappedIdCol(us, ds, "parents", "demographicsParents");
             col.setLabel("Parents");
             ds.addColumn(col);
         }
 
         if (ds.getColumn("totalOffspring") == null)
         {
-            ColumnInfo col15 = getWrappedIdCol(us, ds, "totalOffspring", "demographicsTotalOffspring");
+            var col15 = getWrappedIdCol(us, ds, "totalOffspring", "demographicsTotalOffspring");
             col15.setLabel("Number of Offspring");
             col15.setDescription("Shows the total offspring of each animal");
             ds.addColumn(col15);
@@ -685,7 +686,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("activeNotes") == null)
         {
-            ColumnInfo col2 = getWrappedIdCol(us, ds, "activeNotes", "notesPivoted");
+            var col2 = getWrappedIdCol(us, ds, "activeNotes", "notesPivoted");
             col2.setLabel("Active Notes By Category");
             //col.setDescription("");
             ds.addColumn(col2);
@@ -693,7 +694,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("activeNoteList") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "activeNoteList", "demographicsActiveNotes");
+            var col = getWrappedIdCol(us, ds, "activeNoteList", "demographicsActiveNotes");
             col.setLabel("Active Notes");
             col.setDescription("This provides a columm summarizing all active DCM notes per animal");
             ds.addColumn(col);
@@ -701,7 +702,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("demographicsActiveAssignment") == null)
         {
-            ColumnInfo col21 = getWrappedIdCol(us, ds, "activeAssignments", "demographicsActiveAssignment");
+            var col21 = getWrappedIdCol(us, ds, "activeAssignments", "demographicsActiveAssignment");
             col21.setLabel("Assignments - Active");
             col21.setDescription("Shows all projects to which the animal is actively assigned on the current date");
             ds.addColumn(col21);
@@ -709,7 +710,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("utilization") == null)
         {
-            ColumnInfo col21 = getWrappedIdCol(us, ds, "utilization", "demographicsUtilization");
+            var col21 = getWrappedIdCol(us, ds, "utilization", "demographicsUtilization");
             col21.setLabel("Utilization");
             col21.setDescription("Shows all projects or animal groups to which the animal is actively assigned on the current date");
             ds.addColumn(col21);
@@ -717,7 +718,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("viral_status") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "viral_status", "demographicsViralStatus");
+            var col = getWrappedIdCol(us, ds, "viral_status", "demographicsViralStatus");
             col.setLabel("Viral Status");
             col.setDescription("Shows the viral status of each animal");
             ds.addColumn(col);
@@ -725,7 +726,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("surgeryChecklist") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "surgeryChecklist", "surgeryChecklist");
+            var col = getWrappedIdCol(us, ds, "surgeryChecklist", "surgeryChecklist");
             col.setLabel("Surgery Checklist");
             col.setDescription("Shows information to review prior to surgeries");
             ds.addColumn(col);
@@ -733,7 +734,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("demographicsAssignmentHistory") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "assignmentHistory", "demographicsAssignmentHistory");
+            var col = getWrappedIdCol(us, ds, "assignmentHistory", "demographicsAssignmentHistory");
             col.setLabel("Assignments - Total");
             col.setDescription("Shows all projects to which the animal has ever been assigned, including active projects");
             ds.addColumn(col);
@@ -741,7 +742,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("treatmentSummary") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "treatmentSummary", "demographicsTreatmentSummary");
+            var col = getWrappedIdCol(us, ds, "treatmentSummary", "demographicsTreatmentSummary");
             col.setLabel("Treatment Summary");
             col.setDescription("Provides columns that summarize the active treatments for each animal");
             ds.addColumn(col);
@@ -749,7 +750,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("housingStats") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "housingStats", "demographicsHousingStats");
+            var col = getWrappedIdCol(us, ds, "housingStats", "demographicsHousingStats");
             col.setLabel("Housing Stats");
             col.setDescription("Provides columns that summarize the recent housing history of each animal");
             ds.addColumn(col);
@@ -757,7 +758,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("availBlood") == null)
         {
-            ColumnInfo bloodCol = getWrappedIdCol(us, ds, "availBlood", "demographicsBloodSummary");
+            var bloodCol = getWrappedIdCol(us, ds, "availBlood", "demographicsBloodSummary");
             bloodCol.setLabel("Blood Remaining");
             bloodCol.setDescription("Calculates the total blood draw and remaining, which is determined by weight and blood drawn.");
             ds.addColumn(bloodCol);
@@ -765,7 +766,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("numPaired") == null)
         {
-            ColumnInfo col21 = getWrappedIdCol(us, ds, "numPaired", "demographicsPaired");
+            var col21 = getWrappedIdCol(us, ds, "numPaired", "demographicsPaired");
             col21.setLabel("Pairing");
             col21.setDescription("Shows all animals paired with the current animal");
             ds.addColumn(col21);
@@ -773,7 +774,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("physicalExamHistory") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "physicalExamHistory", "demographicsPE");
+            var col = getWrappedIdCol(us, ds, "physicalExamHistory", "demographicsPE");
             col.setLabel("Physical Exam History");
             col.setDescription("Shows the date of last physical exam for each animal");
             ds.addColumn(col);
@@ -781,7 +782,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("labworkHistory") == null)
         {
-            ColumnInfo col = getWrappedIdCol(us, ds, "labworkHistory", "demographicsLabwork");
+            var col = getWrappedIdCol(us, ds, "labworkHistory", "demographicsLabwork");
             col.setLabel("Labwork History");
             col.setDescription("Shows the date of last labwork for a subsets of tests");
             ds.addColumn(col);
@@ -789,7 +790,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("MostRecentTB") == null)
         {
-            ColumnInfo col17 = getWrappedIdCol(us, ds, "MostRecentTB", "demographicsMostRecentTBDate");
+            var col17 = getWrappedIdCol(us, ds, "MostRecentTB", "demographicsMostRecentTBDate");
             col17.setLabel("TB Tests");
             col17.setDescription("Calculates the most recent TB date for this animal, time since TB and the last eye TB tested");
             ds.addColumn(col17);
@@ -797,7 +798,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("mostRecentBCS") == null)
         {
-            ColumnInfo col17 = getWrappedIdCol(us, ds, "mostRecentBCS", "demographicsMostRecentBCS");
+            var col17 = getWrappedIdCol(us, ds, "mostRecentBCS", "demographicsMostRecentBCS");
             col17.setLabel("Body Condition Score");
             col17.setDescription("Calculates the most recent BCS for each animal");
             ds.addColumn(col17);
@@ -805,7 +806,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("mostRecentAlopeciaScore") == null)
         {
-            ColumnInfo col17 = getWrappedIdCol(us, ds, "mostRecentAlopeciaScore", "demographicsMostRecentAlopecia");
+            var col17 = getWrappedIdCol(us, ds, "mostRecentAlopeciaScore", "demographicsMostRecentAlopecia");
             col17.setLabel("Alopecia Score");
             col17.setDescription("Calculates the most recent alopecia score for each animal");
             ds.addColumn(col17);
@@ -813,7 +814,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("clinicalActions") == null)
         {
-            ColumnInfo col17 = new AliasedColumn("clinicalActions", ds.getColumn("Id"));
+            var col17 = new AliasedColumn("clinicalActions", ds.getColumn("Id"));
             col17.setLabel("Clinical Actions");
             col17.setHidden(true);
             col17.setDescription("This column displays a menu with direct access to manage treatments, cases, etc");
@@ -830,7 +831,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("historicAnimalGroups") == null)
         {
-            ColumnInfo col22 = getWrappedIdCol(us, ds, "historicAnimalGroups", "demographicsAnimalGroups");
+            var col22 = getWrappedIdCol(us, ds, "historicAnimalGroups", "demographicsAnimalGroups");
             col22.setLabel("Animal Groups - Historic");
             col22.setDescription("Displays all animal groups to which this animal has ever belonged");
             ds.addColumn(col22);
@@ -838,7 +839,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ds.getColumn("animalGroupsPivoted") == null)
         {
-            ColumnInfo agPivotCol = getWrappedIdCol(us, ds, "animalGroupsPivoted", "animalGroupsPivoted");
+            var agPivotCol = getWrappedIdCol(us, ds, "animalGroupsPivoted", "animalGroupsPivoted");
             agPivotCol.setLabel("Active Group Summary");
             agPivotCol.setHidden(true);
             agPivotCol.setDescription("Displays the active groups for each animal");
@@ -933,8 +934,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             UserSchema us = getStudyUserSchema(ti);
             if (us != null)
             {
-                ColumnInfo lsidCol = ti.getColumn("lsid");
-                ColumnInfo col = ti.addColumn(new WrappedColumn(lsidCol, "cagematesAtOpen"));
+                var lsidCol = ti.getMutableColumn("lsid");
+                var col = ti.addColumn(new WrappedColumn(lsidCol, "cagematesAtOpen"));
                 col.setLabel("Cagemates At Open");
                 col.setUserEditable(false);
                 col.setIsUnselectable(true);
@@ -950,8 +951,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             UserSchema us = getStudyUserSchema(ti);
             if (us != null)
             {
-                ColumnInfo lsidCol = ti.getColumn("lsid");
-                ColumnInfo col = ti.addColumn(new WrappedColumn(lsidCol, "effectiveCage"));
+                var lsidCol = ti.getMutableColumn("lsid");
+                var col = ti.addColumn(new WrappedColumn(lsidCol, "effectiveCage"));
                 col.setLabel("Lowest Joined Cage");
                 col.setUserEditable(false);
                 col.setIsUnselectable(true);
@@ -994,7 +995,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ti.getColumn("cond") != null)
         {
-            ti.getColumn("cond").setHidden(true);
+            ti.getMutableColumn("cond").setHidden(true);
         }
 
         if (ti.getColumn("previousLocation") == null)
@@ -1002,8 +1003,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             UserSchema us = getStudyUserSchema(ti);
             if (us != null)
             {
-                ColumnInfo lsidCol = ti.getColumn("lsid");
-                ColumnInfo col = ti.addColumn(new WrappedColumn(lsidCol, "previousLocation"));
+                var lsidCol = ti.getMutableColumn("lsid");
+                var col = ti.addColumn(new WrappedColumn(lsidCol, "previousLocation"));
                 col.setLabel("Previous Location");
                 col.setUserEditable(false);
                 col.setIsUnselectable(true);
@@ -1016,12 +1017,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     {
         if (ti.getColumn("collectedby") != null)
         {
-            ti.getColumn("collectedby").setHidden(true);
+            ti.getMutableColumn("collectedby").setHidden(true);
         }
 
         if (ti.getColumn("condition") != null)
         {
-            ti.getColumn("condition").setHidden(true);
+            ti.getMutableColumn("condition").setHidden(true);
         }
 
     }
@@ -1052,12 +1053,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         if (ti.getColumn("meaning") != null)
         {
-            ti.getColumn("meaning").setHidden(true);
+            ti.getMutableColumn("meaning").setHidden(true);
         }
 
         if (ti.getColumn("qualifier") != null)
         {
-            ti.getColumn("qualifier").setHidden(true);
+            ti.getMutableColumn("qualifier").setHidden(true);
         }
     }
 
@@ -1086,7 +1087,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void customizeDemographicsTable(AbstractTableInfo ti)
     {
-        ColumnInfo originCol = ti.getColumn("origin");
+        var originCol = ti.getMutableColumn("origin");
         if (originCol != null)
         {
             originCol.setLabel("Source");
@@ -1183,7 +1184,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn("mostRecentClinicalObservations") == null)
         {
             UserSchema us = getStudyUserSchema(ti);
-            ColumnInfo col17 = getWrappedCol(us, ti, "mostRecentClinicalObservations", "mostRecentClinicalObservationsForAnimal", "Id", "Id");
+            var col17 = getWrappedCol(us, ti, "mostRecentClinicalObservations", "mostRecentClinicalObservationsForAnimal", "Id", "Id");
             col17.setLabel("Most Recent Clinical Observations");
             col17.setDescription("Displays the most recent set of clinical observations for this animal");
             col17.setDisplayWidth("150");
@@ -1191,13 +1192,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ti.addColumn(col17);
         }
 
-        ColumnInfo birthCol = ti.getColumn("birth");
+        var birthCol = ti.getMutableColumn("birth");
         if (birthCol != null)
         {
             birthCol.setFormat(LookAndFeelProperties.getInstance(ti.getUserSchema().getContainer()).getDefaultDateTimeFormat());
         }
 
-        ColumnInfo deathCol = ti.getColumn("death");
+        var deathCol = ti.getMutableColumn("death");
         if (deathCol != null)
         {
             deathCol.setFormat(LookAndFeelProperties.getInstance(ti.getUserSchema().getContainer()).getDefaultDateTimeFormat());
@@ -1246,13 +1247,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     {
         if (ti.getColumn("manner") != null)
         {
-            ti.getColumn("manner").setHidden(true);
+            ti.getMutableColumn("manner").setHidden(true);
         }
     }
 
     private void customizeBirthTable(AbstractTableInfo ti)
     {
-        ColumnInfo birthCondition = ti.getColumn("birth_condition");
+        var birthCondition = ti.getMutableColumn("birth_condition");
         if (birthCondition != null)
         {
             birthCondition.setLabel("Birth Condition");
@@ -1263,19 +1264,19 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
         }
 
-        ColumnInfo cond = ti.getColumn("cond");
+        var cond = ti.getMutableColumn("cond");
         if (cond != null)
         {
             cond.setHidden(true);
         }
 
-        ColumnInfo dam = ti.getColumn("dam");
+        var dam = ti.getMutableColumn("dam");
         if (dam != null)
         {
             dam.setLabel("Observed Dam");
         }
 
-        ColumnInfo sire = ti.getColumn("sire");
+        var sire = ti.getMutableColumn("sire");
         if (sire != null)
         {
             sire.setLabel("Observed Sire");
@@ -1382,7 +1383,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn("mostRecentObservations") == null)
         {
             UserSchema us = getStudyUserSchema(ti);
-            ColumnInfo col17 = getWrappedCol(us, ti, "mostRecentObservations", "mostRecentObservationsForCase", "objectid", "caseid");
+            var col17 = getWrappedCol(us, ti, "mostRecentObservations", "mostRecentObservationsForCase", "objectid", "caseid");
             col17.setLabel("Most Recent Observations");
             col17.setDescription("Displays the most recent set of observations associated with this case");
             col17.setDisplayWidth("150");
@@ -1423,26 +1424,26 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         DetailsURL detailsURL = DetailsURL.fromString("/ehr/dataEntryFormDetails.view?formType=${formtype}&taskid=${taskid}");
         ti.setDetailsURL(detailsURL);
 
-        ColumnInfo titleCol = ti.getColumn("title");
+        var titleCol = ti.getMutableColumn("title");
         if (titleCol != null)
         {
             titleCol.setURL(detailsURL);
         }
 
-        ColumnInfo rowIdCol = ti.getColumn("rowid");
+        var rowIdCol = ti.getMutableColumn("rowid");
         if (rowIdCol != null)
         {
             rowIdCol.setURL(detailsURL);
         }
 
-        ColumnInfo updateCol = ti.getColumn("updateTitle");
+        var updateCol = ti.getMutableColumn("updateTitle");
         if (updateCol == null)
         {
             updateCol = new WrappedColumn(ti.getColumn("title"), "updateTitle");
             ti.addColumn(updateCol);
         }
 
-        ColumnInfo updateTaskId = ti.getColumn("updateTaskId");
+        var updateTaskId = ti.getMutableColumn("updateTaskId");
         if (updateTaskId == null)
         {
             updateTaskId = new WrappedColumn(ti.getColumn("rowid"), "updateTaskId");
@@ -1473,19 +1474,19 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         DetailsURL detailsURL = DetailsURL.fromString("/ehr/dataEntryFormDetails.view?formType=${formtype}&requestId=${requestId}");
         ti.setDetailsURL(detailsURL);
 
-        ColumnInfo titleCol = ti.getColumn("title");
+        var titleCol = ti.getMutableColumn("title");
         if (titleCol != null)
         {
             titleCol.setURL(detailsURL);
         }
 
-        ColumnInfo rowIdCol = ti.getColumn("rowid");
+        var rowIdCol = ti.getMutableColumn("rowid");
         if (rowIdCol != null)
         {
             rowIdCol.setURL(detailsURL);
         }
 
-//        ColumnInfo updateCol = ti.getColumn("updateTitle");
+//        var updateCol = ti.getMutableColumn("updateTitle");
 //        if (updateCol == null)
 //        {
 //            updateCol = new WrappedColumn(ti.getColumn("title"), "updateTitle");
@@ -1504,29 +1505,29 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void customizeProtocol(AbstractTableInfo ti)
     {
-        ti.getColumn("inves").setHidden(true);
-        ti.getColumn("maxAnimals").setHidden(true);
-        ti.getColumn("title").setScale(80);
-        ti.getColumn("investigatorId").setHidden(false);
-        ti.getColumn("approve").setLabel("Initial IACUC Approval Date");
-        ti.getColumn("enddate").setLabel("Date Disabled");
-        ti.getColumn("enddate").setDescription("This shows the date this protocol was disabled.  This is most commonly when the IACUC expires; however, it is possible for a protocol to be disabled prior to a full 3-year period for other reasons");
-        ColumnInfo externalId = ti.getColumn("external_id");
+        ti.getMutableColumn("inves").setHidden(true);
+        ti.getMutableColumn("maxAnimals").setHidden(true);
+        ti.getMutableColumn("title").setScale(80);
+        ti.getMutableColumn("investigatorId").setHidden(false);
+        ti.getMutableColumn("approve").setLabel("Initial IACUC Approval Date");
+        ti.getMutableColumn("enddate").setLabel("Date Disabled");
+        ti.getMutableColumn("enddate").setDescription("This shows the date this protocol was disabled.  This is most commonly when the IACUC expires; however, it is possible for a protocol to be disabled prior to a full 3-year period for other reasons");
+        var externalId = ti.getMutableColumn("external_id");
         externalId.setHidden(false);
         externalId.setLabel("eIACUC #");
 
-        ti.getColumn("first_approval").setHidden(true);
-        ti.getColumn("project_type").setHidden(true);
-        //ti.getColumn("ibc_approval_required").setHidden(false);
-        ti.getColumn("ibc_approval_num").setHidden(false);
+        ti.getMutableColumn("first_approval").setHidden(true);
+        ti.getMutableColumn("project_type").setHidden(true);
+        //ti.getMutableColumn("ibc_approval_required").setHidden(false);
+        ti.getMutableColumn("ibc_approval_num").setHidden(false);
 
-        if (ti.getColumn("totalProjects") == null)
+        if (ti.getMutableColumn("totalProjects") == null)
         {
             UserSchema us = getUserSchema(ti, "ehr");
             if (us != null)
             {
                 ColumnInfo protocolCol = ti.getColumn("protocol");
-                ColumnInfo col2 = ti.addColumn(new WrappedColumn(protocolCol, "totalProjects"));
+                var col2 = ti.addColumn(new WrappedColumn(protocolCol, "totalProjects"));
                 col2.setLabel("Total Projects");
                 col2.setUserEditable(false);
                 col2.setIsUnselectable(true);
@@ -1600,28 +1601,28 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.setTitleColumn("displayName");
         LDKService.get().applyNaturalSort(ti, "displayName");
 
-        ti.getColumn("inves").setHidden(true);
-        ti.getColumn("inves2").setHidden(true);
-        ti.getColumn("reqname").setHidden(true);
-        ti.getColumn("research").setHidden(true);
-        ti.getColumn("avail").setHidden(true);
-        ti.getColumn("contact_emails").setHidden(true);
-        ti.getColumn("projecttype").setHidden(true);
+        ti.getMutableColumn("inves").setHidden(true);
+        ti.getMutableColumn("inves2").setHidden(true);
+        ti.getMutableColumn("reqname").setHidden(true);
+        ti.getMutableColumn("research").setHidden(true);
+        ti.getMutableColumn("avail").setHidden(true);
+        ti.getMutableColumn("contact_emails").setHidden(true);
+        ti.getMutableColumn("projecttype").setHidden(true);
 
-        ti.getColumn("project").setLabel("Project Id");
-        ti.getColumn("project").setHidden(true);
+        ti.getMutableColumn("project").setLabel("Project Id");
+        ti.getMutableColumn("project").setHidden(true);
 
-        ti.getColumn("startdate").setLabel("Project Start");
-        ti.getColumn("enddate").setLabel("Project End");
+        ti.getMutableColumn("startdate").setLabel("Project Start");
+        ti.getMutableColumn("enddate").setLabel("Project End");
 
-        ColumnInfo invest = ti.getColumn("investigatorId");
+        var invest = ti.getMutableColumn("investigatorId");
         invest.setHidden(false);
         UserSchema us = getEHRUserSchema(ti, "onprc_ehr");
         if (us != null)
             invest.setFk(new QueryForeignKey(us, null, "investigators", "rowid", "lastname"));
         invest.setLabel("Project Contact");
 
-        ColumnInfo nameCol = ti.getColumn("name");
+        var nameCol = ti.getMutableColumn("name");
         nameCol.setHidden(false);
         nameCol.setLabel("Project");
 
@@ -1654,9 +1655,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     {
         UserSchema us = getUserSchema(ti, "ehr_lookups");
 
-        ColumnInfo roomCol = ti.getColumn("room");
+        var roomCol = ti.getMutableColumn("room");
 
-        ColumnInfo assignments = ti.getColumn("assignments");
+        var assignments = ti.getMutableColumn("assignments");
         if (assignments == null)
         {
             WrappedColumn col = new WrappedColumn(roomCol, "assignments");
@@ -1667,17 +1668,17 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ti.addColumn(col);
         }
 
-        ti.getColumn("housingCondition").setNullable(false);
-        ti.getColumn("housingType").setNullable(false);
-        ti.getColumn("maxCages").setHidden(true);
+        ti.getMutableColumn("housingCondition").setNullable(false);
+        ti.getMutableColumn("housingType").setNullable(false);
+        ti.getMutableColumn("maxCages").setHidden(true);
     }
 
-    private ColumnInfo getWrappedIdCol(UserSchema us, AbstractTableInfo ds, String name, String queryName)
+    private BaseColumnInfo getWrappedIdCol(UserSchema us, AbstractTableInfo ds, String name, String queryName)
     {
         return getWrappedCol(us, ds, name, queryName, "Id", "Id");
     }
 
-    private ColumnInfo getWrappedCol(UserSchema us, AbstractTableInfo ds, String name, String queryName, String colName, String targetCol)
+    private BaseColumnInfo getWrappedCol(UserSchema us, AbstractTableInfo ds, String name, String queryName, String colName, String targetCol)
     {
 
         WrappedColumn col = new WrappedColumn(ds.getColumn(colName), name);
@@ -1723,7 +1724,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ColumnInfo plt = table.getColumn("PLT");
         if (plt != null)
         {
-            plt.setDisplayColumnFactory(new DisplayColumnFactory()
+            ((BaseColumnInfo)plt).setDisplayColumnFactory(new DisplayColumnFactory()
             {
                 @Override
                 public DisplayColumn createRenderer(final ColumnInfo colInfo)
@@ -1752,7 +1753,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ColumnInfo hct = table.getColumn("HCT");
         if (hct != null)
         {
-            hct.setDisplayColumnFactory(new DisplayColumnFactory()
+            ((BaseColumnInfo)hct).setDisplayColumnFactory(new DisplayColumnFactory()
             {
                 @Override
                 public DisplayColumn createRenderer(final ColumnInfo colInfo)
@@ -1787,15 +1788,15 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void customizeCageTable(AbstractTableInfo table)
     {
-        ColumnInfo joinToCage = table.getColumn("joinToCage");
+        var joinToCage = table.getMutableColumn("joinToCage");
         if (joinToCage != null)
         {
             joinToCage.setHidden(true);
         }
 
-        table.getColumn("length").setHidden(true);
-        table.getColumn("width").setHidden(true);
-        table.getColumn("height").setHidden(true);
+        table.getMutableColumn("length").setHidden(true);
+        table.getMutableColumn("width").setHidden(true);
+        table.getMutableColumn("height").setHidden(true);
 
         String name = "availability";
         if (table.getColumn(name) == null)
@@ -1871,7 +1872,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn("caseHistory") != null)
             return;
 
-        ColumnInfo ci = new WrappedColumn(ti.getColumn("Id"), "caseHistory");
+        var ci = new WrappedColumn(ti.getColumn("Id"), "caseHistory");
         ci.setDisplayColumnFactory(new DisplayColumnFactory()
         {
             @Override
@@ -2076,10 +2077,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     return null;
                 }
 
-                ti.getColumn(pkCol.getName()).setHidden(true);
-                ti.getColumn(pkCol.getName()).setKeyField(true);
+                ((BaseColumnInfo)ti.getColumn(pkCol.getName())).setHidden(true);
+                ((BaseColumnInfo)ti.getColumn(pkCol.getName())).setKeyField(true);
 
-                ti.getColumn("flagsAtTime").setLabel("Flags At Time");
+                ((BaseColumnInfo)ti.getColumn("flagsAtTime")).setLabel("Flags At Time");
 
                 return ti;
             }
@@ -2141,10 +2142,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     return null;
                 }
 
-                ti.getColumn(pkCol.getName()).setHidden(true);
-                ti.getColumn(pkCol.getName()).setKeyField(true);
+                ((BaseColumnInfo)ti.getColumn(pkCol.getName())).setHidden(true);
+                ((BaseColumnInfo)ti.getColumn(pkCol.getName())).setKeyField(true);
 
-                ti.getColumn("problemsAtTime").setLabel("Problems At Time");
+                ((BaseColumnInfo)ti.getColumn("problemsAtTime")).setLabel("Problems At Time");
 
                 return ti;
             }
@@ -2206,10 +2207,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     return null;
                 }
 
-                ti.getColumn(pkCol.getName()).setHidden(true);
-                ti.getColumn(pkCol.getName()).setKeyField(true);
+                ((BaseColumnInfo)ti.getColumn(pkCol.getName())).setHidden(true);
+                ((BaseColumnInfo)ti.getColumn(pkCol.getName())).setKeyField(true);
 
-                ti.getColumn("groupsAtTime").setLabel("Groups At Time");
+                ((BaseColumnInfo)ti.getColumn("groupsAtTime")).setLabel("Groups At Time");
 
                 return ti;
             }
@@ -2236,39 +2237,46 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void customizeCageObservations(AbstractTableInfo ti)
     {
-        ti.getColumn("userid").setHidden(true);
-        ti.getColumn("feces").setHidden(true);
-        ti.getColumn("no_observations").setHidden(true);
+        ti.getMutableColumn("userid").setHidden(true);
+        ti.getMutableColumn("feces").setHidden(true);
+        ti.getMutableColumn("no_observations").setHidden(true);
     }
 
     private void customizeProtocolProcedures(AbstractTableInfo ti)
     {
-        ColumnInfo procedureName = ti.getColumn("procedureName");
+        var procedureName = ti.getMutableColumn("procedureName");
         if (procedureName != null)
         {
             UserSchema us = getUserSchema(ti, "ehr_lookups");
             if (us != null)
             {
-                procedureName.setFk(new QueryForeignKey(us, null, "procedureNames", "procedureName", "procedureName", true));
+                procedureName.setFk(QueryForeignKey.from(ti.getUserSchema(), ti.getContainerFilter())
+                    .schema(us)
+                    .to("procedureNames", "procedureName", "procedureName")
+                    .raw(true));
             }
             procedureName.setNullable(false);
         }
 
-        ti.getColumn("code").setHidden(true);
-        ti.getColumn("project").setHidden(true);
-        ti.getColumn("frequency").setHidden(true);
-        ti.getColumn("rowid").setHidden(true);
+        ti.getMutableColumn("code").setHidden(true);
+        ti.getMutableColumn("project").setHidden(true);
+        ti.getMutableColumn("frequency").setHidden(true);
+        ti.getMutableColumn("rowid").setHidden(true);
     }
 
     private void customizeClinicalObservations(AbstractTableInfo ti)
     {
-        ColumnInfo categoryCol = ti.getColumn("category");
+        var categoryCol = ti.getMutableColumn("category");
         if (categoryCol != null)
         {
             UserSchema us = getUserSchema(ti, "ehr");
             if (us != null)
             {
-                categoryCol.setFk(new QueryForeignKey(us, null, "observation_types", "value", "value", true));
+                categoryCol.setFk(QueryForeignKey
+                        .from(ti.getUserSchema(), ti.getContainerFilter())
+                        .schema(us)
+                        .to("observation_types", "value", "value")
+                        .raw(true));
             }
         }
     }
@@ -2281,7 +2289,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             if (us != null)
             {
                 ColumnInfo rowidCol = ti.getColumn("rowid");
-                ColumnInfo col = ti.addColumn(new WrappedColumn(rowidCol, "majorityLocation"));
+                var col = ti.addColumn(new WrappedColumn(rowidCol, "majorityLocation"));
                 col.setLabel("Majority Location");
                 col.setUserEditable(false);
                 col.setIsUnselectable(true);

@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.ContainerFilter;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.ehr.security.EHRProjectEditPermission;
@@ -45,11 +46,11 @@ public class ONPRC_EHRUserSchema extends SimpleUserSchema
 
     @Override
     @Nullable
-    protected TableInfo createWrappedTable(String name, @NotNull TableInfo schemaTable)
+    protected TableInfo createWrappedTable(String name, @NotNull TableInfo schemaTable, ContainerFilter cf)
     {
         if (ONPRC_EHRSchema.TABLE_VET_ASSIGNMENT.equalsIgnoreCase(name))
         {
-            CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable).init();
+            CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable, cf).init();
           ti.addPermissionMapping(InsertPermission.class, EHRVeterinarianPermission.class);
             ti.addPermissionMapping(UpdatePermission.class, EHRVeterinarianPermission.class);
             ti.addPermissionMapping(DeletePermission.class, EHRVeterinarianPermission.class);
@@ -60,7 +61,7 @@ public class ONPRC_EHRUserSchema extends SimpleUserSchema
         }
         else if (ONPRC_EHRSchema.TABLE_CUSTOMERS.equalsIgnoreCase(name))
         {
-            CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable).init();
+            CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable, cf).init();
             ti.addPermissionMapping(InsertPermission.class, ONPRC_EHRCustomerEditPermission.class);
             ti.addPermissionMapping(UpdatePermission.class, ONPRC_EHRCustomerEditPermission.class);
             ti.addPermissionMapping(DeletePermission.class, ONPRC_EHRCustomerEditPermission.class);
@@ -68,7 +69,7 @@ public class ONPRC_EHRUserSchema extends SimpleUserSchema
         }
         else if (ONPRC_EHRSchema.TABLE_INVESTIGATORS.equalsIgnoreCase(name))
         {
-            CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable).init();
+            CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable, cf).init();
             ti.addPermissionMapping(InsertPermission.class, EHRProjectEditPermission.class);
             ti.addPermissionMapping(UpdatePermission.class, EHRProjectEditPermission.class);
             ti.addPermissionMapping(DeletePermission.class, EHRProjectEditPermission.class);
@@ -76,17 +77,17 @@ public class ONPRC_EHRUserSchema extends SimpleUserSchema
         }
         else if (ONPRC_EHRSchema.TABLE_BIRTH_CONDITION.equalsIgnoreCase(name))
         {
-            return new ContainerScopedTable(this, schemaTable, "value").init();
+            return new ContainerScopedTable(this, schemaTable, cf, "value").init();
         }
         else if (ONPRC_EHRSchema.TABLE_HOUSING_TRANFER_REQUESTS.equalsIgnoreCase(name))
         {
-            CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable).init();
+            CustomPermissionsTable ti = new CustomPermissionsTable(this, schemaTable, cf).init();
             ti.addPermissionMapping(InsertPermission.class, ONPRC_EHRTransferRequestPermission.class);
             ti.addPermissionMapping(UpdatePermission.class, ONPRC_EHRTransferRequestPermission.class);
             ti.addPermissionMapping(DeletePermission.class, ONPRC_EHRTransferRequestPermission.class);
             return ti;
         }
 
-        return super.createWrappedTable(name, schemaTable);
+        return super.createWrappedTable(name, schemaTable, cf);
     }
 }
