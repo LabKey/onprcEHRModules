@@ -60,7 +60,7 @@ public class SSPImportHelper
     private TableInfo getResultLookupTable()
     {
         AssayProtocolSchema schema = _provider.createProtocolSchema(_u, _c, _protocol, null);
-        TableInfo assayTable = schema.createDataTable();
+        TableInfo assayTable = schema.createDataTable(null);
 
         ForeignKey fk = assayTable.getUserSchema().getTable("data").getColumn("result").getFk();
         if (fk != null)
