@@ -89,7 +89,7 @@ public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
 
     private void unoccupiedNHPRooms(Container c, User u, final StringBuilder msg)
     {
-        TableInfo ti = getEHRLookupsSchema(c, u).getTable("rooms");
+        TableInfo ti = getEHRLookupsSchema(c, u).getTable("rooms", null , true, true);
         assert ti instanceof AbstractTableInfo;
 
         LDKService.get().applyNaturalSort((AbstractTableInfo)ti, "room");
