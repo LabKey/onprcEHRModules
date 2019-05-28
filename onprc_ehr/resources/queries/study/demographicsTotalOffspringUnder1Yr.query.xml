@@ -1,0 +1,26 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsTotalOffspringUnder1Yr" tableDbType="NOT_IN_DB">
+                <columns>
+                    <column columnName="Id">
+                        <isKeyField>true</isKeyField>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="offspringUnder1Yr">
+                        <columnTitle>Offspring Under 1 Yr.</columnTitle>
+                    </column>
+                    <column columnName="totalOffspringUnder1Yr">
+                        <columnTitle>Total Offsping Under 1 Yr.</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;
+                            query.queryName=demographicsOffspring&amp;
+                            query.Id/age/ageInYears~lte=1&amp;
+                            query.Id~eq=${Id}
+                        </url>
+                    </column>
+                </columns>
+            <titleColumn>totalOffspring</titleColumn>
+            </table>
+        </tables>
+    </metadata>
+</query>

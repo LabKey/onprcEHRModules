@@ -1,0 +1,17 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="bloodDrawsByDay" tableDbType="TABLE">
+                <tableTitle>Blood Draws By Day</tableTitle>
+                <columns>
+                    <column columnName="quantity">
+                        <columnTitle>Volume Drawn On This Date</columnTitle>
+                    </column>
+                    <column columnName="dropDate">
+                        <columnTitle>Date Volume Becomes Available</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

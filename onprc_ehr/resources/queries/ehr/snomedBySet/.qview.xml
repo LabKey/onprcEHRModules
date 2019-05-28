@@ -1,0 +1,13 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+   <columns>
+       <column name="Id"/>
+       <column name="date"/>
+       <column name="Id/demographics/species"/>
+       <column name="Id/demographics/gender"/>
+       <column name="caseno"/>
+       <column name="type"/>
+       <column name="tissue"/>
+       <column name="codes"/>
+       <column name="codesMeaning"/>
+   </columns>
+</customView>

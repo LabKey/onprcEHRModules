@@ -1,0 +1,27 @@
+<script type="text/javascript">
+
+Ext4.onReady(function (){
+    if (!LABKEY.ActionURL.getParameter('area') && !LABKEY.ActionURL.getParameter('building')){
+        alert('Must Provide The Area or Building Name'); return false;
+    }
+
+    var webpart = <%=webpartContext%>;
+
+    var filterArray = [
+        LABKEY.Filter.create('room/datedisabled', null, LABKEY.Filter.Types.ISBLANK)
+    ];
+
+    if (LABKEY.ActionURL.getParameter('area'))
+        filterArray.push(LABKEY.Filter.create('room/area', LABKEY.ActionURL.getParameterArray('area').join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
+
+    if (LABKEY.ActionURL.getParameter('building'))
+        filterArray.push(LABKEY.Filter.create('room/building', LABKEY.ActionURL.getParameterArray('building').join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
+
+    Ext4.create('ONPRC.panel.RoomLayoutPanel', {
+        doRowInversion: LABKEY.ActionURL.getParameter('doRowInversion'),
+        filterArray: filterArray
+    }).render(webpart.wrapperDivId);
+
+});
+
+</script>

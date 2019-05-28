@@ -1,0 +1,28 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+   <columns>
+       <column name="Id" />
+       <column name="date" />
+       <!--<column name="qcstate" />-->
+       <column name="project" />
+       <column name="project/protocol">
+            <properties>
+                <property name="columnTitle" value="Protocol"/>
+            </properties>
+       </column>
+       <column name="quantity" />
+       <column name="performedby" />
+       <column name="reason" />
+       <column name="remark" />
+       <column name="BloodRemaining/lastWeight"/>
+       <column name="BloodRemaining/allowableBlood"/>
+       <column name="BloodRemaining/previousBlood"/>
+       <column name="BloodRemaining/availableBlood"/>
+       <column name="BloodRemaining/minDate"/>
+       <column name="sampletype"/>
+       <column name="QCState"/>
+   </columns>
+   <sorts>
+       <sort column="date" descending="true"/>
+       <sort column="Id" descending="false"/>
+   </sorts>
+</customView>

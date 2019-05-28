@@ -1,0 +1,38 @@
+frequency	hourofday	timedescription
+BID - Two times a day	800	AM
+BID - Two times a day	2000	Night
+BID - AM/PM	800	AM
+BID - AM/PM	1500	PM
+BID - AM/Night	800	AM
+BID - AM/Night	2000	Night
+SID - Once a day	800	AM
+SID - AM	800	AM
+SID - PM	1500	PM
+SID - Night	2000	Night
+TID - Three times a day	800	AM
+TID - Three times a day	1200	Noon
+TID - Three times a day	1600	PM
+TID	800	AM
+TID	1200	Noon
+TID	1600	PM
+TID - AM/PM/Night	800	AM
+TID - AM/PM/Night	1400	PM
+TID - AM/PM/Night	2000	Night
+QID - Four times a day	800	AM
+QID - Four times a day	1200	Noon
+QID - Four times a day	1600	PM
+QID - Four times a day	2000	Night
+QID	800	AM
+QID	1200	Noon
+QID	1600	PM
+QID	2000	Night
+CON	800	AM
+Q2H	800	AM
+Q4H	800	AM
+Q6H	800	AM
+EOD - Every other Day	800	AM
+1/w - One per Week	800	AM
+Once every six months	800	AM
+Q1MO - Once a month	800	AM
+E3D - Every Three Days	800	AM
+EOW - Every other Week	800	AM

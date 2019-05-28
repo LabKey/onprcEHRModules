@@ -1,0 +1,15 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="flagDuplicates" tableDbType="TABLE">
+                <tableTitle>Animals With Duplicate Active Flags</tableTitle>
+                <columns>
+                    <column columnName="totalFlags">
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=flags&amp;query.isActive~eq=true&amp;query.Id~eq=${Id}&amp;query.flag/category~eq=${category}</url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

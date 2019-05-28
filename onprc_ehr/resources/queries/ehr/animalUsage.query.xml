@@ -1,0 +1,34 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="animalUsage" tableDbType="TABLE">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Allowable Animals By Protocol/Project</tableTitle>
+                <columns>
+                    <column columnName="totalAssignments">
+                        <columnTitle>Total Assignments</columnTitle>
+                        <!--<isHidden>true</isHidden>-->
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Clinical Encounters&amp;query.viewName=Surgeries&amp;query.project/protocol~eq=${protocol}&amp;query.date~dategte=${date}&amp;query.date~datelte=${enddate}&amp;query.procedureid~eq=${procedureid}</url>
+                    </column>
+                    <column columnName="totalAnimals">
+                        <columnTitle>Distinct Animals Assigned Over Interval</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;
+                            query.queryName=assignmentOverlapsById&amp;
+                            query.param.protocol=${protocol/displayName}&amp;
+                            query.param.project=${project/displayName}&amp;
+                            query.param.StartDate=${start}&amp;
+                            query.param.EndDate=${enddate}
+                        </url>
+                    </column>
+                    <column columnName="pctUsed">
+                        <columnTitle>Percent Used</columnTitle>
+                        <formatString>0.##</formatString>
+                    </column>
+                    <column columnName="container">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -1,0 +1,37 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+   <columns>
+       <column name="Id" />
+       <column name="Id/demographics/gender" />
+       <column name="Id/demographics/species" />
+       <column name="Id/demographics/geographic_origin" />
+       <column name="startDate" />
+       <!--<column name="projects" />-->
+       <!--<column name="projectTitles" />-->
+       <column name="utilization" />
+       <!--<column name="investigators" />-->
+       <!--<column name="divisions" />-->
+       <column name="totalAssignments" />
+       <!--<column name="totalResearchAssignments"/>-->
+       <column name="isCaged"/>
+       <column name="isP51" />
+       <column name="isU42" />
+       <column name="isU24" />
+       <column name="spfStatus" />
+       <column name="isInfant" />
+       <column name="isBreedingMale" />
+       <column name="isBreedingFemale" />
+       <column name="isJuvenille" />
+   </columns>
+   <sorts>
+       <sort column="Id"/>
+   </sorts>
+    <aggregates>
+        <aggregate column="isP51" type="SUM"/>
+        <aggregate column="isU42" type="SUM"/>
+        <aggregate column="isU24" type="SUM"/>
+        <aggregate column="isInfant" type="SUM"/>
+        <aggregate column="isBreedingMale" type="SUM"/>
+        <aggregate column="isBreedingFemale" type="SUM"/>
+        <aggregate column="isJuvenille" type="SUM"/>
+    </aggregates>
+</customView>

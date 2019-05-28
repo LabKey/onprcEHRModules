@@ -1,0 +1,109 @@
+<script type="text/javascript">
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        /* get the participant id from the request URL: this parameter is required. */
+        var subjectIds = LABKEY.ActionURL.getParameter('subjectIds');
+        subjectIds = subjectIds ? subjectIds.split(';') : [];
+
+        Ext4.create('Ext.panel.Panel', {
+            width: 400,
+            border: false,
+            defaults: {
+                labelWidth: 180
+            },
+            items: [{
+                xtype: 'textarea',
+                width: 400,
+                height: 200,
+                fieldLabel: 'Enter Animal Id(s)',
+                itemId: 'animalField'
+            },{
+                //Modified 11-18-2016 R.Blasa
+                xtype: 'datefield',
+                fieldLabel: 'Starting Date',
+                itemId: 'minDate',
+                labelWidth: 80,
+                width: 200
+//                value: this.minDate
+            },{
+
+                xtype: 'datefield',
+                fieldLabel: 'Ending Date',
+                itemId: 'maxDate',
+                labelWidth: 80,
+                width: 200,
+                value: new Date()
+            },{
+
+                xtype: 'checkbox',
+                fieldLabel: 'Show Snapshot Only',
+                itemId: 'hideHistory'
+            },{
+                xtype: 'checkbox',
+                fieldLabel: 'Redact Information',
+                itemId: 'redacted'
+            }],
+            buttons: [{
+                text: 'Submit',
+                scope: this,
+                handler: function(btn){
+                    var val = btn.up('panel').down('#animalField').getValue();
+                    var redacted = btn.up('panel').down('#redacted').getValue();
+                    var hideHistory = btn.up('panel').down('#hideHistory').getValue();
+
+                    //Modified: 11-18-2016 R.Blasa
+                    var mindate1 = btn.up('panel').down('#minDate').getValue();
+                    var maxdate1 = btn.up('panel').down('#maxDate').getValue();
+
+
+
+                    if (val){
+                        val = Ext4.String.trim(val);
+                        val = val.replace(/[\s,;]+/g, ';');
+                        val = val.replace(/(^;|;$)/g, '');
+
+                        val = val ? val.split(';') : [];
+                    }
+
+                    if (!val){
+                        Ext4.Msg.alert('Error', 'Must enter at least one animal Id');
+                        return;
+                    }
+
+                    if (!hideHistory){
+                        var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                        var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                        ssrsFolder = '/' + ssrsFolder  + '/' + 'SalesMedicalHistoryReport';
+
+                        url += ssrsFolder + '&' + LABKEY.ActionURL.queryString({
+                            SessionID: LABKEY.Utils.getSessionID(),
+                            HostName: location.hostname,
+                            'rs:ClearSession': true,
+                            Redacted: redacted ? 'true' : 'false',
+                            AnimalId: val,
+                            minDate: mindate1.format('Y-m-d'),      //Added: 11-18-2016 R.Blasa
+                            maxDate: maxdate1.format('Y-m-d')
+                        });
+
+                        //url += '&rs:Format=PDF'
+                        window.location = url;
+                    }
+                    else {
+                        window.location = LABKEY.ActionURL.buildURL('ehr', 'clinicalHistoryExport', null, {
+                            subjectId: val,
+                            sortMode: 'type',
+                            redacted: redacted,
+                            hideGridButtons: true,
+                            hideHistory: hideHistory
+
+                        });
+                    }
+                }
+            }]
+        }).render(webpart.wrapperDivId);
+    });
+</script>

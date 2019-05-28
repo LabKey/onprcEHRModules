@@ -1,0 +1,43 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="animalGroupProblemData" tableDbType="TABLE">
+                <tableTitle>Morbidity and Mortality For Animal Group Members</tableTitle>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <columns>
+                    <column columnName="lsid">
+                        <isHidden>true</isHidden>
+                        <isKeyField>true</isKeyField>
+                    </column>
+                    <column columnName="date">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="StartDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="EndDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="problemId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="totalGroupAssignments">
+                        <columnTitle>Total Assignments To This Group</columnTitle>
+                    </column>
+                    <column columnName="minDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="maxDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="totalIdsInGroup">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+                <buttonBarOptions includeStandardButtons="true">
+                    <includeScript>ehr.context</includeScript>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -1,0 +1,16 @@
+value	sort_order
+F	1
+F/M	2
+F/M/L	3
+M	4
+M/F	4
+M/F/L	5
+M/L	6
+M/L/F	7
+L/M/F	8
+L/M	9
+L	10
+Pelleted	11
+Scant	12
+None	13
+Unknown	14

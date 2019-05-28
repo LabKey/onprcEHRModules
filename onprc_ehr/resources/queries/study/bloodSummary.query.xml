@@ -1,0 +1,41 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="bloodSummary" tableDbType="NOT_IN_DB">
+                <tableTitle>Blood Volume Summary</tableTitle>
+                <columns>
+                    <column columnName="Lsid">
+                        <isKeyField>true</isKeyField>
+                        <!--<isHidden>true</isHidden>-->
+                    </column>
+                    <column columnName="previousBlood">
+                        <columnTitle>Drawn in Previous 21 Days (inclusive)</columnTitle>
+                        <formatString>#.##</formatString>
+                    </column>
+                    <column columnName="previousBloodWithoutPending">
+                        <columnTitle>Drawn in Previous 21 Days (including without non-approved requests)</columnTitle>
+                        <formatString>#.##</formatString>
+                    </column>
+                    <column columnName="lastWeight">
+                        <columnTitle>Latest Weight For This Draw</columnTitle>
+                        <formatString>#.##</formatString>
+                    </column>
+                    <column columnName="lastWeightDate">
+                        <columnTitle>Date of Last Weight For This Draw</columnTitle>
+                    </column>
+                    <column columnName="allowableBlood">
+                        <columnTitle>Max Allowable Blood Based On Weight</columnTitle>
+                        <formatString>#.##</formatString>
+                    </column>
+                    <column columnName="availableBlood">
+                        <columnTitle>Blood Volume Available After Draw</columnTitle>
+                        <formatString>#.##</formatString>
+                    </column>
+                    <column columnName="minDate">
+                        <columnTitle>Earliest Blood Draw Considered</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

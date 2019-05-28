@@ -1,0 +1,26 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="roomsByProject" tableDbType="TABLE">
+                <tableTitle>Assignment Summary By Project</tableTitle>
+                <columns>
+                    <column columnName="room">
+                        <isKeyField>true</isKeyField>
+                        <displayWidth>40</displayWidth>
+                    </column>
+                    <column columnName="totalAnimals">
+                        <columnTitle>Total Animals</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=demographics&amp;
+                            query.viewName=By Location&amp;
+                            query.id/curLocation/room~eq=${room}&amp;
+                            query.id/activeAssignments/projects~contains=${project/displayName}&amp;
+                            query.id/activeAssignments/investigators~contains=${investigatorId/lastname}
+                        </url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

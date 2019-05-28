@@ -1,0 +1,6 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="ONPRC Labs">
+   <view name="labsPage"/>
+   <locations>
+		<location name="body"/>
+   </locations>    
+</webpart>

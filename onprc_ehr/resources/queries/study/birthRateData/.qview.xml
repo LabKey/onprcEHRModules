@@ -1,0 +1,18 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="Id/demographics/species"/>
+        <column name="Id/demographics/gender"/>
+        <column name="Id/demographics/birth"/>
+        <column name="birthRoom"/>
+        <column name="birthRoomType"/>
+        <column name="Id/dataset/birth/cond" />
+        <column name="Id/dataset/birth/type" />
+        <column name="Id/demographics/death"/>
+        <column name="Id/dataset/birth/survivorship/survivorshipInDays" />
+        <column name="Id/dataset/deaths/cause"/>
+    </columns>
+   <sorts>
+       <sort column="Id"/>
+   </sorts>
+</customView>

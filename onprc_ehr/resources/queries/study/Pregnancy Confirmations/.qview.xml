@@ -1,0 +1,20 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="daysElapsed"/>
+        <column name="sire"/>
+        <column name="estDeliveryDate"/>
+        <column name="confirmationType"/>
+        <column name="gestation_days"/>
+        <column name="outcome/births"/>
+        <column name="outcome/offspring"/>
+        <column name="outcome/birthDate"/>
+        <column name="outcome/birthCondition"/>
+        <column name="remark"/>
+        <column name="performedby"/>
+    </columns>
+    <sorts>
+        <sort column="date" descending="true"/>
+    </sorts>
+</customView>

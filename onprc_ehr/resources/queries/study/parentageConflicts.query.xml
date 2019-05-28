@@ -1,0 +1,31 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="parentageConflicts" tableDbType="TABLE">
+                <tableTitle>Parentage Conflicts</tableTitle>
+                <columns>
+                    <column columnName="parents">
+                        <columnTitle>Parent(s)</columnTitle>
+                    </column>
+                    <column columnName="relationship">
+                        <columnTitle>Relationship</columnTitle>
+                    </column>
+                    <column columnName="method">
+                        <columnTitle>Method(s)</columnTitle>
+                    </column>
+                    <column columnName="totalRecords">
+                        <columnTitle>Total Records</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;
+                            query.queryName=Parentage&amp;
+                            query.Id~eq=${Id}&amp;
+                            query.relationship~eq=${relationship}&amp;
+                            query.relationship~neq=Foster Dam&amp;
+                            query.enddate~isblank&amp;
+                            query.relationship~neq=Surrogate Dam
+                        </url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -1,0 +1,103 @@
+<script type="text/javascript">
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        Ext4.define('EHR.panel.VetReviewPanel', {
+            extend: 'Ext.panel.Panel',
+
+            initComponent: function(){
+                Ext4.apply(this, {
+                    itemId: 'outerPanel',
+                    border: false,
+                    defaults: {
+                        border: false
+                    },
+                    items: [{
+                        width: 1000,
+                        items: [{
+                            html: 'This is designed to show any SOAPs entered for a given animal since the last date a vet review was entered.  ' +
+                                'Most of these notes will pertain to open cases, but this is not necessarily the case.<p>' +
+                                'Each animal is assigned to a vet, using a series of rules.  Vets can be assigned to either an IACUC protocol, an area, or a room.  ' +
+                                'To determine the assigned vet for each animal, the vet is preferentially selected based on IACUC assignment, then by room, and finally by area.  ' +
+                                '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'demographicsAssignedVet', 'query.Id/demographics/calculated_status~eq': 'Alive'}) + '">Click here to view a list of vets assigned to living animals</a></li>' +
+                                '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_ehr', 'query.queryName': 'vet_assignment_summary'}) + '">Click here to view the rules governing vet assignment</a></li>',
+                            style: 'padding-bottom: 20px;',
+                            border: false
+                        },{
+                            layout: 'hbox',
+                            border: false,
+                            items: [{
+                                xtype: 'ehr-vetfieldcombo',
+                                width: 400,
+                                fieldLabel: 'Choose Vet (blank for all)',
+                                itemId: 'userField'
+                            },{
+                                xtype: 'button',
+                                style: 'margin-left: 10px;margin-top: 4px;',
+                                text: 'Submit',
+                                scope: this,
+                                handler: function(btn){
+                                    var panel = btn.up('#outerPanel');
+                                    var userName = panel.down('#userField').getDisplayValue();
+                                    var filterArray = [];
+                                    filterArray.push(LABKEY.Filter.create('totalRemarksEnteredSinceReview', 0, LABKEY.Filter.Types.GT));
+
+                                    if (userName){
+                                        filterArray.push(LABKEY.Filter.create('Id/assignedVet/assignedVet', userName, LABKEY.Filter.Types.CONTAINS));
+                                    }
+
+                                    var target = panel.down('#targetPanel');
+                                    target.removeAll();
+                                    target.add({
+                                        xtype: 'ldk-querypanel',
+                                        queryConfig: {
+                                            schemaName: 'study',
+                                            queryName: 'demographics',
+                                            viewName: 'Vet Review',
+                                            filterArray: filterArray,
+                                            scope: this,
+                                            success: function(dr){
+                                                var itemWidth = Ext4.get(dr.domId).getSize().width + 150;
+                                                this.doResize(itemWidth);
+                                            }
+                                        }
+                                    });
+                                }
+                            }]
+                        }]
+                    },{
+                        itemId: 'targetPanel',
+                        style: 'padding-top: 20px'
+                    }]
+                });
+
+                this.callParent(arguments);
+
+                this.on('afterrender', function(panel){
+                    this.originalWidth = Math.max(this.getWidth(), Ext4.getBody().getWidth());
+                }, this);
+            },
+
+            doResize: function(itemWidth){
+                var width2 = this.getWidth();
+                if (itemWidth > width2){
+                    this.setWidth(itemWidth);
+                    this.doLayout();
+                }
+                else if (itemWidth < width2) {
+                    if (this.originalWidth && width2 != this.originalWidth){
+                        this.setWidth(Math.max(this.originalWidth, itemWidth));
+                        this.doLayout();
+                    }
+                }
+            }
+        });
+
+        Ext4.create('EHR.panel.VetReviewPanel', {
+
+        }).render(webpart.wrapperDivId);
+    });
+</script>

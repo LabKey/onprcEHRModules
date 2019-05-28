@@ -1,0 +1,20 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="tissue"/>
+        <!--<column name="tissueCondition"/>-->
+        <column name="qualifier"/>
+        <column name="preparation"/>
+        <column name="quantity"/>
+        <column name="weight"/>
+        <column name="QCState"/>
+        <column name="taskid"/>
+    </columns>
+   <sorts>
+       <sort column="date" descending="true"/>
+   </sorts>
+  <!--<filters>-->
+      <!--<filter column="qcstate/publicdata" operator="eq" value="true"/>-->
+  <!--</filters>-->
+</customView>

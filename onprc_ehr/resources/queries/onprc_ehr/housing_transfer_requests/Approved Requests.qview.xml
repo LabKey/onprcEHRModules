@@ -1,0 +1,10 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <sorts>
+        <sort column="date" descending="true"/>
+        <sort column="room" />
+        <sort column="cage" />
+    </sorts>
+    <filters>
+        <filter column="QCState/Label" operator="eq" value="Request: Approved"/>
+    </filters>
+</customView>

@@ -1,0 +1,71 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="histology" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
+                <insertUrl />
+                <importUrl />
+                <updateUrl />
+                <deleteUrl />
+                <columns>
+                    <column columnName="Id"/>
+                    <column columnName="date">
+                        <columnTitle>Date</columnTitle>
+                        <nullable>false</nullable>
+                        <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                    </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="slideNum">
+                        <columnTitle>Slide Number</columnTitle>
+                    </column>
+                    <column columnName="sort_order">
+                        <columnTitle>Sort Order</columnTitle>
+                    </column>
+                    <column columnName="tissue">
+                        <columnTitle>Organ/Tissue</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>snomed</fkTable>
+                            <fkColumnName>code</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="qualifier">
+                        <columnTitle>Qualifier</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>snomed_qualifiers</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="stain">
+                        <columnTitle>Stain</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>histology_stain</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="remark">
+                        <displayWidth>110</displayWidth>
+                        <columnTitle>Diagnosis</columnTitle>
+                        <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
+                        <inputType>textarea</inputType>
+                    </column>
+                    <column columnName="objectid">
+                        <columnTitle>Key</columnTitle>
+                        <shownInInsertView>false</shownInInsertView>
+                        <shownInUpdateView>false</shownInUpdateView>
+                        <shownInDetailsView>false</shownInDetailsView>
+                        <isHidden>true</isHidden>
+                        <!--<isAutoInc>true</isAutoInc>-->
+                        <!--<isKeyField>true</isKeyField>-->
+                    </column>
+                </columns>
+                <tableTitle>Histology</tableTitle>
+                <description>Histology</description>
+            </table>
+        </tables>
+    </metadata>
+</query>

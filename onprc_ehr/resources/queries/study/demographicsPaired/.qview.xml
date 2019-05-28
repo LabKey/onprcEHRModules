@@ -1,0 +1,40 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="false">
+    <columns>
+        <column name="Id/curLocation/area">
+            <properties>
+                <property name="columnTitle" value="Area"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/room">
+            <properties>
+                <property name="columnTitle" value="Room"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/cage">
+            <properties>
+                <property name="columnTitle" value="Cage"/>
+            </properties>
+        </column>
+        <column name="Id"/>
+        <column name="total"/>
+        <column name="Id/dataset/demographics/gender"/>
+        <column name="Id/dataset/demographics/species"/>
+        <column name="Id/activeAssignments/projects">
+            <properties>
+                <property name="columnTitle" value="Active Assignments"/>
+            </properties>
+        </column>
+        <column name="Id/activeAssignments/investigators">
+            <properties>
+                <property name="columnTitle" value="Investigators"/>
+            </properties>
+        </column>
+        <column name="Id/age/yearAndDays"/>
+        <column name="category"/>
+        <column name="housingType"/>
+    </columns>
+    <sorts>
+        <sort column="Id/curLocation/room"/>
+        <sort column="Id/curLocation/cage"/>
+    </sorts>
+</customView>

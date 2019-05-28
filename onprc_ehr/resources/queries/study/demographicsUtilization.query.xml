@@ -1,0 +1,21 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsUtilization" tableDbType="NOT_IN_DB">
+                <tableTitle>Utilization</tableTitle>
+                <columns>
+                    <column columnName="use">
+                        <columnTitle>Projects and Groups</columnTitle>
+                        <displayWidth>180</displayWidth>
+                    </column>
+                    <column columnName="usageCategories">
+                        <columnTitle>Usage Categories</columnTitle>
+                    </column>
+                    <column columnName="fundingCategories">
+                        <columnTitle>Funding Categories</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

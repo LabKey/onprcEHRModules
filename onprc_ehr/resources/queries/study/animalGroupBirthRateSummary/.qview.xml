@@ -1,0 +1,14 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <sorts>
+        <sort column="groupId/name"/>
+    </sorts>
+    <aggregates>
+        <aggregate column="totalIds" label="Total" type="SUM"/>
+        <aggregate column="totalBornDead" label="Total" type="SUM"/>
+        <aggregate column="totalDiedBefore180Days" label="Total" type="SUM"/>
+        <aggregate column="totalDiedBeforeOneYear" label="Total" type="SUM"/>
+        <aggregate column="totalUnder180DaysOld" label="Total" type="SUM"/>
+        <aggregate column="totalUnderOneYrOld" label="Total" type="SUM"/>
+        <aggregate column="totalSurvivedOneYear" label="Total" type="SUM"/>
+    </aggregates>
+</customView>

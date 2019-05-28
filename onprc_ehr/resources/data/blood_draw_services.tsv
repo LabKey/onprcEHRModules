@@ -1,0 +1,10 @@
+service	automaticrequestfromblooddraw	requiredtubetype	minvolume	labwork_service	formtype
+CBC with automated differential	false	EDTA	0.5	CBC with automated differential	Labwork Request
+Comprehensive Chemistry panel in-house	false		1	Comprehensive Chemistry panel in-house	Labwork Request
+MHC Typing	false		2		
+Viral Load	false		1		
+SPF Surveillance - Annual	false	No Additive	4	SPF Surveillance - Annual	Labwork Request
+ESPF Surveillance - Monthly	false	No Additive	4	ESPF Surveillance - Monthly	Labwork Request
+ESPF Surveillance - Quarterly	false	No Additive	4	ESPF Surveillance - Quarterly	Labwork Request
+Japanese Macaque Surveillance	false	No Additive	4	Japanese Macaque Surveillance	Labwork Request
+Compromised SPF Surveillance	false	No Additive	4	Compromised SPF Surveillance	Labwork Request

@@ -1,0 +1,21 @@
+category	enforceUnique	omitFromOverview	doHighlight
+Alert	false	false	true
+Assign Alias	true	false	true
+ATG	false	false	false
+BSU	false	false	false
+Cage Exemptions	false	false	false
+Candidate	false	false	false
+Condition	true	false	false
+Flag	false	false	false
+Genetics	false	true	false
+PTG	false	false	false
+SPF	true	false	false
+TB	false	false	false
+TMB	false	false	false
+Clinical	false	false	false
+Group 2011	false	false	false
+Housing Tier	false	false	false
+NHPR Note	false	false	false
+Origin	false	false	false
+Repro Note	false	false	false
+Surveillance	false	false	false

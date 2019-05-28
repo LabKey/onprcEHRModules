@@ -1,0 +1,10 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="pairedCageSummary" tableDbType="TABLE">
+                <tableTitle>Paired Cage Summary</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

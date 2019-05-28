@@ -1,0 +1,7 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="EHR Help">
+   <view name="help"/>
+   <locations>
+		<location name="right"/>
+		<location name="menu"/>
+   </locations>    
+</webpart>

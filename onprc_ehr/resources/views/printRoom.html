@@ -1,0 +1,72 @@
+<style type="text/css">
+    @media print{
+        @page {
+            size: landscape;
+        }
+    }
+
+    @page {
+        size: landscape;
+    }
+
+</style>
+<script type="text/javascript">
+
+    Ext4.onReady(function (){
+        if (!LABKEY.ActionURL.getParameter('area') && !LABKEY.ActionURL.getParameter('rooms') && !LABKEY.ActionURL.getParameter('building')){
+            alert('Must Provide The Area, Building or Room Name'); return false;
+        }
+
+        var webpart = <%=webpartContext%>;
+        var filterArray = [LABKEY.Filter.create('room/datedisabled', null, LABKEY.Filter.Types.ISBLANK)];
+
+        //preferentially use room over area if both provided
+        if (LABKEY.ActionURL.getParameter('rooms') != null){
+            filterArray.push(LABKEY.Filter.create('room', LABKEY.ActionURL.getParameterArray('rooms').join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
+        }
+        else if (LABKEY.ActionURL.getParameter('area') != null){
+            filterArray.push(LABKEY.Filter.create('room/area', LABKEY.ActionURL.getParameterArray('area').join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
+        }
+        else if (LABKEY.ActionURL.getParameter('building') != null){
+            filterArray.push(LABKEY.Filter.create('room/building', LABKEY.ActionURL.getParameterArray('building').join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
+        }
+
+        Ext4.Msg.wait('Loading...');
+
+        ONPRC.panel.RoomLayoutPanel.getPanelSections(filterArray, function(ret){
+            Ext4.Msg.hide();
+
+            Ext4.apply(ret, {
+                showAnimalDetails: Ext4.data.Types.BOOLEAN.convert(LABKEY.ActionURL.getParameter('showAnimalDetails')),
+                doRowInversion: Ext4.data.Types.BOOLEAN.convert(LABKEY.ActionURL.getParameter('doRowInversion')),
+                printMode: 1
+            });
+
+            var roomConfigs = ONPRC.panel.RoomLayoutPanel.getRoomItems(ret);
+            var foundCages = false;
+            Ext4.Array.each(roomConfigs, function(section, idx){
+                if (section && section.items && section.items.length){
+                    var target = Ext4.get(webpart.wrapperDivId).createChild({tag: 'div', cls: (idx+1 < roomConfigs.length ? 'page-break' : null)});
+                    foundCages = true;
+                    Ext4.create('Ext.panel.Panel', {
+                        border: false,
+                        defaults: {
+                            border: false
+                        },
+                        items: section
+                    }).render(target.id);
+                }
+            }, this);
+
+            if (!foundCages){
+                Ext4.Msg.alert('No Cages', 'No cages found for the selected rooms');
+            }
+            else {
+                // Hack to improve printing in Chrome
+                if (Ext4.isChrome) { Ext4.get(webpart.wrapperDivId).setStyle({zoom: '150%'}); };
+            }
+
+        }, this);
+    });
+
+</script>

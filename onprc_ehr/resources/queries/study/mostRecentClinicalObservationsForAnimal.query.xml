@@ -1,0 +1,27 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="mostRecentClinicalObservationsForAnimal" tableDbType="TABLE">
+                <tableTitle>Most Recent Observations For Animal</tableTitle>
+                <titleColumn>observations</titleColumn>
+                <columns>
+                    <column columnName="Id">
+                        <isKeyField>true</isKeyField>
+                    </column>
+                    <column columnName="observations">
+                        <columnTitle>Latest Observations</columnTitle>
+                        <displayColumnFactory>
+                            <className>org.labkey.onprc_ehr.table.ObservationDisplayColumnFactory</className>
+                        </displayColumnFactory>
+                     </column>
+
+                    <column columnName="date">
+                        <columnTitle>Observation Date</columnTitle>
+                        <formatString>Date</formatString>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

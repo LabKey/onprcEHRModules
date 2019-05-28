@@ -1,0 +1,18 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="taskId"/>
+        <column name="taskId/formtype"/>
+        <column name="sedation"/>
+        <column name="areas"/>
+        <column name="performedby"/>
+        <column name="Alopecia Score::observation"/>
+        <column name="Alopecia Type::observation"/>
+        <column name="Alopecia Regrowth::observation"/>
+    </columns>
+    <sorts>
+        <sort column="Id"/>
+        <sort column="date" descending="true"/>
+    </sorts>
+</customView>

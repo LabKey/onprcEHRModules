@@ -1,0 +1,94 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="pairings" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
+                <insertUrl />
+                <importUrl />
+                <updateUrl />
+                <deleteUrl />
+                <columns>
+                    <column columnName="Id">
+
+                    </column>
+                    <column columnName="date">
+
+                    </column>
+                    <column columnName="lowestcage">
+                        <columnTitle>Pair Id</columnTitle>
+                        <description>This is used to identify the lowest cage number of the pair.  It is used to determine which animals in the group are considered part of the pair.</description>
+                    </column>
+                    <column columnName="pairid">
+                        <columnTitle>Pair ID</columnTitle>
+                        <isHidden>true</isHidden>
+                        <description>This field is used to differentiate pairs.  By convention is should usually be the lowest cage number in the group; however, it does not need to match this</description>
+                    </column>
+                    <column columnName="room">
+                        <columnTitle>Room</columnTitle>
+                    </column>
+                    <column columnName="cage">
+                        <columnTitle>Cage</columnTitle>
+                    </column>
+                    <column columnName="eventtype">
+                        <columnTitle>Event Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingEventType</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="housingtype">
+                        <isHidden>true</isHidden>
+                        <columnTitle>Housing Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingHousingType</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="goal">
+                        <columnTitle>Pair Goal</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingGoal</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="outcome">
+                        <columnTitle>Pair Outcome</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingOutcome</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="observation">
+                        <columnTitle>Observation</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingObservation</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="separationreason">
+                        <columnTitle>Separation Reason</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingSeparationReason</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="remark">
+                        <columnTitle>Remark</columnTitle>
+                    </column>
+                    <column columnName="performedby">
+                        <columnTitle>Performed By</columnTitle>
+                    </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

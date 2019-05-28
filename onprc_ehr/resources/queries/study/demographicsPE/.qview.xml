@@ -1,0 +1,43 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="false">
+    <columns>
+        <column name="Id/curLocation/area">
+            <properties>
+                <property name="columnTitle" value="Area"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/room">
+            <properties>
+                <property name="columnTitle" value="Room"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/cage">
+            <properties>
+                <property name="columnTitle" value="Cage"/>
+            </properties>
+        </column>
+        <column name="Id"/>
+        <column name="Id/dataset/demographics/species"/>
+        <column name="Id/dataset/demographics/gender"/>
+        <column name="Id/utilization/use"/>
+        <column name="AgeInYears"/>
+        <column name="Id/MostRecentWeight/MostRecentWeight">
+            <properties>
+                <property name="columnTitle" value="Current Weight (kg)"/>
+            </properties>
+        </column>
+        <column name="Id/MostRecentWeight/MostRecentWeightDate">
+            <properties>
+                <property name="columnTitle" value="Weight Date"/>
+            </properties>
+        </column>
+        <column name="lastdate"/>
+        <column name="daysUntilNextExam"/>
+        <column name="Id/labworkHistory/lastHematologyDate"/>
+        <column name="Id/labworkHistory/lastBiochemistryDate"/>
+        <column name="Id/currentCondition/condition"/>
+    </columns>
+    <sorts>
+        <sort column="Id/curLocation/room"/>
+        <sort column="Id/curLocation/cage"/>
+    </sorts>
+</customView>

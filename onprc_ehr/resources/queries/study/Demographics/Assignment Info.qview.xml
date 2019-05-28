@@ -1,0 +1,56 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="false">
+    <columns>
+        <column name="Id"/>
+        <!--<column name="Id/curLocation/room">-->
+            <!--<properties>-->
+                <!--<property name="columnTitle" value="Room"/>-->
+            <!--</properties>-->
+        <!--</column>-->
+        <!--<column name="Id/curLocation/cage">-->
+            <!--<properties>-->
+                <!--<property name="columnTitle" value="Cage"/>-->
+            <!--</properties>-->
+        <!--</column>-->
+        <column name="species"/>
+        <column name="geographic_origin"/>
+        <column name="gender"/>
+        <column name="Id/age/ageInYears">
+            <properties>
+                <property name="columnTitle" value="Age"/>
+            </properties>
+        </column>
+        <column name="Id/currentCondition/condition"/>
+        <column name="Id/spfStatus/status">
+            <properties>
+                <property name="columnTitle" value="SPF Status"/>
+            </properties>
+        </column>
+        <column name="Id/activeAssignments/projectAndInvestigator">
+            <properties>
+                <property name="columnTitle" value="Project(s)"/>
+            </properties>
+        </column>
+        <column name="Id/activeAssignments/numResearchAssignments"/>
+        <column name="Id/MostRecentWeight/MostRecentWeight">
+            <properties>
+                <property name="columnTitle" value="Current Weight (kg)"/>
+            </properties>
+        </column>
+        <column name="Id/MostRecentWeight/DaysSinceWeight">
+            <properties>
+                <property name="columnTitle" value="Days Since Weight"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/area"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
+        <column name="Id/activeNoteList/notes"/>
+        <column name="history"/>
+    </columns>
+    <filters>
+        <filter column="calculated_status" operator="eq" value="Alive"/>
+    </filters>
+    <sorts>
+        <sort column="Id" descending="false"/>
+    </sorts>
+</customView>

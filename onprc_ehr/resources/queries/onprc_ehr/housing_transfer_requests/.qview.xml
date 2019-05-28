@@ -1,0 +1,32 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Requests">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="Id/curLocation/room">
+            <properties>
+                <property name="columnTitle" value="Current Room"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/cage">
+            <properties>
+                <property name="columnTitle" value="Current Cage"/>
+            </properties>
+        </column>
+        <column name="room/area">
+            <properties>
+                <property name="columnTitle" value="Destination Area"/>
+            </properties>
+        </column>
+        <column name="room"/>
+        <column name="cage"/>
+        <column name="reason"/>
+        <column name="remark"/>
+        <column name="existingAnimals"/>
+        <column name="QCState"/>
+    </columns>
+    <sorts>
+        <sort column="date" descending="true"/>
+        <sort column="room" />
+        <sort column="cage" />
+    </sorts>
+</customView>

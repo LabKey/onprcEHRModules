@@ -1,0 +1,59 @@
+<script type="text/javascript">
+
+Ext4.onReady(function (){
+    var webpart = <%=webpartContext%>;
+
+    Ext4.create('LDK.panel.NavPanel', {
+        renderTo: webpart.wrapperDivId,
+        width: '100%',
+        sections: [{
+            header: 'Admin',
+            items: [
+                {name: 'Genetics Calculations', url: '<%=contextPath%>/ehr<%=containerPath%>/geneticCalculationSettings.view?'},
+                {name: 'Manage EHR Study', url: '<%=contextPath%>/study<%=containerPath%>/manageStudy.view?'},
+                {name: 'Populate Initial Data', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/populateData.view?'},
+                {name: 'Populate Templates', url: '<%=contextPath%>/onprc_ehr<%=containerPath%>/populateTemplates.view?'},
+                {name: 'Record Delete Settings', url: '<%=contextPath%>/ehr<%=containerPath%>/recordDeleteSettings.view?'},
+                {name: 'Run Custom SQL', url: '<%=contextPath%>/ldk<%=containerPath%>/runCustomSql.view?schemaName=study'},
+                {name: 'Set EHR Module Properties', url: '<%=contextPath%>/core<%=containerPath%>/modulePropertyAdmin.view?moduleName=EHR'},
+                {name: 'Update Dataset Properties and Indexes', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureDatasetProperties.view?'},
+                {name: 'Update Study QCStates', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureQCStates.view?'},
+                {name: 'Verify Dataset Resources', url: '<%=contextPath%>/ehr<%=containerPath%>/verifyDatasetResources.view?'},
+                {name: 'Verify Dataset Columns', url: '<%=contextPath%>/ehr<%=containerPath%>/validateDataSetCols.view?'},
+                {name: 'Verify EHR Schema Indexes Are Compressed', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureEHRSchemaIndexes.view?'},
+                {name: 'Cache Demographics On All Living Animals', url: '<%=contextPath%>/ehr<%=containerPath%>/cacheLivingAnimals.view?'},
+                {name: 'Prime/Refresh Data Entry Cache', url: '<%=contextPath%>/ehr<%=containerPath%>/primeDataEntryCache.view?'}
+            ]
+        },{
+            header: 'Logs',
+            items: [
+                {name: 'Labkey.log', url: '<%=contextPath%>/admin/showPrimaryLog.view'},
+                {name: 'Labkey-errors.log', url: '<%=contextPath%>/admin/showAllErrors.view'},
+                {name: 'ETL Log', url: '<%=contextPath%>/onprc_ehr/showEtlLog.view'}
+            ]
+        },{
+            header: 'Notifications',
+            items: [
+                {name: 'Notification Admin', url: '<%=contextPath%>/ldk<%=containerPath%>/notificationAdmin.view?'}
+            ]
+        },{
+            header: 'Associated Servers',
+            items: [
+                {name: 'ActiveMQ Queue: Production App Server', url: 'http://prime.ohsu.edu:8161/admin/queues.jsp'},
+                {name: 'ActiveMQ Queue: Test/Training App Server', url: 'http://prime-test.ohsu.edu:8161/admin/queues.jsp'},
+
+                {name: 'Monit: Production App Server', url: 'http://prime.ohsu.edu:2812/'},
+                {name: 'Monit: Production Pipeline Server', url: 'http://prc-labkey2.ohsu.edu:2812/'},
+                {name: 'Monit: Test/Training App Server', url: 'http://prime-test.ohsu.edu:2812/'},
+                {name: 'Monit: Test/Training Pipeline Server', url: 'http://prc-labkey4.ohsu.edu:2812/'},
+
+                {name: 'Munin: Production App Server', url: 'http://prime.ohsu.edu:8449/'},
+                {name: 'Munin: Production Pipeline Server', url: 'http://prc-labkey2.ohsu.edu:8449/'},
+                {name: 'Munin: Test/Training App Server', url: 'http://prime-test.ohsu.edu:8449/'},
+                {name: 'Munin: Test/Training Pipeline Server', url: 'http://prc-labkey4.ohsu.edu:8449/'}
+            ]
+        }]
+    });
+});
+
+</script>

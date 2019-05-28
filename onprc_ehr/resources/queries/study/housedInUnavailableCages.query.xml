@@ -1,0 +1,9 @@
+    <query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="housedInUnavailableCages" tableDbType="TABLE">
+                <tableTitle>Animals Housed In Unavailable Cages</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>

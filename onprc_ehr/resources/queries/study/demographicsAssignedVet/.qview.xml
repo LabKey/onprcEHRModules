@@ -1,0 +1,16 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="Id/demographics/calculated_status"/>
+        <column name="Id/curLocation/room/area"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
+        <column name="Id/utilization/use"/>
+        <column name="assignedVet"/>
+        <column name="assignmentType"/>
+        <column name="protocols"/>
+        <column name="areas"/>
+        <column name="rooms"/>
+        <column name="Id/demographics/history"/>
+    </columns>
+</customView>

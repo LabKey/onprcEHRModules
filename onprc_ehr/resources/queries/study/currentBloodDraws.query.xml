@@ -1,0 +1,38 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="currentBloodDraws" tableDbType="TABLE">
+                <tableTitle>Current Blood Draws</tableTitle>
+                <columns>
+                    <column columnName="mostRecentWeight">
+                        <formatString>0.##</formatString>
+                    </column>
+                    <column columnName="maxAllowableBlood">
+                        <formatString>0.##</formatString>
+                        <columnTitle>Maximum allowable blood</columnTitle>
+                    </column>
+                    <column columnName="bloodPrevious">
+                        <formatString>0.##</formatString>
+                        <columnTitle>Blood drawn over interval, looking backwards</columnTitle>
+                    </column>
+                    <column columnName="allowablePrevious">
+                        <formatString>0.##</formatString>
+                        <columnTitle>Max allowable blood, accounting for previous draws only</columnTitle>
+                    </column>
+                    <column columnName="bloodFuture">
+                        <formatString>0.##</formatString>
+                        <columnTitle>Blood drawn over interval, looking forwards</columnTitle>
+                    </column>
+                    <column columnName="allowableFuture">
+                        <formatString>0.##</formatString>
+                        <columnTitle>Max allowable blood, accounting for future draws only</columnTitle>
+                    </column>
+                    <column columnName="allowableBlood">
+                        <formatString>0.##</formatString>
+                        <columnTitle>Max allowable blood on this date</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

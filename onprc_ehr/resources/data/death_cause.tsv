@@ -1,0 +1,26 @@
+value	title	category	description	sort_order	date_disabled
+Spontaneous Death				1	
+Sudden Infant Death				5	
+Accidental Death				13	
+Death Due to Fight				14	
+Acute Surgical Death				6	
+Postoperative Death				7	
+Dead On Arrival				15	
+Unplanned Experimental Death				8	
+Perinatal Death				2	
+Postpartum Death				9	
+Death in Quarantine				12	
+Undetermined Cause				10	
+Unclassified Cause				11	
+Abortion ( < 130 days gestation )				17	
+Spontaneous Death, Experimental subject				22	
+Neonatal death (<28 days of age, breathed once)				28	
+Spontaneous Death in quarantine				24	
+Stillbirth ( > 130 days gestation, never breathed)				16	
+Cause of Death Unknown				99	
+EUTHANASIA, EXPERIMENTAL				3	
+EUTHANASIA, NONEXPERIMENTAL				4	
+EUTHANASIA, QUARANTINE				3	
+Medical Termination				30	
+Miscarriage				32	
+Biochemical Pregnancy				35	

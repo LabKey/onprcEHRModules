@@ -1,0 +1,135 @@
+<script type="text/javascript">
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        Ext4.define('EHR.panel.CaseReviewPanel', {
+            extend: 'Ext.panel.Panel',
+
+            initComponent: function(){
+                Ext4.apply(this, {
+                    itemId: 'outerPanel',
+                    border: false,
+                    defaults: {
+                        border: false
+                    },
+                    items: [{
+                        width: 400,
+                        items: [{
+                            xtype: 'combo',
+                            width: 400,
+                            fieldLabel: 'Category',
+                            itemId: 'categoryField',
+                            value: 'Clinical',
+                            forceSelection: true,
+                            valueField: 'value',
+                            displayField: 'value',
+                            store: {
+                                type: 'store',
+                                fields: ['value'],
+                                data: [{value: 'Clinical'}, {value: 'Surgery'}]
+                            }
+                        },{
+                            xtype: 'ehr-vetfieldcombo',
+                            width: 400,
+                            fieldLabel: 'Choose Vet (blank for all)',
+                            itemId: 'userField'
+                        },{
+                            fieldLabel: 'Days Since Vet Review',
+                            xtype: 'ldk-numberfield',
+                            itemId: 'daysSinceVetReview',
+                            value: 1,
+                            width: 400
+                        },{
+                            fieldLabel: 'Only Show Active',
+                            xtype: 'checkbox',
+                            itemId: 'showActive',
+                            checked: true,
+                            width: 400
+                        }],
+                        buttons: [{
+                            text: 'Submit',
+                            scope: this,
+                            handler: function(btn){
+                                var panel = btn.up('#outerPanel');
+                                var userId = panel.down('#userField').getValue();
+                                var category = panel.down('#categoryField').getValue();
+                                var daysSinceLastVetReview = panel.down('#daysSinceVetReview').getValue();
+                                var showActive = panel.down('#showActive').getValue();
+
+                                var filterArray = [];
+                                if (userId){
+                                    filterArray.push(LABKEY.Filter.create('assignedvet', userId, LABKEY.Filter.Types.EQUAL));
+                                }
+
+                                if (category){
+                                    filterArray.push(LABKEY.Filter.create('category', category, LABKEY.Filter.Types.EQUAL));
+                                }
+
+                                if (showActive){
+                                    filterArray.push(LABKEY.Filter.create('isActive', true, LABKEY.Filter.Types.EQUAL));
+                                }
+
+                                var viewName;
+                                if (category == 'Clinical'){
+                                    viewName = 'Clinical Case Review';
+                                }
+                                else if (category == 'Surgery'){
+                                    viewName = 'Surgery Case Review';
+                                }
+                                if (daysSinceLastVetReview){
+                                    filterArray.push(LABKEY.Filter.create('daysSinceLastVetReview', daysSinceLastVetReview, LABKEY.Filter.Types.GTE));
+                                }
+
+                                var target = panel.down('#targetPanel');
+                                target.removeAll();
+                                target.add({
+                                    xtype: 'ldk-querypanel',
+                                    queryConfig: {
+                                        schemaName: 'study',
+                                        queryName: 'cases',
+                                        viewName: viewName,
+                                        filterArray: filterArray,
+                                        scope: this,
+                                        success: function(dr){
+                                            this.doResize(target.getWidth() + 80);
+                                        }
+                                    }
+                                });
+                            }
+                        }]
+                    },{
+                        itemId: 'targetPanel',
+                        style: 'padding-top: 20px'
+                    }]
+                });
+
+                this.callParent(arguments);
+
+                this.on('afterrender', function(panel){
+                    this.originalWidth = Math.max(this.getWidth(), Ext4.getBody().getWidth());
+                }, this);
+            },
+
+            doResize: function(itemWidth){
+                var width2 = this.getWidth();
+                if (itemWidth > width2){
+                    this.setWidth(itemWidth);
+                    this.doLayout();
+                }
+                else if (itemWidth < width2) {
+                    if (this.originalWidth && width2 != this.originalWidth){
+                        this.setWidth(Math.max(this.originalWidth, itemWidth));
+                        this.doLayout();
+                    }
+                }
+            }
+        });
+
+        Ext4.create('EHR.panel.CaseReviewPanel', {
+
+        }).render(webpart.wrapperDivId);
+    });
+</script>

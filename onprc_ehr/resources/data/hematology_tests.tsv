@@ -1,0 +1,38 @@
+testid	name	units	alertOnAbnormal	alertOnAny	includeInPanel	sort_order
+WBC	White Blood Cells	10^3/uL	true	false	true	1
+NEUT%	Neutrophils	%	true	false	true	2
+BAND%	Bands		true	false	true	3
+LYMPH%	Lymphocytes	%	true	false	true	4
+MONO%	Monocytes	%	true	false	true	5
+EOS%	Eosinophils	%	true	false	true	6
+BASO%	Basophils	%	true	false	true	7
+HCT	Hematocrit	%	true	false	true	8
+HGB	Hemoglobin		true	false	true	9
+RBC	Red Blood Cells	10^6/uL	true	false	true	10
+MCV	Mean corpuscular volume	fL	true	false	true	11
+MCH	Mean corpuscular hemoglobin	picograms	true	false	true	12
+MCHC	Mean corpuscular hemoglobin concentration	g/dL	true	false	true	13
+RETIC	Reticulocytes	%	true	false	true	14
+PLT	Platelets	10^3/uL	true	false	true	15
+MYELO	Myelocytes	%	true	false	false	
+MPV	Mean platelet volume	fl	true	false	false	
+Anisocytosis	Anisocytosis		true	false	false	
+GLOB	Globulin	g/dL	true	false	false	
+GLUC	Glucose		true	false	false	
+Hypochromic RBC	Hypochromic RBC		true	false	false	
+LUC	Large unstained cells		true	false	false	
+Macrocytic RBC	Macrocytic RBC		true	false	false	
+METAMYELO	Metamyelocytes	%	true	false	false	
+Microcytic RBC	Microcytic RBC		true	false	false	
+NRBC	Nucleated red blood cells		true	false	false	
+PCV	Packed cell volume	%	true	false	true	
+Polychromasia RBC	Polychromasia RBC		true	false	false	
+MPMN	Neutrophils		true	false	false	
+SEDRate	Sedimentation rate		true	false	false	
+TP	Total protein		true	false	false	
+RDW		%	true	false	false	
+NEUT#	Neutrophil #	10^3/uL	true	false	false	16
+LYMPH#	Lymphocyte #	10^3/uL	true	false	false	17
+MONO#	Monocyte #	10^3/uL	true	false	false	18
+EOS#	Eosinophil #	10^3/uL	true	false	false	19
+BASO#	Basophil #	10^3/uL	true	false	false	20

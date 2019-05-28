@@ -1,0 +1,90 @@
+<script type="text/javascript">
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        /* get the participant id from the request URL: this parameter is required. */
+        var subjectId = LABKEY.ActionURL.getParameter('subjectId');
+
+        if (!subjectId){
+            Ext4.create('Ext.panel.Panel', {
+                width: 300,
+                border: false,
+                items: [{
+                    xtype: 'textfield',
+                    width: 295,
+                    fieldLabel: 'Enter Animal Id',
+                    labelWidth: 130,
+                    itemId: 'animalField'
+                }],
+                buttons: [{
+                    text: 'Submit',
+                    scope: this,
+                    handler: function(btn){
+                        var val = btn.up('panel').down('#animalField').getValue();
+                        if (!val){
+                            Ext4.Msg.alert('Error', 'Must enter an animal Id');
+                            return;
+                        }
+
+                        window.location = LABKEY.ActionURL.buildURL('ehr', 'clinicalHistoryExport', null, {
+                            subjectId: val,
+                            sortMode: 'type',
+                           // Updated 5-25-2017 Blasa
+                           checkedItems: 'Microbiology;TB Tests;Assignments;Serology;Serology/Virology;Necropsy'
+                        });
+                    }
+                }]
+            }).render(webpart.wrapperDivId);
+        }
+        else {
+            var title = subjectId;
+            document.title = title;
+            LABKEY.Utils.setWebpartTitle(title, webpart.id);
+
+            var toAdd = [];
+            toAdd.push({
+                html: '<span style="font-size: large;"><b>Animal: ' + subjectId + '</b></span>',
+                style: 'padding-bottom: 20px;',
+                border: false
+            });
+
+            toAdd.push({
+                xtype: 'ehr-narrowsnapshotpanel',
+                hrefTarget: '_blank',
+                border: false,
+                subjectId: subjectId
+            });
+
+            toAdd.push({
+                html: '<b>Chronological History:</b><hr>',
+                style: 'padding-top: 5px;',
+                border: false
+            });
+
+            toAdd.push({
+                xtype: 'ehr-clinicalhistorypanel',
+                hideExportBtn: true,
+                border: true,
+                subjectId: subjectId,
+                autoLoadRecords: true,
+                minDate: LABKEY.ActionURL.getParameter('minDate'),
+                maxDate: LABKEY.ActionURL.getParameter('maxDate'),
+                caseId: LABKEY.ActionURL.getParameter('caseId'),
+                redacted: LABKEY.ActionURL.getParameter('redacted'),
+                sortMode: LABKEY.ActionURL.getParameter('sortMode'),
+                checkedItems: LABKEY.ActionURL.getParameter('checkedItems') ? LABKEY.ActionURL.getParameter('checkedItems').split(';') : null,
+                hrefTarget: '_blank',
+                style: 'margin-bottom: 20px;'
+            });
+
+            Ext4.create('Ext.panel.Panel', {
+                border: false,
+                style: 'width: 8in;',
+                items: toAdd
+            }).render(webpart.wrapperDivId);
+        }
+    });
+</script>

@@ -1,0 +1,32 @@
+<module xmlns="http://labkey.org/moduleProperties/xml/">
+    <properties>
+        <propertyDescriptor name="SSRSServerURL">
+            <canSetPerContainer>true</canSetPerContainer>
+            <description>The is the baseURL to the server used to load SSRS reports.  It is expected to be something like: 'http://myServer.edu/Reports/Pages/ReportViewer.aspx?'</description>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
+        <propertyDescriptor name="SSRSReportFolder">
+            <canSetPerContainer>true</canSetPerContainer>
+            <description>This is the subfolder within SSRS that holds the EHR reports</description>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
+        <propertyDescriptor name="DocumentArchiveContainer">
+            <canSetPerContainer>true</canSetPerContainer>
+            <description>This is the container path to the folder that will store documents related to arrivals and departures from the center.</description>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
+        <propertyDescriptor name="VetReviewStartDate">
+            <canSetPerContainer>true</canSetPerContainer>
+            <description>There are reports that show records based on date of last vet review.  Because legacy animals may not have this value, a default date can be supplied, resulting in records prior to this date being considered reviewed.</description>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
+    </properties>
+</module>

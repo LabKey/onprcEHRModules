@@ -1,0 +1,20 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+   <columns>
+       <column name="room/area"/>
+       <column name="room"/>
+       <column name="room/assignments/projects"/>
+       <column name="room/assignments/projectIdCount"/>
+       <column name="room/assignments/projectCageCount"/>
+       <column name="TotalCages" />
+       <column name="AvailableCages" />
+       <column name="CagesUsed"/>
+       <column name="MarkedUnavailable" />
+       <column name="CagesEmpty"/>
+       <column name="pctUsed"/>
+       <column name="TotalAnimals"/>
+   </columns>
+   <sorts>
+       <sort column="room/area"/>
+       <sort column="room/sort_order"/>
+   </sorts>
+</customView>

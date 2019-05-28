@@ -1,0 +1,18 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="potentialSire"/>
+        <column name="rooms"/>
+        <column name="cages"/>
+        <column name="sireAgeAtTime"/>
+        <column name="potentialSire/source/type">
+            <properties>
+                <property name="columnTitle" value="Sire Source"/>
+            </properties>
+        </column>
+    </columns>
+    <sorts>
+        <sort column="Id"/>
+        <sort column="potentialSire"/>
+    </sorts>
+</customView>

@@ -1,0 +1,30 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+   <columns>
+       <column name="Id" />
+       <column name="Id/demographics/gender" />
+       <column name="Id/demographics/species" />
+       <column name="Id/demographics/geographic_origin" />
+       <column name="date"/>
+       <column name="project"/>
+       <column name="project/projecttype"/>
+       <column name="project/title"/>
+       <column name="project/investigatorId"/>
+       <column name="project/investigatorId/division"/>
+       <column name="project/investigatorId/investigatortype"/>
+       <column name="project/account/grantNumber"/>
+       <column name="spfStatus" />
+       <column name="overlappingProjects"/>
+       <column name="utilization" />
+       <!--<column name="isP51" />-->
+       <column name="isU42" />
+       <column name="isU24" />
+   </columns>
+   <sorts>
+       <sort column="Id"/>
+   </sorts>
+    <aggregates>
+        <aggregate column="isP51" type="SUM"/>
+        <aggregate column="isU42" type="SUM"/>
+        <aggregate column="isU24" type="SUM"/>
+    </aggregates>
+</customView>

@@ -1,0 +1,7 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+   <sorts>
+       <sort column="investigatorId/lastname"/>
+       <sort column="investigatorId/firstname"/>
+       <sort column="room/sort_order"/>
+   </sorts>
+</customView>

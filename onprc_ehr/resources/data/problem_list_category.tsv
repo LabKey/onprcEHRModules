@@ -1,0 +1,21 @@
+value	description
+Behavioral	Behavioral issue or concern. Examples include SIB and fecal smearing.
+Cardiac Abnormality	Abnormalities associated with the cardiac system. Examples include murmurs and dilated cardiomyopathy.
+Dermatopathy	Abnormalities associated with the dermal system. Examples include alopecia and moist dermatitis. 
+Endocrinopathy	Abnormalities associated with the endocrine system. Diabetes is an example.
+GI-Diarrhea	Clinical cases presenting for diarrhea, with or without dehydration. 
+GI-Other	Abnormalities associated with the digestive system, excluding diarrhea. Examples include dental extractions, vomiting, and adenocarcinoma.
+MS Abnormality	Abnormalities associated with the musculoskeletal system. Examples include osteoarthritis, reactive arthritis, and fractures.
+Neurologic Abnormality	Abnormalities associated with the neurologic system. Seizures are an example.
+OBGYN Condition	Abnormalities associated with the female reproductive system. Examples include dystocia, vaginal prolapse, and heavy mense.
+Ophthalmic Abnormality	Abnormalities associated with the ophthalmic system. Examples include blepharospasm and corneal abrasion.
+Other	For conditions not covered by any other Master Problem. Uncommonly used.
+Protocol Associated	The primary abnormality is the result of experimental manipulation. Examples include implant abscess, induced anemia, and induced diabetes mellitus.
+Research Support	The case was opened for a surgery or activity supporting a research project. Examples include lymph node biopsy and BAL.
+Respiratory Abnormality	Abnormalities associated with the respiratory system. Examples include URI and pneumonia.
+Routine or Preventative care	Cases opened for routine or preventative care. Physical exam is an example.
+Urogenital	Abnormalities associated with the urogenital system. Examples include cystitis, testicular or vulvar trauma, or renal amyloidosis.
+Weight Loss	Cases opened for weight loss, when the etiology is unknown.
+Weight Management	
+Wound	Cases opened for a wound. 
+Monitoring	This is used to track animals that need additional monitoring after the initial problem has resolved.  This allows the initial problem to be closed while still keeping an active case open.

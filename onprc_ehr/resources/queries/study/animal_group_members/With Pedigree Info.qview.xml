@@ -1,0 +1,48 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="groupId"/>
+        <column name="Id/curLocation/area"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
+        <column name="Id"/>
+        <column name="Id/demographics/species"/>
+        <column name="Id/demographics/gender"/>
+        <column name="Id/age/yearAndDays"/>
+        <column name="Id/parents/dam"/>
+        <column name="Id/parents/damType"/>
+        <column name="Id/parents/dam/curLocation/location">
+            <properties>
+                <property name="columnTitle" value="Dam Location"/>
+            </properties>
+        </column>
+        <column name="Id/parents/dam/activeAnimalGroups/groups">
+            <properties>
+                <property name="columnTitle" value="Dam Groups"/>
+            </properties>
+        </column>
+        <column name="Id/parents/sire"/>
+        <column name="Id/parents/sireType"/>
+        <column name="Id/parents/sire/curLocation/location">
+            <properties>
+                <property name="columnTitle" value="Sire Location"/>
+            </properties>
+        </column>
+        <column name="Id/parents/sire/activeAnimalGroups/groups">
+            <properties>
+                <property name="columnTitle" value="Sire Groups"/>
+            </properties>
+        </column>
+        <column name="date"/>
+        <column name="enddate"/>
+        <column name="history"/>
+    </columns>
+    <filters>
+        <filter column="isActive" operator="eq" value="true"/>
+    </filters>
+    <sorts>
+        <sort column="groupId/name"/>
+        <sort column="Id/curLocation/room"/>
+        <sort column="Id/curLocation/cage" />
+        <sort column="Id"/>
+    </sorts>
+</customView>

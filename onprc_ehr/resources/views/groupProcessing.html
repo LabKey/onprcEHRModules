@@ -1,0 +1,252 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        var groupName = LABKEY.ActionURL.getParameter('groupName');
+        var roomName = LABKEY.ActionURL.getParameter('room');
+
+        Ext4.create('Ext.panel.Panel', {
+            border: false,
+            defaults: {
+                border: false
+            },
+            items: [{
+                html: 'This page is designed to provide information to help with processing of animal groups.  Each of these reports can be loaded either by animal group or by room.  To load it on the entire colony, leave both combos blank.',
+                style: 'margin-bottom: 20px;'
+            },{
+                xtype: 'labkey-combo',
+                fieldLabel: 'Group Name',
+                value: groupName,
+                itemId: 'groupName',
+                displayField: 'name',
+                valueField: 'name',
+                store: {
+                    type: 'labkey-store',
+                    schemaName: 'ehr',
+                    queryName: 'animal_groups',
+                    viewName: 'Active Groups',
+                    columns: 'name',
+                    autoLoad: true
+                }
+            },{
+                xtype: 'ehr-roomfieldsingle',
+                itemId: 'room',
+                fieldLabel: 'Room',
+                value: roomName
+            },{
+                html: '<hr><b>Blood Summary Report:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will summarize blood needed for viral surveillance and genetics, based on the criteria outlined below for those reports.  Either of these can be run individually using the sections below.<br>',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                itemId: 'processingBloodDrawsBtn',
+                getUrlParams: function(){
+                    var groupName = this.up('panel').down('#groupName').getValue();
+                    var room = this.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'processingBloodDraws',
+                        'query.Id/demographics/calculated_status~eq': 'Alive'
+                    };
+
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    return params;
+                },
+                menu: [{
+                    text: 'Open In Browser',
+                    scope: this,
+                    handler: function(item){
+                        var params = item.up('#processingBloodDrawsBtn').getUrlParams();
+                        window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+                    }
+                },{
+                    text: 'Download To Excel',
+                    scope: this,
+                    handler: function(item){
+                        var params = item.up('#processingBloodDrawsBtn').getUrlParams();
+                        window.open(LABKEY.ActionURL.buildURL('query', 'exportRowsXLSX', null, params))
+                    }
+                }]
+            },{
+                html: '<hr><b>Blood Needed For Viral Surveillance:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will summarize blood needed for viral surveillance based on the following criteria:<br>' +
+                        '- 4mL is required for HBV testing on all SPF animals over 180 days old that have not been HBV tested during this calendar year<br>' +
+                        '- 4mL is required for SRV testing for all Japanese Macaques, and non-SPF Cynos that have not been testing during this calendar year',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                scope: this,
+                handler: function(btn){
+                    var groupName = btn.up('panel').down('#groupName').getValue();
+                    var room = btn.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'processingSerology',
+                        'query.Id/demographics/calculated_status~eq': 'Alive',
+                        'query.bloodVol~gt': 0
+                    };
+
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+                }
+            },{
+                html: '<hr><b>Blood Needed For Genetic Testing:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will summarize blood needed for genetic testing, using the following criteria:<br>' +
+                    '- 1mL of blood is needed for Parentage testing on all animals that do not already have genetic parentage data, unless the animal has been flagged as previously drawn.<br>' +
+                    '- 1mL of blood is needed for MHC Typing on all U42 Indian-origin rhesus macaques (males and females, under 5 years old) and all male Indian rhesus under 5 years old only for non-U42, unless the animal already has MHC data or has been flagged as previously drawn.<br>' +
+                    '- Minimum 5mL of blood is needed for the DNA Bank on every animal (listed as 6mL in the report), unless one of the following samples is already in the freezer: any gDNA, buffy coat >=5mL or whole blood >=5mL',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                scope: this,
+                handler: function(btn){
+                    var groupName = btn.up('panel').down('#groupName').getValue();
+                    var room = btn.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'processingGeneticsBloodDraws',
+                        'query.Id/demographics/calculated_status~eq': 'Alive',
+                        'query.totalBloodDrawVol~gt': 0
+                    };
+
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+                }
+            },{
+                html: '<hr><b>TB Testing:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will show the last TB test date for members of this group.',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                scope: this,
+                handler: function(btn){
+                    var groupName = btn.up('panel').down('#groupName').getValue();
+                    var room = btn.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'demographicsMostRecentTBDate',
+                        'query.Id/demographics/calculated_status~eq': 'Alive'
+                    };
+
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+                }
+            },{
+                html: '<hr><b>Ivermectin Treatments:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will show the last date ivermectin was given to each member of this group.',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                scope: this,
+                handler: function(btn){
+                    var groupName = btn.up('panel').down('#groupName').getValue();
+                    var room = btn.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'processingIvermectin',
+                        'query.Id/demographics/calculated_status~eq': 'Alive'
+                    };
+
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+                }
+            },{
+                html: '<hr><b>Clinical PE Information:</b>',
+                style: 'margin-bottom: 10px;'
+            },{
+                html: 'This report will produce a simple list of these animals, showing age, weight, etc.',
+                style: 'margin-bottom: 10px;'
+            },{
+                xtype: 'button',
+                style: 'margin-bottom: 10px;',
+                border: true,
+                text: 'View Report',
+                itemId: 'clinicalPeBtn',
+                scope: this,
+                getUrlParams: function(){
+                    var groupName = this.up('panel').down('#groupName').getValue();
+                    var room = this.up('panel').down('#room').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'demographics',
+                        'query.Id/demographics/calculated_status~eq': 'Alive',
+                        //'query.columns': 'Id,gender,Id/age/yearAndDays,Id/mostRecentWeight/MostRecentWeight'
+                        'query.viewName': 'Clinical PE Form'
+                    };
+
+                    if (groupName)
+                        params['query.Id/utilization/use~contains'] = groupName;
+                    if (room)
+                        params['query.Id/curLocation/room~eq'] = room;
+
+                    return params;
+                },
+                menu: [{
+                    text: 'Open In Browser',
+                    scope: this,
+                    handler: function(item){
+                        var params = item.up('#clinicalPeBtn').getUrlParams();
+                        window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+                    }
+                },{
+                    text: 'Download To Excel',
+                    scope: this,
+                    handler: function(item){
+                        var params = item.up('#clinicalPeBtn').getUrlParams();
+                        window.open(LABKEY.ActionURL.buildURL('query', 'exportRowsXLSX', null, params))
+                    }
+                }]
+            }]
+        }).render(webpart.wrapperDivId);
+    });
+
+</script>

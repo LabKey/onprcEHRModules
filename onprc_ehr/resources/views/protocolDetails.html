@@ -1,0 +1,153 @@
+<script type="text/javascript">
+
+Ext4.onReady(function (){
+    var protocol = LABKEY.ActionURL.getParameter('protocol') || LABKEY.ActionURL.getParameter('key');
+    if (!protocol){
+        alert('Must Provide Protocol Number');
+        return false;
+    }
+    protocol = protocol.toLowerCase();
+
+    var webpart = <%=webpartContext%>;
+    var domSpec = [{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'protocolDetails_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'protocolProjects_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'protocolLinks_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'allowableAnimals_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'exemptions_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'housingSummary_' + webpart.wrapperDivId
+    }];
+
+    var el = Ext4.get(webpart.wrapperDivId);
+    Ext4.DomHelper.append(el, domSpec);
+
+    LABKEY.Query.selectRows({
+        requiredVersion: 9.1,
+        schemaName: 'ehr',
+        queryName: 'protocol',
+        columns: 'protocol,displayName',
+        filterArray: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback(),
+        scope: this,
+        success: function(results){
+            if (!results || !results.rows || !results.rows.length){
+                return;
+            }
+            var sr = new LDK.SelectRowsRow(results.rows[0]);
+
+            var otherReports = [{
+                name: 'View Active Animal Assignments',
+                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Assignment', 'query.viewName': 'Active Assignments', 'query.project/protocol/displayName~eq': sr.getValue('displayName')})
+            },{
+                name: 'View All Animals Assigned To This Protocol Over A Date Range',
+                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentOverlapsById', 'query.param.Protocol': sr.getValue('displayName')})
+            },{
+                name: 'View Procedures Allowed Under This Protocol',
+                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'protocolProcedures', 'query.protocol/displayName~eq': sr.getValue('displayName')})
+            },{
+                name: 'View Procedures Performed Under This Protocol',
+                url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.project/protocol/displayName~eq': sr.getValue('displayName')})
+            },{
+                name: 'View Procedure Count Performed Under This Protocol',
+                url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'proceduresPerYear', 'query.protocol/displayName~eq': sr.getValue('displayName')})
+            },{
+                name: 'View Any Assignments To This Protocol That Do Not Match Allowable Animals',
+                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'assignmentsNotAllowed', 'query.protocol/displayName~eq': sr.getValue('displayName')})
+            },{
+                name: 'View The Number of Small Lab Animals Allowed Under This Protocol',
+                url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'sla', 'query.queryName': 'allowableAnimals', 'query.protocol/displayName~eq': sr.getValue('displayName')})
+            }];
+
+            Ext4.create('LDK.panel.WebpartPanel', {
+                title: 'Other Reports',
+                bodyStyle: 'padding:5px;',
+                items: [{
+                    xtype: 'ldk-navpanel',
+                    sections: [{
+                        header: null,
+                        items: otherReports
+                    }]
+                }]
+            }).render('protocolLinks_' + webpart.wrapperDivId);
+        }
+    });
+
+    var buttons = null;
+    if (EHR.Security.hasProtocolEditorPermission()){
+        buttons = [{
+            text: 'More Actions',
+            menu: [{
+                text: 'Edit Protocol Details',
+                href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()
+            }]
+        }]
+    }
+
+    Ext4.create('LDK.panel.DetailsPanel', {
+        store: {
+            schemaName: 'ehr',
+            queryName: 'protocol',
+            filterArray: [
+                LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)
+            ]
+        },
+        title: 'Protocol Details:',
+        renderTo: 'protocolDetails_' + webpart.wrapperDivId,
+        detailsConfig: {
+            buttons: buttons
+        }
+    });
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Housing Summary',
+        schemaName: 'study',
+        queryName: 'protocolHousingSummary',
+        columns: 'room,room/housingType,totalAnimals',
+        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback()
+    }).render('housingSummary_' + webpart.wrapperDivId);
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Projects Under This Protocol',
+        schemaName: 'ehr',
+        queryName: 'project',
+        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback()
+    }).render('protocolProjects_' + webpart.wrapperDivId);
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Allowable NHPs',
+        schemaName: 'ehr',
+        queryName: 'animalUsage',
+        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback()
+    }).render('allowableAnimals_' + webpart.wrapperDivId);
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Exemptions',
+        schemaName: 'ehr',
+        queryName: 'protocolexemptions',
+        filters: [LABKEY.Filter.create('coalescedProtocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback()
+    }).render('exemptions_' + webpart.wrapperDivId);
+
+});
+
+</script>

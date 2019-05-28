@@ -1,0 +1,119 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function (){
+        var project = LABKEY.ActionURL.getParameter('project') || LABKEY.ActionURL.getParameter('key');
+        if (!project){
+            alert('Must Provide Project Number');
+            return;
+        }
+
+        var webpart = <%=webpartContext%>;
+        var domSpec = [{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'projectDetails_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'projectLinks_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'housingSummary_' + webpart.wrapperDivId
+        },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'projectAssignments_' + webpart.wrapperDivId
+        }];
+
+        var el = Ext4.get(webpart.wrapperDivId);
+        Ext4.DomHelper.append(el, domSpec);
+
+        var buttons = null;
+        if (EHR.Security.hasProjectEditorPermission()){
+            buttons = [{
+                text: 'More Actions',
+                menu: [{
+                    text: 'Edit Project Details',
+                    href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'project', project: project}) + '&returnUrl=' + LDK.Utils.getSrcURL()
+                }]
+            }]
+        }
+
+        Ext4.create('LDK.panel.DetailsPanel', {
+            store: {
+                schemaName: 'ehr',
+                queryName: 'project',
+                filterArray: [
+                    LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)
+                ]
+            },
+            title: 'Project Details',
+            renderTo: 'projectDetails_' + webpart.wrapperDivId,
+            detailsConfig: {
+                buttons: buttons
+            }
+        });
+
+
+        LDK.Utils.getReadOnlyQWP({
+            title: 'Housing Summary',
+            schemaName: 'study',
+            queryName: 'projectHousingSummary',
+            columns: 'room,room/housingType,totalAnimals',
+            filters: [LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)],
+            failure: LDK.Utils.getErrorCallback()
+        }).render('housingSummary_' + webpart.wrapperDivId);
+
+        LABKEY.Query.selectRows({
+            requiredVersion: 9.1,
+            schemaName: 'ehr',
+            queryName: 'project',
+            columns: 'project,displayName',
+            filterArray: [LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)],
+            failure: LDK.Utils.getErrorCallback(),
+            scope: this,
+            success: function(results){
+                if (!results || !results.rows || !results.rows.length){
+                    return;
+                }
+                var sr = new LDK.SelectRowsRow(results.rows[0]);
+
+                Ext4.create('LDK.panel.WebpartPanel', {
+                    title: 'Other Reports',
+                    items: [{
+                        xtype: 'ldk-navpanel',
+                        sections: [{
+                            header: null,
+                            items: [{
+                                name: 'View All Assignments Made To This Project',
+                                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Assignment', 'query.project/displayName~eq': sr.getValue('displayName')})
+                            },{
+                                name: 'View All Aliases That Have Been Assocated With This Project',
+                                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'projectAccountHistory', 'query.project/displayName~eq': sr.getValue('displayName')})
+                            },{
+                                name: 'View All Animals Assigned To This Project Over A Date Range',
+                                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentOverlapsById', 'query.param.Project': sr.getValue('displayName')})
+                            },{
+                                name: 'View All Morbidity and Mortality Data For This Project Over A Date Range',
+                                url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'assignmentProblemSummary', 'query.project~eq': sr.getValue('displayName')})
+                            }]
+                        }]
+                    }],
+                    renderTo: 'projectLinks_' + webpart.wrapperDivId
+                });
+            }
+        });
+
+        LDK.Utils.getReadOnlyQWP({
+            title: 'Active Assignments',
+            schemaName: 'study',
+            queryName: 'Assignment',
+            viewName: 'Active Assignments',
+            filters: [LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)],
+            sort: '-Date',
+            failure: LDK.Utils.getErrorCallback()
+        }).render('projectAssignments_' + webpart.wrapperDivId);
+    });
+
+</script>

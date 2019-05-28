@@ -1,0 +1,18 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="assignmentsNotAllowedSummary" tableDbType="TABLE">
+                <tableTitle>Summary of Assignments Not Covered By Allowable Animals</tableTitle>
+                <columns>
+                    <column columnName="total">
+                        <url>/query/executeQuery.view?
+                            schemaName=ehr&amp;
+                            queryName=assignmentsNotAllowed&amp;
+                            query.protocol~eq=${protocol}&amp;
+                        </url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

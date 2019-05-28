@@ -1,0 +1,29 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="proceduresPerYear" tableDbType="TABLE">
+                <tableTitle>Procedures Per Year, By IACUC Protocol</tableTitle>
+                <columns>
+                    <column columnName="total">
+                        <columnTitle>Total</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=Clinical Encounters&amp;
+                            query.project/protocol~eq=${protocol}&amp;
+                            query.date~dategte=${date}&amp;
+                            query.date~datelte=${enddate}&amp;
+                            query.procedureid/shortName~eq=${procedureName}
+                        </url>
+                    </column>
+                    <column columnName="date">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="enddate">
+                        <isHidden>true</isHidden>
+                        <columnTitle>End Date</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

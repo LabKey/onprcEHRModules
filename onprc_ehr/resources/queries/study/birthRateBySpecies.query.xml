@@ -1,0 +1,70 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="birthRateBySpecies" tableDbType="TABLE">
+                <tableTitle>Birth Rate Summary, By Species</tableTitle>
+                <columns>
+                    <column columnName="totalIds">
+                        <columnTitle>Total Ids</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=birthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.birthRoom~contains=${Room}&amp;
+                            query.Id/demographics/species~eq=${species}&amp;
+                        </url>
+                    </column>
+                    <column columnName="totalBornDead">
+                        <columnTitle>Total That Survived 0 Days</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=birthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.birthRoom~contains=${Room}&amp;
+                            query.Id/demographics/species~eq=${species}&amp;
+                            query.bornDead~eq=1&amp;
+                        </url>
+                    </column>
+                    <column columnName="totalDiedBeforeOneYear">
+                        <columnTitle>Total That Did Not Survive 365 Days</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=birthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.birthRoom~contains=${Room}&amp;
+                            query.Id/demographics/species~eq=${species}&amp;
+                            query.diedBeforeOneYear~eq=1&amp;
+                        </url>
+                    </column>
+                    <column columnName="totalSurvivedOneYear">
+                        <columnTitle>Total That Did Not Die Within 365 Days</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=birthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.birthRoom~contains=${Room}&amp;
+                            query.Id/demographics/species~eq=${species}&amp;
+                            query.diedBeforeOneYear~eq=0&amp;
+                        </url>
+                    </column>
+                    <column columnName="StartDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="EndDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="Room">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+                <buttonBarOptions includeStandardButtons="true">
+                    <includeScript>ehr.context</includeScript>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

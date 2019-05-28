@@ -1,0 +1,8 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart"
+         title="Quick EHR Search">
+    <view name="quickSearchonprc"/>
+    <locations>
+        <location name="right"/>
+        <location name="menu"/>
+    </locations>
+</webpart>
