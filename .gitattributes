@@ -81,6 +81,7 @@ GenotypeAssays/src/org/labkey/genotypeassays/assay/SSPImportHelper.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/assay/SSPPivotingImportMethod.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/assay/UCDavisSTRImportMethod.java -text
 GenotypeAssays/src/org/labkey/genotypeassays/buttons/CacheAnalysesButton.java -text
+GenotypeAssays/test/src/org/labkey/test/tests/external/labModules/GenotypeAssaysTest.java -text
 HormoneAssay/build.gradle -text
 HormoneAssay/module.properties -text
 HormoneAssay/resources/assay/hormone/config.xml -text
@@ -113,3 +114,4 @@ HormoneAssay/src/org/labkey/hormoneassay/HormoneAssaySchema.java -text
 HormoneAssay/src/org/labkey/hormoneassay/assay/DefaultImportMethod.java -text
 HormoneAssay/src/org/labkey/hormoneassay/assay/PivotedImportMethod.java -text
 HormoneAssay/src/org/labkey/hormoneassay/assay/RocheE411ImportMethod.java -text
+HormoneAssay/test/src/org/labkey/test/tests/external/labModules/HormoneAssayTest.java -text
