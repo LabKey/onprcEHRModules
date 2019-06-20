@@ -1,0 +1,7 @@
+<view xmlns="http://labkey.org/data/xml/view" title="SBT Review" frame="none">
+    <dependencies>
+        <dependency path="laboratory.context"/>
+        <dependency path="SequenceAnalysis/sequenceAnalysis"/>
+        <dependency path="genotypeassays/panel/HaplotypePanel.js"/>
+    </dependencies>
+</view>

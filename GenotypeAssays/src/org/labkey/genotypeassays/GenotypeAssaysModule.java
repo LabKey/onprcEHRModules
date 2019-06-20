@@ -22,11 +22,17 @@ import org.labkey.api.data.DbSchema;
 import org.labkey.api.laboratory.LaboratoryService;
 import org.labkey.api.laboratory.button.ChangeAssayResultStatusBtn;
 import org.labkey.api.ldk.ExtendedSimpleModule;
+import org.labkey.api.ldk.LDKService;
+import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.view.WebPartFactory;
+import org.labkey.api.view.template.ClientDependency;
 import org.labkey.genotypeassays.assay.GenotypeAssayDataProvider;
 import org.labkey.genotypeassays.assay.SNPAssayDataProvider;
 import org.labkey.genotypeassays.assay.SSPAssayDataProvider;
+import org.labkey.genotypeassays.buttons.HaplotypeReviewButton;
+import org.labkey.genotypeassays.buttons.PublishSBTResultsButton;
+import org.labkey.genotypeassays.buttons.SBTReviewButton;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -83,6 +89,18 @@ public class GenotypeAssaysModule extends ExtendedSimpleModule
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.SSP_ASSAY_PROVIDER, Arrays.asList("DataId:ASC", "include:primerPair,result,subjectId"));
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("result", "DataId"));
         LaboratoryService.get().registerAssayResultsIndex(GenotypeAssaysManager.GENOTYPE_ASSAY_PROVIDER, Arrays.asList("RowId", "DataId"));
+
+        SimpleButtonConfigFactory btn3 = new SimpleButtonConfigFactory(this, "Edit Alignments", "GenotypeAssays.window.EditAlignmentsWindow.buttonHandler(dataRegionName, arguments[0] ? arguments[0].ownerCt : null)");
+        btn3.setClientDependencies(ClientDependency.fromModuleName("laboratory"), ClientDependency.fromModuleName("sequenceanalysis"), ClientDependency.fromPath("genotypeassays/window/EditAlignmentsWindow.js"));
+        LDKService.get().registerQueryButton(btn3, "sequenceanalysis", "alignment_summary_grouped");
+
+        LDKService.get().registerQueryButton(new SBTReviewButton(), "sequenceanalysis", "sequence_analyses");
+        LDKService.get().registerQueryButton(new HaplotypeReviewButton(), "sequenceanalysis", "sequence_analyses");
+        LDKService.get().registerQueryButton(new PublishSBTResultsButton(), "sequenceanalysis", "alignment_summary_by_lineage");
+        //LDKService.get().registerQueryButton(new PublishSBTHaplotypesButton(), "sequenceanalysis", "haplotypeMatches");
+        LaboratoryService.get().registerTableCustomizer(this, GeneticsTableCustomizer.class, "sequenceanalysis", "sequence_analyses");
+        LaboratoryService.get().registerTableCustomizer(this, GeneticsTableCustomizer.class, "sequenceanalysis", "alignment_summary_by_lineage");
+        LaboratoryService.get().registerTableCustomizer(this, GeneticsTableCustomizer.class, "sequenceanalysis", "alignment_summary_grouped");
     }
 
     @Override

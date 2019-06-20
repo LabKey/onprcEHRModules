@@ -16,18 +16,30 @@
 
 package org.labkey.genotypeassays;
 
+import org.json.JSONArray;
+import org.labkey.api.action.ApiResponse;
+import org.labkey.api.action.ApiSimpleResponse;
 import org.labkey.api.action.ConfirmAction;
+import org.labkey.api.action.MutatingApiAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.SqlExecutor;
 import org.labkey.api.data.TableInfo;
+import org.labkey.api.exp.api.ExpProtocol;
+import org.labkey.api.exp.api.ExperimentService;
 import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.permissions.ReadPermission;
+import org.labkey.api.security.permissions.UpdatePermission;
+import org.labkey.api.util.Pair;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.HtmlView;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GenotypeAssaysController extends SpringActionController
 {
@@ -92,6 +104,125 @@ public class GenotypeAssaysController extends SpringActionController
         public URLHelper getSuccessURL(Object form)
         {
             return getContainer().getStartURL(getUser());
+        }
+    }
+
+    @RequiresPermission(UpdatePermission.class)
+    public class CacheAnalysesAction extends MutatingApiAction<CacheAnalysesForm>
+    {
+        public ApiResponse execute(CacheAnalysesForm form, BindException errors)
+        {
+            Map<String, Object> resultProperties = new HashMap<>();
+
+            //first verify permission to delete
+            if (form.getAlleleNames() != null)
+            {
+                try
+                {
+                    ExpProtocol protocol = ExperimentService.get().getExpProtocol(form.getProtocolId());
+                    if (protocol == null)
+                    {
+                        errors.reject(ERROR_MSG, "Unknown protocol: " + form.getProtocolId());
+                        return null;
+                    }
+
+                    Pair<List<Integer>, List<Integer>> ret = GenotypeAssaysManager.get().cacheAnalyses(getViewContext(), protocol, form.getAlleleNames());
+                    resultProperties.put("runsCreated", ret.first);
+                    resultProperties.put("runsDeleted", ret.second);
+                }
+                catch (IllegalArgumentException e)
+                {
+                    errors.reject(ERROR_MSG, e.getMessage());
+                    return null;
+                }
+            }
+            else
+            {
+                errors.reject(ERROR_MSG, "No alleles provided");
+                return null;
+            }
+
+            resultProperties.put("success", true);
+
+            return new ApiSimpleResponse(resultProperties);
+        }
+    }
+
+    public static class CacheAnalysesForm
+    {
+        private String[] _alleleNames;
+        private String _json;
+        private int _protocolId;
+
+        public String[] getAlleleNames()
+        {
+            return _alleleNames;
+        }
+
+        public void setAlleleNames(String[] alleleNames)
+        {
+            _alleleNames = alleleNames;
+        }
+
+        public int getProtocolId()
+        {
+            return _protocolId;
+        }
+
+        public void setProtocolId(int protocolId)
+        {
+            _protocolId = protocolId;
+        }
+
+        public String getJson()
+        {
+            return _json;
+        }
+
+        public void setJson(String json)
+        {
+            _json = json;
+        }
+    }
+
+    @RequiresPermission(UpdatePermission.class)
+    public class CacheHaplotypesAction extends MutatingApiAction<CacheAnalysesForm>
+    {
+        public ApiResponse execute(CacheAnalysesForm form, BindException errors)
+        {
+            Map<String, Object> resultProperties = new HashMap<>();
+
+            //first verify permission to delete
+            if (form.getJson() != null)
+            {
+                try
+                {
+                    ExpProtocol protocol = ExperimentService.get().getExpProtocol(form.getProtocolId());
+                    if (protocol == null)
+                    {
+                        errors.reject(ERROR_MSG, "Unknown protocol: " + form.getProtocolId());
+                        return null;
+                    }
+
+                    Pair<List<Integer>, List<Integer>> ret = GenotypeAssaysManager.get().cacheHaplotypes(getViewContext(), protocol, new JSONArray(form.getJson()));
+                    resultProperties.put("runsCreated", ret.first);
+                    resultProperties.put("runsDeleted", ret.second);
+                }
+                catch (IllegalArgumentException e)
+                {
+                    errors.reject(ERROR_MSG, e.getMessage());
+                    return null;
+                }
+            }
+            else
+            {
+                errors.reject(ERROR_MSG, "No data provided");
+                return null;
+            }
+
+            resultProperties.put("success", true);
+
+            return new ApiSimpleResponse(resultProperties);
         }
     }
 }
