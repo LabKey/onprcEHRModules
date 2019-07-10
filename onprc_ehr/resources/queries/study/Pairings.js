@@ -8,7 +8,7 @@ require("ehr/triggers").initScript(this);
 
 function onInit(event, helper){
     helper.setScriptOptions({
-        errorSeveritiyForImproperHousing: 'INFO'
+        errorSeverityForImproperHousing: 'INFO'
     });
 }
 
