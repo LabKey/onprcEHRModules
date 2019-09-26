@@ -1,0 +1,7 @@
+<ap:provider xmlns:ap="http://labkey.org/study/assay/xml">
+    <ap:name>Genotype Assay</ap:name>
+    <ap:description>An assay to store various types of genetic data, including sequence-specific PCR, SNPs, microsatellites, sequence-based genotyping and others</ap:description>
+    <ap:requiredModules>
+        <ap:moduleName>GenotypeAssays</ap:moduleName>
+    </ap:requiredModules>
+</ap:provider>

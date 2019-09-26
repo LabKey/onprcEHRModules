@@ -1,0 +1,90 @@
+<ap:domain xmlns:exp="http://cpas.fhcrc.org/exp/xml"
+   xmlns:ap="http://labkey.org/study/assay/xml">
+    <exp:Description>These are the SSP result fields.</exp:Description>
+    <exp:PropertyDescriptor>
+        <exp:Name>subjectId</exp:Name>
+        <exp:Required>true</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#string</exp:RangeURI>
+        <exp:ConceptURI>http://cpas.labkey.com/Study#ParticipantId</exp:ConceptURI>
+        <exp:Label>Subject Id</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>date</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#dateTime</exp:RangeURI>
+        <exp:ConceptURI>http://cpas.labkey.com/laboratory#sampleDate</exp:ConceptURI>
+        <exp:Label>Sample Date</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>sampleId</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#int</exp:RangeURI>
+        <exp:Label>Freezer Id</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>laneNumber</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#int</exp:RangeURI>
+        <exp:Label>Lane Number</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>method</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#string</exp:RangeURI>
+        <exp:Label>Method</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>sampleType</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#string</exp:RangeURI>
+        <exp:Label>Sample Type</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>primerPair</exp:Name>
+        <exp:Required>true</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#string</exp:RangeURI>
+        <exp:Label>Primer Pair</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>result</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#string</exp:RangeURI>
+        <exp:Label>Result</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>comment</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#multiLine</exp:RangeURI>
+        <exp:Label>Comment</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>sequence</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#multiLine</exp:RangeURI>
+        <exp:Label>Sequence</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>qcflag</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#string</exp:RangeURI>
+        <exp:Label>QC Flags</exp:Label>
+    </exp:PropertyDescriptor>
+    <exp:PropertyDescriptor>
+        <exp:Name>statusflag</exp:Name>
+        <exp:Required>false</exp:Required>
+        <exp:RangeURI>http://www.w3.org/2001/XMLSchema#string</exp:RangeURI>
+        <exp:Label>Status Flag</exp:Label>
+    </exp:PropertyDescriptor>
+    <!--<exp:PropertyDescriptor>-->
+        <!--<exp:Name>Institution</exp:Name>-->
+        <!--<exp:Required>false</exp:Required>-->
+        <!--<exp:RangeURI>http://www.w3.org/2001/XMLSchema#string</exp:RangeURI>-->
+        <!--<exp:Label>Institution</exp:Label>-->
+    <!--</exp:PropertyDescriptor>-->
+    <!--<exp:PropertyDescriptor>-->
+        <!--<exp:Name>Investigator</exp:Name>-->
+        <!--<exp:Required>false</exp:Required>-->
+        <!--<exp:RangeURI>http://www.w3.org/2001/XMLSchema#string</exp:RangeURI>-->
+        <!--<exp:Label>Investigator</exp:Label>-->
+    <!--</exp:PropertyDescriptor>-->
+</ap:domain>

@@ -1,0 +1,7 @@
+<ap:provider xmlns:ap="http://labkey.org/study/assay/xml">
+    <ap:name>SNP Assay</ap:name>
+    <ap:description>An assay designed to store SNP data from a variety of sources</ap:description>
+    <ap:requiredModules>
+        <ap:moduleName>GenotypeAssays</ap:moduleName>
+    </ap:requiredModules>
+</ap:provider>

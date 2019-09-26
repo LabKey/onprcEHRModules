@@ -1,0 +1,40 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="strConflicts" tableDbType="TABLE">
+                <tableTitle>STR Result Conflicts</tableTitle>
+                <columns>
+                    <column columnName="category">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
+                    <column columnName="marker">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
+                    <column columnName="alleles">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
+                    <column columnName="distinctResults">
+                        <columnTitle>Distinct Results</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=${schemaName}&amp;
+                            query.queryName=strSummary&amp;
+                            query.subjectId~eq=${subjectId}&amp;
+                            query.run/assayType~eq=STR&amp;
+                            query.marker~eq=${marker}
+                        </url>
+                    </column>
+                    <column columnName="totalDataPoints">
+                        <columnTitle>Total Data Points</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=${schemaName}&amp;
+                            query.queryName=Data&amp;
+                            query.subjectId~eq=${subjectId}&amp;
+                            query.run/assayType~eq=STR&amp;
+                            query.marker~eq=${marker}
+                        </url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

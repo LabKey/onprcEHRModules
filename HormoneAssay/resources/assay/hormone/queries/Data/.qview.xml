@@ -1,0 +1,29 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" canOverride="true">
+    <columns>
+        <column name="subjectId"/>
+        <column name="date"/>
+        <column name="testName"/>
+        <column name="result"/>
+        <column name="units"/>
+        <column name="category"/>
+
+        <!--TODO-->
+        <column name="diluent"/>
+        <column name="dilutionFactor"/>
+
+        <column name="comment"/>
+        <column name="qcflag"/>
+        <column name="sampleType" />
+        <column name="sampleId"/>
+        <column name="Run/RowId">
+            <properties>
+                <property name="columnTitle" value="Run"/>
+            </properties>
+        </column>
+        <column name="workbook"/>
+    </columns>
+    <sorts>
+        <sort column="subjectId" />
+        <sort column="date" descending="true"/>
+    </sorts>
+</customView>

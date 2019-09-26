@@ -1,0 +1,75 @@
+<tables xmlns="http://labkey.org/data/xml">
+    <table tableName="assaytypes" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Genotyping Assay Types</tableTitle>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
+        <columns>
+            <column columnName="name"/>
+            <column columnName="description"/>
+        </columns>
+    </table>
+    <table tableName="primer_pairs" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Primer Pairs</tableTitle>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
+        <pkColumnName>primername</pkColumnName>
+        <columns>
+            <column columnName="primername">
+                <columnTitle>Primer Name</columnTitle>
+                <isKeyField>true</isKeyField>
+            </column>
+            <column columnName="ref_nt_name">
+                <columnTitle>Ref NT Name</columnTitle>
+            </column>
+            <column columnName="ref_nt_id">
+                <columnTitle>Ref NT Id</columnTitle>
+            </column>
+            <column columnName="shortname">
+                <nullable>true</nullable>
+                <columnTitle>Short Name</columnTitle>
+            </column>
+            <column columnName="forwardprimer">
+                <nullable>true</nullable>
+                <columnTitle>Forward Primer</columnTitle>
+            </column>
+            <column columnName="reverseprimer">
+                <nullable>true</nullable>
+                <columnTitle>Reverse Primer</columnTitle>
+            </column>
+            <column columnName="createdby">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="created">
+                <isUserEditable>false</isUserEditable>
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modified">
+                <isUserEditable>false</isUserEditable>
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+        </columns>
+    </table>
+    <table tableName="ssp_result_types" tableDbType="TABLE">
+        <tableTitle>SSP Result Types</tableTitle>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
+        <pkColumnName>result</pkColumnName>
+        <titleColumn>result</titleColumn>
+        <columns>
+            <column columnName="result">
+                <isKeyField>true</isKeyField>
+            </column>
+            <column columnName="meaning">
+            </column>
+            <column columnName="importAliases">
+                <columnTitle>Import Aliases</columnTitle>
+            </column>
+        </columns>
+    </table>
+</tables>

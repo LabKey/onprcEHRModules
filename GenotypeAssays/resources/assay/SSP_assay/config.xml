@@ -1,0 +1,7 @@
+<ap:provider xmlns:ap="http://labkey.org/study/assay/xml">
+    <ap:name>SSP Typing</ap:name>
+    <ap:description>Sequence Specific PCR Assay.</ap:description>
+    <ap:requiredModules>
+        <ap:moduleName>GenotypeAssays</ap:moduleName>
+    </ap:requiredModules>
+</ap:provider>
