@@ -1,131 +1,47 @@
-* text=auto !eol
-GenotypeAssays/build.gradle -text
-GenotypeAssays/module.properties -text
-GenotypeAssays/resources/assay/GenotypeAssay/config.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/domains/batch.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/domains/result.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/domains/run.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/Batches.query.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/Data.query.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/Data/.qview.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/Runs.query.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/Runs/.qview.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/resultSummaryBySubject.query.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/resultSummaryBySubject.sql -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/resultSummaryBySubjectAndMethod.query.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/resultSummaryBySubjectAndMethod.sql -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/strConflicts.query.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/strConflicts.sql -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/strSummary.query.xml -text
-GenotypeAssays/resources/assay/GenotypeAssay/queries/strSummary.sql -text
-GenotypeAssays/resources/assay/GenotypeAssay/views/upload.html -text
-GenotypeAssays/resources/assay/GenotypeAssay/views/upload.view.xml -text
-GenotypeAssays/resources/assay/SSP_assay/config.xml -text
-GenotypeAssays/resources/assay/SSP_assay/domains/batch.xml -text
-GenotypeAssays/resources/assay/SSP_assay/domains/result.xml -text
-GenotypeAssays/resources/assay/SSP_assay/domains/run.xml -text
-GenotypeAssays/resources/assay/SSP_assay/queries/AlleleFrequencies.query.xml -text
-GenotypeAssays/resources/assay/SSP_assay/queries/AlleleFrequencies.sql -text
-GenotypeAssays/resources/assay/SSP_assay/queries/Batches.query.xml -text
-GenotypeAssays/resources/assay/SSP_assay/queries/Data.query.xml -text
-GenotypeAssays/resources/assay/SSP_assay/queries/Data/.qview.xml -text
-GenotypeAssays/resources/assay/SSP_assay/queries/Runs.query.xml -text
-GenotypeAssays/resources/assay/SSP_assay/queries/Runs/.qview.xml -text
-GenotypeAssays/resources/assay/SSP_assay/queries/SSP_Pivot.query.xml -text
-GenotypeAssays/resources/assay/SSP_assay/queries/SSP_Pivot.sql -text
-GenotypeAssays/resources/assay/SSP_assay/queries/SSP_Summary.query.xml -text
-GenotypeAssays/resources/assay/SSP_assay/queries/SSP_Summary.sql -text
-GenotypeAssays/resources/assay/SSP_assay/queries/conflictingResults.query.xml -text
-GenotypeAssays/resources/assay/SSP_assay/queries/conflictingResults.sql -text
-GenotypeAssays/resources/assay/SSP_assay/views/upload.html -text
-GenotypeAssays/resources/assay/SSP_assay/views/upload.view.xml -text
-GenotypeAssays/resources/assay/SnpAssay/config.xml -text
-GenotypeAssays/resources/assay/SnpAssay/domains/batch.xml -text
-GenotypeAssays/resources/assay/SnpAssay/domains/result.xml -text
-GenotypeAssays/resources/assay/SnpAssay/domains/run.xml -text
-GenotypeAssays/resources/assay/SnpAssay/queries/Batches.query.xml -text
-GenotypeAssays/resources/assay/SnpAssay/queries/Data.query.xml -text
-GenotypeAssays/resources/assay/SnpAssay/queries/Data/.qview.xml -text
-GenotypeAssays/resources/assay/SnpAssay/queries/Runs.query.xml -text
-GenotypeAssays/resources/assay/SnpAssay/queries/Runs/.qview.xml -text
-GenotypeAssays/resources/assay/SnpAssay/queries/highConfidence.query.xml -text
-GenotypeAssays/resources/assay/SnpAssay/queries/highConfidence.sql -text
-GenotypeAssays/resources/assay/SnpAssay/queries/snpConflicts.query.xml -text
-GenotypeAssays/resources/assay/SnpAssay/queries/snpConflicts.sql -text
-GenotypeAssays/resources/assay/SnpAssay/queries/snpSummary.query.xml -text
-GenotypeAssays/resources/assay/SnpAssay/queries/snpSummary.sql -text
-GenotypeAssays/resources/assay/SnpAssay/views/upload.html -text
-GenotypeAssays/resources/assay/SnpAssay/views/upload.view.xml -text
-GenotypeAssays/resources/module.xml -text
-GenotypeAssays/resources/schemas/dbscripts/postgresql/genotypeassays-0.00-0.01.sql -text
-GenotypeAssays/resources/schemas/dbscripts/postgresql/genotypeassays-0.02-0.03.sql -text
-GenotypeAssays/resources/schemas/dbscripts/sqlserver/genotypeassays-0.00-0.01.sql -text
-GenotypeAssays/resources/schemas/dbscripts/sqlserver/genotypeassays-0.02-0.03.sql -text
-GenotypeAssays/resources/schemas/genotypeassays.xml -text
-GenotypeAssays/resources/views/bulkHaplotype.html -text
-GenotypeAssays/resources/views/bulkHaplotype.view.xml -text
-GenotypeAssays/resources/views/sbtReview.html -text
-GenotypeAssays/resources/views/sbtReview.view.xml -text
-GenotypeAssays/resources/web/genotypeassays/buttons.js -text
-GenotypeAssays/resources/web/genotypeassays/data/BeadStudioExample.xlsx -text
-GenotypeAssays/resources/web/genotypeassays/data/QuantStudioExample.txt -text
-GenotypeAssays/resources/web/genotypeassays/data/UCDavis.txt -text
-GenotypeAssays/resources/web/genotypeassays/panel/HaplotypePanel.js -text
-GenotypeAssays/resources/web/genotypeassays/window/EditAlignmentsWindow.js -text
-GenotypeAssays/resources/web/genotypeassays/window/PublishResultsWindow.js -text
-GenotypeAssays/src/org/labkey/genotypeassays/AlignmentDisplayColumn.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/GeneticsTableCustomizer.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysController.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysManager.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysModule.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/GenotypeAssaysSchema.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/BeadStudioImportMethod.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/DefaultGenotypeAssaysImportMethod.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/DefaultSnpAssayImportMethod.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/GenotypeAssayDataProvider.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/QuantStudioImportMethod.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/SNPAssayDataProvider.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/SSPAssayDataProvider.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/SSPAssayDefaultImportMethod.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/SSPImportHelper.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/SSPPivotingImportMethod.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/assay/UCDavisSTRImportMethod.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/buttons/CacheAnalysesButton.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/buttons/HaplotypeReviewButton.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/buttons/PublishSBTHaplotypesButton.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/buttons/PublishSBTResultsButton.java -text
-GenotypeAssays/src/org/labkey/genotypeassays/buttons/SBTReviewButton.java -text
-GenotypeAssays/test/src/org/labkey/test/tests/external/labModules/GenotypeAssaysTest.java -text
-HormoneAssay/build.gradle -text
-HormoneAssay/module.properties -text
-HormoneAssay/resources/assay/hormone/config.xml -text
-HormoneAssay/resources/assay/hormone/domains/batch.xml -text
-HormoneAssay/resources/assay/hormone/domains/result.xml -text
-HormoneAssay/resources/assay/hormone/domains/run.xml -text
-HormoneAssay/resources/assay/hormone/queries/Batches.query.xml -text
-HormoneAssay/resources/assay/hormone/queries/Data.query.xml -text
-HormoneAssay/resources/assay/hormone/queries/Data/.qview.xml -text
-HormoneAssay/resources/assay/hormone/queries/Results[!!-~]Pivoted.query.xml -text
-HormoneAssay/resources/assay/hormone/queries/Results[!!-~]Pivoted.sql -text
-HormoneAssay/resources/assay/hormone/queries/Results[!!-~]Pivoted/.qview.xml -text
-HormoneAssay/resources/assay/hormone/queries/Runs.query.xml -text
-HormoneAssay/resources/assay/hormone/queries/Runs/.qview.xml -text
-HormoneAssay/resources/assay/hormone/views/upload.html -text
-HormoneAssay/resources/assay/hormone/views/upload.view.xml -text
-HormoneAssay/resources/schemas/dbscripts/postgresql/hormoneassay-0.00-0.01.sql -text
-HormoneAssay/resources/schemas/dbscripts/postgresql/hormoneassay-0.01-0.02.sql -text
-HormoneAssay/resources/schemas/dbscripts/postgresql/hormoneassay-0.02-0.03.sql -text
-HormoneAssay/resources/schemas/dbscripts/sqlserver/hormoneassay-0.00-0.01.sql -text
-HormoneAssay/resources/schemas/dbscripts/sqlserver/hormoneassay-0.01-0.02.sql -text
-HormoneAssay/resources/schemas/dbscripts/sqlserver/hormoneassay-0.02-0.03.sql -text
-HormoneAssay/resources/schemas/hormoneassay.xml -text
-HormoneAssay/resources/web/hormoneassay/SampleData/RocheE411.txt -text
-HormoneAssay/src/org/labkey/hormoneassay/HormoneAssayController.java -text
-HormoneAssay/src/org/labkey/hormoneassay/HormoneAssayDataProvider.java -text
-HormoneAssay/src/org/labkey/hormoneassay/HormoneAssayManager.java -text
-HormoneAssay/src/org/labkey/hormoneassay/HormoneAssayModule.java -text
-HormoneAssay/src/org/labkey/hormoneassay/HormoneAssaySchema.java -text
-HormoneAssay/src/org/labkey/hormoneassay/assay/DefaultImportMethod.java -text
-HormoneAssay/src/org/labkey/hormoneassay/assay/PivotedImportMethod.java -text
-HormoneAssay/src/org/labkey/hormoneassay/assay/RocheE411ImportMethod.java -text
-HormoneAssay/test/src/org/labkey/test/tests/external/labModules/HormoneAssayTest.java -text
+# Convert text files to OS line-endings on checkout, and LF on check-in
+*               text=auto !eol
+
+# Text files to convert
+*.css           text diff=css
+*.htm           text diff=html
+*.html          text diff=html
+*.java          text diff=java
+*.js            text
+*.json          text
+*.jsp           text
+*.jspf          text
+*.jspx          text
+*.properties    text
+*.py            text diff=python
+*.sql           text
+*.tld           text
+*.ts            text
+*.txt           text
+*.xml           text
+*.yml           text
+
+# Keep unix endings
+*.bash          text eol=lf
+*.sh            text eol=lf
+
+# Keep Windows endings
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+
+# Known binary files -- Don't change (binary is a macro for -text -diff)
+*.bin           binary
+*.class         binary
+*.dll           binary
+*.ear           binary
+*.exe           binary
+*.gif           binary
+*.gz            binary
+*.ico           binary
+*.jar           binary
+*.jpg           binary
+*.jpeg          binary
+*.png           binary
+*.so            binary
+*.tar           binary
+*.war           binary
+*.zip           binary
