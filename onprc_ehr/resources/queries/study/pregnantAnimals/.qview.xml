@@ -1,0 +1,27 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="false">
+    <columns>
+        <column name="Id/curLocation/area">
+            <properties>
+                <property name="columnTitle" value="Area"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/room">
+            <properties>
+                <property name="columnTitle" value="Room"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/cage">
+            <properties>
+                <property name="columnTitle" value="Cage"/>
+            </properties>
+        </column>
+        <column name="Id"/>
+        <column name="confirmationDate"/>
+        <column name="estDeliveryDate"/>
+        <column name="estDeliveryDays"/>
+        <column name="confirmationType"/>
+    </columns>
+    <sorts>
+        <sort column="Id"/>
+    </sorts>
+</customView>

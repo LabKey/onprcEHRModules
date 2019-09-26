@@ -1,0 +1,19 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="category"/>
+        <column name="pathogen"/>
+        <column name="result"/>
+        <column name="qualifier"/>
+        <column name="roomAtTime"/>
+        <column name="viralStatus"/>
+        <column name="viralStatusAtEnd"/>
+        <column name="SPFStatus"/>
+        <column name="history"/>
+    </columns>
+    <sorts>
+        <sort column="date"/>
+        <sort column="Id"/>
+    </sorts>
+</customView>

@@ -1,0 +1,22 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="flagUsageSummary" tableDbType="TABLE">
+                <tableTitle>Summary of Active Flags</tableTitle>
+                <columns>
+                    <column columnName="totalRecords">
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=Animal Record Flags&amp;
+                            query.viewName=Active Flags&amp;
+                            query.flag/category~eq=${category}&amp;
+                            query.flag/value~eq=${value}&amp;
+                        </url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+
+

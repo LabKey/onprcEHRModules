@@ -1,0 +1,54 @@
+code	meaning	SourceCity	SourceState	SourceCountry
+abl	Advanced Bioscience Laboratories	NULL	NULL	NULL
+avp	Aventis Pasteur, Toronto, Ontario Canada	NULL	NULL	NULL
+bab	Brooks Air Force Base, TX	NULL	NULL	NULL
+bmy	Bristol Meyers Labs, IN	NULL	NULL	NULL
+bos	Boston	NULL	NULL	NULL
+bqi	Bioqual Inc, Rockville MD	NULL	NULL	NULL
+brl	Biologic Resources Lab, Univ of IL/ Chicago	NULL	NULL	NULL
+bru	Brown University, Warwick, RI	NULL	NULL	NULL
+btl	Industrial Biotest Laboratory	NULL	NULL	NULL
+cal	California	NULL	NULL	NULL
+cen	WNPRC	NULL	NULL	NULL
+cpc	Caribbean Primate Center	NULL	NULL	NULL
+crh	Charles River Brf, Houston Texas	NULL	NULL	NULL
+crp	Covance Research Products	NULL	NULL	NULL
+csc	Clinical Science Clinic, Madison, WI	NULL	NULL	NULL
+csp	Central State Primates, Kaiser, MO	NULL	NULL	NULL
+cuw	Catholic University, Washington, DE	NULL	NULL	NULL
+dfs	Department Of Food Science, Madison, WI	NULL	NULL	NULL
+fer	Feral	NULL	NULL	NULL
+fri	Food Research Inst, UW-Madison	NULL	NULL	NULL
+haw	Hawaii	NULL	NULL	NULL
+hmc	Hershey Medical Center Hershey, PA	NULL	NULL	NULL
+hms	Harvard Medical School, New England Primate Center, Southborough MA	NULL	NULL	NULL
+hzt	Hazelton Labs, Madison, WI	NULL	NULL	NULL
+lab	Harlow Primate Lab, UW-Madison	NULL	NULL	NULL
+lbi	Litton Bionetics	NULL	NULL	NULL
+lbs	Laboratory Animal Breeders & Services, Yemassee, SC	NULL	NULL	NULL
+loy	Dr. Loy	NULL	NULL	NULL
+lsp	Lensip Tuxedo, NY	NULL	NULL	NULL
+mds	University of WI Medical School	NULL	NULL	NULL
+mic	Michigan	NULL	NULL	NULL
+mrb	Miami Rare Bird Farm	NULL	NULL	NULL
+opc	Oregon Primate Center	NULL	NULL	NULL
+pfi	Pfizer, Kalamazoo MI	NULL	NULL	NULL
+pii	Primate Imports Inc.	NULL	NULL	NULL
+pit	University Of Pittsburg	NULL	NULL	NULL
+pli	Primelabs Inc.	NULL	NULL	NULL
+pr	Puerto Rico	NULL	NULL	NULL
+sfi	Shamrock Farms Inc.	NULL	NULL	NULL
+snb	Shin Nippon Biomedical Labs, Everett, WA	NULL	NULL	NULL
+sun	State University of New York At Syracuse	NULL	NULL	NULL
+tpc	Texas Primate Center	NULL	NULL	NULL
+tss	Three Springs Scientific, Yemassee, SC	NULL	NULL	NULL
+tul	Tulsa Zoo	NULL	NULL	NULL
+ucd	Univ. of California-Davis Primate Center	NULL	NULL	NULL
+ucr	University Of California-Riverside, Riverside, CA	NULL	NULL	NULL
+vs	Veterinary Science from Hazleton Labs	NULL	NULL	NULL
+wac	Woodard Asiatic Corporation	NULL	NULL	NULL
+wai	Waisman Center, Madison, WI	NULL	NULL	NULL
+wnc	Winston-Salem, NC	NULL	NULL	NULL
+wvh	VA Hospital, Wood, WI	NULL	NULL	NULL
+ypc	Yerkes Primate Center, Atlanta, GA	NULL	NULL	NULL
+zoo	Zoology, UW-Madison	NULL	NULL	NULL

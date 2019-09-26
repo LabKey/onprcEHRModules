@@ -1,0 +1,60 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="pairDifferences" tableDbType="TABLE">
+                <tableTitle>Changes In Cagemates</tableTitle>
+                <description>This query is designed to compare animal pairings between two dates.  It will use the animal location at midnight of that date, and it will consider full-pairs only.</description>
+                <columns>
+                    <column columnName="Id">
+
+                    </column>
+                    <column columnName="hasChanged">
+                        <isHidden>true</isHidden>
+                        <columnTitle>Has Changed?</columnTitle>
+                    </column>
+                    <column columnName="room1">
+                        <columnTitle>Room 1</columnTitle>
+                    </column>
+                    <column columnName="cage1">
+                        <columnTitle>Cage 1</columnTitle>
+                    </column>
+                    <column columnName="housingType1">
+                        <columnTitle>Housing Type 1</columnTitle>
+                    </column>
+                    <column columnName="room2">
+                        <columnTitle>Room 2</columnTitle>
+                    </column>
+                    <column columnName="cage2">
+                        <columnTitle>Cage 2</columnTitle>
+                    </column>
+                    <column columnName="housingType2">
+                        <columnTitle>Housing Type 2</columnTitle>
+                    </column>
+                    <column columnName="animalsInCage1">
+                        <columnTitle>Animals On Date 1</columnTitle>
+                        <displayWidth>400</displayWidth>
+                    </column>
+                    <column columnName="animalsInCage2">
+                        <columnTitle>Animals On Date 2</columnTitle>
+                        <displayWidth>400</displayWidth>
+                    </column>
+                    <column columnName="pairObservations">
+                        <columnTitle>Pair Observations On Date</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=pairings&amp;
+                            query.Id~eq=${Id}&amp;
+                            query.date~dateeq=${date2}&amp;
+                        </url>
+                    </column>
+                    <column columnName="date1">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="date2">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

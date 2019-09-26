@@ -1,0 +1,95 @@
+<script type="text/javascript">
+
+Ext4.onReady(function (){
+    var webpart = <%=webpartContext%>;
+
+    Ext4.create('Ext.panel.Panel', {
+        itemId: 'snomedSearchPanel',
+        border: false,
+        defaults: {
+            border: false
+        },
+        items: [{
+            html: 'This page allows animals to be identified based on SNOMED codes tagged in their record.  Enter keywords or other terms to search into the box below, one per line.  The search will be performed on the meaning of the SNOMED, not the code itself.',
+            maxWidth: 1000,
+            style: 'padding-bottom: 10px;'
+        },{
+            xtype: 'panel',
+            itemId: 'snomed',
+            defaults: {
+                border: false
+            },
+            items: [{
+                xtype: 'textarea',
+                itemId: 'searchTerms',
+                //fieldLabel: 'Search Terms',
+                width: 1000,
+                height: 200
+            }],
+            buttonAlign: 'left',
+            buttons: [{
+                text: 'Search',
+                scope: this,
+                handler: function(btn){
+                    var panel = btn.up('#snomedSearchPanel');
+                    var target = panel.down('#target');
+                    var text = Ext4.String.trim(panel.down('#searchTerms').getValue());
+                    if (!text){
+                        Ext4.Msg.alert('Error', 'Must enter at least one search term');
+                        return;
+                    }
+
+                    text = text.replace(/(\r\n|\n|\r)+/gm, '\n');
+                    if (text){
+                        var tmp = [];
+                        text = text.split('\n');
+                        Ext4.Array.forEach(text, function(t){
+                            t = Ext4.String.trim(t);
+                            if (t)
+                                tmp.push(t);
+                        }, this);
+                        tmp = Ext4.Array.unique(tmp);
+                        text = tmp;
+                    }
+
+                    if (!text.length){
+                        Ext4.Msg.alert('Error', 'Must enter at least 1 search term');
+                        return;
+                    }
+
+                    target.removeAll();
+                    Ext4.Msg.wait('Loading...');
+
+                    var filterArray = [];
+                    Ext4.Array.forEach(text, function(term){
+                        filterArray.push(LABKEY.Filter.create('meaning', term, LABKEY.Filter.Types.CONTAINS));
+                    }, this);
+
+                    target.add({
+                        xtype: 'ldk-querypanel',
+                        queryConfig: {
+                            schemaName: 'ehr',
+                            queryName: 'snomedBySet',
+                            filters: filterArray,
+                            frame: 'none',
+                            timeout: 9999999,
+                            scope: this,
+                            sort: 'Id,date',
+                            success: function () {
+                                panel.doLayout();
+                                Ext4.Msg.hide();
+                            },
+                            failure: LDK.Utils.getErrorCallback()
+                        }
+                    });
+                }
+            }]
+        },{
+            xtype: 'container',
+            style: 'padding-top: 20px;padding-left: 5px;',
+            itemId: 'target'
+        }]
+    }).render(webpart.wrapperDivId);
+});
+
+</script>

@@ -1,0 +1,530 @@
+<tables xmlns="http://labkey.org/data/xml">
+    <table tableDbType="TABLE" tableName="etl_runs">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="date">
+            </column>
+            <column columnName="queryname">
+                <columnTitle>queryName</columnTitle>
+            </column>
+            <column columnName="rowversion">
+                <columnTitle>Row Version</columnTitle>
+            </column>
+            <column columnName="container"/>
+        </columns>
+    </table>
+    <table tableName="investigators" tableDbType="TABLE">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <tableTitle>Investigators</tableTitle>
+        <auditLogging>DETAILED</auditLogging>
+        <titleColumn>lastName</titleColumn>
+        <importUrl></importUrl>
+        <insertUrl></insertUrl>
+        <updateUrl></updateUrl>
+        <deleteUrl></deleteUrl>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Investigator Id</columnTitle>
+            </column>
+            <column columnName="lastname">
+                <columnTitle>Last Name</columnTitle>
+            </column>
+            <column columnName="firstname">
+                <columnTitle>First Name</columnTitle>
+            </column>
+            <column columnName="position">
+                <columnTitle>Position</columnTitle>
+            </column>
+            <column columnName="address">
+                <columnTitle>Address</columnTitle>
+            </column>
+            <column columnName="city">
+                <columnTitle>City</columnTitle>
+            </column>
+            <column columnName="state">
+                <columnTitle>State</columnTitle>
+            </column>
+            <column columnName="country">
+                <columnTitle>Country</columnTitle>
+            </column>
+            <column columnName="zip">
+                <columnTitle>ZIP</columnTitle>
+            </column>
+            <column columnName="phonenumber">
+                <columnTitle>Phone Number</columnTitle>
+            </column>
+            <column columnName="investigatortype">
+                <columnTitle>Investigator Type</columnTitle>
+            </column>
+            <column columnName="employeeid">
+                <columnTitle>Employee Id</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="financialanalyst">
+                <columnTitle>Financial Analyst</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="emailaddress">
+                <columnTitle>Email Address</columnTitle>
+            </column>
+            <column columnName="datecreated">
+                <columnTitle>Date Created</columnTitle>
+            </column>
+            <column columnName="datedisabled">
+                <columnTitle>Date Disabled</columnTitle>
+            </column>
+            <column columnName="division">
+                <columnTitle>Division</columnTitle>
+            </column>
+            <column columnName="assignedVet">
+                <columnTitle>Responsible Vet</columnTitle>
+                <isHidden>true</isHidden>
+                <fk>
+                    <fkDbSchema>core</fkDbSchema>
+                    <fkTable>users</fkTable>
+                    <fkColumnName>UserId</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="userid">
+                <columnTitle>LabKey UserId</columnTitle>
+                <fk>
+                    <fkDbSchema>core</fkDbSchema>
+                    <fkTable>users</fkTable>
+                    <fkColumnName>userid</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="createdby">
+
+            </column>
+            <column columnName="created">
+
+            </column>
+            <column columnName="modifiedby">
+
+            </column>
+            <column columnName="modified">
+
+            </column>
+            <column columnName="objectid">
+
+            </column>
+        </columns>
+    </table>
+    <table tableDbType="TABLE" tableName="serology_test_schedule">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <tableTitle>Serology Test Schedule</tableTitle>
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="code">
+                <columnTitle>Agent</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr_lookups</fkDbSchema>
+                    <fkTable>snomed</fkTable>
+                    <fkColumnName>code</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="flag">
+                <columnTitle>Flag</columnTitle>
+                <description>If provided, only animals with this flag will be considered.  Leave blank for all.</description>
+            </column>
+            <column columnName="species">
+                <columnTitle>Species</columnTitle>
+                <description>If provided, only animals of this species will be considered.  Leave blank for all.</description>
+                <fk>
+                    <fkDbSchema>ehr_lookups</fkDbSchema>
+                    <fkTable>species</fkTable>
+                    <fkColumnName>common</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="interval">
+                <columnTitle>Test Interval (Months)</columnTitle>
+            </column>
+        </columns>
+    </table>
+    <table tableName="customers" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Customers</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <titleColumn>lastName</titleColumn>
+        <columns>
+            <column columnName="rowId">
+                <columnTitle>Customer Id</columnTitle>
+            </column>
+            <column columnName="firstName">
+                <columnTitle>First Name</columnTitle>
+            </column>
+            <column columnName="lastName">
+                <columnTitle>Last Name</columnTitle>
+            </column>
+            <column columnName="investigatorId">
+                <columnTitle>Investigator</columnTitle>
+                <fk>
+                    <fkDbSchema>onprc_ehr</fkDbSchema>
+                    <fkTable>investigators</fkTable>
+                    <fkColumnName>rowId</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="institution">
+                <columnTitle>Institution</columnTitle>
+            </column>
+            <column columnName="title">
+                <columnTitle>Title</columnTitle>
+                <inputType>textfield</inputType>
+            </column>
+            <column columnName="affiliation">
+                <columnTitle>Affiliation</columnTitle>
+            </column>
+            <column columnName="address">
+                <columnTitle>Address</columnTitle>
+            </column>
+            <column columnName="city">
+                <columnTitle>City</columnTitle>
+            </column>
+            <column columnName="state">
+                <columnTitle>State</columnTitle>
+            </column>
+            <column columnName="country">
+                <columnTitle>Country</columnTitle>
+            </column>
+            <column columnName="zip">
+                <columnTitle>ZIP</columnTitle>
+            </column>
+            <column columnName="phoneNumber">
+                <columnTitle>Phone Number</columnTitle>
+            </column>
+            <column columnName="recipientType">
+                <columnTitle>Recipient Type</columnTitle>
+            </column>
+            <column columnName="emailAddress">
+                <columnTitle>Email Address</columnTitle>
+            </column>
+            <column columnName="shipAddress">
+                <columnTitle>Ship Address</columnTitle>
+            </column>
+            <column columnName="shipCity">
+                <columnTitle>Ship City</columnTitle>
+            </column>
+            <column columnName="shipState">
+                <columnTitle>Ship State</columnTitle>
+            </column>
+            <column columnName="shipCountry">
+                <columnTitle>Ship Country</columnTitle>
+            </column>
+            <column columnName="shipZip">
+                <columnTitle>Ship ZIP</columnTitle>
+            </column>
+            <column columnName="dateCreated">
+                <columnTitle>Date Created</columnTitle>
+            </column>
+            <column columnName="dateDisabled">
+                <columnTitle>Date Disabled</columnTitle>
+            </column>
+            <column columnName="objectid"/>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+    <table tableDbType="TABLE" tableName="vet_assignment" useColumnOrder="true">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <tableTitle>Vet Assignment</tableTitle>
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="userid">
+                <columnTitle>Vet</columnTitle>
+            </column>
+            <column columnName="area">
+                <columnTitle>Area</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr_lookups</fkDbSchema>
+                    <fkTable>areas</fkTable>
+                    <fkColumnName>area</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="room">
+                <columnTitle>Room</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr_lookups</fkDbSchema>
+                    <fkTable>rooms</fkTable>
+                    <fkColumnName>room</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="protocol">
+                <columnTitle>IACUC Protocol</columnTitle>
+            </column>
+            <column columnName="priority">
+                <columnTitle>High Priority?</columnTitle>
+                <description>If true, then this location will supercede any active assignments for that animal</description>
+            </column>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+    <table tableDbType="TABLE" tableName="housing_transfer_requests" useColumnOrder="true">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <tableTitle>Housing Transfer Requests</tableTitle>
+        <columns>
+            <column columnName="Id">
+                <columnTitle>Id</columnTitle>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+            </column>
+            <column columnName="date">
+                <columnTitle>Date</columnTitle>
+            </column>
+            <column columnName="room">
+                <columnTitle>Destination Room</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr_lookups</fkDbSchema>
+                    <fkTable>rooms</fkTable>
+                    <fkColumnName>room</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="cage">
+                <columnTitle>Destination Cage</columnTitle>
+            </column>
+            <column columnName="divider">
+                <columnTitle>Divider</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr_lookups</fkDbSchema>
+                    <fkTable>divider_types</fkTable>
+                    <fkColumnName>rowid</fkColumnName>
+                    <fkDisplayColumnName>divider</fkDisplayColumnName>
+                </fk>
+            </column>
+            <column columnName="reason">
+                <columnTitle>Reason For Move</columnTitle>
+                <!--<fk>-->
+                    <!--<fkDbSchema>ehr_lookups</fkDbSchema>-->
+                    <!--<fkTable>areas</fkTable>-->
+                    <!--<fkColumnName>area</fkColumnName>-->
+                <!--</fk>-->
+            </column>
+            <column columnName="remark">
+                <columnTitle>Special Instructions</columnTitle>
+            </column>
+            <column columnName="formSort">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="QCState">
+                <columnTitle>Status</columnTitle>
+                <conditionalFormats>
+                    <conditionalFormat>
+                        <filters>
+                            <filter operator="eq" value="In Progress"/>
+                        </filters>
+                        <backgroundColor>FBEC5D</backgroundColor>
+                    </conditionalFormat>
+                    <conditionalFormat>
+                        <filters>
+                            <filter operator="eq" value="Review Required"/>
+                        </filters>
+                        <backgroundColor>FBEC5D</backgroundColor>
+                    </conditionalFormat>
+                    <conditionalFormat>
+                        <filters>
+                            <filter operator="eq" value="Scheduled"/>
+                        </filters>
+                        <backgroundColor>FBEC5D</backgroundColor>
+                    </conditionalFormat>
+                    <conditionalFormat>
+                        <filters>
+                            <filter operator="eq" value="Delete Requested"/>
+                        </filters>
+                        <backgroundColor>FF0000</backgroundColor>
+                    </conditionalFormat>
+                    <conditionalFormat>
+                        <filters>
+                            <filter operator="eq" value="Request: Approved"/>
+                        </filters>
+                        <backgroundColor>FBEC5D</backgroundColor>
+                    </conditionalFormat>
+                    <conditionalFormat>
+                        <filters>
+                            <filter operator="eq" value="Request: Sample Delivered"/>
+                        </filters>
+                        <backgroundColor>FBEC5D</backgroundColor>
+                    </conditionalFormat>
+                    <conditionalFormat>
+                        <filters>
+                            <filter operator="eq" value="Request: Denied"/>
+                        </filters>
+                        <backgroundColor>FF0000</backgroundColor>
+                    </conditionalFormat>
+                    <conditionalFormat>
+                        <filters>
+                            <filter operator="eq" value="Request: Cancelled"/>
+                        </filters>
+                        <backgroundColor>FBEC5D</backgroundColor>
+                    </conditionalFormat>
+                    <conditionalFormat>
+                        <filters>
+                            <filter operator="eq" value="Request: Pending"/>
+                        </filters>
+                        <backgroundColor>FBEC5D</backgroundColor>
+                    </conditionalFormat>
+                </conditionalFormats>
+            </column>
+            <column columnName="requestid"/>
+            <column columnName="objectid"/>
+
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+        <buttonBarOptions includeStandardButtons="false">
+            <includeScript>ehr.context</includeScript>
+            <item text="Grid Views">
+                <originalText>Grid Views</originalText>
+            </item>
+            <item text="Charts">
+                <originalText>Charts</originalText>
+            </item>
+            <item text="Export">
+                <originalText>Export</originalText>
+            </item>
+            <item text="Print">
+                <originalText>Print</originalText>
+            </item>
+        </buttonBarOptions>
+    </table>
+    <table tableDbType="TABLE" tableName="birth_condition">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <insertUrl></insertUrl>
+        <updateUrl></updateUrl>
+        <importUrl></importUrl>
+        <deleteUrl></deleteUrl>
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="value"/>
+            <column columnName="alive">
+                <columnTitle>Counts as Alive?</columnTitle>
+            </column>
+            <column columnName="description"/>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+
+    <table tableName="encounter_summaries_remarks" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Encounter Summaries Remarks</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="Id">
+                <columnTitle>Id</columnTitle>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="date"/>
+            <column columnName="category">
+                <columnTitle>Category</columnTitle>
+            </column>
+            <column columnName="parentid"/>
+            <column columnName="taskid">
+                <columnTitle>Task Id</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>tasks</fkTable>
+                    <fkColumnName>taskid</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="schemaName">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="queryName">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="remark"/>
+            <column columnName="objectid"/>
+            <column columnName="formsort"/>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+
+    <table tableName="NHP_Training" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>NHP Training</tableTitle>
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="RowId">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="Id">
+                <columnTitle>Id</columnTitle>
+            </column>
+
+            <column columnName="date">
+                <columnTitle>Start Date</columnTitle>
+            </column>
+
+            <column columnName="training_Ending_Date">
+                <columnTitle>End Date</columnTitle>
+            </column>
+            <column columnName="training_type">
+                <columnTitle>Training Type</columnTitle>
+            </column>
+
+            <column columnName="reason">
+                <columnTitle>Training Reason</columnTitle>
+            </column>
+            <column columnName="training_results">
+                <columnTitle>Training Result</columnTitle>
+            </column>
+            <column columnName="remark"/>
+            <column columnName="taskid">
+                <columnTitle>Task Id</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>tasks</fkTable>
+                    <fkColumnName>taskid</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="qcstate">
+                <fk>
+                    <fkDbSchema>core</fkDbSchema>
+                    <fkTable>qcstate</fkTable>
+                    <fkColumnName>RowId</fkColumnName>
+                </fk>
+            </column>
+
+            <column columnName="formSort">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="performedby">
+                <columnTitle>Performed by</columnTitle>
+            </column>
+
+            <column columnName="objectid">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby"/>
+
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+            </column>
+        </columns>
+    </table>
+</tables>

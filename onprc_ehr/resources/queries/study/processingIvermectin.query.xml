@@ -1,0 +1,18 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="processingIvermectin" tableDbType="TABLE">
+                <tableTitle>Date of Last Ivermectin Treatment</tableTitle>
+                <columns>
+                    <column columnName="lastDate">
+                        <columnTitle>Date of Last Ivermectin</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Drug Administration&amp;query.Id~eq=${Id}&amp;query.date~eq=${lastDate}</url>
+                    </column>
+                    <column columnName="daysSinceTreatment">
+                        <columnTitle>Days Since Treatment</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

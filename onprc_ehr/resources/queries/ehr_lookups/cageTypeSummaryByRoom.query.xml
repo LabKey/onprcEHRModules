@@ -1,0 +1,10 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="cageTypeSummaryByRoom" tableDbType="TABLE">
+                <tableTitle>Cages Type Summary, By Room</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

@@ -1,0 +1,11 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+
+        Ext4.create('ONPRC.panel.IconPanel', {
+            category: 'dcm'
+        }).render(webpart.wrapperDivId);
+    });
+
+</script>

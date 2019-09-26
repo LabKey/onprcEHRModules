@@ -1,0 +1,30 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="roomsAssignment" tableDbType="TABLE">
+                <tableTitle>Assignment Summary By Room</tableTitle>
+                <columns>
+                    <column columnName="room">
+                        <isKeyField>true</isKeyField>
+                        <displayWidth>40</displayWidth>
+                    </column>
+                    <column columnName="totalAssignments">
+                        <columnTitle>Total Assignments</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=assignment&amp;query.isActive~eq=true&amp;query.id/curLocation/room~eq=${room}</url>
+                    </column>
+                    <column columnName="projects">
+                        <displayWidth>80</displayWidth>
+                    </column>
+                    <column columnName="projectIdCount">
+                        <columnTitle>Animals By Project</columnTitle>
+                        <displayWidth>140</displayWidth>
+                    </column>
+                    <column columnName="projectCageCount">
+                        <columnTitle>Cages By Project</columnTitle>
+                        <displayWidth>140</displayWidth>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

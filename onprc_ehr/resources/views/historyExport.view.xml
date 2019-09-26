@@ -1,0 +1,6 @@
+<view xmlns="http://labkey.org/data/xml/view" title="History Export" frame="portal">
+    <dependencies>
+        <dependency path="ehr.context" />
+        <dependency path="ehr/panel/ClinicalHistoryPanel.js" />
+    </dependencies>
+</view>

@@ -1,0 +1,6 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Investigators">
+    <sorts>
+        <sort column="lastName" />
+        <sort column="firstName" />
+    </sorts>
+</customView>

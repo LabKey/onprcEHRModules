@@ -1,0 +1,10 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <filters>
+        <filter column="category" value="Behavior" operator="eq"/>
+    </filters>
+    <sorts>
+        <sort column="Id/curLocation/room"/>
+        <sort column="Id/curLocation/cage"/>
+        <sort column="Id"/>
+    </sorts>
+</customView>

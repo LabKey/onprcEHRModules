@@ -1,0 +1,207 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+
+        Ext4.create('Ext.panel.Panel', {
+            border: false,
+            itemId: 'outerPanel',
+            defaults: {
+                border: false
+            },
+            items: [{
+                html: 'This page is designed to provide the raw data used for the NPRC Consortium Reports.  Note: in most cases this report will provide a grid listing the animals the provide a given metric, rather than just the final number.  This is deliberate, because sometimes interpretation may be required.',
+                width: 1000
+            },{
+                html: '<h2>Section 1: Breakdown of Animals</h2>',
+                style: 'margin-bottom: 20px;margin-top: 20px;'
+            },{
+                html: 'This section will load a listing of all animals housed at the center on the date provided.  Per animal, it will show the assignments, age, and SPF status on that date.  There are columns that categorize the animals according to funding source (U42/U24/P51), age category (infant/juvenille/breeding), etc.  These column can be used to filter in order to provide subsets showing groups like U42/SPF-9, or P51/Non-SPF.  At the bottom of the grid, there are aggregates showing the total number of animals matching each of the criteria.  Typically one would load the report for the desired date, filter to find the proper subset and use these totals as the final numbers.',
+                style: 'margin-bottom: 20px;',
+                width: 1000
+            },{
+                xtype: 'form',
+                itemId: 'filterPanel',
+                defaults: {
+                    width: 400,
+                    labelWidth: 150
+                },
+                items: [{
+                    xtype: 'datefield',
+                    name: 'date',
+                    fieldLabel: 'Date',
+                    value: new Date((new Date()).getFullYear(), 0, 1)
+                }],
+                buttonAlign: 'left',
+                buttons: [{
+                    text: 'Load',
+                    scope: this,
+                    handler: function(btn){
+                        var panel = btn.up('#outerPanel');
+                        var values = panel.down('#filterPanel').getForm().getValues();
+
+                        if (!values.date){
+                            Ext4.Msg.alert('Error', 'Must provide a date');
+                            return;
+                        }
+
+                        var target = panel.down('#queryArea');
+                        target.removeAll();
+                        target.add({
+                            xtype: 'ldk-querypanel',
+                            queryConfig: {
+                                schemaName: 'study',
+                                queryName: 'consortiumRawData',
+                                maxRows: 20,
+                                parameters: {
+                                    StartDate: values.date,
+                                    EndDate: values.date
+                                }
+                            }
+                        });
+                    }
+                }]
+            },{
+                itemId: 'queryArea',
+                border: false,
+                style: 'padding-top: 20px;',
+                bodyStyle: 'padding: 5px;',
+                defaults: {
+                    border: false
+                }
+            },{
+                html: '<hr>'
+            },{
+                html: '<h2>Section 2: Assignment</h2>',
+                style: 'margin-bottom: 20px;margin-top: 20px;'
+            },{
+                html: 'This section will load a list of all assignments that overlap with the dates provided.  The animals are categorized by their funding source and SPF Status on the date of assignment (which may have occurred prior to the start date).',
+                style: 'margin-bottom: 20px;',
+                width: 1000
+            },{
+                xtype: 'form',
+                itemId: 'filterPanel2',
+                defaults: {
+                    width: 400,
+                    labelWidth: 150
+                },
+                items: [{
+                    xtype: 'datefield',
+                    name: 'startDate',
+                    fieldLabel: 'Start Date',
+                    value: new Date((new Date()).getFullYear(), 0, 1)
+                },{
+                    xtype: 'datefield',
+                    name: 'endDate',
+                    fieldLabel: 'End Date',
+                    value: new Date((new Date()).getFullYear(), 11, 31)
+                }],
+                buttonAlign: 'left',
+                buttons: [{
+                    text: 'Load',
+                    scope: this,
+                    handler: function(btn){
+                        var panel = btn.up('#outerPanel');
+                        var values = panel.down('#filterPanel2').getForm().getValues();
+
+                        if (!values.startDate || !values.endDate){
+                            Ext4.Msg.alert('Error', 'Must provide a start date and end date');
+                            return;
+                        }
+
+                        var target = panel.down('#queryArea2');
+                        target.removeAll();
+                        target.add({
+                            xtype: 'ldk-querypanel',
+                            queryConfig: {
+                                schemaName: 'study',
+                                queryName: 'consortiumAssignmentData',
+                                maxRows: 20,
+                                parameters: {
+                                    StartDate: values.startDate,
+                                    EndDate: values.endDate,
+                                    Project: null,
+                                    Protocol: null
+                                },
+                                removeableFilters: [LABKEY.Filter.create('Id/demographics/species', values.species, LABKEY.Filter.Types.EQUAL)]
+                            }
+                        });
+                    }
+                }]
+            },{
+                itemId: 'queryArea2',
+                border: false,
+                style: 'padding-top: 20px;',
+                bodyStyle: 'padding: 5px;',
+                defaults: {
+                    border: false
+                }
+            },{
+                html: '<hr>'
+            },{
+                html: '<h2>Section 3: Births</h2>',
+                style: 'margin-bottom: 20px;margin-top: 20px;'
+            },{
+                html: 'This section will load a list of all births that took place over the dates provided.  The animals are categorized by their funding source and SPF Status.  The latter are defined using assignment/flags present during the first 30 days of the animal\'s life.',
+                style: 'margin-bottom: 20px;',
+                width: 1000
+            },{
+                xtype: 'form',
+                itemId: 'filterPanel3',
+                defaults: {
+                    width: 400,
+                    labelWidth: 150
+                },
+                items: [{
+                    xtype: 'datefield',
+                    name: 'startDate',
+                    fieldLabel: 'Start Date',
+                    value: new Date((new Date()).getFullYear(), 0, 1)
+                },{
+                    xtype: 'datefield',
+                    name: 'endDate',
+                    fieldLabel: 'End Date',
+                    value: new Date((new Date()).getFullYear(), 11, 31)
+                }],
+                buttonAlign: 'left',
+                buttons: [{
+                    text: 'Load',
+                    scope: this,
+                    handler: function(btn){
+                        var panel = btn.up('#outerPanel');
+                        var values = panel.down('#filterPanel3').getForm().getValues();
+
+                        if (!values.startDate || !values.endDate){
+                            Ext4.Msg.alert('Error', 'Must provide a start date and end date');
+                            return;
+                        }
+
+                        var target = panel.down('#queryArea3');
+                        target.removeAll();
+                        target.add({
+                            xtype: 'ldk-querypanel',
+                            queryConfig: {
+                                schemaName: 'study',
+                                queryName: 'consortiumBirthData',
+                                maxRows: 20,
+                                parameters: {
+                                    StartDate: values.startDate,
+                                    EndDate: values.endDate
+                                }
+                            }
+                        });
+                    }
+                }]
+            },{
+                itemId: 'queryArea3',
+                border: false,
+                style: 'padding-top: 20px;',
+                bodyStyle: 'padding: 5px;',
+                defaults: {
+                    border: false
+                }                
+            }]
+        }).render(webpart.wrapperDivId);
+    });
+
+</script>

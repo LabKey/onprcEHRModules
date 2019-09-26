@@ -1,0 +1,119 @@
+<script type="text/javascript">
+
+Ext4.onReady(function (){
+    if (!LABKEY.ActionURL.getParameter('room')){
+        alert('Must Provide Location');
+        return false;
+    }
+
+    var webpart = <%=webpartContext%>;
+    var room = LABKEY.ActionURL.getParameter('room');
+
+    var domSpec = [{
+        tag: 'div',
+        id :'cageDetails_' + webpart.wrapperDivId,
+        style: 'padding-bottom: 20px;'
+    },{
+        tag: 'div',
+        id :'cageLayout_' + webpart.wrapperDivId,
+        style: 'padding-bottom: 20px;'
+    },{
+        tag: 'div',
+        id :'reports_' + webpart.wrapperDivId,
+        style: 'padding-bottom: 20px;'
+    },{
+        tag: 'div',
+        id :'activeAnimals_' + webpart.wrapperDivId,
+        style: 'padding-bottom: 20px;'
+    }];
+
+    var el = Ext4.get(webpart.wrapperDivId);
+    Ext4.DomHelper.append(el, domSpec);
+
+    var filterArray = [LABKEY.Filter.create('room', LABKEY.ActionURL.getParameter('room'), LABKEY.Filter.Types.EQUAL)];
+    var buttons = null;
+    if (EHR.Security.hasLocationEditorPermission()){
+        buttons = [{
+            text: 'More Actions',
+            menu: [{
+                text: 'Copy Cages From Other Room',
+                handler: function(){
+                    Ext4.create('ONPRC_EHR.window.RoomBulkChangeWindow', {
+                        room: room
+                    }).show();
+                }
+            },{
+                text: 'Bulk Edit Cages',
+                hrefTarget: '_blank',
+                href: LABKEY.ActionURL.buildURL('ehr', 'updateQuery', null, {schemaName: 'ehr_lookups', 'query.queryName': 'cage', 'query.room~eq': room})
+            },{
+                text: 'Housing Transfer Request',
+                hrefTarget: '_blank',
+                href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {formType: 'housing_request'})
+            },{
+                text: 'Housing Transfer',
+                hrefTarget: '_blank',
+                href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {formType: 'housing'})
+            }]
+        }]
+    }
+
+    Ext4.create('LDK.panel.DetailsPanel', {
+        store: {
+            schemaName: 'ehr_lookups',
+            queryName: 'rooms',
+            filterArray: filterArray
+        },
+        title: 'Room Details',
+        renderTo: 'cageDetails_' + webpart.wrapperDivId,
+        showBackBtn: false,
+        detailsConfig: {
+            buttons: buttons
+        }
+    });
+
+    Ext4.create('ONPRC.panel.RoomLayoutPanel', {
+        doRowInversion: LABKEY.ActionURL.getParameter('doRowInversion'),
+        filterArray: [LABKEY.Filter.create('room', LABKEY.ActionURL.getParameter('room'), LABKEY.Filter.Types.EQUAL)]
+    }).render('cageLayout_' + webpart.wrapperDivId);
+
+    var filterArray2 = [
+        LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+        LABKEY.Filter.create('Id/curlocation/room', LABKEY.ActionURL.getParameter('room'), LABKEY.Filter.Types.EQUAL)
+    ];
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Animals Currently Housed',
+        schemaName: 'study',
+        queryName: 'demographics',
+        viewName: 'By Location',
+        filterArray: filterArray2,
+        sort: '-Date'
+     }).render('activeAnimals_' + webpart.wrapperDivId);
+
+    Ext4.create('LDK.panel.WebpartPanel', {
+        title: 'Other Reports',
+        items: [{
+            xtype: 'ldk-navpanel',
+            sections: [{
+                header: null,
+                items: [{
+                    name: 'Find Animals Housed In This Room At A Specific Time',
+                    url: LABKEY.ActionURL.buildURL('ehr', 'housingOverlaps', null, {room: room})
+                },{
+                    name: 'View All Animals Ever Housed In This Room',
+                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Housing', 'query.room~eq': room})
+                },{
+                    name: 'View List Of Any Cages With Insufficient Space For The Animals Housed In Them (Using The Guide)',
+                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr_lookups', 'query.queryName': 'cagereview', 'query.room~eq': room, 'query.viewName': 'Problem Cages', 'query.param.RequirementSet': 'The Guide'})
+//                },{
+//                    name: 'View List Of Any Cages With Insufficient Space For The Animals Housed In Them (Using USDA Guidelines)',
+//                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr_lookups', 'query.queryName': 'cagereview', 'query.room~eq': room, 'query.viewName': 'Problem Cages', 'query.param.RequirementSet': 'USDA'})
+                }]
+            }]
+        }],
+        renderTo: 'reports_' + webpart.wrapperDivId
+    });
+});
+
+</script>

@@ -1,0 +1,46 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="pregnancyConfirmation" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
+                <insertUrl />
+                <importUrl />
+                <updateUrl />
+                <deleteUrl />
+                <columns>
+                    <column columnName="Id">
+                    </column>
+                    <column columnName="date">
+                        <columnTitle>Confirmation Date</columnTitle>
+                    </column>
+                    <column columnName="confirmationType">
+                        <columnTitle>Confirmation Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>PregnancyConfirm</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="estDeliveryDate">
+                        <columnTitle>Estimated Delivery Date</columnTitle>
+                    </column>
+                    <column columnName="gestation_days">
+                        <columnTitle>Gestation days</columnTitle>
+                    </column>
+                    <column columnName="sire">
+                        <columnTitle>Sire</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>id</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

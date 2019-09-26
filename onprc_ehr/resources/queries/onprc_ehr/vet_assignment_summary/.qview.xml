@@ -1,0 +1,11 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="userId/UserId/DisplayName" />
+        <column name="protocols" />
+        <column name="areas" />
+        <column name="rooms" />
+    </columns>
+    <sorts>
+        <sort column="userId/UserId/DisplayName"/>
+    </sorts>
+</customView>

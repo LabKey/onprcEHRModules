@@ -1,0 +1,30 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsPE" tableDbType="NOT_IN_DB">
+                <tableTitle>PE Exam History</tableTitle>
+                <columns>
+                    <column columnName="Id">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="lastdate">
+                        <columnTitle>Date of Last Exam</columnTitle>
+                    </column>
+                    <column columnName="daysSinceExam">
+                        <columnTitle>Days Since Last Exam</columnTitle>
+                    </column>
+                    <column columnName="daysUntilNextExam">
+                        <columnTitle>Days Until Next Exam Due</columnTitle>
+                    </column>
+                    <column columnName="total">
+                        <columnTitle>Total Exams</columnTitle>
+                        <!--<url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Demographics&amp;query.id/numPaired/room~eq=${room}&amp;query.id/numPaired/effectiveCage~eq=${effectiveCage}</url>-->
+                    </column>
+                    <column columnName="isRestricted">
+                        <columnTitle>Clinically Restricted?</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

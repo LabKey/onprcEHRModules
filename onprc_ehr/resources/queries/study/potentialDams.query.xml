@@ -1,0 +1,15 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="potentialDams" tableDbType="TABLE">
+                <tableTitle>Potential Dams</tableTitle>
+                <description>This query identifies all female animals co-housed in the same room/cage at time of birth</description>
+                <columns>
+                    <column columnName="damAgeAtTime">
+                        <columnTitle>Dam Age At Birth (years)</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

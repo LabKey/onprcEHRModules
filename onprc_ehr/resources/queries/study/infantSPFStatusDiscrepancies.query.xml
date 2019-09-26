@@ -1,0 +1,15 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="infantSPFStatusDiscrepancies" tableDbType="TABLE">
+                <tableTitle>Infants With Different SPF Status From Dam At Birth</tableTitle>
+                <columns>
+
+                </columns>
+                <buttonBarOptions includeStandardButtons="true">
+                    <includeScript>ehr.context</includeScript>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

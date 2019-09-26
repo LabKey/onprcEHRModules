@@ -1,0 +1,22 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="pairHistory" tableDbType="TABLE">
+                <tableTitle>Pairing History</tableTitle>
+                <columns>
+                    <column columnName="earliestOverlap">
+                        <columnTitle>Earliest Overlap</columnTitle>
+                        <formatString>Date</formatString>
+                    </column>
+                    <column columnName="mostRecentOverlap">
+                        <columnTitle>Most Recent Overlap</columnTitle>
+                        <formatString>Date</formatString>
+                    </column>
+                    <column columnName="pairid">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

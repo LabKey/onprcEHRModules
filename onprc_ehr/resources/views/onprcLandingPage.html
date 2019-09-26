@@ -1,0 +1,28 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        //NOTE: the ONPRC module is inherently center-specific, so we will hard-code some paths
+        var projectName = 'ONPRC';
+
+        Ext4.get(webpart.wrapperDivId).update(
+            getIconHtml(LABKEY.ActionURL.buildURL('project', 'start', projectName + '/Admin'), '<%=contextPath%>/ehr/icons/clipboard.png', 'Admin') +
+            getIconHtml(LABKEY.ActionURL.buildURL('project', 'start', projectName + '/EHR'), '<%=contextPath%>/ehr/icons/icon_center_lg.png', 'EHR') +
+            getIconHtml(LABKEY.ActionURL.buildURL('project', 'start', projectName + '/Labs'), '<%=contextPath%>/ehr/icons/labs.png', 'Labs') +
+            getIconHtml(LABKEY.ActionURL.buildURL('project', 'start', projectName + '/Core Facilities'), '<%=contextPath%>/ehr/icons/icon_cores_lg.png', 'Cores & Resources') +
+            getIconHtml(LABKEY.ActionURL.buildURL('project', 'start', projectName + '/SLA'), '<%=contextPath%>/sla/icons/rodent_icon.png', 'SLA')
+        );
+
+        function getIconHtml(url, iconUrl, text){
+            return '<a href="' + url + '"><div class="ehr-tool-icon-wrapper-lg tool-icon">' +
+                    '<div class="ehr-tool-icon-lg">' +
+                    '<img src="' + iconUrl + '">' + text  +
+                    '</div>' +
+            '</div></a>';
+        }
+    });
+</script>

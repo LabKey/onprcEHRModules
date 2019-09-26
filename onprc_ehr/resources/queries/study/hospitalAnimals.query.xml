@@ -1,0 +1,15 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="hospitalAnimals" tableDbType="TABLE">
+                <tableTitle>Animals Housed In Hospital</tableTitle>
+                <columns>
+                    <column columnName="totalAnimals">
+
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

@@ -1,0 +1,10 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="notesPivoted" tableDbType="TABLE">
+                <tableTitle>Summary of Active Notes</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

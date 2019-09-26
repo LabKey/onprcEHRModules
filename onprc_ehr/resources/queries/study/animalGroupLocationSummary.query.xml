@@ -1,0 +1,22 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="animalGroupLocationSummary" tableDbType="TABLE">
+                <tableTitle>Summary of Group Housing, Excluding Hospital</tableTitle>
+                <columns>
+                    <column columnName="roomSummary">
+                        <columnTitle>Rooms</columnTitle>
+                        <displayWidth>200</displayWidth>
+                    </column>
+                    <column columnName="totalRooms">
+                        <columnTitle>Total Rooms</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=animal_group_members&amp;query.groupId~eq=${groupId}&amp;query.enddateCoalesced~dategte=-0d</url>
+                    </column>
+                </columns>
+                <buttonBarOptions includeStandardButtons="true">
+                    <includeScript>ehr.context</includeScript>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

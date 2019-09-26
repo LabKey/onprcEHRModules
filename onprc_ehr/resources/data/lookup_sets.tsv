@@ -1,0 +1,81 @@
+setname	label	keyfield	titleColumn
+PregnancyConfirm	Pregnancy Confirmation Types	
+housingDefinition	Housing Definition	
+housingTypes	Housing Types	
+AcquistionType	Acquistion Types
+RearingType	Rearing Types	
+MatingType	Mating Types	
+pairingEventType	Pairing Event Types	value
+tb_method	TB Test Methods	value
+microbiologyQuantity	Microbiology Quantity	value
+blood_sample_type	Blood Sample Types	value
+pairingHousingType	Pairing Housing Types	value
+pairingOutcome	Pairing Outcomes	value
+pairingGoal	Pairing Goal	value
+pairingObservation	Pairing Observations	value
+antibioticSensitivityResult	Antibiotic Sensitivity Result	value
+pairingSeparationReason	Pairing Separation Reason	value
+tissue_preparation	Tissue Preparation	value
+tissue_condition	Tissue Condition	value
+drugReason	Drug Reason	value
+serologyMethod	Serology Methods	value
+TransferReason	Transfer Reasons	
+assignmentReleaseType	Assignment Release Types	value
+animalGroupReleaseType	Animal Group Release Types	value
+observation_areas	Observation Areas	value
+drugOutcome	Drug Administration Outcomes	value
+encounterSummaryCategory	Encounter Summary Category	value
+labworkChargeType	Labwork Charge Types	value
+notes_category	DCM Notes Category	value
+blood_draw_reason	Blood Draw Reason	value
+encounter_roles	Encounter Roles	value
+parentageRelationship	Parentage Relationship	value
+parentageMethod	Parentage Determination Methods	value
+serologyResultQualifier	Serology Result Qualifier	value
+app_score	Appetite Score	value
+att_score	Attitude Score	value
+turgor_score	Turgor Score	value
+hyd_score	Hyd Score	value
+stool_score	Stool Score	value
+sib_score	SIB Score	value
+incision_score	Incision Score	value
+alopecia_type	Alopecia Type	value
+alopecia_score	Alopecia Type	value
+alopecia_regrowth	Alopecia Regrowth	value
+mens_score	Mens Score	value
+tissue_sample_type	Tissue Distribution Sample Type	value
+tissue_distribution_category	Tissue Distribution Request Category	value
+cage_status	Cage Status	value
+project_use_category	Center Project Use Categories	value
+project_type	Center Project Types	value
+procedure_drug_templates	Procedure Drug Templates	value
+behavior_types	Behavior Types	value
+fecal_smear_score	Fecal Smear Scores	value
+problem_list_subcategory	Problem List Subcategory	value
+customer_affiliation	Customer Affiliation	value
+birth_date_type	Birth Date Type	value
+birth_type	Birth Type Field Values	value
+chemistry_method	Chemistry Method Field Values	value
+clinpath_sampletype	Clinpath Sample Type Field Values	value
+clinpath_types	Clinpath Type Field Values	value
+clinremarks_category	Clinremarks Category Field Values	value
+drug_categories	Drug Category Field Values	value
+hematology_method	Hematology Method Field Values	value
+problem_list_category	Problem List Category Field Values	value
+parasitology_method	Parasitology Method Field Values	value
+urinalysis_method	Urinalysis Method Field Values	value
+urinalysis_qualitative_results	Urinalysis Qualitative Result Field Values	value
+bcs_score	BCS Score Field Values	value
+avail_codes Availability Code Field Values	value
+status_codes	Status Code Field Values	value
+snomed_qualifiers	SNOMED Code Qualifiers	value
+housing_reason	Housing Reason Field Values	value
+housing_condition_codes	Housing Condition Field Values	value
+histology_stain	Histology Stain Field Values	value
+encounter_types	Encounter Types	value
+DeliveryMode	Delivery Mode Field Values	value
+DeliveryType	Delivery Type Field Values	value
+death_manner	Death Manner	value
+death_cause	Death Cause	value
+ConfirmationType	Pregnancy Confirmation Type	value
+clinpath_collection_method	Clinpath Collection Method	value

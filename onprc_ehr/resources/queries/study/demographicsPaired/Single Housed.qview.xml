@@ -1,0 +1,5 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="false">
+    <filters>
+        <filter column="total" operator="eq" value="1"/>
+    </filters>
+</customView>

@@ -1,0 +1,23 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="Id/demographics/species"/>
+        <column name="Id/spfStatus/status"/>
+        <column name="Id/age/yearAndDays"/>
+        <column name="Id/utilization/use"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
+        <column name="agent"/>
+        <column name="flag"/>
+        <column name="testInterval"/>
+        <column name="lastTestDate"/>
+        <column name="monthsSinceTest"/>
+        <column name="monthsUntildue"/>
+    </columns>
+    <sorts>
+        <sort column="Id" />
+    </sorts>
+    <filters>
+        <filter column="Id/demographics/calculated_status" operator="eq" value="Alive"/>
+    </filters>
+</customView>

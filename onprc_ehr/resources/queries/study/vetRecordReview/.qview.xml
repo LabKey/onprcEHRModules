@@ -1,0 +1,22 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="editCol"/>
+        <column name="Id"/>
+        <column name="project"/>
+        <column name="date"/>
+        <column name="recordType"/>
+        <column name="category"/>
+        <column name="description"/>
+        <column name="remark"/>
+        <column name="performedby"/>
+        <column name="taskid"/>
+        <column name="vetreviewdate"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
+        <!--<column name="Id/utilization/use"/>-->
+    </columns>
+   <sorts>
+       <sort column="Id"/>
+       <sort column="date" descending="true"/>
+   </sorts>
+</customView>

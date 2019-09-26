@@ -1,0 +1,14 @@
+    <query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="housingTypeSummary" tableDbType="TABLE">
+                <tableTitle>Housing Type Summary</tableTitle>
+                <columns>
+                    <column columnName="totalAnimals">
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=housing&amp;query.viewName=Active Housing&amp;query.room/housingType/value~eq=${housingType}</url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

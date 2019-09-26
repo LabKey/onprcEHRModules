@@ -1,0 +1,47 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Requests">
+    <columns>
+        <column name="Id"/>
+
+        <column name="date">
+            <properties>
+                <property name="columnTitle" value="Training Start Date"/>
+            </properties>
+        </column>
+        <column name="training_Ending_Date">
+            <properties>
+                <property name="columnTitle" value="Training Ending Date"/>
+            </properties>
+        </column>
+        <column name="training_type">
+            <properties>
+                <property name="columnTitle" value="Training Type"/>
+            </properties>
+        </column>
+        <column name="reason">
+            <properties>
+                <property name="columnTitle" value="Training Reason"/>
+            </properties>
+        </column>
+
+        <column name="training_results">
+            <properties>
+                <property name="columnTitle" value="Training Result"/>
+            </properties>
+        </column>
+        <column name="remark">
+            <properties>
+                <property name="columnTitle" value="Remarks"/>
+            </properties>
+        </column>
+
+        <column name="performedby">
+            <properties>
+                <property name="columnTitle" value="Performed By"/>
+            </properties>
+        </column>
+    </columns>
+    <sorts>
+        <sort column="date" descending="true"/>
+
+    </sorts>
+</customView>

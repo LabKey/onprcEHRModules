@@ -1,0 +1,17 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="Id/demographics/gender"/>
+        <column name="Id/demographics/species"/>
+        <column name="housingAtTime/roomAtTime"/>
+        <column name="housingAtTime/cageAtTime"/>
+        <column name="housingAtTime/RoomAtTime/housingType"/>
+        <column name="groupsAtTime/groupsAtTime"/>
+        <column name="dateOnly"/>
+        <column name="category"/>
+        <column name="history"/>
+    </columns>
+    <sorts>
+        <sort column="Id"/>
+    </sorts>
+</customView>

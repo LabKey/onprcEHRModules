@@ -1,0 +1,18 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="alopeciaData" tableDbType="TABLE">
+                <tableTitle>Alopecia Summary</tableTitle>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <columns>
+                    <column columnName="areas">
+                        <columnTitle>Areas In Previous 30 Days</columnTitle>
+                    </column>
+                    <column columnName="rooms">
+                        <columnTitle>Rooms In Previous 30 Days</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

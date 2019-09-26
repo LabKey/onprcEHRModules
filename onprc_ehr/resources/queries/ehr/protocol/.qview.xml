@@ -1,0 +1,23 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Protocols">
+   <columns>
+       <column name="protocol"/>
+       <!--<column name="external_id"/>-->
+       <column name="title"/>
+       <column name="investigatorId"/>
+       <column name="approve"/>
+       <column name="annualReviewDate"/>
+       <!--<column name="daysUntilAnnualReview"/>-->
+       <column name="renewalDate"/>
+       <!--<column name="daysUntilRenewal"/>-->
+       <column name="enddate"/>
+       <column name="usda_level"/>
+       <column name="activeAnimals/totalActiveAnimals">
+           <properties>
+               <property name="columnTitle" value="# Animals Assigned"/>
+           </properties>
+       </column>
+   </columns>
+   <sorts>
+       <sort column="protocol" />
+   </sorts>
+</customView>

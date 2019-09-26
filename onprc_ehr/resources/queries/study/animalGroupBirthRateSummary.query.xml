@@ -1,0 +1,102 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="animalGroupBirthRateSummary" tableDbType="TABLE">
+                <tableTitle>Animal Group Birth Rate Summary</tableTitle>
+                <columns>
+                    <column columnName="totalIds">
+                        <columnTitle>Total Births</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=animalGroupBirthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.groupId/name~eq=${groupId/name}&amp;
+                        </url>
+                    </column>
+                    <column columnName="totalDams">
+                        <columnTitle>Distinct Dams</columnTitle>
+                    </column>
+                    <column columnName="totalBornDead">
+                        <columnTitle>Total That Survived 0 Days</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=animalGroupBirthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.groupId/name~eq=${groupId/name}&amp;
+                            query.bornDead~eq=1&amp;
+                        </url>
+                    </column>
+                    <column columnName="totalUnder180DaysOld">
+                        <columnTitle>Total Under 180 Days Old</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=animalGroupBirthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.groupId/name~eq=${groupId/name}&amp;
+                            query.under180DaysOld~eq=1&amp;
+                        </url>
+                    </column>
+                    <column columnName="totalUnderOneYrOld">
+                        <columnTitle>Total Under One Yr Old</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=animalGroupBirthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.groupId/name~eq=${groupId/name}&amp;
+                            query.underOneYrOld~eq=1&amp;
+                        </url>
+                    </column>
+                    <column columnName="totalDiedBefore180Days">
+                        <columnTitle>Total That Died Within 180 Days</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=animalGroupBirthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.groupId/name~eq=${groupId/name}&amp;
+                            query.diedBefore180Days~eq=1&amp;
+                        </url>
+                    </column>
+                    <column columnName="totalDiedBeforeOneYear">
+                        <columnTitle>Total That Died Within 365 Days</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=animalGroupBirthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.groupId/name~eq=${groupId/name}&amp;
+                            query.diedBeforeOneYear~eq=1&amp;
+                        </url>
+                    </column>
+                    <column columnName="totalSurvivedOneYear">
+                        <columnTitle>Total That Did Not Die Within 365 Days</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=animalGroupBirthRateData&amp;
+                            query.param.StartDate=${StartDate}&amp;
+                            query.param.EndDate=${EndDate}&amp;
+                            query.groupId/name~eq=${groupId/name}&amp;
+                            query.diedBeforeOneYear~eq=0&amp;
+                        </url>
+                    </column>
+                    <column columnName="StartDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="EndDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="Room">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+                <buttonBarOptions includeStandardButtons="true">
+                    <includeScript>ehr.context</includeScript>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

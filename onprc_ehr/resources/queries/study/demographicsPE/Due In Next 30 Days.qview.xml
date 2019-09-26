@@ -1,0 +1,9 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <sorts>
+        <sort column="Id/curLocation/room"/>
+        <sort column="Id/curLocation/cage"/>
+    </sorts>
+    <filters>
+        <filter column="daysUntilNextExam" operator="lte" value="30"/>
+    </filters>
+</customView>

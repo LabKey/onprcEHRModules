@@ -1,0 +1,20 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="pairingSummary" tableDbType="TABLE" useColumnOrder="true">
+                <tableTitle>Pairing Summary</tableTitle>
+                <columns>
+                    <column columnName="Id">
+
+                    </column>
+                    <column columnName="date">
+
+                    </column>
+                    <column columnName="otherIds">
+                        <columnTitle>Other Ids</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

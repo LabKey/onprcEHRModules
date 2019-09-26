@@ -1,0 +1,59 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsBloodSummary" tableDbType="NOT_IN_DB">
+                <tableTitle>Available Blood</tableTitle>
+                <columns>
+                    <column columnName="Id">
+                        <isKeyField>true</isKeyField>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="lsid">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="mostRecentWeight">
+                        <columnTitle>Most Recent Weight (kg)</columnTitle>
+                    </column>
+                    <column columnName="bloodPrevious">
+                        <columnTitle>Previous Draws (mL)</columnTitle>
+                        <formatString>0.##</formatString>
+                        <url>/query/executeQuery.view?schemaName=study&amp;
+                            query.queryName=Blood Draws&amp;
+                            query.Id~eq=${Id}&amp;
+                            query.Date~lte=${Date}&amp;
+                            query.sort=-Date&amp;
+                        </url>
+                    </column>
+                    <column columnName="bloodFuture">
+                        <columnTitle>Future Draws (mL)</columnTitle>
+                        <formatString>0.##</formatString>
+                        <url>/query/executeQuery.view?schemaName=study&amp;
+                            query.queryName=Blood Draws&amp;
+                            query.Id~eq=${Id}&amp;
+                            query.Date~gt=${Date}&amp;
+                            query.sort=-Date&amp;
+                        </url>
+                    </column>
+                    <column columnName="maxBlood">
+                        <columnTitle>Max blood, assuming no other draws (mL)</columnTitle>
+                        <formatString>0.##</formatString>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="availBlood">
+                        <columnTitle>Available Blood (mL)</columnTitle>
+                        <formatString>0.##</formatString>
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="lt" value="0"/>
+                                </filters>
+                                <backgroundColor>FBEC5D</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
+                    </column>
+                </columns>
+                <titleColumn>availBlood</titleColumn>
+            </table>
+        </tables>
+    </metadata>
+</query>

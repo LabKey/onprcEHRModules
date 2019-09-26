@@ -1,0 +1,27 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="clinicalCases" tableDbType="NOT_IN_DB">
+                <tableTitle>Active Clinical Cases</tableTitle>
+                <description>This query is used for the daily clinical cases report.  It includes active clinical cases and hospital animals</description>
+                <columns>
+                    <column columnName="Id">
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>Animal</fkTable>
+                            <fkColumnName>Id</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="assignedvet">
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>veterinarians</fkTable>
+                            <fkColumnName>UserId</fkColumnName>
+                        </fk>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

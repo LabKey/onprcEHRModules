@@ -1,0 +1,32 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="animalGroupAverageKinship" tableDbType="TABLE">
+                <tableTitle>Average Kinship With Animal Groups</tableTitle>
+                <columns>
+                    <column columnName="avgCoefficient">
+                        <columnTitle>Avg. Coefficient Within Group</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=ehr&amp;
+                            query.queryName=kinship&amp;
+                            query.Id~eq=${Id}
+                        </url>
+                        <formatString>##.###</formatString>
+                    </column>
+                    <column columnName="distinctAnimals">
+                        <columnTitle>Distinct Animals With Kinship</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=ehr&amp;
+                            query.queryName=kinship&amp;
+                            query.Id~eq=${Id}&amp;
+                            query.Id2/Id/utilization/use~contains=${groupId/name}
+                        </url>
+                    </column>
+                    <column columnName="totalInPopulation">
+                        <columnTitle>Total Animals In Population</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

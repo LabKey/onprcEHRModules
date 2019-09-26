@@ -1,0 +1,41 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="surgeryChecklist" tableDbType="TABLE">
+                <javaCustomizer class="org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer" />
+                <tableTitle>Surgical Checklist</tableTitle>
+                <columns>
+                    <column columnName="labworkDate">
+                        <columnTitle>Date of Labwork</columnTitle>
+                    </column>
+                    <column columnName="HCT">
+                        <columnTitle>Latest HCT</columnTitle>
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="lt" value="30"/>
+                                </filters>
+                                <backgroundColor>ffff00</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
+                    </column>
+                    <column columnName="PLT">
+                        <columnTitle>Latest PLT</columnTitle>
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="lt" value="50"/>
+                                </filters>
+                                <backgroundColor>ffff00</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
+                    </column>
+                </columns>
+                <buttonBarOptions position="both" includeStandardButtons="false">
+                    <includeScript>ehr.context</includeScript>
+                    <onRender>EHR.DatasetButtons.moreActionsHandler</onRender>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

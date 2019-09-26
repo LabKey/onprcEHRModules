@@ -1,0 +1,28 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+   <columns>
+       <column name="Id" />
+       <column name="birth"/>
+       <column name="Id/demographics/gender" />
+       <column name="Id/demographics/species" />
+       <column name="Id/demographics/geographic_origin" />
+       <column name="bornDead"/>
+       <column name="diedBeforeOneYear"/>
+       <column name="spfStatus" />
+       <column name="utilization" />
+       <column name="totalAssignments" />
+       <column name="isP51" />
+       <column name="isU42" />
+       <column name="isU24" />
+
+   </columns>
+   <sorts>
+       <sort column="Id"/>
+   </sorts>
+    <aggregates>
+        <aggregate column="isP51" type="SUM"/>
+        <aggregate column="isU42" type="SUM"/>
+        <aggregate column="isU24" type="SUM"/>
+        <aggregate column="isInfant" type="SUM"/>
+        <aggregate column="bornDead" type="SUM"/>
+    </aggregates>
+</customView>

@@ -1,0 +1,25 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="parentageSummary" tableDbType="TABLE">
+                <tableTitle>Parentage Summary</tableTitle>
+                <columns>
+                    <column columnName="parent">
+                        <columnTitle>Parent</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>id</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="relationship">
+                        <columnTitle>Relationship</columnTitle>
+                    </column>
+                    <column columnName="method">
+                        <columnTitle>Method</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

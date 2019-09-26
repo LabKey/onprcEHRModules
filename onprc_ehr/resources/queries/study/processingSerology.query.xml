@@ -1,0 +1,50 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="processingSerology" tableDbType="TABLE">
+                <tableTitle>Viral Surveillance Blood Volumes</tableTitle>
+                <columns>
+                    <column columnName="spfStatus">
+                        <columnTitle>SPF Status</columnTitle>
+                    </column>
+                    <column columnName="lastHBV">
+                        <columnTitle>Date of Last HBV Test</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=serology&amp;query.Id~eq=${Id}&amp;query.date~eq=${lastHBV}</url>
+                    </column>
+                    <column columnName="daysSinceHBV">
+                        <columnTitle>Days Since HBV Test</columnTitle>
+                    </column>
+                    <column columnName="isHBVCurrent">
+                        <columnTitle>Had HBV Test During Calendar Year?</columnTitle>
+                    </column>
+                    <column columnName="isHBVRequired">
+                        <columnTitle>Is HBV Test Required?</columnTitle>
+                    </column>
+                    <column columnName="hbvBloodVol">
+                        <columnTitle>Blood Vol Needed For HBV</columnTitle>
+                    </column>
+
+                    <column columnName="lastSRV">
+                        <columnTitle>Date of Last SRV Test</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=serology&amp;query.Id~eq=${Id}&amp;query.date~eq=${lastSRV}</url>
+                    </column>
+                    <column columnName="daysSinceSRV">
+                        <columnTitle>Days Since SRV Test</columnTitle>
+                    </column>
+                    <column columnName="isSRVCurrent">
+                        <columnTitle>Had SRV Test During Calendar Year?</columnTitle>
+                    </column>
+                    <column columnName="isSRVRequired">
+                        <columnTitle>Is SRV Test Required?</columnTitle>
+                    </column>
+                    <column columnName="srvBloodVol">
+                        <columnTitle>Blood Vol Needed For SRV</columnTitle>
+                    </column>
+                    <column columnName="bloodVol">
+                        <columnTitle>Total Blood Vol Needed</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

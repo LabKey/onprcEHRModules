@@ -1,0 +1,160 @@
+<script type="text/javascript">
+
+Ext4.onReady(function(){
+    var webpart = <%=webpartContext%>;
+    var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+    if(!ctx)
+        return;
+
+    var issueHTML = '';
+    if (ctx['EHRIssuesContainer']){
+        issueHTML = '<div style="max-width:920px">Below are the sections of the Electronic Health Record.  If there are additional reports you would like, please submit a request <a href="' + LABKEY.ActionURL.buildURL('issues', 'list', ctx['EHRIssuesContainer']) + '" target="_blank">here</a>.<br><br></div>'
+    }
+
+    Ext4.get(webpart.wrapperDivId).update(
+        issueHTML +
+        '<table>' +
+        '<tr style="vertical-align:top">' +
+        '    <td style="width:300px">' +
+        '        <div id="ehrMenu1_'+webpart.wrapperDivId+'"></div>' +
+        '    </td>' +
+        '    <td style="width:300px;vertical-align:top">' +
+        '        <div id="ehrMenu2_'+webpart.wrapperDivId+'"></div>' +
+        '    </td>' +
+        '    <td style="width:300px">' +
+        '        <div id="ehrMenu3_'+webpart.wrapperDivId+'"></div>' +
+        '    </td>' +
+        '</tr>' +
+        '</table>'
+    );
+
+    Ext4.create('LDK.panel.NavPanel', {
+        width: 270,
+        renderTo: 'ehrMenu1_'+webpart.wrapperDivId,
+        sections: [{
+            header: 'By Animal',
+            itemDefaults: {
+                linkCls: 'none',
+                style: 'font-weight: bold;'
+            },
+            items: [
+                {name: 'Animal History', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view?'},
+                {name: 'Animal Search', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalSearch.view?'}
+            ]
+        },{
+            header: 'By Dataset',
+            itemDefaults: {
+                linkCls: 'none',
+                style: 'font-weight: bold;'
+            },
+            items: [
+                {name: 'Browse All Datasets', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/datasets.view?'},
+                {name: 'Housing Queries', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/housingQueries.view?'},
+                {name: 'Protocol and Project Queries', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/projectQueries.view?'}
+            ]
+        },{
+            header: 'By Location',
+            itemDefaults: {
+                linkCls: 'none',
+                style: 'font-weight: bold;'
+            },
+            items: [
+                {name: 'Search By Area, Room, or Cage', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage'}
+            ]
+        }]
+    });
+
+    Ext4.create('LDK.panel.NavPanel', {
+        width: 270,
+        renderTo: 'ehrMenu2_'+webpart.wrapperDivId,
+        sections: [{
+            header: 'Daily Reports',
+            itemDefaults: {
+                linkCls: 'none',
+                style: 'font-weight: bold;'
+            },
+            items: [
+                {name: 'Records Needing Vet Review', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/vetReview.view'},
+                {name: 'Active Behavior Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:behaviorCases'},
+                {name: 'Active Clinical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:cases'},
+                {name: 'Active Surgical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgicalCases'},
+                {name: 'Clinical Medication Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:clinMedicationSchedule'},
+                {name: 'Surgical Medication Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgMedicationSchedule'},
+                {name: 'Printable Reports', url: LABKEY.ActionURL.buildURL('onprc_ehr', 'printableReports', ctx['EHRStudyContainer'])}
+            ]
+        },{
+            header: 'Entire Colony',
+            itemDefaults: {
+                linkCls: 'none',
+                style: 'font-weight: bold;'
+            },
+            items: [
+                {name: 'Animal Groups', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=animal_groups&query.viewName=Active Groups'},
+                {name: 'Colony Overview', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/colonyOverview.view?'},
+                {name: 'Room Utilization', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=roomUtilization'},
+                {name: 'More Reports', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/moreReports.view?'}
+            ]
+        }]
+    });
+
+    var menuCfg = {
+        width: 330,
+        renderTo: 'ehrMenu3_'+webpart.wrapperDivId,
+        sections: [{
+            header: 'Misc',
+            itemDefaults: {
+                linkCls: 'none',
+                style: 'font-weight: bold;'
+            },
+            items: [
+                {name: 'Compare Lists of Animals', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/utilities.view?'},
+                {name: 'Bulk History Export', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/historyExport.view?'},
+                    //Modified: 8-30-2016 R.Blasa
+                {name: 'Exposure Report', url: ctx['SSRSServerURL'] +'%2fAnnual+Reports%2fExposure+Report%2fDemographicsReportMain&rs:Command=Render'},
+                {name: 'Drug Formulary', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=drug_defaults'},
+                {name: 'Procedure List', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=procedures&query.viewName=Active Procedures'},
+                {name: 'Search Center SNOMED Codes', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=snomed'}
+            ]
+        },{
+            header: 'Data Entry',
+            itemDefaults: {
+                linkCls: 'none',
+                style: 'font-weight: bold;'
+            },
+            items: [
+                {name: 'Enter Data / Task Review', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/enterData.view'},
+
+                {name: 'Post Op Med Verification', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=medsignoff'}
+            ]
+        },{
+            header: 'Service Requests',
+            itemDefaults: {
+                linkCls: 'none',
+                style: 'font-weight: bold;'
+            },
+            items: [
+                {name: 'Manage Requests', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/serviceRequests.view'},
+                //{name: 'ASB Services Request', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=ASB Service Request'},
+                //{name: 'Colony Services Request', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=Colony Service Request'},
+                {name: 'Request Labwork', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=Labwork Request'}
+            ]
+        }]
+    };
+
+    if (LABKEY.Security.currentUser.isAdmin){
+        menuCfg.sections.push({
+            header: 'Admin',
+            itemDefaults: {
+                linkCls: 'none',
+                style: 'font-weight: bold;'
+            },
+            items: [
+                {name: 'EHR Admin Page', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/ehrAdmin.view'}
+            ]
+        });
+    }
+
+    Ext4.create('LDK.panel.NavPanel', menuCfg);
+});
+
+</script>

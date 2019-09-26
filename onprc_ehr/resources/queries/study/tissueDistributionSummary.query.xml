@@ -1,0 +1,20 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="tissueDistributionSummary" tableDbType="TABLE">
+                <tableTitle>Tissue Distribution Summary</tableTitle>
+                <columns>
+                    <column columnName="totalSamples">
+                        <columnTitle>Total Samples</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=Tissue Distributions&amp;
+                            query.fiscalYear~eq=${fiscalYear}&amp;
+                            query.requestCategory~eq=${requestCategory}&amp;
+                        </url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

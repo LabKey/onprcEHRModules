@@ -1,0 +1,80 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="pathogenData" tableDbType="TABLE">
+                <tableTitle>Pathogen Raw Data</tableTitle>
+                <columns>
+                    <column columnName="Id">
+                        <columnTitle>Id</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>id</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="totalTests">
+                        <columnTitle>Total Tests Performed</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="totalIds">
+                        <columnTitle>Distinct Ids Tested</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="negative">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="positive">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="IdNegative">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="IdPositive">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="StartDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="EndDate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="viralStatus">
+                        <columnTitle>SPF During Interval?</columnTitle>
+                    </column>
+                    <column columnName="wasSPF">
+                        <columnTitle>Was SPF During Iterval?</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="leftCenter">
+                        <columnTitle>Died or Was Shipped?</columnTitle>
+                    </column>
+                    <column columnName="endedSPF">
+                        <columnTitle>Was SPF At End?</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="SPFStatus">
+                        <columnTitle>SPF Status</columnTitle>
+                    </column>
+                    <column columnName="wasSPFId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="endedSPFId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="droppedFromSPFId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="neverSPFId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="leftCenterId">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+                <buttonBarOptions includeStandardButtons="true">
+                    <includeScript>ehr.context</includeScript>
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>

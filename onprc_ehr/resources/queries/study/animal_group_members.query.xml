@@ -1,0 +1,46 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="animal_group_members" tableDbType="TABLE" useColumnOrder="true">
+                <tableTitle>Animal Group Members</tableTitle>
+                <columns>
+                    <column columnName="Id">
+
+                    </column>
+                    <column columnName="date">
+                        <columnTitle>Date Added</columnTitle>
+                    </column>
+                    <column columnName="enddate">
+                        <columnTitle>Date Removed</columnTitle>
+                        <isHidden>false</isHidden>
+                    </column>
+                    <column columnName="groupId">
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>animal_groups</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                            <fkDisplayColumnName>name</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="releaseType">
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>animalGroupReleaseType</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="qcstate">
+                        <fk>
+                            <fkDbSchema>core</fkDbSchema>
+                            <fkTable>qcstate</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

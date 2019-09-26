@@ -1,0 +1,15 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="animalGroupMemberDuplicates" tableDbType="TABLE">
+                <tableTitle>Animals With Duplicate Animal Groups</tableTitle>
+                <columns>
+                    <column columnName="totalGroups">
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=animal_group_members&amp;query.isActive~eq=true&amp;query.Id~eq=${Id}</url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

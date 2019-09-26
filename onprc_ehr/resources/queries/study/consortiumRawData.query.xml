@@ -1,0 +1,26 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="consortiumRawData" tableDbType="NOT_IN_DB">
+                <tableTitle>Consortium Export Raw Data</tableTitle>
+                <columns>
+                    <column columnName="isCaged">
+                        <columnTitle>Is Caged (Non-Hospital)?</columnTitle>
+                    </column>
+                    <column columnName="isU42">
+                        <columnTitle>Is U42?</columnTitle>
+                    </column>
+                    <column columnName="isU24">
+                        <columnTitle>Is U24?</columnTitle>
+                    </column>
+                    <column columnName="isP51">
+                        <columnTitle>Is P51?</columnTitle>
+                    </column>
+                    <column columnName="spfStatus">
+                        <columnTitle>SPF Status At Time</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -1,0 +1,425 @@
+#!/usr/bin/perl
+#
+# Plugin to monitor SQLServer status
+#
+# Adapted from a script by Rune Nordbøe Skillingstad
+# https://redmine.koumbit.net/projects/munin-contrib/repository/revisions/2f2252e98de3d33e25aaffc717968420f36ac9d4/entry/plugins/security/forefront_
+#
+#
+# Parameters:
+#
+#     config
+#     autoconf
+#     suggest
+#
+# Config variables
+#
+#     dsn     - If DSN name differs from hostname
+#     dbuser  - Valid MS SQL user (Windows authentication is posible using "DOMAIN\user")
+#     dbpass  - Password
+#
+# Install guide:
+# This plugin relies on correct configured ODBC for the SQLServer database
+# Prerequisits:
+# * Install and configure FreeTDS and DBD::Sybase.  Instructions can be found here: http://www.perlmonks.org/?node_id=392385
+# - DBD::Sybase is prefered over ODBC because of strange TEXT field handling in DBD::ODBC
+#
+# Example
+# /etc/freetds/freetds.conf:
+# [MyHost]
+#        host = MyHost.domain.com
+#        port = 1433
+#        tds version = 7.0
+#
+# Copy this script to /usr/share/munin/plugins and run "munin-node-configure --shell"
+# If freetds.conf has one or more lines containing "host = <server>", the output will be something like this:
+# ln -s /usr/share/munin/plugins/sqlserver_ /etc/munin/plugins/sqlserver_MyHost.Domain.com_cache
+# ln -s /usr/share/munin/plugins/sqlserver_ /etc/munin/plugins/sqlserver_MyHost.domain.com_filesize
+# ln -s /usr/share/munin/plugins/sqlserver_ /etc/munin/plugins/sqlserver_MyHost.domain.com_transactions
+#
+#
+# Add your DSN and user/password to /etc/munin/plugin-conf.d/munin-node:
+# [sqlserver_MyHost.domain.com_*]
+# env.dsn MyHost
+# env.dbuser <user>
+# env.dbpass <password>
+#
+#
+# Magic markers (optional - used by munin-config and some installation
+# scripts):
+#
+#%# family=auto
+#%# capabilities=autoconf suggest
+
+use strict;
+use Data::Dumper;
+use Text::Trim;
+
+my $host = undef;
+my $stat = undef;
+my $instance_name = '';
+
+my @stats = qw(access buffer cache connections filesize locks logsize memory transactions);
+
+if($0 =~ /^(?:|.*\/)sqlserver_(.+?)_([^_]+)$/) {
+    $host = $1;
+    $stat = $2;
+    $host =~  s/_/-/g;
+}
+
+my $dsn    = $ENV{dsn}    || $host;
+my $dbuser = $ENV{dbuser} || undef;
+my $dbpass = $ENV{dbpass} || undef;
+
+my $ret = undef;
+if(!eval "require DBI;") {
+    $ret = "DBI not found ";
+}
+if(!eval "require DBD::Sybase;") {
+    $ret .= "DBD::Sybase not found ";
+}
+if(!eval "require MIME::Base64;") {
+    $ret .= "MIME::Base64 not found ";
+} else {
+    use MIME::Base64;
+}
+
+my $dbh = DBI->connect("DBI:Sybase:$dsn", $dbuser, $dbpass, { PrintError => 1, AutoCommit => 1 });
+my $instance_name_query = "SELECT distinct instance_name
+   FROM sys.dm_os_performance_counters
+   WHERE object_name = 'SQLServer:Databases'";
+
+if ($instance_name){
+	$instance_name_query .= " and instance_name = '$instance_name'"
+}
+
+$instance_name_query .= " order by instance_name";
+
+my @all_instance_names;
+my $sth = $dbh->prepare($instance_name_query, {odbc_exec_direct => 1});
+$sth->execute();
+my $name;
+while(my @row = $sth->fetchrow_array) {
+	$name = trim($row[0]);
+	push(@all_instance_names, $name);
+}
+
+#possibly add?
+#--'Queued requests', 'Processes blocked'
+
+my $access_counters = ['Probe Scans/sec', 'Range Scans/sec', 'Page Splits/sec', 'Pages Allocated/sec', 'Pages compressed/sec', 'Index Searches/sec', 'Full Scans/sec'];
+my $buffer_counters = ['Page lookups/sec', 'Page reads/sec', 'Page writes/sec'];
+my $locks_instances = ['AllocUnit', 'HoBT', 'Metadata', 'Application', 'RID', 'Extent', 'Key', 'Page', 'Object', 'File', 'Database', '_Total'];
+my $locks_counters = ['Number of Deadlocks/sec'];
+my $memory_counters = ['Used memory (KB)', 'Total Server Memory (KB)', 'SQL Cache Memory (KB)', 'Max memory (KB)', 'Target memory (KB)', 'Query exec memory target (KB)', 'Max request memory grant (KB)', 'Optimizer Memory (KB)', 'SQL Cache Memory (KB)', 'Target Server Memory (KB)', 'Lock Memory (KB)', 'Maximum Workspace Memory (KB)'];
+my $transaction_counters = ['Transactions/sec', 'Write Transactions/sec'];
+
+
+if($ARGV[0] and $ARGV[0] eq "autoconf") {
+    if($ret) {
+	print "no ($ret)\n";
+	exit 1;
+    }
+    print "yes\n";
+    exit 0;
+}
+
+if($ARGV[0] and $ARGV[0] eq "suggest") {
+    if("/etc/odbc.ini") {
+	my $dsn = undef;
+	my $host = undef;
+	open(IN, "</etc/freetds.conf") || die "Can't read FreeTDS config file";
+	while(<IN>) {
+	    next if(/^[;#]/);
+	    if(/host\s*=\s*([\w.-]+)/) {
+		my $host = $1;
+		$host =~ s/-/_/g;
+		print $host."_".join("\n".$host."_",@stats)."\n";
+	    }
+	}
+	close(IN);
+	exit 0;
+    }
+    exit 1;
+}
+
+if(!grep(/$stat/, @stats)) {
+    print STDERR "\"$stat\" is not a valid script ending\n";
+    exit 1;
+}
+
+if($ARGV[0] and $ARGV[0] eq "config") {
+    eval "&".$stat."_config()";
+    exit 0;
+}
+
+eval "&".$stat."_fetch()";
+
+sub buffer_config {
+	print "graph_args --base 1000 -r --lower-limit 0\n";
+	print "graph_title MSSQL Buffers\n";
+	print "graph_category MSSQL\n";
+	print "graph_info This graph shows buffer information\n";
+	print "graph_vlabel Count\n";
+	print "graph_scale no\n";
+	print "graph_period second\n";
+
+	foreach (@$buffer_counters){
+	    my $counter = normalizeName($_);
+        print "buffer_".$counter.".label $_\n";
+        print "buffer_".$counter.".info $_\n";
+        print "buffer_".$counter.".type GAUGE\n";
+        print "buffer_".$counter.".draw LINE1\n";
+    }
+}
+
+sub memory_config {
+	print "graph_args --base 1000 -r --lower-limit 0\n";
+	print "graph_title MSSQL Memory Usage\n";
+	print "graph_category MSSQL\n";
+	print "graph_info This graph shows memory usage\n";
+	print "graph_vlabel %\n";
+	print "graph_scale no\n";
+	print "graph_period second\n";
+
+	foreach (@$memory_counters){
+	    my $counter = normalizeName($_);
+        print "mem_".$counter.".label $_\n";
+        print "mem_".$counter.".info $_\n";
+        print "mem_".$counter.".type GAUGE\n";
+        print "mem_".$counter.".draw LINE1\n";
+    }
+}
+
+sub access_config {
+	print "graph_args --base 1000 -r --lower-limit 0\n";
+	print "graph_title MSSQL Access Metrics\n";
+	print "graph_category MSSQL\n";
+	print "graph_info This graph shows access metrics\n";
+	print "graph_vlabel Total\n";
+	print "graph_scale no\n";
+	print "graph_period second\n";
+
+    foreach (@$access_counters){
+        my $counter = normalizeName($_);
+        print "access_".$counter.".label $_\n";
+        print "access_".$counter.".info $_\n";
+        print "access_".$counter.".type GAUGE\n";
+        print "access_".$counter.".draw LINE1\n";
+    }
+}
+
+sub locks_config {
+	print "graph_args --base 1000 -r --lower-limit 0\n";
+	print "graph_title MSSQL Locks\n";
+	print "graph_category MSSQL\n";
+	print "graph_info This graph shows information about locks\n";
+	print "graph_vlabel Locks\n";
+	print "graph_scale no\n";
+	print "graph_period second\n";
+
+    foreach my $instance (@$locks_instances){
+        foreach (@$locks_counters){
+            my $counter = normalizeName($_);
+            print $instance."_locks_".$counter.".label $instance $_\n";
+            print $instance."_locks_".$counter.".info $instance $_\n";
+            print $instance."_locks_".$counter.".type GAUGE\n";
+            print $instance."_locks_".$counter.".draw LINE1\n";
+        }
+    }
+}
+
+sub transactions_config {
+	print "graph_args --base 1000 -r --lower-limit 0\n";
+	print "graph_title MSSQL Transactions\n";
+	print "graph_category MSSQL\n";
+	print "graph_info This graph shows transactions\n";
+	print "graph_vlabel Transactions\n";
+	print "graph_scale no\n";
+	print "graph_period second\n";
+
+    foreach my $instance (@all_instance_names){
+        foreach (@$transaction_counters){
+            my $counter = normalizeName($_);
+            print $instance."_trans_".$counter.".label $instance $_\n";
+            print $instance."_trans_".$counter.".info $instance $_\n";
+            print $instance."_trans_".$counter.".type GAUGE\n";
+            print $instance."_trans_".$counter.".draw LINE1\n";
+        }
+    }
+}
+
+sub cache_config {
+	print "graph_args --base 1000 -r --lower-limit 0\n";
+	print "graph_title MSSQL Buffer Cache Hit Ratio\n";
+	print "graph_category MSSQL\n";
+	print "graph_info This graph shows Buffer Cache Hit Ratio\n";
+	print "graph_vlabel %\n";
+	print "graph_scale no\n";
+	print "graph_period second\n";
+	print "bc_hitratio.label BufferCacheHitRatio\n";
+	print "bc_hitratio.info BufferCacheHitRatio\n";
+	print "bc_hitratio.type GAUGE\n";
+	print "bc_hitratio.draw LINE1\n";
+}
+
+sub connections_config {
+	print "graph_args --base 1000 -r --lower-limit 0\n";
+	print "graph_title User Connections\n";
+	print "graph_category MSSQL\n";
+	print "graph_info This graph shows User Connections\n";
+	print "graph_vlabel Connections\n";
+	print "graph_scale no\n";
+	print "graph_period second\n";
+	print "connections.label User Connections\n";
+	print "connections.info User Connections\n";
+	print "connections.type GAUGE\n";
+	print "connections.draw LINE1\n";
+}
+
+sub filesize_config {
+	print "graph_args --base 1024k -r --lower-limit 0\n";
+	print "graph_title MSSQL DB File Sizes\n";
+	print "graph_category MSSQL\n";
+	print "graph_info This graph shows DB File Sizes (MB)\n";
+	print "graph_vlabel MB\n";
+	print "graph_scale no\n";
+	print "graph_period second\n";
+
+	foreach (@all_instance_names){
+		print "$_.label $_\n";
+		print "$_.info INSTANCE: $_\n";
+		print "$_.type GAUGE\n";
+		print "$_.draw LINE1\n";
+	}
+}
+
+sub logsize_config {
+	print "graph_args --base 1024k -r --lower-limit 0\n";
+	print "graph_title MSSQL Log File Sizes\n";
+	print "graph_category MSSQL\n";
+	print "graph_info This graph shows Log File Sizes (MB)\n";
+	print "graph_vlabel MB\n";
+	print "graph_scale no\n";
+	print "graph_period second\n";
+
+	foreach (@all_instance_names){
+		print "$_.label $_\n";
+		print "$_.info INSTANCE: $_\n";
+		print "$_.type GAUGE\n";
+		print "$_.draw LINE1\n";
+	}
+}
+
+sub cache_fetch {
+	my $buffercachehitratio_query = "select (a.cntr_value * 1.0 / b.cntr_value) * 100.0
+		from sys.dm_os_performance_counters a
+		join (select cntr_value, object_name
+			  from sys.dm_os_performance_counters
+			  where counter_name = 'Buffer cache hit ratio base'
+			  and object_name = 'SQLServer:Buffer Manager') b
+		on a.object_name = b.object_name
+		where a.counter_name = 'Buffer cache hit ratio'
+		and a.object_name = 'SQLServer:Buffer Manager'";
+
+    my $sth = $dbh->prepare($buffercachehitratio_query, {odbc_exec_direct => 1});
+    $sth->execute();
+
+    while(my @row = $sth->fetchrow_array) {
+		print "bc_hitratio.value " . trim($row[0]) . "\n";
+    }
+}
+
+sub filesize_fetch {
+	#for all instances
+    my $sth = run_query(["Data File(s) Size (KB)"]);
+    while(my @row = $sth->fetchrow_array) {
+        print trim($row[0]) . ".value " . (trim($row[2]) / 1024) . "\n";
+    }
+}
+
+sub transactions_fetch {
+    my $sth = run_query($transaction_counters);
+    while(my @row = $sth->fetchrow_array) {
+        print trim($row[0]) . "_trans_" . normalizeName($row[1]) . ".value " . trim($row[2]) . "\n";
+    }
+}
+
+sub access_fetch {
+    my $sth = run_query($access_counters);
+    while(my @row = $sth->fetchrow_array) {
+        print "access_" . normalizeName($row[1]) . ".value " . trim($row[2]) . "\n";
+    }
+}
+
+sub connections_fetch {
+    #these are not specific to an instance
+    my $sth = run_query(['User Connections']);
+    while(my @row = $sth->fetchrow_array) {
+        print "connections.value " . trim($row[2]) . "\n";
+    }
+}
+
+sub locks_fetch {
+    my $sth = run_query($locks_counters);
+    while(my @row = $sth->fetchrow_array) {
+        print trim($row[0]) . "_locks_" . normalizeName($row[1]) . ".value " . trim($row[2]) . "\n";
+    }
+}
+
+sub memory_fetch {
+    #these are not specific to an instance
+    my $sth = run_query($memory_counters);
+    while(my @row = $sth->fetchrow_array) {
+        print "mem_" . normalizeName($row[1]) . ".value " . trim($row[2]) . "\n";
+    }
+}
+
+sub buffer_fetch {
+    #these are not specific to an instance
+    my $sth = run_query($buffer_counters);
+    while(my @row = $sth->fetchrow_array) {
+        print "buffer_" . normalizeName($row[1]) . ".value " . trim($row[2]) . "\n";
+    }
+}
+
+sub logsize_fetch {
+    #for all instances
+    my $sth = run_query(["Log File(s) Size (KB)"]);
+    while(my @row = $sth->fetchrow_array) {
+        print trim($row[0]) . ".value " . (trim($row[2]) / 1024) . "\n";
+    }
+}
+
+sub run_query {
+    my $counter_names = shift;
+    my $instance = shift;
+    my $object_name = shift;
+
+    my $transaction_query = "select instance_name, counter_name, cntr_value from sys.dm_os_performance_counters
+         where counter_name IN ('" . join("', '", @$counter_names) . "')";
+
+     if ($instance){
+         $transaction_query .= " and instance_name = '$instance'";
+     }
+
+     if ($object_name){
+        $transaction_query .= " and object_name = '$object_name'";
+     }
+
+    my $sth = $dbh->prepare($transaction_query, {odbc_exec_direct => 1});
+    $sth->execute();
+
+	return $sth;
+}
+
+sub normalizeName {
+    my $name = shift;
+    $name = trim($name);
+    $name =~ s/[^\w\s]//g;
+    $name =~ s/[ ]/_/g;
+    return lc($name);
+}
+
+exit 0;
+

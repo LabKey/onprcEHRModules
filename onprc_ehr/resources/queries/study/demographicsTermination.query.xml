@@ -1,0 +1,20 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsTermination" tableDbType="NOT_IN_DB">
+                <tableTitle>Terminal Projects</tableTitle>
+                <columns>
+                    <column columnName="status">
+                        <columnTitle>Is Terminal?</columnTitle>
+                    </column>
+                    <column columnName="projects">
+                        <columnTitle>Projects</columnTitle>
+                    </column>
+                    <column columnName="flags">
+                        <columnTitle>Flags</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

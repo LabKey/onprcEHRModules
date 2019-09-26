@@ -1,0 +1,14 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="pregnancyOutcome" tableDbType="TABLE">
+                <tableTitle>Pregnancy Outcomes</tableTitle>
+                <columns>
+                    <column columnName="births">
+                        <columnTitle>Births Within 180 Days</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

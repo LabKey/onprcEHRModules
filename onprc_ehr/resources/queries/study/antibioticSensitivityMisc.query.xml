@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="antibioticSensitivityMisc" tableDbType="TABLE">
+                <tableTitle>Antibiotic Misc Results</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -1,0 +1,15 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="caseHousingAtOpen" tableDbType="NOT_IN_DB">
+                <tableTitle>Housing At Case Open</tableTitle>
+                <columns>
+                    <column columnName="lsid">
+                        <isKeyField>true</isKeyField>
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

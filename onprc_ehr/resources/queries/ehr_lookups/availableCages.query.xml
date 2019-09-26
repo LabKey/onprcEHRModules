@@ -1,0 +1,18 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="availableCages" tableDbType="TABLE">
+                <tableTitle>Available Cages</tableTitle>
+                <columns>
+                    <column columnName="row">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="column">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

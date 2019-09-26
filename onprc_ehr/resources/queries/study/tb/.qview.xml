@@ -1,0 +1,17 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id" />
+        <column name="date" />
+        <column name="lot" />
+        <column name="dilution" />
+        <column name="result1" />
+        <column name="result2" />
+        <column name="result3" />
+        <column name="remark" />
+        <column name="qcstate" />
+        <column name="taskid" />
+    </columns>
+    <sorts>
+        <sort column="date" descending="true"/>
+    </sorts>
+</customView>

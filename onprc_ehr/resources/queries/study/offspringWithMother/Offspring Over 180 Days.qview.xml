@@ -1,0 +1,9 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <filters>
+        <filter column="ageInDays" operator="gte" value="180"/>
+        <filter column="room/housingType/value" operator="eq" value="Cage location"/>
+    </filters>
+    <sorts>
+        <sort column="Id"/>
+    </sorts>
+</customView>

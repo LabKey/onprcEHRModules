@@ -1,0 +1,19 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id" />
+        <column name="date" />
+        <column name="project" />
+        <column name="type" />
+        <column name="servicerequested" />
+        <column name="tissue" />
+        <column name="collectionMethod" />
+        <column name="remark" />
+        <column name="QCState" />
+        <column name="taskid" />
+        <column name="requestid" />
+    </columns>
+    <sorts>
+        <sort column="date" descending="true"/>
+        <sort column="Id" />
+    </sorts>
+</customView>

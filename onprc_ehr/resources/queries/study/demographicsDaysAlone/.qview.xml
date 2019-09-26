@@ -1,0 +1,16 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="room/area"/>
+        <column name="room"/>
+        <column name="cage"/>
+        <column name="Id/utilization/use"/>
+        <column name="species"/>
+        <column name="gender"/>
+        <column name="cagemates"/>
+        <column name="pairedAnimals"/>
+        <column name="aloneSince"/>
+        <column name="daysAlone"/>
+        <column name="history"/>
+    </columns>
+</customView>

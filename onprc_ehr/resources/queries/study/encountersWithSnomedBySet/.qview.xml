@@ -1,0 +1,17 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="caseno"/>
+        <column name="set_number"/>
+        <column name="codes"/>
+        <column name="codesMeaning"/>
+
+    </columns>
+    <sorts>
+        <sort column="Id"/>
+        <sort column="date" descending="true"/>
+        <sort column="caseno"/>
+        <sort column="set_number"/>
+    </sorts>
+</customView>

@@ -1,0 +1,19 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+   <columns>
+       <column name="groupId"/>
+       <column name="Id"/>
+       <column name="Id/demographics/species"/>
+       <column name="Id/demographics/gender"/>
+       <column name="date"/>
+       <column name="enddate"/>
+       <column name="reason" />
+       <column name="qcstate" />
+       <column name="taskid" />
+       <column name="history"/>
+   </columns>
+   <sorts>
+       <!--<sort column="groupId/name"/>-->
+       <sort column="Id"/>
+       <sort column="date" descending="true"/>
+   </sorts>
+</customView>

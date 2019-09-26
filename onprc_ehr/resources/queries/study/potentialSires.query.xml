@@ -1,0 +1,14 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="potentialSires" tableDbType="TABLE">
+                <tableTitle>Potential Sires</tableTitle>
+                <columns>
+                    <column columnName="sireAgeAtTime">
+                        <columnTitle>Sire Age At Conception Window (years)</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

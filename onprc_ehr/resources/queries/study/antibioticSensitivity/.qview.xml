@@ -1,0 +1,16 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="runId/tissue"/>
+        <column name="microbe"/>
+        <column name="antibiotic"/>
+        <column name="result"/>
+        <column name="requestid"/>
+        <column name="taskid"/>
+        <column name="QCState"/>
+    </columns>
+    <sorts>
+        <sort column="date" descending="true"/>
+    </sorts>
+</customView>

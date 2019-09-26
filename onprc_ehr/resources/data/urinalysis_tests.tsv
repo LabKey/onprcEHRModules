@@ -1,0 +1,20 @@
+testid	name	units	alertOnAbnormal	alertOnAny	includeInPanel	sort_order
+Color	Color	no units	true	false	true	1
+App	Appearance	no units	true	false	true	2
+SpecGrav	Specific Gravity	no units	true	false	true	3
+pH	pH	no units	true	false	true	4
+Bili	Bilirubin	no units	true	false	true	5
+Glu	Glucose	no units	true	false	true	6
+Ket	Ketone	no units	true	false	true	7
+Prot	Protein	no units	true	false	true	8
+Urobili	Urobilinogen	mg/dl	true	false	true	9
+Blood	Blood	no units	true	false	true	10
+Other	Other	no units	true	false	false	
+WBC	WBC	phpf	true	false	true	11
+RBC	RBC	phpf	true	false	true	12
+Epith	Epith	phpf	true	false	true	13
+Bact	Bacteria	no units	true	false	true	14
+Crystals	Crystals	phpf	true	false	true	15
+Casts	Casts	plpf	true	false	true	16
+Cast-1	Cast Type 1	plpf	true	false	true	17
+Cast-2	Cast Type 2	plpf	true	false	true	18

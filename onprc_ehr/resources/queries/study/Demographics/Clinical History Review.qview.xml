@@ -1,0 +1,50 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="species"/>
+        <column name="gender"/>
+        <column name="calculated_status">
+            <properties>
+                <property name="columnTitle" value="Status"/>
+            </properties>
+        </column>
+        <column name="Id/utilization/use"/>
+        <column name="Id/curLocation/room">
+            <properties>
+                <property name="columnTitle" value="Room"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/cage">
+            <properties>
+                <property name="columnTitle" value="Cage"/>
+            </properties>
+        </column>
+        <column name="Id/age/yearAndDays"/>
+        <column name="Id/currentCondition/condition"/>
+        <column name="Id/viral_status/viralStatus"/>
+        <column name="Id/totalOffspring/TotalOffspring"/>
+
+        <column name="Id/MostRecentWeight/MostRecentWeight">
+            <properties>
+                <property name="columnTitle" value="Current Weight (kg)"/>
+            </properties>
+        </column>
+        <column name="Id/problemHistory/categories">
+            <properties>
+                <property name="columnTitle" value="Problems In Last 2 Years"/>
+            </properties>
+        </column>
+
+        <!--<column name="Id/weightChange/MinLast2yr"/>-->
+        <!--<column name="Id/weightChange/MaxLast2yr"/>-->
+        <column name="history"/>
+    </columns>
+    <filters>
+        <filter column="calculated_status" operator="eq" value="Alive"/>
+    </filters>
+    <sorts>
+        <sort column="Id/curLocation/room"/>
+        <sort column="Id/curLocation/cage"/>
+        <sort column="Id" />
+    </sorts>
+</customView>

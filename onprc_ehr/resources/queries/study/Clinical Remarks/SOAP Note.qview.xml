@@ -1,0 +1,24 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="caseid"/>
+        <column name="project"/>
+        <column name="category"/>
+        <column name="performedby"/>
+
+        <column name="hx"/>
+        <column name="s"/>
+        <column name="o"/>
+        <column name="a"/>
+        <column name="p"/>
+        <column name="p2"/>
+        <!--<column name="description"/>-->
+        <column name="remark"/>
+        <column name="qcstate" />
+        <column name="taskid" />
+    </columns>
+    <sorts>
+        <sort column="date" descending="true"/>
+    </sorts>
+</customView>

@@ -1,0 +1,25 @@
+value	category	editorconfig	schemaName	queryName	valueColumn
+Alopecia Score	Behavior	{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"alopecia_score","forceSelection":true,"displayField":"value","valueField":"value"}	ehr_lookups	alopecia_score	value
+SIB Score	Behavior	{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"sib_score","forceSelection":true,"displayField":"value","valueField":"value"}	ehr_lookups	sib_score	value
+Alopecia Type	Behavior	{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"alopecia_type","forceSelection":true,"displayField":"value","valueField":"value","sortFields":"sort_order"}	ehr_lookups	alopecia_type	value
+Alopecia Regrowth	Behavior	{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"alopecia_regrowth","forceSelection":true,"displayField":"value","valueField":"value","sortFields":"sort_order"}	ehr_lookups	alopecia_regrowth	value
+BCS		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"bcs_score","forceSelection":true,"displayField":"value","valueField":"value"}	ehr_lookups	bcs_score	value
+CRT		{"xtype":"textfield","defaultValue":"1-2"}
+MM		{"xtype":"textfield","defaultValue":"Pink"}
+Turgor		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"turgor_score","displayField":"value","sortFields":"sort_order","valueField":"value"}
+Pain Score		{"xtype":"ldk-numberfield","minValue":0,"maxValue":12}
+Other		{"xtype":"textfield"}
+Menses		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"mens_score","displayField":"value","sortFields":"sort_order","valueField":"value"}
+App		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"app_score","displayField":"value","sortFields":"sort_order","valueField":"value"}
+Att		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"att_score","displayField":"value","valueField":"value"}
+Hyd		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"hyd_score","displayField":"value","sortFields":"sort_order","valueField":"value"}
+Stool		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"stool_score","displayField":"value","sortFields":"sort_order","valueField":"value"}
+Incision		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"incision_score","displayField":"value","sortFields":"sort_order","valueField":"value"}
+Observations		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"normal_abnormal","displayField":"state","valueField":"state"}
+Temp		{"xtype":"ldk-numberfield","minValue":0}
+Pulse		{"xtype":"ldk-numberfield","minValue":0}
+Resp		{"xtype":"ldk-numberfield","minValue":0}
+Vet Attention		{"xtype":"textfield","value":"Review Needed"}
+Reviewed		{"xtype":"textfield"}
+Behaviors	Behavior	{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"behavior_types","displayField":"value","valueField":"value"}	ehr_lookups	behavior_types	value
+Fecal Smear	Behavior	{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"fecal_smear_score","displayField":"value","valueField":"value"}

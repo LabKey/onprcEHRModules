@@ -1,0 +1,138 @@
+reportname	category	reporttype	reporttitle	visible	containerpath	schemaname	queryname	viewname	report	datefieldname	todayonly	queryhaslocation	sort_order	QCStateLabelFieldName	description
+activeAssignments	Assignments and Groups	query	Active Assignments	true		study	Assignment	Active Assignments		date	false	false		qcstate/publicdata	This report shows the active assignments for each animal
+assignmentHistory	Assignments and Groups	query	Assignment History	true		study	Assignment			date	false	false		qcstate/publicdata	This report shows all assignments records for the animals
+activeGroups	Assignments and Groups	query	Active Groups	true		study	animal_group_members	Active Members		date	false	false		qcstate/publicdata	This report shows the active assignments for each animal
+groupHistory	Assignments and Groups	query	Group History	true		study	animal_group_members			date	false	false		qcstate/publicdata	This report shows all assignments records for the animals
+
+microbiology	Lab Results	query	Microbiology	true		study	Microbiology Results			date	false	false		qcstate/publicdata	
+biochemistry	Lab Results	js	Biochemistry	true		study	bloodChemistry			date	false	false			Contains results of chemistry panels.  Can be displayed either by panel, or showing reference ranges
+clinPathRuns	Lab Results	query	Lab Runs	true		study	Clinpath Runs			date	false	false		qcstate/publicdata	Contains all clinpath requests
+iStat	Lab Results	js	iStat	true		study	iStat			date	false	false		qcstate/publicdata	Contains iStat results
+hematology	Lab Results	js	Hematology	true		study	hematology			date	false	false			Contains hematology data showing cell subsets
+#Immunology	Lab Results	js	Immunology	true		study	immunology			date	false	false			Immunology results showing lymphocyte subsets
+parasitology	Lab Results	query	Parasitology	true		study	Parasitology Results			date	false	false		qcstate/publicdata	Contains results of parasitology testing
+urinalysis	Lab Results	js	Urinalysis	true		study	urinalysisResults			date	false	false			Contains urinalysis results
+#viralChallenges	Lab Results	query	Viral Challenges	true		study	ViralChallenges			date	false	false			This report contains a list of all viral challenges, determined by comparing against known SNOMED codes
+
+miscTests	Lab Results	query	Misc Tests	true		study	Misc Tests			date	false	false		qcstate/publicdata	This report contains the misc lab results not represented in the other reports
+antibioticSensitivity	Lab Results	js	Antibiotic Sensitivity	true		study	antibioticSensitivity			date	false	false		qcstate/publicdata	This report contains the results of tests of antibiotic resistance
+serology	Lab Results	query	Serology	true		study	Serology Results			date	false	false		qcstate/publicdata	This report contains the results of serology tests
+#virology	Lab Results	query	Virology	true		study	Virology Results			date	false	false		qcstate/publicdata	This report contains the results of serology and isolation virology tests for pathogens such as HBV
+clinCases	Clinical	query	Cases	true		study	Cases	Active Clinical Cases		date	false	false		qcstate/publicdata	This report contains one record for each case opend for this animal, including surergies, exams, procedures, etc.
+snomedTags	Clinical	query	SNOMED Codes	true		ehr	snomed_tags			date	false	false		qcstate/publicdata	This report lists all SNOMED codes used in the animal\'s record
+#encountersWithSnomedBySet	Pathology	query	SNOMED Codes - Grouped	true		study	encountersWithSnomedBySet			date	false	false		qcstate/publicdata	This report lists all SNOMED codes used in the animal\'s record
+
+surgery	Surgery	query	Surgeries	true		study	Clinical Encounters	Surgeries		date	false	false		qcstate/publicdata	This report contains one record for each encounter with each animal, including surgeries, exams, procedures, etc.
+surgery	Surgery	query	Surgeries Today	true		study	Clinical Encounters	Surgeries Today		date	false	false		qcstate/publicdata	
+procedures	Clinical	query	Procedures	true		study	Clinical Encounters	Procedures		date	false	false		qcstate/publicdata	
+procedureHistory	Surgery	query	Procedure Summary	true		study	proceduresPerYear			date	false	false		qcstate/publicdata	This report contains one record for each encounter with each animal, including surgeries, exams, procedures, etc.
+surgeryChecklist	Surgery	query	Surgery Checklist	true		study	surgeryChecklist			date	false	false		qcstate/publicdata	This report provides information intended to be reviewed prior to surgeries.
+clinObs	Clinical	query	Observations	true		study	Clinical Observations			date	false	false		qcstate/publicdata	This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.
+clinObsBsu	Behavior	query	Observations	true		study	Clinical Observations	BSU Observations		date	false	false		qcstate/publicdata	This report contains one record for each encounter with each animal, including surergies, exams, procedures, etc.
+clinremarks	Clinical	query	Clinical Remarks	true		study	Clinical Remarks			date	false	false		qcstate/publicdata	This report contains the clinical remarks entered about each animal
+behaviorRemarks	Behavior	query	Behavior Remarks	true		study	Clinical Remarks	Behavior Remarks		date	false	false		qcstate/publicdata	This report contains the behavior remarks entered about each animal
+drug	Behavior	query	Behavior Treatments	true		study	Drug Administration	Behavior Treatments		date	false	false		qcstate/publicdata	This report contains the behavior treatments entered about each animal
+pairings	Behavior	query	Pairing Observations	true		study	pairingSummary			date	false	false			This report contains records about pairings made using each animal
+pairingHousingSummary	Behavior	query	Pairing With Housing	true		study	pairingHousingSummary			date	false	false			This report contains records about pairings made using each animal
+roommateHistoryBSU	Behavior	query	Cagemate History	true		study	housingRoommates	Caged Housing Only		StartDate	false	false		qcstate/publicdata	This report displays all animals that shared a cage, including the start date, stop date and days co-housed
+pairingHistory	Behavior	js	Pairing History	true		study	pairHistory			date	false	false		qcstate/publicdata	This report displays all animals that shared a cage, including the start date, stop date and days co-housed
+
+#caseSummary	Clinical	query	Cases Over 2 Years	true		study	clinicalCaseSummary			date	false	false		qcstate/publicdata	This reports summarizes clinical cases opened in the past 2 years.
+#fullHistory	Clinical	query	Full History	true		study	StudyData	Full History		date	false	false		qcstate/publicdata	Contains all clinical data on the animal
+#fullHistoryPlusObs	Clinical	query	Full History Plus Obs	true		study	StudyData	Full History Plus Obs		date	false	false		qcstate/publicdata	Similar to Full History, but also contains irregular observations
+#tasksById	Clinical	query	Tasks	true		ehr	TasksById			date	false	false		taskid/qcstate/publicdata	This report displays and forms that have been completed about each animal
+treatments	Clinical	query	Medication Orders	true		study	Treatment Orders			date	false	false		qcstate/publicdata	Contains a list of all orders for treatments
+drug	Clinical	query	Medications - All	true		study	drugsUnified			date	false	false		qcstate/publicdata	This report contains records of all medications administered to each animal
+weight	Colony Management	js	Weights	true		study	weightGraph			date	false	false		qcstate/publicdata	This report contains a summary of the animal\'s weight, including a graph
+clinicalHistory	Clinical	js	Clinical History	true		study	onprcClinicalHistory			date	false	false		qcstate/publicdata	This report contains an overview of the animal\'s clinical history
+behaviorHistory	Behavior	js	Full History	true		study	onprcClinicalHistory			date	false	false		qcstate/publicdata	This report contains an overview of the animal\'s clinical history
+fullClinicalHistory	Pathology	js	Clinical History - Full	true		study	onprcFullClinicalHistory			date	false	false		qcstate/publicdata	This report contains an overview of the animal\'s clinical history
+
+clinMedicationSchedule	Daily Reports	js	Clinical Medication Schedule	true		study	clinMedicationSchedule			date	false	false		qcstate/publicdata	This report contains a list of daily treatments to be administered
+dietSchedule	Daily Reports	js	Diets	true		study	dietSchedule			date	false	false		qcstate/publicdata	This report contains a list of daily treatments to be administered
+surgMedicationSchedule2	Surgery	js	Surgical Medication Schedule	true		study	surgMedicationSchedule			date	false	false		qcstate/publicdata	This report contains a list of daily treatments to be administered
+surgMedicationSchedule	Daily Reports	js	Surgical Medication Schedule	true		study	surgMedicationSchedule			date	false	false		qcstate/publicdata	This report contains a list of daily treatments to be administered
+incompleteTreatments	Daily Reports	js	Meds/Diet - Incomplete	true		study	incompleteTreatments			date	false	false		qcstate/publicdata	This report contains a list of daily treatments not yet administered
+
+bloodSchedule	Daily Reports	js	Blood Schedule	true		study	bloodSchedule			date	false	false		qcstate/publicdata	This report contains an overview of the animal's clinical history
+#behaviorRemarks	Colony Management	query	Behavior Remarks	true		study	Behavior Remarks			date	false	false		qcstate/publicdata	Contains remarks entered by Behavioral Management
+birth	Colony Management	query	Birth Records	true		study	birth				false	false		qcstate/publicdata	Birth records
+birth2	Reproductive Management	query	Birth Records	true		study	birth				false	false		qcstate/publicdata	Birth records
+death	Colony Management	query	Death Records	true		study	deaths				false	false		qcstate/publicdata	Death records
+roommateHistory	Colony Management	query	Cagemate History	true		study	housingRoommates			StartDate	false	false		qcstate/publicdata	This report displays all animals that shared a cage, including the start date, stop date and days co-housed
+activeHousing	Colony Management	query	Housing - Active	true		study	housing	Active Housing		date	false	TRUE		qcstate/publicdata	This report shows the active housing record for each animal
+housing	Colony Management	query	Housing History	true		study	housing			date	false	TRUE		qcstate/publicdata	This report contains the housing history of each animal
+inbreeding	Genetics	query	Inbreeding Coefficients	true		study	Inbreeding Coefficients				false	false		qcstate/publicdata	This report shows the inbreeding coefficient of each animal, where pedigree data is available. The inbreeding coefficient is the kinship coefficient between the individual's parents. It measures the probability that the two alleles of a gene are identical by descent in the same individual (autozygosity). It is zero if the individual is not inbred.
+parentage	Genetics	query	Parentage	true		study	demographicsParents				false	false		qcstate/publicdata	This report shows information about the parentage of each animal, drawing from genetic data and observations
+potentialParents	Colony Management	js	Potential Parents	true		study	potentialParents				false	false		qcstate/publicdata	This report shows potential parents for the animal, which is based on housing at estimated time of conception
+citesReview	Colony Management	query	Cites Review	true		study	demographics	Cites Review		date	false	false		qcstate/publicdata	
+kinship	Genetics	js	Kinship	true		ehr	kinshipSummary				false	false		qcstate/publicdata	This report shows the kinship coefficient between every animal in the colony. The kinship coefficient is a measure of relatedness between two individuals. It represents the probability that two genes, sampled at random from each individual are identical (e.g. the kinship coefficient between a parent and an offspring is 0.25).
+#mensCalendar	Colony Management	query	Menses Calendar	TRUE		study	mensCalendar				FALSE	FALSE		qcstate/publicdata	This report shows a calendar view of the mens observations entered by daily obs.
+pedigree	Genetics	js	Pedigree	true		study	pedigree				false	false		qcstate/publicdata	This report displays pedigree data for animals, including parents, grandparents, siblings and offspring
+mhcData	Genetics	query	MHC Typing - Summary	true		MHC_Data	MHC_Data_Unified				false	false
+mhcDataPivoted	Genetics	query	MHC Typing - Detailed	true		MHC_Data	MHC_Data_Pivoted	Common Alleles			false	false
+siblings	Reproductive Management	query	Siblings	true		study	demographicsSiblings				false	false		qcstate/publicdata	This report displays pedigree data for animals, including parents, grandparents, siblings and offspring
+offspring	Reproductive Management	query	Offspring	true		study	demographicsOffspring				false	false		qcstate/publicdata	This report displays pedigree data for animals, including parents, grandparents, siblings and offspring
+pedigreePlot	Genetics	report	Pedigree Plot	true		study	pedigree		module:EHR/schemas/study/Pedigree/Pedigree.r		false	false		qcstate/publicdata	This report will generate a pedigree plot for the selected animal
+#pregnancies	Colony Management	query	Pregnancies	true		study	Pregnancies			date	false	false		qcstate/publicdata	This report contains a list of known pregnancies, including conception dates and sire, where available
+#dnaBank	Genetics	query	DNA Bank	true		DNABank	Samples				false	false		qcstate/publicdata	This report shows the inbreeding coefficient of each animal, where pedigree data is available. The inbreeding coefficient is the kinship coefficient between the individual's parents. It measures the probability that the two alleles of a gene are identical by descent in the same individual (autozygosity). It is zero if the individual is not inbred.
+
+TB	Lab Results	query	TB Test Dates	true		study	encounters	TB Tests		date	false	false		qcstate/publicdata	TB Test results
+snapshot	General	js	Snapshot	true		study	onprcSnapshot				false	false		qcstate/publicdata	This report contains a summary of the animal, including demographics, assignments and weight
+clinSnapshot	Clinical	js	Clinical Snapshot	true		study	onprcSnapshot				false	false		qcstate/publicdata	This report contains a summary of the animal, including demographics, assignments and weight
+arrival	General	query	Arrivals	true		study	arrival			date	false	false		qcstate/publicdata	Displays arrival and departure dates
+departure	General	query	Departures	true		study	departure			date	false	false		qcstate/publicdata	Displays arrival and departure dates
+bloodDraws	General	query	Blood Draw History	true		study	Blood Draws			date	false	false			Contains records of blood draws.  
+#charges	General	query	Charges	true		study	Charges			date	false	false		qcstate/publicdata	This report contains a list of charges attached to the animal's record
+currentBlood	General	js	Current Blood	true		study	currentBlood			date	false	false			This report contains a summary of the current available blood for each animal
+deaths	General	query	Deaths	true		study	Deaths			date	false	false		qcstate/publicdata	Contains a list of animal deaths
+demographics	General	query	Demographics	true		study	demographics	By Location			false	false		qcstate/publicdata	This report displays the demographics data about each animal including species, gender and birth
+#extendedAbstract	General	query	Extended Abstract	false		study	animal	Extended Abstract			false	false		qcstate/publicdata	
+#majorEvents	General	query	Major Events	true		study	majorEvents			date	false	false			This report attempts to identify major events in the history of the animal, including births and major surgeries
+notes	General	query	Notes	true		study	notes	Active Notes		date	false	false		qcstate/publicdata	This report contains non-clinical notes entered into the animal's record
+biopsies	Pathology	query	Biopsies	true		study	Clinical Encounters	Biopsies		date	false	false		qcstate/publicdata	Contains information about biopsies
+#histology	Pathology	query	Histology	true		study	histologyPublic			date	false	false		qcstate/publicdata	Histology records and associated diagnoses
+pathologyDiagnoses	Pathology	query	SNOMED Codes	true		study	pathologySnomeds			date	false	false		qcstate/publicdata	
+necropsies	Pathology	query	Necropsies	true		study	Clinical Encounters	Necropsies		date	false	false		qcstate/publicdata	Contains information about necropsies
+tissueSamples	Pathology	query	Tissue Weights	true		study	Tissue Samples			date	false	false		qcstate/publicdata	This report contains tissue weights obtained at necropsy
+tissueMeasurements	Pathology	js	Tissue Measurements	true		study	measurementsPivoted			date	false	false		qcstate/publicdata	This report contains tissue measurements
+tissueDistriutions	Pathology	query	Tissue Distributions	true		study	Tissue Distributions			date	false	false		qcstate/publicdata	
+
+#alopecia	Physical Exam	query	Alopecia	true		study	Alopecia			date	false	false		qcstate/publicdata	Contains alopecia scores from the colony
+#bodyCondition	Physical Exam	query	Body Condition	true		study	Body Condition			date	false	false		qcstate/publicdata	Contains body condition scores captured during physical exams
+#peObservations	Physical Exam	query	PE Findings	true		study	Clinical Observations	PE Observations		date	false	false		qcstate/publicdata	This report contains the clinical observations entered about each animal
+#dentalStatus	Physical Exam	query	Dental Status	true		study	Dental Status			date	false	false		qcstate/publicdata	Contains dental assessments captured during physical exams
+#pe	Physical Exam	query	Exams	true		study	Clinical Encounters	PE		date	false	false		qcstate/publicdata	A list of physical exams performed
+#teeth	Physical Exam	query	Teeth	true		study	Teeth			date	false	false		qcstate/publicdata	Contains observations about teeth taken during physical exams
+#vitals	Physical Exam	query	Vitals	true		study	Vitals			date	false	false		qcstate/publicdata	Contains records of vitals, including heart rate and blood pressure
+#obs	Daily Reports	js	Irregular Observations	true		study	irregularObs			date	true	true	1		Displays irregular observations from today only
+#obsTreatment	Daily Reports	js	Obs/Treatment	true		study	irregularObsTreatment			date	true	true	2		Displays irregular observations and treatments for today
+#todaysHistory	Daily Reports	query	Today's History	true		study	StudyData	Full History		Date	true	false	3	qcstate/publicdata	This report contains the full history, filtered to show events that happened today only
+#treatmentScheduleAM	Daily Reports	query	Treatments - Morning	true		study	treatmentSchedule	AM Treatments		date	true	false	4	qcstate/publicdata	The report displays all treatments scheduled for today
+#treatmentSchedulePM	Daily Reports	query	Treatments - Afternoon	true		study	treatmentSchedule	PM Treatments		date	true	false	5	qcstate/publicdata	The report displays all treatments scheduled for today
+#treatmentScheduleNight	Daily Reports	query	Treatments - Evening	true		study	treatmentSchedule	Night Treatments		date	true	false	6	qcstate/publicdata	The report displays all treatments scheduled for today
+#treatmentSchedule	Daily Reports	query	Treatments - Master	true		study	treatmentSchedule			date	true	false	7	qcstate/publicdata	The report displays all treatments scheduled for today
+cases	Daily Reports	query	Active Clinical Cases	true		study	Cases	Active Clinical Cases		date	false	false		qcstate/publicdata	This displays active clinical cases
+behaviorCases	Behavior	query	Behavior Cases	true		study	cases	Open Behavior Cases		date	false	false		qcstate/publicdata	This displays active behavior cases
+#enrichment	Behavior	query	Enrichment	true		study	Enrichment			date	false	false		qcstate/publicdata	
+surgicalCases	Daily Reports	query	Active Surgery Cases	true		study	Cases	Active Surgery Cases		date	false	false		qcstate/publicdata	This displays active surgery cases
+surgeryCasesClosedToday	Surgery	js	Surgery Cases Closed Today	true		study	surgeryCasesClosedToday			date	false	false		qcstate/publicdata	This displays surgery cases closed today
+activeFlags	General	query	Active Flags	true		study	Animal Record Flags	Active Flags		date	false	false		qcstate/publicdata	This displays active flags for this animals
+surgicalCases2	Surgery	query	Surgery Cases	true		study	Cases	Active Surgery Cases		date	false	false		qcstate/publicdata	This displays active surgery cases
+#diet	Colony Management	query	Diet	true		study	Diet	Active Diets		date	false	false		qcstate/publicdata	This displays active diets
+#problemList	Daily Reports	query	Unresolved Problem List	true		study	Problem List	Unresolved Problems		date	false	false		qcstate/publicdata	This displays the clinical problem list
+#openProblems	Clinical	query	Problems - Active	true		study	Problem List	Unresolved Problems		date	false	false		qcstate/publicdata	This displays the unresolved clinical problem list
+allProblems	Clinical	query	Master Problems	true		study	Problem List			date	false	false		qcstate/publicdata	This displays the clinical problem list, including closed problems
+matings	Reproductive Management	query	Matings	true		study	matingsExpanded			date	false	false		qcstate/publicdata	This displays the records of matings
+matingSuccessRates	Reproductive Management	query	Mating Success Rates	true		study	matingSuccessRates			date	false	false		qcstate/publicdata	This displays a summary of matings
+
+reproSummary	Reproductive Management	js	Reproductive Summary	true		study	reproSummary			date	false	false		qcstate/publicdata	
+menseCycleLength	Reproductive Management	js	Cycle Length	true		study	menseCycleLength			date	false	false		qcstate/publicdata	
+menses	Reproductive Management	query	Menses	true		study	menseData			date	false	false		qcstate/publicdata	
+delivery	Reproductive Management	query	Deliveries	true		study	Delivery			date	false	false		qcstate/publicdata	
+#delivery	Reproductive Management	js	Deliveries	true		study	Delivery			date	false	false		qcstate/publicdata	
+pregnancy	Reproductive Management	query	Pregnancies	true		study	Pregnancy Confirmations			date	false	false		qcstate/publicdata	
+#todaysBlood	Daily Reports	query	Blood Draw Schedule	true		study	BloodSchedule	Blood Schedule		date	TRUE	false	9	qcstate/publicdata	Contains records of blood draws scheduled for today
+
+#sbt	Genetics	query	MHC Genotype	TRUE		study	demographics			date	FALSE	FALSE		qcstate/publicdata	This report contains summaries of MHC genetics, derived from many different techniques
+#feeding	Colony Management	query	Feeding	true		study	Feeding				false	false		qcstate/publicdata	This report contains the amount and type of food ordered for each animal

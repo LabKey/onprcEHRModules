@@ -1,0 +1,8 @@
+<view xmlns="http://labkey.org/data/xml/view" title="ONPRC Cores &amp; Resources">
+    <dependencies>
+        <dependency path="ehr.context" />
+        <dependency path="extWidgets/IconPanel.css" />
+        <dependency path="extWidgets/IconPanel.js" />
+        <dependency path="onprc_ehr/panel/IconPanel.js" />
+    </dependencies>
+</view>

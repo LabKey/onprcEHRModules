@@ -1,0 +1,43 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="calculated_status">
+            <properties>
+                <property name="columnTitle" value="Status"/>
+            </properties>
+        </column>
+        <column name="Id/activeAssignments/investigators">
+            <properties>
+                <property name="columnTitle" value="Investigators"/>
+            </properties>
+        </column>
+        <column name="species"/>
+        <column name="gender"/>
+        <column name="birth"/>
+        <column name="Id/age/yearAndDays"/>
+        <column name="Id/curLocation/room">
+            <properties>
+                <property name="columnTitle" value="Room"/>
+            </properties>
+        </column>
+        <column name="Id/curLocation/cage">
+            <properties>
+                <property name="columnTitle" value="Cage"/>
+            </properties>
+        </column>
+        <column name="Id/MostRecentWeight/MostRecentWeight">
+            <properties>
+                <property name="columnTitle" value="Current Weight (kg)"/>
+            </properties>
+        </column>
+        <column name="Id/MostRecentWeight/MostRecentWeightDate">
+            <properties>
+                <property name="columnTitle" value="Weight Date"/>
+            </properties>
+        </column>
+        <column name="history"/>
+    </columns>
+    <sorts>
+        <sort column="Id" descending="false"/>
+    </sorts>
+</customView>

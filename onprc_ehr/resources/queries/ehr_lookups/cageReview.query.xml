@@ -1,0 +1,87 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="cageReview" tableDbType="NOT_IN_DB">
+                <tableTitle>Cage Review</tableTitle>
+                <columns>
+                    <column columnName="room">
+
+                    </column>
+                    <column columnName="cage">
+                        <columnTitle>Primary Cage</columnTitle>
+                    </column>
+                    <column columnName="numCages">
+                        <columnTitle># Joined Cages</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="cages">
+                        <columnTitle>Cages</columnTitle>
+                    </column>
+                    <column columnName="totalWeight">
+                        <columnTitle>Total Weight of Animals Over 6 Months</columnTitle>
+                        <isHidden>true</isHidden>
+                        <formatString>0.##</formatString>
+                    </column>
+                    <column columnName="rawWeight">
+                        <columnTitle>Total Weight of All Animals</columnTitle>
+                        <isHidden>true</isHidden>
+                        <formatString>0.##</formatString>
+                    </column>
+                    <column columnName="totalAnimals">
+                        <columnTitle>Total Animals 6 Months Or Older</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="totalAnimalsUnder6Mo">
+                        <columnTitle>Total Animals Under 6 Months</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="totalAnimals5MonthsOld">
+                        <columnTitle>Total Animals 5 Months Old</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="totalApproachingLimit">
+                        <columnTitle>Total Animals Within 5% of Increasing Cage Class</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="requiredSqFt">
+                        <columnTitle>Required Sq. Ft (Excluding Animals Under 6 Months)</columnTitle>
+                        <displayWidth>80</displayWidth>
+                        <formatString>0.##</formatString>
+                    </column>
+                    <column columnName="totalSqFt">
+                        <columnTitle>Available Sq. Ft</columnTitle>
+                    </column>
+                    <column columnName="requiredSqFtIncluding5Mo">
+                        <columnTitle>Required Sq. Ft (Including 5 Month Olds)</columnTitle>
+                        <displayWidth>80</displayWidth>
+                        <formatString>0.##</formatString>
+                    </column>
+                    <column columnName="requiredSqFtForAll">
+                        <columnTitle>Required Sq. Ft (Including Infants)</columnTitle>
+                        <formatString>0.##</formatString>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="heights">
+                        <columnTitle>Required Height(s)</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="weights">
+                        <columnTitle>Animal Weights</columnTitle>
+                    </column>
+                    <column columnName="cageStatus">
+                        <columnTitle>Cage Status</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="startswith" value="ERROR"/>
+                                </filters>
+                                <backgroundColor>FBEC5D</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

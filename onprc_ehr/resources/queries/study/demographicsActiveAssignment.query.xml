@@ -1,0 +1,50 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsActiveAssignment" tableDbType="NOT_IN_DB">
+                <tableTitle>Active Assignments</tableTitle>
+                <columns>
+                    <column columnName="Id">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="projectAndInvestigator">
+                        <displayWidth>180</displayWidth>
+                    </column>
+                    <column columnName="totalProjects">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <columnTitle>Total Projects</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true</url>
+                    </column>
+                    <column columnName="numActiveAssignments">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <columnTitle># Active Assignments</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true</url>
+                    </column>
+                    <column columnName="numResearchAssignments">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <columnTitle># Research Assignments</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true&amp;query.project/isResearch~eq=1</url>
+                    </column>
+                    <column columnName="numResourceAssignments">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <columnTitle># Resource Assignments</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true&amp;query.project/isResource~eq=1</url>
+                    </column>
+                    <column columnName="numU24U42Assignments">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <columnTitle># U24/U42 Assignments</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=Assignment&amp;query.id~eq=${id}&amp;query.isActive~eq=true&amp;query.project/isU24U42~eq=1</url>
+                    </column>
+                    <column columnName="numProvisionalAssignments">
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                        <columnTitle># Provisional Assignments</columnTitle>
+                    </column>
+                    <column columnName="vets">
+                        <columnTitle>Resonsible Vet(s)</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

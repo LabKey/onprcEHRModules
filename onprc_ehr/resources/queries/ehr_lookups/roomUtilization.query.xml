@@ -1,0 +1,83 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="roomUtilization" tableDbType="NOT_IN_DB">
+                <tableTitle>Room Utilization</tableTitle>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <columns>
+                    <column columnName="room">
+                        <isKeyField>true</isKeyField>
+                        <fk>
+                          <fkDbSchema>ehr_lookups</fkDbSchema>
+                          <fkTable>rooms</fkTable>
+                          <fkColumnName>room</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="TotalCages">
+                        <columnTitle>Total Cage Spaces</columnTitle>
+                        <displayWidth>40</displayWidth>
+                        <url>/query/executeQuery.view?
+                            schemaName=ehr_lookups&amp;
+                            query.queryName=cage&amp;
+                            query.room~eq=${room}&amp;
+                            query.sort=cage&amp;
+                        </url>
+                    </column>
+                    <column columnName="AvailableCages">
+                        <columnTitle>Total Cages Present</columnTitle>
+                        <displayWidth>40</displayWidth>
+                        <url>/query/executeQuery.view?
+                            schemaName=ehr_lookups&amp;
+                            query.queryName=availableCages&amp;
+                            query.room~eq=${room}&amp;
+                            query.isAvailable~eq=true&amp;
+                            query.sort=cage&amp;
+                        </url>
+                    </column>
+                    <column columnName="MarkedUnavailable">
+                        <columnTitle>Marked Unavailable</columnTitle>
+                    </column>
+                    <column columnName="CagesUsed">
+                        <columnTitle>Cages Used</columnTitle>
+                        <displayWidth>40</displayWidth>
+                        <url>/query/executeQuery.view?
+                            schemaName=ehr_lookups&amp;
+                            query.queryName=cage&amp;
+                            query.room~eq=${room}&amp;
+                            query.availability/isAvailable~eq=true&amp;
+                            query.totalAnimals/totalAnimals~gt=0&amp;
+                            query.sort=cage&amp;
+                        </url>
+                    </column>
+                    <column columnName="CagesEmpty">
+                        <columnTitle>Cages Empty</columnTitle>
+                        <displayWidth>40</displayWidth>
+                        <url>/query/executeQuery.view?
+                            schemaName=ehr_lookups&amp;
+                            query.queryName=cage&amp;
+                            query.room~eq=${room}&amp;
+                            query.availability/isAvailable~eq=true&amp;
+                            query.totalAnimals/totalAnimals~isblank&amp;
+                            query.sort=cage&amp;
+                        </url>
+                    </column>
+                    <column columnName="pctUsed">
+                        <displayWidth>40</displayWidth>
+                        <columnTitle>% Used</columnTitle>
+                    </column>
+                    <column columnName="TotalAnimals">
+                        <columnTitle>Total Animals</columnTitle>
+                        <displayWidth>40</displayWidth>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=Demographics&amp;
+                            query.viewName=By Location&amp;
+                            query.Id/curLocation/room~eq=${room}&amp;
+                            query.sort=Id&amp;
+                        </url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

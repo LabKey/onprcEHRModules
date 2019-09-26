@@ -1,0 +1,34 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="true">
+    <columns>
+        <column name="Id"/>
+        <column name="species"/>
+        <column name="geographic_origin"/>
+        <column name="gender"/>
+        <column name="Id/source/type">
+            <properties>
+                <property name="columnTitle" value="Source"/>
+            </properties>
+        </column>
+
+        <column name="Id/parents/dam"/>
+        <column name="Id/parents/damType"/>
+        <column name="Id/parents/dam/source/type">
+            <properties>
+                <property name="columnTitle" value="Dam Source"/>
+            </properties>
+        </column>
+
+        <column name="Id/parents/sire"/>
+        <column name="Id/parents/sireType"/>
+        <column name="Id/parents/sire/source/type">
+            <properties>
+                <property name="columnTitle" value="Sire Source"/>
+            </properties>
+        </column>
+
+        <column name="history"/>
+    </columns>
+    <sorts>
+        <sort column="Id" descending="false"/>
+    </sorts>
+</customView>

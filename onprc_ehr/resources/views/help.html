@@ -1,0 +1,20 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId, ['EHRIssuesContainer', 'EHRDocumentationContainer']);
+        if(!ctx)
+            return;
+
+        Ext4.get(webpart.wrapperDivId).update(
+            '<div style="max-width:300px;">' +
+                '<a href="' + LABKEY.ActionURL.buildURL('project', 'begin', ctx['EHRDocumentationContainer']) + '">Click here for general information on how to use the EHR</a></li>' +
+                '<p></p>' +
+                '<a href="' + LABKEY.ActionURL.buildURL('issues', 'insert', ctx['EHRIssuesContainer']) + '" target="new">Click here to submit a support request, feature requests, or report bugs</a>' +
+                '<p></p>' +
+                '<a href="' + LABKEY.ActionURL.buildURL('issues', 'list', ctx['EHRIssuesContainer'], {'Issues.CreatedBy/DisplayName~eq': LABKEY.Security.currentUser.displayName, 'Issues.Status~neqornull': 'closed'}) + '" target="new">Click here to view or update any issues you submitted</a>' +
+            '</div>'
+        );
+    });
+
+</script>

@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="microbiologyPivoted" tableDbType="TABLE">
+                <tableTitle>Microbiology</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>

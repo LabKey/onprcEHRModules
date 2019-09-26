@@ -1,0 +1,37 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsActiveTreatments" tableDbType="NOT_IN_DB">
+                <tableTitle>Active Treatments</tableTitle>
+                <columns>
+                    <column columnName="Id">
+                        <isHidden>true</isHidden>
+                        <isKeyField>true</isKeyField>
+                    </column>
+                    <column columnName="totalTreatments">
+                        <columnTitle># Active Treatments</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=treatment_order&amp;query.Id~eq=${Id}&amp;query.isActive~eq=true</url>
+                    </column>
+                    <column columnName="totalClinicalTreatments">
+                        <columnTitle># Active Clinical Treatments</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=treatment_order&amp;query.Id~eq=${Id}&amp;query.isActive~eq=true&amp;query.category~eq=Clinical</url>
+                    </column>
+                    <column columnName="totalSurgicalTreatments">
+                        <columnTitle># Surgical Treatments</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=treatment_order&amp;query.Id~eq=${Id}&amp;query.isActive~eq=true&amp;query.category~eq=Surgical</url>
+                    </column>
+                    <column columnName="totalResearchTreatments">
+                        <columnTitle># Research Treatments</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=study&amp;query.queryName=treatment_order&amp;query.Id~eq=${Id}&amp;query.isActive~eq=true&amp;query.category~eq=Research</url>
+                    </column>
+                    <column columnName="activeTreatments">
+                        <displayWidth>250</displayWidth>
+                    </column>
+                    <column columnName="lastModification">
+                        <columnTitle>Date of Last Modification</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

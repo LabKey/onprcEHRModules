@@ -1,0 +1,18 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+<columns>
+    <column name="Id"/>
+    <column name="Species"/>
+    <column name="Gender"/>
+    <column name="Method"/>
+    <column name="BCSDate"/>
+    <column name="MostRecentBCS"/>
+    <column name="mostRecentWeightDate"/>
+    <column name="MostRecentWeight"/>
+    <column name="bloodPrevious"/>
+    <column name="bloodFuture"/>
+    <column name="blood_per_kg"/>
+    <column name="AllowableBlood"/>
+    <column name="AvailableBlood"/>
+
+</columns>
+</customView>
