@@ -21,6 +21,8 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.RuntimeSQLException;
 import org.labkey.api.data.SimpleFilter;
+import org.labkey.api.ehr.notification.AbstractEHRNotification;
+import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
@@ -29,9 +31,6 @@ import org.labkey.api.query.QueryView;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.settings.AppProps;
-import org.labkey.api.util.ResultSetUtil;
-import org.labkey.api.ehr.notification.AbstractEHRNotification;
-import org.labkey.api.ldk.notification.NotificationService;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.validation.BindException;
 
@@ -117,11 +116,9 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         QuerySettings qs = us.getSettings(mpv, "query");
         qs.setBaseFilter(filter);
         QueryView view = new QueryView(us, qs, errors);
-        Results rs = null;
-        try
+        try (Results rs = view.getResults())
         {
-            rs = view.getResults();
-            msg.append("<b>Clinpath requests created since the last time this email was sent on " + getDateTimeFormat(c).format(lastRun) + ":</b><p>\n");
+            msg.append("<b>Clinpath requests created since the last time this email was sent on ").append(getDateTimeFormat(c).format(lastRun)).append(":</b><p>\n");
             int total = 0;
             while (rs.next())
             {
@@ -130,8 +127,8 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
 
             if (total > 0)
             {
-                msg.append("There are " +  total + " requests.<br>");
-                msg.append("<p><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/dataEntry.view#topTab:Requests&activeReport:ClinpathRequests'>Click here to view them</a><br>\n");
+                msg.append("There are ").append(total).append(" requests.<br>");
+                msg.append("<p><a href='").append(AppProps.getInstance().getBaseServerUrl()).append(AppProps.getInstance().getContextPath()).append("/ehr").append(c.getPath()).append("/dataEntry.view#topTab:Requests&activeReport:ClinpathRequests'>Click here to view them</a><br>\n");
             }
             else
             {
@@ -146,10 +143,6 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         catch (IOException e)
         {
             throw new RuntimeException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
         }
     }
 
@@ -171,10 +164,8 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("qcstate/label"), "Request: Pending");
         qs.setBaseFilter(filter);
         QueryView view = new QueryView(us, qs, errors);
-        Results rs = null;
-        try
+        try (Results rs = view.getResults())
         {
-            rs = view.getResults();
             msg.append("<b>Clinpath requests that have not been approved or denied yet:</b><p>\n");
             int total = 0;
             while (rs.next())
@@ -184,8 +175,8 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
 
             if (total > 0)
             {
-                msg.append("WARNING: There are " + total + " requests that have not been approved or denied yet.<br>");
-                msg.append("<p><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/dataEntry.view#topTab:Requests&activeReport:ClinpathRequests'>Click here to view them</a><br>\n");
+                msg.append("WARNING: There are ").append(total).append(" requests that have not been approved or denied yet.<br>");
+                msg.append("<p><a href='").append(AppProps.getInstance().getBaseServerUrl()).append(AppProps.getInstance().getContextPath()).append("/ehr").append(c.getPath()).append("/dataEntry.view#topTab:Requests&activeReport:ClinpathRequests'>Click here to view them</a><br>\n");
             }
             else
             {
@@ -200,10 +191,6 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         catch (IOException e)
         {
             throw new RuntimeException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
         }
     }
 
@@ -226,10 +213,8 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         filter.addCondition(FieldKey.fromString("date"), new Date(), CompareType.DATE_LTE);
         qs.setBaseFilter(filter);
         QueryView view = new QueryView(us, qs, errors);
-        Results rs = null;
-        try
+        try (Results rs = view.getResults())
         {
-            rs = view.getResults();
             msg.append("<b>Clinpath requests requested for today, but have not been marked complete:</b><p>\n");
             int total = 0;
             while (rs.next())
@@ -239,8 +224,8 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
 
             if (total > 0)
             {
-                msg.append("<b>WARNING: There are " + total + " requests that were requested for today or earlier, but have not been marked complete.</b><br>");
-                msg.append("<p><a href='" +  getExecuteQueryUrl(c, "study", "Clinpath Runs", null) + "&query.qcstate/label~neq=Completed&query.date~datelte=" + getDateFormat(c).format(new Date()) + "'>Click here to view them</a><br>\n");
+                msg.append("<b>WARNING: There are ").append(total).append(" requests that were requested for today or earlier, but have not been marked complete.</b><br>");
+                msg.append("<p><a href='").append(getExecuteQueryUrl(c, "study", "Clinpath Runs", null)).append("&query.qcstate/label~neq=Completed&query.date~datelte=").append(getDateFormat(c).format(new Date())).append("'>Click here to view them</a><br>\n");
                 msg.append("<hr>\n");
             }
             else
@@ -255,10 +240,6 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         catch (IOException e)
         {
             throw new RuntimeException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
         }
     }
 }

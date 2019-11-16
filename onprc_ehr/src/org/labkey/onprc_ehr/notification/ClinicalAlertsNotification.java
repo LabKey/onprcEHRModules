@@ -31,7 +31,6 @@ import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
-import org.labkey.api.util.ResultSetUtil;
 
 import java.sql.SQLException;
 import java.text.NumberFormat;
@@ -127,22 +126,20 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         fieldKeys.add(FieldKey.fromString("pctWithProblem"));
         Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, fieldKeys);
 
-        Results rs = null;
-        try
-        {
-            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("pctWithProblem"), threshold, CompareType.GT);
-            filter.addCondition(FieldKey.fromString("category"), "Routine", CompareType.DOES_NOT_CONTAIN);
-            filter.addCondition(FieldKey.fromString("category"), "Other", CompareType.DOES_NOT_CONTAIN);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("pctWithProblem"), threshold, CompareType.GT);
+        filter.addCondition(FieldKey.fromString("category"), "Routine", CompareType.DOES_NOT_CONTAIN);
+        filter.addCondition(FieldKey.fromString("category"), "Other", CompareType.DOES_NOT_CONTAIN);
 
-            rs = QueryService.get().select(ti, cols.values(), filter, new Sort("groupId/name"), params, true);
+        try (Results rs = QueryService.get().select(ti, cols.values(), filter, new Sort("groupId/name"), params, true))
+        {
             int idx = 0;
             while (rs.next())
             {
-                String url = getExecuteQueryUrl(c, "study", "animalGroupProblemSummary", null) + " &query.param.StartDate=" + getDateFormat(c).format(cal.getTime())+ "&query.param.EndDate=" + getDateFormat(c).format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other";
+                String url = getExecuteQueryUrl(c, "study", "animalGroupProblemSummary", null) + " &query.param.StartDate=" + getDateFormat(c).format(cal.getTime()) + "&query.param.EndDate=" + getDateFormat(c).format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other";
                 if (idx == 0)
                 {
-                    msg.append("<b>WARNING: The following animal groups have a high incidence of clinical problems (>" + threshold + "% of animals) in the past " + interval + " days:</b><br>\n");
-                    msg.append("<p><a href='" + url + "'>Click here to view them</a><br><br>\n\n");
+                    msg.append("<b>WARNING: The following animal groups have a high incidence of clinical problems (>").append(threshold).append("% of animals) in the past ").append(interval).append(" days:</b><br>\n");
+                    msg.append("<p><a href='").append(url).append("'>Click here to view them</a><br><br>\n\n");
                     msg.append("<table border=1 style='border-collapse: collapse;'>");
                     msg.append("<tr style='font-weight: bold;'><td>Group</td><td>Majority Location</td><td>Problem Category</td><td>Distinct Animals In Group</td><td>Distinct Animals With Problem</td><td>Percent With Problem</td></tr>");
                 }
@@ -152,7 +149,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
                 String groupLocation = rs.getString(FieldKey.fromString("groupId/majorityLocation/majorityLocation"));
                 String category = rs.getString(FieldKey.fromString("category"));
                 String url2 = url + "&query.groupId/name~eq=" + groupName + "&query.category~eq=" + category;
-                msg.append("<tr><td>").append(groupName).append("</td><td>").append(StringUtils.trimToEmpty(groupLocation)).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(NumberFormat.getInstance().format(rs.getDouble(FieldKey.fromString("pctWithProblem"))) + "%").append("</a>").append("</td></tr>");
+                msg.append("<tr><td>").append(groupName).append("</td><td>").append(StringUtils.trimToEmpty(groupLocation)).append("</td><td>").append("<a href='").append(url2).append("'>").append(category).append("</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(NumberFormat.getInstance().format(rs.getDouble(FieldKey.fromString("pctWithProblem"))) + "%").append("</a>").append("</td></tr>");
             }
 
             if (idx > 0)
@@ -164,10 +161,6 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         catch (SQLException e)
         {
             throw new RuntimeException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
         }
     }
 
@@ -193,24 +186,22 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         fieldKeys.add(FieldKey.fromString("pctWithProblem"));
         Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, fieldKeys);
 
-        Results rs = null;
-        try
-        {
-            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("pctWithProblem"), threshold, CompareType.GT);
-            filter.addCondition(FieldKey.fromString("category"), "Routine", CompareType.DOES_NOT_CONTAIN);
-            filter.addCondition(FieldKey.fromString("category"), "Other", CompareType.DOES_NOT_CONTAIN);
-            filter.addCondition(FieldKey.fromString("room/area"), "Hospital", CompareType.NEQ);
-            filter.addCondition(FieldKey.fromString("totalIdWithProblems"), 2, CompareType.GT);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("pctWithProblem"), threshold, CompareType.GT);
+        filter.addCondition(FieldKey.fromString("category"), "Routine", CompareType.DOES_NOT_CONTAIN);
+        filter.addCondition(FieldKey.fromString("category"), "Other", CompareType.DOES_NOT_CONTAIN);
+        filter.addCondition(FieldKey.fromString("room/area"), "Hospital", CompareType.NEQ);
+        filter.addCondition(FieldKey.fromString("totalIdWithProblems"), 2, CompareType.GT);
 
-            rs = QueryService.get().select(ti, cols.values(), filter, new Sort("room/sort_order"), params, true);
+        try (Results rs = QueryService.get().select(ti, cols.values(), filter, new Sort("room/sort_order"), params, true))
+        {
             int idx = 0;
             while (rs.next())
             {
-                String url = getExecuteQueryUrl(c, "study", "roomProblemSummary", null) + "&query.param.StartDate=" + getDateFormat(c).format(cal.getTime())+ "&query.param.EndDate=" + getDateFormat(c).format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other&query.room/area~neq=Hospital&query.totalIdWithProblems~gt=2";
+                String url = getExecuteQueryUrl(c, "study", "roomProblemSummary", null) + "&query.param.StartDate=" + getDateFormat(c).format(cal.getTime()) + "&query.param.EndDate=" + getDateFormat(c).format(new Date()) + "&query.pctWithProblem~gte=10&query.category~doesnotcontain=Routine&query.category~doesnotcontain=Other&query.room/area~neq=Hospital&query.totalIdWithProblems~gt=2";
                 if (idx == 0)
                 {
-                    msg.append("<b>WARNING: The following non-hospital rooms have a high incidence of clinical problems (>" + threshold + "% of animals, with at least 2 animals afflicted) in the past " + interval + " days:</b><br>\n");
-                    msg.append("<p><a href='" + url + "'>Click here to view them</a><br><br>\n\n");
+                    msg.append("<b>WARNING: The following non-hospital rooms have a high incidence of clinical problems (>").append(threshold).append("% of animals, with at least 2 animals afflicted) in the past ").append(interval).append(" days:</b><br>\n");
+                    msg.append("<p><a href='").append(url).append("'>Click here to view them</a><br><br>\n\n");
                     msg.append("<table border=1 style='border-collapse: collapse;'>");
                     msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Problem Category</td><td>Distinct Animals In Room</td><td>Distinct Animals With Problem</td><td>Percent With Problem</td></tr>");
                 }
@@ -219,7 +210,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
                 String room = rs.getString(FieldKey.fromString("room"));
                 String category = rs.getString(FieldKey.fromString("category"));
                 String url2 = url + "&query.room~eq=" + room + "&query.category~eq=" + category;
-                msg.append("<tr><td>").append(room).append("</td><td>").append("<a href='" + url2 + "'>" + category + "</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(NumberFormat.getInstance().format(rs.getDouble(FieldKey.fromString("pctWithProblem"))) + "%").append("</a>").append("</td></tr>");
+                msg.append("<tr><td>").append(room).append("</td><td>").append("<a href='").append(url2).append("'>").append(category).append("</a>").append("</td><td>").append(rs.getInt("totalIds")).append("</td><td>").append(rs.getInt(FieldKey.fromString("totalIdWithProblems"))).append("</td><td>").append("<a href='" + url2 + "'>").append(NumberFormat.getInstance().format(rs.getDouble(FieldKey.fromString("pctWithProblem"))) + "%").append("</a>").append("</td></tr>");
             }
 
             if (idx > 0)
@@ -231,10 +222,6 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         catch (SQLException e)
         {
             throw new RuntimeException(e);
-        }
-        finally
-        {
-            ResultSetUtil.close(rs);
         }
     }
 
