@@ -102,21 +102,25 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     public static final String NAME = "ONPRC_EHR";
     public static final String CONTROLLER_NAME = "onprc_ehr";
 
+    @Override
     public String getName()
     {
         return NAME;
     }
 
+    @Override
     public double getVersion()
     {
         return 18.10;
     }
 
+    @Override
     public boolean hasScripts()
     {
         return true;
     }
 
+    @Override
     protected void init()
     {
         addController(CONTROLLER_NAME, ONPRC_EHRController.class);
@@ -476,6 +480,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     {
         DefaultSchema.registerProvider(ONPRC_EHRSchema.SCHEMA_NAME, new DefaultSchema.SchemaProvider(this)
         {
+            @Override
             public QuerySchema createSchema(final DefaultSchema schema, Module module)
             {
                 return new ONPRC_EHRUserSchema(schema.getUser(), schema.getContainer());
