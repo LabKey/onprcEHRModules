@@ -35,7 +35,7 @@ public class OGASyncModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 0.01;
+        return null;
     }
 
     @Override
