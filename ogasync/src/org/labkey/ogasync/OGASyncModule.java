@@ -16,6 +16,7 @@
 
 package org.labkey.ogasync;
 
+import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.module.ModuleContext;
@@ -32,7 +33,7 @@ public class OGASyncModule extends ExtendedSimpleModule
     }
 
     @Override
-    public double getVersion()
+    public @Nullable Double getSchemaVersion()
     {
         return 0.01;
     }

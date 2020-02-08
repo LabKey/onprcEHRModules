@@ -17,6 +17,7 @@
 package org.labkey.hormoneassay;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.laboratory.LaboratoryService;
@@ -40,7 +41,7 @@ public class HormoneAssayModule extends ExtendedSimpleModule
     }
 
     @Override
-    public double getVersion()
+    public @Nullable Double getSchemaVersion()
     {
         return 0.03;
     }

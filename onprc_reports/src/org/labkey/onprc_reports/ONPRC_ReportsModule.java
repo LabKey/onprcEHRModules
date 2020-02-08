@@ -17,6 +17,7 @@
 package org.labkey.onprc_reports;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ldk.ExtendedSimpleModule;
@@ -36,9 +37,9 @@ public class ONPRC_ReportsModule extends ExtendedSimpleModule
     }
 
     @Override
-    public double getVersion()
+    public @Nullable Double getSchemaVersion()
     {
-        return 0.01;
+        return null;
     }
 
     @Override
