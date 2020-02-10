@@ -1,6 +1,7 @@
 package org.labkey.extscheduler;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.DefaultSchema;
@@ -23,7 +24,7 @@ public class ExtSchedulerModule extends ExtendedSimpleModule
     }
 
     @Override
-    public double getVersion()
+    public @Nullable Double getSchemaVersion()
     {
         return 15.28;
     }
