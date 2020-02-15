@@ -17,6 +17,7 @@
 package org.labkey.mergesync;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.ehr.EHRService;
@@ -43,7 +44,7 @@ public class MergeSyncModule extends ExtendedSimpleModule
     }
 
     @Override
-    public double getVersion()
+    public @Nullable Double getSchemaVersion()
     {
         return 0.11;
     }

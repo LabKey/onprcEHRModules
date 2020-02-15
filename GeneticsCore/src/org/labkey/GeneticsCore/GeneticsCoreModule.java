@@ -16,6 +16,7 @@
 
 package org.labkey.GeneticsCore;
 
+import org.jetbrains.annotations.Nullable;
 import org.labkey.GeneticsCore.notification.GeneticsCoreNotification;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.LDKService;
@@ -36,7 +37,7 @@ public class GeneticsCoreModule extends ExtendedSimpleModule
     }
 
     @Override
-    public double getVersion()
+    public @Nullable Double getSchemaVersion()
     {
         return 17.10;
     }
