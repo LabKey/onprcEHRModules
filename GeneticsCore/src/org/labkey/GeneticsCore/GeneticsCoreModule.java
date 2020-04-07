@@ -53,11 +53,11 @@ public class GeneticsCoreModule extends ExtendedSimpleModule
     protected void doStartupAfterSpringConfig(ModuleContext moduleContext)
     {
         SimpleButtonConfigFactory btn1 = new SimpleButtonConfigFactory(this, "Add Genetics Blood Draw Flags", "GeneticsCore.buttons.editGeneticsFlagsForSamples(dataRegionName, arguments[0] ? arguments[0].ownerCt : null, 'add')");
-        btn1.setClientDependencies(ClientDependency.supplierFromModuleName("laboratory"), ClientDependency.supplierFromModuleName("ehr"), ClientDependency.supplierFromPath("geneticscore/window/ManageFlagsWindow.js", ModeTypeEnum.BOTH), ClientDependency.supplierFromPath("geneticscore/buttons.js", ModeTypeEnum.BOTH));
+        btn1.setClientDependencies(ClientDependency.supplierFromModuleName("laboratory"), ClientDependency.supplierFromModuleName("ehr"), ClientDependency.supplierFromPath("geneticscore/window/ManageFlagsWindow.js"), ClientDependency.supplierFromPath("geneticscore/buttons.js", ModeTypeEnum.BOTH));
         LDKService.get().registerQueryButton(btn1, "laboratory", "samples");
 
         SimpleButtonConfigFactory btn2 = new SimpleButtonConfigFactory(this, "Remove Genetics Blood Draw Flags", "GeneticsCore.buttons.editGeneticsFlagsForSamples(dataRegionName, arguments[0] ? arguments[0].ownerCt : null, 'remove')");
-        btn2.setClientDependencies(ClientDependency.supplierFromModuleName("laboratory"), ClientDependency.supplierFromModuleName("ehr"), ClientDependency.supplierFromPath("geneticscore/window/ManageFlagsWindow.js", ModeTypeEnum.BOTH), ClientDependency.supplierFromPath("geneticscore/buttons.js", ModeTypeEnum.BOTH));
+        btn2.setClientDependencies(ClientDependency.supplierFromModuleName("laboratory"), ClientDependency.supplierFromModuleName("ehr"), ClientDependency.supplierFromPath("geneticscore/window/ManageFlagsWindow.js"), ClientDependency.supplierFromPath("geneticscore/buttons.js"));
         LDKService.get().registerQueryButton(btn2, "laboratory", "samples");
 
         NotificationService.get().registerNotification(new GeneticsCoreNotification());

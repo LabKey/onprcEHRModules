@@ -187,30 +187,30 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         assert r != null;
         EHRService.get().registerTriggerScript(this, r);
 
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("Ext4", ModeTypeEnum.BOTH), this);
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/BloodSummaryPanel.js", ModeTypeEnum.BOTH), this);
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/onprcReports.js", ModeTypeEnum.BOTH), this);
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/Utils.js", ModeTypeEnum.BOTH), this);
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/EHROverrides.js", ModeTypeEnum.BOTH), this);
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/ONPRCDefaults.js", ModeTypeEnum.BOTH), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("Ext4"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/BloodSummaryPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/onprcReports.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/Utils.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/EHROverrides.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/ONPRCDefaults.js"), this);
         //Added 6-4-2015 Blasa
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalProcedures.js", ModeTypeEnum.BOTH), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalProcedures.js"), this);
 
         //Added 11-17-16 KOLLI
    //     EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/CohortField.js"), this);
 
         //Added: 7-12-2016 R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/SnapshotPanel.js", ModeTypeEnum.BOTH), this);
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/ClinicalActionsButton.js", ModeTypeEnum.BOTH), this);
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageTreatmentsWindow.js", ModeTypeEnum.BOTH), this);
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ManageTreatmentsPanel.js", ModeTypeEnum.BOTH), this);
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/SmallFormSnapShotPanel.js", ModeTypeEnum.BOTH), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/SnapshotPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/ClinicalActionsButton.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageTreatmentsWindow.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ManageTreatmentsPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/SmallFormSnapShotPanel.js"), this);
 
         //Added: 8-24-2016 R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/DemographicsRecord.js", ModeTypeEnum.BOTH), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/DemographicsRecord.js"), this);
 
         //Added: 2-22-2017  R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/NarrowSnapshotPanel.js", ModeTypeEnum.BOTH), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/NarrowSnapshotPanel.js"), this);
 
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
