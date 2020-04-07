@@ -4,7 +4,6 @@ import org.labkey.api.data.TableInfo;
 import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
-import org.labkey.clientLibrary.xml.ModeTypeEnum;
 import org.labkey.onprc_billing.ONPRC_BillingModule;
 import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;
 

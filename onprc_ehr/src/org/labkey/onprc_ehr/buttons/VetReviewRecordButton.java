@@ -20,7 +20,6 @@ import org.labkey.api.ehr.security.EHRVeterinarianPermission;
 import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
-import org.labkey.clientLibrary.xml.ModeTypeEnum;
 
 /**
  * User: bimber

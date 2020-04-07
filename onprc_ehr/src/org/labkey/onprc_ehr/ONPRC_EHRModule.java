@@ -48,7 +48,6 @@ import org.labkey.api.util.UnexpectedException;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.NavTree;
 import org.labkey.api.view.template.ClientDependency;
-import org.labkey.clientLibrary.xml.ModeTypeEnum;
 import org.labkey.onprc_ehr.buttons.AnimalGroupCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentReleaseConditionButton;
@@ -65,12 +64,12 @@ import org.labkey.onprc_ehr.dataentry.*;
 import org.labkey.onprc_ehr.demographics.ActiveAnimalGroupsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.AssignedVetDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.CagemateInfantDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.FosterChildDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.HousingDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ParentsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.PregnancyConfirmDemographicsProvider;
-import org.labkey.onprc_ehr.demographics.CagemateInfantDemographicsProvider;
-import org.labkey.onprc_ehr.demographics.FosterChildDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.SourceDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.TBDemographicsProvider;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
@@ -81,12 +80,10 @@ import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
 import org.labkey.onprc_ehr.notification.*;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
+import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
-import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
-
-
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
 import java.net.URISyntaxException;
