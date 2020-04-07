@@ -34,7 +34,7 @@ public class BulkEditRequestsButton extends SimpleButtonConfigFactory
     {
         super(owner, "Bulk Edit Requests", "ONPRC_EHR.Buttons.bulkEditRequestHandler();");
 
-        setClientDependencies(PageFlowUtil.set(ClientDependency.fromPath("onprc_ehr/buttons/bulkEditRequestButtons.js")));
+        setClientDependencies(PageFlowUtil.set(ClientDependency.supplierFromPath("onprc_ehr/buttons/bulkEditRequestButtons.js")));
         _formType = formType;
     }
 

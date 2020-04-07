@@ -21,6 +21,7 @@ import org.labkey.api.view.template.ClientDependency;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * User: bimber
@@ -36,10 +37,10 @@ public class EncounterChildFormSection extends SimpleGridPanel
         super(schemaName, queryName, label, EHRService.FORM_SECTION_LOCATION.Tabs);
         _allowAddDefaults = allowAddDefaults;
 
-        addClientDependency(ClientDependency.fromPath("ehr/buttons/encounterButtons.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/EncounterChild.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/EncounterAddRecordWindow.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/AddProcedureDefaultsWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/encounterButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/EncounterChild.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/EncounterAddRecordWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddProcedureDefaultsWindow.js"));
 
         addConfigSource("Encounter");
         addConfigSource("EncounterChild");
@@ -47,11 +48,11 @@ public class EncounterChildFormSection extends SimpleGridPanel
         setTemplateMode(TEMPLATE_MODE.ENCOUNTER);
     }
 
-    public EncounterChildFormSection(String schemaName, String queryName, String label, boolean allowAddDefaults, String clientStoreClass, List<ClientDependency> extraDependencies, String tabName)
+    public EncounterChildFormSection(String schemaName, String queryName, String label, boolean allowAddDefaults, String clientStoreClass, List<Supplier<ClientDependency>> extraDependencies, String tabName)
     {
         this(schemaName, queryName, label, allowAddDefaults);
         setClientStoreClass(clientStoreClass);
-        for (ClientDependency cd : extraDependencies)
+        for (Supplier<ClientDependency> cd : extraDependencies)
         {
             addClientDependency(cd);
         }

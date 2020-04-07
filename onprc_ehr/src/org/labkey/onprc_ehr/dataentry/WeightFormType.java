@@ -42,11 +42,11 @@ public class WeightFormType extends TaskForm
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
             new WeightFormSection(),
-            new DrugAdministrationFormSection(ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
+            new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
             new TBProcedureFormSection()
         ));
 
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Weight.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Weight.js"));
 
         for (FormSection s : getFormSections())
         {

@@ -33,7 +33,7 @@ public class HousingTransferButton extends SimpleButtonConfigFactory
     {
         super(owner, "Mark Transfers Completed", "ONPRC_EHR.Buttons.markTransferComplete(dataRegionName);");
 
-        setClientDependencies(ClientDependency.fromPath("onprc_ehr/buttons/housingTransferButton.js"));
+        setClientDependencies(ClientDependency.supplierFromPath("onprc_ehr/buttons/housingTransferButton.js"));
     }
 
     public boolean isAvailable(TableInfo ti)

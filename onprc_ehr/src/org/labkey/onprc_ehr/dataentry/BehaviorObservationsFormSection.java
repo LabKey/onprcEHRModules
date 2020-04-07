@@ -27,6 +27,6 @@ public class BehaviorObservationsFormSection extends ClinicalObservationsFormSec
     {
         super(location);
 
-        addClientDependency(ClientDependency.fromPath("ehr/window/CopyBehaviorExamWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/CopyBehaviorExamWindow.js"));
     }
 }

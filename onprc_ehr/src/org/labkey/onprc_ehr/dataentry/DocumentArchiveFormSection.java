@@ -32,7 +32,7 @@ public class DocumentArchiveFormSection extends AbstractFormSection
     {
         super("ArrivalInstructions", "Document Archive", "onprc-documentarchivepanel");
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/panel/DocumentArchivePanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/DocumentArchivePanel.js"));
     }
 
     @Override

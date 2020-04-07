@@ -39,7 +39,7 @@ public class GeneralRequestFormType extends RequestForm
                 new RequestFormSection(),
                 new AnimalDetailsFormSection(),
                 new BloodDrawFormSection(true),
-                new DrugAdministrationFormSection(ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"))
+                new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"))
         ));
     }
 }

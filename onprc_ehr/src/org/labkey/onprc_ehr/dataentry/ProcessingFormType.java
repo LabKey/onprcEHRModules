@@ -46,12 +46,12 @@ public class ProcessingFormType extends TaskForm
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "encounters", "Procedures"),
                 new BloodDrawFormSection(false),
-                new DrugAdministrationFormSection(ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
+                new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
                 new WeightFormSection()
         ));
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/data/sources/Processing.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/Processing.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalDefaults.js"));
 
         for (FormSection s: this.getFormSections())
         {

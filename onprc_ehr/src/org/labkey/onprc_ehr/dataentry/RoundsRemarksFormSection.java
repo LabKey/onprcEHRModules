@@ -33,13 +33,13 @@ public class RoundsRemarksFormSection extends SimpleFormSection
     public RoundsRemarksFormSection(String label, EHRService.FORM_SECTION_LOCATION location)
     {
         super("study", "Clinical Remarks", label, "ehr-roundsremarksgridpanel", location);
-        addClientDependency(ClientDependency.fromPath("ehr/plugin/ClinicalObservationsCellEditing.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/panel/ClinicalRemarkPanel.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/grid/RoundsRemarksGridPanel.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/grid/ObservationsRowEditorGridPanel.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/plugin/ClinicalRemarksRowEditor.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/data/ClinicalObservationsClientStore.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/buttons/roundsButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/plugin/ClinicalObservationsCellEditing.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/panel/ClinicalRemarkPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/grid/RoundsRemarksGridPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/grid/ObservationsRowEditorGridPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/plugin/ClinicalRemarksRowEditor.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalObservationsClientStore.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/roundsButtons.js"));
 
         setTemplateMode(TEMPLATE_MODE.NONE);
     }

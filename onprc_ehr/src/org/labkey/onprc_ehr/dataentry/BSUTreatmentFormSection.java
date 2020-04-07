@@ -28,7 +28,7 @@ public class BSUTreatmentFormSection extends DrugAdministrationFormSection
 {
     public BSUTreatmentFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super(location, DrugAdministrationFormSection.LABEL, ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"));
+        super(location, DrugAdministrationFormSection.LABEL, ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"));
         setLabel("Treatments Given");
         setTabName(getLabel());
         _showAddTreatments = false;

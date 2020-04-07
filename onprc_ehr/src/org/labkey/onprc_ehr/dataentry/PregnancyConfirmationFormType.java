@@ -44,11 +44,11 @@ public class PregnancyConfirmationFormType extends TaskForm
             new AnimalDetailsFormSection(),
             new ClinicalEncountersFormSection(),
             new SimpleGridPanel("study", "pregnancyConfirmation", "Pregnancies"),
-            new DrugAdministrationFormSection(ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"))
+            new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"))
         ));
 
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/PregnancyConfirmation.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/PregnancyConfirmation.js"));
 
         for (FormSection s : getFormSections())
         {

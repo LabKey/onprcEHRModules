@@ -32,8 +32,8 @@ public class ClinicalEncountersFormSection extends SimpleFormSection
     public ClinicalEncountersFormSection()
     {
         super("study", "encounters", "Procedures", "ehr-gridpanel", EHRService.FORM_SECTION_LOCATION.Body);
-        addClientDependency(ClientDependency.fromPath("ehr/buttons/encounterButtons.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/data/ClinicalEncountersClientStore.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/encounterButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalEncountersClientStore.js"));
         setClientStoreClass("EHR.data.ClinicalEncountersClientStore");
         //Modified 8-24-2015 Blasa Shows Template menus
       //  setTemplateMode(TEMPLATE_MODE.NONE);

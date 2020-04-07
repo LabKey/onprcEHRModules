@@ -24,9 +24,9 @@ public class CensusFormType extends TaskForm
                         new CensusFormSection())
         );
 
-        addClientDependency(ClientDependency.fromPath("sla/model/sources/SLA.js"));
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/ONPRC_ProjectField.js"));
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/onprc_SlaCensusConfig.js"));
+        addClientDependency(ClientDependency.supplierFromPath("sla/model/sources/SLA.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/ONPRC_ProjectField.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/onprc_SlaCensusConfig.js"));
 
 
         for (FormSection s : this.getFormSections())

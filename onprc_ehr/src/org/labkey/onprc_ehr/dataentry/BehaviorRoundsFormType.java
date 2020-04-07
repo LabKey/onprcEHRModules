@@ -50,9 +50,9 @@ public class BehaviorRoundsFormType extends TaskForm
             s.addConfigSource("BehaviorRounds");
         }
 
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/BehaviorDefaults.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/BehaviorRounds.js"));
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/BehaviorCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/BehaviorDefaults.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/BehaviorRounds.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BehaviorCasesWindow.js"));
     }
 
     @Override

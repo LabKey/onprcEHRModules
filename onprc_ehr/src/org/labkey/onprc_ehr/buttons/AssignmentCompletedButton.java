@@ -29,7 +29,7 @@ public class AssignmentCompletedButton extends MarkCompletedButton
     {
         super(owner, "study", "assignment", "End Assignments");
 
-        setClientDependencies(ClientDependency.fromPath("onprc_ehr/window/MarkAssignmentCompletedWindow.js"));
+        setClientDependencies(ClientDependency.supplierFromPath("onprc_ehr/window/MarkAssignmentCompletedWindow.js"));
     }
 
     @Override

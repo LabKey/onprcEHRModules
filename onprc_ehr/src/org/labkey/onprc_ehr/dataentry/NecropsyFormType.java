@@ -48,7 +48,7 @@ public class NecropsyFormType extends EncounterForm
     public NecropsyFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, LABEL, "Pathology", Arrays.asList(
-                new NonStoreFormSection("Instructions", "Instructions", "ehr-necropsyinstructionspanel", Arrays.asList(ClientDependency.fromPath("ehr/panel/NecropsyInstructionsPanel.js"))),
+                new NonStoreFormSection("Instructions", "Instructions", "ehr-necropsyinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/NecropsyInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ClinicalEncountersFormPanelSection("Necropsy"),
                 new AnimalDetailsFormSection(),
@@ -75,14 +75,14 @@ public class NecropsyFormType extends EncounterForm
             s.addConfigSource("Necropsy_Notes");
         }
 
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Pathology.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Pathology.js"));
         //Added 5-25-2016 R.Blasa
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/Pathology_Notes.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Pathology_Notes.js"));
 
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Necropsy.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/form/field/PathologyCaseNoField.js"));
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/pathologyButtons.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/CopyFromCaseWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Necropsy.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/PathologyCaseNoField.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/pathologyButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/CopyFromCaseWindow.js"));
     }
 
     @Override

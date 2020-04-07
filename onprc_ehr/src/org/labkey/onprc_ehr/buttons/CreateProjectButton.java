@@ -32,7 +32,7 @@ public class CreateProjectButton extends SimpleButtonConfigFactory
     {
         super(owner, "Create Project For Protocol", "ONPRC_EHR.window.CreateProjectWindow.buttonHandler(dataRegionName);");
 
-        setClientDependencies(ClientDependency.fromPath("onprc_ehr/window/CreateProjectWindow.js"));
+        setClientDependencies(ClientDependency.supplierFromPath("onprc_ehr/window/CreateProjectWindow.js"));
     }
 
     public boolean isAvailable(TableInfo ti)

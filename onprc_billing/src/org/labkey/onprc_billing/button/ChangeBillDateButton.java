@@ -4,6 +4,7 @@ import org.labkey.api.data.TableInfo;
 import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.clientLibrary.xml.ModeTypeEnum;
 import org.labkey.onprc_billing.ONPRC_BillingModule;
 import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;
 
@@ -16,7 +17,7 @@ public class ChangeBillDateButton extends SimpleButtonConfigFactory
     {
         super(owner, "Change Billing Date", "ONPRC_Billing.window.ChangeBillDateWindow.buttonHandler(dataRegionName);");
 
-        setClientDependencies(ClientDependency.fromPath("onprc_billing/window/ChangeBillDateWindow.js"), ClientDependency.fromModuleName(ONPRC_BillingModule.NAME));
+        setClientDependencies(ClientDependency.supplierFromPath("onprc_billing/window/ChangeBillDateWindow.js", ModeTypeEnum.BOTH), ClientDependency.supplierFromModuleName(ONPRC_BillingModule.NAME));
     }
 
     public boolean isAvailable(TableInfo ti)

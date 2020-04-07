@@ -36,8 +36,8 @@ public class PathologyFormSection extends EncounterChildFormSection
     {
         super(schemaName, queryName, label, false);
 
-        addClientDependency(ClientDependency.fromPath("ehr/form/field/SnomedCodesEditor.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/grid/SnomedColumn.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/SnomedCodesEditor.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/grid/SnomedColumn.js"));
     }
 
     @Override

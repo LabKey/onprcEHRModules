@@ -28,7 +28,7 @@ public class SurgeryRequestFormSection extends SimpleGridPanel
     public SurgeryRequestFormSection()
     {
         super("study", "Clinical Encounters", "Surgery Request");
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Surgery Request.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Surgery Request.js"));
         addConfigSource("Surgery Request");
     }
 }

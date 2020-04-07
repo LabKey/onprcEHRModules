@@ -42,9 +42,9 @@ public class NHPTrainingFormType extends TaskForm
         ));
 
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/NHPTrainingProperties.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/NHPTrainingProperties.js"));
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/ONPRC_TrainingType.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/ONPRC_TrainingType.js"));
 
 
         for (FormSection s : this.getFormSections())
