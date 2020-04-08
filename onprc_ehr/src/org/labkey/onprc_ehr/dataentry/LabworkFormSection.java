@@ -41,10 +41,10 @@ public class LabworkFormSection extends SimpleGridPanel
     public LabworkFormSection(String schemaName, String queryName, String label, boolean allowPanelEdit)
     {
         super(schemaName, queryName, label, EHRService.FORM_SECTION_LOCATION.Tabs);
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/labworkButtons.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/LabworkChild.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/data/LabworkResultsStore.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/LabworkPanelEditWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/labworkButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/LabworkChild.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/data/LabworkResultsStore.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/LabworkPanelEditWindow.js"));
         setClientStoreClass("EHR.data.LabworkResultsStore");
         addConfigSource("LabworkChild");
         setTemplateMode(TEMPLATE_MODE.NONE);

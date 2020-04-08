@@ -34,8 +34,8 @@ public class NewAnimalFormSection extends SimpleGridPanel
         super(schemaName, queryName, label);
         _allowSetSpecies = allowSetSpecies;
 
-        addClientDependency(ClientDependency.fromPath("ehr/window/AnimalIdSeriesWindow.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/form/field/AnimalIdGeneratorField.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AnimalIdSeriesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/AnimalIdGeneratorField.js"));
     }
 
     @Override

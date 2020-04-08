@@ -31,11 +31,11 @@ public class EncounterMedicationsFormSection extends EncounterChildFormSection
         super(schemaName, queryName, label, allowAddDefaults);
 
         setClientStoreClass("EHR.data.DrugAdministrationRunsClientStore");
-        addClientDependency(ClientDependency.fromPath("ehr/data/DrugAdministrationRunsClientStore.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/CopyFromSectionWindow.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/SedationWindow.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/DrugAmountWindow.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/SurgeryPostOpMedsWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/data/DrugAdministrationRunsClientStore.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/CopyFromSectionWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/SedationWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/DrugAmountWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/SurgeryPostOpMedsWindow.js"));
     }
 
     @Override

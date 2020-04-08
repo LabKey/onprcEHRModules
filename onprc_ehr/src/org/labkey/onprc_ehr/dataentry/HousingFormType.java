@@ -43,7 +43,7 @@ public class HousingFormType extends UnsaveableTask
                 new HousingFormSection("study", "housing", "Housing Transfers")
         ));
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/panel/HousingDataEntryPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/HousingDataEntryPanel.js"));
         setJavascriptClass("ONPRC_EHR.panel.HousingDataEntryPanel");
     }
 

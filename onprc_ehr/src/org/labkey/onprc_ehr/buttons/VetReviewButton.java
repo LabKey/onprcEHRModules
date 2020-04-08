@@ -31,7 +31,7 @@ public class VetReviewButton extends SimpleButtonConfigFactory
     public VetReviewButton(Module owner)
     {
         super(owner, "Mark Vet Review", "EHR.window.VetReviewWindow.buttonHandler(dataRegionName);");
-        setClientDependencies(ClientDependency.fromPath("ehr/window/VetReviewWindow.js"));
+        setClientDependencies(ClientDependency.supplierFromPath("ehr/window/VetReviewWindow.js"));
     }
 
     public boolean isAvailable(TableInfo ti)

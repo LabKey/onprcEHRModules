@@ -33,7 +33,7 @@ public class ManageFlagsButton extends SimpleButtonConfigFactory
     public ManageFlagsButton(Module owner)
     {
         super(owner, "Manage Flags", "ONPRC_EHR.window.ManageFlagsWindow.buttonHandler(dataRegionName);");
-        setClientDependencies(ClientDependency.fromModuleName("ehr"), ClientDependency.fromPath("onprc_ehr/window/ManageFlagsWindow.js"));
+        setClientDependencies(ClientDependency.supplierFromModuleName("ehr"), ClientDependency.supplierFromPath("onprc_ehr/window/ManageFlagsWindow.js"));
         setInsertPosition(-1);
     }
 

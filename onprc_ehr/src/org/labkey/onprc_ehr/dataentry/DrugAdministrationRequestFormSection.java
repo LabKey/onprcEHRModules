@@ -30,7 +30,7 @@ public class DrugAdministrationRequestFormSection extends DrugAdministrationForm
 {
     public DrugAdministrationRequestFormSection()
     {
-        super(EHRService.FORM_SECTION_LOCATION.Body, "Treatments/Medications", ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"));
+        super(EHRService.FORM_SECTION_LOCATION.Body, "Treatments/Medications", ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"));
 
         _showAddTreatments = false;
     }

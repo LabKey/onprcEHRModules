@@ -48,7 +48,7 @@ public class PathologyTissuesFormType extends TaskForm
         super(ctx, owner, NAME, LABEL, "Pathology", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
-                new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
+                new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
                 new SimpleFormSection("study", "tissue_samples", "Tissues/Weights", "onprc_ehr-dragdropgridpanel", EHRService.FORM_SECTION_LOCATION.Tabs),
                 new TissueDistFormSection(),
                 new SimpleFormSection("study", "measurements", "Measurements", "onprc_ehr-dragdropgridpanel", EHRService.FORM_SECTION_LOCATION.Tabs)
@@ -65,13 +65,13 @@ public class PathologyTissuesFormType extends TaskForm
             s.addConfigSource("Necropsy");
         }
 
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Pathology.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/Necropsy.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/form/field/PathologyCaseNoField.js"));
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/pathologyButtons.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/CopyFromCaseWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Pathology.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Necropsy.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/PathologyCaseNoField.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/pathologyButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/CopyFromCaseWindow.js"));
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/grid/DragDropGridPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/DragDropGridPanel.js"));
     }
 
     @Override

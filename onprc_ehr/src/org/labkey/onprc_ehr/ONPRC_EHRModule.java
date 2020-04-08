@@ -64,12 +64,12 @@ import org.labkey.onprc_ehr.dataentry.*;
 import org.labkey.onprc_ehr.demographics.ActiveAnimalGroupsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.AssignedVetDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.CagemateInfantDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.FosterChildDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.HousingDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ParentsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.PregnancyConfirmDemographicsProvider;
-import org.labkey.onprc_ehr.demographics.CagemateInfantDemographicsProvider;
-import org.labkey.onprc_ehr.demographics.FosterChildDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.SourceDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.TBDemographicsProvider;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
@@ -80,12 +80,10 @@ import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
 import org.labkey.onprc_ehr.notification.*;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
+import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
-import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
-
-
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
 import java.net.URISyntaxException;
@@ -186,30 +184,30 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         assert r != null;
         EHRService.get().registerTriggerScript(this, r);
 
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("Ext4"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/BloodSummaryPanel.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/onprcReports.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/Utils.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/EHROverrides.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/data/sources/ONPRCDefaults.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("Ext4"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/BloodSummaryPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/onprcReports.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/Utils.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/EHROverrides.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/ONPRCDefaults.js"), this);
         //Added 6-4-2015 Blasa
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/ClinicalProcedures.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalProcedures.js"), this);
 
         //Added 11-17-16 KOLLI
    //     EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/CohortField.js"), this);
 
         //Added: 7-12-2016 R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/SnapshotPanel.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/buttons/ClinicalActionsButton.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/window/ManageTreatmentsWindow.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/ManageTreatmentsPanel.js"), this);
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/SmallFormSnapShotPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/SnapshotPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/ClinicalActionsButton.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageTreatmentsWindow.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ManageTreatmentsPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/SmallFormSnapShotPanel.js"), this);
 
         //Added: 8-24-2016 R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/DemographicsRecord.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/DemographicsRecord.js"), this);
 
         //Added: 2-22-2017  R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/NarrowSnapshotPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/NarrowSnapshotPanel.js"), this);
 
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
@@ -423,11 +421,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Surgeries", SurgeryFormType.NAME), "study", "surgery");
 
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "blood");
-        EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singleton(ClientDependency.fromPath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "clinpathRuns");
+        EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singletonList(ClientDependency.supplierFromPath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "clinpathRuns");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "onprc_ehr", "housing_transfer_requests");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "encounters");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "drug");
-        EHRService.get().registerTbarButton(new ChangeQCStateButton(this, "Mark Delivered", "ONPRC_EHR.window.MarkLabworkDeliveredWindow", Collections.singleton(ClientDependency.fromPath("onprc_ehr/window/MarkLabworkDeliveredWindow.js"))), "study", "clinpathRuns");
+        EHRService.get().registerTbarButton(new ChangeQCStateButton(this, "Mark Delivered", "ONPRC_EHR.window.MarkLabworkDeliveredWindow", Collections.singletonList(ClientDependency.supplierFromPath("onprc_ehr/window/MarkLabworkDeliveredWindow.js"))), "study", "clinpathRuns");
 
         EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "bloodChargeType"), "study", "blood");
         EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "medicationChargeType"), "study", "drug");

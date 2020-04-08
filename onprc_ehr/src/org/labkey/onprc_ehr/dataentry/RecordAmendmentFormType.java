@@ -48,8 +48,8 @@ public class RecordAmendmentFormType extends TaskForm
             s.addConfigSource("RecordAmendment");
         }
 
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/RecordAmendment.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/RecordAmendment.js"));
     }
 
     @Override

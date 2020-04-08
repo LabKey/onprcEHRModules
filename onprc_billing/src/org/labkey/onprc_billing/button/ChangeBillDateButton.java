@@ -16,7 +16,7 @@ public class ChangeBillDateButton extends SimpleButtonConfigFactory
     {
         super(owner, "Change Billing Date", "ONPRC_Billing.window.ChangeBillDateWindow.buttonHandler(dataRegionName);");
 
-        setClientDependencies(ClientDependency.fromPath("onprc_billing/window/ChangeBillDateWindow.js"), ClientDependency.fromModuleName(ONPRC_BillingModule.NAME));
+        setClientDependencies(ClientDependency.supplierFromPath("onprc_billing/window/ChangeBillDateWindow.js"), ClientDependency.supplierFromModuleName(ONPRC_BillingModule.NAME));
     }
 
     public boolean isAvailable(TableInfo ti)

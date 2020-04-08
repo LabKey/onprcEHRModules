@@ -20,6 +20,8 @@ import org.labkey.api.ehr.dataentry.forms.BloodDrawFormType;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.function.Supplier;
+
 public class ONPRCBloodDrawFormType extends BloodDrawFormType
 {
     public ONPRCBloodDrawFormType(DataEntryFormContext ctx, Module owner)
@@ -28,8 +30,8 @@ public class ONPRCBloodDrawFormType extends BloodDrawFormType
     }
 
     @Override
-    public ClientDependency getAddScheduledTreatmentWindowDependency()
+    public Supplier<ClientDependency> getAddScheduledTreatmentWindowDependency()
     {
-        return ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js");
+        return ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js");
     }
 }

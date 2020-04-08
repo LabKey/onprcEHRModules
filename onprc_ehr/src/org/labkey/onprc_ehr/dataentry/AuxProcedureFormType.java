@@ -43,7 +43,7 @@ public class AuxProcedureFormType extends TaskForm
     {
         super(ctx, owner, NAME, NAME, "Research", Arrays.asList(
                 //Added 2-24-2016  Blasa
-            new NonStoreFormSection("Apply Form Template", "Apply Form Template", "onprc-applyformtemplatepanel", Arrays.asList(ClientDependency.fromPath("/onprc_ehr/panel/ApplyFormTemplatePanel.js"))),
+            new NonStoreFormSection("Apply Form Template", "Apply Form Template", "onprc-applyformtemplatepanel", Arrays.asList(ClientDependency.supplierFromPath("/onprc_ehr/panel/ApplyFormTemplatePanel.js"))),
 
 
             new TaskFormSection(),
@@ -52,7 +52,7 @@ public class AuxProcedureFormType extends TaskForm
             new ClinicalEncountersFormSection(),   //Added 5-4-2015  Blasa
             new BloodDrawFormSection(false),
             new WeightFormSection(),
-            new DrugAdministrationFormSection(ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
+            new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
             new TreatmentOrdersFormSection()
         ));
 
@@ -61,8 +61,8 @@ public class AuxProcedureFormType extends TaskForm
             s.addConfigSource("ResearchProcedures");
         }
 
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ResearchProcedures.js"));
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/BulkBloodDrawWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ResearchProcedures.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkBloodDrawWindow.js"));
         setDisplayReviewRequired(true);
     }
     //Added 2-24-2016  Blasa

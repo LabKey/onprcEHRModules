@@ -53,7 +53,7 @@ public class ClinicalRoundsFormType extends TaskForm
             //however, have been re-added apparently people do use them
             new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
             new WeightFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
-            new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
+            new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
             new TreatmentOrdersFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
             new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, false)
         ));
@@ -67,8 +67,8 @@ public class ClinicalRoundsFormType extends TaskForm
             s.setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NONE);
         }
 
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalRounds.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalRounds.js"));
     }
 
     @Override

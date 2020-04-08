@@ -38,9 +38,9 @@ public class SurgicalRoundsRemarksFormSection extends RoundsRemarksFormSection
         super("Remarks", location);
         setConfigSources(Collections.singletonList("Task"));
 
-        addClientDependency(ClientDependency.fromPath("ehr/window/AddClinicalCasesWindow.js"));
-        addClientDependency(ClientDependency.fromPath("ehr/window/AddSurgicalCasesWindow.js"));
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/BulkChangeCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddClinicalCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddSurgicalCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkChangeCasesWindow.js"));
 
         _showLocation = true;
     }

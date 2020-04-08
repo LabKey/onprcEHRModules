@@ -29,7 +29,7 @@ public class AnesthesiaFormSection extends SimpleGridPanel
     {
         super("study", "anesthesia", "Anesthesia");
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/AnesthesiaRowWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AnesthesiaRowWindow.js"));
     }
 
     @Override

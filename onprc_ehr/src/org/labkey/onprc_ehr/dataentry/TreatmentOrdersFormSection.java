@@ -35,7 +35,7 @@ public class TreatmentOrdersFormSection extends DrugAdministrationFormSection
 
     public TreatmentOrdersFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super(location, DrugAdministrationFormSection.LABEL, ClientDependency.fromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"));
+        super(location, DrugAdministrationFormSection.LABEL, ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js"));
         setName("Treatment Orders");
         setLabel("Medication/Treatment Orders");
         setQueryName("Treatment Orders");

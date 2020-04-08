@@ -34,7 +34,7 @@ public class DeathInstructionsFormSection extends AbstractFormSection
     {
         super("DeathFormInstructions", "Instructions", "onprc-deathforminstructionspanel");
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/panel/DeathFormInstructionsPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/DeathFormInstructionsPanel.js"));
     }
 
     @Override
