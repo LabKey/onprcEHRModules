@@ -26,8 +26,8 @@
         <dependency path="clientapi/ext4.lib.xml"/>
     </clientDependencies>
     <requiredModuleContext>
-        <requiredModule name="LDK" />
-        <requiredModule name="EHR" />
-        <requiredModule name="Laboratory" />
+        <module name="LDK" />
+        <module name="EHR" />
+        <module name="Laboratory" />
     </requiredModuleContext>
 </module>
