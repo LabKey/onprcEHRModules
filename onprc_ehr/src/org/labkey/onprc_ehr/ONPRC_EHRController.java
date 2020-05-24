@@ -302,10 +302,9 @@ public class ONPRC_EHRController extends SpringActionController
             return new HtmlView(msg.toString());
         }
 
-        public NavTree appendNavTrail(NavTree tree)
+        public void addNavTrail(NavTree tree)
         {
-            return tree.addChild("ONPRC EHR Tests");
-
+            tree.addChild("ONPRC EHR Tests");
         }
     }
 

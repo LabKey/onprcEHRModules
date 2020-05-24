@@ -220,9 +220,9 @@ public class ONPRC_BillingController extends SpringActionController
             return new HtmlView(sb.toString());
         }
 
-        public NavTree appendNavTrail(NavTree root)
+        public void addNavTrail(NavTree root)
         {
-            return root.addChild(_title == null ? "Notification" : _title);
+            root.addChild(_title == null ? "Notification" : _title);
         }
     }
 
