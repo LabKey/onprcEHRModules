@@ -38,6 +38,7 @@ public class MergeSyncUserSchema extends SimpleUserSchema
 
         DefaultSchema.registerProvider(MergeSyncSchema.NAME, new DefaultSchema.SchemaProvider(m)
         {
+            @Override
             public QuerySchema createSchema(final DefaultSchema schema, Module module)
             {
                 return new MergeSyncUserSchema(schema.getUser(), schema.getContainer(), dbSchema);

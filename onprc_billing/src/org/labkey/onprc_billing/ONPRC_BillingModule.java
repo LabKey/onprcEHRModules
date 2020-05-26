@@ -157,6 +157,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     {
         DefaultSchema.registerProvider(ONPRC_BillingSchema.NAME, new DefaultSchema.SchemaProvider(this)
         {
+            @Override
             public QuerySchema createSchema(final DefaultSchema schema, Module module)
             {
                 return new ONPRC_EHRBillingUserSchema(schema.getUser(), schema.getContainer());

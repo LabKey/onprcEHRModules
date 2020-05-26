@@ -73,11 +73,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         super(owner);
     }
 
+    @Override
     public String getName()
     {
         return "Colony Alerts";
     }
 
+    @Override
     public String getEmailSubject(Container c)
     {
         return "Daily Colony Alerts: " + getDateTimeFormat(c).format(new Date());
@@ -95,6 +97,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         return "every day at 6AM";
     }
 
+    @Override
     public String getDescription()
     {
         return "The report is designed to identify potential problems with the colony, primarily related to weights, housing and assignments.";
@@ -269,6 +272,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: The following cages have animals, but do not have known dimensions:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString("room") + "/" + rs.getString("cage") + "<br>\n");
@@ -284,6 +288,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: The following cages do have have their row/column specified:</b><br>\n");
             ts2.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString("cage") + "<br>\n");
@@ -306,6 +311,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: The following rooms report a negative number for available cages.  This probably means there is a problem in the cage divider configuration, or an animal is listed as being housed in the higher-numbered cage of a joined pair:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString("room") + "<br>\n");
@@ -346,6 +352,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
             {
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     String status = rs.getString("viralStatuses");
@@ -376,6 +383,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: The following rooms have animals, but do not have a record in the rooms table:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString("room") + "<br>\n");
@@ -404,6 +412,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: The following animals do not have a weight:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     Results results = new ResultsImpl(rs, columns);
@@ -447,6 +456,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 	        msg.append("<b>WARNING: There are " + count + " active housing records where the animal is not alive:</b><br>\n");
 
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
@@ -471,6 +481,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 	        msg.append("<b>WARNING: There are " + count + " living animals without an active housing record:</b><br>\n");
 
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
@@ -494,6 +505,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are " + count + " animals listed as living, but have a birth type indicating they were born dead:</b><br>\n");
 
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
@@ -729,6 +741,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("Deaths since " + getDateFormat(c).format(cal.getTime()) + ":<br><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
@@ -769,6 +782,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("Births since " + getDateFormat(c).format(cal.getTime()) + ":<br><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
@@ -1043,6 +1057,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: The following animals are listed as Alive and are over 30 days old, but do not have a known gender:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
             {
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString(getStudy(c).getSubjectColumnName()));
@@ -1069,6 +1084,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: The following birth records were entered in the last 90 days, but are missing a gender:</b><br>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + " (" + getDateFormat(c).format(rs.getDate("date"))+ ")" + "<br>\n");
@@ -1447,6 +1463,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are " + count + " blood draws within the past " + daysInPast + " day(s) exceeding the allowable volume.  Note: this warning may include draws scheduled in the future, but have not actually been performed.  Click the IDs below to see more information:</b><br><br>");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
             {
+                @Override
                 public void exec(ResultSet object) throws SQLException
                 {
                     Results rs = new ResultsImpl(object, columns);
@@ -1632,6 +1649,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
             {
+                @Override
                 public void exec(ResultSet object) throws SQLException
                 {
                     ResultsImpl rs = new ResultsImpl(object, columns);

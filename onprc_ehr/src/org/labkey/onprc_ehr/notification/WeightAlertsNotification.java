@@ -58,16 +58,19 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         super(owner);
     }
 
+    @Override
     public String getName()
     {
         return "Weight Drop Alerts";
     }
 
+    @Override
     public String getDescription()
     {
         return "This will send an email to alert of any animals with significant weight changes";
     }
 
+    @Override
     public String getEmailSubject(Container c)
     {
         return "Weight Drop Alerts: " + getDateTimeFormat(c).format(new Date());
@@ -148,6 +151,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
             msg.append("  <a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id/MostRecentWeight/MostRecentWeightDate~isblank'>Click here to view these animals</a></p>\n");
 
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     Results results = new ResultsImpl(rs, columns);
@@ -349,6 +353,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
             final StringBuilder tableMsg = new StringBuilder();
             tableMsg.append("<table border=1><tr><td>Room</td><td>Cage</td><td>Id</td><td>Investigator(s)</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Date</td><td>Interval (days)</td><td>Weight (kg)</td><td>% Change</td></tr>");
             ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+                @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
                     Results results = new ResultsImpl(rs, columns);

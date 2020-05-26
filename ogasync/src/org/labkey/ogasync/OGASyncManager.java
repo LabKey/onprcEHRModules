@@ -179,6 +179,7 @@ public class OGASyncManager
         {
             _log.info("scheduling OGA sync");
             JobRunner.getDefault().execute(new Runnable(){
+                @Override
                 public void run()
                 {
                     schedule();

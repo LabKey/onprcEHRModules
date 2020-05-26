@@ -40,6 +40,7 @@ public class VetReviewDisplayColumn extends DataColumn
         super(col);
     }
 
+    @Override
     public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
     {
         Object o = getValue(ctx);

@@ -36,6 +36,7 @@ public class ObservationDisplayColumn extends DataColumn
         super(col);
     }
 
+    @Override
     public String getFormattedValue(RenderContext ctx)
     {
         String result = super.getFormattedValue(ctx);

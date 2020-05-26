@@ -86,21 +86,25 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
             super(BillingTask.class);
         }
 
+        @Override
         public List<FileType> getInputTypes()
         {
             return Collections.emptyList();
         }
 
+        @Override
         public String getStatusName()
         {
             return PipelineJob.TaskStatus.running.toString();
         }
 
+        @Override
         public List<String> getProtocolActionNames()
         {
             return Arrays.asList("Calculating Billing Data");
         }
 
+        @Override
         public PipelineJob.Task createTask(PipelineJob job)
         {
             BillingTask task = new BillingTask(this, job);
@@ -108,12 +112,14 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
             return task;
         }
 
+        @Override
         public boolean isJobComplete(PipelineJob job)
         {
             return false;
         }
     }
 
+    @Override
     @NotNull
     public RecordedActionSet run() throws PipelineJobException
     {

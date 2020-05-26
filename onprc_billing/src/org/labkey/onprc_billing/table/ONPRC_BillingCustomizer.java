@@ -36,6 +36,7 @@ public class ONPRC_BillingCustomizer extends AbstractTableCustomizer
         return QueryForeignKey.from(ti.getUserSchema(), ti.getContainerFilter()).raw(true);
     }
 
+    @Override
     public void customize(TableInfo table)
     {
         if (table instanceof AbstractTableInfo)

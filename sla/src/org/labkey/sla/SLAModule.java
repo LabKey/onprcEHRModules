@@ -107,6 +107,7 @@ public class SLAModule extends ExtendedSimpleModule
     {
         DefaultSchema.registerProvider(SLASchema.NAME, new DefaultSchema.SchemaProvider(this)
         {
+            @Override
             public QuerySchema createSchema(final DefaultSchema schema, Module module)
             {
                 return new SLAUserSchema(schema.getUser(), schema.getContainer());

@@ -50,6 +50,7 @@ public class ETL
         if (!isScheduled)
         {
             executor = (executor == null ? Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+                @Override
                 public Thread newThread(Runnable r) {
                     return new Thread(r, "SLA ETL");
                 }

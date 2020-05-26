@@ -77,6 +77,7 @@ public class RequestSyncHelper
         }
 
         JobRunner.getDefault().execute(new Runnable(){
+            @Override
             public void run()
             {
                 doSyncRequest(Arrays.asList(rows));

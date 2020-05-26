@@ -19,6 +19,7 @@ import org.labkey.sla.SLAManager;
  */
 public class SLATableCustomizer extends AbstractTableCustomizer
 {
+    @Override
     public void customize(TableInfo ti)
     {
         EHRService.get().getEHRCustomizer().customize(ti);

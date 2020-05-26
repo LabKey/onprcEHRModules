@@ -83,6 +83,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     }
 
+    @Override
     public void customize(TableInfo table)
     {
         if (table instanceof AbstractTableInfo)
@@ -1731,6 +1732,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 {
                     return new DataColumn(colInfo){
 
+                        @Override
                         public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
                         {
                             String runId = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdPLT"));
@@ -1761,6 +1763,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     return new DataColumn(colInfo)
                     {
 
+                        @Override
                         public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
                         {
                             String runId = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdHCT"));
@@ -1880,6 +1883,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             {
                 return new DataColumn(colInfo){
 
+                    @Override
                     public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
                     {
                         String objectid = (String)ctx.get("objectid");
@@ -1895,16 +1899,19 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         keys.add(FieldKey.fromString("objectid"));
                     }
 
+                    @Override
                     public boolean isSortable()
                     {
                         return false;
                     }
 
+                    @Override
                     public boolean isFilterable()
                     {
                         return false;
                     }
 
+                    @Override
                     public boolean isEditable()
                     {
                         return false;
@@ -2052,6 +2059,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         col.setIsUnselectable(true);
         col.setUserEditable(false);
         col.setFk(new LookupForeignKey(){
+            @Override
             public TableInfo getLookupTableInfo()
             {
                 String name = tableName + "_flagsAtTime";
@@ -2117,6 +2125,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         col.setIsUnselectable(true);
         col.setUserEditable(false);
         col.setFk(new LookupForeignKey(){
+            @Override
             public TableInfo getLookupTableInfo()
             {
                 String name = tableName + "_" + colName;
@@ -2182,6 +2191,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         col.setIsUnselectable(true);
         col.setUserEditable(false);
         col.setFk(new LookupForeignKey(){
+            @Override
             public TableInfo getLookupTableInfo()
             {
                 String name = tableName + "_" + colName;

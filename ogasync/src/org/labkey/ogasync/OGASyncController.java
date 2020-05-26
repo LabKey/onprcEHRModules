@@ -45,6 +45,7 @@ public class OGASyncController extends SpringActionController
     @RequiresPermission(AdminPermission.class)
     public class RunEtlAction extends MutatingApiAction<Object>
     {
+        @Override
         public ApiResponse execute(Object form, BindException errors)
         {
             try
@@ -77,6 +78,7 @@ public class OGASyncController extends SpringActionController
     @RequiresPermission(AdminPermission.class)
     public class SetEtlDetailsAction extends MutatingApiAction<EtlAdminForm>
     {
+        @Override
         public ApiResponse execute(EtlAdminForm form, BindException errors)
         {
             Map<String, Object> resultProperties = new HashMap<>();
@@ -234,6 +236,7 @@ public class OGASyncController extends SpringActionController
     @RequiresPermission(AdminPermission.class)
     public class GetEtlDetailsAction extends ReadOnlyApiAction<Object>
     {
+        @Override
         public ApiResponse execute(Object form, BindException errors)
         {
             Map<String, Object> resultProperties = new HashMap<>();

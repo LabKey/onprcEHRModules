@@ -51,11 +51,13 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         super(owner);
     }
 
+    @Override
     public String getName()
     {
         return "Lab Schedule Alerts";
     }
 
+    @Override
     public String getEmailSubject(Container c)
     {
         return "Lab Test Schedule Alerts: " + getDateTimeFormat(c).format(new Date());
@@ -73,6 +75,7 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
         return "every 60 mins, at 15 min past hour between 8AM and 5PM";
     }
 
+    @Override
     public String getDescription()
     {
         return "The report provides alerts related to the lab test schedule.";

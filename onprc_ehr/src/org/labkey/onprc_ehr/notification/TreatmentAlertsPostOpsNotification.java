@@ -51,16 +51,19 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
         super(owner);
     }
 
+    @Override
     public String getName()
     {
         return "Treatment PostOpsMed Alerts";
     }
 
+    @Override
     public String getDescription()
     {
         return "This runs every day at 9AM, 1PM, 5PM  if there are treatments scheduled that have not yet been marked complete";
     }
 
+    @Override
     public String getEmailSubject(Container c)
     {
         return "Daily Treatment PostOpsMed Alerts: " + getDateTimeFormat(c).format(new Date());
@@ -69,6 +72,7 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
     @Override
     public String getCronString() {return "0 0 9,13,17 * * ?";}
 
+    @Override
     public String getScheduleDescription()
     {
         return "daily at 9AM,1PM, 5PM";

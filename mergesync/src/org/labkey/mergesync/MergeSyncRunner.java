@@ -82,6 +82,7 @@ public class MergeSyncRunner implements Job
     /**
      * pulls data from Merge back to EHR
      */
+    @Override
     public void execute(JobExecutionContext context) throws JobExecutionException
     {
         if (!MergeSyncManager.get().isPullEnabled())

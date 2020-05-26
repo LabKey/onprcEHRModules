@@ -35,6 +35,7 @@ public class ChargeableItemsCustomizer implements TableCustomizer
 
     }
 
+    @Override
     public void customize(TableInfo table)
     {
         if (table instanceof AbstractTableInfo)

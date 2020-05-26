@@ -53,6 +53,7 @@ public class ExtSchedulerModule extends ExtendedSimpleModule
     {
         DefaultSchema.registerProvider(ExtSchedulerSchema.NAME, new DefaultSchema.SchemaProvider(this)
         {
+            @Override
             public QuerySchema createSchema(final DefaultSchema schema, Module module)
             {
                 return new ExtSchedulerQuerySchema(schema.getUser(), schema.getContainer());

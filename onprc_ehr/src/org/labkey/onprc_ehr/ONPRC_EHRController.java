@@ -75,6 +75,7 @@ public class ONPRC_EHRController extends SpringActionController
     @RequiresPermission(ReadPermission.class)
     public class GetNavItemsAction extends ReadOnlyApiAction<Object>
     {
+        @Override
         public ApiResponse execute(Object form, BindException errors)
         {
             Map<String, Object> resultProperties = new HashMap<>();
@@ -255,6 +256,7 @@ public class ONPRC_EHRController extends SpringActionController
     @AdminConsoleAction
     public class ShowEtlLogAction extends ExportAction
     {
+        @Override
         public void export(Object o, HttpServletResponse response, BindException errors) throws Exception
         {
             PageFlowUtil.streamLogFile(response, 0, getLogFile("ehr-etl.log"));
@@ -280,6 +282,7 @@ public class ONPRC_EHRController extends SpringActionController
             return getContainer().getStartURL(getUser());
         }
 
+        @Override
         public ModelAndView getView(RunEHRTestsForm form, BindException errors) throws Exception
         {
             StringBuilder msg = new StringBuilder();
@@ -302,6 +305,7 @@ public class ONPRC_EHRController extends SpringActionController
             return new HtmlView(msg.toString());
         }
 
+        @Override
         public void addNavTrail(NavTree tree)
         {
             tree.addChild("ONPRC EHR Tests");
@@ -326,6 +330,7 @@ public class ONPRC_EHRController extends SpringActionController
     @RequiresSiteAdmin
     public class FixWorkbookPathsAction extends ConfirmAction<Object>
     {
+        @Override
         public boolean handlePost(Object form, BindException errors)
         {
             inspectWorkbooks(true);
@@ -333,6 +338,7 @@ public class ONPRC_EHRController extends SpringActionController
             return true;
         }
 
+        @Override
         public ModelAndView getConfirmView(Object form, BindException errors)
         {
             List<String> msgs = inspectWorkbooks(false);
@@ -340,11 +346,13 @@ public class ONPRC_EHRController extends SpringActionController
             return new HtmlView(StringUtils.join(msgs, "<br><br>"));
         }
 
+        @Override
         public void validateCommand(Object form, Errors errors)
         {
 
         }
 
+        @Override
         public ActionURL getSuccessURL(Object form)
         {
             return getContainer().getStartURL(getUser());
@@ -439,6 +447,7 @@ public class ONPRC_EHRController extends SpringActionController
     @RequiresPermission(ReadPermission.class)
     public class GetAnimalLockAction extends ReadOnlyApiAction<Object>
     {
+        @Override
         public ApiResponse execute(Object form, BindException errors)
         {
             return new ApiSimpleResponse(ONPRC_EHRManager.get().getAnimalLockProperties(getContainer()));
@@ -448,6 +457,7 @@ public class ONPRC_EHRController extends SpringActionController
     @RequiresPermission(EHRDataEntryPermission.class)
     public class SetAnimalLockAction extends MutatingApiAction<LockAnimalForm>
     {
+        @Override
         public ApiResponse execute(LockAnimalForm form, BindException errors)
         {
             ///Added by Lakshmi on 02/26/2015: This is server side validation code to check if the Birth/Arrival screens are locked or not.

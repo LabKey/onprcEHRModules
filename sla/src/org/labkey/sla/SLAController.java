@@ -97,6 +97,7 @@ public class SLAController extends SpringActionController
     @RequiresPermission(AdminOperationsPermission.class)
     public class ValidateEtlAction extends ConfirmAction<ValidateEtlSyncForm>
     {
+        @Override
         public boolean handlePost(ValidateEtlSyncForm form, BindException errors) throws Exception
         {
             ETLRunnable runnable = new ETLRunnable();
@@ -104,6 +105,7 @@ public class SLAController extends SpringActionController
             return true;
         }
 
+        @Override
         public ModelAndView getConfirmView(ValidateEtlSyncForm form, BindException errors) throws Exception
         {
             StringBuilder sb = new StringBuilder();
@@ -120,11 +122,13 @@ public class SLAController extends SpringActionController
             return new HtmlView(sb.toString());
         }
 
+        @Override
         public void validateCommand(ValidateEtlSyncForm form, Errors errors)
         {
 
         }
 
+        @Override
         public ActionURL getSuccessURL(ValidateEtlSyncForm form)
         {
             return getContainer().getStartURL(getUser());
@@ -149,6 +153,7 @@ public class SLAController extends SpringActionController
     @RequiresPermission(AdminPermission.class)
     public class SetEtlDetailsAction extends MutatingApiAction<EtlAdminForm>
     {
+        @Override
         public ApiResponse execute(EtlAdminForm form, BindException errors)
         {
             Map<String, Object> resultProperties = new HashMap<>();
@@ -332,6 +337,7 @@ public class SLAController extends SpringActionController
     @AdminConsoleAction
     public class ShowEtlLogAction extends ExportAction
     {
+        @Override
         public void export(Object o, HttpServletResponse response, BindException errors) throws Exception
         {
             PageFlowUtil.streamLogFile(response, 0, getLogFile("sla-etl.log"));
@@ -347,6 +353,7 @@ public class SLAController extends SpringActionController
     @RequiresPermission(AdminPermission.class)
     public class GetEtlDetailsAction extends ReadOnlyApiAction<Object>
     {
+        @Override
         public ApiResponse execute(Object form, BindException errors)
         {
             Map<String, Object> resultProperties = new HashMap<>();
