@@ -54,16 +54,19 @@ public class TreatmentAlertsNotification extends AbstractEHRNotification
         super(owner);
     }
 
+    @Override
     public String getName()
     {
         return "Treatment Alerts";
     }
 
+    @Override
     public String getDescription()
     {
         return "This runs every day at 10AM, 1PM and 4PM if there are treatments scheduled that have not yet been marked complete";
     }
 
+    @Override
     public String getEmailSubject(Container c)
     {
         return "Daily Treatment Alerts: " + getDateTimeFormat(c).format(new Date());
@@ -75,6 +78,7 @@ public class TreatmentAlertsNotification extends AbstractEHRNotification
         return "0 0 10,13,16 * * ?";
     }
 
+    @Override
     public String getScheduleDescription()
     {
         return "daily at 10AM, 1PM and 4PM";

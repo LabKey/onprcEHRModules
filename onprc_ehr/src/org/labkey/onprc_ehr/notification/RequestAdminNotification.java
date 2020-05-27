@@ -47,16 +47,19 @@ public class RequestAdminNotification extends ColonyAlertsNotification
         private int hour;
     }
 
+    @Override
     public String getName()
     {
         return "Service Request Alerts";
     }
 
+    @Override
     public String getDescription()
     {
         return "This runs periodically during the day and sends alerts related to service requests.";
     }
 
+    @Override
     public String getEmailSubject(Container c)
     {
         return "DCM Service Request Alerts: " + getDateTimeFormat(c).format(new Date());
@@ -68,6 +71,7 @@ public class RequestAdminNotification extends ColonyAlertsNotification
         return "0 0 7,15 * * ?";
     }
 
+    @Override
     public String getScheduleDescription()
     {
         return "daily at 7AM and 3PM";

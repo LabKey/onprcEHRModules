@@ -18,6 +18,7 @@ public class MergeSyncTableCustomizer extends AbstractTableCustomizer
 
     }
 
+    @Override
     public void customize(TableInfo ti)
     {
         if (ti instanceof AbstractTableInfo && (matches(ti, "study", "Clinpath Runs") || matches(ti, "study", "clinpathRuns")))

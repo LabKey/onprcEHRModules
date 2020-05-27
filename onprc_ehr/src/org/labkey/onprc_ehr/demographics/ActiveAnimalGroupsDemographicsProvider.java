@@ -38,6 +38,7 @@ public class ActiveAnimalGroupsDemographicsProvider extends AbstractListDemograp
         _supportsQCState = false;
     }
 
+    @Override
     protected Set<FieldKey> getFieldKeys()
     {
         Set<FieldKey> keys = new HashSet<>();

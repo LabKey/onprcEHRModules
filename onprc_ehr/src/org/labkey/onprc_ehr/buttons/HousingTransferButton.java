@@ -36,6 +36,7 @@ public class HousingTransferButton extends SimpleButtonConfigFactory
         setClientDependencies(ClientDependency.supplierFromPath("onprc_ehr/buttons/housingTransferButton.js"));
     }
 
+    @Override
     public boolean isAvailable(TableInfo ti)
     {
         return super.isAvailable(ti) && EHRService.get().hasPermission("study", "housing", ti.getUserSchema().getContainer(), ti.getUserSchema().getUser(), EHRCompletedInsertPermission.class);

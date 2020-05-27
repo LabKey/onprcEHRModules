@@ -56,6 +56,7 @@ public class PivotedImportMethod extends PivotingImportMethod
         return _importMethod.getMetadata(ctx, protocol);
     }
 
+    @Override
     public String getTooltip()
     {
         return "Choose this option to upload data using a template with many test results per row";

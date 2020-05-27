@@ -50,16 +50,19 @@ public class TreatmentAlertsPostOpsNotificationSecondary extends AbstractEHRNoti
         super(owner);
     }
 
+    @Override
     public String getName()
     {
         return "Treatment PostOpsMed Secondary Alerts";
     }
 
+    @Override
     public String getDescription()
     {
         return "This runs every evening at 8:50PM  if there are treatments scheduled that have not yet been marked complete";
     }
 
+    @Override
     public String getEmailSubject(Container c)
     {
         return "Daily Treatment PostOpsMed Alerts: " + getDateTimeFormat(c).format(new Date());
@@ -68,6 +71,7 @@ public class TreatmentAlertsPostOpsNotificationSecondary extends AbstractEHRNoti
     @Override                      //Modified 7/29/2015 Blasa
     public String getCronString() { return "0 50 20 * * ?";}
 
+    @Override
     public String getScheduleDescription()
     {
         return "Evenings at 8:50 PM";

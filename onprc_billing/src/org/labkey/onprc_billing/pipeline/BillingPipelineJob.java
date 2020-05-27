@@ -94,28 +94,33 @@ public class BillingPipelineJob extends PipelineJob implements BillingPipelineJo
         return PipelineJobService.get().getTaskPipeline(new TaskId(BillingPipelineJob.class));
     }
 
+    @Override
     public Date getStartDate()
     {
         Date ret = _form.getStartDate() == null ? null : DateUtils.truncate(_form.getStartDate(), Calendar.DATE);
         return ret;
     }
 
+    @Override
     public Date getEndDate()
     {
         Date ret = _form.getEndDate() == null ? null : DateUtils.truncate(_form.getEndDate(), Calendar.DATE);
         return ret;
     }
 
+    @Override
     public String getComment()
     {
         return _form.getComment();
     }
 
+    @Override
     public String getName()
     {
         return _form.getProtocolName();
     }
 
+    @Override
     public File getAnalysisDir()
     {
         return _analysisDir;

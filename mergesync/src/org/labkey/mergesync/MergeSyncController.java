@@ -50,6 +50,7 @@ public class MergeSyncController extends SpringActionController
     @RequiresPermission(AdminPermission.class)
     public class SetEtlDetailsAction extends MutatingApiAction<EtlAdminForm>
     {
+        @Override
         public ApiResponse execute(EtlAdminForm form, BindException errors)
         {
             Map<String, Object> resultProperties = new HashMap<>();
@@ -238,6 +239,7 @@ public class MergeSyncController extends SpringActionController
     @RequiresPermission(AdminPermission.class)
     public class GetEtlDetailsAction extends ReadOnlyApiAction<Object>
     {
+        @Override
         public ApiResponse execute(Object form, BindException errors)
         {
             Map<String, Object> resultProperties = new HashMap<>();
@@ -259,6 +261,7 @@ public class MergeSyncController extends SpringActionController
     @RequiresPermission(AdminPermission.class)
     public class PullFromMergeAction extends MutatingApiAction<Object>
     {
+        @Override
         public ApiResponse execute(Object form, BindException errors)
         {
             try
@@ -291,6 +294,7 @@ public class MergeSyncController extends SpringActionController
     @RequiresPermission(AdminPermission.class)
     public class ResyncRunsAction extends MutatingApiAction<ResyncRunsForm>
     {
+        @Override
         public ApiResponse execute(ResyncRunsForm form, BindException errors)
         {
             if (form.getPks() == null || form.getPks().length == 0)

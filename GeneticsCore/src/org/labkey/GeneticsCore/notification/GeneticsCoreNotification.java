@@ -52,6 +52,7 @@ public class GeneticsCoreNotification implements Notification
         return "Genetics Core Alerts: " + _dateTimeFormat.format(new Date());
     }
 
+    @Override
     public boolean isAvailable(Container c)
     {
         if (!c.getActiveModules().contains(ModuleLoader.getInstance().getModule(GeneticsCoreModule.class)))
@@ -60,6 +61,7 @@ public class GeneticsCoreNotification implements Notification
         return true;
     }
 
+    @Override
     public String getCategory()
     {
         return "Genetics";
@@ -83,6 +85,7 @@ public class GeneticsCoreNotification implements Notification
         return "The report is designed provide a summary of alerts relevant to genetics, including alerts about genetics blood draws, parentage, etc.";
     }
 
+    @Override
     public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();

@@ -223,6 +223,7 @@ public class MergeSyncManager
         {
             _log.info("scheduling Merge sync");
             JobRunner.getDefault().execute(new Runnable(){
+                @Override
                 public void run()
                 {
                     schedule();

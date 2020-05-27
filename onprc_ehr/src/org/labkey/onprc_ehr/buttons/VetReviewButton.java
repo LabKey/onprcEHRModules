@@ -34,6 +34,7 @@ public class VetReviewButton extends SimpleButtonConfigFactory
         setClientDependencies(ClientDependency.supplierFromPath("ehr/window/VetReviewWindow.js"));
     }
 
+    @Override
     public boolean isAvailable(TableInfo ti)
     {
         return super.isAvailable(ti) && ti.getUserSchema().getContainer().hasPermission(ti.getUserSchema().getUser(), EHRVeterinarianPermission.class);

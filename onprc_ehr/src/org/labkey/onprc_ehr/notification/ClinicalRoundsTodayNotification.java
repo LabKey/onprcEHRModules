@@ -81,6 +81,7 @@ public class ClinicalRoundsTodayNotification extends AbstractEHRNotification
         return "The report is designed to alert for Clinical rounds observations entered today, and not entered recently..";
     }
 
+    @Override
     public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();

@@ -35,6 +35,7 @@ public class CreateProjectButton extends SimpleButtonConfigFactory
         setClientDependencies(ClientDependency.supplierFromPath("onprc_ehr/window/CreateProjectWindow.js"));
     }
 
+    @Override
     public boolean isAvailable(TableInfo ti)
     {
         return super.isAvailable(ti) && ti.getUserSchema().getContainer().hasPermission(ti.getUserSchema().getUser(), EHRProjectEditPermission.class);
