@@ -2065,12 +2065,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 String name = tableName + "_flagsAtTime";
                 QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
                 qd.setSql("SELECT\n" +
-                        "sd." + pkCol.getSelectName() + ",\n" +
+                        "sd." + pkCol.getFieldKey().toSQLString() + ",\n" +
                         "group_concat(DISTINCT h.flag.value, chr(10)) as flagsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".study.flags h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
-                        "group by sd." + pkCol.getSelectName());
+                        "group by sd." + pkCol.getFieldKey().toSQLString());
                 qd.setIsTemporary(true);
 
                 List<QueryException> errors = new ArrayList<>();
@@ -2131,12 +2131,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 String name = tableName + "_" + colName;
                 QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
                 qd.setSql("SELECT\n" +
-                        "sd." + pkCol.getSelectName() + ",\n" +
+                        "sd." + pkCol.getFieldKey().toSQLString() + ",\n" +
                         "group_concat(DISTINCT h.category, chr(10)) as problemsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".study.\"Problem List\" h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
-                        "group by sd." + pkCol.getSelectName());
+                        "group by sd." + pkCol.getFieldKey().toSQLString());
                 qd.setIsTemporary(true);
 
                 List<QueryException> errors = new ArrayList<>();
@@ -2197,12 +2197,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 String name = tableName + "_" + colName;
                 QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
                 qd.setSql("SELECT\n" +
-                        "sd." + pkCol.getSelectName() + ",\n" +
+                        "sd." + pkCol.getFieldKey().toSQLString() + ",\n" +
                         "group_concat(DISTINCT h.groupId.name, chr(10)) as groupsAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".study.animal_group_members h\n" +
                         "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced))\n" +
-                        "group by sd." + pkCol.getSelectName());
+                        "group by sd." + pkCol.getFieldKey().toSQLString());
                 qd.setIsTemporary(true);
 
                 List<QueryException> errors = new ArrayList<>();
