@@ -14,7 +14,7 @@ Ext4.define('ONPRC_EHR.panel.RequestInstructionsPanel', {
             items = [{
                 html: 'This form allows you to request Labwork, similar to requesting in Merge.  After requesting Clinpath services through this form, this request will be created in Merge.  You can print print labels through Merge.<p>' +
                         '<a class="labkey-text-link" href="' + mergeURL + '" target="_blank">Click here to open Merge</a><p>' +
-                        '<a class="labkey-text-link" href="https://bridge.ohsu.edu/research/onprc/dcm/cpu/Shared%20Documents/How%20to%20reprint%20a%20label%20from%20the%20Merge%20LIS.pdf" target="_blank">Click here for instructions on Merge label printing</a>',
+                        '<a class="labkey-text-link" href="https://bridge.ohsu.edu/research/onprc/dcm/cpu/Shared%20Documents/How%20to%20reprint%20a%20label%20from%20the%20Merge%20LIS.pdf" target="_blank" rel="noopener noreferrer">Click here for instructions on Merge label printing</a>',
                 style: 'padding: 5px;'
             }]
         }
