@@ -1,6 +1,7 @@
 package org.labkey.ogasync;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.CompareType;
@@ -44,7 +45,7 @@ import java.util.Set;
  */
 public class OGASyncRunner implements Job
 {
-    private static final Logger _log = Logger.getLogger(OGASyncRunner.class);
+    private static final Logger _log = LogManager.getLogger(OGASyncRunner.class);
     private static final String INVESTIGATOR_EMPLOYYE_ID_NUMBER = "investigatorEmployeeNumber";
     private static final String FISCAL_AUTHORITY_EMPLOYEE_ID_NUMBER = "fiscalAuthorityNumber";
     private static final String ADFM_EMP_NUM = "ADFM_EMP_NUM";

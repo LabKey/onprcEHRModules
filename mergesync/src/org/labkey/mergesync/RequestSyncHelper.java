@@ -2,7 +2,8 @@ package org.labkey.mergesync;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
@@ -51,7 +52,7 @@ import java.util.TimeZone;
  */
 public class RequestSyncHelper
 {
-    private static final Logger _log = Logger.getLogger(RequestSyncHelper.class);
+    private static final Logger _log = LogManager.getLogger(RequestSyncHelper.class);
     protected final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private Container _container = null;

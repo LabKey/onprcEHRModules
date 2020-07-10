@@ -1,6 +1,7 @@
 package org.labkey.GeneticsCore.notification;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.labkey.GeneticsCore.GeneticsCoreManager;
 import org.labkey.GeneticsCore.GeneticsCoreModule;
 import org.labkey.api.data.CompareType;
@@ -30,7 +31,7 @@ import java.util.Date;
  */
 public class GeneticsCoreNotification implements Notification
 {
-    protected final static Logger _log = Logger.getLogger(GeneticsCoreNotification.class);
+    protected final static Logger _log = LogManager.getLogger(GeneticsCoreNotification.class);
     protected final static SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
     protected final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     protected NotificationService _ns = NotificationService.get();

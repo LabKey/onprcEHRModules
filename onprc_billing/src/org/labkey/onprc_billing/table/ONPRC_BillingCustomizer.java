@@ -1,6 +1,7 @@
 package org.labkey.onprc_billing.table;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.Container;
@@ -27,7 +28,7 @@ import org.labkey.onprc_billing.ONPRC_BillingSchema;
  */
 public class ONPRC_BillingCustomizer extends AbstractTableCustomizer
 {
-    private static final Logger _log = Logger.getLogger(ONPRC_BillingCustomizer.class);
+    private static final Logger _log = LogManager.getLogger(ONPRC_BillingCustomizer.class);
 
     // consider moving this helper to AbstractTableCustomizer
     private QueryForeignKey.Builder qfk(AbstractTableInfo ti)

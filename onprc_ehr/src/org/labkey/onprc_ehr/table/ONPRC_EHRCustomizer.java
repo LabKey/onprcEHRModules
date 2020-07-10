@@ -16,7 +16,8 @@
 package org.labkey.onprc_ehr.table;
 
 import org.apache.commons.beanutils.ConversionException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.BaseColumnInfo;
 import org.labkey.api.data.ColumnInfo;
@@ -76,7 +77,7 @@ import java.util.Set;
  */
 public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 {
-    private static final Logger _log = Logger.getLogger(ONPRC_EHRCustomizer.class);
+    private static final Logger _log = LogManager.getLogger(ONPRC_EHRCustomizer.class);
 
     public ONPRC_EHRCustomizer()
     {

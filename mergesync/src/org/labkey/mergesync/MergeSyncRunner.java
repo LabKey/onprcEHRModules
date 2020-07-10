@@ -2,7 +2,8 @@ package org.labkey.mergesync;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 import org.labkey.api.cache.CacheManager;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
@@ -62,7 +63,7 @@ import java.util.Set;
  */
 public class MergeSyncRunner implements Job
 {
-    private static final Logger _log = Logger.getLogger(MergeSyncRunner.class);
+    private static final Logger _log = LogManager.getLogger(MergeSyncRunner.class);
     protected final static SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
     protected final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Set<String> EXCLUDED_RESULTS = PageFlowUtil.set("received", "recieved", ".", "SENT TO RHEIN CONSULTING LAB");
