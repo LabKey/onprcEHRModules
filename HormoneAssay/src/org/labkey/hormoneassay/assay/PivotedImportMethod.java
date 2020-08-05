@@ -1,6 +1,6 @@
 package org.labkey.hormoneassay.assay;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.json.JSONObject;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.Container;

@@ -1,6 +1,7 @@
 package org.labkey.GeneticsCore;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.labkey.api.action.SpringActionController;
 
 /**
@@ -11,7 +12,7 @@ import org.labkey.api.action.SpringActionController;
 public class GeneticsCoreController extends SpringActionController
 {
     private static final DefaultActionResolver _actionResolver = new DefaultActionResolver(GeneticsCoreController.class);
-    private static final Logger _log = Logger.getLogger(GeneticsCoreController.class);
+    private static final Logger _log = LogManager.getLogger(GeneticsCoreController.class);
 
     public GeneticsCoreController()
     {

@@ -1,7 +1,8 @@
 package org.labkey.onprc_billing.query;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.Aggregate;
 import org.labkey.api.data.CompareType;
@@ -42,7 +43,7 @@ public class BillingTriggerHelper
 {
     private Container _container = null;
     private User _user = null;
-    private static final Logger _log = Logger.getLogger(BillingTriggerHelper.class);
+    private static final Logger _log = LogManager.getLogger(BillingTriggerHelper.class);
 
     public BillingTriggerHelper(int userId, String containerId)
     {

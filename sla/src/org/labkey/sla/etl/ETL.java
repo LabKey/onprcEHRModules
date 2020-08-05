@@ -15,7 +15,8 @@
  */
 package org.labkey.sla.etl;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.labkey.api.data.PropertyManager;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ETL
 {
-    private final static Logger log = Logger.getLogger(ETL.class);
+    private final static Logger log = LogManager.getLogger(ETL.class);
     private static ScheduledExecutorService executor;
     private static ETLRunnable runnable;
     private static boolean isScheduled = false;

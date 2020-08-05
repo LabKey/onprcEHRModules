@@ -17,7 +17,8 @@ package org.labkey.onprc_ehr.query;
 
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.collections.CaseInsensitiveHashSet;
@@ -99,7 +100,7 @@ public class ONPRC_EHRTriggerHelper
 {
     private Container _container = null;
     private User _user = null;
-    private static final Logger _log = Logger.getLogger(ONPRC_EHRTriggerHelper.class);
+    private static final Logger _log = LogManager.getLogger(ONPRC_EHRTriggerHelper.class);
     private Map<String, TableInfo> _cachedTables = new HashMap<>();
 
     private List<Map<String, Object>> _cachedCageSizeRecords = null;

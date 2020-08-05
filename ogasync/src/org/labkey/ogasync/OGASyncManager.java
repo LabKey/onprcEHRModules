@@ -16,7 +16,8 @@
 
 package org.labkey.ogasync;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
@@ -58,7 +59,7 @@ public class OGASyncManager
         return _instance;
     }
 
-    private static final Logger _log = Logger.getLogger(OGASyncManager.class);
+    private static final Logger _log = LogManager.getLogger(OGASyncManager.class);
     public static final String LABKEY_USER_PROP_NAME = "labkeyUser";
     public static final String LABKEY_CONTAINER_PROP_NAME = "labkeyContainer";
     public static final String ENABLED_PROP_NAME = "etlStatus";

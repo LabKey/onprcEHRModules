@@ -17,7 +17,8 @@
 package org.labkey.mergesync;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
@@ -70,7 +71,7 @@ public class MergeSyncManager
         return _instance;
     }
 
-    private static final Logger _log = Logger.getLogger(MergeSyncManager.class);
+    private static final Logger _log = LogManager.getLogger(MergeSyncManager.class);
     private Integer _syncInterval;
 
     public static final String DATA_SOURCE_PROP_NAME = "dataSourceName";

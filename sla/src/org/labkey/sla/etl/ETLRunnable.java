@@ -18,7 +18,8 @@ package org.labkey.sla.etl;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
@@ -91,7 +92,7 @@ public class ETLRunnable implements Runnable
     public final static String CONFIG_PROPERTY_DOMAIN = "org.labkey.sla.etl.config";
     public final static byte[] DEFAULT_VERSION = new byte[0];
 
-    private final static Logger log = Logger.getLogger(ETLRunnable.class);
+    private final static Logger log = LogManager.getLogger(ETLRunnable.class);
     private static final int UPSERT_BATCH_SIZE = 500;
     private boolean isRunning = false;
     private boolean shutdown;
