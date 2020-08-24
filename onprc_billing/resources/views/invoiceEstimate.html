@@ -142,8 +142,8 @@
                         ],
                         parameters: {
                             numDays: interval,
-                            startDate: startDate.format('Y-m-d'),
-                            endDate: endDate.format('Y-m-d')
+                            startDate: Ext4.Date.format(startDate, 'Y-m-d'),
+                            endDate: Ext4.Date.format(endDate, 'Y-m-d')
                         },
                         aggregates: [
                             {column: 'totalCost', type: LABKEY.AggregateTypes.SUM, label: 'Total'}
@@ -163,8 +163,8 @@
                             LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)
                         ],
                         parameters: {
-                            startDate: startDate.format('Y-m-d'),
-                            endDate: endDate.format('Y-m-d')
+                            startDate: Ext4.Date.format(startDate, 'Y-m-d'),
+                            endDate: Ext4.Date.format(endDate, 'Y-m-d')
                         },
                         aggregates: [
                             {column: 'totalCost', type: LABKEY.AggregateTypes.SUM, label: 'Total'}
@@ -184,8 +184,8 @@
                             LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)
                         ],
                         parameters: {
-                            startDate: startDate.format('Y-m-d'),
-                            endDate: endDate.format('Y-m-d')
+                            startDate: Ext4.Date.format(startDate, 'Y-m-d'),
+                            endDate: Ext4.Date.format(endDate, 'Y-m-d')
                         },
                         aggregates: [
                             {column: 'totalCost', type: LABKEY.AggregateTypes.SUM, label: 'Total'}
@@ -205,8 +205,8 @@
                             LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)
                         ],
                         parameters: {
-                            startDate: startDate.format('Y-m-d'),
-                            endDate: endDate.format('Y-m-d')
+                            startDate: Ext4.Date.format(startDate, 'Y-m-d'),
+                            endDate: Ext4.Date.format(endDate, 'Y-m-d')
                         },
                         aggregates: [
                             {column: 'totalCost', type: LABKEY.AggregateTypes.SUM, label: 'Total'}
@@ -227,8 +227,8 @@
                         ],
                         parameters: {
                             numDays: interval,
-                            startDate: startDate.format('Y-m-d'),
-                            endDate: endDate.format('Y-m-d')
+                            startDate: Ext4.Date.format(startDate, 'Y-m-d'),
+                            endDate: Ext4.Date.format(endDate, 'Y-m-d')
                         },
                         aggregates: [
                             {column: 'totalCost', type: LABKEY.AggregateTypes.SUM, label: 'Total'}
@@ -248,8 +248,8 @@
                             LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)
                         ],
                         parameters: {
-                            startDate: startDate.format('Y-m-d'),
-                            endDate: endDate.format('Y-m-d')
+                            startDate: Ext4.Date.format(startDate, 'Y-m-d'),
+                            endDate: Ext4.Date.format(endDate, 'Y-m-d')
                         },
                         aggregates: [
                             {column: 'totalCost', type: LABKEY.AggregateTypes.SUM, label: 'Total'}
