@@ -235,7 +235,7 @@ Ext4.define('onprc_ehr.panel.AnimalDetailsCasePanel', {
                 interval = interval + ' days ago';
             }
 
-            text = row.weight + ' kg, ' + date.format('Y-m-d') + (!Ext4.isEmpty(interval) ? ' (' + interval + ')' : '');
+            text = row.weight + ' kg, ' + Ext4.Date.format(date, 'Y-m-d') + (!Ext4.isEmpty(interval) ? ' (' + interval + ')' : '');
         }
 
         toSet['weights'] = text;
@@ -279,12 +279,12 @@ Ext4.define('onprc_ehr.panel.AnimalDetailsCasePanel', {
                     if (date && (!enddate || enddate.getTime() > (new Date()).getTime())){
                         var reviewdate = row.reviewdate ? LDK.ConvertUtils.parseDate(row.reviewdate) : null;
                         if (!reviewdate || Ext4.Date.clearTime(reviewdate).getTime() <= Ext4.Date.clearTime(new Date()).getTime()){
-                            text = text + ' (' + date.format('Y-m-d') + ')';
+                            text = text + ' (' + Ext4.Date.format(date, 'Y-m-d') + ')';
 
                             values.push(text);
                         }
                         else if (reviewdate && Ext4.Date.clearTime(reviewdate).getTime() > Ext4.Date.clearTime(new Date()).getTime()){
-                            text = text + ' - None (Reopens: '  + reviewdate.format('Y-m-d') + ')';
+                            text = text + ' - None (Reopens: '  + Ext4.Date.format(reviewdate, 'Y-m-d') + ')';
                             values.push(text);
                         }
                     }

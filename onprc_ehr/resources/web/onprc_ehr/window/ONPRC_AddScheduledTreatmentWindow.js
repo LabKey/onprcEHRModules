@@ -146,7 +146,7 @@ Ext4.define('ONPRC_EHR.window.AddScheduledTreatmentWindow', {
 
         var filterArray = [];
 
-        filterArray.push(LABKEY.Filter.create('date', date.format(LABKEY.extDefaultDateFormat), LABKEY.Filter.Types.DATE_EQUAL));
+        filterArray.push(LABKEY.Filter.create('date', Ext4.Date.format(date, LABKEY.extDefaultDateFormat), LABKEY.Filter.Types.DATE_EQUAL));
         filterArray.push(LABKEY.Filter.create('taskid', null, LABKEY.Filter.Types.ISBLANK));
         filterArray.push(LABKEY.Filter.create('treatmentStatus', null, LABKEY.Filter.Types.ISBLANK));
               //Modified 7-4-2015 Blasa
@@ -186,7 +186,7 @@ Ext4.define('ONPRC_EHR.window.AddScheduledTreatmentWindow', {
             queryName: 'treatmentSchedule',
             parameters: {
                 NumDays: 1,
-                StartDate: date.format(LABKEY.extDefaultDateFormat)
+                StartDate: Ext4.Date.format(date, LABKEY.extDefaultDateFormat)
             },
             sort: 'date,Id/curlocation/room_sortValue,Id/curlocation/cage_sortValue,Id',
             columns: 'primaryKey,lsid,treatmentid,Id,date,project,meaning,code,qualifier,route,concentration,conc_units,amount,amount_units,dosage,dosage_units,volume,vol_units,remark,category,chargetype',
