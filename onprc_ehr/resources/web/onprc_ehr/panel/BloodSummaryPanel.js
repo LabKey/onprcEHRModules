@@ -171,7 +171,7 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
         Ext4.each(results.rows, function(row, idx){
             //capture the current day's amount
             var rowDate = new Date(row.date.value);
-            if (rowDate && rowDate.format(LABKEY.extDefaultDateFormat) == (new Date()).format(LABKEY.extDefaultDateFormat)){
+            if (rowDate && Ext4.Date.format(rowDate, LABKEY.extDefaultDateFormat) == Ext4.Date.format(new Date(), LABKEY.extDefaultDateFormat)){
                 currentRow = row;
             }
 
@@ -198,7 +198,7 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
                 newRow.isHidden = {value: true};
                 var date = LDK.ConvertUtils.parseDate(row.date.value);
                 date = Ext4.Date.add(date, Ext4.Date.DAY, 1);
-                newRow.date.value = date.format('Y/m/d H:i:s');
+                newRow.date.value = Ext4.Date.format(date, 'Y/m/d H:i:s');
                 newRows.push(newRow);
             }
         }, this);
@@ -233,11 +233,11 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
                         hoverText: function(row){
                             var lines = [];
 
-                            lines.push('Date: ' + row.date.format(LABKEY.extDefaultDateFormat));
+                            lines.push('Date: ' + Ext4.Date.format(row.date, LABKEY.extDefaultDateFormat));
                             lines.push('Drawn on this Date: ' + row.quantity);
                             lines.push('Volume Available on this Date: ' + LABKEY.Utils.roundNumber(row.allowableDisplay, 1) + ' mL');
 
-                            lines.push('Current Weight: ' + row.mostRecentWeight + ' kg (' + row.mostRecentWeightDate.format(LABKEY.extDefaultDateFormat) + ')');
+                            lines.push('Current Weight: ' + row.mostRecentWeight + ' kg (' + Ext4.Date.format(row.mostRecentWeightDate, LABKEY.extDefaultDateFormat) + ')');
 
                             lines.push('Drawn in Previous ' + row.blood_draw_interval + ' days: ' + LABKEY.Utils.roundNumber(row.bloodPrevious, 1));
                             lines.push('Drawn in Next ' + row.blood_draw_interval + ' days: ' + LABKEY.Utils.roundNumber(row.bloodFuture, 1));
