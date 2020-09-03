@@ -396,7 +396,7 @@ Ext4.define('ONPRC_EHR.window.MassBleedWindow', {
         }
 
         timeStr = Ext4.String.leftPad(timeStr, 5, '0'); //expect: HH:mm
-        var ret = LDK.ConvertUtils.parseDate(date.format(LABKEY.extDefaultDateFormat) + ' ' + timeStr);
+        var ret = LDK.ConvertUtils.parseDate(Ext4.Date.format(date, LABKEY.extDefaultDateFormat) + ' ' + timeStr);
         if (!ret){
             errors.push('Row ' + rowIdx + ': invalid time: ' + timeStr);
         }

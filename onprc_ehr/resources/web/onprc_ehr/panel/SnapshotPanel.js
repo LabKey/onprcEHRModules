@@ -279,12 +279,12 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                     if (date && (!enddate || enddate.getTime() > (new Date()).getTime())){
                         var reviewdate = row.reviewdate ? LDK.ConvertUtils.parseDate(row.reviewdate) : null;
                         if (!reviewdate || Ext4.Date.clearTime(reviewdate).getTime() <= Ext4.Date.clearTime(new Date()).getTime()){
-                            text = text + ' (' + date.format('Y-m-d') + ')';
+                            text = text + ' (' + Ext4.Date.format(date, 'Y-m-d') + ')';
 
                             values.push(text);
                         }
                         else if (reviewdate && Ext4.Date.clearTime(reviewdate).getTime() > Ext4.Date.clearTime(new Date()).getTime()){
-                            text = text + ' - None (Reopens: '  + reviewdate.format('Y-m-d') + ')';
+                            text = text + ' - None (Reopens: '  + Ext4.Date.format(reviewdate, 'Y-m-d') + ')';
                             values.push(text);
                         }
                     }
@@ -313,7 +313,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         if (results)
         {
              var sDate = LDK.ConvertUtils.parseDate(results[0].ExpectedDelivery);
-              toSet['pregnancyInfo']   = sDate.format('Y-m-d');
+              toSet['pregnancyInfo']   = Ext4.Date.format(sDate, 'Y-m-d');
         }
         else
         {
@@ -378,7 +378,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
             }, this);
                 //Modified: 8-29-2016 R.Blasa Include time within the date field
             Ext4.each(rows, function(r){
-                text.push('<tr><td nowrap>' + r.weight + ' kg' + '</td><td style="padding-left: 5px;" nowrap>' + r.date.format('Y-m-d H:i') + '</td><td style="padding-left: 5px;" nowrap>' + (Ext4.isDefined(r.interval) ? ' (' + r.interval + ')' : '') + "</td></tr>");
+                text.push('<tr><td nowrap>' + r.weight + ' kg' + '</td><td style="padding-left: 5px;" nowrap>' + Ext4.Date.format(r.date, 'Y-m-d H:i') + '</td><td style="padding-left: 5px;" nowrap>' + (Ext4.isDefined(r.interval) ? ' (' + r.interval + ')' : '') + "</td></tr>");
             }, this);
         }
 

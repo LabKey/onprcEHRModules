@@ -85,8 +85,8 @@
                             'rs:ClearSession': true,
                             Redacted: redacted ? 'true' : 'false',
                             AnimalId: val,
-                            minDate: mindate1.format('Y-m-d'),      //Added: 11-18-2016 R.Blasa
-                            maxDate: maxdate1.format('Y-m-d')
+                            minDate: Ext4.Date.format(mindate1, 'Y-m-d'),      //Added: 11-18-2016 R.Blasa
+                            maxDate: Ext4.Date.format(maxdate1, 'Y-m-d')
                         });
 
                         //url += '&rs:Format=PDF'

@@ -135,7 +135,7 @@ Ext4.define('ONPRC_Billing.window.ChangeBillDateWindow', {
         }
 
         if (this.lastInvoiceDate && date.getTime() < this.lastInvoiceDate.getTime()){
-            Ext4.Msg.alert('Error', 'Must supply a date that is after the last invoice date of: ' + this.lastInvoiceDate.format('Y-m-d'));
+            Ext4.Msg.alert('Error', 'Must supply a date that is after the last invoice date of: ' + Ext4.Date.format(this.lastInvoiceDate, 'Y-m-d'));
             return;
         }
 
