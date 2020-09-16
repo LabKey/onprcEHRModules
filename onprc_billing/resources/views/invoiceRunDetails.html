@@ -63,8 +63,8 @@ Ext4.onReady(function(){
 
                                 var startDate = rec.get('billingPeriodStart') ? rec.get('billingPeriodStart').clearTime() : null;
                                 var endDate = rec.get('billingPeriodEnd') ? rec.get('billingPeriodEnd').clearTime() : null;
-                                var startDateString = startDate ? startDate.format('Y-m-d') : '';
-                                var endDateString = endDate ? endDate.format('Y-m-d') : '';
+                                var startDateString = startDate ? Ext4.Date.format(startDate, 'Y-m-d') : '';
+                                var endDateString = endDate ? Ext4.Date.format(endDate, 'Y-m-d') : '';
 
                                 var interval = 0;
                                 if (startDate && endDate){
