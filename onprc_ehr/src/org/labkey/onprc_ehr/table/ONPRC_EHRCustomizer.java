@@ -1738,7 +1738,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         {
                             String runId = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdPLT"));
                             String id = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedHtml(ctx) + "</a></span>");
                         }
 
                         @Override
@@ -1769,7 +1769,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         {
                             String runId = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdHCT"));
                             String id = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedValue(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedHtml(ctx) + "</a></span>");
                         }
 
                         @Override
