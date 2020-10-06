@@ -347,7 +347,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Modified: 12-13-2016 R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ASBRequestFormType.class, this));
-        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ColonyRequestFormType.class, this));
+        //Modified: Kollil, 10/02/2020
+        //Colony services request form is disabled as per ISE team's decision
+        //EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ColonyRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(HousingRequestFormType.class, this));
 
@@ -377,7 +379,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Created: 1-20-2017 R.Blasa
         EHRService.get().registerDemographicsProvider(new PregnancyConfirmDemographicsProvider(this));
-
 
         //Created: 2-21-2017 R.Blasa
         EHRService.get().registerDemographicsProvider(new CagemateInfantDemographicsProvider(this));
