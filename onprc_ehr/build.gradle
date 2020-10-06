@@ -5,4 +5,7 @@ dependencies
    implementation "com.sun.mail:jakarta.mail:${javaMailVersion}"
    BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: "apiJarFile")
    BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:ehrModules:ehr", depProjectConfig: "apiJarFile")
+   BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:ehrModules:ehr", depProjectConfig: 'published', depExtension: 'module')
+   BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: 'published', depExtension: 'module')
+   BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:onprcEHRModules:mergesync", depProjectConfig: 'published', depExtension: 'module')
 }
