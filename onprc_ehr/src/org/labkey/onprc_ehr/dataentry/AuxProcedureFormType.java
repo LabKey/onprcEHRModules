@@ -53,7 +53,8 @@ public class AuxProcedureFormType extends TaskForm
             new BloodDrawFormSection(false),
             new WeightFormSection(),
             new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
-            new TreatmentOrdersFormSection()
+            new TreatmentOrdersFormSection(),
+            new StudyDetailsFormSection() //Added by Kolli, 2/20/2020
         ));
 
         for (FormSection s : getFormSections())

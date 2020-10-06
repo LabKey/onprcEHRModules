@@ -168,6 +168,13 @@ exports.init = function(EHR){
     }
 });
 
+    //Added: kollil, 5/12/2020
+    //Allow to enter future start dates
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'StudyDetails', function(event, helper){
+        helper.setScriptOptions({
+            allowFutureDates: true
+        });
+    });
 
     //Added 4-27-2016  R.Blasa
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'protocol', function(helper, scriptErrors, row, oldRow){

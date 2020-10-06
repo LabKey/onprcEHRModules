@@ -1,0 +1,18 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="StudyDetails_Reference_Data" tableDbType="NOT_IN_DB">
+                <tableTitle>Study Details</tableTitle>
+                <columns>
+                    <column columnName="value">
+                        <isKeyField>true</isKeyField>
+                        <isHidden>false</isHidden>
+                    </column>
+                </columns>
+                <sorts>
+                    <sort column="sort_order" descending="true"/>
+                </sorts>
+            </table>
+        </tables>
+    </metadata>
+</query>

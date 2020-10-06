@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2018 LabKey Corporation
+ * Copyright (c) 2013-2015 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.EHRDemographicsService;
-import org.labkey.api.ehr.EHRQCState;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.demographics.AnimalRecord;
 import org.labkey.api.exp.api.StorageProvisioner;
@@ -58,30 +57,30 @@ import org.labkey.api.security.UserManager;
 import org.labkey.api.security.UserPrincipal;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.study.DatasetTable;
-import org.labkey.api.study.StudyService;
 import org.labkey.api.util.GUID;
 import org.labkey.api.util.MailHelper;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.Pair;
-//import org.labkey.ehr.demographics.EHRDemographicsServiceImpl;
-//import org.labkey.ehr.security.EHRSecurityManager;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 import org.labkey.onprc_ehr.notification.CullListNotification;
 import org.labkey.onprc_ehr.notification.MensesTMBNotification;
+import org.labkey.onprc_ehr.notification.ProjectAlertsNotification;
 import org.labkey.onprc_ehr.notification.ProtocolAlertsNotification;
 
 import javax.mail.Address;
 import javax.mail.Message;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -89,6 +88,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+//import org.labkey.ehr.demographics.EHRDemographicsServiceImpl;
+//import org.labkey.ehr.security.EHRSecurityManager;
 
 /**
  * User: bimber
@@ -178,6 +180,84 @@ public class ONPRC_EHRTriggerHelper
         map.put("generatedByServer", true);
 
         return map;
+    }
+
+    //Added by Kolli 3/3/20
+    //This function automatically sets the study details endDate if previous study details endDate is empty when a new study is created.
+    public void closeStudyDetailsRecords(List<Map<String, Object>> records) throws Exception
+    {
+        TableInfo housing = getTableInfo("study", "StudyDetails");
+        List<Map<String, Object>> toUpdate = new ArrayList<>();
+        List<Map<String, Object>> oldKeys = new ArrayList<>();
+
+        //sort on date
+        records = new ArrayList<>(records);
+        records.sort(new Comparator<Map<String, Object>>()
+        {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2)
+            {
+                try
+                {
+                    Date date = dateTimeFormat.parse(o1.get("date").toString());
+                    Date date2 = dateTimeFormat.parse(o2.get("date").toString());
+
+                    return date == null ? -1 : date.compareTo(date2);
+                }
+                catch (ParseException e)
+                {
+                    return 0;
+                }
+            }
+        });
+
+        Set<String> encounteredLsids = new HashSet<>();
+        for (Map<String, Object> row : records)
+        {
+            Date date = dateTimeFormat.parse(row.get("date").toString());
+            if (date.getHours() == 0 && date.getMinutes() == 0)
+            {
+                Exception e = new Exception();
+                _log.error("Attempting to terminate study details records with a rounded date.  This might indicate upstream code is rounding the date: " + dateTimeFormat.format(date), e);
+            }
+
+            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), row.get("Id"));
+            filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+
+            //we want to only close those records starting prior to this record
+            filter.addCondition(FieldKey.fromString("date"), date, CompareType.LTE);
+            filter.addCondition(FieldKey.fromString("objectid"), row.get("objectid"), CompareType.NEQ_OR_NULL);
+            if (!encounteredLsids.isEmpty())
+            {
+                filter.addCondition(FieldKey.fromString("lsid"), encounteredLsids, CompareType.NOT_IN);
+            }
+
+            TableSelector ts = new TableSelector(housing, Collections.singleton("lsid"), filter, null);
+            List<String> ret = ts.getArrayList(String.class);
+            if (!ret.isEmpty())
+            {
+                encounteredLsids.addAll(ret);
+                for (String lsid : ret)
+                {
+                    Map<String, Object> r = new CaseInsensitiveHashMap<>();
+                    r.put("lsid", lsid);
+                    r.put("enddate", date);
+                    toUpdate.add(r);
+
+                    Map<String, Object> keyMap = new CaseInsensitiveHashMap<>();
+                    keyMap.put("lsid", lsid);
+                    oldKeys.add(keyMap);
+                }
+            }
+        }
+
+        if (!toUpdate.isEmpty())
+        {
+            _log.info("closing study details records: " + toUpdate.size());
+            Map<String, Object> context = getExtraContext();
+            context.put("skipAnnounceChangedParticipants", true);
+            housing.getUpdateService().updateRows(getUser(), getContainer(), toUpdate, oldKeys, null, context);
+        }
     }
 
     public Date onTreatmentOrderChange(Map<String, Object> row, Map<String, Object> oldRow) throws Exception
@@ -1078,7 +1158,7 @@ public class ONPRC_EHRTriggerHelper
     }
 
     //Added on 10/5/2016, L.Kolli
-    public Map<String, Object> onAnimalArrival_AddDemographics(String id, Map<String, Object> row)
+    public Map<String, Object> onAnimalArrival_AddDemographics(String id, Map<String, Object> row) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
     {
         Map<String, Object> demographicsProps = new HashMap<String, Object>();
 
@@ -1559,7 +1639,7 @@ public class ONPRC_EHRTriggerHelper
         filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("Id"), id, CompareType.EQUAL);
 
-        TableInfo flagsTable = getTableInfo("study", "flags");
+        TableInfo flagsTable = getTableInfo("study", "Animal Record Flags");
         TableSelector ts = new TableSelector(flagsTable, PageFlowUtil.set("flag"), filter, null);
         List<String> values = ts.getArrayList(String.class);
         if (values != null && !values.isEmpty())
@@ -1825,7 +1905,7 @@ public class ONPRC_EHRTriggerHelper
     {
         if (!_cachedObservations.containsKey(category))
         {
-            TableInfo ti = getTableInfo("ehr", "observation_types");
+            TableInfo ti = getTableInfo("onprc_ehr", "observation_types");
             TableSelector ts = new TableSelector(ti, PageFlowUtil.set("schemaName", "queryName", "valuecolumn"), new SimpleFilter(FieldKey.fromString("value"), category), null);
             Map<String, Object> record = ts.getMap();
 
