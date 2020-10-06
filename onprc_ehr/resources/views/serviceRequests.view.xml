@@ -1,7 +1,6 @@
-<view xmlns="http://labkey.org/data/xml/view" title="Manage Requests" frame="none">
+<view xmlns="http://labkey.org/data/xml/view" title="Service Requests" frame="portal">
     <dependencies>
         <dependency path="ehr.context" />
-        <dependency path="ehr/panel/ServiceRequestsPanel.js"/>
-        <dependency path="onprc_ehr/panel/ONPRCServiceRequestPanel.js"/>
+        <dependency path="onprc_ehr/panel/ServiceRequestsPanel.js"/>
     </dependencies>
 </view>

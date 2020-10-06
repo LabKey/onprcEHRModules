@@ -6,6 +6,7 @@
         <column name="project"/>
         <column name="remark"/>
         <column name="description" />
+        <column name="CEG_Plan" />
         <column name="performedby"/>
         <column name="category"/>
         <column name="taskid" />

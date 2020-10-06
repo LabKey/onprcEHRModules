@@ -30,22 +30,161 @@ EHR.model.DataModelManager.registerMetadata('Default', {
                 }
             }
 
+        },
+
+        //Added: 12-27-2017  R.Blasa
+        'study.Arrival': {
+            date: {
+                xtype: 'xdatetime',
+                allowBlank: false,
+                extFormat: LABKEY.extDefaultDateTimeFormat,
+                columnConfig: {
+                    width: 150
+                }
+           },
+            //Added: 5-3-2018 R.Blasa
+            acquisitionType: {
+                hidden: false,
+                allowBlank: false
+            }
+        },
+
+        //Added: 12-26-2017  R.Blasa
+        'study.Assignment': {
+
+            date: {
+                xtype: 'datefield',
+                extFormat: LABKEY.extDefaultDateFormat,
+                columnConfig: {
+                    width: 100
+                }
+            },
+            enddate: {
+                xtype: 'datefield',
+                extFormat: LABKEY.extDefaultDateFormat,
+                columnConfig: {
+                    width: 100
+                }
+            },
+
+            projectedRelease: {
+                xtype: 'datefield',
+                extFormat: LABKEY.extDefaultDateFormat,
+                columnConfig: {
+                    width: 100
+                }
+            },
+
+            projectedReleaseCondition: {
+                columnConfig: {
+                    width: 200
+                }
+            },
+            releaseCondition: {
+                columnConfig: {
+                    width: 200
+                } ,
+                lookup: {
+                filterArray: [
+                    LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)
+
+                ]
+
+            }
+         },
+
+            assignCondition: {
+                columnConfig: {
+                    width: 200
+                }
+
+            },
+
+
+            projectedRelease: {
+                    xtype: 'datefield',
+                    extFormat: LABKEY.extDefaultDateFormat,
+                    columnConfig: {
+                        width: 100
+                    }
+               }
+
+    },
+
+        'study.weight': {
+            project: {
+                hidden: true
+            },
+            account: {
+                hidden: true
+            },
+            performedby: {
+                allowBlank: false,
+                lookup: {
+                    schemaName: 'core',
+                    queryName: 'users',
+                    keyColumn: 'DisplayName',
+                    displayColumn: 'DisplayName',
+                    columns: 'UserId,DisplayName,FirstName,LastName',
+                    sort: 'Type,DisplayName'
+                }
+            },
+
+            'id/curlocation/location': {
+                shownInGrid: true
+            },
+            remark: {
+                shownInGrid: true
+            },
+            weight: {
+                allowBlank: false,
+                useNull: true,
+                editorConfig: {
+                    allowNegative: false,
+                    decimalPrecision: 4
+                }
+            }
+        },
+        //Added: 11-20-2017   R.blasa
+
+        'study.clinremarks': {
+
+            CEG_Plan: {
+                formEditorConfig: {
+                    xtype: 'onprc_ehr-CEG_Plantextarea'
+                },
+                height: 52
+            }
+        },
+
+        //Added: 12-27-2017   R.blasa
+
+        'study.flags': {
+
+            RequestedBy: {
+                columnConfig: {
+                    width: 100
+                }
+
+            },
+            ScheduleNecropsy: {
+                xtype: 'datefield',
+                extFormat: LABKEY.extDefaultDateFormat,
+                columnConfig: {
+                    width: 150
+                }
+
+            },
+            TargetEndDate: {
+                xtype: 'datefield',
+                extFormat: LABKEY.extDefaultDateFormat,
+                columnConfig: {
+                    width: 150
+                }
+            }
+
         }
 
-    //    'study.Assignment' : {
-    //        Cohort: {
-    //            xtype: 'onprc-cohortfield',
-    //            editorConfig: {
-    //
-    //            },
-    //            shownInGrid: true,
-    //            useNull: true,
-    //            columnConfig: {
-    //                width: 500
-    //            }
-    //        }
-    //    }
-    //
     }
 });
 

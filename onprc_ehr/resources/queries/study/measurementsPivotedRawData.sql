@@ -25,6 +25,7 @@ SELECT
   m0.measurementNo,
   m0.measurement,
   m0.parentid,
+  m0.remark,
   (SELECT group_concat(distinct sc.secondaryCategory) as expr FROM ehr_lookups.snomed_subset_codes sc WHERE sc.primaryCategory = 'Measurements' and m0.snomed = sc.code) as categories
 
 FROM (
@@ -36,7 +37,8 @@ SELECT
   m.tissue as snomed,
   '1' as measurementNo,
   m.measurement1 as measurement,
-  m.parentid
+  m.parentid,
+  m.remark
 
 from study.measurements m
 where measurement1 is not null
@@ -50,7 +52,8 @@ select
   m.tissue as snomed,
   '2' as measurementNo,
   m.measurement2 as measurement,
-  m.parentid
+  m.parentid,
+  m.remark
 
 from study.measurements m
 where measurement2 is not null
@@ -64,7 +67,8 @@ select
   m.tissue as snomed,
   '3' as measurementNo,
   m.measurement3 as measurement,
-  m.parentid
+  m.parentid,
+  m.remark
 
 from study.measurements m
 where measurement3 is not null

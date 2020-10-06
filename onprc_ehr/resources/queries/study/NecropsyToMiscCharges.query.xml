@@ -1,0 +1,57 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="NecropsyToMiscCharges" tableDbType="TABLE">
+                <tableTitle>Necropsy To Misc Charges Report</tableTitle>
+
+                <columns>
+                    <column columnName="NecropsyID">
+                        <columnTitle>Id</columnTitle>
+                    </column>
+                    <column columnName="NecropsyDate">
+                        <columnTitle>Charge Date</columnTitle>
+                    </column>
+                    <column columnName="Necropsyprocedure">
+                        <columnTitle>Necropsy Procedure Name</columnTitle>
+                    </column>
+                    <column columnName="caseno">
+                        <columnTitle>Necropsy Case No</columnTitle>
+                    </column>
+                    <column columnName="NecropsyDate">
+                        <columnTitle>Necropsy Date</columnTitle>
+                    </column>
+                    <column columnName="NecropsyProject">
+                        <columnTitle>Necropsy Center Project</columnTitle>
+                    </column>
+                    <column columnName="NecropsyInvestigator">
+                        <columnTitle>Necropsy Investigator</columnTitle>
+                    </column>
+                    <column columnName="NecropsyTaskID">
+                        <columnTitle>Necropsy TaskID</columnTitle>
+                    </column>
+
+                    <column columnName="MiscProject">
+                        <columnTitle>Misc Center Project</columnTitle>
+                    </column>
+                    <column columnName="chargeId">
+                        <columnTitle>Charge Name</columnTitle>
+                    </column>
+                    <column columnName="quantity">
+                        <columnTitle>Quantity</columnTitle>
+                    </column>
+                    <column columnName="unitCost">
+                        <columnTitle>Unit Cost</columnTitle>
+                    </column>
+                    <column columnName="chargecategory">
+                        <columnTitle>Charge Category</columnTitle>
+                    </column>
+
+                    <column columnName="MiscTaskID">
+                        <columnTitle>Misc TaskID</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

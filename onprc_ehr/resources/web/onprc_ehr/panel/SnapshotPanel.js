@@ -85,6 +85,10 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                         xtype: 'displayfield',
                         fieldLabel: 'Active Cases',
                         name: 'activeCases'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Behavior Alert' ,
+                        name: 'behaviorflag'
                     }]
                 },{
                     xtype: 'container',
@@ -231,7 +235,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
 
 
-            if (this.showExtendedInformation){
+        if (this.showExtendedInformation){
             this.appendBirthResults(toSet, results.getBirthInfo(), results.getBirth());
             this.appendDeathResults(toSet, results.getDeathInfo());
             this.appendParentageResults(toSet, results.getParents());
@@ -335,17 +339,21 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
     },
 
-    //Added: 2-21-2017  R.Blasa  Display Infant cage mate under 1 yr
+    //Added: 4-20-2017  R.Blasa  Display Infant cage mate under 1 yr
     appendFosterChildtResults: function(toSet, results){
-
+        var values = [];
         if (results)
         {
-            toSet['fosterinfants'] = results[0].FosterChild;
+            Ext4.each(results, function(row){
+                var foster = row.FosterChild;
+
+                values.push(foster);
+
+            }, this);
+
         }
-        else
-        {
-            toSet['fosterinfants'] = 'None';
-        }
+
+            toSet['fosterinfants'] = values.length ? values.join('<br>') : 'None';
 
     },
 
@@ -385,7 +393,64 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         toSet['weights'] = text.length ? '<table>' + text.join('') + '</table>' : null;
     },
 
+    //Modified: 6-13-2017  R.Blasa
+    appendRoommateResults: function(toSet, results, id){
+        var cagemates = 0;
+        var animals = [];
+        var pairingType;
 
+        if (results && results.length){
+            var row = results[0];
+            if (row.animals){
+                animals = row.animals.replace(/( )*,( )*/g, ',');
+                animals = animals.split(',');
+                animals.sort();
+                animals = animals.remove(id);
+
+            }
+
+            pairingType = row.category;
+        }
+
+        var values = [];
+        if (results){
+            Ext4.each(results, function(row){
+                if (row.animals){
+                    animals = row.animals.replace(/( )*,( )*/g, ',');
+                    animals = animals.split(',')
+                    animals.sort();
+                    animals = animals.remove(id);
+                    values.push(animals);
+
+                }
+
+            }, this);
+        }
+
+        //Modified: 8-22-2017 R.Blasa    Provide link to Snapshot report
+        var url1 = '<a href="' + LABKEY.ActionURL.buildURL('ehr', 'animalHistory', null, {}) + '#subjects:' + animals[0]   + '&inputType:singleSubject&showReport:1&activeReport:clinSnapshot' + '" target="_blank">' + animals[0]  +'</a>';
+        var url2 = '<a href="' + LABKEY.ActionURL.buildURL('ehr', 'animalHistory', null, {}) + '#subjects:' + animals[1]   + '&inputType:singleSubject&showReport:1&activeReport:clinSnapshot' + '" target="_blank">' + animals[1]  +'</a>';
+        var url3 = '<a href="' + LABKEY.ActionURL.buildURL('ehr', 'animalHistory', null, {}) + '#subjects:' + animals[2]   + '&inputType:singleSubject&showReport:1&activeReport:clinSnapshot' + '" target="_blank">' + animals[2]  +'</a>';
+        toSet['cagemates'] = cagemates;
+
+        toSet['pairingType'] = pairingType;
+
+        if (animals.length > 3){
+            toSet['cagemates'] = animals.length + ' animals';
+        }
+        else if (animals.length == 0){
+            toSet['cagemates'] = 'None';
+        }
+        else if (animals.length == 1) {
+            toSet['cagemates'] = url1;
+        }
+        else if (animals.length == 2) {
+            toSet['cagemates'] = url1 + '<br>' + url2 ;
+        }
+        else if (animals.length == 3) {
+            toSet['cagemates'] = url1 + '<br>' + url2 + '<br>' + url3;
+        }
+    },
     appendParentageResults: function(toSet, results){
         if (results){
             var parentMap = {};
@@ -425,6 +490,67 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         }
         else {
             toSet['parents'] = 'No data';
+        }
+    },
+
+    //Modified: 5-10-2018  R.Blasa
+    appendFlags: function(toSet, results){
+        var values = [];
+        var behavevalues  = [];
+        var category;
+        if (results){
+            Ext4.each(results, function(row){
+                category = row['flag/category'];
+                var highlight = row['flag/category/doHighlight'];
+                var omit = row['flag/category/omitFromOverview'];
+
+                //skip
+                if (omit === true)
+                    return;
+
+                if (category)
+                    category = Ext4.String.trim(category);
+
+                // var val = row['flag/value'];
+                var  text ;
+                var behavetext;
+
+               if (category == 'Behavior Flag')
+                 {
+                     behavetext = category + ': ' + row['flag/value'];
+                     if (behavetext)
+                         behavevalues.push(behavetext);
+
+                 }
+                else
+                {
+                    text = category + ': ' + row['flag/value'];
+                    if (text && highlight)
+                        text = '<span style="background-color:yellow">' + text + '</span>';
+                    if (text)
+                        values.push(text);
+                 }
+
+
+            }, this);
+
+            if (values.length) {
+                values = Ext4.unique(values);
+            }
+
+            if (behavevalues.length) {
+                behavevalues = Ext4.unique(behavevalues);
+            }
+        }
+
+        toSet['flags'] = values.length ? '<a onclick="EHR.Utils.showFlagPopup(\'' + this.subjectId + '\', this);">' + values.join('<br>') + '</div>' : null;
+
+        if (behavevalues.length) {
+            toSet['behaviorflag'] = behavevalues.length ? '<a onclick="EHR.Utils.showFlagPopup(\'' + this.subjectId + '\', this);">' + behavevalues.join('<br>') + '</div>' : null;
+        }
+        else
+        {
+            toSet['behaviorflag'] = 'None'
         }
     },
 

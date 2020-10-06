@@ -33,6 +33,9 @@ public class GrossFindingsFormPanelSection extends SimpleFormPanelSection
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/EncounterChild.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/EncounterAddRecordWindow.js"));
 
+        //Added: 5-17-2018  R.Blasa
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/Gross_Finding.css"));
+
         addConfigSource("Encounter");
         addConfigSource("EncounterChild");
     }

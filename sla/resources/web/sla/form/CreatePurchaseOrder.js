@@ -3,6 +3,7 @@
  * a purchase order (see createPurchaseOrder.html and updatePurchaseOrder.html for usages).
  */
 Ext4.define('SLA.panel.PurchaseOrderRequest', {
+
     extend: 'Ext.panel.Panel',
 
     bodyStyle: 'background-color: transparent;',
@@ -20,7 +21,27 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
      */
     initComponent: function()
     {
-        // add the initial form sections, start with just the protocol form if this is not an update
+        //Ext4.apply(this, {
+        //    bodyStyle: 'padding: 5px;',
+        //    defaults: {
+        //        border: false
+        //    },
+        //    items: [{
+        //        html: 'The birth/arrival screen will be disabled as a default.  You must enable the form in order to: <br> <ul><li>Get an Animal ID(s)</li><li>Secure the numbers for processing</li><li>Finish entering data on acquired numbers</li></ul><br><b>When you enable the form for data entry all others will automatically be blocked from using the form.</b> <br>Once you "Submit for Review" or "Save and Close", the birth/arrival form will be automatically be available for all other users. If you do not submit/save <i>please click the button below to exit data entry before leaving</i>, otherwise all other users will be permanently locked out. <br><br> If the birth/arrival form is unavailable and you believe it has been kept locked by mistake please first contact the person who locked the form. If they cannot be reached and it is a weekday please e-mail onprcitsupport@ohsu.edu with the subject "Priority 1 Work Stoppage: birth/arrival Form Locked". If it is a weekend please contact an RFO lead tech. Please take care not to request the birth/arrival form be unlocked unless you are confident the lock is in error, otherwise you will kick a user out of the birth/arrival form and prevent data entry.' ,
+        //        style: 'padding-bottom: 10px;'
+        //    },{
+        //        itemId: 'infoArea',
+        //        border: false
+        //    },{
+        //        layout: 'hbox',
+        //        defaults: {
+        //            style: 'margin-right: 5px;'
+        //        },
+        //    }]
+        //});
+
+
+         // add the initial form sections, start with just the protocol form if this is not an update
         var items = [
             this.getProtocolForm(),
             this.getPurchaseForm(),
@@ -41,6 +62,8 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
 
         this.callParent();
     },
+
+
 
     /**
      * Initialize the Ext panel for selecting the IACUC protocol for a purchase order.
@@ -434,13 +457,14 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
             }
 
             //added by Kolli
-            if (speciesRowData.location == 'NSI 0123D' || speciesRowData.location == 'NSI 0125D' )
+            if (speciesRowData.room == 'NSI 0123D' || speciesRowData.room == 'NSI 0125D' )
             {
                 isHazardsRequired = true;
             }
 
         }, this);
-        if (isHazardsRequired && (purchaseData.listHazard == null || purchaseData.listHazard == ''))
+        //if (isHazardsRequired && (purchaseData.listHazard == null || purchaseData.listHazard == ''))
+        if (isHazardsRequired && (purchaseData.hazardslist == null || purchaseData.hazardslist == ''))
         {
             this.showErrorMsg('You have selected Location(s): NSI 0123D or NSI 0125D. Please list the biological or chemical agents! ');
             return;
@@ -855,6 +879,222 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 success: function (response)
                 {
                     this.showSuccess(rowId);
+                    this.insertMiscCharges(rowId,newPurchaseData);
+                }
+            });
+        }
+        else
+        {
+            this.showSuccess(rowId);
+            this.insertMiscCharges(rowId,newPurchaseData);
+        }
+
+    },
+
+    ////Kollil: If the new receiving info is entered, Insert a row into the onprc_billing.miscCharges table
+    //insertMiscCharges : function (rowId,newPurchaseData)
+    //{
+    //    var miscCharges=[];
+    //    var prevDetailsMap = {};
+    //    var vendor_id ;
+    //
+    //    //Get the vendor id for the given name
+    //    LABKEY.Query.executeSql({
+    //        method: 'POST',
+    //        schemaName: 'sla_public',
+    //        sql: "Select objectid from vendors where name = 'ONPRC Weaning - SLA'",
+    //        //failure: LDK.Utils.getErrorCallback(),
+    //        success: function(data)
+    //        {
+    //            // we expect exactly one row in the response, so if that is not the case return an 'Invalid' error
+    //            if (data.rows.length != 1)
+    //            {
+    //                response.error = 'Invalid vendorid';
+    //                callback.call(scope, response);
+    //            }
+    //            else
+    //            {
+    //                vendor_id = data.rows[0].objectid;
+    //
+    //    //        }
+    //    //    }
+    //    //});
+    //                // Get previous purchase data
+    //                Ext4.each(this.initData.species, function (speciesRow)
+    //                {
+    //                    prevDetailsMap[speciesRow['objectid']] = speciesRow;
+    //                });
+    //                // Get New purchase data
+    //                Ext4.each(newPurchaseData.details, function (detailsRow)
+    //                {
+    //                    var objectid = detailsRow['objectid'],
+    //                            receiveddate = Ext4.isDate(detailsRow['receiveddate']) ? Ext4.util.Format.date(detailsRow['receiveddate'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['receiveddate']),
+    //                            receivedby = detailsRow['receivedby'];
+    //
+    //                    if (Ext4.isDefined(prevDetailsMap[objectid]))
+    //                    {
+    //                        var prevReceiveddate = this.trimDateToYMDStr(prevDetailsMap[objectid]['receiveddate']),
+    //                                prevReceivedby = prevDetailsMap[objectid]['receivedby'];
+    //
+    //                        //Compare the receiving info with the previous data
+    //                        if ((prevReceiveddate == null & receiveddate != null) || (prevReceivedby == null & receivedby != null))
+    //                        {
+    //                            //if (newPurchaseData['vendorid.name'] == 'ONPRC Weaning - SLA')
+    //                            if (newPurchaseData['vendorid'] == vendor_id)
+    //                            {
+    //                                miscCharges.push({
+    //                                    "date": receiveddate,
+    //                                    "project": newPurchaseData['project'],
+    //                                    "objectid": LABKEY.Utils.generateUUID(),
+    //                                    //"category": 'SLA Fees',
+    //                                    "chargeType": 'SLAU',
+    //                                    "chargeId": 5398, //Chargeableitem: ChargeName = 'SLAU Weaning Fee', ChargeID = 5398
+    //                                    "quantity": 1, //detailsRow['NumAnimalsReceived'],
+    //                                    "comment": 'SLA Weaning',
+    //                                });
+    //                            }
+    //                            else
+    //                            {
+    //                                miscCharges.push({
+    //                                    "date": receiveddate,
+    //                                    "project": newPurchaseData['project'],
+    //                                    "objectid": LABKEY.Utils.generateUUID(),
+    //                                    //"category": 'SLA Fees',
+    //                                    "chargeType": 'SLAU',
+    //                                    "chargeId": 5331, //Chargeableitem: ChargeName = 'SLAU Animal Purchase', ChargeID = 5331
+    //                                    "quantity": 1, //detailsRow['NumAnimalsReceived'],
+    //                                    "comment": 'SLA Purchase billing',
+    //                                });
+    //                            }
+    //                        }
+    //                    }
+    //                },this);
+    //
+    //                if (miscCharges.length > 0 )
+    //                {
+    //                    LABKEY.Query.insertRows({
+    //                        containerPath: '/ONPRC/EHR',
+    //                        schemaName: 'onprc_billing',
+    //                        queryName: 'miscCharges',
+    //                        rows: miscCharges,
+    //                        scope: this,
+    //                        success: function ()
+    //                        {
+    //                            this.showSuccess(rowId);
+    //                        },
+    //                        failure: function(response)
+    //                        {
+    //                            console.error(response.exception);
+    //                            this.showErrorMsg(response.exception);
+    //                        }
+    //                    });
+    //                }
+    //                else
+    //                {
+    //                    this.showSuccess(rowId);
+    //                }
+    //
+    //            }
+    //        }
+    //    });
+    //},
+
+
+    //Kollil: If the new receiving info is entered, Insert a row into the onprc_billing.miscCharges table
+    insertMiscCharges : function (rowId,newPurchaseData)
+    {
+        var miscCharges=[];
+        var prevDetailsMap = {};
+        //var vendor_id ;
+
+        ////Get the vendor id for the given name
+        //LABKEY.Query.executeSql({
+        //    method: 'POST',
+        //    schemaName: 'sla_public',
+        //    sql: "Select objectid from vendors where name = 'ONPRC Weaning - SLA'",
+        //    //failure: LDK.Utils.getErrorCallback(),
+        //    success: function(data)
+        //    {
+        //        // we expect exactly one row in the response, so if that is not the case return an 'Invalid' error
+        //        if (data.rows.length != 1)
+        //        {
+        //            response.error = 'Invalid vendorid';
+        //            callback.call(scope, response);
+        //        }
+        //        else
+        //        {
+        //            vendor_id = data.rows[0].objectid;
+        //        }
+        //    }
+        //});
+
+        // Get previous purchase data
+        Ext4.each(this.initData.species, function (speciesRow)
+        {
+            prevDetailsMap[speciesRow['objectid']] = speciesRow;
+        });
+        // Get New purchase data
+        Ext4.each(newPurchaseData.details, function (detailsRow)
+        {
+            var objectid = detailsRow['objectid'],
+                    receiveddate = Ext4.isDate(detailsRow['receiveddate']) ? Ext4.util.Format.date(detailsRow['receiveddate'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['receiveddate']),
+                    receivedby = detailsRow['receivedby'];
+
+            if (Ext4.isDefined(prevDetailsMap[objectid]))
+            {
+                var prevReceiveddate = this.trimDateToYMDStr(prevDetailsMap[objectid]['receiveddate']),
+                        prevReceivedby = prevDetailsMap[objectid]['receivedby'];
+
+                //Compare the receiving info with the previous data
+                if ((prevReceiveddate == null & receiveddate != null) || (prevReceivedby == null & receivedby != null))
+                {
+                    if (this.initData.purchase.vendor == 'ONPRC Weaning - SLA')
+                    //if (newPurchaseData['vendorid'] == vendor_id)
+                    {
+                        miscCharges.push({
+                            "date": receiveddate,
+                            "project": newPurchaseData['project'],
+                            "objectid": LABKEY.Utils.generateUUID(),
+                            //"category": 'SLA Fees',
+                            "chargeType": 'SLAU',
+                            "chargeId": 5398, //Chargeableitem: ChargeName = 'SLAU Weaning Fee', ChargeID = 5398
+                            "quantity": 1, //detailsRow['NumAnimalsReceived'],
+                            "comment": 'SLA Weaning',
+                        });
+                    }
+                    else
+                    {
+                        miscCharges.push({
+                            "date": receiveddate,
+                            "project": newPurchaseData['project'],
+                            "objectid": LABKEY.Utils.generateUUID(),
+                            //"category": 'SLA Fees',
+                            "chargeType": 'SLAU',
+                            "chargeId": 5331, //Chargeableitem: ChargeName = 'SLAU Animal Purchase', ChargeID = 5331
+                            "quantity": 1, //detailsRow['NumAnimalsReceived'],
+                            "comment": 'SLA Purchase billing',
+                        });
+                    }
+                }
+            }
+        },this);
+
+        if (miscCharges.length > 0 )
+        {
+            LABKEY.Query.insertRows({
+                containerPath: '/ONPRC/EHR',
+                schemaName: 'onprc_billing',
+                queryName: 'miscCharges',
+                rows: miscCharges,
+                scope: this,
+                success: function ()
+                {
+                    this.showSuccess(rowId);
+                },
+                failure: function(response)
+                {
+                    console.error(response.exception);
+                    this.showErrorMsg(response.exception);
                 }
             });
         }
@@ -863,6 +1103,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
             this.showSuccess(rowId);
         }
     },
+
 
     trimDateToYMDStr : function(val)
     {

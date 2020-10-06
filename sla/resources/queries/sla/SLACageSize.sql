@@ -6,10 +6,9 @@
 
   /*   Created  Blasa    2-13-2015  Provide Distinct SLA Cage Size Reference table */
 
-  select    distinct  cagesize
-   from  onprc_billing.slaPerDiemFeeDefinition b
-   Where active = True
-   order by cagesize
-
+  select  value
+   from  sla.Reference_Data
+   Where columnName = 'cagesize'
+   order by sort_order
 
 

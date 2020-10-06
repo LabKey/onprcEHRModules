@@ -48,7 +48,7 @@ Ext4.onReady(function(){
                 style: 'font-weight: bold;'
             },
             items: [
-                {name: 'Browse All Datasets', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/datasets.view?'},
+                {name: 'Browse All Datasets', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/datasets.view?'},
                 {name: 'Housing Queries', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/housingQueries.view?'},
                 {name: 'Protocol and Project Queries', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/projectQueries.view?'}
             ]
@@ -122,7 +122,8 @@ Ext4.onReady(function(){
                 style: 'font-weight: bold;'
             },
             items: [
-                {name: 'Enter Data / Task Review', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/enterData.view'},
+//                    Modified: 4-3-2017 R.Blasa  Allow new method of presenting Necropsy entry screens
+                {name: 'Enter Data / Task Review', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/enterData.view'},
 
                 {name: 'Post Op Med Verification', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=medsignoff'}
             ]
@@ -133,9 +134,9 @@ Ext4.onReady(function(){
                 style: 'font-weight: bold;'
             },
             items: [
-                {name: 'Manage Requests', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/serviceRequests.view'},
-                //{name: 'ASB Services Request', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=ASB Service Request'},
-                //{name: 'Colony Services Request', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=Colony Service Request'},
+                //            Modified: 7-18-2017 R.Blasa
+                {name: 'Manage Requests', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/serviceRequests.view'},
+
                 {name: 'Request Labwork', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=Labwork Request'}
             ]
         }]

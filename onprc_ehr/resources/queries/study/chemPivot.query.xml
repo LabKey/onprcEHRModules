@@ -18,7 +18,8 @@
                             <fkColumnName>Id</fkColumnName>
                         </fk>
                     </column>
-                    <column columnName="chargetype">
+
+                    <column columnName="createdby">
                         <columnTitle>Testing Performed By</columnTitle>
                     </column>
                 </columns>

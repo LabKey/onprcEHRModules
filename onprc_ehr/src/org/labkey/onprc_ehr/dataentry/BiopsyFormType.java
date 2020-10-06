@@ -62,6 +62,7 @@ public class BiopsyFormType extends EncounterForm
             s.addConfigSource("Encounter");
             s.addConfigSource("Pathology");
             s.addConfigSource("Biopsy");
+            s.addConfigSource("Biopsy_Staff");
         }
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Pathology.js"));

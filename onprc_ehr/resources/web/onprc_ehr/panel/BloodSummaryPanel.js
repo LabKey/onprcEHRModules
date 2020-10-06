@@ -18,9 +18,9 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
             defaults: {
                 border: false
             },
-            items: [{
+          /*  items: [{
                 html: 'Loading...'
-            }]
+            }]*/
         });
 
         this.callParent();
@@ -37,7 +37,7 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
           //  viewName: 'newBloodCalc',
             filterArray: [LABKEY.Filter.create('id', this.subjects.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF)],
      //       columns: 'id,species,species/blood_per_kg,species/max_draw_pct,species/blood_draw_interval,id/MostRecentWeight/mostRecentWeight,id/MostRecentWeight/mostRecentWeightDate,Id/demographics/calculated_status',
-           columns: 'id,Species,Gender,MostRecentBCS,BCSDate,mostRecentWeight,mostRecentWeightDate,blood_draw_interval,bloodPrevious,bloodFuture,blood_per_kg,FixedRateCalculation,TotalBloodVolume,AllowableBlood,AvailableBlood,Method,Id/demographics/calculated_status',
+           columns: 'id,Species,species/blood_per_kg,species/max_draw_pct,species/blood_draw_interval,Gender,MostRecentBCS,BCSDate,weight,MostRecentWeightDate,blood_draw_interval,bloodPrevious,bloodFuture,blood_per_kg,FixedRateCalculation,TotalBloodVolume,AllowableBlood,AvailableBlood,Method,Id/demographics/calculated_status',
 
             requiredVersion: 9.1,
             sort: 'id',
@@ -128,7 +128,7 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
                 });
 
                 if (!bds || !bds.length) {
-                    var maxDraw = dd.getValue('species/blood_per_kg') * dd.getValue('species/max_draw_pct') * dd.getValue('id/MostRecentWeight/mostRecentWeight');
+                    var maxDraw = dd.getValue('totalAllowable');
                     cfg.items.push({
                         html: 'There are no previous or future blood draws with the relevant timeframe.  The maximum amount of ' + Ext4.util.Format.round(maxDraw, 2) + ' mL can be drawn.',
                         border: false
@@ -164,6 +164,8 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
         };
 
         //this assumes we sorted on date
+
+
         var newRows = [];
         var rowPrevious;
         var seriesIds = [];
@@ -207,15 +209,57 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
 
         if (currentRow){
             toAdd.push({
-                html: 'The amount of blood available if drawn today is: ' + Ext4.util.Format.round(currentRow.allowableDisplay.value, 1) + ' mL.  The graph below shows how the amount of blood available will change over time, including when previous draws will drop off.<br>',
+                html: 'The amount of blood available if drawn today is: ' + Ext4.util.Format.round(currentRow.allowableDisplay.value, 1) + ' mL. <br>',
                 border: false,
                 style: 'margin-bottom: 20px'
             });
         }
 
+
         toAdd.push({
+            html: '',
+            border: false,
+            style: 'margin-bottom: 10px;'
+        });
+
+        toAdd.push({
+            xtype: 'ldk-querypanel',
+            style: 'margin-bottom: 10px;',
+            queryConfig: LDK.Utils.getReadOnlyQWPConfig({
+                title: 'Recent/Scheduled Blood Draws: ' + subject,
+                schemaName: 'study',
+                queryName: 'bloodDrawsByDay',
+                allowHeaderLock: false,
+                //frame: 'none',
+               filters: [
+                    LABKEY.Filter.create('Id', subject, LABKEY.Filter.Types.EQUAL),
+                     //THis filter is looking to identify values from bloodDraws by Day and attempts to get the species value, it makes better sense to only filter for the animal
+                     //ID and do the other calcs in the actual query
+                    LABKEY.Filter.create('date', '-' + (dd.getValue('species/blood_draw_interval') * 2 ) + 'd', LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL)
+                 ]
+
+            })
+        });
+
+        toAdd.push({
+            xtype: 'ldk-querypanel',
+            style: 'margin-bottom: 10px;',
+            queryConfig: LDK.Utils.getReadOnlyQWPConfig({
+                title: 'Pending/Not-Yet-Approved Blood Draws: ' + subject,
+                schemaName: 'study',
+                queryName: 'blood',
+                allowHeaderLock: false,
+                //frame: 'none',
+                filters: [
+                     LABKEY.Filter.create('Id', subject, LABKEY.Filter.Types.EQUAL),
+                     LABKEY.Filter.create('qcState','Completed' , LABKEY.Filter.Types.NOT_EQUAL)
+                 ],
+                sort: '-date'
+            })
+        });
+/*toAdd.push({
             xtype: 'container',
-            //title: 'Available Blood: ' + subject,
+            title: 'Available Blood: ' + subject,
             items: [{
                 xtype: 'ldk-graphpanel',
                 margin: '0 0 0 0',
@@ -293,47 +337,7 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
                     }, this);
                 }
             }]
-        });
-
-        toAdd.push({
-            html: '',
-            border: false,
-            style: 'margin-bottom: 10px;'
-        });
-
-        toAdd.push({
-            xtype: 'ldk-querypanel',
-            style: 'margin-bottom: 10px;',
-            queryConfig: LDK.Utils.getReadOnlyQWPConfig({
-                title: 'Recent/Scheduled Blood Draws: ' + subject,
-                schemaName: 'study',
-                queryName: 'bloodDrawsByDay',
-                allowHeaderLock: false,
-                //frame: 'none',
-                filters: [
-                    LABKEY.Filter.create('Id', subject, LABKEY.Filter.Types.EQUAL),
-                    LABKEY.Filter.create('date', '-' + (dd.getValue('species/blood_draw_interval') * 2) + 'd', LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL)
-                ],
-                sort: '-date'
-            })
-        });
-
-        toAdd.push({
-            xtype: 'ldk-querypanel',
-            style: 'margin-bottom: 10px;',
-            queryConfig: LDK.Utils.getReadOnlyQWPConfig({
-                title: 'Pending/Not-Yet-Approved Blood Draws: ' + subject,
-                schemaName: 'study',
-                queryName: 'blood',
-                allowHeaderLock: false,
-                //frame: 'none',
-                filters: [
-                    LABKEY.Filter.create('Id', subject, LABKEY.Filter.Types.EQUAL),
-                    LABKEY.Filter.create('countsAgainstVolume', false, LABKEY.Filter.Types.EQUAL)
-                ],
-                sort: '-date'
-            })
-        });
+        });*/
 
         toAdd.push({
             html: '',

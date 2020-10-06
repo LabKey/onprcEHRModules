@@ -6,6 +6,7 @@ SELECT
   t.geographic_origin,
   t.gender,
   t.isU42,
+  t.isESPF,
   t.flags,
   t.parentageBloodDrawVol,
   t.mhcBloodDrawVol,
@@ -24,6 +25,10 @@ SELECT
     WHEN (a.Id IS NULL) THEN 'N'
     ELSE 'Y'
   END as isU42,
+  CASE
+    WHEN (u.Id IS NULL) THEN 'N'
+    ELSE 'Y'
+  END as isESPF,
   f.flags,
   CASE
     WHEN (f.flags LIKE '%Parentage Blood Draw Needed%') THEN 1
@@ -36,11 +41,13 @@ SELECT
   END as parentageBloodDrawVol,
   --Note: MHC draws are being taken on all U42 Animals (Males and females) and non-U42 males only
   --Note: if changing this logic, mhcFlagSummary.sql should also be updated
+  --Note:  Issue Tracker 4128 changed the method relating to ESPF Animals as depicted in line 48 and 49
   CASE
     WHEN (f.flags LIKE '%MHC Blood Draw Needed%') THEN 1
     WHEN (f.flags LIKE '%MHC Typing Not Needed%') THEN 0
     WHEN (f.flags LIKE '%MHC Blood Draw Collected%') THEN 0
-    WHEN (d.species = 'RHESUS MACAQUE' AND d.Id.age.ageInYears <= 5.0 AND d.geographic_origin = 'India' AND m.Id IS NULL AND (a.Id IS NOT NULL OR d.gender = 'm')) THEN 1
+    WHEN (d.species = 'RHESUS MACAQUE' AND d.Id.age.ageInYears <= 5.0 AND d.geographic_origin = 'India' AND m.Id IS NULL AND (a.Id IS NOT NULL OR d.gender = 'm' ) and u.id is null ) THEN 1
+    WHEN (u.id is not Null and  d.Id.age.ageInYears <= 10.0 and d.Id.age.ageInMonths >=  6 ) then 1
     ELSE 0
   END as mhcBloodDrawVol,
   CASE
@@ -132,6 +139,17 @@ LEFT JOIN (
   WHERE a.isActive = true and a.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.U42_PROJECT')
   GROUP BY a.Id
 ) a ON (a.Id = d.Id)
+
+--U24 ESPF
+LEFT JOIN (
+  SELECT
+    u.Id
+    --count(*) as total
+  FROM study.assignment u
+  WHERE u.isActive = true and u.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.U24_PROJECT')
+  GROUP BY u.Id
+) u ON (u.Id = d.Id)
+
 
 WHERE d.calculated_status = 'Alive'
 

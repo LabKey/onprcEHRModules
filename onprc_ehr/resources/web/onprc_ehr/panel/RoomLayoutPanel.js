@@ -258,7 +258,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 }
 
                                 var animalItems = [];
-                                if (animals.length > 4){
+                                if (animals.length > 8){    //Modified: 7-5-2018  R.Blasa
                                     animalItems.push({
                                         html: '<span style="font-size: 10px;">' + animals.length + ' animals</span>',
                                         border: false,

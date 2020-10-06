@@ -49,13 +49,13 @@ public class ClinicalReportFormType extends TaskForm
 
     public ClinicalReportFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, LABEL, "Clinical", Arrays.asList(
+        super(ctx, owner, NAME, LABEL, "Clinical", Arrays.<FormSection>asList(
                 new NonStoreFormSection("Instructions", "Instructions", "ehr-examinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/ExamInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ExtendedAnimalDetailsFormSection(),
                 new SimpleFormPanelSection("study", "Clinical Remarks", "SOAP", false, EHRService.FORM_SECTION_LOCATION.Tabs),
                 new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
-                new SimpleGridPanel("study", "encounters", "Procedures", EHRService.FORM_SECTION_LOCATION.Tabs),
+                new EncounterProcedureFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new WeightFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
                 new TreatmentOrdersFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
@@ -63,8 +63,7 @@ public class ClinicalReportFormType extends TaskForm
                 new SimpleGridPanel("ehr", "snomed_tags", "Diagnostic Codes", EHRService.FORM_SECTION_LOCATION.Tabs),
                 //Added 5-23-2015   Blasa
                 new SimpleGridPanel("study", "housing", "Housing Transfers",EHRService.FORM_SECTION_LOCATION.Tabs)
-                //Removed temporarily  7-2-2015   Blasa
-               // new SimpleGridPanel("study", "encounters", "TB Tests",EHRService.FORM_SECTION_LOCATION.Tabs)
+
 
         ));
 
@@ -74,10 +73,8 @@ public class ClinicalReportFormType extends TaskForm
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("ClinicalDefaults");
-            s.addConfigSource("ClinicalReport");
-
-            //Removed temporarily  7-2-2015   Blasa
-           // s.addConfigSource("TBProcedure");
+//            s.addConfigSource("ClinicalReport");
+            s.addConfigSource("ClinicalReport_ONPRC");
 
             if (!s.getName().equals("Clinical Remarks"))
                 s.addConfigSource("ClinicalReportChild");
@@ -103,8 +100,6 @@ public class ClinicalReportFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/HousingDataEntryPanel.js"));
         setJavascriptClass("ONPRC_EHR.panel.HousingDataEntryPanel");
 
-        //Removed temporarily  7-2-2015   Blasa
-       // addClientDependency(ClientDependency.fromFilePath("ehr/model/sources/TBProcedure.js"));
 
     }
 

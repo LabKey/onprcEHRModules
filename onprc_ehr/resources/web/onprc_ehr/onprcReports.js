@@ -193,6 +193,8 @@ EHR.reports.currentBlood = function(panel, tab){
         if (subjects.length < 2)
         {
             for (var i = 0; i < subjects.length; i++)
+
+
             {
                 var str = subjects[i];
                 var filterArray = panel.getFilterArray(tab);
@@ -245,10 +247,10 @@ EHR.reports.currentBlood = function(panel, tab){
                     title: 'Overview' + title,
                     schemaName: 'study',
                     queryName: 'demographicsBloodSummary',//'demographicsBloodSummary',
-                 //   viewName: 'NewBloodCalc',
-            filterArray: filterArray.removable.concat(filterArray.nonRemovable)
-        }
-        });
+                    //   viewName: 'NewBloodCalc',
+                    filterArray: filterArray.removable.concat(filterArray.nonRemovable)
+                }
+            });
         }
 
         if (toAdd.length)
@@ -347,11 +349,11 @@ EHR.reports.potentialParents = function(panel, tab){
         style: 'padding-bottom: 20px;',
         bodyStyle: 'padding: 5px;',
         html: 'This report calculates potential parents for the selected animal(s).  The potential parents are determined as follows:' +
-            '<br><br>' +
-            '<ul style="margin-left: 20px">' +
-            '<li style="list-style-type: disc;">Potential dams are determined by finding any female housed in the animal\'s birth location at the time of birth, which were at least 2.5 years old at the time.  Note: this report considers housing in whole-day increments in order to avoid missing potential parents due to errors in the timestamp of transfers.</li>' +
-            '<li style="list-style-type: disc;">Potential sires are determined by finding the locations where all potential dams were housed during the conception window (defined below) relative to the animal\'s birth.  The potential sires are any male animals housed in these locations during the conception window, which are at least 2.5 years old at the time.</li>' +
-            '</ul>'
+        '<br><br>' +
+        '<ul style="margin-left: 20px">' +
+        '<li style="list-style-type: disc;">Potential dams are determined by finding any female housed in the animal\'s birth location at the time of birth, which were at least 2.5 years old at the time.  Note: this report considers housing in whole-day increments in order to avoid missing potential parents due to errors in the timestamp of transfers.</li>' +
+        '<li style="list-style-type: disc;">Potential sires are determined by finding the locations where all potential dams were housed during the conception window (defined below) relative to the animal\'s birth.  The potential sires are any male animals housed in these locations during the conception window, which are at least 2.5 years old at the time.</li>' +
+        '</ul>'
     });
 
     tab.add({
@@ -373,8 +375,8 @@ EHR.reports.potentialParents = function(panel, tab){
                     border: false
                 },
                 items: [{
-                html: 'Choose Conception Range (Days Prior To Birth):',
-                style: 'padding-bottom: 10px;'
+                    html: 'Choose Conception Range (Days Prior To Birth):',
+                    style: 'padding-bottom: 10px;'
                 },{
                     xtype: 'numberfield',
                     hideTrigger: true,
@@ -761,12 +763,12 @@ EHR.reports.onprcSnapshot = function(panel, tab){
                 var idcolor = false;
 
                 if  (str.substr(0,2)== 'gp' || str.substr(0,3)== 'rbr') {
-                   idcolor = true;
+                    idcolor = true;
                 }
                 toAdd.push({
                     xtype: 'ldk-webpartpanel',
                     //title: 'Overview: ' + subjects[i],   //Added 4-12-2016 Blasa
-                   // title: 'Overview: ' + '<span style="background-color:#77BC71">' + subjects[i]+ '</span>',
+                    // title: 'Overview: ' + '<span style="background-color:#77BC71">' + subjects[i]+ '</span>',
                     //Added 4-12-2016 Blasa
                     title: idcolor?'Overview: ' +  '<span style="color:#8B0000">' + subjects[i]+ '</span>':'Overview: ' + subjects[i],
 
@@ -970,4 +972,108 @@ EHR.reports.surgeryCasesClosedToday = function(panel, tab){
             removeableFilters: filterArray.removable
         })
     });
+}
+
+//Modified 4-1-2016 R.Blasa
+EHR.reports.onprcweightGraph = function(panel, tab){
+    if (tab.filters.subjects){
+        renderSubjects(tab.filters.subjects, tab);
+    }
+    else
+    {
+        panel.resolveSubjectsFromHousing(tab, renderSubjects, this);
+    }
+
+    function renderSubjects(subjects, tab)
+    {
+        if (!subjects.length)
+        {
+            tab.add({
+                html: 'No animals were found.',
+                border: false
+            });
+
+            return;
+        }
+
+        var toAdd = [];
+
+        toAdd.push({
+            html: 'Note: Please click the animal ID to open the graphical representation of the same report. Choose a different tab, to display the animal\'s weight record in more detail.',
+            style: 'padding-bottom: 20px;',
+            border: false
+        });
+        var filterArray = panel.getFilterArray(tab);
+        var title = panel.getTitleSuffix();
+        toAdd.push({
+            xtype: 'ldk-querypanel',
+            style: 'margin-bottom:20px;',
+            queryConfig: {
+                title: 'Weights' ,
+                schemaName: 'study',
+                queryName: 'demographics',
+                viewName: 'Snapshot',
+                filterArray: filterArray.removable.concat(filterArray.nonRemovable)
+            }
+        });
+
+        if (toAdd.length)
+            tab.add(toAdd);
+
+    }
 };
+
+EHR.reports.kinshipSummary = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+    var ids = panel.getFilterContext().subjects;
+
+    tab.add({
+        xtype: 'panel',
+        border: false,
+        subjectList: ids,
+        bodyStyle: 'padding: 5px;',
+        defaults: {
+            border: false
+        },
+        items: [{
+            xtype: 'ldk-linkbutton',
+            hidden: !ids || !ids.length,
+            text: 'Click Here To Limit To Animals In Selection',
+            linkTarget: '_blank',
+            linkCls: 'labkey-text-link',
+            style: 'margin-bottom: 20px;',
+            handler: function(btn){
+                var p = btn.up('panel');
+                if (p.subjectList) {
+                    var qwp = p.down('ldk-querypanel').qwp;
+                    if (qwp) {
+                        qwp.removeableFilters = qwp.removeableFilters || [];
+                        qwp.removeableFilters.push(LABKEY.Filter.create('Id2', p.subjectList.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
+
+                        var dr = LABKEY.DataRegions[qwp.dataRegionName];
+                        if (dr){
+                            dr.addFilter(LABKEY.Filter.create('Id2', p.subjectList.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
+                            dr.refresh();
+                        }
+                    }
+                }
+            }
+        },{
+            xtype: 'container',
+            border: false,
+            items: [{
+                xtype: 'ldk-querypanel',
+                style: 'margin-bottom:20px;',
+                queryConfig: panel.getQWPConfig({
+                    schemaName: 'ehr',
+                    queryName: 'kinshipSummary',
+                    title: 'Kinship' + title,
+                    filters: filterArray.nonRemovable,
+                    removeableFilters: filterArray.removable || []
+                })
+            }]
+        }]
+    });
+
+}

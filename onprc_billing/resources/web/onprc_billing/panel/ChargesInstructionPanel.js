@@ -11,7 +11,9 @@ Ext4.define('ONPRC_Billing.panel.ChargesInstructionPanel', {
             items: [{
                 html: 'This form allows authorized users to enter new charges.  This should only be used for changes that are not automatically calculated from the animal record.  ' +
                     '<br><br>' +
-                    '<b>Important:</b> The vast majority of the time, you should leave unit cost blank.  It will be calculated based on standard rates (at the time of the charge), and based on known exemptions.  This field will only be editable if the item you selected supports variable unit cost.',
+                    '<b>Important:</b> The vast majority of the time, you should leave unit cost blank.  It will be calculated based on standard rates (at the time of the charge), and based on known exemptions.  This field will only be editable if the item you selected supports variable unit cost.' +
+                    '<br><br>' +
+                     '<b>Note:</b> Recent changes to the  property settings now allows you to enter either the Center Project, or the Alias number.',
                 style: 'padding: 5px;'
             }]
         })

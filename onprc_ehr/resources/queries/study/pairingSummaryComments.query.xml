@@ -1,0 +1,39 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="pairingSummaryComments" tableDbType="TABLE" useColumnOrder="true">
+                <tableTitle>Pairing Summary Comments</tableTitle>
+                <columns>
+                    <column columnName="Id">
+                    </column>
+                    <column columnName="lowestCage">
+                    </column>
+                    <column columnName="date">
+                    </column>
+                    <column columnName="eventType">
+                    </column>
+                    <column columnName="remark">
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="enddate">
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="remark2">
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="endeventType">
+                    </column>
+                    <column columnName="otherIds">
+                        <columnTitle>Other Ids</columnTitle>
+                    </column>
+                    <column columnName="separationreason">
+                    </column>
+                    <column columnName="observation">
+                    </column>
+                    <column columnName="outcome">
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

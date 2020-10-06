@@ -79,6 +79,17 @@ public class BehaviorExamFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/ExamDataEntryPanel.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalReportChild.js"));
         setJavascriptClass("EHR.panel.ExamDataEntryPanel");
+
+        //        //Added: 12-18-2017  R.Blasa
+        setStoreCollectionClass("ONPRC_EHR.data.sources.BehaviorExamStoreCollection");
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/data/sources/BehaviorExamStoreCollection.js"));
+
+        //        //Added: 1-23-2018  R.Blasa
+// Disable as temporary workaround to ticket Ticket 33579: Clinical Staff unsable to Create new Cases
+//        addClientDependency(ClientDependency.fromPath("onprc_ehr/window/ManageCasesWindow.js"));
+
+
+
     }
 
     @Override
@@ -86,6 +97,7 @@ public class BehaviorExamFormType extends TaskForm
     {
         List<String> ret = super.getButtonConfigs();
 
+//        ret.add("OPEN_BEHAVIORCASE");
         ret.add("OPENBEHAVIORCASE");
 
         return ret;

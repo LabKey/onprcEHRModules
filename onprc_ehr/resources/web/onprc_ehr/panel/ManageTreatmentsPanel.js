@@ -94,7 +94,7 @@ Ext4.define('onprc_ehr.panel.ManageTreatmentsPanel', {
                 }
             }, config);
 
-            Ext4.create('EHR.window.ManageRecordWindow', cfg).show();
+            Ext4.create('ONPRC_EHR.window.ManageRecordWindow', cfg).show();  //Modified: 7-18-2018  R.Blasa
         },
 
         getActionBtnMenu: function(rec){
@@ -186,14 +186,14 @@ Ext4.define('onprc_ehr.panel.ManageTreatmentsPanel', {
     getStore: function(){
         if (this.store)
             return this.store;
-
+        var xdate = (new Date()).format('Y-m-d');
         this.store = Ext4.create('LABKEY.ext4.data.Store', {
             schemaName: 'study',
             queryName: 'treatment_order',
-            columns: 'lsid,objectid,Id,date,enddate,project,category,remark,performedby,code,route,frequency,frequency/meaning,amountAndVolume,modifiedby/DisplayName,modified',
+            columns: 'lsid,objectid,Id,date,enddate,project,category,remark,performedby,code,route,frequency,frequency/meaning,amountAndVolume,modifiedby/DisplayName,modified,enddateTimeCoalesced',
             filterArray: [
                 LABKEY.Filter.create('Id', this.animalId, LABKEY.Filter.Types.EQUAL),
-                LABKEY.Filter.create('isExpired', false, LABKEY.Filter.Types.EQUAL)
+                LABKEY.Filter.create('enddateTimeCoalesced', xdate, LABKEY.Filter.Types.GTE)//Modified: 6-28-2018  R.Blasa
             ],
             autoLoad: true,
             listeners: {

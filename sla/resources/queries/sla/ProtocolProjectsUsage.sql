@@ -24,11 +24,22 @@ LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.al
 LEFT JOIN (select * from onprc_billing.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
 LEFT JOIN "/onprc/admin/finance/public".onprc_billing_public.aliases y ON y.alias = x.account
 LEFT JOIN (
-  SELECT i.protocol,species,gender,sum(animalsreceived) AS NumUsed
-  FROM sla.purchasedetails pd, sla.purchase p
-  LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project i ON p.project = i.project
-  WHERE p.objectid = pd.purchaseid AND animalsreceived IS NOT NULL
-  GROUP BY i.protocol,species,gender
+--   SELECT i.protocol,species,gender,sum(animalsreceived) AS NumUsed
+--   FROM sla.purchasedetails pd, sla.purchase p
+--   LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project i ON p.project = i.project
+--   WHERE p.objectid = pd.purchaseid AND animalsreceived IS NOT NULL
+--   GROUP BY i.protocol,species,gender
+--Changed by LK on 5/30 to get the accurate numused.
+   (SELECT i.protocol,pd.species,pd.gender,sum(animalsreceived) AS NumUsed
+   FROM sla.purchasedetails pd, sla.purchase p, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project i,
+   Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals aa1
+   Where p.project = i.project AND p.objectid = pd.purchaseid
+   AND aa1.protocol = i.protocol AND aa1.species = pd.species AND aa1.gender = pd.gender
+   AND animalsreceived IS NOT NULL
+   AND  (p.orderdate between aa1.StartDate AND aa1.EndDate) AND aa1.enddate > now()
+   --And i.project = 2167
+   GROUP BY i.protocol, pd.species, pd.gender)
+
 ) AS calc ON a.protocol = calc.protocol
         AND (aa.species = calc.species OR (aa.species IS NULL AND calc.species IS NULL))
         AND (aa.gender = calc.gender OR (aa.gender IS NULL AND calc.gender IS NULL))
@@ -39,7 +50,7 @@ WHERE
     (aa.StartDate IS NOT NULL AND aa.EndDate IS NULL AND now() > aa.StartDate) OR
     (aa.StartDate IS NULL AND aa.EndDate IS NOT NULL AND now() < aa.EndDate) OR
     (now() between aa.StartDate AND aa.EndDate)
-    --(x.StartDate IS NOT NULL AND x.EndDate IS NOT NULL AND now() between x.StartDate AND x.EndDate)
+    --(aa.StartDate IS NOT NULL AND aa.EndDate IS NOT NULL AND now() between aa.StartDate AND aa.EndDate)
   )
   -- and filtered based on dataAccess for the given user
   AND

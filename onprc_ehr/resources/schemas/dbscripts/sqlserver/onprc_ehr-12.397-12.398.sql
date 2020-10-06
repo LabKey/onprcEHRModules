@@ -1,0 +1,49 @@
+ /* Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 2/17/2018 Jones ga
+ * This script creates the ONPRC_EHR.animalGroups Dataset which is populated by the ETL Process
+ *
+ */
+CREATE TABLE [onprc_ehr].[PRIME_VIEW_ANIMAL_GROUPS](
+	[rowid] [int] IDENTITY(1,1) NOT NULL,
+	[Parent_Protocol] [varchar](255) NOT NULL,
+	[Group_ID] [varchar](255) NULL,
+	[Group_Name] [varchar](255) NULL,
+	[Species] [varchar](255) NULL,
+	[SPF_Status] [varchar](255) NULL,
+	[Weight_Start] [varchar](255) NULL,
+	[Weight_End] [varchar](255) NULL,
+	[Age_Start] [varchar](255) NULL,
+	[Age_End] [varchar](255) NULL,
+	[Gender] [varchar](255) NULL,
+	[Number_of_Animals_Max] [int] NULL,
+	[Non_Standard_Housing_Types] [nvarchar](max) NULL,
+	[Non_Standard_Housing_Description] [ntext] NULL,
+	[Non_Standard_Housing_Frequency_and_Duration] [ntext] NULL,
+	[Non_Standard_Housing_Monitoring] [ntext] NULL,
+	[createdby] [int] NULL,
+	[created] [datetime] NULL,
+	[modifiedby] [int] NULL,
+	[modified] [datetime] NULL,
+	[Restraint] [nvarchar](max) NULL,
+	[Nutritional_Manipulation_Description] [ntext] NULL,
+	[Nutritional_Manipulation_Adverse_Consequences] [nvarchar](255) NULL,
+	[Nutritional_Manipulation_Health_Assessment] [nchar](10) NULL,
+	[Non_Pharmaceutical_Grade_Drug_Use] [ntext] NULL,
+	[Food_Withheld] [int] NULL,
+	[Water_Withheld] [int] NULL,
+	[Food_Water_Withheld_Description] [ntext] NULL,
+	[Food_Water_Withheld_Justification] [ntext] NULL,
+	[Food_Water_Withheld_Adverse_Consequences] [ntext] NULL,
+	[Death_As_Endpoint_Number_of_Animals] [nvarchar](255) NULL,
+	[Death_As_Endpoint_Justification] [ntext] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]

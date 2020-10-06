@@ -106,7 +106,8 @@ WHERE t1.date is not null
 
 ) s ON (s.animalid = d.id)
 
-WHERE d.calculated_status = 'Alive'
+WHERE --d.calculated_status = 'Alive'
 
 --account for date/time in schedule
-and s.date >= s.startDate and s.date <= s.enddate
+--and
+s.date >= s.startDate and s.date <= s.enddate

@@ -138,7 +138,7 @@ EHR.DemographicsRecord = function(data){
         },
 
         getGeographicOrigin: function(){
-            return data['geographic_origin'];
+            return data['geneticAncestry'] ? data['geneticAncestry']  + ' (Verified)' : data['geographic_origin'];
         },
 
         getMostRecentWeight: function(){
@@ -187,14 +187,6 @@ EHR.DemographicsRecord = function(data){
         getMonthsSinceLastTB: function(){
             if (data['tb'] && data['tb'].length){
                 return data['tb'][0].MonthsSinceLastTB;
-            }
-        },
-
-        getLastTBDate: function(){
-            if (data['tb'] && data['tb'].length){
-                var date = data['tb'][0]['MostRecentTBDate'];
-                if (date)
-                    return LDK.ConvertUtils.parseDate(date);
             }
         },
 

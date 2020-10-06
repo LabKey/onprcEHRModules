@@ -1,0 +1,13 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Calls">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="enddate"/>
+        <column name="indian"/>
+        <column name="chinese"/>
+        <column name="result"/>
+    </columns>
+    <sorts>
+        <sort column="date" descending="true"/>
+    </sorts>
+</customView>

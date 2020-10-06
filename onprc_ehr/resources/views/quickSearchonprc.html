@@ -177,9 +177,13 @@
                             window.location = LABKEY.ActionURL.buildURL('ehr', 'projectDetails', ctx['EHRStudyContainer'], {project:value});
                         }
                     },{
-                        html: '<a href="' + (LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'ehr', 'query.queryName': 'project', 'query.viewName': 'Active Projects'})) + '">[View Active Projects]</a> <a href="' + (LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'ehr', 'query.queryName': 'project'})) + '">[View All Projects]</a>',
+                        html: '<a href="' + (LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'ehr', 'query.queryName': 'project', 'query.viewName': 'Active Projects'})) + '">[View Active Projects]</a>    ' +
+                        ' <a href="' + (LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'ehr', 'query.queryName': 'project'})) + '">[View  All Projects]</a> ' +
+                        ' <a href="' + (LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'onprc_billing_public', 'query.queryName': 'DCMCenterProjecttoAlias'})) + '" >[View Center Project To Alias]</a>',
                         colspan: 2
+
                     },{
+
                         html: 'IACUC Protocol:',
                         style: 'padding-top: 10px;',
                         colspan: 2

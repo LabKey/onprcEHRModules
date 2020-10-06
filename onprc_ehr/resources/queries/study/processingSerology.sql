@@ -65,7 +65,7 @@ SELECT
   END as isSRVCurrent,
   --all Jmacs and all non-SPF cynos
   CASE
-    WHEN (d.Id.age.ageInDays > 180 AND ((spf.Id IS NULL AND d.species = 'CYNOMOLGUS MACAQUE') OR d.species = 'JAPANESE MACAQUE')) THEN true
+    WHEN (d.Id.age.ageInDays > 180 AND ((spf.Id IS NULL AND (d.species = 'CYNOMOLGUS MACAQUE' OR d.species = 'RHESUS MACAQUE')) OR d.species = 'JAPANESE MACAQUE')) THEN true
     ELSE false
   END as isSRVRequired,
 

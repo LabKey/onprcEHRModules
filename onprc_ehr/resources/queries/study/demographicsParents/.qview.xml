@@ -5,6 +5,8 @@
         <column name="damType"/>
         <column name="sire"/>
         <column name="sireType"/>
+        <column name="fostermom"/>
+        <column name="fosterType"/>
         <column name="numParents"/>
     </columns>
     <sorts>

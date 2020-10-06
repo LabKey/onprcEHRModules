@@ -15,8 +15,10 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.json.JSONObject;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.List;
@@ -35,6 +37,14 @@ public class TissueDistFormSection extends SimpleGridPanel
         setXtype("onprc_ehr-dragdropgridpanel");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/CopyTissuesWindow.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/DragDropGridPanel.js"));
+    }
+//    Added: 6-26-2017  R.Blasa  Include tool bar at bottom grid
+    @Override
+    public JSONObject toJSON(DataEntryFormContext ctx, boolean includeFormElements)
+    {
+        JSONObject jsonObject = super.toJSON(ctx, includeFormElements);
+        jsonObject.put("topAndBottomButtons", true);
+        return jsonObject;
     }
 
     @Override

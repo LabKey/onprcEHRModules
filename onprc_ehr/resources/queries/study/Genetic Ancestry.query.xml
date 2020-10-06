@@ -1,0 +1,42 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Genetic Ancestry" tableDbType="TABLE">
+                <tableUrl />
+                <insertUrl />
+                <importUrl />
+                <updateUrl />
+                <deleteUrl />
+                <columns>
+                    <column columnName="Id">
+
+                    </column>
+                    <column columnName="date">
+                        <columnTitle>Date Added</columnTitle>
+                    </column>
+                    <column columnName="enddate">
+                        <columnTitle>Date Disabled</columnTitle>
+                    </column>
+                    <column columnName="chinese">
+
+                    </column>
+                    <column columnName="indian">
+
+                    </column>
+                    <column columnName="result">
+                        <columnTitle>Result</columnTitle>
+                        <nullable>false</nullable>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>geographic_origins</fkTable>
+                            <fkColumnName>meaning</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="project">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -42,6 +42,8 @@ import org.labkey.onprc_billing.button.ChargeEditButton;
 import org.labkey.onprc_billing.button.ProjectEditButton;
 import org.labkey.onprc_billing.dataentry.ChargesAdvancedFormType;
 import org.labkey.onprc_billing.dataentry.ChargesFormType;
+//import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
+import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
 import org.labkey.onprc_billing.dataentry.ReversalFormType;
 import org.labkey.onprc_billing.notification.BillingValidationNotification;
 import org.labkey.onprc_billing.notification.DCMFinanceNotification;
@@ -75,7 +77,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 12.372;
+        return 17.502;
     }
 
     @Override
@@ -116,6 +118,9 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesAdvancedFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ReversalFormType.class, this));
+
+        //Added: 5/6/2018 Kollil
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesVirologyCoreFormType.class, this));
 
         //NOTE: not really being used, so have disabled
         //Resource billingTriggers = getModuleResource("/scripts/onprc_billing/billing_triggers.js");

@@ -29,6 +29,7 @@ SELECT
   t.blood_per_kg,
   t.mostRecentWeight,
   t.mostRecentWeightDate,
+  t.AllowableBlood FromOriginalQUery,
   cast(t.allowableBlood as double) as maxAllowableBlood,
   cast(t.bloodPrevious as double) as bloodPrevious,
   cast((t.allowableBlood - t.bloodPrevious) as double) as allowablePrevious,
@@ -52,16 +53,20 @@ SELECT
   bd.id,
   bd.dateOnly as date,
   bd.quantity,
-  d.species,
-  d.id.mostRecentWeight.MostRecentWeight,
-  d.id.mostRecentWeight.MostRecentWeightDate,
+  b.species,
+  b.weight as MostRecentWeight,
+  b.MostRecentWeightDate,
+ /* d.id.mostRecentWeight.MostRecentWeight,
+  d.id.mostRecentWeight.MostRecentWeightDate,*/
   d.species.blood_per_kg,
   d.species.max_draw_pct,
   bd.blood_draw_interval,
   b.allowableBlood,
   bd.minDate,
   bd.maxDate,
-  COALESCE(
+  b.PreviousDraws as BloodPrevious,
+  b.FutureDraws as BloodFuture,
+ /* COALESCE(
     (SELECT SUM(coalesce(draws.quantity, 0)) AS _expr
     FROM study."Blood Draws" draws
     WHERE draws.id = bd.id
@@ -79,7 +84,7 @@ SELECT
       AND draws.dateOnly >= bd.dateOnly
       --NOTE: this has been changed to include penidng/non-approved draws
       AND draws.countsAgainstVolume = true
-  ), 0) AS BloodFuture
+  ), 0) AS BloodFuture*/
 
 FROM study.bloodDrawChanges bd
 JOIN study.DemographicsBloodSummary b on (b.id = bd.id)

@@ -61,4 +61,72 @@
             </ns:column>
         </ns:columns>
     </ns:table>
+    <ns:table tableName="taqman_probes" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Taqman Probes</ns:tableTitle>
+        <ns:pkColumnName>rowId</ns:pkColumnName>
+        <ns:columns>
+            <ns:column columnName="rowid">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="probe">
+
+            </ns:column>
+            <ns:column columnName="target">
+
+            </ns:column>
+            <ns:column columnName="container">
+                <ns:columnTitle>Folder</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="created">
+
+            </ns:column>
+            <ns:column columnName="createdby">
+
+            </ns:column>
+            <ns:column columnName="modified">
+
+            </ns:column>
+            <ns:column columnName="modifiedby">
+
+            </ns:column>
+        </ns:columns>
+    </ns:table>
+    <ns:table tableName="test_significance" tableDbType="TABLE">
+        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:tableTitle>Genetic Test Significance</ns:tableTitle>
+        <ns:pkColumnName>rowId</ns:pkColumnName>
+        <ns:columns>
+            <ns:column columnName="rowid">
+                <ns:columnTitle>Row Id</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="probe">
+
+            </ns:column>
+            <ns:column columnName="genotype">
+
+            </ns:column>
+            <ns:column columnName="label">
+
+            </ns:column>
+            <ns:column columnName="comment">
+
+            </ns:column>
+            <ns:column columnName="container">
+                <ns:columnTitle>Folder</ns:columnTitle>
+            </ns:column>
+            <ns:column columnName="created">
+
+            </ns:column>
+            <ns:column columnName="createdby">
+
+            </ns:column>
+            <ns:column columnName="modified">
+
+            </ns:column>
+            <ns:column columnName="modifiedby">
+
+            </ns:column>
+        </ns:columns>
+    </ns:table>
 </ns:tables>

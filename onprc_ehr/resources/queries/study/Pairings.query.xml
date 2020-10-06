@@ -9,19 +9,10 @@
                 <deleteUrl />
                 <columns>
                     <column columnName="Id">
-
-                    </column>
-                    <column columnName="date">
-
                     </column>
                     <column columnName="lowestcage">
                         <columnTitle>Pair Id</columnTitle>
                         <description>This is used to identify the lowest cage number of the pair.  It is used to determine which animals in the group are considered part of the pair.</description>
-                    </column>
-                    <column columnName="pairid">
-                        <columnTitle>Pair ID</columnTitle>
-                        <isHidden>true</isHidden>
-                        <description>This field is used to differentiate pairs.  By convention is should usually be the lowest cage number in the group; however, it does not need to match this</description>
                     </column>
                     <column columnName="room">
                         <columnTitle>Room</columnTitle>
@@ -29,14 +20,79 @@
                     <column columnName="cage">
                         <columnTitle>Cage</columnTitle>
                     </column>
+                    <column columnName="date">
+                        <columnTitle>Start Date</columnTitle>
+                    </column>
                     <column columnName="eventtype">
-                        <columnTitle>Event Type</columnTitle>
+                        <columnTitle>Start Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>PairingStartType</fkTable>
+                            <fkColumnName>value</fkColumnName>
+
+
+                        </fk>
+                    </column>
+                    <column columnName="remark">
+                        <columnTitle>Start Remark</columnTitle>
+                        <displayWidth>50</displayWidth>
+
+                    </column>
+                    <column columnName="goal">
+                        <columnTitle>Divider Goal</columnTitle>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>pairingEventType</fkTable>
+                            <fkTable>pairingGoal</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="outcome">
+                        <columnTitle>Divider Outcome</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingOutcome</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="enddate">
+                        <isHidden>false</isHidden>
+                        <columnTitle>End Date</columnTitle>
+                    </column>
+
+                    <column columnName="endeventType">
+                        <columnTitle>End Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>PairingEndType</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="separationreason">
+                        <columnTitle>Separation Reason</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingSeparationReason</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="observation">
+                        <columnTitle>Observation</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingObservation</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="remark2">
+                        <columnTitle>End Remark</columnTitle>
+                        <displayWidth>200</displayWidth>
+                    </column>
+
+
+
                     <column columnName="housingtype">
                         <isHidden>true</isHidden>
                         <columnTitle>Housing Type</columnTitle>
@@ -46,40 +102,10 @@
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
-                    <column columnName="goal">
-                        <columnTitle>Pair Goal</columnTitle>
-                        <fk>
-                            <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>pairingGoal</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                        </fk>
-                    </column>
-                    <column columnName="outcome">
-                        <columnTitle>Pair Outcome</columnTitle>
-                        <fk>
-                            <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>pairingOutcome</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                        </fk>
-                    </column>
-                    <column columnName="observation">
-                        <columnTitle>Observation</columnTitle>
-                        <fk>
-                            <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>pairingObservation</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                        </fk>
-                    </column>
-                    <column columnName="separationreason">
-                        <columnTitle>Separation Reason</columnTitle>
-                        <fk>
-                            <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>pairingSeparationReason</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                        </fk>
-                    </column>
-                    <column columnName="remark">
-                        <columnTitle>Remark</columnTitle>
+                    <column columnName="pairid">
+                        <columnTitle>Pair ID</columnTitle>
+                        <isHidden>true</isHidden>
+                        <description>This field is used to differentiate pairs.  By convention is should usually be the lowest cage number in the group; however, it does not need to match this</description>
                     </column>
                     <column columnName="performedby">
                         <columnTitle>Performed By</columnTitle>

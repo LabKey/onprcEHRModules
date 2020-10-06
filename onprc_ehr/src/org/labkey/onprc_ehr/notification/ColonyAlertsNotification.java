@@ -143,6 +143,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //misc
         demographicsWithoutGender(c, u, msg);
+        getGeographicOriginConflicts(c, u, msg);
 
         incompleteBirthRecords(c, u, msg);
         birthRecordsWithoutDemographics(c, u, msg);
@@ -603,6 +604,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("matchesDamStatus"), false, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("dam"), null, CompareType.NONBLANK);
 
+//        Added: 6-21-2017  R.Blasa
+        filter.addCondition(FieldKey.fromString("dam"), "", CompareType.NEQ);
+
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1 * duration);
         filter.addCondition(FieldKey.fromString("birth"), cal.getTime(), CompareType.DATE_GTE);
@@ -689,7 +693,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animals with multiple active cases of the same category.  One of the duplicates should be closed or set for review</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " animals with multiple active cases of the same category. One of the duplicates should be closed or set for review</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "duplicateCases", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -701,8 +705,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void recordsEnteredMoreThan7DaysAfter(final Container c, User u, final StringBuilder msg)
     {
         int offset = 7;
-
-
 
     }
 
@@ -961,6 +963,68 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     /**
+     * Kollil : Find the pregnant NHPs whose gestation time is past 30 days
+     */
+    protected void checkPregnantGestation(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("thirty_days_pastGestation_date"), new Date(), CompareType.DATE_LTE);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("pregnancyGestationOverdue"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " pregnant animals 30 days past the gestation period.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnancyGestationOverdue", null) + "&query.thirty_days_pastGestation_date~datelte="+ getDateTimeFormat(c).format(new Date()) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no pregnant animals 30 days past the gestation period.</b><br>\n");
+        }
+    }
+
+    /**
+     * Kollil, 5/12/2017 : Send DCM Notes notification on the action date
+     */
+    protected void dcmNotesAlert(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("actiondate"), new Date(), CompareType.DATE_EQUAL);
+        filter.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("notes"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " DCM action items.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.actiondate~dateeq="+ getDateTimeFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no DCM action items!</b><br>\n");
+        }
+    }
+
+    /**
+     * Kollil, 5/12/2017 : Send BSU Notes notification on the action date
+     */
+    protected void bsuNotesAlert(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("actiondate"), new Date(), CompareType.DATE_EQUAL);
+        filter.addCondition(FieldKey.fromString("category"), "BSU Notes", CompareType.EQUAL);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("notes"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " BSU action items.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.actiondate~dateeq="+ getDateTimeFormat(c).format(new Date()) + "&query.category~eq=BSU Notes'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no BSU action items!</b><br>\n");
+        }
+    }
+
+    /**
      * we find protocols over the animal limit
      */
     protected void protocolsOverLimit(final Container c, User u, final StringBuilder msg)
@@ -1006,6 +1070,24 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    //Added: 8-7-2018  R.Blasa
+    protected void ValidateBiirthHousingHistory(final Container c, User u, final StringBuilder msg)
+    {
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("BirthInitialHousingMismatch"), null, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " several Birth ids having mismatched initial locations</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BirthInitialHousingMismatch", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no Birth Initial Housing mismtached locations to report.</b><br>\n");
+        }
+    }
+
+
     protected void overlappingProtocolCounts(final Container c, User u, final StringBuilder msg)
     {
         TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("protocolGroupsOverlapping"));
@@ -1017,6 +1099,19 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + Math.max(totalProject, totalProtocol) + " IACUC Protocols or Center Projects that list allowable animal groups that overlap or conflict.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocolGroupsOverlapping", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void getGeographicOriginConflicts(final Container c, User u, final StringBuilder msg)
+    {
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("geographicOriginConflicts"));
+        long count = ts.getRowCount();
+
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " animals where the demographics table value for geographic origin conflicts with genetic ancestry.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "geographicOriginConflicts", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }

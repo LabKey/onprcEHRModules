@@ -115,6 +115,9 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
     togglePanel: function(locked){
         var btn = this.down('#lockBtn');
 
+        //btn.setText(locked ? 'Unlock Entry' : 'Lock Entry');
+        btn.setText(locked ? 'Exit data entry' : 'Enable the form for data entry');
+
         btn.locked = !locked;
 
         var up = this.dataEntryPanel.getUpperPanel();

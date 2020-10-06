@@ -60,7 +60,7 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
     @Override
     public String getDescription()
     {
-        return "This runs every day at 9AM, 1PM, 5PM  if there are treatments scheduled that have not yet been marked complete";
+        return "This runs every day at 9AM, 3PM   if there are treatments scheduled that have not yet been marked complete";
     }
 
     @Override
@@ -70,12 +70,12 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
     }
 
     @Override
-    public String getCronString() {return "0 0 9,13,17 * * ?";}
+    public String getCronString() {return "0 0 9,15 * * ?";}
 
     @Override
     public String getScheduleDescription()
     {
-        return "daily at 9AM,1PM, 5PM";
+        return "daily at 9AM,3PM";
     }
 
     @Override

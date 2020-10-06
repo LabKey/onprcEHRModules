@@ -2,7 +2,42 @@
     <properties>
         <propertyDescriptor name="ExtSchedulerUserGroupName">
             <description>The group name to be used for the set of users to display in the Scheduler app UserId combobox for creating new events.</description>
+            <showDescriptionInline>true</showDescriptionInline>
             <canSetPerContainer>true</canSetPerContainer>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
+        <propertyDescriptor name="ExtSchedulerEventPeriodLength">
+            <label>Event Period Length (minutes)</label>
+            <description>Length in minutes for event period when creating a new event.</description>
+            <showDescriptionInline>true</showDescriptionInline>
+            <canSetPerContainer>true</canSetPerContainer>
+            <defaultValue>30</defaultValue>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
+        <propertyDescriptor name="ExtSchedulerEventFormColumns">
+            <label>Event Form Columns</label>
+            <description>A comma separated list of column names to display for the EventForm.js file. Column Names(Name,ResourceId,UserId,Alias,Quantity,Comments,StartDate,EndDate)</description>
+            <showDescriptionInline>true</showDescriptionInline>
+            <canSetPerContainer>true</canSetPerContainer>
+            <defaultValue>Name,ResourceId,UserId,Alias,Quantity,Comments,StartDate,EndDate</defaultValue>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
+        <propertyDescriptor name="ExtSchedulerAllowEventOverlap">
+            <label>Event Overlap Allowed</label>
+            <description>Set as true to allow for calendar events to overlap for a given resource. Defaults to false when blank.</description>
+            <showDescriptionInline>true</showDescriptionInline>
+            <inputType>select</inputType>
+            <options>
+                <option display="true" value="true"/>
+            </options>
+            <canSetPerContainer>true</canSetPerContainer>
+            <defaultValue>false</defaultValue>
             <editPermissions>
                 <permission>ADMIN</permission>
             </editPermissions>

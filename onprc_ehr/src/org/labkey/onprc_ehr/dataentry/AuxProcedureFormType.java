@@ -70,7 +70,6 @@ public class AuxProcedureFormType extends TaskForm
     protected List<String> getButtonConfigs()
     {
         List<String> ret = super.getButtonConfigs();
-
         ret.add("APPLYFORMTEMPLATE");
 
         return ret;
@@ -80,7 +79,7 @@ public class AuxProcedureFormType extends TaskForm
     protected List<String> getMoreActionButtonConfigs()
     {
         List<String> defaultButtons = super.getMoreActionButtonConfigs();
-        defaultButtons.add("COPY_TASK");
+        defaultButtons.add("COPY_TASKS");
         defaultButtons.add("BULK_BLOOD_DRAW");
 
         return defaultButtons;

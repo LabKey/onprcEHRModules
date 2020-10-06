@@ -207,7 +207,7 @@ Ext4.define('SLA.form.SpeciesGrid', {
                 editor: {
                     // use the input field that validates input as text
                     xtype: 'datefield',
-                    minValue: new Date()
+                    //minValue: new Date()
                 }
             },
             {

@@ -1,11 +1,3 @@
-/*
- * Copyright (c) 2013 LabKey Corporation
- *
- * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
- */
-
--- NOTE: this query provides the raw data used in most of billing *Rates.sql queries.  The goal is to have a single implementation of the
--- process to assign rates and accounts to the raw charges.
 SELECT
   p.Id,
   p.date,
@@ -19,6 +11,7 @@ SELECT
   round(CAST(CASE
     --order of priority for unit cost:
     --if this row specifies a unit cost, like an adjustment, defer to that.  this is unique to miscCharges
+    --this occurs when the rate is a vairable rate or a reversal where an negative number is entered
     WHEN (p.unitCost IS NOT NULL) THEN p.unitCost
     --project-level exemption: pay this value
     WHEN (e.unitCost IS NOT NULL) THEN e.unitCost
@@ -30,12 +23,12 @@ SELECT
     WHEN (alias.category IS NOT NULL AND alias.category != 'OGA') THEN cr.unitCost
     --if we dont know the aliasType, we also dont know what do to
     WHEN (alias.aliasType.aliasType IS NULL) THEN null
-    --remove both subsidy and raise F&A if needed
-    WHEN (alias.aliasType.removeSubsidy = true AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN ((cr.unitCost / (1 - COALESCE(cr.subsidy, 0))) * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN (1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE) - alias.faRate)) ELSE 1 END))
+   --remove both subsidy and raise F&A if needed
+    WHEN (alias.aliasType.removeSubsidy = true AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN ((cr.unitCost / (1 - COALESCE(cr.subsidy, 0))) * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN ((1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE) / (1 + alias.faRate)))) ELSE 1 END))
     --remove subsidy only
     WHEN (alias.aliasType.removeSubsidy = true AND alias.aliasType.canRaiseFA = false) THEN (cr.unitCost / (1 - COALESCE(cr.subsidy, 0)))
-    --raise F&A only
-    WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN (1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE) - alias.faRate)) ELSE 1 END))
+    --raise F&A on  ly
+    WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN ((1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)))/(1+ alias.faRate)) ELSE 1 END))
     --the NIH rate
     ELSE cr.unitCost
   END AS DOUBLE), 2) as unitCost,

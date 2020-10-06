@@ -77,7 +77,7 @@ Ext4.define('onprc_ehr.buttons.ClinicalActionsButton', {
                     return;
                 }
 
-                Ext4.create('EHR.window.ManageCasesWindow', {
+                Ext4.create('ONPRC_EHR.window.ManageCasesWindow', {
                     animalId: animalId
                 }).show();
             }

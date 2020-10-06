@@ -852,6 +852,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     {
         appendLatestHxCol(ti);
         appendSurgeryCol(ti);
+        appendSurgeryFollupDaysyCol(ti);  //Added: 11/1/2017  R.Blasa
         appendCaseHistoryCol(ti);
 
         String problemCategories = "problemCategories";
@@ -1060,6 +1061,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn("qualifier") != null)
         {
             ti.getMutableColumn("qualifier").setHidden(true);
+        }
+
+        if (ti.getColumn("isActive") != null)
+        {
+            ti.removeColumn(ti.getColumn("isActive"));
+            EHRService.get().addIsActiveCol(ti, true, EHRService.EndingOption.endsToday, EHRService.EndingOption.activeAfterMidnightTonight);
         }
     }
 
@@ -1335,6 +1342,17 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         recentRemark.setDisplayWidth("200");
         ti.addColumn(recentRemark);
 
+        //don't use caseId.  CEg Plan info Added: 10-25-2017 R.Blasa
+        SQLFragment recentCeg_Plansql = new SQLFragment("(SELECT " + prefix + " (" + "r.CEG_Plan" + ") as _expr FROM " + realTable.getSelectName() +
+                " r WHERE "
+//                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.CEG_Plan IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc " + suffix + ")", ONPRC_EHRManager.REPLACED_SOAP);
+        ExprColumn recentCeg_plan = new ExprColumn(ti, "mostRecentCeg_Plan", recentCeg_Plansql, JdbcType.VARCHAR, objectId);
+        recentCeg_plan.setLabel("Most Recent Ceg Plan For Case");
+        recentCeg_plan.setDescription("This column will display the most recent CEG Plan that has been entered for the animal.");
+        recentCeg_plan.setDisplayWidth("200");
+        ti.addColumn(recentCeg_plan);
+
         //does not use caseId
         SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)").getSqlCharSequence() + " FROM " + realTable.getSelectName() +
                 " r WHERE "
@@ -1417,6 +1435,35 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ExprColumn procedureCol = new ExprColumn(ti, name, procedureSql, JdbcType.VARCHAR, ti.getColumn("date"));
         procedureCol.setLabel("Procedures Performed On Open Date");
         procedureCol.setDisplayWidth("300");
+        ti.addColumn(procedureCol);
+    }
+
+     //Added: 11-1-2017   R.Blasa
+    private void appendSurgeryFollupDaysyCol(AbstractTableInfo ti)
+    {
+        String name = "surgeryfollowupDays";
+        if (ti.getColumn(name) != null)
+            return;
+
+        TableInfo realTable = getRealTableForDataset(ti, "Clinical Encounters");
+        if (realTable == null)
+        {
+            _log.warn("Unable to find real table for clin encounters");
+            return;
+        }
+
+        //find any surgical procedures from the same date as this case
+        String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
+        SQLFragment procedureSql = new SQLFragment("(SELECT cast(max(p.followupDays) as varchar(2))" +
+                " FROM " + realTable.getSelectName() + " r " +
+                " JOIN ehr_lookups.procedures p ON (p.rowid = r.procedureid) " +
+                //r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND
+                " WHERE r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId " +
+                " AND CAST(r.date AS date) = CAST(" + ExprColumn.STR_TABLE_ALIAS + ".date as date) " +
+                " AND r.type = 'Surgery' )");
+        ExprColumn procedureCol = new ExprColumn(ti, name, procedureSql, JdbcType.VARCHAR, ti.getColumn("date"));
+        procedureCol.setLabel("Procedures Surgery Follow up Days");
+        procedureCol.setDisplayWidth("100");
         ti.addColumn(procedureCol);
     }
 

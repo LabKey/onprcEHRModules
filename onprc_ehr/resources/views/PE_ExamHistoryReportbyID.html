@@ -1,0 +1,63 @@
+<!--Created: 5-16-2018 R.Blasa-->
+
+<script type="text/javascript">
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        /* get the participant id from the request URL: this parameter is required. */
+        var subjectIds = LABKEY.ActionURL.getParameter('subjectIds');
+        subjectIds = subjectIds ? subjectIds.split(';') : [];
+
+        Ext4.create('Ext.panel.Panel', {
+            width: 400,
+            border: false,
+            defaults: {
+                labelWidth: 180
+            },
+            items: [{
+                html: 'This page provides a report based on a list of aninmal ids.<br><br>  Please enter one Id per row, or paste a list of monkey ids into the input box below.',
+                style: 'padding-bottom: 15px;'
+            },{
+
+                style: 'padding-bottom: 20px;',
+                xtype: 'textarea',
+                width: 400,
+                height: 200,
+                fieldLabel: 'Enter Animal Id(s)',
+                itemId: 'animalField'
+
+            }],
+            buttons: [{
+                text: 'Submit',
+                scope: this,
+                handler: function(btn) {
+                    var val = btn.up('panel').down('#animalField').getValue();
+
+
+                    if (val) {
+                        val = Ext4.String.trim(val);
+                        val = val.replace(/[\s,;]+/g, ';');
+
+                    }
+
+                    if (!val) {
+                        Ext4.Msg.alert('Error', 'Must enter at least one animal Id');
+                        return;
+                    }
+
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'demographicsPE'
+                    };
+
+                    params['query.Id~in'] = val
+                    window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+
+                }
+            }]
+        }).render(webpart.wrapperDivId);
+    });
+</script>

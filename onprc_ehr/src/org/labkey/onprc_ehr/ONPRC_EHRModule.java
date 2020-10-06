@@ -77,7 +77,9 @@ import org.labkey.onprc_ehr.history.DefaultAnimalGroupsEndDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalRecordFlagDataSource;
 import org.labkey.onprc_ehr.history.DefaultNHPTrainingDataSource;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
+import org.labkey.onprc_ehr.history.ONPRCClinicalRemarksDataSource;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
+import org.labkey.onprc_ehr.history.ONPRCiStatLabworkType;
 import org.labkey.onprc_ehr.notification.*;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
@@ -92,9 +94,9 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * User: bbimber
- * Date: 5/16/12
- * Time: 1:52 P
+ * User: jonesga
+ * Date: 6/26/2018
+ * Change of ONPRC Module Number
  */
 public class ONPRC_EHRModule extends ExtendedSimpleModule
 {
@@ -110,7 +112,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 18.10;
+        return 17.705;
     }
 
     @Override
@@ -158,6 +160,20 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added 3-8-2017 Blasa
         ns.registerNotification(new ObeseFlagNotification(this));
 
+        //Added 4-25-2017 R.Blasa
+        ns.registerNotification(new InfantsBornAssignedNotification(this));
+
+        //Added April, 2017 Kollil
+        ns.registerNotification(new PregnantNHPsGestationAlert(this));
+
+        //Added May 12th, 2017 Kollil
+        ns.registerNotification(new DCMNotesNotification(this));
+
+        //Added May 12th, 2017 Kollil
+        ns.registerNotification(new BSUNotesNotification(this));
+
+        //Added 8-7-2018 R.Blasa
+        ns.registerNotification(new BirthHousingMismatchNotification(this));
 
         ns.registerNotification(new RequestAdminNotification(this));
         ns.registerNotification(new ColonyAlertsLiteNotification(this));
@@ -210,6 +226,28 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/NarrowSnapshotPanel.js"), this);
 
 
+
+        //Added: 10-25-2017  R.Blasa  References new Xtype
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/CEG_PlantextArea.js"), this);
+
+        //Added: 7-7-2017  R.Blasa
+//        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/HousingReason.js"), this);
+
+        //Added: 1-19-2018  R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/AnimalGroupFieldsCombo.js"), this);
+
+//        //Added: 10-5-2018  R.Blasa   //needed for displaying wound subcategory
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/ManageCasesPanel.js"), this);
+
+        //        //Added: 10-8-2018  R.Blasa   //needed for displaying wound subcategory
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/window/ManageCasesWindow.js"), this);
+
+
+        //Added: 7-18-2018  R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/window/ManageRecordWindow.js"), this);
+
+
+
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Commonly Used Queries");
 
@@ -247,6 +285,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added 1-30-2017  R.Blasa
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Snapshot Printable Report", this, DetailsURL.fromString("/onprc_ehr/SnapshotPrintableReport.view"), "Clinical");
 
+        //Added 5-16-2018  R.Blasa
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam by ID(s)", this, DetailsURL.fromString("/onprc_ehr/PE_ExamHistoryReportbyID.view"), "Routine Clinical Tasks");
+
         //Added 5-11-2015 New report for Lois Colgin
         try
         {
@@ -259,6 +300,24 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
                     return "http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fPrimeLaboratory+Report&rs:Command=Render";
                 }
             }, "Clinical Pathology");
+        }
+        catch (URISyntaxException e)
+        {
+            throw new UnexpectedException(e);
+        }
+
+        //Added 6-21-2017 R.Blasa
+        try
+        {
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Basic Exposure Report", this, new URLHelper("http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fExposure+Report%2fBasicExposureMain&rs:Command=Render")
+            {
+                // SSRS is picky about the URI-encoding of the query parameters
+                @Override
+                public String toString()
+                {
+                    return "http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fExposure+Report%2fBasicExposureMain&rs:Command=Render";
+                }
+            }, "Exposure Report");
         }
         catch (URISyntaxException e)
         {
@@ -294,8 +353,18 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Mense Data With Cycle Date", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=menseData"), "Reproductive Management");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummary"), "Pathology");
+      //       Added: 1-2-2018  R.Blasa
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary(Calendar Year)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=TissueDistributionSummaryCalendarYr"), "Pathology");
+
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "SNOMED Search", this, DetailsURL.fromString("/onprc_ehr/snomedSearch.view"), "Pathology");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary, By Recipient", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummaryByRecipient"), "Pathology");
+
+//        Added 1-2-2018  R.Blasa
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary, By Recipient(Calendar Year)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummaryByRecipientCalendarYr"), "Pathology");
+
+         //Added: 12-7-2017   R.Blasa
+     //   EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Animal Census on a Given Date Range", this, DetailsURL.fromString("/onprc_ehr/CensusGivenDateRange.view"), "Colony Management");
+
 
         EHRService.get().registerActionOverride("projectDetails", this, "views/projectDetails.html");
         EHRService.get().registerActionOverride("protocolDetails", this, "views/protocolDetails.html");
@@ -305,6 +374,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerActionOverride("animalSearch", this, "views/animalSearch.html");
         EHRService.get().registerActionOverride("animalHistory", this, "views/animalHistory.html");
         EHRService.get().registerActionOverride("serviceRequests", this, "views/serviceRequests.html");
+
+        //Added: 10-2-2017  R.Blasa displays onperc version of enterData.view
+        EHRService.get().registerActionOverride("enterData", this, "views/enterData.html");
 
         //data entry
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(WeightFormType.class, this));
@@ -341,6 +413,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(MatingFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PregnancyConfirmationFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ParentageFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(GeneticAncestryFormType.class, this));
 
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ONPRCBloodDrawFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(AuxProcedureFormType.class, this));
@@ -355,10 +428,19 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(DrugRequestBulkEditFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestBulkEditFormType.class, this));
 
+
+//        Added: 11-21-2017  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ProcedureRequestBulkEditFormType.class, this));
+
+
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(RecordAmendmentFormType.class, this));
 
         //Added: 10-19-2016 R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NHPTrainingFormType.class, this));
+
+        //Added: 4-5-2017 R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NHPRProcessingFormType.class, this));
+
 
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
@@ -369,6 +451,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerDemographicsProvider(new CagematesDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new HousingDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new ParentsDemographicsProvider(this));
+        EHRService.get().registerDemographicsProvider(new GeneticAncestryDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new SourceDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new ActiveFlagsDemographicsProvider(this));
         EHRService.get().registerDemographicsProvider(new TBDemographicsProvider(this));
@@ -378,6 +461,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Created: 1-20-2017 R.Blasa
         EHRService.get().registerDemographicsProvider(new PregnancyConfirmDemographicsProvider(this));
 
+        //Added: 3-27-2017  R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/EnterDataPanel.js"), this);
 
         //Created: 2-21-2017 R.Blasa
         EHRService.get().registerDemographicsProvider(new CagemateInfantDemographicsProvider(this));
@@ -386,6 +471,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Created: 3-10-2017 R.Blasa
         EHRService.get().registerDemographicsProvider(new FosterChildDemographicsProvider(this));
+
+
+        //Created: 4-7-2015-10-2017 R.Blasa
+        EHRService.get().registerDemographicsProvider(new ActiveTreatmentsXDemographicsProvider(this));
 
         //buttons
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "my_tasks");
@@ -420,6 +509,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Labwork", LabworkFormType.NAME), "study", "clinpathRuns");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Surgeries", SurgeryFormType.NAME), "study", "surgery");
 
+
+        //Added: 7-29-2017  R.Blasa
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Procedures", AuxProcedureFormType.NAME), "study", "encounters");
+
+
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "blood");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singletonList(ClientDependency.supplierFromPath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "clinpathRuns");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "onprc_ehr", "housing_transfer_requests");
@@ -446,14 +540,22 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "tissue_samples");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "organ_weights");
 
-        EHRService.get().registerOptionalClinicalHistoryResources(this);
+//       Added: 10-9-2017  R.Blasa
+       EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, ProcedureRequestBulkEditFormType.NAME), "study", "encounters");
+
         EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource(this));
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource(this));
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsEndDataSource(this));
         //R.Blasa   3-4-2015
         EHRService.get().registerHistoryDataSource(new DefaultAnimalRecordFlagDataSource(this));
+        //R.Blasa   1-23-2015
+        EHRService.get().registerHistoryDataSource(new org.labkey.api.ehr.history.DefaultAnimalRecordFlagDataSource(this));
+        EHRService.get().registerHistoryDataSource(new ONPRCClinicalRemarksDataSource(this));
+
+        EHRService.get().registerOptionalClinicalHistoryResources(this);
 
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
+        EHRService.get().registerLabworkType(new ONPRCiStatLabworkType(this));
         //R.Blasa   11-28-2016
         EHRService.get().registerHistoryDataSource(new DefaultNHPTrainingDataSource(this));
 

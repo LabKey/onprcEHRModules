@@ -17,10 +17,12 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
+import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.UnsaveableTask;
 import org.labkey.api.module.Module;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
 
@@ -40,5 +42,15 @@ public class ParentageFormType extends UnsaveableTask
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "parentage", "Parentage")
         ));
+
+        //Added 12-27-2017 R.Blasa
+        for (FormSection s : this.getFormSections())
+        {
+            s.addConfigSource("ParentageProperty");
+        }
+
+
+        //Added 5-26-2016 R.Blasa
+        addClientDependency(ClientDependency.fromPath("/onprc_ehr/model/sources/Parentage_Properties.js"));
     }
 }

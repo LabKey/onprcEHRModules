@@ -15,7 +15,6 @@
  */
 package org.labkey.onprc_ehr.query;
 
-import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +24,6 @@ import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
-import org.labkey.api.data.ConvertHelper;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
@@ -123,6 +121,8 @@ public class ONPRC_EHRTriggerHelper
 
     private static final String NONRESTRICTED = "Nonrestricted";
     private static final String EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, EXPERIMENTAL";
+    private static final String NON_EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, NONEXPERIMENTAL";
+    private static final String SPONTANEOUS_DEATH = "Spontaneous Death";
 
 
     public ONPRC_EHRTriggerHelper(int userId, String containerId)
@@ -201,24 +201,24 @@ public class ONPRC_EHRTriggerHelper
             Object current = row.get(field);
             if (current instanceof Number)
             {
-                current = ((Number)current).doubleValue();
+                current = ((Number) current).doubleValue();
             }
             else if (current instanceof String)
             {
-                current = StringUtils.trimToNull((String)current);
+                current = StringUtils.trimToNull((String) current);
             }
 
             Object old = oldRow.get(field);
             if (old instanceof Number)
             {
-                old = ((Number)old).doubleValue();
+                old = ((Number) old).doubleValue();
             }
             else if (old instanceof String)
             {
-                old = StringUtils.trimToNull((String)old);
+                old = StringUtils.trimToNull((String) old);
             }
 
-            if ((current == null && old != null ) || (current != null && old != null && !current.equals(old)))
+            if ((current == null && old != null) || (current != null && old != null && !current.equals(old)))
             {
                 _log.info("change: " + field);
                 hasChanged = true;
@@ -232,8 +232,8 @@ public class ONPRC_EHRTriggerHelper
             //    hasChanged = true;
             //}
         }
-
-        if (hasChanged && hasTreatmentBeenGiven((Date)oldRow.get("date"), (Integer)oldRow.get("frequency")) && !hasTerminated((Date)oldRow.get("enddate")))
+//    Modified: 7-13-2017  R.Blasa
+        if (hasChanged && hasTreatmentBeenGiven((Date) oldRow.get("date"), (Integer) oldRow.get("frequency")) && !hasTerminated((Date) oldRow.get("enddate")))
         {
             return createUpdatedTreatmentRow(row, oldRow);
         }
@@ -267,33 +267,19 @@ public class ONPRC_EHRTriggerHelper
 
     private boolean hasTreatmentBeenGiven(Date startDate, Integer frequency)
     {
-        if (frequency == null)
-        {
-            return false;
-        }
+
 
         Date earliestDose = null;
-
-        List<Integer> hours = getEarliestFrequencyHours(frequency);
-        if (hours != null)
+        Boolean results =false;
+        Date curDate = new Date();
+        earliestDose = startDate;
+        if (earliestDose.before(new Date()))
         {
-            for (Integer hour : hours)
-            {
-                Calendar timeToTest = Calendar.getInstance();
-                timeToTest.setTime(startDate);
-                timeToTest.set(Calendar.HOUR_OF_DAY, (int) Math.floor(hour / 100));
-                timeToTest.set(Calendar.MINUTE, hour % 100);
-
-                if (timeToTest.getTime().getTime() >= startDate.getTime())
-                {
-                    earliestDose = timeToTest.getTime();
-                    break;
-                }
-            }
+            results = true;
         }
-
+        return results;
         // return true if the earliest expected dose is before now
-        return earliestDose == null ? false : earliestDose.before(new Date());
+//        return earliestDose == null ? false : earliestDose.before(new Date());
     }
 
     public Date createUpdatedTreatmentRow(Map<String, Object> row, Map<String, Object> oldRow) throws Exception
@@ -303,7 +289,7 @@ public class ONPRC_EHRTriggerHelper
         toCreate.putAll(oldRow);
         toCreate.remove("lsid");
 
-        String originalObjectId = (String)toCreate.get("objectid");
+        String originalObjectId = (String) toCreate.get("objectid");
         assert originalObjectId != null;
 
         String newObjectId = new GUID().toString();
@@ -338,7 +324,7 @@ public class ONPRC_EHRTriggerHelper
             DbSchema dbSchema;
             if (targetTable instanceof DatasetTable)
             {
-                Domain domain = targetTable.getDomain();
+                Domain domain = ((FilteredTable) targetTable).getDomain();
                 if (domain != null)
                 {
                     realTable = StorageProvisioner.createTableInfo(domain);
@@ -732,9 +718,9 @@ public class ONPRC_EHRTriggerHelper
 
         for (Map<String, Object> row : housingRecords)
         {
-            String rowRoom = (String)row.get("room");
-            String rowCage = (String)row.get("cage");
-            String id = (String)row.get("Id");
+            String rowRoom = (String) row.get("room");
+            String rowCage = (String) row.get("cage");
+            String id = (String) row.get("Id");
 
             if (row.get("enddate") == null)
             {
@@ -875,9 +861,9 @@ public class ONPRC_EHRTriggerHelper
         {
             if (requirementset == null || requirementset.equals(row.get("requirementset")))
             {
-                if (weight >= (Double)row.get("low") && weight < (Double)row.get("high"))
+                if (weight >= (Double) row.get("low") && weight < (Double) row.get("high"))
                 {
-                    return (Double)row.get("sqft");
+                    return (Double) row.get("sqft");
                 }
             }
         }
@@ -891,9 +877,9 @@ public class ONPRC_EHRTriggerHelper
         {
             if (requirementset == null || requirementset.equals(row.get("requirementset")))
             {
-                if (weight >= (Double)row.get("low") && weight < (Double)row.get("high"))
+                if (weight >= (Double) row.get("low") && weight < (Double) row.get("high"))
                 {
-                    return (Double)row.get("height");
+                    return (Double) row.get("height");
                 }
             }
         }
@@ -907,7 +893,7 @@ public class ONPRC_EHRTriggerHelper
         if (roomRec == null)
             return null;
 
-        return (Integer)roomRec.get("housingTypeInt");
+        return (Integer) roomRec.get("housingTypeInt");
     }
 
     public Integer getHousingCondition(String room)
@@ -916,7 +902,7 @@ public class ONPRC_EHRTriggerHelper
         if (roomRec == null)
             return null;
 
-        return (Integer)roomRec.get("housingConditionInt");
+        return (Integer) roomRec.get("housingConditionInt");
     }
 
     private List<Map<String, Object>> getCageSizeRecords()
@@ -1016,7 +1002,8 @@ public class ONPRC_EHRTriggerHelper
     }
 
     // Taken from DateUtils.  should remove if we upgrade core
-    private Date maxDate(Date d1, Date d2) {
+    private Date maxDate(Date d1, Date d2)
+    {
         if (d1 == null && d2 == null) return null;
         if (d1 == null) return d2;
         if (d2 == null) return d1;
@@ -1046,12 +1033,12 @@ public class ONPRC_EHRTriggerHelper
                     row.put("enddate", deathDate);
 
 
+                    //Modified: 6-8-2018 R.Blasa     All experimetal and Euthenized  cause of death are automitaclly assigned 206 at  release
+                    if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) || NON_EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) ||  SPONTANEOUS_DEATH.equals(causeOfDeath) )
 
-                    //Modified: 6-28-2016 R.Blasa     All experimetal and Euthenized  cause of death are automitaclly assigned 206 at  release
-                    if (EXPERIMENTAL_EUTHANASIA.equals(causeOfDeath) )
                     {
 
-                            row.put("releaseCondition", 206);
+                        row.put("releaseCondition", 206);
 
                     }
 
@@ -1097,11 +1084,102 @@ public class ONPRC_EHRTriggerHelper
         return demographicsProps;
     }
 
-    //Modified: 10-13-2016 R.Blasa  to include passign Arrival date
-    public void doBirthTriggers(String id, Date date, String dam, Date flagStartDate, String birthCondition, boolean isBecomingPublic) throws Exception
+    //Added on 10/5/2016, L.Kolli
+    public void onAnimalArrival_AddBirth(String id, Map<String, Object> row) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
+    {
+        if (row.get("birth") != null)
+        {
+            Map<String, Object> birthProps = new HashMap<>();
+            for (String key : new String[]{"Id", "dam", "sire"})
+            {
+                if (row.containsKey(key))
+                {
+                    birthProps.put(key, row.get(key));
+                }
+            }
+            birthProps.put("date", row.get("birth"));
+            birthProps.put("gender", row.get("gender"));
+            birthProps.put("species", row.get("species"));
+            birthProps.put("geographic_origin", row.get("geographic_origin"));
+
+            //Added: 10-14-2016 R.Blasa
+            birthProps.put("Arrival_Date", row.get("date"));
+
+            createBirthRecord_ONPRC(id, birthProps);
+        }
+    }
+
+    //Added on 09/30/2016, L.Kolli
+    public void createBirthRecord_ONPRC(String id, Map<String, Object> props) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
+    {
+        if (id == null) ///If AId is null, return
+            return;
+
+        //Check if the AId exists in the Birth table
+        TableInfo ti1 = getTableInfo("study", "birth");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
+
+        TableSelector ts = new TableSelector(ti1, filter, null);
+        if (ts.exists())
+        {
+            //Birth record found. Don't make duplicate entry
+            return;
+        }
+        else //Enter newly entered AnimalID into Birth table
+        {
+            TableInfo ti = getTableInfo("study", "birth");
+            Map<String, Object> row = new CaseInsensitiveHashMap<>();
+            row.putAll(props);
+            if (!row.containsKey("objectid"))
+            {
+                row.put("objectid", new GUID().toString());
+            }
+
+            List<Map<String, Object>> rows = new ArrayList<>();
+            rows.add(row);
+            BatchValidationException errors = new BatchValidationException();
+            ti.getUpdateService().insertRows(getUser(), getContainer(), rows, errors, null, getExtraContext());
+
+            if (errors.hasErrors())
+                throw errors;
+        }
+
+    }
+    //    Added: 6-27-2017  F.Blasa  Process when transitioning from Prenatal - Fetus to Live
+    public void doBirthConditionAfterPrenatal(String id, Date date, String dam, Date Arrival_Date, String birthCondition, boolean isBecomingPublic) throws Exception
     {
         //is the infant is dead, terminate the assignments
         Date enddate = isBirthAlive(birthCondition) ? null : date;
+
+        String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
+        if (nonRestrictedFlag != null)
+        {
+            //Modified: 10-14-2016 R.Blasa
+            Date Arrival_date = null;
+            if (Arrival_Date != null)
+            {
+                Arrival_date = Arrival_Date;
+
+            }
+            else
+            {
+                Arrival_date = date;
+            }
+            //only add initial status if born alive
+            EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, Arrival_date, enddate, null, Collections.singletonList(id), false);
+        }
+        else
+        {
+            _log.warn("Unable to find active flag for condition nonrestricted");
+        }
+    }
+
+    //Modified: 10-13-2016 R.Blasa  to include assign Arrival date
+    public void doBirthTriggers(String id, Date date, String dam, Date Arrival_Date, String birthCondition, String species, boolean isBecomingPublic) throws Exception
+    {
+        //is the infant is dead, terminate the assignments
+        Date enddate = isBirthAlive(birthCondition) ? null : date;
+
 
         //also check for a pre-existing death record:
         Date deathDate = new TableSelector(getTableInfo("study", "deaths"), Collections.singleton("date"), new SimpleFilter(FieldKey.fromString("Id"), id), null).getObject(Date.class);
@@ -1116,18 +1194,60 @@ public class ONPRC_EHRTriggerHelper
             String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
             if (nonRestrictedFlag != null)
             {
-                if (flagStartDate == null)
+                //Modified: 10-14-2016 R.Blasa
+                Date Arrival_date = null;
+                if (Arrival_Date != null)
                 {
-                    flagStartDate = date;
+                    Arrival_date = Arrival_Date;
+
+                }
+                else
+                {
+                    Arrival_date = date;
                 }
 
+
                 //only add initial status if born alive
-                EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, flagStartDate, enddate, null, Collections.singletonList(id), false);
+                EHRService.get().ensureFlagActive(getUser(), getContainer(), nonRestrictedFlag, Arrival_date, enddate, null, Collections.singletonList(id), false);
             }
             else
             {
                 _log.warn("Unable to find active flag for condition nonrestricted");
             }
+
+
+        }
+//        Added: 10-27-2017   R.Blasa  Create an SPR4 entries for Rhesus macaques
+
+        if ("Live Birth".equalsIgnoreCase(birthCondition) && "RHESUS MACAQUE".equalsIgnoreCase(species)  )
+
+            {
+
+             String SPFFlag = getFlag("SPF", "SPF 4", null, true);
+
+            TableInfo flagsSP4 = getTableInfo("study", "flags");
+            SimpleFilter flagFilter = new SimpleFilter(FieldKey.fromString("Id"), id);
+
+            //Note: Validate if SPF 4 is active
+            flagFilter.addCondition(FieldKey.fromString("flag/value"), "SPF 4");
+            flagFilter.addClause(new SimpleFilter.OrClause(
+                    new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, date),
+                    new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)
+            ));
+
+
+            TableSelector existingSP4 = new TableSelector(flagsSP4, Collections.singleton("flag"), flagFilter, null);
+                if (existingSP4.exists())
+                {
+                    _log.info("SP4 Flag active record exist for this monkey id: " + id + "Value") ;
+                }
+                else
+                {
+                    _log.info("adding SP4 Animal : " + id + "Value");
+
+                    EHRService.get().ensureFlagActive(getUser(), getContainer(), SPFFlag, date, enddate, null, Collections.singletonList(id), false);
+
+                }
         }
 
         //NOTE: we allow this to run the first time this record is public with a non-null dam.  this allows the record to be created without dam, then updated
@@ -1210,7 +1330,8 @@ public class ONPRC_EHRTriggerHelper
                     new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, date),
                     new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)
             ));
-            assignmentFilter.addCondition(FieldKey.fromString("project/displayName"), PageFlowUtil.set(ONPRC_EHRManager.U42_PROJECT, ONPRC_EHRManager.U24_PROJECT), CompareType.IN);
+//            Modified:5-12-2017 Added Japanese Macaque Assignments
+            assignmentFilter.addCondition(FieldKey.fromString("project/displayName"), PageFlowUtil.set(ONPRC_EHRManager.U42_PROJECT, ONPRC_EHRManager.U24_PROJECT, ONPRC_EHRManager.JMAC_PROJECT), CompareType.IN);
 
             TableSelector ts3 = new TableSelector(assignment, Collections.singleton("project"), assignmentFilter, null);
             List<Integer> assignmentList = ts3.getArrayList(Integer.class);
@@ -1301,7 +1422,7 @@ public class ONPRC_EHRTriggerHelper
         List<Integer> foundCodes = findHigherActiveConditonCodes(id, date, condition);
         if (!foundCodes.isEmpty())
         {
-            return "Animal already has a higher condition code (" + (StringUtils.join(foundCodes, ","))+ "), cannot choose a lower code unless the existing code is removed or disabled";
+            return "Animal already has a higher condition code (" + (StringUtils.join(foundCodes, ",")) + "), cannot choose a lower code unless the existing code is removed or disabled";
         }
 
         return null;
@@ -1389,8 +1510,8 @@ public class ONPRC_EHRTriggerHelper
                 {
                     for (Map<String, Object> r : recordsInTransaction)
                     {
-                        String id = (String)r.get("Id");
-                        Number project = (Number)r.get("project");
+                        String id = (String) r.get("Id");
+                        Number project = (Number) r.get("project");
                         if (id == null || project == null)
                         {
                             continue;
@@ -1600,7 +1721,7 @@ public class ONPRC_EHRTriggerHelper
         }
 
         //first gather all animals currently housed, by cage
-        //Map<String, Set<String>> animalMap = getAnimalLocationsAfterMove(room, rowsInTransaction);
+        Map<String, Set<String>> animalMap = getAnimalLocationsAfterMove(room, rowsInTransaction);
         Set<String> errors = new HashSet<>();
 
         //also build list of existing dividers and changes
@@ -1747,35 +1868,25 @@ public class ONPRC_EHRTriggerHelper
         return _nextProtocolId;
     }
 
-    public boolean requiresAssistingStaff(Object procedureText)
+    public boolean requiresAssistingStaff(Integer procedureId)
     {
-        if (procedureText == null)
+        if (procedureId == null)
         {
             return false;
         }
 
-        try
+        if (!_cachedProcedureCategories.containsKey(procedureId))
         {
-            Integer procedureId = ConvertHelper.convert(procedureText, Integer.class);
-            if (!_cachedProcedureCategories.containsKey(procedureId))
-            {
-                TableInfo ti = getTableInfo("ehr_lookups", "procedures");
-                TableSelector ts = new TableSelector(ti, PageFlowUtil.set("category"), new SimpleFilter(FieldKey.fromString("rowid"), procedureId), null);
-                String category = ts.getObject(String.class);
+            TableInfo ti = getTableInfo("ehr_lookups", "procedures");
+            TableSelector ts = new TableSelector(ti, PageFlowUtil.set("category"), new SimpleFilter(FieldKey.fromString("rowid"), procedureId), null);
+            String category = ts.getObject(String.class);
 
-                _cachedProcedureCategories.put(procedureId, category);
-            }
-
-            String category = _cachedProcedureCategories.get(procedureId);
-
-            return "Surgery".equals(category);
-        }
-        catch (ConversionException e)
-        {
-            _log.warn("unable to convert procedureId to integer: [" + procedureText + "]", new Exception());
+            _cachedProcedureCategories.put(procedureId, category);
         }
 
-        return false;
+        String category = _cachedProcedureCategories.get(procedureId);
+
+        return "Surgery".equals(category);
     }
 
     public String getSpeciesForDam(String dam)
@@ -1821,22 +1932,24 @@ public class ONPRC_EHRTriggerHelper
 
     private Map<String, Set<String>> _cachedObservations = new HashMap<>();
 
-    private @NotNull Set<String> getAllowableObservations(String category)
+    private
+    @NotNull
+    Set<String> getAllowableObservations(String category)
     {
         if (!_cachedObservations.containsKey(category))
         {
             TableInfo ti = getTableInfo("ehr", "observation_types");
             TableSelector ts = new TableSelector(ti, PageFlowUtil.set("schemaName", "queryName", "valuecolumn"), new SimpleFilter(FieldKey.fromString("value"), category), null);
-            Map<String, Object> record = ts.getMap();
+            Map<String, Object> record = ts.getObject(Map.class);
 
             Set<String> allowable;
             if (record != null && record.get("schemaname") != null && record.get("queryname") != null && record.get("valuecolumn") != null)
             {
-                TableInfo valuesTable = getTableInfo((String)record.get("schemaname"), (String)record.get("queryname"));
+                TableInfo valuesTable = getTableInfo((String) record.get("schemaname"), (String) record.get("queryname"));
                 if (valuesTable != null)
                 {
                     allowable = new CaseInsensitiveHashSet();
-                    TableSelector ts2 = new TableSelector(valuesTable, PageFlowUtil.set((String)record.get("valuecolumn")), null, null);
+                    TableSelector ts2 = new TableSelector(valuesTable, PageFlowUtil.set((String) record.get("valuecolumn")), null, null);
                     allowable.addAll(ts2.getArrayList(String.class));
                 }
                 else
@@ -1964,7 +2077,6 @@ public class ONPRC_EHRTriggerHelper
     }
 
 
-
     //Added 9-2-2015 Blasa
     public void sendCullListNotifications(String id, String date, String flag)
     {
@@ -2071,31 +2183,30 @@ public class ONPRC_EHRTriggerHelper
             html.append("<tr style='font-weight: bold;'><td>Iacuc Protocol</td><td> Investigator</td><td>  Iacuc Approval Date</td></tr>\n");
 
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
-               {
-
-                   @Override
-                   public void exec(ResultSet rs) throws SQLException
-                   {
-
-                       //Translate Investigator id to its true name
-                       TableInfo ti2 = getTableInfo("onprc_ehr", "investigators");
-                       SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("rowid"), rs.getString("investigatorId"));
-                       filter2.addCondition(FieldKey.fromString("datedisabled"), true, CompareType.ISBLANK);
-
-                       TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("lastname"), filter2, null);
-                       List<String> ret2 = ts2.getArrayList(String.class);
-                       if (ret2 != null && !ret2.isEmpty())
                        {
-                           for (String Investname : ret2)
-                           {
-                               //html.append("<tr><td>" + (rs.getString("external_id") == null ? "" : rs.getString("external_id")) + "</td><td>" + Investname + "</td><td>" + rs.getString("approve") + "</td></tr>\n");
-                               html.append("<tr><td>" + (rs.getString("external_id") == null ? "" : rs.getString("external_id")) + "</td><td>  " + Investname + "   </td><td>" + rs.getString("approve") + "</td></tr>\n");
-                               break;
-                           }
-                       }
-                   }
 
-               }
+                           @Override
+                           public void exec(ResultSet rs) throws SQLException
+                           {
+
+                               //Translate Investigator id to its true name
+                               TableInfo ti2 = getTableInfo("onprc_ehr", "investigators");
+                               SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("rowid"), rs.getString("investigatorId"));
+                               filter2.addCondition(FieldKey.fromString("datedisabled"), true, CompareType.ISBLANK);
+
+                               TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("lastname"), filter2, null);
+                               List<String> ret2 = ts2.getArrayList(String.class);
+                               if (ret2 != null && !ret2.isEmpty())
+                               {
+                                   for (String Investname : ret2)
+                                   {
+                                       html.append("<tr><td>" + (rs.getString("external_id") == null ? "" : rs.getString("external_id")) + "</td><td>  " + Investname + "   </td><td>" + rs.getString("approve") + "</td></tr>\n");
+                                       break;
+                                   }
+                               }
+                           }
+
+                       }
 
             );
 
@@ -2108,7 +2219,7 @@ public class ONPRC_EHRTriggerHelper
 
     }
 
-      //Added 9-2-2015  Blasa
+    //Added 9-2-2015  Blasa
     private void sendMessage(String subject, String bodyHtml, Collection<UserPrincipal> recipients)
     {
         try
@@ -2148,4 +2259,68 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
+    //Added 4-21-2017  Blasa
+    public String retrieveAcquisitionType(Integer Acquirow)
+    {
+    SimpleFilter filter = new SimpleFilter(FieldKey.fromString("rowid"),  Acquirow);
+    filter.addCondition(FieldKey.fromString("value"), "Pending Arrival");
+
+    if(new TableSelector(getTableInfo("ehr_lookups", "AcquistionType"),filter, null).exists() )
+      {
+            return "Pending Arrival";
+      }
+    else
+       {
+            return null;
+       }
+
+    }
+    public void updateGeographicStatus(List<String> ids) throws Exception
+    {
+        TableInfo ti = getTableInfo("study", "demographicsGeneticAncestry");
+        if (ti == null)
+        {
+            return;
+        }
+
+        Set<FieldKey> keys = new HashSet<>();
+        keys.add(FieldKey.fromString("Id"));
+        keys.add(FieldKey.fromString("Id/demographics/lsid"));
+        keys.add(FieldKey.fromString("Id/demographics/geographic_origin"));
+        keys.add(FieldKey.fromString("geneticAncestry"));
+        final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, keys);
+
+        final List<Map<String, Object>> toUpdate = new ArrayList<>();
+        final List<Map<String, Object>> oldKeys = new ArrayList<>();
+        TableSelector ts = new TableSelector(ti, colMap.values(), new SimpleFilter(FieldKey.fromString("Id"), ids, CompareType.IN), null);
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet object) throws SQLException
+            {
+                ResultsImpl rs = new ResultsImpl(object, colMap);
+                String origin = rs.getString(FieldKey.fromString("Id/demographics/geographic_origin"));
+                String geneticAncestry = rs.getString(FieldKey.fromString("geneticAncestry"));
+                String lsid = rs.getString(FieldKey.fromString("Id/demographics/lsid"));
+                if (lsid != null && geneticAncestry != null && !geneticAncestry.equals(origin))
+                {
+                    Map<String, Object> row = new CaseInsensitiveHashMap<>();
+                    row.put("lsid", lsid);
+                    row.put("geographic_origin", geneticAncestry);
+                    Map<String, Object> keyRow = new CaseInsensitiveHashMap<>();
+                    keyRow.put("lsid", lsid);
+
+                    oldKeys.add(keyRow);
+                    toUpdate.add(row);
+                }
+
+            }
+        });
+
+        if (!toUpdate.isEmpty())
+        {
+            TableInfo demographics = getTableInfo("study", "demographics");
+            demographics.getUpdateService().updateRows(_user, _container, toUpdate, oldKeys, null, getExtraContext());
+        }
+    }
 }

@@ -19,11 +19,12 @@ select
   m.id,
   m.date,
   m.label as tissue,
-  max(m.measurement) as value
+  max(m.measurement) as value,
+  m.remark
 
 FROM study.measurementsPivotedRawData m
 WHERE m.categories like '%Placental%'
 
-group by m.id, m.date, m.label, m.parentid
+group by m.id, m.date, m.label, m.parentid,  m.remark
 
 pivot value by tissue

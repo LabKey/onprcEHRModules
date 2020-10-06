@@ -26,30 +26,35 @@ function onUpsert(helper, scriptErrors, row, oldRow){
     //for compatibility with old system
 
 
-
     var currentVet = [];
-    LABKEY.Query.selectRows({
-        schemaName: 'study',
-        queryName: 'demographicsAssignedVet',
-        scope: this,
-        filterArray: [
-            LABKEY.Filter.create('id', row.Id, LABKEY.Filter.Types.EQUAL)
-        ],
-        success: function(data){
-            if(data.rows && data.rows.length){
-              /*  var rowData; */
-              currentVet = data.rows[0].assignedVet;
-                // for (var i=0;i<data.rows.length;i++){
-                //     rowData = data.rows[i];
-                //     toUpdate.push({rowid: rowData.rowid});
-                // }
+    if (row.Id && !helper.isValidateOnly()) {
+
+        LABKEY.Query.selectRows({
+            schemaName: 'study',
+            queryName: 'demographicsAssignedVet',
+            scope: this,
+            filterArray: [
+                LABKEY.Filter.create('id', row.Id, LABKEY.Filter.Types.EQUAL)
+            ],
+            success: function (data)
+            {
+                if (data.rows && data.rows.length)
+                {
+                    /*  var rowData; */
+                    currentVet = data.rows[0].assignedVet;
+                    // for (var i=0;i<data.rows.length;i++){
+                    //     rowData = data.rows[i];
+                    //     toUpdate.push({rowid: rowData.rowid});
+                    // }
+                }
+            },
+            failure: function (error)
+            {
+                console.log('Select rows error');
+                console.log(error);
             }
-        },
-        failure: function(error){
-            console.log('Select rows error');
-            console.log(error);
-        }
-    });
+        });
+    }
 
 
     row.userid = row.performedby;
@@ -78,5 +83,7 @@ function setDescription(row, helper){
     if (row.assignedVet)
         description.push('assignedVet: '+row.assignedVet);
 
+
     return description;
 }
+
