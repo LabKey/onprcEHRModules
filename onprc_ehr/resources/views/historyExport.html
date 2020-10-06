@@ -73,11 +73,11 @@
                         Ext4.Msg.alert('Error', 'Must enter at least one animal Id');
                         return;
                     }
-
+                    //Modified: 1-17-2019  R.Blasa
                     if (!hideHistory){
                         var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                         var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                        ssrsFolder = '/' + ssrsFolder  + '/' + 'SalesMedicalHistoryReport';
+                        ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/SalesMedicalHistoryReport';
 
                         url += ssrsFolder + '&' + LABKEY.ActionURL.queryString({
                             SessionID: LABKEY.Utils.getSessionID(),

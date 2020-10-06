@@ -1,3 +1,4 @@
+
 /**
  * Ext component for creating the input form and species grid for collecting/updating information about
  * a purchase order (see createPurchaseOrder.html and updatePurchaseOrder.html for usages).
@@ -41,7 +42,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
         //});
 
 
-         // add the initial form sections, start with just the protocol form if this is not an update
+        // add the initial form sections, start with just the protocol form if this is not an update
         var items = [
             this.getProtocolForm(),
             this.getPurchaseForm(),
@@ -128,8 +129,8 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                     noRequestorRecord: function(form)
                     {
                         Ext4.get('purchaseOrderErrors').update('<p class="labkey-error">'
-                            + 'No requestor record found for your user account. Please contact an administrator to get '
-                            + 'this issue resolved.</p>');
+                                + 'No requestor record found for your user account. Please contact an administrator to get '
+                                + 'this issue resolved.</p>');
                         this.disable();
                     }
                 }
@@ -251,8 +252,8 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
     toggleSubmitButton : function()
     {
         var protocolValid = this.getProtocolForm().isValid(),
-            formValid = this.getPurchaseForm().isValid(),
-            speciesGridValid = this.getPurchaseSpeciesGrid().isValid();
+                formValid = this.getPurchaseForm().isValid(),
+                speciesGridValid = this.getPurchaseSpeciesGrid().isValid();
 
         this.getSubmitButton().setDisabled(this.adminContainer == null || !protocolValid || !formValid || !speciesGridValid);
     },
@@ -553,13 +554,13 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 Ext4.Msg.confirm('Confirmation Message', warnMsg, function (btn)
                 {
                     if (btn == 'yes')
-                        //successCallback.call(scope);
+                    //successCallback.call(scope);
                         this.insertPurchaseOrder(purchaseData);
                     else
                         this.getSubmitButton().enable();
                 }, this);
 
-               // this.insertPurchaseOrder(purchaseData);
+                // this.insertPurchaseOrder(purchaseData);
             }, this);
         }
     },
@@ -696,15 +697,15 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 if (value.PercentUsed > 105)
                 {
                     errorMsg += errorSep + 'With the current order, you have <b>exceeded 100% plus 5% more</b> animal usage of the approved quantity. ' + baseMsg
-                        + ' You are not authorized to purchase any more animals at this point. If you wish to purchase more animals, please contact the IACUC committee for approval!';
+                            + ' You are not authorized to purchase any more animals at this point. If you wish to purchase more animals, please contact the IACUC committee for approval!';
                     errorSep = '<br/><br/>';
                 }
                 else if (value.PercentUsed > 100)
                 {
                     warnMsg += warnSep + 'With the current order, you have <b>exceeded 100%</b> animal usage of the approved quantity. ' + baseMsg
-                        + ' According to IACUC committee, you can order 5% more animals than the approved quantity without IACUC approval. '
-                        + 'Therefore in this order, you can order an <b>extra ' + Math.floor(value.NumAllowed * 0.05) + '</b> animal(s). '
-                        + 'If you wish to purchase more animals, please contact the IACUC committee for approval!';
+                            + ' According to IACUC committee, you can order 5% more animals than the approved quantity without IACUC approval. '
+                            + 'Therefore in this order, you can order an <b>extra ' + Math.floor(value.NumAllowed * 0.05) + '</b> animal(s). '
+                            + 'If you wish to purchase more animals, please contact the IACUC committee for approval!';
                     warnSep = '<br/><br/>';
                 }
                 else if (value.PercentUsed == 100)
@@ -809,11 +810,11 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
         if (!sendNotification && this.initData != null)
         {
             var prevConfNum = this.initData.purchase['confirmationnum'],
-                newConfNum = newPurchaseData['confirmationnum'],
-                prevOrderDt = this.trimDateToYMDStr(this.initData.purchase['orderdate']),
-                newOrderDt = this.trimDateToYMDStr(newPurchaseData['orderdate']),
-                prevHousingAvail = this.initData.purchase['housingconfirmed'],
-                newHousingAvail = newPurchaseData['housingconfirmed'];
+                    newConfNum = newPurchaseData['confirmationnum'],
+                    prevOrderDt = this.trimDateToYMDStr(this.initData.purchase['orderdate']),
+                    newOrderDt = this.trimDateToYMDStr(newPurchaseData['orderdate']),
+                    prevHousingAvail = this.initData.purchase['housingconfirmed'],
+                    newHousingAvail = newPurchaseData['housingconfirmed'];
 
             sendNotification = prevConfNum != newConfNum || prevOrderDt != newOrderDt;
 
@@ -833,21 +834,21 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 Ext4.each(newPurchaseData.details, function (detailsRow)
                 {
                     var objectid = detailsRow['objectid'],
-                        receiveddate = Ext4.isDate(detailsRow['receiveddate']) ? Ext4.util.Format.date(detailsRow['receiveddate'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['receiveddate']),
-                        receivedby = detailsRow['receivedby'],
-                        datecancelled = Ext4.isDate(detailsRow['datecancelled']) ? Ext4.util.Format.date(detailsRow['datecancelled'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['datecancelled']),
-                        cancelledby = detailsRow['cancelledby'];
+                            receiveddate = Ext4.isDate(detailsRow['receiveddate']) ? Ext4.util.Format.date(detailsRow['receiveddate'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['receiveddate']),
+                            receivedby = detailsRow['receivedby'],
+                            datecancelled = Ext4.isDate(detailsRow['datecancelled']) ? Ext4.util.Format.date(detailsRow['datecancelled'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['datecancelled']),
+                            cancelledby = detailsRow['cancelledby'];
 
                     // compare new values to previous, or if this is a new species row, check for non-null key values
                     if (Ext4.isDefined(prevDetailsMap[objectid]))
                     {
                         var prevReceiveddate = this.trimDateToYMDStr(prevDetailsMap[objectid]['receiveddate']),
-                            prevReceivedby = prevDetailsMap[objectid]['receivedby'],
-                            prevDatecancelled = this.trimDateToYMDStr(prevDetailsMap[objectid]['datecancelled']),
-                            prevCancelledby = prevDetailsMap[objectid]['cancelledby'];
+                                prevReceivedby = prevDetailsMap[objectid]['receivedby'],
+                                prevDatecancelled = this.trimDateToYMDStr(prevDetailsMap[objectid]['datecancelled']),
+                                prevCancelledby = prevDetailsMap[objectid]['cancelledby'];
 
                         sendNotification = prevReceiveddate != receiveddate || prevReceivedby != receivedby
-                                            || prevDatecancelled != datecancelled || prevCancelledby != cancelledby;
+                                || prevDatecancelled != datecancelled || prevCancelledby != cancelledby;
                     }
                     else if (receiveddate != null || receivedby != null || datecancelled != null || cancelledby != null)
                     {
@@ -1059,7 +1060,21 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                             "chargeType": 'SLAU',
                             "chargeId": 5398, //Chargeableitem: ChargeName = 'SLAU Weaning Fee', ChargeID = 5398
                             "quantity": 1, //detailsRow['NumAnimalsReceived'],
-                            "comment": 'SLA Weaning',
+                            "comment": 'SLA Weaning'
+                        });
+                    }
+                    //Added by Kolli on 03-01-2019
+                    else if (this.initData.purchase.vendor == 'ONPRC Weaning - Self Prepared')
+                    {
+                        miscCharges.push({
+                            "date": receiveddate,
+                            "project": newPurchaseData['project'],
+                            "objectid": LABKEY.Utils.generateUUID(),
+                            //"category": 'SLA Fees',
+                            "chargeType": 'SLAU',
+                            "chargeId": 5614, //Chargeableitem: ChargeName = 'SLAU Weaning - No Staff', ChargeID = 5398
+                            "quantity": 1, //detailsRow['NumAnimalsReceived'],
+                            "comment": 'SLA Weaning - Self Prepared'
                         });
                     }
                     else
@@ -1072,7 +1087,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                             "chargeType": 'SLAU',
                             "chargeId": 5331, //Chargeableitem: ChargeName = 'SLAU Animal Purchase', ChargeID = 5331
                             "quantity": 1, //detailsRow['NumAnimalsReceived'],
-                            "comment": 'SLA Purchase billing',
+                            "comment": 'SLA Purchase billing'
                         });
                     }
                 }
@@ -1186,3 +1201,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
         });
     }
 });
+
+
+
+

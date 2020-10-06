@@ -38,6 +38,9 @@ public class PathologyDiagnosesFormSection extends PathologyFormSection
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/DragDropGridPanel.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/pathologyButtons.js"));
         setXtype("onprc_ehr-dragdropgridpanel");
+
+        //Added: 10-31-2018  R.Blasa   address issues with text font size
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/Gross_Finding.css"));
     }
 
 //    Added: 6-26-2017  R.Blasa  Include tool bar at bottom grid
@@ -47,6 +50,14 @@ public class PathologyDiagnosesFormSection extends PathologyFormSection
         JSONObject jsonObject = super.toJSON(ctx, includeFormElements);
         jsonObject.put("topAndBottomButtons", true);
         return jsonObject;
+    }
+
+    @Override
+    public List<String> getTbarButtons()
+    {
+        List<String> result = super.getTbarButtons();
+        result.add("PATH_SAVE_DRAFT");
+        return result;
     }
 
     @Override

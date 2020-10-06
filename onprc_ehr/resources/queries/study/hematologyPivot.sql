@@ -37,7 +37,7 @@ FROM
 
 GROUP BY b.id, b.date, b.runId, b.testId, b.method,b.createdby
 PIVOT results BY testId IN
-(select testid from ehr_lookups.hematology_tests t WHERE t.includeInPanel = true)) pvt
+(select testid from ehr_lookups.hematology_tests t WHERE t.includeInPanel = true  order by sort_order)) pvt
 
 LEFT OUTER JOIN
 

@@ -60,6 +60,7 @@ import org.labkey.onprc_ehr.buttons.ManageFlagsButton;
 import org.labkey.onprc_ehr.buttons.ProtocolEditButton;
 import org.labkey.onprc_ehr.buttons.VetReviewButton;
 import org.labkey.onprc_ehr.buttons.VetReviewRecordButton;
+import org.labkey.onprc_ehr.buttons.CreateTaskFromRecordButtons;
 import org.labkey.onprc_ehr.dataentry.*;
 import org.labkey.onprc_ehr.demographics.ActiveAnimalGroupsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
@@ -72,6 +73,7 @@ import org.labkey.onprc_ehr.demographics.ParentsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.PregnancyConfirmDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.SourceDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.TBDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.LastHousingDemographicsProvider;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsEndDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalRecordFlagDataSource;
@@ -288,16 +290,17 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added 5-16-2018  R.Blasa
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam by ID(s)", this, DetailsURL.fromString("/onprc_ehr/PE_ExamHistoryReportbyID.view"), "Routine Clinical Tasks");
 
-        //Added 5-11-2015 New report for Lois Colgin
+        //Modified: 1-17-2019  R.Blasa
         try
         {
-            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Laboratory Test Summary", this, new URLHelper("http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fPrimeLaboratory+Report&rs:Command=Render")
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology Laboratory Summary Report", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory+Report&rs:Command=Render")
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
                 public String toString()
                 {
-                    return "http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fPrimeLaboratory+Report&rs:Command=Render";
+                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory+Report&rs:Command=Render";
+
                 }
             }, "Clinical Pathology");
         }
@@ -306,16 +309,17 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
             throw new UnexpectedException(e);
         }
 
-        //Added 6-21-2017 R.Blasa
+        //Modified 1-7-2019 R.Blasa
         try
         {
-            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Basic Exposure Report", this, new URLHelper("http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fExposure+Report%2fBasicExposureMain&rs:Command=Render")
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Basic Exposure Report", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fExposure+Reports%2fBasicExposureMain&rs:Command=Render")
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
+                //Modified: 1-17-2019  R.Blasa
                 public String toString()
                 {
-                    return "http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fExposure+Report%2fBasicExposureMain&rs:Command=Render";
+                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fExposure+Reports%2fBasicExposureMain&rs:Command=Render";
                 }
             }, "Exposure Report");
         }
@@ -476,6 +480,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Created: 4-7-2015-10-2017 R.Blasa
         EHRService.get().registerDemographicsProvider(new ActiveTreatmentsXDemographicsProvider(this));
 
+        //Created: 12-18-2018 R.Blasa
+        EHRService.get().registerDemographicsProvider(new LastHousingDemographicsProvider(this));
+
         //buttons
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "my_tasks");
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "tasks");
@@ -510,8 +517,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Surgeries", SurgeryFormType.NAME), "study", "surgery");
 
 
-        //Added: 7-29-2017  R.Blasa
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Procedures", AuxProcedureFormType.NAME), "study", "encounters");
+        //Added: 1-18-2019  R.Blasa
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Procedures", AuxProcedureFormType.NAME), "study", "encounters");
 
 
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "blood");

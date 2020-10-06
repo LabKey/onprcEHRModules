@@ -24,6 +24,9 @@ WHERE
     (aa.StartDate IS NULL AND aa.EndDate IS NOT NULL AND now() < aa.EndDate) OR
     (now() between aa.StartDate AND aa.EndDate)
   )
+  AND
+  --Check for the project enddate. Added by LK on 1/16/2019
+  (now() between a.StartDate AND a.EndDate)
   -- and filtered based on dataAccess for the given user
   AND
   (

@@ -234,6 +234,9 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         this.appendFosterChildtResults(toSet, results.getFosterChild());
 
 
+        //Added: 12-20-2018  R.Blasa
+        this.appendLastKnownLocationResults(toSet, results.getLastKnownlocation());
+
 
         if (this.showExtendedInformation){
             this.appendBirthResults(toSet, results.getBirthInfo(), results.getBirth());
@@ -356,6 +359,26 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
             toSet['fosterinfants'] = values.length ? values.join('<br>') : 'None';
 
     },
+
+    //Added: 12-20-2018  R.Blasa  Last Known Locatoni
+    appendLastKnownLocationResults: function(toSet, results){
+        var values = [];
+        if (results)
+        {
+            Ext4.each(results, function(row){
+                var lastlocation = row.location;
+
+                values.push(lastlocation);
+
+            }, this);
+
+        }
+
+        toSet['lastlocation'] = values.length ? values.join('<br>') : 'None';
+
+    },
+
+
 
 
 
@@ -491,6 +514,48 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         else {
             toSet['parents'] = 'No data';
         }
+    },
+
+    //Modified: 12-20-2018  R.Blasa
+    appendDemographicsResults: function(toSet, row, id){
+        if (!row){
+            console.log('Id not found');
+            return;
+        }
+
+        var animalId = row.getId() || id;
+        if (!Ext4.isEmpty(animalId)){
+            toSet['animalId'] = id;
+        }
+
+        var status = row.getCalculatedStatus() || 'Unknown';
+        toSet['calculated_status'] = '<span ' + (status != 'Alive' ? 'style="background-color:yellow"' : '') + '>' + status + '</span>';
+
+        toSet['species'] = row.getSpecies();
+        toSet['geographic_origin'] = row.getGeographicOrigin();
+        toSet['gender'] = row.getGender();
+        toSet['age'] = row.getAgeInYearsAndDays();
+
+        var location;
+        if (row.getActiveHousing() && row.getActiveHousing().length){
+            var housingRow = row.getActiveHousing();
+            location = '';
+            if (!Ext4.isEmpty(row.getCurrentRoom()))
+                location = row.getCurrentRoom();
+            if (!Ext4.isEmpty(row.getCurrentCage()))
+                location += ' / ' + row.getCurrentCage();
+
+            if (location){
+                if (this.showLocationDuration && housingRow.date){
+                    var date = LDK.ConvertUtils.parseDate(housingRow.date);
+                    if (date)
+                        location += ' (' + date.format(LABKEY.extDefaultDateFormat) + ')';
+                }
+            }
+        }
+
+        toSet['location'] = location || 'No active housing';
+
     },
 
     //Modified: 5-10-2018  R.Blasa

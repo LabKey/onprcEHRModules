@@ -51,7 +51,8 @@ public class NecropsyFormType extends EncounterForm
                 new NonStoreFormSection("Instructions", "Instructions", "ehr-necropsyinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/NecropsyInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ClinicalEncountersFormPanelSection("Necropsy"),
-                new AnimalDetailsFormSection(),
+                //Modified: 12-20-2018  R.Blasa
+                new AnimalDetailssFormSection(),
                 new GrossFindingsFormPanelSection(),
                 new PathologyFormSection("ehr", "encounter_participants", "Staff"),
                 new PathologyNotesFormPanelSection(),

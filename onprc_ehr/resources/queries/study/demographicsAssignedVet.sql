@@ -1,121 +1,71 @@
-/*
- * Copyright (c) 2014-2017 LabKey Corporation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-SELECT
-  d.Id,
-  COALESCE(n.assignedVet,c.vetNames, h.highPriRoomVetNames, h.highPriAreaVetNames, a1.vetName,a2.vetName, h.roomVetNames, h.areaVetNames) as assignedVet,
-  --COALESCE(c.vetUserIds, h.highPriRoomVetUserIds, h.highPriAreaVetUserIds, a.vetUserIds, h.roomVetUserIds, h.areaVetUserIds) as assignedVetId,
-  CASE
-    WHEN (n.status IS NOT null) THEN 'DECEASED NHP'
-    WHEN (c.vetNames IS NOT NULL) THEN 'Active Case'
-    WHEN (h.highPriRoomVetNames IS NOT NULL) THEN 'Room (Priority)'
-    WHEN (h.highPriAreaVetNames IS NOT NULL) THEN 'Area (Priority)'
-    WHEN (a1.vetName IS NOT NULL) THEN 'Research Assignment'
-    WHEN (a2.vetName IS NOT NULL) THEN 'Resource Assignment'
-    WHEN (h.roomVetNames IS NOT NULL) THEN 'Room'
-    WHEN (h.areaVetNames IS NOT NULL) THEN 'Area'
-    ELSE 'None'
-  END as assignmentType,
-  a1.protocol as ResearchProtocol,
-  a2.protocol as ResourceProtocol,
-  h.areas,
-  h.rooms
+--Update 3/7/2019 load to test
 
-FROM study.demographics d
+Select
+Distinct
+d.Id,
+d.room.area as Area,
+d.room,
+d.CaseVet,
+d.protocol,
+Case
 
-LEFT JOIN (
-    Select
-    n.id,
-    vd.assignedVet,
-    'Deceased' as status
-    from study.deaths n left outer join study.vetAssignedDeceased vd on n.Id = vd.id
+	when d.caseVet is not null then d.CaseVet
+	when p3.userId is not null  then v1.userId.displayName
+	when p4.userId is not null then  v2.userId.DisplayName
+	when v1.userId is not null  then v1.userId.displayName
+	when v2.userId is not null then  v2.userId.DisplayName
+	when v3.userId is not null then  v3.userId.DisplayName
+	when v4.userId is not null then  v4.userId.DisplayName
+	when p1.userId is not null then  p1.userId.DisplayName
+	when p2.userId is not null then   p2.userId.DisplayName
+	when v5.userId is not null then  v5.userId.DisplayName
+	when v6.userId is not null then  v6.userId.DisplayName
+	when h1.userId is not null then  h1.userId.DisplayName
+	when h2.userId is not null then h2.userId.DisplayName
 
-)
- n on (n.Id =d.id)
+	End as AssignedVet,
 
-LEFT JOIN (
-  SELECT
-    c.Id,
-    group_concat(distinct c.assignedvet.DisplayName) as vetNames,
-    CAST(group_concat(distinct c.assignedvet) as varchar(200)) as vetUserIds
-  FROM study.cases c
-  --WHERE c.isOpen = true
-  WHERE c.enddateCoalesced >= curdate() OR CAST(c.enddate AS DATE) = CAST(c.Id.demographics.lastDayAtCenter AS DATE)
-  GROUP BY c.Id
-) c ON (c.Id = d.Id)
+Case
 
---LEFT JOIN(
---Select cr.assignedVet
---from study.clinremarks cr)
---cr ON (cr.id = d.Id)
---
---need to insure we get the last record in Clinical Remarks for the animal.
---
---
---
---)
+	when d.caseVet is not null then 'Open Case'
+	When p3.userId is not null then 'Protocol Room Priority'
+	When p4.userId is not null then 'Protocol Area Priority'
+	when v1.userId is not null  then 'Protocol Research Room'
+	when v2.userId is not null then  'Protocol Research Area'
+	when v3.userId is not null then  'Protocol Resource Room'
+	when v4.userId is not null then  'Protocol Resource Area'
+	when p1.userId  is not null then  'Room Priority'
+	when p2.userId is not null then  'Area Priority'
+	when v5.userId is not null then  'Protocol Research Only'
+	when v6.userId is not null then  'Protocol Resource Only'
 
+	when h1.userId is not null then 'Room Only'
+	when h2.userId  is not null then 'Area Only'
 
-LEFT JOIN (
-Select  a1.id,
-a1.vetAssigned as vetName,
-a1.protocol
-from researchAssigned a1)
-a1 ON (a1.Id = d.Id)
+	End as AssignmentType
 
-LEFT JOIN (
-Select  a2.id,
-a2. vetAssigned as vetName,
-a2.protocol
-from resourceAssigned a2 )
-a2 ON (a2.Id = d.Id)
-
-
-
-
---  SELECT
---    a.Id,
---    group_concat(distinct CAST(v.userId.displayName as varchar(120))) as vetNames,
---    CAST(group_concat(distinct v.userId) as varchar(200)) as vetUserIds,
---------    Need to only look at Vets on assignment as assigned vet for reseach protocols
---        (Select distinct a2.project.protocol.displayname from study.assignment a2 where a2.project.protocol = v.protocol and a2.project.use_category.value = 'Research') as protocols
-----    group_concat.use_cagte(distinct a.project.protocol.displayName) as protocols
---  FROM study.assignment a
---  JOIN onprc_ehr.vet_assignment v ON (a.project.protocol = v.protocol)
---  WHERE a.enddateCoalesced >= curdate() OR CAST(a.enddateCoalesced AS DATE) = CAST(a.Id.demographics.lastDayAtCenter AS DATE)
---  GROUP BY a.Id,v.protocol
-
-
-LEFT JOIN (
-  SELECT
-    h.Id,
-    group_concat(distinct CASE WHEN (v.area IS NOT NULL) THEN CAST(v.userId.displayName as varchar(120)) ELSE NULL END) as areaVetNames,
-    group_concat(distinct CASE WHEN (v.room IS NOT NULL) THEN CAST(v.userId.displayName as varchar(120)) ELSE NULL END) as roomVetNames,
-    group_concat(distinct CASE WHEN (v.area IS NOT NULL and v.priority = true) THEN CAST(v.userId.displayName as varchar(120)) ELSE NULL END) as highPriAreaVetNames,
-    group_concat(distinct CASE WHEN (v.room IS NOT NULL and v.priority = true) THEN CAST(v.userId.displayName as varchar(120)) ELSE NULL END) as highPriRoomVetNames,
-
-    group_concat(distinct CASE WHEN (v.area IS NOT NULL) THEN v.userId ELSE NULL END) as areaVetUserIds,
-    group_concat(distinct CASE WHEN (v.room IS NOT NULL) THEN v.userId ELSE NULL END) as roomVetUserIds,
-    group_concat(distinct CASE WHEN (v.area IS NOT NULL and v.priority = true) THEN v.userId ELSE NULL END) as highPriAreaVetUserIds,
-    group_concat(distinct CASE WHEN (v.room IS NOT NULL and v.priority = true) THEN v.userId ELSE NULL END) as highPriRoomVetUserIds,
-
-    group_concat(distinct h.room.area) as areas,
-    group_concat(distinct h.room) as rooms
-
-  FROM study.housing h
-  JOIN onprc_ehr.vet_assignment v ON (v.area = h.room.area OR v.room = h.room)
-  WHERE h.enddateTimeCoalesced >= now() OR CAST(h.enddateCoalesced AS DATE) = CAST(h.Id.demographics.lastDayAtCenter AS DATE)
-  GROUP BY h.Id
-) h ON (h.Id = d.Id) --Where d.calculated_status = 'alive'
+FROM study.vet_assignmentDemographics d
+--this handles REsearch Protocol Room
+Left Join onprc_ehr.vet_assignment v1 on (v1.protocol.displayName = d.protocol and v1.room = d.room and d.assignmentType = 'Research Assigned')
+--this handles Research Protocol Area
+Left Join onprc_ehr.vet_assignment v2 on (v2.protocol.displayName = d.protocol  and v2.area = d.room.area and d.assignmentType = 'Research Assigned')
+--this handles Resource Protocol Room
+Left Join onprc_ehr.vet_assignment v3 on (v3.protocol.displayName = d.protocol  and v3.room = d.room and d.assignmentType = 'Resource Assigned')
+--this handles Research Protocol Area
+Left Join onprc_ehr.vet_assignment v4 on (v4.protocol.displayName = d.protocol  and v4.area = d.room.area and d.assignmentType = 'Resource Assigned')
+--this handled Research Assigned No Additional Sekections
+Left Join onprc_ehr.vet_assignment v5 on (v5.protocol.displayName = d.protocol   and v5.room is null and v5.area is null and d.assignmentType = 'Research Assigned' )
+--this handles resource Protocol Only
+Left Join onprc_ehr.vet_assignment v6 on (v6.protocol.displayName = d.protocol  and v6.room is null and v6.area is null  and d.assignmentType = 'Resource Assigned' )
+--this handles when the room is a priorty
+Left join onprc_ehr.vet_assignment p1 on (p1.room = d.room and p1.protocol is null and p1.priority = true)
+--this handles when the room is a priorty-
+Left join onprc_ehr.vet_assignment p2 on (p2.area = d.room.area and p2.protocol is null and p2.priority = true)
+--THis handles when a priority is placed on Room and Protocol --
+Left Join onprc_ehr.vet_assignment p3 on (p3.protocol.displayName = d.protocol and p3.room = d.room and p3.priority = true)
+--THis handles when a priority is placed on Areaand Protocol -
+Left Join onprc_ehr.vet_assignment p4 on (p4.protocol.displayName = d.protocol  and p4.area = d.room.area and p4.priority = true)
+--these deal with assignment based on housing only
+Left join onprc_ehr.vet_assignment h1 on (h1.room = d.room and h1.protocol is null and h1.area is null and h1.priority = false)
+Left join onprc_ehr.vet_assignment h2 on (h2.area = d.room.area and h2.room is null and h2.protocol is null and h2.priority = false)
+where d.id not like '[a-z]%'

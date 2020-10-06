@@ -23,7 +23,5 @@
         <sort column="Id/curLocation/cage"/>
         <sort column="date" descending="true"/>
     </sorts>
-    <filters>
-    <filter column="isopen" operator="eq" value="true"/>
-    </filters>
+
 </customView>

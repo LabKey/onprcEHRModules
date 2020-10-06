@@ -133,7 +133,7 @@ public class InfantsBornAssignedNotification extends AbstractEHRNotification
         long total = ts.getRowCount();
         if (total == 0)
         {
-            msg.append("There are no Expiring Obese Flag for today.\n");
+            msg.append("There are no records of infants that were born to Assigned Animals.\n");
         }
         else
         {

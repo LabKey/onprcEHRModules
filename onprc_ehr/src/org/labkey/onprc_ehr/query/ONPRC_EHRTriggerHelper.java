@@ -2323,4 +2323,33 @@ public class ONPRC_EHRTriggerHelper
             demographics.getUpdateService().updateRows(_user, _container, toUpdate, oldKeys, null, getExtraContext());
         }
     }
+
+    //New blood draw validation code by LKolli, 2/1/2019
+    public String verifyBloodVolume_New(String id, Date date, List<Map<String, Object>> recordsInTransaction, List<Map<String, Object>> weightsInTransaction, String objectId, Double quantity)
+    {
+        //Check for valid AnimalId, date and quantity
+        if (id == null || date == null || quantity == null)
+            return null;
+
+        //Get ABV data from onprc_ehr.AvailableBloodVolume
+        Double maxAllowable = getABV(id);
+        if (maxAllowable == null)
+            return "Couldn't find available blood volume for AnimalId: " + id ;
+
+        if (quantity > maxAllowable)
+            return "The quantity requested, " + quantity + "ml exceeds the available blood volume, " + maxAllowable + "ml for AnimalId: " + id ;
+
+        return null;
+    }
+
+    //Query the db table, onprc_ehr.AvailableBloodVolume for the max allowable blood.
+    //This table is populated every hour during business hours by Mathematica.
+    public Double getABV(String id)
+    {
+        TableInfo ti = getTableInfo("onprc_ehr", "AvailableBloodVolume");
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("ABV"), new SimpleFilter(FieldKey.fromString("Id"), id), null);
+
+        return ts.getObject(Double.class);
+    }
+
 }

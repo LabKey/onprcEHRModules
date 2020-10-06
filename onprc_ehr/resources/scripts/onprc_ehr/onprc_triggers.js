@@ -486,13 +486,6 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'blood', function(helper, scriptErrors, row){
-        if (!helper.isETL() && row.project && row.chargetype){
-            if (row.chargetype == 'No Charge' && !helper.getJavaHelper().isDefaultProject(row.project))
-                EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'You have chosen \'No Charge\' with a project that does not support this.  You may need to choose \'Research\' instead (which is not billed)', 'INFO');
-        }
-    });
-
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'housing', function(helper, scriptErrors, row, oldRow){
         if (row.cage){
             row.cage = row.cage.toUpperCase();
@@ -775,6 +768,94 @@ exports.init = function(EHR){
 
 
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.INIT, function (event, helper) {
+
+        /* Override the default EHR validation for Blood draw validation. By LKolli, 2/01/2019 */
+
+        //unregister the default EHR validation code
+        EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'blood', EHR.Server.TriggerManager.Events.BEFORE_UPSERT);
+        //register the new validation code
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'blood', function (helper, scriptErrors, row, oldRow) {
+            if (!helper.isETL() && row.date && !row.daterequested){
+                if (!oldRow || !oldRow.daterequested){
+                    row.daterequested = row.date;
+                }
+            }
+
+            if (row.quantity === 0){
+                EHR.Server.Utils.addError(scriptErrors, 'quantity', 'This field is required', 'WARN');
+            }
+
+            if (!helper.isETL()){
+                if (row.date && !row.requestdate)
+                    row.requestdate = row.date;
+
+                if (!row.quantity && row.num_tubes && row.tube_vol){
+                    row.quantity = row.num_tubes * row.tube_vol;
+                }
+
+                if (row.additionalServices) {
+                    if (row.tube_type || row.tube_vol){
+                        var tubeType = row.tube_type || null;
+                        var quantity = row.quantity || 0;
+                        var msgs = helper.getJavaHelper().validateBloodAdditionalServices(row.additionalServices, tubeType, quantity);
+                        if (msgs && msgs.length){
+                            LABKEY.ExtAdapter.each(msgs, function(msg){
+                                EHR.Server.Utils.addError(scriptErrors, 'additionalServices', msg, 'INFO');
+                            }, this);
+                        }
+                    }
+                }
+
+                if (row.quantity && row.tube_vol){
+                    if (row.quantity != (row.num_tubes * row.tube_vol)){
+                        EHR.Server.Utils.addError(scriptErrors, 'quantity', 'Quantity does not match tube vol / # tubes', 'INFO');
+                        EHR.Server.Utils.addError(scriptErrors, 'num_tubes', 'Quantity does not match tube vol / # tubes', 'INFO');
+                    }
+                }
+
+                EHR.Server.Validation.checkRestraint(row, scriptErrors);
+
+                if (row.Id && row.date && row.quantity){
+                    // volume is handled differently for requests vs actual draws
+                    var errorQC;
+                    if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel)['isRequest'] && !row.taskid)
+                        errorQC = 'ERROR';
+                    else
+                        errorQC = 'INFO';
+
+                    var map = helper.getProperty('bloodInTransaction');
+                    var draws = [];
+                    if (map && map[row.Id]){
+                        draws = map[row.Id];
+                    }
+
+                    var weightMap = helper.getProperty('weightInTransaction');
+                    var weights = [];
+                    if (weightMap && weightMap[row.Id]){
+                        weights = weightMap[row.Id];
+                    }
+
+                    if (row.objectid) {
+
+                        if ((row.QCStateLabel != 'Request: Cancelled') || (row.QCStateLabel != 'Request: Denied'))
+                        {
+                            //Calling the new ONPRC blood draw validation code, LKolli, 2/1/2019
+                            var msg = triggerHelper.verifyBloodVolume_New(row.id, row.date, draws, weights, row.objectid || null, row.quantity);
+                            if (msg != null) {
+                                //TODO: change all future bloods draws to review required, if submitted for medical purpose.
+                                EHR.Server.Utils.addError(scriptErrors, 'num_tubes', msg, errorQC);
+                                EHR.Server.Utils.addError(scriptErrors, 'quantity', msg, errorQC);
+                            }
+                        }
+                    }
+                    else {
+                        console.warn('objectid not provided for blood draw, cannot calculate allowable blood volume.  this probably indicates an error with the form submitting these data')
+                    }
+                }
+            }
+        });
+
+
         // Override the default EHR validation for project creation
         EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('ehr', 'project', EHR.Server.TriggerManager.Events.BEFORE_UPSERT);
 
@@ -790,4 +871,6 @@ exports.init = function(EHR){
             }
         });
     });
+
+
 };

@@ -68,6 +68,11 @@ EHR.DemographicsRecord = function(data){
             return data['fosterchild'];
         },
 
+        //Added 12-20-2018 R.Blasa
+        getLastKnownlocation: function(){
+            return data['lastlocation'];
+        },
+
         getCurrentLocation: function(){
             if (data['activeHousing'] && data['activeHousing'].length){
                 var ret = data['activeHousing'][0].room;

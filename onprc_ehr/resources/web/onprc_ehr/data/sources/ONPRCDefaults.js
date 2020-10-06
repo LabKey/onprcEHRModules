@@ -10,6 +10,16 @@
  */
 EHR.model.DataModelManager.registerMetadata('Default', {
     byQuery: {
+
+        //Kolli1 3/19: Added this code to display the description field in the protocol details data entry screen. The Description field is hidden in the core. (Defaults.js)
+        // To overwrite the core code, this snippet is added on the onprc side
+        'ehr.protocol': {
+            description: {
+                hidden: false,
+                label: "Notes"
+            }
+        },
+
         'study.blood' : {
             tube_vol: {
                 hidden: true
@@ -31,6 +41,17 @@ EHR.model.DataModelManager.registerMetadata('Default', {
             }
 
         },
+
+        // //Added: 1-23-2019  R.Blasa   allow drug sedation alert notification
+        // 'study.drug': {
+        //     description: {
+        //         hidden: false,
+        //         width: 200
+        //     },
+        //     reason: {
+        //         hidden: true,
+        //     }
+        // },
 
         //Added: 12-27-2017  R.Blasa
         'study.Arrival': {
