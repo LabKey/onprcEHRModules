@@ -1,0 +1,23 @@
+-- Adds table Annual Rate Change to Billing
+-- Note: Unnecessary due to onprc_billing.AnnualRateChange existing in the DB
+-- from when it was renamed in the 12.378-12.379 script
+
+
+-- SET ANSI_NULLS ON
+-- GO
+--
+-- SET QUOTED_IDENTIFIER ON
+-- GO
+-- DROP TABLE onprc_billing.AnnualRateChange;
+-- CREATE TABLE onprc_billing.AnnualRateChange
+-- (
+-- 	[billingYear] [varchar](10) NOT NULL,
+-- 	[inflationRate] [decimal](18, 0) NULL,
+-- 	[startDate] [datetime] NULL,
+-- 	[endDate] [datetime] NULL,
+-- 	[createdBy] [int] NULL,
+-- 	[created] [datetime] NULL,
+-- 	[modifiedBy] [int] NULL,
+-- 	[modified] [datetime] NULL
+-- ) ON [PRIMARY]
+-- GO

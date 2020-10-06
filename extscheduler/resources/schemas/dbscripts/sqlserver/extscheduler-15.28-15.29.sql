@@ -1,0 +1,1 @@
+ALTER TABLE extscheduler.Events ADD  Quantity INT;
