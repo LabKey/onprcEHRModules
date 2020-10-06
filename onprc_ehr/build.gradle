@@ -11,5 +11,8 @@ dependencies
    modules("org.labkey.module:laboratory:${labkeyVersion}@module") { transitive = true }
    modules("org.labkey.module:LDK:${labkeyVersion}@module") { transitive = true }
    modules("org.labkey.module:dataintegration:${labkeyVersion}@module") { transitive = true }
-   modules("org.labkey.module:premium:${labkeyVersion}@module") { transitive = true }
+BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:LabDevKitModules:laboratory", depProjectConfig: 'published', depExtension: 'module')
+BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: 'published', depExtension: 'module')
+BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:dataintegration", depProjectConfig: 'published', depExtension: 'module')
+BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:premium", depProjectConfig: 'published', depExtension: 'module')
 }
