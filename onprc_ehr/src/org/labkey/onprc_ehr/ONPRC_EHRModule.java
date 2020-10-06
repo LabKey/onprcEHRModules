@@ -110,7 +110,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 18.10;
+        return 20.416;
     }
 
     @Override
@@ -440,6 +440,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, BloodRequestBulkEditFormType.NAME), "study", "blood");
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, DrugRequestBulkEditFormType.NAME), "study", "drug");
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, LabworkRequestBulkEditFormType.NAME), "study", "clinpathRuns");
+
+        //Modified: 8-18-2020 R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PathDeathFormType.class, this));
 
         EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "encounters");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "encounters");

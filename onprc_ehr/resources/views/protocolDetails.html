@@ -119,7 +119,7 @@ Ext4.onReady(function (){
         title: 'Housing Summary',
         schemaName: 'study',
         queryName: 'protocolHousingSummary',
-        columns: 'room,room/housingType,totalAnimals',
+        columns: 'room,room/housingType,room/housingCondition,totalAnimals',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback()
     }).render('housingSummary_' + webpart.wrapperDivId);

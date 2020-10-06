@@ -1,4 +1,4 @@
-<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Industry Rate Sheet">
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Industrial Rates">
     <columns>
         <column name="category"/>
         <column name="Name"/>
