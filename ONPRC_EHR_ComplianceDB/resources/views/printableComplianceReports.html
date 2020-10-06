@@ -110,10 +110,10 @@
                                 'rs:ClearSession': true,
                                 'rs:Command': 'render'
                             });
-
+                            //Modified: 1-17-2019 R.Blasa
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder + '/' + 'EmployeeComplianceXMLReport';
+                            ssrsFolder = '/' + ssrsFolder + '/' + 'Compliance/EmployeeComplianceXMLReport';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
 
@@ -183,10 +183,10 @@
                             'rs:ClearSession': true,
                             'rs:Command': 'render'
                         });
-
+                        //Modified: 1-17-2019  R.Blasa
                         var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                         var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                        ssrsFolder = '/' + ssrsFolder + '/' + 'EmployeeComplianceXMLReport';
+                        ssrsFolder = '/' + ssrsFolder + '/' + 'Compliance/EmployeeComplianceXMLReport';
 
                         url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
 

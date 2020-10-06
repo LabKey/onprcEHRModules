@@ -297,6 +297,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
+                //Modified: 1-17-2019  R.Blasa
                 public String toString()
                 {
                     return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory+Report&rs:Command=Render";
