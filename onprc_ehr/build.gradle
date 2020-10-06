@@ -5,4 +5,11 @@ dependencies
    implementation "com.sun.mail:jakarta.mail:${javaMailVersion}"
    BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: "apiJarFile")
    BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:ehrModules:ehr", depProjectConfig: "apiJarFile")
+
+   // Ensure that we have these modules, either from Artifactory or local source, even if they aren't direct dependencies
+   // to make it easier to build a minimal set on a dev machine
+   BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:LabDevKitModules:laboratory", depProjectConfig: 'published', depExtension: 'module')
+   BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: 'published', depExtension: 'module')
+   BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:dataintegration", depProjectConfig: 'published', depExtension: 'module')
+   BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:premium", depProjectConfig: 'published', depExtension: 'module')
 }
