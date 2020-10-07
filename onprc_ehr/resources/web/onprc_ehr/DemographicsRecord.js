@@ -73,6 +73,11 @@ EHR.DemographicsRecord = function(data){
             return data['lastlocation'];
         },
 
+        //Created: 10-4-2019  R.Blasa
+        getActiveDrugs: function(){
+            return data['activeDrugs'];
+        },
+
         getCurrentLocation: function(){
             if (data['activeHousing'] && data['activeHousing'].length){
                 var ret = data['activeHousing'][0].room;

@@ -156,12 +156,22 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
         if (this.showExtendedInformation){
             items[0].items = items[0].items.concat(this.getExtendedItems());
+
         }
 
         items[0].items = items[0].items.concat([{
             name: 'treatments',
             xtype: 'ehr-snapshotchildpanel',
             headerLabel: 'Current Medications / Prescribed Diets',
+            emptyText: 'There are no active medications'
+        }]);
+
+
+        //Sdded: 10-28-2019  R.Blasa
+        items[0].items = items[0].items.concat([{
+            name: 'sdrug',
+            xtype: 'ehr-snapshotchildpanel',
+            headerLabel: 'Sustained Release Medication',
             emptyText: 'There are no active medications'
         }]);
 
@@ -237,6 +247,8 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         //Added: 12-20-2018  R.Blasa
         this.appendLastKnownLocationResults(toSet, results.getLastKnownlocation());
 
+        //Added: 10-4-2019  R.Bl;asa
+          this.appendDrugRecords(toSet, results.getActiveDrugs());
 
         if (this.showExtendedInformation){
             this.appendBirthResults(toSet, results.getBirthInfo(), results.getBirth());
@@ -379,8 +391,85 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
     },
 
 
+    //Added: 10-4-2019  R.Blasa  Display 72 hour Drug's given
+    appendDrugRecords2: function(toSet, results){
+        var values = [];
+        if (results)
+        {
+            Ext4.each(results, function(row){
+                var foster = row.FosterChild;
+
+                values.push(foster);
+
+            }, this);
+
+        }
+
+        toSet['fosterinfants'] = values.length ? values.join('<br>') : 'None';
+
+    },
+
+    //Added: 10-7-2019  R.Blasa
+    appendDrugRecords: function(toSet, rows){
+        var el = this.down('panel[name=sdrug]');
+        if (!el)
+            return;
+
+        if (rows && rows.length){
+            Ext4.each(rows, function(r){
+                if (r.date){
+                    var date = LDK.ConvertUtils.parseDate(r.date);
+                    //Modified: 11-6-2019  R.Blasa   Compute elapse time in hours
+                    var now = new Date();
+                    r.ElapseHours = Ext4.util.Format.round(Ext4.Date.getElapsed(date, now) / (1000 * 60 *60), 0);
+
+                }
+                if (r.enddate){
+                    var enddate = LDK.ConvertUtils.parseDate(r.enddate);
 
 
+                }
+            }, this);
+        }
+
+         el.appendTable({
+            rows: rows
+        }, this.getDrugColumns());
+    },
+
+    getDrugColumns: function(){
+        return [{
+            name: 'meaning',
+            label: 'Medication'
+
+        },{
+            name: 'amountAndVolume',
+            label: 'Amount',
+            attrs: {
+                style: 'white-space: normal !important;"'
+            }
+        },{
+            name: 'route',
+            label: 'Route'
+        },{
+            name: 'date',
+            label: 'Start Date'
+        },{
+            name: 'ElapseHours',
+            label: 'Hours Elapsed'
+
+        },{
+            name: 'enddate',
+            label: 'End Date'
+
+        },{
+            name: 'remark',
+            label: 'Remark'
+        },{
+            name: 'category',
+            label: 'Category'
+        }];
+    },
 
     appendWeightResults: function(toSet, results){
         var text = [];

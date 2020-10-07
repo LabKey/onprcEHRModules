@@ -67,6 +67,7 @@ import org.labkey.onprc_ehr.demographics.CagemateInfantDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.FosterChildDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.HousingDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.LastHousingDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ParentsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.PregnancyConfirmDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.SourceDemographicsProvider;
@@ -251,6 +252,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 7-18-2018  R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/window/ManageRecordWindow.js"), this);
 
+        //Added: 10-7-2019   R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"), this);
+
+
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Commonly Used Queries");
 
@@ -430,8 +435,14 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(DrugRequestBulkEditFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestBulkEditFormType.class, this));
 
-        //Added: 5/23/2019 Kollil
-//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICRequestFormType.class, this));
+        //Added: 5/23/2019 Kolli
+   //     EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICRequestFormType.class, this));
+
+        //Added: 8/10/2019 Kolli
+//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IPCRequestFormType.class, this));
+
+        //Added: 7/10/2019 by Kolli
+//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICDataEntryFormType.class, this));
 
 //        Added: 11-21-2017  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ProcedureRequestBulkEditFormType.class, this));
@@ -445,6 +456,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 4-5-2017 R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NHPRProcessingFormType.class, this));
 
+        //Added: 11-4-2019  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(TBTestObservationFormType.class, this));
 
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
@@ -479,6 +492,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Created: 4-7-2015-10-2017 R.Blasa
         EHRService.get().registerDemographicsProvider(new ActiveTreatmentsXDemographicsProvider(this));
+
+        //Created: 12-18-2018 R.Blasa
+        EHRService.get().registerDemographicsProvider(new LastHousingDemographicsProvider(this));
+
+        //Created: 10-4-2019 R.Blasa
+        EHRService.get().registerDemographicsProvider(new ActiveDrugsGivenDemographicsProvider(this));
 
         //buttons
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "my_tasks");

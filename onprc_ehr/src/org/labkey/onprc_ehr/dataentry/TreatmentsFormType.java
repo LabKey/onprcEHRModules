@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
+import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
@@ -49,6 +50,14 @@ public class TreatmentsFormType extends TaskForm
             new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
             new TreatmentOrdersFormSection()
         ));
+
+        //Added: 10-7-2019  R.Blasa
+        for (FormSection s : this.getFormSections())
+        {
+            s.addConfigSource("TreatmentDrugsClinical");
+
+        }
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"));
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
         {
