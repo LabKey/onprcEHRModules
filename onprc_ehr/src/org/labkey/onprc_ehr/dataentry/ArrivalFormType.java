@@ -22,6 +22,7 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.WeightFormSection;
 import org.labkey.api.module.Module;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,9 +50,12 @@ public class ArrivalFormType extends TaskForm
                 new WeightFormSection()
         ));
 
-        //setJavascriptClass("ONPRC_EHR.panel.NewAnimalDataEntryPanel");
 
-        //addClientDependency(ClientDependency.fromFilePath("onprc_ehr/panel/NewAnimalDataEntryPanel.js"));
+//        Added: 8-6-2019   R.Blasa
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/panel/ArrivalDataEntryPanel.js"));
+        setJavascriptClass("ONPRC_EHR.panel.ArrivalDataEntryPanel");
+
+
     }
 
     @Override

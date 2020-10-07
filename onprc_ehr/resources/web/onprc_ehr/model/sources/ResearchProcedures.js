@@ -24,6 +24,11 @@ EHR.model.DataModelManager.registerMetadata('ResearchProcedures', {
                 defaultValue: 'Procedure',
                 hidden: true
             },
+
+             //Added: 6-21-2019  R.blasa  hide Special Instructions
+            instructions: {
+            hidden: true
+             },
             title: {
                 hidden: true
             },
@@ -38,7 +43,7 @@ EHR.model.DataModelManager.registerMetadata('ResearchProcedures', {
             procedureid: {
                 lookup: {
                     filterArray: [
-                        LABKEY.Filter.create('category', 'Surgery', LABKEY.Filter.Types.NEQ),
+                        LABKEY.Filter.create('category', 'Research;Procedure', LABKEY.Filter.Types.EQUALS_ONE_OF),  //Modified: 7-23-2019  R.Blasa
                         LABKEY.Filter.create('active', true, LABKEY.Filter.Types.EQUAL)
                     ]
                 }

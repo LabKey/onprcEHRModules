@@ -458,7 +458,8 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
             }
 
             //added by Kolli
-            if (speciesRowData.room == 'NSI 0123D' || speciesRowData.room == 'NSI 0125D' )
+            //Added the new room to the list: NSI 134 by Kolli on 4/19
+            if (speciesRowData.room == 'NSI 0123D' || speciesRowData.room == 'NSI 0125D' || speciesRowData.room == 'NSI 0134')
             {
                 isHazardsRequired = true;
             }
@@ -467,7 +468,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
         //if (isHazardsRequired && (purchaseData.listHazard == null || purchaseData.listHazard == ''))
         if (isHazardsRequired && (purchaseData.hazardslist == null || purchaseData.hazardslist == ''))
         {
-            this.showErrorMsg('You have selected Location(s): NSI 0123D or NSI 0125D. Please list the biological or chemical agents! ');
+            this.showErrorMsg('You have selected Location(s): NSI 0123D or NSI 0125D or NSI 134. Please list the biological or chemical agents! ');
             return;
         }
 

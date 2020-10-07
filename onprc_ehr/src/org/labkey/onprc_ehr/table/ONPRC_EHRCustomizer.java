@@ -267,6 +267,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             appendGroupsAtTimeCol(ehrSchema, ds, dateColName);
             appendProblemsAtTimeCol(ehrSchema, ds, dateColName);
             appendFlagsAtTimeCol(ehrSchema, ds, dateColName);
+//            Added:7-16-2019  R.Blasa
+            appendFlagsAlertActiveCol(ehrSchema, ds);
             appendIsAssignedAtTimeCol(ehrSchema, ds, dateColName);
         }
     }
@@ -2143,6 +2145,71 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         ds.addColumn(col);
     }
+//    Added:7-19-2019  R.Blasa Show Alert Flag categories only
+private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTableInfo ds)
+{
+    String name = "flagsAlertsActive";
+    if (ds.getColumn(name) != null)
+        return;
+
+    final ColumnInfo pkCol = getPkCol(ds);
+    if (pkCol == null)
+        return;
+
+    if (ds.getColumn("Id") == null)
+        return;
+
+    if (!hasTable(ds, "study", "flags", ehrSchema.getContainer()))
+        return;
+
+    final String tableName = ds.getName();
+    final String queryName = ds.getPublicName();
+    final String schemaName = ds.getPublicSchemaName();
+    final UserSchema targetSchema = ds.getUserSchema();
+    final String ehrPath = ehrSchema.getContainer().getPath();
+
+    WrappedColumn col = new WrappedColumn(pkCol, name);
+    col.setLabel("Flags Alerts Active");
+    col.setReadOnly(true);
+    col.setIsUnselectable(true);
+    col.setUserEditable(false);
+    col.setFk(new LookupForeignKey(){
+        public TableInfo getLookupTableInfo()
+        {
+            String name = tableName + "_flagsAtTime";
+            QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
+            qd.setSql("SELECT\n" +
+                    "sd." + pkCol.getSelectName() + ",\n" +
+                    "group_concat(DISTINCT h.flag.value, chr(10)) as flagsAlertsActive\n" +
+                    "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
+                    "JOIN \"" + ehrPath + "\".study.flags h\n" +
+                    "    ON (sd.id = h.id AND h.flag.category = 'Alert' AND (h.dateOnly <= CAST(NOW() AS DATE) AND ((CAST(NOW() AS DATE) <= h.enddateCoalesced) or h.enddate is null)) AND h.qcstate.publicdata = true)\n" +
+                    "group by sd." + pkCol.getSelectName());
+            qd.setIsTemporary(true);
+
+            List<QueryException> errors = new ArrayList<>();
+            TableInfo ti = qd.getTable(errors, true);
+            if (errors.size() > 0)
+            {
+                _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
+                for (QueryException error : errors)
+                {
+                    _log.error(error.getMessage(), error);
+                }
+                return null;
+            }
+
+            ti.getColumn(pkCol.getName()).setHidden(true);
+            ti.getColumn(pkCol.getName()).setKeyField(true);
+
+            ti.getColumn("flagsAlertsActive").setLabel("Flags Alerts Active");
+
+            return ti;
+        }
+    });
+
+    ds.addColumn(col);
+}
 
     private void appendProblemsAtTimeCol(final UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
     {

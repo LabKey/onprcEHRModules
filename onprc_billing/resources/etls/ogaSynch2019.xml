@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--update of procedure to production for daily run -->
+<!--Added 11/23/2018 -->
+<!--Update 6/10/2019-->
+
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>OGASync2018</name>
+
+    <description>Copies OGA Data from external source to PRIME for PRocessing </description>
+
+
+    <transforms>
+        <transform id="OGASync">
+
+            <description>Import to OGA Sync in Prime</description>
+
+            <source schemaName="OGAProd" queryName="ogaSourceOutPut"/>
+
+            <destination schemaName="ONPRC_billing" queryName="ogasynch" targetOption="truncate" />
+
+        </transform>
+        <!--Need to update to change the processes and document each one
+            <transform id="OGA_SP1" type="StoredProcedure">
+                <description>Runs a stored procedure to Update Transaction log based on OGA External Schema.</description>
+                <procedure schemaName="ONPRC_billing" procedureName="OGA_TransactionLog">
+                </procedure>
+             </transform>
+        <transform id="OGA_SP2" type="StoredProcedure">
+            <description>Runs a stored procedure Update the OGA Associated Datasets in Prime based on Transaction Log.</description>
+            <procedure schemaName="ONPRC_billing" procedureName="oga_RecordUpdate">
+            </procedure>
+        </transform>
+
+        <transform id="OGA_SP3" type="StoredProcedure">
+            <description>Runs a stored procedure to Update the Alias dataset.</description>
+            <procedure schemaName="ONPRC_billing" procedureName="oga_InsertAliasRecords">
+            </procedure>
+        </transform>
+
+        <transform id="OGA_SP4" type="StoredProcedure">
+            <description>Runs a stored procedure to Update the Grants dataset.</description>
+            <procedure schemaName="ONPRC_billing" procedureName="oga_InsertGrantRecords">
+            </procedure>
+        </transform>
+
+        <transform id="OGA_SP5" type="StoredProcedure">
+            <description>Runs a stored procedure to Update the Grant Projects dataset..</description>
+            <procedure schemaName="ONPRC_billing" procedureName="oga_InsertGrantProjectRecords">
+            </procedure>
+        </transform>
+
+        <transform id="OGA_SP6" type="StoredProcedure">
+            <description>Runs a stored procedure updates the Transaction log when all records are updated.</description>
+            <procedure schemaName="ONPRC_billing" procedureName="oga_UpdateTransactionLogs">
+            </procedure>
+        </transform>
+-->
+    </transforms>
+
+
+    <schedule><cron expression="0 0 0 * * ?" /></schedule>
+
+
+
+</etl>

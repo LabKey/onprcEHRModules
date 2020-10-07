@@ -59,7 +59,7 @@
             </column>
             <column columnName="employeeid">
                 <columnTitle>Employee Id</columnTitle>
-                <isHidden>true</isHidden>
+                <!--<isHidden>true</isHidden>-->
             </column>
             <column columnName="financialanalyst">
                 <columnTitle>Financial Analyst</columnTitle>
@@ -212,7 +212,7 @@
             </column>
             <column columnName="shipZip">
                 <columnTitle>Ship ZIP</columnTitle>
-            </column>
+            </column>Nonprc_billing.xml
             <column columnName="dateCreated">
                 <columnTitle>Date Created</columnTitle>
             </column>

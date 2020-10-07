@@ -152,6 +152,63 @@ EHR.reports.iStat = function(panel, tab){
     });
 }
 
+//Added: 6-27-2019  R.Blasa
+EHR.reports.TBTest = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    var target = tab.add({tag: 'span', style: 'padding-bottom: 20px'});
+    tab.doLayout();
+
+    var config = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'TBTestEnounters',
+        title: "TB Test Dates " + title,
+        titleField: 'Id',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable,
+        sort: '-date'
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: config
+    });
+
+    var miscConfig = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'TBObservationsReport',
+        title: 'TB TST Scores' + title,
+        titleField: 'Id',
+        sort: '-date',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: miscConfig
+    });
+
+    var resultsConfig = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'TBTestSerologyLabResults',
+        title: 'TB Serology Results' + title,
+        titleField: 'Id',
+        sort: '-date',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable
+
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: resultsConfig
+    });
+}
 
 
 EHR.reports.clinMedicationSchedule = function(panel, tab){
@@ -1054,7 +1111,7 @@ EHR.reports.kinshipSummary = function(panel, tab){
                         var dr = LABKEY.DataRegions[qwp.dataRegionName];
                         if (dr){
                             dr.addFilter(LABKEY.Filter.create('Id2', p.subjectList.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF));
-                            dr.refresh();
+                            // dr.refresh();  Modidifed: 5-23-2019  R.Blasa Prevent from refreshing grid reports.
                         }
                     }
                 }

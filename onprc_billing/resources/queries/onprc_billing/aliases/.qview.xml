@@ -4,7 +4,6 @@
         <column name="category"/>
         <column name="aliasEnabled"/>
         <column name="projectNumber"/>
-        <column name="grantNumber"/>
         <column name="investigatorName"/>
         <column name="investigatorId"/>
         <column name="fiscalAuthority"/>
@@ -15,8 +14,11 @@
         <column name="budgetStartDate"/>
         <column name="budgetEndDate"/>
         <column name="projectStatus"/>
+        <column name="enddate"/>
+        <column name="comment"/>
     </columns>
     <sorts>
         <sort column="alias"/>
     </sorts>
+
 </customView>

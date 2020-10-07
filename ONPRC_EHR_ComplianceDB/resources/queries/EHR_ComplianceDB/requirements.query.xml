@@ -1,0 +1,23 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Requirements" tableDbType="NOT_IN_DB">
+                <tableTitle>Requirements</tableTitle>
+                <columns>
+                    <!--<column columnName="access">-->
+                    <!--<columnTitle>West Campus Level 1</columnTitle>-->
+                    <!--</column>-->
+                    <!--<column columnName="animals">-->
+                    <!--<columnTitle>West Campus Level 2</columnTitle>-->
+                    <!--</column>-->
+                    <!--<column columnName="contactsSla">-->
+                    <!--<columnTitle>West Campus Level 3</columnTitle>-->
+                    <!--</column>-->
+                    <!--<column columnName="tissues">-->
+                    <!--<columnTitle>West Campus Level 4</columnTitle>-->
+                    <!--</column>-->
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -26,12 +26,12 @@ import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
-import org.labkey.api.ehr.notification.AbstractEHRNotification;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.ehr.notification.AbstractEHRNotification;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,7 +60,7 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
     @Override
     public String getDescription()
     {
-        return "This runs every day at 9AM, 12PM, 1PM, 2PM, 3PM   if there are treatments scheduled that have not yet been marked complete";
+        return "This runs every day at 9AM,1PM,3PM   if there are treatments scheduled that have not yet been marked complete";
     }
 
     @Override
@@ -70,12 +70,12 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
     }
 
     @Override
-    public String getCronString() {return "0 0 9,12,13,14,15 * * ?";}
+    public String getCronString() {return "0 0 9,13,15 * * ?";}
 
     @Override
     public String getScheduleDescription()
     {
-        return "daily at 9AM,12PM,1PM,2PM,3PM";
+        return "daily at 9AM,1PM,3PM";
     }
 
     @Override

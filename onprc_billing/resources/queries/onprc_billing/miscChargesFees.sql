@@ -52,6 +52,7 @@ SELECT
   mc.sourceInvoicedItem,
   mc.invoiceId,
   mc.taskid,
+  mc.chargeType as chargeUnit
 
 FROM onprc_billing.miscCharges mc
 

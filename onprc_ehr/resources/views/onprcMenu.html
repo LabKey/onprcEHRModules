@@ -23,28 +23,28 @@
                     cls: 'labkey-iconpanel',
                     tpl: [
                         '<tpl for=".">',
-                            '<tpl if="publicUrl">',
-                                '<div style="width: 300px;font-weight: bold;height: auto;" class="thumb-wrap thumb-wrap-side">',
-                                    '<span style="float: left;position: relative;">{title:htmlEncode}:</span>',
-                                    '<span style="float: right;position: relative;margin-right: 5px;">',
-                                    '<tpl if="!canReadPublic"><span data-qtip="You do not have permission to view this page"> [Public] </a>',
-                                    '<tpl else><a href="{publicUrl}"> [Public] </a>',
-                                    '</tpl>',
+                        '<tpl if="publicUrl">',
+                        '<div style="width: 300px;font-weight: bold;" class="thumb-wrap thumb-wrap-side">',
+                        '<span style="float: left;position: relative;">{title:htmlEncode}:</span>',
+                        '<span style="float: right;position: relative;margin-right: 5px;">',
+                        '<tpl if="!canReadPublic"><span data-qtip="You do not have permission to view this page"> [Public] </a>',
+                        '<tpl else><a href="{publicUrl}"> [Public] </a>',
+                        '</tpl>',
 
-                                    '<tpl if="!canRead"><span data-qtip="You do not have permission to view this page" > [Private] </span>',
-                                    '<tpl else><a href="{url}"> [Private] </a>',
-                                    '</tpl>',
-                                    '</span>',
-                                '</div>',
-                            '<tpl else>',
-                                '<div ',
-                                '<tpl if="!canRead">data-qtip="You do not have permission to view this page"</tpl>',
-                                'style="width: 300px;height: auto;" class="thumb-wrap thumb-wrap-side">',
-                                '<tpl if="url"><a href="{url}"></tpl>',
-                                    '<span style="font-weight: bold" class="thumb-label-side">{title:htmlEncode}</span>',
-                                '<tpl if="url"></a></tpl>',
-                                '</div>',
-                            '</tpl>',
+                        '<tpl if="!canRead"><span data-qtip="You do not have permission to view this page" > [Private] </span>',
+                        '<tpl else><a href="{url}"> [Private] </a>',
+                        '</tpl>',
+                        '</span>',
+                        '</div>',
+                        '<tpl else>',
+                        '<div ',
+                        '<tpl if="!canRead">data-qtip="You do not have permission to view this page"</tpl>',
+                        'style="width: 300px;" class="thumb-wrap thumb-wrap-side">',
+                        '<tpl if="url"><a href="{url}"></tpl>',
+                        '<span style="font-weight: bold" class="thumb-label-side">{title:htmlEncode}</span>',
+                        '<tpl if="url"></a></tpl>',
+                        '</div>',
+                        '</tpl>',
                         '</tpl>',
                         '<div class="x-clear"></div>'
                     ],
@@ -94,7 +94,7 @@
             },{
                 title: 'Labs',
                 itemId: 'labs'
-            },{         //Added 5-28-2015 Blasa
+            },{ //Added 5-28-2015 Blasa
                 title: 'SLA',
                 itemId: 'sla'
             },{
@@ -103,13 +103,16 @@
             },{  //Added 12-7-2016 Blasa
                 title: 'Resource Scheduler',
                 itemId: 'scheduler'
+            },{  //Added by Kolli on 2-26-2019
+                title: 'Room Reservations',
+                itemId: 'reservation'
             }]
         });
 
         ONPRC.Utils.getNavItems({
             scope: this,
             success: function(results){
-                Ext4.each(['labs', 'admin', 'cores', 'ehr', 'dcm', 'sla', 'scheduler'], function(name){
+                Ext4.each(['labs', 'admin', 'cores', 'ehr', 'dcm', 'sla', 'scheduler', 'reservation'], function(name){
                     if (results[name] && results[name].length){
                         var section = panel.down('#' + name).items.get(0);
                         var toAdd = [];
@@ -133,3 +136,5 @@
     });
 
 </script>
+
+

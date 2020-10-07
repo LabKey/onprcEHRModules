@@ -1,7 +1,6 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Grant Projects">
     <columns>
         <column name="projectNumber"/>
-        <column name="grantNumber"/>
         <column name="investigatorName"/>
         <column name="projectTitle"/>
         <column name="projectDescription"/>

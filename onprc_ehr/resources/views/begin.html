@@ -109,9 +109,11 @@ Ext4.onReady(function(){
             items: [
                 {name: 'Compare Lists of Animals', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/utilities.view?'},
                 {name: 'Bulk History Export', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/historyExport.view?'},
-                    //Modified: 1-17-2019 R.Blasa
-                {name: 'Exposure Report', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fExposure+Reports%2fDemographicsReportMain&rs:Command=Render'},
+                    //Modified: 9-9-2019 R.Blasa  Display Basic instead of Full Expsure report
+                {name: 'Basic Exposure Report', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fExposure+Reports%2fBasicExposureMain&rs:Command=Render'},
                 {name: 'Drug Formulary', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=drug_defaults'},
+                    //Added by Kolli on 7/30/19
+                {name: 'Common Medical Abbreviations', url: '<%=contextPath%>' + '/wiki/home/Support/page.view?name=Common%20Abbreviations'},
                 {name: 'Procedure List', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=procedures&query.viewName=Active Procedures'},
                 {name: 'Search Center SNOMED Codes', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=snomed'}
             ]

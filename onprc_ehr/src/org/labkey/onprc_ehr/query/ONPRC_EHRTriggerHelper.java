@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.query;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
@@ -69,6 +70,7 @@ import org.labkey.onprc_ehr.ONPRC_EHRSchema;
 import org.labkey.onprc_ehr.notification.CullListNotification;
 import org.labkey.onprc_ehr.notification.MensesTMBNotification;
 import org.labkey.onprc_ehr.notification.ProtocolAlertsNotification;
+import org.labkey.onprc_ehr.notification.ProjectAlertsNotification;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -1218,8 +1220,8 @@ public class ONPRC_EHRTriggerHelper
 
         }
 //        Added: 10-27-2017   R.Blasa  Create an SPR4 entries for Rhesus macaques
-
-        if ("Live Birth".equalsIgnoreCase(birthCondition) && "RHESUS MACAQUE".equalsIgnoreCase(species)  )
+//       Modified:  6-19-2019  R.Blasa to Create SP4 when Rhesus and no Dam assigned to Infant
+        if ("Live Birth".equalsIgnoreCase(birthCondition) && "RHESUS MACAQUE".equalsIgnoreCase(species) && dam == null )
 
             {
 
@@ -1274,6 +1276,41 @@ public class ONPRC_EHRTriggerHelper
             {
                 _log.error("dam has more than 1 active SPF flag: " + dam);
             }
+            else if (flagList.size() == 0)
+            {
+                //        Added: 6-19-2019   R.Blasa  Create new flag if dam is not assigned to SPRF and Rhesus Macaque
+                if ("Live Birth".equalsIgnoreCase(birthCondition) && "RHESUS MACAQUE".equalsIgnoreCase(species)  )
+
+                {
+
+                    String SPFFlag = getFlag("SPF", "SPF 4", null, true);
+
+                    TableInfo flagsSP4 = getTableInfo("study", "flags");
+                    SimpleFilter flagFilter2 = new SimpleFilter(FieldKey.fromString("Id"), id);
+
+                    //Note: Validate if SPF 4 is active
+                    flagFilter2.addCondition(FieldKey.fromString("flag/value"), "SPF 4");
+                    flagFilter2.addClause(new SimpleFilter.OrClause(
+                            new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, date),
+                            new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)
+                    ));
+
+
+                    TableSelector existingSP4 = new TableSelector(flagsSP4, Collections.singleton("flag"), flagFilter2, null);
+                    if (existingSP4.exists())
+                    {
+                        _log.info("SP4 Flag active record exist for this monkey id: " + id + "Value") ;
+                    }
+                    else
+                    {
+                        _log.info("adding SP4 Animal : " + id + "Value");
+
+                        EHRService.get().ensureFlagActive(getUser(), getContainer(), SPFFlag, date, enddate, null, Collections.singletonList(id), false);
+
+                    }
+                }
+            }
+
 
             //also breeding groups
             TableInfo animalGroups = getTableInfo("study", "animal_group_members");
@@ -2212,6 +2249,98 @@ public class ONPRC_EHRTriggerHelper
 
         }
 
+
+        html.append("</table>\n");
+
+        sendMessage(subject, html.toString(), recipients);
+
+    }
+
+
+    //Added 3-6-2019 Blasa
+    public void sendProjectNotifications(Integer projectid)
+    {
+
+        if (!NotificationService.get().isServiceEnabled())
+        {
+            _log.info("notification service is not enabled, will not send Project notification.");
+            return;
+        }
+
+        String subject = "Center Project Notification: ";
+
+        Set<UserPrincipal> recipients = NotificationService.get().getRecipients(new ProjectAlertsNotification(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)), getContainer());
+
+        if (recipients.size() == 0)
+        {
+            _log.warn("No recipients, Center Project notification");
+            return;
+        }
+        final StringBuilder html = new StringBuilder();
+
+//        Added: 4-3-2019  R.Blasa
+        Date roundedMax = new Date();
+        roundedMax = DateUtils.truncate(roundedMax, Calendar.DATE);
+
+        TableInfo ti = getTableInfo("ehr", "project");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("project"), projectid);
+        filter.addCondition(FieldKey.fromString("enddateCoalesced"), roundedMax, CompareType.GTE);
+
+        Sort sort = new Sort("name");
+
+        List<FieldKey> names= new ArrayList<>();
+        FieldKey protocolFieldKey = FieldKey.fromString("protocol/external_id");
+        names.add(protocolFieldKey);
+        names.add(FieldKey.fromString("name"));
+        names.add(FieldKey.fromString("investigatorId"));
+        names.add(FieldKey.fromString("startdate"));
+        names.add(FieldKey.fromString("project"));
+
+        final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
+        final ColumnInfo protocolColumn = colKeys.get(protocolFieldKey);
+        TableSelector ts = new TableSelector(ti, colKeys.values(), filter, sort);
+
+        if (ts.getRowCount() == 0)
+        {
+            html.append("There are no Center Projects to display");
+            _log.info("Success Section Part 1X");
+            return;
+        }
+        else
+        {
+            //Create header information on the report
+
+            html.append("<table border=1 style='border-collapse: collapse;'>");
+            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td><td>Iacuc Protocol</td><td> Investigator</td><td>  Center Project Start Date</td></tr>\n");
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+                       {
+
+                           @Override
+                           public void exec(ResultSet rs) throws SQLException
+                           {
+
+                               TableInfo ti2 = getTableInfo("onprc_ehr", "investigators");
+                               SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("rowid"), rs.getString("investigatorId"));
+                               filter2.addCondition(FieldKey.fromString("datedisabled"), true, CompareType.ISBLANK);
+
+                               TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("lastname"), filter2, null);
+                               List<String> ret2 = ts2.getArrayList(String.class);
+                               if (ret2 != null && !ret2.isEmpty())
+                               {
+                                   for (String Investname : ret2)
+                                   {
+                                       html.append("<tr><td>" + ( rs.getString("name"))  + "</td><td>" + ( rs.getString("project"))  + "</td><td>   " + ( rs.getString(protocolColumn.getAlias()))  + "</td><td>   " + Investname + "   </td><td>" + rs.getString("startdate") + "</td></tr>\n");
+                                       break;
+
+                                   }
+                               }
+                           }
+
+                       }
+
+            );
+
+        }
 
         html.append("</table>\n");
 

@@ -7,42 +7,57 @@ d.room.area as Area,
 d.room,
 d.CaseVet,
 d.protocol,
+d.ProtocolPI,
+d.Calculated_status,
 Case
-    when d.DeceaseDAssignedVet is not null then d.DeceaseDAssignedVet
+  --  when d.DeceaseDAssignedVet is not null then d.DeceaseDAssignedVet
 	when d.caseVet is not null then d.CaseVet
-	when p3.userId is not null  then v1.userId.displayName
-	when p4.userId is not null then  v2.userId.DisplayName
+	when p1.userId is not null  then p1.userId.displayName
+	when p2.userId is not null then  p2.userId.DisplayName
 	when v1.userId is not null  then v1.userId.displayName
 	when v2.userId is not null then  v2.userId.DisplayName
 	when v3.userId is not null then  v3.userId.DisplayName
 	when v4.userId is not null then  v4.userId.DisplayName
-	when p1.userId is not null then  p1.userId.DisplayName
-	when p2.userId is not null then   p2.userId.DisplayName
+	when p3.userId is not null then  p3.userId.DisplayName
+	when p4.userId is not null then   p4.userId.DisplayName
 	when v5.userId is not null then  v5.userId.DisplayName
 	when v6.userId is not null then  v6.userId.DisplayName
 	when h1.userId is not null then  h1.userId.DisplayName
 	when h2.userId is not null then h2.userId.DisplayName
 
-	End as AssignedVet,
+LEFT JOIN (
+Select  a2.id,
+a2. vetAssigned as vetName,
+a2.protocol
+from resourceAssigned a2 )
+a2 ON (a2.Id = d.Id)
 
 Case
-    when d.DeceaseDAssignedVet is not null then 'Deceased or Shipped NHP'
+   -- when d.DeceaseDAssignedVet is not null then 'Deceased or Shipped NHP'
 	when d.caseVet is not null then 'Open Case'
+	when p1.userId  is not null then  'Room Priority'
+	when p2.userId is not null then  'Area Priority'
 	When p3.userId is not null then 'Protocol Room Priority'
 	When p4.userId is not null then 'Protocol Area Priority'
 	when v1.userId is not null  then 'Protocol Research Room'
 	when v2.userId is not null then  'Protocol Research Area'
 	when v3.userId is not null then  'Protocol Resource Room'
 	when v4.userId is not null then  'Protocol Resource Area'
-	when p1.userId  is not null then  'Room Priority'
-	when p2.userId is not null then  'Area Priority'
 	when v5.userId is not null then  'Protocol Research Only'
 	when v6.userId is not null then  'Protocol Resource Only'
 
-	when h1.userId is not null then 'Room Only'
-	when h2.userId  is not null then 'Area Only'
 
-	End as AssignmentType
+--  SELECT
+--    a.Id,
+--    group_concat(distinct CAST(v.userId.displayName as varchar(120))) as vetNames,
+--    CAST(group_concat(distinct v.userId) as varchar(200)) as vetUserIds,
+--------    Need to only look at Vets on assignment as assigned vet for reseach protocols
+--        (Select distinct a2.project.protocol.displayname from study.assignment a2 where a2.project.protocol = v.protocol and a2.project.use_category.value = 'Research') as protocols
+----    group_concat.use_cagte(distinct a.project.protocol.displayName) as protocols
+--  FROM study.assignment a
+--  JOIN onprc_ehr.vet_assignment v ON (a.project.protocol = v.protocol)
+--  WHERE a.enddateCoalesced >= curdate() OR CAST(a.enddateCoalesced AS DATE) = CAST(a.Id.demographics.lastDayAtCenter AS DATE)
+--  GROUP BY a.Id,v.protocol
 
 FROM study.vet_assignmentDemographics d
 --this handles REsearch Protocol Room
@@ -68,4 +83,4 @@ Left Join onprc_ehr.vet_assignment p4 on (p4.protocol.displayName = d.protocol  
 --these deal with assignment based on housing only
 Left join onprc_ehr.vet_assignment h1 on (h1.room = d.room and h1.protocol is null and h1.area is null and h1.priority = false)
 Left join onprc_ehr.vet_assignment h2 on (h2.area = d.room.area and h2.room is null and h2.protocol is null and h2.priority = false)
-where d.id not like '[a-z]%'
+--where d.id not like '[a-z]%'

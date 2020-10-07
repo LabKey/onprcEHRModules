@@ -1,5 +1,6 @@
 
 SELECT a.project as ProjectID,
+aa.species,
 a.account as Alias,
 y.grantNumber as OGAGrantNumber,
 a.protocol as ParentIACUC,
@@ -11,7 +12,7 @@ i.FirstName,
 i.LastName,
 i.Division,
 p.external_id,
-i.LastName + ': ' + a.name + '('+ p.external_id +')' + ' - ' + a.title as PIIacuc
+i.LastName + ': ' + a.name + '('+ p.external_id +')' + ' - ' + a.title + ' (Species: ' + aa.species + ')' as PIIacuc
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project a
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.protocol p ON p.protocol = a.protocol
 LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId

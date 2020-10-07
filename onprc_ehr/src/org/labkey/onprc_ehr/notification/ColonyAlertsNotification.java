@@ -341,13 +341,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void roomsWithMixedViralStatus(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
-        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;ABSL3", CompareType.CONTAINS_NONE_OF);
+        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;Sequester/Containment;ABSL3", CompareType.CONTAINS_NONE_OF);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("area,room"));
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding ABSL2+ and ABSL3 rooms:</b><p></p>\n");
+            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding ABSL2+,Sequester/Containment, and ABSL3 rooms:</b><p></p>\n");
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p/>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
@@ -400,6 +400,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("Id/MostRecentWeight/MostRecentWeightDate"), null, CompareType.ISBLANK);
+        //Added by Kolli1, 6/11. Excluding the Guinea pigs & Rabbits and showing only primates
+        //filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG+;RABBIT", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG", CompareType.NEQ);
+
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
 
         TableInfo ti = getStudySchema(c, u).getTable("Demographics");
@@ -450,6 +454,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        //Added by Kolli1, 6/11. Excluding the Guinea pigs & Rabbits and showing only primates
+        //filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG+;RABBIT", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG", CompareType.NEQ);
+
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Housing"), filter, sort);
         long count = ts.getRowCount();
         if (count > 0)
@@ -475,6 +483,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("Id/curLocation/room/room"), null, CompareType.ISBLANK);
+        //Added by Kolli1, 6/11. Excluding the Guinea pigs & Rabbits and showing only primates
+        //filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG+;RABBIT", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG", CompareType.NEQ);
+
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), filter, sort);
         long count = ts.getRowCount();
         if (count > 0)
@@ -1842,6 +1854,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void infantsNotWithMother(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/age/ageInDays"), 180, CompareType.LTE);
+        //Added by Kolli1, 6/11. Excluding the Guinea pigs & Rabbits and showing only primates
+        //filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG+;RABBIT", CompareType.CONTAINS_NONE_OF);
+        filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG", CompareType.NEQ);
         filter.addCondition(FieldKey.fromString("Id/demographics/calculated_status"), "Alive", CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 191", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("withMother"), 0, CompareType.EQUAL);

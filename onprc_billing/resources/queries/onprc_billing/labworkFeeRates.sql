@@ -178,7 +178,12 @@ SELECT
 
   mc.item,
   mc.category,
-  mc.unitcost,
+  case
+    When mc.project.displayName in (Select project from "/ONPRC/ADMIN/FINANCE".lists.LabFee_NoChargeProjects where enddate is null)
+        then 0
+        else mc.unitcost
+        End as unitCost,
+ -- mc.unitcost,
   mc.nihRate,
   mc.quantity,
 
@@ -206,5 +211,7 @@ SELECT
   mc.currentActiveAlias
 
 FROM onprc_billing.miscChargesFeeRateData mc
+--left outer join "/ONPRC/ADMIN/FINANCE".lists.LabFee_NoChargeProjects nc on (mc.project.displayName =  nc.project and nc.DateDisabled is null)
+
 WHERE cast(mc.billingDate as date) >= CAST(StartDate as date) AND cast(mc.billingDate as date) <= CAST(EndDate as date)
-AND mc.category = 'Clinical Lab Test'
+AND mc.category = 'Clinical Lab Test' --and nc.project is null

@@ -41,12 +41,42 @@ exports.init = function(EHR){
         });
     });
 
+    //Added: 8-1-2019  R.Blasa
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'birth', function(event, helper){
         //NOTE: births are sometimes not entered until processing, meaning they could be significantly in the past
         helper.setScriptOptions({
-            allowDatesInDistantPast: true
+            allowDatesInDistantPast: true,
+            allowFutureDates: true
         });
     });
+
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study','birth', function(helper, scriptErrors, row, oldRow){
+    //Added: 8-1-2019  R.Blasa
+
+        if (row.Id && row.birth_condition == 'Fetus - Prenatal') {
+            helper.setScriptOptions({
+                allowFutureDates: true
+            });
+
+        }
+    });
+
+
+    //Added: 7-19-2019  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Demographics', function(event, helper){
+        helper.setScriptOptions({
+            allowFutureDates: true
+        });
+    });
+
+    //Added: 7-22-2019  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'housing', function(event, helper){
+        helper.setScriptOptions({
+            allowFutureDates: true
+        });
+    });
+
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'clinpathRuns', function(event, helper){
         helper.setScriptOptions({
@@ -190,22 +220,6 @@ exports.init = function(EHR){
         }
     });
 
-    //Added 8-27-2018  R.Blasa   Create  a new entry when housing condition, or housing type are modified
-    // EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr_lookups',  'rooms', function(helper, scriptErrors, row, oldRow){
-    //
-    //     if (row.room == oldRow.room && row.cage == oldRow.cage && (oldRow.housingCondition != row.housingCondition || oldRow.housingType != row.houstingType) ){
-    //
-    //         //Create a log entry for billing as result of changes mades to  Room dataset
-    //         var msg  =    triggerHelper.createHousingTyperecord(room, row.housingType,row.housingCondition);
-    //         if (msg){
-    //             EHR.Server.Utils.addError(scriptErrors, 'housingCondition', msg, 'INFO');
-    //         }
-    //         else {
-    //             triggerHelper.createHousingTyperecord(row.Id, row.enddate, row.releaseCondition);
-    //         }
-    //
-    //     }
-    // });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
         //check number of allowed animals at assign/approve time.  use different behavior than core EHR
@@ -259,9 +273,10 @@ exports.init = function(EHR){
         }
 
         //update condition on release
+        //Modified: 5-13-2019  R.Blasa
         if (!helper.isETL() && helper.getEvent() == 'update' && oldRow){
             if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData){
-                if (row.releaseCondition && row.enddate){
+                if (row.releaseCondition && row.enddate && row.releaseCondition != 206){
                     var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.enddate, row.releaseCondition);
                     if (msg){
                         EHR.Server.Utils.addError(scriptErrors, 'releaseCondition', msg, 'INFO');
@@ -301,7 +316,8 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'assignment', function(scriptErrors, helper, row, oldRow){
-        if (!helper.isETL() && row.Id && row.assignCondition){
+        //Modified: 5-9-2019  R.Blasa  Prevent flag enttrie for terminal monkey ids
+        if (!helper.isETL() && row.Id && row.assignCondition != 206){
             triggerHelper.updateAnimalCondition(row.Id, row.date, row.assignCondition);
         }
     });
@@ -740,19 +756,7 @@ exports.init = function(EHR){
         }
     });
 
-    // //Added: 9-7-2018  R.Blasa
-    // EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'encounters', function(helper, errors, row, oldRow) {
-    //     //Create an immediate alert notification when this is created
-    //     // if (row.id &&  row.procedureid == 2440) {
-    //         if (row.id &&  row.procedureid == 2094) {
-    //         //Update demographics records
-    //         console.log("ASB Procedure Request Complete NOP  " + row.procedureid);
-    //         var msg = triggerHelper.sendASBProcedureNOPRequestNotification(row.id);
-    //             if (msg){
-    //                 EHR.Server.Utils.addError(scriptErrors, 'procedureid', msg, 'ERROR');
-    //             }
-    //          }
-    //     });
+
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'clinremarks', function(scriptErrors, helper, row, oldRow){
         if (helper.isETL() || helper.isValidateOnly()){
@@ -861,12 +865,26 @@ exports.init = function(EHR){
 
         EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr', 'project', function (helper, scriptErrors, row, oldRow) {
             var constraintHelper = org.labkey.ldk.query.UniqueConstraintHelper.create(LABKEY.Security.currentContainer.id, LABKEY.Security.currentUser.id, 'ehr', 'project_active', 'name');
-            console.log("ONPRC insert handler");
+
             //enforce name unique
             if (row.name) {
                 var isValid = constraintHelper.validateKey(row.name, oldRow ? (oldRow.name || null) : null);
                 if (!isValid) {
                     EHR.Server.Utils.addError(scriptErrors, 'name', 'There is already an old project with the name in ehr: ' + row.name, 'ERROR');
+                }
+            }
+        });
+
+        //Added 3-5-2019  R.Blasa
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
+
+            var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
+
+            if (row.project){
+                console.log("project data collected  " + row.project)
+                var msg = triggerHelper.sendProjectNotifications(row.project);
+                if (msg){
+                    EHR.Server.Utils.addError(scriptErrors, 'project', msg, 'ERROR');
                 }
             }
         });
