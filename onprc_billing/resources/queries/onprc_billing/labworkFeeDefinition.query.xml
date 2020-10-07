@@ -1,0 +1,59 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="labworkFeeRates" tableDbType="TABLE">
+                <tableTitle>Labwork Charges</tableTitle>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <columns>
+                    <column columnName="rowid">
+                        <columnTitle>Row Id</columnTitle>
+                    </column>
+                    <column columnName="servicename">
+                        <columnTitle>Service/Panel Name</columnTitle>
+                        <nullable>false</nullable>
+                        <fk>
+                            <fkFolderPath>/ONPRC/EHR</fkFolderPath>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>labwork_services</fkTable>
+                            <fkColumnName>servicename</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="chargetype">
+                        <columnTitle>Charge Type</columnTitle>
+                        <nullable>true</nullable>
+                        <isHidden>true</isHidden>
+                        <fk>
+                            <fkFolderPath>/ONPRC/EHR</fkFolderPath>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>labworkChargeType</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="chargeId">
+                        <columnTitle>Charge Id</columnTitle>
+                        <nullable>false</nullable>
+                    </column>
+                    <column columnName="active">
+                        <columnTitle>Is Active?</columnTitle>
+                        <defaultValue>true</defaultValue>
+                    </column>
+                    <column columnName="startDate">
+                        <columnTitle>Start Date</columnTitle>
+                        <nullable>false</nullable>
+                        <formatString>Date</formatString>
+                    </column>
+                    <column columnName="endDate">
+                        <columnTitle>End Date</columnTitle>
+                        <nullable>false</nullable>
+                        <formatString>Date</formatString>
+                    </column>
+                    <column columnName="objectid"/>
+                    <column columnName="createdBy"/>
+                    <column columnName="created"/>
+                    <column columnName="modifiedBy"/>
+                    <column columnName="modified"/>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

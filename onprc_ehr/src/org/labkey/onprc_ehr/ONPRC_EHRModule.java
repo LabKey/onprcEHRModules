@@ -560,6 +560,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerHistoryDataSource(new org.labkey.api.ehr.history.DefaultAnimalRecordFlagDataSource(this));
         EHRService.get().registerHistoryDataSource(new ONPRCClinicalRemarksDataSource(this));
 
+        EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "encounters");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "encounters");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "tissue_samples");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "organ_weights");
+
         EHRService.get().registerOptionalClinicalHistoryResources(this);
 
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));

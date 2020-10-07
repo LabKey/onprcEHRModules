@@ -14,8 +14,6 @@
  *
  */
 
-USE [Labkey]
-GO
 /****** Object:  StoredProcedure [onprc_ehr].[etl.Step1A_eIACUCtoPublicAction]    Script Date: 2/7/2018 2:04:29 PM ******/
 SET ANSI_NULLS ON
 GO

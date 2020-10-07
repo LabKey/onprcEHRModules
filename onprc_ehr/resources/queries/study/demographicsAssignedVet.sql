@@ -8,7 +8,7 @@ d.room,
 d.CaseVet,
 d.protocol,
 Case
-
+    when d.DeceaseDAssignedVet is not null then d.DeceaseDAssignedVet
 	when d.caseVet is not null then d.CaseVet
 	when p3.userId is not null  then v1.userId.displayName
 	when p4.userId is not null then  v2.userId.DisplayName
@@ -26,7 +26,7 @@ Case
 	End as AssignedVet,
 
 Case
-
+    when d.DeceaseDAssignedVet is not null then 'Deceased or Shipped NHP'
 	when d.caseVet is not null then 'Open Case'
 	When p3.userId is not null then 'Protocol Room Priority'
 	When p4.userId is not null then 'Protocol Area Priority'

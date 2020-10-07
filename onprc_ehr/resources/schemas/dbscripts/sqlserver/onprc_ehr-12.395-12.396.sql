@@ -16,13 +16,12 @@
  * SQL 2014 DB for Labkey-gj
  */
 
-GO
 /****** Object:  StoredProcedure [onprc_ehr].[etl1_eIACUCtoPRIMEProcessing]    Script Date: 2/7/2018 2:01:46 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-Create PROCEDURE onprc_ehr.etl.Step1eIACUCtoPRIMEProcessing
+Create PROCEDURE onprc_ehr.etlStep1eIACUCtoPRIMEProcessing
 
 AS
 

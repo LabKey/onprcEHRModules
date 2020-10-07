@@ -14,8 +14,6 @@
  *
  */
 
-USE [Labkey]
-GO
 /****** Object:  StoredProcedure [onprc_ehr].[etl2_update_ehrProtocol]    Script Date: 2/7/2018 2:29:18 PM ******/
 SET ANSI_NULLS ON
 GO

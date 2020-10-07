@@ -1,4 +1,4 @@
-<tables xmlns="http://labkey.org/data/xml">
+<tables xsi:schemaLocation="http://labkey.org/data/xml ..\..\..\..\schemas\tableInfo.xsd" xmlns="http://labkey.org/data/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <table tableName="chargeRates" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Charge Rates</tableTitle>
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
@@ -97,7 +97,7 @@
                 <columnTitle>Service Center</columnTitle>
                 <description>A code used to categorize these items by department, primarily used when exporting or communicating with external billing systems.  Similar to itemCode</description>
             </column>
-                <column columnName="allowscustomunitcost">
+            <column columnName="allowscustomunitcost">
                 <columnTitle>Allow Custom Unit Cost?</columnTitle>
             </column>
             <column columnName="allowblankid">
@@ -541,6 +541,7 @@
                 <columnTitle>Housing Type</columnTitle>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>housingTypes</fkTable>
                     <fkColumnName>rowid</fkColumnName>
@@ -551,6 +552,7 @@
                 <columnTitle>Housing Definition</columnTitle>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>housingDefinition</fkTable>
                     <fkColumnName>rowid</fkColumnName>
@@ -921,6 +923,7 @@
                 <columnTitle>Charge Type</columnTitle>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>procedureChargeType</fkTable>
                     <fkColumnName>value</fkColumnName>
@@ -930,6 +933,7 @@
                 <columnTitle>Assisting Staff</columnTitle>
                 <nullable>true</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>procedureChargeType</fkTable>
                     <fkColumnName>value</fkColumnName>
@@ -976,6 +980,7 @@
                 <columnTitle>SNOMED Code</columnTitle>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>snomed</fkTable>
                     <fkColumnName>code</fkColumnName>
@@ -986,6 +991,7 @@
                 <description>If provided, only medications using this route will be billed.  Can be left blank for all routes.</description>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>routes</fkTable>
                     <fkColumnName>route</fkColumnName>
@@ -1244,6 +1250,7 @@
                 <columnTitle>Service/Panel Name</columnTitle>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>labwork_services</fkTable>
                     <fkColumnName>servicename</fkColumnName>
@@ -1254,6 +1261,7 @@
                 <nullable>true</nullable>
                 <isHidden>true</isHidden>
                 <fk>
+                    <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>labworkChargeType</fkTable>
                     <fkColumnName>value</fkColumnName>

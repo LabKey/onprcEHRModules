@@ -26,8 +26,8 @@ public class NecropsyRequestForm extends RequestForm
                 new SimpleFormSection("study", "tissue_samples", "Tissue Samples", "onprc_ehr-dragdropgridpanel"),
                 new SimpleFormSection("study", "organ_weights", "Organ Weights", "onprc_ehr-dragdropgridpanel")
                 ));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/DragDropGridPanel.js"));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalEncounters.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/grid/DragDropGridPanel.js"));
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/ClinicalEncounters.js"));
 
         for (FormSection s : getFormSections())
             s.addConfigSource("ClinicalEncounters");
