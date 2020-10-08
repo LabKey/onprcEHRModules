@@ -11,8 +11,10 @@ Ext4.define('ONPRC_EHR.data.sources.BehaviorExamStoreCollection', {
         this.mon(EHR.DemographicsCache, 'casecreated', this.onCaseCreated, this);
     },
 
+    //Modified: 1-15-2020  R. Blasa
     onCaseCreated: function(id, category, caseId){
-        if (category != 'Clinical')
+
+        if (category != 'Behavior')
             return;
 
         //NOTE: if we opened a case from this form, tag the SOAP note

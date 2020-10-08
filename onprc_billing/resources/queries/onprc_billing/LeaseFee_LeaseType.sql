@@ -15,84 +15,72 @@ COndition Code Change
 Not if ESPF one use Animal
 Obese - TMB - ESPF
 --Update 2020-01-10 Changes ESPF to U42 Expanded SPF Lease so that will properly display
+--2020-01-15 Update to handle TMB Adult Assignment
+
 */
 
 SELECT
 l.id,
-
 Case
 --Research Owned Animal
-	When l.researchowned = 'yes' then 'researchOwned'
+When l.researchowned = 'yes' then 'researchOwned'
 --Adult Research Assignment P51 Animal (animal unassigned and adult)
 ----**Dual Assigned Obese JMac Control Infant Lease
-	When l.id.age.ageinyears < 3 and da.project.name  = '0622-01'and (l.id !=r.id or r.id is null) then 'Obese JMac Control Infant'
+When l.id.age.ageinyears < 3 and da.project.name = '0622-01'and (l.id !=r.id or r.id is null) then 'Obese JMac Control Infant'
 ----**Dual Assigned Obese JMac WSD Infant Lease
-	When l.id.age.ageinyears < 3 and da.project.name  = '0622-01'and l.id =r.id then 'Obese JMac WSD Infant'
+When l.id.age.ageinyears < 3 and da.project.name = '0622-01'and l.id =r.id then 'Obese JMac WSD Infant'
 
 
-	--Adult Day Lease Condition Change for Research Assigned Adults -  remove Age restriction
-	When (l.id.age.ageinyears > 1 and l.dayLease = 'yes' and l.assignCondition = l.projectedReleaseCondition) and (da.project.name  != '0833' or da.project.name is Null ) then 'Day Lease Research Assignment P51 NHP NC'
-	--Adult Day L:ease No Condition Change
-	When (l.id.age.ageinyears > 1 and l.dayLease = 'yes' and l.assignCondition != l.projectedReleaseCondition) and (da.project.name  != '0833' or da.project.name is Null) then 'Day Lease Research Assignment P51 NHP Condition Change'
+--Adult Day Lease Condition Change for Research Assigned Adults - remove Age restriction
+When (l.id.age.ageinyears > 1 and l.dayLease = 'yes' and l.assignCondition = l.projectedReleaseCondition) and (da.project.name != '0833' or da.project.name is Null ) then 'Day Lease Research Assignment P51 NHP NC'
+--Adult Day L:ease No Condition Change
+When (l.id.age.ageinyears > 1 and l.dayLease = 'yes' and l.assignCondition != l.projectedReleaseCondition) and (da.project.name != '0833' or da.project.name is Null) then 'Day Lease Research Assignment P51 NHP Condition Change'
 
 --Dual assigned ESPF using different Chared Code
-	When da.project.Name  = '0492-03' then 'U42 Expanded SPF Lease'
+When da.project.Name = '0492-03' then 'U42 Expanded SPF Lease'
 --Dual assigned TMB Male on Day Lease
-	When l.agegroup = 'Adult'  and da.project.name = '0300'  and l.dayLease = 'yes' then 'TMB Adult Day Lease'
+When l.agegroup = 'Adult' and da.project.name = '0300' and l.dayLease = 'yes' then 'TMB Adult Day Lease'
 
---Dual assigned Obese Male Day Lease
-	When l.agegroup = 'Adult'  and da.project.name = '0833'  and l.dayLease = 'yes' then 'OBESE Adult Day Lease'
 
+/*********Dual Assigned TMB Dam */
+When l.MultipleAssignments = 'TMB Dam' then 'Animal Lease Fee -TMB'
 --Full LEase P51 adult
-	When l.id.age.ageinyears > 1 and l.daylease <> 'yes' and (da.project.name  <> '0833' or da.project.Name is Null) then 'Research Assignment P51 Adult'
+When l.id.age.ageinyears > 1 and l.daylease <> 'yes' and (da.project.name <> '0833' or da.project.Name is Null) then 'Research Assignment P51 Adult'
 
 --**Dual Assigned TMB-Dam Assigned Use lease_TMB as Process --------------------------------------------------------------------------------------------------------
+
 -- For No charge Dam is Dual assigned to TMB and to the Project and Infant is assigned to the Project - THe lease for infant is built into the TMB Lease of the Dam
-	WHEN L.Birthtype = 'TMBResearchAssignment' then 'TMB No Charge'
+WHEN L.Birthtype = 'TMBResearchAssignment' then 'TMB No Charge'
 
 --**Dual Assigned TMB Dam Not Assigned ----------------------------------------------------------------------------------------------------------------------------
 -- For this the INfant and Dam are not assigned to the same project and the dam is assigned to TMB
-	WHEN L.Birthtype = 'TMB DAm Not Assigned' then 'TMB Full P 51 Rate Lease'
+WHEN L.Birthtype = 'TMB DAm Not Assigned' then 'TMB Full P 51 Rate Lease'
 -- TMB Dam is TMB and is assigned to Research to produce infant
-	--	When l.id in (Select d1.id from study.tmbdam d1 where d1.id = l.id and d1.date < l.date and l.enddate is Null) and l.project.Use_category = 'Research'
---		then 'TMB Dam Research Assignment'
-
-
+-- When l.id in (Select d1.id from study.tmbdam d1 where d1.id = l.id and d1.date < l.date and l.enddate is Null) and l.project.Use_category = 'Research'
+-- then 'TMB Dam Research Assignment'
 --Infant born to Resource Dam
-	When l.birthType = 'Born to Resource Dam' then l.birthType
+When l.birthType = 'Born to Resource Dam' then l.birthType
 
-
---Adult Day Lease Condition Change ------------------------------------------------------------------------------------------------------------
--- This is better handled separately
---	when (Select l2.DayLeaseConditionChange from study.lease_DayLeaseAdult l2 where l2.id = l.id)  = 'Yes' and l.dayLease = 'yes' Then 'Adult Day Lease With Condition Change'
-
-
---handle Birth to resource and research at birth --handle it
-
---	when (Select l2.DayLeaseConditionChange from study.lease_DayLeaseAdult l2 where l2.id = l.id)  = 'No' and l.dayLease = 'yes' Then 'Adult Day Lease No Condition Change'
-
-/*********Dual Assigned ESPFTMB Birth */
-	When da.project.Name  = '0492-03' then 'U42 Expanded SPF Lease'
 ----Dual Assigned Obese JMac Infant or Dam Day Lease = No condition Code CHanges - if change full lease
 --need to change to also incldue if the damn is there
-	When da.project.name   = '0622-01'  and l.daylease = 'yes' then 'Obese 0622-01  Day Lease'
+When da.project.name = '0622-01' and l.daylease = 'yes' then 'Obese 0622-01 Day Lease'
 ----**Dual Assigned Obese JMac Control Infant Lease
-	When l.id.age.ageinyears < 3 and da.project.name  = '0622-01'and l.id !=r.id then 'Obese JMac Control Infant'
+When l.id.age.ageinyears < 3 and da.project.name = '0622-01'and l.id !=r.id then 'Obese JMac Control Infant'
 ----**Dual Assigned Obese JMac WSD Infant Lease
-	When l.id.age.ageinyears < 3 and da.project.name  = '0622-01'and l.id =r.id then 'Obese JMac WSD Infant'
+When l.id.age.ageinyears < 3 and da.project.name = '0622-01'and l.id =r.id then 'Obese JMac WSD Infant'
 ----**Dual Assigned Obese Adult Day Lease
-	When l.agegroup = 'adult' and da.project.name  = '0833' and l.daylease = 'yes' then 'OBESE Adult Day Lease'
+When l.agegroup = 'adult' and da.project.name = '0833' and l.daylease = 'yes' then 'OBESE Adult Day Lease'
 ----**Dual Assigned Obese Adult Male Lease
-	When l.agegroup = 'adult' and da.project.name  = '0833' and l.daylease = 'no' and Cast(l.projectedReleaseCondition as Varchar(20)) != 'Terminal' then 'OBESE Adult Male Lease'
+When l.agegroup = 'adult' and da.project.name = '0833' and l.daylease = 'no' and Cast(l.projectedReleaseCondition as Varchar(20)) != 'Terminal' then 'OBESE Adult Male Lease'
 ----Dual Assigned Obese Adult Male Terminal Lease
-	When l.agegroup = 'adult' and da.project.name  = '0833' and l.daylease = 'no' and Cast(l.projectedReleaseCondition as Varchar(20)) = 'Terminal' then 'OBESE Adult Terminal Leasel'
+When l.agegroup = 'adult' and da.project.name = '0833' and l.daylease = 'no' and Cast(l.projectedReleaseCondition as Varchar(20)) = 'Terminal' then 'OBESE Adult Terminal Leasel'
 --when Adult Animal Assigned to Research project
-	when l.agegroup = 'adult' and da.project  ='0300' then 'Aninal Lease Fee -TMB'
+--when l.agegroup = 'adult' and da.project ='0300' then 'Aninal Lease Fee -TMB'
 --Infant Research Assignment P51 Animal Day Lease -------------------------------------------------------------------------------------------------------
-	When l.id.age.ageinyears < 1 and l.daylease = 'yes' then 'Day Lease Research Assignment P51 Infant'
+When l.id.age.ageinyears < 1 and l.daylease = 'yes' then 'Day Lease Research Assignment P51 Infant'
 
 --Infant Research Assignment P51 Animal-------------------------------------------------------------------------------------------------------
-	When l.ageatAssignment < 1 then 'Research Assignment P51 Infant'
+When l.ageatAssignment < 1 then 'Research Assignment P51 Infant'
 
 
 

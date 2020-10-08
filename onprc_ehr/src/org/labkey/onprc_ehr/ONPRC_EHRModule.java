@@ -53,6 +53,7 @@ import org.labkey.onprc_ehr.buttons.AssignmentCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentReleaseConditionButton;
 import org.labkey.onprc_ehr.buttons.BulkEditRequestsButton;
 import org.labkey.onprc_ehr.buttons.ChangeProjectedReleaseDateButton;
+import org.labkey.onprc_ehr.buttons.CreateNecropsyRequestButton;
 import org.labkey.onprc_ehr.buttons.CreateProjectButton;
 import org.labkey.onprc_ehr.buttons.HousingTransferButton;
 import org.labkey.onprc_ehr.buttons.ManageFlagsButton;
@@ -113,7 +114,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 17.705;
+        return 17.706;
     }
 
     @Override
@@ -383,6 +384,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerActionOverride("cageDetails", this, "views/cageDetails.html");
         EHRService.get().registerActionOverride("animalSearch", this, "views/animalSearch.html");
         EHRService.get().registerActionOverride("animalHistory", this, "views/animalHistory.html");
+        EHRService.get().registerActionOverride("serviceRequests", this, "views/serviceRequests.html");
 
         //Added: 10-2-2017  R.Blasa displays onperc version of enterData.view
         EHRService.get().registerActionOverride("enterData", this, "views/enterData.html");
@@ -405,6 +407,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SurgeryFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SingleSurgeryFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyRequestForm.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BiopsyFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PathologyTissuesFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalReportFormType.class, this));
@@ -575,6 +578,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //R.Blasa   1-23-2015
         EHRService.get().registerHistoryDataSource(new org.labkey.api.ehr.history.DefaultAnimalRecordFlagDataSource(this));
         EHRService.get().registerHistoryDataSource(new ONPRCClinicalRemarksDataSource(this));
+
+        EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "encounters");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "encounters");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "tissue_samples");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "organ_weights");
 
         EHRService.get().registerOptionalClinicalHistoryResources(this);
 

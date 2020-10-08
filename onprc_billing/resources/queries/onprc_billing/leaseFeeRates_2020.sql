@@ -1,10 +1,12 @@
 --Corrested Issue with Adjustments and loading into Test
+--20200111 - changed source from rate data to a passthru with a lookup of rate name and unit cost
 
 SELECT d.Id,
        r.leasetype,
        d.ResearchOwned,
        d.project,  --integer
-       d.ProjectAlias,
+       d.project.name as CenterProject,
+       r.AliasAtTime,
        d.AgeAtAssignment,
        d.ageinyears,
        d.AgeGroup,
@@ -14,6 +16,8 @@ SELECT d.Id,
        d.DayLease,
        d.DayLeaseLength, --integer
        d.MultipleAssignments,
+       d.CreditResource as dualassignment,
+       null as creditto,
        d.date,
        d.projectedRelease,
        d.enddate,
@@ -30,11 +34,16 @@ SELECT d.Id,
        r.ChargeID, --integer
        i.Name as Item,
        i.DepartmentCode as ServiceCenter,
-       RateCalc(d.alias,r.chargeID,d.project,d.Date,d.farate)  as CalculatedRate,
-       r.revisedChargeID
+       r.exemptionRate,
+       r.Multiplier,
+       r.subsidy,
+       RateCalc(r.AliasAtTime,r.chargeID,d.project,d.Date,d.farate)  as CalculatedRate,
+       null as revisedRate,
+       r.revisedChargeID,
+       r.revisedSubsidy
 
-FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leasefee_rateData r join
-	Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.LeaseFee_Demographics d on r.id = d.id and r.assignmentdate = d.date and 		r.projectid = d.project
+FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leasefee_rateChargeItem r join
+	Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.LeaseFee_Demographics d on r.id = d.id and r.assignmentdate = d.date and r.projectid = d.project
     join	Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leasefee_LeaseType t on d.id = t.id and t.assignmentdate = d.date and t.project = d.project
      join	Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.chargeableItems i on i.rowID = r.chargeID
 
@@ -45,6 +54,7 @@ select
     'automatic_adjustment' as AssignmentType,
     '' as researchOwned,
     a.projectID, --intege
+    a.project.name as CenterProject,
     a.alias,
     a.ageattime,
     1 as ageinYears, --need to run function to return years
@@ -55,6 +65,8 @@ select
     '' as DayLease,
     '' as DayLeaseLength, --integer
     '' as MultipleAssignments,
+       null as dualassignment,
+       null as creditto,
     a.date,
     a.enddate as projectedrelease,
     a.enddate,
@@ -71,8 +83,13 @@ select
     a.leaseCharge1, --integer
     ii.name as Item,
     ii.DepartmentCode as ServiceCenter,
+    null as exemptionRate,
+     null as Multiplier,
+     null as subsidy,
+    RateCalc(a.alias,a.leasecharge1,a.projectID, a.date,a.farate) as CalculatedRate,
     RateCalc(a.alias,a.leasecharge2,a.projectID, a.date,a.farate) as RevisedRate,
-    a.leaseCharge2
+    a.leaseCharge2,
+    null as RevisedSubsidy
 
 FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.LeaseFeeReleaseAdjustment a
 join	Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.chargeableItems ii on ii.rowID = a.chargeID
@@ -81,21 +98,28 @@ join	Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.on
 Union
 
 
+
 Select
     r.id,
     'Misc Charge',
     null as researchOwned,
     r.project,
+    r.project.name as CenterProject,
     r.account.alias,
     null as ageatTime,
     null as ageInYears,
     null as AgeGroup,
     null as BirthAssignment,
     null as BirthType,
-    'Misc Charge' as AssignmentTypeNA,
+    case
+        When r.chargeCategory is not Null then r.chargeCategory
+        Else     'Misc Charge'
+        End as AssignmentTypeNA,
     null as DayLease,
     null as DayLeaseLength, --integer
     null as MultipleAssignments,
+     null as dualassignment,
+       null as creditto,
     r.date,
     null as projectedrelease,
     null as enddate,
@@ -111,9 +135,15 @@ Select
     null as canRaiseFA,
     r.chargeID, --integer
     r.chargeID.Name as Item,
-    r.serviceCenter as ServiceCenter,
+     r.serviceCenter as ServiceCenter,
+    null as exemptionRate,
+    Null as Multiplier,
+    null as Subsidy,
+
     r.rateCalc,
-    null as rate2
+    null as RevisedRate,
+    null as rate2,
+    null as RevisedSubsidy
 
 
 

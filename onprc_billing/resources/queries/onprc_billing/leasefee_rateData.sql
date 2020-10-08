@@ -58,6 +58,28 @@ FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.on
        AND lf.active = true)
 where l.daylease <> 'yes'
 
+UNION
+
+SELECT l.id,
+l.project.name as CenterProject,
+l.project.project as ProjectID,
+l.alias,
+l.leasetype,
+l.assignmentdate,
+l.assignCondition.code,
+
+l.projectedReleaseCondition.code as ProjectedReleaseCode,
+Cast(l.ageAtAssignment as Integer) as AssignmentAge,
+lf.chargeId,
+Null as RevisedChargeID,
+
+1 as quantity
+
+FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType l
+    JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
+       lf.chargeId.Name = 'Animal Lease Fee - TMB' and lf.active = true)
+
+where (l.leasetype = 'Animal Lease Fee -TMB') and l.daylease <> 'yes'
 
 
 UNION

@@ -39,7 +39,9 @@ Case
 	End as BirthType,
 
 Case
+	--When da.id
 	when ( a.date = a.id.birth.date and t.id is not null) then 'TMB Birth'
+
 	when a.project.use_category = 'Research' then 'Research'
 	Else a.project.use_category
 end
@@ -64,12 +66,20 @@ Case
 
 Case
 	when (Select Count(a2.project.name) from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a2 where (a2.id = a.id and a.project <> a2.project and a2.enddate is null and a2.date <= a.date)) > 2 then 'Over 2 Assignments'
+	when tmb.id is not null then 'TMB Dam'
 	when (Select Count(a2.project.name) from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a2 where (a2.id = a.id and a.project <> a2.project and a2.enddate is null and a2.date <= a.date)) = 2 then
   'Dual Assigned'
 
 End as MultipleAssignments,
  --(Select a2.project.name from study.assignment a2 where (a2.id = a.id and a.project <> a2.project and a2.enddate is null and a2.date <= a.date)) as DualAssignment,
-
+Case
+    When da.project is not null and da.dualassignment = a.project then da.project.name
+    else null
+    End as CreditResource,
+Case
+    When da.project is not null and da.dualassignment = a.project then da.project.account
+    else null
+    End as CreditTo,
 
 
 a.date,
@@ -100,5 +110,9 @@ FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assig
 left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.tmbBirth t on a.id = t.id
 left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.birth_resourceDam d on a.id  =  d.id
 --left outer join study.tmbdam t on t.id = a.id.birth.dam
+Left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.dualassigned da on da.id = a.id and (da.dualassignment = a.project
+            and (da.enddate is null or da.enddate > a.date) and (da.dualenddate is null or da.Dualenddate > a.date))
+Left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.tmbDam tmb on tmb.id = a.id  and (tmb.date <= a.date and tmb.enddate >= a.date or tmb.endDate is Null)
 where a.datefinalized >= startDate and (a.datefinalized <= enddate or a.enddate is null)
+
 and a.id not like  '[a-z]%'

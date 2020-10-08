@@ -62,9 +62,13 @@ public class NecropsyFormType extends EncounterForm
                 //new PathologyTissueDistFormSection(),
                 //new PathologyFormSection("study", "measurements", "Measurements"),
                 new PathologyDiagnosesFormSection("study", "histology", "Histologic Findings"),
-                new PathologyDiagnosesFormSection("study", "pathologyDiagnoses", "Diagnoses"),
-                new SimpleFormSection("study", "tissue_samples", "Tissue Samples", "onprc_ehr-dragdropgridpanel"),
-                new SimpleFormSection("study", "organ_weights", "Organ Weights", "onprc_ehr-dragdropgridpanel")
+                new PathologyDiagnosesFormSection("study", "pathologyDiagnoses", "Diagnoses")
+
+                //Removed: 2-4-2020  R.Blassa  Commented temporarily Note: This form was excluded 17.2 version
+//                new SimpleFormSection("study", "tissue_samples", "Tissue Samples", "onprc_ehr-dragdropgridpanel")
+
+                //Removed: 1-29-2020  R.Blassa  Commented temporarily Note: This form was excluded 17.2 version
+             //   new SimpleFormSection("study", "organ_weights", "Organ Weights", "onprc_ehr-dragdropgridpanel")
         ));
 
         for (FormSection s : this.getFormSections())

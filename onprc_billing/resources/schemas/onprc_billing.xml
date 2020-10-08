@@ -1508,7 +1508,7 @@
         </columns>
     </table>
     <table tableName="AnnualRateChange" tableDbType="TABLE" useColumnOrder="true">
-        <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer"/>
         <auditLogging>DETAILED</auditLogging>
         <tableTitle>Annual Rate Change</tableTitle>
         <columns>
