@@ -1,6 +1,7 @@
 --2020/02/12 build
 
-SELECT r.Id,
+SELECT
+r.Id,
 r.date as BillingDate,
 r.enddate as ReleaseDate,
 r.CenterProject,
@@ -57,22 +58,29 @@ r.canRaiseFA,
 r.BirthAssignment,
 r.BirthType,
 case
+
+    When a.creditto is not null then 'Adjustment'
     When d.creditResource is not Null then d.creditResource
     Else 'p51'
     End as CreditTo,
 Case
-When d.creditResource is not Null then d.creditTo
+
+    when a.creditto is not null then a.creditto
+    when d.creditResource is not Null then d.creditTo
     else ca.account
     End  as CreditAccount,
 case
     WHen r.releaseType = 'No Charge' then 0
+        WHen r.releaseType = 'IACUC Excluded / No Charge' then 0
     when r.researchOwned = 'Yes' then 0
-    when r.DayLeaseLength > 0 and r.daylease = 'yes' then (r.dayleaseLength * r.CalculatedRate)
-    when r.revisedrate is not null and r.revisedrate > r.CalculatedRate then (r.revisedRate - r.CalculatedRate)
-    when r.revisedrate is not null and r.revisedrate < r.CalculatedRate then (r.CalculatedRate - r.RevisedRate)
+    when r.DayLeaseLength> 0 then (r.dayleaseLength * r.CalculatedRate)
+    --when r.revisedRate Is Not null then 2020
+    when r.assignmentType = 'automatic_adjustment' and r.revisedrate > r.CalculatedRate then (r.revisedRate - r.CalculatedRate)
+    when  r.assignmentType = 'automatic_adjustment' then ((r.CalculatedRate - r.RevisedRate) * -1)
 
     Else (1 * r.CalculatedRate)
     End as TotalCost,
+r.calculatedRate,
 r.revisedRate
 
 
