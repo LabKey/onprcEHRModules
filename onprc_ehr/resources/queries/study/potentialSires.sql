@@ -13,29 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 SELECT
-  c.Id,
-  h.Id as potentialSire,
-  group_concat(DISTINCT h.room) as rooms,
-  group_concat(DISTINCT h.cage) as cages,
-  --NOTE: SQL_TSI_YEAR not support in postgres
-  (max(timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, c.minDate)) / 365) as sireAgeAtTime
+    d.RowId,
+    d.participantId as id,
+    d.Date as Birth,
+    d.Species,
+    d.room  as birthRooom,
+    d.cage as birthCage,
+    d.sireAgeAtTime,
+    d.potentialSire,
+    d.SireBirth,
+    d.Siregender,
+    d.SireSpecies,
+    d.SireDeath
 
-FROM study.potentialConceptionLocations c
+from onprc_ehr.PotentialSire_source d
 
---then find all males overlapping with these locations that also overlap with the conception window
-JOIN study.housing h ON ((
-    h.Id.demographics.gender = 'm' AND
-    h.room = c.room AND
-    (h.cage = c.cage OR (h.cage IS NULL AND c.cage IS NULL)) AND
-    h.dateOnly <= cast(c.maxDate as date) AND h.enddateCoalesced >= cast(c.minDate as date)
-)
 
---note: this is to always include all observed sires
-OR h.Id = c.Id.birth.sire
-)
-
-WHERE timestampdiff('SQL_TSI_DAY', h.Id.demographics.birth, c.minDate) > 912.5 --(2.5 years)
-AND h.Id.demographics.species = c.Id.demographics.species
-
-GROUP BY c.Id, h.Id

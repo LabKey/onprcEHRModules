@@ -19,11 +19,11 @@
             },
             layout: {type: 'vbox'},
             items: [{
-                html: 'Please Select the Calculation Method to Use from the Drop Down Box. If Margin is included  enter a value between .0 and and .50 Please use a 2 place decimal',
+                html: 'Please Select the Calculation Method to Use from the Drop Down Box. If Margin is included  enter a value between .0 and and .50.  Please use a 2 place decimal.  THE ONPRC F&A Rate is 47% ',
                 style: 'padding-bottom: 10px;'
             },
 
-                {
+                {E
                     xtype: 'numberfield',
                     itemId: 'filter-field',
                     fieldLabel: 'Project Margin',
@@ -37,7 +37,7 @@
 
                 {
                     xtype: 'button',
-                    text: 'Retrieve Industry Rates -------Margin Only       ',
+                    text: 'Retrieve Industry Rates ------- Margin Only       ',
                     border: true,
                     padding: '10 5 3 10', // (top, right, bottom, left).
                     handler: function (btn) {
@@ -46,7 +46,7 @@
                         if ((cushionValue != null) &&(cushionValue >= .0) && (cushionValue <= .50)) {
                             var qwp = new LABKEY.QueryWebPart({
                                 schemaName: 'onprc_billing_public',
-                                queryName: 'NIHIndustryRateNew',
+                                queryName: 'NIHIndustryRates',
                                 renderTo: 'IndustryDiv',
                                 title: 'Industry Rates',
                                 parameters: {Margin: cushionValue, FARate: 1, CalcMethod: 'Margin Only'}
@@ -60,7 +60,7 @@
                 },
                 {
                     xtype: 'button',
-                    text: 'Retrieve Industry Rates ----------F&A Only        ',
+                    text: 'Retrieve Industry Rates ---------- F&A Only        ',
                     border: true,
                     padding: '10 11 3 10', // (top, right, bottom, left).
                     handler: function (btn) {
@@ -70,7 +70,7 @@
 
                         var qwp = new LABKEY.QueryWebPart({
                             schemaName: 'onprc_billing_public',
-                            queryName: 'NIHIndustryRateNew',
+                            queryName: 'NIHIndustryRates',
 
                             renderTo: 'IndustryDiv',
                             title: 'Industry Rates',
@@ -91,7 +91,7 @@
                         if ((cushionValue != null) &&(cushionValue >= .0) && (cushionValue <= .50)) {
                             var qwp = new LABKEY.QueryWebPart({
                                 schemaName: 'onprc_billing_public',
-                                queryName: 'NIHIndustryRateNew',
+                                queryName: 'NIHIndustryRates',
                                 renderTo: 'IndustryDiv',
                                 title: 'Industry Rates',
                                 parameters: {Margin: cushionValue, FARate: 1, CalcMethod: 'Margin  and F & A'}
@@ -116,7 +116,7 @@
 
                         var qwp = new LABKEY.QueryWebPart({
                             schemaName: 'onprc_billing_public',
-                            queryName: 'NIHIndustryRateNew',
+                            queryName: 'NIHIndustryRates',
                             renderTo: 'IndustryDiv',
                             title: 'Industry Rates',
                             parameters: {Margin: 0, FARate: 1, CalcMethod: 'No Margin or F&A Calc '}

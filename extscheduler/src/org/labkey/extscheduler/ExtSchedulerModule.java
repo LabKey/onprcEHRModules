@@ -26,7 +26,7 @@ public class ExtSchedulerModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 15.31;
+        return 20.503;
     }
 
     @Override

@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- Cleanupo of file 4/11/2020
  */
 
 package org.labkey.onprc_billing;
@@ -39,11 +38,13 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.view.ViewContext;
 import org.labkey.api.view.WebPartFactory;
+import org.labkey.api.writer.ContainerUser;
 import org.labkey.onprc_billing.button.ChangeBillDateButton;
 import org.labkey.onprc_billing.button.ChargeEditButton;
 import org.labkey.onprc_billing.button.ProjectEditButton;
 import org.labkey.onprc_billing.dataentry.ChargesAdvancedFormType;
 import org.labkey.onprc_billing.dataentry.ChargesFormType;
+//import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
 import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
 import org.labkey.onprc_billing.dataentry.ReversalFormType;
 import org.labkey.onprc_billing.notification.BillingValidationNotification;
@@ -75,11 +76,11 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     {
         return NAME;
     }
-
+//This was updated to match all sets
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 20.411;
+        return 19.411;
     }
 
     @Override
@@ -124,10 +125,6 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
 
         //Added: 5/6/2018 Kollil
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesVirologyCoreFormType.class, this));
-
-        //Added: 1/6/2020 Kollil
-      /*  EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesARTCoreFormType.class, this));
-*/
 
         //NOTE: not really being used, so have disabled
         //Resource billingTriggers = getModuleResource("/scripts/onprc_billing/billing_triggers.js");
@@ -182,7 +179,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
 
     @NotNull
     @Override
-    public JSONObject getPageContextJson(ViewContext ctx)
+    public JSONObject getPageContextJson(ContainerUser ctx)
     {
         Map<String, Object> ret = new HashMap<>();
         Map<String, String> map = getDefaultPageContextJson(ctx.getContainer());

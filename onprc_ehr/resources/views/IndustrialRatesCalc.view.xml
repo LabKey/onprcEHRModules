@@ -1,4 +1,4 @@
-<view xmlns="http://labkey.org/data/xml/view" title="Inudstrial Rate Calculations">
+<view xmlns="http://labkey.org/data/xml/view" title="Industrial Rate Calculations">
 
     <dependencies>
         <dependency path="ehr.context" />

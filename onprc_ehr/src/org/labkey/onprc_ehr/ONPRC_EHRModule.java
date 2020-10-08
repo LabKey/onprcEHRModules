@@ -87,6 +87,7 @@ import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
+//import org.labkey.onprc_ehr.security.ONPRC_EHRPMICEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -114,7 +115,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 20.107;
+        return 20.414;
     }
 
     @Override
@@ -131,6 +132,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         RoleManager.registerRole(new ONPRC_EHRCustomerEditRole());
         RoleManager.registerRole(new ONPRC_EHRCMUAdministrationRole());
         RoleManager.registerRole(new ONPRC_EHRTransferRequestRole());
+
+//        Added: 12-5-2019
+//        RoleManager.registerRole(new ONPRC_EHRPMICEditRole());
     }
 
     @Override
@@ -442,7 +446,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestBulkEditFormType.class, this));
 
         //Added: 5/23/2019 Kolli
-   //     EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICRequestFormType.class, this));
+//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICRequestFormType.class, this));
 
         //Added: 8/10/2019 Kolli
 //        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IPCRequestFormType.class, this));

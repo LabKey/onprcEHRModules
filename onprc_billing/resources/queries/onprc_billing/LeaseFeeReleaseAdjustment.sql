@@ -4,14 +4,13 @@ PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
 SELECT
 a.id,
 case
-    When a.enddate <= a.dateFinalized then a.dateFinalized
+    When a.enddate < a.dateFinalized then a.dateFinalized
     Else a.enddate
     End as date,
 --a.date,
 a.project,
 a.project.project as projectID,
 a.project.account as alias,
-(Select h.account from Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.projectAccountHistory h where h.project = a.project and (a.date  => h.startDate and a.date =< h.enddate)) as AliasAtTime,
 a.project.account.farate as faRate,
 a.project.account.aliastype.removesubsidy as removeSubsidy,
 a.project.account.aliastype.canRaiseFA as CanRaiseFA,
@@ -34,11 +33,7 @@ CASE
   else 1
   end as quantity,
 lf2.chargeId as leaseCharge1,
-lf2.chargeID.activeRate.Subsidy as Subsidy,
-(Select r3.unitcost from Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.chargeRates r3 where r3.chargeID = lf2.chargeID and r3.StartDate <= a.date and r3.endDate >= a.date) as Lf1Rate,
-(Select r2.unitcost from Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.chargeRates r2 where r2.chargeID = lf.chargeID and r2.StartDate <= a.date and r2.endDate >= a.date) as Lf2Rate,
 lf.chargeId as leaseCharge2,
-a.project.account as CreditTo,
 a.objectid as sourceRecord,
 'Adjustment - Automatic' as chargeCategory,
 'Y' as isAdjustment,
@@ -52,8 +47,8 @@ a.enddatefinalized
 
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a
 LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf
-  ON (lf.assignCondition = a.assignCondition.code
-    AND lf.releaseCondition = a.releaseCondition.code
+  ON (lf.assignCondition = a.assignCondition
+    AND lf.releaseCondition = a.releaseCondition
     AND (a.ageAtTime.AgeAtTimeYearsRounded >= lf.minAge OR lf.minAge IS NULL)
     AND (a.ageAtTime.AgeAtTimeYearsRounded < lf.maxAge OR lf.maxAge IS NULL)
       and (a.date >=lf.startDate
@@ -61,8 +56,8 @@ LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer'
   )
 
 LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf2
-  ON (lf2.assignCondition = a.assignCondition.code
-    AND lf2.releaseCondition = a.projectedReleaseCondition.code
+  ON (lf2.assignCondition = a.assignCondition
+    AND lf2.releaseCondition = a.projectedReleaseCondition
     AND (a.ageAtTime.AgeAtTimeYearsRounded >= lf2.minAge OR lf2.minAge IS NULL)
     AND (a.ageAtTime.AgeAtTimeYearsRounded < lf2.maxAge OR lf2.maxAge IS NULL)
     and (a.date >=lf2.startDate
