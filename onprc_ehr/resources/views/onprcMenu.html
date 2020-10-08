@@ -109,6 +109,22 @@
             }]
         });
 
+        // Ensure proper layout if webpart came back from the server after the menu item was already collapsed and didn't
+        // render to the desired size
+        var menu = div.up('.dropdown');
+        if (menu) {
+            var obs = new MutationObserver(function (mutationsList) {
+                for (var i = 0; i < mutationsList.length; i++) {
+                    var mutation = mutationsList[i];
+                    if (mutation.attributeName === 'class') {
+                        panel.doLayout();
+                    }
+                }
+                obs.disconnect();
+            });
+            obs.observe(menu.dom, {attributes: true});
+        }
+
         ONPRC.Utils.getNavItems({
             scope: this,
             success: function(results){

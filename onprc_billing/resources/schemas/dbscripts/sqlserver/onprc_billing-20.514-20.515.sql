@@ -1,11 +1,6 @@
-USE [Labkey]
-GO
 /****** Object:  StoredProcedure [onprc_billing].[oga_InsertRecords]    Script Date: 5/21/2020 5:43:28 AM ******/
 /*****Update 2020-05-21 to handle Investigator and FA Ids in Prime*******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
+
 ALTER PROCEDURE [onprc_billing].[oga_InsertRecords]
 
     AS

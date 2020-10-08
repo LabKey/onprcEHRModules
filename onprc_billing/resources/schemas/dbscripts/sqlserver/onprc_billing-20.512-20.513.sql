@@ -1,11 +1,8 @@
 
 /****** Object:  StoredProcedure [onprc_billing].[oga_InsertRecords]    Script Date: 5/18/2020 10:35:50 AM ******/
-SET ANSI_NULLS ON
-GO
 DROP PROCEDURE IF EXISTS [onprc_billing].[oga_InsertRecords]
 GO
-SET QUOTED_IDENTIFIER ON
-GO
+
 CREATE PROCEDURE [onprc_billing].[oga_InsertRecords]
 
     AS

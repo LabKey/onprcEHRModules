@@ -13,15 +13,12 @@
                 <column columnName="eventType">
                 </column>
                 <column columnName="remark">
-                    <displayWidth>100</displayWidth>
                 </column>
                 <column columnName="enddate">
-                    <displayWidth>100</displayWidth>
                 </column>
                 <column columnName="endeventType">
                 </column>
                 <column columnName="remark2">
-                    <displayWidth>100</displayWidth>
                 </column>
                 <column columnName="otherIds">
                     <columnTitle>Other Ids</columnTitle>

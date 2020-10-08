@@ -3,12 +3,13 @@
 //Modified: 7-17-2017  R.Blasa
 
 Ext4.define('onprc_ehr.panel.EnterDataPanel', {
-    extend: 'LDK.panel.QueryTabPanel',
+    extend: 'LABKEY.ext4.BootstrapTabPanel',
+    autoHeight: true,
+    layout: 'anchor',
 
     initComponent: function(){
         Ext4.apply(this, {
-            items: this.getItems(),
-            minHeight: 200
+            items: this.getItems()
         });
 
         this.loadData();
@@ -49,7 +50,7 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
             });
         }, this);
 
-        var tab = this.down('#enterNew');
+        var tab = Ext4.ComponentQuery.query("#enterNew")[0];
         tab.removeAll();
         tab.add({
             xtype: 'ldk-navpanel',
@@ -57,38 +58,71 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
         });
     },
 
+    onSuccessResize: function (dr){
+        var width1 = Ext4.get(dr.domId).getSize().width + 50;
+        var width2 = Ext4.get(this.id).getSize().width;
+
+        if(width1 > width2){
+            console.log(width1+'/'+width2)
+            this.setWidth(width1);
+            console.log('resizing')
+        }
+        else {
+            this.setWidth('100%');
+        }
+    },
+
+
     getItems: function(){
         return [
             {
-                xtype: 'panel',
-                bodyStyle: 'margin: 5px;',
                 title: 'Enter New Data',
-                itemId: 'enterNew',
-                defaults: {
-                    border: false
-                },
+                ref: 'EnterNewData',
                 items: [{
-                    html: 'Loading...'
+                    xtype: 'panel',
+                    bodyStyle: 'margin: 5px; padding-top: 10px;',
+                    itemId: 'enterNew',
+                    id: 'enterNew',
+                    defaults: {
+                        border: false
+                    },
+                    items: [{
+                        html: 'Loading...'
+                    }]
                 }]
             },
             {
-                xtype: 'ldk-querypanel',
-                bodyStyle: 'margin: 5px;',
                 title: 'My Tasks',
-                queryConfig:  {
-                    schemaName: 'onprc_ehr',  //Modified: 3-27-2017  R.Blasa
-                    queryName: 'my_tasks',
-                    viewName: 'Active Tasks'
-                }
+                bodyStyle: 'padding-top: 10px;',
+                ref: 'MyTasks',
+                items: [{
+                    itemId: 'MyTasks',
+                    xtype: 'ldk-querycmp',
+                    cls: 'my-tasks-marker',
+                    queryConfig: {
+                        schemaName: 'onprc_ehr',
+                        queryName: 'my_tasks',
+                        viewName: 'Active Tasks',
+                        scope: this,
+                        success: this.onSuccessResize
+                    }
+                }]
             },{
-                xtype: 'ldk-querypanel',
-                bodyStyle: 'margin: 5px;',
                 title: 'All Tasks',
-                queryConfig:  {
-                    schemaName: 'ehr',
-                    queryName: 'tasks',
-                    viewName: 'Active Tasks'
-                }
+                ref: 'AllTasks',
+                bodyStyle: 'padding-top: 10px;',
+                items: [{
+                    itemId: 'AllTasks',
+                    xtype: 'ldk-querycmp',
+                    cls: 'all-tasks-marker',
+                    queryConfig: {
+                        schemaName: 'ehr',
+                        queryName: 'tasks',
+                        viewName: 'Active Tasks',
+                        scope: this,
+                        success: this.onSuccessResize
+                    }
+                }]
             },{
                 title: 'Queues',
                 bodyStyle: 'margin: 5px;',

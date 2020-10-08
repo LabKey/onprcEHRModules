@@ -312,9 +312,30 @@
             }
         });
 
-        Ext4.create('onprc_ehr.panel.QuickSearchPanel', {
+        var panel = Ext4.create('onprc_ehr.panel.QuickSearchPanel', {
 //            hoverPart: HoverNavigation.Parts[webpart.hoverPartName]
-        }).render(webpart.wrapperDivId);
+        });
+        panel.render(webpart.wrapperDivId);
+
+        // Ensure proper layout if webpart came back from the server after the menu item was already collapsed and didn't
+        // render to the desired size
+
+        var div = Ext4.get(webpart.wrapperDivId);
+
+        var menu = div.up('.dropdown');
+        if (menu) {
+            var obs = new MutationObserver(function (mutationsList) {
+                for (var i = 0; i < mutationsList.length; i++) {
+                    var mutation = mutationsList[i];
+                    if (mutation.attributeName === 'class') {
+                        panel.doLayout();
+                    }
+                }
+                obs.disconnect();
+            });
+            obs.observe(menu.dom, {attributes: true});
+        }
+
     }
 
 </script>

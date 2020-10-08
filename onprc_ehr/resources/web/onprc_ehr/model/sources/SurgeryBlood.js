@@ -18,8 +18,14 @@ EHR.model.DataModelManager.registerMetadata('Surgery_Blood', {
                 }
             }
 
-        }
+        },
+        'study.treatment_order': {
 
+            enddate: {
+                hidden: false,
+                extFormat: 'Y-m-d 23:59'
+                }
+            }
 
     }
 });

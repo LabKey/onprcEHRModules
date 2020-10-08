@@ -30,13 +30,11 @@
                             <fkTable>PairingStartType</fkTable>
                             <fkColumnName>value</fkColumnName>
 
-
                         </fk>
                     </column>
                     <column columnName="remark">
                         <columnTitle>Start Remark</columnTitle>
-                        <displayWidth>50</displayWidth>
-
+                        <displayWidth>300</displayWidth>
                     </column>
                     <column columnName="goal">
                         <columnTitle>Divider Goal</columnTitle>
@@ -88,10 +86,8 @@
 
                     <column columnName="remark2">
                         <columnTitle>End Remark</columnTitle>
-                        <displayWidth>200</displayWidth>
+                        <displayWidth>300</displayWidth>
                     </column>
-
-
 
                     <column columnName="housingtype">
                         <isHidden>true</isHidden>

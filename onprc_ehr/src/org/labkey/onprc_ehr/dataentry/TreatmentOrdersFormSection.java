@@ -40,6 +40,11 @@ public class TreatmentOrdersFormSection extends DrugAdministrationFormSection
         setLabel("Medication/Treatment Orders");
         setQueryName("Treatment Orders");
         _showAddTreatments = false;
+
+//        Modified: 7-29-2020 Set Remarks information
+        setClientStoreClass("ONPRC_EHR.data.TreatmentOrdersClientStore");
+        addClientDependency(ClientDependency.fromPath("onprc_ehr/data/sources/TreatmentOrdersClientStore.js"));
+
     }
 
     @Override

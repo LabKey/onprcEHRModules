@@ -7,8 +7,6 @@
   Script Date: 5/18/2020 10:33:15 AM ******/
 DROP PROCEDURE IF EXISTS [onprc_billing].[OGA_RemoveRecords]
 GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE PROCEDURE [onprc_billing].[OGA_RemoveRecords]
     AS
     BEGIN

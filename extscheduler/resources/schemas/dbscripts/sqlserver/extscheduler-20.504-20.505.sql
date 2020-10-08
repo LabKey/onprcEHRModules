@@ -1,10 +1,10 @@
-USE [Labkey]
-GO
+-- USE [Labkey]
+-- GO
 /****** Object:  StoredProcedure [extscheduler].[extBlockOutMorning]    Script Date: 5/13/2020 6:10:00 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
+-- SET ANSI_NULLS ON
+-- GO
+-- SET QUOTED_IDENTIFIER ON
+-- GO
 -- ================================================
 -- Template generated from Template Explorer using:
 -- Create Procedure (New Menu).SQL

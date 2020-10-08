@@ -8,9 +8,12 @@
                 <updateUrl />
                 <deleteUrl />
                 <columns>
-                    <column columnName="Id"/>
+                    <column columnName="Id">
+                        <displayWidth>80</displayWidth>
+                    </column>
                     <column columnName="date">
                         <columnTitle>Date</columnTitle>
+                        <displayWidth>130</displayWidth>
                         <nullable>false</nullable>
                         <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                     </column>
@@ -22,9 +25,11 @@
                     </column>
                     <column columnName="sort_order">
                         <columnTitle>Sort Order</columnTitle>
+                        <displayWidth>50</displayWidth>
                     </column>
                     <column columnName="tissue">
                         <columnTitle>Organ/Tissue</columnTitle>
+                        <displayWidth>80</displayWidth>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>snomed</fkTable>
@@ -48,7 +53,7 @@
                         </fk>
                     </column>
                     <column columnName="remark">
-                        <displayWidth>110</displayWidth>
+                        <displayWidth>700</displayWidth>
                         <columnTitle>Diagnosis</columnTitle>
                         <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
                         <inputType>textarea</inputType>

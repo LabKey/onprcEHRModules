@@ -1513,7 +1513,6 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         updateCol.setLabel("Title");
         updateCol.setHidden(true);
-        updateCol.setDisplayWidth("150");
 
         updateTaskId.setLabel("Task Id");
         updateTaskId.setHidden(true);

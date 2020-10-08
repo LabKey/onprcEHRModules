@@ -157,7 +157,13 @@ public class ONPRC_EHRTriggerHelper
         if (_cachedTables.containsKey(key))
             return _cachedTables.get(key);
 
-        UserSchema us = QueryService.get().getUserSchema(getUser(), getContainer(), schemaName);
+        Container ehrContainer = EHRService.get().getEHRStudyContainer(getContainer());
+        if (ehrContainer == null)
+        {
+            // Fall back on the current container
+            ehrContainer = getContainer();
+        }
+        UserSchema us = QueryService.get().getUserSchema(getUser(), ehrContainer, schemaName);
         if (us == null)
         {
             _cachedTables.put(key, null);
