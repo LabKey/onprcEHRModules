@@ -1,0 +1,78 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="ACtivealias_2020" tableDbType="TABLE">
+                <tableTitle>Active Aliases ONPRC</tableTitle>
+                <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+                <columns>
+                    <Column columname="alias"/>
+                    <Column columname="project"/>
+                    <Column columname="category"/>
+                    <column columnName="grantnumber">
+                    <columnTitle>OGA Award Nummber</columnTitle>
+
+                      <!--  <fk>
+                            <fkDbSchema>oga</fkDbSchema>
+                            <fkTable>ZGMS_PRIM_ALL_V</fkTable>
+                            <fkColumnName>oga_award_Number</fkColumnName>
+                            <fkDisplayColumnName>oga_award_Number</fkDisplayColumnName>
+                        </fk>-->
+                    </column>
+                    <column columnName="agendyAwardNumber">
+
+                       <!-- <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>ogasync</fkTable>
+                            <fkColumnName>AGENCY_AWARD_NUMBER</fkColumnName>
+                            <fkDisplayColumnName>AGENCY_AWARD_NUMBER</fkDisplayColumnName>
+                        </fk>-->
+                    </column>
+                    <column columnName="budgetStartDate">
+                        <formatString>MM-dd-yyyy</formatString>
+                    </column>
+                    <column columnName="budgetEndDate">
+                        <formatString>MM-dd-yyyy</formatString>
+                    </column>
+                    <column columnName="InvestigatorID">
+
+                        <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>investigators</fkTable>
+                            <fkColumnName>employeeID</fkColumnName>
+                            <fkDisplayColumnName>InvestigatorID</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="fiscalAuthority">
+
+                        <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>fiscalAuthorities</fkTable>
+                            <fkColumnName>employeeid</fkColumnName>
+                            <fkDisplayColumnName>rowID</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName = 'faRate'>
+                            <formatString>0.00</formatString>
+                    </column>
+                    <column columnName = 'faSchedule'/>
+                    <column columnName = 'PPQNumber'/>
+                    <column columnName="PPQDate">
+                        <formatString>MM-dd-yyyy</formatString>
+                    </column>
+                    <column columnName = 'projectTiyle'/>
+                    <column columnName = 'projectDescription'/>
+                    <column columnName = 'org'/>
+                    <column columnName = 'Comments'/>
+
+                </columns>
+            </table>
+                sorts>
+
+            <filters>
+                <filter column="aliasEnabled" operator="eq" value="Y"/>
+                <filter column="org" operator="in" value=""/>
+            </filters>
+
+        </tables>
+    </metadata>
+</query>

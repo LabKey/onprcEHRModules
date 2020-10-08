@@ -5,8 +5,11 @@
         <column name="aliasEnabled"/>
         <column name="projectNumber"/>
         <column name="investigatorName"/>
+        <column name="grantNumber"/>
+        <column name="agencyAwardNumber"/>
         <column name="investigatorId"/>
         <column name="fiscalAuthority"/>
+        <column name="faRate"/>
         <column name="faSchedule"/>
         <column name="aliasType"/>
         <column name="projectTitle"/>
@@ -14,8 +17,15 @@
         <column name="budgetStartDate"/>
         <column name="budgetEndDate"/>
         <column name="projectStatus"/>
+        <column name="dateDisabled"/>
         <column name="enddate"/>
-        <column name="comment"/>
+        <column name="comments"/>
+        <column name="PPQNumber"/>
+        <column name="PPQDate"/>
+        <column name="AwardStatus"/>
+        <column name="Org"/>
+        <column name="budgetEndDateCoalesced"/>
+        <column name="budhetEndDatetimeCoalesced"/>
     </columns>
     <sorts>
         <sort column="alias"/>

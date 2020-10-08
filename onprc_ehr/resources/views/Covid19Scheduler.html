@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ONPRC Covid 19 Test SCheduler </title>
+</head>
+<body>
+<!--Ext.onReady(function(){
+_grid = new LABKEY.ext.EditorGridPanel({
+store: new LABKEY.ext.Store({
+schemaName: 'lists',
+queryName: 'People'
+}),
+renderTo: 'grid',
+width: 800,
+autoHeight: true,
+title: 'Example',
+editable: true
+});
+});
+</script>
+
+<div id='grid'/>-->
+
+
+        <script type="text/javascript">
+    Ext4.onReady(function() {
+        _grid = new LABKEY.ext.EditorGridPanel({
+            store: new LABKEY.ext.Store({
+                schemaName: 'lists',
+                queryName: 'Covid19Testing'
+            }),
+            renderTo: 'grid',
+            width: 1200,
+            autoHeight: true,
+            title: 'Covid 19 Test Scheduler',
+            editable: true
+        });
+    });
+        </script>-->
+
+            }
+
+
+<h2>Covid 19 Testing Scheduler</h2>
+<div id='grid'/>
+<!--<div id='theFormDiv'></div>
+<div id='IndustryDiv'></div>-->
+</body>
+</html>

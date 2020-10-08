@@ -93,17 +93,29 @@ Ext.define('App.view.EventForm', {
                 }
             },
             {
-                xtype      : 'textfield',
+                xtype      : 'textarea',
+                labelAlign: 'top',
+                width: 320,
+                height: 200,
                 fieldLabel : 'Comments',
                 name :  'Comments',
                 reference  : 'eventCommentsField',
+                style: 'margin-top: 20px;',
                 allowBlank : true,
                 hidden     : this.eventFormColumns.indexOf('Comments') === -1,
                 bind       : {
                     value    : '{eventRecord.Comments}',
                     readOnly : !this.editable
                 }
-            },
+         /*       xtype: 'textarea',
+                labelAlign: 'top',
+                width: 500,
+                height: 200,
+                fieldLabel: 'Question/Comment',
+                name: 'comment',
+                style: 'margin-top: 20px;',
+                allowBlank: false
+          */  },
             {
                 xtype  : 'fieldcontainer',
                 layout : 'hbox',

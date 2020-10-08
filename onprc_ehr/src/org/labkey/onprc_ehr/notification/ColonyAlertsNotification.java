@@ -1051,7 +1051,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     /**
-<<<<<<< .mine
      * Kollil, 10/24/2019 : PMIC scheduler alert notifications Daily & Weekly
      */
     protected void pmicSchedulerAlert(final Container c, User u, final StringBuilder msg)
@@ -1182,139 +1181,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     /**
-||||||| .r64573
-=======
-     * Kollil, 10/24/2019 : PMIC scheduler alert notifications Daily & Weekly
-     */
-//    protected void pmicSchedulerAlert(final Container c, User u, final StringBuilder msg)
-//    {
-//        //PMIC container: 783D2EA5-C6AC-1036-A33C-BD25D0574070
-//        if (QueryService.get().getUserSchema(u, c, "extscheduler") == null) {
-//            msg.append("<b>Warning: The extscheduler schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
-//            return;
-//        }
-//        //Daily events query
-//        TableInfo ti = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler");
-//        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(u));
-//        TableSelector ts = new TableSelector(ti, null, null);
-//        long count = ts.getRowCount();
-//
-//        //Weekly events query
-//        TableInfo ti1 = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler_Weekly");
-//        ((ContainerFilterable) ti1).setContainerFilter(ContainerFilter.Type.AllFolders.create(u));
-//        TableSelector ts1 = new TableSelector(ti1, null, null);
-//        long count1 = ts1.getRowCount();
-//
-//        if (count > 0) {//Daily events count
-//            msg.append("<b>There are " + count + " PMIC events scheduled for today:</b>");
-//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler", null) + "'>Click here to view them</a></p>\n");
-//            msg.append("<hr>");
-//        }
-//        if (count1 > 0) {//Weekly events count
-//            msg.append("<b>There are " + count1 + " PMIC events scheduled this week:</b>");
-//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Weekly", null) + "'>Click here to view them</a></p>\n");
-//            msg.append("<hr>");
-//        }
-//        //Display the daily report in the email
-//        if (count > 0) {
-//            Set<FieldKey> columns = new HashSet<>();
-//            columns.add(FieldKey.fromString("resourceid"));
-//            columns.add(FieldKey.fromString("startdate"));
-//            columns.add(FieldKey.fromString("enddate"));
-//            columns.add(FieldKey.fromString("name"));
-//            columns.add(FieldKey.fromString("alias"));
-//            columns.add(FieldKey.fromString("quantity"));
-//            columns.add(FieldKey.fromString("comments"));
-//            columns.add(FieldKey.fromString("color"));
-//            columns.add(FieldKey.fromString("room"));
-//            columns.add(FieldKey.fromString("bldg"));
-//
-//            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
-//            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
-//            count = ts2.getRowCount();
-//
-//            if (count == 0) {
-//                msg.append("There are no scheduled PMIC events");
-//            }
-//            else {
-//                msg.append("<br><b>Daily PMIC events:</b><br><br>\n");
-//                msg.append("<table border=1 style='border-collapse: collapse;'>");
-//                msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + "style='font-weight: bold;'>");
-//                msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
-//
-//                ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
-//                    @Override
-//                    public void exec(ResultSet object) throws SQLException {
-//                        Results rs = new ResultsImpl(object, colMap);
-//                        msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
-//                        msg.append("<td>" + rs.getString("resourceid") + "</td>");
-//                        msg.append("<td>" + rs.getString("startdate") + "</td>");
-//                        msg.append("<td>" + rs.getString("enddate") + "</td>");
-//                        msg.append("<td>" + rs.getString("name") + "</td>");
-//                        msg.append("<td>" + rs.getString("alias") + "</td>");
-//                        msg.append("<td>" + rs.getString("quantity") + "</td>");
-//                        msg.append("<td>" + rs.getString("comments") + "</td>");
-//                        msg.append("<td>" + rs.getString("color") + "</td>");
-//                        msg.append("<td>" + rs.getString("room") + "</td>");
-//                        msg.append("<td>" + rs.getString("bldg") + "</td>");
-//                        msg.append("</tr>");
-//                    }
-//                });
-//                msg.append("</table>");
-//            }
-//            //Display the weekly report in the email
-//            if (count1 > 0) {
-//                Set<FieldKey> columns1 = new HashSet<>();
-//                columns1.add(FieldKey.fromString("resourceid"));
-//                columns1.add(FieldKey.fromString("startdate"));
-//                columns1.add(FieldKey.fromString("enddate"));
-//                columns1.add(FieldKey.fromString("name"));
-//                columns1.add(FieldKey.fromString("alias"));
-//                columns1.add(FieldKey.fromString("quantity"));
-//                columns1.add(FieldKey.fromString("comments"));
-//                columns1.add(FieldKey.fromString("color"));
-//                columns1.add(FieldKey.fromString("room"));
-//                columns1.add(FieldKey.fromString("bldg"));
-//
-//                final Map<FieldKey, ColumnInfo> colMap1 = QueryService.get().getColumns(ti1, columns1);
-//                TableSelector ts3 = new TableSelector(ti1, colMap1.values(), null, null);
-//                count1 = ts3.getRowCount();
-//
-//                if (count1 == 0) {
-//                    msg.append("There are no scheduled PMIC events");
-//                }
-//                else {
-//                    msg.append("<br><br><b>Weekly PMIC events:</b><br><br>\n");
-//                    msg.append("<table border=1 style='border-collapse: collapse;'>");
-//                    msg.append("<tr bgcolor = " + '"' + "#00FF00" + '"' + "style='font-weight: bold;'>");
-//                    msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
-//
-//                    ts3.forEach(new Selector.ForEachBlock<ResultSet>() {
-//                        @Override
-//                        public void exec(ResultSet object) throws SQLException {
-//                            Results rs1 = new ResultsImpl(object, colMap1);
-//                            msg.append("<tr bgcolor = " + '"' + "#00FF00" + '"' + ">");
-//                            msg.append("<td>" + rs1.getString("resourceid") + "</td>");
-//                            msg.append("<td>" + rs1.getString("startdate") + "</td>");
-//                            msg.append("<td>" + rs1.getString("enddate") + "</td>");
-//                            msg.append("<td>" + rs1.getString("name") + "</td>");
-//                            msg.append("<td>" + rs1.getString("alias") + "</td>");
-//                            msg.append("<td>" + rs1.getString("quantity") + "</td>");
-//                            msg.append("<td>" + rs1.getString("comments") + "</td>");
-//                            msg.append("<td>" + rs1.getString("color") + "</td>");
-//                            msg.append("<td>" + rs1.getString("room") + "</td>");
-//                            msg.append("<td>" + rs1.getString("bldg") + "</td>");
-//                            msg.append("</tr>");
-//                        }
-//                    });
-//                    msg.append("</table>");
-//                }
-//            }
-//        }
-//    }
-
-    /**
->>>>>>> .r65353
      * we find protocols over the animal limit
      */
     protected void protocolsOverLimit(final Container c, User u, final StringBuilder msg)
@@ -2132,7 +1998,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void infantsNotWithMother(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/age/ageInDays"), 180, CompareType.LTE);
-        //Added by Kolli1, 6/11. Excluding the Guinea pigs & Rabbits and showing only primates
+        //Added by Kollil, 6/11. Excluding the Guinea pigs & Rabbits and showing only primates
         //filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG;RABBIT", CompareType.CONTAINS_NONE_OF);
         filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG", CompareType.NEQ);
         filter.addCondition(FieldKey.fromString("Id/demographics/calculated_status"), "Alive", CompareType.EQUAL);
@@ -2144,11 +2010,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         ASB RM 185
         COL RM 4
         */
+        //Added ASB 239 to this list on 5/14/2020 byt kolli
         //filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 191", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 213", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 236", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 240", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 185", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 239", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "COL RM 4", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("withMother"), 0, CompareType.EQUAL);
 
@@ -2164,7 +2032,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>NOTE: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in ASB RM 213, ASB RM 236, ASB RM 240, ASB RM 185 & COL RM 4</b><br><br>");
+            msg.append("<b>NOTE: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in ASB RM 213, ASB RM 236, ASB RM 240, ASB RM 185, ASB RM 239 & COL RM 4</b><br><br>");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override

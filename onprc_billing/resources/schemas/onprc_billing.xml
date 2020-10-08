@@ -1151,9 +1151,11 @@
             </column>
             <column columnName="grantNumber">
                 <columnTitle>OGA Grant Number</columnTitle>
+               
             </column>
             <column columnName="agencyAwardNumber">
                 <columnTitle>Agency Award Number</columnTitle>
+               
             </column>
             <column columnName="investigatorId">
                 <columnTitle>Investigator</columnTitle>
@@ -1207,6 +1209,11 @@
             <column columnName="created"/>
             <column columnName="modifiedBy"/>
             <column columnName="modified"/>
+            <column columnName="dateDisabled"/>
+            <column columnName="Comments"/>
+            <column columnName="PPQNumber"/>
+            <column columnName="PPQDate"/>
+
         </columns>
     </table>
     <table tableName="iacucFundingSources" tableDbType="TABLE" useColumnOrder="true">
