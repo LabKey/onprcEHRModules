@@ -16,7 +16,7 @@
 
             <description>Import to OGA Sync in Prime</description>
 
-            <source schemaName="OGAProd" queryName="ogaSourceOutPut"/>
+            <source schemaName="oga" queryName="ogaSourceOutPut"/>
 
             <destination schemaName="ONPRC_billing" queryName="ogasynch" targetOption="truncate" />
 

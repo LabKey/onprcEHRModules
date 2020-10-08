@@ -16,7 +16,7 @@
 
             <source schemaName="eIACUC" queryName="PRIME_VIEW_ANIMAL_GROUPS"/>
 
-            <destination schemaName="ONPRC_EHR" queryName="PRIME_VIEW_ANIMAL_GROUPS" targetOption="truncate" />
+            <destination schemaName="ONPRC_EHR" queryName="eIACUC_PRIME_VIEW_ANIMAL_GROUPS" targetOption="truncate" />
 
         </transform>
 
@@ -26,7 +26,7 @@
 
             <source schemaName="eIACUC" queryName="PRIME_VIEW_IBC_NUMBERS"/>
 
-            <destination schemaName="ONPRC_EHR" queryName="PRIME_VIEW_IBC_NUMBERS" targetOption="truncate"/>
+            <destination schemaName="ONPRC_EHR" queryName="eIACUC_PRIME_VIEW_IBC_NUMBERS" targetOption="truncate"/>
 
         </transform>
 
@@ -36,7 +36,7 @@
 
             <source schemaName="eIACUC" queryName="PRIME_VIEW_NON_SURGICAL_PROCS"/>
 
-            <destination schemaName="ONPRC_EHR" queryName="PRIME_VIEW_NON_SURGICAL_PROCS" targetOption="truncate"/>
+            <destination schemaName="ONPRC_EHR" queryName="eIACUC_PRIME_VIEW_NON_SURGICAL_PROCS" targetOption="truncate"/>
 
         </transform>
 
@@ -46,7 +46,7 @@
 
             <source schemaName="eIACUC" queryName="PRIME_VIEW_PROTOCOLS"/>
 
-            <destination schemaName="ONPRC_EHR" queryName="PRIME_VIEW_PROTOCOLS" targetOption="truncate"/>
+            <destination schemaName="ONPRC_EHR" queryName="eIACUC_PRIME_VIEW_PROTOCOLS" targetOption="truncate"/>
 
         </transform>
 
@@ -57,7 +57,7 @@
 
             <source schemaName="eIACUC" queryName="PRIME_VIEW_SURGERIES"/>
 
-            <destination schemaName="ONPRC_EHR" queryName="PRIME_VIEW_SURGICAL_PROCS" targetOption="truncate"/>
+            <destination schemaName="ONPRC_EHR" queryName="eIACUC_PRIME_VIEW_SURGICAL_PROCS" targetOption="truncate"/>
 
         </transform>
 

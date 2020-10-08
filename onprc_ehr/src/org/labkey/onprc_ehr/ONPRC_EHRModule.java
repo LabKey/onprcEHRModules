@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2018 LabKey Corporation
+ * Copyright (c) 2012-2017 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.buttons.ChangeQCStateButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromIdsButton;
-import org.labkey.api.ehr.buttons.CreateTaskFromRecordsButton;
-import org.labkey.api.ehr.buttons.DiscardTaskButton;
 import org.labkey.api.ehr.buttons.EHRShowEditUIButton;
 import org.labkey.api.ehr.buttons.MarkCompletedButton;
 import org.labkey.api.ehr.buttons.ReassignRequestButton;
@@ -33,33 +31,30 @@ import org.labkey.api.ehr.security.EHRProjectEditPermission;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.buttons.ShowEditUIButton;
 import org.labkey.api.ldk.notification.NotificationService;
-import org.labkey.api.module.AdminLinkManager;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.QuerySchema;
 import org.labkey.api.resource.Resource;
-import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.util.UnexpectedException;
-import org.labkey.api.view.ActionURL;
-import org.labkey.api.view.NavTree;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.buttons.AnimalGroupCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentCompletedButton;
 import org.labkey.onprc_ehr.buttons.AssignmentReleaseConditionButton;
 import org.labkey.onprc_ehr.buttons.BulkEditRequestsButton;
 import org.labkey.onprc_ehr.buttons.ChangeProjectedReleaseDateButton;
-import org.labkey.onprc_ehr.buttons.CreateNecropsyRequestButton;
 import org.labkey.onprc_ehr.buttons.CreateProjectButton;
+import org.labkey.onprc_ehr.buttons.DiscardTaskButton;
 import org.labkey.onprc_ehr.buttons.HousingTransferButton;
 import org.labkey.onprc_ehr.buttons.ManageFlagsButton;
 import org.labkey.onprc_ehr.buttons.ProtocolEditButton;
 import org.labkey.onprc_ehr.buttons.VetReviewButton;
 import org.labkey.onprc_ehr.buttons.VetReviewRecordButton;
+import org.labkey.onprc_ehr.buttons.CreateTaskFromRecordButtons;
 import org.labkey.onprc_ehr.dataentry.*;
 import org.labkey.onprc_ehr.demographics.ActiveAnimalGroupsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
@@ -68,11 +63,11 @@ import org.labkey.onprc_ehr.demographics.CagemateInfantDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.FosterChildDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.HousingDemographicsProvider;
-import org.labkey.onprc_ehr.demographics.LastHousingDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ParentsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.PregnancyConfirmDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.SourceDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.TBDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.LastHousingDemographicsProvider;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsEndDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalRecordFlagDataSource;
@@ -114,7 +109,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 17.706;
+        return 20.107;
     }
 
     @Override
@@ -298,17 +293,18 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added 5-16-2018  R.Blasa
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam by ID(s)", this, DetailsURL.fromString("/onprc_ehr/PE_ExamHistoryReportbyID.view"), "Routine Clinical Tasks");
 
-        //Added 5-11-2015 New report for Lois Colgin
+        //Modified: 1-17-2019  R.Blasa
         try
         {
-            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Laboratory Test Summary", this, new URLHelper("http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fPrimeLaboratory+Report&rs:Command=Render")
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology Laboratory Summary Report", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory+Report&rs:Command=Render")
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
                 //Modified: 1-17-2019  R.Blasa
                 public String toString()
                 {
-                    return "http://primateapp.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fAnnual+Reports%2fPrimeLaboratory+Report&rs:Command=Render";
+                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory+Report&rs:Command=Render";
+
                 }
             }, "Clinical Pathology");
         }
@@ -324,6 +320,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
+                //Modified: 1-17-2019  R.Blasa
                 public String toString()
                 {
                     return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fExposure+Reports%2fDemographicsReportMain&rs:Command=Render";
@@ -384,7 +381,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerActionOverride("cageDetails", this, "views/cageDetails.html");
         EHRService.get().registerActionOverride("animalSearch", this, "views/animalSearch.html");
         EHRService.get().registerActionOverride("animalHistory", this, "views/animalHistory.html");
-        EHRService.get().registerActionOverride("serviceRequests", this, "views/serviceRequests.html");
 
         //Added: 10-2-2017  R.Blasa displays onperc version of enterData.view
         EHRService.get().registerActionOverride("enterData", this, "views/enterData.html");
@@ -407,7 +403,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SurgeryFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(SingleSurgeryFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyFormType.class, this));
-        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyRequestForm.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BiopsyFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PathologyTissuesFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ClinicalReportFormType.class, this));
@@ -426,7 +421,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ParentageFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(GeneticAncestryFormType.class, this));
 
-        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ONPRCBloodDrawFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(AuxProcedureFormType.class, this));
 
         //Modified: 12-13-2016 R.Blasa
@@ -526,19 +521,20 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         editBtn.setCopyFilters(false);
         EHRService.get().registerMoreActionsButton(editBtn, "study", "flags");
 
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", ONPRCBloodDrawFormType.NAME, new String[]{"Blood Draws"}), "study", "demographics");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", BloodDrawFormType.NAME, new String[]{"Blood Draws"}), "study", "demographics");
         //EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Weight For Selected", "Weight", "weight", new String[]{"Weight"}), "study", "demographics");
         //EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Weight For Selected", "Weight", "weight", new String[]{"Weight"}), "study", "weight");
         EHRService.get().registerTbarButton(new HousingTransferButton(this), "onprc_ehr", "housing_transfer_requests");
 
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Blood Draws", ONPRCBloodDrawFormType.NAME), "study", "blood");
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Treatments/Medications", TreatmentsFormType.NAME), "study", "drug");
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Labwork", LabworkFormType.NAME), "study", "clinpathRuns");
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Surgeries", SurgeryFormType.NAME), "study", "surgery");
+        //Modified: 1-18-2019  R.Blasa
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Blood Draws", BloodDrawFormType.NAME), "study", "blood");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Treatments/Medications", TreatmentsFormType.NAME), "study", "drug");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Labwork", LabworkFormType.NAME), "study", "clinpathRuns");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Surgeries", SurgeryFormType.NAME), "study", "surgery");
 
 
-        //Added: 7-29-2017  R.Blasa
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Procedures", AuxProcedureFormType.NAME), "study", "encounters");
+        //Added: 1-18-2019  R.Blasa
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Procedures", AuxProcedureFormType.NAME), "study", "encounters");
 
 
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "blood");
@@ -579,32 +575,16 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerHistoryDataSource(new org.labkey.api.ehr.history.DefaultAnimalRecordFlagDataSource(this));
         EHRService.get().registerHistoryDataSource(new ONPRCClinicalRemarksDataSource(this));
 
-        EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "encounters");
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "encounters");
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "tissue_samples");
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "organ_weights");
-
         EHRService.get().registerOptionalClinicalHistoryResources(this);
 
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
         EHRService.get().registerLabworkType(new ONPRCiStatLabworkType(this));
+
         //R.Blasa   11-28-2016
         EHRService.get().registerHistoryDataSource(new DefaultNHPTrainingDataSource(this));
 
-
         //R.Blasa   11-20-2019
         EHRService.get().registerHistoryDataSource(new DefaultSustainedReleaseDatasource(this));
-
-
-
-        AdminLinkManager.getInstance().addListener((adminNavTree, container, user) ->
-        {
-            if (container.hasPermission(user, AdminPermission.class) && container.getActiveModules().contains(ONPRC_EHRModule.this))
-            {
-                adminNavTree.addChild(new NavTree("EHR Admin Page", new ActionURL("onprc_ehr", "ehrAdmin", container)));
-            }
-        });
-
     }
 
     @Override
