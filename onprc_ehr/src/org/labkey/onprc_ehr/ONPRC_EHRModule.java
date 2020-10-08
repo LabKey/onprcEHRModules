@@ -76,6 +76,7 @@ import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsEndDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalRecordFlagDataSource;
 import org.labkey.onprc_ehr.history.DefaultNHPTrainingDataSource;
+import org.labkey.onprc_ehr.history.DefaultSustainedReleaseDatasource;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
 import org.labkey.onprc_ehr.history.ONPRCClinicalRemarksDataSource;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
@@ -581,6 +582,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerLabworkType(new ONPRCiStatLabworkType(this));
         //R.Blasa   11-28-2016
         EHRService.get().registerHistoryDataSource(new DefaultNHPTrainingDataSource(this));
+
+
+        //R.Blasa   11-20-2019
+        EHRService.get().registerHistoryDataSource(new DefaultSustainedReleaseDatasource(this));
+
+
 
         AdminLinkManager.getInstance().addListener((adminNavTree, container, user) ->
         {

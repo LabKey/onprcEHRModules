@@ -55,6 +55,19 @@ public class ChargesFormType extends TaskForm
         {
             return false;
         }
+//        Added: 12-3-2019  R.blasa
+        Group j = GroupManager.getGroup(getCtx().getContainer(), "Pathology External Entry", GroupEnumType.SITE);
+        if (j != null && getCtx().getUser().isInGroup(j.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
+
+        //        Added: 12-3-2019  R.blasa
+        Group L = GroupManager.getGroup(getCtx().getContainer(), "Virology Core", GroupEnumType.SITE);
+        if (L != null && getCtx().getUser().isInGroup(L.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
         return super.isVisible();
     }
 }

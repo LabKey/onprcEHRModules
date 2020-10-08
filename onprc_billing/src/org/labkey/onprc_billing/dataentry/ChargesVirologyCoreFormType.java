@@ -7,6 +7,8 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;
+import org.labkey.onprc_billing.security.ONPRCVirologyCoreEntryPermission;
 import org.labkey.security.xml.GroupEnumType;
 import org.labkey.api.security.GroupManager;
 import org.labkey.api.security.permissions.AdminPermission;
@@ -33,17 +35,6 @@ public class ChargesVirologyCoreFormType extends TaskForm
     }
 
 
-    //Added: 11/1/2018  R.Blasa  Hide this menu when SLA users are accessing their exit records
-    @Override
-    public boolean isVisible()
-    {
-        Group g = GroupManager.getGroup(getCtx().getContainer(), "SLA Users", GroupEnumType.SITE);
-        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
-        return super.isVisible();
-    }
 
     @Override
     protected List<String> getMoreActionButtonConfigs()
@@ -52,5 +43,24 @@ public class ChargesVirologyCoreFormType extends TaskForm
         defaultButtons.add("COPY_TASK");
 
         return defaultButtons;
+    }
+
+//    Added: 12-3-2019  R.Blasa
+@Override
+public boolean canInsert()
+{
+    if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRCVirologyCoreEntryPermission.class))
+        return false;
+
+    return super.canInsert();
+}
+
+    @Override
+    public boolean canRead()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRCVirologyCoreEntryPermission.class))
+            return false;
+
+        return super.canRead();
     }
 }

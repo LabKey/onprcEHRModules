@@ -6,4 +6,4 @@ FROM "/onprc/admin/finance/public".onprc_billing_public.aliases
 --WHERE (budgetstartdate IS NOT NULL AND (budgetEndDate IS NULL OR budgetEndDate >= now() ))
 -- including the aliases that expired 30 days ago from today's date. This provision is given to the PIs to enter the previous month charges. By Kolli on 7/6/19
 WHERE (budgetstartdate IS NOT NULL AND (budgetEndDate IS NULL OR budgetEndDate >= TIMESTAMPADD('SQL_TSI_DAY', -30, now()) ))
-OR alias in (Select alias from "/onprc/admin/finance".lists.Special_Aliases Where category like 'Virology')
+OR alias in (Select alias from lists.Special_Aliases Where category like 'Virology')

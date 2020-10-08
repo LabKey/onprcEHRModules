@@ -358,6 +358,74 @@
                         style: 'padding-top: 10px;',
                         colspan: 4
                     },{
+
+                        html: '<i>Sustained Release Medications:</i>'
+
+                    },{
+
+                        style: 'padding-left: 60px;',
+
+
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Print Version',
+
+                        border: true,
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
+                            var params = panel.getParams(true, true);
+                            if (!params)
+                                return;
+
+                            if (params.Rooms)
+                                params.Rooms = params.Rooms.join(';');
+
+
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatments_72hr';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
+
+                    },{
+                        style: 'margin-left: 5px;',
+
+                    },{
+
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 4
+                    },{
                         html: '<i>Diets:</i>'
                     },{
                         style: 'padding-left: 10px;',
