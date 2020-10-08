@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NIH Industrial Rates </title>
+</head>
+<body>
+
+<script type="text/javascript">
+    Ext4.onReady(function() {
+
+        Ext4.create('Ext.form.FormPanel', {
+            renderTo: 'theFormDiv',
+            bodyStyle: 'padding: 10px;',
+            queryName: 'NIHIndustryRateNew',
+            title: 'Industry Rates: Select Calculation Method to Use',
+            defaults: {
+                border: false
+            },
+            layout: {type: 'vbox'},
+            items: [{
+                html: 'Please Select the Calculation Method to Use from the Drop Down Box. If Margin is included  enter a value between .0 and and .50 Please use a 2 place decimal',
+                style: 'padding-bottom: 10px;'
+            },
+
+                {
+                    xtype: 'numberfield',
+                    itemId: 'filter-field',
+                    fieldLabel: 'Project Margin',
+                    width: 200,
+                    hideTrigger: true,
+                    padding: '10 5 3 10', // (top, right, bottom, left).
+                    minValue: .0,
+                    maxValue: 0.51
+                },
+
+
+                {
+                    xtype: 'button',
+                    text: 'Retrieve Industry Rates -------Margin Only       ',
+                    border: true,
+                    padding: '10 5 3 10', // (top, right, bottom, left).
+                    handler: function (btn) {
+                        var panel = btn.up('panel');
+                        var cushionValue = panel.down('#filter-field').getValue();
+                        if ((cushionValue != null) &&(cushionValue >= .0) && (cushionValue <= .50)) {
+                            var qwp = new LABKEY.QueryWebPart({
+                                schemaName: 'onprc_billing_public',
+                                queryName: 'NIHIndustryRateNew',
+                                renderTo: 'IndustryDiv',
+                                title: 'Industry Rates',
+                                parameters: {Margin: cushionValue, FARate: 1, CalcMethod: 'Margin Only'}
+                            });
+
+                        }
+                        else {
+                            Ext4.Msg.alert('Error', 'You must enter a rate between 0  and .50 (Inclusive)');
+                        }
+                    }
+                },
+                {
+                    xtype: 'button',
+                    text: 'Retrieve Industry Rates ----------F&A Only        ',
+                    border: true,
+                    padding: '10 11 3 10', // (top, right, bottom, left).
+                    handler: function (btn) {
+                        var panel = btn.up('panel');
+                        //    var cushionValue = panel.down('#filter-field').getValue();
+
+
+                        var qwp = new LABKEY.QueryWebPart({
+                            schemaName: 'onprc_billing_public',
+                            queryName: 'NIHIndustryRateNew',
+
+                            renderTo: 'IndustryDiv',
+                            title: 'Industry Rates',
+                            parameters: {Margin: 0, FARate: 1.91, CalcMethod: 'F&A  Only'}
+                        });
+
+                    }
+                },
+
+                {
+                    xtype: 'button',
+                    text: 'Retrieve Industry Rates ----- Margin &  F&A ',
+                    border: true,
+                    padding: '10 5 3 10', // (top, right, bottom, left).
+                    handler: function (btn) {
+                        var panel = btn.up('panel');
+                        var cushionValue = panel.down('#filter-field').getValue();
+                        if ((cushionValue != null) &&(cushionValue >= .0) && (cushionValue <= .50)) {
+                            var qwp = new LABKEY.QueryWebPart({
+                                schemaName: 'onprc_billing_public',
+                                queryName: 'NIHIndustryRateNew',
+                                renderTo: 'IndustryDiv',
+                                title: 'Industry Rates',
+                                parameters: {Margin: cushionValue, FARate: 1, CalcMethod: 'Margin  and F & A'}
+                            });
+
+                        }
+                        else {
+                            Ext4.Msg.alert('Error', 'You must enter a rate between 0  and .50 (Inclusive)');
+                        }
+                    }
+                },
+
+                {
+                    xtype: 'button',
+                    text: 'Retrieve Industry Rates No Margin Or  F&A ',
+                    border: true,
+                    padding: '10 5 3 10', // (top, right, bottom, left).
+                    handler: function (btn) {
+                        var panel = btn.up('panel');
+                        // var cushionValue = 0;
+                        //if ((cushionValue  Null))
+
+                        var qwp = new LABKEY.QueryWebPart({
+                            schemaName: 'onprc_billing_public',
+                            queryName: 'NIHIndustryRateNew',
+                            renderTo: 'IndustryDiv',
+                            title: 'Industry Rates',
+                            parameters: {Margin: 0, FARate: 1, CalcMethod: 'No Margin or F&A Calc '}
+                        })
+                    }
+                }
+            ]
+        })});
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<h2>Industrial Rates</h2>
+<div id='theFormDiv'></div>
+<div id='IndustryDiv'></div>
+</body>
+</html>

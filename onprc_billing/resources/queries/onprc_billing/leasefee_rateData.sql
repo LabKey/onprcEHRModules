@@ -1,8 +1,11 @@
 --this returns day lease for adults
 --updated 6/7/2019 correction of previous lease lookup
+--2020-01-10 Updae to change the ESPF top correct Value
+-- resolved issue to insura all data sources use Subsstitute Path
 Select
 l.id,
 l.project.name as CenterProject,
+l.project.project as ProjectID,
 l.alias,
 l.leasetype,
 l.assignmentdate,
@@ -19,11 +22,12 @@ l.dayleaselength as quantity
 
 
 
-FROM onprc_Billing.leaseFee_LeaseType  l JOIN onprc_billing.leaseFeeDefinition lf ON (
+FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType  l
+    JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
 
        l.Leasetype = lf.chargeId.Name
        AND lf.active = true)
-where l.daylease <> 'yes'
+where l.daylease <> 'yes' and l.leasetype != 'U42 Expanded SPF Lease'
 
 UNION
 
@@ -31,6 +35,7 @@ UNION
 Select
 l.id,
 l.project.name as CenterProject,
+l.project.project as ProjectID,
 l.alias,
 l.leasetype,
 l.assignmentdate,
@@ -38,7 +43,7 @@ l.assignCondition.code,
 l.projectedReleaseCondition.code as ProjectedReleaseCode,
 Cast(l.ageAtAssignment as Integer) as AssignmentAge,
 Case
-	When l.leasetype = 'U42 Expanded SPF Lease' then lf.chargeId
+	When l.leasetype = 'U42 Expanded SPF Lease' then lf.chargeID
 	else Null
 	End as chargeId,
 Null as RevisedChargeID,
@@ -46,7 +51,8 @@ Null as RevisedChargeID,
 
 
 
-FROM onprc_Billing.leaseFee_LeaseType  l JOIN onprc_billing.leaseFeeDefinition lf ON (
+FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType  l JOIN
+    Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
 
        l.Leasetype = lf.chargeId.Name
        AND lf.active = true)
@@ -58,6 +64,7 @@ UNION
 
 SELECT l.id,
 l.project.name as CenterProject,
+l.project.project as ProjectID,
 l.alias,
 l.leasetype,
 l.assignmentdate,
@@ -70,7 +77,8 @@ Null as RevisedChargeID,
 
 1 as quantity
 
-FROM onprc_Billing.leaseFee_LeaseType l left outer JOIN onprc_billing.leaseFeeDefinition lf ON (
+FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType l
+    left outer JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
 
        lf.assignCondition = l.assignCondition.code
        AND lf.releaseCondition = l.projectedReleaseCondition.code
@@ -86,6 +94,7 @@ UNION
 --day lease no condition change
 SELECT l.id,
 l.project.name as CenterProject,
+l.project.project as ProjectID,
 l.alias,
 l.leasetype,
 l.assignmentdate,
@@ -99,7 +108,7 @@ end as ChargeID,
 Null as RevisedChargeID,
 l.dayleaselength as Quantity
 
-FROM onprc_Billing.leaseFee_LeaseType  l
+FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType  l
 where l.daylease = 'yes' and l.leasetype <> 'Day Lease Research Assignment P51 NHP Condition Change'
 
 UNION
@@ -108,6 +117,7 @@ UNION
 --day lease condition change
 SELECT l.id,
 l.project.name as CenterProject,
+l.project.project as ProjectID,
 l.alias,
 l.leasetype,
 l.assignmentdate,
@@ -120,8 +130,8 @@ Null as RevisedChargeID,
 
 1 as  Quantity
 
-FROM onprc_Billing.leaseFee_LeaseType  l
-	left outer JOIN onprc_billing.leaseFeeDefinition lf ON (
+FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType  l
+	left outer JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
 
        lf.assignCondition = l.assignCondition.code
        AND lf.releaseCondition = l.ReleaseCondition.code
@@ -136,6 +146,7 @@ UNION
 
 SELECT l.id,
 l.project.name as CenterProject,
+l.project.project as ProjectID,
 l.alias,
 l.leasetype,
 l.assignmentdate,
@@ -150,7 +161,8 @@ Null as RevisedChargeID,
 
 1 as quantity
 
-FROM onprc_Billing.leaseFee_LeaseType  l left outer JOIN onprc_billing.leaseFeeDefinition lf ON (
+FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType  l
+    left outer JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
 
        lf.assignCondition = l.assignCondition.code
        AND lf.releaseCondition = l.projectedReleaseCondition.code
@@ -166,6 +178,7 @@ UNION
 Select
 r.id,
 r.project.name as CenterProject,
+r.project.project as ProjectID,
 r.alias,
 'Adjustment-Automatic' as LeaseType,
 r.date,
@@ -178,4 +191,4 @@ r.leasecharge1 as revisedChargeID,
 1 as quantity
 
 
-from onprc_billing.leaseFeeReleaseAdjustment r
+from Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeReleaseAdjustment r

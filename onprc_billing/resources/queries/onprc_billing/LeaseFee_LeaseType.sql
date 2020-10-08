@@ -14,7 +14,7 @@ COndition Code Change
 00Not if PI Owned]
 Not if ESPF one use Animal
 Obese - TMB - ESPF
-
+--Update 2020-01-10 Changes ESPF to U42 Expanded SPF Lease so that will properly display
 */
 
 SELECT
@@ -36,7 +36,7 @@ Case
 	When (l.id.age.ageinyears > 1 and l.dayLease = 'yes' and l.assignCondition != l.projectedReleaseCondition) and (da.project.name  != '0833' or da.project.name is Null) then 'Day Lease Research Assignment P51 NHP Condition Change'
 
 --Dual assigned ESPF using different Chared Code
-	When da.project.Name  = '0492-03' then 'DualAssignedESPF'
+	When da.project.Name  = '0492-03' then 'U42 Expanded SPF Lease'
 --Dual assigned TMB Male on Day Lease
 	When l.agegroup = 'Adult'  and da.project.name = '0300'  and l.dayLease = 'yes' then 'TMB Adult Day Lease'
 
@@ -72,7 +72,7 @@ Case
 --	when (Select l2.DayLeaseConditionChange from study.lease_DayLeaseAdult l2 where l2.id = l.id)  = 'No' and l.dayLease = 'yes' Then 'Adult Day Lease No Condition Change'
 
 /*********Dual Assigned ESPFTMB Birth */
-	When da.project.Name  = '0492-03' then 'DualAssignedESPF'
+	When da.project.Name  = '0492-03' then 'U42 Expanded SPF Lease'
 ----Dual Assigned Obese JMac Infant or Dam Day Lease = No condition Code CHanges - if change full lease
 --need to change to also incldue if the damn is there
 	When da.project.name   = '0622-01'  and l.daylease = 'yes' then 'Obese 0622-01  Day Lease'
@@ -153,10 +153,14 @@ l.projectedReleaseCondition,
 l.releaseCondition,
 l.releaseType,
 l.remark,
-l.alias
-FROM onprc_billing.leasefee_demographics l
-	left outer join study.birth b on l.id = b.id
-	left outer join study.lease_ObeseInfant_HFDDam R on l.id = r.id
-	Left outer join study.dualassigned da on da.id = l.id and (da.dualassignment = l.project
+l.alias,
+l.faRate,
+l.removesubsidy,
+l.canRaiseFA,
+l.project.project as projectID
+FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leasefee_demographics l
+	left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.birth b on l.id = b.id
+	left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.lease_ObeseInfant_HFDDam R on l.id = r.id
+	Left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.dualassigned da on da.id = l.id and (da.dualassignment = l.project
             and (da.enddate is null or da.enddate > l.date) and (da.dualenddate is null or Dualenddate > l.date))
 where l.researchowned = 'no'

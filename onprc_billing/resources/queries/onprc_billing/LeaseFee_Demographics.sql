@@ -6,15 +6,17 @@ PI Purchased NHP is code in studyflags to look for
 Need to determine if this is a day lease
 Add Column for Credit To
 Lease Type - Reqds from the query for leases and populates the lease sequnce to use
-??Is there a benefit to having a query that reads lease charges from the
+??Is there a benefit to having a query that reads lease charges from the\
+Update of File 2020-01-10 insured that all files use the subsistue page
 */
+--Update to resolve path issues
 PARAMETERS(StartDate TIMESTAMP, EndDate TIMESTAMP)
 
 SELECT distinct a.Id,
 Case
-	When a.id in (Select f.id from study.flags f where (f.id = a.id and f.flag.value = 'PI Purchased NHP' and f.enddate is Null)) then  'yes'
+	When a.id in (Select f.id from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.flags f where (f.id = a.id and f.flag.value = 'PI Purchased NHP' and f.enddate is Null)) then  'yes'
 	else 'No'
-End as ResearchOwned,
+    End as ResearchOwned,
 a.project,
 a.project.account as ProjectAlias,
 
@@ -61,8 +63,8 @@ Case
 --need to determine if this is a dual assignment so we can tag who receives the credit
 
 Case
-	when (Select Count(a2.project.name) from study.assignment a2 where (a2.id = a.id and a.project <> a2.project and a2.enddate is null and a2.date <= a.date)) > 2 then 'Over 2 Assignments'
-	when (Select Count(a2.project.name) from study.assignment a2 where (a2.id = a.id and a.project <> a2.project and a2.enddate is null and a2.date <= a.date)) = 2 then
+	when (Select Count(a2.project.name) from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a2 where (a2.id = a.id and a.project <> a2.project and a2.enddate is null and a2.date <= a.date)) > 2 then 'Over 2 Assignments'
+	when (Select Count(a2.project.name) from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a2 where (a2.id = a.id and a.project <> a2.project and a2.enddate is null and a2.date <= a.date)) = 2 then
   'Dual Assigned'
 
 End as MultipleAssignments,
@@ -71,6 +73,7 @@ End as MultipleAssignments,
 
 
 a.date,
+a.project.project as projectID,
 a.projectedRelease,
 a.enddate,
 a.datefinalized,
@@ -79,7 +82,11 @@ a.projectedReleaseCondition,
 a.releaseCondition,
 a.releaseType,
 a.remark,
-a.project.account As alias
+a.project.account As alias,
+a.project.account.farate,
+a.project.account.aliasType.removesubsidy,
+a.project.account.aliasType.canRaiseFA
+
 
 --This looks at situations where an animal is being dual assigned and credits the correct resource
 --Case
@@ -89,9 +96,9 @@ a.project.account As alias
 --End as CreditTo,
 
 
-FROM study.assignment a
-left outer join study.tmbBirth t on a.id = t.id
-left join study.birth_resourceDam d on a.id  =  d.id
+FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a
+left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.tmbBirth t on a.id = t.id
+left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.birth_resourceDam d on a.id  =  d.id
 --left outer join study.tmbdam t on t.id = a.id.birth.dam
-where a.date >= startDate and (a.date <= enddate or a.enddate is null)
+where a.datefinalized >= startDate and (a.datefinalized <= enddate or a.enddate is null)
 and a.id not like  '[a-z]%'

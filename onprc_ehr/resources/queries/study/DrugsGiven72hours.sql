@@ -31,7 +31,7 @@ SELECT
 FROM study.drug p
 WHERE p.qcstate.publicdata = true
 and timestampdiff('SQL_TSI_HOUR',p.date, now() ) < 73
-and p.code = 'E-Y9723'
+and p.code in (select code from ehr_lookups.snomed_subset_codes  Where primaryCategory = 'Sustained Medications' )
 and p.route <> 'Spillage'
 
 UNION
@@ -51,5 +51,5 @@ SELECT
 FROM study.treatment_order s
 WHERE s.qcstate.publicdata = true
 and timestampdiff('SQL_TSI_HOUR',s.date, now() ) < 73
-and s.code = 'E-Y9723'
+and s.code in (select code from ehr_lookups.snomed_subset_codes  Where primaryCategory = 'Sustained Medications' )
 and s.route <> 'Spillage'

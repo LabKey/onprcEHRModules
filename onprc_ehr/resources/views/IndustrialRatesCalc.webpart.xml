@@ -1,0 +1,6 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="Industrial Rate Calculations">
+   <view name="IndustrialRatesCalc"/>
+   <locations>
+		<location name="body"/>
+   </locations>
+</webpart>

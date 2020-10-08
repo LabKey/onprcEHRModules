@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NIHRateSheet</title>
+</head>
+<body>
+<script type="text/javascript">
+    LABKEY.requiresClientAPI();
+    LABKEY.requiresExt3();
+    LABKEY.requiresExt3ClientAPI();
+</script>
+<div id='qwpDiv' />
+<script type="text/javascript">
+
+    var config= {
+        renderTo: 'qwpDiv',
+        schemaName: 'onprc_billing_public',
+        queryName: 'NIHRateSheetYr60',
+
+        buttonBarPosition: 'top',
+        allowChooseQuery: false,
+        allowChooseView: false,
+        showFrame: false,
+        title: 'NIH Rate Sheet'
+    };
+    var wp= new LABKEY.QueryWebPart(config);
+    wp.render();
+</script>
+</body>
+</html>

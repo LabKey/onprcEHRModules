@@ -1,0 +1,6 @@
+<view xmlns="http://labkey.org/data/xml/view" title="Inudstrial Rate Calculations">
+
+    <dependencies>
+        <dependency path="ehr.context" />
+    </dependencies>
+</view>
