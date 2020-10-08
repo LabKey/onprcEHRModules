@@ -1,3 +1,5 @@
+--2020/02/12 build
+
 SELECT r.Id,
 r.date as BillingDate,
 r.enddate as ReleaseDate,
@@ -17,7 +19,7 @@ Case
 	When r.item = 'Lease Fee Adjustment' then a.leaseCharge1.name
 	else null
 	end  as OriginalLeaseType,
-a.leaseCharge2  as FinalLeaseType,
+r.revisedChargeID  as FinalLeaseType,
 r.AssignmentType as ChargeCategory,
 r.CalculatedRate as UnitCost,
 cr.unitCost as NIHRate,
@@ -26,6 +28,8 @@ cr.unitCost as NIHRate,
 --case statement when dayeleaselength > 0 then dayleasr leanth else 1  as quantity
 case
     when r.DayLeaseLength> 0 then r.dayleaseLength
+    when r.researchowned = 'Yes' then 0
+    when d.birthType = 'Born to Resource Dam' then 0
     Else 1
     End as Quantity,
 --Credit Alias Need to
@@ -61,7 +65,9 @@ When d.creditResource is not Null then d.creditTo
     else ca.account
     End  as CreditAccount,
 case
-    when r.DayLeaseLength> 0 then (r.dayleaseLength * r.CalculatedRate)
+    WHen r.releaseType = 'No Charge' then 0
+    when r.researchOwned = 'Yes' then 0
+    when r.DayLeaseLength > 0 and r.daylease = 'yes' then (r.dayleaseLength * r.CalculatedRate)
     when r.revisedrate is not null and r.revisedrate > r.CalculatedRate then (r.revisedRate - r.CalculatedRate)
     when r.revisedrate is not null and r.revisedrate < r.CalculatedRate then (r.CalculatedRate - r.RevisedRate)
 
@@ -83,9 +89,7 @@ r.revisedRate
 --IS Assigned to Protocol at Time
 
 FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeRates_2020 r
-	left outer join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeReleaseAdjustment a on a.id = r.id and a.date = r.date
+	left outer join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeReleaseAdjustment a on a.id = r.id
     left join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.chargeRates cr on r.chargeID = cr.chargeID and (cr.startDate <= r.date and cr.enddate >= r.date or cr.enddate is null)
     left outer join	Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.creditAccount ca on ca.chargeID = r.chargeID and (r.Date > ca.startDate and r.Date <= ca.enddate)
-    --left join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.chargeRates cr on r.chargeID = cr.chargeID and (cr.startDate <= r.date and cr.enddate >= r.date or cr.enddate is null)
-  --left join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.LeaseFeeRates_CreditTo ct on r.chargeID = ct.chargeID and ct.id <= r.id  and ct.assignmentDate = r.date
     Left outer join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.LeaseFee_Demographics d on r.id = d.id and r.date = d.date and r.project = d.project

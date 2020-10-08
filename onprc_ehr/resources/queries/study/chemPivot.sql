@@ -13,7 +13,7 @@ FROM
   b.Id,
   b.date,
   b.method,
-  b.createdby, ---Added 5-10-2017 R.Blasa
+  b.performedby, ---Added 2-21-2020 R.Blasa
   b.testId,
   group_concat(b.result) as results
   FROM (
@@ -26,8 +26,7 @@ FROM
       --NOTE: removed to allow legacy runs to group into 1 row.  since we already group on Id/Date/Test, this should be ok
       --coalesce(b.taskId, b.runId) as groupingId,
       b.runid.method as method,
-      b.createdby.DisplayName as createdby, ---Added 5-10-2017 R.Blasa
-
+      b.performedby, ---Added 2-21-2020 R.Blasa
       b.remark,
       b.runId.remark as runRemark,
       b.resultoorindicator,
@@ -40,8 +39,8 @@ FROM
 
     ) b
 
-  --Updated 6-3-2015 Blasa
-  GROUP BY b.runid,b.id, b.date, b.testId, b.method, b.createdby
+  ---Updated 2-21-2020 Blasa
+  GROUP BY b.runid,b.id, b.date, b.testId, b.method, b.performedby
   PIVOT results BY testId IN (select testid from ehr_lookups.chemistry_tests t WHERE t.includeInPanel = true order by sort_order)) pivot_
 
 LEFT OUTER JOIN

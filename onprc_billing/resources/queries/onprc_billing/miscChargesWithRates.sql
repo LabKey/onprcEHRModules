@@ -157,7 +157,7 @@ LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer'
 )
 
 LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.aliases alias ON (
-  alias.alias = COALESCE(p.debitedaccount, aliasAtTime.account)
+  alias.alias = COALESCE(p.debitedaccount, aliasAtTime.account) and alias.dateDisabled is Null
 )
 
 LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.projectMultipliers pm ON (

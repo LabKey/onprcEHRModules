@@ -48,6 +48,8 @@ end
 as	AssignmentType,
 --determine if day lease -
 Case
+	WHen a.assigncondition <> a.projectedReleaseCondition  then 'No'
+	WHen a.assigncondition <> a.ReleaseCondition  then 'No'
 	When (TimestampDiff('SQL_TSI_DAY',a.date,a.enddate) < 15 and TimestampDiff('SQL_TSI_DAY',a.date,a.enddate) >= 0) then 'Yes'
 	When TimestampDiff('SQL_TSI_DAY',a.date,a.projectedRelease) < 0 then 'Bad Date Entry'
 	When TimestampDiff('SQL_TSI_DAY',a.date,a.projectedRelease) < 15 then 'Yes'
@@ -57,6 +59,8 @@ End as DayLease,
 
 --build in to handle bad code
 Case
+    WHen a.assigncondition <> a.projectedReleaseCondition  then 1
+	WHen a.assigncondition <> a.ReleaseCondition  then 1
 	when a.enddate is not null and TimestampDiff('SQL_TSI_DAY',a.date,a.enddate) < 15  then TimestampDiff('SQL_TSI_DAY',a.date,a.enddate)
     when a.projectedRelease is not null and TimestampDiff('SQL_TSI_DAY',a.date,a.projectedRelease) < 15 and TimestampDiff('SQL_TSI_DAY',a.date,a.projectedRelease) >=0 then 	TimestampDiff('SQL_TSI_DAY',a.date,a.projectedRelease)
 	Else Null
@@ -65,21 +69,20 @@ Case
 --need to determine if this is a dual assignment so we can tag who receives the credit
 
 Case
-	when (Select Count(a2.project.name) from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a2 where (a2.id = a.id and a.project <> a2.project and a2.enddate is null and a2.date <= a.date)) > 2 then 'Over 2 Assignments'
-	when tmb.id is not null then 'TMB Dam'
-	when (Select Count(a2.project.name) from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a2 where (a2.id = a.id and a.project <> a2.project and a2.enddate is null and a2.date <= a.date)) = 2 then
-  'Dual Assigned'
+	When da.project is not null then 'Dual Assigned'
 
 End as MultipleAssignments,
  --(Select a2.project.name from study.assignment a2 where (a2.id = a.id and a.project <> a2.project and a2.enddate is null and a2.date <= a.date)) as DualAssignment,
-Case
-    When da.project is not null and da.dualassignment = a.project then da.project.name
-    else null
-    End as CreditResource,
-Case
-    When da.project is not null and da.dualassignment = a.project then da.project.account
-    else null
-    End as CreditTo,
+---Case
+ --   When (da.project is not null and da.projectCategory = 'Resource') and da.dualassignment = a.project then da.project.name
+ --   else null
+    da.projectName as CreditResource,
+    da.project.Account as CreditTo,
+--Case
+--    When (da.project is not null and da.projectCategory = 'Resource') and da.dualassignment = a.project then da.project.account
+--    else null
+ --   da.projectAccount as CreditTo,
+
 
 
 a.date,
@@ -110,8 +113,8 @@ FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assig
 left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.tmbBirth t on a.id = t.id
 left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.birth_resourceDam d on a.id  =  d.id
 --left outer join study.tmbdam t on t.id = a.id.birth.dam
-Left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.dualassigned da on da.id = a.id and (da.dualassignment = a.project
-            and (da.enddate is null or da.enddate > a.date) and (da.dualenddate is null or da.Dualenddate > a.date))
+Left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.dualassigned da on da.id = a.id and (da.dualassignment = a.project.project
+            and (da.enddate is null or da.enddate >= a.date) and (da.dualenddate is null or da.Dualenddate >= a.date))
 Left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.tmbDam tmb on tmb.id = a.id  and (tmb.date <= a.date and tmb.enddate >= a.date or tmb.endDate is Null)
 where a.datefinalized >= startDate and (a.datefinalized <= enddate or a.enddate is null)
 

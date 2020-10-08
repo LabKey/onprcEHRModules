@@ -37,7 +37,7 @@ SELECT d.Id,
        r.exemptionRate,
        r.Multiplier,
        r.subsidy,
-       RateCalc(r.AliasAtTime,r.chargeID,d.project,d.Date,d.farate)  as CalculatedRate,
+       RateCalc(r.AliasAtTime,r.chargeID,d.project,d.Date,.4)  as CalculatedRate,
        null as revisedRate,
        r.revisedChargeID,
        r.revisedSubsidy
@@ -52,7 +52,7 @@ union
 select
     a.id,
     'automatic_adjustment' as AssignmentType,
-    '' as researchOwned,
+    a.researchowned,
     a.projectID, --intege
     a.project.name as CenterProject,
     a.alias,

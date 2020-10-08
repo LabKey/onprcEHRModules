@@ -1,119 +1,3 @@
---this returns day lease for adults
---updated 6/7/2019 correction of previous lease lookup
---2020-01-10 Updae to change the ESPF top correct Value
--- resolved issue to insura all data sources use Subsstitute Path
-Select
-l.id,
-l.project.name as CenterProject,
-l.project.project as ProjectID,
-l.alias,
-l.leasetype,
-l.assignmentdate,
-l.assignCondition.code,
-l.projectedReleaseCondition.code as ProjectedReleaseCode,
-Cast(l.ageAtAssignment as Integer) as AssignmentAge,
-Case
-	When l.leasetype = lf.chargeID.name then lf.chargeid
-	else Null
-	End as chargeId,
-Null as RevisedChargeID,
-l.dayleaselength as quantity
-
-
-
-
-FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType  l
-    JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
-
-       l.Leasetype = lf.chargeId.Name
-       AND lf.active = true)
-where l.daylease <> 'yes' and l.leasetype != 'U42 Expanded SPF Lease'
-
-UNION
-
---this returns ESPF DUal assigned animals
-Select
-l.id,
-l.project.name as CenterProject,
-l.project.project as ProjectID,
-l.alias,
-l.leasetype,
-l.assignmentdate,
-l.assignCondition.code,
-l.projectedReleaseCondition.code as ProjectedReleaseCode,
-Cast(l.ageAtAssignment as Integer) as AssignmentAge,
-Case
-	When l.leasetype = 'U42 Expanded SPF Lease' then lf.chargeID
-	else Null
-	End as chargeId,
-Null as RevisedChargeID,
-1 as quantity
-
-
-
-FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType  l JOIN
-    Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
-
-       l.Leasetype = lf.chargeId.Name
-       AND lf.active = true)
-where l.daylease <> 'yes'
-
-UNION
-
-SELECT l.id,
-l.project.name as CenterProject,
-l.project.project as ProjectID,
-l.alias,
-l.leasetype,
-l.assignmentdate,
-l.assignCondition.code,
-
-l.projectedReleaseCondition.code as ProjectedReleaseCode,
-Cast(l.ageAtAssignment as Integer) as AssignmentAge,
-lf.chargeId,
-Null as RevisedChargeID,
-
-1 as quantity
-
-FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType l
-    JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
-       lf.chargeId.Name = 'Animal Lease Fee - TMB' and lf.active = true)
-
-where (l.leasetype = 'Animal Lease Fee -TMB') and l.daylease <> 'yes'
-
-
-UNION
-
-SELECT l.id,
-l.project.name as CenterProject,
-l.project.project as ProjectID,
-l.alias,
-l.leasetype,
-l.assignmentdate,
-l.assignCondition.code,
-
-l.projectedReleaseCondition.code as ProjectedReleaseCode,
-Cast(l.ageAtAssignment as Integer) as AssignmentAge,
-lf.chargeId,
-Null as RevisedChargeID,
-
-1 as quantity
-
-FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType l
-    left outer JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
-
-       lf.assignCondition = l.assignCondition.code
-       AND lf.releaseCondition = l.projectedReleaseCondition.code
-       AND (Cast(l.ageAtAssignment as Integer) >= lf.minAge OR lf.minAge IS NULL)
-       AND (Cast(l.ageAtAssignment as Integer) < lf.maxAge OR lf.maxAge IS NULL)
-       AND lf.active = true)
-
-where (l.leasetype = 'Research Assignment P51 Adult') and l.daylease <> 'yes'
-
-UNION
-
-
---day lease no condition change
 SELECT l.id,
 l.project.name as CenterProject,
 l.project.project as ProjectID,
@@ -125,92 +9,44 @@ l.assignCondition.code,
 l.projectedReleaseCondition.code as ProjectedReleaseCode,
 Cast(l.ageAtAssignment as Integer) as AssignmentAge,
 Case
-	when l.daylease = 'yes' then '90'
-end as ChargeID,
-Null as RevisedChargeID,
-l.dayleaselength as Quantity
 
-FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType  l
-where l.daylease = 'yes' and l.leasetype <> 'Day Lease Research Assignment P51 NHP Condition Change'
+	when (l.leasetype  = 'U42 Expanded SPF Lease' and l.daylease <> 'yes') then 5348
+    When (l.leaseType = 'Obese 0622-01  Day Lease'  and l.leasetype = lf.chargeID.name) then 5367
+	When (l.leaseType = 'Obese JMac Control Infant' and l.daylease <> 'yes' and l.leasetype = lf.chargeID.name) then 5372
+	When (l.leaseType = 'Obese JMac WSD Infant' and l.daylease <> 'yes' and l.leasetype = lf.chargeID.name) then 5371
+	When (l.leaseType = 'OBESE Adult Male Lease' and l.daylease <> 'yes' and l.leasetype = lf.chargeID.name) then 5368
+	When (l.leaseType = 'OBESE Adult Terminal Leasel' and l.daylease <> 'yes' and l.leasetype = lf.chargeID.name) then 5369
+	When (l.leaseType = 'OBESE Adult Day Lease'  and l.leasetype = lf.chargeID.name) then 5367
+    When (l.leaseType = 'Day Lease Research Assignment P51 NHP Condition Change'  and l.leasetype = lf.chargeID.name) then 9999
+	When (l.leaseType = 'Day Lease Research Assignment P51 NHP NC' ) then 90
+	When (l.leaseType = 'DualAssignedESPF' and l.daylease <> 'yes' and l.leasetype = lf.chargeID.name) then null
+    when (l.leasetype  = 'Animal Lease Fee - TMB') and l.daylease <> 'yes' then 1552
 
-UNION
-
-
---day lease condition change
-SELECT l.id,
-l.project.name as CenterProject,
-l.project.project as ProjectID,
-l.alias,
-l.leasetype,
-l.assignmentdate,
-l.assignCondition.code,
-
-l.projectedReleaseCondition.code as ProjectedReleaseCode,
-Cast(l.ageAtAssignment as Integer) as AssignmentAge,
-lf.ChargeID,
-Null as RevisedChargeID,
-
-1 as  Quantity
-
-FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType  l
-	left outer JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
-
-       lf.assignCondition = l.assignCondition.code
-       AND lf.releaseCondition = l.ReleaseCondition.code
-       AND (Cast(l.ageAtAssignment as Integer) >= lf.minAge OR lf.minAge IS NULL)
-       AND (Cast(l.ageAtAssignment as Integer) < lf.maxAge OR lf.maxAge IS NULL)
-       AND lf.active = true)
-
-where l.daylease = 'yes' and l.leasetype = 'Day Lease Research Assignment P51 NHP Condition Change'
+	When (l.leaseType = 'TMB Adult Day Lease'  and l.leasetype = lf.chargeID.name) then 90
+	When (l.leaseType = 'TMB No Charge'  and l.leasetype = lf.chargeID.name) then Null
+	When (l.leaseType = 'TMB Full P 51 Rate Lease'  and l.leasetype = lf.chargeID.name) then
+		(Select lf1.ChargeID from Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf1
+         where lf1.assignCondition = l.assignCondition
+             AND lf1.releaseCondition = l.projectedReleaseCondition
+             AND (l.ageAtAssignment >= lf1.minAge OR lf1.minAge IS NULL)
+             AND (l.ageAtAssignment < lf1.maxAge OR lf1.maxAge IS NULL)
+             AND lf1.active = true)
+	when (l.leasetype like 'Research Assignment P51 %' and l.daylease <> 'yes')  then
+		(Select lf2.ChargeID from Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf2
+         where lf2.assignCondition = l.assignCondition
+             AND lf2.releaseCondition = l.projectedReleaseCondition
+             AND (l.ageAtAssignment >= lf2.minAge OR lf2.minAge IS NULL)
+             AND (l.ageAtAssignment < lf2.maxAge OR lf2.maxAge IS NULL)
+             AND lf2.active = true)
 
 
-UNION
-
-SELECT l.id,
-l.project.name as CenterProject,
-l.project.project as ProjectID,
-l.alias,
-l.leasetype,
-l.assignmentdate,
-l.assignCondition.code,
-
-l.projectedReleaseCondition.code as ProjectedReleaseCode,
-Cast(l.ageAtAssignment as Integer) as AssignmentAge,
-Case
-	when l.leasetype = 'Research Assignment P51 Infant' then lf.chargeId
-end as ChargeID,
+	When (l.leaseType = 'Born to Resource Dam' ) then Null
+	Else Null
+	End as chargeID,
+--lf.chargeId,
 Null as RevisedChargeID,
 
 1 as quantity
 
-FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType  l
-    left outer JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf ON (
-
-       lf.assignCondition = l.assignCondition.code
-       AND lf.releaseCondition = l.projectedReleaseCondition.code
-       AND (Cast(l.ageAtAssignment as Integer) >= lf.minAge OR lf.minAge IS NULL)
-       AND (Cast(l.ageAtAssignment as Integer) < lf.maxAge OR lf.maxAge IS NULL)
-       AND lf.active = true)
-
-where (l.leasetype = 'Research Assignment P51 Infant') and l.daylease <> 'yes'
-
---deals with Release adjustmnents
-UNION
-
-Select
-r.id,
-r.project.name as CenterProject,
-r.project.project as ProjectID,
-r.alias,
-'Adjustment-Automatic' as LeaseType,
-r.date,
-r.assignCondition,
-Null as ProjectedReleaseCondition,
-r.ageatTime,
-r.leasecharge2 as originalChargeID,
-r.leasecharge1 as revisedChargeID,
-
-1 as quantity
-
-
-from Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeReleaseAdjustment r
+FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leaseFee_LeaseType l left outer join
+  Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFeeDefinition lf on l.leaseType = lf.chargeID.name

@@ -56,6 +56,16 @@
 
         </transform>
 
+        <transform id="step5a">
+
+            <description>Transfer to EHR Requests</description>
+
+            <source schemaName="LIS" queryName="RequestTemp"/>
+
+            <destination schemaName="EHR" queryName="requests"  />
+
+        </transform>
+
 
     </transforms>
 

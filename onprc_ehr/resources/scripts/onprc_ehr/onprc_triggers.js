@@ -13,6 +13,101 @@ var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY
 exports.init = function(EHR){
     EHR.ETL = ETL;
 
+    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.INIT, function (event, helper, EHR) {
+
+        EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'birth', EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC);
+
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'birth', function (scriptErrors, helper, row, oldRow) {
+            // Put custom ONPRC handler here
+            // skip normal birth records process when birth condition has a value of Fetus
+            console.log("onprc_ehr/birth.js entry")
+            if (row.Id && row.birth_condition == 'Fetus - Prenatal')
+            {
+                var obj = {
+                    Id: row.Id,
+                    birth: row.date,
+                    date: row.date,
+                    calculated_status: 'Fetus'
+                };
+
+
+                helper.getJavaHelper().createDemographicsRecord(row.Id, obj);
+            }
+
+            else
+            {
+                var isLiving = EHR.Server.Utils.isLiveBirth(row.birth_condition);
+                if (isLiving)
+                {
+                    helper.registerLiveBirth(row.Id, row.date);
+                }
+
+                if (!helper.isETL())
+                {
+                    //if a weight is provided, we insert into the weight table:
+                    if (row.weight && row.wdate)
+                    {
+                        helper.getJavaHelper().insertWeight(row.Id, row.wdate, row.weight);
+                    }
+
+                    //if room provided, we insert into housing.  if this animal already has an active housing record, skip
+
+                    if (row.room && row.Id && row.date)
+                    {
+
+                        helper.getJavaHelper().createHousingRecord(row.Id, row.date, (isLiving ? null : row.date), row.room, (row.cage || null),null);
+                    }
+
+                    if (!helper.isGeneratedByServer())
+                    {
+                        var obj = {
+                            Id: row.Id,
+                            gender: row.gender,
+                            dam: row.dam,
+                            sire: row.sire,
+                            origin: row.origin,
+                            birth: row.date,
+                            date: row.date,
+                            calculated_status: isLiving ? 'Alive' : 'Dead'
+
+                        };
+
+                        //NOTE: the follow is designed to allow the table to either have physical columns for species/origin, or do display the demographics values.  in the latter case, editing the form field will act to update the demographics record
+                        if (row.species || row['Id/demographics/species'])
+                        {
+                            obj.species = row.species || row['Id/demographics/species'];
+                        }
+
+                        if (row.geographic_origin || row['Id/demographics/geographic_origin'])
+                        {
+                            obj.geographic_origin = row.geographic_origin || row['Id/demographics/geographic_origin'];
+                        }
+
+                        //find dam, if provided
+                        if (row.dam && !obj.geographic_origin)
+                        {
+                            obj.geographic_origin = helper.getJavaHelper().getGeographicOrigin(row.dam);
+                        }
+
+                        if (row.dam && !obj.species)
+                        {
+                            obj.species = helper.getJavaHelper().getSpecies(row.dam);
+                        }
+
+                        if (!isLiving)
+                        {
+                            obj.death = row.date;
+                        }
+
+                        //if not already present, we insert into demographics
+                        helper.getJavaHelper().createDemographicsRecord(row.Id, obj);
+                    }
+                }
+            }
+        });
+    });
+
+
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.INIT, function(event, helper, EHR){
         EHR.Server.Utils.isLiveBirth = function(birthCondition){
             EHR.Assert.assertNotEmpty('triggerHelper is null', triggerHelper);

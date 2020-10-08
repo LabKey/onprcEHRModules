@@ -82,7 +82,7 @@ LEFT JOIN onprc_billing_public.projectAccountHistory aliasAtTime ON (
 )
 
 LEFT JOIN onprc_billing_public.aliases alias ON (
-  aliasAtTime.account = alias.alias
+  aliasAtTime.account = alias.alias and alias.datedisabled is null
 )
 
 LEFT JOIN onprc_billing_public.projectMultipliers pm ON (

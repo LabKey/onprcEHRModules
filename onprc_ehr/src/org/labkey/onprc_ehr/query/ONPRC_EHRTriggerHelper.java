@@ -122,6 +122,7 @@ public class ONPRC_EHRTriggerHelper
     private Map<Integer, DividerRecord> _cachedDividerRecords = new HashMap<>();
 
     private static final String NONRESTRICTED = "Nonrestricted";
+    private static final String TERMINAL = "Terminal";
     private static final String EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, EXPERIMENTAL";
     private static final String NON_EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, NONEXPERIMENTAL";
     private static final String SPONTANEOUS_DEATH = "Spontaneous Death";
@@ -1402,7 +1403,10 @@ public class ONPRC_EHRTriggerHelper
                     row.put("enddate", enddate);
                     row.put("project", project);
                     row.put("assignCondition", getConditionCodeForMeaning(NONRESTRICTED));
-                    row.put("projectedReleaseCondition", getConditionCodeForMeaning(NONRESTRICTED));
+
+//                    Modified: 4-13-2020  R.Blasa
+                    row.put("projectedReleaseCondition", getConditionCodeForMeaning(TERMINAL));
+
                     if (enddate != null)
                     {
                         row.put("releaseCondition", getConditionCodeForMeaning(NONRESTRICTED));

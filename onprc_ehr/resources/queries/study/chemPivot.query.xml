@@ -19,7 +19,7 @@
                         </fk>
                     </column>
 
-                    <column columnName="createdby">
+                    <column columnName="performedby">
                         <columnTitle>Testing Performed By</columnTitle>
                     </column>
                 </columns>

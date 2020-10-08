@@ -29,6 +29,7 @@ a5.id as ESPFAnimal,
 (SELECT max(rowid) as rowid FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.chargeableItems ci WHERE ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.LEASE_FEE_ADJUSTMENT') and ci.active = true) as chargeId,
 CASE
   when (fl.id Is Not Null) then 0
+  when (d.researchOwned = 'yes') then 0
   else 1
   end as quantity,
 lf2.chargeId as leaseCharge1,
@@ -36,6 +37,10 @@ lf.chargeId as leaseCharge2,
 a.objectid as sourceRecord,
 'Adjustment - Automatic' as chargeCategory,
 'Y' as isAdjustment,
+Case
+	When a.id in (Select f.id from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.flags f where (f.id = a.id and f.flag.value = 'PI Purchased NHP' and f.enddate is Null)) then  'yes'
+	else 'No'
+    End as ResearchOwned,
 a.datefinalized,
 a.enddatefinalized
 
@@ -77,6 +82,9 @@ Left JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.
     (a.id = fl.id
     and fl.flag.code = 4034
     and (a.date >= fl.date and a.date <=COALESCE(fl.enddate,Now()) ))
+
+LEFt join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leaseFee_demographics d
+    on a.id = d.id
 
 WHERE a.releaseCondition != a.projectedReleaseCondition
 and (A.id != A5.id or A5.id is Null)
