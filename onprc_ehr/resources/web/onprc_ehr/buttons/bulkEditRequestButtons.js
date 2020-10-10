@@ -84,6 +84,7 @@ ONPRC_EHR.Buttons.bulkEditRequestHandler = function(dataRegionName, formType, is
                     var newForm = Ext4.DomHelper.append(document.getElementsByTagName('body')[0],
                             '<form method="POST" action="' + LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {formType: formType, srcURL: srcURL}) + '">' +
                                 '<input type="hidden" name="pkValues" value="' + Ext4.htmlEncode(keys.join(';')) + '" />' +
+                            '<input type="hidden" name="X-LABKEY-CSRF" value="' + Ext4.htmlEncode(LABKEY.CSRF) + '" />' +
                             '</form>');
                     newForm.submit();
                 }

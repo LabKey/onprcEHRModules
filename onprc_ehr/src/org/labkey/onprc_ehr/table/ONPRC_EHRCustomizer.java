@@ -1128,7 +1128,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 @Override
                 public DisplayColumn createRenderer(ColumnInfo colInfo)
                 {
-                    return new FixedWidthDisplayColumn(colInfo, 200);
+                    return new FixedWidthDisplayColumn(colInfo, 100);
                 }
             });
 
@@ -1177,7 +1177,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         SQLFragment remarkSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(groupConatSql, false, true, ti.getSqlDialect().concatenate(getChr(ti) + "(10)", getChr(ti) + "(10)")).getSqlCharSequence() + " as expr1 FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized <= {fn now()} AND (cr.category IS NULL or cr.category = ? or cr.category = ?) AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?))", completedQCState.getRowId(), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
                         ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.VARCHAR, ti.getColumn("Id"), ti.getColumn("date"));
                         remarkCol.setLabel("Remarks Entered Since Last Vet Review");
-                        remarkCol.setDisplayWidth("200");
+//                        remarkCol.setDisplayWidth("300");
                         remarkCol.setDisplayColumnFactory(new DisplayColumnFactory()
                         {
                             @Override

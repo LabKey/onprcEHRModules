@@ -1,0 +1,12 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="StudyDetails" tableDbType="NOT_IN_DB">
+                <tableTitle>Study Details</tableTitle>
+                <sorts>
+                    <sort column="Date" descending="true"/>
+                </sorts>
+            </table>
+        </tables>
+    </metadata>
+</query>

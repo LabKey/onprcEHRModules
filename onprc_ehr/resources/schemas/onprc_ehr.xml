@@ -299,9 +299,9 @@
             <column columnName="reason">
                 <columnTitle>Reason For Move</columnTitle>
                 <!--<fk>-->
-                    <!--<fkDbSchema>ehr_lookups</fkDbSchema>-->
-                    <!--<fkTable>areas</fkTable>-->
-                    <!--<fkColumnName>area</fkColumnName>-->
+                <!--<fkDbSchema>ehr_lookups</fkDbSchema>-->
+                <!--<fkTable>areas</fkTable>-->
+                <!--<fkColumnName>area</fkColumnName>-->
                 <!--</fk>-->
             </column>
             <column columnName="remark">
@@ -383,14 +383,17 @@
             <item text="Grid Views">
                 <originalText>Grid Views</originalText>
             </item>
-            <item text="Charts">
-                <originalText>Charts</originalText>
+            <item text="Reports">
+                <originalText>Reports</originalText>
             </item>
             <item text="Export">
                 <originalText>Export</originalText>
             </item>
             <item text="Print">
                 <originalText>Print</originalText>
+            </item>
+            <item text="Paging">
+                <originalText>Paging</originalText>
             </item>
         </buttonBarOptions>
     </table>
@@ -414,6 +417,7 @@
             <column columnName="modified"/>
         </columns>
     </table>
+
 
     <table tableName="encounter_summaries_remarks" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Encounter Summaries Remarks</tableTitle>
@@ -498,7 +502,7 @@
             </column>
             <column columnName="qcstate">
                 <fk>
-                    <fkDbSchema>core</fkDbSchema>
+                    <fkDbSchema>study</fkDbSchema>
                     <fkTable>qcstate</fkTable>
                     <fkColumnName>RowId</fkColumnName>
                 </fk>
@@ -527,4 +531,45 @@
             </column>
         </columns>
     </table>
+
+    <!--StudyDetails reference data schema. Added by Kolli, 02/20/2020 -->
+    <table tableName="StudyDetails_Reference_Data" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>StudyDetails_Reference_Data</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowId">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="value">
+                <columnTitle>Value</columnTitle>
+            </column>
+
+            <column columnName="name">
+                <columnTitle>Name</columnTitle>
+            </column>
+
+            <column columnName="remark"/>
+            <column columnName="dateDisabled">
+                <columnTitle>End Date</columnTitle>
+            </column>
+
+            <column columnName="sort_order">
+                <columnTitle>Sort Order</columnTitle>
+            </column>
+
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="createdby"/>
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby"/>
+
+        </columns>
+    </table>
+
 </tables>
+

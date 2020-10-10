@@ -77,7 +77,7 @@ End as MultipleAssignments,
  --   When (da.project is not null and da.projectCategory = 'Resource') and da.dualassignment = a.project then da.project.name
  --   else null
     da.projectName as CreditResource,
-    da.project.Account as CreditTo,
+    da.projectAccount as CreditTo,
 --Case
 --    When (da.project is not null and da.projectCategory = 'Resource') and da.dualassignment = a.project then da.project.account
 --    else null

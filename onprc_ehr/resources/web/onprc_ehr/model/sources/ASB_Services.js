@@ -26,8 +26,8 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
             procedureid: {
                 lookup: {
                     filterArray: [
-
-                        LABKEY.Filter.create('category', 'Research', LABKEY.Filter.Types.EQUAL),
+                        LABKEY.Filter.create('category', 'Surgery', LABKEY.Filter.Types.NEQ),
+                        LABKEY.Filter.create('category', 'Pathology', LABKEY.Filter.Types.NEQ),
                         LABKEY.Filter.create('active', true, LABKEY.Filter.Types.EQUAL)
                     ]
         }}},

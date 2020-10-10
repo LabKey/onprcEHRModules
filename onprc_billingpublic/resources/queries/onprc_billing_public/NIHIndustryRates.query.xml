@@ -1,5 +1,4 @@
-<!--Update for YR 61-->
-query xmlns="http://labkey.org/data/xml/query">
+<query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="NIHIndustryRates" tableDbType="TABLE">

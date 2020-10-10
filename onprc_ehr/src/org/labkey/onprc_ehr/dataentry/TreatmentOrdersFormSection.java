@@ -16,7 +16,6 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.List;

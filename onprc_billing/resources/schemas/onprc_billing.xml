@@ -299,6 +299,7 @@
             <column columnName="modified"/>
         </columns>
         <buttonBarOptions includeStandardButtons="true">
+            <includeScript>Ext4</includeScript>
             <includeScript>ehr.context</includeScript>
             <includeScript>/onprc_billing/window/ReverseChargeWindow.js</includeScript>
             <item insertPosition="end" text="More Actions" permissionClass="org.labkey.onprc_billing.security.ONPRCBillingAdminPermission">
