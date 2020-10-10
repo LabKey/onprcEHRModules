@@ -26,6 +26,7 @@ import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.DisplayColumnFactory;
 import org.labkey.api.data.JdbcType;
+import org.labkey.api.data.MutableColumnInfo;
 import org.labkey.api.data.RenderContext;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.TableInfo;
@@ -2198,10 +2199,10 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                 return null;
             }
 
-            ti.getColumn(pkCol.getName()).setHidden(true);
-            ti.getColumn(pkCol.getName()).setKeyField(true);
+            ((MutableColumnInfo)ti.getColumn(pkCol.getName())).setHidden(true);
+            ((MutableColumnInfo)ti.getColumn(pkCol.getName())).setKeyField(true);
 
-            ti.getColumn("flagsAlertsActive").setLabel("Flags Alerts Active");
+            ((MutableColumnInfo)ti.getColumn("flagsAlertsActive")).setLabel("Flags Alerts Active");
 
             return ti;
         }

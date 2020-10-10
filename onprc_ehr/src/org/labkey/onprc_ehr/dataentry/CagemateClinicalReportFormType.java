@@ -50,7 +50,7 @@ public class CagemateClinicalReportFormType extends TaskForm
         ));
 
         setStoreCollectionClass("EHR.data.ClinicalReportStoreCollection");
-        addClientDependency(ClientDependency.fromPath("ehr/data/ClinicalReportStoreCollection.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalReportStoreCollection.js"));
 
         setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NO_ID);
         setDisplayReviewRequired(true);
@@ -62,7 +62,7 @@ public class CagemateClinicalReportFormType extends TaskForm
             s.addConfigSource("ClinicalProcedures");
         }
 
-        addClientDependency(ClientDependency.fromPath("ehr/model/sources/ClinicalDefaults.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalDefaults.js"));
 
 
     }

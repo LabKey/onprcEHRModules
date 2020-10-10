@@ -31,7 +31,7 @@ public class TissueWeightsFormSection extends SimpleGridPanel
         super("study", "tissue_samples", "Tissues/Weights");
         setLocation(EHRService.FORM_SECTION_LOCATION.Tabs);
         setXtype("onprc_ehr-dragdropgridpanel");
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/grid/DragDropGridPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/DragDropGridPanel.js"));
     }
 
     //    Added: 6-26-2017  R.Blasa  Include tool bar at bottom grid

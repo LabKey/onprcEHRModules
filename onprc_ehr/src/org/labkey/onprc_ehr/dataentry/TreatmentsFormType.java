@@ -57,7 +57,7 @@ public class TreatmentsFormType extends TaskForm
             s.addConfigSource("TreatmentDrugsClinical");
 
         }
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"));
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
         {

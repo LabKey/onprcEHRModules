@@ -63,10 +63,13 @@ import org.labkey.onprc_ehr.buttons.VetReviewRecordButton;
 import org.labkey.onprc_ehr.dataentry.*;
 import org.labkey.onprc_ehr.demographics.ActiveAnimalGroupsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.ActiveDrugsGivenDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.ActiveTreatmentsXDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.AssignedVetDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagemateInfantDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.FosterChildDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.GeneticAncestryDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.HousingDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.LastHousingDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ParentsDemographicsProvider;
@@ -222,7 +225,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalProcedures.js"), this);
 
         //Added 11-17-16 KOLLI
-   //     EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/CohortField.js"), this);
+   //     EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/CohortField.js"), this);
 
         //Added: 7-12-2016 R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/SnapshotPanel.js"), this);
@@ -240,26 +243,26 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
 
         //Added: 10-25-2017  R.Blasa  References new Xtype
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/CEG_PlantextArea.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/CEG_PlantextArea.js"), this);
 
         //Added: 7-7-2017  R.Blasa
-//        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/HousingReason.js"), this);
+//        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/HousingReason.js"), this);
 
         //Added: 1-19-2018  R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/AnimalGroupFieldsCombo.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/AnimalGroupFieldsCombo.js"), this);
 
 //        //Added: 10-5-2018  R.Blasa   //needed for displaying wound subcategory
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/ManageCasesPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ManageCasesPanel.js"), this);
 
         //        //Added: 10-8-2018  R.Blasa   //needed for displaying wound subcategory
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/window/ManageCasesWindow.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageCasesWindow.js"), this);
 
 
         //Added: 7-18-2018  R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/window/ManageRecordWindow.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageRecordWindow.js"), this);
 
         //Added: 10-7-2019   R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"), this);
 
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
@@ -489,7 +492,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerDemographicsProvider(new PregnancyConfirmDemographicsProvider(this));
 
         //Added: 3-27-2017  R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.fromPath("onprc_ehr/panel/EnterDataPanel.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/EnterDataPanel.js"), this);
 
         //Created: 2-21-2017 R.Blasa
         EHRService.get().registerDemographicsProvider(new CagemateInfantDemographicsProvider(this));

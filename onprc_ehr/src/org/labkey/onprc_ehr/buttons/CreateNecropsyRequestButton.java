@@ -10,6 +10,6 @@ public class CreateNecropsyRequestButton extends CreateTaskFromRecordsButton
     public CreateNecropsyRequestButton(Module owner)
     {
         super(owner, "Create Necropsy Request From Selected", "ONPRC_EHR.window.CreateNecropsyRequestWindow.createTaskFromRecordHandler(dataRegionName, '" + NecropsyFormType.NAME + "')");
-        setClientDependencies(ClientDependency.fromPath("onprc_ehr/window/CreateNecropsyRequestWindow.js"));
+        setClientDependencies(ClientDependency.supplierFromPath("onprc_ehr/window/CreateNecropsyRequestWindow.js"));
     }
 }

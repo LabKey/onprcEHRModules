@@ -32,7 +32,7 @@ public class EncounterProcedureFormSection extends SimpleGridPanel
     {
         super("study", "encounters", "Procedures", location);
         //Added 3-30-2017  R.Blasa
-        addClientDependency(ClientDependency.fromPath("ehr/data/ClinicalEncountersClientStore.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalEncountersClientStore.js"));
         setClientStoreClass("EHR.data.ClinicalEncountersClientStore");
 
 

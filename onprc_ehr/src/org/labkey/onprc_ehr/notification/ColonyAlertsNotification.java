@@ -1062,13 +1062,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
         //Daily events query
         TableInfo ti = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler");
-        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(u));
+        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
         TableSelector ts = new TableSelector(ti, null, null);
         long count = ts.getRowCount();
 
         //Weekly events query
         TableInfo ti1 = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler_Weekly");
-        ((ContainerFilterable) ti1).setContainerFilter(ContainerFilter.Type.AllFolders.create(u));
+        ((ContainerFilterable) ti1).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
         TableSelector ts1 = new TableSelector(ti1, null, null);
         long count1 = ts1.getRowCount();
 

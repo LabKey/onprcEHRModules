@@ -43,7 +43,7 @@ public class TreatmentOrdersFormSection extends DrugAdministrationFormSection
 
 //        Modified: 7-29-2020 Set Remarks information
         setClientStoreClass("ONPRC_EHR.data.TreatmentOrdersClientStore");
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/data/sources/TreatmentOrdersClientStore.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/TreatmentOrdersClientStore.js"));
 
     }
 
