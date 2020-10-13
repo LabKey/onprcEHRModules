@@ -2317,7 +2317,7 @@ public class ONPRC_EHRTriggerHelper
                                {
                                    for (String Investname : ret2)
                                    {
-                                       html.append("<tr><td>" + (rs.getString("external_id") == null ? "" : rs.getString("external_id")) + "</td><td>  " + Investname + "   </td><td>" + rs.getString("approve") + "</td></tr>\n");
+                                       html.append("<tr><td>" + (rs.getString("external_id") == null ? PageFlowUtil.filter("") : PageFlowUtil.filter(rs.getString("external_id"))) + "</td><td>  " + PageFlowUtil.filter(Investname) + "   </td><td>" + PageFlowUtil.filter(rs.getString("approve")) + "</td></tr>\n");
                                        break;
                                    }
                                }
@@ -2409,7 +2409,7 @@ public class ONPRC_EHRTriggerHelper
                                {
                                    for (String Investname : ret2)
                                    {
-                                       html.append("<tr><td>" + ( rs.getString("name"))  + "</td><td>" + ( rs.getString("project"))  + "</td><td>   " + ( rs.getString(protocolColumn.getAlias()))  + "</td><td>   " + Investname + "   </td><td>" + rs.getString("startdate") + "</td></tr>\n");
+                                       html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("project"))  + "</td><td>   " + PageFlowUtil.filter(rs.getString(protocolColumn.getAlias()))  + "</td><td>   " + PageFlowUtil.filter(Investname) + "   </td><td>" +  PageFlowUtil.filter(rs.getString("startdate")) + "</td></tr>\n");
                                        break;
 
                                    }

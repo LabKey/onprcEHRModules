@@ -1,10 +1,6 @@
 USE [Labkey]
 GO
 /****** Object:  StoredProcedure [onprc_billing].[oga_AliasCleanupNew]    Script Date: 1/29/2020 7:13:37 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 
 CREATE PROCEDURE [onprc_billing].[oga_AliasCleanup]
 

@@ -1,10 +1,6 @@
 
-GO
 /****** Object:  StoredProcedure [onprc_billing].[AnnualRateChangeProcess]    Script Date: 5/4/2018 10:50:22 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
+
 -- =============================================
 -- Author:		<Author,,Name>
 -- Create date: <Create Date,,>

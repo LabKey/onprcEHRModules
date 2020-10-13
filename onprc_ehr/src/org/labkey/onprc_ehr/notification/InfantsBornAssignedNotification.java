@@ -153,7 +153,7 @@ public class InfantsBornAssignedNotification extends AbstractEHRNotification
                     String dams = results.getString(FieldKey.fromString("dam"));
                     String projectname = results.getString(FieldKey.fromString("ProjectName"));
 
-                    msg.append("<tr><td>" + Ids  + "</td><td>" + getDateTimeFormat(c).format(datess) + "</td><td>"  + projectname + "</td><td>" + dams + "</td></tr>\n");
+                    msg.append("<tr><td>" + PageFlowUtil.filter(Ids)  + "</td><td>" + PageFlowUtil.filter(getDateTimeFormat(c).format(datess)) + "</td><td>"  + PageFlowUtil.filter(projectname) + "</td><td>" + PageFlowUtil.filter(dams) + "</td></tr>\n");
 
                 }
             });

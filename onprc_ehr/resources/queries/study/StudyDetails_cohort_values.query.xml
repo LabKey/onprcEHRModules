@@ -9,9 +9,6 @@
                         <isHidden>false</isHidden>
                     </column>
                 </columns>
-                <sorts>
-                    <sort column="sort_order" descending="true"/>
-                </sorts>
             </table>
         </tables>
     </metadata>

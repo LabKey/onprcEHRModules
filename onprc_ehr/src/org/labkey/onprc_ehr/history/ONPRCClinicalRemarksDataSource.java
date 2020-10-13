@@ -110,8 +110,8 @@ public class ONPRCClinicalRemarksDataSource extends AbstractDataSource
     {
         if (rs.hasColumn(FieldKey.fromString(field)) && rs.getObject(FieldKey.fromString(field)) != null)
         {
-            sb.append("<tr style='vertical-align:top;margin-bottom: 5px;'><td style='padding-right: 5px;'>" + label + ":</td><td>");
-            sb.append(rs.getString(FieldKey.fromString(field)));
+            sb.append("<tr style='vertical-align:top;margin-bottom: 5px;'><td style='padding-right: 5px;'>" + PageFlowUtil.filter(label) + ":</td><td>");
+            sb.append(PageFlowUtil.filter(rs.getString(FieldKey.fromString(field))));
             sb.append("</td></tr>");
         }
     }
