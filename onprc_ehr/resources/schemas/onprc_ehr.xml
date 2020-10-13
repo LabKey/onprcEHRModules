@@ -570,6 +570,403 @@
 
         </columns>
     </table>
-
+    <table tableName="AvailableBloodVolume" tableDbType="TABLE">
+        <columns>
+            <column columnName="datecreated"/>
+            <column columnName="id"/>
+            <column columnName="gender"/>
+            <column columnName="species"/>
+            <column columnName="yoa"/>
+            <column columnName="mostrecentweightdate"/>
+            <column columnName="weight"/>
+            <column columnName="calcmethod"/>
+            <column columnName="BCS"/>
+            <column columnName="BCSage"/>
+            <column columnName="previousdraws"/>
+            <column columnName="ABV"/>
+            <column columnName="dsrowid"/>
+        </columns>
+    </table>
+    <table tableName="project" tableDbType="TABLE">
+        <columns>
+            <column columnName="project"/>
+            <column columnName="protocol"/>
+            <column columnName="account"/>
+            <column columnName="inves"/>
+            <column columnName="avail"/>
+            <column columnName="title"/>
+            <column columnName="research"/>
+            <column columnName="reqname"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+            <column columnName="contact_emails"/>
+            <column columnName="startdate"/>
+            <column columnName="enddate"/>
+            <column columnName="inves2"/>
+            <column columnName="name"/>
+            <column columnName="investigatorId"/>
+            <column columnName="use_category"/>
+            <column columnName="alwaysavailable"/>
+            <column columnName="shortname"/>
+            <column columnName="projecttype"/>
+            <column columnName="container"/>
+            <column columnName="objectid"/>
+        </columns>
+    </table>
+    <table tableName="eIACUC_PRIME_VIEW_NON_SURGICAL_PROCS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Animal_Group"/>
+            <column columnName="NS_Procedure_Name"/>
+            <column columnName="Standard_Procedure"/>
+            <column columnName="Iterations"/>
+            <column columnName="Deviation"/>
+            <column columnName="Deviation_Description"/>
+            <column columnName="Recovery_Days"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+    <table tableName="PRIME_VIEW_ANIMAL_GROUPS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Parent_Protocol"/>
+            <column columnName="Group_ID"/>
+            <column columnName="Group_Name"/>
+            <column columnName="Species"/>
+            <column columnName="SPF_Status"/>
+            <column columnName="Weight_Start"/>
+            <column columnName="Weight_End"/>
+            <column columnName="Age_Start"/>
+            <column columnName="Age_End"/>
+            <column columnName="Gender"/>
+            <column columnName="Number_of_Animals_Max"/>
+            <column columnName="Non_Standard_Housing_Types"/>
+            <column columnName="Non_Standard_Housing_Description"/>
+            <column columnName="Non_Standard_Housing_Frequency_and_Duration"/>
+            <column columnName="Non_Standard_Housing_Monitoring"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+            <column columnName="Restraint"/>
+            <column columnName="Nutritional_Manipulation_Description"/>
+            <column columnName="Nutritional_Manipulation_Adverse_Consequences"/>
+            <column columnName="Nutritional_Manipulation_Health_Assessment"/>
+            <column columnName="Non_Pharmaceutical_Grade_Drug_Use"/>
+            <column columnName="Food_Withheld"/>
+            <column columnName="Water_Withheld"/>
+            <column columnName="Food_Water_Withheld_Description"/>
+            <column columnName="Food_Water_Withheld_Justification"/>
+            <column columnName="Food_Water_Withheld_Adverse_Consequences"/>
+            <column columnName="Death_As_Endpoint_Number_of_Animals"/>
+            <column columnName="Death_As_Endpoint_Justification"/>
+        </columns>
+    </table>
+    <table tableName="protocol" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowId"/>
+            <column columnName="protocol"/>
+            <column columnName="inves"/>
+            <column columnName="approve"/>
+            <column columnName="description"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+            <column columnName="maxanimals"/>
+            <column columnName="enddate"/>
+            <column columnName="title"/>
+            <column columnName="usda_level"/>
+            <column columnName="external_id"/>
+            <column columnName="project_type"/>
+            <column columnName="ibc_approval_required"/>
+            <column columnName="ibc_approval_num"/>
+            <column columnName="investigatorId"/>
+            <column columnName="last_modification"/>
+            <column columnName="first_approval"/>
+            <column columnName="container"/>
+            <column columnName="objectid"/>
+            <column columnName="lastAnnualReview"/>
+            <column columnName="PROTOCOL_State"/>
+            <column columnName="PPQ_Numbers"/>
+            <column columnName="template_oid"/>
+            <column columnName="Restraint"/>
+        </columns>
+    </table>
+    <table tableName="PRIME_VIEW_PROTOCOL_Processing" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Protocol_ID"/>
+            <column columnName="Template_OID"/>
+            <column columnName="Protocol_OID"/>
+            <column columnName="Protocol_Title"/>
+            <column columnName="PI_ID"/>
+            <column columnName="PI_First_Name"/>
+            <column columnName="PI_Last_Name"/>
+            <column columnName="PI_Email"/>
+            <column columnName="PI_Phone"/>
+            <column columnName="USDA_Level"/>
+            <column columnName="ProcessDate"/>
+            <column columnName="Approval_Date"/>
+            <column columnName="Annual_Update_Due"/>
+            <column columnName="Three_year_Expiration"/>
+            <column columnName="Last_Modified"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+            <column columnName="recordstatus"/>
+            <column columnName="PROTOCOL_STATE"/>
+            <column columnName="PPQ_Numbers"/>
+        </columns>
+    </table>
+    <table tableName="eIACUC_PRIME_VIEW_IBC_NUMBERS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Animal_Group"/>
+            <column columnName="IBC_Registration_Number"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+    <table tableName="PotentialParents_source" tableDbType="TABLE">
+        <columns>
+            <column columnName="RowId"/>
+            <column columnName="participantId"/>
+            <column columnName="BirthDate"/>
+            <column columnName="Species"/>
+            <column columnName="BirthRoom"/>
+            <column columnName="Birthcage"/>
+            <column columnName="ParentAgeAtTime"/>
+            <column columnName="PotentialParent"/>
+            <column columnName="[PotentialParentType"/>
+            <column columnName="ParentBirth"/>
+            <column columnName="Parentgender"/>
+            <column columnName="ParentSpecies"/>
+            <column columnName="ParentDeath"/>
+            <column columnName="created"/>
+            <column columnName="createdBy"/>
+            <column columnName="modified"/>
+            <column columnName="modifiedBy"/>
+            <column columnName="container"/>
+        </columns>
+    </table>
+    <table tableName="eIACUC_PRIME_VIEW_ANIMAL_GROUPS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Parent_Protocol"/>
+            <column columnName="Group_ID"/>
+            <column columnName="Group_Name"/>
+            <column columnName="Species"/>
+            <column columnName="SPF_Status"/>
+            <column columnName="Weight_Start"/>
+            <column columnName="Weight_End"/>
+            <column columnName="Age_Start"/>
+            <column columnName="Age_End"/>
+            <column columnName="Gender"/>
+            <column columnName="Number_of_Animals_Max"/>
+            <column columnName="Breeding_Colony"/>
+            <column columnName="Non_Standard_Housing_Types"/>
+            <column columnName="Non_Standard_Housing_Description"/>
+            <column columnName="Non_Standard_Housing_Frequency_and_Duration"/>
+            <column columnName="Non_Standard_Housing_Monitoring"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+            <column columnName="Restraint"/>
+            <column columnName="Nutritional_Manipulation_Description"/>
+            <column columnName="Nutritional_Manipulation_Adverse_Consequences"/>
+            <column columnName="Nutritional_Manipulation_Health_Assessment"/>
+            <column columnName="Non_Pharmaceutical_Grade_Drug_Use"/>
+            <column columnName="Food_Withheld"/>
+            <column columnName="Water_Withheld"/>
+            <column columnName="Food_Water_Withheld_Description"/>
+            <column columnName="Food_Water_Withheld_Justification"/>
+            <column columnName="Food_Water_Withheld_Adverse_Consequences"/>
+            <column columnName="Death_As_Endpoint_Number_of_Animals"/>
+            <column columnName="Death_As_Endpoint_Justification"/>
+        </columns>
+    </table>
+    <table tableName="eIACUC_PRIME_VIEW_SURGICAL_PROCS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="OID"/>
+            <column columnName="Animal_Group"/>
+            <column columnName="Standard_Procedure"/>
+            <column columnName="Iterations"/>
+            <column columnName="Deviation"/>
+            <column columnName="Deviation_Description"/>
+            <column columnName="Recovery_Days"/>
+            <column columnName="Surgery_Name"/>
+        </columns>
+    </table>
+    <table tableName="PRIME_VIEW_NON_SURGICAL_PROCS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Animal_Group"/>
+            <column columnName="NS_Procedure_Name"/>
+            <column columnName="Standard_Procedure"/>
+            <column columnName="Iterations"/>
+            <column columnName="Deviation"/>
+            <column columnName="Deviation_Description"/>
+            <column columnName="Recovery_Days"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+    <table tableName="eIACUC_PRIME_VIEW_PROTOCOLS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Protocol_ID"/>
+            <column columnName="Template_OID"/>
+            <column columnName="Protocol_OID"/>
+            <column columnName="Protocol_Title"/>
+            <column columnName="PI_ID"/>
+            <column columnName="PI_First_Name"/>
+            <column columnName="PI_Last_Name"/>
+            <column columnName="PI_Email"/>
+            <column columnName="PI_Phone"/>
+            <column columnName="USDA_Level"/>
+            <column columnName="Approval_Date"/>
+            <column columnName="Annual_Update_Due"/>
+            <column columnName="Three_year_Expiration"/>
+            <column columnName="Last_Modified"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+            <column columnName="PROTOCOL_State"/>
+            <column columnName="PPQ_Numbers"/>
+            <column columnName="Description"/>
+        </columns>
+    </table>
+    <table tableName="PotentialDam_source" tableDbType="TABLE">
+        <columns>
+            <column columnName="RowId"/>
+            <column columnName="participantId"/>
+            <column columnName="Date"/>
+            <column columnName="Species"/>
+            <column columnName="room"/>
+            <column columnName="cage"/>
+            <column columnName="DamAgeAtTime"/>
+            <column columnName="PotentialDam"/>
+            <column columnName="DamBirth"/>
+            <column columnName="Damgender"/>
+            <column columnName="DamSpecies"/>
+            <column columnName="DamDeath"/>
+            <column columnName="created"/>
+            <column columnName="createdBy"/>
+            <column columnName="modified"/>
+            <column columnName="modifiedBy"/>
+            <column columnName="container"/>
+        </columns>
+    </table>
+    <table tableName="PRIME_VIEW_PROTOCOLS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Protocol_ID"/>
+            <column columnName="Template_OID"/>
+            <column columnName="Protocol_OID"/>
+            <column columnName="Protocol_Title"/>
+            <column columnName="PI_ID"/>
+            <column columnName="PI_First_Name"/>
+            <column columnName="PI_Last_Name"/>
+            <column columnName="PI_Email"/>
+            <column columnName="PI_Phone"/>
+            <column columnName="USDA_Level"/>
+            <column columnName="Approval_Date"/>
+            <column columnName="Annual_Update_Due"/>
+            <column columnName="Three_year_Expiration"/>
+            <column columnName="Last_Modified"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+            <column columnName="PROTOCOL_State"/>
+            <column columnName="PPQ_Numbers"/>
+            <column columnName="Description"/>
+        </columns>
+    </table>
+    <table tableName="PRIME_VIEW_SURGICAL_PROCS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="OID"/>
+            <column columnName="Animal_Group"/>
+            <column columnName="Standard_Procedure"/>
+            <column columnName="Iterations"/>
+            <column columnName="Deviation"/>
+            <column columnName="Deviation_Description"/>
+            <column columnName="Recovery_Days"/>
+            <column columnName="Surgery_Name"/>
+        </columns>
+    </table>
+    <table tableName="Reference_StaffNames" tableDbType="TABLE">
+        <columns>
+            <column columnName="RowId"/>
+            <column columnName="username"/>
+            <column columnName="LastName"/>
+            <column columnName="FirstName"/>
+            <column columnName="displayname"/>
+            <column columnName="Type"/>
+            <column columnName="role"/>
+            <column columnName="remark"/>
+            <column columnName="SortOrder"/>
+            <column columnName="StartDate"/>
+            <column columnName="DisableDate"/>
+        </columns>
+    </table>
+    <table tableName="PRIME_VIEW_IBC_NUMBERS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Animal_Group"/>
+            <column columnName="IBC_Registration_Number"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+    <table tableName="Frequency_DayofWeek" tableDbType="TABLE">
+        <columns>
+            <column columnName="RowId"/>
+            <column columnName="FreqKey"/>
+            <column columnName="value"/>
+            <column columnName="Meaning"/>
+            <column columnName="calenderType"/>
+            <column columnName="Sort_order"/>
+            <column columnName="DisableDate"/>
+        </columns>
+    </table>
+    <table tableName="PotentialSire_source" tableDbType="TABLE">
+        <columns>
+            <column columnName="RowId"/>
+            <column columnName="participantId"/>
+            <column columnName="Date"/>
+            <column columnName="Species"/>
+            <column columnName="room"/>
+            <column columnName="cage"/>
+            <column columnName="SireAgeAtTime"/>
+            <column columnName="PotentialSire"/>
+            <column columnName="SireBirth"/>
+            <column columnName="Siregender"/>
+            <column columnName="Sirespecies"/>
+            <column columnName="SireDeath"/>
+            <column columnName="created"/>
+            <column columnName="createdBy"/>
+            <column columnName="modified"/>
+            <column columnName="modifiedBy"/>
+            <column columnName="container"/>
+        </columns>
+    </table>
 </tables>
 
