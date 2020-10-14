@@ -1,14 +1,8 @@
-USE [Labkey]
-GO
 /****** Object:  UserDefinedFunction [onprc_ehr].[RateCalc]    Script Date: 2/5/2020 2:39:01 PM
 This is the rate calc function from SQL
 2020/2/5 update to fix issue with no Subsidy value being populated
 
 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 
 ALTER FUNCTION [onprc_ehr].[RateCalc]
 --ALTER FUNCTION [onprc_ehr].[RateCalc]

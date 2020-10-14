@@ -15,10 +15,6 @@
  */
 
 /****** Object:  StoredProcedure [onprc_ehr].[etl3_insertToEhr_Protocol]    Script Date: 2/7/2018 2:30:52 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE  PROCEDURE [onprc_ehr].[etl3_insertToEhr_Protocol]
 
 AS

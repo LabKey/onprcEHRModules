@@ -1,10 +1,3 @@
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-GO
-
 
 CREATE TABLE [onprc_ehr].[AvailableBloodVolume](
 	[datecreated] [datetime] NULL,

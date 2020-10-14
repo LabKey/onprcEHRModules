@@ -1,9 +1,5 @@
 
 /****** Object:  StoredProcedure [onprc_ehr].[PotentialSire_Insert]    Script Date: 4/22/2020 10:16:39 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 -- =============================================
 -- Author:		jonesga@ohsu.edu
 -- Create date: 2020-04-22
