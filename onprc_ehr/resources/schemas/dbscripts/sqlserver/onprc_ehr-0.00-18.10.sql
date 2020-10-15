@@ -266,6 +266,7 @@ CREATE TABLE onprc_ehr.NHP_Training(
  CONSTRAINT PK_NHPTrainingObject PRIMARY KEY (objectid)
 );
 
+GO
 /****** Object:  StoredProcedure [onprc_ehr].[etl1_eIACUCtoPRIMEProcessing]    Script Date: 2/7/2018 2:01:46 PM ******/
 Create PROCEDURE onprc_ehr.etlStep1eIACUCtoPRIMEProcessing
 
@@ -371,6 +372,7 @@ AS
 
   END
 
+GO
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -805,7 +807,7 @@ AS
 
 
   END
-
+GO
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -926,7 +928,7 @@ AS
 
 
   END
-
+GO
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -975,7 +977,7 @@ AS
 
 
   END
-
+GO
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at

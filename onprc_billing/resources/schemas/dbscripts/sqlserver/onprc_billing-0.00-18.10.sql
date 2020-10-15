@@ -1010,7 +1010,7 @@ ALTER TABLE onprc_billing.AnnualRateChange Add CONSTRAINT PK_AnnualRateChange_Ro
 -- add primary key and identity key
 alter table [onprc_billing].[AnnualRateChange]
 ALTER COLUMN InflationRate Numeric(18,4)
-
+GO
 /****** Object:  StoredProcedure [onprc_billing].[AnnualRateChangeProcess]    Script Date: 5/4/2018 10:50:22 AM ******/
 
 -- =============================================
