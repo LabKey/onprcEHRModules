@@ -100,5 +100,5 @@ Case
 
 
 
-FROM "/ONPRC/EHR".study.assignment a left outer join "/ONPRC/EHR".study.assignment a2 on a.id = a2.id
+FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a2 on a.id = a2.id
 where ( a.project <> a2.project) and a.project.use_category != 'Research'

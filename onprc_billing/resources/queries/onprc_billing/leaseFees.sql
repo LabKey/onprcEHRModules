@@ -37,25 +37,25 @@ When   a5.id is not Null
     and (TIMESTAMPDIFF('SQL_TSI_Day',a.date,a.projectedRelease)< 90))
     AND a.assignCondition = a.projectedreleasecondition
     AND a.enddate IS NULL)
-        then (Select c.rowid from "/ONPRC/Admin/Finance".onprc_billing.chargeableItems c where c.itemCode = 'ONR24')
+        then (Select c.rowid from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.onprc_billing.chargeableItems c where c.itemCode = 'ONR24')
    --obese long term terminal assignment
   When  (a3.Id is not Null  AND ((TIMESTAMPDIFF('SQL_TSI_Day',a.date,a.projectedRelease)) > 90 ) AND a.enddate is  NULL and a.projectedReleaseCondition = 206)
-        then (Select c.rowid from "/ONPRC/Admin/Finance".onprc_billing.chargeableItems c where c.itemCode = 'ONR45')
+        then (Select c.rowid from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.onprc_billing.chargeableItems c where c.itemCode = 'ONR45')
  --obese long term
   When   (a3.id Is Not NUll
     and ((TIMESTAMPDIFF('SQL_TSI_Day',a.date,a.projectedRelease)> 90 ) AND a.enddate IS NULL))
-        then (Select c.rowid from "/ONPRC/Admin/Finance".onprc_billing.chargeableItems c where c.itemCode = 'ONR25')
+        then (Select c.rowid from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.onprc_billing.chargeableItems c where c.itemCode = 'ONR25')
 
 --Infant/Dam Day Lease
 
  When   (a4.id is not null and (TIMESTAMPDIFF('SQL_TSI_Day',a.date,a.projectedRelease)) <=14 and a.endDate is  null and a.ageAtTime.AgeAtTimeYearsRounded < 1
         and a.remark like '%Diet%')
-        then (Select c.rowid from "/ONPRC/Admin/Finance".onprc_billing.chargeableItems c where c.itemCode = 'ONR40')
+        then (Select c.rowid from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.onprc_billing.chargeableItems c where c.itemCode = 'ONR40')
   When   (a4.id is not null and (TIMESTAMPDIFF('SQL_TSI_Day',a.date,a.projectedRelease)) <=14 and a.endDate is  null and a.ageAtTime.AgeAtTimeYearsRounded < 1
         and a.remark like 'Control%')
-        then (Select c.rowid from "/ONPRC/Admin/Finance".onprc_billing.chargeableItems c where c.itemCode = 'ONR41')
+        then (Select c.rowid from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.onprc_billing.chargeableItems c where c.itemCode = 'ONR41')
   When   (a4.id is not null  and (TIMESTAMPDIFF('SQL_TSI_Day',a.date,a.projectedRelease)) <=14 and a.endDate is  null and a.ageAtTime.AgeAtTimeYearsRounded < 1)
-        then (Select c.rowid from "/ONPRC/Admin/Finance".onprc_billing.chargeableItems c where c.itemCode = 'ONR44')
+        then (Select c.rowid from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.onprc_billing.chargeableItems c where c.itemCode = 'ONR44')
   WHEN (a.duration <= CAST(javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_MAX_DURATION') as INTEGER) AND a.enddate IS NOT NULL AND a.assignCondition = a.releaseCondition) THEN (SELECT rowid FROM 	   onprc_billing_public.chargeableItems ci WHERE ci.active = true AND ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_NAME'))
   WHEN (a.duration <= CAST(javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_MAX_DURATION') as INTEGER) AND a.enddate IS NOT NULL AND a.assignCondition = a.releaseCondition) THEN (SELECT rowid FROM    onprc_billing_public.chargeableItems ci WHERE ci.active = true AND ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_NAME'))
   WHEN a2.id IS NOT NULL THEN (SELECT rowid FROM onprc_billing_public.chargeableItems ci WHERE (ci.startDate <= a.date and ci.endDate >= a.date) AND ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.TMB_LEASE_NAME'))
