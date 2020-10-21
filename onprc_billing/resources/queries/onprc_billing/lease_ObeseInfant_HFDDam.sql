@@ -6,4 +6,4 @@ b.room,
 b.cage,
 b.dam
 
-FROM birth b join study.flags s on b.dam = s.id and s.flag.value = 'JMac Obese HFD' and s.enddate is null
+FROM study.birth b join study.flags s on b.dam = s.id and s.flag.value = 'JMac Obese HFD' and s.enddate is null

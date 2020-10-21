@@ -106,14 +106,14 @@ LEFT JOIN study.assignment a2 ON (
 
 
 --Obese 0833 animals id 1609
-LEFt join onprc_billing.assignment_ObseseResource a3 on
+LEFT join onprc_billing.assignment_ObeseResource a3 on
   ( a.id = a3.id and a.project !=a3.project
     and a3.project = 1609
     and a3.dateonly <=a.dateOnly
      AND a3.endDateCoalesced >= a.dateOnly)
 
 --Obese 0622-01 animals id 1082
-LEFt join onprc_billing.assignment_ObseseResource a4 on
+LEFT join onprc_billing.assignment_ObeseResource a4 on
   (  a.id = a4.id and a.project !=a4.project
     and a4.project = 1082
     and a4.dateonly <=a.dateOnly
@@ -124,7 +124,7 @@ LEFt join onprc_billing.assignment_ObseseResource a4 on
 
 
 --espf animals being dual assigned
-LEFt join assignment_U42ESPF a5 on
+LEFT join assignment_U42ESPF a5 on
   (  a.id = a5.id and a.project !=a5.project
     and a5.project = 1107
     and a5.dateonly <=a.dateOnly
@@ -142,7 +142,7 @@ LEFT JOIN onprc_billing.leaseFeeDefinition lf ON (
 
 
 --adds the reasearch owned animal exemption
-Left JOIN study.flags fl on
+LEFT JOIN study.flags fl on
 	(a.id = fl.id
 	and fl.flag.code = 4034
 	and (a.date >= fl.date and a.date <=COALESCE(fl.enddate,Now()) ))
@@ -242,14 +242,14 @@ LEFT JOIN onprc_billing.leaseFeeDefinition lf2
     AND a2.endDateCoalesced >= a.dateOnly
     AND a2.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TMB_PROJECT')
   )
-LEFt join assignment_U42ESPF a5 on
+LEFT join assignment_U42ESPF a5 on
   (  a.id = a5.id and a.project !=a5.project
     and a5.project = 1107
     and a5.dateonly <=a.dateOnly
      AND a5.endDateCoalesced >= a.dateOnly)
 
 --adds the reasearch owned animal exemption
-Left JOIN study.flags fl on
+LEFT JOIN study.flags fl on
 	(a.id = fl.id
 	and fl.flag.code = 4034
 	and (a.date >= fl.date and a.date <=COALESCE(fl.enddate,Now()) ))
