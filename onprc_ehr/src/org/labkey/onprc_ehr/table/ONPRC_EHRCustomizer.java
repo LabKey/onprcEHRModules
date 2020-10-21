@@ -2179,12 +2179,12 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
             String name = tableName + "_flagsAtTime";
             QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
             qd.setSql("SELECT\n" +
-                    "sd." + pkCol.getSelectName() + ",\n" +
+                    "sd." + pkCol.getColumnName() + ",\n" +
                     "group_concat(DISTINCT h.flag.value, chr(10)) as flagsAlertsActive\n" +
                     "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                     "JOIN \"" + ehrPath + "\".study.flags h\n" +
                     "    ON (sd.id = h.id AND h.flag.category = 'Alert' AND (h.dateOnly <= CAST(NOW() AS DATE) AND ((CAST(NOW() AS DATE) <= h.enddateCoalesced) or h.enddate is null)) AND h.qcstate.publicdata = true)\n" +
-                    "group by sd." + pkCol.getSelectName());
+                    "group by sd." + pkCol.getColumnName());
             qd.setIsTemporary(true);
 
             List<QueryException> errors = new ArrayList<>();
