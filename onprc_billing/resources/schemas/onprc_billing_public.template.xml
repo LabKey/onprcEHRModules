@@ -59,7 +59,7 @@
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>Aliases Receiving Credits For Each Charge</tableTitle>
             </table>
-            <table tableName="chargeUnitss" tableDbType="NOT_IN_DB">
+            <table tableName="chargeUnits" tableDbType="NOT_IN_DB">
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>Charge Units</tableTitle>
             </table>
