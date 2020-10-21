@@ -420,7 +420,7 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'assignment', function(scriptErrors, helper, row, oldRow){
         //Modified: 5-9-2019  R.Blasa  Prevent flag enttrie for terminal monkey ids
         if (!helper.isETL() && row.Id && row.assignCondition != 206){
-            triggerHelper.updateAnimalCondition(row.Id, row.date, row.assignCondition);
+            triggerHelper.updateAnimalCondition(row.Id, row.date, row.assignCondition ? row.assignCondition : null);
         }
     });
 
