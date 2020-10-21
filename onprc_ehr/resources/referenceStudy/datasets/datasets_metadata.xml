@@ -874,6 +874,9 @@
             <column columnName="assignedVet">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="CEG_Plan">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Clinical Remarks</tableTitle>
     </table>
@@ -1235,6 +1238,9 @@
             <column columnName="method">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="type">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Chemistry Results</tableTitle>
     </table>
@@ -1388,6 +1394,9 @@
                 <datatype>varchar</datatype>
             </column>
             <column columnName="sampleId">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="sampletype">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="collectionMethod">
@@ -2270,6 +2279,9 @@
                 <datatype>varchar</datatype>
             </column>
             <column columnName="separationreason">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="remark2">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="project">
