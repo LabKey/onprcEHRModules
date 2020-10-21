@@ -80,7 +80,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 20.517;
+        return 20.516;
     }
 
     @Override
