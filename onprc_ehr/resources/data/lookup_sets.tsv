@@ -2,7 +2,7 @@ setname	label	keyfield	titleColumn
 PregnancyConfirm	Pregnancy Confirmation Types	
 housingDefinition	Housing Definition	
 housingTypes	Housing Types	
-AcquistionType	Acquistion Types
+AcquistionType	Acquistion Types	value
 RearingType	Rearing Types	
 MatingType	Mating Types	
 pairingEventType	Pairing Event Types	value
