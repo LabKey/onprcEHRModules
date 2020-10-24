@@ -38,16 +38,7 @@ Ext4.define('ONPRC_EHR.data.ClinpathRunsClientStore', {
         if (record.get('servicerequested')){
             modifiedFieldNames = modifiedFieldNames || [];
 
-            var storeId = LABKEY.ext4.Util.getLookupStoreId({
-                lookup: {
-                    schemaName: 'onprc_ehr',
-                    queryName: 'labServiceRequest_Active',
-                    keyColumn: 'servicename',
-                    displayColumn: 'servicename'
-                }
-            });
-
-            var store = Ext4.StoreMgr.get(storeId);
+            var store = EHR.DataEntryUtils.getLabworkServicesStore();
             if (!store){
                 LDK.Utils.logToServer({
                     message: 'Unable to find lookup store in ClinpathRunsClientStore'
