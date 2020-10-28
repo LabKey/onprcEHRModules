@@ -103,14 +103,14 @@ Ext4.define('ONPRC_EHR.window.ManageRecordWindow', {
                     formtype: 'treatments',
                     title: 'Medication/Diet',
                     assignedto: LABKEY.Security.currentUser.userid,
-                    qcstate: 18,
+                    qcstate: EHR.Security.getQCStateByLabel('Completed').RowId,
                     datecompleted: new Date(),
                     category: 'Task'
                 }],
                 scope: this,
                 failure: EHR.Utils.onError,
                 success: function () {
-                    Ext.Msg.hide();
+                    Ext4.Msg.hide();
                 }
             });
             rec.set('taskid', tsk);
