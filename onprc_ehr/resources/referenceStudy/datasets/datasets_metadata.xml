@@ -1858,6 +1858,9 @@
             <column columnName="calculated_status">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="earliestRemarkSinceReview">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Demographics</tableTitle>
     </table>
@@ -2264,6 +2267,9 @@
                 <datatype>varchar</datatype>
             </column>
             <column columnName="eventType">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="endeventType">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="housingType">

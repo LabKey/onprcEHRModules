@@ -95,7 +95,7 @@ LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
 LEFT JOIN onprc_billing.fiscalAuthorities f ON f.rowid = i.financialanalyst
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals aa ON a.protocol = aa.protocol
 LEFT JOIN (select * from onprc_billing.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
-LEFT JOIN "/onprc/admin/finance/public".onprc_billing_public.aliases y ON y.alias = x.account
+LEFT JOIN Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases y ON y.alias = x.account
 LEFT JOIN (
 --   SELECT i.protocol,species,gender,sum(animalsreceived) AS NumUsed
 --   FROM sla.purchasedetails pd, sla.purchase p
