@@ -1,7 +1,5 @@
-USE [Labkey]
-GO
-/****** Object:  StoredProcedure [onprc_billing].[oga_AliasCleanupNew]    Script Date: 1/29/2020 7:13:37 AM ******/
 
+/****** Object:  StoredProcedure [onprc_billing].[oga_AliasCleanupNew]    Script Date: 1/29/2020 7:13:37 AM ******/
 CREATE PROCEDURE [onprc_billing].[oga_AliasCleanup]
 
     AS
