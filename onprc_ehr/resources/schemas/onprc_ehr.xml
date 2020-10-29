@@ -968,5 +968,27 @@
             <column columnName="container"/>
         </columns>
     </table>
+    <table tableName="usersActiveNames" tableDbType="TABLE">
+        <columns>
+            <column columnName="Email" />
+            <column columnName="_ts" />
+            <column columnName="EntityId" />
+            <column columnName="CreatedBy" />
+            <column columnName="Created" />
+            <column columnName="ModifiedBy" />
+            <column columnName="Modified" />
+            <column columnName="Owner" />
+            <column columnName="UserId" />
+            <column columnName="DisplayName" />
+            <column columnName="FirstName" />
+            <column columnName="LastName" />
+            <column columnName="Phone" />
+            <column columnName="Mobile" />
+            <column columnName="Pager" />
+            <column columnName="IM" />
+            <column columnName="Description" />
+            <column columnName="LastLogin" />
+            <column columnName="Active" />
+        </columns>
+    </table>
 </tables>
-

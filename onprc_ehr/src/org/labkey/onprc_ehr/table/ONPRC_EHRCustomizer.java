@@ -1157,37 +1157,29 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
                 //clinical remarks entered since last vet review is a proxy for whether it needs to be reviewed again
                 EHRQCState completedQCState = EHRService.get().getQCStates(ti.getUserSchema().getContainer()).get(EHRService.QCSTATES.Completed.name());
-                if (completedQCState != null)
+                // Even if QC states aren't loaded, inject the columns for query validation purposes
+                int qcStateRowId = completedQCState == null ? -1 : completedQCState.getRowId();
+
+                SQLFragment totalRemarkSql = new SQLFragment("(SELECT count(*) FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ? or cr.category = ?))", qcStateRowId, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT);
+                ExprColumn totalRemarkCol = new ExprColumn(ti, "totalRemarksEnteredSinceReview", totalRemarkSql, JdbcType.INTEGER, ti.getColumn("Id"));
+                totalRemarkCol.setLabel("# Remarks Entered Since Last Vet Review");
+                ti.addColumn(totalRemarkCol);
+
+                SQLFragment earliestRemarkSql = new SQLFragment("(SELECT min(cr.datefinalized) as expr FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ? or cr.category = ?))", qcStateRowId, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT);
+                ExprColumn earliestRemarkCol = new ExprColumn(ti, "earliestRemarkSinceReview", earliestRemarkSql, JdbcType.TIMESTAMP, ti.getColumn("Id"));
+                earliestRemarkCol.setLabel("Earliest Remark Entered Since Last Vet Review");
+                ti.addColumn(earliestRemarkCol);
+
+                //date part not supported in postgres
+                if (ti.getSqlDialect().isSqlServer())
                 {
-                    SQLFragment totalRemarkSql = new SQLFragment("(SELECT count(*) FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ? or cr.category = ?))", completedQCState.getRowId(), ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT);
-                    ExprColumn totalRemarkCol = new ExprColumn(ti, "totalRemarksEnteredSinceReview", totalRemarkSql, JdbcType.INTEGER, ti.getColumn("Id"));
-                    totalRemarkCol.setLabel("# Remarks Entered Since Last Vet Review");
-                    ti.addColumn(totalRemarkCol);
-
-                    SQLFragment earliestRemarkSql = new SQLFragment("(SELECT min(cr.datefinalized) as expr FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ? or cr.category = ?))", completedQCState.getRowId(), ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT);
-                    ExprColumn earliestRemarkCol = new ExprColumn(ti, "earliestRemarkSinceReview", earliestRemarkSql, JdbcType.TIMESTAMP, ti.getColumn("Id"));
-                    earliestRemarkCol.setLabel("Earliest Remark Entered Since Last Vet Review");
-                    ti.addColumn(earliestRemarkCol);
-
-                    //date part not supported in postgres
-                    if (ti.getSqlDialect().isSqlServer())
-                    {
-                        //NOTE: the first token in the group_concat() is used for sorting
-                        SQLFragment groupConatSql = new SQLFragment(ti.getSqlDialect().concatenate("LEFT(CONVERT(VARCHAR, cr.date, 120), 19)", "'<>'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.MONTH, "cr.date") + " AS VARCHAR)", "'/'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.DATE, "cr.date") + " AS VARCHAR)", "': '", getChr(ti) + "(10)", "CASE WHEN cr.description IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("COALESCE(cr.description, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.remark IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Remark: '",  "COALESCE(cr.remark, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.performedby IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Entered By: '",  "COALESCE(cr.performedby, '')", getChr(ti) + "(10)") + " END", "'<>'","cr.objectid", "'<:>'"));
-                        SQLFragment remarkSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(groupConatSql, false, true, ti.getSqlDialect().concatenate(getChr(ti) + "(10)", getChr(ti) + "(10)")).getSqlCharSequence() + " as expr1 FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized <= {fn now()} AND (cr.category IS NULL or cr.category = ? or cr.category = ?) AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?))", completedQCState.getRowId(), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
-                        ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.VARCHAR, ti.getColumn("Id"), ti.getColumn("date"));
-                        remarkCol.setLabel("Remarks Entered Since Last Vet Review");
-//                        remarkCol.setDisplayWidth("300");
-                        remarkCol.setDisplayColumnFactory(new DisplayColumnFactory()
-                        {
-                            @Override
-                            public DisplayColumn createRenderer(ColumnInfo colInfo)
-                            {
-                                return new VetReviewDisplayColumn(colInfo);
-                            }
-                        });
-                        ti.addColumn(remarkCol);
-                    }
+                    //NOTE: the first token in the group_concat() is used for sorting
+                    SQLFragment groupConatSql = new SQLFragment(ti.getSqlDialect().concatenate("LEFT(CONVERT(VARCHAR, cr.date, 120), 19)", "'<>'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.MONTH, "cr.date") + " AS VARCHAR)", "'/'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.DATE, "cr.date") + " AS VARCHAR)", "': '", getChr(ti) + "(10)", "CASE WHEN cr.description IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("COALESCE(cr.description, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.remark IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Remark: '",  "COALESCE(cr.remark, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.performedby IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Entered By: '",  "COALESCE(cr.performedby, '')", getChr(ti) + "(10)") + " END", "'<>'","cr.objectid", "'<:>'"));
+                    SQLFragment remarkSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(groupConatSql, false, true, ti.getSqlDialect().concatenate(getChr(ti) + "(10)", getChr(ti) + "(10)")).getSqlCharSequence() + " as expr1 FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized <= {fn now()} AND (cr.category IS NULL or cr.category = ? or cr.category = ?) AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?))", qcStateRowId, ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
+                    ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.VARCHAR, ti.getColumn("Id"), ti.getColumn("date"));
+                    remarkCol.setLabel("Remarks Entered Since Last Vet Review");
+                    remarkCol.setDisplayColumnFactory(VetReviewDisplayColumn::new);
+                    ti.addColumn(remarkCol);
                 }
             }
         }

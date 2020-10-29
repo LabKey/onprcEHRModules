@@ -17,9 +17,6 @@
                     <column columnName="caseno">
                         <columnTitle>Necropsy Case No</columnTitle>
                     </column>
-                    <column columnName="NecropsyDate">
-                        <columnTitle>Necropsy Date</columnTitle>
-                    </column>
                     <column columnName="NecropsyProject">
                         <columnTitle>Necropsy Center Project</columnTitle>
                     </column>

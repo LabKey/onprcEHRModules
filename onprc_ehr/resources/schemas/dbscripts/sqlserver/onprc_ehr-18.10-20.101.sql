@@ -429,6 +429,9 @@ CREATE TABLE [onprc_ehr].[protocol](
  *
  */
 
+DROP PROCEDURE onprc_ehr.etlStep1eIACUCtoPRIMEProcessing;
+GO
+
 /****** Object:  StoredProcedure [onprc_ehr].[etl1_eIACUCtoPRIMEProcessing]    Script Date: 2/7/2018 2:01:46 PM ******/
 CREATE PROCEDURE [onprc_ehr.etlStep1eIACUCtoPRIMEProcessing]
 
@@ -808,3 +811,25 @@ CREATE TABLE onprc_ehr.Frequency_DayofWeek(
 
 );
 
+CREATE TABLE onprc_ehr.usersActiveNames(
+    Email nvarchar(64) NULL,
+    _ts timestamp NOT NULL,
+    EntityId ENTITYID NULL,
+    CreatedBy USERID NULL,
+    Created datetime NULL,
+    ModifiedBy USERID NULL,
+    Modified datetime NULL,
+    Owner USERID NULL,
+    UserId USERID NOT NULL,
+    DisplayName nvarchar(64) NOT NULL,
+    FirstName nvarchar(64) NULL,
+    LastName nvarchar(64) NULL,
+    Phone nvarchar(64) NULL,
+    Mobile nvarchar(64) NULL,
+    Pager nvarchar(64) NULL,
+    IM nvarchar(64) NULL,
+    Description nvarchar(255) NULL,
+    LastLogin datetime NULL,
+    Active bit NOT NULL
+    )
+    GO

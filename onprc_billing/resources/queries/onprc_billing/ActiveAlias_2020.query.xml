@@ -1,13 +1,13 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="ACtivealias_2020" tableDbType="TABLE">
+            <table tableName="Activealias_2020" tableDbType="TABLE">
                 <tableTitle>Active Aliases ONPRC</tableTitle>
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer"/>
                 <columns>
-                    <Column columname="alias"/>
-                    <Column columname="project"/>
-                    <Column columname="category"/>
+                    <column columnName="alias"/>
+                    <column columnName="project"/>
+                    <column columnName="category"/>
                     <column columnName="grantnumber">
                     <columnTitle>OGA Award Nummber</columnTitle>
 
@@ -66,13 +66,6 @@
 
                 </columns>
             </table>
-                sorts>
-
-            <filters>
-                <filter column="aliasEnabled" operator="eq" value="Y"/>
-                <filter column="org" operator="in" value=""/>
-            </filters>
-
         </tables>
     </metadata>
 </query>
