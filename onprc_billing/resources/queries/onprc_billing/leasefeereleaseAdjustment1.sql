@@ -60,7 +60,7 @@ d.remark,
        AND lf1.active = true) as RevisedChargecode
 
 
-FROM leasefee_demograpicsTest d
+FROM leasefee_demograpicsTest d -- this query is broken on onprc's server, so is deleted in the module
 
 
 where d.enddate is not null

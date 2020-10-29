@@ -52,7 +52,7 @@ CASE
     ELSE null
   END as isExpiredAccount,
 CASE WHEN a.alias IS NULL THEN 'Y' ELSE null END as isMissingAccount,
-CASE WHEN a.fiscalAuthority.faid IS NULL THEN 'Y' ELSE null END as isMissingFaid,
+CASE WHEN a.fiscalAuthority.faid IS NULL THEN 'Y' ELSE null END as isMissingFaid
 
 
 
@@ -60,6 +60,6 @@ FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.on
     left join
         Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.chargeRates r on r.chargeID = t.chargeID and t.alias = r.AliasAtTIme
     Left join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.aliases a on t.alias = a.alias
-    Left Join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.chargeRateExemptions e e.
+    Left Join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.chargeRateExemptions e
     Left Join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leasefee_rateChargeItem rc
 
