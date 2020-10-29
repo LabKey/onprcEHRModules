@@ -157,6 +157,13 @@ exports.init = function(EHR){
         }
     });
 
+    //Added: kollil, 5/12/2020
+    //Allow to enter future start dates
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'StudyDetails', function(event, helper){
+        helper.setScriptOptions({
+            allowFutureDates: true
+        });
+    });
 
     //Added: 7-19-2019  R.Blasa
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Demographics', function(event, helper){
@@ -412,7 +419,7 @@ exports.init = function(EHR){
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'assignment', function(scriptErrors, helper, row, oldRow){
         //Modified: 5-9-2019  R.Blasa  Prevent flag enttrie for terminal monkey ids
-        if (!helper.isETL() && row.Id && row.assignCondition != 206){
+        if (!helper.isETL() && row.Id && row.assignCondition && row.assignCondition != 206){
             triggerHelper.updateAnimalCondition(row.Id, row.date, row.assignCondition);
         }
     });

@@ -40,7 +40,7 @@ public class PathologyDiagnosesFormSection extends PathologyFormSection
         setXtype("onprc_ehr-dragdropgridpanel");
 
         //Added: 10-31-2018  R.Blasa   address issues with text font size
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/Gross_Finding.css"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Gross_Finding.css"));
     }
 
 //    Added: 6-26-2017  R.Blasa  Include tool bar at bottom grid

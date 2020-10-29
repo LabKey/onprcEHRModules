@@ -1083,7 +1083,7 @@ EHR.reports.onprcweightGraph = function(panel, tab){
 EHR.reports.kinshipSummary = function(panel, tab){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
-    var ids = panel.getFilterContext().subjects;
+    var ids = tab.filters.subjects;
 
     tab.add({
         xtype: 'panel',

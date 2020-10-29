@@ -186,7 +186,7 @@ Ext4.define('onprc_ehr.panel.ManageTreatmentsPanel', {
     getStore: function(){
         if (this.store)
             return this.store;
-        var xdate = (new Date()).format('Y-m-d');
+        var xdate = Ext4.Date.format(new Date(), 'Y-m-d');
         this.store = Ext4.create('LABKEY.ext4.data.Store', {
             schemaName: 'study',
             queryName: 'treatment_order',

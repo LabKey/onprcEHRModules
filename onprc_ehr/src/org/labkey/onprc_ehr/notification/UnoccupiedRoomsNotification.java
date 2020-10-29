@@ -192,7 +192,7 @@ public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
 
                 {
                     Results rs = new ResultsImpl(object, colMap);
-                    msg.append("<tr><td>" + (rs.getString("building") == null ? "" : rs.getString("building")) + "</td><td>" + rs.getString("room") + "</td></tr>");
+                    msg.append("<tr><td>" + (rs.getString("building") == null ? PageFlowUtil.filter("") : PageFlowUtil.filter(rs.getString("building"))) + "</td><td>" + PageFlowUtil.filter(rs.getString("room") + "</td></tr>"));
                 }
             });
 

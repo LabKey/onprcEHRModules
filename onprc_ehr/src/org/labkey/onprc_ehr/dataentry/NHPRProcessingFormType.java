@@ -53,7 +53,7 @@ public class NHPRProcessingFormType extends UnsaveableTask
 
 
         //Added 5-26-2016 R.Blasa
-        addClientDependency(ClientDependency.fromPath("/onprc_ehr/model/sources/ProjectAnimalConditions.js"));
+        addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/model/sources/ProjectAnimalConditions.js"));
 
     }
 }

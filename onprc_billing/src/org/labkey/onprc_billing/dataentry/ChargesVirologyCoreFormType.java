@@ -31,7 +31,7 @@ public class ChargesVirologyCoreFormType extends TaskForm
                 new ChargesVirologyCoreFormSection()
         ));
 
-        addClientDependency(ClientDependency.fromPath("onprc_billing/panel/ChargesInstructionPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_billing/panel/ChargesInstructionPanel.js"));
     }
 
 

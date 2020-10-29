@@ -38,12 +38,12 @@ public class ChargesVirologyCoreFormSection extends SimpleFormSection
         //super("onprc_billing", "virologyCharges", "Virology Charges", "ehr-gridpanel", location);
         setConfigSources(Collections.singletonList("Task"));
         setClientStoreClass("EHR.data.MiscChargesClientStore");
-        addClientDependency(ClientDependency.fromPath("ehr/data/MiscChargesClientStore.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/data/MiscChargesClientStore.js"));
 
 //        setClientStoreClass("EHR.data.VirologyChargesClientStore");
 //        addClientDependency(ClientDependency.fromPath("ehr/data/VirologyChargesClientStore.js"));
 
-        addClientDependency(ClientDependency.fromPath("onprc_billing/model/sources/VirologyMisc.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_billing/model/sources/VirologyMisc.js"));
         addConfigSource("VirologyMisc");
     }
 

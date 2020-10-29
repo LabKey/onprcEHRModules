@@ -25,7 +25,7 @@ public class AnimalDetailssFormSection extends NonStoreFormSection
     public AnimalDetailssFormSection()
     {
         super("AnimalDetails", "Animal Details", "onprc_ehr-animaldetailspanels");
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/panel/AnimalDetailsPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/AnimalDetailsPanel.js"));
 
     }
 }

@@ -54,13 +54,7 @@
                     items: [
                         {name: 'IACUC Protocols', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx.EHRStudyContainer, {schemaName: 'ehr', 'query.queryName': 'protocol'})},
                         {name: 'ONPRC Projects', url: LABKEY.ActionURL.buildURL(queryController, queryAction, ctx.EHRStudyContainer, {schemaName: 'ehr', 'query.queryName': 'project', showImport: true})},
-
-                        {name: 'Grants', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'grants', 'query.viewName': 'Active Grants'})},
-                        {name: 'Grant Projects', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'grantProjects', 'query.viewName': 'Active Grant Projects'})},
-                        {name: 'Aliases', url: LABKEY.ActionURL.buildURL(queryController, queryAction, null, {schemaName: 'onprc_billing', 'query.queryName': 'aliases', 'query.viewName': 'Active Aliases'})},
-
-                        //{name: 'Approved IACUC Funding Sources', url: LABKEY.ActionURL.buildURL(queryController, queryAction, ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'iacucFundingSources'})},
-
+                        {name: 'Aliases (Grants  Data included)', url: LABKEY.ActionURL.buildURL(queryController, queryAction, null, {schemaName: 'onprc_billing', 'query.queryName': 'aliases', 'query.viewName': 'Active Aliases'})},
                         {name: 'Investigators', url: LABKEY.ActionURL.buildURL(queryController, queryAction, ctx.EHRStudyContainer, {schemaName: 'onprc_ehr', 'query.queryName': 'investigators', showImport: true})},
                         {name: 'Financial Analysts', url: LABKEY.ActionURL.buildURL(queryController, queryAction, ctx.EHRStudyContainer, {schemaName: 'onprc_billing', 'query.queryName': 'fiscalAuthorities', showImport: true})},
                         {name: 'OGA Raw Data', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'OGA', 'query.queryName': 'ZGMS_PRIM_ALL_V'})}

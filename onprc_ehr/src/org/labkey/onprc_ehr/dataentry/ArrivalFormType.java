@@ -52,7 +52,7 @@ public class ArrivalFormType extends TaskForm
 
 
 //        Added: 8-6-2019   R.Blasa
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/panel/ArrivalDataEntryPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ArrivalDataEntryPanel.js"));
         setJavascriptClass("ONPRC_EHR.panel.ArrivalDataEntryPanel");
 
 

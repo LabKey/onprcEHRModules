@@ -82,7 +82,7 @@ public class BehaviorExamFormType extends TaskForm
 
         //        //Added: 12-18-2017  R.Blasa
         setStoreCollectionClass("ONPRC_EHR.data.sources.BehaviorExamStoreCollection");
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/data/sources/BehaviorExamStoreCollection.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/BehaviorExamStoreCollection.js"));
 
         //        //Added: 1-23-2018  R.Blasa
 // Disable as temporary workaround to ticket Ticket 33579: Clinical Staff unsable to Create new Cases

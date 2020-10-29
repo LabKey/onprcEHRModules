@@ -21,6 +21,7 @@ DROP TABLE [onprc_ehr].[eIACUC_PRIME_VIEW_ANIMAL_GROUPS]
 GO
 
 /****** Object:  Table [onprc_ehr].[eIACUC_PRIME_VIEW_ANIMAL_GROUPS]    Script Date: 1/24/2020 12:23:44 PM ******/
+
 CREATE TABLE [onprc_ehr].[eIACUC_PRIME_VIEW_ANIMAL_GROUPS](
 	[rowid] [int] IDENTITY(1,1) NOT NULL,
 	[Parent_Protocol] [varchar](255) NOT NULL,

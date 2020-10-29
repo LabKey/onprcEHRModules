@@ -23,7 +23,7 @@ import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.WeightFormSection;
-import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
+import org.labkey.onprc_ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -53,7 +53,8 @@ public class AuxProcedureFormType extends TaskForm
             new BloodDrawFormSection(false),
             new WeightFormSection(),
             new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
-            new TreatmentOrdersFormSection()
+            new TreatmentOrdersFormSection(),
+            new StudyDetailsFormSection() //Added by Kolli, 2/20/2020
         ));
 
         for (FormSection s : getFormSections())

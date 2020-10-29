@@ -46,9 +46,9 @@ public class TBTestObservationFormType extends TaskForm
 
         }
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/model/sources/TB_TestObservation.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TB_TestObservation.js"));
 
-        addClientDependency(ClientDependency.fromPath("onprc_ehr/form/field/TB_TST_Scores_Type.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/TB_TST_Scores_Type.js"));
 
 
 

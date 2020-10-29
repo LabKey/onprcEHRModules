@@ -174,10 +174,10 @@ public class ObeseFlagNotification extends AbstractEHRNotification
 
 
 
-                    msg.append("<td>" + Ids  + "</td>" +
-                            "<td>" + rooms +  "</td><td>"  + cages  + "</td>" +
-                            "<td>" + "  " + weights  + "</td><td>" +
-                            DateUtil.formatDateTime(c, datess) + "</td><td>" + DateUtil.formatDateTime(c, enddates) + "</td><td>" + "  " + vetname  + "</td></tr>\n");
+                    msg.append("<td>" + PageFlowUtil.filter(Ids)  + "</td>" +
+                            "<td>" + PageFlowUtil.filter(rooms) +  "</td><td>"  + PageFlowUtil.filter(cages)  + "</td>" +
+                            "<td>" + PageFlowUtil.filter("  ") + PageFlowUtil.filter(weights)  + "</td><td>" +
+                            PageFlowUtil.filter(DateUtil.formatDateTime(c, datess)) + "</td><td>" + PageFlowUtil.filter(DateUtil.formatDateTime(c, enddates)) + "</td><td>" + "  " + PageFlowUtil.filter(vetname)  + "</td></tr>\n");
 
 
                 }

@@ -43,7 +43,7 @@ Ext4.define('ONPRC_EHR.window.MarkAssignmentCompletedWindow', {
             },
             bodyStyle: 'padding: 5px;',
             items: [{
-                html: 'This helperT allows you to end the selected assignments.  You are required to choose the end date, and release type.  If release condition is left blank, the projected release condition will be used.',
+                html: 'This helper allows you to end the selected assignments.  You are required to choose the end date, and release type.  If release condition is left blank, the projected release condition will be used.',
                 width: 470,
                 style: 'padding-bottom: 10px;'
             },{

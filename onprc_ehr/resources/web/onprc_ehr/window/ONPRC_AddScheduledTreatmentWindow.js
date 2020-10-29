@@ -78,12 +78,13 @@ Ext4.define('ONPRC_EHR.window.AddScheduledTreatmentWindow', {
                             ['2000', '8:00 PM']
                         ]
                     }
+                },{
+                    xtype: 'ehr-snomedtreatmentcombo',    //Modified 6-22-2015 Blasa
+                    defaultSubset: 'Post Op Meds' ,
+                    fieldLabel: 'Treatment(s)',
+                    itemId: 'code'
                 },
-                {xtype: 'onprc-snomedtreatmentcombo',    //Modified 6-22-2015 Blasa
-                defaultSubset: 'Post Op Meds' ,
-                fieldLabel: 'Treatment(s)',
-                itemId: 'code'
-            },/*
+              /*
               {
                     xtype: 'checkcombo',
                     forceSelection: true,

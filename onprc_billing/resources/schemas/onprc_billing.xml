@@ -299,6 +299,7 @@
             <column columnName="modified"/>
         </columns>
         <buttonBarOptions includeStandardButtons="true">
+            <includeScript>Ext4</includeScript>
             <includeScript>ehr.context</includeScript>
             <includeScript>/onprc_billing/window/ReverseChargeWindow.js</includeScript>
             <item insertPosition="end" text="More Actions" permissionClass="org.labkey.onprc_billing.security.ONPRCBillingAdminPermission">
@@ -1213,7 +1214,20 @@
             <column columnName="Comments"/>
             <column columnName="PPQNumber"/>
             <column columnName="PPQDate"/>
-
+            <column columnName="ApplicationTypeDescription"/>
+            <column columnName="AwardStatus"/>
+            <column columnName="AwardID"/>
+            <column columnName="ApplicationType"/>
+            <column columnName="ProjectID"/>
+            <column columnName="ActivityType"/>
+            <column columnName="AwardNumber"/>
+            <column columnName="AwardSuffix"/>
+            <column columnName="ADFMEmpNum"/>
+            <column columnName="ADFMFullName"/>
+            <column columnName="ActivityTypeDescription"/>
+            <column columnName="FUndingSourceNumber"/>
+            <column columnName="FUndingSourceName"/>
+            <column columnName="Org"/>
         </columns>
     </table>
     <table tableName="iacucFundingSources" tableDbType="TABLE" useColumnOrder="true">
@@ -1543,6 +1557,67 @@
             <column columnName="created"/>
             <column columnName="modifiedBy"/>
             <column columnName="modified"/>
+        </columns>
+    </table>
+    <table tableName="ogasynch" tableDbType="TABLE">
+        <columns>
+            <column columnName="lastIndexed"/>
+            <column columnName="modifiedBy"/>
+            <column columnName="container"/>
+            <column columnName="modified"/>
+            <column columnName="created"/>
+            <column columnName="entityId"/>
+            <column columnName="createdBy"/>
+            <column columnName="ADFM EMP NUM"/>
+            <column columnName="ADFM FULL NAME"/>
+            <column columnName="ADFM LAST NAME"/>
+            <column columnName="ADFM FIRST NAME"/>
+            <column columnName="PI EMP NUM"/>
+            <column columnName="PI FULL NAME"/>
+            <column columnName="PI LAST NAME"/>
+            <column columnName="PI FIRST NAME"/>
+            <column columnName="PDFM EMP NUM"/>
+            <column columnName="PDFM FULL NAME"/>
+            <column columnName="PDFM LAST NAME"/>
+            <column columnName="PDFM FIRST NAME"/>
+            <column columnName="AGENCY AWARD NUMBER"/>
+            <column columnName="OGA AWARD NUMBER"/>
+            <column columnName="OGA AWARD TYPE"/>
+            <column columnName="OGA PROJECT NUMBER"/>
+            <column columnName="ALIAS"/>
+            <column columnName="ALIAS ENABLED FLAG"/>
+            <column columnName="ALIAS ENABLED FLAG_MVIndicator"/>
+            <column columnName="PROJECT DESCRIPTION"/>
+            <column columnName="APPLICATION TYPE"/>
+            <column columnName="ACTIVITY TYPE"/>
+            <column columnName="AWARD NUMBER"/>
+            <column columnName="AWARD SUFFIX"/>
+            <column columnName="ORG"/>
+            <column columnName="CURRENT BUDGET START DATE"/>
+            <column columnName="CURRENT BUDGET END DATE"/>
+            <column columnName="PROJECT TITLE"/>
+            <column columnName="PPQ CODE"/>
+            <column columnName="PPQ DATE"/>
+            <column columnName="IACUC NUMBER"/>
+            <column columnName="AWARD STATUS"/>
+            <column columnName="PROJECT STATUS"/>
+            <column columnName="AWARD ID"/>
+            <column columnName="PROJECT ID"/>
+            <column columnName="BURDEN SCHEDULE"/>
+            <column columnName="BURDEN RATE"/>
+            <column columnName="faRate"/>
+            <column columnName="Key"/>
+        </columns>
+    </table>
+    <table tableName="MergeChargtypeUpdates" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="ProjectName"/>
+            <column columnName="Protocol"/>
+            <column columnName="ChargeType"/>
+            <column columnName="objectid"/>
+            <column columnName="startDate"/>
+            <column columnName="endDate"/>
         </columns>
     </table>
 </tables>
