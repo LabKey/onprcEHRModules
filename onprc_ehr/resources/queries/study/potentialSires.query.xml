@@ -4,6 +4,13 @@
             <table tableName="potentialSires" tableDbType="TABLE">
                 <tableTitle>Potential Sires</tableTitle>
                 <columns>
+                    <column columnName="Id">
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>Id</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="sireAgeAtTime">
                         <columnTitle>Sire Age At Conception Window (years)</columnTitle>
                     </column>

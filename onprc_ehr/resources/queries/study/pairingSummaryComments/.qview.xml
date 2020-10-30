@@ -1,0 +1,27 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="lowestCage"/>
+        <column name="Id/demographics/gender"/>
+        <column name="otherIds"/>
+        <column name="date"/>
+        <column name="eventtype"/>
+        <column name="remark"/>
+        <column name="goal"/>
+        <column name="outcome"/>
+        <column name="enddate"/>
+        <!--<column name="housingtype"/>-->
+        <!--<column name="observation"/>-->
+        <column name="endeventType"/>
+        <column name="separationreason"/>
+        <column name="observation"/>
+        <column name="duration"/>
+        <column name="remark2"/>
+        <column name="performedby"/>
+        <column name="taskid"/>
+        <!--<column name="history"/>-->
+    </columns>
+    <sorts>
+        <sort column="date" descending="true"/>
+    </sorts>
+</customView>

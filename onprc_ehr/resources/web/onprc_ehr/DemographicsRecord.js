@@ -68,6 +68,16 @@ EHR.DemographicsRecord = function(data){
             return data['fosterchild'];
         },
 
+        //Added 12-20-2018 R.Blasa
+        getLastKnownlocation: function(){
+            return data['lastlocation'];
+        },
+
+        //Created: 10-4-2019  R.Blasa
+        getActiveDrugs: function(){
+            return data['activeDrugs'];
+        },
+
         getCurrentLocation: function(){
             if (data['activeHousing'] && data['activeHousing'].length){
                 var ret = data['activeHousing'][0].room;
@@ -138,7 +148,7 @@ EHR.DemographicsRecord = function(data){
         },
 
         getGeographicOrigin: function(){
-            return data['geographic_origin'];
+            return data['geneticAncestry'] ? data['geneticAncestry']  + ' (Verified)' : data['geographic_origin'];
         },
 
         getMostRecentWeight: function(){
@@ -187,14 +197,6 @@ EHR.DemographicsRecord = function(data){
         getMonthsSinceLastTB: function(){
             if (data['tb'] && data['tb'].length){
                 return data['tb'][0].MonthsSinceLastTB;
-            }
-        },
-
-        getLastTBDate: function(){
-            if (data['tb'] && data['tb'].length){
-                var date = data['tb'][0]['MostRecentTBDate'];
-                if (date)
-                    return LDK.ConvertUtils.parseDate(date);
             }
         },
 

@@ -1,0 +1,6 @@
+<view xmlns="http://labkey.org/data/xml/view" title="NIH Reduced Rates">
+
+    <dependencies>
+        <dependency path="ehr.context" />
+    </dependencies>
+</view>

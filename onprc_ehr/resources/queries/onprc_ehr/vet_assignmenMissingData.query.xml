@@ -1,0 +1,30 @@
+<!--
+<tables xmlns="http://labkey.org/data/xml">
+    <table tableName="Vet_assignmentMissingSummary" tableDbType="NOT_IN_DB">
+        <columns>
+            <column columnName="MissingItem">
+                <url replaceMissing="blankValue">/query/ONPRC/EHR/executeQuery.view?schemaName=onprc_ehr&amp;query.queryName=vet_assignmentMissingData&amp;query.MissingItem~eq=${MissingItem}</url>
+            </column>
+        </columns>
+    </table>
+</tables>
+-->
+
+<query xmlns="http://labkey.org/data/xml/query">
+<metadata>
+    <tables xmlns="http://labkey.org/data/xml">
+        <table tableName="Vet_assignmentMissingLink" tableDbType="TABLE">
+            <tableTitle>Vet Assignment Missing Item Summary</tableTitle>
+            <columns>
+                <column columnName="MissingItem">
+                    <url>/query/executeQuery.view?
+                        schemaName=onprc_ehr&amp;
+                        queryName=Vet_assignmentMissingSummary&amp;
+                        query.MissingItem~eq=${MissingItem}&amp;
+                    </url>
+                </column>
+            </columns>
+        </table>
+    </tables>
+</metadata>
+</query>

@@ -1,0 +1,185 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="invoicedItems" tableDbType="TABLE">
+                <tableTitle>Invoiced Items</tableTitle>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer"/>
+                <columns>
+                    <column columnName="rowId">
+                        <columnTitle>Row Id</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="invoiceId">
+                        <columnTitle>Invoice</columnTitle>
+                        <fk>
+
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>invoiceRuns</fkTable>
+                            <fkColumnName>objectid</fkColumnName>
+                            <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="transactionNumber">
+                        <columnTitle>Transaction Number</columnTitle>
+                    </column>
+                    <column columnName="invoiceDate">
+                        <columnTitle>Invoice Date</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="Id">
+                        <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                    </column>
+                    <column columnName="date">
+                        <columnTitle>Transaction Date</columnTitle>
+                        <formatString>Date</formatString>
+                    </column>
+                    <column columnName="item">
+                        <columnTitle>Item</columnTitle>
+                    </column>
+                    <column columnName="itemCode">
+                        <columnTitle>Item Code</columnTitle>
+                        <description>A code used to refer to identify this item, which is primarily used when exporting or communicating with external billing systems</description>
+                    </column>
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>chargeableItemCategories</fkTable>
+                            <fkColumnName>category</fkColumnName>
+                            <fkDisplayColumnName>category</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="servicecenter">
+                        <columnTitle>Service Center</columnTitle>
+                    </column>
+                    <column columnName="project">
+                        <columnTitle>Project</columnTitle>
+                    </column>
+                    <column columnName="debitedaccount">
+                        <columnTitle>Debited Alias</columnTitle>
+                    </column>
+                    <column columnName="creditedaccount">
+                        <columnTitle>Credited Alias</columnTitle>
+                    </column>
+                    <column columnName="faid">
+                        <columnTitle>FAID</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>fiscalAuthorities</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                            <fkDisplayColumnName>lastName</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="investigatorId">
+
+                    </column>
+                    <column columnName="lastName">
+                        <columnTitle>Last Name</columnTitle>
+                    </column>
+                    <column columnName="firstName">
+                        <columnTitle>First Name</columnTitle>
+                    </column>
+                    <column columnName="department">
+                        <columnTitle>Department</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="mailcode">
+                        <columnTitle>Mail Code</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="contactPhone">
+                        <columnTitle>Contact Phone</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="chargeId">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="cageId">
+                        <columnTitle>Cage Id</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="objectid">
+                        <columnTitle>Key</columnTitle>
+                        <isHidden>true</isHidden>
+                        <isKeyField>true</isKeyField>
+                        <shownInDetailsView>false</shownInDetailsView>
+                        <shownInInsertView>false</shownInInsertView>
+                    </column>
+                    <column columnName="quantity">
+                        <columnTitle>Quantity</columnTitle>
+                    </column>
+                    <column columnName="unitCost">
+                        <columnTitle>Unit Cost</columnTitle>
+                        <formatString>$###,##0.00</formatString>
+                    </column>
+                    <column columnName="totalcost">
+                        <columnTitle>Total Cost</columnTitle>
+                        <formatString>$###,##0.00</formatString>
+                    </column>
+                    <column columnName="credit">
+                        <columnTitle>Is Credit?</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="rateId">
+                        <columnTitle>Rate Id</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="exemptionId">
+                        <columnTitle>Exception Id</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="creditaccountid">
+                        <columnTitle>Credit Account Id</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="comment">
+                        <columnTitle>Comment</columnTitle>
+                    </column>
+                    <column columnName="transactionType">
+                        <columnTitle>Transaction Type</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+
+                    <column columnName="sourceRecord">
+                        <columnTitle>Charge Source Clin Path</columnTitle>
+                        <fk>
+                            <fkFolderPath>/ONPRC/EHR</fkFolderPath>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>ClinPathRuns</fkTable>
+                            <fkColumnName>objectId</fkColumnName>
+                            <fkDisplayColumnName>SampleID</fkDisplayColumnName>
+
+
+
+                        </fk>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="issueId">
+                        <columnTitle>Issue #</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="chargecategory">
+                        <columnTitle>Charge Category</columnTitle>
+                    </column>
+                    <column columnName="billingId">
+                        <columnTitle>Billing Id</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="invoiceNumber">
+                        <columnTitle>Invoice Number</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="container">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="createdBy"/>
+                    <column columnName="created">
+                        <formatString>Date</formatString>
+                    </column>
+                    <column columnName="modifiedBy"/>
+                    <column columnName="modified"/>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

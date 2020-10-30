@@ -1,0 +1,12 @@
+<templateSchema sourceSchemaName="genotypeassays" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>genotypesWithSignificance</tableName>
+    </tables>
+    <metadata>
+        <ns:tables xmlns:ns="http://labkey.org/data/xml">
+            <ns:table tableName="genotypesWithSignificance" tableDbType="NOT_IN_DB">
+
+            </ns:table>
+        </ns:tables>
+    </metadata>
+</templateSchema>

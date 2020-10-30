@@ -9,6 +9,7 @@ concentration,
 concentration_units,
 quantity,
 quantity_units,
-comment
+comment,
+dateremoved  --retain this column since downstream queries still filter on it.  more complete fix added to trunk
 FROM laboratory.samples
 WHERE dateremoved IS NULL

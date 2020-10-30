@@ -17,71 +17,18 @@
  */
 
 SELECT
-  t.id,
-  t.date,
-  cast(t.quantity as double) as quantity,
-  t.species,
-  t.max_draw_pct,
-  t.blood_draw_interval,
-  t.blood_per_kg,
-  t.mostRecentWeight,
-  t.mostRecentWeightDate,
-  cast(t.allowableBlood as double) as maxAllowableBlood,
-  cast(t.bloodPrevious as double) as bloodPrevious,
-  cast((t.allowableBlood - t.bloodPrevious) as double) as allowablePrevious,
+ bs.id
+           ,bs.gender
+           ,bs.species
+           ,bs.yoa as YearofBirth
+           ,bs.mostrecentweightdate
+           ,bs.weight as MostRecentWeight
+           ,bs.calcmethod as CalculationMethod
+           ,bs.BCS as MostRecentBCS
+           ,bs.BCSage
+           ,bs.previousdraws
+           ,bs.ABV as TotalAvailableBlood
 
-  cast(t.bloodFuture as double) as bloodFuture,
-  cast((t.allowableBlood - t.bloodFuture) as double) as allowableFuture,
 
-  --if the draw is historic, always consider previous draws only.
-  --otherwise, look both forward and backwards, then take the interval with the highest volume
-  cast(case
-    WHEN t.date < curdate() THEN (t.allowableBlood - t.bloodPrevious)
-    WHEN t.bloodPrevious < t.bloodFuture THEN (t.allowableBlood - t.bloodFuture)
-    ELSE (t.allowableBlood - t.bloodPrevious)
-  end  as double) as allowableBlood,
-  t.minDate,
-  t.maxDate
 
-FROM (
-
-SELECT
-  bd.id,
-  bd.dateOnly as date,
-  bd.quantity,
-  d.species,
-  d.id.mostRecentWeight.MostRecentWeight,
-  d.id.mostRecentWeight.MostRecentWeightDate,
-  d.species.blood_per_kg,
-  d.species.max_draw_pct,
-  bd.blood_draw_interval,
-  bs.availableblood,
-  bs.allowableBlood,
- -- (d.id.mostRecentWeight.MostRecentWeight * d.species.blood_per_kg * d.species.max_draw_pct) as allowableBlood,
-  bd.minDate,
-  bd.maxDate,
-  COALESCE(
-    (SELECT SUM(coalesce(draws.quantity, 0)) AS _expr
-    FROM study."Blood Draws" draws
-    WHERE draws.id = bd.id
-      AND draws.dateOnly > bd.minDate
-      AND draws.dateOnly <= bd.dateOnly
-      --NOTE: this has been changed to include penidng/non-approved draws
-      AND draws.countsAgainstVolume = true
-  ), 0) AS BloodPrevious,
-
-  COALESCE(
-    (SELECT SUM(coalesce(draws.quantity, 0)) AS _expr
-    FROM study."Blood Draws" draws
-    WHERE draws.id = bd.id
-      AND draws.dateOnly < bd.maxDate
-      AND draws.dateOnly >= bd.dateOnly
-      --NOTE: this has been changed to include penidng/non-approved draws
-      AND draws.countsAgainstVolume = true
-  ), 0) AS BloodFuture
-
-FROM study.bloodDrawChanges bd
-JOIN study.demographics d ON (d.id = bd.id)
-Join demographicsBloodSummary bs on (bs.id = bd.id)
-
-) t
+FROM demographicsBloodSummary bs

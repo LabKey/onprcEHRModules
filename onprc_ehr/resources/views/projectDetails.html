@@ -60,7 +60,7 @@
             title: 'Housing Summary',
             schemaName: 'study',
             queryName: 'projectHousingSummary',
-            columns: 'room,room/housingType,totalAnimals',
+            columns: 'room,room/housingType,room/housingCondition,totalAnimals',
             filters: [LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL)],
             failure: LDK.Utils.getErrorCallback()
         }).render('housingSummary_' + webpart.wrapperDivId);

@@ -234,6 +234,36 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     style: 'margin-bottom: 10px;',
                                     border: false
                                 });
+
+                                //Modified: 8-19-2019  R. Blasa Added Divider Legends Not eeded at this time
+                                currentSection.push({
+                                //     html: '<b>List of cage slides, and the display letters they represent:</b><br><br> ' +
+                                //     '   Infant Feeding Slide --------->  IFS <br> ' +
+                                //     '   Clear Slide     -----------------------> C <br> ' +
+                                //     '   Extension Solid Slide --------> ES <br> ' +
+                                //     '   Extension Mesh Slide -------> EM <br> ' +
+                                //     '   Window Slide      -------------------> W <br> ' +
+                                //     '   Double Mesh Slides ----------> DM  <br> ' +
+                                //     '   Double Solid Slides -----------> DS <br> ' +
+                                //     '   Window Mesh Slide ----------> WM <br> ' +
+                                //     '   Backward Grooming Slide -> B  <br>  <br> <br>',
+                                //
+                                //
+                                // }, {
+                                    //Added: 10-9-2019  R.Blasa
+                                    xtype: 'button',
+                                    text: 'Slide Descriptions',
+                                    scope: this,
+                                    style: 'margin-bottom: 10px;',
+                                    handler: function(btn){
+
+                                        var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'SliderDefinition', this.containerPath);
+                                        window.open(url);
+                                    },
+
+                                    style: 'margin-bottom: 10px;',
+                                    border: false
+                                });
                             }
 
                             table = ONPRC.panel.RoomLayoutPanel.getRowBlockCfg(maxCage);
@@ -258,7 +288,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 }
 
                                 var animalItems = [];
-                                if (animals.length > 4){
+                                if (animals.length > 8){    //Modified: 7-5-2018  R.Blasa
                                     animalItems.push({
                                         html: '<span style="font-size: 10px;">' + animals.length + ' animals</span>',
                                         border: false,
@@ -378,8 +408,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     defaults: {
                                         border: false
                                     },
-                                    items: [{
-                                        html: row.get('cage_type') == 'No Cage' ? 'No Cage' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') + '</span>'),
+
+                                        //Modified: 4-8-2020 R.Blasa  Contains symbol representing divider types
+                                     items: [{
+                                            html: row.get('cage_type') == 'No Cage' ? 'No Cage' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
                                         bodyStyle: {
                                             'background-color': 'transparent'
                                         },

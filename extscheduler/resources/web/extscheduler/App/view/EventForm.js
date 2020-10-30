@@ -13,8 +13,14 @@ Ext.define('App.view.EventForm', {
     editable : false,
     scheduler : null,
 
+    eventPeriodLength: 30,
+
     initComponent: function()
     {
+        var context = LABKEY.getModuleContext('extscheduler');
+        this.eventPeriodLength = parseInt(context['ExtSchedulerEventPeriodLength']);
+        this.eventFormColumns = context['ExtSchedulerEventFormColumns'].split(',');
+
         this.items = [
             //{
             //    xtype      : 'textfield',
@@ -22,6 +28,7 @@ Ext.define('App.view.EventForm', {
             //    name       : 'Name',
             //    reference  : 'eventNameField',
             //    allowBlank : !this.editable,
+            //    hidden     : this.eventFormColumns.indexOf('Name') === -1,
             //    bind       : {
             //        value    : '{eventRecord.Name}',
             //        readOnly : !this.editable
@@ -33,9 +40,11 @@ Ext.define('App.view.EventForm', {
                 name       : 'ResourceId',
                 reference  : 'eventResourceField',
                 allowBlank : !this.editable,
+                hidden     : this.eventFormColumns.indexOf('ResourceId') === -1,
                 bind       : {
                     value    : '{eventRecord.ResourceId}',
                     readOnly : !this.editable
+
                 }
             },
             {
@@ -49,25 +58,68 @@ Ext.define('App.view.EventForm', {
                 editable   : false,
                 typeAhead   : true,
                 allowBlank : !this.editable,
+                hidden     : this.eventFormColumns.indexOf('UserId') === -1,
                 bind       : {
                     value    : '{eventRecord.UserId}',
                     readOnly : !this.editable
                 }
             },
-            // {
-            //     xtype      : 'textfield',
-            //     fieldLabel : 'Alias',
-            //     name       : 'Alias',
-            //     reference  : 'eventAliasField',
-            //     allowBlank : !this.editable,
-            //     bind       : {
-            //         value    : '{eventRecord.Alias}',
-            //         readOnly : !this.editable
-            //     }
-            // },
+            {
+                xtype      : 'textfield',
+                fieldLabel : 'Alias',
+                name       : 'Alias',
+                reference  : 'eventAliasField',
+                //allowBlank : !this.editable,
+                allowBlank: true,
+                hidden     : this.eventFormColumns.indexOf('Alias') === -1,
+                bind       : {
+                    value    : '{eventRecord.Alias}',
+                    readOnly : !this.editable
+                }
+            },
+            {
+                xtype      : 'numberfield',
+                fieldLabel : 'Quantity',
+                name       : 'Quantity',
+                value : 1,
+                minValue: 1,
+                allowDecimals : false,
+                reference  : 'eventQuantityField',
+                allowBlank : !this.editable,
+                hidden     : this.eventFormColumns.indexOf('Quantity') === -1,
+                bind       : {
+                    value    : '{eventRecord.Quantity}',
+                    readOnly : !this.editable
+                }
+            },
+            {
+                xtype      : 'textarea',
+                labelAlign: 'top',
+                width: 320,
+                height: 200,
+                fieldLabel : 'Comments',
+                name :  'Comments',
+                reference  : 'eventCommentsField',
+                style: 'margin-top: 20px;',
+                allowBlank : true,
+                hidden     : this.eventFormColumns.indexOf('Comments') === -1,
+                bind       : {
+                    value    : '{eventRecord.Comments}',
+                    readOnly : !this.editable
+                }
+         /*       xtype: 'textarea',
+                labelAlign: 'top',
+                width: 500,
+                height: 200,
+                fieldLabel: 'Question/Comment',
+                name: 'comment',
+                style: 'margin-top: 20px;',
+                allowBlank: false
+          */  },
             {
                 xtype  : 'fieldcontainer',
                 layout : 'hbox',
+                hidden     : this.eventFormColumns.indexOf('StartDate') === -1,
                 items  : [
                     this.getStartDateField(),
                     this.getStartTimeField()
@@ -76,6 +128,7 @@ Ext.define('App.view.EventForm', {
             {
                 xtype  : 'fieldcontainer',
                 layout : 'hbox',
+                hidden     : this.eventFormColumns.indexOf('EndDate') === -1,
                 items  : [
                     this.getEndDateField(),
                     this.getEndTimeField()
@@ -187,7 +240,7 @@ Ext.define('App.view.EventForm', {
                 width     : 90,
                 name      : 'StartTime',
                 format    : 'H:i',
-                increment : 30,
+                increment : this.eventPeriodLength,
                 allowBlank : !this.editable,
                 bind      : {
                     minValue : '{defaultMinTime}',
@@ -200,7 +253,7 @@ Ext.define('App.view.EventForm', {
 
             this.startTimeField.on('change', function(timefield, newValue){
                 if (this.getEndTimeField().getValue() == null)
-                    this.getEndTimeField().setValue(new Date(newValue.getTime() + (30*60*1000)));
+                    this.getEndTimeField().setValue(new Date(newValue.getTime() + (this.eventPeriodLength*60*1000)));
 
                 this.ensureEndTimeAfterStart();
             }, this);
@@ -245,7 +298,7 @@ Ext.define('App.view.EventForm', {
                 name      : 'EndTime',
                 width     : 90,
                 format    : 'H:i',
-                increment : 30,
+                increment : this.eventPeriodLength,
                 allowBlank : !this.editable,
                 bind      : {
                     minValue : '{minEndTime}',
@@ -274,7 +327,7 @@ Ext.define('App.view.EventForm', {
 
         if (allNonNull && startDate.getTime() == endDate.getTime())
         {
-            var d = new Date(startTime.getTime() + (30*60*1000));
+            var d = new Date(startTime.getTime() + (this.eventPeriodLength*60*1000));
             this.getEndTimeField().setMinValue(d);
 
             if (startTime.getTime() >= endTime.getTime())

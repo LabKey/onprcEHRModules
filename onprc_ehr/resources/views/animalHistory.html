@@ -7,27 +7,21 @@
             return;
 
         Ext4.create('EHR.panel.AnimalHistoryPanel', {
+
+            html: '<i>**Please click the <b>Update Report</b> button if the program fails to display a report**</i>',  //Added: 11-17-2017  R.Blasa
+
             defaultReport: ctx.DefaultAnimalHistoryReport,
             defaultTab: 'General',
             showFilterOptionsTitle: true,
+            clearBetweenClicks: false,
             filterTypes: [{
                 xtype: 'ldk-singlesubjectfiltertype',
                 inputValue: LDK.panel.SingleSubjectFilterType.filterName,
-                label: 'Single Animal',
-                aliasTable: {
-                    schemaName: 'study',
-                    queryName: 'demographics',
-                    idColumn: 'Id'
-                }
+                label:'Single Animal'
             },{
-                xtype: 'ehr-multianimalfiltertype',
+                xtype: 'onprc_ehr-multianimalfiltertype',
                 inputValue: EHR.panel.MultiAnimalFilterType.filterName,
-                label: EHR.panel.MultiAnimalFilterType.label,
-                aliasTable: {
-                    schemaName: 'study',
-                    queryName: 'demographics',
-                    idColumn: 'Id'
-                }
+                label: EHR.panel.MultiAnimalFilterType.label
             },{
                 xtype: 'ehr-locationfiltertype',
                 inputValue: EHR.panel.LocationFilterType.filterName,

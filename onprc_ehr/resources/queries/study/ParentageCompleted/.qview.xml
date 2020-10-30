@@ -1,0 +1,20 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Calls">
+    <columns>
+        <column name="Area"/>
+        <column name="Room"/>
+        <column name="Cage"/>
+        <column name="Id"/>
+        <column name="project"/>
+        <column name="gender"/>
+        <column name="livestatus"/>
+        <column name="birthdate"/>
+        <column name="currentweight"/>
+        <column name="weightdate"/>
+        <column name="observeddam"/>
+        <column name="geneticdam"/>
+        <column name="fosterdam"/>
+    </columns>
+    <sorts>
+        <sort column="Area" descending="true"/>
+    </sorts>
+</customView>

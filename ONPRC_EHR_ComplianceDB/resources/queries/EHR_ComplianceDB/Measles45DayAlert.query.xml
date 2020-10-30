@@ -1,0 +1,49 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Measles45DayAlert" tableDbType="NOT_IN_DB">
+                <tableTitle>Measles 45 Day Overdue Report</tableTitle>
+                <columns>
+                    <column columnName="employeeId">
+                        <isKeyField>true</isKeyField>
+                        <fk>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                            <fkTable>employees</fkTable>
+                            <fkColumnName>employeeId</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="requirementName">
+                        <columnTitle>Requirement Name</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                            <fkTable>requirements</fkTable>
+                            <fkColumnName>requirementName</fkColumnName>
+                        </fk>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
+                    <column columnName="DaysOverDue">
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="gte" value="0"/>
+                                    <filter operator="lte" value="14"/>
+                                </filters>
+                                <backgroundColor>E3170D</backgroundColor>
+                            </conditionalFormat>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="gte" value="15"/>
+                                </filters>
+                                <backgroundColor>FBEC5D</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
+                    </column>
+                    <column columnName="isRequired">
+                        <columnTitle>Is Required?</columnTitle>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -13,6 +13,101 @@ var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY
 exports.init = function(EHR){
     EHR.ETL = ETL;
 
+    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.INIT, function (event, helper, EHR) {
+
+        EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'birth', EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC);
+
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'birth', function (scriptErrors, helper, row, oldRow) {
+            // Put custom ONPRC handler here
+            // skip normal birth records process when birth condition has a value of Fetus
+            console.log("onprc_ehr/birth.js entry")
+            if (row.Id && row.birth_condition == 'Fetus - Prenatal')
+            {
+                var obj = {
+                    Id: row.Id,
+                    birth: row.date,
+                    date: row.date,
+                    calculated_status: 'Fetus'
+                };
+
+
+                helper.getJavaHelper().createDemographicsRecord(row.Id, obj);
+            }
+
+            else
+            {
+                var isLiving = EHR.Server.Utils.isLiveBirth(row.birth_condition);
+                if (isLiving)
+                {
+                    helper.registerLiveBirth(row.Id, row.date);
+                }
+
+                if (!helper.isETL())
+                {
+                    //if a weight is provided, we insert into the weight table:
+                    if (row.weight && row.wdate)
+                    {
+                        helper.getJavaHelper().insertWeight(row.Id, row.wdate, row.weight);
+                    }
+
+                    //if room provided, we insert into housing.  if this animal already has an active housing record, skip
+
+                    if (row.room && row.Id && row.date)
+                    {
+
+                        helper.getJavaHelper().createHousingRecord(row.Id, row.date, (isLiving ? null : row.date), row.room, (row.cage || null),null);
+                    }
+
+                    if (!helper.isGeneratedByServer())
+                    {
+                        var obj = {
+                            Id: row.Id,
+                            gender: row.gender,
+                            dam: row.dam,
+                            sire: row.sire,
+                            origin: row.origin,
+                            birth: row.date,
+                            date: row.date,
+                            calculated_status: isLiving ? 'Alive' : 'Dead'
+
+                        };
+
+                        //NOTE: the follow is designed to allow the table to either have physical columns for species/origin, or do display the demographics values.  in the latter case, editing the form field will act to update the demographics record
+                        if (row.species || row['Id/demographics/species'])
+                        {
+                            obj.species = row.species || row['Id/demographics/species'];
+                        }
+
+                        if (row.geographic_origin || row['Id/demographics/geographic_origin'])
+                        {
+                            obj.geographic_origin = row.geographic_origin || row['Id/demographics/geographic_origin'];
+                        }
+
+                        //find dam, if provided
+                        if (row.dam && !obj.geographic_origin)
+                        {
+                            obj.geographic_origin = helper.getJavaHelper().getGeographicOrigin(row.dam);
+                        }
+
+                        if (row.dam && !obj.species)
+                        {
+                            obj.species = helper.getJavaHelper().getSpecies(row.dam);
+                        }
+
+                        if (!isLiving)
+                        {
+                            obj.death = row.date;
+                        }
+
+                        //if not already present, we insert into demographics
+                        helper.getJavaHelper().createDemographicsRecord(row.Id, obj);
+                    }
+                }
+            }
+        });
+    });
+
+
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.INIT, function(event, helper, EHR){
         EHR.Server.Utils.isLiveBirth = function(birthCondition){
             EHR.Assert.assertNotEmpty('triggerHelper is null', triggerHelper);
@@ -41,12 +136,49 @@ exports.init = function(EHR){
         });
     });
 
+    //Added: 8-1-2019  R.Blasa
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'birth', function(event, helper){
         //NOTE: births are sometimes not entered until processing, meaning they could be significantly in the past
         helper.setScriptOptions({
-            allowDatesInDistantPast: true
+            allowDatesInDistantPast: true,
+            allowFutureDates: true
         });
     });
+
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study','birth', function(helper, scriptErrors, row, oldRow){
+    //Added: 8-1-2019  R.Blasa
+
+        if (row.Id && row.birth_condition == 'Fetus - Prenatal') {
+            helper.setScriptOptions({
+                allowFutureDates: true
+            });
+
+        }
+    });
+
+    //Added: kollil, 5/12/2020
+    //Allow to enter future start dates
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'StudyDetails', function(event, helper){
+        helper.setScriptOptions({
+            allowFutureDates: true
+        });
+    });
+
+    //Added: 7-19-2019  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'Demographics', function(event, helper){
+        helper.setScriptOptions({
+            allowFutureDates: true
+        });
+    });
+
+    //Added: 7-22-2019  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'housing', function(event, helper){
+        helper.setScriptOptions({
+            allowFutureDates: true
+        });
+    });
+
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'clinpathRuns', function(event, helper){
         helper.setScriptOptions({
@@ -59,6 +191,15 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'assignment', function(event, helper){
         helper.setScriptOptions({
             doStandardProtocolCountValidation: false
+        });
+    });
+
+    //Added : 12-19-2017  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study','clinpathRuns', function(helper, scriptErrors, row, oldRow){
+        helper.setScriptOptions({
+
+            allowFutureDates: false  //Added: R.Blasa
+
         });
     });
 
@@ -103,8 +244,8 @@ exports.init = function(EHR){
         {
             EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'If choosing Research Staff, you must enter the assisting staff.', 'WARN');
         }
-
-        if (row.chargetype != 'Research Staff' && row.assistingstaff)
+        //Modified: 6-9-2020 R. Blasa to allow to process Infectious Disease Resource as Charge unit
+        if (row.chargetype != 'Research Staff' && row.assistingstaff && row.assistingstaff != 'DCM: Surgery Services')
         {
             EHR.Server.Utils.addError(scriptErrors, 'assistingstaff', 'This field will be ignored unless Research Staff is selected, and should be blank.', 'WARN');
         }
@@ -181,6 +322,7 @@ exports.init = function(EHR){
         }
     });
 
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
         //check number of allowed animals at assign/approve time.  use different behavior than core EHR
         if (!helper.isETL() && !helper.isQuickValidation() &&
@@ -214,6 +356,13 @@ exports.init = function(EHR){
         }
     });
 
+    //Created: 1-17-2018 R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr', 'snomed_tags', function(helper, scriptErrors, row, oldRow){
+        if (row.Id && !row.code){
+            EHR.Server.Utils.addError(scriptErrors, 'code', 'A snomed code is required to continue', 'WARN');
+        }
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
         // note: if this is automatically generated from death/departure, allow an incomplete record
         // alerts will flag these
@@ -226,9 +375,10 @@ exports.init = function(EHR){
         }
 
         //update condition on release
+        //Modified: 5-13-2019  R.Blasa
         if (!helper.isETL() && helper.getEvent() == 'update' && oldRow){
             if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData){
-                if (row.releaseCondition && row.enddate){
+                if (row.releaseCondition && row.enddate && row.releaseCondition != 206){
                     var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.enddate, row.releaseCondition);
                     if (msg){
                         EHR.Server.Utils.addError(scriptErrors, 'releaseCondition', msg, 'INFO');
@@ -268,7 +418,8 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'assignment', function(scriptErrors, helper, row, oldRow){
-        if (!helper.isETL() && row.Id && row.assignCondition){
+        //Modified: 5-9-2019  R.Blasa  Prevent flag enttrie for terminal monkey ids
+        if (!helper.isETL() && row.Id && row.assignCondition && row.assignCondition != 206){
             triggerHelper.updateAnimalCondition(row.Id, row.date, row.assignCondition);
         }
     });
@@ -280,12 +431,49 @@ exports.init = function(EHR){
                 EHR.Server.Utils.addError(scriptErrors, 'groupId', msg, 'INFO');
             }
         }
+        //Added: 12-29-2017  R.Blasa
+        if (row.Id && !row.groupId){
+            EHR.Server.Utils.addError(scriptErrors, 'groupId', 'A Group Id selection is required.', 'WARN');
+        }
     });
+
+
      //Modified: 10-13-2016 R.Blasa added arrival date parameter
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'birth', function(helper, errors, row, oldRow) {
-        //NOTE: we want to perform the birth updates if this row is becoming public, or if we're updating to set the dam for the first time
-        if (!helper.isValidateOnly() && (row._becomingPublicData || (oldRow && !oldRow.dam && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && row.dam))) {
-            triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null, row.arrival_date || null, row.birth_condition || null, !!row._becomingPublicData);
+        //Modified: 3-20-2017 R.Blasa  Fetal Prenatal updates
+        if (row.id && oldRow)
+        {
+            if (row.id && oldRow.birth_condition && oldRow.birth_condition == 'Fetus - Prenatal' && row.birth_condition && row.birth_condition != 'Fetus - Prenatal')
+            {
+                //Modified: 10-27-2017
+                triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null, row.Arrival_Date || null, row.birth_condition || null,row.species || null, !!row._becomingPublicData);
+
+                //Added: 6-26-2017 R.Blasa
+                //set active flag condition after changing status from Fetus Prenatal to Alive. (Needs to execute because it is no longer considered isBecomingPublic status)
+                triggerHelper.doBirthConditionAfterPrenatal(row.Id, row.date, row.dam || null, row.Arrival_Date || null, row.birth_condition || null, !!row._becomingPublicData);
+
+                //Created housing when room location is provided
+                if (row.id && row.room)
+                {
+                    helper.getJavaHelper().createHousingRecord(row.Id, row.date, null, row.room, (row.cage || null), (row.initialCond || null));
+                }
+                //Added: 6-26-2017 R.Blasa
+                //if a weight is provided, we insert into the weight table:
+                if (row.weight && row.wdate)
+                {
+                    helper.getJavaHelper().insertWeight(row.Id, row.wdate, row.weight);
+                }
+
+            }
+        }
+        //Added: 6-27-2017  R,Blasa  Process only
+        if (row.birth_condition != 'Fetus - Prenatal')
+        {
+            //NOTE: we want to perform the birth updates if this row is becoming public, or if we're updating to set the dam for the first time
+            if (!helper.isValidateOnly() && (row._becomingPublicData || (oldRow && !oldRow.dam && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && row.dam)))
+            {
+                triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null, row.Arrival_Date || null, row.birth_condition || null, row.species || null, !!row._becomingPublicData);
+            }
         }
     });
 
@@ -358,9 +546,29 @@ exports.init = function(EHR){
                 }
             });
         }
+
+        //Added: 1-17-2018  R.Blasa disallow male id
+        if (row.dam )
+        {
+            EHR.Server.Utils.findDemographics({
+                participant: row.dam ,
+                helper: helper,
+                scope: this,
+                callback: function (data)
+                {
+                    if (data)
+                    {
+                        if (data['gender/origGender'] && data['gender/origGender'] != 'f')
+                            EHR.Server.Utils.addError(scriptErrors, 'dam', 'The dam has to be female', 'ERROR');
+                    }
+                }
+            });
+
+        }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'deaths', function(scriptErrors, helper, row, oldRow){
+    //Modified: 6-8-2018  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'deaths', function(helper, errors, row, oldRow){
         if (row.Id && row.date){
             //close assignment records.
             triggerHelper.closeActiveAssignmentRecords(row.Id, row.date, (row.cause || null));
@@ -396,13 +604,6 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'blood', function(helper, scriptErrors, row){
-        if (!helper.isETL() && row.project && row.chargetype){
-            if (row.chargetype == 'No Charge' && !helper.getJavaHelper().isDefaultProject(row.project))
-                EHR.Server.Utils.addError(scriptErrors, 'chargetype', 'You have chosen \'No Charge\' with a project that does not support this.  You may need to choose \'Research\' instead (which is not billed)', 'INFO');
-        }
-    });
-
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'housing', function(helper, scriptErrors, row, oldRow){
         if (row.cage){
             row.cage = row.cage.toUpperCase();
@@ -435,6 +636,10 @@ exports.init = function(EHR){
                         }
                         else if (data.calculated_status != 'Alive' && !data.hasBirthRecord){
                             EHR.Server.Utils.addError(scriptErrors, 'enddate', 'This animal is not listed as alive, cannot enter an open ended housing record', 'WARN');
+                        }
+                        //Added: 6-14-2017  R.Blasa
+                        else if (data.calculated_status == 'Dead' || data.calculated_status == 'Shipped'){
+                            EHR.Server.Utils.addError(scriptErrors, 'Id', 'This animal is deceased or shipped out, you are not allowed to make this changes to the housing record', 'WARN');
                         }
                     }
                 }
@@ -474,23 +679,104 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'arrival', function(helper, scriptErrors, row, oldRow){
-        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, 'initialRoom', 'initialCage', false);
+        //Don't process normally if Pending -- Modified: 4-25-2017 R.Blasa
+        var acquiValue = triggerHelper.retrieveAcquisitionType(row.acquisitionType);
+        if (row.id && acquiValue != 'Pending Arrival')
+        {
+            onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, 'initialRoom', 'initialCage', false);
+        }
     });
 
-//    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Parentage', function(helper, errors, row, oldRow){
-//        if (row.Id && row.parent && row.relationship && row.method && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData) {
-//            onprc_utils.updateParentage(row.Id, row.parent, row.relationship, row.method);
-//        }
-//    });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'arrival', function(scriptErrors, helper, row, oldRow) {
-        if (row.Id && row.date) {
-            triggerHelper.ensureQuarantineFlag(row.Id, row.date);
+        //Don't process normally if Pending -- Modified: 4-5-2017 R.Blasa
+        var acquiValue = triggerHelper.retrieveAcquisitionType(row.acquisitionType);
+        if (row.id && acquiValue != 'Pending Arrival')
+        {
+            if (row.Id && row.date)
+            {
+                console.log('Qurantine flag')
+                triggerHelper.ensureQuarantineFlag(row.Id, row.date);
+            }
         }
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'birth', function(helper, scriptErrors, row, oldRow){
         onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, null, null, false);
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'arrival', function(helper, errors, row, oldRow) {
+            //Don't process normally if Pending -- Created: 4-25-2017 R.Blasa
+        if (row.id && oldRow)
+        {
+            var acquiValueOld = triggerHelper.retrieveAcquisitionType(oldRow.acquisitionType);
+            var acquiValue = triggerHelper.retrieveAcquisitionType(row.acquisitionType);
+            if (row.id && acquiValueOld == 'Pending Arrival' && acquiValue != 'Pending Arrival' && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData)
+            {
+                //Add Housing record if room provided
+                if (row.initialRoom)
+                {
+                    helper.getJavaHelper().createHousingRecord(row.Id, row.date, null, row.initialRoom, (row.initialCage || null), (row.initialCond || null));
+                }
+
+                //Add Birth record
+                triggerHelper.onAnimalArrival_AddBirth(row.id, row);
+
+                triggerHelper.ensureQuarantineFlag(row.Id, row.date);
+
+            }
+
+        }
+
+        if(row.id)
+        {
+            //Update demographics records
+            EHR.Server.Utils.findDemographics({
+                participant: row.id,
+                helper: helper,
+                scope: this,
+                callback: function (data)
+                {
+                    data = data || {};
+
+                    var obj = {};
+                    var hasUpdates = false;
+
+                    if (row.gender && row.gender != data.gender )
+                    {
+                        obj.gender = row.gender;
+                        hasUpdates = true;
+                    }
+
+                    if (row.species && row.species != data.species )
+                    {
+                        obj.species = row.species;
+                        hasUpdates = true;
+                    }
+
+                    if (row.geographic_origin && row.geographic_origin != data.geographic_origin )
+                    {
+                        obj.geographic_origin = row.geographic_origin;
+                        hasUpdates = true;
+                    }
+
+                    if (row.birth && row.birth.getTime() != (data.birth ? data.birth.getTime() : 0))
+                    {
+                        obj.birth = row.birth;
+                        hasUpdates = true;
+                    }
+
+
+                    if (hasUpdates)
+                    {
+                        obj.Id = row.id;
+                        var demographicsUpdates = [obj];
+                        helper.getJavaHelper().updateDemographicsRecord(demographicsUpdates);
+                    }
+
+                }
+            });
+        }
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'treatment_order', function(scriptErrors, helper, row, oldRow){
@@ -561,8 +847,8 @@ exports.init = function(EHR){
         if (helper.isETL() || helper.isValidateOnly()){
             return;
         }
-
-        if (row && oldRow && row.category != 'Research'){
+        //Modified: 7-12-2017  R.blasa
+        if (row && oldRow ){
             EHR.Assert.assertNotEmpty('triggerHelper is null', triggerHelper);
 
             var date = triggerHelper.onTreatmentOrderChange(row, oldRow);
@@ -571,6 +857,8 @@ exports.init = function(EHR){
             }
         }
     });
+
+
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'clinremarks', function(scriptErrors, helper, row, oldRow){
         if (helper.isETL() || helper.isValidateOnly()){
@@ -583,4 +871,126 @@ exports.init = function(EHR){
             triggerHelper.replaceSoap(row.parentid);
         }
     });
+
+
+    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.INIT, function (event, helper) {
+
+        /* Override the default EHR validation for Blood draw validation. By LKolli, 2/01/2019 */
+
+        //unregister the default EHR validation code
+        EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'blood', EHR.Server.TriggerManager.Events.BEFORE_UPSERT);
+        //register the new validation code
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'blood', function (helper, scriptErrors, row, oldRow) {
+            if (!helper.isETL() && row.date && !row.daterequested){
+                if (!oldRow || !oldRow.daterequested){
+                    row.daterequested = row.date;
+                }
+            }
+
+            if (row.quantity === 0){
+                EHR.Server.Utils.addError(scriptErrors, 'quantity', 'This field is required', 'WARN');
+            }
+
+            if (!helper.isETL()){
+                if (row.date && !row.requestdate)
+                    row.requestdate = row.date;
+
+                if (!row.quantity && row.num_tubes && row.tube_vol){
+                    row.quantity = row.num_tubes * row.tube_vol;
+                }
+
+                if (row.additionalServices) {
+                    if (row.tube_type || row.tube_vol){
+                        var tubeType = row.tube_type || null;
+                        var quantity = row.quantity || 0;
+                        var msgs = helper.getJavaHelper().validateBloodAdditionalServices(row.additionalServices, tubeType, quantity);
+                        if (msgs && msgs.length){
+                            LABKEY.ExtAdapter.each(msgs, function(msg){
+                                EHR.Server.Utils.addError(scriptErrors, 'additionalServices', msg, 'INFO');
+                            }, this);
+                        }
+                    }
+                }
+
+                if (row.quantity && row.tube_vol){
+                    if (row.quantity != (row.num_tubes * row.tube_vol)){
+                        EHR.Server.Utils.addError(scriptErrors, 'quantity', 'Quantity does not match tube vol / # tubes', 'INFO');
+                        EHR.Server.Utils.addError(scriptErrors, 'num_tubes', 'Quantity does not match tube vol / # tubes', 'INFO');
+                    }
+                }
+
+                EHR.Server.Validation.checkRestraint(row, scriptErrors);
+
+                if (row.Id && row.date && row.quantity){
+                    // volume is handled differently for requests vs actual draws
+                    var errorQC;
+                    if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel)['isRequest'] && !row.taskid)
+                        errorQC = 'ERROR';
+                    else
+                        errorQC = 'INFO';
+
+                    var map = helper.getProperty('bloodInTransaction');
+                    var draws = [];
+                    if (map && map[row.Id]){
+                        draws = map[row.Id];
+                    }
+
+                    var weightMap = helper.getProperty('weightInTransaction');
+                    var weights = [];
+                    if (weightMap && weightMap[row.Id]){
+                        weights = weightMap[row.Id];
+                    }
+
+                    if (row.objectid) {
+
+                        if ((row.QCStateLabel != 'Request: Cancelled') || (row.QCStateLabel != 'Request: Denied'))
+                        {
+                            //Calling the new ONPRC blood draw validation code, LKolli, 2/1/2019
+                            var msg = triggerHelper.verifyBloodVolume_New(row.id, row.date, draws, weights, row.objectid || null, row.quantity);
+                            if (msg != null) {
+                                //TODO: change all future bloods draws to review required, if submitted for medical purpose.
+                                EHR.Server.Utils.addError(scriptErrors, 'num_tubes', msg, errorQC);
+                                EHR.Server.Utils.addError(scriptErrors, 'quantity', msg, errorQC);
+                            }
+                        }
+                    }
+                    else {
+                        console.warn('objectid not provided for blood draw, cannot calculate allowable blood volume.  this probably indicates an error with the form submitting these data')
+                    }
+                }
+            }
+        });
+
+
+        // Override the default EHR validation for project creation
+        EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('ehr', 'project', EHR.Server.TriggerManager.Events.BEFORE_UPSERT);
+
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr', 'project', function (helper, scriptErrors, row, oldRow) {
+            var constraintHelper = org.labkey.ldk.query.UniqueConstraintHelper.create(LABKEY.Security.currentContainer.id, LABKEY.Security.currentUser.id, 'ehr', 'project_active', 'name');
+
+            //enforce name unique
+            if (row.name) {
+                var isValid = constraintHelper.validateKey(row.name, oldRow ? (oldRow.name || null) : null);
+                if (!isValid) {
+                    EHR.Server.Utils.addError(scriptErrors, 'name', 'There is already an old project with the name in ehr: ' + row.name, 'ERROR');
+                }
+            }
+        });
+
+        //Added 3-5-2019  R.Blasa
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
+
+            var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
+
+            if (row.project){
+                console.log("project data collected  " + row.project)
+                var msg = triggerHelper.sendProjectNotifications(row.project);
+                if (msg){
+                    EHR.Server.Utils.addError(scriptErrors, 'project', msg, 'ERROR');
+                }
+            }
+        });
+    });
+
+
 };

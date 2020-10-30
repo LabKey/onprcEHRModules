@@ -15,50 +15,50 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
 
             outcome: {
                 allowBlank: false,
-
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
                     ]
                 }
-
-            }  ,
-
-            eventType: {
-                allowBlank: false,
-
-                lookup: {
-                    filterArray: [
-                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
-                    ]
-                }
-
-
             },
 
+            eventtype: {
+                allowBlank: false,
+                lookup: {
+                    sort: 'sort_order'
+                }
+            },
             goal: {
                 allowBlank: false,
-
                 lookup: {
                     filterArray: [
-                        LABKEY.Filter.create('dated_disabled', null, LABKEY.Filter.Types.ISBLANK)
+                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
                     ]
                 }
-
-
             },
+
+            endeventType: {
+                lookup: {
+                    sort: 'sort_order'
+                }
+            },
+
+            enddate: {
+                hidden: false
+            },
+
             separationreason: {
-                allowBlank: false,
+                allowBlank: true,
 
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
                     ]
                 }
-
 
             },
             observation: {
+                allowBlank: true,
                 columnConfig: {
                     width: 200
                 },
@@ -68,8 +68,18 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     ]
                 }
 
+            },
+
+            remark2: {
+                    xtype: 'textareafield',
+                    width: 400,
+
+                },
+            remark: {
+                    width: 400
+                },
+
             }
-        }
 
     }
 });

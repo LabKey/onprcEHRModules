@@ -9,8 +9,6 @@ var LABKEY = require("labkey");
 
 var helper = org.labkey.ldk.query.LookupValidationHelper.create(LABKEY.Security.currentContainer.id, LABKEY.Security.currentUser.id, 'onprc_ssu', 'schedule');
 
-console.log("** evaluating: " + this['javax.script.filename']);
-
 function beforeInsert(row, errors){
     beforeUpsert(row, errors);
 

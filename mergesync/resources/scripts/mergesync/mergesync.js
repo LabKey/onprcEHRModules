@@ -7,7 +7,7 @@ var console = require("console");
 var LABKEY = require("labkey");
 
 exports.init = function(EHR){
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.COMPLETE, 'study', 'Clinpath Runs', function(event, errors, helper){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.COMPLETE, 'study', 'clinpathruns', function(event, errors, helper){
         var rows = helper.getRows();
         if (helper.getEvent() == 'insert' && rows.length && !helper.isValidateOnly()){
             var toSync = [];
@@ -37,7 +37,7 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_DELETE, 'study', 'Clinpath Runs', function(helper, errors, row) {
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_DELETE, 'study', 'clinpathruns', function(helper, errors, row) {
         if (row.objectid){
             var mergeHelper = new org.labkey.mergesync.RequestSyncHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
             mergeHelper.deleteSyncRecords(row.objectid);

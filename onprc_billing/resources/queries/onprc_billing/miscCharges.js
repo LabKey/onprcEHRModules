@@ -32,20 +32,19 @@ EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Even
         }
 
         if (row.debitedaccount){
-            row.debitedaccount = row.debitedaccount.replace(/^\s+|\s+$/g, '')
+            row.debitedaccount = row.debitedaccount.replace(/^\s+|\s+$/g, '');
         }
 
-        if (row.creditedaccount){
-            row.creditedaccount = row.creditedaccount.replace(/^\s+|\s+$/g, '')
+        if (row.creditedaccount) {
+            row.creditedaccount = row.creditedaccount.replace(/^\s+|\s+$/g, '');
         }
-
         if (row.chargeId){
-            if (!row.chargeCategory && row.unitcost){
-                if (!billingHelper.supportsCustomUnitCost(row.chargeId))
-                {
-                    EHR.Server.Utils.addError(scriptErrors, 'unitCost', 'This type of charge does not support a custom unit cost.  You should leave this blank and it will be automatically calculated.', 'WARN');
-                }
-            }
+            // if (!row.chargeCategory && row.unitcost){
+            //     if (!billingHelper.supportsCustomUnitCost(row.chargeId))
+            //     {
+            //        EHR.Server.Utils.addError(scriptErrors, 'unitCost', 'This type of charge does not support a custom unit cost.  You should leave this blank and it will be automatically calculated.', 'WARN');
+            //     }
+            // }
 
             if (!row.Id){
                 if (!billingHelper.supportsBlankAnimal(row.chargeId))

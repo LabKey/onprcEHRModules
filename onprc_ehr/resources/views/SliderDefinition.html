@@ -1,0 +1,21 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        Ext4.get(webpart.wrapperDivId).update(
+
+                '<div> ' +
+
+               '<img src="<%=contextPath%>/onprc_ehr/icons/primeSlideImage.gif" style="border: 1px solid black"/>' +
+
+                '</div>'
+
+        );
+
+
+    });
+</script>

@@ -1,8 +1,10 @@
+
 /**
  * Ext component for creating the input form and species grid for collecting/updating information about
  * a purchase order (see createPurchaseOrder.html and updatePurchaseOrder.html for usages).
  */
 Ext4.define('SLA.panel.PurchaseOrderRequest', {
+
     extend: 'Ext.panel.Panel',
 
     bodyStyle: 'background-color: transparent;',
@@ -20,6 +22,26 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
      */
     initComponent: function()
     {
+        //Ext4.apply(this, {
+        //    bodyStyle: 'padding: 5px;',
+        //    defaults: {
+        //        border: false
+        //    },
+        //    items: [{
+        //        html: 'The birth/arrival screen will be disabled as a default.  You must enable the form in order to: <br> <ul><li>Get an Animal ID(s)</li><li>Secure the numbers for processing</li><li>Finish entering data on acquired numbers</li></ul><br><b>When you enable the form for data entry all others will automatically be blocked from using the form.</b> <br>Once you "Submit for Review" or "Save and Close", the birth/arrival form will be automatically be available for all other users. If you do not submit/save <i>please click the button below to exit data entry before leaving</i>, otherwise all other users will be permanently locked out. <br><br> If the birth/arrival form is unavailable and you believe it has been kept locked by mistake please first contact the person who locked the form. If they cannot be reached and it is a weekday please e-mail onprcitsupport@ohsu.edu with the subject "Priority 1 Work Stoppage: birth/arrival Form Locked". If it is a weekend please contact an RFO lead tech. Please take care not to request the birth/arrival form be unlocked unless you are confident the lock is in error, otherwise you will kick a user out of the birth/arrival form and prevent data entry.' ,
+        //        style: 'padding-bottom: 10px;'
+        //    },{
+        //        itemId: 'infoArea',
+        //        border: false
+        //    },{
+        //        layout: 'hbox',
+        //        defaults: {
+        //            style: 'margin-right: 5px;'
+        //        },
+        //    }]
+        //});
+
+
         // add the initial form sections, start with just the protocol form if this is not an update
         var items = [
             this.getProtocolForm(),
@@ -41,6 +63,8 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
 
         this.callParent();
     },
+
+
 
     /**
      * Initialize the Ext panel for selecting the IACUC protocol for a purchase order.
@@ -105,8 +129,8 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                     noRequestorRecord: function(form)
                     {
                         Ext4.get('purchaseOrderErrors').update('<p class="labkey-error">'
-                            + 'No requestor record found for your user account. Please contact an administrator to get '
-                            + 'this issue resolved.</p>');
+                                + 'No requestor record found for your user account. Please contact an administrator to get '
+                                + 'this issue resolved.</p>');
                         this.disable();
                     }
                 }
@@ -228,8 +252,8 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
     toggleSubmitButton : function()
     {
         var protocolValid = this.getProtocolForm().isValid(),
-            formValid = this.getPurchaseForm().isValid(),
-            speciesGridValid = this.getPurchaseSpeciesGrid().isValid();
+                formValid = this.getPurchaseForm().isValid(),
+                speciesGridValid = this.getPurchaseSpeciesGrid().isValid();
 
         this.getSubmitButton().setDisabled(this.adminContainer == null || !protocolValid || !formValid || !speciesGridValid);
     },
@@ -434,15 +458,17 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
             }
 
             //added by Kolli
-            if (speciesRowData.location == 'NSI 0123D' || speciesRowData.location == 'NSI 0125D' )
+            //Added the new room to the list: NSI 134 by Kolli on 4/19
+            if (speciesRowData.room == 'NSI 0123D' || speciesRowData.room == 'NSI 0125D' || speciesRowData.room == 'NSI 0134')
             {
                 isHazardsRequired = true;
             }
 
         }, this);
-        if (isHazardsRequired && (purchaseData.listHazard == null || purchaseData.listHazard == ''))
+        //if (isHazardsRequired && (purchaseData.listHazard == null || purchaseData.listHazard == ''))
+        if (isHazardsRequired && (purchaseData.hazardslist == null || purchaseData.hazardslist == ''))
         {
-            this.showErrorMsg('You have selected Location(s): NSI 0123D or NSI 0125D. Please list the biological or chemical agents! ');
+            this.showErrorMsg('You have selected Location(s): NSI 0123D or NSI 0125D or NSI 134. Please list the biological or chemical agents! ');
             return;
         }
 
@@ -529,13 +555,13 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 Ext4.Msg.confirm('Confirmation Message', warnMsg, function (btn)
                 {
                     if (btn == 'yes')
-                        //successCallback.call(scope);
+                    //successCallback.call(scope);
                         this.insertPurchaseOrder(purchaseData);
                     else
                         this.getSubmitButton().enable();
                 }, this);
 
-               // this.insertPurchaseOrder(purchaseData);
+                // this.insertPurchaseOrder(purchaseData);
             }, this);
         }
     },
@@ -672,15 +698,15 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 if (value.PercentUsed > 105)
                 {
                     errorMsg += errorSep + 'With the current order, you have <b>exceeded 100% plus 5% more</b> animal usage of the approved quantity. ' + baseMsg
-                        + ' You are not authorized to purchase any more animals at this point. If you wish to purchase more animals, please contact the IACUC committee for approval!';
+                            + ' You are not authorized to purchase any more animals at this point. If you wish to purchase more animals, please contact the IACUC committee for approval!';
                     errorSep = '<br/><br/>';
                 }
                 else if (value.PercentUsed > 100)
                 {
                     warnMsg += warnSep + 'With the current order, you have <b>exceeded 100%</b> animal usage of the approved quantity. ' + baseMsg
-                        + ' According to IACUC committee, you can order 5% more animals than the approved quantity without IACUC approval. '
-                        + 'Therefore in this order, you can order an <b>extra ' + Math.floor(value.NumAllowed * 0.05) + '</b> animal(s). '
-                        + 'If you wish to purchase more animals, please contact the IACUC committee for approval!';
+                            + ' According to IACUC committee, you can order 5% more animals than the approved quantity without IACUC approval. '
+                            + 'Therefore in this order, you can order an <b>extra ' + Math.floor(value.NumAllowed * 0.05) + '</b> animal(s). '
+                            + 'If you wish to purchase more animals, please contact the IACUC committee for approval!';
                     warnSep = '<br/><br/>';
                 }
                 else if (value.PercentUsed == 100)
@@ -785,11 +811,11 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
         if (!sendNotification && this.initData != null)
         {
             var prevConfNum = this.initData.purchase['confirmationnum'],
-                newConfNum = newPurchaseData['confirmationnum'],
-                prevOrderDt = this.trimDateToYMDStr(this.initData.purchase['orderdate']),
-                newOrderDt = this.trimDateToYMDStr(newPurchaseData['orderdate']),
-                prevHousingAvail = this.initData.purchase['housingconfirmed'],
-                newHousingAvail = newPurchaseData['housingconfirmed'];
+                    newConfNum = newPurchaseData['confirmationnum'],
+                    prevOrderDt = this.trimDateToYMDStr(this.initData.purchase['orderdate']),
+                    newOrderDt = this.trimDateToYMDStr(newPurchaseData['orderdate']),
+                    prevHousingAvail = this.initData.purchase['housingconfirmed'],
+                    newHousingAvail = newPurchaseData['housingconfirmed'];
 
             sendNotification = prevConfNum != newConfNum || prevOrderDt != newOrderDt;
 
@@ -809,21 +835,21 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 Ext4.each(newPurchaseData.details, function (detailsRow)
                 {
                     var objectid = detailsRow['objectid'],
-                        receiveddate = Ext4.isDate(detailsRow['receiveddate']) ? Ext4.util.Format.date(detailsRow['receiveddate'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['receiveddate']),
-                        receivedby = detailsRow['receivedby'],
-                        datecancelled = Ext4.isDate(detailsRow['datecancelled']) ? Ext4.util.Format.date(detailsRow['datecancelled'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['datecancelled']),
-                        cancelledby = detailsRow['cancelledby'];
+                            receiveddate = Ext4.isDate(detailsRow['receiveddate']) ? Ext4.util.Format.date(detailsRow['receiveddate'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['receiveddate']),
+                            receivedby = detailsRow['receivedby'],
+                            datecancelled = Ext4.isDate(detailsRow['datecancelled']) ? Ext4.util.Format.date(detailsRow['datecancelled'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['datecancelled']),
+                            cancelledby = detailsRow['cancelledby'];
 
                     // compare new values to previous, or if this is a new species row, check for non-null key values
                     if (Ext4.isDefined(prevDetailsMap[objectid]))
                     {
                         var prevReceiveddate = this.trimDateToYMDStr(prevDetailsMap[objectid]['receiveddate']),
-                            prevReceivedby = prevDetailsMap[objectid]['receivedby'],
-                            prevDatecancelled = this.trimDateToYMDStr(prevDetailsMap[objectid]['datecancelled']),
-                            prevCancelledby = prevDetailsMap[objectid]['cancelledby'];
+                                prevReceivedby = prevDetailsMap[objectid]['receivedby'],
+                                prevDatecancelled = this.trimDateToYMDStr(prevDetailsMap[objectid]['datecancelled']),
+                                prevCancelledby = prevDetailsMap[objectid]['cancelledby'];
 
                         sendNotification = prevReceiveddate != receiveddate || prevReceivedby != receivedby
-                                            || prevDatecancelled != datecancelled || prevCancelledby != cancelledby;
+                                || prevDatecancelled != datecancelled || prevCancelledby != cancelledby;
                     }
                     else if (receiveddate != null || receivedby != null || datecancelled != null || cancelledby != null)
                     {
@@ -855,6 +881,236 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 success: function (response)
                 {
                     this.showSuccess(rowId);
+                    this.insertMiscCharges(rowId,newPurchaseData);
+                }
+            });
+        }
+        else
+        {
+            this.showSuccess(rowId);
+            this.insertMiscCharges(rowId,newPurchaseData);
+        }
+
+    },
+
+    ////Kollil: If the new receiving info is entered, Insert a row into the onprc_billing.miscCharges table
+    //insertMiscCharges : function (rowId,newPurchaseData)
+    //{
+    //    var miscCharges=[];
+    //    var prevDetailsMap = {};
+    //    var vendor_id ;
+    //
+    //    //Get the vendor id for the given name
+    //    LABKEY.Query.executeSql({
+    //        method: 'POST',
+    //        schemaName: 'sla_public',
+    //        sql: "Select objectid from vendors where name = 'ONPRC Weaning - SLA'",
+    //        //failure: LDK.Utils.getErrorCallback(),
+    //        success: function(data)
+    //        {
+    //            // we expect exactly one row in the response, so if that is not the case return an 'Invalid' error
+    //            if (data.rows.length != 1)
+    //            {
+    //                response.error = 'Invalid vendorid';
+    //                callback.call(scope, response);
+    //            }
+    //            else
+    //            {
+    //                vendor_id = data.rows[0].objectid;
+    //
+    //    //        }
+    //    //    }
+    //    //});
+    //                // Get previous purchase data
+    //                Ext4.each(this.initData.species, function (speciesRow)
+    //                {
+    //                    prevDetailsMap[speciesRow['objectid']] = speciesRow;
+    //                });
+    //                // Get New purchase data
+    //                Ext4.each(newPurchaseData.details, function (detailsRow)
+    //                {
+    //                    var objectid = detailsRow['objectid'],
+    //                            receiveddate = Ext4.isDate(detailsRow['receiveddate']) ? Ext4.util.Format.date(detailsRow['receiveddate'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['receiveddate']),
+    //                            receivedby = detailsRow['receivedby'];
+    //
+    //                    if (Ext4.isDefined(prevDetailsMap[objectid]))
+    //                    {
+    //                        var prevReceiveddate = this.trimDateToYMDStr(prevDetailsMap[objectid]['receiveddate']),
+    //                                prevReceivedby = prevDetailsMap[objectid]['receivedby'];
+    //
+    //                        //Compare the receiving info with the previous data
+    //                        if ((prevReceiveddate == null & receiveddate != null) || (prevReceivedby == null & receivedby != null))
+    //                        {
+    //                            //if (newPurchaseData['vendorid.name'] == 'ONPRC Weaning - SLA')
+    //                            if (newPurchaseData['vendorid'] == vendor_id)
+    //                            {
+    //                                miscCharges.push({
+    //                                    "date": receiveddate,
+    //                                    "project": newPurchaseData['project'],
+    //                                    "objectid": LABKEY.Utils.generateUUID(),
+    //                                    //"category": 'SLA Fees',
+    //                                    "chargeType": 'SLAU',
+    //                                    "chargeId": 5398, //Chargeableitem: ChargeName = 'SLAU Weaning Fee', ChargeID = 5398
+    //                                    "quantity": 1, //detailsRow['NumAnimalsReceived'],
+    //                                    "comment": 'SLA Weaning',
+    //                                });
+    //                            }
+    //                            else
+    //                            {
+    //                                miscCharges.push({
+    //                                    "date": receiveddate,
+    //                                    "project": newPurchaseData['project'],
+    //                                    "objectid": LABKEY.Utils.generateUUID(),
+    //                                    //"category": 'SLA Fees',
+    //                                    "chargeType": 'SLAU',
+    //                                    "chargeId": 5331, //Chargeableitem: ChargeName = 'SLAU Animal Purchase', ChargeID = 5331
+    //                                    "quantity": 1, //detailsRow['NumAnimalsReceived'],
+    //                                    "comment": 'SLA Purchase billing',
+    //                                });
+    //                            }
+    //                        }
+    //                    }
+    //                },this);
+    //
+    //                if (miscCharges.length > 0 )
+    //                {
+    //                    LABKEY.Query.insertRows({
+    //                        containerPath: '/ONPRC/EHR',
+    //                        schemaName: 'onprc_billing',
+    //                        queryName: 'miscCharges',
+    //                        rows: miscCharges,
+    //                        scope: this,
+    //                        success: function ()
+    //                        {
+    //                            this.showSuccess(rowId);
+    //                        },
+    //                        failure: function(response)
+    //                        {
+    //                            console.error(response.exception);
+    //                            this.showErrorMsg(response.exception);
+    //                        }
+    //                    });
+    //                }
+    //                else
+    //                {
+    //                    this.showSuccess(rowId);
+    //                }
+    //
+    //            }
+    //        }
+    //    });
+    //},
+
+
+    //Kollil: If the new receiving info is entered, Insert a row into the onprc_billing.miscCharges table
+    insertMiscCharges : function (rowId,newPurchaseData)
+    {
+        var miscCharges=[];
+        var prevDetailsMap = {};
+        //var vendor_id ;
+
+        ////Get the vendor id for the given name
+        //LABKEY.Query.executeSql({
+        //    method: 'POST',
+        //    schemaName: 'sla_public',
+        //    sql: "Select objectid from vendors where name = 'ONPRC Weaning - SLA'",
+        //    //failure: LDK.Utils.getErrorCallback(),
+        //    success: function(data)
+        //    {
+        //        // we expect exactly one row in the response, so if that is not the case return an 'Invalid' error
+        //        if (data.rows.length != 1)
+        //        {
+        //            response.error = 'Invalid vendorid';
+        //            callback.call(scope, response);
+        //        }
+        //        else
+        //        {
+        //            vendor_id = data.rows[0].objectid;
+        //        }
+        //    }
+        //});
+
+        // Get previous purchase data
+        Ext4.each(this.initData.species, function (speciesRow)
+        {
+            prevDetailsMap[speciesRow['objectid']] = speciesRow;
+        });
+        // Get New purchase data
+        Ext4.each(newPurchaseData.details, function (detailsRow)
+        {
+            var objectid = detailsRow['objectid'],
+                    receiveddate = Ext4.isDate(detailsRow['receiveddate']) ? Ext4.util.Format.date(detailsRow['receiveddate'], 'Y-m-d') : this.trimDateToYMDStr(detailsRow['receiveddate']),
+                    receivedby = detailsRow['receivedby'];
+
+            if (Ext4.isDefined(prevDetailsMap[objectid]))
+            {
+                var prevReceiveddate = this.trimDateToYMDStr(prevDetailsMap[objectid]['receiveddate']),
+                        prevReceivedby = prevDetailsMap[objectid]['receivedby'];
+
+                //Compare the receiving info with the previous data
+                if ((prevReceiveddate == null & receiveddate != null) || (prevReceivedby == null & receivedby != null))
+                {
+                    if (this.initData.purchase.vendor == 'ONPRC Weaning - SLA')
+                    //if (newPurchaseData['vendorid'] == vendor_id)
+                    {
+                        miscCharges.push({
+                            "date": receiveddate,
+                            "project": newPurchaseData['project'],
+                            "objectid": LABKEY.Utils.generateUUID(),
+                            //"category": 'SLA Fees',
+                            "chargeType": 'SLAU',
+                            "chargeId": 5398, //Chargeableitem: ChargeName = 'SLAU Weaning Fee', ChargeID = 5398
+                            "quantity": 1, //detailsRow['NumAnimalsReceived'],
+                            "comment": 'SLA Weaning'
+                        });
+                    }
+                    //Added by Kolli on 03-01-2019
+                    else if (this.initData.purchase.vendor == 'ONPRC Weaning - Self Prepared')
+                    {
+                        miscCharges.push({
+                            "date": receiveddate,
+                            "project": newPurchaseData['project'],
+                            "objectid": LABKEY.Utils.generateUUID(),
+                            //"category": 'SLA Fees',
+                            "chargeType": 'SLAU',
+                            "chargeId": 5614, //Chargeableitem: ChargeName = 'SLAU Weaning - No Staff', ChargeID = 5398
+                            "quantity": 1, //detailsRow['NumAnimalsReceived'],
+                            "comment": 'SLA Weaning - Self Prepared'
+                        });
+                    }
+                    else
+                    {
+                        miscCharges.push({
+                            "date": receiveddate,
+                            "project": newPurchaseData['project'],
+                            "objectid": LABKEY.Utils.generateUUID(),
+                            //"category": 'SLA Fees',
+                            "chargeType": 'SLAU',
+                            "chargeId": 5331, //Chargeableitem: ChargeName = 'SLAU Animal Purchase', ChargeID = 5331
+                            "quantity": 1, //detailsRow['NumAnimalsReceived'],
+                            "comment": 'SLA Purchase billing'
+                        });
+                    }
+                }
+            }
+        },this);
+
+        if (miscCharges.length > 0 )
+        {
+            LABKEY.Query.insertRows({
+                containerPath: '/ONPRC/EHR',
+                schemaName: 'onprc_billing',
+                queryName: 'miscCharges',
+                rows: miscCharges,
+                scope: this,
+                success: function ()
+                {
+                    this.showSuccess(rowId);
+                },
+                failure: function(response)
+                {
+                    console.error(response.exception);
+                    this.showErrorMsg(response.exception);
                 }
             });
         }
@@ -863,6 +1119,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
             this.showSuccess(rowId);
         }
     },
+
 
     trimDateToYMDStr : function(val)
     {
@@ -945,3 +1202,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
         });
     }
 });
+
+
+
+

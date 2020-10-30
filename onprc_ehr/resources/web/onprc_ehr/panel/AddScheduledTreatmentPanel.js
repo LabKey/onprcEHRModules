@@ -58,6 +58,7 @@ Ext4.define('onprc_ehr.panel.AddScheduledTreatmentPanel', {
                         data: [
                             ['800', '8:00 AM'],
                             ['1200', '12:00 Noon'],
+                            ['1400', '2:00 PM'],
                             ['1600', '4:00 PM'],
                             ['2000', '8:00 PM']
                         ]

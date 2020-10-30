@@ -40,7 +40,10 @@ public class LabworkRequestFormType extends RequestForm
     {
         super(ctx, owner, NAME, LABEL, "Requests", Arrays.asList(
                 new RequestFormSection(),
-                new LabworkRequestInstructionsFormSection(),
+
+               //Modified: 1-14-2019  R. Blasa No longer need Merge web link
+//                new LabworkRequestInstructionsFormSection(),
+
                 new AnimalDetailsFormSection(),
                 new ClinpathRunsFormSection(true)
         ));

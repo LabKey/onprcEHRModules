@@ -31,7 +31,7 @@ FROM (SELECT
   o.caseid,
   o.date,
   CASE
-    WHEN o.category = javaConstant('org.labkey.ehr.EHRManager.OBS_CATEGORY_OBSERVATIONS') THEN null
+    WHEN o.category = 'Observations' THEN null
     ELSE o.category
   END as category,
   CASE
@@ -49,14 +49,14 @@ JOIN (
   SELECT o2.Id, o2.caseid, max(o2.date) as date
   FROM study.clinical_observations o2
   WHERE o2.caseid IS NOT NULL
-    AND o2.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.VET_REVIEW')
-    AND o2.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TECH_REVIEW')
+     AND o2.category != 'Vet Review'
+     AND o2.category != 'Reviewed'
   GROUP BY o2.Id, o2.caseid
 ) t ON (t.Id = o.Id AND t.caseid = o.caseid AND t.date = o.date)
 
 WHERE o.caseid IS NOT NULL
-  AND o.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.VET_REVIEW')
-  AND o.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TECH_REVIEW')
+    AND o.category != 'Vet Review'
+    AND o.category != 'Reviewed'
 
 ) t
 GROUP BY t.Id, t.caseid

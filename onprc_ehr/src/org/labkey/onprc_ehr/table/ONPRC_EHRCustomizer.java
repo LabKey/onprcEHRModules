@@ -26,6 +26,7 @@ import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.DisplayColumnFactory;
 import org.labkey.api.data.JdbcType;
+import org.labkey.api.data.MutableColumnInfo;
 import org.labkey.api.data.RenderContext;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.TableInfo;
@@ -267,6 +268,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             appendGroupsAtTimeCol(ehrSchema, ds, dateColName);
             appendProblemsAtTimeCol(ehrSchema, ds, dateColName);
             appendFlagsAtTimeCol(ehrSchema, ds, dateColName);
+//            Added:7-16-2019  R.Blasa
+            appendFlagsAlertActiveCol(ehrSchema, ds);
             appendIsAssignedAtTimeCol(ehrSchema, ds, dateColName);
         }
     }
@@ -852,6 +855,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     {
         appendLatestHxCol(ti);
         appendSurgeryCol(ti);
+        appendSurgeryFollupDaysyCol(ti);  //Added: 11/1/2017  R.Blasa
         appendCaseHistoryCol(ti);
 
         String problemCategories = "problemCategories";
@@ -1061,6 +1065,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         {
             ti.getMutableColumn("qualifier").setHidden(true);
         }
+
+        if (ti.getColumn("isActive") != null)
+        {
+            ti.removeColumn(ti.getColumn("isActive"));
+            EHRService.get().addIsActiveCol(ti, true, EHRService.EndingOption.endsToday, EHRService.EndingOption.activeAfterMidnightTonight);
+        }
     }
 
     private void customizeTreatmentFrequency(AbstractTableInfo ti)
@@ -1118,7 +1128,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 @Override
                 public DisplayColumn createRenderer(ColumnInfo colInfo)
                 {
-                    return new FixedWidthDisplayColumn(colInfo, 200);
+                    return new FixedWidthDisplayColumn(colInfo, 100);
                 }
             });
 
@@ -1147,37 +1157,29 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
                 //clinical remarks entered since last vet review is a proxy for whether it needs to be reviewed again
                 EHRQCState completedQCState = EHRService.get().getQCStates(ti.getUserSchema().getContainer()).get(EHRService.QCSTATES.Completed.name());
-                if (completedQCState != null)
+                // Even if QC states aren't loaded, inject the columns for query validation purposes
+                int qcStateRowId = completedQCState == null ? -1 : completedQCState.getRowId();
+
+                SQLFragment totalRemarkSql = new SQLFragment("(SELECT count(*) FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ? or cr.category = ?))", qcStateRowId, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT);
+                ExprColumn totalRemarkCol = new ExprColumn(ti, "totalRemarksEnteredSinceReview", totalRemarkSql, JdbcType.INTEGER, ti.getColumn("Id"));
+                totalRemarkCol.setLabel("# Remarks Entered Since Last Vet Review");
+                ti.addColumn(totalRemarkCol);
+
+                SQLFragment earliestRemarkSql = new SQLFragment("(SELECT min(cr.datefinalized) as expr FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ? or cr.category = ?))", qcStateRowId, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT);
+                ExprColumn earliestRemarkCol = new ExprColumn(ti, "earliestRemarkSinceReview", earliestRemarkSql, JdbcType.TIMESTAMP, ti.getColumn("Id"));
+                earliestRemarkCol.setLabel("Earliest Remark Entered Since Last Vet Review");
+                ti.addColumn(earliestRemarkCol);
+
+                //date part not supported in postgres
+                if (ti.getSqlDialect().isSqlServer())
                 {
-                    SQLFragment totalRemarkSql = new SQLFragment("(SELECT count(*) FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ? or cr.category = ?))", completedQCState.getRowId(), ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT);
-                    ExprColumn totalRemarkCol = new ExprColumn(ti, "totalRemarksEnteredSinceReview", totalRemarkSql, JdbcType.INTEGER, ti.getColumn("Id"));
-                    totalRemarkCol.setLabel("# Remarks Entered Since Last Vet Review");
-                    ti.addColumn(totalRemarkCol);
-
-                    SQLFragment earliestRemarkSql = new SQLFragment("(SELECT min(cr.datefinalized) as expr FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ? or cr.category = ?))", completedQCState.getRowId(), ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT);
-                    ExprColumn earliestRemarkCol = new ExprColumn(ti, "earliestRemarkSinceReview", earliestRemarkSql, JdbcType.TIMESTAMP, ti.getColumn("Id"));
-                    earliestRemarkCol.setLabel("Earliest Remark Entered Since Last Vet Review");
-                    ti.addColumn(earliestRemarkCol);
-
-                    //date part not supported in postgres
-                    if (ti.getSqlDialect().isSqlServer())
-                    {
-                        //NOTE: the first token in the group_concat() is used for sorting
-                        SQLFragment groupConatSql = new SQLFragment(ti.getSqlDialect().concatenate("LEFT(CONVERT(VARCHAR, cr.date, 120), 19)", "'<>'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.MONTH, "cr.date") + " AS VARCHAR)", "'/'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.DATE, "cr.date") + " AS VARCHAR)", "': '", getChr(ti) + "(10)", "CASE WHEN cr.description IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("COALESCE(cr.description, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.remark IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Remark: '",  "COALESCE(cr.remark, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.performedby IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Entered By: '",  "COALESCE(cr.performedby, '')", getChr(ti) + "(10)") + " END", "'<>'","cr.objectid", "'<:>'"));
-                        SQLFragment remarkSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(groupConatSql, false, true, ti.getSqlDialect().concatenate(getChr(ti) + "(10)", getChr(ti) + "(10)")).getSqlCharSequence() + " as expr1 FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized <= {fn now()} AND (cr.category IS NULL or cr.category = ? or cr.category = ?) AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?))", completedQCState.getRowId(), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
-                        ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.VARCHAR, ti.getColumn("Id"), ti.getColumn("date"));
-                        remarkCol.setLabel("Remarks Entered Since Last Vet Review");
-                        remarkCol.setDisplayWidth("200");
-                        remarkCol.setDisplayColumnFactory(new DisplayColumnFactory()
-                        {
-                            @Override
-                            public DisplayColumn createRenderer(ColumnInfo colInfo)
-                            {
-                                return new VetReviewDisplayColumn(colInfo);
-                            }
-                        });
-                        ti.addColumn(remarkCol);
-                    }
+                    //NOTE: the first token in the group_concat() is used for sorting
+                    SQLFragment groupConatSql = new SQLFragment(ti.getSqlDialect().concatenate("LEFT(CONVERT(VARCHAR, cr.date, 120), 19)", "'<>'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.MONTH, "cr.date") + " AS VARCHAR)", "'/'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.DATE, "cr.date") + " AS VARCHAR)", "': '", getChr(ti) + "(10)", "CASE WHEN cr.description IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("COALESCE(cr.description, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.remark IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Remark: '",  "COALESCE(cr.remark, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.performedby IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Entered By: '",  "COALESCE(cr.performedby, '')", getChr(ti) + "(10)") + " END", "'<>'","cr.objectid", "'<:>'"));
+                    SQLFragment remarkSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(groupConatSql, false, true, ti.getSqlDialect().concatenate(getChr(ti) + "(10)", getChr(ti) + "(10)")).getSqlCharSequence() + " as expr1 FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized <= {fn now()} AND (cr.category IS NULL or cr.category = ? or cr.category = ?) AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?))", qcStateRowId, ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
+                    ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.VARCHAR, ti.getColumn("Id"), ti.getColumn("date"));
+                    remarkCol.setLabel("Remarks Entered Since Last Vet Review");
+                    remarkCol.setDisplayColumnFactory(VetReviewDisplayColumn::new);
+                    ti.addColumn(remarkCol);
                 }
             }
         }
@@ -1335,6 +1337,17 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         recentRemark.setDisplayWidth("200");
         ti.addColumn(recentRemark);
 
+        //don't use caseId.  CEg Plan info Added: 10-25-2017 R.Blasa
+        SQLFragment recentCeg_Plansql = new SQLFragment("(SELECT " + prefix + " (" + "r.CEG_Plan" + ") as _expr FROM " + realTable.getSelectName() +
+                " r WHERE "
+//                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.CEG_Plan IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc " + suffix + ")", ONPRC_EHRManager.REPLACED_SOAP);
+        ExprColumn recentCeg_plan = new ExprColumn(ti, "mostRecentCeg_Plan", recentCeg_Plansql, JdbcType.VARCHAR, objectId);
+        recentCeg_plan.setLabel("Most Recent Ceg Plan For Case");
+        recentCeg_plan.setDescription("This column will display the most recent CEG Plan that has been entered for the animal.");
+        recentCeg_plan.setDisplayWidth("200");
+        ti.addColumn(recentCeg_plan);
+
         //does not use caseId
         SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)").getSqlCharSequence() + " FROM " + realTable.getSelectName() +
                 " r WHERE "
@@ -1420,6 +1433,35 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.addColumn(procedureCol);
     }
 
+     //Added: 11-1-2017   R.Blasa
+    private void appendSurgeryFollupDaysyCol(AbstractTableInfo ti)
+    {
+        String name = "surgeryfollowupDays";
+        if (ti.getColumn(name) != null)
+            return;
+
+        TableInfo realTable = getRealTableForDataset(ti, "Clinical Encounters");
+        if (realTable == null)
+        {
+            _log.warn("Unable to find real table for clin encounters");
+            return;
+        }
+
+        //find any surgical procedures from the same date as this case
+        String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
+        SQLFragment procedureSql = new SQLFragment("(SELECT cast(max(p.followupDays) as varchar(2))" +
+                " FROM " + realTable.getSelectName() + " r " +
+                " JOIN ehr_lookups.procedures p ON (p.rowid = r.procedureid) " +
+                //r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND
+                " WHERE r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId " +
+                " AND CAST(r.date AS date) = CAST(" + ExprColumn.STR_TABLE_ALIAS + ".date as date) " +
+                " AND r.type = 'Surgery' )");
+        ExprColumn procedureCol = new ExprColumn(ti, name, procedureSql, JdbcType.VARCHAR, ti.getColumn("date"));
+        procedureCol.setLabel("Procedures Surgery Follow up Days");
+        procedureCol.setDisplayWidth("100");
+        ti.addColumn(procedureCol);
+    }
+
     private void customizeTasks(AbstractTableInfo ti)
     {
         DetailsURL detailsURL = DetailsURL.fromString("/ehr/dataEntryFormDetails.view?formType=${formtype}&taskid=${taskid}");
@@ -1464,7 +1506,6 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         updateCol.setLabel("Title");
         updateCol.setHidden(true);
-        updateCol.setDisplayWidth("150");
 
         updateTaskId.setLabel("Task Id");
         updateTaskId.setHidden(true);
@@ -2096,6 +2137,71 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         ds.addColumn(col);
     }
+//    Added:7-19-2019  R.Blasa Show Alert Flag categories only
+private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTableInfo ds)
+{
+    String name = "flagsAlertsActive";
+    if (ds.getColumn(name) != null)
+        return;
+
+    final ColumnInfo pkCol = getPkCol(ds);
+    if (pkCol == null)
+        return;
+
+    if (ds.getColumn("Id") == null)
+        return;
+
+    if (!hasTable(ds, "study", "flags", ehrSchema.getContainer()))
+        return;
+
+    final String tableName = ds.getName();
+    final String queryName = ds.getPublicName();
+    final String schemaName = ds.getPublicSchemaName();
+    final UserSchema targetSchema = ds.getUserSchema();
+    final String ehrPath = ehrSchema.getContainer().getPath();
+
+    WrappedColumn col = new WrappedColumn(pkCol, name);
+    col.setLabel("Flags Alerts Active");
+    col.setReadOnly(true);
+    col.setIsUnselectable(true);
+    col.setUserEditable(false);
+    col.setFk(new LookupForeignKey(){
+        public TableInfo getLookupTableInfo()
+        {
+            String name = tableName + "_flagsAtTime";
+            QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
+            qd.setSql("SELECT\n" +
+                    "sd." + pkCol.getColumnName() + ",\n" +
+                    "group_concat(DISTINCT h.flag.value, chr(10)) as flagsAlertsActive\n" +
+                    "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
+                    "JOIN \"" + ehrPath + "\".study.flags h\n" +
+                    "    ON (sd.id = h.id AND h.flag.category = 'Alert' AND (h.dateOnly <= CAST(NOW() AS DATE) AND ((CAST(NOW() AS DATE) <= h.enddateCoalesced) or h.enddate is null)) AND h.qcstate.publicdata = true)\n" +
+                    "group by sd." + pkCol.getColumnName());
+            qd.setIsTemporary(true);
+
+            List<QueryException> errors = new ArrayList<>();
+            TableInfo ti = qd.getTable(errors, true);
+            if (errors.size() > 0)
+            {
+                _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
+                for (QueryException error : errors)
+                {
+                    _log.error(error.getMessage(), error);
+                }
+                return null;
+            }
+
+            ((MutableColumnInfo)ti.getColumn(pkCol.getName())).setHidden(true);
+            ((MutableColumnInfo)ti.getColumn(pkCol.getName())).setKeyField(true);
+
+            ((MutableColumnInfo)ti.getColumn("flagsAlertsActive")).setLabel("Flags Alerts Active");
+
+            return ti;
+        }
+    });
+
+    ds.addColumn(col);
+}
 
     private void appendProblemsAtTimeCol(final UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
     {

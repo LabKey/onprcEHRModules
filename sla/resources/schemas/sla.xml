@@ -63,7 +63,7 @@
                     <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                     <fkDbSchema>sla</fkDbSchema>
                    <fkTable>SLACageType</fkTable>
-                    <fkColumnName>cagetype</fkColumnName>
+                    <fkColumnName>value</fkColumnName>
 
                 </fk>
             </column>
@@ -73,7 +73,7 @@
                     <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                     <fkDbSchema>sla</fkDbSchema>
                     <fkTable>SLACageSize</fkTable>
-                    <fkColumnName>cagesize</fkColumnName>
+                    <fkColumnName>value</fkColumnName>
                 </fk>
             </column>
             <column columnName="cageCount" />

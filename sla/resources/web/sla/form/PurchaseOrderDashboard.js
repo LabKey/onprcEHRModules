@@ -159,7 +159,7 @@ Ext4.define('SLA.panel.PurchaseOrderDashboard', {
             data: data,
             tpl: new Ext4.XTemplate(
                 '<tpl if="TotalCount != undefined">',
-
+                    '<div class="order-dashboard-warning">Note: All purchase requests must be recieved no later than WEDNESDAY NOON for shipments next week. If you have any questions, Please contact, Kati Marshall: marshalk@ohsu.edu <br> <br></div>',
                     '<div class="order-dashboard-section">',
                         '<div class="order-dashboard-header">Data Entry</div>',
                         '<tpl if="UserCanInsert">',

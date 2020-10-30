@@ -106,6 +106,7 @@ public class GeneticsCoreNotification implements Notification
         getParentageFreezerSamplesNotFlagged(c, u, msg);
 
         getParentageConflicts(c, u, msg);
+        getAncestryConflicts(c, u, msg);
 
         return msg.toString();
     }
@@ -154,6 +155,18 @@ public class GeneticsCoreNotification implements Notification
         {
             ActionURL url = QueryService.get().urlFor(u, c, QueryAction.executeQuery, "study", "parentageConflicts");
             msg.append("<b>WARNING: There are " + count + " animals with duplicate or conflicting parentage calls.</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url.toString() + "'>Click here to view these animals</a><hr>");
+        }
+    }
+
+    public void getAncestryConflicts(Container c, User u, StringBuilder msg)
+    {
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("geneticAncestryConflicts");
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("Id"));
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            ActionURL url = QueryService.get().urlFor(u, c, QueryAction.executeQuery, "study", "geneticAncestryConflicts");
+            msg.append("<b>WARNING: There are " + count + " animals with duplicate or conflicting genetic ancestry calls.</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url.toString() + "'>Click here to view these animals</a><hr>");
         }
     }
 

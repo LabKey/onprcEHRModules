@@ -15,9 +15,14 @@
  */
 SELECT
   v.userId,
-  group_concat(DISTINCT (v.area || CASE WHEN v.priority = true THEN '*' ELSE '' END), chr(10)) as areas,
+
+  group_concat(DISTINCT ( CASE WHEN (v.protocol is not null and v.room is not null)  THEN (v.protocol.displayname || '-' || v.room) ELSE '' END), chr(10)) as Protocol_Room,
+  group_concat(DISTINCT ( CASE WHEN (v.protocol is not null and v.area is not null)  THEN (v.protocol.displayname || '-' || v.area) ELSE '' END), chr(10)) as Protocol_Area,
+  group_concat(DISTINCT (v.protocol.displayName || ' (' || v.protocol.investigatorid.lastname || ')'), chr(10)) as protocols,
   group_concat(DISTINCT (v.room || CASE WHEN v.priority = true THEN '*' ELSE '' END), chr(10)) as rooms,
-  group_concat(DISTINCT (v.protocol.displayName || ' (' || v.protocol.investigatorid.lastname || ')'), chr(10)) as protocols
+  group_concat(DISTINCT (v.area || CASE WHEN v.priority = true THEN '*' ELSE '' END), chr(10)) as areas
+
+
 
 FROM onprc_ehr.vet_assignment v
 GROUP BY v.userId

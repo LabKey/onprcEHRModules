@@ -3,16 +3,18 @@
     <column name="Id"/>
     <column name="Species"/>
     <column name="Gender"/>
-    <column name="Method"/>
-    <column name="BCSDate"/>
-    <column name="MostRecentBCS"/>
+    <column name="CalcMethodReason"/>
+    <column name="date"/>
+    <column name="bcs"/>
     <column name="mostRecentWeightDate"/>
-    <column name="MostRecentWeight"/>
-    <column name="bloodPrevious"/>
-    <column name="bloodFuture"/>
-    <column name="blood_per_kg"/>
-    <column name="AllowableBlood"/>
-    <column name="AvailableBlood"/>
+    <column name="weight"/>
+    <column name="previousDraws"/>
+    <column name="futureDraws"/>
+    <column name="TotalAllowableBlood"/>
+    <column name="TotalAvailableBlood"/>
 
 </columns>
 </customView>
+
+
+

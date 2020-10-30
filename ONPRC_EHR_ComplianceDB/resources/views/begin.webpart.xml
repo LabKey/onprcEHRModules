@@ -1,0 +1,9 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="ONPRC_EHR_Compliance">
+
+    <!--Please note: 10-20-2017 R.Blasa  Comments: This is the name of the Web part "ONRPC_EHR Compliance"-->
+
+    <view name="begin"/>
+    <locations>
+        <location name="body"/>
+    </locations>
+</webpart>

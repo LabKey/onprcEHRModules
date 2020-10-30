@@ -260,7 +260,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         msg.append("<b>Weights:</b><br><br>\n");
 
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
-        filter.addCondition(FieldKey.fromString("Id/MostRecentWeight/DaysSinceWeight"), 60, CompareType.GT);
+        filter.addCondition(FieldKey.fromString("Id/MostRecentWeight/DaysSinceWeight"), 45, CompareType.GT);
         filter.addCondition(FieldKey.fromString("Id/curLocation/Room/housingType/value"), "Cage Location", CompareType.EQUAL);
 
         TableInfo ti = getStudySchema(c, u).getTable("demographics");
@@ -272,8 +272,8 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
 
         if (count > 0)
         {
-            msg.append("WARNING: There are " + count + " animals in cage locations and have not been weighed in the past 60 days: ");
-            String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/MostRecentWeight/DaysSinceWeight~gt=60&query.calculated_status~eq=Alive&query.Id/curLocation/Room/housingType/value~eq=Cage Location";
+            msg.append("WARNING: There are " + count + " animals in cage locations and have not been weighed in the past 45 days: ");
+            String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/MostRecentWeight/DaysSinceWeight~gt=45&query.calculated_status~eq=Alive&query.Id/curLocation/Room/housingType/value~eq=Cage Location";
             msg.append("<b><a href='" + url + "'>Click here to view them.</a></b><br><br>\n");
 
             msg.append("Summary by area:<br>\n");

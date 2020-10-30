@@ -18,7 +18,7 @@ SELECT
   m.id,
   m.date,
   m.gestation_days as gestation_days,
-TIMESTAMPADD('SQL_TSI_DAY',(p.Gestation - m.gestation_days), curdate())   as ExpectedDelivery,
+TIMESTAMPADD('SQL_TSI_DAY',(p.Gestation - m.gestation_days), m.date)   as ExpectedDelivery,
 m.QCState
 
 FROM study.pregnancyConfirmation m

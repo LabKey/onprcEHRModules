@@ -72,13 +72,14 @@
                         var params = item.up('#processingBloodDrawsBtn').getUrlParams();
                         window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
                     }
-                },{
-                    text: 'Download To Excel',
-                    scope: this,
-                    handler: function(item){
-                        var params = item.up('#processingBloodDrawsBtn').getUrlParams();
-                        window.open(LABKEY.ActionURL.buildURL('query', 'exportRowsXLSX', null, params))
-                    }
+//                    Modified: 12-7-2018 R.Blasa Defaults to Open Browser since Export menu limits the size to 100 records
+//                },{
+//                    text: 'Download To Excel',
+//                    scope: this,
+//                    handler: function(item){
+//                        var params = item.up('#processingBloodDrawsBtn').getUrlParams();
+//                        window.open(LABKEY.ActionURL.buildURL('query', 'exportRowsXLSX', null, params))
+//                    }
                 }]
             },{
                 html: '<hr><b>Blood Needed For Viral Surveillance:</b>',
@@ -236,13 +237,13 @@
                     handler: function(item){
                         var params = item.up('#clinicalPeBtn').getUrlParams();
                         window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
-                    }
-                },{
-                    text: 'Download To Excel',
-                    scope: this,
-                    handler: function(item){
-                        var params = item.up('#clinicalPeBtn').getUrlParams();
-                        window.open(LABKEY.ActionURL.buildURL('query', 'exportRowsXLSX', null, params))
+//                    }
+//                },{
+//                    text: 'Download To Excel',
+//                    scope: this,
+//                    handler: function(item){
+//                        var params = item.up('#clinicalPeBtn').getUrlParams();
+//                        window.open(LABKEY.ActionURL.buildURL('query', 'exportRowsXLSX', null, params))
                     }
                 }]
             }]

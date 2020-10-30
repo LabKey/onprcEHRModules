@@ -15,34 +15,23 @@ EHR.model.DataModelManager.registerMetadata('ProjectAnimalConditions', {
 
             assignCondition: {
                 allowBlank: false,
-
-                columnConfig: {
-                    width: 200
-                },
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)
                     ]
                 }
 
-            }  ,
+            } ,
             projectedReleaseCondition: {
                 allowBlank: false,
-                columnConfig: {
-                    width: 20
-                },
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)
                     ]
                 }
 
-
             },
-            releaseCondition: {
-                columnConfig: {
-                    width: 200
-                },
+
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)
@@ -50,7 +39,6 @@ EHR.model.DataModelManager.registerMetadata('ProjectAnimalConditions', {
                 }
 
             }
-        }
 
     }
     });

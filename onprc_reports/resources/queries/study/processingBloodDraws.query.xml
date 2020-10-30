@@ -7,6 +7,9 @@
                     <column columnName="isU42">
                         <columnTitle>Is U42?</columnTitle>
                     </column>
+                    <column columnName="PCRBloodVolume">
+                        <columnTitle>PCR Blood Volume (mL)</columnTitle>
+                    </column>
                     <column columnName="serologyBloodVol">
                         <columnTitle>Serology Blood Vol (mL)</columnTitle>
                     </column>

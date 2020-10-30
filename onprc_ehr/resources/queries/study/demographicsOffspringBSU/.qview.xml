@@ -1,0 +1,22 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="gender"/>
+        <column name="Relationship"/>
+        <column name="Offspring"/>
+        <column name="offspringgender"/>
+        <column name="birth"/>
+        <column name="birthType"/>
+        <column name="status"/>
+        <column name="geneticdam"/>
+        <column name="observeddam"/>
+        <column name="fosterMom"/>
+        <column name="sire"/>
+        <column name="sireType"/>
+
+
+    </columns>
+    <sorts>
+        <sort column="Id" />
+    </sorts>
+</customView>

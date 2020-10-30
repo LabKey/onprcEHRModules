@@ -177,9 +177,13 @@
                             window.location = LABKEY.ActionURL.buildURL('ehr', 'projectDetails', ctx['EHRStudyContainer'], {project:value});
                         }
                     },{
-                        html: '<a href="' + (LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'ehr', 'query.queryName': 'project', 'query.viewName': 'Active Projects'})) + '">[View Active Projects]</a> <a href="' + (LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'ehr', 'query.queryName': 'project'})) + '">[View All Projects]</a>',
+                        html: '<a href="' + (LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'ehr', 'query.queryName': 'project', 'query.viewName': 'Active Projects'})) + '">[View Active Projects]</a>    ' +
+                        ' <a href="' + (LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'ehr', 'query.queryName': 'project'})) + '">[View  All Projects]</a> ' +
+                        ' <a href="' + (LABKEY.ActionURL.buildURL('query', 'executeQuery', ctx['EHRStudyContainer'], {schemaName: 'onprc_billing_public', 'query.queryName': 'DCMCenterProjecttoAlias'})) + '" >[View Center Project To Alias]</a>',
                         colspan: 2
+
                     },{
+
                         html: 'IACUC Protocol:',
                         style: 'padding-top: 10px;',
                         colspan: 2
@@ -308,9 +312,29 @@
             }
         });
 
-        Ext4.create('onprc_ehr.panel.QuickSearchPanel', {
+        var panel = Ext4.create('onprc_ehr.panel.QuickSearchPanel', {
 //            hoverPart: HoverNavigation.Parts[webpart.hoverPartName]
-        }).render(webpart.wrapperDivId);
+        });
+        panel.render(webpart.wrapperDivId);
+
+        // Ensure proper layout if webpart came back from the server after the menu item was already collapsed and didn't
+        // render to the desired size
+
+        var div = Ext4.get(webpart.wrapperDivId);
+
+        var menu = div.up('.dropdown');
+        if (menu) {
+            var obs = new MutationObserver(function (mutationsList) {
+                for (var i = 0; i < mutationsList.length; i++) {
+                    var mutation = mutationsList[i];
+                    if (mutation.attributeName === 'class') {
+                        panel.doLayout();
+                    }
+                }
+            });
+            obs.observe(menu.dom, {attributes: true});
+        }
+
     }
 
 </script>

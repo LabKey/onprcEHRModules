@@ -63,7 +63,9 @@ public class ClinicalRoundsFormType extends TaskForm
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("ClinicalDefaults");
-            s.addConfigSource("ClinicalRounds");
+
+            //Modified: 10-5-2017  R.Blasa
+            s.addConfigSource("ClinicalRounds_ONPRC");
             s.setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NONE);
         }
 

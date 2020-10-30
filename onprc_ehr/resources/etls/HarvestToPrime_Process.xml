@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>Harvest_To_Prime_Process</name>
+
+    <description>Transfers LIS schema temp tables into study dataset lab values</description>
+
+
+    <transforms>
+
+        <transform id="Stored_HarvestToPrime" type="StoredProcedure">
+            <description>Runs a stored procedure that generates lab values</description>
+            <procedure schemaName="LIS" procedureName="p_HarvestToPrimeExportProcess">
+            </procedure>
+        </transform>
+
+
+        <transform id="step1a">
+
+            <description>Transfer to EHR Tasks</description>
+
+            <source schemaName="LIS" queryName="TasksTemp"/>
+
+            <destination schemaName="EHR" queryName="tasks"  />
+
+        </transform>
+
+        <transform id="step2a">
+
+            <description>Transfer to ClinpathRuns</description>
+
+            <source schemaName="LIS" queryName="ClinPathRunsTemp"/>
+
+            <destination schemaName="STUDY" queryName="clinpathRuns" />
+
+        </transform>
+
+        <transform id="step3a">
+
+            <description>Transfer to ChemistryResults</description>
+
+            <source schemaName="LIS" queryName="ChemResultsTemp"/>
+
+            <destination schemaName="STUDY" queryName="chemistryResults" />
+
+        </transform>
+
+        <transform id="step4a">
+
+            <description>Transfer to HematologyResults</description>
+
+            <source schemaName="LIS" queryName="HematologyResultsTemp"/>
+
+            <destination schemaName="STUDY" queryName="HematologyResults" />
+
+        </transform>
+
+        <transform id="step5a">
+
+            <description>Transfer to EHR Requests</description>
+
+            <source schemaName="LIS" queryName="RequestTemp"/>
+
+            <destination schemaName="EHR" queryName="requests"  />
+
+        </transform>
+
+
+    </transforms>
+
+    <schedule>
+
+        <cron expression="0 0/10 * * * ?"/>
+
+    </schedule>
+
+
+</etl>
+
+
+
+
