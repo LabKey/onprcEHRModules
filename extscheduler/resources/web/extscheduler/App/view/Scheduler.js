@@ -17,6 +17,7 @@ Ext.define('App.view.Scheduler', {
     eventResizeHandles   : 'none',
     eventBodyTemplate    :'<b>{Name:htmlEncode}</b><br/>{ResourceName:htmlEncode}<br/>{UserDisplayName:htmlEncode}',
     snapToIncrement      : true,
+    allowOverlap         : true,
     highlightCurrentTime : true,
     calendarTimeAxisCfg  : {
         height : 30

@@ -33,7 +33,8 @@ END as status,
 c.remark,
 c.taskid,
 c.runId,
-c.qcstate
+c.qcstate,
+ r.type
 
 FROM (
     SELECT
@@ -53,6 +54,7 @@ FROM (
     c.date,
     c.runId,
     c.remark,
+    c.type,
     ROUND(CONVERT(age_in_months(c.id.dataset.demographics.birth, c.date), DOUBLE) / 12.0, 1) as ageAtTime
     FROM "Chemistry Results" c
     WHERE c.qcstate.publicdata = true
@@ -66,9 +68,9 @@ FROM (
 
 LEFT JOIN ehr_lookups.lab_test_range r ON (
   c.testId = r.test AND
-  c.species = r.species AND
+  (c.species = r.species or (c.species is not null and r.species is null)) AND
   --(ac.ageClass = r.age_class OR (ac.ageClass IS NULL AND r.age_class IS NULL)) AND
-  c.gender = r.gender and
-  r.type = 'Chemistry'
+  (c.gender = r.gender or (c.gender is not null and r.gender is null))  and
+  coalesce(c.type,'Biochemistry') = r.type
 )
 

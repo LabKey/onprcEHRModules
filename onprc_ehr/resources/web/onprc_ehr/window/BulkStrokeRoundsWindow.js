@@ -97,13 +97,13 @@ Ext4.define('ONPRC_EHR.window.BulkStrokeRoundsWindow', {
                 errors.push('Row ' + rowIdx + ': not enough items in row');
                 continue;
             }
-            var id = parsed[0][1];
+            var id = Ext4.String.trim(parsed[0][1]);
             if (!id){
                 errors.push('Row ' + rowIdx + ': missing Id');
                 return;
             }
-            var procedure = parsed[5][1];
-            var narrative = parsed[6][1];
+            var procedure = Ext4.String.trim(parsed[5][1]);
+            var narrative = Ext4.String.trim(parsed[6][1]);
             //var project = this.resolveProjectByName(parsed[4][1], errors, rowIdx);
             var project = EHR.DataEntryUtils.getDefaultClinicalProject();
             var cnt = i;
@@ -121,7 +121,7 @@ Ext4.define('ONPRC_EHR.window.BulkStrokeRoundsWindow', {
         //Procedure
         if (recordMap.encounters.length){
             var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('encounters');
-            LDK.Assert.assertNotEmpty('Unable to find procedure store in BulkStrokeRoundsWindow', clientStore);
+            LDK.Assert.assertNotEmpty('Unable to find procedure store in BulkStrokeRoundsWindow ', clientStore);
 
             var records = [];
             for (var i=0;i<recordMap.encounters.length;i++){

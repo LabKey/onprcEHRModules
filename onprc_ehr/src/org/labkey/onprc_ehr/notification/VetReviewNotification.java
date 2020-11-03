@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/*promoting to uat for verification*/
 package org.labkey.onprc_ehr.notification;
 
 import org.labkey.api.data.ColumnInfo;
@@ -43,7 +45,7 @@ import java.util.Map;
  */
 public class VetReviewNotification extends ColonyAlertsNotification
 {
-    public VetReviewNotification(Module owner)
+    public VetReviewNotification (Module owner)
     {
         super(owner);
     }
@@ -83,7 +85,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
     {
         StringBuilder msg = new StringBuilder();
 
-        remarksWithoutAssignedVet(c, u, msg);
+       /* remarksWithoutAssignedVet(c, u, msg);*/
         vetRecordsUnderReview(c, u, msg);
         animalsWithoutAssignedVet(c, u, msg);
 
@@ -97,22 +99,25 @@ public class VetReviewNotification extends ColonyAlertsNotification
         doRemarkQuery(c, u, msg, filter, "ALERT: The following animals that have remarks entered at least " + duration + " days ago, but have not yet been reviewed.");
     }
 
-    public void remarksWithoutAssignedVet(Container c, User u, final StringBuilder msg)
-    {
+    /*public void remarksWithoutAssignedVet(Container c, User u, final StringBuilder msg);
+     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/assignedVet/assignedVet"), null, CompareType.ISBLANK);
         filter.addCondition(FieldKey.fromString("totalRemarksEnteredSinceReview"), 0, CompareType.GT);
         doRemarkQuery(c, u, msg, filter, "ALERT: The following animals that have remarks entered, but the animal is not currently assigned to a vet.");
-    }
+    }*/
 
     public void doRemarkQuery(Container c, User u, final StringBuilder msg, SimpleFilter filter, String header)
     {
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("demographics");
+        //TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("demographics_AssignedVetNotification");
+//        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("demographics_VetAssignment_Notification");
+        //Changed by Kollil on 6/19/2019. Created a new query to get the vet assignment info
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("demographics_Vet_Assignment_Alert");
         final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, PageFlowUtil.set(
                 FieldKey.fromString("Id"),
                 FieldKey.fromString("calculated_status"),
                 FieldKey.fromString("earliestRemarkSinceReview"),
                 FieldKey.fromString("lastVetReview"),
-                FieldKey.fromString("Id/assignedVet/assignedVet")
+                FieldKey.fromString("assignedVet")
         ));
 
         TableSelector ts = new TableSelector(ti, cols.values(), filter, new Sort("Id"));
@@ -127,7 +132,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
 
                 rows.add("<tr><td>" +
                         "<a href='" + urlBase + rs.getString(FieldKey.fromString("Id")) + "'>" + rs.getString(FieldKey.fromString("Id")) + "</a></td>" +
-                        "<td>" + (rs.getString(FieldKey.fromString("Id/assignedVet/assignedVet")) == null ? "NONE" : rs.getString(FieldKey.fromString("Id/assignedVet/assignedVet"))) + "</td>" +
+                        "<td>" + (rs.getString(FieldKey.fromString("assignedVet")) == null ? "NONE" : rs.getString(FieldKey.fromString("assignedVet"))) + "</td>" +
                         "<td>" + getDateFormat(c).format(rs.getDate(FieldKey.fromString("earliestRemarkSinceReview"))) + "</td>" +
                         "<td>" + (rs.getDate(FieldKey.fromString("lastVetReview")) == null ? "Never" : getDateFormat(c).format(rs.getDate(FieldKey.fromString("lastVetReview")))) + "</td>" +
                         "<td>" + rs.getString(FieldKey.fromString("calculated_status")) + "</td>" +
@@ -152,7 +157,10 @@ public class VetReviewNotification extends ColonyAlertsNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("Id/assignedVet/assignedVet"), null, CompareType.ISBLANK);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("demographics"), filter, null);
+        //TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("demographics_AssignedVetNotification"), filter, null);
+//        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("demographics_VetAssignment_Notification"), filter, null);
+        //Changed by Kollil on 6/19/2019. Created a new query to get the vet assignment info
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("demographics_Vet_Assignment_Alert"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {

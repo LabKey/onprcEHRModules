@@ -52,6 +52,8 @@
             </column>
             <column columnName="Name" />
             <column columnName="Alias" />
+            <column columnName="Quantity" />
+            <column columnName="Comments" />
             <column columnName="UserId">
                 <columnTitle>User</columnTitle>
                 <fk>
@@ -96,5 +98,46 @@
             </column>
         </columns>
     </table>
-
+    <table tableName="vw_Covid19Research" tableDbType="VIEW">
+        <columns>
+            <column columnName="SChedulerID"/>
+            <column columnName="ResourceId"/>
+            <column columnName="ResourceName"/>
+            <column columnName="Name"/>
+            <column columnName="StartDate"/>
+            <column columnName="UserId"/>
+            <column columnName="CreatedBy"/>
+            <column columnName="Created"/>
+            <column columnName="Quantity"/>
+            <column columnName="EmployeeID"/>
+        </columns>
+    </table>
+    <table tableName="dateParts" tableDbType="TABLE">
+        <columns>
+            <column columnName="date"/>
+            <column columnName="dateOnly"/>
+            <column columnName="DayOfYear"/>
+            <column columnName="DayofMonth"/>
+            <column columnName="DayofWeek"/>
+            <column columnName="DayName"/>
+            <column columnName="WeekofMonth"/>
+            <column columnName="WeekofYear"/>
+            <column columnName="Month"/>
+            <column columnName="year"/>
+        </columns>
+    </table>
+    <table tableName="vw_Covid19DCMSchedule" tableDbType="VIEW">
+        <columns>
+            <column columnName="SChedulerID"/>
+            <column columnName="ResourceId"/>
+            <column columnName="ResourceName"/>
+            <column columnName="Name"/>
+            <column columnName="StartDate"/>
+            <column columnName="UserId"/>
+            <column columnName="CreatedBy"/>
+            <column columnName="Created"/>
+            <column columnName="Quantity"/>
+            <column columnName="EmployeeID"/>
+        </columns>
+    </table>
 </tables>

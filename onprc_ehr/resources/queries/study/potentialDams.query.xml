@@ -5,6 +5,13 @@
                 <tableTitle>Potential Dams</tableTitle>
                 <description>This query identifies all female animals co-housed in the same room/cage at time of birth</description>
                 <columns>
+                    <column columnName="Id">
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>Id</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="damAgeAtTime">
                         <columnTitle>Dam Age At Birth (years)</columnTitle>
                     </column>

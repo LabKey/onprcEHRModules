@@ -28,5 +28,12 @@
                 <permission>ADMIN</permission>
             </editPermissions>
         </propertyDescriptor>
+        <propertyDescriptor name="DCM_NHP_Resources_Container">
+            <canSetPerContainer>true</canSetPerContainer>
+            <defaultValue>/ONPRC/DCM/NHP Resources</defaultValue>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
     </properties>
 </module>

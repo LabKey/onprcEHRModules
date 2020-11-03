@@ -1,3 +1,4 @@
+//update to add new data set
 package org.labkey.extscheduler;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,7 @@ public class ExtSchedulerModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 15.28;
+        return 20.603;
     }
 
     @Override

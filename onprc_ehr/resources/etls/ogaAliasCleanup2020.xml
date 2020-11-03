@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--update of procedure to production for daily run-->
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>ogaAliasCleanUp2020</name>
+
+    <description>Code to enddate or remove Aliases not Assocatied with ONPRC </description>
+
+
+    <transforms>
+        <transform id="AliasCleanup" type="StoredProcedure">
+            <description>Code to enddate or remove Aliases not Assocatied with ONPRC.</description>
+            <procedure schemaName="onprc_billing" procedureName="oga_AliasCleanup2020">
+            </procedure>
+        </transform>
+
+
+    </transforms>
+
+    <!--
+
+        <schedule><cron expression="0 0 0 * * ?" /></schedule>-->
+
+
+</etl>

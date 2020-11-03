@@ -40,13 +40,17 @@ SELECT
     WHEN (alias.category IS NOT NULL AND alias.category != 'OGA') THEN cr.unitCost
     --if we dont know the aliasType, we also dont know what do to
     WHEN (alias.aliasType.aliasType IS NULL) THEN null
-    --remove both subsidy and raise F&A if needed
-    WHEN (alias.aliasType.removeSubsidy = true AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN ((cr.unitCost / (1 - COALESCE(cr.subsidy, 0))) * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN (1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE) - alias.faRate)) ELSE 1 END))
+    --remove both subsidy and raise F&A if needed------- Changed by Kollil on 5/19/17
+     WHEN (alias.aliasType.removeSubsidy = true AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN ((cr.unitCost / (1 - COALESCE(cr.subsidy, 0))) * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN
+    ((1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE) / (1 + alias.faRate)))) ELSE 1 END))
+
     --remove subsidy only
     WHEN (alias.aliasType.removeSubsidy = true AND alias.aliasType.canRaiseFA = false) THEN (cr.unitCost / (1 - COALESCE(cr.subsidy, 0)))
+
     --raise F&A only
-    WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN (1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE) - alias.faRate)) ELSE 1 END))
-    --the NIH rate
+    --WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN (1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE) - alias.faRate)) ELSE 1 END))
+   WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN ((1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)))/(1+ alias.faRate)) ELSE 1 END))
+ --the NIH rate
     ELSE cr.unitCost
   END AS DOUBLE), 2) as unitCost,
   cr.unitCost as nihRate,
@@ -55,7 +59,7 @@ SELECT
 
   cast(ce.account as varchar(200)) as creditAccount,
   ce.rowid as creditAccountId,
-  coalesce(alias.investigatorId, p.project.investigatorId) as investigatorId,
+  alias.investigatorId as investigatorId,
   CASE
     WHEN e.unitCost IS NOT NULL THEN 'Y'
     WHEN pm.multiplier IS NOT NULL THEN ('Multiplier: ' || CAST(pm.multiplier AS varchar(100)))
@@ -93,7 +97,7 @@ SELECT
     ELSE null
   END as isExpiredAccount,
   CASE WHEN (TIMESTAMPDIFF('SQL_TSI_DAY', p.date, curdate()) > 45) THEN 'Y' ELSE null END as isOldCharge,
-  p.project.account as currentActiveAlias
+  p.project as currentActiveAlias
 
 FROM onprc_billing.slaPerDiems p
 

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NIHReducedRates</title>
+</head>
+<body>
+<script>
+    Ext4.onReady(function() {
+        var filterField = {
+            xtype      : 'numberfield',
+            itemId     : 'filter-field',
+            fieldLabel : 'Project F&A',
+            width      : 200,
+            hideTrigger: true,
+            minValue   : 0,
+            maxValue   : 0.47
+        };
+
+        var submitBtn = {
+            xtype   : 'button',
+            text    : 'Retrieve Reduced F&A Rates',
+            border  : true,
+            handler : function(btn)
+            {
+                var panel = btn.up('panel');
+                var faRate = panel.down('#filter-field').getValue();
+                if ((faRate >= .01) && (faRate < .48))
+                {
+                    var qwp = new LABKEY.QueryWebPart({
+                        schemaName : 'onprc_billing_public',
+                        queryName  : panel.queryName, // Change to use a different list, for example: 'Instruments'
+                        renderTo   : 'RARateDiv',
+                        title      : 'Reduced F&A Rates',
+                        parameters : {ProjectFA: faRate}
+                    });
+
+                }
+                else
+                {
+                    Ext4.Msg.alert('Error', 'You must enter a rate between 0 and .47');
+                }
+            }
+        };
+
+        Ext4.create('Ext.form.FormPanel', {
+            renderTo : 'theFormDiv',
+            bodyStyle: 'padding: 5px;',
+            queryName: 'NIHRates_ReducedFA',
+            title    : 'Reduced F&A Rates: Enter the Project F&A Percentage To Use',
+            defaults: {
+                border: false
+            },
+            items    : [ {html: 'Please enter a value between 0 and .47', style: 'padding-bottom: 10px;'}, filterField , submitBtn ]
+        });
+
+    });
+
+</script>
+
+<h2>Reduced F&A Rate Sheet</h2>
+<div id='theFormDiv'></div>
+<div id='RARateDiv'></div>
+</body>
+</html>

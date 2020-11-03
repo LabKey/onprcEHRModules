@@ -5,11 +5,12 @@
  */
 
   /*   Created  Blasa    2-13-2015  Provide Distinct SLA Cage Type Reference table */
+--  Modified:R.blasa   5-23-2017
 
-  select    distinct  cagetype
-   from  onprc_billing.slaPerDiemFeeDefinition b
-   Where active = True
-   order by cagetype
+  select  value
+   from  sla.Reference_Data
+   Where columnName = 'cagetype'
+   order by sort_order
 
 
 

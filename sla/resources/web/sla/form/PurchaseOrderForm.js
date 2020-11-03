@@ -170,7 +170,7 @@ Ext4.define('SLA.form.PurchaseForm', {
             name: 'hazardslist',
             value: this.initData['hazardslist'],
             disabled: this.isUpdate && !LABKEY.user.canUpdate,
-            fieldLabel: 'List Biological or Chemical agents (Required for NSI 0123D, NSI 0125D)',
+            fieldLabel: 'List Biological or Chemical agents (Required for NSI 0123D, NSI 0125D, NSI 0134)',
             labelWidth: this.FIELD_LABEL_WIDTH
         });
 

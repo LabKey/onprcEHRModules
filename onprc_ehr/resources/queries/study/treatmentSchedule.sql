@@ -87,8 +87,10 @@ JOIN study."Treatment Orders" t1
   --NOTE: should the enddate consider date/time?
   ON (dr.dateOnly >= t1.dateOnly and dr.dateOnly <= t1.enddateCoalesced AND
       --technically the first day of the treatment is day 1, not day 0
-      mod(CAST(timestampdiff('SQL_TSI_DAY', CAST(t1.dateOnly as timestamp), dr.dateOnly) as integer), t1.frequency.intervalindays) = 0
-  )
+  (  (mod(CAST(timestampdiff('SQL_TSI_DAY', CAST(t1.dateOnly as timestamp), dr.dateOnly) as integer), t1.frequency.intervalindays) = 0 And t1.frequency.intervalindays is not null And t1.frequency.dayofweek is null )
+
+   OR (t1.frequency.dayofweek is not null And t1.frequency.intervalindays is null And dr.DayOfWeek in (select k.value from onprc_ehr.Frequency_DayofWeek k where k.FreqKey = t1.frequency.rowid ) ) )
+      )
 
 LEFT JOIN ehr.treatment_times tt ON (tt.treatmentid = t1.objectid)
 LEFT JOIN ehr_lookups.treatment_frequency_times ft ON (ft.frequency = t1.frequency.meaning AND tt.rowid IS NULL)
@@ -110,7 +112,8 @@ WHERE t1.date is not null
 
 ) s ON (s.animalid = d.id)
 
-WHERE d.calculated_status = 'Alive'
+WHERE (d.lastDayatCenter Is Null or d.lastDayAtCenter > s.enddate)
+
 
 --account for date/time in schedule
 and s.date >= s.startDate and s.date <= s.enddate

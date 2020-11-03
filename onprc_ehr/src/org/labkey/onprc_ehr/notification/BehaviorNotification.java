@@ -114,17 +114,17 @@ public class BehaviorNotification extends ColonyAlertsNotification
         return msg.toString();
     }
 
+//    Modified: 9-7-2018  R.Blasa
     private void behaviorCaseSummary(Container c, User u, final StringBuilder msg)
     {
-        TableInfo ti = getStudySchema(c, u).getTable("cases");
+        TableInfo ti = getStudySchema(c, u).getTable("mostRecentObservationsBehavior");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true);
-        filter.addCondition(FieldKey.fromString("category"), "Behavior");
 
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("Id"), filter, null);
         long total = ts.getRowCount();
         msg.append("<b>Behavior Cases:</b><p>");
         msg.append("There are " + total + " active behavior cases (this does not include cases closed for review).  ");
-        String url = getExecuteQueryUrl(c, "study", "cases", "Open Behavior Cases") + "&query.isActive~eq=true";
+        String url = getExecuteQueryUrl(c, "study", "mostRecentObservationsBehavior", "Open Behavior Case") + "&query.isActive~eq=true";
         msg.append("<a href='" + url + "'>Click here to view them</a>");
         msg.append("<hr>");
     }

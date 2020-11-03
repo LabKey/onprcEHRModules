@@ -25,7 +25,8 @@ SELECT
   c.remark,
   c.mostRecentP2,
   c.isActive,
-  c.assignedvet
+  c.assignedvet,
+  c.mostRecentCeg_Plan
 
 FROM study.cases c
 WHERE c.isActive = true AND c.category = 'Clinical'
@@ -33,9 +34,8 @@ WHERE c.isActive = true AND c.category = 'Clinical'
 UNION ALL
 
 SELECT
-  d.Id,
-  d.date,
-
+  h.Id,
+  h.date,
   null as enddate,
   null as reviewdate,
   null as category,
@@ -45,7 +45,9 @@ SELECT
   null as remark,
   null as mostrecentP2,
   null as isActive,
-  null as assignedVet
+  null as assignedVet,
+  null as mostRecentCeg_Plan
 
-FROM study.demographicsCurrentLocation d
-WHERE d.area = 'Hospital' AND (d.Id.activecases.categories NOT LIKE '%Clinical%' OR d.Id.activecases.categories IS NULL)
+FROM study.housing h
+WHERE h.room.area = 'Hospital' and h.enddate is null
+and h.id not in (Select c1.id from study.cases c1 where c1.id = h.id and c1.IsActive = true)

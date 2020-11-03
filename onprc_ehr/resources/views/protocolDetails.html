@@ -33,6 +33,10 @@ Ext4.onReady(function (){
         tag: 'div',
         style: 'padding-bottom: 10px;',
         id: 'housingSummary_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'housingSummarySpecie_' + webpart.wrapperDivId
     }];
 
     var el = Ext4.get(webpart.wrapperDivId);
@@ -119,10 +123,19 @@ Ext4.onReady(function (){
         title: 'Housing Summary',
         schemaName: 'study',
         queryName: 'protocolHousingSummary',
-        columns: 'room,room/housingType,totalAnimals',
+        columns: 'room,room/housingType,room/housingCondition,totalAnimals',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback()
     }).render('housingSummary_' + webpart.wrapperDivId);
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Housing Summary By Specie',
+        schemaName: 'study',
+        queryName: 'protocolHousingSummary_Species',
+        columns: 'id/demographics/species,totalAnimals',
+        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        failure: LDK.Utils.getErrorCallback()
+    }).render('housingSummarySpecie_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
         title: 'Projects Under This Protocol',

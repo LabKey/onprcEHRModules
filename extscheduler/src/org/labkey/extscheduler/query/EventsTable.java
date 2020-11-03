@@ -39,7 +39,9 @@ public class EventsTable extends FilteredTable<ExtSchedulerQuerySchema>
         wrapAllColumns(true);
 
         SqlDialect dialect = getSchema().getSqlDialect();
-        SQLFragment isOwnerSQL = new SQLFragment("CASE WHEN "+ ExprColumn.STR_TABLE_ALIAS +".UserId = ? OR " + ExprColumn.STR_TABLE_ALIAS +".CreatedBy = ? THEN "
+
+//  Modified: 6-19-2020  R.Blasa  Allow future events to be displayed
+        SQLFragment isOwnerSQL = new SQLFragment("CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".StartDate >=  {fn now()}  AND (" + ExprColumn.STR_TABLE_ALIAS +".UserId = ? OR " + ExprColumn.STR_TABLE_ALIAS +".CreatedBy = ? ) THEN "
                 + dialect.getBooleanTRUE() + " ELSE " + dialect.getBooleanFALSE() + " END");
         isOwnerSQL.add(schema.getUser().getUserId());
         isOwnerSQL.add(schema.getUser().getUserId());
@@ -51,12 +53,10 @@ public class EventsTable extends FilteredTable<ExtSchedulerQuerySchema>
         // disable bulk import for all users
         setImportURL(AbstractTableInfo.LINK_DISABLER);
 
-        // only allow admins to see insert new button and edit links
-        if (!getContainer().hasPermission(schema.getUser(), AdminPermission.class))
-        {
-            setInsertURL(AbstractTableInfo.LINK_DISABLER);
-            setUpdateURL(AbstractTableInfo.LINK_DISABLER);
-        }
+
+//       Added: 6-15-2020  R.Blasa    allowed delete option
+//        setDeleteURL(AbstractTableInfo.LINK_DISABLER);
+
     }
 
     @Override

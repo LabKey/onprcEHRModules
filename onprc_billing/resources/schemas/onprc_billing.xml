@@ -1,4 +1,4 @@
-<tables xmlns="http://labkey.org/data/xml">
+<tables xsi:schemaLocation="http://labkey.org/data/xml ..\..\..\..\schemas\tableInfo.xsd" xmlns="http://labkey.org/data/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <table tableName="chargeRates" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Charge Rates</tableTitle>
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
@@ -18,7 +18,7 @@
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="container"/>
             <column columnName="createdBy"/>
@@ -52,7 +52,7 @@
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="container"/>
             <column columnName="createdBy"/>
@@ -97,7 +97,7 @@
                 <columnTitle>Service Center</columnTitle>
                 <description>A code used to categorize these items by department, primarily used when exporting or communicating with external billing systems.  Similar to itemCode</description>
             </column>
-                <column columnName="allowscustomunitcost">
+            <column columnName="allowscustomunitcost">
                 <columnTitle>Allow Custom Unit Cost?</columnTitle>
             </column>
             <column columnName="allowblankid">
@@ -118,11 +118,12 @@
             <column columnName="modified"/>
             <column columnName="startDate">
                 <columnTitle>Start Date</columnTitle>
+                <formatString>Date</formatString>
             </column>
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
         </columns>
     </table>
@@ -156,6 +157,7 @@
             </column>
             <column columnName="date">
                 <columnTitle>Transaction Date</columnTitle>
+                <formatString>Date</formatString>
             </column>
             <column columnName="item">
                 <columnTitle>Item</columnTitle>
@@ -290,11 +292,14 @@
                 <isHidden>true</isHidden>
             </column>
             <column columnName="createdBy"/>
-            <column columnName="created"/>
+            <column columnName="created">
+                <formatString>Date</formatString>
+            </column>
             <column columnName="modifiedBy"/>
             <column columnName="modified"/>
         </columns>
         <buttonBarOptions includeStandardButtons="true">
+            <includeScript>Ext4</includeScript>
             <includeScript>ehr.context</includeScript>
             <includeScript>/onprc_billing/window/ReverseChargeWindow.js</includeScript>
             <item insertPosition="end" text="More Actions" permissionClass="org.labkey.onprc_billing.security.ONPRCBillingAdminPermission">
@@ -321,16 +326,18 @@
             <column columnName="startDate">
                 <columnTitle>Start Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="container"/>
             <column columnName="createdBy"/>
-            <column columnName="created"/>
+            <column columnName="created">
+                <formatString>Date</formatString>
+            </column>
             <column columnName="modifiedBy"/>
             <column columnName="modified"/>
         </columns>
@@ -347,7 +354,7 @@
             <column columnName="date">
                 <columnTitle>Date of Charge</columnTitle>
                 <description>This column typically refers to the date the charge took place (ie. date blood was drawn).  This differs from the column labeled Date Charge Created, which refers to the date the charge was actually entered into the system.  This column is used in the IBS sheet; however, it is not used to determine which billing period the item falls into.</description>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="project"/>
             <column columnName="debitedaccount">
@@ -535,6 +542,7 @@
                 <columnTitle>Housing Type</columnTitle>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>housingTypes</fkTable>
                     <fkColumnName>rowid</fkColumnName>
@@ -545,6 +553,7 @@
                 <columnTitle>Housing Definition</columnTitle>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>housingDefinition</fkTable>
                     <fkColumnName>rowid</fkColumnName>
@@ -569,12 +578,12 @@
             <column columnName="startDate">
                 <columnTitle>Start Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
         </columns>
     </table>
@@ -625,12 +634,12 @@
             <column columnName="startDate">
                 <columnTitle>Start Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
         </columns>
     </table>
@@ -650,10 +659,12 @@
             </column>
             <column columnName="billingPeriodStart">
                 <columnTitle>Billing Period Start</columnTitle>
+                <formatString>Date</formatString>
                 <nullable>false</nullable>
             </column>
             <column columnName="billingPeriodEnd">
                 <columnTitle>Billing Period End</columnTitle>
+                <formatString>Date</formatString>
                 <nullable>false</nullable>
             </column>
             <column columnName="invoiceNumber">
@@ -751,12 +762,12 @@
             <column columnName="startDate">
                 <columnTitle>Start Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
         </columns>
     </table>
@@ -853,7 +864,7 @@
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <isHidden>true</isHidden>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="fiscalAuthority">
                 <columnTitle>Fiscal Authority</columnTitle>
@@ -876,9 +887,11 @@
             </column>
             <column columnName="budgetStartDate">
                 <columnTitle>Budget Start Date</columnTitle>
+                <formatString>Date</formatString>
             </column>
             <column columnName="budgetEndDate">
                 <columnTitle>Budget End Date</columnTitle>
+                <formatString>Date</formatString>
             </column>
             <column columnName="comment">
                 <columnTitle>Comment</columnTitle>
@@ -911,6 +924,7 @@
                 <columnTitle>Charge Type</columnTitle>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>procedureChargeType</fkTable>
                     <fkColumnName>value</fkColumnName>
@@ -920,6 +934,7 @@
                 <columnTitle>Assisting Staff</columnTitle>
                 <nullable>true</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>procedureChargeType</fkTable>
                     <fkColumnName>value</fkColumnName>
@@ -941,12 +956,12 @@
             <column columnName="startDate">
                 <columnTitle>Start Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
         </columns>
     </table>
@@ -966,6 +981,7 @@
                 <columnTitle>SNOMED Code</columnTitle>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>snomed</fkTable>
                     <fkColumnName>code</fkColumnName>
@@ -976,6 +992,7 @@
                 <description>If provided, only medications using this route will be billed.  Can be left blank for all routes.</description>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>routes</fkTable>
                     <fkColumnName>route</fkColumnName>
@@ -993,12 +1010,12 @@
             <column columnName="startDate">
                 <columnTitle>Start Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
         </columns>
     </table>
@@ -1020,14 +1037,14 @@
             <column columnName="startdate">
                 <columnTitle>Start Date</columnTitle>
                 <description>This column refers to the date that this alias was first associated with this project.  In other words, this alias is the active alias for the project between the dates listed.</description>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
                 <nullable>false</nullable>
             </column>
             <column columnName="enddate">
                 <columnTitle>End Date</columnTitle>
                 <description>This column refers to the date that this alias is no longer associated with this project.  In other words, this alias is the active alias for the project between the dates listed.</description>
                 <nullable>true</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <!--TODO: add container-->
             <column columnName="objectid"/>
@@ -1087,9 +1104,11 @@
             </column>
             <column columnName="budgetStartDate">
                 <columnTitle>Current Budget Start Date</columnTitle>
+                <formatString>Date</formatString>
             </column>
             <column columnName="budgetEndDate">
                 <columnTitle>Current Budget End Date</columnTitle>
+                <formatString>Date</formatString>
             </column>
             <column columnName="fiscalAuthority">
                 <columnTitle>Fiscal Authority</columnTitle>
@@ -1133,9 +1152,11 @@
             </column>
             <column columnName="grantNumber">
                 <columnTitle>OGA Grant Number</columnTitle>
+               
             </column>
             <column columnName="agencyAwardNumber">
                 <columnTitle>Agency Award Number</columnTitle>
+               
             </column>
             <column columnName="investigatorId">
                 <columnTitle>Investigator</columnTitle>
@@ -1155,9 +1176,11 @@
             </column>
             <column columnName="budgetStartDate">
                 <columnTitle>Alias Start Date</columnTitle>
+                <formatString>Date</formatString>
             </column>
             <column columnName="budgetEndDate">
                 <columnTitle>Alias End Date</columnTitle>
+                <formatString>Date</formatString>
             </column>
             <column columnName="faRate">
                 <columnTitle>F&amp;A Rate</columnTitle>
@@ -1187,6 +1210,24 @@
             <column columnName="created"/>
             <column columnName="modifiedBy"/>
             <column columnName="modified"/>
+            <column columnName="dateDisabled"/>
+            <column columnName="Comments"/>
+            <column columnName="PPQNumber"/>
+            <column columnName="PPQDate"/>
+            <column columnName="ApplicationTypeDescription"/>
+            <column columnName="AwardStatus"/>
+            <column columnName="AwardID"/>
+            <column columnName="ApplicationType"/>
+            <column columnName="ProjectID"/>
+            <column columnName="ActivityType"/>
+            <column columnName="AwardNumber"/>
+            <column columnName="AwardSuffix"/>
+            <column columnName="ADFMEmpNum"/>
+            <column columnName="ADFMFullName"/>
+            <column columnName="ActivityTypeDescription"/>
+            <column columnName="FUndingSourceNumber"/>
+            <column columnName="FUndingSourceName"/>
+            <column columnName="Org"/>
         </columns>
     </table>
     <table tableName="iacucFundingSources" tableDbType="TABLE" useColumnOrder="true">
@@ -1209,7 +1250,7 @@
             </column>
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="container"/>
             <column columnName="createdBy"/>
@@ -1230,6 +1271,7 @@
                 <columnTitle>Service/Panel Name</columnTitle>
                 <nullable>false</nullable>
                 <fk>
+                    <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>labwork_services</fkTable>
                     <fkColumnName>servicename</fkColumnName>
@@ -1240,6 +1282,7 @@
                 <nullable>true</nullable>
                 <isHidden>true</isHidden>
                 <fk>
+                    <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                     <fkDbSchema>ehr_lookups</fkDbSchema>
                     <fkTable>labworkChargeType</fkTable>
                     <fkColumnName>value</fkColumnName>
@@ -1256,12 +1299,12 @@
             <column columnName="startDate">
                 <columnTitle>Start Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="endDate">
                 <columnTitle>End Date</columnTitle>
                 <nullable>false</nullable>
-                <formatString>yyyy-MM-dd</formatString>
+                <formatString>Date</formatString>
             </column>
             <column columnName="objectid"/>
             <column columnName="createdBy"/>
@@ -1483,6 +1526,98 @@
             <column columnName="created"/>
             <column columnName="modifiedBy"/>
             <column columnName="modified"/>
+        </columns>
+    </table>
+    <table tableName="AnnualRateChange" tableDbType="TABLE" useColumnOrder="true">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer"/>
+        <auditLogging>DETAILED</auditLogging>
+        <tableTitle>Annual Rate Change</tableTitle>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Row Id</columnTitle>
+            </column>
+            <column columnName="billingyear">
+                <columnTitle>Billing Year</columnTitle>
+
+            </column>
+            <column columnName="inflationRate">
+                <columnTitle>Inflation Rate</columnTitle>
+                <formatString>0.0000</formatString>
+                <nullable>false</nullable>
+            </column>
+            <column columnName="startdate">
+                <nullable>false</nullable>
+                <columnTitle>Start Date</columnTitle>
+            </column>
+            <column columnName="enddate">
+                <nullable>false</nullable>
+                <columnTitle>End Date</columnTitle>
+            </column>
+            <column columnName="createdBy"/>
+            <column columnName="created"/>
+            <column columnName="modifiedBy"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+    <table tableName="ogasynch" tableDbType="TABLE">
+        <columns>
+            <column columnName="lastIndexed"/>
+            <column columnName="modifiedBy"/>
+            <column columnName="container"/>
+            <column columnName="modified"/>
+            <column columnName="created"/>
+            <column columnName="entityId"/>
+            <column columnName="createdBy"/>
+            <column columnName="ADFM EMP NUM"/>
+            <column columnName="ADFM FULL NAME"/>
+            <column columnName="ADFM LAST NAME"/>
+            <column columnName="ADFM FIRST NAME"/>
+            <column columnName="PI EMP NUM"/>
+            <column columnName="PI FULL NAME"/>
+            <column columnName="PI LAST NAME"/>
+            <column columnName="PI FIRST NAME"/>
+            <column columnName="PDFM EMP NUM"/>
+            <column columnName="PDFM FULL NAME"/>
+            <column columnName="PDFM LAST NAME"/>
+            <column columnName="PDFM FIRST NAME"/>
+            <column columnName="AGENCY AWARD NUMBER"/>
+            <column columnName="OGA AWARD NUMBER"/>
+            <column columnName="OGA AWARD TYPE"/>
+            <column columnName="OGA PROJECT NUMBER"/>
+            <column columnName="ALIAS"/>
+            <column columnName="ALIAS ENABLED FLAG"/>
+            <column columnName="ALIAS ENABLED FLAG_MVIndicator"/>
+            <column columnName="PROJECT DESCRIPTION"/>
+            <column columnName="APPLICATION TYPE"/>
+            <column columnName="ACTIVITY TYPE"/>
+            <column columnName="AWARD NUMBER"/>
+            <column columnName="AWARD SUFFIX"/>
+            <column columnName="ORG"/>
+            <column columnName="CURRENT BUDGET START DATE"/>
+            <column columnName="CURRENT BUDGET END DATE"/>
+            <column columnName="PROJECT TITLE"/>
+            <column columnName="PPQ CODE"/>
+            <column columnName="PPQ DATE"/>
+            <column columnName="IACUC NUMBER"/>
+            <column columnName="AWARD STATUS"/>
+            <column columnName="PROJECT STATUS"/>
+            <column columnName="AWARD ID"/>
+            <column columnName="PROJECT ID"/>
+            <column columnName="BURDEN SCHEDULE"/>
+            <column columnName="BURDEN RATE"/>
+            <column columnName="faRate"/>
+            <column columnName="Key"/>
+        </columns>
+    </table>
+    <table tableName="MergeChargtypeUpdates" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="ProjectName"/>
+            <column columnName="Protocol"/>
+            <column columnName="ChargeType"/>
+            <column columnName="objectid"/>
+            <column columnName="startDate"/>
+            <column columnName="endDate"/>
         </columns>
     </table>
 </tables>

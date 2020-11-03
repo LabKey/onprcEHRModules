@@ -85,6 +85,10 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                         xtype: 'displayfield',
                         fieldLabel: 'Active Cases',
                         name: 'activeCases'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Behavior Alert' ,
+                        name: 'behaviorflag'
                     }]
                 },{
                     xtype: 'container',
@@ -152,12 +156,22 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
         if (this.showExtendedInformation){
             items[0].items = items[0].items.concat(this.getExtendedItems());
+
         }
 
         items[0].items = items[0].items.concat([{
             name: 'treatments',
             xtype: 'ehr-snapshotchildpanel',
             headerLabel: 'Current Medications / Prescribed Diets',
+            emptyText: 'There are no active medications'
+        }]);
+
+
+        //Sdded: 10-28-2019  R.Blasa
+        items[0].items = items[0].items.concat([{
+            name: 'sdrug',
+            xtype: 'ehr-snapshotchildpanel',
+            headerLabel: 'Sustained Release Medication',
             emptyText: 'There are no active medications'
         }]);
 
@@ -230,8 +244,13 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         this.appendFosterChildtResults(toSet, results.getFosterChild());
 
 
+        //Added: 12-20-2018  R.Blasa
+        this.appendLastKnownLocationResults(toSet, results.getLastKnownlocation());
 
-            if (this.showExtendedInformation){
+        //Added: 10-4-2019  R.Bl;asa
+          this.appendDrugRecords(toSet, results.getActiveDrugs());
+
+        if (this.showExtendedInformation){
             this.appendBirthResults(toSet, results.getBirthInfo(), results.getBirth());
             this.appendDeathResults(toSet, results.getDeathInfo());
             this.appendParentageResults(toSet, results.getParents());
@@ -335,21 +354,122 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
     },
 
-    //Added: 2-21-2017  R.Blasa  Display Infant cage mate under 1 yr
+    //Added: 4-20-2017  R.Blasa  Display Infant cage mate under 1 yr
     appendFosterChildtResults: function(toSet, results){
-
+        var values = [];
         if (results)
         {
-            toSet['fosterinfants'] = results[0].FosterChild;
+            Ext4.each(results, function(row){
+                var foster = row.FosterChild;
+
+                values.push(foster);
+
+            }, this);
+
         }
-        else
+
+            toSet['fosterinfants'] = values.length ? values.join('<br>') : 'None';
+
+    },
+
+    //Added: 12-20-2018  R.Blasa  Last Known Locatoni
+    appendLastKnownLocationResults: function(toSet, results){
+        var values = [];
+        if (results)
         {
-            toSet['fosterinfants'] = 'None';
+            Ext4.each(results, function(row){
+                var lastlocation = row.location;
+
+                values.push(lastlocation);
+
+            }, this);
+
         }
+
+        toSet['lastlocation'] = values.length ? values.join('<br>') : 'None';
 
     },
 
 
+    //Added: 10-4-2019  R.Blasa  Display 72 hour Drug's given
+    appendDrugRecords2: function(toSet, results){
+        var values = [];
+        if (results)
+        {
+            Ext4.each(results, function(row){
+                var foster = row.FosterChild;
+
+                values.push(foster);
+
+            }, this);
+
+        }
+
+        toSet['fosterinfants'] = values.length ? values.join('<br>') : 'None';
+
+    },
+
+    //Added: 10-7-2019  R.Blasa
+    appendDrugRecords: function(toSet, rows){
+        var el = this.down('panel[name=sdrug]');
+        if (!el)
+            return;
+
+        if (rows && rows.length){
+            Ext4.each(rows, function(r){
+                if (r.date){
+                    var date = LDK.ConvertUtils.parseDate(r.date);
+                    //Modified: 11-6-2019  R.Blasa   Compute elapse time in hours
+                    var now = new Date();
+                    r.ElapseHours = Ext4.util.Format.round(Ext4.Date.getElapsed(date, now) / (1000 * 60 *60), 0);
+
+                }
+                if (r.enddate){
+                    var enddate = LDK.ConvertUtils.parseDate(r.enddate);
+
+
+                }
+            }, this);
+        }
+
+         el.appendTable({
+            rows: rows
+        }, this.getDrugColumns());
+    },
+
+    getDrugColumns: function(){
+        return [{
+            name: 'meaning',
+            label: 'Medication'
+
+        },{
+            name: 'amountAndVolume',
+            label: 'Amount',
+            attrs: {
+                style: 'white-space: normal !important;"'
+            }
+        },{
+            name: 'route',
+            label: 'Route'
+        },{
+            name: 'date',
+            label: 'Start Date'
+        },{
+            name: 'ElapseHours',
+            label: 'Hours Elapsed'
+
+        },{
+            name: 'enddate',
+            label: 'End Date'
+
+        },{
+            name: 'remark',
+            label: 'Remark'
+        },{
+            name: 'category',
+            label: 'Category'
+        }];
+    },
 
     appendWeightResults: function(toSet, results){
         var text = [];
@@ -385,7 +505,64 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         toSet['weights'] = text.length ? '<table>' + text.join('') + '</table>' : null;
     },
 
+    //Modified: 6-13-2017  R.Blasa
+    appendRoommateResults: function(toSet, results, id){
+        var cagemates = 0;
+        var animals = [];
+        var pairingType;
 
+        if (results && results.length){
+            var row = results[0];
+            if (row.animals){
+                animals = row.animals.replace(/( )*,( )*/g, ',');
+                animals = animals.split(',');
+                animals.sort();
+                animals = animals.remove(id);
+
+            }
+
+            pairingType = row.category;
+        }
+
+        var values = [];
+        if (results){
+            Ext4.each(results, function(row){
+                if (row.animals){
+                    animals = row.animals.replace(/( )*,( )*/g, ',');
+                    animals = animals.split(',')
+                    animals.sort();
+                    animals = animals.remove(id);
+                    values.push(animals);
+
+                }
+
+            }, this);
+        }
+
+        //Modified: 8-22-2017 R.Blasa    Provide link to Snapshot report
+        var url1 = '<a href="' + LABKEY.ActionURL.buildURL('ehr', 'animalHistory', null, {}) + '#subjects:' + animals[0]   + '&inputType:singleSubject&showReport:1&activeReport:clinSnapshot' + '" target="_blank">' + animals[0]  +'</a>';
+        var url2 = '<a href="' + LABKEY.ActionURL.buildURL('ehr', 'animalHistory', null, {}) + '#subjects:' + animals[1]   + '&inputType:singleSubject&showReport:1&activeReport:clinSnapshot' + '" target="_blank">' + animals[1]  +'</a>';
+        var url3 = '<a href="' + LABKEY.ActionURL.buildURL('ehr', 'animalHistory', null, {}) + '#subjects:' + animals[2]   + '&inputType:singleSubject&showReport:1&activeReport:clinSnapshot' + '" target="_blank">' + animals[2]  +'</a>';
+        toSet['cagemates'] = cagemates;
+
+        toSet['pairingType'] = pairingType;
+
+        if (animals.length > 3){
+            toSet['cagemates'] = animals.length + ' animals';
+        }
+        else if (animals.length == 0){
+            toSet['cagemates'] = 'None';
+        }
+        else if (animals.length == 1) {
+            toSet['cagemates'] = url1;
+        }
+        else if (animals.length == 2) {
+            toSet['cagemates'] = url1 + '<br>' + url2 ;
+        }
+        else if (animals.length == 3) {
+            toSet['cagemates'] = url1 + '<br>' + url2 + '<br>' + url3;
+        }
+    },
     appendParentageResults: function(toSet, results){
         if (results){
             var parentMap = {};
@@ -425,6 +602,109 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
         }
         else {
             toSet['parents'] = 'No data';
+        }
+    },
+
+    //Modified: 12-20-2018  R.Blasa
+    appendDemographicsResults: function(toSet, row, id){
+        if (!row){
+            console.log('Id not found');
+            return;
+        }
+
+        var animalId = row.getId() || id;
+        if (!Ext4.isEmpty(animalId)){
+            toSet['animalId'] = id;
+        }
+
+        var status = row.getCalculatedStatus() || 'Unknown';
+        toSet['calculated_status'] = '<span ' + (status != 'Alive' ? 'style="background-color:yellow"' : '') + '>' + status + '</span>';
+
+        toSet['species'] = row.getSpecies();
+        toSet['geographic_origin'] = row.getGeographicOrigin();
+        toSet['gender'] = row.getGender();
+        toSet['age'] = row.getAgeInYearsAndDays();
+
+        var location;
+        if (row.getActiveHousing() && row.getActiveHousing().length){
+            var housingRow = row.getActiveHousing();
+            location = '';
+            if (!Ext4.isEmpty(row.getCurrentRoom()))
+                location = row.getCurrentRoom();
+            if (!Ext4.isEmpty(row.getCurrentCage()))
+                location += ' / ' + row.getCurrentCage();
+
+            if (location){
+                if (this.showLocationDuration && housingRow.date){
+                    var date = LDK.ConvertUtils.parseDate(housingRow.date);
+                    if (date)
+                        location += ' (' + date.format(LABKEY.extDefaultDateFormat) + ')';
+                }
+            }
+        }
+
+        toSet['location'] = location || 'No active housing';
+
+    },
+
+    //Modified: 5-10-2018  R.Blasa
+    appendFlags: function(toSet, results){
+        var values = [];
+        var behavevalues  = [];
+        var category;
+        if (results){
+            Ext4.each(results, function(row){
+                category = row['flag/category'];
+                var highlight = row['flag/category/doHighlight'];
+                var omit = row['flag/category/omitFromOverview'];
+
+                //skip
+                if (omit === true)
+                    return;
+
+                if (category)
+                    category = Ext4.String.trim(category);
+
+                // var val = row['flag/value'];
+                var  text ;
+                var behavetext;
+
+               if (category == 'Behavior Flag')
+                 {
+                     behavetext = category + ': ' + row['flag/value'];
+                     if (behavetext)
+                         behavevalues.push(behavetext);
+
+                 }
+                else
+                {
+                    text = category + ': ' + row['flag/value'];
+                    if (text && highlight)
+                        text = '<span style="background-color:yellow">' + text + '</span>';
+                    if (text)
+                        values.push(text);
+                 }
+
+
+            }, this);
+
+            if (values.length) {
+                values = Ext4.unique(values);
+            }
+
+            if (behavevalues.length) {
+                behavevalues = Ext4.unique(behavevalues);
+            }
+        }
+
+        toSet['flags'] = values.length ? '<a onclick="EHR.Utils.showFlagPopup(\'' + this.subjectId + '\', this);">' + values.join('<br>') + '</div>' : null;
+
+        if (behavevalues.length) {
+            toSet['behaviorflag'] = behavevalues.length ? '<a onclick="EHR.Utils.showFlagPopup(\'' + this.subjectId + '\', this);">' + behavevalues.join('<br>') + '</div>' : null;
+        }
+        else
+        {
+            toSet['behaviorflag'] = 'None'
         }
     },
 

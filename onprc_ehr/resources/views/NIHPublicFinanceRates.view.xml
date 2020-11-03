@@ -1,0 +1,6 @@
+<view xmlns="http://labkey.org/data/xml/view" title="ONPRC Rate Sheets">
+
+    <dependencies>
+        <dependency path="ehr.context" />
+    </dependencies>
+</view>

@@ -18,8 +18,11 @@ package org.labkey.onprc_billing.dataentry;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
+import org.json.JSONObject;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * User: bimber
@@ -39,5 +42,25 @@ public class ChargesFormSection extends SimpleFormSection
         setConfigSources(Collections.singletonList("Task"));
         setClientStoreClass("EHR.data.MiscChargesClientStore");
         addClientDependency(ClientDependency.supplierFromPath("ehr/data/MiscChargesClientStore.js"));
+    }
+    //            Added: 3-8-2018 R.Blasa
+    @Override
+    public JSONObject toJSON(DataEntryFormContext ctx, boolean includeFormElements)
+    {
+        JSONObject jsonObject = super.toJSON(ctx, includeFormElements);
+        jsonObject.put("topAndBottomButtons", true);
+        return jsonObject;
+    }
+
+
+
+    @Override
+    public List<String> getTbarButtons()
+    {
+        List<String> defaultButtons = super.getTbarButtons();
+        defaultButtons.remove("ADDANIMALS");
+        defaultButtons.add(0, "ADDANIMALST");
+
+        return defaultButtons;
     }
 }

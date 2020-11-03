@@ -1,0 +1,27 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
+        <column name="Id/utilization/use"/>
+        <column name="date">
+            <properties>
+                <property name="columnTitle" value="Open Date"/>
+            </properties>
+        </column>
+        <column name="reviewdate"/>
+        <column name="isActive"/>
+        <column name="Id/demographics/species"/>
+        <column name="Id/demographics/gender"/>
+        <column name="allProblemCategories"/>
+        <column name="observations"/>
+        <column name="caseHistory"/>
+    </columns>
+
+    <sorts>
+        <sort column="Id/curLocation/room"/>
+        <sort column="Id/curLocation/cage"/>
+        <sort column="date" descending="true"/>
+    </sorts>
+
+</customView>

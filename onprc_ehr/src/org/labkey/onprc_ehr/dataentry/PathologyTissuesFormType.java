@@ -16,9 +16,11 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.AbstractFormSection;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -51,7 +53,9 @@ public class PathologyTissuesFormType extends TaskForm
                 new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
                 new SimpleFormSection("study", "tissue_samples", "Tissues/Weights", "onprc_ehr-dragdropgridpanel", EHRService.FORM_SECTION_LOCATION.Tabs),
                 new TissueDistFormSection(),
-                new SimpleFormSection("study", "measurements", "Measurements", "onprc_ehr-dragdropgridpanel", EHRService.FORM_SECTION_LOCATION.Tabs)
+
+//                Added: 6-26-2017   R.Blasa
+                new TissueMeasurementsFormSection()
         ));
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
@@ -63,6 +67,12 @@ public class PathologyTissuesFormType extends TaskForm
         {
             s.addConfigSource("Pathology");
             s.addConfigSource("Necropsy");
+            s.addConfigSource("PathTissues");
+
+//            Added: 6-1-2017 R.Blasa
+            if (s instanceof SimpleFormSection )
+                s.setTemplateMode(AbstractFormSection.TEMPLATE_MODE.NO_ID);
+
         }
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Pathology.js"));

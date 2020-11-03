@@ -17,6 +17,7 @@ Ext4.define('SLA.window.AddCensusWindow', {
     MAX_RECORDS: 350,
 
     initComponent: function(){
+        var ctx = EHR.Utils.getEHRContext();
         Ext4.apply(this, {
             title: 'Choose Location(s)',
             modal: true,
@@ -39,39 +40,15 @@ Ext4.define('SLA.window.AddCensusWindow', {
                     border: false,
                     width: 400
                 },
-               /* items: [{
-                    xtype: 'ehr-areafield',
-                    multiSelect: false,
-                    emptyText: '',
-                    fieldLabel: 'Area',
-                    itemId: 'areaField',
-                    pairedWithRoomField: true,
-                    getRoomField: function(){
-                        return this.up('form').down('#roomField')
-                    }
-                },{  */
+
                     items: [{
-                    xtype: 'ehr-roomfield',
+                    xtype: 'onprc_RoomfieldExtended',
                     multiSelect: true,
                     addAllSelector: true,
                     typeAhead: true,
                     emptyText: '',
-                   // showOccupiedOnly: true,
                     fieldLabel: 'Room(s)',
-                    itemId: 'roomField',
-                    getStoreFilterArray: function(){
-                         var ret = [
-                              LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK),
-                              LABKEY.Filter.create('housingType', 589, LABKEY.Filter.Types.EQUAL)
-                              ];
-                        return ret;
-                     },
-                    listeners: {
-                        change: function (field) {
-                            var areaField = field.up('panel').down('#areaField');
-                            areaField.reset();
-                        }
-                    }
+                    itemId: 'roomField'
                 }]
             }],
             buttons: [{

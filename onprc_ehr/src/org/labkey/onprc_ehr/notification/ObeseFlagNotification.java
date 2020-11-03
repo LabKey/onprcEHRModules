@@ -130,6 +130,15 @@ public class ObeseFlagNotification extends AbstractEHRNotification
         colKeys.add(FieldKey.fromString("enddate"));
         colKeys.add(FieldKey.fromString("flag/category"));
         colKeys.add(FieldKey.fromString("flag/value"));
+
+//        Added: 10-25-2019  R.Blasa
+        colKeys.add(FieldKey.fromString("Id/assignedVet/assignedVet"));
+        colKeys.add(FieldKey.fromString("Id/MostRecentWeight/MostRecentWeight"));
+        colKeys.add(FieldKey.fromString("Id/curLocation/room"));
+        colKeys.add(FieldKey.fromString("Id/curLocation/cage"));
+
+
+
         final Map<FieldKey, ColumnInfo> columns = QueryService.get().getColumns(ti, colKeys);
 
         TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
@@ -142,7 +151,7 @@ public class ObeseFlagNotification extends AbstractEHRNotification
         {
             //Create header information on this report
             msg.append("<table border=1 style='border-collapse: collapse;'>");
-            msg.append("<tr style='font-weight: bold;'><td>Monkey ID</td><td>Start Date</td><td>Removal Date</td><td>Category</td><td>Meaning</td></tr>\n");
+            msg.append("<tr style='font-weight: bold;'><td>Monkey ID</td><td>Room</td><td>Cage</td><td>Current Weight (kg)</td><td>Start Date</td><td>Removal Date</td><td>Assigned Vet</td></tr>\n");
 
 
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
@@ -156,7 +165,20 @@ public class ObeseFlagNotification extends AbstractEHRNotification
                     Date datess = results.getDate(FieldKey.fromString("date"));
                     String categorys = results.getString(FieldKey.fromString("flag/category"));
                     String valuess = results.getString(FieldKey.fromString("flag/value"));
-                    msg.append("<tr><td>" + Ids  + "</td><td>" + DateUtil.formatDateTime(c, datess) + "</td><td>" + DateUtil.formatDateTime(c, enddates) + "</td><td>" + categorys  + "</td><td>" + valuess  + "</td></tr>\n");
+
+//                    Added: 10-25-2019  R,Blasa
+                    String vetname = results.getString(FieldKey.fromString("Id/assignedVet/assignedVet"));
+                    String weights = results.getString(FieldKey.fromString("Id/MostRecentWeight/MostRecentWeight"));
+                    String rooms = results.getString(FieldKey.fromString("Id/curLocation/room"));
+                    String cages = results.getString(FieldKey.fromString("Id/curLocation/cage"));
+
+
+
+                    msg.append("<td>" + PageFlowUtil.filter(Ids)  + "</td>" +
+                            "<td>" + PageFlowUtil.filter(rooms) +  "</td><td>"  + PageFlowUtil.filter(cages)  + "</td>" +
+                            "<td>" + PageFlowUtil.filter("  ") + PageFlowUtil.filter(weights)  + "</td><td>" +
+                            PageFlowUtil.filter(DateUtil.formatDateTime(c, datess)) + "</td><td>" + PageFlowUtil.filter(DateUtil.formatDateTime(c, enddates)) + "</td><td>" + "  " + PageFlowUtil.filter(vetname)  + "</td></tr>\n");
+
 
                 }
             });

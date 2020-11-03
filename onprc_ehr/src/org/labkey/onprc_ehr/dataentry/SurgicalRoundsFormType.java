@@ -26,6 +26,10 @@ import org.labkey.api.security.PrincipalType;
 import org.labkey.api.security.SecurityManager;
 import org.labkey.api.security.UserPrincipal;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.security.xml.GroupEnumType;
+import org.labkey.api.security.GroupManager;
+import org.labkey.api.security.Group;
+import org.labkey.api.security.permissions.AdminPermission;
 
 import java.util.Arrays;
 
@@ -58,6 +62,19 @@ public class SurgicalRoundsFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/SurgicalRounds.js"));
         setDisplayReviewRequired(true);
     }
+
+    //Added: 7-26-2018  R.Blasa
+    @Override
+    public boolean isVisible()
+    {
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "Surgery Research", GroupEnumType.SITE);
+        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
+        return super.isVisible();
+    }
+
 
     @Override
     protected boolean canInsert()

@@ -13,6 +13,9 @@
         <column name="Offspring/parents/sireType"/>
         <column name="Offspring/parents/dam"/>
         <column name="Offspring/parents/damType"/>
+        <column name="Offspring/parents/fostermom"/>
+
+
     </columns>
    <sorts>
        <sort column="Id" />

@@ -191,6 +191,21 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENTERDEATH_FOR_TISSUES', {
     }
 });
 
+EHR.DataEntryUtils.registerGridButton('PATH_SAVE_DRAFT', function(config) {
+    return Ext4.Object.merge({
+        text: 'Save Draft',
+        name: 'saveDraft',
+        requiredQC: 'In Progress',
+        errorThreshold: 'WARN',
+        disabled: false,
+        itemId: 'saveDraftBtn',
+        handler: function(btn){
+            var panel = btn.up('ehr-dataentrypanel');
+            panel.onSubmit(btn)
+        },
+        disableOn: 'ERROR'
+    }, config);
+});
 EHR.DataEntryUtils.registerGridButton('RESET_SORT_ORDER', function(config){
     return Ext4.Object.merge({
         text: 'Reset Sort Order',

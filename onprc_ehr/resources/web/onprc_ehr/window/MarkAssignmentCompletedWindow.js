@@ -69,6 +69,9 @@ Ext4.define('ONPRC_EHR.window.MarkAssignmentCompletedWindow', {
                     schemaName: 'ehr_lookups',
                     queryName: 'animal_condition',
                     columns: 'code,meaning',
+                    filterArray: [
+                        LABKEY.Filter.create('datedisabled',null, LABKEY.Filter.Types.ISBLANK)
+                    ],
                     autoLoad: true,
                     sort: 'code'
                 }

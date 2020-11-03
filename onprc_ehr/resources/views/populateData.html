@@ -760,6 +760,12 @@ Ext4.onReady(function(){
             queryName: 'ageclass',
             pk: 'rowid'
         },{
+            label: 'Acquistion Types',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'AcquistionType',
+            pk: 'rowid'
+        },{
             label: 'Treatment Frequency Times',
             populateFn: 'populateTreatmentFrequencies',
             schemaName: 'ehr_lookups',
