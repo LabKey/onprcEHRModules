@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS onprc_billing.ogaSynch
+EXEC core.fn_dropifexists 'ogaSynch','onprc_billing','TABLE';
 GO
 
 CREATE TABLE [onprc_billing].[ogasynch](
