@@ -2,16 +2,14 @@
 /****** Object:  Table [onprc_ehr].[PotentialDam_source]    Script Date: 4/121/20202 7:00:04 AM ******/
 /****** Object:  Table [onprc_ehr].[PotentialParents_source]    Script Date: 4/121/20202 7:00:04 AM ******/
 
-DROP TABLE IF EXISTS [onprc_ehr].[potentialDam_Source]
+EXEC core.fn_dropifexists 'potentialDam_Source','onprc_ehr','TABLE';
 GO
 
-DROP TABLE IF EXISTS [onprc_ehr].[potentialsire_Source]
+EXEC core.fn_dropifexists 'potentialsire_Source','onprc_ehr','TABLE';
 GO
 
-DROP TABLE IF EXISTS [onprc_ehr].[potentialParents_Source]
+EXEC core.fn_dropifexists 'potentialParents_Source','onprc_ehr','TABLE';
 GO
-
-
 
 /****** Object:  Table [onprc_ehr].[PotentialSire_source]    Script Date: 4/121/20202 7:00:04 AM ******/
 CREATE TABLE [onprc_ehr].[PotentialSire_source](
