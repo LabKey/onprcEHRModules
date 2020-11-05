@@ -39,6 +39,18 @@
                 <property name="columnTitle" value="Performed By"/>
             </properties>
         </column>
+
+        <column name="qcstate">
+            <properties>
+                <property name="columnTitle" value="QC State"/>
+            </properties>
+        </column>
+
+        <column name="taskid">
+            <properties>
+                <property name="columnTitle" value="Task ID"/>
+            </properties>
+        </column>
     </columns>
     <sorts>
         <sort column="date" descending="true"/>

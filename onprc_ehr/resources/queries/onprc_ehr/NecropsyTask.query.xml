@@ -1,0 +1,57 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="NecropsyTask" tableDbType="TABLE">
+                <tableTitle>Necropsy Task</tableTitle>
+                <columns>
+                    <column columnName="taskid">
+                        <columnTitle>Task ID</columnTitle>
+                        <url>/ehr/dataEntryForm.view?formType=${formtype}&amp;taskid=${taskid}</url>
+                    </column>
+                    <column columnName="title">
+                        <columnTitle>Title</columnTitle>
+                        <url>/ehr/dataEntryForm.view?formType=${formtype}&amp;taskid=${taskid}</url>
+                    </column>
+                    <column columnName="ProcedureName">
+                        <columnTitle>Procedure Name</columnTitle>
+                     </column>
+                    <column columnName="Investigator">
+                        <columnTitle>Investigator</columnTitle>
+                    </column>
+                    <column columnName="assignedto">
+                        <columnTitle>Assigned To</columnTitle>
+                        <nullable>true</nullable>
+                        <fk>
+                            <fkDbSchema>core</fkDbSchema>
+                            <fkTable>PrincipalsWithoutAdmin</fkTable>
+                            <fkColumnName>UserId</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="duedate">
+                        <columnTitle>Due Date</columnTitle>
+                        <nullable>true</nullable>
+                        <formatString>yyyy-MM-dd HH:mm</formatString>
+                    </column>
+                    <column columnName="createdby">
+                        <columnTitle>Created By</columnTitle>
+                        <fk>
+                            <fkDbSchema>core</fkDbSchema>
+                            <fkTable>users</fkTable>
+                            <fkColumnName>userid</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="qcstate">
+                        <isHidden>false</isHidden>
+                        <shownInDetailsView>true</shownInDetailsView>
+                        <columnTitle>Status</columnTitle>
+                        <displayWidth>50</displayWidth>
+
+                    </column>
+
+                </columns>
+
+            </table>
+        </tables>
+    </metadata>
+</query>

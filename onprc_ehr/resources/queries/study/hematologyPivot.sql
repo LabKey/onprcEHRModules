@@ -13,7 +13,7 @@ FROM
   b.id,
   b.date,
   b.method,
-  b.chargetype,
+  b.performedby, ---Added 2-21-2020 R.Blasa
   b.testId,
   b.runId @hidden,
   group_concat(b.result) as results
@@ -25,7 +25,7 @@ FROM
     b.date,
     b.testId,
     b.runid.method as method,
-    b.runid.chargetype as chargetype,
+    b.performedby as performedby, ---Added 2-21-2020 R.Blasa
     coalesce(b.runId, b.objectid) as runId,
     CASE
     WHEN b.result IS NULL THEN  b.qualresult
@@ -35,9 +35,9 @@ FROM
   WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
   ) b
 
-GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.chargetype
+GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.performedby
 PIVOT results BY testId IN
-(select testid from ehr_lookups.hematology_tests t WHERE t.includeInPanel = true)) pvt
+(select testid from ehr_lookups.hematology_tests t WHERE t.includeInPanel = true  order by sort_order)) pvt
 
 LEFT OUTER JOIN
 
@@ -47,7 +47,7 @@ LEFT OUTER JOIN
   group_concat(distinct servicerequested, chr(10)) as servicerequested,
   b.runId,
   b.method,
-  b.chargetype,
+  b.performedby, ---Added 2-21-2020 R.Blasa,
   group_concat(distinct b.remark, chr(10)) as remark,
   group_concat(distinct b.runRemark, chr(10)) as runRemark
 
@@ -57,7 +57,7 @@ FROM (
     b.id,
     b.date,
     b.runid.method as method,
-    b.runid.chargetype as chargetype,
+    b.performedby as performedby, ---Added 5-10-2020 R.Blasa
     b.runid.servicerequested as servicerequested,
     coalesce(b.runId, b.objectid) as runId,
     b.remark,
@@ -66,6 +66,6 @@ FROM (
   WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
 ) b
 
-GROUP BY b.id, b.date, b.runId, b.method, b.chargetype) grp
+GROUP BY b.id, b.date, b.runId, b.method, performedby) grp
 
-ON pvt.id = grp.id AND pvt.date = grp.date AND pvt.runID = grp.runId AND pvt.method = grp.method AND pvt.chargetype = grp.chargetype
+ON pvt.id = grp.id AND pvt.date = grp.date AND pvt.runID = grp.runId AND pvt.method = grp.method AND pvt.performedby = grp.performedby

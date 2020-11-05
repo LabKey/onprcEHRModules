@@ -29,12 +29,6 @@
                     <column columnName="lacksRate">
                         <isHidden>true</isHidden>
                     </column>
-                    <column columnName="creditAccountId">
-                        <isHidden>true</isHidden>
-                    </column>
-                    <column columnName="invoicedItemId">
-                        <isHidden>true</isHidden>
-                    </column>
                     <column columnName="container">
                         <isHidden>true</isHidden>
                     </column>

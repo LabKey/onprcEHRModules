@@ -48,6 +48,7 @@ Ext4.define('ONPRC_EHR.window.BulkChangeCasesWindow', {
             caseIds.push(rec.get('caseid'));
         }, this);
 
+        //Modified: 9-10-2018  R.Blasa
         caseIds = Ext4.unique(caseIds);
         LABKEY.Query.selectRows({
             schemaName: 'study',
@@ -56,7 +57,7 @@ Ext4.define('ONPRC_EHR.window.BulkChangeCasesWindow', {
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
             success: this.onLoad,
-            columns: 'objectid,Id,date,remark,category,reviewdate,enddate'
+            columns: 'objectid,Id,date,remark,category,reviewdate,lsid,enddate'
         });
     },
 

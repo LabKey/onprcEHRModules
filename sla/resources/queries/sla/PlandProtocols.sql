@@ -1,5 +1,6 @@
 
 SELECT a.project as ProjectID,
+aa.species,
 a.account as Alias,
 y.grantNumber as OGAGrantNumber,
 a.protocol as ParentIACUC,
@@ -11,12 +12,12 @@ i.FirstName,
 i.LastName,
 i.Division,
 p.external_id,
-i.LastName + ': ' + a.name + '('+ p.external_id +')' + ' - ' + a.title as PIIacuc
+i.LastName + ': ' + a.name + '('+ p.external_id +')' + ' - ' + a.title + ' (Species: ' + aa.species + ')' as PIIacuc
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project a
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.protocol p ON p.protocol = a.protocol
 LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals aa ON a.protocol = aa.protocol
-LEFT JOIN "/onprc/admin/finance/public".onprc_billing_public.aliases y ON y.alias = a.account
+LEFT JOIN Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases y ON y.alias = a.account
 WHERE
   -- filter based on the current date compared with the start and end dates
   (
@@ -24,6 +25,9 @@ WHERE
     (aa.StartDate IS NULL AND aa.EndDate IS NOT NULL AND now() < aa.EndDate) OR
     (now() between aa.StartDate AND aa.EndDate)
   )
+  AND
+  --Check for the project enddate. Added by LK on 1/16/2019
+  (now() between a.StartDate AND a.EndDate)
   -- and filtered based on dataAccess for the given user
   AND
   (

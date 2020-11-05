@@ -45,9 +45,13 @@ import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.ehr.notification.AbstractEHRNotification;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 
+import org.labkey.api.data.ContainerFilter;
+import org.labkey.api.data.ContainerFilterable;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -143,6 +147,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //misc
         demographicsWithoutGender(c, u, msg);
+        getGeographicOriginConflicts(c, u, msg);
 
         incompleteBirthRecords(c, u, msg);
         birthRecordsWithoutDemographics(c, u, msg);
@@ -340,13 +345,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void roomsWithMixedViralStatus(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
-        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;ABSL3", CompareType.CONTAINS_NONE_OF);
+        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;Sequester/Containment;ABSL3", CompareType.CONTAINS_NONE_OF);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("area,room"));
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding ABSL2+ and ABSL3 rooms:</b><p></p>\n");
+            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding ABSL2+,Sequester/Containment, and ABSL3 rooms:</b><p></p>\n");
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p/>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
@@ -399,6 +404,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("Id/MostRecentWeight/MostRecentWeightDate"), null, CompareType.ISBLANK);
+        //Added by Kolli1, 6/11. Excluding the Guinea pigs & Rabbits and showing only primates
+        //filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG+;RABBIT", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG", CompareType.NEQ);
+
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
 
         TableInfo ti = getStudySchema(c, u).getTable("Demographics");
@@ -449,6 +458,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/Dataset/Demographics/calculated_status"), "Alive", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+        //Added by Kolli1, 6/11. Excluding the Guinea pigs & Rabbits and showing only primates
+        //filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG+;RABBIT", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG", CompareType.NEQ);
+
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Housing"), filter, sort);
         long count = ts.getRowCount();
         if (count > 0)
@@ -474,6 +487,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("calculated_status"), "Alive");
         filter.addCondition(FieldKey.fromString("Id/curLocation/room/room"), null, CompareType.ISBLANK);
+        //Added by Kolli1, 6/11. Excluding the Guinea pigs & Rabbits and showing only primates
+        //filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG+;RABBIT", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG", CompareType.NEQ);
+
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Demographics"), filter, sort);
         long count = ts.getRowCount();
         if (count > 0)
@@ -603,6 +620,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("matchesDamStatus"), false, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("dam"), null, CompareType.NONBLANK);
 
+//        Added: 6-21-2017  R.Blasa
+        filter.addCondition(FieldKey.fromString("dam"), "", CompareType.NEQ);
+
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1 * duration);
         filter.addCondition(FieldKey.fromString("birth"), cal.getTime(), CompareType.DATE_GTE);
@@ -689,7 +709,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " animals with multiple active cases of the same category.  One of the duplicates should be closed or set for review</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " animals with multiple active cases of the same category. One of the duplicates should be closed or set for review</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "duplicateCases", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -701,8 +721,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void recordsEnteredMoreThan7DaysAfter(final Container c, User u, final StringBuilder msg)
     {
         int offset = 7;
-
-
 
     }
 
@@ -912,6 +930,11 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         keys.add(FieldKey.fromString("Id/demographics/calculated_status"));
         keys.add(FieldKey.fromString("Id/demographics/geographic_origin"));
 
+//        Modified: 2-20-2020 R. Blasa
+        keys.add(FieldKey.fromString("date"));
+        keys.add(FieldKey.fromString("remark"));
+
+
         final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, keys);
         TableSelector ts = new TableSelector(ti, cols.values(), filter, new Sort(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
@@ -919,7 +942,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + count + " finalized birth records within the past 30 days lacking information:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
-            msg.append("<tr><td>Id</td><td>Status</td><td>Gender</td><td>Species</td><td>Geographic Origin</td></tr>");
+            msg.append("<tr><td>Id</td><td>Status</td><td>Birth Date</td><td>Remarks</td><td>Gender</td><td>Species</td><td>Geographic Origin</td></tr>");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
@@ -933,6 +956,11 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     msg.append("<tr>");
                     msg.append("<td><a href=\"" + url + "&query.Id~eq=" + rs.getString("Id") + "\">" + rs.getString("Id") + "</a></td>");
                     msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/calculated_status")) == null ? "Unknown" : rs.getString(FieldKey.fromString("Id/demographics/calculated_status"))) + "</td>");
+
+                 //Added: 2-20-2020  R.Blasa
+                    msg.append("<td>" + (rs.getString("date") == null ? "Unknown" : rs.getDate("date")) + "</td>");
+                    msg.append("<td>" + (rs.getString("remark") == null ? " " : rs.getString("remark")) + "</td>");
+
                     msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
                     msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/species")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/species"))) + "</td>");
                     msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/geographic_origin")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/geographic_origin"))) + "</td>");
@@ -957,6 +985,198 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are " + count + " protocols that will expire within the next 14 days.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocol", null) + "&query.daysUntilRenewal~lte=14'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
+        }
+    }
+
+    /**
+     * Kollil : Find the pregnant NHPs whose gestation time is past 30 days
+     */
+    protected void checkPregnantGestation(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("thirty_days_pastGestation_date"), new Date(), CompareType.DATE_LTE);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("pregnancyGestationOverdue"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " pregnant animals 30 days past the gestation period.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnancyGestationOverdue", null) + "&query.thirty_days_pastGestation_date~datelte="+ getDateTimeFormat(c).format(new Date()) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no pregnant animals 30 days past the gestation period.</b><br>\n");
+        }
+    }
+
+    /**
+     * Kollil, 5/12/2017 : Send DCM Notes notification on the action date
+     */
+    protected void dcmNotesAlert(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("actiondate"), new Date(), CompareType.DATE_EQUAL);
+        filter.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("notes"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " DCM action items.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.actiondate~dateeq="+ getDateTimeFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no DCM action items!</b><br>\n");
+        }
+    }
+
+    /**
+     * Kollil, 5/12/2017 : Send BSU Notes notification on the action date
+     */
+    protected void bsuNotesAlert(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("actiondate"), new Date(), CompareType.DATE_EQUAL);
+        filter.addCondition(FieldKey.fromString("category"), "BSU Notes", CompareType.EQUAL);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("notes"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " BSU action items.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.actiondate~dateeq="+ getDateTimeFormat(c).format(new Date()) + "&query.category~eq=BSU Notes'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no BSU action items!</b><br>\n");
+        }
+    }
+
+    /**
+     * Kollil, 10/24/2019 : PMIC scheduler alert notifications Daily & Weekly
+     */
+    protected void pmicSchedulerAlert(final Container c, User u, final StringBuilder msg)
+    {
+        //PMIC container: 783D2EA5-C6AC-1036-A33C-BD25D0574070
+        if (QueryService.get().getUserSchema(u, c, "extscheduler") == null) {
+            msg.append("<b>Warning: The extscheduler schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+        //Daily events query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler");
+        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        //Weekly events query
+        TableInfo ti1 = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler_Weekly");
+        ((ContainerFilterable) ti1).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts1 = new TableSelector(ti1, null, null);
+        long count1 = ts1.getRowCount();
+
+        if (count > 0) {//Daily events count
+            msg.append("<b>There are " + count + " PMIC events scheduled for today:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler", null) + "'>Click here to view them</a></p>\n");
+            msg.append("<hr>");
+        }
+        if (count1 > 0) {//Weekly events count
+            msg.append("<b>There are " + count1 + " PMIC events scheduled this week:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Weekly", null) + "'>Click here to view them</a></p>\n");
+            msg.append("<hr>");
+        }
+        //Display the daily report in the email
+        if (count > 0) {
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("resourceid"));
+            columns.add(FieldKey.fromString("startdate"));
+            columns.add(FieldKey.fromString("enddate"));
+            columns.add(FieldKey.fromString("name"));
+            columns.add(FieldKey.fromString("alias"));
+            columns.add(FieldKey.fromString("quantity"));
+            columns.add(FieldKey.fromString("comments"));
+            columns.add(FieldKey.fromString("color"));
+            columns.add(FieldKey.fromString("room"));
+            columns.add(FieldKey.fromString("bldg"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+            count = ts2.getRowCount();
+
+            if (count == 0) {
+                msg.append("There are no scheduled PMIC events");
+            }
+            else {
+                msg.append("<br><b>Daily PMIC events:</b><br><br>\n");
+                msg.append("<table border=1 style='border-collapse: collapse;'>");
+                msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + "style='font-weight: bold;'>");
+                msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
+
+                ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
+                    @Override
+                    public void exec(ResultSet object) throws SQLException {
+                        Results rs = new ResultsImpl(object, colMap);
+                        msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
+                        msg.append("<td>" + rs.getString("resourceid") + "</td>");
+                        msg.append("<td>" + rs.getString("startdate") + "</td>");
+                        msg.append("<td>" + rs.getString("enddate") + "</td>");
+                        msg.append("<td>" + rs.getString("name") + "</td>");
+                        msg.append("<td>" + rs.getString("alias") + "</td>");
+                        msg.append("<td>" + rs.getString("quantity") + "</td>");
+                        msg.append("<td>" + rs.getString("comments") + "</td>");
+                        msg.append("<td>" + rs.getString("color") + "</td>");
+                        msg.append("<td>" + rs.getString("room") + "</td>");
+                        msg.append("<td>" + rs.getString("bldg") + "</td>");
+                        msg.append("</tr>");
+                    }
+                });
+                msg.append("</table>");
+            }
+            //Display the weekly report in the email
+            if (count1 > 0) {
+                Set<FieldKey> columns1 = new HashSet<>();
+                columns1.add(FieldKey.fromString("resourceid"));
+                columns1.add(FieldKey.fromString("startdate"));
+                columns1.add(FieldKey.fromString("enddate"));
+                columns1.add(FieldKey.fromString("name"));
+                columns1.add(FieldKey.fromString("alias"));
+                columns1.add(FieldKey.fromString("quantity"));
+                columns1.add(FieldKey.fromString("comments"));
+                columns1.add(FieldKey.fromString("color"));
+                columns1.add(FieldKey.fromString("room"));
+                columns1.add(FieldKey.fromString("bldg"));
+
+                final Map<FieldKey, ColumnInfo> colMap1 = QueryService.get().getColumns(ti1, columns1);
+                TableSelector ts3 = new TableSelector(ti1, colMap1.values(), null, null);
+                count1 = ts3.getRowCount();
+
+                if (count1 == 0) {
+                    msg.append("There are no scheduled PMIC events");
+                }
+                else {
+                    msg.append("<br><br><b>Weekly PMIC events:</b><br><br>\n");
+                    msg.append("<table border=1 style='border-collapse: collapse;'>");
+                    msg.append("<tr bgcolor = " + '"' + "#00FF00" + '"' + "style='font-weight: bold;'>");
+                    msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
+
+                    ts3.forEach(new Selector.ForEachBlock<ResultSet>() {
+                        @Override
+                        public void exec(ResultSet object) throws SQLException {
+                            Results rs1 = new ResultsImpl(object, colMap1);
+                            msg.append("<tr bgcolor = " + '"' + "#00FF00" + '"' + ">");
+                            msg.append("<td>" + rs1.getString("resourceid") + "</td>");
+                            msg.append("<td>" + rs1.getString("startdate") + "</td>");
+                            msg.append("<td>" + rs1.getString("enddate") + "</td>");
+                            msg.append("<td>" + rs1.getString("name") + "</td>");
+                            msg.append("<td>" + rs1.getString("alias") + "</td>");
+                            msg.append("<td>" + rs1.getString("quantity") + "</td>");
+                            msg.append("<td>" + rs1.getString("comments") + "</td>");
+                            msg.append("<td>" + rs1.getString("color") + "</td>");
+                            msg.append("<td>" + rs1.getString("room") + "</td>");
+                            msg.append("<td>" + rs1.getString("bldg") + "</td>");
+                            msg.append("</tr>");
+                        }
+                    });
+                    msg.append("</table>");
+                }
+            }
         }
     }
 
@@ -1006,6 +1226,24 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    //Added: 8-7-2018  R.Blasa
+    protected void ValidateBiirthHousingHistory(final Container c, User u, final StringBuilder msg)
+    {
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("BirthInitialHousingMismatch"), null, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " several Birth ids having mismatched initial locations</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BirthInitialHousingMismatch", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no Birth Initial Housing mismtached locations to report.</b><br>\n");
+        }
+    }
+
+
     protected void overlappingProtocolCounts(final Container c, User u, final StringBuilder msg)
     {
         TableSelector ts = new TableSelector(getEHRSchema(c, u).getTable("protocolGroupsOverlapping"));
@@ -1017,6 +1255,19 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + Math.max(totalProject, totalProtocol) + " IACUC Protocols or Center Projects that list allowable animal groups that overlap or conflict.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocolGroupsOverlapping", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
+    protected void getGeographicOriginConflicts(final Container c, User u, final StringBuilder msg)
+    {
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("geographicOriginConflicts"));
+        long count = ts.getRowCount();
+
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " animals where the demographics table value for geographic origin conflicts with genetic ancestry.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "geographicOriginConflicts", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -1747,8 +1998,26 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void infantsNotWithMother(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/age/ageInDays"), 180, CompareType.LTE);
+        //Added by Kollil, 6/11. Excluding the Guinea pigs & Rabbits and showing only primates
+        //filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG;RABBIT", CompareType.CONTAINS_NONE_OF);
+        filter.addCondition(FieldKey.fromString("Id/demographics/species/common"), "GUINEA PIG", CompareType.NEQ);
         filter.addCondition(FieldKey.fromString("Id/demographics/calculated_status"), "Alive", CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 191", CompareType.NEQ_OR_NULL);
+        // Changed by Kolli on 3/6/2020
+        /*Rm 191 used to be a nursery, but below are the current rooms where infants are likely to be housed without dams. Can you exclude these rooms, rather than ASB RM 191?
+        ASB RM 213
+        ASB RM 236
+        ASB RM 240
+        ASB RM 185
+        COL RM 4
+        */
+        //Added ASB 239 to this list on 5/14/2020 byt kolli
+        //filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 191", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 213", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 236", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 240", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 185", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 239", CompareType.NEQ_OR_NULL);
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "COL RM 4", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("withMother"), 0, CompareType.EQUAL);
 
         TableInfo ti = getStudySchema(c, u).getTable("infantsSeparateFromMother");
@@ -1763,7 +2032,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>NOTE: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in ASB RM 191</b><br><br>");
+            msg.append("<b>NOTE: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in ASB RM 213, ASB RM 236, ASB RM 240, ASB RM 185, ASB RM 239 & COL RM 4</b><br><br>");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override

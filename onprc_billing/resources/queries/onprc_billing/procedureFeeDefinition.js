@@ -16,8 +16,8 @@ EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Even
     if (row.assistingstaff && row.procedureid && !onprcTriggerHelper.requiresAssistingStaff(row.procedureid)){
         EHR.Server.Utils.addError(scriptErrors, 'assistingstaff', 'Only surgeries support assisting staff.', 'ERROR');
     }
-
-    if (row.chargetype != 'Research Staff' && row.assistingstaff){
+    //Modified: 6-9-2020 R. Blasa to allow to process Infectious Disease Resource as Charge unit
+    if (row.chargetype != 'Research Staff' && row.assistingstaff && row.assistingstaff != 'DCM: Surgery Services'){
         EHR.Server.Utils.addError(scriptErrors, 'assistingstaff', 'This field will be ignored unless Research Staff is selected, and should be blank.', 'ERROR');
     }
 });

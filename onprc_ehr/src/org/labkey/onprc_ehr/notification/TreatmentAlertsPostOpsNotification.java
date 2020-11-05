@@ -60,7 +60,7 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
     @Override
     public String getDescription()
     {
-        return "This runs every day at 9AM, 1PM, 5PM  if there are treatments scheduled that have not yet been marked complete";
+        return "This runs every day at 9AM,1PM,3PM   if there are treatments scheduled that have not yet been marked complete";
     }
 
     @Override
@@ -70,12 +70,12 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
     }
 
     @Override
-    public String getCronString() {return "0 0 9,13,17 * * ?";}
+    public String getCronString() {return "0 0 9,13,15 * * ?";}
 
     @Override
     public String getScheduleDescription()
     {
-        return "daily at 9AM,1PM, 5PM";
+        return "daily at 9AM,1PM,3PM";
     }
 
     @Override
@@ -86,7 +86,6 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
         //Find today's date
         Date now = new Date();
         msg.append("This email contains any treatments not marked as completed.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
-
 
         processPostOpsTreatments(c, u, msg, new Date());
 
@@ -176,13 +175,111 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
             msg.append("<b>Treatments:</b><p>");
             msg.append("There are " + (totals.get(completed) + totals.get(incomplete)) + " scheduled treatments on or before " + _timeFormat.format(maxDate) + ".  <a href='" + url + "'>Click here to view them</a>.  Of these, " + totals.get(completed) + " have been marked completed.</p>\n");
 
-            if (totals.get(incomplete) == 0)
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //Add code to display report, by Kollil
+
+            TableInfo ti1 = QueryService.get().getUserSchema(u, c, "study").getTable("treatmentSchedulePostOps");
+
+            //All fields
+            Set<FieldKey> columns1 = new HashSet<>();
+            columns1.add(FieldKey.fromString("id"));
+            columns1.add(FieldKey.fromString("calculated_status"));
+            columns1.add(FieldKey.fromString("treatmentStatus"));
+            columns1.add(FieldKey.fromString("room"));
+            columns1.add(FieldKey.fromString("cage"));
+            columns1.add(FieldKey.fromString("date"));
+            columns1.add(FieldKey.fromString("startDate"));
+            columns1.add(FieldKey.fromString("endDate"));
+            columns1.add(FieldKey.fromString("dayselapsed"));
+            columns1.add(FieldKey.fromString("category"));
+            columns1.add(FieldKey.fromString("medication"));
+            columns1.add(FieldKey.fromString("volume"));
+            columns1.add(FieldKey.fromString("vol_units"));
+            columns1.add(FieldKey.fromString("concentration"));
+            columns1.add(FieldKey.fromString("conc_units"));
+            columns1.add(FieldKey.fromString("amountWithUnits"));
+            columns1.add(FieldKey.fromString("amountAndVolume"));
+            columns1.add(FieldKey.fromString("dosage"));
+            columns1.add(FieldKey.fromString("dosage_units"));
+            columns1.add(FieldKey.fromString("frequency"));
+            columns1.add(FieldKey.fromString("route"));
+            columns1.add(FieldKey.fromString("reason"));
+            columns1.add(FieldKey.fromString("remark"));
+            columns1.add(FieldKey.fromString("performedby"));
+
+            final Map<FieldKey, ColumnInfo> colMap1 = QueryService.get().getColumns(ti1, columns1);
+            TableSelector ts1 = new TableSelector(ti1, colMap1.values(), filter, new Sort("id"));
+            ts1.setNamedParameters(params);
+            //url = getExecuteQueryUrl(c, "study", "treatmentSchedulePostOps", null) ;
+            total = ts1.getRowCount();
+
+            if (total == 0)
             {
-                msg.append("All treatments scheduled prior to " + _timeFormat.format(maxDate) + " have been marked complete as of " + getDateTimeFormat(c).format(curDate) + ".<p>\n");
+                msg.append("There are no post op meds");
             }
             else
             {
-                msg.append("There are " + totals.get(incomplete) + " treatments that have not been marked complete:<p>\n");
+                msg.append("<br><br><br><b>Post Op Meds:</b><br><br>\n");
+                msg.append("<table border=1 style='border-collapse: collapse;'>");
+                msg.append("<tr style='font-weight: bold;'><td>Id</td><td>Status</td><td>Treatment Status</td><td>Room</td><td>Cage</td><td>Treatment Date</td><td>Treatment Start Date</td><td>Treatment End Date</td><td>Days Elapsed</td><td>Category</td><td>Treatment</td><td>Volume</td><td>Volume Units</td><td>Drug Conc</td><td>Conc Units</td><td>Amount</td><td>Amount And Volume</td><td>Dosage</td><td>Dosage Units</td><td>Frequency</td><td>Route</td><td>Reason</td><td>Remark</td><td>Ordered By</td></tr>");
+
+                ts1.forEach(new Selector.ForEachBlock<ResultSet>()
+                {
+                    @Override
+                    public void exec(ResultSet object) throws SQLException
+
+                    {
+                        Results rs = new ResultsImpl(object, colMap1);
+                        String status = rs.getString("TreatmentStatus");
+                        if  ("completed".equalsIgnoreCase(status))
+                        {
+                            msg.append("<tr>");
+                        }
+                        else {
+                            //If not "completed", highlight the record with yellow color
+                            msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
+                        }
+
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("id")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("calculated_status")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("TreatmentStatus")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("room")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("cage")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("startDate")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("endDate")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("dayselapsed")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("category")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("medication")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("volume")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("vol_units")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("concentration")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("conc_units")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("amountWithUnits")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("amountAndVolume")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("dosage")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("dosage_units")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("frequency")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("route")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("reason")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark"))+ "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("performedby")) + "</td>");
+                        msg.append("</tr>");
+                    }
+                });
+
+                msg.append("</table>");
+            }
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            if (totals.get(incomplete) == 0)
+            {
+                msg.append("<br>All treatments scheduled prior to " + _timeFormat.format(maxDate) + " have been marked complete as of " + getDateTimeFormat(c).format(curDate) + ".<p>\n");
+            }
+            else
+            {
+                msg.append("<br>There are " + totals.get(incomplete) + " treatments that have not been marked complete:<p>\n");
                 msg.append("<table border=1 style='border-collapse: collapse;'>");
 
                 for (String area : totalByArea.keySet())
@@ -194,5 +291,6 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
             }
             msg.append("<hr>\n");
         }
+
     }
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>AddDrugToAnimalRecord</name>
+
+    <description>Vitamin Administartion on Saturdays</description>
+
+    <transforms>
+
+        <transform id="Stored_Proc" type="StoredProcedure">
+            <description>Runs a stored procedure to update the drug table.</description>
+            <procedure schemaName="onprc_ehr" procedureName="AddDrugToAnimalRecord">
+            </procedure>
+        </transform>
+
+
+        <transform id="AddDrug">
+            <description>Import the drug data ( Multivitamin, NOS (E-87600)) from labkey_public.dbo.Temp_Drug table to Drug table in Prime</description>
+            <source schemaName="labkeyPublic" queryName="Temp_Drug"/>
+            <destination schemaName="study" queryName="drug"  />
+        </transform>
+
+    </transforms>
+
+    <schedule>
+        <!-- runs at noon every saturday -->
+        <cron expression="0 0 12 ? * SAT *"/>
+
+    </schedule>
+
+
+</etl>
+

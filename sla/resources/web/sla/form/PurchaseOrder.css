@@ -14,6 +14,11 @@
     border-radius: 5px;
 }
 
+.order-dashboard-warning {
+    color: #ff0000;
+    font-weight: bold;
+}
+
 .order-dashboard-summary .order-dashboard-item a {
     font-weight: bold;
 }

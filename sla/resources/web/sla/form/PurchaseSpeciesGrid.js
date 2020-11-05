@@ -207,7 +207,7 @@ Ext4.define('SLA.form.SpeciesGrid', {
                 editor: {
                     // use the input field that validates input as text
                     xtype: 'datefield',
-                    minValue: new Date()
+                    //minValue: new Date()
                 }
             },
             {
@@ -303,7 +303,7 @@ Ext4.define('SLA.form.SpeciesGrid', {
                 }
             },
             {
-                hidden: !LABKEY.user.canUpdate, // fields in this form should only be seen by Editors
+                //hidden: !LABKEY.user.canUpdate, // fields in this form should only be seen by Editors
                 dataIndex: 'sla_DOB',
                 text: 'SLA DOB',
                 width: 250,

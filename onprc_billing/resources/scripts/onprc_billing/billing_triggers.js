@@ -100,19 +100,19 @@ exports.init = function(EHR){
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Clinical Encounters', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow){
         if (row && oldRow){
             processUpdate(helper, 'encounters', ['project', 'Id', 'date', 'chargetype', 'procedureid'], row, oldRow);
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Clinpath Runs', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'clinpathruns', function(helper, scriptErrors, row, oldRow){
         if (row && oldRow){
             processUpdate(helper, 'clinpathRuns', ['project', 'Id', 'date', 'chargetype', 'servicerequested'], row, oldRow);
         }
     });
 
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'Blood Draws', function(helper, scriptErrors, row, oldRow){
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'blood', function(helper, scriptErrors, row, oldRow){
         console.log('inspecting blood draws record for billing audit');
 
         if (row && oldRow){

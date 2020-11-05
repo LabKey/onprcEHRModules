@@ -1,0 +1,267 @@
+<script type="text/javascript">
+
+    <!--Replaced this code with SSRS Reports interface  10-17-2019  R.Blasa -->
+
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+
+        Ext4.define('ONPRC.panel.PrintableComplianceReportsPanel', {
+            itemId: 'sheetPanel',
+            extend: 'Ext.panel.Panel',
+
+            initComponent: function(){
+                Ext4.apply(this, {
+                    border: false,
+                    defaults: {
+                        border: false
+                    },
+                    items: this.getItems()
+
+                });
+
+                this.callParent();
+            },
+
+            getItems: function() {
+                var container = '/ONPRC/Admin/Compliance/';
+                var items = [{
+                    html: 'NOTE:' +
+                    '<br>Click the button below to display the Employee\'s Summary Report.  The program will display a report of all training requirements for each employee.</b>',
+                    style: 'padding-bottom: 20px;'
+//                },{
+//                    xtype: 'checkcombo',    //Added: 10-18-2017  R.Blasa
+//                    itemId: 'employeeNames',
+//                    displayField: 'FullName',
+//                    valueField: 'employeeid',
+//                    width: 400,
+//                    multiSelect: true,
+//                    fieldLabel: 'Employee Name(s)',
+//                    store: {
+//                        type: 'labkey-store',
+//                        containerPath: container,
+//                        schemaName: 'ehr_compliancedb',
+//                        queryName: 'EmployeeActiveList',
+//                        columns: 'employeeid, FullName',
+//                        sort: 'lastName',
+//                        filterArray: [LABKEY.Filter.create('isActive', true, LABKEY.Filter.Types.EQUAL)],
+//                        autoLoad: true
+//                    }
+//
+//                },{
+//                    xtype: 'combobox',    //Added: 10-18-2017  R.Blasa
+//                    itemId: 'supervisorNames',
+//                    displayField: 'name',
+//                    valueField: 'supervisor',
+//                    width: 400,
+//                    multiSelect: true,
+//                    fieldLabel: 'Supervisor Name(s)',
+//                    store: {
+//                        type: 'labkey-store',
+//                        containerPath: container,
+//                        schemaName: 'ehr_compliancedb',
+//                        queryName: 'SupervisorActiveList',
+//                        columns: 'employeeid, supervisor, name',
+//                        sort: 'supervisor',
+//                        autoLoad: true
+//
+//                    }
+
+                }];
+                items.push({
+                    layout: {
+                        type: 'table',
+                        columns: 5,
+                        tdAttrs: {
+                            valign: 'top'
+                        }
+                    },
+                    defaults: {
+                        border: false
+                    },
+                    items: [{
+                        html: '<i>Report by Supervisor:</i>'
+                    },{
+                        style: 'padding-left: 5px;',
+                        html: '<br><br><br>'
+                    }, {
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Print Version',
+                        border: true,
+                        getUrlString: function ()
+                        {
+//                            var panel = this.up('#sheetPanel');
+//                            var field = panel.down('#employeeNames');
+//
+//                            var value = field.getValue() || [];
+//                            value = Ext4.isArray(value) ? value: [value];
+
+                            var params = {
+                                SessionId: LABKEY.Utils.getSessionID(),
+                                HostName: location.hostname
+
+                            };
+//                            if (!value)
+//                                return;
+
+
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder + '/' + 'Compliance/EmployeeComplianceSuperXMLReport';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+//                        },{
+//                            text: 'Print To PDF',
+//                            handler: function(menu){
+//                                var btn = menu.up('button');
+//                                var url = btn.getUrlString();
+//                                if (!url)
+//                                    return;
+//
+//                                url += '&rs:Format=PDF';
+//                                window.open(url);
+//                            }
+                        }]
+
+                    }]
+
+
+                 },{
+
+                    html: '<i>Report by Employee(s):</i>'  //Added: 10-17-2019  R.Blasa
+                },{
+                    style: 'padding-left: 5px;',
+                    html: ''
+                },{
+                    xtype: 'button',
+                    style: 'margin-left: 150px;',
+                    text: 'Print Version',
+                    border: true,
+                    getUrlString: function(){
+//                        var panel = this.up('#sheetPanel');
+//                        var field = panel.down('#supervisorNames');
+//
+//                        var value = field.getValue() || [];
+//                        value = Ext4.isArray(value) ? value: [value];
+
+                        var params = {
+                            SessionId: LABKEY.Utils.getSessionID(),
+                            HostName: location.hostname
+
+                        };
+//                        if (!value)
+//                            return;
+//
+//
+//                        if (!Ext4.isEmpty(value))
+//                            params.supervisor = value;
+//
+//                        if (params.EmployeeID){
+//                            delete params.EmployeeID
+//                        }
+
+
+
+                        Ext4.apply(params, {
+                            'rs:ClearSession': true,
+                            'rs:Command': 'render'
+                        });
+
+                        var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                        var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                        ssrsFolder = '/' + ssrsFolder + '/' + 'Compliance/EmployeeComplianceEmpXMLReport';
+
+                        url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+
+                        return url;
+                    },
+                    menu: [{
+                        text: 'Print',
+                        handler: function(menu){
+                            var btn = menu.up('button');
+                            var url = btn.getUrlString();
+                            if (!url)
+                                return;
+
+                            window.open(url);
+                        }
+//                    },{
+//                        text: 'Print To PDF',
+//                        handler: function(menu){
+//                            var btn = menu.up('button');
+//                            var url = btn.getUrlString();
+//                            if (!url)
+//                                return;
+//
+//                            url += '&rs:Format=PDF';
+//                            window.open(url);
+//                        }
+                    }]
+
+                });
+                return items;
+            },
+            getParamsgroup: function(supressErrors, skipRoomsIfAllSelected){
+                var params = {
+                    SessionId: LABKEY.Utils.getSessionID(),
+                    HostName: location.hostname
+
+                };
+
+
+
+                var roomFields = this.down('#animal_groups');
+                var rooms = roomFields.getValue() || [];
+                rooms = Ext4.isArray(rooms) ? rooms: [rooms];
+
+                params.rooms =rooms;
+
+                if (!rooms.length && !supressErrors){
+                    Ext4.Msg.alert('Error', 'Must select an Animal Group name');
+                    return;
+                }
+
+                return params;
+            },
+
+
+            getParams: function(supressErrors, skipRoomsIfAllSelected){
+            var params = {
+                SessionId: LABKEY.Utils.getSessionID(),
+                HostName: location.hostname
+
+            };
+
+
+
+            return params;
+        }
+
+
+    });
+
+
+    Ext4.create('ONPRC.panel.PrintableComplianceReportsPanel', {
+
+        }).render(webpart.wrapperDivId);
+    });
+
+</script>

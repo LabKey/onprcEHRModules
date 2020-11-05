@@ -874,6 +874,9 @@
             <column columnName="assignedVet">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="CEG_Plan">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Clinical Remarks</tableTitle>
     </table>
@@ -1235,6 +1238,9 @@
             <column columnName="method">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="type">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Chemistry Results</tableTitle>
     </table>
@@ -1388,6 +1394,9 @@
                 <datatype>varchar</datatype>
             </column>
             <column columnName="sampleId">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="sampletype">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="collectionMethod">
@@ -1716,6 +1725,9 @@
             </column>
             <column columnName="enddatefinalized">
                 <datatype>timestamp</datatype>
+            </column>
+            <column columnName="assignmentType">
+                <datatype>varchar</datatype>
             </column>
         </columns>
         <tableTitle>Assignment</tableTitle>
@@ -2254,6 +2266,9 @@
             <column columnName="eventType">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="endeventType">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="housingType">
                 <datatype>varchar</datatype>
             </column>
@@ -2267,6 +2282,9 @@
                 <datatype>varchar</datatype>
             </column>
             <column columnName="separationreason">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="remark2">
                 <datatype>varchar</datatype>
             </column>
             <column columnName="project">
@@ -2394,5 +2412,47 @@
             </column>
         </columns>
         <tableTitle>Organ Weights</tableTitle>
+    </table>
+    <table tableName="StudyDetails" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="enddate">
+                <datatype>timestamp</datatype>
+                <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
+            </column>
+            <column columnName="studyCohort">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="studyGroup">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="studyGroupNum">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="studyPhase">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+            </column>
+            <column columnName="objectid">
+                <datatype>entityid</datatype>
+                <propertyURI>urn:ehr.labkey.org/#ObjectId</propertyURI>
+                <isKeyField>true</isKeyField>
+            </column>
+        </columns>
+        <tableTitle>StudyDetails</tableTitle>
     </table>
 </tables>

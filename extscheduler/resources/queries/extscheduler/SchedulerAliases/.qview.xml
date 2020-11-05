@@ -1,0 +1,11 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" containerFilter="AllFolders">
+    <columns>
+        <column name="ResouceId"/>
+        <column name="Name"/>
+        <column name="StartDate"/>
+        <column name="StartDate"/>
+        <column name="EndDate"/>
+        <column name="UserId"/>
+        <column name="Alias"/>
+    </columns>
+</customView>

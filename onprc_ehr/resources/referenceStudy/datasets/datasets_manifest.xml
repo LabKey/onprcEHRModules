@@ -146,5 +146,8 @@
         <dataset name="organ_weights" id="5032" showByDefault="true" category="Pathology" demographicData="false" type="Standard">
             <tags/>
         </dataset>
+        <dataset name="StudyDetails" id="5039" showByDefault="true" category="Research Procedures" demographicData="false" type="Standard">
+            <tags/>
+        </dataset>
     </datasets>
 </datasets>

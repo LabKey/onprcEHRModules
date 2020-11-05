@@ -3,7 +3,7 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="vet_assignment_summary" tableDbType="NOT_IN_DB">
                 <tableTitle>Vet Assignment</tableTitle>
-                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer"/>
                 <columns>
 
                 </columns>

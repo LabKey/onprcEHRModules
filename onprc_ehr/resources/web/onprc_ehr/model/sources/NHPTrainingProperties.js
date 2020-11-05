@@ -15,27 +15,32 @@ EHR.model.DataModelManager.registerMetadata('NHPTraining', {
     byQuery: {
         'onprc_ehr.NHP_Training': {
             training_Start_Date: {
-                xtype: 'xdatetime',
-                editorConfig: {
-                    dateFormat: 'Y-m-d',
-                    timeFormat: 'H:i'
-                },
-
+                xtype: 'datefield',
+                extFormat: LABKEY.extDefaultDateFormat,
                 columnConfig: {
                     width: 150
                 }
             },
 
             training_End_Date: {
-                xtype: 'xdatetime',
-                editorConfig: {
-                    dateFormat: 'Y-m-d',
-                    timeFormat: 'H:i'
-                },
-
+                xtype: 'datefield',
+                extFormat: LABKEY.extDefaultDateFormat,
                 columnConfig: {
                     width: 150
                 }
+            },
+
+            //Added: 5-22-2018  R.Blasa
+            created: {
+                hidden: true,
+                xtype: 'datefield',
+                extFormat: LABKEY.extDefaultDateFormat
+            },
+        //Added: 5-22-2018  R.Blasa
+            modified: {
+                hidden: true,
+                xtype: 'datefield',
+                extFormat: LABKEY.extDefaultDateFormat
             },
 
             training_type: {

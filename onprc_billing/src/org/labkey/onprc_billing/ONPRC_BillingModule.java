@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import org.labkey.api.audit.AuditLogService;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
+import org.labkey.api.data.JdbcType;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.buttons.MarkCompletedButton;
 import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
@@ -33,6 +34,7 @@ import org.labkey.api.module.ModuleContext;
 import org.labkey.api.pipeline.PipelineService;
 import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.QuerySchema;
+import org.labkey.api.query.QueryService;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.view.ViewContext;
 import org.labkey.api.view.WebPartFactory;
@@ -42,6 +44,8 @@ import org.labkey.onprc_billing.button.ChargeEditButton;
 import org.labkey.onprc_billing.button.ProjectEditButton;
 import org.labkey.onprc_billing.dataentry.ChargesAdvancedFormType;
 import org.labkey.onprc_billing.dataentry.ChargesFormType;
+//import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
+import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
 import org.labkey.onprc_billing.dataentry.ReversalFormType;
 import org.labkey.onprc_billing.notification.BillingValidationNotification;
 import org.labkey.onprc_billing.notification.DCMFinanceNotification;
@@ -53,6 +57,7 @@ import org.labkey.onprc_billing.security.ONPRCAliasEditorPermission;
 import org.labkey.onprc_billing.security.ONPRCAliasEditorRole;
 import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;
 import org.labkey.onprc_billing.security.ONPRCBillingAdminRole;
+import org.labkey.onprc_billing.security.ONPRCVirologyAccessRole;
 import org.labkey.onprc_billing.table.ChargeableItemsCustomizer;
 import org.labkey.onprc_billing.table.ONPRC_BillingCustomizer;
 
@@ -71,11 +76,11 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     {
         return NAME;
     }
-
+//This was updated to match all sets
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 12.372;
+        return 20.516;
     }
 
     @Override
@@ -98,6 +103,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
 
         RoleManager.registerRole(new ONPRCBillingAdminRole());
         RoleManager.registerRole(new ONPRCAliasEditorRole());
+        RoleManager.registerRole(new ONPRCVirologyAccessRole());
     }
 
     @Override
@@ -116,6 +122,9 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesAdvancedFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ReversalFormType.class, this));
+
+        //Added: 5/6/2018 Kollil
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesVirologyCoreFormType.class, this));
 
         //NOTE: not really being used, so have disabled
         //Resource billingTriggers = getModuleResource("/scripts/onprc_billing/billing_triggers.js");
@@ -136,6 +145,9 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new ChargeEditButton(this, ONPRC_BillingSchema.NAME, ONPRC_BillingSchema.TABLE_CHARGE_RATE_EXEMPTIONS), ONPRC_BillingSchema.NAME, ONPRC_BillingSchema.TABLE_CHARGE_RATE_EXEMPTIONS);
         EHRService.get().registerMoreActionsButton(new ChargeEditButton(this, ONPRC_BillingSchema.NAME, ONPRC_BillingSchema.TABLE_CHARGE_RATES), ONPRC_BillingSchema.NAME, ONPRC_BillingSchema.TABLE_CHARGE_RATES);
         EHRService.get().registerMoreActionsButton(new ChargeEditButton(this, ONPRC_BillingSchema.NAME, ONPRC_BillingSchema.TABLE_CREDIT_ACCOUNT), ONPRC_BillingSchema.NAME, ONPRC_BillingSchema.TABLE_CREDIT_ACCOUNT);
+        QueryService.get().registerPassthroughMethod("RateCalc","onprc_ehr",JdbcType.DOUBLE,5,5);
+
+
     }
 
     @Override

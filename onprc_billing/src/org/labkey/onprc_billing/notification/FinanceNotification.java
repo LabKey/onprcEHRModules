@@ -21,6 +21,8 @@ import org.labkey.api.data.Aggregate;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.ContainerFilter;
+import org.labkey.api.data.ContainerFilterable;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.SQLFragment;
@@ -189,6 +191,10 @@ public class FinanceNotification extends AbstractNotification
         getExpiredCreditAliases(ehrContainer, u, msg);
         getCreditAliasesDisabled(ehrContainer, u, msg);
         chargesMissingRates(financeContainer, u, msg);
+
+        //Added by Kollil
+        getSchedulerAliases(ehrContainer, u, msg);
+
         surgeriesNotBilled(ehrContainer, u, start, endDate, msg);
         simpleAlert(financeContainer, u , msg, "onprc_billing", "invalidChargeRateEntries", " charge rate records with invalid or overlapping intervals.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
         simpleAlert(financeContainer, u , msg, "onprc_billing", "invalidChargeRateExemptionEntries", " charge rate exemptions with invalid or overlapping intervals.  This indicates a problem with how the records are setup in the system and may cause problems with the billing calculation.");
@@ -789,4 +795,28 @@ public class FinanceNotification extends AbstractNotification
             msg.append("<hr>");
         }
     }
+
+    private void getSchedulerAliases(Container c, User u, StringBuilder msg)
+    {
+
+        if (QueryService.get().getUserSchema(u, c, "extscheduler") == null)
+        {
+            msg.append("<b>Warning: the extscheduler schema has not been enabled in this folder, so the alias alert cannot run<p><hr>");
+            return;
+        }
+
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("SchedulerAliases");
+        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Alias"), null, CompareType.NONBLANK);
+        TableSelector ts = new TableSelector(ti, filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>Warning: In Resource Scheduler, there are " + count + " invalid Aliases.</b><p>");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "extscheduler", "SchedulerAliases", null) +  "'>Click here to view them</a>");
+            msg.append("<hr>");
+        }
+
+    }
+
 }

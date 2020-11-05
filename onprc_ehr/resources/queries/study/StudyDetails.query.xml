@@ -1,0 +1,105 @@
+<!--StudyDetails schema. Added by Kolli, 02/20/2020 -->
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="StudyDetails" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
+                <tableTitle>Study Details</tableTitle>
+                <columns>
+                    <column columnName="rowId">
+                        <isHidden>true</isHidden>
+                    </column>
+
+                    <column columnName="Id">
+                        <columnTitle>Id</columnTitle>
+                    </column>
+
+                    <column columnName="project">
+                        <columnTitle>Center Project</columnTitle>
+                        <nullable>false</nullable>
+                    </column>
+
+                    <column columnName="Date">
+                        <columnTitle>Start Date</columnTitle>
+                    </column>
+
+                    <column columnName="endDate">
+                        <columnTitle>End Date</columnTitle>
+                    </column>
+
+                    <column columnName="studyCohort">
+                        <columnTitle>Study Cohort</columnTitle>
+                    </column>
+
+                    <column columnName="studyGroup">
+                        <columnTitle>Study Group</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>StudyDetails_group_values</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="studyGroupNum">
+                        <columnTitle>Study Group #</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>StudyDetails_cohort_values</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="studyPhase">
+                        <columnTitle>Study Phase</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>StudyDetails_phase_values</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="remark">
+                        <columnTitle>Remark</columnTitle>
+                    </column>
+
+                    <column columnName="qcstate">
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>qcstate</fkTable>
+                            <fkColumnName>RowId</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="taskid">
+                        <columnTitle>Task Id</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>tasks</fkTable>
+                            <fkColumnName>taskid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="objectid">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="performedby">
+                        <columnTitle>Performed by</columnTitle>
+                    </column>
+                    <column columnName="created">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="createdby"/>
+
+                    <column columnName="modified">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="modifiedby"/>
+
+                    <column columnName="container">
+                        <isHidden>true</isHidden>
+                    </column>
+
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

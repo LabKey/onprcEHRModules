@@ -10,6 +10,29 @@ EHR.model.DataModelManager.registerMetadata('LabworkPanel', {
     },
     byQuery: {
         'study.clinpathRuns': {
+            servicerequested: {
+                allowBlank: false,
+                columnConfig: {
+                    width: 250
+                },
+                lookup: {
+                   xtype: 'labkey-combo',
+                   schemaName: 'onprc_ehr',
+                  queryName: 'labServiceRequest_Active',
+                  keyColumn: 'servicename',
+                  columns: '*',
+                  sort: 'chargetype,servicename,outsidelab'
+                },
+                editorConfig: {
+                    anyMatch: true,
+                    listConfig: {
+                        innerTpl: '{[(values.chargetype ? "<b>" + values.chargetype + ":</b> " : "") + values.servicename + (values.outsidelab ? "*" : "")]}',
+                            getInnerTpl: function () {
+                            return this.innerTpl;
+                        }
+                    }
+                }
+            },
 
             performedby: {
                 defaultValue: LABKEY.Security.currentUser.displayName ,

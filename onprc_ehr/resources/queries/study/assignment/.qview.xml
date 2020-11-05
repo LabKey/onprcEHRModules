@@ -30,6 +30,7 @@
         <column name="date"/>
         <column name="enddate"/>
         <column name="projectedRelease"/>
+        <column name="assignmentType"/>
         <column name="assignCondition"/>
         <column name="projectedReleaseCondition"/>
         <column name="releaseCondition"/>

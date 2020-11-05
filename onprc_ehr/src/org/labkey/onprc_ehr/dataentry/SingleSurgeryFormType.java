@@ -74,6 +74,12 @@ public class SingleSurgeryFormType extends EncounterForm
         {
             s.addConfigSource("Encounter");
             s.addConfigSource("Surgery");
+
+            //Added: 9-6-2017  R.Blasa
+            s.addConfigSource("Surgery_Blood");
+
+            //Added: 10-13-2017  R.Blasa
+            s.addConfigSource("Biopsy_Staff");
         }
     }
 

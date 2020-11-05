@@ -23,9 +23,13 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.Group;
+import org.labkey.api.security.GroupManager;
 import org.labkey.api.security.PrincipalType;
 import org.labkey.api.security.UserPrincipal;
+import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.security.xml.GroupEnumType;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -62,6 +66,7 @@ public class BiopsyFormType extends EncounterForm
             s.addConfigSource("Encounter");
             s.addConfigSource("Pathology");
             s.addConfigSource("Biopsy");
+            s.addConfigSource("Biopsy_Staff");
         }
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Pathology.js"));
@@ -114,8 +119,20 @@ public class BiopsyFormType extends EncounterForm
         UserPrincipal up = org.labkey.api.security.SecurityManager.getPrincipal(NecropsyFormType.DEFAULT_GROUP, getCtx().getContainer(), true);
         return up != null && up.getPrincipalType() == PrincipalType.GROUP ? up.getUserId() : null;
     }
-
+    //Modified: 12-3-2019  R.Blasa
     @Override
+    public boolean isVisible()
+    {
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "Pathology External Entry", GroupEnumType.SITE);
+        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
+
+        return super.isVisible();
+    }
+
+        @Override
     public JSONObject toJSON()
     {
         JSONObject ret = super.toJSON();

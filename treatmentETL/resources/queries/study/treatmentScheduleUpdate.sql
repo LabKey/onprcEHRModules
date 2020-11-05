@@ -1,3 +1,7 @@
+--Date   2019-03-15
+--By  jonesga
+--inserted missing code at line 87
+
 SELECT
 d.id,
 d.calculated_status,
@@ -84,6 +88,7 @@ JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study."Trea
   ON (dr.dateOnly >= t1.dateOnly and dr.dateOnly <= t1.enddateCoalesced AND
       --technically the first day of the treatment is day 1, not day 0
       mod(CAST(timestampdiff('SQL_TSI_DAY', CAST(t1.dateOnly as timestamp), dr.dateOnly) as integer), t1.frequency.intervalindays) = 0
+       OR (t1.frequency.dayofweek is not null And t1.frequency.intervalindays is null And dr.DayOfWeek in (select k.value from onprc_ehr.Frequency_DayofWeek k where k.FreqKey = t1.frequency.rowid ))
   )
 
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.treatment_times tt ON (tt.treatmentid = t1.objectid)
@@ -106,7 +111,8 @@ WHERE t1.date is not null
 
 ) s ON (s.animalid = d.id)
 
-WHERE d.calculated_status = 'Alive'
+WHERE --d.calculated_status = 'Alive'
 
 --account for date/time in schedule
-and s.date >= s.startDate and s.date <= s.enddate
+--and
+s.date >= s.startDate and s.date <= s.enddate

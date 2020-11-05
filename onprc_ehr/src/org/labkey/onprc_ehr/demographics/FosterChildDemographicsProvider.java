@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.demographics;
 
+import org.labkey.api.data.Sort;
 import org.labkey.api.ehr.demographics.AbstractListDemographicsProvider;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
@@ -46,11 +47,17 @@ public class FosterChildDemographicsProvider extends AbstractListDemographicsPro
     }
 
     @Override
+    protected Sort getSort()
+    {
+
+        return new Sort("-date");
+    }
+
+    @Override
     public boolean requiresRecalc(String schema, String query)
     {
-        return ("study".equalsIgnoreCase(schema) && "Parentage".equalsIgnoreCase(query)) ||
-                ("study".equalsIgnoreCase(schema) && "Birth".equalsIgnoreCase(query)) ||
-                ("study".equalsIgnoreCase(schema) && "Demographics".equalsIgnoreCase(query));
+        return ("study".equalsIgnoreCase(schema) && "Parentage".equalsIgnoreCase(query)) ;
+
     }
 
 }

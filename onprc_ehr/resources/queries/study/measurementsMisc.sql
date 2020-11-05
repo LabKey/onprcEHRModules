@@ -20,7 +20,8 @@ SELECT
   m.tissue,
   m.measurement1,
   m.measurement2,
-  m.measurement3
+  m.measurement3,
+  m.remark
 
 from study.measurements m
 where m.tissue NOT IN (SELECT code FROM ehr_lookups.snomed_subset_codes sc WHERE sc.primaryCategory = 'Measurements')

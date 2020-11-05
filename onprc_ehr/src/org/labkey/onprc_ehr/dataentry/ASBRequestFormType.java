@@ -26,14 +26,10 @@ import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
 
-/**
- * User: bimber
- * Date: 7/29/13
- * Time: 5:03 PM
- */
+//Modified: 12-21-2016 R.blasa
 public class ASBRequestFormType extends RequestForm
 {
-    public static final String NAME = "ASB Services Request";
+    public static final String NAME = "ASB SERVICES REQUEST";
     public static final String DEFAULT_GROUP = "ASB Services";
 
     public ASBRequestFormType(DataEntryFormContext ctx, Module owner)
@@ -42,9 +38,12 @@ public class ASBRequestFormType extends RequestForm
                 new RequestFormSection(),
                 //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),
-                new BloodDrawFormSection(true)
+                new ClinicalEncountersFormSection(),
+                new BloodDrawFormSection(true),
 
-              //  new DrugAdministrationRequestFormSection() Removed 6/17/2015 GJONES ISsue 1820
+//                Modified: 7-18-2017   R.Blasa
+
+                new DrugAdministrationRequestFormSection()
         ));
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ASB_Services.js"));

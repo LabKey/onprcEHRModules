@@ -59,30 +59,32 @@ Ext4.define('ONPRC_EHR.window.AddScheduledTreatmentWindow', {
                  xtype: 'ehr-roomfield',
                  itemId: 'roomField'
              },*/{
-                xtype: 'checkcombo',
-                forceSelection: true,
-                multiSelect: true,
-                addAllSelector: true,
-                fieldLabel: 'Treatment Time',
-                itemId: 'timeField',
-                displayField: 'treatmentTime',
-                valueField: 'timeValue',
-                store: {
-                    type: 'array',
-                    fields: ['timeValue','treatmentTime'],
-                    data: [
-                        ['800', '8:00 AM'],
-                        ['1200', '12:00 Noon'],
-                        ['1600', '4:00 PM'],
-                        ['2000', '8:00 PM']
-                    ]
-                }
-            },{
-                xtype: 'ehr-snomedtreatmentcombo',
-                defaultSubset: 'Post Op Meds' ,
-                fieldLabel: 'Treatment(s)',
-                itemId: 'code'
-            },/*
+                    xtype: 'checkcombo',
+                    forceSelection: true,
+                    multiSelect: true,
+                    addAllSelector: true,
+                    fieldLabel: 'Treatment Time',
+                    itemId: 'timeField',
+                    displayField: 'treatmentTime',
+                    valueField: 'timeValue',
+                    store: {
+                        type: 'array',
+                        fields: ['timeValue','treatmentTime'],
+                        data: [
+                            ['800', '8:00 AM'],
+                            ['1200', '12:00 Noon'],
+                            ['1400', '2:00 PM'],
+                            ['1600', '4:00 PM'],
+                            ['2000', '8:00 PM']
+                        ]
+                    }
+                },{
+                    xtype: 'ehr-snomedtreatmentcombo',    //Modified 6-22-2015 Blasa
+                    defaultSubset: 'Post Op Meds' ,
+                    fieldLabel: 'Treatment(s)',
+                    itemId: 'code'
+                },
+              /*
               {
                     xtype: 'checkcombo',
                     forceSelection: true,

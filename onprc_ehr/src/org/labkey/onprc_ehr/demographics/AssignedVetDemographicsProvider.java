@@ -63,6 +63,8 @@ public class AssignedVetDemographicsProvider extends AbstractListDemographicsPro
     @Override
     public boolean requiresRecalc(String schema, String query)
     {
-        return "study".equalsIgnoreCase(schema) && ("housing".equalsIgnoreCase(query) || "assignment".equalsIgnoreCase(query) || "cases".equalsIgnoreCase(query));
+        return "study".equalsIgnoreCase(schema) && ("Demographics".equalsIgnoreCase(query) || "housing".equalsIgnoreCase(query) || "assignment".equalsIgnoreCase(query) || "cases".equalsIgnoreCase(query)) ||
+                ("onprc_ehr".equalsIgnoreCase(schema) && "vet_assignment".equalsIgnoreCase(query));
     }
 }
+

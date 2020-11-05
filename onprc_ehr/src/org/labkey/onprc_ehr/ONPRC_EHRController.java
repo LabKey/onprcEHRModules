@@ -91,6 +91,8 @@ public class ONPRC_EHRController extends SpringActionController
             //Added 6-5-2016 Blasa
             resultProperties.put("sla", getSection("/ONPRC/SLA"));
 
+            //Added by kollil 5/7/2019
+            resultProperties.put("reservation", getSection("/ONPRC/Room Reservations"));
 
             //for now, EHR is hard coded
             List<JSONObject> ehr = new ArrayList<>();

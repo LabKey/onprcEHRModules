@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>AvailableBloodVolume</name>
+
+    <description>Transfers from the Available Blood Volume Calculation in labkeyPublic.onprc_ehr to Production</description>
+
+
+    <transforms>
+
+
+        <transform id="step1">
+
+            <description>Truncate and Populate Available Blood Data</description>
+
+            <source schemaName="labkeyPublic" queryName="AvailableBloodVolume"/>
+
+            <destination schemaName="ONPRC_EHR" queryName="AvailableBloodVolume" targetOption="truncate" />
+
+        </transform>
+
+
+    </transforms>
+    	<schedule>
+
+            <cron expression="0 20 0,7,8,9,10,11,12,13,14,15,16,17,18 ? * * *"/>
+
+        </schedule>
+
+
+</etl>
+
+
+
+

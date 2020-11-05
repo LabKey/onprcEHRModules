@@ -19,7 +19,6 @@ SELECT
   p.chargeId,
   e.objectid as sourceRecord,
   e.taskid
-
 FROM study.encounters e
 JOIN onprc_billing.procedureFeeDefinition p ON (
   p.procedureId = e.procedureId and
@@ -47,6 +46,7 @@ SELECT
   (select rowid from onprc_billing_public.chargeableItems ci where ci.name = 'Blood Draw' and ci.active = true) as chargeId,
   max(e.objectid) as sourceRecord,
   e.taskid
+
 
 FROM study.blood e
 WHERE CAST(e.datefinalized as date) >= CAST(StartDate as date) AND CAST(e.datefinalized as date) <= CAST(EndDate as date)
@@ -121,7 +121,6 @@ null as procedureId,
 (select rowid from onprc_billing_public.chargeableItems ci where ci.name = 'Drug Administration' and ci.active = true) as chargeId,
 max(e.objectid) as sourceRecord,
 e.taskid
-
 
 
 FROM study.drug e  --join "/ONPRC/EHR".onprc_billing.medicationFeeDefinition mfd ON mfd.code = e.code .code

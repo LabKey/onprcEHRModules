@@ -6,11 +6,14 @@
         <column name="room"/>
         <column name="cage"/>
         <column name="eventtype"/>
+        <column name="remark"/>
         <column name="housingtype"/>
         <column name="observation"/>
         <column name="outcome"/>
+        <column name="enddate"/>
+        <column name="endeeventType"/>
+        <column name="remark2"/>
         <column name="separationreason"/>
-        <column name="remark"/>
         <column name="performedby"/>
         <column name="taskid"/>
         <column name="QCState"/>

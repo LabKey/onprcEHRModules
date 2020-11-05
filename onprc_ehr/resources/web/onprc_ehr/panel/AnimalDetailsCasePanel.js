@@ -169,7 +169,7 @@ Ext4.define('onprc_ehr.panel.AnimalDetailsCasePanel', {
                     hidden: EHR.Security.hasClinicalEntryPermission() && !EHR.Security.hasPermission(EHR.QCStates.COMPLETED, 'update', [{schemaName: 'study', queryName: 'Treatment Orders'}]),
                     handler: function(){
                         if (this.subjectId){
-                            Ext4.create('EHR.window.ManageTreatmentsWindow', {animalId: this.subjectId}).show();
+                            Ext4.create('onprc_ehr.window.ManageTreatmentsWindow', {animalId: this.subjectId}).show();
                         }
                         else {
                             console.log('no id');

@@ -1,0 +1,31 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="clinremarks" tableDbType="TABLE" useColumnOrder="true">
+                <tableTitle>Clinical Remarks Open</tableTitle>
+                <columns>
+                    <column columnName="qcstate" />
+                    <column columnName="Id"/>
+                    <column columnName="date"/>
+                    <column columnName="project"/>
+                    <column columnName="CEG_Plan"/>
+
+                    <column columnName="remark"/>
+                    <column columnName="description" />
+
+                    <column columnName="performedby"/>
+                    <column columnName="category"/>
+                    <column columnName="taskid" />
+                    <column columnName="assignedVet">
+                        <!--<isKeyField>true</isKeyField>-->
+                        <columnTitle>Key</columnTitle>
+                        <shownInInsertView>false</shownInInsertView>
+                        <shownInUpdateView>false</shownInUpdateView>
+                        <shownInDetailsView>false</shownInDetailsView>
+                        <isHidden>true</isHidden>
+                    </column>
+              </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

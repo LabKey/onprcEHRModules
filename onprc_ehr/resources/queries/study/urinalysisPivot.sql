@@ -31,7 +31,7 @@ FROM
       WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
       ) b
 
-    GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.collectionmethod, b.remark
+    GROUP BY b.id, b.date, b.runId, b.testId, b.method, b.collectionmethod
     PIVOT results BY testId IN (select testid from ehr_lookups.urinalysis_tests t WHERE t.includeInPanel = true order by sort_order)
     ) pvt
 
@@ -43,7 +43,7 @@ FROM
     b.method,
     b.collectionmethod,
     b.runId,
-    group_concat(distinct b.remark, chr(10)) as remark,
+    group_concat(distinct b.remark, chr(10)) as remark
 
     FROM (
 
@@ -53,12 +53,12 @@ FROM
         coalesce(b.runId, b.objectid) as runId,
         b.remark,
         b.method,
-        b.runid.collectionmethod,
+        b.runid.collectionmethod
       FROM study."Urinalysis Results" b
       WHERE b.testId.includeInPanel = true and b.qcstate.publicdata = true
       ) b
 
-    GROUP BY b.id, b.date, b.runId, b.method, b.collectionmethod, b.remark
+    GROUP BY b.id, b.date, b.runId, b.method, b.collectionmethod
     ) grp
 
-  ON pvt.id = grp.id AND pvt.date = grp.date AND pvt.method = grp.method AND pvt.runId = grp.runId AND pvt.collectionmethod = grp.collectionmethod
+  ON pvt.id = grp.id AND pvt.date = grp.date  AND pvt.runId = grp.runId AND pvt.collectionmethod = grp.collectionmethod

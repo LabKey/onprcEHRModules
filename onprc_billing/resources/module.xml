@@ -7,6 +7,14 @@
                 <permission>ADMIN</permission>
             </editPermissions>
         </propertyDescriptor>
+        <propertyDescriptor name="BillingContainer_Public">
+            <canSetPerContainer>true</canSetPerContainer>
+            <description>The is the path to the container holding billing data made accessible for the non-finance users.  Use of slashes is very important - it should be in the format '/myProject/ehr'</description>
+            <defaultValue>/onprc/admin/finance/public</defaultValue>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+        </propertyDescriptor>
         <propertyDescriptor name="IssuesContainer">
             <canSetPerContainer>true</canSetPerContainer>
             <description>The is the path to the issue tracker used by the Finance group.  Use of slashes is very important - it should be in the format '/myProject/ehr'</description>

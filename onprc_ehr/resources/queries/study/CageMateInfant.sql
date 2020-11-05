@@ -15,17 +15,24 @@
  */
 
 
+
 select
 
 a.id,
-a.room,
-e.offspringUnder1Yr as InfantCageMate,
+group_concat(e.Id ) as InfantCageMate,
 a.QCState
 
- from study.housingRoommates a, study.demographicsInfantUnderOne e
-where  a.RoommateId.Id = e.offspringUnder1Yr
-And a.Id.DataSet.demographics.calculated_status.code = 'Alive'
-And e.Id.DataSet.demographics.calculated_status.code = 'Alive'
-and a.roommateEnd  is null
-and a.qcstate = 18
-and a.room.housingtype.value = 'Cage Location'
+
+ from study.housing a, study.demographics e
+where  a.Id <> e.Id
+And e.calculated_status.code = 'Alive'
+and a.Enddate  is null
+and a.qcstate = 18 and e.qcstate = 18
+and a.housingType.value = 'Cage Location'
+and (a.room.room = e.Id.curLocation.room and a.cage = e.Id.curLocation.cage)
+and e.Id.age.ageInyears < 1
+
+
+Group by a.id, a.QCState
+
+
