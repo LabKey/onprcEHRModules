@@ -16,9 +16,7 @@
  * Created by jonesga
  * Purpose -  View joining Scheduler Resources, Events and the User Data
  */
-
-
-DROP VIEW IF EXISTS extScheduler.vw_Covid19Research
+EXEC core.fn_dropifexists 'vw_Covid19Research', 'extScheduler', 'VIEW', NULL;
 GO
 
 CREATE VIEW extScheduler.vw_Covid19Research AS

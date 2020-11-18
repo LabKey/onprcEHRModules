@@ -15,7 +15,7 @@
 -- Create date: 2020-05-13
 -- Description:	PRocedure to Block out Scheduling for Covid19 testing for  7 to 8 on Monday and Friday
 -- =============================================
-DROP PROCEDURE IF EXISTS [extscheduler].[extBlockOutMorning]
+EXEC core.fn_dropifexists 'extBlockOutMorning', 'extscheduler', 'PROCEDURE'
 GO
 
 CREATE PROCEDURE [extscheduler].[extBlockOutMorning]

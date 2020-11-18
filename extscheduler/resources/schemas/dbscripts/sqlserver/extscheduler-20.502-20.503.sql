@@ -4,8 +4,9 @@ Created by jonesga
 Purpose:  Dataset to mimic DateRange from Labkey for SCheduler actionin SQL
 
 */
-DROP TABLE IF EXISTS extScheduler.DateParts
+EXEC core.fn_dropifexists 'DateParts','extScheduler','TABLE';
 GO
+
 CREATE TABLE extScheduler.dateParts
 (date datetime,
 dateOnly datetime,

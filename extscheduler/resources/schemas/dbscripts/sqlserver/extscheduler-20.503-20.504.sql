@@ -14,9 +14,9 @@
 -- Create date: 2020-05-13
 -- Description:	PRocedure to Block out Scheduling for Covid19 testing for  3:30 to 7 PM on Monday and Friday
 -- =============================================
-
-DROP PROCEDURE IF EXISTS extscheduler.extBlockOutEvening
+EXEC core.fn_dropifexists 'extBlockOutEvening', 'extscheduler', 'PROCEDURE'
 GO
+
 CREATE PROCEDURE extscheduler.extBlockOutEvening
     -- Add the parameters for the stored procedure here
     @Month INTEGER, @ResourceID INTEGER
