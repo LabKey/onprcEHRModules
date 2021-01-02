@@ -63,9 +63,6 @@
         WHERE d.gender = 'm' and DateDiff(day, d.birth, b.date) > 912.5 --(2.5 years)
           AND d.species = d1.species
 
-
-
-
-
-
     END
+
+GO

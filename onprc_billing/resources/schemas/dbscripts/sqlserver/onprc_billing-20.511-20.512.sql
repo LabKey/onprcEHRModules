@@ -18,3 +18,5 @@ CREATE PROCEDURE [onprc_billing].[OGA_RemoveRecords]
 
 
     END
+
+GO

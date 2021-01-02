@@ -50,6 +50,6 @@ BEGIN
     where c.dayofWeek in (1,3,4,5,7) and c.Month = @Month
 --Days of Week start with Sunday
 
-
-
 END
+
+GO

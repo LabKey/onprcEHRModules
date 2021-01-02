@@ -123,3 +123,5 @@ Select @unitCostVal =
            return @unitCostVal--@projectExemption
 
 End
+
+GO
