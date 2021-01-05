@@ -21,6 +21,8 @@ import org.labkey.api.data.Aggregate;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.ContainerFilter;
+import org.labkey.api.data.ContainerFilterable;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
@@ -32,6 +34,7 @@ import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.notification.AbstractEHRNotification;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.FieldKey;
@@ -42,16 +45,11 @@ import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.ehr.notification.AbstractEHRNotification;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
-
-import org.labkey.api.data.ContainerFilter;
-import org.labkey.api.data.ContainerFilterable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1020,12 +1018,52 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " DCM action items.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.actiondate~dateeq="+ getDateTimeFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
-            msg.append("<hr>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.date~dateeq="+ getDateTimeFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("</p><br><hr>");
         }
         else
         {
-            msg.append("<b>WARNING: There are no DCM action items!</b><br>\n");
+            msg.append("<b>WARNING: There are no DCM action items!</b><br><hr>");
+        }
+
+        //Added by Kollil on 11/04/2020
+        //New alert for DCM notes (category = notes pertaining to DAR) added the previous day.
+
+        //Get yesterday date
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -1);
+        String formatted = getDateFormat(c).format(cal.getTime());
+
+        SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_EQUAL);
+        filter1.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
+        TableSelector ts1 = new TableSelector(getStudySchema(c, u).getTable("notes"), filter1, null);
+        long count1 = ts1.getRowCount();
+        if (count1 > 0)
+        {
+            msg.append("<b>There are " + count1 + " DCM notes entries added yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("</p><br><hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: No DCM notes added yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
+        }
+
+        //Added by Kollil on 11/04/2020
+        //New alert for Flags added the previous day.
+        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_EQUAL);
+        TableSelector ts2 = new TableSelector(getStudySchema(c, u).getTable("flags"), filter2, null);
+        long count2 = ts2.getRowCount();
+        if (count2 > 0)
+        {
+            msg.append("<b>There are " + count2 + " flags added yesterday. </b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+            msg.append("</p><hr>");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no flags added yesterday!</b><br><hr>");
         }
     }
 
@@ -1061,7 +1099,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             return;
         }
         //Daily events query
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler");
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler_Daily");
         ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
         TableSelector ts = new TableSelector(ti, null, null);
         long count = ts.getRowCount();
@@ -1074,7 +1112,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         if (count > 0) {//Daily events count
             msg.append("<b>There are " + count + " PMIC events scheduled for today:</b>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler", null) + "'>Click here to view them</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Daily", null) + "'>Click here to view them</a></p>\n");
             msg.append("<hr>");
         }
         if (count1 > 0) {//Weekly events count
@@ -1106,14 +1144,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             else {
                 msg.append("<br><b>Daily PMIC events:</b><br><br>\n");
                 msg.append("<table border=1 style='border-collapse: collapse;'>");
-                msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + "style='font-weight: bold;'>");
+                msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
                 msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
 
                 ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
                     @Override
                     public void exec(ResultSet object) throws SQLException {
                         Results rs = new ResultsImpl(object, colMap);
-                        msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
+                        msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
                         msg.append("<td>" + rs.getString("resourceid") + "</td>");
                         msg.append("<td>" + rs.getString("startdate") + "</td>");
                         msg.append("<td>" + rs.getString("enddate") + "</td>");
@@ -1153,14 +1191,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 else {
                     msg.append("<br><br><b>Weekly PMIC events:</b><br><br>\n");
                     msg.append("<table border=1 style='border-collapse: collapse;'>");
-                    msg.append("<tr bgcolor = " + '"' + "#00FF00" + '"' + "style='font-weight: bold;'>");
+                    msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
                     msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
 
                     ts3.forEach(new Selector.ForEachBlock<ResultSet>() {
                         @Override
                         public void exec(ResultSet object) throws SQLException {
                             Results rs1 = new ResultsImpl(object, colMap1);
-                            msg.append("<tr bgcolor = " + '"' + "#00FF00" + '"' + ">");
+                            msg.append("<tr bgcolor = " + '"' + "#CEF6CE" + '"' + ">");
                             msg.append("<td>" + rs1.getString("resourceid") + "</td>");
                             msg.append("<td>" + rs1.getString("startdate") + "</td>");
                             msg.append("<td>" + rs1.getString("enddate") + "</td>");
@@ -1179,6 +1217,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             }
         }
     }
+    //End of PMIC alert
 
     /**
      * we find protocols over the animal limit

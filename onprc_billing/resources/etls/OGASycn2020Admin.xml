@@ -1,0 +1,28 @@
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>OGASync2020Admin</name>
+    <description>Copies OGA Data from external source to PRIME for PRocessing </description>
+    <transforms>
+        <transform id="OGAsync_Remove" type="StoredProcedure">
+            <description>Runs a stored procedure to Update Transaction log based on OGA External Schema.</description>
+            <procedure procedureName="ClearOGASync" schemaName="ONPRC_billing"/>
+        </transform>
+        <transform id="OGASync">
+            <description>Import to OGA Sync in Prime</description>
+            <source queryName="ogaSourceOutPut" schemaName="OGA"/>
+            <destination queryName="ogasynch" schemaName="ONPRC_billing" targetOption="truncate"/>
+        </transform>
+        <!--This removes all records from aliases dataset that are not OHSU GL Category -->
+        <transform id="OGA_Remove" type="StoredProcedure">
+            <description>Runs a stored procedure to Update Transaction log based on OGA External Schema.</description>
+            <procedure procedureName="OGA_RemoveRecords" schemaName="ONPRC_billing"/>
+        </transform>
+        <!-- This inserts records into the Alias from OGA Sync -->
+        <transform id="OGA_Insert" type="StoredProcedure">
+            <description>Runs a stored procedure Update the OGA Associated Datasets in Prime based on Transaction Log.</description>
+            <procedure procedureName="oga_InsertRecords" schemaName="ONPRC_billing"/>
+        </transform>
+    </transforms>
+    <schedule>
+        <cron expression="0 0 0 * * ?"/>
+    </schedule>
+</etl>

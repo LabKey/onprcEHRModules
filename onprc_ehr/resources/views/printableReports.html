@@ -224,7 +224,7 @@
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveClinicalCases';
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveClinicalCasesNew';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
 
@@ -697,7 +697,7 @@
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/WeightSheets';
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/WeightSheetsNew';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
                             return url;
