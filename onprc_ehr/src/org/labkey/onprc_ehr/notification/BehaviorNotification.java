@@ -125,8 +125,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             return;
         }
 
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("NHP_Training_BehaviorAlert");
-        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("NHP_Training_BehaviorAlert", ContainerFilter.Type.AllFolders.create(c, u));
         TableSelector ts = new TableSelector(ti, null, null);
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true);
 
