@@ -228,7 +228,6 @@ exports.init = function(EHR){
     });
 
     //note: encounter_participants objectid handled by the query's trigger script
-
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'clinical_observations', function(helper, scriptErrors, row, oldRow){
         if (row.category && LABKEY.ExtAdapter.isDefined(row.observation)){
             var msg = triggerHelper.validateObservation(row.category, row.observation);
@@ -237,6 +236,44 @@ exports.init = function(EHR){
             }
         }
     });
+
+    // Added by Kollil, 11/05/20: Vet assignment validation
+    /* This is user input validation for vet assignment screen
+    1. User can select with Room or area but not both
+    2. User can select Project or Protocol but not both
+    3. Vet and (room or area or project or protocol) required
+    4. User can select priority
+    */
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'onprc_ehr', 'vet_assignment', function(helper, scriptErrors, row, oldRow){
+        if (row.room || row.area || row.project || row.protocol || row.userId || row.priority){
+            //console.log(" 1. In vet assignment, before validation!");
+            //var msg = triggerHelper.validateVetAssignment(row.room, row.area, row.project, row.protocol, row.userId, row.priority);
+            //console.log(" 2. In vet assignment, after validation: " + row.userId);
+
+            //Check for empty form
+            if (row.room == null && row.area == null && row.project == null && row.protocol == null && row.userId == null) {
+                EHR.Server.Utils.addError(scriptErrors, 'userId', 'Must enter a valid Vet, Room or Area, Project or Protocol', 'ERROR');
+            }
+            //Vet is required
+            else if (row.userId == null ) {
+                EHR.Server.Utils.addError(scriptErrors, 'userId', 'Must enter a valid Vet', 'ERROR');
+            }
+            //Vet selected but everything else is empty
+            else if ((row.userId != null ) && (row.area == null && row.room == null && row.project == null && row.protocol == null)) {
+                EHR.Server.Utils.addError(scriptErrors, 'area', 'Must enter a Room or Area or Active Project or Active Protocol', 'ERROR');
+            }
+            //Can't enter both area and room
+            else if (row.area != null && row.room != null)  {
+                EHR.Server.Utils.addError(scriptErrors, 'area', 'Must enter either Room or Area', 'ERROR');
+            }
+            //Can't enter both project and protocol
+            else if (row.project != null && row.protocol != null)  {
+                EHR.Server.Utils.addError(scriptErrors, 'protocol', 'Must enter either Active Project or Active Protocol', 'ERROR');
+            }
+
+        }
+    });
+
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow)
     {

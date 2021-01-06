@@ -972,6 +972,10 @@
             <column columnName="lot">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="outcome">
+                <datatype>varchar</datatype>
+                <columnTitle>Drug Outcome</columnTitle>
+            </column>
             <column columnName="datefinalized">
                 <datatype>timestamp</datatype>
             </column>

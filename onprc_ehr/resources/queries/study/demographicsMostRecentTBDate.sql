@@ -18,7 +18,8 @@ select
     ELSE (6 - age_in_months(T2.lastDate, now()))
   END AS MonthsUntilDue,
 
-  (SELECT group_concat(DISTINCT f.flag.value) FROM study.flags f WHERE f.id = d.id AND (f.flag.value IN ('Do Not TB Test', 'TB Serologic test only')) AND f.isActive = true) as flags,
+  (SELECT group_concat(DISTINCT f.flag.value) FROM study.flags f WHERE f.id = d.id AND (f.flag.value IN ('DO NOT Administer intradermal tuberculin test', 'Administer TB test in left eyelid ONLY')) AND f.isActive = true) as flags,
+
   d.calculated_status
 from study.demographics d
 

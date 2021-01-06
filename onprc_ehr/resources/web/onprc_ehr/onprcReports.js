@@ -869,8 +869,12 @@ EHR.reports.onprcSnapshot = function(panel, tab){
             });
         }
 
-        if (toAdd.length)
+        if (toAdd.length) {
             tab.add(toAdd);
+            if (tab.getWidth() < 1000) {
+                tab.setWidth(1000);
+            }
+        }
     }
 
 };
