@@ -2541,7 +2541,7 @@ public class ONPRC_EHRTriggerHelper
         if (id == null || date == null || quantity == null)
             return null;
 
-        //Get ABV data from onprc_ehr.AvailableBloodVolume
+        //Get ABV data from onprc_ehr.AvailableBloodVolumeA
         Double maxAllowable = getABV(id);
         if (maxAllowable == null)
             return "Couldn't find available blood volume for AnimalId: " + id ;
