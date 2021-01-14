@@ -1,5 +1,7 @@
 
 /****** Object:  Table [list].[c10437d746_covid19testing]    Script Date: 9/16/2020 9:19:28 AM ******/
+EXEC core.fn_dropifexists 'Covid19Testing', 'extScheduler', 'TABLE', NULL;
+GO
 
 CREATE TABLE [extScheduler].[Covid19Testing](
     [container] [dbo].[ENTITYID] NOT NULL,
