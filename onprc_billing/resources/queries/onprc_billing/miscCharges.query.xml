@@ -20,12 +20,12 @@
                     </column>
                     <column columnName="chargetype">
                         <columnTitle>Charge Unit</columnTitle>
-                        <!--<fk>-->
-                            <!--<fkDbSchema>onprc_billing_public</fkDbSchema>-->
-                            <!--<fkTable>chargeUnits</fkTable>-->
-                            <!--<fkColumnName>chargetype</fkColumnName>-->
-                            <!--<fkDisplayColumnName useRawValue="true"/>-->
-                        <!--</fk>-->
+                        <fk>
+                            <fkDbSchema>onprc_billing_public</fkDbSchema>
+                            <fkTable>chargeUnits</fkTable>
+                            <fkColumnName>chargetype</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
                     </column>
                     <column columnName="chargecategory">
                         <fk>
