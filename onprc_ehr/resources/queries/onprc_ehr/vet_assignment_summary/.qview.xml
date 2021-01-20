@@ -1,6 +1,11 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
         <column name="userId/UserId/DisplayName" />
+        <column name="project_room" />
+        <column name="project_area" />
+        <column name="projects" />
+        <column name="Protocol_Room" />
+        <column name="Protocol_Area" />
         <column name="protocols" />
         <column name="areas" />
         <column name="rooms" />

@@ -258,6 +258,7 @@
                 <columnTitle>High Priority?</columnTitle>
                 <description>If true, then this location will supercede any active assignments for that animal</description>
             </column>
+            <column columnName="project"/>
             <column columnName="container"/>
             <column columnName="createdby"/>
             <column columnName="created"/>

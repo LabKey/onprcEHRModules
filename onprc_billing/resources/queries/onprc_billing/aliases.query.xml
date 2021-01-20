@@ -5,10 +5,39 @@
                 <tableTitle>Aliases</tableTitle>
                 <columns>
                     <column columnName="projectNumber">
-
+                            <columnTitle>OGA Project Number</columnTitle>
+                            <url>/query/executeQuery.view?schemaName=onprc_billing&amp;
+                                queryName=ogasynch&amp;
+                                query.[OGA PROJECT NUMBER]~eq=${projectNumber}
+                            </url>
+                        </column>
+                    <column columnName="grantNumber">
+                        <columnTitle>OGA Grant Number</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=onprc_billing&amp;
+                            queryName=ogasynch&amp;
+                            query.ogaAwardNumber~eq=${grantNumber}
+                        </url>
                     </column>
-                    <column columnName="aliasEnabled">
-                        <columnTitle>Alias Enabled</columnTitle>
+                    <column columnName="investigatorID">
+                        <columnTitle>Investigator</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=onprc_ehr&amp;&amp;
+                            queryName=investigators&amp;
+                            query.rowId~eq=${investigatorID}
+                        </url>
+                    </column>
+                    <column columnName="fiscalAuthority">
+                        <columnTitle>Fiscal Authority New</columnTitle>
+                        <url>/query/executeQuery.view?schemaName=onprc_billing&amp;
+                            queryName=fiscalAuthorities&amp;
+                            query.rowID~eq=${fiscalAuthority}
+                        </url>
+                    </column>
+                    <column columnName="projectID">
+                    <columnTitle>ProjectID</columnTitle>
+                    <url>/query/executeQuery.view?schemaName=onprc_billing&amp;
+                        queryName=ogasynch&amp;
+                        query.projectID~eq=${projectId}
+                    </url>
                     </column>
                 </columns>
             </table>

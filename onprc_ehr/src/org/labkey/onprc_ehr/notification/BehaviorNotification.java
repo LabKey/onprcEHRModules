@@ -19,6 +19,8 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONObject;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.ContainerFilter;
+import org.labkey.api.data.ContainerFilterable;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
@@ -106,12 +108,39 @@ public class BehaviorNotification extends ColonyAlertsNotification
         transfersYesterday(c, u, msg);
         surgeryCasesRecentlyClosed(c, u, msg);
         pairIdConflicts(c, u , msg);
+        NHPTraining_BehaviorAlert(c, u , msg);
 
         notesEndingToday(c, u, msg, Arrays.asList("BSU Notes"), null);
 
         saveValues(c, toSave);
 
         return msg.toString();
+    }
+
+    // Added by Kollil 11/04/2020
+    private void NHPTraining_BehaviorAlert(Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
+            msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("NHP_Training_BehaviorAlert", ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true);
+
+        long total = ts.getRowCount();
+        msg.append("<b>NHP_Training entries where \"Training Result = In-Progress\" for over 60 days:</b><p>");
+        if (total > 0)
+        {
+            msg.append("There are " + total + " entries found. ");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "NHP_Training_BehaviorAlert", null)  + "'>Click here to view them</a></p>\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no NHP_Training entries where \"Training Result = In Progress\" for over 60 days!</b><br><hr>\n");
+        }
     }
 
 //    Modified: 9-7-2018  R.Blasa
