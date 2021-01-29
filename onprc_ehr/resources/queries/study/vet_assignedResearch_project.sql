@@ -1,3 +1,6 @@
+--update jonesga  1-28-2021
+--added to 20.11 to handle project assignment for Resource Projects
+
 Select a.Id,
        a.project,
        a.project.project as ProjectID,
