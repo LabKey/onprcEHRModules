@@ -3,7 +3,7 @@
   Script Date: 5/18/2020 10:35:50 AM
 Update 2020-11-25 jonesga to change source of fa rate from burden rate to cast value
   ******/
-DROP PROCEDURE IF EXISTS [onprc_billing].[oga_InsertRecords]
+EXEC core.fn_dropifexists 'oga_InsertRecords', 'onprc_billing', 'PROCEDURE'
 GO
 
 CREATE PROCEDURE [onprc_billing].[oga_InsertRecords]

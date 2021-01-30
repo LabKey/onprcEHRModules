@@ -1,6 +1,7 @@
 /****** Object:  StoredProcedure [onprc_billing].[oga_InsertRecords]    Script Date: 12/2/2020 12:18:09 PM ******/
-DROP PROCEDURE IF EXISTS [onprc_billing].[oga_InsertRecords]
-    GO
+EXEC core.fn_dropifexists 'oga_InsertRecords', 'onprc_billing', 'PROCEDURE'
+GO
+
 CREATE PROCEDURE [onprc_billing].[oga_InsertRecords]
 
 
