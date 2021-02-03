@@ -3,9 +3,6 @@
 EXEC core.fn_dropifexists 'Covid19Testing', 'extScheduler', 'TABLE', NULL;
 GO
 
-
-DROP TABLE IF EXISTS [extScheduler].[Covid19Testing]
-GO
 CREATE TABLE [extScheduler].[Covid19Testing](
     [container] [dbo].[ENTITYID] NOT NULL,
     [entityId] [dbo].[ENTITYID] NOT NULL,
