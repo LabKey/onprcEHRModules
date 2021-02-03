@@ -82,7 +82,7 @@ public class ONPRCClinicalRemarksDataSource extends AbstractDataSource
                 label = "Entered By";
             }
 
-            appendNote(rs, "performedby", "<span style='white-space:nowrap'>" + label + "</span>", sb);
+            appendNote(rs, "performedby", label, sb);
         }
 
         appendNote(rs, "hx", "Hx", sb);
@@ -110,7 +110,7 @@ public class ONPRCClinicalRemarksDataSource extends AbstractDataSource
     {
         if (rs.hasColumn(FieldKey.fromString(field)) && rs.getObject(FieldKey.fromString(field)) != null)
         {
-            sb.append("<tr style='vertical-align:top;margin-bottom: 5px;'><td style='padding-right: 5px;'>" + PageFlowUtil.filter(label) + ":</td><td>");
+            sb.append("<tr style='vertical-align:top;margin-bottom: 5px;'><td style='padding-right: 5px;'><span style='white-space:nowrap'>" + PageFlowUtil.filter(label) + ":</span></td><td>");
             sb.append(PageFlowUtil.filter(rs.getString(FieldKey.fromString(field))));
             sb.append("</td></tr>");
         }
