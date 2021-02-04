@@ -19,9 +19,8 @@ SELECT
     emp.comment,
     emp.trainer,
     Case
-        When (c.requirementname is null) Then CAST(TIMESTAMPDIFF('SQL_TSI_DAY', emp.date, now()) AS VARCHAR)
-        When (c.requirementname is not null) Then CAST('-1' AS VARCHAR)
-        ELSE ''
+        When (c.requirementname is null) Then TIMESTAMPDIFF('SQL_TSI_DAY', emp.date, now())
+        When (c.requirementname is not null) Then -1
         End As DaysOverDue
 FROM ehr_compliancedb.completiondates c
          RIGHT JOIN (
