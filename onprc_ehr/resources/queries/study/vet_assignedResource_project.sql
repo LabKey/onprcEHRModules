@@ -17,4 +17,5 @@ Select a.Id,
 
 
 from onprc_ehr.vet_assignment v left outer join  study.assignment a on a.project.project = v.project.project
+
 where (v.project is not null and (a.date <= Now() and a.enddate is null) and a.project.use_category != 'Research')

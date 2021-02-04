@@ -64,6 +64,10 @@ public class AuxProcedureFormType extends TaskForm
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ResearchProcedures.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkBloodDrawWindow.js"));
+
+        //        Added 12-20-2017  R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/CopyTaskWindow.js"));
+
         setDisplayReviewRequired(true);
     }
     //Added 2-24-2016  Blasa
