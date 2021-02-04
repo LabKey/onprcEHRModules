@@ -1,5 +1,6 @@
-DROP PROCEDURE IF EXISTS [onprc_billing].[oga_InsertRecords]
-    GO
+EXEC core.fn_dropifexists 'oga_InsertRecords', 'onprc_billing', 'PROCEDURE'
+GO
+
 CREATE PROCEDURE [onprc_billing].[oga_InsertRecords]
 
 
