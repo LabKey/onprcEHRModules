@@ -1,0 +1,52 @@
+
+<script type="text/javascript">
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+
+    Ext4.create('Ext.panel.Panel', {
+            width: 400,
+            border: false,
+            defaults: {
+                labelWidth: 180
+            },
+            items: [{
+                xtype: 'textarea',
+                width: 300,
+                height: 200,
+                fieldLabel: 'Enter Animal Id(s)',
+    itemId: 'animalField'
+    }],
+    buttons: [{
+    text: 'Submit',
+    scope: this,
+    handler: function(btn){
+    var val = btn.up('panel').down('#animalField').getValue() ;
+
+                    if (val){
+                        val = Ext4.String.trim(val);
+                        val = val.replace(/[\s,;]+/g, ';');
+                        val = val.replace(/(^;|;$)/g, '');
+                    }
+                    if (!val){
+                        Ext4.Msg.alert('Error', 'Must enter at least one animal Id');
+                        return;
+                    }
+
+                         var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'CMU_P2Review'  };
+
+
+                    if (!Ext4.isEmpty(val))
+                             params['query.Id~in'] = val;
+
+                     window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+                }
+            }]
+        }).render(webpart.wrapperDivId);
+    });
+</script>

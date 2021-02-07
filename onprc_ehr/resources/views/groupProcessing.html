@@ -62,7 +62,18 @@
         areaField.reset();
     }
     }
-    }, {
+    },{
+    xtype:'textarea',    //Added: 7-27-2017  R.Blasa
+    itemId: 'animalField',
+    width: 295,
+    height: 100,
+    fieldLabel: 'Enter Animal ID'
+    },{
+    html: '',
+    style: 'margin-bottom: 10px;'
+    },{
+    html: '<hr>'
+    },{
     html: '<hr><b>Blood Summary Report:</b>',
     style: 'margin-bottom: 10px;'
     },{
@@ -79,17 +90,30 @@
                 groupName = Ext4.isArray(groupName) ? groupName: [groupName];
                 var room = btn.up('panel').down('#room').getValue() || [];
                 room = Ext4.isArray(room) ? room: [room];
+
+                    var field = btn.up('panel').down('#animalField');
+                    var animalid = field.getValue() || [];
+                if (!Ext4.isEmpty(animalid)){
+                    animalid = Ext4.String.trim(animalid);
+                    animalid = animalid.replace(/[\s,;]+/g, ';');
+                     animalid = animalid.replace(/(^;|;$)/g, '');
+                    }
+                 animalid = Ext4.isArray(animalid) ? animalid: [animalid];
+
                 var params = {
-                        schemaName: 'study',
-                        'query.queryName': 'processingBloodDraws',
-                        'query.Id/demographics/calculated_status~eq': 'Alive'
-                    };
+                    schemaName: 'study',
+                    'query.queryName': 'processingBloodDraws',
+                    'query.Id/demographics/calculated_status~eq': 'Alive'
+                };
 
                if (!Ext4.isEmpty(groupName))
                 params['query.Id/activeAnimalGroups/groups~in'] = groupName.join(';');
 
                 if (!Ext4.isEmpty(room))
                 params['query.Id/curLocation/room~in'] = room.join(';');
+
+                if (!Ext4.isEmpty(animalid))
+                params['query.Id~in'] = animalid.join(';');
 
                 window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
                 }
@@ -110,8 +134,19 @@
                 handler: function(btn){
                 var groupName = btn.up('panel').down('#groupName').getValue() || [];
                 groupName = Ext4.isArray(groupName) ? groupName: [groupName];
+
                 var room = btn.up('panel').down('#room').getValue() || [];
                 room = Ext4.isArray(room) ? room: [room];
+
+                var field = btn.up('panel').down('#animalField');
+                var animalid = field.getValue() || [];
+                if (!Ext4.isEmpty(animalid)){
+                animalid = Ext4.String.trim(animalid);
+                animalid = animalid.replace(/[\s,;]+/g, ';');
+                animalid = animalid.replace(/(^;|;$)/g, '');
+                }
+                animalid = Ext4.isArray(animalid) ? animalid: [animalid];
+
                 var params = {
                 schemaName: 'study',
                 'query.queryName': 'processingSerology',
@@ -124,6 +159,9 @@
 
                 if (!Ext4.isEmpty(room))
                 params['query.Id/curLocation/room~in'] = room.join(';');
+
+                if (!Ext4.isEmpty(animalid))
+                params['query.Id~in'] = animalid.join(';');
 
                 window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
             }
@@ -147,6 +185,16 @@
                 groupName = Ext4.isArray(groupName) ? groupName: [groupName];
                 var room = btn.up('panel').down('#room').getValue() || [];
                 room = Ext4.isArray(room) ? room: [room];
+
+                var field = btn.up('panel').down('#animalField');
+                var animalid = field.getValue() || [];
+                if (!Ext4.isEmpty(animalid)){
+                animalid = Ext4.String.trim(animalid);
+                animalid = animalid.replace(/[\s,;]+/g, ';');
+                animalid = animalid.replace(/(^;|;$)/g, '');
+                 }
+                animalid = Ext4.isArray(animalid) ? animalid: [animalid];
+
                 var params = {
                 schemaName: 'study',
                 'query.queryName': 'processingGeneticsBloodDraws',
@@ -159,6 +207,9 @@
 
                 if (!Ext4.isEmpty(room))
                 params['query.Id/curLocation/room~in'] = room.join(';');
+
+                if (!Ext4.isEmpty(animalid))
+                params['query.Id~in'] = animalid.join(';');
 
                 window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
             }
@@ -179,6 +230,16 @@
                 groupName = Ext4.isArray(groupName) ? groupName: [groupName];
                 var room = btn.up('panel').down('#room').getValue() || [];
                 room = Ext4.isArray(room) ? room: [room];
+
+                var field = btn.up('panel').down('#animalField');
+                var animalid = field.getValue() || [];
+                if (!Ext4.isEmpty(animalid)){
+                animalid = Ext4.String.trim(animalid);
+                animalid = animalid.replace(/[\s,;]+/g, ';');
+                animalid = animalid.replace(/(^;|;$)/g, '');
+                }
+                animalid = Ext4.isArray(animalid) ? animalid: [animalid];
+
                 var params = {
                 schemaName: 'study',
                 'query.queryName': 'demographicsMostRecentTBDate',
@@ -190,6 +251,10 @@
 
                 if (!Ext4.isEmpty(room))
                 params['query.Id/curLocation/room~in'] = room.join(';');
+
+
+                if (!Ext4.isEmpty(animalid))
+                params['query.Id~in'] = animalid.join(';');
 
                 window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
             }
@@ -210,6 +275,15 @@
                 groupName = Ext4.isArray(groupName) ? groupName: [groupName];
                 var room = btn.up('panel').down('#room').getValue() || [];
                 room = Ext4.isArray(room) ? room: [room];
+
+                var field = btn.up('panel').down('#animalField');
+                var animalid = field.getValue() || [];
+                if (!Ext4.isEmpty(animalid)){
+                animalid = Ext4.String.trim(animalid);
+                animalid = animalid.replace(/[\s,;]+/g, ';');
+                animalid = animalid.replace(/(^;|;$)/g, '');
+                 }
+                animalid = Ext4.isArray(animalid) ? animalid: [animalid];
                 var params = {
                 schemaName: 'study',
                 'query.queryName': 'processingIvermectin',
@@ -221,6 +295,10 @@
 
                 if (!Ext4.isEmpty(room))
                 params['query.Id/curLocation/room~in'] = room.join(';');
+
+
+                if (!Ext4.isEmpty(animalid))
+                params['query.Id~in'] = animalid.join(';');
 
                 window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
             }
@@ -241,6 +319,16 @@
                 groupName = Ext4.isArray(groupName) ? groupName: [groupName];
                 var room = btn.up('panel').down('#room').getValue() || [];
                 room = Ext4.isArray(room) ? room: [room];
+
+                var field = btn.up('panel').down('#animalField');
+                var animalid = field.getValue() || [];
+                if (!Ext4.isEmpty(animalid)){
+                animalid = Ext4.String.trim(animalid);
+                animalid = animalid.replace(/[\s,;]+/g, ';');
+                animalid = animalid.replace(/(^;|;$)/g, '');
+                }
+                animalid = Ext4.isArray(animalid) ? animalid: [animalid];
+
                 var params = {
                 schemaName: 'study',
                 'query.queryName': 'demographics',
@@ -254,11 +342,14 @@
                 if (!Ext4.isEmpty(room))
                 params['query.Id/curLocation/room~in'] = room.join(';');
 
+                if (!Ext4.isEmpty(animalid))
+                params['query.Id~in'] = animalid.join(';');
+
                 window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
             }
 
             }]
-       }).render(webpart.wrapperDivId);
-   });
+            }).render(webpart.wrapperDivId);
+            });
 
 </script>
