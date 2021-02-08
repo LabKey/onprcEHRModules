@@ -71,6 +71,11 @@ public class BulkClinicalEntryFormType extends TaskForm
        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkStrokeRoundsWindow.js"));
         //Added 6-4-2015 Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalProcedures.js"));
+
+        //        Added: 2-4-2021  R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamCasesDataEntryPanel.js"));
+        setDisplayReviewRequired(true);
+        setJavascriptClass("ONPRC_EHR.panel.ExamCasesDataEntryPanel");
     }
 
     @Override
