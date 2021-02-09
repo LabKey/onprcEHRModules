@@ -67,6 +67,7 @@ import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveDrugsGivenDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveTreatmentsXDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.AssignedVetDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.BCSScoreWeightsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagemateInfantDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.FosterChildDemographicsProvider;
@@ -181,6 +182,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added May 12th, 2017 Kollil
         ns.registerNotification(new BSUNotesNotification(this));
+
+        //Added Oct 7th, 2020 Kollil
+//        ns.registerNotification(new PMICSchedulerNotification(this));
 
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
@@ -386,6 +390,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
          //Added: 12-7-2017   R.Blasa
      //   EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Animal Census on a Given Date Range", this, DetailsURL.fromString("/onprc_ehr/CensusGivenDateRange.view"), "Colony Management");
 
+//     Added: 2-2-2021 R.Blasa
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "CMU_P2 Review Report", this, DetailsURL.fromString("/onprc_ehr/CMU_P2Review.view"), "Colony Management");
 
         EHRService.get().registerActionOverride("projectDetails", this, "views/projectDetails.html");
         EHRService.get().registerActionOverride("protocolDetails", this, "views/protocolDetails.html");
@@ -441,9 +447,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Modified: 12-13-2016 R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ASBRequestFormType.class, this));
-        //Modified: Kollil, 10/02/2020
-        //Colony services request form is disabled as per ISE team's decision
-        //EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ColonyRequestFormType.class, this));
+
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(HousingRequestFormType.class, this));
 
@@ -456,6 +460,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 5/23/2019 Kolli
 //        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICRequestFormType.class, this));
+
+        //Added: 1/13/2021 Kolli
+//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ARTCoreRequestFormType.class, this));
 
         //Added: 8/10/2019 Kolli
 //        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IPCRequestFormType.class, this));
@@ -514,6 +521,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Created: 10-4-2019 R.Blasa
         EHRService.get().registerDemographicsProvider(new ActiveDrugsGivenDemographicsProvider(this));
 
+
+        //Created: 1-15-2021 R.Blasa
+        EHRService.get().registerDemographicsProvider(new BCSScoreWeightsDemographicsProvider(this));
         //buttons
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "my_tasks");
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "tasks");
