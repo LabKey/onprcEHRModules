@@ -91,8 +91,10 @@ public class ClinicalReportFormType extends TaskForm
         setStoreCollectionClass("EHR.data.ClinicalReportStoreCollection");
         addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalReportStoreCollection.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalDefaults.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalReport.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalReportChild.js"));
+
+        //  Modified: 10-5-2017  R.Blasa  reinstalled 2-12-21
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalReport.js"));
 
         //Added 4-3-2015 Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/HousingDataEntryPanel.js"));
