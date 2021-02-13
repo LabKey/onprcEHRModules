@@ -27,7 +27,7 @@ Ext4.define('ONPRC_EHR.data.TreatmentOrdersClientStore', {
     },
 
     onRecordUpdate: function(record, modifiedFieldNames){
-        if (record.get('code')){
+        if (record.get('code') && modifiedFieldNames == 'code'){
             modifiedFieldNames = modifiedFieldNames || [];
 
             if (record.get('code') == 'E-85760' && record.get('remark')== null){
