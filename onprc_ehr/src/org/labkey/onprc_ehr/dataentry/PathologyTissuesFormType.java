@@ -50,8 +50,13 @@ public class PathologyTissuesFormType extends TaskForm
         super(ctx, owner, NAME, LABEL, "Pathology", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
+                //                Added:5-31-2017  R.Blasa
+                new ClinicalEncountersFormPanelSection("Pathology Tissues"),
+
                 new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
-                new SimpleFormSection("study", "tissue_samples", "Tissues/Weights", "onprc_ehr-dragdropgridpanel", EHRService.FORM_SECTION_LOCATION.Tabs),
+
+                //                Added: 6-26-2017   R.Blasa
+                new TissueWeightsFormSection(),
                 new TissueDistFormSection(),
 
 //                Added: 6-26-2017   R.Blasa
@@ -82,6 +87,13 @@ public class PathologyTissuesFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/CopyFromCaseWindow.js"));
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/DragDropGridPanel.js"));
+
+        //Added: 5-5-2017   R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/PathologyTissues.js"));
+
+//        //Added: 5-24-2017  R.Blasa
+        setStoreCollectionClass("onprc_ehr.data.sources.PathologyTissuesStoreCollection");
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathologyTissuesStoreCollection.js"));
     }
 
     @Override
