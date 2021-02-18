@@ -42,6 +42,15 @@ public class ChargesFormSection extends SimpleFormSection
         setConfigSources(Collections.singletonList("Task"));
         setClientStoreClass("EHR.data.MiscChargesClientStore");
         addClientDependency(ClientDependency.supplierFromPath("ehr/data/MiscChargesClientStore.js"));
+
+
+        //            Added: 1-19-2018 R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddAnimalsWindow.js"));
+
+        //            Added: 6-8-2017  R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_billing/model/sources/AliasMisc.js"));
+        addConfigSource("AliasMisc");
+
     }
     //            Added: 3-8-2018 R.Blasa
     @Override
