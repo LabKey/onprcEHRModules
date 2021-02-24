@@ -36,6 +36,7 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.writer.ContainerUser;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -109,23 +110,23 @@ public class BehaviorNotification extends ColonyAlertsNotification
         surgeryCasesRecentlyClosed(c, u, msg);
         pairIdConflicts(c, u , msg);
         NHPTraining_BehaviorAlert(c, u , msg);
+        dcmNotesAlert(c, u , msg);
 
         notesEndingToday(c, u, msg, Arrays.asList("BSU Notes"), null);
-
         saveValues(c, toSave);
 
         return msg.toString();
     }
 
     // Added by Kollil 11/04/2020
-    private void NHPTraining_BehaviorAlert(Container c, User u, final StringBuilder msg)
+    private void NHPTraining_BehaviorAlert(final Container c, User u, final StringBuilder msg)
     {
         if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
             msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
             return;
         }
-
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("NHP_Training_BehaviorAlert", ContainerFilter.Type.AllFolders.create(c, u));
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("NHP_Training_BehaviorAlert",ContainerFilter.Type.AllFolders.create(c, u));
+//        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(u);
         TableSelector ts = new TableSelector(ti, null, null);
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true);
 
@@ -141,9 +142,69 @@ public class BehaviorNotification extends ColonyAlertsNotification
         {
             msg.append("<b>WARNING: There are no NHP_Training entries where \"Training Result = In Progress\" for over 60 days!</b><br><hr>\n");
         }
+
     }
 
-//    Modified: 9-7-2018  R.Blasa
+    /*
+     Kollil, 11/18/20: 1. New alert for DCM notes (category = notes pertaining to DAR) added the previous day.
+                       2. New alert for Flags added the previous day.
+    */
+    protected void dcmNotesAlert(final Container c, User u, final StringBuilder msg)
+    {
+        //Added by Kollil on 11/04/2020
+        //New alert for DCM notes (category = notes pertaining to DAR) added the previous day.
+
+        //Get yesterday date
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -1);
+        String formatted = getDateFormat(c).format(cal.getTime());
+
+        SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("created"), cal.getTime(), CompareType.DATE_EQUAL);
+        filter1.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
+        TableSelector ts1 = new TableSelector(getStudySchema(c, u).getTable("notes"), filter1, null);
+        long count1 = ts1.getRowCount();
+        msg.append("<b>DCM Alerts:</b><br><hr>");
+        if (count1 > 0) {
+            msg.append("<b>" + count1 + " DCM notes entries added yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.created~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("</p><br><hr>\n\n");
+        }
+        else {
+            msg.append("<b>WARNING: No DCM notes added yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
+        }
+
+        //Added by Kollil on 11/04/2020
+        //New alert for Flags added the previous day.
+        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("created"), cal.getTime(), CompareType.DATE_EQUAL);
+        TableSelector ts2 = new TableSelector(getStudySchema(c, u).getTable("flags"), filter2, null);
+        long count2 = ts2.getRowCount();
+        if (count2 > 0) {
+            msg.append("<b>" + count2 + " flag(s) added yesterday. </b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&query.created~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+            msg.append("</p><hr>");
+        }
+        else {
+            msg.append("<b>WARNING: There are no flags added yesterday!</b><br><hr>");
+        }
+
+        //Added by Kollil on 1/04/2021
+        //New alert for Flags removed the previous day.
+        SimpleFilter filter3 = new SimpleFilter(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_EQUAL);
+        TableSelector ts3 = new TableSelector(getStudySchema(c, u).getTable("flags"), filter3, null);
+        long count3 = ts3.getRowCount();
+        if (count3 > 0) {
+            msg.append("<b>" + count3 + " flag(s) removed yesterday. </b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&query.enddate~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+            msg.append("</p><hr>");
+        }
+        else {
+            msg.append("<b>WARNING: There are no flags removed yesterday!</b><br><hr>");
+        }
+
+    }
+
+    //    Modified: 9-7-2018  R.Blasa
     private void behaviorCaseSummary(Container c, User u, final StringBuilder msg)
     {
         TableInfo ti = getStudySchema(c, u).getTable("mostRecentObservationsBehavior");
