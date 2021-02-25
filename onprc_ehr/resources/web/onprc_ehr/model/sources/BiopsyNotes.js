@@ -16,12 +16,9 @@ EHR.model.DataModelManager.registerMetadata('Biopsy_Notes', {
 
         'study.encounters': {
             project: {
-                xtype: 'ehr-projectfield',
-                editorConfig: {
-                    showInactive: false
-                }
+                xtype: 'ehr-projectentryfield'
             }
-        }
+        },
 
 
     }

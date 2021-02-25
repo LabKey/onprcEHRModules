@@ -89,11 +89,8 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
        },
         'study.encounters': {
             project: {
-                xtype: 'ehr-projectfield',
-                editorConfig: {
-                    showInactive: false
-                }
-            }
+                xtype: 'ehr-projectentryfield'
+                 }
         },
         'onprc_ehr.encounter_summaries_remarks': {
             Id: {
