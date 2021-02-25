@@ -87,6 +87,14 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
                header: 'Snomed Codes'
             }
        },
+        'study.encounters': {
+            project: {
+                xtype: 'ehr-projectfield',
+                editorConfig: {
+                    showInactive: false
+                }
+            }
+        },
         'onprc_ehr.encounter_summaries_remarks': {
             Id: {
                 hidden: true
