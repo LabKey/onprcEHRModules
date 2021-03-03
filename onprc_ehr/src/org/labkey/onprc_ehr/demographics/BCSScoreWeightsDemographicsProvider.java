@@ -33,6 +33,15 @@ public class BCSScoreWeightsDemographicsProvider extends AbstractListDemographic
         _supportsQCState = false;
     }
 
+    @Override
+    public Collection<String> getKeysToTest()
+    {
+        Set<String> keys = new HashSet<>(super.getKeysToTest());
+        keys.remove("duration");
+
+        return keys;
+    }
+
     protected Collection<FieldKey> getFieldKeys()
     {
         Set<FieldKey> keys = new HashSet<>();
