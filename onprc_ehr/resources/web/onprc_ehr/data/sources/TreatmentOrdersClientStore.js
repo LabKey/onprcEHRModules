@@ -16,7 +16,7 @@ Ext4.define('ONPRC_EHR.data.TreatmentOrdersClientStore', {
 
     onAddRecord: function(store, records){
         Ext4.each(records, function(record){
-            this.onRecordUpdate(record, ['objectid']);
+            this.onRecordUpdate(record, ['objectid', 'code']);
         }, this);
     },
 
