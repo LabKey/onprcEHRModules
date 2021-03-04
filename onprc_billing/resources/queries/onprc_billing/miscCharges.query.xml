@@ -35,6 +35,25 @@
                             <fkDisplayColumnName useRawValue="true"/>
                         </fk>
                     </column>
+                    <column columnName="invoiceItemID">
+                        <fk>
+                            <fkFolderPath>/ONPRC/ADMIN/FINANCE/</fkFolderPath>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>InvoicedItems</fkTable>
+                            <fkColumnName>TransactionNumber</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
+                    </column>
+                    <column columnName="invoiceID">
+                        <fk>
+                            <fkFolderPath>/ONPRC/ADMIN/FINANCE/</fkFolderPath>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>invoiceRunDetails</fkTable>
+                            <fkColumnName>InvoiceID</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
+                    </column>
+
                 </columns>
             </table>
         </tables>
