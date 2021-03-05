@@ -449,9 +449,10 @@ public class SLAController extends SpringActionController
                         + "  GESTATION: " + (orderDetail.getGestation() != null ? orderDetail.getGestation() : "") + "<br/>"
                         + "NUM OF ANIMALS ORDERED: " + (orderDetail.getAnimalsordered() != null ? orderDetail.getAnimalsordered() : "")
                         + (orderDetail.getAnimalsreceived() != null ? " NUM OF ANIMALS RECEIVED: " + orderDetail.getAnimalsreceived() : "") + "<br/>"
-                        + "REQUESTED ARRIVAL DATE: " + (orderDetail.getRequestedarrivaldate() != null ? df.format(orderDetail.getRequestedarrivaldate()) : "") + "<br/>"
+                        + "EXPECTED ARRIVAL DATE: " + (orderDetail.getExpectedarrivaldate() != null ? df.format(orderDetail.getExpectedarrivaldate()) : "") + "<br/>"
+                        + "  REQUESTED ARRIVAL DATE: " + (orderDetail.getRequestedarrivaldate() != null ? df.format(orderDetail.getRequestedarrivaldate()) : "") + "<br/>"
                         + (orderDetail.getReceiveddate() != null ? "RECEIVED BY: " + (orderDetail.getReceivedby() != null ? orderDetail.getReceivedby() : "")
-                        + "  RECEIVED DATE: " + df.format(orderDetail.getReceiveddate()) + "<br/>" : "")
+                        + "RECEIVED DATE: " + df.format(orderDetail.getReceiveddate()) + "<br/>" : "")
                         + (orderDetail.getDatecancelled() != null ? "DATE CANCELLED: " + df.format(orderDetail.getDatecancelled()) + "<br/>" : "")
                         + "<br/>";
             }

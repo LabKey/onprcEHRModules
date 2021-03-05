@@ -81,6 +81,12 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
                 hidden: true
             }
         },
+
+        'study.histology': {
+            codesRaw: {
+               header: 'Snomed Codes'
+            }
+       },
         'onprc_ehr.encounter_summaries_remarks': {
             Id: {
                 hidden: true
