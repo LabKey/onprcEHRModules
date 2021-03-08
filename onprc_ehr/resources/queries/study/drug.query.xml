@@ -118,6 +118,7 @@
                     </column>
                     <column columnName="amount">
                         <columnTitle>Amount</columnTitle>
+                        <formatString>0.000</formatString>
                     </column>
                     <column columnName="amount_units">
                         <columnTitle>Amount Units</columnTitle>
