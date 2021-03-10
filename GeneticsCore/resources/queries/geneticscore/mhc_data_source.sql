@@ -3,7 +3,7 @@ SELECT
   s.allele,
   --s.primerPairs,
   s.shortName,
-  s.totalRecords as testsPerformed,
+  s.totalRecords as totalTests,
   s.status as result,
   cast('SSP' as varchar) as type
 
