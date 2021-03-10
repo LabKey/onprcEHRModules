@@ -106,6 +106,7 @@
                     </column>
                     <column columnName="volume">
                         <columnTitle>Volume</columnTitle>
+                        <formatString>0.000</formatString>
                     </column>
                     <column columnName="vol_units">
                         <columnTitle>Vol Units</columnTitle>
