@@ -18,6 +18,7 @@ package org.labkey.GeneticsCore;
 
 import org.jetbrains.annotations.Nullable;
 import org.labkey.GeneticsCore.notification.GeneticsCoreNotification;
+import org.labkey.api.laboratory.LaboratoryService;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.LDKService;
 import org.labkey.api.ldk.notification.NotificationService;
@@ -60,6 +61,8 @@ public class GeneticsCoreModule extends ExtendedSimpleModule
         LDKService.get().registerQueryButton(btn2, "laboratory", "samples");
 
         NotificationService.get().registerNotification(new GeneticsCoreNotification());
+
+        LaboratoryService.get().registerDataProvider(new GeneticsCoreDataProvider());
     }
 
     @Override
