@@ -154,7 +154,8 @@ Ext4.define('SLA.form.PurchaseForm', {
             name: 'account',
             value: this.initData['account'],
             disabled: this.isUpdate && !LABKEY.user.canUpdate,
-            fieldLabel: 'Alias',
+            fieldLabel: 'Alias*',
+            allowBlank: false,
             labelWidth: this.FIELD_LABEL_WIDTH
         });
 

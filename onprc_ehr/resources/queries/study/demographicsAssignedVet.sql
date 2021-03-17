@@ -1,13 +1,12 @@
---Update 3/7/2019 load to test
-
---Update 2021-01-27 jonesga
-
+--2021/03/09  Update to include Project
 Select
     Distinct
     d.Id,
     d.room.area as Area,
     d.room,
     d.CaseVet,
+    d.project,
+    d.assignmentType as CodeAssignmentType,
     d.protocol,
     d.ProtocolPI,
     d.Calculated_status,
@@ -16,6 +15,12 @@ Select
         when d.caseVet is not null then d.CaseVet
         when p1.userId is not null  then p1.userId.displayName
         when p2.userId is not null then  p2.userId.DisplayName
+        when s3.userID is not null then  s3.userID.displayName
+        when s4.userID is not null then  s4.userID.displayName
+        when s5.userID is not null then  s5.userID.displayName
+        when s6.userID is not null then  s6.userID.displayName
+        when s1.userID is not null then  s1.userID.displayName
+        when s2.userID is not null then  s2.userID.displayName
         when v1.userId is not null  then v1.userId.displayName
         when v2.userId is not null then  v2.userId.DisplayName
         when v3.userId is not null then  v3.userId.DisplayName
@@ -34,6 +39,12 @@ Select
         when d.caseVet is not null then 'Open Case'
         when p1.userId  is not null then  'Room Priority'
         when p2.userId is not null then  'Area Priority'
+        When s3.userID is not null then 'Project Room Research'
+        When s4.userID is not null then 'Project Room Resource'
+        When s5.userID is not null then 'Project Area Research'
+        When s6.userID is not null then 'Project Area Resource'
+        when s1.userID is not null then 'Project Research'
+        when s2.userID is not null then 'Project Resource'
         When p3.userId is not null then 'Protocol Room Priority'
         When p4.userId is not null then 'Protocol Area Priority'
         when v1.userId is not null  then 'Protocol Research Room'
@@ -49,6 +60,26 @@ Select
         End as AssignmentType
 
 FROM study.vet_assignmentDemographics d
+--this handles Project research Room
+         Left Join onprc_ehr.vet_assignment s3 on (s3.project = d.project and s3.room = d.room and d.assignmentType = 'Project Research Assigned')
+
+--this handles Project resource Room
+         Left Join onprc_ehr.vet_assignment s4 on (s4.project = d.project and s4.room = d.room and d.assignmentType = 'Project Resource Assigned')
+    --this handles Project research area
+         Left Join onprc_ehr.vet_assignment s5 on (s5.project = d.project  and s5.area = d.room.area and d.assignmentType = 'Project Research Assigned')
+    --this handles Project resource area
+         Left Join onprc_ehr.vet_assignment s6 on (s6.project = d.project  and s6.area = d.room.area and d.assignmentType = 'Project Resource Assigned')
+--this handles Project research Area
+         Left Join onprc_ehr.vet_assignment s1 on (s1.project = d.project and d.assignmentType = 'Project Research Assigned')
+
+--this handles Project resource  area
+         Left Join onprc_ehr.vet_assignment s2 on (s2.project = d.project and d.assignmentType = 'Project Resource Assigned')
+
+    /*
+        --THis handles Project
+
+        --this handles
+        */
 --this handles REsearch Protocol Room
          Left Join onprc_ehr.vet_assignment v1 on (v1.protocol.displayName = d.protocol and v1.room = d.room and d.assignmentType = 'Research Assigned')
 --this handles Research Protocol Area
