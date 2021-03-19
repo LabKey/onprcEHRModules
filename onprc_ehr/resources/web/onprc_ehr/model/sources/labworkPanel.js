@@ -33,6 +33,34 @@ EHR.model.DataModelManager.registerMetadata('LabworkPanel', {
                     }
                 }
             },
+            vet: {
+            hidden: false,
+            allowBlank: false,
+            columnConfig: {
+                width: 200
+            },
+            lookup: {
+                xtype: 'labkey-combo',
+                schemaName: 'onprc_ehr',
+                queryName: 'Reference_StaffNames',
+                keyColumn: 'username',
+                displayColumn: 'username',
+                filterArray: [
+                    LABKEY.Filter.create('DisableDate', null, LABKEY.Filter.Types.ISBLANK)],
+                columns: 'username,FirstName,LastName,Type,DisableDate',
+                sort: 'username'
+
+            },
+            editorConfig: {
+                anyMatch: true,
+                listConfig: {
+                    innerTpl: '{[values.username + (values.username ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : "")]}',
+                    getInnerTpl: function(){
+                        return this.innerTpl;
+                    }
+                }
+            }
+        },
 
             performedby: {
                 defaultValue: LABKEY.Security.currentUser.displayName ,
