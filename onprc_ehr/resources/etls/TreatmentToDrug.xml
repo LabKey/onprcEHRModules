@@ -5,7 +5,7 @@
     <transforms>
         <transform id="step1">
             <description>Transfer to Drug Table</description>
-            <source queryName="treatmentToDrug" schemaName="study"/>
+            <source queryName="TreatmentToDrug" schemaName="study"/>
             <destination schemaName="study" queryName="Drug"/>
         </transform>
     </transforms>
