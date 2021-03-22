@@ -1283,7 +1283,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 public void exec(ResultSet object) throws SQLException {
                     Results rs = new ResultsImpl(object, colMap);
                     String url = getParticipantURL(c, rs.getString("Id"));
-                    int animal_count = Integer.parseInt(rs.getString("TotalAnimals"));
+                    int animal_count = rs.getInt("TotalAnimals");
 
                     if ( animal_count == 0) { //high light the row in yellow if the room was empty before the move
                         msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
