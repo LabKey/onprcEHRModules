@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS [onprc_ehr].[PMIC_Reference_Data]
+EXEC core.fn_dropifexists 'PMIC_Reference_Data','onprc_ehr','TABLE';
     GO
 
 /****** Object:  Table [onprc_ehr].[PMIC_Reference_Data]    Script Date: 2/12/2020 ******/

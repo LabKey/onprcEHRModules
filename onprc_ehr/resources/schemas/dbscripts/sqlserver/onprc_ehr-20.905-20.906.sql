@@ -4,9 +4,10 @@
  The stored proc manages the addition and deleting data from the temp tables
  at the time of execution via ETL process.
  */
-DROP TABLE IF EXISTS [onprc_ehr].[availableCages_temp];
-DROP TABLE IF EXISTS [onprc_ehr].[availableCagesByRoom_temp];
-DROP TABLE IF EXISTS [onprc_ehr].[roomUtilization_temp];
+EXEC core.fn_dropifexists 'availableCages_temp','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'availableCagesByRoom_temp','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'roomUtilization_temp','onprc_ehr','TABLE';
+
 
 CREATE TABLE [onprc_ehr].[availableCages_temp](
     [location] [varchar](50) NOT NULL,
@@ -20,14 +21,14 @@ CREATE TABLE [onprc_ehr].[availableCages_temp](
     [divider] [int] NULL,
     [isAvailable] [int] NULL,
     [isMarkedUnavailable] [int] NULL,
-    )ON [PRIMARY]
+    )
 ;
 
 CREATE TABLE [onprc_ehr].[availableCagesByRoom_temp](
     [room] [varchar](200) NULL,
     [availableCages] [int] NULL,
     [markedUnavailable] [int] NULL
-    ) ON [PRIMARY]
+    ) 
 ;
 
 CREATE TABLE [onprc_ehr].[roomUtilization_temp](
@@ -37,14 +38,11 @@ CREATE TABLE [onprc_ehr].[roomUtilization_temp](
     [markedUnavailable] [int] NULL,
     [cagesEmpty] [int] NULL,
     [totalAnimals] [int] NULL
-    ) ON [PRIMARY]
+    ) 
 ;
 
 /****** Object:  StoredProcedure [onprc_ehr].[NHPRoomsUsage]   ******/
-SET ANSI_NULLS ON
-    GO
-SET QUOTED_IDENTIFIER ON
-    GO
+
 -- =============================================
 -- Author:		Lakshmi Kolli
 -- Create date: 3/6/2021
