@@ -35,12 +35,8 @@ public class PMICRequestFormType extends RequestForm
     {
         super(ctx, owner, NAME, NAME, "Requests", Arrays.asList(
                 new RequestFormSection(),
-                //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),
                 new ClinicalEncountersFormSection()
-                // new BloodDrawFormSection(true),
-                //new PMICDrugAdministrationRequestFormSection()
-                //new WeightFormSection()
         ));
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/PMIC_Services.js"));
@@ -49,6 +45,7 @@ public class PMICRequestFormType extends RequestForm
         {
             s.addConfigSource("PMIC_Services");
         }
+
     }
 
 //    //    Added: 12-5-2019  R.Blasa  Allow access only to PMIC Access group.
