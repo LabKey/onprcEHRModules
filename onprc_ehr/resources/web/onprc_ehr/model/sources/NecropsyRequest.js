@@ -21,13 +21,13 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 xtype: 'xdatetime',
                 header: 'Start Date',
                 extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:0')
+                defaultValue: (new Date()).format('Y-m-d 8:00')
             },
             enddate: {
                 xtype: 'xdatetime',
                 header: 'Ending Date',
                 extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:0'),
+                defaultValue: (new Date()).format('Y-m-d 8:00'),
                 hidden: false
             },
             project: {
@@ -72,7 +72,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             date: {
                 xtype: 'xdatetime',
                 extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:0')
+                defaultValue: (new Date()).format('Y-m-d 8:00')
             },
             project: {
                 xtype: 'onprc_ehr-projectentryfield',
@@ -164,7 +164,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             date: {
                 xtype: 'xdatetime',
                 extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:0')
+                defaultValue: (new Date()).format('Y-m-d 8:00')
             }
         }
     }

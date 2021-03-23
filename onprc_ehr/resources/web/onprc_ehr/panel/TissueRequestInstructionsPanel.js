@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-Ext4.define('ONPRC_EHR.panel.NecropsuRequestInstructionsPanel', {
+Ext4.define('ONPRC_EHR.panel.NecropsyRequestInstructionsPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.onprc_ehr_necropsyRequestinstructionspanel',
 
