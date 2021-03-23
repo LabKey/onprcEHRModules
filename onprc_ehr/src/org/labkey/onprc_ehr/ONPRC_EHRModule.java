@@ -269,6 +269,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 10-7-2019   R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"), this);
 
+        //Added: 3-22-2021   R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/ProjectEntryField.js"), this);
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Commonly Used Queries");
