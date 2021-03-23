@@ -15,7 +15,6 @@
 
                     </column>
                     <column columnName="project">
-
                     </column>
                     <column columnName="category">
                         <isHidden>true</isHidden>
@@ -26,14 +25,16 @@
                     </column>
                     <column columnName="recipient">
                         <columnTitle>Recipient</columnTitle>
+<!--                        <displayWidth>60</displayWidth>-->
                         <fk>
                             <fkDbSchema>onprc_ehr</fkDbSchema>
                             <fkTable>customers</fkTable>
                             <fkColumnName>rowid</fkColumnName>
                         </fk>
                     </column>
-                    <column columnName="requestcategory">
+                    <column columnName="requestCategory">
                         <columnTitle>Request Category</columnTitle>
+<!--                        <displayWidth>50</displayWidth>-->
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>tissue_distribution_category</fkTable>
@@ -41,8 +42,9 @@
                             <fkDisplayColumnName useRawValue="true"/>
                         </fk>
                     </column>
-                    <column columnName="sampletype">
+                    <column columnName="sampleType">
                         <columnTitle>Sample Type</columnTitle>
+<!--                        <displayWidth>50</displayWidth>-->
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>tissue_sample_type</fkTable>
@@ -52,6 +54,7 @@
                     </column>
                     <column columnName="tissue">
                         <columnTitle>Tissue</columnTitle>
+<!--                        <displayWidth>50</displayWidth>-->
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>snomed</fkTable>
@@ -66,6 +69,41 @@
                         <columnTitle>Quantity</columnTitle>
                         <isHidden>true</isHidden>
                     </column>
+                    <column columnName="deliveryLoc">
+                        <columnTitle>Delivery Request</columnTitle>
+                    </column>
+                    <column columnName="availdistribution">
+                        <columnTitle>Avail Distr</columnTitle>
+                    </column>
+
+                    <column columnName="tissueloc">
+                        <columnTitle>Nec Location</columnTitle>
+                    </column>
+                    <column columnName="fasting">
+                        <columnTitle>Req Fasting</columnTitle>
+                    </column>
+                    <column columnName="perfusion">
+                        <columnTitle>Perfusion</columnTitle>
+                    </column>
+                    <column columnName="prioritylevel">
+                        <columnTitle>Level of Priority</columnTitle>
+                    </column>
+                    <column columnName="tissueLoc">
+                        <columnTitle>Necropsy location</columnTitle>
+                    </column>
+
+<!--                    <column columnName="billingcodes">-->
+<!--                        <columnTitle>Billing Code</columnTitle>-->
+<!--                    </column>-->
+                    <column columnName="remark">
+                        <columnTitle>Comments</columnTitle>
+                        <isHidden>false</isHidden>
+                    </column>
+
+                    <column columnName="performedby">
+                        <columnTitle>Completed by</columnTitle>
+                        <isHidden>false</isHidden>
+                     </column>
                     <column columnName="qualifier">
                         <columnTitle>Qualifier</columnTitle>
                         <isHidden>true</isHidden>
