@@ -8,6 +8,7 @@ EXEC core.fn_dropifexists 'availableCages_temp','onprc_ehr','TABLE';
 EXEC core.fn_dropifexists 'availableCagesByRoom_temp','onprc_ehr','TABLE';
 EXEC core.fn_dropifexists 'roomUtilization_temp','onprc_ehr','TABLE';
 
+GO
 
 CREATE TABLE [onprc_ehr].[availableCages_temp](
     [location] [varchar](50) NOT NULL,
