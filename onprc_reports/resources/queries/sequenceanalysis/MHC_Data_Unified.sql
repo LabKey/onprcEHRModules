@@ -40,17 +40,18 @@ FULL JOIN (SELECT DISTINCT subjectId FROM assay.GenotypeAssay.Genotype.Data s WH
 LEFT JOIN assay.GenotypeAssay.Genotype.Data a ON (a.run.assayType = 'SBT' AND p.ref_nt_name = a.marker AND a.subjectid = s.subjectid)
 WHERE a.rowid IS NULL AND (p.ref_nt_name LIKE 'Mamu-A%' OR p.ref_nt_name LIKE 'Mamu-B%')
 
-UNION ALL
-
-SELECT
-
-  t.subjectId as Id,
-  t.marker as allele,
-  null as shortName,
-  count(*) as totalTests,
-  t.result,
-  GROUP_CONCAT(distinct t.assaytype) as type
-
-FROM geneticscore.mhc_data t
-WHERE t.datatype = 'Lineage'
-GROUP BY t.subjectid, t.marker, t.result
+-- NOTE: eventually this will be the only source of data. However, disable for now so that we can populate this
+-- table on the production server without polluting the results people see.
+-- UNION ALL
+--
+-- SELECT
+--
+--   t.subjectId as Id,
+--   t.marker as allele,
+--   null as shortName,
+--   count(*) as totalTests,
+--   t.result,
+--   GROUP_CONCAT(distinct t.assaytype) as type
+--
+-- FROM geneticscore.mhc_data t
+-- GROUP BY t.subjectid, t.marker, t.result
