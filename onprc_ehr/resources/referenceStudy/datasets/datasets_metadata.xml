@@ -1051,6 +1051,9 @@
             <column columnName="chargetype">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="billable">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="code">
                 <datatype>varchar</datatype>
             </column>
