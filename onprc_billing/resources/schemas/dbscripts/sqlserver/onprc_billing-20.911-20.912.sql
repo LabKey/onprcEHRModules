@@ -83,4 +83,4 @@ CREATE PROCEDURE [onprc_billing].[oga_InsertRecords]
         From [onprc_billing].[ogasynch]
     END
 
-
+GO

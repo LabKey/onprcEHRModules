@@ -9,7 +9,6 @@ BEGIN
 
 Delete from onprc_billing.ogasynch
 
-
-
-
 END
+
+GO
