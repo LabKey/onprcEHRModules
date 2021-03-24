@@ -32,7 +32,7 @@
                             <fkColumnName>rowid</fkColumnName>
                         </fk>
                     </column>
-                    <column columnName="requestCategory">
+                    <column columnName="requestcategory">
                         <columnTitle>Request Category</columnTitle>
 <!--                        <displayWidth>50</displayWidth>-->
                         <fk>
@@ -42,7 +42,7 @@
                             <fkDisplayColumnName useRawValue="true"/>
                         </fk>
                     </column>
-                    <column columnName="sampleType">
+                    <column columnName="sampletype">
                         <columnTitle>Sample Type</columnTitle>
 <!--                        <displayWidth>50</displayWidth>-->
                         <fk>

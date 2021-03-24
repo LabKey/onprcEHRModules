@@ -20,18 +20,25 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             date: {
                 xtype: 'xdatetime',
                 header: 'Start Date',
-                extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:00')
+                extFormat: LABKEY.extDefaultDateTimeFormat,
+                editorConfig: {
+                    dateFormat: LABKEY.extDefaultDateFormat,
+                    timeFormat: 'H:i'
+                }
             },
             enddate: {
                 xtype: 'xdatetime',
                 header: 'Ending Date',
-                extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:00'),
+                extFormat: LABKEY.extDefaultDateTimeFormat,
+                editorConfig: {
+                    dateFormat: LABKEY.extDefaultDateFormat,
+                    timeFormat: 'H:i'
+                },
                 hidden: false
             },
             project: {
                 xtype: 'onprc_ehr-projectentryfield',
+
                 header: 'Center Project assigned'
             },
             billingproject: {
@@ -71,15 +78,18 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
 
             date: {
                 xtype: 'xdatetime',
-                extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:00')
+                extFormat: LABKEY.extDefaultDateTimeFormat,
+                editorConfig: {
+                    dateFormat: LABKEY.extDefaultDateFormat,
+                    timeFormat: 'H:i'
+                }
             },
             project: {
                 xtype: 'onprc_ehr-projectentryfield',
                 label: 'Center Project'
 
             },
-            requestCategory: {
+            requestcategory: {
                 columnConfig: {
                     width: 150
                 }
@@ -89,7 +99,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                     width: 150
                 }
             },
-            sampleType: {
+            sampletype: {
                 columnConfig: {
                     width: 100
                 }
@@ -145,9 +155,9 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                     width: 250
                 }
             },
-            // billingcodes: {
-            //     xtype: 'path_delivery'   //placeholder billinc codes
-            // },
+            billingcodes: {
+                xtype: 'path_delivery'   //placeholder billinc codes
+            },
             performedby: {
                 defaultValue: LABKEY.Security.currentUser.displayName,
                 hidden: false,
@@ -163,8 +173,11 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
             date: {
                 xtype: 'xdatetime',
-                extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:00')
+                extFormat: LABKEY.extDefaultDateTimeFormat,
+                editorConfig: {
+                    dateFormat: LABKEY.extDefaultDateFormat,
+                    timeFormat: 'H:i'
+                }
             }
         }
     }
