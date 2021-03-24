@@ -1,10 +1,7 @@
 EXEC core.fn_dropifexists 'oga_InsertRecords', 'onprc_billing', 'PROCEDURE'
 GO
 
-CREATE PROCEDURE [onprc_billing].[oga_InsertRecords]
-
-
-AS
+CREATE PROCEDURE [onprc_billing].[oga_InsertRecords] AS
 BEGIN
 
 INSERT INTO [onprc_billing].[aliases]
@@ -87,3 +84,4 @@ SELECT
 		left outer join [onprc_ehr].investigators i on o.[PI EMP NUM] = i.employeeid
 		left outer join onprc_billing.fiscalAuthorities f on f.employeeId = o.[PDFM EMP NUM]
 END
+GO

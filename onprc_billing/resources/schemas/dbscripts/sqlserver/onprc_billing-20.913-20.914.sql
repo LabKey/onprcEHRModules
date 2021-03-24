@@ -88,3 +88,4 @@ SELECT
 		left outer join [onprc_ehr].investigators i on o.[PI EMP NUM] = i.employeeid
 		left outer join onprc_billing.fiscalAuthorities f on f.employeeId = o.[PDFM EMP NUM]
 END
+GO

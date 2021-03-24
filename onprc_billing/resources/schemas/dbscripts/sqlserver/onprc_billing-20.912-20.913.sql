@@ -87,3 +87,4 @@ SELECT
              ,[ORG]
         From [onprc_billing].[ogasynch]
 END
+GO
