@@ -1220,6 +1220,27 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     //End of PMIC alert
 
     /**
+     * Kollil, 03/24/2021 : PMIC services request alert
+     */
+    protected void pmicServicesRequestAlert(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("PMIC_ServicesRequestAlert"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>" + count + " PMIC procedures found.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "PMIC_ServicesRequestAlert", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("</p><br><hr>");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no scheduled PMIC procedures!</b><br><hr>");
+        }
+    }
+    //End of PMIC services alert
+
+    /**
      * Kollil, 03/18/2021 : Housing transfer notifications Daily
      */
     protected void housingTransferAlert(final Container c, User u, final StringBuilder msg)
