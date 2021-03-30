@@ -10,6 +10,7 @@ EXEC core.fn_dropifexists 'roomUtilization_temp','onprc_ehr','TABLE';
 
 GO
 
+-- Create the temp tables
 CREATE TABLE [onprc_ehr].[availableCages_temp](
     [location] [varchar](50) NOT NULL,
     [room] [varchar](200) NULL,
@@ -42,6 +43,10 @@ CREATE TABLE [onprc_ehr].[roomUtilization_temp](
     ) 
 ;
 
+GO
+
+
+-- Create the stored proc here
 /****** Object:  StoredProcedure [onprc_ehr].[NHPRoomsUsage]   ******/
 
 -- =============================================
@@ -124,7 +129,7 @@ FROM ehr_lookups.rooms r
             FROM ehr_lookups.cage c
             WHERE cage is not null
 
-                  --allow for rooms w/o cages
+            --allow for rooms w/o cages
             UNION ALL
             SELECT r.room, null as cage
             FROM ehr_lookups.rooms r
@@ -134,5 +139,6 @@ FROM ehr_lookups.rooms r
 WHERE r.datedisabled is null
 GROUP BY r.room
 
-
 END
+
+GO
