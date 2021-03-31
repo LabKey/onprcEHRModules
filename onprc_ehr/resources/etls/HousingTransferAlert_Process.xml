@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Room utilization numbers procedure runs daily at 4pm -->
+<!--Added By Kollil, 3/29/2021 -->
+
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>HousingTransfers</name>
+
+    <description>Executes stored procedure to populate the NHP room utilization numbers into a temp table.</description>
+
+    <transforms>
+
+        <transform id="NHPRoomsUsage" type="StoredProcedure">
+            <description>Runs a stored procedure to get the room utilization numbers</description>
+            <procedure schemaName="ONPRC_EHR" procedureName="NHPRoomsUsage">
+            </procedure>
+        </transform>
+
+    </transforms>
+    <schedule>
+        <!--4pm-->
+        <cron expression="0 0 16 * * ?"/>
+    </schedule>
+
+
+</etl>
