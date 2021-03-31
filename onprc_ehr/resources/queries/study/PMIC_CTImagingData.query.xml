@@ -1,0 +1,154 @@
+<!--PMIC schema. Added by Kolli, 02/27/2020 -->
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="PMIC_CTImagingData" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
+                <tableTitle>CT Imaging Data</tableTitle>
+                <columns>
+                    <column columnName="rowId">
+                        <isHidden>true</isHidden>
+                    </column>
+
+                    <column columnName="Id">
+                        <columnTitle>AnimalId</columnTitle>
+                    </column>
+
+                    <column columnName="Date">
+                        <columnTitle>Exam Date</columnTitle>
+                    </column>
+
+                    <column columnName="project">
+                        <columnTitle>Charge To</columnTitle>
+                    </column>
+
+                    <column columnName="chargeType">
+                        <columnTitle>Credit To</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>PMIC_ChargeTypes</fkTable>
+                            <fkColumnName>chargetype</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="examNum">
+                        <columnTitle>Exam Num</columnTitle>
+                    </column>
+
+                    <column columnName="accessionNum">
+                        <columnTitle>Accession Num</columnTitle>
+                    </column>
+
+                    <column columnName="PMICType">
+                        <columnTitle>PMIC Type</columnTitle>
+                    </column>
+
+                    <column columnName="contrastType">
+                        <columnTitle>Contrast Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>PMIC_CTContrastType_values</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="contrastAmount">
+                        <columnTitle>Contrast Amount</columnTitle>
+                        <formatString>0.0000</formatString>
+                    </column>
+
+                    <column columnName="route">
+                        <columnTitle>Route</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>PMIC_Route_values</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="CTType">
+                        <columnTitle>CT Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>PMIC_CTACType_values</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="CTScanRange">
+                        <columnTitle>CT Scan Range(mm)</columnTitle>
+                    </column>
+
+                    <column columnName="CTDIvol">
+                        <columnTitle>CTDIVol</columnTitle>
+                        <formatString>0.0000</formatString>
+                    </column>
+
+                    <column columnName="DLP">
+                        <columnTitle>DLP</columnTitle>
+                        <formatString>0.0000</formatString>
+                    </column>
+
+                    <column columnName="totalExamDLP">
+                        <columnTitle>Total Exam DLP</columnTitle>
+                        <formatString>0.0000</formatString>
+                    </column>
+
+                    <column columnName="wetLabUse">
+                        <columnTitle>Wet lab use</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>PMIC_WetLabUse_values</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="imageUploadLink">
+                        <columnTitle>Image Upload Link</columnTitle>
+                    </column>
+
+                    <column columnName="remark">
+                        <columnTitle>Remark</columnTitle>
+                    </column>
+
+                    <column columnName="qcstate">
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>qcstate</fkTable>
+                            <fkColumnName>RowId</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="taskid">
+                        <columnTitle>Task Id</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>tasks</fkTable>
+                            <fkColumnName>taskid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="objectid">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="performedBy">
+                        <columnTitle>Performed By</columnTitle>
+                    </column>
+                    <column columnName="created">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="createdby"/>
+
+                    <column columnName="modified">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="modifiedby"/>
+
+                    <column columnName="container">
+                        <isHidden>true</isHidden>
+                    </column>
+
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
