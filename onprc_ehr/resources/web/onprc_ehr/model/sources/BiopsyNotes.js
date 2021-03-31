@@ -16,10 +16,14 @@ EHR.model.DataModelManager.registerMetadata('Biopsy_Notes', {
 
         'study.encounters': {
             project: {
-                xtype: 'ehr-projectentryfield'
+                xtype: 'onprc_ehr-projectentryfield'
             }
         },
 
-
+        'study.pathologyDiagnoses': {
+            codesRaw: {
+                header: 'Snomed Codes'
+            }
+        }
     }
 });
