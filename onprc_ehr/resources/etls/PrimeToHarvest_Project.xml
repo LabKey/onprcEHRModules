@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>Prime_Harvest_Project</name>
+
+    <description>Captures Labwork Request and Demographics information from Prime</description>
+
+
+    <transforms>
+
+<!--        <transform id="Stored_PrimeToHarvest" type="StoredProcedure">-->
+<!--            <description>Runs a stored procedure that generates lab values</description>-->
+<!--            <procedure schemaName="LIS" procedureName="p_PrimeToHarvestExportProcess">-->
+<!--            </procedure>-->
+<!--        </transform>-->
+<!--        -->
+
+        <transform id="step1a">
+
+            <description>Export Resultset into external csv file</description>
+
+            <source schemaName="LIS" queryName="PrimeHarvestFinal"/>
+
+            <destination type="file" dir="\\primateapp3\HarvestData\PrimeToHarvest" fileBaseName="Output" fileExtension="csv" />
+
+        </transform>
+
+        <transform id="step2a">
+            <description>Reset temp table </description>
+            <destination schemaName="LIS" queryName="PrimeHarvestFinal" targetOption="truncate"/>
+        </transform>
+
+
+    </transforms>
+
+    <schedule>
+
+        <cron expression="0 0/10 * * * ?"/>
+
+    </schedule>
+
+
+</etl>
+
+
+
+
