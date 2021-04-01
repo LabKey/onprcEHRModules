@@ -19,5 +19,5 @@ SELECT
     e.modified
 FROM Events e, Resources r
 Where r.id = e.resourceid
-  --And e.container = '783D2EA5-C6AC-1036-A33C-BD25D0574070'
+  And e.container = '783D2EA5-C6AC-1036-A33C-BD25D0574070' -- PMIC container
   And CAST(e.startDate AS DATE) = curdate() --Show only PMIC events
