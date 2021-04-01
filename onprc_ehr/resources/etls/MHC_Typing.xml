@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>PRIME-seq MHC Data</name>
+    <description>Syncs MHC Typing Data from PRIME-seq</description>
+    <transforms>
+        <transform type="RemoteQueryTransformStep" id="assay">
+            <description>Copy to target</description>
+            <source remoteSource="PRIMESEQ_MHC" schemaName="geneticscore" queryName="mhc_data_source">
+                <sourceColumns>
+                    <column>Id</column>
+                    <column>allele</column>
+                    <column>shortName</column>
+                    <column>totalTests</column>
+                    <column>result</column>
+                    <column>type</column>
+                </sourceColumns>
+            </source>
+            <destination schemaName="geneticscore" queryName="mhc_data" targetOption="truncate" bulkLoad="true">
+
+            </destination>
+        </transform>
+    </transforms>
+
+    <incrementalFilter className="ModifiedSinceFilterStrategy" timestampColumnName="modified" />
+    <schedule>
+        <cron expression="0 20 2 * * ?"/>
+    </schedule>
+</etl>
