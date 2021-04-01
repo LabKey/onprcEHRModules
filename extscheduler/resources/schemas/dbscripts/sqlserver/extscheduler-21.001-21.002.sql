@@ -1,0 +1,1 @@
+ALTER TABLE extscheduler.Resources ADD  Instance varchar(50);

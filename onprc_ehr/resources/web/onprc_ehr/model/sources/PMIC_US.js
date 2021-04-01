@@ -24,6 +24,7 @@ EHR.model.DataModelManager.registerMetadata('US', {
 
             project: {
                 allowBlank: true,
+                hidden: true,
                 columnConfig: {
                     width: 150
                 }
@@ -32,7 +33,7 @@ EHR.model.DataModelManager.registerMetadata('US', {
             chargeType: {
                 allowBlank: true,
                 defaultValue: 'PMIC',
-                hidden: false
+                hidden: true
             },
 
             examNum: {
