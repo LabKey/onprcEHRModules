@@ -19,8 +19,8 @@
 
     </transforms>
     <schedule>
-        <!--4pm-->
-        <cron expression="0 0 16 * * ?"/>
+        <!--4:30pm-->
+        <cron expression="0 30 16 * * ?"/>
     </schedule>
 
 
