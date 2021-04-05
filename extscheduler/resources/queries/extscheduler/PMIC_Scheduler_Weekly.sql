@@ -3,7 +3,7 @@ Created by: Kolli on 11/14/2019
 Weekly report: This query filters all the PMIC events from today to the next 7 days
 */
 SELECT
-    r.resourceId,
+    r.resourceid,
     e.startdate,
     e.enddate,
     e.name,
