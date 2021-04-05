@@ -17,7 +17,7 @@ SELECT
     e.createdby,
     e.modifiedby,
     e.modified
-FROM Events e, PMIC_getContainerPath r
+FROM Events e, PMIC_getFolderInfo r
 Where r.id = e.resourceid
   --And e.container = '783D2EA5-C6AC-1036-A33C-BD25D0574070'
   And CAST(e.startDate AS DATE) = curdate() --Show only PMIC events
