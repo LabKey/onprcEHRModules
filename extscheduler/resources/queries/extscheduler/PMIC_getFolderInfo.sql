@@ -1,6 +1,6 @@
 SELECT
 r.Id,
-r.name as resourceName,
+r.name as resourceId,
 r.color,
 r.room,
 r.bldg,

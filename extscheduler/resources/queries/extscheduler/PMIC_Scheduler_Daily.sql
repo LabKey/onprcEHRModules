@@ -3,7 +3,7 @@ Created by: Kolli on 10/24/2019
 This query filters all the PMIC daily events
 */
 SELECT
-    r.resourceName,
+    r.resourceId,
     e.startdate,
     e.enddate,
     e.name,
