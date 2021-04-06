@@ -1112,12 +1112,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         if (count > 0) {//Daily events count
             msg.append("<b>There are " + count + " PMIC events scheduled for today:</b>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Daily", null) + "'>Click here to view them</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Daily", null) + "&query.containerFilterName=AllFolders'>Click here to view them</a></p>\n");
             msg.append("<hr>");
         }
         if (count1 > 0) {//Weekly events count
             msg.append("<b>There are " + count1 + " PMIC events scheduled this week:</b>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Weekly", null) + "'>Click here to view them</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Weekly", null) + "&query.containerFilterName=AllFolders'>Click here to view them</a></p>\n");
             msg.append("<hr>");
         }
         //Display the daily report in the email
