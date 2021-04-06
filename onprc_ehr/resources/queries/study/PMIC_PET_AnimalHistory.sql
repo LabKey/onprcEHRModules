@@ -1,0 +1,23 @@
+SELECT
+    Id,
+    Date,
+    examNum,
+    accessionNum,
+    PMICType,
+    PETRadioisotope,
+    PETDoseMCI,
+    PETDoseMBQ,
+    route,
+    CTDIvol,
+    DLP,
+    totalExamDLP,
+    phantom,
+    wetLabUse,
+    ligandAndComments,
+    imageUploadLink,
+    taskid,
+    qcstate,
+    performedby,
+    created,
+    createdBy
+from study.PMIC_PETImagingData
