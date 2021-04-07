@@ -1,0 +1,21 @@
+SELECT
+    Id,
+    Date,
+    examNum,
+    accessionNum,
+    PMICType,
+    contrastType,
+    contrastAmount,
+    route,
+    CTDIvol,
+    DLP,
+    totalExamDLP,
+    wetLabUse,
+    remark,
+    imageUploadLink,
+    taskid,
+    qcstate,
+    performedby,
+    created,
+    createdBy
+from study.PMIC_CTImagingData
