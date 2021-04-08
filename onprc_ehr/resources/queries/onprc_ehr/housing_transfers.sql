@@ -16,5 +16,5 @@ Select
     r.totalAnimals as TotalAnimals
 From study.housing h, roomUtilization_temp r
 Where h.room = r.room
-  And h.date >= '03-01-2021'
---And h.date >= timestampadd(SQL_TSI_DAY, -1, now()) --'03-08-2021'
+--   And h.date >= '03-01-2021'
+And h.date >= timestampadd(SQL_TSI_DAY, -1, now())
