@@ -2308,21 +2308,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>Id</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <nullable>false</nullable>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
             </column>
             <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
-                <nullable>false</nullable>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
             </column>
             <column columnName="tissue">
                 <datatype>varchar</datatype>
@@ -2417,30 +2411,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>AnimalId</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
-            <column columnName="Date">
+            <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Exam Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="project">
                 <datatype>varchar</datatype>
@@ -2613,30 +2592,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>AnimalId</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
-            <column columnName="Date">
+            <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Exam Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="project">
                 <datatype>varchar</datatype>
@@ -2768,30 +2732,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>AnimalId</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
-            <column columnName="Date">
+            <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Exam Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="project">
                 <datatype>varchar</datatype>
@@ -2932,30 +2881,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>AnimalId</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
-            <column columnName="Date">
+            <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Exam Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="project">
                 <datatype>varchar</datatype>
@@ -3054,30 +2988,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>AnimalId</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
-            <column columnName="Date">
+            <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Exam Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="project">
                 <datatype>varchar</datatype>
@@ -3161,30 +3080,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>AnimalId</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
-            <column columnName="Date">
+            <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Exam Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="project">
                 <datatype>varchar</datatype>
@@ -3268,30 +3172,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>Id</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
             <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="tissueType">
                 <datatype>varchar</datatype>
@@ -3335,30 +3224,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>Id</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
             <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="tissueType">
                 <datatype>varchar</datatype>
@@ -3423,30 +3297,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>Id</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
             <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="tissueType">
                 <datatype>varchar</datatype>
@@ -3476,30 +3335,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>Id</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
             <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="serviceAndProducts">
                 <datatype>varchar</datatype>
@@ -3515,30 +3359,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>Id</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
             <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="project">
                 <datatype>varchar</datatype>
@@ -3610,30 +3439,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>Id</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
             <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="tissueType">
                 <datatype>varchar</datatype>
@@ -3656,30 +3470,15 @@
         <columns>
             <column columnName="Id">
                 <datatype>varchar</datatype>
-                <columnTitle>Id</columnTitle>
-                <description>Subject identifier</description>
                 <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
-                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
-                <nullable>false</nullable>
-                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
                 <importAliases>
                     <importAlias>ptid</importAlias>
                 </importAliases>
-                <fk>
-                    <fkDbSchema>study</fkDbSchema>
-                    <fkTable>Animal</fkTable>
-                    <fkColumnName>Id</fkColumnName>
-                </fk>
-                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                <scale>32</scale>
             </column>
             <column columnName="date">
                 <datatype>timestamp</datatype>
-                <columnTitle>Date</columnTitle>
                 <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
                 <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
-                <nullable>false</nullable>
-                <formatString>DateTime</formatString>
             </column>
             <column columnName="tissueType">
                 <datatype>varchar</datatype>
