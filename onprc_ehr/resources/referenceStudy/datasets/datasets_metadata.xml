@@ -2328,22 +2328,6 @@
                 <datatype>varchar</datatype>
                 <columnTitle>Organ/Tissue</columnTitle>
             </column>
-            <column columnName="remark">
-                <datatype>varchar</datatype>
-                <inputType>textarea</inputType>
-                <columnTitle>Remark</columnTitle>
-                <propertyURI>urn:ehr.labkey.org/#Remark</propertyURI>
-            </column>
-            <column columnName="Description">
-                <datatype>varchar</datatype>
-                <inputType>textarea</inputType>
-                <columnTitle>Description</columnTitle>
-                <propertyURI>urn:ehr.labkey.org/#Description</propertyURI>
-                <isHidden>true</isHidden>
-                <shownInInsertView>false</shownInInsertView>
-                <shownInUpdateView>false</shownInUpdateView>
-                <shownInDetailsView>false</shownInDetailsView>
-            </column>
             <column columnName="objectid">
                 <datatype>entityid</datatype>
                 <columnTitle>Key</columnTitle>
@@ -2353,24 +2337,6 @@
                 <shownInUpdateView>false</shownInUpdateView>
                 <shownInDetailsView>false</shownInDetailsView>
                 <isKeyField>true</isKeyField>
-            </column>
-            <column columnName="parentId">
-                <datatype>varchar</datatype>
-                <columnTitle>Parent Id</columnTitle>
-                <propertyURI>urn:ehr.labkey.org/#ParentId</propertyURI>
-                <isHidden>true</isHidden>
-                <shownInInsertView>false</shownInInsertView>
-                <shownInUpdateView>false</shownInUpdateView>
-                <shownInDetailsView>false</shownInDetailsView>
-            </column>
-            <column columnName="taskid">
-                <datatype>varchar</datatype>
-                <columnTitle>Taskid</columnTitle>
-                <propertyURI>urn:ehr.labkey.org/#TaskId</propertyURI>
-                <isHidden>true</isHidden>
-                <shownInInsertView>false</shownInInsertView>
-                <shownInUpdateView>false</shownInUpdateView>
-                <shownInDetailsView>false</shownInDetailsView>
             </column>
             <column columnName="project">
                 <datatype>integer</datatype>
@@ -2385,20 +2351,6 @@
                 <datatype>varchar</datatype>
                 <columnTitle>Account</columnTitle>
                 <propertyURI>urn:ehr.labkey.org/#Account</propertyURI>
-            </column>
-            <column columnName="performedby">
-                <datatype>varchar</datatype>
-                <columnTitle>Performed By</columnTitle>
-                <propertyURI>urn:ehr.labkey.org/#PerformedBy</propertyURI>
-            </column>
-            <column columnName="requestid">
-                <datatype>varchar</datatype>
-                <columnTitle>Requestid</columnTitle>
-                <propertyURI>urn:ehr.labkey.org/#RequestId</propertyURI>
-                <isHidden>true</isHidden>
-                <shownInInsertView>false</shownInInsertView>
-                <shownInUpdateView>false</shownInUpdateView>
-                <shownInDetailsView>false</shownInDetailsView>
             </column>
             <column columnName="enddate">
                 <datatype>timestamp</datatype>
@@ -2458,5 +2410,1326 @@
             </column>
         </columns>
         <tableTitle>StudyDetails</tableTitle>
+    </table>
+
+    <table tableName="PMIC_PETImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_PETImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>AnimalId</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="Date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Exam Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="project">
+                <datatype>varchar</datatype>
+                <columnTitle>Charge To</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>project</fkTable>
+                    <fkColumnName>displayName</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_ChargeTypes</fkTable>
+                    <fkColumnName>chargetype</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="PETRadioisotope">
+                <datatype>varchar</datatype>
+                <columnTitle>PET Radioisotope</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_PETRadioisotope_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="PETDoseMCI">
+                <datatype>double</datatype>
+                <columnTitle>PET Dose(mCi)</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="PETDoseMBQ">
+                <datatype>double</datatype>
+                <columnTitle>PET Dose(MBq)</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="route">
+                <datatype>varchar</datatype>
+                <columnTitle>Route</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_Route_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="CTDIvol">
+                <datatype>double</datatype>
+                <columnTitle>CTDIVol</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="DLP">
+                <datatype>double</datatype>
+                <columnTitle>DLP</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="totalExamDLP">
+                <datatype>double</datatype>
+                <columnTitle>Total Exam DLP</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="phantom">
+                <datatype>varchar</datatype>
+                <columnTitle>Phantom</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_Phantom_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="wetLabUse">
+                <datatype>varchar</datatype>
+                <columnTitle>Wet lab use</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_WetLabUse_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="ligandAndComments">
+                <datatype>varchar</datatype>
+                <columnTitle>Ligand and Comments</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="imageUploadLink">
+                <datatype>varchar</datatype>
+                <columnTitle>Image Upload Link</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="CTACType">
+                <datatype>varchar</datatype>
+                <columnTitle>CTACType</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="CTACScanRange">
+                <datatype>varchar</datatype>
+                <columnTitle>CTACScanRange</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>PMIC_PETImagingData</tableTitle>
+    </table>
+    <table tableName="PMIC_CTImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_CTImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>AnimalId</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="Date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Exam Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="project">
+                <datatype>varchar</datatype>
+                <columnTitle>Charge To</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>project</fkTable>
+                    <fkColumnName>displayName</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_ChargeTypes</fkTable>
+                    <fkColumnName>chargetype</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="contrastType">
+                <datatype>varchar</datatype>
+                <columnTitle>Contrast Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_CTContrastType_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="contrastAmount">
+                <datatype>double</datatype>
+                <columnTitle>Contrast Amount</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="route">
+                <datatype>varchar</datatype>
+                <columnTitle>Route</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_Route_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="CTDIvol">
+                <datatype>double</datatype>
+                <columnTitle>CTDIVol</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="DLP">
+                <datatype>double</datatype>
+                <columnTitle>DLP</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="totalExamDLP">
+                <datatype>double</datatype>
+                <columnTitle>Total Exam DLP</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="wetLabUse">
+                <datatype>varchar</datatype>
+                <columnTitle>Wet lab use</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_WetLabUse_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="imageUploadLink">
+                <datatype>varchar</datatype>
+                <columnTitle>Image Upload Link</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>PMIC_CTImagingData</tableTitle>
+    </table>
+    <table tableName="PMIC_SPECTImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_SPECTImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>AnimalId</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="Date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Exam Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="project">
+                <datatype>varchar</datatype>
+                <columnTitle>Charge To</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>project</fkTable>
+                    <fkColumnName>displayName</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_ChargeTypes</fkTable>
+                    <fkColumnName>chargetype</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="SPECTIsotope">
+                <datatype>varchar</datatype>
+                <columnTitle>SPECT Isotope</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="SPECTDoseMCI">
+                <datatype>double</datatype>
+                <columnTitle>SPECT Dose(mCi)</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="SPECTDoseMBQ">
+                <datatype>double</datatype>
+                <columnTitle>SPECT Dose(MBq)</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="route">
+                <datatype>varchar</datatype>
+                <columnTitle>Route</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_Route_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="CTDIvol">
+                <datatype>double</datatype>
+                <columnTitle>CTDIVol</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="DLP">
+                <datatype>double</datatype>
+                <columnTitle>DLP</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="totalExamDLP">
+                <datatype>double</datatype>
+                <columnTitle>Total Exam DLP</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.0000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="wetLabUse">
+                <datatype>varchar</datatype>
+                <columnTitle>Wet lab use</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_WetLabUse_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="ligandAndComments">
+                <datatype>varchar</datatype>
+                <columnTitle>Ligand and Comments</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="imageUploadLink">
+                <datatype>varchar</datatype>
+                <columnTitle>Image Upload Link</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>PMIC_SPECTImagingData</tableTitle>
+    </table>
+    <table tableName="PMIC_AngioImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_AngioImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>AnimalId</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="Date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Exam Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="project">
+                <datatype>varchar</datatype>
+                <columnTitle>Charge To</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>project</fkTable>
+                    <fkColumnName>displayName</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_ChargeTypes</fkTable>
+                    <fkColumnName>chargetype</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="CTDIvol">
+                <datatype>double</datatype>
+                <columnTitle>CTDIVol</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="DLP">
+                <datatype>double</datatype>
+                <columnTitle>DLP</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="totalExamDLP">
+                <datatype>double</datatype>
+                <columnTitle>Total Exam DLP</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#double</rangeURI>
+                <formatString>0.000</formatString>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+            </column>
+            <column columnName="wetLabUse">
+                <datatype>varchar</datatype>
+                <columnTitle>Wet lab use</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_WetLabUse_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="imageUploadLink">
+                <datatype>varchar</datatype>
+                <columnTitle>Image Upload Link</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>PMIC_AngioImagingData</tableTitle>
+    </table>
+    <table tableName="PMIC_USImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_USImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>AnimalId</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="Date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Exam Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="project">
+                <datatype>varchar</datatype>
+                <columnTitle>Charge To</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>project</fkTable>
+                    <fkColumnName>displayName</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_ChargeTypes</fkTable>
+                    <fkColumnName>chargetype</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="ultrasoundProcedure">
+                <datatype>varchar</datatype>
+                <columnTitle>Ultrasound Procedure</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_US_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="wetLabUse">
+                <datatype>varchar</datatype>
+                <columnTitle>Wet lab use</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_WetLabUse_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>PMIC_USImagingData</tableTitle>
+    </table>
+    <table tableName="PMIC_DEXAImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_DEXAImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>AnimalId</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="Date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Exam Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="project">
+                <datatype>varchar</datatype>
+                <columnTitle>Charge To</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>project</fkTable>
+                    <fkColumnName>displayName</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_ChargeTypes</fkTable>
+                    <fkColumnName>chargetype</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="DEXAProcedure">
+                <datatype>varchar</datatype>
+                <columnTitle>DEXA Procedure</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_DEXA_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="animalPosition">
+                <datatype>varchar</datatype>
+                <columnTitle>Animal Position</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>PMIC_DEXA_AnimalPosition_values</fkTable>
+                    <fkColumnName>value</fkColumnName>
+                </fk>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>PMIC_DEXAImagingData</tableTitle>
+    </table>
+    <table tableName="IPC_Sectioning" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_Sectioning data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>Id</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="tissueType">
+                <datatype>varchar</datatype>
+                <columnTitle>Tissue Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <scale>4000</scale>
+            </column>
+            <column columnName="paraffinSectioning">
+                <datatype>varchar</datatype>
+                <columnTitle>Paraffin Sectioning</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="sectionThickness">
+                <datatype>varchar</datatype>
+                <columnTitle>SectionThickness</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="frozenSectioning">
+                <datatype>varchar</datatype>
+                <columnTitle>Frozen Sectioning</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="specialIns">
+                <datatype>varchar</datatype>
+                <columnTitle>Special Instructions</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>IPC_Sectioning</tableTitle>
+    </table>
+    <table tableName="IPC_Staining" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_Staining data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>Id</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="tissueType">
+                <datatype>varchar</datatype>
+                <columnTitle>Tissue Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <scale>4000</scale>
+            </column>
+            <column columnName="HAndE">
+                <datatype>varchar</datatype>
+                <columnTitle><![CDATA[H&E]]></columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="specialStain">
+                <datatype>varchar</datatype>
+                <columnTitle>Special Stain</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="IHC">
+                <datatype>varchar</datatype>
+                <columnTitle>IHC</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="IHCPrimaryAntibody">
+                <datatype>varchar</datatype>
+                <columnTitle>IHC Primary Antibody</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="irrelevantAntibody">
+                <datatype>varchar</datatype>
+                <columnTitle>Irrevelant Antibody</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="RNAScope">
+                <datatype>varchar</datatype>
+                <columnTitle>RNA Scope</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="other">
+                <datatype>varchar</datatype>
+                <columnTitle>Other</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>IPC_Staining</tableTitle>
+    </table>
+    <table tableName="IPC_SlidePrinting" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_SlidePrinting data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>Id</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="tissueType">
+                <datatype>varchar</datatype>
+                <columnTitle>Tissue Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <scale>4000</scale>
+            </column>
+            <column columnName="projectNotes">
+                <datatype>varchar</datatype>
+                <columnTitle>Project Notes</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="additionalText">
+                <datatype>varchar</datatype>
+                <columnTitle>Additional text on slide</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>IPC_SlidePrinting</tableTitle>
+    </table>
+    <table tableName="IPC_Other" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_Other data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>Id</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="serviceAndProducts">
+                <datatype>varchar</datatype>
+                <columnTitle>Service And Products</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>IPC_Other</tableTitle>
+    </table>
+    <table tableName="IPC_ServiceRequestDetails" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_ServiceRequestDetails data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>Id</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="project">
+                <datatype>varchar</datatype>
+                <columnTitle>Center Project</columnTitle>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <dimension>false</dimension>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>project</fkTable>
+                    <fkColumnName>displayName</fkColumnName>
+                </fk>
+                <scale>4000</scale>
+            </column>
+            <column columnName="requestedBy">
+                <datatype>varchar</datatype>
+                <columnTitle>Requested By</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="email">
+                <datatype>varchar</datatype>
+                <columnTitle>Email</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="department">
+                <datatype>varchar</datatype>
+                <columnTitle>Department</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="pathologist">
+                <datatype>varchar</datatype>
+                <columnTitle>Pathologist</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="investigator">
+                <datatype>varchar</datatype>
+                <columnTitle>Investigator</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="alias">
+                <datatype>varchar</datatype>
+                <columnTitle>Alias</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="sampleLocation">
+                <datatype>varchar</datatype>
+                <columnTitle>Sample Dropoff/Pickup Location</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>IPC_ServiceRequestDetails</tableTitle>
+    </table>
+    <table tableName="IPC_CassettePrinting" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_CassettePrinting data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>Id</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="tissueType">
+                <datatype>varchar</datatype>
+                <columnTitle>Tissue Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <scale>4000</scale>
+            </column>
+            <column columnName="PILabel">
+                <datatype>varchar</datatype>
+                <columnTitle>PI Label Text</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>IPC_CassettePrinting</tableTitle>
+    </table>
+    <table tableName="IPC_ProcessingEmbedding" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_ProcessingEmbedding data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <columnTitle>Id</columnTitle>
+                <description>Subject identifier</description>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#ParticipantId</conceptURI>
+                <nullable>false</nullable>
+                <url replaceMissing="blankValue">/ehr/participantView.view?participantId=${id}</url>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>Animal</fkTable>
+                    <fkColumnName>Id</fkColumnName>
+                </fk>
+                <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                <scale>32</scale>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <columnTitle>Date</columnTitle>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+                <nullable>false</nullable>
+                <formatString>DateTime</formatString>
+            </column>
+            <column columnName="tissueType">
+                <datatype>varchar</datatype>
+                <columnTitle>Tissue Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <scale>4000</scale>
+            </column>
+            <column columnName="embedding">
+                <datatype>varchar</datatype>
+                <columnTitle>Embedding</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="fixationMethod">
+                <datatype>varchar</datatype>
+                <columnTitle>Fixation Method</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="fixationDuration">
+                <datatype>varchar</datatype>
+                <columnTitle>Fixation Duration</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="currentFixative">
+                <datatype>varchar</datatype>
+                <columnTitle>Current Fixative</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="processingType">
+                <datatype>varchar</datatype>
+                <columnTitle>Processing Type</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+            <column columnName="embeddingIns">
+                <datatype>varchar</datatype>
+                <columnTitle>Embedding Instructions</columnTitle>
+                <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
+                <defaultValueType>FIXED_EDITABLE</defaultValueType>
+                <scale>4000</scale>
+            </column>
+        </columns>
+        <tableTitle>IPC_ProcessingEmbedding</tableTitle>
     </table>
 </tables>
