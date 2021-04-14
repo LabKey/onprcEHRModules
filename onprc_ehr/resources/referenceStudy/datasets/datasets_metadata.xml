@@ -2433,7 +2433,6 @@
                     <fkColumnName>displayName</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="chargeType">
                 <datatype>varchar</datatype>
@@ -2446,28 +2445,24 @@
                     <fkColumnName>chargetype</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="examNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Exam Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="accessionNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Accession Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="PMICType">
                 <datatype>varchar</datatype>
                 <columnTitle>PMIC Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="PETRadioisotope">
                 <datatype>varchar</datatype>
@@ -2480,7 +2475,6 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="PETDoseMCI">
                 <datatype>double</datatype>
@@ -2507,7 +2501,6 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="CTDIvol">
                 <datatype>double</datatype>
@@ -2541,7 +2534,6 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="wetLabUse">
                 <datatype>varchar</datatype>
@@ -2554,35 +2546,30 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="ligandAndComments">
                 <datatype>varchar</datatype>
                 <columnTitle>Ligand and Comments</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="imageUploadLink">
                 <datatype>varchar</datatype>
                 <columnTitle>Image Upload Link</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="CTACType">
                 <datatype>varchar</datatype>
                 <columnTitle>CTACType</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="CTACScanRange">
                 <datatype>varchar</datatype>
                 <columnTitle>CTACScanRange</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>PMIC_PETImagingData</tableTitle>
@@ -2614,7 +2601,6 @@
                     <fkColumnName>displayName</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="chargeType">
                 <datatype>varchar</datatype>
@@ -2627,28 +2613,24 @@
                     <fkColumnName>chargetype</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="examNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Exam Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="accessionNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Accession Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="PMICType">
                 <datatype>varchar</datatype>
                 <columnTitle>PMIC Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="contrastType">
                 <datatype>varchar</datatype>
@@ -2661,7 +2643,6 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="contrastAmount">
                 <datatype>double</datatype>
@@ -2681,7 +2662,6 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="CTDIvol">
                 <datatype>double</datatype>
@@ -2715,14 +2695,12 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="imageUploadLink">
                 <datatype>varchar</datatype>
                 <columnTitle>Image Upload Link</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>PMIC_CTImagingData</tableTitle>
@@ -2754,7 +2732,6 @@
                     <fkColumnName>displayName</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="chargeType">
                 <datatype>varchar</datatype>
@@ -2767,28 +2744,24 @@
                     <fkColumnName>chargetype</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="examNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Exam Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="accessionNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Accession Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="PMICType">
                 <datatype>varchar</datatype>
                 <columnTitle>PMIC Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="SPECTIsotope">
                 <datatype>varchar</datatype>
@@ -2796,7 +2769,6 @@
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <dimension>false</dimension>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="SPECTDoseMCI">
                 <datatype>double</datatype>
@@ -2823,7 +2795,6 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="CTDIvol">
                 <datatype>double</datatype>
@@ -2857,21 +2828,18 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="ligandAndComments">
                 <datatype>varchar</datatype>
                 <columnTitle>Ligand and Comments</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="imageUploadLink">
                 <datatype>varchar</datatype>
                 <columnTitle>Image Upload Link</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>PMIC_SPECTImagingData</tableTitle>
@@ -2903,7 +2871,6 @@
                     <fkColumnName>displayName</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="chargeType">
                 <datatype>varchar</datatype>
@@ -2916,28 +2883,24 @@
                     <fkColumnName>chargetype</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="examNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Exam Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="accessionNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Accession Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="PMICType">
                 <datatype>varchar</datatype>
                 <columnTitle>PMIC Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="CTDIvol">
                 <datatype>double</datatype>
@@ -2971,14 +2934,12 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="imageUploadLink">
                 <datatype>varchar</datatype>
                 <columnTitle>Image Upload Link</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>PMIC_AngioImagingData</tableTitle>
@@ -3010,7 +2971,6 @@
                     <fkColumnName>displayName</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="chargeType">
                 <datatype>varchar</datatype>
@@ -3023,28 +2983,24 @@
                     <fkColumnName>chargetype</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="examNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Exam Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="accessionNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Accession Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="PMICType">
                 <datatype>varchar</datatype>
                 <columnTitle>PMIC Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="ultrasoundProcedure">
                 <datatype>varchar</datatype>
@@ -3057,7 +3013,6 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="wetLabUse">
                 <datatype>varchar</datatype>
@@ -3070,7 +3025,6 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>PMIC_USImagingData</tableTitle>
@@ -3102,7 +3056,6 @@
                     <fkColumnName>displayName</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="chargeType">
                 <datatype>varchar</datatype>
@@ -3115,28 +3068,24 @@
                     <fkColumnName>chargetype</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="examNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Exam Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="accessionNum">
                 <datatype>varchar</datatype>
                 <columnTitle>Accession Num</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="PMICType">
                 <datatype>varchar</datatype>
                 <columnTitle>PMIC Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="DEXAProcedure">
                 <datatype>varchar</datatype>
@@ -3149,7 +3098,6 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="animalPosition">
                 <datatype>varchar</datatype>
@@ -3162,7 +3110,6 @@
                     <fkColumnName>value</fkColumnName>
                 </fk>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>PMIC_DEXAImagingData</tableTitle>
@@ -3186,35 +3133,30 @@
                 <datatype>varchar</datatype>
                 <columnTitle>Tissue Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
-                <scale>4000</scale>
             </column>
             <column columnName="paraffinSectioning">
                 <datatype>varchar</datatype>
                 <columnTitle>Paraffin Sectioning</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="sectionThickness">
                 <datatype>varchar</datatype>
                 <columnTitle>SectionThickness</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="frozenSectioning">
                 <datatype>varchar</datatype>
                 <columnTitle>Frozen Sectioning</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="specialIns">
                 <datatype>varchar</datatype>
                 <columnTitle>Special Instructions</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>IPC_Sectioning</tableTitle>
@@ -3238,56 +3180,48 @@
                 <datatype>varchar</datatype>
                 <columnTitle>Tissue Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
-                <scale>4000</scale>
             </column>
             <column columnName="HAndE">
                 <datatype>varchar</datatype>
                 <columnTitle><![CDATA[H&E]]></columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="specialStain">
                 <datatype>varchar</datatype>
                 <columnTitle>Special Stain</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="IHC">
                 <datatype>varchar</datatype>
                 <columnTitle>IHC</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="IHCPrimaryAntibody">
                 <datatype>varchar</datatype>
                 <columnTitle>IHC Primary Antibody</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="irrelevantAntibody">
                 <datatype>varchar</datatype>
                 <columnTitle>Irrevelant Antibody</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="RNAScope">
                 <datatype>varchar</datatype>
                 <columnTitle>RNA Scope</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="other">
                 <datatype>varchar</datatype>
                 <columnTitle>Other</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>IPC_Staining</tableTitle>
@@ -3311,21 +3245,18 @@
                 <datatype>varchar</datatype>
                 <columnTitle>Tissue Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
-                <scale>4000</scale>
             </column>
             <column columnName="projectNotes">
                 <datatype>varchar</datatype>
                 <columnTitle>Project Notes</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="additionalText">
                 <datatype>varchar</datatype>
                 <columnTitle>Additional text on slide</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>IPC_SlidePrinting</tableTitle>
@@ -3349,7 +3280,6 @@
                 <datatype>varchar</datatype>
                 <columnTitle>Service And Products</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>IPC_Other</tableTitle>
@@ -3380,56 +3310,48 @@
                     <fkTable>project</fkTable>
                     <fkColumnName>displayName</fkColumnName>
                 </fk>
-                <scale>4000</scale>
             </column>
             <column columnName="requestedBy">
                 <datatype>varchar</datatype>
                 <columnTitle>Requested By</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="email">
                 <datatype>varchar</datatype>
                 <columnTitle>Email</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="department">
                 <datatype>varchar</datatype>
                 <columnTitle>Department</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="pathologist">
                 <datatype>varchar</datatype>
                 <columnTitle>Pathologist</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="investigator">
                 <datatype>varchar</datatype>
                 <columnTitle>Investigator</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="alias">
                 <datatype>varchar</datatype>
                 <columnTitle>Alias</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="sampleLocation">
                 <datatype>varchar</datatype>
                 <columnTitle>Sample Dropoff/Pickup Location</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>IPC_ServiceRequestDetails</tableTitle>
@@ -3453,14 +3375,12 @@
                 <datatype>varchar</datatype>
                 <columnTitle>Tissue Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
-                <scale>4000</scale>
             </column>
             <column columnName="PILabel">
                 <datatype>varchar</datatype>
                 <columnTitle>PI Label Text</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>IPC_CassettePrinting</tableTitle>
@@ -3484,49 +3404,42 @@
                 <datatype>varchar</datatype>
                 <columnTitle>Tissue Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
-                <scale>4000</scale>
             </column>
             <column columnName="embedding">
                 <datatype>varchar</datatype>
                 <columnTitle>Embedding</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="fixationMethod">
                 <datatype>varchar</datatype>
                 <columnTitle>Fixation Method</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="fixationDuration">
                 <datatype>varchar</datatype>
                 <columnTitle>Fixation Duration</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="currentFixative">
                 <datatype>varchar</datatype>
                 <columnTitle>Current Fixative</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="processingType">
                 <datatype>varchar</datatype>
                 <columnTitle>Processing Type</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
             <column columnName="embeddingIns">
                 <datatype>varchar</datatype>
                 <columnTitle>Embedding Instructions</columnTitle>
                 <rangeURI>http://www.w3.org/2001/XMLSchema#string</rangeURI>
                 <defaultValueType>FIXED_EDITABLE</defaultValueType>
-                <scale>4000</scale>
             </column>
         </columns>
         <tableTitle>IPC_ProcessingEmbedding</tableTitle>
