@@ -1,0 +1,68 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="housing_transfers" tableDbType="NOT_IN_DB">
+                <tableTitle>Housing Transfer Alert</tableTitle>
+                <columns>
+                    <column columnName="Id"/>
+                    <column columnName="ActiveClinicalTreatment">
+                        <columnTitle>Active Treatments?</columnTitle>
+                        <conditionalFormats>
+                        <conditionalFormat>
+                            <filters>
+                                <filter operator="eq" value="Yes"/>
+                            </filters>
+                            <!--   If current Meds, change cell color to BLUE-->
+                            <backgroundColor>00FFFF</backgroundColor>
+                        </conditionalFormat>
+                    </conditionalFormats>
+                    </column>
+                    <column columnName="ActiveDiets">
+                        <columnTitle>Active Diets?</columnTitle>
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="eq" value="Yes"/>
+                                </filters>
+                                <!--  If current diets, change cell color to ORANGE-->
+                                <backgroundColor>FFA500</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
+                    </column>
+                    <column columnName="InDate">
+                        <columnTitle>In Date</columnTitle>
+                    </column>
+                    <column columnName="Building"/>
+                    <column columnName="Area"/>
+                    <column columnName="Room"/>
+                    <column columnName="Cage"/>
+                    <column columnName="housingType">
+                        <columnTitle>Housing Type</columnTitle>
+                    </column>column>
+                    <column columnName="housingCondition">
+                        <columnTitle>Housing Condition</columnTitle>
+                    </column>column>
+                    <column columnName="ReasonForMove">
+                        <columnTitle>Reason For Move</columnTitle>
+                    </column>column>
+                    <column columnName="Remark"/>
+
+                    <column columnName="TotalAnimals">
+                        <columnTitle>Num animals before the transfer</columnTitle>
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="eq" value="0"/>
+<!--                                    <filter operator="gte" value="20"/>-->
+                                </filters>
+<!--                                If animals moving into empty room, change cell color to YELLOW-->
+                                <backgroundColor>FFFF00</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
+                    </column>
+
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
