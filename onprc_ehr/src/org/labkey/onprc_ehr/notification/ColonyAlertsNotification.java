@@ -1257,6 +1257,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
 
         if (count > 0) {//transfers count
+            msg.append("<br><b>Housing Transfers:</b><br><br>");
             msg.append("<b>" + count + " animal transfers were found in last 24 hours:</b>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "housing_transfers", null) + "'>Click here to view them</a></p>\n");
             msg.append("<hr>");
@@ -1281,20 +1282,23 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             columns.add(FieldKey.fromString("Remark"));
             columns.add(FieldKey.fromString("TotalAnimals"));
             columns.add(FieldKey.fromString("ActiveClinicalTreatment"));
+            columns.add(FieldKey.fromString("ActiveDiets"));
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
-            count = ts2.getRowCount();
 
-            msg.append("<br><b>Housing Transfers:</b><br><br>");
             //Legend
             msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr>");
+            msg.append("<td><b> LEGEND: </b></td></tr>");
             msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
-            msg.append("<td> Yellow indicates animal transferred into an empty room</td></tr>");
+            msg.append("<td><b> Yellow row indicates animal transferred into an empty room. </b></td></tr>");
             msg.append("<tr bgcolor = " + '"' + "#00FFFF" + '"' + ">");
-            msg.append("<td> Blue indicates animal has active clinical treatments</td></tr>");
+            msg.append("<td><b> Blue cell indicates animal has active Clinical treatments. </b></td></tr>");
+            msg.append("<tr bgcolor = " + '"' + "#FFA500" + '"' + ">");
+            msg.append("<td><b> Orange cell indicates animal has active Clinical treatments including Diets (or) just Diets. </b></td></tr>");
             msg.append("</table>");
-            //Header
+            // Table header
             msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
             msg.append("<td> Id </td><td> In Date </td><td> Building </td><td> Area </td><td> Room </td><td> Cage </td><td> Housing Type </td><td> Housing Condition </td><td> Reason For Move </td><td> Remark </td><td> Num animals before the transfer </td></tr>");
@@ -1308,8 +1312,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
                     if ( animal_count == 0) { //high light the row in yellow if the room was empty before the move
                         msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
-                        if (rs.getString("ActiveClinicalTreatment") != null) { //High light with blue color if there are any active treatments
-                            msg.append("<td style= " + '"' + "background-color:#00FFFF" +'"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                        if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") == null)
+                        {  //High light with blue color if there are any active treatments
+                            msg.append("<td style= " + '"' + "background-color:#00FFFF" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                        }
+                        else if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") != null)
+                        { //High light with orange color if there are any diets within treatments
+                            msg.append("<td style= " + '"' + "background-color:#FFA500" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
                         }
                         else {
                             msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
@@ -1326,10 +1335,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                         msg.append("<td>" + PageFlowUtil.filter(rs.getInt("TotalAnimals")) + "</td>");
                         msg.append("</tr>");
                     }
-                    else {
-                        //msg.append("<td> <a href='" + url + "'>" + rs.getString("Id") + "</a></td>\n");
-                        if (rs.getString("ActiveClinicalTreatment") != null) { //High light with blue color if there are any active treatments
-                            msg.append("<td style= " + '"' + "background-color:#00FFFF" +'"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                    else { //animal moving into non-empty room
+                        if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") == null)
+                        {  //High light with blue color if there are any active treatments
+                            msg.append("<td style= " + '"' + "background-color:#00FFFF" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                        }
+                        else if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") != null)
+                        { //High light with orange color if there are any diets within treatments
+                            msg.append("<td style= " + '"' + "background-color:#FFA500" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
                         }
                         else {
                             msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
@@ -1350,8 +1363,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 }
             });
                 msg.append("</table>");
-
-
         }
     }
     //End of housing transfer alert

@@ -6,16 +6,28 @@
                 <columns>
                     <column columnName="Id"/>
                     <column columnName="ActiveClinicalTreatment">
-                        <columnTitle>Current Meds?</columnTitle>
+                        <columnTitle>Active Treatments?</columnTitle>
                         <conditionalFormats>
                         <conditionalFormat>
                             <filters>
                                 <filter operator="eq" value="Yes"/>
                             </filters>
-<!--                            If current Meds, change cell color to BLUE-->
+                            <!--   If current Meds, change cell color to BLUE-->
                             <backgroundColor>00FFFF</backgroundColor>
                         </conditionalFormat>
                     </conditionalFormats>
+                    </column>
+                    <column columnName="ActiveDiets">
+                        <columnTitle>Active Diets?</columnTitle>
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="eq" value="Yes"/>
+                                </filters>
+                                <!--  If current diets, change cell color to ORANGE-->
+                                <backgroundColor>FFA500</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
                     </column>
                     <column columnName="InDate">
                         <columnTitle>In Date</columnTitle>
