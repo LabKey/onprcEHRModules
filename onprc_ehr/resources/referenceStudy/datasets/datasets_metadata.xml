@@ -2417,6 +2417,676 @@
         </columns>
         <tableTitle>Organ Weights</tableTitle>
     </table>
+
+    <table tableName="PMIC_PETImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_PETImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+            </column>
+            <column columnName="PETRadioisotope">
+                <datatype>varchar</datatype>
+                <columnTitle>PET Radioisotope</columnTitle>
+            </column>
+            <column columnName="PETDoseMCI">
+                <datatype>double</datatype>
+                <columnTitle>PET Dose(mCi)</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="PETDoseMBQ">
+                <datatype>double</datatype>
+                <columnTitle>PET Dose(MBq)</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="route">
+                <datatype>varchar</datatype>
+                <columnTitle>Route</columnTitle>
+            </column>
+            <column columnName="CTDIvol">
+                <datatype>double</datatype>
+                <columnTitle>CTDIVol</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="DLP">
+                <datatype>double</datatype>
+                <columnTitle>DLP</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="totalExamDLP">
+                <datatype>double</datatype>
+                <columnTitle>Total Exam DLP</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="phantom">
+                <datatype>varchar</datatype>
+                <columnTitle>Phantom</columnTitle>
+            </column>
+            <column columnName="wetLabUse">
+                <datatype>varchar</datatype>
+                <columnTitle>Wet lab use</columnTitle>
+            </column>
+            <column columnName="ligandAndComments">
+                <datatype>varchar</datatype>
+                <columnTitle>Ligand and Comments</columnTitle>
+            </column>
+            <column columnName="imageUploadLink">
+                <datatype>varchar</datatype>
+                <columnTitle>Image Upload Link</columnTitle>
+            </column>
+            <column columnName="CTACType">
+                <datatype>varchar</datatype>
+                <columnTitle>CTACType</columnTitle>
+            </column>
+            <column columnName="CTACScanRange">
+                <datatype>varchar</datatype>
+                <columnTitle>CTACScanRange</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>PMIC_PETImagingData</tableTitle>
+    </table>
+    <table tableName="PMIC_CTImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_CTImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+            </column>
+            <column columnName="contrastType">
+                <datatype>varchar</datatype>
+                <columnTitle>Contrast Type</columnTitle>
+            </column>
+            <column columnName="contrastAmount">
+                <datatype>double</datatype>
+                <columnTitle>Contrast Amount</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="route">
+                <datatype>varchar</datatype>
+                <columnTitle>Route</columnTitle>
+            </column>
+            <column columnName="CTDIvol">
+                <datatype>double</datatype>
+                <columnTitle>CTDIVol</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="DLP">
+                <datatype>double</datatype>
+                <columnTitle>DLP</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="totalExamDLP">
+                <datatype>double</datatype>
+                <columnTitle>Total Exam DLP</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="wetLabUse">
+                <datatype>varchar</datatype>
+                <columnTitle>Wet lab use</columnTitle>
+            </column>
+            <column columnName="imageUploadLink">
+                <datatype>varchar</datatype>
+                <columnTitle>Image Upload Link</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>PMIC_CTImagingData</tableTitle>
+    </table>
+    <table tableName="PMIC_SPECTImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_SPECTImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+            </column>
+            <column columnName="SPECTIsotope">
+                <datatype>varchar</datatype>
+                <columnTitle>SPECT Isotope</columnTitle>
+            </column>
+            <column columnName="SPECTDoseMCI">
+                <datatype>double</datatype>
+                <columnTitle>SPECT Dose(mCi)</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="SPECTDoseMBQ">
+                <datatype>double</datatype>
+                <columnTitle>SPECT Dose(MBq)</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="route">
+                <datatype>varchar</datatype>
+                <columnTitle>Route</columnTitle>
+            </column>
+            <column columnName="CTDIvol">
+                <datatype>double</datatype>
+                <columnTitle>CTDIVol</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="DLP">
+                <datatype>double</datatype>
+                <columnTitle>DLP</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="totalExamDLP">
+                <datatype>double</datatype>
+                <columnTitle>Total Exam DLP</columnTitle>
+                <formatString>0.0000</formatString>
+            </column>
+            <column columnName="wetLabUse">
+                <datatype>varchar</datatype>
+                <columnTitle>Wet lab use</columnTitle>
+            </column>
+            <column columnName="ligandAndComments">
+                <datatype>varchar</datatype>
+                <columnTitle>Ligand and Comments</columnTitle>
+            </column>
+            <column columnName="imageUploadLink">
+                <datatype>varchar</datatype>
+                <columnTitle>Image Upload Link</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>PMIC_SPECTImagingData</tableTitle>
+    </table>
+    <table tableName="PMIC_AngioImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_AngioImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+            </column>
+            <column columnName="CTDIvol">
+                <datatype>double</datatype>
+                <columnTitle>CTDIVol</columnTitle>
+                <formatString>0.000</formatString>
+            </column>
+            <column columnName="DLP">
+                <datatype>double</datatype>
+                <columnTitle>DLP</columnTitle>
+                <formatString>0.000</formatString>
+            </column>
+            <column columnName="totalExamDLP">
+                <datatype>double</datatype>
+                <columnTitle>Total Exam DLP</columnTitle>
+                <formatString>0.000</formatString>
+            </column>
+            <column columnName="wetLabUse">
+                <datatype>varchar</datatype>
+                <columnTitle>Wet lab use</columnTitle>
+            </column>
+            <column columnName="imageUploadLink">
+                <datatype>varchar</datatype>
+                <columnTitle>Image Upload Link</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>PMIC_AngioImagingData</tableTitle>
+    </table>
+    <table tableName="PMIC_USImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_USImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+            </column>
+            <column columnName="ultrasoundProcedure">
+                <datatype>varchar</datatype>
+                <columnTitle>Ultrasound Procedure</columnTitle>
+            </column>
+            <column columnName="wetLabUse">
+                <datatype>varchar</datatype>
+                <columnTitle>Wet lab use</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>PMIC_USImagingData</tableTitle>
+    </table>
+    <table tableName="PMIC_DEXAImagingData" tableDbType="TABLE">
+        <description>Contains up to one row of PMIC_DEXAImagingData data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+            </column>
+            <column columnName="chargeType">
+                <datatype>varchar</datatype>
+                <columnTitle>Credit To</columnTitle>
+            </column>
+            <column columnName="examNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Exam Num</columnTitle>
+            </column>
+            <column columnName="accessionNum">
+                <datatype>varchar</datatype>
+                <columnTitle>Accession Num</columnTitle>
+            </column>
+            <column columnName="PMICType">
+                <datatype>varchar</datatype>
+                <columnTitle>PMIC Type</columnTitle>
+            </column>
+            <column columnName="DEXAProcedure">
+                <datatype>varchar</datatype>
+                <columnTitle>DEXA Procedure</columnTitle>
+            </column>
+            <column columnName="animalPosition">
+                <datatype>varchar</datatype>
+                <columnTitle>Animal Position</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>PMIC_DEXAImagingData</tableTitle>
+    </table>
+    <table tableName="IPC_Sectioning" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_Sectioning data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="tissueType">
+                <datatype>varchar</datatype>
+                <columnTitle>Tissue Type</columnTitle>
+            </column>
+            <column columnName="paraffinSectioning">
+                <datatype>varchar</datatype>
+                <columnTitle>Paraffin Sectioning</columnTitle>
+            </column>
+            <column columnName="sectionThickness">
+                <datatype>varchar</datatype>
+                <columnTitle>SectionThickness</columnTitle>
+            </column>
+            <column columnName="frozenSectioning">
+                <datatype>varchar</datatype>
+                <columnTitle>Frozen Sectioning</columnTitle>
+            </column>
+            <column columnName="specialIns">
+                <datatype>varchar</datatype>
+                <columnTitle>Special Instructions</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>IPC_Sectioning</tableTitle>
+    </table>
+    <table tableName="IPC_Staining" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_Staining data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="tissueType">
+                <datatype>varchar</datatype>
+                <columnTitle>Tissue Type</columnTitle>
+            </column>
+            <column columnName="HAndE">
+                <datatype>varchar</datatype>
+                <columnTitle><![CDATA[H&E]]></columnTitle>
+            </column>
+            <column columnName="specialStain">
+                <datatype>varchar</datatype>
+                <columnTitle>Special Stain</columnTitle>
+            </column>
+            <column columnName="IHC">
+                <datatype>varchar</datatype>
+                <columnTitle>IHC</columnTitle>
+            </column>
+            <column columnName="IHCPrimaryAntibody">
+                <datatype>varchar</datatype>
+                <columnTitle>IHC Primary Antibody</columnTitle>
+            </column>
+            <column columnName="irrelevantAntibody">
+                <datatype>varchar</datatype>
+                <columnTitle>Irrevelant Antibody</columnTitle>
+            </column>
+            <column columnName="RNAScope">
+                <datatype>varchar</datatype>
+                <columnTitle>RNA Scope</columnTitle>
+            </column>
+            <column columnName="other">
+                <datatype>varchar</datatype>
+                <columnTitle>Other</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>IPC_Staining</tableTitle>
+    </table>
+    <table tableName="IPC_SlidePrinting" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_SlidePrinting data for each Animal/Date combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="tissueType">
+                <datatype>varchar</datatype>
+                <columnTitle>Tissue Type</columnTitle>
+            </column>
+            <column columnName="projectNotes">
+                <datatype>varchar</datatype>
+                <columnTitle>Project Notes</columnTitle>
+            </column>
+            <column columnName="additionalText">
+                <datatype>varchar</datatype>
+                <columnTitle>Additional text on slide</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>IPC_SlidePrinting</tableTitle>
+    </table>
+    <table tableName="IPC_Other" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_Other data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="serviceAndProducts">
+                <datatype>varchar</datatype>
+                <columnTitle>Service And Products</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>IPC_Other</tableTitle>
+    </table>
+    <table tableName="IPC_ServiceRequestDetails" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_ServiceRequestDetails data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
+            </column>
+            <column columnName="requestedBy">
+                <datatype>varchar</datatype>
+                <columnTitle>Requested By</columnTitle>
+            </column>
+            <column columnName="email">
+                <datatype>varchar</datatype>
+                <columnTitle>Email</columnTitle>
+            </column>
+            <column columnName="department">
+                <datatype>varchar</datatype>
+                <columnTitle>Department</columnTitle>
+            </column>
+            <column columnName="pathologist">
+                <datatype>varchar</datatype>
+                <columnTitle>Pathologist</columnTitle>
+            </column>
+            <column columnName="investigator">
+                <datatype>varchar</datatype>
+                <columnTitle>Investigator</columnTitle>
+            </column>
+            <column columnName="alias">
+                <datatype>varchar</datatype>
+                <columnTitle>Alias</columnTitle>
+            </column>
+            <column columnName="sampleLocation">
+                <datatype>varchar</datatype>
+                <columnTitle>Sample Dropoff/Pickup Location</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>IPC_ServiceRequestDetails</tableTitle>
+    </table>
+    <table tableName="IPC_CassettePrinting" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_CassettePrinting data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="tissueType">
+                <datatype>varchar</datatype>
+                <columnTitle>Tissue Type</columnTitle>
+            </column>
+            <column columnName="PILabel">
+                <datatype>varchar</datatype>
+                <columnTitle>PI Label Text</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>IPC_CassettePrinting</tableTitle>
+    </table>
+    <table tableName="IPC_ProcessingEmbedding" tableDbType="TABLE">
+        <description>Contains up to one row of IPC_ProcessingEmbedding data for each Animal/Date/objectId combination.</description>
+        <columns>
+            <column columnName="Id">
+                <datatype>varchar</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#ParticipantId</propertyURI>
+                <importAliases>
+                    <importAlias>ptid</importAlias>
+                </importAliases>
+            </column>
+            <column columnName="date">
+                <datatype>timestamp</datatype>
+                <propertyURI>http://cpas.labkey.com/Study#VisitDate</propertyURI>
+                <conceptURI>http://cpas.labkey.com/Study#VisitDate</conceptURI>
+            </column>
+            <column columnName="tissueType">
+                <datatype>varchar</datatype>
+                <columnTitle>Tissue Type</columnTitle>
+            </column>
+            <column columnName="embedding">
+                <datatype>varchar</datatype>
+                <columnTitle>Embedding</columnTitle>
+            </column>
+            <column columnName="fixationMethod">
+                <datatype>varchar</datatype>
+                <columnTitle>Fixation Method</columnTitle>
+            </column>
+            <column columnName="fixationDuration">
+                <datatype>varchar</datatype>
+                <columnTitle>Fixation Duration</columnTitle>
+            </column>
+            <column columnName="currentFixative">
+                <datatype>varchar</datatype>
+                <columnTitle>Current Fixative</columnTitle>
+            </column>
+            <column columnName="processingType">
+                <datatype>varchar</datatype>
+                <columnTitle>Processing Type</columnTitle>
+            </column>
+            <column columnName="embeddingIns">
+                <datatype>varchar</datatype>
+                <columnTitle>Embedding Instructions</columnTitle>
+            </column>
+        </columns>
+        <tableTitle>IPC_ProcessingEmbedding</tableTitle>
+    </table>
+
+
     <table tableName="StudyDetails" tableDbType="TABLE">
         <columns>
             <column columnName="Id">
