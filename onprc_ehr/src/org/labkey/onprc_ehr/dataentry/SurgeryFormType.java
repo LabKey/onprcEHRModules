@@ -64,7 +64,9 @@ public class SurgeryFormType extends EncounterForm
         {
             addSection(new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.supplierFromPath("ehr/data/MiscChargesClientStore.js")), null));
         }
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Surgery.js"));
+//        Modified: 4-20-2021  R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Surgery.js"));
+
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/OpenSurgeryCasesWindow.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/SurgeryDataEntryPanel.js"));
         setDisplayReviewRequired(true);
@@ -73,7 +75,9 @@ public class SurgeryFormType extends EncounterForm
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("Encounter");
-            s.addConfigSource("Surgery");
+
+//           Modified: 4-20-2021 R. Blasa
+           s.addConfigSource("onprc_Surgery");
 
             //Added: 9-6-2017  R.Blasa
             s.addConfigSource("Surgery_Blood");
