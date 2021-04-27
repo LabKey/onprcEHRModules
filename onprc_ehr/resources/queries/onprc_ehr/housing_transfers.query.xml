@@ -38,13 +38,13 @@
                     <column columnName="Cage"/>
                     <column columnName="housingType">
                         <columnTitle>Housing Type</columnTitle>
-                    </column>column>
+                    </column>
                     <column columnName="housingCondition">
                         <columnTitle>Housing Condition</columnTitle>
-                    </column>column>
+                    </column>
                     <column columnName="ReasonForMove">
                         <columnTitle>Reason For Move</columnTitle>
-                    </column>column>
+                    </column>
                     <column columnName="Remark"/>
 
                     <column columnName="TotalAnimals">
