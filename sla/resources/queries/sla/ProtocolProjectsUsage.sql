@@ -28,7 +28,7 @@ LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.pr
     LEFT JOIN onprc_billing.fiscalAuthorities f ON f.rowid = i.financialanalyst
     LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_BreedingGroups aa ON a.protocol = aa.protocol
     LEFT JOIN (select * from onprc_billing.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
-    LEFT JOIN "/onprc/admin/finance/public".onprc_billing_public.aliases y ON y.alias = x.account
+    LEFT JOIN Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases y ON y.alias = x.account
     LEFT JOIN (
     --Changed by LK on 5/30 to get the accurate numused.
 --Ignore the gender when counting the usage if the approval data gender is: "Male or Female". Count both Male and Female usage.
@@ -101,7 +101,7 @@ LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.pr
     LEFT JOIN onprc_billing.fiscalAuthorities f ON f.rowid = i.financialanalyst
     LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_BreedingGroups aa ON a.protocol = aa.protocol
     LEFT JOIN (select * from onprc_billing.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
-    LEFT JOIN "/onprc/admin/finance/public".onprc_billing_public.aliases y ON y.alias = x.account
+    LEFT JOIN Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases y ON y.alias = x.account
     LEFT JOIN (
     --Changed by LK on 5/30 to get the accurate numused.
 -- Count only the usage for the "Male" or "Female" gender

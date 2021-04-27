@@ -16,7 +16,8 @@ FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.protocol p ON p.protocol = a.protocol
     LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
     LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_BreedingGroups aa ON a.protocol = aa.protocol
-    LEFT JOIN "/onprc/admin/finance/public".onprc_billing_public.aliases y ON y.alias = a.account
+    --LEFT JOIN "/onprc/admin/finance/public".onprc_billing_public.aliases y ON y.alias = a.account
+    LEFT JOIN Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases y ON y.alias = a.account
 WHERE
 -- filter based on the current date compared with the start and end dates
     (
