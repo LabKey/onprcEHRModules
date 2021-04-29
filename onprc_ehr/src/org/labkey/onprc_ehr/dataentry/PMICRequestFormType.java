@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.json.JSONObject;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
@@ -24,6 +25,8 @@ import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 //Created: 5/23/2019 Kollil
 public class PMICRequestFormType extends RequestForm
@@ -47,6 +50,18 @@ public class PMICRequestFormType extends RequestForm
         }
 
     }
+
+    //This function has a property that allows to schedule PMIC service requests in future with no num days restriction - By Kollil, 4/20/21
+    @Override
+    public JSONObject toJSON()
+    {
+        JSONObject ret = super.toJSON();
+        Map<String, Object> map = new HashMap<>();
+        map.put("allowRequestsInDistantFuture", true);
+        ret.put("extraContext", map);
+        return ret;
+    }
+
 
 //    //    Added: 12-5-2019  R.Blasa  Allow access only to PMIC Access group.
 //    @Override
