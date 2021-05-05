@@ -1150,7 +1150,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
 
-            msg.append("<hr><b>Daily PMIC events:</b><br><br>\n");
+            msg.append("<hr><b>Today's PMIC events:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
             msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
