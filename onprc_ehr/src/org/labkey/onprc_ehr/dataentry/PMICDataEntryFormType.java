@@ -25,6 +25,7 @@ public class PMICDataEntryFormType extends TaskForm
         super(ctx, owner, NAME, "PMIC Data Entry", "Imaging", Arrays.asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
+                new ClinicalEncountersFormSection(),
                 new PMIC_PETFormSection(),
                 new PMIC_CTFormSection(),
                 new PMIC_SPECTFormSection(),
