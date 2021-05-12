@@ -36,6 +36,9 @@ EHR.model.DataModelManager.registerMetadata('PMIC_Services', {
                         columnConfig: {
                             width: 150
                         }
+                    },
+                    billingproject: {
+                        hidden:true
                     }
                 }
             }
