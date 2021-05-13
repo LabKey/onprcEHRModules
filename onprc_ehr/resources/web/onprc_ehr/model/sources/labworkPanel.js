@@ -42,12 +42,12 @@ EHR.model.DataModelManager.registerMetadata('LabworkPanel', {
             lookup: {
                 xtype: 'labkey-combo',
                 schemaName: 'onprc_ehr',
-                queryName: 'Reference_StaffNames',
-                keyColumn: 'username',
+                queryName: 'Labwork_Requestor_Vets',
+                keyColumn: 'userId',
                 displayColumn: 'username',
                 filterArray: [
                     LABKEY.Filter.create('DisableDate', null, LABKEY.Filter.Types.ISBLANK)],
-                columns: 'username,FirstName,LastName,Type,DisableDate',
+                columns: 'username,FirstName,LastName,Type,DisableDate,userId',
                 sort: 'username'
 
             },
