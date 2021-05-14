@@ -1,0 +1,6 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="Covid 19 Events for Today">
+    <view name="Covid19EventsToday"/>
+    <locations>
+        <location name="body"/>
+    </locations>
+</webpart>

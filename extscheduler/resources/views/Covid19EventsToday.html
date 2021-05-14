@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ONPRC Covid 19 Events for Today </title>
+</head>
+<body>
+
+        <script type="text/javascript">
+    Ext4.onReady(function() {
+        _grid = new LABKEY.ext.EditorGridPanel({
+            store: new LABKEY.ext.Store({
+                schemaName: 'extScheduler',
+                queryName: 'Covid19EventsToDay'
+            }),
+            renderTo: 'grid',
+            width: 1200,
+            autoHeight: true,
+            title: 'Covid 19 Events Today',
+            editable: true
+        });
+    });
+        </script>-->
+
+            }
+
+
+<h2>Covid 19 Events for Today</h2>
+<div id='grid'/>
+<!--<div id='theFormDiv'></div>
+<div id='IndustryDiv'></div>-->
+</body>
+</html>

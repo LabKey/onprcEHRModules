@@ -1,0 +1,23 @@
+SELECT t.EntityId,
+       t.Key,
+       t.ResourceID,
+       t.EventID,
+       t.ScheduledDate as createdate,
+       MonthName(e.startDate) as MOnth,
+       DayofMonth(e.startDate) as ScheduledDate,
+       hour(e.startDate) as SchedueldTime,
+       minute(e.startDate)masmScheduledTimeMinute,
+       t.ScheduledTime,
+       t.UserName,
+       t.UserID,
+       t.EmployeeID,
+       t.Created,
+       t.CreatedBy,
+       t.Modified,
+       t.ModifiedBy,
+       t.Recorded,
+       t.RecordedBy,
+       t.ComplianceUpdated,
+       t.DateCompleted
+FROM Covid19Testing t join events e on t.eventID = e.id
+where week(e.startDate) = week(Now())
