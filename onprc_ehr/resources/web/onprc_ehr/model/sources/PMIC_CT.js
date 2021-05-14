@@ -146,6 +146,19 @@ EHR.model.DataModelManager.registerMetadata('CT', {
                 }
             },
 
+            CTACScanRange: {
+                header:"CT Scan Range(mm)",
+                columnConfig: {
+                    width: 150
+                }
+            },
+
+            phantom: {
+                columnConfig: {
+                    width: 150
+                }
+            },
+
             TotalExamDLP: {
                 hidden: true,
                 header: 'Total Exam DLP (mGy*cm)',

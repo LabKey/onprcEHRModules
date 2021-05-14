@@ -94,6 +94,19 @@
                         <formatString>0.0000</formatString>
                     </column>
 
+                    <column columnName="CTScanRange">
+                        <columnTitle>CT Scan Range(mm)</columnTitle>
+                    </column>
+
+                    <column columnName="phantom">
+                        <columnTitle>Phantom</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>PMIC_Phantom_values</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
                     <column columnName="wetLabUse">
                         <columnTitle>Wet lab use</columnTitle>
                         <fk>
