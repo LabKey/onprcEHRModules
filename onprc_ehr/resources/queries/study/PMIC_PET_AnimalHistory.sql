@@ -9,7 +9,7 @@ SELECT
     PETDoseMBQ,
     route,
     CTACType,
-    CTScanRange,
+    CTACScanRange,
     CTDIvol,
     phantom,
     DLP,
