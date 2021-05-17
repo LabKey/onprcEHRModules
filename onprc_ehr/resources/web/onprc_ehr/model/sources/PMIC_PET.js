@@ -41,7 +41,7 @@ EHR.model.DataModelManager.registerMetadata('PET', {
             examNum: {
                 header:"Exam Num",
                 columnConfig: {
-                    width: 200
+                    width: 150
                 }
             },
 
