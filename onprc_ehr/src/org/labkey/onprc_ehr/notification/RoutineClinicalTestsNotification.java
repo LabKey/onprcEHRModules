@@ -274,7 +274,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         if (count > 0)
         {
             msg.append("WARNING: There are " + count + " animals in cage locations and have not been weighed in the past 75 days: ");
-            String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/MostRecentWeight/DaysSinceWeight~gt=45&query.calculated_status~eq=Alive&query.Id/curLocation/Room/housingType/value~eq=Cage Location";
+            String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/MostRecentWeight/DaysSinceWeight~gt=75&query.calculated_status~eq=Alive&query.Id/curLocation/Room/housingType/value~eq=Cage Location";
             msg.append("<b><a href='" + url + "'>Click here to view them.</a></b><br><br>\n");
 
             msg.append("Summary by area:<br>\n");
