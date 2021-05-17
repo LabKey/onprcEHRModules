@@ -66,8 +66,8 @@
                         </fk>
                     </column>
 
-                    <column columnName="CTType">
-                        <columnTitle>CT Type</columnTitle>
+                    <column columnName="CTACType">
+                        <columnTitle>CTAC Type</columnTitle>
                         <fk>
                             <fkDbSchema>study</fkDbSchema>
                             <fkTable>PMIC_CTACType_values</fkTable>
@@ -84,6 +84,15 @@
                         <formatString>0.0000</formatString>
                     </column>
 
+                    <column columnName="phantom">
+                        <columnTitle>Phantom</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>PMIC_Phantom_values</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
                     <column columnName="DLP">
                         <columnTitle>DLP</columnTitle>
                         <formatString>0.0000</formatString>
@@ -96,15 +105,6 @@
 
                     <column columnName="CTScanRange">
                         <columnTitle>CT Scan Range(mm)</columnTitle>
-                    </column>
-
-                    <column columnName="phantom">
-                        <columnTitle>Phantom</columnTitle>
-                        <fk>
-                            <fkDbSchema>study</fkDbSchema>
-                            <fkTable>PMIC_Phantom_values</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                        </fk>
                     </column>
 
                     <column columnName="wetLabUse">

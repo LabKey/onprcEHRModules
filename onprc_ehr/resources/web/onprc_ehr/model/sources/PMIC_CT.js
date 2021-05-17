@@ -66,7 +66,7 @@ EHR.model.DataModelManager.registerMetadata('CT', {
                 }
             },
 
-            CTType: {
+            CTACType: {
                 columnConfig: {
                     width: 150
                 }

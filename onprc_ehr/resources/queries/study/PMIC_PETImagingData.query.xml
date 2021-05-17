@@ -71,8 +71,8 @@
                         </fk>
                     </column>
 
-                    <column columnName="CTType">
-                        <columnTitle>CT Type</columnTitle>
+                    <column columnName="CTACType">
+                        <columnTitle>CTAC Type</columnTitle>
                         <fk>
                             <fkDbSchema>study</fkDbSchema>
                             <fkTable>PMIC_CTACType_values</fkTable>
@@ -80,22 +80,12 @@
                         </fk>
                     </column>
 
-                    <column columnName="CTScanRange">
-                        <columnTitle>CT Scan Range(mm)</columnTitle>
+                    <column columnName="CTACScanRange">
+                        <columnTitle>CTAC Scan Range(mm)</columnTitle>
                     </column>
 
                     <column columnName="CTDIvol">
                         <columnTitle>CTDIVol</columnTitle>
-                        <formatString>0.0000</formatString>
-                    </column>
-
-                    <column columnName="DLP">
-                        <columnTitle>DLP</columnTitle>
-                        <formatString>0.0000</formatString>
-                    </column>
-
-                    <column columnName="totalExamDLP">
-                        <columnTitle>Total Exam DLP</columnTitle>
                         <formatString>0.0000</formatString>
                     </column>
 
@@ -106,6 +96,16 @@
                             <fkTable>PMIC_Phantom_values</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
+                    </column>
+
+                    <column columnName="DLP">
+                        <columnTitle>DLP</columnTitle>
+                        <formatString>0.0000</formatString>
+                    </column>
+
+                    <column columnName="totalExamDLP">
+                        <columnTitle>Total Exam DLP</columnTitle>
+                        <formatString>0.0000</formatString>
                     </column>
 
                     <column columnName="wetLabUse">
@@ -123,6 +123,10 @@
 
                     <column columnName="imageUploadLink">
                         <columnTitle>Image Upload Link</columnTitle>
+                    </column>
+
+                    <column columnName="performedBy">
+                        <columnTitle>Performed By</columnTitle>
                     </column>
 
                     <column columnName="qcstate">
@@ -144,9 +148,7 @@
                     <column columnName="objectid">
                         <isHidden>true</isHidden>
                     </column>
-                    <column columnName="performedBy">
-                        <columnTitle>Performed By</columnTitle>
-                    </column>
+
                     <column columnName="created">
                         <isHidden>true</isHidden>
                     </column>
