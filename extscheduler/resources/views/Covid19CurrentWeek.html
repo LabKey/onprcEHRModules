@@ -11,7 +11,22 @@
         _grid = new LABKEY.ext.EditorGridPanel({
             store: new LABKEY.ext.Store({
                 schemaName: 'extScheduler',
-                queryName: 'Covid19CurrentWeek'
+                queryName: 'Covid19CurrentWeekSChedule'
+                buttonBar: {
+                    includeStandardButtons: true,
+                    items: [
+                        {text: 'JavaScript Link Button', url: LABKEY.ActionURL.buildURL('announcements', 'begin')},
+                        {text: 'JavaScript OnClick Button', onClick: "alert('JavaScript OnClick Alert'); return false;"},
+                        {text: 'JavaScript Handler Button', handler: onTestHandler},
+                        {text: 'JavaScript Menu Button', items: [
+                                '-', // separator
+                                {text: 'JavaScript Menu1', handler: onItem1Handler},
+                                {text: 'JavaScript Menu2', items: [
+                                        {text: 'JavaScript Fly Out', handler: onItem2Handler}
+                                    ]}
+                            ]}
+                    ]
+                }
             }),
             renderTo: 'grid',
             width: 1200,
