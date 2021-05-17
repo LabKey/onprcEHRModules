@@ -25,7 +25,7 @@ EHR.model.DataModelManager.registerMetadata('CT', {
 
             project: {
                 allowBlank: true,
-                hidden: true,
+                hidden: false,
                 columnConfig: {
                     width: 150
                 }
@@ -33,8 +33,9 @@ EHR.model.DataModelManager.registerMetadata('CT', {
 
             chargeType: {
                 allowBlank: true,
-                defaultValue: 'PMIC',
-                hidden: true
+                hidden: false,
+                defaultValue: 'PMIC'
+
             },
 
             examNum: {
@@ -65,7 +66,7 @@ EHR.model.DataModelManager.registerMetadata('CT', {
                 }
             },
 
-            CTType: {
+            CTACType: {
                 columnConfig: {
                     width: 150
                 }
@@ -140,6 +141,19 @@ EHR.model.DataModelManager.registerMetadata('CT', {
 
             ImageUploadLink: {
                 hidden: true,
+                columnConfig: {
+                    width: 150
+                }
+            },
+
+            CTACScanRange: {
+                header:"CT Scan Range(mm)",
+                columnConfig: {
+                    width: 150
+                }
+            },
+
+            phantom: {
                 columnConfig: {
                     width: 150
                 }

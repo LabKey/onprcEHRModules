@@ -1,12 +1,13 @@
-<!--PMIC schema. Added by Kolli, 02/27/2020 -->
+!--PMIC schema. Added by Kolli, 02/27/2020 -->
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="PMIC_PETImagingData" tableDbType="TABLE" useColumnOrder="true">
+        <table tableName="PMIC_encounters" tableDbType="TABLE" useColumnOrder="true">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableUrl />
                 <tableTitle>PET Imaging Data</tableTitle>
                 <columns>
-                    <column columnName="rowId">
+                    <column columnName="requestid">
                         <isHidden>true</isHidden>
                     </column>
 
@@ -14,32 +15,27 @@
                         <columnTitle>AnimalId</columnTitle>
                     </column>
 
-                    <column columnName="Date">
-                        <columnTitle>Exam Date</columnTitle>
+                    <column columnName="date">
+                        <columnTitle>Date</columnTitle>
+                    </column>
+
+                    <column columnName="ActiveAssignments">
+                        <columnTitle>Active Assignments</columnTitle>
                     </column>
 
                     <column columnName="project">
-                        <columnTitle>Charge To</columnTitle>
+                        <columnTitle>Project</columnTitle>
+                    </column>
+
+                    <column columnName="investigatorid">
+                        <columnTitle>Investigator</columnTitle>
                     </column>
 
                     <column columnName="chargeType">
-                        <columnTitle>Credit To</columnTitle>
-                        <fk>
-                            <fkDbSchema>study</fkDbSchema>
-                            <fkTable>PMIC_ChargeTypes</fkTable>
-                            <fkColumnName>chargetype</fkColumnName>
-                        </fk>
+                        <columnTitle>Charge Type</columnTitle>
                     </column>
 
-                    <column columnName="examNum">
-                        <columnTitle>Exam Num</columnTitle>
-                    </column>
-
-                    <column columnName="accessionNum">
-                        <columnTitle>Accession Num</columnTitle>
-                    </column>
-
-                    <column columnName="PMICType">
+                    <column columnName="procedureid">
                         <columnTitle>PMIC Type</columnTitle>
                     </column>
 
@@ -71,8 +67,8 @@
                         </fk>
                     </column>
 
-                    <column columnName="CTACType">
-                        <columnTitle>CTAC Type</columnTitle>
+                    <column columnName="CTType">
+                        <columnTitle>CT Type</columnTitle>
                         <fk>
                             <fkDbSchema>study</fkDbSchema>
                             <fkTable>PMIC_CTACType_values</fkTable>
@@ -80,22 +76,13 @@
                         </fk>
                     </column>
 
-                    <column columnName="CTACScanRange">
-                        <columnTitle>CTAC Scan Range(mm)</columnTitle>
+                    <column columnName="CTScanRange">
+                        <columnTitle>CT Scan Range(mm)</columnTitle>
                     </column>
 
                     <column columnName="CTDIvol">
                         <columnTitle>CTDIVol</columnTitle>
                         <formatString>0.0000</formatString>
-                    </column>
-
-                    <column columnName="phantom">
-                        <columnTitle>Phantom</columnTitle>
-                        <fk>
-                            <fkDbSchema>study</fkDbSchema>
-                            <fkTable>PMIC_Phantom_values</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                        </fk>
                     </column>
 
                     <column columnName="DLP">
@@ -106,6 +93,15 @@
                     <column columnName="totalExamDLP">
                         <columnTitle>Total Exam DLP</columnTitle>
                         <formatString>0.0000</formatString>
+                    </column>
+
+                    <column columnName="phantom">
+                        <columnTitle>Phantom</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>PMIC_Phantom_values</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
 
                     <column columnName="wetLabUse">
@@ -123,10 +119,6 @@
 
                     <column columnName="imageUploadLink">
                         <columnTitle>Image Upload Link</columnTitle>
-                    </column>
-
-                    <column columnName="performedBy">
-                        <columnTitle>Performed By</columnTitle>
                     </column>
 
                     <column columnName="qcstate">
@@ -148,7 +140,9 @@
                     <column columnName="objectid">
                         <isHidden>true</isHidden>
                     </column>
-
+                    <column columnName="performedBy">
+                        <columnTitle>Performed By</columnTitle>
+                    </column>
                     <column columnName="created">
                         <isHidden>true</isHidden>
                     </column>

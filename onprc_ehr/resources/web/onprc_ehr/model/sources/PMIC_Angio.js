@@ -24,7 +24,7 @@ EHR.model.DataModelManager.registerMetadata('Angio', {
 
             project: {
                 allowBlank: true,
-                hidden: true,
+                hidden: false,
                 columnConfig: {
                     width: 150
                 }
@@ -33,7 +33,7 @@ EHR.model.DataModelManager.registerMetadata('Angio', {
             chargeType: {
                 allowBlank: true,
                 defaultValue: 'PMIC',
-                hidden: true
+                hidden: false
             },
 
             examNum: {
