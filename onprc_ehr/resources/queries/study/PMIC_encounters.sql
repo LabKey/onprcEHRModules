@@ -11,7 +11,7 @@ SELECT
     QCState,
     taskid,
     requestid.createdby,
-    taskid,
-    isAssignedToProtocolAtTime
+    taskid
+--     isAssignedToProtocolAtTime
 from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.encounters
 Where chargeType like 'PMIC'
