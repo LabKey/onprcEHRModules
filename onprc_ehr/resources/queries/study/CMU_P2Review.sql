@@ -9,4 +9,4 @@ SELECT c.Id,
 
 FROM clinremarks c
 where  c.id.Demographics.calculated_status = 'alive'
-  And c.date in (Select Max(c1.date) from clinremarks c1 where c.id = c1.id And c.p2 is not null)
+  And c.date in (Select Max(c1.date) from clinremarks c1 where c.id = c1.id And c1.p2 is not null)
