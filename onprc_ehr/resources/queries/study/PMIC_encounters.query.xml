@@ -1,78 +1,98 @@
-<query xmlns="http://labkey.org/data/xml/query">
-    <metadata>
-        <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="PMIC_encounters" tableDbType="TABLE">
-                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
-                <columns>
-                </columns>
-            </table>
-        </tables>
-    </metadata>
-</query>
-
-<!--&lt;!&ndash;PMIC schema. Added by Kolli, 05/12/21 &ndash;&gt;-->
 <!--<query xmlns="http://labkey.org/data/xml/query">-->
 <!--    <metadata>-->
 <!--        <tables xmlns="http://labkey.org/data/xml">-->
-<!--        <table tableName="PMIC_encounters" tableDbType="TABLE" useColumnOrder="true">-->
-<!--        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />-->
-<!--                <tableUrl />-->
-<!--                <tableTitle>PET Imaging Data</tableTitle>-->
+<!--            <table tableName="PMIC_encounters" tableDbType="TABLE">-->
+<!--                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />-->
 <!--                <columns>-->
-<!--                    <column columnName="requestid">-->
-<!--                        <isHidden>true</isHidden>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="Id">-->
-<!--                        <columnTitle>AnimalId</columnTitle>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="date">-->
-<!--                        <columnTitle>Date</columnTitle>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="ActiveAssignments">-->
-<!--                        <columnTitle>Active Assignments</columnTitle>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="project">-->
-<!--                        <columnTitle>Center Project</columnTitle>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="investigatorid">-->
-<!--                        <columnTitle>Project Contact</columnTitle>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="chargeType">-->
-<!--                        <columnTitle>Charge Unit</columnTitle>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="procedureid">-->
-<!--                        <columnTitle>Procedure</columnTitle>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="remark">-->
-<!--                        <columnTitle>Remark</columnTitle>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="QCState">-->
-<!--                        <columnTitle>Status</columnTitle>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="taskid">-->
-<!--                        <columnTitle>Task Id</columnTitle>-->
-<!--                    </column>-->
-
-<!--                    <column columnName="createdby">-->
-<!--                        <columnTitle>Created By</columnTitle>-->
-<!--                    </column>-->
-
-<!--&lt;!&ndash;                    <column columnName="isAssignedToProtocolAtTime">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <columnTitle>Is Assigned To Protocol At Time?</columnTitle>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </column>&ndash;&gt;-->
-
 <!--                </columns>-->
 <!--            </table>-->
 <!--        </tables>-->
 <!--    </metadata>-->
 <!--</query>-->
+
+<!--PMIC schema. Added by Kolli, 05/12/21 -->
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+        <table tableName="PMIC_encounters" tableDbType="TABLE" useColumnOrder="true">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+<!--            <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />-->
+            <tableUrl />
+            <tableTitle>PET Imaging Data</tableTitle>
+            <columns>
+                <column columnName="requestid">
+                    <isHidden>true</isHidden>
+                </column>
+
+                <column columnName="Id">
+                    <columnTitle>AnimalId</columnTitle>
+                </column>
+
+                <column columnName="date">
+                    <columnTitle>Date</columnTitle>
+                </column>
+
+                <column columnName="ActiveAssignments">
+                    <columnTitle>Active Assignments</columnTitle>
+                </column>
+
+                <column columnName="project">
+                    <columnTitle>Center Project</columnTitle>
+                </column>
+
+                <column columnName="investigatorid">
+                    <columnTitle>Project Contact</columnTitle>
+                </column>
+
+                <column columnName="chargeType">
+                    <columnTitle>Charge Unit</columnTitle>
+                </column>
+
+                <column columnName="procedureid">
+                    <columnTitle>Procedure</columnTitle>
+                </column>
+
+                <column columnName="remark">
+                    <columnTitle>Remark</columnTitle>
+                </column>
+
+                <column columnName="QCState">
+                    <columnTitle>Status</columnTitle>
+                </column>
+
+                <column columnName="taskid">
+                    <columnTitle>Task Id</columnTitle>
+                </column>
+
+                <column columnName="createdby">
+                    <columnTitle>Created By</columnTitle>
+                </column>
+
+<!--                    <column columnName="isAssignedToProtocolAtTime">-->
+<!--                        <columnTitle>Is Assigned To Protocol At Time?</columnTitle>-->
+<!--                    </column>-->
+
+                </columns>
+                <buttonBarOptions position="both" includeStandardButtons="true">
+                    <includeScript>ehr.context</includeScript>
+                    <includeScript>/ehr/studyButtons.js</includeScript>
+                    <onRender>EHR.DatasetButtons.moreActionsHandler</onRender>
+
+                    <item text="More Actions" insertPosition="end" requiresSelection="true">
+<!--                        <item text="Jump To History">-->
+<!--                            <onClick>-->
+<!--                                EHR.DatasetButtons.historyHandler(dataRegion, dataRegionName, 'Assignment');-->
+<!--                            </onClick>-->
+<!--                        </item>-->
+<!--                        <item text="Return Distinct Values">-->
+<!--                            <onClick>-->
+<!--                                EHR.window.GetDistinctWindow.getDistinctHandler(dataRegionName, 'Assignment');-->
+<!--                            </onClick>-->
+<!--                        </item>-->
+                    </item>
+
+                </buttonBarOptions>
+            </table>
+        </tables>
+    </metadata>
+</query>
