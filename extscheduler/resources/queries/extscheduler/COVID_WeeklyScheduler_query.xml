@@ -1,0 +1,141 @@
+
+<!-- https://www.labkey.org/Documentation/wiki-page.view?name=premBulkEdit -->
+
+<tables xmlns="http://labkey.org/data/xml">
+    <table tableName="Covid_WeeklyScheduler" tableDbType="NOT_IN_DB">
+        <columns>
+            <column columnName="Key">
+                <isUserEditable>false</isUserEditable>
+            </column>
+            <column columnName="ID">
+                <isReadOnly>true</isReadOnly>
+            </column>
+            <column columnName="RequestRetraining">
+                <columnTitle>Retraining Requested</columnTitle>
+                <formatString>yyyy-MM-dd HH:mm</formatString>
+                <conditionalFormats>
+                    <conditionalFormat>
+                        <filters>
+                            <filter operator="isnonblank" value="true"/>
+                        </filters>
+                        <textColor>B22222</textColor>
+                        <backgroundColor>FFDAB9</backgroundColor>
+                    </conditionalFormat>
+                </conditionalFormats>
+            </column>
+            <column columnName="TrainingCompleted">
+                <formatString>DATE</formatString>
+            </column>
+        </columns>
+        <buttonBarOptions position="both" includeStandardButtons="true">
+
+            <!-- The "Needs Retraining" button sets the "Request Retraining" column for the selected rows
+                 with the current date and highlight color (the "Training Completed" column is cleared). -->
+            <item text="Needs Retraining" requiresSelection="true">
+                <onClick>
+                    var checked = dataRegion.getChecked();
+
+                    var sql = 'SELECT Key FROM lists.Technicians WHERE Key IN (';
+                    var separator = '';
+                    for (var i = 0; i &lt; checked.length; i++) {
+                    sql += separator + checked[i];
+                    separator = ', ';
+                    }
+                    sql += ')';
+
+                    LABKEY.Query.executeSql({schemaName: 'lists', sql: sql, success: function(data) {
+                    var updateRows = [];
+
+                    for (var j = 0; j &lt; data.rows.length; j++) {
+                    updateRows.push({Key: data.rows[j].Key, requestRetraining: new Date(), trainingCompleted: '' });
+                    }
+
+                    LABKEY.Query.updateRows({ schemaName: 'lists', queryName: 'Technicians', rows: updateRows, success: function() { location.reload(); }});
+                    }});
+                </onClick>
+            </item>
+
+            <!-- The "Training Completed" button enters the current date in the Training Completed column
+                 and clears the Request Retraining column. -->
+            <item text="Training Completed" requiresSelection="true">
+                <onClick>
+                    var checked = dataRegion.getChecked();
+
+                    var sql = 'SELECT Key FROM lists.Technicians WHERE Key IN (';
+                    var separator = '';
+                    for (var i = 0; i &lt; checked.length; i++) {
+                    sql += separator + checked[i];
+                    separator = ', ';
+                    }
+                    sql += ')';
+
+                    LABKEY.Query.executeSql({schemaName: 'lists', sql: sql, success: function(data) {
+                    var updateRows = [];
+
+                    for (var j = 0; j &lt; data.rows.length; j++) {
+                    updateRows.push({Key: data.rows[j].Key, requestRetraining: '', trainingCompleted: new Date().toDateString() });
+                    }
+
+                    LABKEY.Query.updateRows({ schemaName: 'lists', queryName: 'Technicians', rows: updateRows, success: function() { location.reload(); }});
+                    }});
+                </onClick>
+            </item>
+
+            <!-- The "Record Certification" button asks the user for the name of the certification and level
+                 earned. All selected rows will be updated with these values, the training date will be set,
+                 and the request column will be cleared. -->
+            <item text="Record Certification">
+                <onClick>
+                    var certif = prompt("Please enter certification earned:", "");
+                    var level = prompt("Please enter level completed:", "range: 1-4");
+                    var selectedValues = [];
+                    for (i=0; i &lt; document.getElementsByName(".select").length; i++){
+                    if (document.getElementsByName(".select")[i].checked){
+                    selectedValues.push(document.getElementsByName(".select")[i].value);
+                    }
+                    }
+                    LABKEY.Query.selectRows({
+                    requiredVersion: 9.1,
+                    schemaName: 'lists',
+                    queryName: 'Technicians',
+                    filterArray: [new LABKEY.Query.Filter.In('Key', selectedValues.join(';'))],
+                    success: onSuccess
+                    });
+                    function onSuccess(results){
+                    var data='';
+                    var updatedRows = [];
+                    for (j=0; j &lt; results.rows.length; j++){
+                    updatedRows.push({'Key': results.rows[j].Key.value, 'Certification': certif, 'Level': level, requestRetraining: '', trainingCompleted: new Date().toDateString()});
+                    }
+                    LABKEY.Query.updateRows({
+                    schemaName: 'lists',
+                    queryName: 'Technicians',
+                    rows: updatedRows,
+                    success: function() {alert('All Rows Successfully Updated!  (refresh the page...)'); location.reload();}
+                    });
+                    }
+                </onClick>
+            </item>
+            git
+            <!-- The "Bulk Edit" button will only work when at least two rows are selected. It will open a
+                 data entry panel for all columns in the list. Any values entered will be pushed to the
+                 matching in all selected rows. Data in columns that are not updated in the bulk entry form
+                 will be unchanged. -->
+            <item text="Bulk Edit" permission="UPDATE" requiresSelection="true" requiresSelectionMinCount="2">
+                <onClick>
+                    var url = LABKEY.ActionURL.buildURL('query', 'updateQueryRows.view', null, {
+                    schemaName: dataRegion.schemaName,
+                    'query.queryName': dataRegion.queryName,
+                    dataRegionSelectionKey: dataRegion.selectionKey
+                    });
+                    var form = dataRegion.form;
+                    if (form &amp;&amp; verifySelected.call(this, form, url, 'POST', 'rows')) {
+                    submitForm(form);
+                    }
+                    document.onclose
+                    return false;
+                </onClick>
+            </item>
+        </buttonBarOptions>
+    </table>
+</tables>
