@@ -1,0 +1,3 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="Covid Scheduler - Week View">
+    <view name="CovidweeklyScheduler"/>
+</webpart>
