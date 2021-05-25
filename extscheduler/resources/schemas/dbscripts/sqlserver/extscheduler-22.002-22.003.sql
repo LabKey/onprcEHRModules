@@ -18,7 +18,7 @@ CREATE TABLE [extscheduler].[TempCov19ReoccurringEvents](
     [Container] [uniqueidentifier] NOT NULL,
     [CreatedBy] [int] NULL,
     [Created] [smalldatetime] NULL,
-    [ModifiedBy] [int] NULL,
+    [ModifiedBy] [int] NULL,branch
     [Modified] [datetime] NULL,
     [Alias] [varchar](100) NULL,
     [Quantity] [int] NULL,
