@@ -14,7 +14,7 @@ SET QUOTED_IDENTIFIER ON
 -- Description:	This stored procedure processes re-occurring COVID calendar events into individual events within the specified date range.
 -- =======================================================================================================================================
 
-ALTER PROCEDURE [extscheduler].[Covid19_ReoccurringEvents]
+CREATE PROCEDURE [extscheduler].[Covid19_ReoccurringEvents]
     AS
 
 DECLARE

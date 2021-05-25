@@ -8,7 +8,7 @@ SET ANSI_NULLS ON
     GO
 SET QUOTED_IDENTIFIER ON
     GO
-ALTER Procedure [extscheduler].[Covid19_ScheduleProcessDCM]
+CREATE Procedure [extscheduler].[Covid19_ScheduleProcessDCM]
     AS
 
 DECLARE
