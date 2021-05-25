@@ -1,29 +1,32 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="Covid Events Today">
     <columns>
-        <table tableName="events" tableDbType="TABLE">
 
-            <column columnName="Id" />
-            <column columnName="ResourceId"/>
 
-            <column columnName="Name" />
-            <column columnName="Alias" />
-            <column columnName="Quantity" />
-            <column columnName="Comments" />
-            <column columnName="UserId"/>
 
-            <column columnName="StartDate"/>
 
-            <column columnName="EndDate"/>
+            <column name="Id" />
+            <column name="ResourceId"/>
 
-            <column columnName="DateDisabled"/>
+            <column name="Name" />
+            <column name="Alias" />
+            <column name="Quantity" />
+            <column name="Comments" />
+            <column name="UserId"/>
 
-            <column columnName="EmployeeID"/>
+            <column name="StartDate"/>
 
-            <column columnName="Container"/>
-            <isHidden>true</isHidden>
+            <column name="EndDate"/>
 
-        </table>
-    </columns>
+            <column name="DateDisabled"/>
+
+            <column name="EmployeeID"/>
+
+            <column name="Container"/>
+
+
+        </columns>
+
+
 
     <filters>
     <filter column="StartDate" operator="dateeq" value="0+d"/>

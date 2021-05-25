@@ -1,29 +1,29 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="Upcoming Events">
     <columns>
-        <table tableName="events" tableDbType="TABLE">
 
-            <column columnName="Id" />
-            <column columnName="ResourceId"/>
 
-            <column columnName="Name" />
-            <column columnName="Alias" />
-            <column columnName="Quantity" />
-            <column columnName="Comments" />
-            <column columnName="UserId"/>
+            <column name="Id" />
+            <column name="ResourceId"/>
 
-            <column columnName="StartDate"/>
+            <column name="Name" />
+            <column name="Alias" />
+            <column name="Quantity" />
+            <column name="Comments" />
+            <column name="UserId"/>
 
-            <column columnName="EndDate"/>
+            <column name="StartDate"/>
 
-            <column columnName="DateDisabled"/>
+            <column name="EndDate"/>
 
-            <column columnName="EmployeeID"/>
+            <column name="DateDisabled"/>
 
-            <column columnName="Container"/>
-            <isHidden>true</isHidden>
+            <column name="EmployeeID"/>
 
-        </table>
-    </columns>
+            <column name="Container"/>
+
+
+        </columns>
+
 
     <filters>
     <filter column="StartDate" operator="dategte" value="0+d"/>
