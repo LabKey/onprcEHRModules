@@ -173,6 +173,8 @@
             <column columnName="Created"/>
             <column columnName="Quantity"/>
             <column columnName="EmployeeID"/>
+            <column columnName="DateComplete"/>
+
         </columns>
     </table>
     <table tableName="Covid19Testing" tableDbType="TABLE">
