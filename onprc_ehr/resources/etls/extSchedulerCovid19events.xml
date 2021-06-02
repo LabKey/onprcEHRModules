@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>Covid19Scheduler</name>
+
+    <description>This ETL every 5 minutes between 6 AM and 9 Pm daily to handle reoccuring and group events</description>
+
+
+    <transforms>
+
+        <transform id="ReoccuringEvents" type="StoredProcedure">
+            <description>Runs a stored procedure that creates events when end date is greater than start date</description>
+            <procedure schemaName="extscheduler" procedureName="Covid19_ReoccurringEvents">
+            </procedure>
+        </transform>
+
+        <transform id="NoTestHoursMorning" type="StoredProcedure">
+            <description>Runs a stored procedure that parses comments for group events.</description>
+            <procedure schemaName="extscheduler" procedureName="Covid19_ScheduleProcessDCM">
+            </procedure>
+        </transform>
+
+
+    </transforms>
+        <schedule><cron expression="0 0,4 5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 ? * * *" /></schedule>
+
+
+
+
+
+</etl>
+
+
+
+
