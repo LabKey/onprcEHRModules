@@ -1,0 +1,129 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Covid19Testing_WeeklyEvent" tabledbType="Table"></table>
+            <columns>
+
+                <column name="id"/>
+
+            <column Name="Container">
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="CreatedBy">
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="DateCompleted">
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="DateDisabled">
+                <shownInInsertView>false</shownInInsertView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="employeeID">
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="Recorded">
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="RecordedBy">
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="ComplianceUpdated">
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="Owner">
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="Alias">
+                <isHidden>true</isHidden>
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+                <shownInDetailsView>false</shownInDetailsView>
+            </column>
+            <column columnName="UserId">
+                <fk>
+                    <fkDbSchema>core</fkDbSchema>
+                    <fkTable>SiteUsers</fkTable>
+                    <fkColumnName>UserId</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="WrappedStartDate" wrappedColumnName="StartDate">
+                <formatString>w</formatString>
+                <columnTitle>WeekNumber</columnTitle>
+                <shownInInsertView>false</shownInInsertView>
+                <shownInUpdateView>false</shownInUpdateView>
+            </column>
+        </columns>
+        <buttonBarOptions position="both" includeStandardButtons="true">
+            <item text="Records Selected" requiresSelection="true">
+                <onClick>var checked = dataRegion.getChecked();
+
+                    var sql = 'SELECT id FROM extScheduler.events WHERE id IN (';
+                    var separator = '';
+                    for (var i = 0; i &lt; checked.length; i++) {
+                    sql += separator + checked[i];
+                    separator = ', ';
+                    }
+                    sql += ')';
+
+                    LABKEY.Query.executeSql({schemaName: 'extscheduler', sql: sql, success: function(data) {
+                    var updateRows = [];
+
+                    for (var j = 0; j &lt; data.rows.length; j++) {
+                    updateRows.push({id: data.rows[j].Id, requestRetraining: ' ' , DateCompleted: new Date() });
+                    }
+
+                    LABKEY.Query.updateRows({ schemaName: 'extscheduler', queryName: 'events', rows: updateRows, success: function() { location.reload(); }});
+                    }});</onClick>
+            </item>
+            <item text="Event Completed" requiresSelection="true">
+                <onClick>var checked = dataRegion.getChecked();
+
+                    var sql = 'SELECT id FROM extScheduler.events WHERE id IN (';
+                    var separator = '';
+                    for (var i = 0; i &lt; checked.length; i++) {
+                    sql += separator + checked[i];
+                    separator = ', ';
+                    }
+                    sql += ')';
+
+                    LABKEY.Query.executeSql({schemaName: 'extscheduler', sql: sql, success: function(data) {
+                    var updateRows = [];
+
+                    for (var j = 0; j &lt; data.rows.length; j++) {
+                    updateRows.push({id: data.rows[j].id, requestRetraining: '', DateCompleted: new Date().toDateString() });
+                    }
+
+                    LABKEY.Query.updateRows({ schemaName: 'extscheduler', queryName: 'events', rows: updateRows, success: function() { location.reload(); }});
+                    }});</onClick>
+            </item>
+            <item text="Bulk Edit" permission="UPDATE" requiresSelection="true" requiresSelectionMinCount="2">
+                <onClick>var url = LABKEY.ActionURL.buildURL('query', 'updateQueryRows.view', null, {
+                    schemaName: dataRegion.schemaName,
+                    'query.queryName': dataRegion.queryName,
+                    dataRegionSelectionKey: dataRegion.selectionKey
+                    });
+                    var form = dataRegion.form;
+                    if (form &amp;&amp; verifySelected.call(this, form, url, 'POST', 'rows')) {
+                    submitForm(form);
+                    }
+                    document.onclose
+                    return false;</onClick>
+            </item>
+        </buttonBarOptions>
+        </tables>
+    </metadata>
+
+</query>

@@ -1,0 +1,19 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="ResourceID"/>
+        <column name="Name"/>
+        <column name="StartDate"/>
+        <column name="EndDate"/>
+        <column name="UserID"/>
+        <column name="Container"/>
+        <column name="Quantity"/>
+        <column name="Comments"/>
+        <column name="DateDisabled"/>
+        <column name="DateCompleted"/>
+
+    </columns>
+    <sorts>
+        <sort column="StartDate"/>
+    </sorts>
+
+</customView>
