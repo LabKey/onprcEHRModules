@@ -1,3 +1,4 @@
+----Created: 6-3-2021  R.Blasa
 SELECT c.Id,
        c.date,
        c.p2,
