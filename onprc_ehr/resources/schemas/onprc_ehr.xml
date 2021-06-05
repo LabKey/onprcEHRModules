@@ -1027,4 +1027,39 @@
 
     </columns>
     </table>
+
+    <table tableName="availableCages_temp" tableDbType="TABLE">
+        <columns>
+            <column columnName="location" />
+            <column columnName="room" />
+            <column columnName="cage" />
+            <column columnName="row" />
+            <column columnName="columnidx" />
+            <column columnName="cage_type" />
+            <column columnName="lowerCage" />
+            <column columnName="lower_cage_type" />
+            <column columnName="divider" />
+            <column columnName="isAvailable" />
+            <column columnName="isMarkedUnavailable" />
+        </columns>
+    </table>
+    
+    <table tableName="availableCagesByRoom_temp" tableDbType="TABLE">
+        <columns>
+            <column columnName="room" />
+            <column columnName="availableCages" />
+            <column columnName="markedUnavailable" />
+        </columns>
+    </table>
+
+    <table tableName="roomUtilization_temp" tableDbType="TABLE">
+        <columns>
+            <column columnName="room" />
+            <column columnName="availableCages" />
+            <column columnName="cagesUsed" />
+            <column columnName="markedUnavailable" />
+            <column columnName="cagesEmpty" />
+            <column columnName="totalAnimals" />
+        </columns>
+    </table>
 </tables>
