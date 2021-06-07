@@ -1,0 +1,6 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="SLA Landing Page">
+    <view name="SLA_LandingPage"/>
+    <locations>
+        <location name="body"/>
+    </locations>
+</webpart>

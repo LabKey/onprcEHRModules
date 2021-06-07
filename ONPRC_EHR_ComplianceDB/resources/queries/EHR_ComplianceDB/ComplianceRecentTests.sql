@@ -26,7 +26,7 @@ SELECT
                 WHEN (e.isActive = false) THEN NULL --dont bother to include if the employee is not active
                 WHEN (rn.requirementname IS NULL) THEN NULL
                 WHEN (ee.RequirementName IS NOT NULL) THEN NULL -----Added 12-17-2020
-                WHEN (T1.MostRecentDate IS NULL) THEN NULL
+                WHEN (T1.MostRecentDate IS NULL) THEN 0       ---Modified: 5-18-2021 restore original
                 WHEN(rn.ExpirePeriod = 0 OR rn.ExpirePeriod IS NULL) THEN NULL
                 ELSE (rn.expirePeriod - (age_in_months(T1.MostRecentDate, curdate())))
                 END AS double)
