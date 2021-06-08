@@ -66,7 +66,7 @@ public class BiopsyHistologyDataSource extends AbstractDataSource
                 {
 //                        sb.append("<tr style='vertical-align:top;margin-bottom: 5px;'><td style='padding-right: 5px;'>" + label + ":</td><td>");
                         sb.append("<tr style='vertical-align:top;margin-bottom: 5px;'></td><td>");
-                        sb.append(rs.getString(FieldKey.fromString(field)));
+                        sb.append(PageFlowUtil.filter(rs.getString(FieldKey.fromString(field))));
                         sb.append("</td></tr>");
                 }
         }
