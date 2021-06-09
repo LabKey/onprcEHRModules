@@ -36,7 +36,7 @@ public class BiopsyHistologyDataSource extends AbstractDataSource
 {
         public BiopsyHistologyDataSource (Module module)
         {
-                super("study", "histology", "Biopsy Histology", "Biopsy", module);
+                super("study", "histology", "Biopsy Diagnosis", "Biopsy", module);
         }
 
         @Override
