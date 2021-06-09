@@ -58,6 +58,19 @@ EHR.model.DataModelManager.registerMetadata('LabworkTestPanel', {
                 }
             }
         } ,
+
+        // Added: 6-3-2021
+        'study.miscTests': {
+            result: {
+                compositeField: 'Numeric Result'
+            },
+            units: {
+                compositeField: 'Units'
+            },
+            category: {
+                hidden: true
+            },
+        },
         'study.parasitologyResults': {      //Added 3-14-2016 Blasa
             date: {
                 xtype: 'xdatetime',
