@@ -1,0 +1,6 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="PMIC Core Services">
+    <view name="PMIC_Wiki"/>
+    <locations>
+        <location name="body"/>
+    </locations>
+</webpart>
