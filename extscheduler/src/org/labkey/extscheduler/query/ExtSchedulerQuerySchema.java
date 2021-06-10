@@ -6,6 +6,7 @@ import org.labkey.api.data.ContainerFilter;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.query.QuerySettings;
 import org.labkey.api.query.QueryView;
+import org.labkey.api.query.SimpleUserSchema;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
@@ -15,7 +16,7 @@ import org.springframework.validation.BindException;
 
 import java.util.Set;
 
-public class ExtSchedulerQuerySchema extends UserSchema
+public class ExtSchedulerQuerySchema extends SimpleUserSchema
 {
     public static final String SCHEMA_NAME = "extscheduler";
     public static final String SCHEMA_DESCR = "Contains data about Ext Scheduler resources and events.";
@@ -27,21 +28,21 @@ public class ExtSchedulerQuerySchema extends UserSchema
         super(SCHEMA_NAME, SCHEMA_DESCR, user, container, ExtSchedulerSchema.getInstance().getSchema());
     }
 
-    @Override
-    public Set<String> getTableNames()
-    {
-        return PageFlowUtil.set(RESOURCES_TABLE_NAME, EVENTS_TABLE_NAME);
-    }
+//    @Override
+//    public Set<String> getTableNames()
+//    {
+//        return PageFlowUtil.set(RESOURCES_TABLE_NAME, EVENTS_TABLE_NAME);
+//    }
 
     @Override
-    public TableInfo createTable(String name, ContainerFilter cf)
+    public TableInfo createWrappedTable(String name, @NotNull TableInfo schemaTable, ContainerFilter cf)
     {
         if (RESOURCES_TABLE_NAME.equalsIgnoreCase(name))
             return new ResourcesTable(ExtSchedulerSchema.getInstance().getSchema().getTable(RESOURCES_TABLE_NAME), this, cf);
         if (EVENTS_TABLE_NAME.equalsIgnoreCase(name))
             return new EventsTable(ExtSchedulerSchema.getInstance().getSchema().getTable(EVENTS_TABLE_NAME), this, cf);
 
-        return null;
+        return super.createWrappedTable(name, schemaTable, cf);
     }
 
     @Override
