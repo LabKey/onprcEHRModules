@@ -51,6 +51,9 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                     width: 300
                 }
             },
+            billingproject: {
+                hidden:true
+            },
             procedureid: {
                 lookup: {
                     filterArray: [
