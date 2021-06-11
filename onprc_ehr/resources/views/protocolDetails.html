@@ -28,6 +28,10 @@ Ext4.onReady(function (){
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
+        id: 'allowableSLAs_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
         id: 'exemptions_' + webpart.wrapperDivId
     },{
         tag: 'div',
@@ -152,6 +156,15 @@ Ext4.onReady(function (){
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback()
     }).render('allowableAnimals_' + webpart.wrapperDivId);
+
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Allowable SLAs',
+        schemaName: 'sla',
+        queryName: 'allowableAnimals_BreedingGroups',
+        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        sort: '-startdate',
+        failure: LDK.Utils.getErrorCallback()
+    }).render('allowableSLAs_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
         title: 'Exemptions',
