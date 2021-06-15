@@ -237,6 +237,20 @@ exports.init = function(EHR){
         }
     });
 
+    // Added by Kollil, 06/14/21: ASB service request form validation:
+    /* This is user input validation for Procedures panel on ASB service req form
+    1. Remarks field is required when "Other" option is selected from the ASB spe Ins drop down list.
+    */
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow)
+    {
+        // console.log(" 1. before validation!");
+        if (row.instructions == 'Other instructions listed in remarks...' && row.remark == null)
+        {
+            // console.log(" 2. in validation!");
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
+        }
+    });
+
     // Added by Kollil, 11/05/20: Vet assignment validation
     /* This is user input validation for vet assignment screen
     1. User can select with Room or area but not both
@@ -274,7 +288,6 @@ exports.init = function(EHR){
         }
     });
 
-
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow)
     {
         if (row.chargetype == 'Research Staff' && !row.assistingstaff && row.procedureid && triggerHelper.requiresAssistingStaff(row.procedureid))
@@ -311,8 +324,9 @@ exports.init = function(EHR){
                     }
                 }
             });
-       }
+        }
     });
+
       //Added 1-12-2016  Blasa  Menses TMB Records
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'clinical_observations', function(helper, scriptErrors, row, oldRow){
 
