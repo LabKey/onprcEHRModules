@@ -127,55 +127,58 @@
             <column columnName="year"/>
         </columns>
     </table>
-    <table tableName="vw_Covid19DCMDaily" tableDbType="VIEW">
+    <table tableName="vw_Covid19DCMSchedule" tableDbType="VIEW">
         <columns>
-            <column columnName="Id"/>
-            <column columnName="StartDate"/>
-            <column columnName="Container"/>
-            <column columnName="Comments"/>
+            <column columnName="SChedulerID"/>
             <column columnName="ResourceId"/>
+            <column columnName="ResourceName"/>
+            <column columnName="Name"/>
+            <column columnName="StartDate"/>
+            <column columnName="UserId"/>
+            <column columnName="CreatedBy"/>
+            <column columnName="Created"/>
             <column columnName="Quantity"/>
-            <column columnName="EventId"/>
+            <column columnName="EmployeeID"/>
         </columns>
     </table>
     <table tableName="Covid19Testing" tableDbType="TABLE">
         <columns>
-            <column columnName="EntityId"/>
+            <column columnName="container"/>
+            <column columnName="entityId"/>
+            <column columnName="lastIndexed"/>
+            <column columnName="createdBy"/>
+            <column columnName="modified"/>
+            <column columnName="modifiedBy"/>
+            <column columnName="created"/>
             <column columnName="Key"/>
+            <column columnName="SchedulerID"/>
             <column columnName="ResourceID"/>
-            <column columnName="EventID"/>
-            <column columnName="ScheduledDate"/>
-            <column columnName="ScheduledTime"/>
             <column columnName="UserName"/>
             <column columnName="UserID"/>
             <column columnName="EmployeeID"/>
-            <column columnName="Created"/>
-            <column columnName="CreatedBy"/>
-            <column columnName="Modified"/>
-            <column columnName="ModifiedBy"/>
-            <column columnName="Recorded"/>
-            <column columnName="RecordedBy"/>
+            <column columnName="ScheduledDate"/>
+            <column columnName="ScheduledTime"/>
+            <column columnName="Create"/>
+            <column columnName="SampleDate"/>
+            <column columnName="CreatedB"/>
             <column columnName="ComplianceUpdated"/>
-            <column columnName="DateCompleted"/>
         </columns>
     </table>
     <table tableName="TempScheduler" tableDbType="TABLE">
         <columns>
             <column columnName="Searchkey"/>
-            <column columnName="UserName"/>
+            <column columnName="usernames"/>
             <column columnName="EventId"/>
-            <column columnName="ResourceID"/>
             <column columnName="StartDate"/>
-            <column columnName="Created"/>
+            <column columnName="created"/>
         </columns>
     </table>
     <table tableName="TempCoV19Final" tableDbType="TABLE">
         <columns>
-            <column columnName="Container"/>
+            <column columnName="container"/>
             <column columnName="UserName"/>
             <column columnName="UserID"/>
             <column columnName="EventID"/>
-            <column columnName="ResourceID"/>
             <column columnName="StartDate"/>
             <column columnName="EmployeeID"/>
             <column columnName="Created"/>
@@ -183,34 +186,10 @@
     </table>
     <table tableName="TempCoV19Interim" tableDbType="TABLE">
         <columns>
-            <column columnName="UserName"/>
-            <column columnName="UserID"/>
             <column columnName="EventId"/>
-            <column columnName="ResourceId"/>
-            <column columnName="EmployeeID"/>
-            <column columnName="Created"/>
-            <column columnName="StartDate"/>
-            <column columnName="Container"/>
-            <column columnName="Notes"/>
+            <column columnName="UserName"/>
+            <column columnName="container"/>
         </columns>
     </table>
-    <table tableName="TempCov19ReoccurringEvents" tableDbType="TABLE">
-        <columns>
-            <column columnName="Row"/>
-            <column columnName="Id"/>
-            <column columnName="ResourceId"/>
-            <column columnName="Name"/>
-            <column columnName="StartDate"/>
-            <column columnName="EndDate"/>
-            <column columnName="UserID"/>
-            <column columnName="Container"/>
-            <column columnName="CreatedBy"/>
-            <column columnName="Created"/>
-            <column columnName="ModifiedBy"/>
-            <column columnName="Modified"/>
-            <column columnName="Alias"/>
-            <column columnName="Quantity"/>
-            <column columnName="Comments"/>
-        </columns>
-    </table>
+
 </tables>
