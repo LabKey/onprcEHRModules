@@ -1,5 +1,5 @@
 SELECT
-q.RowPk,
+q.RowPk as objectid,
 q.created,
 q.createdby,
 q.created as modified,
