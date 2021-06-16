@@ -1065,7 +1065,7 @@
 
     <!--ASB SpeIns reference data schema. Added by Kolli, 06/8/21 -->
     <table tableName="ASB_SpecialInstructions" tableDbType="TABLE" useColumnOrder="true">
-        <tableTitle>ASB_SpecialInstructions</tableTitle>
+        <tableTitle>ASB Special Instructions</tableTitle>
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>
         <columns>
