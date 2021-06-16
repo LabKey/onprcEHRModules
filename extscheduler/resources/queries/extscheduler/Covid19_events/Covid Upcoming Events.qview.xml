@@ -1,0 +1,24 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="ResourceID"/>
+        <column name="Name"/>
+        <column name="StartDate"/>
+        <column name="EndDate"/>
+        <column name="UserID"/>
+        <column name="Container"/>
+        <column name="Quantity"/>
+        <column name="Comments"/>
+        <column name="DateDisabled"/>
+        <column name="DateCompleted"/>
+
+    </columns>
+    <sorts>
+        <sort column="StartDate"/>
+    </sorts>
+
+    <filters>
+        <filter column="StartDate" operator="dategte" value="-0d"/>
+        <filter column ="container" operator="eq" value = "5C3C9FF8-6BCF-1038-930A-7D62F3A605B4"
+    </filters>
+
+</customView>
