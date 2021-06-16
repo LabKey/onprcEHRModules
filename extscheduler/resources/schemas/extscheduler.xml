@@ -10,6 +10,7 @@
             <column columnName="Color" />
             <column columnName="Room" />
             <column columnName="Bldg" />
+            <column columnName="Instance" />
 
             <column columnName="Container">
                 <isHidden>true</isHidden>
