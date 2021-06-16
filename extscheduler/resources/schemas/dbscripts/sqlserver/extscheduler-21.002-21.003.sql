@@ -1,1 +1,0 @@
-ALTER TABLE extscheduler.Events ADD  DateDisabled smalldatetime;
