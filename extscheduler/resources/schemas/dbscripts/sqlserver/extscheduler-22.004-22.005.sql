@@ -1,5 +1,6 @@
 --2021-05-25 Modified Stored Procedure to Address modification of Processing to Events DB
 --Created by KolliL
+--update 2021-06-16 to add to new build
 
 /****** Object:  StoredProcedure [extscheduler].[Covid19_ReoccurringEvents]    Script Date: 5/25/2021 5:24:26 AM ******/
 EXEC core.fn_dropifexists 'Covid19_ReoccurringEvents', 'extscheduler', 'PROCEDURE';
