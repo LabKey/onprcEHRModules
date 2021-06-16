@@ -1069,10 +1069,6 @@
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>
         <columns>
-            <column columnName="rowId">
-                <isHidden>true</isHidden>
-            </column>
-
             <column columnName="value">
                 <columnTitle>Value</columnTitle>
             </column>
