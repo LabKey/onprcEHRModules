@@ -28,6 +28,7 @@ import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class BiopsyHistologyDataSource extends AbstractDataSource
 {
         public BiopsyHistologyDataSource (Module module)
         {
-                super("study", "histology", "Biopsy Diagnosis", "Biopsy", module);
+                super ("study", "histology", "Biopsy Diagnosis", "Biopsy", module);
         }
 
         @Override
@@ -51,6 +52,13 @@ public class BiopsyHistologyDataSource extends AbstractDataSource
                 sb.append("</table>");
 
                 return sb.toString();
+        }
+        @Override
+        protected SimpleFilter getFilter(String subjectId, Date minDate, Date maxDate)
+        {
+                SimpleFilter result = super.getFilter(subjectId, minDate, maxDate);
+                result.addCondition(FieldKey.fromParts("taskid", "formtype"), "Biopsy");
+                return result;
         }
 
 
