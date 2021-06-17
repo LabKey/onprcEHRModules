@@ -64,7 +64,7 @@ public class GeneticsCoreController extends SpringActionController
             }
             catch (Exception e)
             {
-                _log.error(e);
+                _log.error("Error starting MHC pipeline", e);
                 errors.reject(ERROR_MSG, e.getMessage());
                 return false;
 
