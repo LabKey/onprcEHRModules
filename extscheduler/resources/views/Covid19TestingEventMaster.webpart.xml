@@ -1,0 +1,6 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="Covid 19 Testing Event Master">
+    <view name="begin"/>
+    <locations>
+        <location name="body"/>
+    </locations>
+</webpart>

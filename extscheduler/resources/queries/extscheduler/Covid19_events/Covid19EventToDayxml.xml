@@ -1,0 +1,49 @@
+<tables xmlns="http://labkey.org/data/xml">
+    <table tableName="Covid19EventsToDay" tableDbType="NOT_IN_DB">
+
+        <columns>
+            <column columnName="EventTime">
+                <formatString>HH:mm</formatString>
+            </column>
+        </columns>
+        <buttonBarOptions position="both" includeStandardButtons="true">
+
+
+
+            <item text="Confirm Attendance" requiresSelection="true">
+                <onClick>var checked = dataRegion.getChecked();
+
+                    var sql = 'SELECT id FROM extScheduler.events WHERE id IN (';
+                    var separator = '';
+                    for (var i = 0; i &lt; checked.length; i++) {
+                    sql += separator + checked[i];
+                    separator = ', ';
+                    }
+                    sql += ')';
+
+                    LABKEY.Query.executeSql({schemaName: 'extscheduler', sql: sql, success: function(data) {
+                    var updateRows = [];
+
+                    for (var j = 0; j &lt; data.rows.length; j++) {
+                    updateRows.push({id: data.rows[j].id, requestRetraining: '', DateCompleted: new Date().toDateString() });
+                    }
+
+                    LABKEY.Query.updateRows({ schemaName: 'extscheduler', queryName: 'events', rows: updateRows, success: function() { location.reload(); }});
+                    }});</onClick>
+            </item>
+            <item text="Bulk Edit" permission="UPDATE" requiresSelection="true" requiresSelectionMinCount="2">
+                <onClick>var url = LABKEY.ActionURL.buildURL('query', 'updateQueryRows.view', null, {
+                    schemaName: dataRegion.schemaName,
+                    'query.queryName': dataRegion.queryName,
+                    dataRegionSelectionKey: dataRegion.selectionKey
+                    });
+                    var form = dataRegion.form;
+                    if (form &amp;&amp; verifySelected.call(this, form, url, 'POST', 'rows')) {
+                    submitForm(form);
+                    }
+                    document.onclose
+                    return false;</onClick>
+            </item>
+        </buttonBarOptions>
+    </table>
+</tables>
