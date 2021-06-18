@@ -1,3 +1,4 @@
+<!--rename of files to match root-->
 <view xmlns="http://labkey.org/data/xml/view" template="app" frame="none" title="Ext Scheduler Testing Master">
     <dependencies>
         <dependency path="clientapi_core"/>

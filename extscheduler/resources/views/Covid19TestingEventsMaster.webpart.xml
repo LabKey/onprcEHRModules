@@ -1,3 +1,5 @@
+
+<!--rename of files to match root-->
 <webpart xmlns="http://labkey.org/data/xml/webpart" title="Covid 19 Testing Event Master">
     <view name="begin"/>
     <locations>
