@@ -2584,6 +2584,18 @@
                 <datatype>varchar</datatype>
                 <columnTitle>Image Upload Link</columnTitle>
             </column>
+            <column columnName="CTACType">
+                <datatype>varchar</datatype>
+                <columnTitle>CTACType</columnTitle>
+            </column>
+            <column columnName="CTScanRange">
+                <datatype>varchar</datatype>
+                <columnTitle>CTScan Range</columnTitle>
+            </column>
+            <column columnName="phantom">
+                <datatype>varchar</datatype>
+                <columnTitle>Phantom</columnTitle>
+            </column>
         </columns>
         <tableTitle>PMIC_CTImagingData</tableTitle>
     </table>
