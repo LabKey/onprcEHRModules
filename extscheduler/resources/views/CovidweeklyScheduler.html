@@ -1,7 +1,10 @@
 <br/>
 <div id="launch-link"></div>
-
-<h3>Covid Testing Events</h3>
+<br/>
+<h3>Resources</h3>
+<div id="resources-qwp"></div>
+<br/>
+<h3>My Events</h3>
 <div id="events-radiogroup"></div>
 <div id="events-qwp"></div>
 
@@ -41,7 +44,6 @@
         }
 
 
-
         var timeFrameFilter = null;
         var renderEventsQueryWebPart = function()
         {
@@ -53,10 +55,9 @@
                 renderTo: 'events-qwp',
                 frame: 'none',
                 schemaName: 'extscheduler',
-                queryName: 'events',
+                queryName: 'Events',
                 filters: filters,
-                sort: 'StartDate',
-                editable:  true
+                sort: 'StartDate,ResourceId,Name'
             });
         };
 
@@ -66,8 +67,7 @@
             columns: 3,
             items: [
                 {boxLabel: 'All', name: 'timeframe', inputValue: 'All', checked: true},
-                {boxLabel: 'This Week', name: 'timeframe', inputValue: 'week'},
-                {boxLabel: 'Today', name: 'timeframe', inputValue: 'toDay'},
+                {boxLabel: 'Previous', name: 'timeframe', inputValue: 'Previous'},
                 {boxLabel: 'Upcoming', name: 'timeframe', inputValue: 'Upcoming'}
             ],
             listeners: {
