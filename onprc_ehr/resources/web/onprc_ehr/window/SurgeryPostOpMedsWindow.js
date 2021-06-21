@@ -142,7 +142,7 @@ Ext4.define('onprc_ehr.window.SurgeryPostOpMedsWindow', {
             if (r.get('date')){
                 items.push({
                     xtype: 'displayfield',
-                    value: r.get('date').format('H:i'),
+                    value: Ext4.Date.format(r.get('date'), 'H:i'),
                     recIdx: recIdx
                 });
 
