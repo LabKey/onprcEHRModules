@@ -1,0 +1,6 @@
+<view xmlns="http://labkey.org/data/xml/view" title="Covid19 Daily Events">
+
+    <dependencies>
+        <dependency path="ehr.context" />
+    </dependencies>
+</view>
