@@ -65,16 +65,18 @@
             width: 250,
             columns: 3,
             items: [
-                {boxLabel: 'All', name: 'timeframe', inputValue: 'All', checked: true},
-                {boxLabel: 'This Week', name: 'timeframe', inputValue: 'week'},
+
                 {boxLabel: 'Today', name: 'timeframe', inputValue: 'toDay'},
+                {boxLabel: 'This Week', name: 'timeframe', inputValue: 'week'},
                 {boxLabel: 'Upcoming', name: 'timeframe', inputValue: 'Upcoming'}
             ],
             listeners: {
                 change: function(radiogroup, newValue)
                 {
-                    if (newValue.timeframe == 'Previous')
+                    if (newValue.timeframe == 'week')
                         timeFrameFilter = LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.DATE_LESS_THAN);
+                    else if (newValue.timeframe == 'toDay')
+                        timeFrameFilter = LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.EQUAL);
                     else if (newValue.timeframe == 'Upcoming')
                         timeFrameFilter = LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL);
                     else
