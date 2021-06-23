@@ -16,7 +16,7 @@
                     <column>objectid</column>
                 </sourceColumns>
             </source>
-            <destination schemaName="geneticscore" queryName="mhc_data" targetOption="merge" bulkLoad="true" batchSize="1000">
+            <destination schemaName="geneticscore" queryName="mhc_data" targetOption="truncate" bulkLoad="true">
                 <alternateKeys>
                     <column name="objectid"/>
                 </alternateKeys>
