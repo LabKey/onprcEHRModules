@@ -18,6 +18,7 @@ import org.labkey.api.util.PageFlowUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,7 @@ public class GeneticsCoreExpListener implements ExperimentListener
     public void beforeDataDelete(Container c, User user, List<? extends ExpData> data)
     {
         //NOTE: this is only used b/c beforeRunDelete() doesnt pass the User
-        Set<ExpRun> runs = data.stream().map(ExpData::getRun).collect(Collectors.toSet());
+        Set<ExpRun> runs = data.stream().map(ExpData::getRun).filter(Objects::nonNull).collect(Collectors.toSet());
         if (!runs.isEmpty())
         {
             runs.forEach(run -> {
@@ -45,6 +46,11 @@ public class GeneticsCoreExpListener implements ExperimentListener
 
     private void deleteForRun(User user, ExpRun run)
     {
+        if (run == null)
+        {
+            return;
+        }
+
         AssayProvider ap = AssayService.get().getProvider(run);
         if (ap == null)
         {
