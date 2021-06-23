@@ -1,33 +1,16 @@
 <tables xmlns="http://labkey.org/data/xml">
     <table tableName="Covid19WeeklyEvents" tableDbType="NOT_IN_DB">
+
         <columns>
             <column columnName="EventTime">
                 <formatString>HH:mm</formatString>
             </column>
         </columns>
         <buttonBarOptions position="both" includeStandardButtons="true">
-            <item text="Records Selected" requiresSelection="true">
-                <onClick>var checked = dataRegion.getChecked();
 
-                    var sql = 'SELECT id FROM extScheduler.events WHERE id IN (';
-                    var separator = '';
-                    for (var i = 0; i &lt; checked.length; i++) {
-                    sql += separator + checked[i];
-                    separator = ', ';
-                    }
-                    sql += ')';
 
-                    LABKEY.Query.executeSql({schemaName: 'extscheduler', sql: sql, success: function(data) {
-                    var updateRows = [];
 
-                    for (var j = 0; j &lt; data.rows.length; j++) {
-                    updateRows.push({id: data.rows[j].Id, requestRetraining: ' ' , DateCompleted: new Date() });
-                    }
-
-                    LABKEY.Query.updateRows({ schemaName: 'extscheduler', queryName: 'events', rows: updateRows, success: function() { location.reload(); }});
-                    }});</onClick>
-            </item>
-            <item text="Event Completed" requiresSelection="true">
+            <item text="Confirm Attendance" requiresSelection="true">
                 <onClick>var checked = dataRegion.getChecked();
 
                     var sql = 'SELECT id FROM extScheduler.events WHERE id IN (';
