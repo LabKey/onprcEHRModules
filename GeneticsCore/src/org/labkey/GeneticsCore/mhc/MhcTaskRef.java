@@ -1,6 +1,8 @@
-package org.labkey.GeneticsCore;
+package org.labkey.GeneticsCore.mhc;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xmlbeans.XmlException;
+import org.jetbrains.annotations.NotNull;
 import org.labkey.api.assay.AssayProtocolSchema;
 import org.labkey.api.assay.AssayProvider;
 import org.labkey.api.assay.AssayService;
@@ -12,17 +14,14 @@ import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.di.TaskRefTask;
 import org.labkey.api.exp.api.ExpProtocol;
 import org.labkey.api.exp.api.ExpRun;
 import org.labkey.api.exp.api.ExperimentService;
-import org.labkey.api.files.FileUrls;
-import org.labkey.api.module.Module;
 import org.labkey.api.pipeline.CancelledException;
-import org.labkey.api.pipeline.PipeRoot;
-import org.labkey.api.pipeline.PipelineDirectory;
 import org.labkey.api.pipeline.PipelineJob;
 import org.labkey.api.pipeline.PipelineJobException;
-import org.labkey.api.pipeline.PipelineProvider;
+import org.labkey.api.pipeline.RecordedActionSet;
 import org.labkey.api.query.BatchValidationException;
 import org.labkey.api.query.DuplicateKeyException;
 import org.labkey.api.query.FieldKey;
@@ -30,16 +29,10 @@ import org.labkey.api.query.InvalidKeyException;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.QueryUpdateServiceException;
 import org.labkey.api.query.UserSchema;
-import org.labkey.api.security.User;
-import org.labkey.api.util.FileUtil;
 import org.labkey.api.util.GUID;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.util.URLHelper;
-import org.labkey.api.view.ActionURL;
-import org.labkey.api.view.ViewBackgroundInfo;
-import org.labkey.api.view.ViewContext;
+import org.labkey.api.writer.ContainerUser;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,92 +44,55 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class MhcAggregationPipelineJob extends PipelineJob
+public class MhcTaskRef implements TaskRefTask
 {
     private static final String lastRunTime = "lastRunTime";
     private static final String PROP_CATEGORY = "geneticscore.MhcAggregationPipelineJob";
 
-    public static class Provider extends PipelineProvider
+    @Override
+    public RecordedActionSet run(@NotNull PipelineJob job) throws PipelineJobException
     {
-        public static final String NAME = "mhcAggregationPipeline";
+        Date lastRun = getLastRun(job.getContainer());
 
-        public Provider(Module owningModule)
+        SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+        job.getLogger().info("Last run: " + (lastRun == null ? "never" : _dateTimeFormat.format(lastRun)));
+        Date jobStart = new Date();
+
+        Set<String> subjects = getIdsWithChangesForAssay(job, lastRun);
+        job.getLogger().info("Total subjects to process: " + subjects.size());
+
+        for (String subject : subjects)
         {
-            super(NAME, owningModule);
+            processSubject(job, subject);
+
+            if (job.isCancelled())
+            {
+                throw new CancelledException();
+            }
         }
 
-        @Override
-        public void updateFileProperties(ViewContext context, PipeRoot pr, PipelineDirectory directory, boolean includeAll)
-        {
+        job.getLogger().info("Done!");
+        saveLastRun(job.getContainer(), jobStart);
 
-        }
-    }
-
-    // Default constructor for serialization
-    protected MhcAggregationPipelineJob()
-    {
-    }
-
-    public MhcAggregationPipelineJob(Container c, User u, ActionURL url, PipeRoot pipeRoot)
-    {
-        super(MhcAggregationPipelineJob.Provider.NAME, new ViewBackgroundInfo(c, u, url), pipeRoot);
-
-        File subdir = new File(pipeRoot.getRootPath(), MhcAggregationPipelineJob.Provider.NAME);
-        if (!subdir.exists())
-        {
-            subdir.mkdirs();
-        }
-
-        setLogFile(new File(subdir, FileUtil.makeFileNameWithTimestamp("mhcAggregation", "log")));
-
+        return new RecordedActionSet();
     }
 
     @Override
-    public URLHelper getStatusHref()
-    {
-        return PageFlowUtil.urlProvider(FileUrls.class).urlBegin(getContainer());
-    }
-
-    @Override
-    public String getDescription()
+    public List<String> getRequiredSettings()
     {
         return null;
     }
 
+    @Override
+    public void setSettings(Map<String, String> settings) throws XmlException
+    {
+
+    }
 
     @Override
-    public void run()
+    public void setContainerUser(ContainerUser containerUser)
     {
-        try
-        {
-            setStatus(TaskStatus.running);
-            Date lastRun = getLastRun();
 
-            SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
-            getLogger().info("Last run: " + (lastRun == null ? "never" : _dateTimeFormat.format(lastRun)));
-            Date jobStart = new Date();
-
-            Set<String> subjects = getIdsWithChangesForAssay(lastRun);
-            getLogger().info("Total subjects to process: " + subjects.size());
-
-            for (String subject : subjects)
-            {
-                processSubject(subject);
-
-                if (isCancelled())
-                {
-                    throw new CancelledException();
-                }
-            }
-
-            saveLastRun(getTargetContainer(), jobStart);
-            getLogger().info("Done!");
-            setStatus(TaskStatus.complete);
-        }
-        catch (PipelineJobException e)
-        {
-            getLogger().error("Error running job" + (e.getMessage() == null ? "" : ": " + e.getMessage()), e);
-        }
     }
 
     public static void saveLastRun(Container container, Date jobStart)
@@ -154,16 +110,16 @@ public class MhcAggregationPipelineJob extends PipelineJob
         map.save();
     }
 
-    private Date getLastRun()
+    private Date getLastRun(Container c)
     {
-        PropertyManager.PropertyMap map = PropertyManager.getWritableProperties(getTargetContainer(), PROP_CATEGORY, true);
+        PropertyManager.PropertyMap map = PropertyManager.getWritableProperties(c, PROP_CATEGORY, true);
         return map.containsKey(lastRunTime) ? new Date(Long.parseLong(map.get(lastRunTime))) : null;
     }
 
-    private void processSubject(String subject) throws PipelineJobException
+    private void processSubject(PipelineJob job, String subject) throws PipelineJobException
     {
-        getLogger().info("Processing: " + subject);
-        UserSchema us = QueryService.get().getUserSchema(getUser(), getTargetContainer(), "geneticscore");
+        job.getLogger().info("Processing: " + subject);
+        UserSchema us = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "geneticscore");
         TableInfo mhcData = us.getTable("mhc_data");
 
         //First delete existing rows:
@@ -177,8 +133,8 @@ public class MhcAggregationPipelineJob extends PipelineJob
 
             try
             {
-                getLogger().info("deleting existing rows: " + toDelete.size());
-                mhcData.getUpdateService().deleteRows(getUser(), getTargetContainer(), toDelete, null, null);
+                job.getLogger().info("deleting existing rows: " + toDelete.size());
+                mhcData.getUpdateService().deleteRows(job.getUser(), getTargetContainer(job), toDelete, null, null);
             }
             catch (InvalidKeyException | BatchValidationException | QueryUpdateServiceException | SQLException e)
             {
@@ -203,9 +159,9 @@ public class MhcAggregationPipelineJob extends PipelineJob
         {
             try
             {
-                getLogger().info("inserting rows: " + toInsert.size());
+                job.getLogger().info("inserting rows: " + toInsert.size());
                 BatchValidationException bve = new BatchValidationException();
-                mhcData.getUpdateService().insertRows(getUser(), getTargetContainer(), toInsert, bve, null, null);
+                mhcData.getUpdateService().insertRows(job.getUser(), getTargetContainer(job), toInsert, bve, null, null);
                 if (bve.hasErrors())
                 {
                     throw bve;
@@ -218,19 +174,19 @@ public class MhcAggregationPipelineJob extends PipelineJob
         }
     }
 
-    private List<AssayProtocolSchema> getAssays()
+    private List<AssayProtocolSchema> getAssays(PipelineJob job)
     {
         List<AssayProtocolSchema> sources = new ArrayList<>();
-        sources.add(getAssaySchema("GenotypeAssay", "Genotype"));
-        sources.add(getAssaySchema("SSP_assay", "SSP"));
+        sources.add(getAssaySchema(job, "GenotypeAssay", "Genotype"));
+        sources.add(getAssaySchema(job, "SSP_assay", "SSP"));
 
         return Collections.unmodifiableList(sources);
     }
 
-    private Set<String> getIdsWithChangesForAssay(Date dateSince)
+    private Set<String> getIdsWithChangesForAssay(PipelineJob job, Date dateSince)
     {
         Set<String> uniqueIds = new HashSet<>();
-        final List<AssayProtocolSchema> assays = getAssays();
+        final List<AssayProtocolSchema> assays = getAssays(job);
         for (AssayProtocolSchema assay : assays)
         {
             //Assay itself:
@@ -241,7 +197,7 @@ public class MhcAggregationPipelineJob extends PipelineJob
             //Now audit table:
             if (dateSince != null)
             {
-                TableInfo auditTableInfo = QueryService.get().getUserSchema(getUser(), getTargetContainer(), "auditLog").getTable("ExperimentAuditEvent");
+                TableInfo auditTableInfo = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "auditLog").getTable("ExperimentAuditEvent");
                 SimpleFilter filter = new SimpleFilter(FieldKey.fromString("created"), dateSince, CompareType.DATE_GTE);
                 filter.addCondition(FieldKey.fromString("ProtocolLsid"), assay.getProtocol().getLSID());
                 TableSelector ts2 = new TableSelector(auditTableInfo, PageFlowUtil.set("ProtocolLsid", "RunLsid", "comment", "RowId"), filter, null);
@@ -262,7 +218,7 @@ public class MhcAggregationPipelineJob extends PipelineJob
                     ExpRun run = ExperimentService.get().getExpRun(rs.getString(FieldKey.fromString("RunLsid")));
                     if (run == null)
                     {
-                        getLogger().warn("Unable to find RunLsid for audit row: " + rs.getObject(FieldKey.fromString("RunLsid")));
+                        job.getLogger().warn("Unable to find RunLsid for audit row: " + rs.getObject(FieldKey.fromString("RunLsid")));
                         return;
                     }
 
@@ -279,7 +235,7 @@ public class MhcAggregationPipelineJob extends PipelineJob
                 if (!analysisIdsUpdated.isEmpty())
                 {
                     Set<Integer> analysesFound = new HashSet<>();
-                    TableInfo ti = QueryService.get().getUserSchema(getUser(), getTargetContainer(), "sequenceanalysis").getTable("sequence_analyses");
+                    TableInfo ti = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "sequenceanalysis").getTable("sequence_analyses");
                     Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("rowid"), FieldKey.fromString("readset/subjectid")));
                     new TableSelector(ti, colMap.values(), new SimpleFilter(FieldKey.fromString("rowid"), analysisIdsUpdated, CompareType.IN), null).forEachResults(rs -> {
                         analysesFound.add(rs.getInt(FieldKey.fromString("rowid")));
@@ -294,7 +250,7 @@ public class MhcAggregationPipelineJob extends PipelineJob
 
                     if (!analysisIdsUpdated.isEmpty())
                     {
-                        TableInfo queryAuditTableInfo = QueryService.get().getUserSchema(getUser(), getTargetContainer(), "auditLog").getTable("QueryUpdateAuditEvent");
+                        TableInfo queryAuditTableInfo = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "auditLog").getTable("QueryUpdateAuditEvent");
                         SimpleFilter auditFilter = new SimpleFilter(FieldKey.fromString("comment"), "A row was deleted.");
                         auditFilter.addCondition(FieldKey.fromString("SchemaName"), assay.getSchemaName());
                         auditFilter.addCondition(FieldKey.fromString("QueryName"), "Data");
@@ -319,15 +275,15 @@ public class MhcAggregationPipelineJob extends PipelineJob
         return uniqueIds;
     }
 
-    private Container getTargetContainer()
+    private Container getTargetContainer(PipelineJob job)
     {
-        return getContainer().isWorkbook() ? getContainer().getParent() : getContainer();
+        return job.getContainer().isWorkbook() ? job.getContainer().getParent() : job.getContainer();
     }
 
-    private AssayProtocolSchema getAssaySchema(String providerName, String protocolName)
+    private AssayProtocolSchema getAssaySchema(PipelineJob job, String providerName, String protocolName)
     {
         AssayProvider ap = AssayService.get().getProvider(providerName);
-        List<ExpProtocol> protocols = AssayService.get().getAssayProtocols(getTargetContainer(), ap);
+        List<ExpProtocol> protocols = AssayService.get().getAssayProtocols(getTargetContainer(job), ap);
         ExpProtocol protocol = null;
         for (ExpProtocol p : protocols)
         {
@@ -344,6 +300,6 @@ public class MhcAggregationPipelineJob extends PipelineJob
         }
 
 
-        return ap.createProtocolSchema(getUser(), getTargetContainer(), protocol, null);
+        return ap.createProtocolSchema(job.getUser(), getTargetContainer(job), protocol, null);
     }
 }

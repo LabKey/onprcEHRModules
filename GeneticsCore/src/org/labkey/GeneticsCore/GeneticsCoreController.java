@@ -1,17 +1,14 @@
 package org.labkey.GeneticsCore;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.labkey.GeneticsCore.mhc.MhcTaskRef;
 import org.labkey.api.action.ConfirmAction;
 import org.labkey.api.action.SpringActionController;
-import org.labkey.api.pipeline.PipeRoot;
-import org.labkey.api.pipeline.PipelineService;
-import org.labkey.api.pipeline.PipelineUrls;
 import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.util.HtmlString;
-import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.HtmlView;
 import org.springframework.validation.BindException;
@@ -34,71 +31,35 @@ public class GeneticsCoreController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class AggregateMhcAction extends ConfirmAction<AggregateMhcForm>
+    public class ResetMhcAggregateTimeAction extends ConfirmAction<Object>
     {
         @Override
-        public ModelAndView getConfirmView(AggregateMhcForm o, BindException errors) throws Exception
+        public ModelAndView getConfirmView(Object o, BindException errors) throws Exception
         {
-            setTitle("Sync MHC Data from PRIMe");
+            setTitle("Reset MHC Aggregation Pipeline Time");
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("This will aggregate MHC typing data into the mhc_data table, creating a single dataset with one row per animal/marker. Do you want to continue?");
-            sb.append("<br><br><label>Check this box to reset the last run time: </label> <input type='checkbox' name = 'resetLastRun' />");
-
-            return new HtmlView(HtmlString.unsafe(sb.toString()));
+            return new HtmlView(HtmlString.of("This will reset the last run time for the MHC aggregation pipeline job, causing it to re-process all IDs. Do you want to continue?"));
         }
 
         @Override
-        public boolean handlePost(AggregateMhcForm o, BindException errors) throws Exception
+        public boolean handlePost(Object o, BindException errors) throws Exception
         {
-            try
-            {
-                if (o.isResetLastRun())
-                {
-                    MhcAggregationPipelineJob.saveLastRun(getContainer(), null);
-                }
-
-                PipeRoot pipelineRoot = PipelineService.get().findPipelineRoot(getContainer());
-                MhcAggregationPipelineJob job = new MhcAggregationPipelineJob(getContainer(), getUser(), getViewContext().getActionURL(), pipelineRoot);
-                PipelineService.get().queueJob(job);
-            }
-            catch (Exception e)
-            {
-                _log.error("Error starting MHC pipeline", e);
-                errors.reject(ERROR_MSG, e.getMessage());
-                return false;
-
-            }
+            MhcTaskRef.saveLastRun(getContainer(), null);
 
             return true;
         }
 
         @Override
-        public void validateCommand(AggregateMhcForm o, Errors errors)
+        public void validateCommand(Object o, Errors errors)
         {
 
         }
 
         @NotNull
         @Override
-        public URLHelper getSuccessURL(AggregateMhcForm o)
+        public URLHelper getSuccessURL(Object o)
         {
-            return PageFlowUtil.urlProvider(PipelineUrls.class).urlBegin(getContainer());
-        }
-    }
-
-    public static class AggregateMhcForm
-    {
-        private boolean resetLastRun = false;
-
-        public boolean isResetLastRun()
-        {
-            return resetLastRun;
-        }
-
-        public void setResetLastRun(boolean resetLastRun)
-        {
-            this.resetLastRun = resetLastRun;
+            return getContainer().getStartURL(getUser());
         }
     }
 }
