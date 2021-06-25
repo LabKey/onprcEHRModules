@@ -22,7 +22,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingWindow', {
                 border: false
             },
             items: [{
-                html : 'This allows you to import record using the Clinical Procesing excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
+                html : 'This allows you to import record using the Clinical Processing Template excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'ldk-linkbutton',
@@ -30,7 +30,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingWindow', {
                 scope: this,
                 style: 'margin-bottom: 10px;',
                 handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/ClinicalProcessing.xlsx'
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/ClinicalProcessingTemplate.xlsx'
                 }
             },{
                 xtype: 'textarea',
@@ -422,7 +422,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingWindow', {
 });
 
 EHR.DataEntryUtils.registerDataEntryFormButton('CLINICPROC_IMPORT', {
-    text: 'Clinical Process Template',
+    text: 'Clinical Processing Template',
     name: 'clinicprocimp',
     itemId: 'clinicprocimp',
     tooltip: 'Click to import using a Clinical Processing excel template',
