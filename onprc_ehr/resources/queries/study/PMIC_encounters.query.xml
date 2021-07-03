@@ -1,5 +1,5 @@
-!--PMIC schema. Added by Kolli, 02/27/2020 -->
 <query xmlns="http://labkey.org/data/xml/query">
+    <!--PMIC schema. Added by Kolli, 02/27/2020 -->
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
         <table tableName="PMIC_encounters" tableDbType="TABLE" useColumnOrder="true">
