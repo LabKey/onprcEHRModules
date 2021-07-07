@@ -1,0 +1,22 @@
+SELECT
+    Id,
+    Date,
+    examNum,
+    accessionNum,
+    PMICType,
+    SPECTIsotope,
+    SPECTDoseMCI,
+    SPECTDoseMBQ,
+    route,
+    CTDIvol,
+    DLP,
+    --totalExamDLP,
+    wetLabUse,
+    ligandAndComments,
+    --imageUploadLink,
+    taskid,
+    qcstate,
+    performedby,
+    created,
+    createdBy
+from study.PMIC_SPECTImagingData

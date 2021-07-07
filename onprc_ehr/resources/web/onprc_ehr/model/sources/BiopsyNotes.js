@@ -16,10 +16,18 @@ EHR.model.DataModelManager.registerMetadata('Biopsy_Notes', {
 
         'study.encounters': {
             project: {
-                xtype: 'ehr-projectentryfield'
-            }
+                xtype: 'onprc_ehr-projectentryfield'
+            },
+            remark: {
+                defaultValue: ' CLINICAL HISTORY: \n\n\n GROSS DESCRIPTION: \n\n\n COMMENTS: \n\n\n',
+                hidden: false
+              }
         },
 
-
+        'study.pathologyDiagnoses': {
+            codesRaw: {
+                header: 'Snomed Codes'
+            }
+        }
     }
 });
