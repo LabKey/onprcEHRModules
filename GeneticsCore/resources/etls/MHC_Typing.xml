@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <etl xmlns="http://labkey.org/etl/xml">
-    <name>PRIME-seq MHC Data</name>
+    <name>PRIME-seq MHC Data Sync</name>
     <description>Syncs MHC Typing Data from PRIME-seq</description>
     <transforms>
         <transform type="RemoteQueryTransformStep" id="assay">
@@ -16,7 +16,7 @@
                     <column>objectid</column>
                 </sourceColumns>
             </source>
-            <destination schemaName="geneticscore" queryName="mhc_data" targetOption="truncate" bulkLoad="true">
+            <destination schemaName="geneticscore" queryName="mhc_data" targetOption="merge" bulkLoad="true" batchSize="1000">
                 <alternateKeys>
                     <column name="objectid"/>
                 </alternateKeys>
