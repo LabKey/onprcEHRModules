@@ -18,35 +18,48 @@
                 width: 300,
                 height: 200,
                 fieldLabel: 'Enter Animal Id(s)',
-    itemId: 'animalField'
-    }],
+             itemId: 'animalField'
+            }],
     buttons: [{
     text: 'Submit',
     scope: this,
-    handler: function(btn){
-    var val = btn.up('panel').down('#animalField').getValue() ;
+    handler: function(btn) {
+        var val = btn.up('panel').down('#animalField').getValue();
+        if (!val){
+            Ext4.Msg.alert('Error', 'Must enter at least one animal Id');
+            return;
+         }
 
-                    if (val){
-                        val = Ext4.String.trim(val);
-                        val = val.replace(/[\s,;]+/g, ';');
-                        val = val.replace(/(^;|;$)/g, '');
-                    }
-                    if (!val){
-                        Ext4.Msg.alert('Error', 'Must enter at least one animal Id');
-                        return;
-                    }
+        // Split the user's input into separate IDs
+        var subjectArray = LDK.Utils.splitIds(val, true);
 
-                         var params = {
-                        schemaName: 'study',
-                        'query.queryName': 'CMU_P2Review'  };
+        // Iterate through the IDs
+        Ext4.Array.each(subjectArray, function(subj) {
+            // Add a new <div> to the page where the query results should go
+        var elementId = 'subject' + subj;
+        var newElement = document.createElement('div');
+        newElement.id = elementId;
+        document.getElementById('resultsArea').appendChild(newElement);
+                // Run the query filtered to that one animal
+                   new LABKEY.QueryWebPart({
+                   schemaName: 'study',
+                   queryName: 'CMU_P2Review',
+                   title: subj,
+                   filters: [
+                                LABKEY.Filter.create('Id', subj)
+                            ]
+                   }).render(elementId);
 
-
-                    if (!Ext4.isEmpty(val))
-                             params['query.Id~in'] = val;
-
-                     window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+         }, this);
                 }
             }]
-        }).render(webpart.wrapperDivId);
+    }).render('searchPanel');
     });
 </script>
+
+<div id="searchPanel">
+
+    </div>
+<div id="resultsArea">
+
+    </div>
