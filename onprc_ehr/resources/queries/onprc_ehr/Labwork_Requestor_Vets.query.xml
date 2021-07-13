@@ -4,7 +4,7 @@
             <table tableName="Labwork_Requestor_Vets" tableDbType="NOT_IN_DB">
                 <columns>
                     <column columnName="userId">
-                        <columnTitle>username</columnTitle>
+                        <columnTitle>user ID</columnTitle>
                         <isKeyField>true</isKeyField>
                    </column>
                 </columns>
