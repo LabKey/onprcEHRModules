@@ -272,6 +272,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 //            Added:7-16-2019  R.Blasa
             appendFlagsAlertActiveCol(ehrSchema, ds);
             appendIsAssignedAtTimeCol(ehrSchema, ds, dateColName);
+
+            //  Added:3-22-2021  R.Blasa
+            appendWeightAtTimeCol(ehrSchema, ds, dateColName);
+
         }
     }
 
@@ -2335,6 +2339,74 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
         ds.addColumn(col);
     }
+
+    //     Added: 3-12-2021  R.Blasa
+    private void appendWeightAtTimeCol(final UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
+    {
+        final String colName = "weightAtTime";
+        if (ds.getColumn(colName) != null)
+            return;
+
+        final ColumnInfo pkCol = getPkCol(ds);
+        if (pkCol == null)
+            return;
+
+        if (ds.getColumn("Id") == null)
+            return;
+
+        if (!hasTable(ds, "study", "weight", ehrSchema.getContainer()))
+            return;
+
+        final String tableName = ds.getName();
+        final String queryName = ds.getPublicName();
+        final String schemaName = ds.getPublicSchemaName();
+        final UserSchema targetSchema = ds.getUserSchema();
+        final String ehrPath = ehrSchema.getContainer().getPath();
+
+        WrappedColumn col = new WrappedColumn(pkCol, colName);
+        col.setLabel("Weight At Time");
+        col.setReadOnly(true);
+//      col.setIsUnselectable(true);
+        col.setUserEditable(false);
+        col.setFk(new LookupForeignKey(){
+            @Override
+            public TableInfo getLookupTableInfo()
+            {
+                String name = tableName + "_" + colName;
+                QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
+                qd.setSql("SELECT\n" +
+                        "sd." + pkCol.getFieldKey().toSQLString() + ",\n" +
+                        "group_concat(DISTINCT h.weight, chr(10)) as weightAtTime\n" +
+                        "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
+                        "JOIN \"" + ehrPath + "\".study.weight h\n" +
+                        "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
+                        "group by sd." + pkCol.getFieldKey().toSQLString());
+                qd.setIsTemporary(true);
+
+                List<QueryException> errors = new ArrayList<>();
+                TableInfo ti = qd.getTable(errors, true);
+                if (errors.size() > 0)
+                {
+                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
+                    for (QueryException error : errors)
+                    {
+                        _log.error(error.getMessage(), error);
+                    }
+                    return null;
+                }
+
+                ((BaseColumnInfo)ti.getColumn(pkCol.getName())).setHidden(true);
+                ((BaseColumnInfo)ti.getColumn(pkCol.getName())).setKeyField(true);
+
+                ((BaseColumnInfo)ti.getColumn("weightAtTime")).setLabel("Weight At Time");
+
+                return ti;
+            }
+        });
+
+        ds.addColumn(col);
+    }
+
 
     private void customizeHousingRequests(AbstractTableInfo ti)
     {
