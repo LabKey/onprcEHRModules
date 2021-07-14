@@ -2,7 +2,8 @@
 SELECT
     a.project as ProjectID,
     a.name AS Project,
-    p.external_id as eIACUCNum,
+    p.external_id as IACUCProtocol,
+    aa.eIACUC_protocol_name as eIACUCNum,
     a.title as Title,
     i.LastName || ', ' || i.FirstName AS PIName,
     x.account as Alias,
@@ -74,7 +75,8 @@ UNION ALL
 SELECT
     a.project as ProjectID,
     a.name AS Project,
-    p.external_id as eIACUCNum,
+    p.external_id as IACUCProtocol,
+    aa.eIACUC_protocol_name as eIACUCNum,
     a.title as Title,
     i.LastName || ', ' || i.FirstName AS PIName,
     x.account as Alias,
