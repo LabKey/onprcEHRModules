@@ -3,6 +3,7 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
@@ -21,16 +22,25 @@ public class NecropsyRequestForm extends RequestForm
     {
         super(ctx, owner, NAME, NAME, "Requests", Arrays.asList(
                 new NecropsyRequestInfoFormSection(),
-                new ClinicalEncountersFormPanelSection("study", "encounters","Necropsy", false),
+                new NonStoreFormSection("Instructions", "References", "onprc_ehr_necropsyRequestinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("onprc_ehr/panel/TissueRequestInstructionsPanel.js"))),
                 new AnimalDetailsFormSection(),
-                new SimpleFormSection("study", "tissue_samples", "Tissue Samples", "onprc_ehr-dragdropgridpanel"),
-                new SimpleFormSection("study", "organ_weights", "Organ Weights", "onprc_ehr-dragdropgridpanel")
+                new ClinicalEncountersFormPanelSection("study", "encounters","Necropsy", false),
+                new TissueDistFormSection()
                 ));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/DragDropGridPanel.js"));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalEncounters.js"));
 
         for (FormSection s : getFormSections())
-            s.addConfigSource("ClinicalEncounters");
+        {
+            s.addConfigSource("PathTissues");
+        }
+
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/DragDropGridPanel.js"));
+
+        //        Added: 1-20-2021  R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/NecropsyRequest.js"));
+
+        //Added 2-17-2021  R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/PathologyTissuesField.js"));
+
     }
 
     @Override
