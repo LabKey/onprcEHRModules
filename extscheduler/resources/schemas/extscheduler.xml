@@ -11,6 +11,7 @@
             <column columnName="Room" />
             <column columnName="Bldg" />
             <column columnName="Instance" />
+            <column columnName="DateDisbaled" />
 
             <column columnName="Container">
                 <isHidden>true</isHidden>

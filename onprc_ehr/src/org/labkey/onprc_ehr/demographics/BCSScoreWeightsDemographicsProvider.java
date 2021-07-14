@@ -37,7 +37,7 @@ public class BCSScoreWeightsDemographicsProvider extends AbstractListDemographic
     public Collection<String> getKeysToTest()
     {
         Set<String> keys = new HashSet<>(super.getKeysToTest());
-        keys.remove("duration");
+        keys.remove(_propName);
 
         return keys;
     }
