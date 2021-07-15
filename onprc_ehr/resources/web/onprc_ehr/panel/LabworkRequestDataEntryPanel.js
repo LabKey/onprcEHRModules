@@ -8,8 +8,6 @@ Ext4.define('ONPRC_EHR.panel.LabworkRequestDataEntryPanel', {
     alias: 'widget.onprc-labworkrequestdataentrypanel',
 
     initComponent: function(){
-        var mergeURL = LABKEY.getModuleProperty('MergeSync', 'MergeURL');
-
         this.callParent(arguments);
     },
 
@@ -18,23 +16,14 @@ Ext4.define('ONPRC_EHR.panel.LabworkRequestDataEntryPanel', {
             Ext4.Msg.hide();
 
         if (extraContext && extraContext.successURL){
-            var mergeURL = LABKEY.getModuleProperty('MergeSync', 'MergeURL');
-            if (mergeURL){
-                Ext4.Msg.confirm('Success', 'The requests have been synced to merge.  Do you want to open merge now?' +
-                        (!Ext4.isIE ? '  Note: merge does not work well in any browser besides IE, and you may want to switch to that browser.' : ''), function(val){
+                Ext4.Msg.alert('Message', 'The Lab Requests have been synced into Orchard. Please print your labels by accessing the Orchard app located on your Windows desktop. If you need an Orchard Login, please email the ONPRC Clin Path Lab at ONPRCClinPathLab@ohsu.edu.' +
+                        (!Ext4.isIE ? '  Note: There may be a delay of about ten minutes before you are able to print your labels through the Orchard application.' : ''), function(val){
                     window.onbeforeunload = Ext4.emptyFn;
-                    if (val == 'yes'){
-                        window.location = mergeURL;
-                    }
-                    else {
-                        window.location = extraContext.successURL;
-                    }
-                }, this);
+                    window.location = extraContext.successURL;
 
+                }, this);
                 return;
             }
         }
 
-        this.callParent(arguments);
-    }
 });

@@ -17,7 +17,11 @@
         <column name="requestid" />
         <column name="requestid/createdby"/>
         <column name="taskid" />
-        <column name="mergeSyncInfo/automaticresults" />
+        <column name="mergeSyncInfo/automaticresults" >
+        <properties>
+            <property name="columnTitle" value="Expect Results from Orchard?"/>
+        </properties>
+        </column>
     </columns>
     <sorts>
         <sort column="date" descending="true"/>
