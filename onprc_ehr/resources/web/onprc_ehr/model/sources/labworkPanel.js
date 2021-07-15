@@ -67,6 +67,13 @@ EHR.model.DataModelManager.registerMetadata('LabworkPanel', {
                 hidden: false
             }
 
+        },
+        'ehr.requests': {
+            priority: {
+                defautValue: 'Routine',
+               hidden: true
+            }
+
         }
     }
 });
