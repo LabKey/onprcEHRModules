@@ -25,7 +25,8 @@
     </transforms>
 
     <incrementalFilter className="ModifiedSinceFilterStrategy" timestampColumnName="modified">
-        <deletedRowsSource schemaName="geneticscore" queryName="mhc_delete_source" deletedSourceKeyColumnName="objectid" targetKeyColumnName="objectid"/>
+        <!--TODO: re-enable this once LK supports remote delete sources-->
+        <!--<deletedRowsSource remoteSource="PRIMESEQ_MHC" schemaName="geneticscore" queryName="mhc_delete_source" deletedSourceKeyColumnName="objectid" targetKeyColumnName="objectid"/>-->
     </incrementalFilter>
     <schedule>
         <cron expression="0 20 2 * * ?"/>
