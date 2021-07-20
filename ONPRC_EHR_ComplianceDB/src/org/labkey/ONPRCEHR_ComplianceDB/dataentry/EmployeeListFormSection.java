@@ -38,9 +38,10 @@ public class EmployeeListFormSection extends SimpleGridPanel
         super("ehr_Compliancedb", "employees", "Employee List");
 
         _allowRowEditing = false;
+        addExtraProperty(BY_PASS_ANIMAL_ID, "true");
+        addClientDependency(ClientDependency.supplierFromPath("EHR_ComplianceDB/model/sources/EmployeeClientStore.js"));
+        setClientStoreClass("ONPRC_EHR.data.EmployeeClientStore");
     }
-
-
 }
 
 
