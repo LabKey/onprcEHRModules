@@ -1062,4 +1062,31 @@
             <column columnName="totalAnimals" />
         </columns>
     </table>
+
+    <!--ASB SpeIns reference data schema. Added by Kolli, 06/8/21 -->
+    <table tableName="ASB_SpecialInstructions" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>ASB Special Instructions</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="value">
+                <columnTitle>Value</columnTitle>
+            </column>
+            <column columnName="remarks" />
+
+            <column columnName="dateDisabled">
+                <columnTitle>End Date</columnTitle>
+            </column>
+
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="createdby"/>
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby"/>
+        </columns>
+    </table>
+
 </tables>
