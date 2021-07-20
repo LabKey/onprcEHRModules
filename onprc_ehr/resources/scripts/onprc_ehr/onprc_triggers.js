@@ -238,38 +238,49 @@ exports.init = function(EHR){
 
     });
 
-    // Added by Kollil, 06/14/21: ASB service request form validation:
     /* This is user input validation for Procedures panel on ASB service req form
-    1. Remarks field is required when "Other" option is selected from the ASB spe Ins drop down list.
-    2. User should select "None" or "Other..." from ASB Special Instructions when an item other than the following procedures is selected, making only the "Remarks" section available.
-         "Research: Afternoon Fast" - 2640 ,
-         "Research: AM Fast" - 1804,
-         "Research: Overnight Fast" - 1807,
-         "Research: Complete NPO" - 2440
-    */
+  1. Remarks field is required when "Other" option is selected from the ASB spe Ins drop down list.
+  2. User should select "None" or "Other..." from ASB Special Instructions when an item other than the following procedures is selected, making only the "Remarks" section available.
+       "Research: Afternoon Fast" - 2640 ,
+       "Research: AM Fast" - 1804,
+       "Research: Overnight Fast" - 1807,
+       "Research: Complete NPO" - 2440
+  */
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow) {
-        // if (row.procedureid == 2640 || row.procedureid == 1804 || row.procedureid == 1807 || row.procedureid == 2440) {
-        //     if (row.instructions == 'Other instructions listed in remarks...' && row.remark == null)
-        //     {
-        //         //When "Other..." is selected, Remarks field is required. i,e. Force the user to enter "Remarks"
-        //         console.log(" 1.");
-        //         EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
-        //     }
-        // }
-        if (row.procedureid != 2640 || row.procedureid != 1804 || row.procedureid != 1807 || row.procedureid != 2440) {
-            if (row.instructions != 'None' || row.instructions != 'Other instructions listed in remarks')
-            {
-                console.log(" 2.");
+        console.log(" 0. procedure: " + row.procedureid + ", ins: " + row.instructions);
+
+        if ((row.procedureid == 1804) && ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)))
+        {
+            console.log(" 1. procedure: " + row.procedureid + ", ins: " + row.instructions);
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
+        }
+        else if ((row.procedureid == 1807) && ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)))
+        {
+            console.log(" 2. procedure: " + row.procedureid + ", ins: " + row.instructions);
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
+        }
+        else if ((row.procedureid == 2440) && ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)))
+        {
+            console.log(" 3. procedure: " + row.procedureid + ", ins: " + row.instructions);
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
+        }
+        else if ((row.procedureid == 2640) && ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)))
+        {
+            console.log(" 4. procedure: " + row.procedureid + ", ins: " + row.instructions);
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
+        }
+        //Everything else...
+        else if ((row.procedureid != 2640) || (row.procedureid != 1804) || (row.procedureid != 1807) || (row.procedureid != 2440)) {
+            if ((row.instructions !== 'None') || (row.instructions !== 'Other instructions listed in remarks')) {
+                console.log(" 5. procedure: " + row.procedureid + ", ins: " + row.instructions);
                 EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing Procedures other than, Research:"Afternoon Fast" or "AM Fast" or "Overnight Fast" or "Complete NPO", you must select "None" or "Other instructions listed in remarks" ', 'WARN');
             }
+            else if ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)) {
+                //When "Other..." is selected, Remarks field is required. i,e. Force the user to enter "Remarks"
+                console.log(" 6. procedure: " + row.procedureid + ", ins: " + row.instructions);
+                EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other instructions listed in remarks", you must enter Remarks!', 'WARN');
+            }
         }
-        if (row.instructions == 'Other instructions listed in remarks' && row.remark == null)
-        {
-            //When "Other..." is selected, Remarks field is required. i,e. Force the user to enter "Remarks"
-            console.log(" 1.");
-            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other instructions listed in remarks", you must enter Remarks!', 'WARN');
-        }
-
     });
 
     // Added by Kollil, 11/05/20: Vet assignment validation
@@ -392,7 +403,9 @@ exports.init = function(EHR){
                 EHR.Server.Utils.addError(scriptErrors, 'protocol', msg, 'ERROR');
             }
         }
+
     });
+
 
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
@@ -412,6 +425,53 @@ exports.init = function(EHR){
                 for (var i=0;i<msgs.length;i++){
                     EHR.Server.Utils.addError(scriptErrors, 'project', msgs[i], 'INFO');
                 }
+            }
+        }
+
+    });
+
+    // Added by Kollil, 06/14/21: ASB service request form validation:
+    /* This is user input validation for Procedures panel on ASB service req form
+    1. Remarks field is required when "Other" option is selected from the ASB spe Ins drop down list.
+    2. User should select "None" or "Other..." from ASB Special Instructions when an item other than the following procedures is selected, making only the "Remarks" section available.
+         "Research: Afternoon Fast" - 2640 ,
+         "Research: AM Fast" - 1804,
+         "Research: Overnight Fast" - 1807,
+         "Research: Complete NPO" - 2440
+    */
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow) {
+        console.log(" 0. procedure: " + row.procedureid + ", ins: " + row.instructions);
+
+        if ((row.procedureid == 1804) && ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)))
+        {
+            console.log(" 1. procedure: " + row.procedureid + ", ins: " + row.instructions);
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
+        }
+        else if ((row.procedureid == 1807) && ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)))
+        {
+            console.log(" 2. procedure: " + row.procedureid + ", ins: " + row.instructions);
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
+        }
+        else if ((row.procedureid == 2440) && ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)))
+        {
+            console.log(" 3. procedure: " + row.procedureid + ", ins: " + row.instructions);
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
+        }
+        else if ((row.procedureid == 2640) && ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)))
+        {
+            console.log(" 4. procedure: " + row.procedureid + ", ins: " + row.instructions);
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
+        }
+        //Everything else...
+        else if ((row.procedureid != 2640) || (row.procedureid != 1804) || (row.procedureid != 1807) || (row.procedureid != 2440)) {
+            if ((row.instructions !== 'None') || (row.instructions !== 'Other instructions listed in remarks')) {
+                console.log(" 5. procedure: " + row.procedureid + ", ins: " + row.instructions);
+                EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing Procedures other than, Research:"Afternoon Fast" or "AM Fast" or "Overnight Fast" or "Complete NPO", you must select "None" or "Other instructions listed in remarks" ', 'WARN');
+            }
+            else if ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)) {
+                //When "Other..." is selected, Remarks field is required. i,e. Force the user to enter "Remarks"
+                console.log(" 6. procedure: " + row.procedureid + ", ins: " + row.instructions);
+                EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other instructions listed in remarks", you must enter Remarks!', 'WARN');
             }
         }
     });
@@ -959,7 +1019,7 @@ exports.init = function(EHR){
                 }
             }
 
-            if (row.quantity === 0){
+            if (row.quantity == 0){
                 EHR.Server.Utils.addError(scriptErrors, 'quantity', 'This field is required', 'WARN');
             }
 
