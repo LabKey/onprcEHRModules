@@ -224,7 +224,7 @@
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveClinicalCases';
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveClinicalCasesNew';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
 
@@ -300,7 +300,7 @@
                                 return;
                             }
 
-                            params['TreatmentDate'] = Ext4.Date.format(date, ABKEY.extDefaultDateFormat);
+                            params['TreatmentDate'] = Ext4.Date.format(date, LABKEY.extDefaultDateFormat);
                             params['NumDays'] = 1;
                             params['Category'] = 'Clinical';
 
@@ -316,7 +316,7 @@
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatments';
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsRevised';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
                             return url;
@@ -353,70 +353,6 @@
                             url += btn.up('#sheetPanel').getAnimalHistoryHash('clinMedicationSchedule');
                             window.open(url);
                         }
-                    },{
-                        html: '<hr>',
-                        style: 'padding-top: 10px;',
-                        colspan: 4
-                    },{
-
-                        html: '<i>Sustained Release Medications:</i>'
-
-                    },{
-
-                        style: 'padding-left: 60px;',
-
-
-                    },{
-                        xtype: 'button',
-                        style: 'margin-left: 5px;',
-                        text: 'Print Version',
-
-                        border: true,
-                        getUrlString: function(){
-                            var panel = this.up('#sheetPanel');
-                            var params = panel.getParams(true, true);
-                            if (!params)
-                                return;
-
-                            if (params.Rooms)
-                                params.Rooms = params.Rooms.join(';');
-
-
-                            Ext4.apply(params, {
-                                'rs:ClearSession': true,
-                                'rs:Command': 'render'
-                            });
-
-                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatments_72hr';
-
-                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            return url;
-                        },
-                        menu: [{
-                            text: 'Print',
-                            handler: function(menu){
-                                var btn = menu.up('button');
-                                var url = btn.getUrlString();
-                                if (!url)
-                                    return;
-
-                                window.open(url);
-                            }
-                        },{
-                            text: 'Print To PDF',
-                            handler: function(menu){
-                                var btn = menu.up('button');
-                                var url = btn.getUrlString();
-                                if (!url)
-                                    return;
-
-                                url += '&rs:Format=PDF';
-                                window.open(url);
-                            }
-                        }]
-
                     },{
                         style: 'margin-left: 5px;',
 
@@ -475,7 +411,7 @@
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatments';
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsRevised';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
                             return url;
@@ -633,7 +569,7 @@
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatments';
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsRevised';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
                             return url;
@@ -697,7 +633,7 @@
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/WeightSheets';
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/WeightSheetsNew';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
                             return url;
@@ -775,23 +711,23 @@
                         menu: [{
                             text: 'Print',
                             handler: function(menu){
-                                var btn = menu.up('button');
-                                var url = btn.getUrlString();
-                                if (!url)
-                                    return;
+                var btn = menu.up('button');
+                var url = btn.getUrlString();
+                if (!url)
+                return;
 
-                                window.open(url);
-                            }
+                window.open(url);
+            }
                         },{
                             text: 'Print To PDF',
                             handler: function(menu){
-                                var btn = menu.up('button');
-                                var url = btn.getUrlString();
-                                if (!url)
-                                    return;
+                            var btn = menu.up('button');
+                            var url = btn.getUrlString();
+                            if (!url)
+                            return;
 
-                                url += '&rs:Format=PDF';
-                                window.open(url);
+                            url += '&rs:Format=PDF';
+                            window.open(url);
                             }
                         }]
 

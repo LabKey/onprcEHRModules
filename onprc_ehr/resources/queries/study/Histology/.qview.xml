@@ -5,8 +5,8 @@
        <column name="sort_order" />
        <column name="tissue" />
        <column name="remark" />
-       <column name="stain" />
-       <!--<column name="codes" />-->
+<!--       <column name="stain" />-->
+       <column name="codes" />
        
    </columns>
    <sorts>

@@ -52,12 +52,11 @@ public class BiopsyFormType extends EncounterForm
                 new ClinicalEncountersFormPanelSection("Biopsy"),
                 new AnimalDetailsFormSection(),
                 new PathologyFormSection("ehr", "encounter_participants", "Staff"),
-                //new PathologyMedicationsFormSection("study", "Drug Administration", "Medications/Treatments"),
                 new PathologyFormSection("study", "tissue_samples", "Tissues/Weights"),
-                //new PathologyFormSection("study", "tissueDistributions", "Tissue Distributions"),
                 new PathologyFormSection("study", "measurements", "Measurements"),
-                //new PathologyDiagnosesFormSection("study", "grossFindings", "Gross Findings"),
-                //new PathologyDiagnosesFormSection("study", "histology", "Histologic Findings"),
+
+//           Added; 2-24-2021  R.Blasa
+                new PathologyDiagnosesFormSection("study", "histology", "Histologic Findings"),
                 new PathologyDiagnosesFormSection("study", "pathologyDiagnoses", "Diagnoses")
         ));
 
@@ -67,6 +66,7 @@ public class BiopsyFormType extends EncounterForm
             s.addConfigSource("Pathology");
             s.addConfigSource("Biopsy");
             s.addConfigSource("Biopsy_Staff");
+            s.addConfigSource("Biopsy_Notes");
         }
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Pathology.js"));
@@ -74,6 +74,9 @@ public class BiopsyFormType extends EncounterForm
         addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/PathologyCaseNoField.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/pathologyButtons.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/CopyFromCaseWindow.js"));
+
+//        Added: 2-24-2021 R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/BiopsyNotes.js"));
     }
 
     @Override

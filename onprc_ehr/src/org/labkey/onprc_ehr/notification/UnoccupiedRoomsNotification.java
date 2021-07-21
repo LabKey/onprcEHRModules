@@ -151,14 +151,11 @@ public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
          ******************************/
         TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("SLAOccupiedLocations");
 
-
         //SLA Locations
-
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Cage_Count"),null, CompareType.ISBLANK);
 
         //SLA Location filters
         filter.addCondition(FieldKey.fromString("building"), null, CompareType.NONBLANK);
-
 
         //SLA unoccupied locations
         Set<FieldKey> columns = new HashSet<>();
@@ -170,7 +167,6 @@ public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
 
         final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
         TableSelector ts = new TableSelector(ti, colMap.values(), filter, new Sort("building,room"));
-
 
         String url = getExecuteQueryUrl(c, "sla", "SLAOccupiedLocations", null) ;
         long total = ts.getRowCount();
@@ -189,10 +185,12 @@ public class UnoccupiedRoomsNotification extends ColonyAlertsNotification
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
-
                 {
                     Results rs = new ResultsImpl(object, colMap);
-                    msg.append("<tr><td>" + (rs.getString("building") == null ? PageFlowUtil.filter("") : PageFlowUtil.filter(rs.getString("building"))) + "</td><td>" + PageFlowUtil.filter(rs.getString("room") + "</td></tr>"));
+                    msg.append("<tr>");
+                    msg.append("<td>" + (rs.getString("building") == null ? PageFlowUtil.filter("") : PageFlowUtil.filter(rs.getString("building"))) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("room")) + "</td>");
+                    msg.append("</tr>");
                 }
             });
 

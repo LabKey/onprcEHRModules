@@ -78,6 +78,11 @@ EHR.DemographicsRecord = function(data){
             return data['activeDrugs'];
         },
 
+        //Created: 1-15-2021  R.Blasa
+        getBCSScoreWeights: function(){
+            return data['BCSWeights'];
+        },
+
         getCurrentLocation: function(){
             if (data['activeHousing'] && data['activeHousing'].length){
                 var ret = data['activeHousing'][0].room;

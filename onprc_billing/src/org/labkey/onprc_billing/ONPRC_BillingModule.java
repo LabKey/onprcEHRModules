@@ -36,7 +36,6 @@ import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.QuerySchema;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.security.roles.RoleManager;
-import org.labkey.api.view.ViewContext;
 import org.labkey.api.view.WebPartFactory;
 import org.labkey.api.writer.ContainerUser;
 import org.labkey.onprc_billing.button.ChangeBillDateButton;
@@ -44,7 +43,6 @@ import org.labkey.onprc_billing.button.ChargeEditButton;
 import org.labkey.onprc_billing.button.ProjectEditButton;
 import org.labkey.onprc_billing.dataentry.ChargesAdvancedFormType;
 import org.labkey.onprc_billing.dataentry.ChargesFormType;
-//import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
 import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
 import org.labkey.onprc_billing.dataentry.ReversalFormType;
 import org.labkey.onprc_billing.notification.BillingValidationNotification;
@@ -80,7 +78,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 20.516;
+        return 20.918;
     }
 
     @Override
@@ -125,6 +123,9 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
 
         //Added: 5/6/2018 Kollil
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesVirologyCoreFormType.class, this));
+
+        //Added: 1/6/2020 Kollil
+       // EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesARTCoreFormType.class, this));
 
         //NOTE: not really being used, so have disabled
         //Resource billingTriggers = getModuleResource("/scripts/onprc_billing/billing_triggers.js");

@@ -134,6 +134,10 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                         fieldLabel: 'Last TB Date',
                         name: 'lastTB'
                     },{
+                        xtype: 'displayfield',  //Added: 1-15-2021  R.blasa
+                        fieldLabel: 'BCS',
+                        name: 'bcsScore'
+                    },{
                         xtype: 'displayfield',
                         fieldLabel: 'Weights',
                         name: 'weights'
@@ -249,6 +253,9 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
         //Added: 10-4-2019  R.Bl;asa
           this.appendDrugRecords(toSet, results.getActiveDrugs());
+
+        //Added: 1-15-2021  R.Bl;asa
+        this.appendBCSScore(toSet, results.getBCSScoreWeights());
 
         if (this.showExtendedInformation){
             this.appendBirthResults(toSet, results.getBirthInfo(), results.getBirth());
@@ -391,23 +398,28 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
     },
 
 
-    //Added: 10-4-2019  R.Blasa  Display 72 hour Drug's given
-    appendDrugRecords2: function(toSet, results){
-        var values = [];
-        if (results)
-        {
-            Ext4.each(results, function(row){
-                var foster = row.FosterChild;
+    //Added: 1-15-2021  R.Blasa
+    appendBCSScore: function(toSet, results){
 
-                values.push(foster);
+            if (results){
+                var score1 = LDK.ConvertUtils.parseDate(results[0].date);
 
-            }, this);
+                var score2 = results[0].weight;
 
-        }
+                var score3 = results[0].observation;
 
-        toSet['fosterinfants'] = values.length ? values.join('<br>') : 'None';
+                var score4 = results[0].duration;
 
-    },
+                var text =  '     ' + score3 + '  /     ' + score1.format('Y-m-d') + '     (' + score4 + '     days ago) at ' + score2 + ' kg' ;
+
+                toSet['bcsScore'] = text;
+            }
+            else
+            {
+                toSet['bcsScore'] = 'None';
+            }
+
+        },
 
     //Added: 10-7-2019  R.Blasa
     appendDrugRecords: function(toSet, rows){

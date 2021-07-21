@@ -1,5 +1,7 @@
 --20190410 - changed to address no assigned vet for protocol in research update1
 --Iss was this was not loaded at the prodctuib level
+--2021-01-27added to 20.11 process
+
 
 SELECT distinct a.Id,
                 a.project,

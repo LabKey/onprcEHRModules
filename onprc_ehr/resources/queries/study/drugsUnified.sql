@@ -43,7 +43,9 @@ SELECT
   t.created,
   t.createdby,
   t.modified,
-  t.modifiedby
+  t.modifiedby,
+  null as outcome,
+  null as lot
 
 FROM study.treatment_order t
 
@@ -79,7 +81,9 @@ SELECT
   d.created,
   d.createdby,
   d.modified,
-  d.modifiedby
+  d.modifiedby,
+  d.outcome,
+  d.lot
 
 FROM study.drug d
 WHERE d.treatmentid IS NULL

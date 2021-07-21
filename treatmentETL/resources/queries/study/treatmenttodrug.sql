@@ -2,7 +2,6 @@ SELECT t.id,
 t.calculated_status,
 t.lsid,
 t.dataset,
-t.animalid,
 t.time,
 t.hours,
 t.minutes,
@@ -37,7 +36,7 @@ t.qcstate,
 t.date,
 t.timeOfDay,
 t.timeOffset,
-t.treatmentid,
+t.treatmentid || '' AS TreatmentId,
 t.treatmentStatus
 FROM treatmentScheduleUpdate t left outer join Drug d on t.id = d.id and t.code = d.code and t.date = d.date
 where d.id is null and d.date is null and d.code is null

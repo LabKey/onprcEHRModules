@@ -67,6 +67,7 @@ import org.labkey.onprc_ehr.demographics.ActiveCasesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveDrugsGivenDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.ActiveTreatmentsXDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.AssignedVetDemographicsProvider;
+import org.labkey.onprc_ehr.demographics.BCSScoreWeightsDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagemateInfantDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.CagematesDemographicsProvider;
 import org.labkey.onprc_ehr.demographics.FosterChildDemographicsProvider;
@@ -84,6 +85,7 @@ import org.labkey.onprc_ehr.history.DefaultNHPTrainingDataSource;
 import org.labkey.onprc_ehr.history.DefaultSustainedReleaseDatasource;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
 import org.labkey.onprc_ehr.history.ONPRCClinicalRemarksDataSource;
+import org.labkey.onprc_ehr.history.BiopsyHistologyDataSource;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
 import org.labkey.onprc_ehr.history.ONPRCiStatLabworkType;
 import org.labkey.onprc_ehr.notification.*;
@@ -119,7 +121,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 20.417;
+        return 20.908;
     }
 
     @Override
@@ -181,6 +183,15 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added May 12th, 2017 Kollil
         ns.registerNotification(new BSUNotesNotification(this));
+
+        //Added Oct 7th, 2020 Kollil
+        ns.registerNotification(new PMICSchedulerNotification(this));
+
+        //Added Oct 7th, 2020 Kollil
+        ns.registerNotification(new PMICServicesRequestNotification(this));
+
+        //Added Mar 18th, 2021 Kollil
+        ns.registerNotification(new HousingTransferNotification(this));
 
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
@@ -265,6 +276,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 10-7-2019   R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"), this);
 
+        //Added: 3-22-2021   R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/ProjectEntryField.js"), this);
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Commonly Used Queries");
@@ -386,6 +399,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
          //Added: 12-7-2017   R.Blasa
      //   EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Animal Census on a Given Date Range", this, DetailsURL.fromString("/onprc_ehr/CensusGivenDateRange.view"), "Colony Management");
 
+//     Added: 2-2-2021 R.Blasa
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "CMU_P2 Review Report", this, DetailsURL.fromString("/onprc_ehr/CMU_P2Review.view"), "Colony Management");
 
         EHRService.get().registerActionOverride("projectDetails", this, "views/projectDetails.html");
         EHRService.get().registerActionOverride("protocolDetails", this, "views/protocolDetails.html");
@@ -441,9 +456,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Modified: 12-13-2016 R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ASBRequestFormType.class, this));
-        //Modified: Kollil, 10/02/2020
-        //Colony services request form is disabled as per ISE team's decision
-        //EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ColonyRequestFormType.class, this));
+
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(LabworkRequestFormType.class, this));
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(HousingRequestFormType.class, this));
 
@@ -455,13 +468,16 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PathDeathFormType.class, this));
 
         //Added: 5/23/2019 Kolli
-//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICRequestFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICRequestFormType.class, this));
+
+        //Added: 7/10/2019 by Kolli
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICDataEntryFormType.class, this));
+
+        //Added: 1/13/2021 Kolli
+//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ARTCoreRequestFormType.class, this));
 
         //Added: 8/10/2019 Kolli
 //        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IPCRequestFormType.class, this));
-
-        //Added: 7/10/2019 by Kolli
-//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICDataEntryFormType.class, this));
 
 //        Added: 11-21-2017  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ProcedureRequestBulkEditFormType.class, this));
@@ -514,6 +530,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Created: 10-4-2019 R.Blasa
         EHRService.get().registerDemographicsProvider(new ActiveDrugsGivenDemographicsProvider(this));
 
+
+        //Created: 1-15-2021 R.Blasa
+        EHRService.get().registerDemographicsProvider(new BCSScoreWeightsDemographicsProvider(this));
         //buttons
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "my_tasks");
         EHRService.get().registerMoreActionsButton(new DiscardTaskButton(this), "ehr", "tasks");
@@ -551,7 +570,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 8-22-2020  R.Blasa
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Procedures", AuxProcedureFormType.NAME), "study", "encounters");
-
+        //Added: 5/10/21  By Kollil
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create PMIC Task From Selected", "PMIC Procedures", PMICDataEntryFormType.NAME), "study", "encounters");
+        //EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "PMIC Procedures", PMICDataEntryFormType.NAME), "study", "PMIC_encounters");
 
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "blood");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singletonList(ClientDependency.supplierFromPath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "clinpathRuns");
@@ -590,6 +611,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //R.Blasa   1-23-2015
         EHRService.get().registerHistoryDataSource(new org.labkey.api.ehr.history.DefaultAnimalRecordFlagDataSource(this));
         EHRService.get().registerHistoryDataSource(new ONPRCClinicalRemarksDataSource(this));
+
+//        6-2-2021  R.Blasa
+        EHRService.get().registerHistoryDataSource(new BiopsyHistologyDataSource(this));
+
 
         EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "encounters");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "encounters");

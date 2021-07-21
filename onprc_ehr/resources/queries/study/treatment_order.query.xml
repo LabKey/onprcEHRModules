@@ -122,6 +122,7 @@
                     </column>
                     <column columnName="volume">
                         <columnTitle>Volume</columnTitle>
+                        <formatString>0.000</formatString>
                     </column>
                     <column columnName="vol_units">
                         <columnTitle>Volume Units</columnTitle>
@@ -134,6 +135,7 @@
                     </column>
                     <column columnName="amount">
                         <columnTitle>Amount</columnTitle>
+                        <formatString>0.000</formatString>
                     </column>
                     <column columnName="amount_units">
                         <columnTitle>Amount Units</columnTitle>

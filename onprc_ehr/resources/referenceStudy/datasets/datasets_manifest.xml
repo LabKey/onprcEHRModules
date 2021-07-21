@@ -149,5 +149,45 @@
         <dataset name="StudyDetails" id="5039" showByDefault="true" category="Research Procedures" demographicData="false" type="Standard">
             <tags/>
         </dataset>
+        <dataset name="PMIC_PETImagingData" id="5033" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="PMIC_CTImagingData" id="5034" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="PMIC_SPECTImagingData" id="5035" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="PMIC_AngioImagingData" id="5036" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="PMIC_USImagingData" id="5037" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="PMIC_DEXAImagingData" id="5038" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="IPC_Sectioning" id="5040" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="IPC_Staining" id="5041" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="IPC_SlidePrinting" id="5042" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="IPC_Other" id="5043" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="IPC_ServiceRequestDetails" id="5044" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="IPC_CassettePrinting" id="5045" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+        <dataset name="IPC_ProcessingEmbedding" id="5046" showByDefault="false" type="Standard">
+            <tags/>
+        </dataset>
+
     </datasets>
 </datasets>

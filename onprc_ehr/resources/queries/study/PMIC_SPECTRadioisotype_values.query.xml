@@ -1,0 +1,15 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="PMIC_Reference_Data" tableDbType="NOT_IN_DB">
+                <tableTitle>PMIC</tableTitle>
+                <columns>
+                    <column columnName="value">
+                        <isKeyField>true</isKeyField>
+                        <isHidden>false</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

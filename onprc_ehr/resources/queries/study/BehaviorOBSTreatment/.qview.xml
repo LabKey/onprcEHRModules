@@ -1,0 +1,28 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id" />
+        <column name="date" />
+        <column name="enddate" />
+        <column name="project" />
+        <column name="code" />
+        <column name="Snomedcode" />
+        <column name="amountAndVolume" />
+        <column name="route"/>
+        <column name="drugremark" />
+
+
+        <column name="category"/>
+        <column name="area"/>
+        <column name="observation"/>
+        <column name="remark"/>
+
+        <column name="performedby" />
+        <column name="taskid" />
+
+        <column name="QCState" />
+    </columns>
+    <sorts>
+        <sort column="date" descending="true"/>
+    </sorts>
+
+</customView>

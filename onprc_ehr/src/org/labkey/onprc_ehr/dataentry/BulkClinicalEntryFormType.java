@@ -71,6 +71,14 @@ public class BulkClinicalEntryFormType extends TaskForm
        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkStrokeRoundsWindow.js"));
         //Added 6-4-2015 Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalProcedures.js"));
+
+        //Added 5-26-2021 R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ClinicalMassProcessing.js"));
+
+        //        Added: 2-4-2021  R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamCasesDataEntryPanel.js"));
+        setDisplayReviewRequired(true);
+        setJavascriptClass("ONPRC_EHR.panel.ExamCasesDataEntryPanel");
     }
 
     @Override
@@ -88,6 +96,9 @@ public class BulkClinicalEntryFormType extends TaskForm
         List<String> defaultButtons = new ArrayList<>();
         defaultButtons.addAll(super.getMoreActionButtonConfigs());
         defaultButtons.add("MASS_BLEED");
+
+//        Added: 5-26-2021  R.Blasa
+        defaultButtons.add("CLINICPROC_IMPORT");
 
         // Added 1-6-2015 Blasa
         defaultButtons.add("STROKE_ROUNDS")  ;

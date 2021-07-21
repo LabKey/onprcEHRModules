@@ -20,7 +20,7 @@
                         <columnTitle>Months Since Last TB</columnTitle>
                     </column>
                     <column columnName="flags">
-                        <columnTitle>Serologic Exemptions</columnTitle>
+                        <columnTitle>TB Test Flags</columnTitle>
                     </column>
                     <column columnName="calculated_status">
                         <isHidden>true</isHidden>

@@ -805,8 +805,8 @@ public class FinanceNotification extends AbstractNotification
             return;
         }
 
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("SchedulerAliases");
-        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("SchedulerAliases",ContainerFilter.Type.AllFolders.create(c, u));
+      /*  ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));*/
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Alias"), null, CompareType.NONBLANK);
         TableSelector ts = new TableSelector(ti, filter, null);
         long count = ts.getRowCount();

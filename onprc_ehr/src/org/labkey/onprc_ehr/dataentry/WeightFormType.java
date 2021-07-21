@@ -60,15 +60,5 @@ public class WeightFormType extends TaskForm
             s.addConfigSource("Weight");
         }
     }
-//Added: 5-16-2018  R.Blasa
-    @Override
-    public boolean isVisible()
-    {
-        Group g = GroupManager.getGroup(getCtx().getContainer(), "Research Clinical Entry", GroupEnumType.SITE);
-        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
-        return super.isVisible();
-    }
+
 }

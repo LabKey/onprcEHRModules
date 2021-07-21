@@ -1,3 +1,4 @@
+--removed referennce to Project
 SELECT
     Distinct
 
@@ -41,13 +42,17 @@ SELECT
         When (d3.id = d.id) then 'Deceased NHP'
         WHEN (n.id IS NOT null) THEN 'SHIPPED NHP'
         WHEN (c.id IS NOT NULL) THEN 'Active Case'
-        WHen r1.id is not null then 'Research Assigned'
-        WHen r2.id is not null then 'Resource Assigned'
+        when s1.project is not null then s1.projectType
+        when s2.project is not null then s2.projectType
+        WHen r1.id is not null then r1.protocoltype
+        WHen r2.id is not null then r2.protocoltype
 
         ELSE 'P51'
         END as assignmentType,
 
     Case
+        when s1.project is not null then s1.use_category
+        when s2.project is not null then s1.use_category
         when r1.protocol is not null then r1.use_Category
         when r2.protocol is not null then r2.use_category
         else  ' '
@@ -60,6 +65,12 @@ SELECT
         when r2.protocol is not null then r2.VetAssignedProtocol
         else  ' '
         End As protocol,
+
+    Case
+        when s1.project is not null then s1.VetAssignedProject
+        when s2.project is not null then s2.VetAssignedProject
+        else  null
+        End As project,
 
     Case
         when r1.protocol is not null then r1.PI
@@ -124,6 +135,8 @@ LEFT JOIN (
     left Join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.birth b on b.id = d.id
     Left Join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.vet_AssignedResearch r1 on d.id = r1.id
     Left Join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.vet_assignedResource r2 on d.id = r2.id --and r2.id not in  (Select r3.id from study.vet_AssignedResearch r3)
+    Left Join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.vet_AssignedResearch_project s1 on d.id = s1.id
+    Left Join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.vet_assignedResource_project s2 on d.id = s2.id
     Left Join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.housing h on h.id  = d.id and (h.enddateTimeCoalesced >= now())
     left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.deaths d1 on d.id  = d1.id
     left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.departure d2 on d2.id = d.id

@@ -1,0 +1,89 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="BehaviorOBSTreatment" tableDbType="TABLE">
+                <tableTitle>Behavior Observations and Treatments Report</tableTitle>
+                <columns>
+
+                    <column columnName="Id">
+                        <displayWidth>100</displayWidth>
+                    </column>
+
+                    <column columnName="date">
+                        <displayWidth>50</displayWidth>
+                    </column>
+
+                    <column columnName="enddate">
+                        <displayWidth>50</displayWidth>
+                    </column>
+
+                    <column columnName="project">
+                        <columnTitle>Center Project</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+
+                    <column columnName="code">
+                        <columnTitle>Code</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+
+
+                    <column columnName="Snomedcode">
+                        <displayWidth>50</displayWidth>
+                    </column>
+
+
+                    <column columnName="amountAndVolume">
+                        <displayWidth>10</displayWidth>
+                    </column>
+
+
+                    <column columnName="route">
+                        <displayWidth>50</displayWidth>
+                    </column>
+
+                    <column columnName="drugremark">
+                        <columnTitle>Drug Remarks</columnTitle>
+                        <displayWidth>200</displayWidth>
+                    </column>
+
+                    <column columnName="drugperformedby">
+                        <columnTitle>Performed by</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+
+                    <column columnName="drugtaskid">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="drugQCState">
+                        <isHidden>true</isHidden>
+                    </column>
+
+                    <column columnName="category">
+                        <displayWidth>80</displayWidth>
+                    </column>
+
+                    <column columnName="area">
+                        <displayWidth>50</displayWidth>
+                    </column>
+
+                    <column columnName="observation">
+                        <displayWidth>10</displayWidth>
+                    </column>
+
+                    <column columnName="remark">
+                        <columnTitle>Observation  Remarks</columnTitle>
+                        <displayWidth>400</displayWidth>
+                    </column>
+
+                    <column columnName="taskid">
+                        <columnTitle>Task ID</columnTitle>
+                    </column>
+
+
+                </columns>
+
+            </table>
+        </tables>
+    </metadata>
+</query>

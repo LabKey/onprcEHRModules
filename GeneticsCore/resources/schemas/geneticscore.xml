@@ -18,9 +18,9 @@
  -->
 <ns:tables xmlns:ns="http://labkey.org/data/xml">
     <ns:table tableName="mhc_data" tableDbType="TABLE">
-        <ns:javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</ns:javaCustomizer>
+        <ns:javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
         <ns:tableTitle>MHC Data</ns:tableTitle>
-        <ns:pkColumnName>rowId</ns:pkColumnName>
+        <ns:pkColumnName>objectid</ns:pkColumnName>
         <ns:columns>
             <ns:column columnName="rowid">
                 <ns:columnTitle>Row Id</ns:columnTitle>
@@ -44,6 +44,15 @@
             <ns:column columnName="assaytype">
                 <ns:columnTitle>Assay Type</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="objectid">
+                <ns:columnTitle>Key</ns:columnTitle>
+                <ns:isHidden>true</ns:isHidden>
+                <ns:isUserEditable>false</ns:isUserEditable>
+                <ns:isKeyField>true</ns:isKeyField>
+            </ns:column>
+            <ns:column columnName="totalTests">
+                <ns:columnTitle># Tests</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="container">
                 <ns:columnTitle>Folder</ns:columnTitle>
             </ns:column>
@@ -62,7 +71,7 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="taqman_probes" tableDbType="TABLE">
-        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer"/>
         <ns:tableTitle>Taqman Probes</ns:tableTitle>
         <ns:pkColumnName>rowId</ns:pkColumnName>
         <ns:columns>
@@ -93,7 +102,7 @@
         </ns:columns>
     </ns:table>
     <ns:table tableName="test_significance" tableDbType="TABLE">
-        <ns:javaCustomizer>org.labkey.ldk.query.DefaultTableCustomizer</ns:javaCustomizer>
+        <ns:javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer"/>
         <ns:tableTitle>Genetic Test Significance</ns:tableTitle>
         <ns:pkColumnName>rowId</ns:pkColumnName>
         <ns:columns>
