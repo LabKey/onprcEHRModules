@@ -7,12 +7,12 @@
             <description>Copy to target</description>
             <source remoteSource="PRIMESEQ_MHC" schemaName="geneticscore" queryName="mhc_data">
                 <sourceColumns>
-                    <column>Id</column>
-                    <column>allele</column>
-                    <column>shortName</column>
-                    <column>totalTests</column>
+                    <column>subjectId</column>
+                    <column>marker</column>
                     <column>result</column>
-                    <column>type</column>
+                    <column>assaytype</column>
+                    <column>score</column>
+                    <column>totalTests</column>
                     <column>objectid</column>
                 </sourceColumns>
             </source>
@@ -25,7 +25,8 @@
     </transforms>
 
     <incrementalFilter className="ModifiedSinceFilterStrategy" timestampColumnName="modified">
-        <deletedRowsSource schemaName="geneticscore" queryName="mhc_delete_source" deletedSourceKeyColumnName="objectid" targetKeyColumnName="objectid"/>
+        <!--TODO: re-enable this once LK supports remote delete sources-->
+        <!--<deletedRowsSource remoteSource="PRIMESEQ_MHC" schemaName="geneticscore" queryName="mhc_delete_source" deletedSourceKeyColumnName="objectid" targetKeyColumnName="objectid"/>-->
     </incrementalFilter>
     <schedule>
         <cron expression="0 20 2 * * ?"/>
