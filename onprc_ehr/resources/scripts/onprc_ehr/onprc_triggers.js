@@ -280,6 +280,12 @@ exports.init = function(EHR){
                 console.log(" 6. procedure: " + row.procedureid + ", ins: " + row.instructions);
                 EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other instructions listed in remarks", you must enter Remarks!', 'WARN');
             }
+            else if ((row.instructions == 'None') && (row.remark != null)) {
+                //When "None" is selected, Remarks field is not required. i,e. Force the user to leave "Remarks" field blank
+                console.log(" 7. procedure: " + row.procedureid + ", ins: " + row.instructions);
+                EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "None", you must leave "Remarks" field blank!', 'WARN');
+            }
+
         }
     });
 
