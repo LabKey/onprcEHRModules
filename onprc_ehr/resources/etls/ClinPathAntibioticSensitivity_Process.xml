@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>ClinpathAntibioticSensitivity_Process</name>
+
+    <description>Transfers LIS schema temp table into study dataset lab values</description>
+
+
+    <transforms>
+
+
+        <transform id="step1a">
+
+            <description>Transfer to Study.antibioticSensitivity</description>
+
+            <source schemaName="LIS" queryName="AntibioticTemp"/>
+
+            <destination schemaName="STUDY" queryName="antibioticSensitivity" />
+
+        </transform>
+
+
+
+    </transforms>
+
+
+</etl>
+
+
+
+
