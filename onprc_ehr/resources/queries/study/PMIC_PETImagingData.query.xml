@@ -85,7 +85,7 @@
                     </column>
 
                     <column columnName="CTDIvol">
-                        <columnTitle>CTDIVol</columnTitle>
+                        <columnTitle>CTDIVol (mGy)</columnTitle>
                         <formatString>0.0000</formatString>
                     </column>
 
@@ -99,12 +99,12 @@
                     </column>
 
                     <column columnName="DLP">
-                        <columnTitle>DLP</columnTitle>
+                        <columnTitle>DLP (mGy*cm)</columnTitle>
                         <formatString>0.0000</formatString>
                     </column>
 
                     <column columnName="totalExamDLP">
-                        <columnTitle>Total Exam DLP</columnTitle>
+                        <columnTitle>Total Exam DLP (mGy*cm)</columnTitle>
                         <formatString>0.0000</formatString>
                     </column>
 
