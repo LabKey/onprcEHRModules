@@ -146,8 +146,11 @@ public class BehaviorNotification extends ColonyAlertsNotification
     }
 
     /*
-     Kollil, 11/18/20: 1. New alert for DCM notes (category = notes pertaining to DAR) added the previous day.
-                       2. New alert for Flags added the previous day.
+     Kollil, Created: 11/18/20, Modified: 04/07/2021
+       1. New alert for DCM notes (category = notes pertaining to DAR) added the previous day.
+       2. New alert for DCM notes (category = notes pertaining to DAR) removed the previous day.
+       3. New alert for Flags added the previous day.
+       4. New alert for Flags removed the previous day.
     */
     protected void dcmNotesAlert(final Container c, User u, final StringBuilder msg)
     {
@@ -172,6 +175,22 @@ public class BehaviorNotification extends ColonyAlertsNotification
         }
         else {
             msg.append("<b>WARNING: No DCM notes added yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
+        }
+
+        //Added by Kollil on 04/07/2021
+        //New alert for DCM notes (category = notes pertaining to DAR) removed the previous day.
+        SimpleFilter filter4 = new SimpleFilter(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_EQUAL);
+        filter4.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
+        TableSelector ts4 = new TableSelector(getStudySchema(c, u).getTable("notes"), filter4, null);
+        long count4 = ts4.getRowCount();
+
+        if (count4 > 0) {
+            msg.append("<b>" + count4 + " DCM notes entries removed yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.enddate~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("</p><br><hr>\n\n");
+        }
+        else {
+            msg.append("<b>WARNING: No DCM notes removed yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
         }
 
         //Added by Kollil on 11/04/2020

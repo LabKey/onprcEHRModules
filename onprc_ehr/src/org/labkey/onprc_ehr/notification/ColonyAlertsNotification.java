@@ -1099,29 +1099,42 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             return;
         }
         //Daily events query
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler_Daily");
-        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler_Daily", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
         TableSelector ts = new TableSelector(ti, null, null);
         long count = ts.getRowCount();
 
         //Weekly events query
-        TableInfo ti1 = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler_Weekly");
-        ((ContainerFilterable) ti1).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableInfo ti1 = QueryService.get().getUserSchema(u, c, "extscheduler").getTable("PMIC_Scheduler_Weekly", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti1).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
         TableSelector ts1 = new TableSelector(ti1, null, null);
         long count1 = ts1.getRowCount();
 
-        if (count > 0) {//Daily events count
-            msg.append("<b>There are " + count + " PMIC events scheduled for today:</b>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Daily", null) + "'>Click here to view them</a></p>\n");
-            msg.append("<hr>");
-        }
-        if (count1 > 0) {//Weekly events count
-            msg.append("<b>There are " + count1 + " PMIC events scheduled this week:</b>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Weekly", null) + "'>Click here to view them</a></p>\n");
-            msg.append("<hr>");
-        }
-        //Display the daily report in the email
+        //Daily events count
         if (count > 0) {
+            msg.append("<b>" + count + " PMIC event(s) scheduled for today:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Daily", null) + "&query.containerFilterName=AllFolders'>Click here to view the events in PRIME</a></p>\n");
+            msg.append("<hr>");
+        }
+        else {
+            msg.append("<b> There are no PMIC events scheduled today! </b>");
+            msg.append("<hr>");
+        }
+
+        //Weekly events count
+        if (count1 > 0) {
+            msg.append("<b>" + count1 + " PMIC event(s) scheduled this week:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "extscheduler", "PMIC_Scheduler_Weekly", null) + "&query.containerFilterName=AllFolders'>Click here to view the events in PRIME</a></p>\n");
+            msg.append("<hr>");
+        }
+        else {
+            msg.append("<b> There are no PMIC events scheduled this week! </b>");
+            msg.append("<hr>");
+        }
+
+        //Display the daily report in the email
+        if (count > 0)
+        {
             Set<FieldKey> columns = new HashSet<>();
             columns.add(FieldKey.fromString("resourceid"));
             columns.add(FieldKey.fromString("startdate"));
@@ -1136,88 +1149,226 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
-            count = ts2.getRowCount();
 
-            if (count == 0) {
-                msg.append("There are no scheduled PMIC events");
-            }
-            else {
-                msg.append("<br><b>Daily PMIC events:</b><br><br>\n");
-                msg.append("<table border=1 style='border-collapse: collapse;'>");
-                msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
-                msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
+            msg.append("<hr><b>Today's PMIC events:</b><br><br>\n");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
 
-                ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
-                    @Override
-                    public void exec(ResultSet object) throws SQLException {
-                        Results rs = new ResultsImpl(object, colMap);
-                        msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
-                        msg.append("<td>" + rs.getString("resourceid") + "</td>");
-                        msg.append("<td>" + rs.getString("startdate") + "</td>");
-                        msg.append("<td>" + rs.getString("enddate") + "</td>");
-                        msg.append("<td>" + rs.getString("name") + "</td>");
-                        msg.append("<td>" + rs.getString("alias") + "</td>");
-                        msg.append("<td>" + rs.getString("quantity") + "</td>");
-                        msg.append("<td>" + rs.getString("comments") + "</td>");
-                        msg.append("<td>" + rs.getString("color") + "</td>");
-                        msg.append("<td>" + rs.getString("room") + "</td>");
-                        msg.append("<td>" + rs.getString("bldg") + "</td>");
-                        msg.append("</tr>");
-                    }
-                });
-                msg.append("</table>");
-            }
-            //Display the weekly report in the email
-            if (count1 > 0) {
-                Set<FieldKey> columns1 = new HashSet<>();
-                columns1.add(FieldKey.fromString("resourceid"));
-                columns1.add(FieldKey.fromString("startdate"));
-                columns1.add(FieldKey.fromString("enddate"));
-                columns1.add(FieldKey.fromString("name"));
-                columns1.add(FieldKey.fromString("alias"));
-                columns1.add(FieldKey.fromString("quantity"));
-                columns1.add(FieldKey.fromString("comments"));
-                columns1.add(FieldKey.fromString("color"));
-                columns1.add(FieldKey.fromString("room"));
-                columns1.add(FieldKey.fromString("bldg"));
-
-                final Map<FieldKey, ColumnInfo> colMap1 = QueryService.get().getColumns(ti1, columns1);
-                TableSelector ts3 = new TableSelector(ti1, colMap1.values(), null, null);
-                count1 = ts3.getRowCount();
-
-                if (count1 == 0) {
-                    msg.append("There are no scheduled PMIC events");
+            ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
+                @Override
+                public void exec(ResultSet object) throws SQLException {
+                    Results rs = new ResultsImpl(object, colMap);
+                    msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("resourceid")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("startdate")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("name")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("alias")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("quantity")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("comments")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("color")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("room")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("bldg")) + "</td>");
+                    msg.append("</tr>");
                 }
-                else {
-                    msg.append("<br><br><b>Weekly PMIC events:</b><br><br>\n");
-                    msg.append("<table border=1 style='border-collapse: collapse;'>");
-                    msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
-                    msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
-
-                    ts3.forEach(new Selector.ForEachBlock<ResultSet>() {
-                        @Override
-                        public void exec(ResultSet object) throws SQLException {
-                            Results rs1 = new ResultsImpl(object, colMap1);
-                            msg.append("<tr bgcolor = " + '"' + "#CEF6CE" + '"' + ">");
-                            msg.append("<td>" + rs1.getString("resourceid") + "</td>");
-                            msg.append("<td>" + rs1.getString("startdate") + "</td>");
-                            msg.append("<td>" + rs1.getString("enddate") + "</td>");
-                            msg.append("<td>" + rs1.getString("name") + "</td>");
-                            msg.append("<td>" + rs1.getString("alias") + "</td>");
-                            msg.append("<td>" + rs1.getString("quantity") + "</td>");
-                            msg.append("<td>" + rs1.getString("comments") + "</td>");
-                            msg.append("<td>" + rs1.getString("color") + "</td>");
-                            msg.append("<td>" + rs1.getString("room") + "</td>");
-                            msg.append("<td>" + rs1.getString("bldg") + "</td>");
-                            msg.append("</tr>");
-                        }
-                    });
-                    msg.append("</table>");
-                }
-            }
+            });
+            msg.append("</table>");
         }
+
+        //Display the weekly report in the email
+        if (count1 > 0) {
+            Set<FieldKey> columns1 = new HashSet<>();
+            columns1.add(FieldKey.fromString("resourceid"));
+            columns1.add(FieldKey.fromString("startdate"));
+            columns1.add(FieldKey.fromString("enddate"));
+            columns1.add(FieldKey.fromString("name"));
+            columns1.add(FieldKey.fromString("alias"));
+            columns1.add(FieldKey.fromString("quantity"));
+            columns1.add(FieldKey.fromString("comments"));
+            columns1.add(FieldKey.fromString("color"));
+            columns1.add(FieldKey.fromString("room"));
+            columns1.add(FieldKey.fromString("bldg"));
+
+            final Map<FieldKey, ColumnInfo> colMap1 = QueryService.get().getColumns(ti1, columns1);
+            TableSelector ts3 = new TableSelector(ti1, colMap1.values(), null, null);
+
+            msg.append("<br><b>Weekly PMIC events:</b><br><br>\n");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
+
+            ts3.forEach(new Selector.ForEachBlock<ResultSet>() {
+                @Override
+                public void exec(ResultSet object) throws SQLException {
+                    Results rs1 = new ResultsImpl(object, colMap1);
+                    msg.append("<tr bgcolor = " + '"' + "#CEF6CE" + '"' + ">");
+                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("resourceid")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("startdate")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("enddate")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("name")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("alias")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("quantity")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("comments")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("color")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("room")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("bldg")) + "</td>");
+                    msg.append("</tr>");
+                }
+            });
+            msg.append("</table>");
+        }
+
     }
     //End of PMIC alert
+
+    /**
+     * Kollil, 03/24/2021 : PMIC services request alert
+     */
+    protected void pmicServicesRequestAlert(final Container c, User u, final StringBuilder msg)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("PMIC_ServicesRequestAlert"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>" + count + " PMIC procedures found.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "PMIC_ServicesRequestAlert", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("</p><br><hr>");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no scheduled PMIC procedures!</b><br><hr>");
+        }
+    }
+    //End of PMIC services alert
+
+    /**
+     * Kollil, 03/18/2021 : Housing transfer notifications Daily
+     */
+    protected void housingTransferAlert(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
+            msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+
+        //Daily transfers query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("housing_transfers", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        if (count > 0) {//transfers count
+            msg.append("<br><b>Housing Transfers:</b><br><br>");
+            msg.append("<b>" + count + " animal transfers were found in last 24 hours:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "housing_transfers", null) + "'>Click here to view the transfers in PRIME</a></p>\n");
+            msg.append("<hr>");
+        }
+
+        if (count == 0) {
+            msg.append("<b>There are no animal transfers today!</b><hr>");
+        }
+
+        //Display the daily report in the email
+        if (count > 0) {
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("Indate"));
+            columns.add(FieldKey.fromString("Building"));
+            columns.add(FieldKey.fromString("Area"));
+            columns.add(FieldKey.fromString("Room"));
+            columns.add(FieldKey.fromString("Cage"));
+            columns.add(FieldKey.fromString("housingType"));
+            columns.add(FieldKey.fromString("housingCondition"));
+            columns.add(FieldKey.fromString("ReasonForMove"));
+            columns.add(FieldKey.fromString("Remark"));
+            columns.add(FieldKey.fromString("TotalAnimals"));
+            columns.add(FieldKey.fromString("ActiveClinicalTreatment"));
+            columns.add(FieldKey.fromString("ActiveDiets"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+
+            //Legend
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr>");
+            msg.append("<td><b> LEGEND: </b></td></tr>");
+            msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
+            msg.append("<td><b> Yellow row indicates animal transferred into an empty room. </b></td></tr>");
+            msg.append("<tr bgcolor = " + '"' + "#00FFFF" + '"' + ">");
+            msg.append("<td><b> Blue cell indicates animal has active Clinical treatments with no Diets. </b></td></tr>");
+            msg.append("<tr bgcolor = " + '"' + "#FFA500" + '"' + ">");
+            msg.append("<td><b> Orange cell indicates animal has active Clinical treatments including Diets (or) just Diets. </b></td></tr>");
+            msg.append("</table>");
+            // Table header
+            msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td> Id </td><td> In Date </td><td> Building </td><td> Area </td><td> Room </td><td> Cage </td><td> Housing Type </td><td> Housing Condition </td><td> Reason For Move </td><td> Remark </td><td> Num animals before the transfer </td></tr>");
+
+            ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
+                @Override
+                public void exec(ResultSet object) throws SQLException {
+                    Results rs = new ResultsImpl(object, colMap);
+                    String url = getParticipantURL(c, rs.getString("Id"));
+                    int animal_count = rs.getInt("TotalAnimals");
+
+                    if ( animal_count == 0) { //high light the row in yellow if the room was empty before the move
+                        msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
+                        if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") == null)
+                        {  //High light with blue color if there are any active treatments
+                            msg.append("<td style= " + '"' + "background-color:#00FFFF" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                        }
+                        else if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") != null)
+                        { //High light with orange color if there are any diets within treatments
+                            msg.append("<td style= " + '"' + "background-color:#FFA500" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                        }
+                        else {
+                            msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                        }
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("InDate")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Building")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Area")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingType")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingCondition")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReasonForMove")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Remark")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getInt("TotalAnimals")) + "</td>");
+                        msg.append("</tr>");
+                    }
+                    else { //animal moving into non-empty room
+                        if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") == null)
+                        {  //High light with blue color if there are any active treatments
+                            msg.append("<td style= " + '"' + "background-color:#00FFFF" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                        }
+                        else if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") != null)
+                        { //High light with orange color if there are any diets within treatments
+                            msg.append("<td style= " + '"' + "background-color:#FFA500" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                        }
+                        else {
+                            msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                        }
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("InDate")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Building")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Area")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingType")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingCondition")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReasonForMove")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Remark")) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getInt("TotalAnimals")) + "</td>");
+                        msg.append("</tr>");
+                    }
+
+                }
+            });
+                msg.append("</table>");
+        }
+    }
+    //End of housing transfer alert
 
     /**
      * we find protocols over the animal limit
