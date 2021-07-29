@@ -6,6 +6,7 @@
 -- =======================================================================================================================================
 
 --Drop if exists (Labkey syntax)
+--Tables
 EXEC core.fn_dropifexists 'Prima_CaseBase','onprc_ehr','TABLE';
 EXEC core.fn_dropifexists 'Prima_CassetteEvents','onprc_ehr','TABLE';
 EXEC core.fn_dropifexists 'Prima_CassetteEventLocations','onprc_ehr','TABLE';
@@ -17,6 +18,9 @@ EXEC core.fn_dropifexists 'Prima_SlideEventLocations','onprc_ehr','TABLE';
 EXEC core.fn_dropifexists 'Prima_StainTests','onprc_ehr','TABLE';
 EXEC core.fn_dropifexists 'Prima_SurgicalWheels','onprc_ehr','TABLE';
 EXEC core.fn_dropifexists 'Prima_UserPersons','onprc_ehr','TABLE';
+--Stored procs
+EXEC core.fn_dropifexists 'PrimaSlideBillingReport', 'onprc_ehr', 'PROCEDURE';
+EXEC core.fn_dropifexists 'PrimaBlockBillingReport', 'onprc_ehr', 'PROCEDURE';
 
 GO
 
@@ -310,8 +314,8 @@ END AS 'Pathologist',
     'Pathologist',
     'Stain Test'
 END
-;
 
+GO
 
 -- =======================================================================================================================================
 -- Author:		Lakshmi Kolli
@@ -368,9 +372,8 @@ FROM (SELECT surgicalwheelid,
                    ON Prima_userpersons.id = sub2.pathologistid
          LEFT JOIN Prima_surgicalwheels
                    ON Prima_surgicalwheels.id = sub2.surgicalwheelid
-ORDER BY 'Surgical Wheel',
+    ORDER BY 'Surgical Wheel',
          'Pathologist'
 END
-;
 
 GO
