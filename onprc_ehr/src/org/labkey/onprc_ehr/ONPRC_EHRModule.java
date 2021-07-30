@@ -85,6 +85,7 @@ import org.labkey.onprc_ehr.history.DefaultNHPTrainingDataSource;
 import org.labkey.onprc_ehr.history.DefaultSustainedReleaseDatasource;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
 import org.labkey.onprc_ehr.history.ONPRCClinicalRemarksDataSource;
+import org.labkey.onprc_ehr.history.BiopsyHistologyDataSource;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
 import org.labkey.onprc_ehr.history.ONPRCiStatLabworkType;
 import org.labkey.onprc_ehr.notification.*;
@@ -610,6 +611,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //R.Blasa   1-23-2015
         EHRService.get().registerHistoryDataSource(new org.labkey.api.ehr.history.DefaultAnimalRecordFlagDataSource(this));
         EHRService.get().registerHistoryDataSource(new ONPRCClinicalRemarksDataSource(this));
+
+//        6-2-2021  R.Blasa
+        EHRService.get().registerHistoryDataSource(new BiopsyHistologyDataSource(this));
+
 
         EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "encounters");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "encounters");
