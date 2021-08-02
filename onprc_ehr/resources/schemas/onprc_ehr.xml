@@ -995,39 +995,40 @@
 
     <!--PMIC reference data schema. Added by Kolli, 03/24/2020 -->
     <table tableName="PMIC_Reference_Data" tableDbType="TABLE" useColumnOrder="true">
-    <tableTitle>PMIC_Reference_Data</tableTitle>
-    <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
-    <auditLogging>DETAILED</auditLogging>
-    <columns>
-        <column columnName="rowId">
-            <isHidden>true</isHidden>
-        </column>
+        <tableTitle>PMIC_Reference_Data</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowId">
+                <isHidden>true</isHidden>
+            </column>
 
-        <column columnName="value">
-            <columnTitle>Value</columnTitle>
-        </column>
+            <column columnName="value">
+                <columnTitle>Value</columnTitle>
+            </column>
 
-        <column columnName="name">
-            <columnTitle>Name</columnTitle>
-        </column>
+            <column columnName="name">
+                <columnTitle>Name</columnTitle>
+            </column>
 
-        <column columnName="remark"/>
-        <column columnName="dateDisabled">
-            <columnTitle>End Date</columnTitle>
-        </column>
+            <column columnName="remark"/>
+            <column columnName="dateDisabled">
+                <columnTitle>End Date</columnTitle>
+            </column>
 
-        <column columnName="created">
-            <isHidden>true</isHidden>
-        </column>
-        <column columnName="createdby"/>
-        <column columnName="modified">
-            <isHidden>true</isHidden>
-        </column>
-        <column columnName="modifiedby"/>
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="createdby"/>
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby"/>
 
-    </columns>
+        </columns>
     </table>
 
+    <!--Housing transfer alert schema. Added by Kolli, 5/2021 -->
     <table tableName="availableCages_temp" tableDbType="TABLE">
         <columns>
             <column columnName="location" />
@@ -1043,7 +1044,7 @@
             <column columnName="isMarkedUnavailable" />
         </columns>
     </table>
-    
+
     <table tableName="availableCagesByRoom_temp" tableDbType="TABLE">
         <columns>
             <column columnName="room" />
@@ -1062,4 +1063,222 @@
             <column columnName="totalAnimals" />
         </columns>
     </table>
+
+    <!--Prima db tables. Added by Kolli, 07/26/2021 -->
+    <table tableName="Prima_UserPersons" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="DateOfBirth" />
+            <column columnName="DepartmentName" />
+            <column columnName="FirstName" />
+            <column columnName="Gender" />
+            <column columnName="LastName" />
+            <column columnName="MiddleName" />
+            <column columnName="Prefix" />
+            <column columnName="SSN" />
+            <column columnName="ProfessionalTitles" />
+            <column columnName="DateOfDeath" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_SurgicalWheels" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="Constant" />
+            <column columnName="Description" />
+            <column columnName="IsActive" />
+            <column columnName="CreatedByUserId" />
+            <column columnName="Deleted" />
+            <column columnName="DeletedByUserId" />
+            <column columnName="NextVersionId" />
+            <column columnName="PreviousVersionId" />
+            <column columnName="Title" />
+            <column columnName="Created" />
+            <column columnName="LastModified" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_StainTests" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="Abbreviation" />
+            <column columnName="Constant" />
+            <column columnName="CptCode" />
+            <column columnName="Description" />
+            <column columnName="StainTestCategoryId" />
+            <column columnName="TimeLength" />
+            <column columnName="CreatedByUserId" />
+            <column columnName="Deleted" />
+            <column columnName="DeletedByUserId" />
+            <column columnName="NextVersionId" />
+            <column columnName="PreviousVersionId" />
+            <column columnName="Title" />
+            <column columnName="Created" />
+            <column columnName="LastModified" />
+            <column columnName="IsValidated" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_SlideBases" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="HandStain" />
+            <column columnName="IsCharged" />
+            <column columnName="StainTestId" />
+            <column columnName="DilutionFactor" />
+            <column columnName="CaseBaseId" />
+            <column columnName="IsRadioActive" />
+            <column columnName="PriorityLevelId" />
+            <column columnName="QcStatus" />
+            <column columnName="SurgicalSerialPart" />
+            <column columnName="Created" />
+            <column columnName="OrderedStatus" />
+            <column columnName="SavedIdentifier" />
+            <column columnName="BarcodeContent" />
+            <column columnName="CurrentBatchId" />
+            <column columnName="AlternateIdentifier" />
+            <column columnName="PrintStatus" />
+            <column columnName="ItemStatus" />
+            <column columnName="FreeTextNotes" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_CaseBase" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="DifferentialDiagnosisId" />
+            <column columnName="PathologistId" />
+            <column columnName="PriorityLevelId" />
+            <column columnName="ResidentPathologistId" />
+            <column columnName="SerialNumber" />
+            <column columnName="SurgeryDate" />
+            <column columnName="SurgicalWheelId" />
+            <column columnName="Created" />
+            <column columnName="ResearcherId" />
+            <column columnName="StudyId" />
+            <column columnName="Discriminator" />
+            <column columnName="StudyPhaseId" />
+            <column columnName="CohortId" />
+            <column columnName="SavedIdentifier" />
+            <column columnName="Status" />
+            <column columnName="AlternateIdentifier" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_CassetteEvents" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="CassetteBaseId" />
+            <column columnName="EventType" />
+            <column columnName="Status" />
+            <column columnName="Trigger" />
+            <column columnName="UserId" />
+            <column columnName="Created" />
+            <column columnName="EventAction" />
+            <column columnName="TissueProcessorId" />
+            <column columnName="TissueProcessorProgramId" />
+            <column columnName="Discriminator" />
+            <column columnName="CassetteBatchId" />
+            <column columnName="CassetteOrderId" />
+            <column columnName="AutomatedCassetteArchivalMachineId" />
+            <column columnName="DisposalReasonId" />
+            <column columnName="ShipmentId" />
+            <column columnName="IsEstimated" />
+            <column columnName="PrintCount" />
+            <column columnName="BarcodeContent" />
+
+        </columns>
+    </table>
+
+    <table tableName="Prima_CassetteEventLocations" tableDbType="TABLE">
+        <columns>
+            <column columnName="CassetteEventId" />
+            <column columnName="LabStationTypeId" />
+            <column columnName="LocationId" />
+            <column columnName="WorkstationId" />
+            <column columnName="Created" />
+            <column columnName="PersonId" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_CassetteBases" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="CassetteColorId" />
+            <column columnName="EmbeddingInstructionId" />
+            <column columnName="EmbeddingNotes" />
+            <column columnName="HasTissue" />
+            <column columnName="ProtocolCassetteId" />
+            <column columnName="SpecimenBaseId" />
+            <column columnName="TissueCollectionId" />
+            <column columnName="TissueProcessorProgramId" />
+            <column columnName="TissueQuantity" />
+            <column columnName="CaseBaseId" />
+            <column columnName="IsRadioActive" />
+            <column columnName="PriorityLevelId" />
+            <column columnName="QcStatus" />
+            <column columnName="SurgicalSerialPart" />
+            <column columnName="Created" />
+            <column columnName="OrderedStatus" />
+            <column columnName="SavedIdentifier" />
+            <column columnName="BarcodeContent" />
+            <column columnName="CurrentBatchId" />
+            <column columnName="AlternateIdentifier" />
+            <column columnName="PrintStatus" />
+            <column columnName="ItemStatus" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_LabstationTypes" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="CanProcess" />
+            <column columnName="Constant" />
+            <column columnName="Description" />
+            <column columnName="IsEnabled" />
+            <column columnName="Order" />
+            <column columnName="Title" />
+            <column columnName="Created" />
+            <column columnName="LastModified" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_SlideEvents" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="SlideBaseId" />
+            <column columnName="EventType" />
+            <column columnName="Status" />
+            <column columnName="Trigger" />
+            <column columnName="UserId" />
+            <column columnName="Created" />
+            <column columnName="EventAction" />
+            <column columnName="CoverSlipperId" />
+            <column columnName="OvenId" />
+            <column columnName="OvenProgramId" />
+            <column columnName="SlideImagerId" />
+            <column columnName="SlideStainerId" />
+            <column columnName="Discriminator" />
+            <column columnName="SlideBatchId" />
+            <column columnName="SlideOrderId" />
+            <column columnName="DisposalReasonId" />
+            <column columnName="ShipmentId" />
+            <column columnName="PrintCount" />
+            <column columnName="BarcodeContent" />
+            <column columnName="EquipmentId" />
+            <column columnName="AutomatedSlideArchivalMachineId" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_SlideEventLocations" tableDbType="TABLE">
+        <columns>
+            <column columnName="SlideEventId" />
+            <column columnName="LabStationTypeId" />
+            <column columnName="LocationId" />
+            <column columnName="WorkstationId" />
+            <column columnName="Created" />
+            <column columnName="PersonId" />
+        </columns>
+    </table>
+
 </tables>
