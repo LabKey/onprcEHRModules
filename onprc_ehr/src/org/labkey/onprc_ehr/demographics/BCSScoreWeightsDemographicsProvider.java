@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * Updated 2021-08-18 Update to stop error reporting
  */
 package org.labkey.onprc_ehr.demographics;
 
@@ -32,12 +33,12 @@ public class BCSScoreWeightsDemographicsProvider extends AbstractListDemographic
         super(module, "study", "BCSScoreWeights", "BCSWeights");
         _supportsQCState = false;
     }
-
+//update 8-18-2021 jonesga
     @Override
     public Collection<String> getKeysToTest()
     {
         Set<String> keys = new HashSet<>(super.getKeysToTest());
-        keys.remove("duration");
+        keys.remove("BCSWeights");
 
         return keys;
     }
