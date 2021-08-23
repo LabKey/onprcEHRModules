@@ -112,7 +112,7 @@ LEFT JOIN (
     GROUP BY s.subjectId, s.sampleType
   /* jonesga 8/23/2021  Added referenc that gDNA greater than or equal to 5 ML*/
     HAVING (
-      s.sampletype = 'gDNA' AND sum(coalesce(s.quantity, 0)) >= 5.0) OR
+      /*s.sampletype = 'gDNA' AND sum(coalesce(s.quantity, 0)) >= 5.0) OR*/
       (s.sampletype = 'Buffy coat' AND sum(coalesce(s.quantity, 0)) >= 5.0) OR
       (s.sampletype = 'Whole Blood' AND sum(coalesce(s.quantity, 0)) >= 5.0)
     )
