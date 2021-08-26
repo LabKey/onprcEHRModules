@@ -14,12 +14,23 @@
                         <columnTitle>Employee ID</columnTitle>
                     </column>
                     <column columnName="taskid">
+                    <fk>
+                        <fkFolderPath>/ONPRC/EHR</fkFolderPath>
+                        <fkDbSchema>ehr</fkDbSchema>
+                        <fkTable>tasks</fkTable>
+                        <fkColumnName>taskid</fkColumnName>
+                        <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                    </fk>
+                </column>
+
+                    <column columnName="qcstate">
+                     <columnTitle>Status</columnTitle>
                         <fk>
                             <fkFolderPath>/ONPRC/EHR</fkFolderPath>
-                            <fkDbSchema>ehr</fkDbSchema>
-                            <fkTable>tasks</fkTable>
-                            <fkColumnName>taskid</fkColumnName>
-                            <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                            <fkDbSchema>core</fkDbSchema>
+                            <fkTable>QCState</fkTable>
+                            <fkColumnName>Rowid</fkColumnName>
+                            <fkDisplayColumnName>Label</fkDisplayColumnName>
                         </fk>
                     </column>
 

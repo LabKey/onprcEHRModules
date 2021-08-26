@@ -21,11 +21,12 @@ import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.security.roles.AbstractModuleScopedRole;
 
 
+
 public class ONPRC_ComplianceDBRole extends AbstractModuleScopedRole
 {
     public ONPRC_ComplianceDBRole(Class<? extends Module> moduleClass)
     {
-        super("Employee Records", "This role is required in order to import data into Employee Records.", moduleClass,
+        super("Compliance Employee Records", "This role is required in order to enter data into Employee Records.", moduleClass,
                 ReadPermission.class,
                 InsertPermission.class,
                 ONPRC_ComplianceDBEntryPermission.class

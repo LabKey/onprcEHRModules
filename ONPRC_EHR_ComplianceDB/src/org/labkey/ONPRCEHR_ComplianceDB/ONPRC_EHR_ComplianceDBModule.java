@@ -25,7 +25,7 @@ import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBRole;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.security.roles.RoleManager;
 
- //Created: 11-24-2020   R.Blasa
+//Created: 11-24-2020   R.Blasa
 
 public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
 {
@@ -64,7 +64,7 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
     {
 
 //        Added: 11-17-2020 R. Blasa
-        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EmployeeRecordsFormType.class, this));
+//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EmployeeRecordsFormType.class, this));
 
        // Added: 7-6-2021 R. Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EmployeeRequirementCategoryFormType.class, this));

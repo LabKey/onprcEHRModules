@@ -17,6 +17,7 @@ package org.labkey.ONPRCEHR_ComplianceDB.dataentry;
 
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.List;
 
@@ -33,7 +34,10 @@ public class EmployeeRequirementCategoryFormSection extends SimpleFormSection
     public EmployeeRequirementCategoryFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
         super("ehr_ComplianceDB", "requirementspercategory", "Employee Category", "ehr-gridpanel", location);
-
+        _allowRowEditing = false;
+        addExtraProperty(BY_PASS_ANIMAL_ID, "true");
+        addClientDependency(ClientDependency.supplierFromPath("EHR_ComplianceDB/model/sources/EmployeeCategoryClientStore.js"));
+        setClientStoreClass("ONPRC_EHR.data.EmployeeCategoryClientStore");
 
     }
 

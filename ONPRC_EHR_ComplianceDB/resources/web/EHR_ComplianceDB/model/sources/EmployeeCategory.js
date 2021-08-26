@@ -57,9 +57,30 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                 }
             },
             rowid: {hidden: true},
-            trackingflag: {hidden: false, header: 'Essentail'},
+            TrackingFlag: {
+                hidden: false,
+                allowBlank: false,
+                columnConfig: {
+                    width: 100,
+                    header: 'Essential'
+                },
+                lookup: {
+                    xtype: 'labkey-combo',
+                    containerPath: '/ONPRC/EHR',
+                    schema: 'sla',
+                    queryName: 'Reference_Data',
+                    keyColumn: 'value',
+                    displayColumn: 'value',
+                    columns: 'value',
+                    sort: 'value',
+                    filterArray: [
+                        LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                        LABKEY.Filter.create('ColumnName', 'NecropsyDist', LABKEY.Filter.Types.EQUAL)],
+                    autoLoad: true
 
-            unit: {
+                }
+            },
+                unit: {
                 hidden: false,
                 allowBlank: false,
                 columnConfig: {
