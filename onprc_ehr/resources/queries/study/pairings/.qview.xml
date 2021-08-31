@@ -11,7 +11,7 @@
         <column name="observation"/>
         <column name="outcome"/>
         <column name="enddate"/>
-        <column name="endeeventType"/>
+        <column name="endeventType"/>
         <column name="remark2"/>
         <column name="separationreason"/>
         <column name="performedby"/>
