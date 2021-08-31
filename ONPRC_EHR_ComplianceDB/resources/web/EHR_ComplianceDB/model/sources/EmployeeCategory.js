@@ -35,9 +35,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
 
              },
             category: {
-                xtype: 'checkcombo',
-                hasOwnTpl: true,
-                includeNullRecord: false,
+                xtype: 'labkey-combo',
                 lookup: {
                     containerPath: '/ONPRC/Admin/Compliance',
                     schema: 'ehr_complianceDB',
@@ -47,11 +45,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                     columns: 'categoryname',
                     sort: 'categoryname'
                 },
-                editorConfig: {
-                    tpl: null,
-                    multiSelect: true,
-                    separator: ';'
-                },
+
                 columnConfig: {
                     width: 300
                 }
@@ -80,15 +74,18 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
 
                 }
             },
-                unit: {
+            unit: {
+                xtype: 'checkcombo',
                 hidden: false,
                 allowBlank: false,
+                hasOwnTpl: true,
+                includeNullRecord: false,
                 columnConfig: {
                     width: 300,
                     header: 'Unit'
                 },
                 lookup: {
-                    xtype: 'labkey-combo',
+                    xtype: 'checkcombo',
                     containerPath: '/ONPRC/Admin/Compliance',
                     schema: 'ehr_complianceDB',
                     queryName: 'unit_names',
@@ -97,8 +94,12 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                     columns: 'unit',
                     sort: 'unit'
 
-                }
-
+                },
+                    editorConfig: {
+                        tpl: null,
+                        multiSelect: true,
+                        separator: ';'
+                    }
 
             }
 

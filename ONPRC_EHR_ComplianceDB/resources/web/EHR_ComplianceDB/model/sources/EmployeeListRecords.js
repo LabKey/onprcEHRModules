@@ -10,10 +10,36 @@ EHR.model.DataModelManager.registerMetadata('EmployeeListRecords', {
     },
     byQuery: {
         'ehr_compliancedb.employees': {
-            category: {
+            unit: {
                 xtype: 'checkcombo',
+                hidden: false,
+                allowBlank: false,
                 hasOwnTpl: true,
                 includeNullRecord: false,
+                columnConfig: {
+                    width: 300,
+                    header: 'Unit'
+                },
+                lookup: {
+                    xtype: 'checkcombo',
+                    containerPath: '/ONPRC/Admin/Compliance',
+                    schema: 'ehr_complianceDB',
+                    queryName: 'unit_names',
+                    keyColumn: 'unit',
+                    displayColumn: 'unit',
+                    columns: 'unit',
+                    sort: 'unit'
+
+                },
+                editorConfig: {
+                    tpl: null,
+                    multiSelect: true,
+                    separator: ';'
+                }
+
+            },
+            category: {
+                xtype: 'labkey-combo',
                 lookup: {
                     containerPath: '/ONPRC/Admin/Compliance',
                     schema: 'ehr_complianceDB',
@@ -23,11 +49,6 @@ EHR.model.DataModelManager.registerMetadata('EmployeeListRecords', {
                     columns: 'categoryname',
                     sort: 'categoryname'
                 },
-                editorConfig: {
-                    tpl: null,
-                    multiSelect: true,
-                    separator: ';'
-                },
                 columnConfig: {
                     width: 200
                 }
@@ -35,9 +56,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeListRecords', {
             title: { columnConfig: {
                     width: 200
                 }},
-            unit: { columnConfig: {
-                    width: 100
-                }},
+
             enddate: { columnConfig: {
                     width: 100
                 }},
