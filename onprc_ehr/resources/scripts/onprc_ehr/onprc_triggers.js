@@ -246,33 +246,58 @@ exports.init = function(EHR){
          "Research: AM Fast" - 1804,
          "Research: Overnight Fast" - 1807,
          "Research: Complete NPO" - 2440
+    3. If a user selects any procedure, does not select an option from “ASB Special Instructions” but does enter a remark
+       in the “Remarks” section, add a warning to the Remarks section that states,
+       “WARN: If entering Remarks, you must select “Other…” in ASB Special Instructions Field” and grey out the “Request” button until the above action is done.
+    4. If a user selects the procedure “Other (Described in Special Instructions)”, add a warning to the “ASB Special Instructions” section
+       that states “WARN: If choosing Procedure “Other (Described in Special Instructions)” you must select “Other…” in ASB Special Instructions Field”
+       and grey out the “Request” button until the above action is done.
+       "Other (Described in Special Instructions)" - 1806
     */
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow) {
         //console.log(" 0. procedure: " + row.procedureid + ", ins: " + row.instructions);
 
+    	// If a user selects any procedure, does not select an option from “ASB Special Instructions” but does enter a remark
+        // in the “Remarks” section, add a warning to the Remarks section that states,
+        // “WARN: If entering Remarks, you must select “Other…” in ASB Special Instructions Field” and grey out the “Request” button until the above action is done.
+        if (row.procedureid != null && row.instructions == null && row.remark != null ) {
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If entering Remarks, you must select “Other...” in ASB Special Instructions field!', 'WARN');
+        }
+
+        // If a user selects the procedure “Other (Described in Special Instructions)”, add a warning to the “ASB Special Instructions” section
+        // that states “WARN: If choosing Procedure “Other (Described in Special Instructions)” you must select “Other…” in ASB Special Instructions Field”
+        // and grey out the “Request” button until the above action is done.
+        // Other (Described in Special Instructions) - 1806
+        if (row.procedureid == 1806 && row.instructions != 'Other instructions listed in remarks' ) {
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing Procedure “Other (Described in Special Instructions)” you must select “Other...” in ASB Special Instructions field!', 'WARN');
+        }
+
+        // User should select "None" or "Other..." from ASB Special Instructions when an item other than the following procedures is selected,
+        // making only the "Remarks" section available.
+        // "Research: Afternoon Fast" - 2640 ,
+        // "Research: AM Fast" - 1804,
+        // "Research: Overnight Fast" - 1807,
+        // "Research: Complete NPO" - 2440
         if (row.procedureid == 1804 || row.procedureid == 1807 || row.procedureid == 2440 || row.procedureid == 2640) {
             if ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)) {
-                console.log(" 1. procedure: " + row.procedureid + ", ins: " + row.instructions);
-                EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other...", you must enter Remarks!', 'WARN');
+                //console.log(" 1. procedure: " + row.procedureid + ", ins: " + row.instructions);
+                EHR.Server.Utils.addError(scriptErrors, 'remark', 'If choosing "Other...", you must enter Remarks!', 'WARN');
             }
         }
         //Everything else...
         else if (row.procedureid != 2640 || row.procedureid != 1804 || row.procedureid != 1807 || row.procedureid != 2440) {
-            //console.log(" 00. procedure: " + row.procedureid + ", ins: " + row.instructions);
             if (row.instructions == 'None' && row.remark != null) {
                 //When "None" is selected, Remarks field is not required. i,e. Force the user to leave "Remarks" field blank
-                //console.log(" 11. procedure: " + row.procedureid + ", ins: " + row.instructions);
-                EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "None", you must leave "Remarks" field blank!', 'WARN');
+                EHR.Server.Utils.addError(scriptErrors, 'remark', 'If choosing "None", you must leave "Remarks" field blank!', 'WARN');
             }
             else if ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)) {
                 //When "Other..." is selected, Remarks field is required. i,e. Force the user to enter "Remarks"
-                //console.log(" 22. procedure: " + row.procedureid + ", ins: " + row.instructions);
-                EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing "Other instructions listed in remarks", you must enter Remarks!', 'WARN');
+                EHR.Server.Utils.addError(scriptErrors, 'remark', 'If choosing "Other instructions listed in remarks", you must enter Remarks!', 'WARN');
             }
             // else if ((row.instructions != 'None') || (row.instructions != 'Other instructions listed in remarks')) {
             else if (row.instructions == 'For Clinic' || row.instructions == 'Leave paired with partner overnight' || row.instructions == 'NHP will need water-soaked chow following procedure' || row.instructions == 'Night Tech to pull chow and wash out 1700-1900') {
                 //console.log(" 33. procedure: " + row.procedureid + ", ins: " + row.instructions);
-                EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing Procedures other than, Research:"Afternoon Fast" or "AM Fast" or "Overnight Fast" or "Complete NPO", you must select "None" or "Other instructions listed in remarks" ', 'WARN');
+                EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing Procedures other than, Research:"Afternoon Fast" or "AM Fast" or "Overnight Fast" or "Complete NPO", you must select "None" or "Other instructions listed in remarks" in ASB Special Instructions field!', 'WARN');
             }
 
         }
