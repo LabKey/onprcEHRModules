@@ -43,6 +43,18 @@
                         <columnTitle>Is Required?</columnTitle>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
+                    <column columnName="TrackingFlag">
+                        <columnTitle>Essential</columnTitle>
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="eq" value="Yes"/>
+                                </filters>
+                                <backgroundColor>FBEC5D</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
+                    </column>
+
                 </columns>
             </table>
         </tables>

@@ -75,7 +75,6 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                 }
             },
             unit: {
-                xtype: 'checkcombo',
                 hidden: false,
                 allowBlank: false,
                 hasOwnTpl: true,
@@ -85,7 +84,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                     header: 'Unit'
                 },
                 lookup: {
-                    xtype: 'checkcombo',
+                    xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
                     schema: 'ehr_complianceDB',
                     queryName: 'unit_names',
@@ -94,12 +93,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                     columns: 'unit',
                     sort: 'unit'
 
-                },
-                    editorConfig: {
-                        tpl: null,
-                        multiSelect: true,
-                        separator: ';'
-                    }
+                }
 
             }
 
