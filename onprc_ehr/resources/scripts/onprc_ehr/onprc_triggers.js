@@ -253,15 +253,26 @@ exports.init = function(EHR){
        that states “WARN: If choosing Procedure “Other (Described in Special Instructions)” you must select “Other…” in ASB Special Instructions Field”
        and grey out the “Request” button until the above action is done.
        "Other (Described in Special Instructions)" - 1806
+    5. If a user selects any procedure, then chooses "None" within "ASB Special Instructions" and continues to add a remark in the remarks section,
+       add the flag for the “None” option: "If choosing "None", you must leave "Remarks" field blank"
     */
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow) {
         //console.log(" 0. procedure: " + row.procedureid + ", ins: " + row.instructions);
 
-    	// If a user selects any procedure, does not select an option from “ASB Special Instructions” but does enter a remark
+    	// 1. If a user selects any procedure, does not select an option from “ASB Special Instructions” but does enter a remark
         // in the “Remarks” section, add a warning to the Remarks section that states,
         // “WARN: If entering Remarks, you must select “Other…” in ASB Special Instructions Field” and grey out the “Request” button until the above action is done.
-        if (row.procedureid != null && row.instructions == null && row.remark != null ) {
-            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If entering Remarks, you must select “Other...” in ASB Special Instructions field!', 'WARN');
+
+        // 2. If a user selects any procedure, then chooses "None" within "ASB Special Instructions" and continues to add a remark in the remarks section,
+        // add the flag for the “None” option: "If choosing "None", you must leave "Remarks" field blank"
+
+        if (row.procedureid != null && row.remark != null ) {
+            if (row.instructions == null) {
+                EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If entering Remarks, you must select “Other...” in ASB Special Instructions field!', 'WARN');
+            }
+            else if (row.instructions == 'None') {
+                EHR.Server.Utils.addError(scriptErrors, 'remark', 'If choosing "None", you must leave "Remarks" field blank!', 'WARN');
+            }
         }
 
         // If a user selects the procedure “Other (Described in Special Instructions)”, add a warning to the “ASB Special Instructions” section
@@ -286,11 +297,11 @@ exports.init = function(EHR){
         }
         //Everything else...
         else if (row.procedureid != 2640 || row.procedureid != 1804 || row.procedureid != 1807 || row.procedureid != 2440) {
-            if (row.instructions == 'None' && row.remark != null) {
-                //When "None" is selected, Remarks field is not required. i,e. Force the user to leave "Remarks" field blank
-                EHR.Server.Utils.addError(scriptErrors, 'remark', 'If choosing "None", you must leave "Remarks" field blank!', 'WARN');
-            }
-            else if ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)) {
+            // if (row.instructions == 'None' && row.remark != null) {
+            //     //When "None" is selected, Remarks field is not required. i,e. Force the user to leave "Remarks" field blank
+            //     EHR.Server.Utils.addError(scriptErrors, 'remark', 'If choosing "None", you must leave "Remarks" field blank!', 'WARN');
+            // }
+            if ((row.instructions == 'Other instructions listed in remarks') && (row.remark == null)) {
                 //When "Other..." is selected, Remarks field is required. i,e. Force the user to enter "Remarks"
                 EHR.Server.Utils.addError(scriptErrors, 'remark', 'If choosing "Other instructions listed in remarks", you must enter Remarks!', 'WARN');
             }
