@@ -51,6 +51,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                 }
             },
             rowid: {hidden: true},
+            QCState: {hidden: true},
             TrackingFlag: {
                 hidden: false,
                 allowBlank: false,

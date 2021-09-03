@@ -52,7 +52,7 @@
                             <fkDisplayColumnName>rowid</fkDisplayColumnName>
                         </fk>
                     </column>
-                    <column columnName="qcstate">
+                    <column columnName="QCState">
                       <columnTitle>Status</columnTitle>
                         <fk>
                             <fkFolderPath>/ONPRC/Admin/Compliance</fkFolderPath>

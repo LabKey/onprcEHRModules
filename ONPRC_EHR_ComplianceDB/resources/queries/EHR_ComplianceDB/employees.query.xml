@@ -23,7 +23,7 @@
                     </fk>
                 </column>
 
-                    <column columnName="qcstate">
+                    <column columnName="QCState">
                      <columnTitle>Status</columnTitle>
                         <fk>
                             <fkFolderPath>/ONPRC/EHR</fkFolderPath>

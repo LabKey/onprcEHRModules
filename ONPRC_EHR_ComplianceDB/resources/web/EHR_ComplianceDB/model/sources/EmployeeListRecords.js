@@ -65,7 +65,8 @@ EHR.model.DataModelManager.registerMetadata('EmployeeListRecords', {
             animals: {hidden: true},
             contactsSla: {hidden: true},
             tissue: {hidden: true},
-            notes: {hidden: false},
+            Notes: {hidden: false},
+            QCState: {hidden: true},
             isActive: {hidden: false}
 
         }}
