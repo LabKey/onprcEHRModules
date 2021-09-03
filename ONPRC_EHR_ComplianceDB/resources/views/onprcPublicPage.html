@@ -15,7 +15,7 @@
         Ext4.create('Ext.panel.Panel', {
             border: false,
             items: [{
-                html: 'This is the public section for Compliance/Training.  Currently, it allows user to lookup employee information and to view the training history of employees.  This do this, click the link below to load a list of employees.  This list can be filtered by name, supervisor or any of the columns.  Once you have found an employee, click the details link to view a summary of their training history.',
+                html: 'This is the public section for Compliance/Training.  Currently, it allows user to lookup employee information and to view the training history of employees.  Click the link below to load a list of employees.  This list can be filtered by name, supervisor or any of the columns.  Once you have found an employee, click the details link to view a summary of their training history.',
                 border: false,
                 style: 'padding-bottom: 10px;'
             },{
@@ -31,6 +31,12 @@
                 text: '<li>View Private Section (authorized users only)</li>',
                 href: LABKEY.ActionURL.buildURL('project', 'start', container),
                 style: 'margin-top: 10px;'
+
+        },{
+            xtype: 'ldk-linkbutton',
+                    text: '<li>Access to Employee Entry Screens</li>',
+                    href: LABKEY.ActionURL.buildURL('onprc_ehr', 'enterData.view'),
+                    style: 'margin-top: 10px;'
             }]
         }).render(webpart.wrapperDivId);
     });
