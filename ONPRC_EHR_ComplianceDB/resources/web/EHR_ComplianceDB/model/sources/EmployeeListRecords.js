@@ -22,7 +22,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeListRecords', {
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
-                    schema: 'ehr_complianceDB',
+                    schema: 'ehr_compliancedb',
                     queryName: 'unit_names',
                     keyColumn: 'unit',
                     displayColumn: 'unit',
@@ -36,7 +36,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeListRecords', {
                 xtype: 'labkey-combo',
                 lookup: {
                     containerPath: '/ONPRC/Admin/Compliance',
-                    schema: 'ehr_complianceDB',
+                    schema: 'ehr_compliancedb',
                     queryName: 'employeecategory',
                     keyColumn: 'categoryname',
                     displayColumn: 'categoryname',

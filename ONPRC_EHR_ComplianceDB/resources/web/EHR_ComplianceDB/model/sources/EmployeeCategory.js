@@ -21,7 +21,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
-                    schema: 'ehr_complianceDB',
+                    schema: 'ehr_compliancedb',
                     queryName: 'Requirements',
                     keyColumn: 'requirementname',
                     displayColumn: 'requirementname',
@@ -38,7 +38,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                 xtype: 'labkey-combo',
                 lookup: {
                     containerPath: '/ONPRC/Admin/Compliance',
-                    schema: 'ehr_complianceDB',
+                    schema: 'ehr_compliancedb',
                     queryName: 'employeecategory',
                     keyColumn: 'categoryname',
                     displayColumn: 'categoryname',
@@ -87,7 +87,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
-                    schema: 'ehr_complianceDB',
+                    schema: 'ehr_compliancedb',
                     queryName: 'unit_names',
                     keyColumn: 'unit',
                     displayColumn: 'unit',

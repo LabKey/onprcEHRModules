@@ -9,7 +9,7 @@
                         <columnTitle>Requirement Name</columnTitle>
                         <fk>
                             <fkFolderPath>/ONPRC/Admin/Compliance</fkFolderPath>
-                            <fkDbSchema>ehr_complianceDB</fkDbSchema>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
                             <fkTable>Requirements</fkTable>
                             <fkColumnName>requirementname</fkColumnName>
                         </fk>
@@ -20,7 +20,7 @@
                     <columnTitle>Category</columnTitle>
                     <fk>
                         <fkFolderPath>/ONPRC/Admin/Compliance</fkFolderPath>
-                        <fkDbSchema>ehr_complianceDB</fkDbSchema>
+                        <fkDbSchema>ehr_compliancedb</fkDbSchema>
                         <fkTable>employeecategory</fkTable>
                         <fkColumnName>categoryname</fkColumnName>
                     </fk>
@@ -30,7 +30,7 @@
                         <columnTitle>Unit</columnTitle>
                         <fk>
                             <fkFolderPath>/ONPRC/Admin/Compliance</fkFolderPath>
-                            <fkDbSchema>ehr_complianceDB</fkDbSchema>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
                             <fkTable>unit_names</fkTable>
                             <fkColumnName>unit</fkColumnName>
                         </fk>
