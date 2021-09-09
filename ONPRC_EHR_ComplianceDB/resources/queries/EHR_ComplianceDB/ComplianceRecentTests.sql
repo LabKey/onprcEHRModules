@@ -63,7 +63,7 @@ FROM ehr_compliancedb.Employees e
             (rc.Category = e.category AND rc.unit = e.unit) OR
             (rc.Category = e.category AND rc.unit IS NULL) OR
             (rc.Category IS NULL AND rc.unit = e.unit) OR
-            (rc.trackingflag = 'Yes')   -----Added: 9-2-2021 R.Blasa
+            NOT (rc.trackingflag IS NULL)   -----Added: 9-2-2021 R.Blasa
         )
     GROUP BY e.employeeid, rc.requirementname,rc.trackingflag
 ) rc ON (rc.employeeid = e.employeeid AND rn.requirementname = rc.requirementname)
