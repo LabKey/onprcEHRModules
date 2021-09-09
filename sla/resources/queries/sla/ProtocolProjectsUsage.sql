@@ -1,4 +1,4 @@
---SLA usage numbers including Breeding groups data
+--SLA usage numbers including Breeding groups data extracted from eIACUC data
 SELECT
     a.project as ProjectID,
     a.name AS Project,
