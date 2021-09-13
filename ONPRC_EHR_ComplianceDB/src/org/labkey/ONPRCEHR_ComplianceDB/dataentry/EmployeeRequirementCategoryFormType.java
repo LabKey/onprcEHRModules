@@ -1,13 +1,13 @@
 package org.labkey.ONPRCEHR_ComplianceDB.dataentry;
 
-import org.labkey.api.ehr.dataentry.FormSection;
-import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.api.ehr.dataentry.TaskForm;
+import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBEntryPermission;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
+import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.TaskForm;
+import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
-import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRequirementCategoryFormSection;
-import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBEntryPermission;
+
 import java.util.Arrays;
 
 
