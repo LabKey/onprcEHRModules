@@ -16,11 +16,10 @@
 package org.labkey.ONPRCEHR_ComplianceDB.dataentry;
 
 import org.labkey.api.ehr.EHRService;
-//import org.labkey.api.ehr.dataentry.SimpleFormSection;
-import org.labkey.api.view.template.ClientDependency;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
+import org.labkey.api.view.template.ClientDependency;
 
-import java.util.List;
+//import org.labkey.api.ehr.dataentry.SimpleFormSection;
 
 //Created: 7-6-2021  R.Blasa
 
@@ -34,8 +33,7 @@ public class EmployeeListFormSection extends SimpleGridPanel
 
     public EmployeeListFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-//        super("ehr_Compliancedb", "employees", "Employee List", "ehr-gridpanel", location);
-        super("ehr_Compliancedb", "employees", "Employee List");
+        super("ehr_compliancedb", "employees", "Employee List");
 
         _allowRowEditing = false;
         addExtraProperty(BY_PASS_ANIMAL_ID, "true");
