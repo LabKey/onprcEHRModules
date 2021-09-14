@@ -56,7 +56,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                 allowBlank: false,
                 columnConfig: {
                     width: 100,
-                    header: 'EssentialT'
+                    header: 'Essential'
                 },
                 lookup: {
                     xtype: 'labkey-combo',
