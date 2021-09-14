@@ -280,7 +280,7 @@ exports.init = function(EHR){
         // and grey out the “Request” button until the above action is done.
         // Other (Described in Special Instructions) - 1806
         if (row.procedureid == 1806 && row.instructions != 'Other instructions listed in remarks' ) {
-            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing Procedure “Other (Described in Special Instructions)” you must select “Other...” in ASB Special Instructions field!', 'WARN');
+            EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If choosing Procedure “Other (described in Special Instructions)” you must select “Other...” in ASB Special Instructions field!', 'WARN');
         }
 
         // User should select "None" or "Other..." from ASB Special Instructions when an item other than the following procedures is selected,
