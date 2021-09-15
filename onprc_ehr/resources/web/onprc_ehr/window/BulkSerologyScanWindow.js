@@ -231,7 +231,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerologyScanWindow', {
                     date: date,
                     tissue: Ext4.String.trim(row[16].substr(row[16].length - 7, 7)),       // Tissue Results
 
-                    agent: Ext4.String.trim(parsed[6][k].substr(parsed[5][k].length - 7, 7)),
+                    agent: Ext4.String.trim(parsed[6][k].substr(parsed[6][k].length - 7, 7)),
                     method: method,
                     result: Ext4.String.trim(row[k]),
 
