@@ -1421,6 +1421,9 @@
             <column columnName="datefinalized">
                 <datatype>timestamp</datatype>
             </column>
+            <column columnName="vet">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Clinpath Runs</tableTitle>
     </table>
