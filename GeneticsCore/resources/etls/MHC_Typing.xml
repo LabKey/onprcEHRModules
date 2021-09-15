@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>PRIME-seq MHC Data</name>
+    <description>Syncs MHC Typing Data from PRIME-seq</description>
+    <transforms>
+        <transform type="RemoteQueryTransformStep" id="assay">
+            <description>Copy to target</description>
+            <source remoteSource="PRIMESEQ_MHC" schemaName="geneticscore" queryName="mhc_data">
+                <sourceColumns>
+                    <column>subjectId</column>
+                    <column>marker</column>
+                    <column>result</column>
+                    <column>assaytype</column>
+                    <column>score</column>
+                    <column>totalTests</column>
+                    <column>objectid</column>
+                </sourceColumns>
+            </source>
+            <destination schemaName="geneticscore" queryName="mhc_data" targetOption="merge" bulkLoad="true" batchSize="1000">
+                <alternateKeys>
+                    <column name="objectid"/>
+                </alternateKeys>
+            </destination>
+        </transform>
+    </transforms>
+
+    <incrementalFilter className="ModifiedSinceFilterStrategy" timestampColumnName="modified">
+        <!--TODO: re-enable this once LK supports remote delete sources-->
+        <!--<deletedRowsSource remoteSource="PRIMESEQ_MHC" schemaName="geneticscore" queryName="mhc_delete_source" deletedSourceKeyColumnName="objectid" targetKeyColumnName="objectid"/>-->
+    </incrementalFilter>
+    <schedule>
+        <cron expression="0 20 2 * * ?"/>
+    </schedule>
+</etl>
