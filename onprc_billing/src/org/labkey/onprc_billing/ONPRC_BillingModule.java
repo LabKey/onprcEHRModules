@@ -44,6 +44,7 @@ import org.labkey.onprc_billing.button.ProjectEditButton;
 import org.labkey.onprc_billing.dataentry.ChargesAdvancedFormType;
 import org.labkey.onprc_billing.dataentry.ChargesFormType;
 import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
+import org.labkey.onprc_billing.dataentry.ChargesARTCoreFormType;
 import org.labkey.onprc_billing.dataentry.ReversalFormType;
 import org.labkey.onprc_billing.notification.BillingValidationNotification;
 import org.labkey.onprc_billing.notification.DCMFinanceNotification;
@@ -123,6 +124,9 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
 
         //Added: 5/6/2018 Kollil
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesVirologyCoreFormType.class, this));
+
+        //Added: 9/16/2021 Kollil
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesARTCoreFormType.class, this));
 
         //Added: 1/6/2020 Kollil
        // EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesARTCoreFormType.class, this));
