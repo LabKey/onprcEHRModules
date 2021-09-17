@@ -24,7 +24,7 @@ public class NecropsyRequestForm extends RequestForm
                 new NonStoreFormSection("Instructions", "References", "onprc_ehr_necropsyRequestinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("onprc_ehr/panel/TissueRequestInstructionsPanel.js"))),
                 new AnimalDetailsFormSection(),
                 new ClinicalEncountersFormPanelSection("study", "encounters","Necropsy", false),
-                new TissueDistFormSection()
+                new TissueDistRequestFormSection()
                 ));
 
         for (FormSection s : getFormSections())
