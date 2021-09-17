@@ -99,9 +99,9 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
             filterArray.push(LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL));
         }
 
-        if (recipient){
-            filterArray.push(LABKEY.Filter.create('recipient', recipient, LABKEY.Filter.Types.EQUAL));
-        }
+        // if (recipient){
+        //     filterArray.push(LABKEY.Filter.create('recipient', recipient, LABKEY.Filter.Types.EQUAL));
+        // }
 
         if (date){
             filterArray.push(LABKEY.Filter.create('date', date, LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL));
@@ -353,7 +353,7 @@ EHR.DataEntryUtils.registerGridButton('COPY_TISSUES', function(config){
             var grid = btn.up('gridpanel');
             LDK.Assert.assertNotEmpty('Unable to find gridpanel in COPY_TISSUES button', grid);
 
-            Ext4.create('ONPRC_EHR.window.CopyTissuesWindow', {
+            Ext4.create('ONPRC_EHR.window.CopyTissuesRequestWindow', {
                 targetStore: grid.store,
                 formConfig: grid.formConfig
             }).show();
