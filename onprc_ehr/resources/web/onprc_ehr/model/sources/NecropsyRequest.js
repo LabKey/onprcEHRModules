@@ -38,12 +38,12 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
             project: {
                 xtype: 'onprc_ehr-projectentryfield',
-
                 header: 'Center Project assigned'
             },
             billingproject: {
                 xtype: 'onprc_ehr-projectentryfield',
-                label: 'Center Project Billing'
+                label: 'Center Project Billing',
+                hidden: false
 
             },
             performedby: {
@@ -58,6 +58,41 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
             caseno: {
                 hidden: true
+            },
+            fastingtype: {
+                hidden: false,
+                xtype: 'path_Fasting',
+                columnConfig: {
+                    width: 150
+                }
+            },
+            availdistribution: {
+                xtype: 'path_approval',
+                columnConfig: {
+                    width: 100
+
+                }
+            },
+            animaldelivery: {
+                hidden: false,
+                xtype: 'path_delivery',
+                columnConfig: {
+                    width: 150
+                }
+            },
+            necropsyGrade: {
+                hidden: false,
+                xtype: 'path_billingGrade',
+                columnConfig: {
+                    width: 150
+                }
+            },
+            remainingTissues: {
+                hidden: false,
+                xtype: 'path_approval',
+                columnConfig: {
+                    width: 150
+                }
             },
 
             remark: {
@@ -109,45 +144,14 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                     width: 250
                 }
             },
-            deliveryLoc: {
-                xtype: 'path_delivery',
-                columnConfig: {
-                    width: 150
-                }
-            },
-            availdistribution: {
-                xtype: 'path_approval',
-                columnConfig: {
-                    width: 100
 
-                }
-            },
-            tissueLoc: {
-                xtype: 'path_tissueloc',
-                header: 'Necropsy Location',
-                columnConfig: {
-                    width: 150
-                }
-            },
 
-            fasting: {
-                xtype: 'path_Fasting',
-                columnConfig: {
-                    width: 150
-                }
-            },
-            perfusion: {
-                xtype: 'path_preparation',
-                columnConfig: {
-                    width: 90
-                }
-            },
-            prioritylevel: {
-                xtype: 'path_priority',
-                columnConfig: {
-                    width: 100
-                }
-            },
+            // prioritylevel: {
+            //     xtype: 'path_priority',
+            //     columnConfig: {
+            //         width: 100
+            //     }
+            // },
             remark: {
                 header: 'Comments',
                 hidden: false,
@@ -155,30 +159,15 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                     width: 250
                 }
             },
-            billingcodes: {
-                xtype: 'path_delivery'   //placeholder billinc codes
-            },
+            // billingcodes: {
+            //     xtype: 'path_delivery'   //placeholder billinc codes
+            // },
             performedby: {
                 defaultValue: LABKEY.Security.currentUser.displayName,
                 hidden: false,
                 header: 'Completed by'
-            }
-        },
-        'study.tissue_samples': {
-
-            performedby: {
-                defaultValue: LABKEY.Security.currentUser.displayName,
-                hidden: false,
-                header: 'Completed by'
-            },
-            date: {
-                xtype: 'xdatetime',
-                extFormat: LABKEY.extDefaultDateTimeFormat,
-                editorConfig: {
-                    dateFormat: LABKEY.extDefaultDateFormat,
-                    timeFormat: 'H:i'
-                }
             }
         }
+
     }
 });
