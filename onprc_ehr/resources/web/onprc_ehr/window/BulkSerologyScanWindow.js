@@ -176,9 +176,9 @@ Ext4.define('ONPRC_EHR.window.BulkSerologyScanWindow', {
         }
 
 
-        var project = this.resolveProjectByName(Ext4.String.trim(row[13]), errors, rowIdx);
+        var project = this.resolveProjectByName(Ext4.String.trim(row[14]), errors, rowIdx);
 
-        var name = Ext4.String.trim(row[14]);
+        var name = Ext4.String.trim(row[15]);
 
         var procRecIdx = this.labworkSericeStoreStore.findExact('servicename', name);
         var procedureRec = this.labworkSericeStoreStore.getAt(procRecIdx);
@@ -192,7 +192,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerologyScanWindow', {
         // Generate Labwork Panel Details
         var FirstTimeFlag = 1;         //set flag
 
-        for (var k = 2; k < 12; k++)         // Process only if Agent data exists
+        for (var k = 2; k < 13; k++)         // Process only if Agent data exists
 
         {
 
@@ -229,15 +229,15 @@ Ext4.define('ONPRC_EHR.window.BulkSerologyScanWindow', {
                 var obj = {
                     Id: id,
                     date: date,
-                    tissue: Ext4.String.trim(row[16].substr(row[16].length - 7, 7)),       // Tissue Results
+                    tissue: Ext4.String.trim(row[17].substr(row[17].length - 7, 7)),       // Tissue Results
 
                     agent: Ext4.String.trim(parsed[6][k].substr(parsed[6][k].length - 7, 7)),
                     method: method,
                     result: Ext4.String.trim(row[k]),
 
-                    qualifier: Ext4.String.trim(row[15]),
+                    qualifier: Ext4.String.trim(row[16]),
 
-                    remark: Ext4.String.trim(row[12]),
+                    remark: Ext4.String.trim(row[13]),
 
                     objectid: Resultsobjectid,
                     runid: HeaderObjectID,
