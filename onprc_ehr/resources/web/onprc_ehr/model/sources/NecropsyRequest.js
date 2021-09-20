@@ -76,6 +76,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             animaldelivery: {
                 hidden: false,
                 xtype: 'path_delivery',
+                label: 'Animal Delivery Requested',
                 columnConfig: {
                     width: 150
                 }
@@ -90,6 +91,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             remainingTissues: {
                 hidden: false,
                 xtype: 'path_approval',
+                label: 'Remaining Tissues available for distribution',
                 columnConfig: {
                     width: 150
                 }
