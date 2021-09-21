@@ -24,36 +24,39 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                 hidden: true
             },
 
-            instructions: {
-                facetingBehaviorType: 'AUTOMATIC',
-                editorConfig: {
-                    xtype: 'combobox',
-                    triggerAction: 'all',
-                    height: 20
-                },
-                header: 'ASB Special Instructions',
-                hidden: false,
-                lookup: {
-                    schemaName: 'onprc_ehr',
-                    queryName: 'ASB_SpecialInstructions',
-                    displayColumn: 'value',
-                    columns: 'value'
-                },
-                columnConfig: {
-                    width: 300
-                }
-            },
+            // instructions: {
+            //     facetingBehaviorType: 'AUTOMATIC',
+            //     editorConfig: {
+            //         xtype: 'combobox',
+            //         triggerAction: 'all',
+            //         height: 20
+            //     },
+            //     header: 'ASB Special Instructions',
+            //     hidden: false,
+            //     lookup: {
+            //         schemaName: 'onprc_ehr',
+            //         queryName: 'ASB_SpecialInstructions',
+            //         displayColumn: 'value',
+            //         columns: 'value'
+            //     },
+            //     columnConfig: {
+            //         width: 300
+            //     }
+            // },
+            //
+            // remark: {
+            //     header: 'Remarks',
+            //     hidden: false,
+            //     columnConfig: {
+            //         width: 300
+            //     }
+            // },
+            //
 
-            remark: {
-                header: 'Remarks',
-                hidden: false,
-                columnConfig: {
-                    width: 300
-                }
-            },
             billingproject: {
                 hidden:true
             },
+
             procedureid: {
                 lookup: {
                     filterArray: [
