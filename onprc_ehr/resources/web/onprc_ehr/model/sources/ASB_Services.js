@@ -23,6 +23,40 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                 defaultValue: 'Procedure',
                 hidden: true
             },
+
+            // instructions: {
+            //     facetingBehaviorType: 'AUTOMATIC',
+            //     editorConfig: {
+            //         xtype: 'combobox',
+            //         triggerAction: 'all',
+            //         height: 20
+            //     },
+            //     header: 'ASB Special Instructions',
+            //     hidden: false,
+            //     lookup: {
+            //         schemaName: 'onprc_ehr',
+            //         queryName: 'ASB_SpecialInstructions',
+            //         displayColumn: 'value',
+            //         columns: 'value'
+            //     },
+            //     columnConfig: {
+            //         width: 300
+            //     }
+            // },
+            //
+            // remark: {
+            //     header: 'Remarks',
+            //     hidden: false,
+            //     columnConfig: {
+            //         width: 300
+            //     }
+            // },
+            //
+
+            billingproject: {
+                hidden:true
+            },
+
             procedureid: {
                 lookup: {
                     filterArray: [
@@ -30,7 +64,9 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                         LABKEY.Filter.create('category', 'Pathology', LABKEY.Filter.Types.NEQ),
                         LABKEY.Filter.create('active', true, LABKEY.Filter.Types.EQUAL)
                     ]
-        }}},
+                }
+            }
+        },
         'study.blood': {
             chargetype: {
                 defaultValue: 'DCM: ASB Services',
