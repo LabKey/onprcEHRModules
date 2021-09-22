@@ -212,57 +212,8 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                         items: [{
                             name: 'Blood Draw Request',      //Modified: 1-7-2017 R.Blasa restored back as ASB Services
                             chargeType: 'DCM: ASB Services'
-//                    },{
-//                        name: 'Clinical Services',
-//                        chargeType: 'DCM: Clinical Services'
-//                        },{
-//                            name: 'Colony Services',
-//                            chargeType: 'DCM: Colony Services'
-//                    },{
-//                        name: 'Surgery Services',
-//                        chargeType: 'DCM: Surgery'
                         }]
                     },{
-                        //Modified: 7-27-2017 R.Blasa Removed
-                        ////header: 'Treatment Requests',
-                        //renderer: function(item){
-                        //    return {
-                        //        layout: 'hbox',
-                        //        bodyStyle: 'padding: 2px;background-color: transparent;',
-                        //        defaults: {
-                        //            border: false
-                        //        },
-                        //        items: [{
-                        //            html: item.name + ':',
-                        //            width: 200
-                        //        },{
-                        //            xtype: 'ldk-linkbutton',
-                        //            text: 'Unapproved Requests',
-                        //            linkCls: 'labkey-text-link',
-                        //            href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
-                        //        },{
-                        //            xtype: 'ldk-linkbutton',
-                        //            text: 'Approved Requests',
-                        //            linkCls: 'labkey-text-link',
-                        //            style: 'padding-left: 5px;',
-                        //            href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
-                        //        },{
-                        //            xtype: 'ldk-linkbutton',
-                        //            text: 'Scheduled Today',
-                        //            linkCls: 'labkey-text-link',
-                        //            style: 'padding-left: 5px;',
-                        //            href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType, 'query.date~dateeq': (new Date()).format('Y-m-d')})
-                        //        }]
-                        //    }
-                        //},
-                        //items: [{
-                        //    //name: 'ASB Services',
-                        //    name: 'Treatment Orders Request',
-                        //    chargeType: 'DCM: ASB Services'
-                        //
-                        //}]
-                    //},{
-                        //header: 'Treatment Requests',
                         renderer: function(item){
                             return {
                                 layout: 'hbox',
@@ -376,48 +327,6 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
 
                         }]
                     },{
-                        //Modified: 7-27-2017  R.Blasa not needed
-                        ////header: 'Treatment Requests',
-                        //renderer: function(item){
-                        //    return {
-                        //        layout: 'hbox',
-                        //        bodyStyle: 'padding: 2px;background-color: transparent;',
-                        //        defaults: {
-                        //            border: false
-                        //        },
-                        //        items: [{
-                        //            html: item.name + ':',
-                        //            width: 200
-                        //        },{
-                        //            xtype: 'ldk-linkbutton',
-                        //            text: 'Unapproved Requests',
-                        //            linkCls: 'labkey-text-link',
-                        //            href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
-                        //        },{
-                        //            xtype: 'ldk-linkbutton',
-                        //            text: 'Approved Requests',
-                        //            linkCls: 'labkey-text-link',
-                        //            style: 'padding-left: 5px;',
-                        //            href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
-                        //        },{
-                        //            xtype: 'ldk-linkbutton',
-                        //            text: 'Scheduled Today',
-                        //            linkCls: 'labkey-text-link',
-                        //            style: 'padding-left: 5px;',
-                        //            href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType, 'query.date~dateeq': (new Date()).format('Y-m-d')})
-                        //        }]
-                        //    }
-                        //},
-                        //items: [{
-                        //    //name: 'ASB Services',
-                        //    name: 'Treatment Orders Request',
-                        //    chargeType: 'DCM: Colony Services'
-                        //
-                        //}]
-
-                    //},{
-
-                        //header: 'Treatment Requests',
                         renderer: function(item){
                             return {
                                 layout: 'hbox',
@@ -533,6 +442,67 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                                 linkCls: 'labkey-text-link',
                                 href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Clinpath Runs', 'query.QCState/Label~startswith': 'Request:', 'query.servicerequested/chargetype~eq': 'SPF Surveillance Lab'})
                             }]
+                        }]
+                    },{
+
+                        //Created: 9-21-2021
+                        header: 'Necropsy Request',
+                        renderer: function(item){
+                            return {
+                                layout: 'hbox',
+                                bodyStyle: 'padding: 2px;background-color: transparent;',
+                                defaults: {
+                                    border: false
+                                },
+                                items: [{
+                                    html: item.name + ':',
+                                    width: 200
+                                },{
+                                    xtype: 'ldk-linkbutton',
+                                    text: 'Unapproved Requests',
+                                    linkCls: 'labkey-text-link',
+                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, Ext4.apply({schemaName: 'study', 'query.queryName': 'encounters','query.QCState/Label~eq': 'Request: Pending', 'query.type/value~eq': 'Necropsy'}))
+                                },{
+                                    xtype: 'ldk-linkbutton',
+                                    text: 'Approved Requests',
+                                    linkCls: 'labkey-text-link',
+                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, Ext4.apply({schemaName: 'study', 'query.queryName': 'encounters','query.QCState/Label~eq': 'Request: Approved', 'query.type/value~eq': 'Necropsy'}))
+                                }]
+                            }
+                        },
+                        items: [{
+                            name: 'Necropsy Procedure Request'
+                        }]
+
+                    },{
+
+                        //Created: 9-21-2021
+                        header: 'Tissue Distribution Request',
+                        renderer: function(item){
+                            return {
+                                layout: 'hbox',
+                                bodyStyle: 'padding: 2px;background-color: transparent;',
+                                defaults: {
+                                    border: false
+                                },
+                                items: [{
+                                    html: item.name + ':',
+                                    width: 200
+                                },{
+                                    xtype: 'ldk-linkbutton',
+                                    text: 'Unapproved Requests',
+                                    linkCls: 'labkey-text-link',
+                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, Ext4.apply({schemaName: 'study', 'query.queryName': 'tissueDistributions','query.QCState/Label~eq': 'Request: Pending'}))
+                                },{
+                                    xtype: 'ldk-linkbutton',
+                                    text: 'Approved Requests',
+                                    linkCls: 'labkey-text-link',
+                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, Ext4.apply({schemaName: 'study', 'query.queryName': 'tissueDistributions','query.QCState/Label~eq': 'Request: Approved'}))
+                                }]
+                            }
+                        },
+                        items: [{
+                            name: 'Tissue Distribution Request'
                         }]
 
                     },{

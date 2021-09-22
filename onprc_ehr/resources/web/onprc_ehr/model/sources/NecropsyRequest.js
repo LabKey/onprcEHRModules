@@ -26,15 +26,16 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                     timeFormat: 'H:i'
                 }
             },
+            instructions: {
+                hidden: false,
+                height: 50,
+                label: 'Preferred Necropsy date range',
+                columnConfig: {
+                    width: 70
+                }
+            },
             enddate: {
-                xtype: 'xdatetime',
-                header: 'Ending Date',
-                extFormat: LABKEY.extDefaultDateTimeFormat,
-                editorConfig: {
-                    dateFormat: LABKEY.extDefaultDateFormat,
-                    timeFormat: 'H:i'
-                },
-                hidden: false
+                hidden: true
             },
             project: {
                 xtype: 'onprc_ehr-projectentryfield',
@@ -51,9 +52,6 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
             procedureid: {
                 defaultValue: 1082,
-                hidden: true
-            },
-            instructions: {
                 hidden: true
             },
             caseno: {
@@ -114,22 +112,17 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
         'study.tissueDistributions': {
 
             date: {
-                xtype: 'xdatetime',
-                extFormat: LABKEY.extDefaultDateTimeFormat,
-                editorConfig: {
-                    dateFormat: LABKEY.extDefaultDateFormat,
-                    timeFormat: 'H:i'
-                }
+                hidden: true
             },
+
             project: {
                 xtype: 'onprc_ehr-projectentryfield',
                 label: 'Center Project'
 
             },
+
             requestcategory: {
-                columnConfig: {
-                    width: 150
-                }
+                hidden: true
             },
             recipient: {
                 columnConfig: {
@@ -138,8 +131,11 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
             sampletype: {
                 columnConfig: {
-                    width: 100
+                    width: 200
                 }
+            },
+            performedby: {
+                hidden: true
             },
             tissue: {
                 columnConfig: {
@@ -147,28 +143,14 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 }
             },
 
-
-            // prioritylevel: {
-            //     xtype: 'path_priority',
-            //     columnConfig: {
-            //         width: 100
-            //     }
-            // },
             remark: {
                 header: 'Comments',
                 hidden: false,
                 columnConfig: {
                     width: 250
                 }
-            },
-            // billingcodes: {
-            //     xtype: 'path_delivery'   //placeholder billinc codes
-            // },
-            performedby: {
-                defaultValue: LABKEY.Security.currentUser.displayName,
-                hidden: false,
-                header: 'Completed by'
             }
+
         }
 
     }
