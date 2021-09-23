@@ -10,7 +10,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
     byQuery: {
         'study.encounters': {
             type: {
-                defaultValue: 'Necropsy',
+                defaultValue: 'Tissues',
                 hidden: true
             },
             chargetype: {
@@ -79,13 +79,13 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                     width: 150
                 }
             },
-            necropsygrade: {
-                hidden: false,
-                xtype: 'path_billinggrade',
-                columnConfig: {
-                    width: 150
-                }
-            },
+            // necropsygrade: {
+            //     hidden: false,
+            //     xtype: 'path_billinggrade',
+            //     columnConfig: {
+            //         width: 150
+            //     }
+            // },
             remainingTissues: {
                 hidden: false,
                 xtype: 'path_approval',
@@ -109,10 +109,23 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             }
 
         },
+        'onprc_billing.miscCharges': {
+            Id: {
+                allowBlank: true,
+                nullable: true
+            },
+            chargeId: {
+                lookup: {
+                    filterArray: [
+                        LABKEY.Filter.create('active', true, LABKEY.Filter.Types.EQUAL)
+                    ]
+                }
+            },
+        },
         'study.tissueDistributions': {
 
             date: {
-                hidden: true
+                hidden: false
             },
 
             project: {

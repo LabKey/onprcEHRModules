@@ -1,5 +1,6 @@
 package org.labkey.onprc_ehr.dataentry;
 
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
@@ -7,6 +8,7 @@ import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.ArrayList;
@@ -26,6 +28,12 @@ public class NecropsyRequestForm extends RequestForm
                 new ClinicalEncountersFormPanelSection("study", "encounters","Necropsy", false),
                 new TissueDistRequestFormSection()
                 ));
+
+        if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
+        {
+            addSection(new MiscChargesByAccountFormSection(EHRService.FORM_SECTION_LOCATION.Tabs));
+        }
+
 
         for (FormSection s : getFormSections())
         {

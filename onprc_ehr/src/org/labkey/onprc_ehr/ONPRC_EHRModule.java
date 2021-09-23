@@ -571,6 +571,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 8-22-2020  R.Blasa
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Procedures", AuxProcedureFormType.NAME), "study", "encounters");
+
+        //Added: 9-23-2021   R.Blasa
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Tissue Distribution", PathologyTissuesFormType.NAME), "study", "tissueDistributions");
+
         //Added: 5/10/21  By Kollil
         //EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create PMIC Task From Selected", "PMIC Procedures", PMICDataEntryFormType.NAME), "study", "encounters");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "PMIC Procedures", PMICDataEntryFormType.NAME), "study", "PMIC_encounters");

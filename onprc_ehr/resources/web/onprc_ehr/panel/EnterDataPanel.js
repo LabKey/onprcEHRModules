@@ -461,12 +461,12 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                                     xtype: 'ldk-linkbutton',
                                     text: 'Unapproved Requests',
                                     linkCls: 'labkey-text-link',
-                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, Ext4.apply({schemaName: 'study', 'query.queryName': 'encounters','query.QCState/Label~eq': 'Request: Pending', 'query.type/value~eq': 'Necropsy'}))
+                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, Ext4.apply({schemaName: 'study', 'query.queryName': 'encounters','query.QCState/Label~eq': 'Request: Pending', 'query.type/value~eq': 'Tissues'}))
                                 },{
                                     xtype: 'ldk-linkbutton',
                                     text: 'Approved Requests',
                                     linkCls: 'labkey-text-link',
-                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, Ext4.apply({schemaName: 'study', 'query.queryName': 'encounters','query.QCState/Label~eq': 'Request: Approved', 'query.type/value~eq': 'Necropsy'}))
+                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, Ext4.apply({schemaName: 'study', 'query.queryName': 'encounters','query.QCState/Label~eq': 'Request: Approved', 'query.type/value~eq': 'Tissues'}))
                                 }]
                             }
                         },
