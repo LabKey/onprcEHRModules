@@ -56,7 +56,7 @@ public class NecropsyRequestForm extends RequestForm
         List<String> defaultButtons = new ArrayList<>();
         defaultButtons.add("DISCARD");
         defaultButtons.add("REQUEST");
-        defaultButtons.add("APPROVE");
+//        defaultButtons.add("APPROVE");
         return defaultButtons;
     }
 

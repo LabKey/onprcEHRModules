@@ -79,13 +79,13 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                     width: 150
                 }
             },
-            // necropsygrade: {
-            //     hidden: false,
-            //     xtype: 'path_billinggrade',
-            //     columnConfig: {
-            //         width: 150
-            //     }
-            // },
+            necropsygrade: {
+                hidden: false,
+                xtype: 'path_billinggrade',
+                columnConfig: {
+                    width: 150
+                }
+            },
             remainingTissues: {
                 hidden: false,
                 xtype: 'path_approval',
