@@ -60,7 +60,8 @@ FROM ehr_compliancedb.Employees e
              JOIN ehr_compliancedb.requirementspercategory rc ON (
             (rc.Category = e.category AND rc.unit = e.unit) OR
             (rc.Category = e.category AND rc.unit IS NULL) OR
-            (rc.Category IS NULL AND rc.unit = e.unit)
+            (rc.Category IS NULL AND rc.unit = e.unit) OR
+            NOT (rc.trackingflag IS NULL)   -----Added: 9-2-2021 R.Blasa
         )
     GROUP BY e.employeeid, rc.requirementname
 ) rc ON (rc.employeeid = e.employeeid AND rn.requirementname = rc.requirementname)
