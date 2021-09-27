@@ -4,25 +4,24 @@
             <table tableName="employees" tableDbType="NOT_IN_DB">
                 <tableTitle>Employees</tableTitle>
                 <columns>
+                    <column columnName="lastName">
+                        <columnTitle>Last Name</columnTitle>
+                    </column>
                     <column columnName="majorudds">
                         <columnTitle>Host</columnTitle>
                     </column>
-                    <!--<column columnName="barrier">-->
-                    <!--<columnTitle>West Campus Level 1</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="animals">-->
-                    <!--<columnTitle>West Campus Level 2</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="contactsSla">-->
-                    <!--<columnTitle>West Campus Level 3</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="tissue">-->
-                    <!--<columnTitle>West Campus Level 4</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="isemployee">-->
-                    <!--<isHidden>true</isHidden>-->
-                    <!--</column>-->
-
+                    <column columnName="employeeid">
+                        <columnTitle>Employee ID</columnTitle>
+                    </column>
+                    <column columnName="taskid">
+                    <fk>
+                        <fkFolderPath>/ONPRC/EHR</fkFolderPath>
+                        <fkDbSchema>ehr</fkDbSchema>
+                        <fkTable>tasks</fkTable>
+                        <fkColumnName>taskid</fkColumnName>
+                        <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                    </fk>
+                </column>
                 </columns>
             </table>
         </tables>
