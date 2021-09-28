@@ -31,7 +31,31 @@ EHR.model.DataModelManager.registerMetadata('EmployeeListRecords', {
                 }
 
             },
+            requirementname: {
+                hidden: false,
+                anyMatch: true,
+                allowBlank: false,
+                columnConfig: {
+                    width: 350,
+                    header: 'Requirement Name'
+                },
+                lookup: {
+                    xtype: 'labkey-combo',
+                    containerPath: '/ONPRC/Admin/Compliance',
+                    schema: 'ehr_compliancedb',
+                    queryName: 'Requirements',
+                    keyColumn: 'requirementname',
+                    displayColumn: 'requirementname',
+                    filterArray: [
+                        LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)
+                    ],
+                    columns: 'requirementname',
+                    sort: 'requirementname'
 
+                }
+
+            },
+             rowid:{hidden: true},
             trackingflag: {
                 hidden: false,
                 allowBlank: false,
