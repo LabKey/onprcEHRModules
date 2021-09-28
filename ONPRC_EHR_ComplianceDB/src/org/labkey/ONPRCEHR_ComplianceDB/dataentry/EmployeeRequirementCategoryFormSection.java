@@ -19,7 +19,7 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
-//Created: 7-6-2021  R.Blasa
+//Created: 7-6-2021  R.Blasa converting category to unit
 
 public class EmployeeRequirementCategoryFormSection extends SimpleFormSection
 {
@@ -31,7 +31,7 @@ public class EmployeeRequirementCategoryFormSection extends SimpleFormSection
 
     public EmployeeRequirementCategoryFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super("ehr_compliancedb", "requirementspercategory", "Employee Unit", "ehr-gridpanel", location);
+        super("ehr_compliancedb", "employeeperUnit", "Employee per Unit", "ehr-gridpanel", location);
         _allowRowEditing = false;
         addExtraProperty(BY_PASS_ANIMAL_ID, "true");
         addClientDependency(ClientDependency.supplierFromPath("EHR_ComplianceDB/model/sources/EmployeeCategoryClientStore.js"));

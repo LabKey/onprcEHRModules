@@ -9,71 +9,28 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
 
     },
     byQuery: {
-        'ehr_compliancedb.requirementspercategory': {
-            requirementname: {
+        'ehr_compliancedb.employeeperUnit': {
+            employeeid: {
                 hidden: false,
                 anyMatch: true,
                 allowBlank: false,
                 columnConfig: {
                     width: 350,
-                    header: 'Requirement Name'
+                    header: 'Employee ID'
                 },
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
                     schema: 'ehr_compliancedb',
-                    queryName: 'Requirements',
-                    keyColumn: 'requirementname',
-                    displayColumn: 'requirementname',
-                    filterArray: [
-                        LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)
-                    ],
-                    columns: 'requirementname',
-                    sort: 'requirementname'
+                    queryName: 'employeelist',
+                    keyColumn: 'employeeid',
+                    displayColumn: 'employeeid',
+                    sort: 'employeeid'
 
                 }
 
             },
-            category: {
-                xtype: 'labkey-combo',
-                lookup: {
-                    containerPath: '/ONPRC/Admin/Compliance',
-                    schema: 'ehr_compliancedb',
-                    queryName: 'employeecategory',
-                    keyColumn: 'categoryname',
-                    displayColumn: 'categoryname',
-                    columns: 'categoryname',
-                    sort: 'categoryname'
-                },
 
-                columnConfig: {
-                    width: 300
-                }
-            },
-            rowid: {hidden: true},
-            trackingflag: {
-                hidden: false,
-                allowBlank: false,
-                columnConfig: {
-                    width: 100,
-                    header: 'Essential'
-                },
-                lookup: {
-                    xtype: 'labkey-combo',
-                    containerPath: '/ONPRC/EHR',
-                    schema: 'sla',
-                    queryName: 'Reference_Data',
-                    keyColumn: 'value',
-                    displayColumn: 'value',
-                    columns: 'value',
-                    sort: 'value',
-                    filterArray: [
-                        LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
-                        LABKEY.Filter.create('ColumnName', 'NecropsyDist', LABKEY.Filter.Types.EQUAL)],
-                    autoLoad: true
-
-                }
-            },
             unit: {
                 hidden: false,
                 allowBlank: false,
@@ -94,10 +51,6 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                     sort: 'unit'
 
                 }
-
-
-
-
 
 
             }

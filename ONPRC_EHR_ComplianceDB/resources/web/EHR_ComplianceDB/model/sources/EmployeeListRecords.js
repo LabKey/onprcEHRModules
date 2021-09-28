@@ -9,65 +9,53 @@ EHR.model.DataModelManager.registerMetadata('EmployeeListRecords', {
 
     },
     byQuery: {
-        'ehr_compliancedb.employees': {
-            unit: {
+        'ehr_compliancedb.EmployeePerEssential': {
+
+            employeeid: {
                 hidden: false,
+                anyMatch: true,
                 allowBlank: false,
-                hasOwnTpl: true,
-                includeNullRecord: false,
                 columnConfig: {
-                    width: 300,
-                    header: 'Unit'
+                    width: 350,
+                    header: 'Employee ID'
                 },
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
                     schema: 'ehr_compliancedb',
-                    queryName: 'unit_names',
-                    keyColumn: 'unit',
-                    displayColumn: 'unit',
-                    columns: 'unit',
-                    sort: 'unit'
+                    queryName: 'employeelist',
+                    keyColumn: 'employeeid',
+                    displayColumn: 'employeeid',
+                    sort: 'employeeid'
 
                 }
 
             },
-            category: {
-                xtype: 'labkey-combo',
-                lookup: {
-                    containerPath: '/ONPRC/Admin/Compliance',
-                    schema: 'ehr_compliancedb',
-                    queryName: 'employeecategory',
-                    keyColumn: 'categoryname',
-                    displayColumn: 'categoryname',
-                    columns: 'categoryname',
-                    sort: 'categoryname'
-                },
+
+            trackingflag: {
+                hidden: false,
+                allowBlank: false,
                 columnConfig: {
-                    width: 200
+                    width: 100,
+                    header: 'Essential'
+                },
+                lookup: {
+                    xtype: 'labkey-combo',
+                    containerPath: '/ONPRC/EHR',
+                    schema: 'sla',
+                    queryName: 'Reference_Data',
+                    keyColumn: 'value',
+                    displayColumn: 'value',
+                    columns: 'value',
+                    sort: 'value',
+                    filterArray: [
+                        LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                        LABKEY.Filter.create('ColumnName', 'NecropsyDist', LABKEY.Filter.Types.EQUAL)],
+                    autoLoad: true
+
                 }
             },
-            title: { columnConfig: {
-                    width: 200
-                }},
 
-            enddate: { columnConfig: {
-                    width: 100
-                }},
-            emergencycontact: {hidden: true},
-            emergencycontactdaytimephone: {hidden: true},
-            emergencycontactnighttimephone: {hidden: true},
-            homephone: {hidden: true},
-            officephone: {hidden: true},
-            cellphone: {hidden: true},
-            email2: {hidden: true},
-            barrier: {hidden: true},
-            animals: {hidden: true},
-            contactsSla: {hidden: true},
-            tissue: {hidden: true},
-            Notes: {hidden: false},
-            QCState: {hidden: true},
-            isActive: {hidden: false}
 
         }}
 });

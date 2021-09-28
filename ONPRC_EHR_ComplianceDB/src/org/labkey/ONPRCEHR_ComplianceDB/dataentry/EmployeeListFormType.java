@@ -17,7 +17,7 @@ public class EmployeeListFormType extends  TaskForm
 
     public EmployeeListFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Employee List", "Employee Training Records", Arrays.asList(
+        super(ctx, owner, NAME, "Employee Per Essential", "Employee Training Records", Arrays.asList(
                 new TaskFormSection(),
                 new EmployeeListFormSection()
         ));

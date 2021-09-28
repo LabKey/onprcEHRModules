@@ -33,7 +33,7 @@ public class EmployeeListFormSection extends SimpleGridPanel
 
     public EmployeeListFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super("ehr_compliancedb", "employees", "Employee List");
+        super("ehr_compliancedb", "EmployeePerEssential", "Employee Per Essential");
 
         _allowRowEditing = false;
         addExtraProperty(BY_PASS_ANIMAL_ID, "true");
