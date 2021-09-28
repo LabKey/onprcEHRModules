@@ -1,4 +1,4 @@
-<!--PMIC schema. Added by Kolli, 02/27/2020 -->
+!--PMIC schema. Added by Kolli, 02/27/2020 -->
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
