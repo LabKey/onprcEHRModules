@@ -13,16 +13,7 @@
                     <column columnName="employeeid">
                         <columnTitle>Employee ID</columnTitle>
                     </column>
-                    <column columnName="taskid">
-                    <fk>
-                        <fkFolderPath>/ONPRC/EHR</fkFolderPath>
-                        <fkDbSchema>ehr</fkDbSchema>
-                        <fkTable>tasks</fkTable>
-                        <fkColumnName>taskid</fkColumnName>
-                        <fkDisplayColumnName>rowid</fkDisplayColumnName>
-                    </fk>
-                </column>
-                </columns>
+                 </columns>
             </table>
         </tables>
     </metadata>

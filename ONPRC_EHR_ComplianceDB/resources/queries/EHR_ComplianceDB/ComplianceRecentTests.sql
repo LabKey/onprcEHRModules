@@ -47,9 +47,7 @@ SELECT
         --this allows to non-standard requirements to be tracked
         WHEN (mt.RequirementName IS NOT NULL) THEN 'Y'
         ELSE 'N'
-        END as isRequired,
-         rc.TrackingFlag as Essential    -----Added: 9-2-2021 R.Blasa
-
+        END as isRequired
 
 FROM ehr_compliancedb.Employees e
 
@@ -57,15 +55,14 @@ FROM ehr_compliancedb.Employees e
 
 --we add in category/unit specific requirements
          LEFT JOIN (
-    SELECT e.employeeid, rc.requirementname, rc.trackingflag
+    SELECT e.employeeid, rc.requirementname
     FROM ehr_compliancedb.employees e
              JOIN ehr_compliancedb.requirementspercategory rc ON (
             (rc.Category = e.category AND rc.unit = e.unit) OR
             (rc.Category = e.category AND rc.unit IS NULL) OR
-            (rc.Category IS NULL AND rc.unit = e.unit) OR
-            NOT (rc.trackingflag IS NULL)   -----Added: 9-2-2021 R.Blasa
+            (rc.Category IS NULL AND rc.unit = e.unit)
         )
-    GROUP BY e.employeeid, rc.requirementname,rc.trackingflag
+    GROUP BY e.employeeid, rc.requirementname
 ) rc ON (rc.employeeid = e.employeeid AND rn.requirementname = rc.requirementname)
 
 --we add in misc requirements specific per employee

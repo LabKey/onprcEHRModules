@@ -23,7 +23,6 @@
                     </column>
                     <column columnName="timesCompleted">
                         <columnTitle>Times Completed</columnTitle>
-                        <displayWidth>60</displayWidth>
                         <url>/query/executeQuery.view?schemaName=ehr_compliancedb&amp;
                             query.queryName=CompletionDates&amp;
                             query.EmployeeId~eq=${employeeId}&amp;
@@ -49,18 +48,7 @@
                         <displayWidth>90</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
-                    <column columnName="trackingflag">
-                        <columnTitle>Essential</columnTitle>
-                        <displayWidth>70</displayWidth>
-                        <conditionalFormats>
-                            <conditionalFormat>
-                                <filters>
-                                    <filter operator="eq" value="Yes"/>
-                                </filters>
-                                <backgroundColor>FBEC5D</backgroundColor>
-                            </conditionalFormat>
-                        </conditionalFormats>
-                    </column>
+
                 </columns>
             </table>
         </tables>
