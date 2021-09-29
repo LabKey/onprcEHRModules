@@ -7,6 +7,7 @@ import org.labkey.api.view.template.ClientDependency;
  * User: Kolli
  * Date: 1/13/2021
  * Time: 10:36 AM
+ * ART Core Billing other service data entry form
  */
 public class ARTCore_OtherServices_FormSection extends SimpleGridPanel
 {

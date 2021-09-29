@@ -1,3 +1,4 @@
+-- Query to get active aliases to display in the ART Core Aliases drop down list
 SELECT alias, alias + ' - ' + COALESCE(investigatorName, 'N/A') as aliasPI
 FROM "/onprc/admin/finance/public".onprc_billing_public.aliases
 --WHERE a.projectStatus in ('Active', 'Partial Setup', 'No Cost Ext', 'Preaward') OR a.alias in ('68119000', '46050050')

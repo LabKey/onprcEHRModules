@@ -3,7 +3,12 @@
  * Copyright (c) 2013-2014 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
- */
+ *
+ * Author: Kolli
+ * Date: 1/13/2021
+ * Time: 10:36 AM
+ * ART Core Billing
+  */
 EHR.model.DataModelManager.registerMetadata('ARTCore_Services', {
             allQueries: {
             },
