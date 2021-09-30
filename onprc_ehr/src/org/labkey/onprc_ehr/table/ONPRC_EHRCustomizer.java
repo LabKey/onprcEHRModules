@@ -1550,7 +1550,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     {
         ti.getMutableColumn("inves").setHidden(true);
         ti.getMutableColumn("maxAnimals").setHidden(true);
-        ti.getMutableColumn("title").setScale(80);
+        ti.getMutableColumn("title").setScale(200);
         ti.getMutableColumn("investigatorId").setHidden(false);
         ti.getMutableColumn("approve").setLabel("Initial IACUC Approval Date");
         ti.getMutableColumn("enddate").setLabel("Date Disabled");
