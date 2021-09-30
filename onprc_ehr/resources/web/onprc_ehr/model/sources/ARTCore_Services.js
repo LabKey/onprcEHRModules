@@ -31,7 +31,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCore_Services', {
                     procedureid: {
                         lookup: {
                             filterArray: [
-                                LABKEY.Filter.create('category', 'ART', LABKEY.Filter.Types.EQUAL),
+                                LABKEY.Filter.create('category', 'PMIC', LABKEY.Filter.Types.EQUAL),
                                 LABKEY.Filter.create('active', true, LABKEY.Filter.Types.EQUAL)
                             ]
                         }
