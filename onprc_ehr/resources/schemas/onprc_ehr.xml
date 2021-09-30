@@ -995,40 +995,39 @@
 
     <!--PMIC reference data schema. Added by Kolli, 03/24/2020 -->
     <table tableName="PMIC_Reference_Data" tableDbType="TABLE" useColumnOrder="true">
-        <tableTitle>PMIC_Reference_Data</tableTitle>
-        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
-        <auditLogging>DETAILED</auditLogging>
-        <columns>
-            <column columnName="rowId">
-                <isHidden>true</isHidden>
-            </column>
+    <tableTitle>PMIC_Reference_Data</tableTitle>
+    <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+    <auditLogging>DETAILED</auditLogging>
+    <columns>
+        <column columnName="rowId">
+            <isHidden>true</isHidden>
+        </column>
 
-            <column columnName="value">
-                <columnTitle>Value</columnTitle>
-            </column>
+        <column columnName="value">
+            <columnTitle>Value</columnTitle>
+        </column>
 
-            <column columnName="name">
-                <columnTitle>Name</columnTitle>
-            </column>
+        <column columnName="name">
+            <columnTitle>Name</columnTitle>
+        </column>
 
-            <column columnName="remark"/>
-            <column columnName="dateDisabled">
-                <columnTitle>End Date</columnTitle>
-            </column>
+        <column columnName="remark"/>
+        <column columnName="dateDisabled">
+            <columnTitle>End Date</columnTitle>
+        </column>
 
-            <column columnName="created">
-                <isHidden>true</isHidden>
-            </column>
-            <column columnName="createdby"/>
-            <column columnName="modified">
-                <isHidden>true</isHidden>
-            </column>
-            <column columnName="modifiedby"/>
+        <column columnName="created">
+            <isHidden>true</isHidden>
+        </column>
+        <column columnName="createdby"/>
+        <column columnName="modified">
+            <isHidden>true</isHidden>
+        </column>
+        <column columnName="modifiedby"/>
 
-        </columns>
+    </columns>
     </table>
 
-    <!--Housing transfer alert schema. Added by Kolli, 5/2021 -->
     <table tableName="availableCages_temp" tableDbType="TABLE">
         <columns>
             <column columnName="location" />
@@ -1044,7 +1043,7 @@
             <column columnName="isMarkedUnavailable" />
         </columns>
     </table>
-
+    
     <table tableName="availableCagesByRoom_temp" tableDbType="TABLE">
         <columns>
             <column columnName="room" />
@@ -1061,6 +1060,32 @@
             <column columnName="markedUnavailable" />
             <column columnName="cagesEmpty" />
             <column columnName="totalAnimals" />
+        </columns>
+    </table>
+
+    <!--ASB SpeIns reference data schema. Added by Kolli, 06/8/21 -->
+    <table tableName="ASB_SpecialInstructions" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>ASB Special Instructions</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="value">
+                <columnTitle>Value</columnTitle>
+            </column>
+            <column columnName="remarks" />
+
+            <column columnName="dateDisabled">
+                <columnTitle>End Date</columnTitle>
+            </column>
+
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="createdby"/>
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby"/>
         </columns>
     </table>
 
