@@ -43,7 +43,7 @@
                           </fk>
                       </column>
                      <column columnName="container">
-                    <isHidden>true</isHidden>
+                        <isHidden>true</isHidden>
                     </column>
                 </columns>
             </table>
