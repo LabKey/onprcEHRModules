@@ -140,6 +140,43 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                             href: LABKEY.ActionURL.buildURL('ldk', 'runNotification', null, {key: 'org.labkey.onprc_ehr.notification.RequestAdminNotification'})
                         }]
                     },{
+                        header: 'ART Core Service Requests',  //Added by Kolli 09/29/2021
+                        renderer: function(item){
+                            return {
+                                layout: 'hbox',
+                                bodyStyle: 'padding: 2px;background-color: transparent;',
+                                defaults: {
+                                    border: false
+                                },
+                                items: [{
+                                    html: item.name + ':',
+                                    width: 200
+                                },{
+                                    xtype: 'ldk-linkbutton',
+                                    text: 'Unapproved Requests',
+                                    linkCls: 'labkey-text-link',
+                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
+                                },{
+                                    xtype: 'ldk-linkbutton',
+                                    text: 'Approved Requests',
+                                    linkCls: 'labkey-text-link',
+                                    style: 'padding-left: 5px;',
+                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
+                                },{
+                                    xtype: 'ldk-linkbutton',
+                                    text: 'Scheduled Today',
+                                    linkCls: 'labkey-text-link',
+                                    style: 'padding-left: 5px;',
+                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType, 'query.date~dateeq': (new Date()).format('Y-m-d')})
+                                }]
+                            }
+                        },
+                        items: [{
+                            name: 'Procedure Request',
+                            chargeType: 'ART'
+
+                        }]
+                    },{
                         header: 'PMIC Service Requests',  //Added by Kolli 3/23/2020
                         renderer: function(item){
                             return {
@@ -177,7 +214,6 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
 
                         }]
                     },{
-                        //header: 'Blood Draw Requests',
                         header: 'ASB Service Requests',
                         renderer: function(item){
                             return {
