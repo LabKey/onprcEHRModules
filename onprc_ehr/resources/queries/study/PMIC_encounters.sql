@@ -9,9 +9,8 @@ SELECT
     procedureid,
     remark,
     QCState,
-    taskid,
-    requestid.createdby,
-    taskid,
-    isAssignedToProtocolAtTime
+    taskid
+--     requestid.createdby
+--     isAssignedToProtocolAtTime
 from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.encounters
 Where chargeType like 'PMIC'
