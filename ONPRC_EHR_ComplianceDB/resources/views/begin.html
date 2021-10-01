@@ -8,6 +8,10 @@ Ext4.onReady(function(){
         Ext4.get(webpart.wrapperDivId).update('Error: the containerPath to the folder holding compliance data has not been set.  Please contact your administrator.')
         return;
     }
+       var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+     if(!ctx) {
+        return;
+     }
 
     var employeeDefaultView = LABKEY.getModuleProperty('ehr_compliancedb', 'EmployeeDefaultView');
 
@@ -65,7 +69,10 @@ Ext4.onReady(function(){
         header: 'Printable Reports',
         items: [{
             name: 'Employees Summary Report', url: LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'printableComplianceReports', LABKEY.ActionURL.getContainer())
-
+        },{
+            name: 'Respirator Protection Report - All', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fRespiratorProtectionFull&rs:Command=Render'
+        },{
+            name: 'Respirator Protection Report - Quarantine', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fRespiratorProtectionQuarantine&rs:Command=Render'
 
         }]
      }]
