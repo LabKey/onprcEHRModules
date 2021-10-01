@@ -75,6 +75,7 @@ import java.util.Set;
  * User: bimber
  * Date: 12/7/12
  * Time: 2:22 PM
+ * Update Jonesga 2021-=10-01 Update to change length of protocol Title
  */
 public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 {
