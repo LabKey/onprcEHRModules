@@ -22,13 +22,22 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
                     schema: 'ehr_compliancedb',
-                    queryName: 'employeelist',
+                    queryName: 'Employeelist',
                     keyColumn: 'employeeid',
-                    displayColumn: 'employeeid',
-                    sort: 'employeeid'
+                    // displayColumn: 'employeeid',
+                    sort: 'employeeid',
+                    columns: 'employeeid,lastName,FirstName'
 
+                },
+                editorConfig: {
+                    anyMatch: true,
+                    listConfig: {
+                        innerTpl: '{[LABKEY.Utils.encodeHtml(values.employeeid + (values.LastName ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : ""))]}',
+                        getInnerTpl: function(){
+                            return this.innerTpl;
+                        }
+                    }
                 }
-
             },
 
             unit: {
