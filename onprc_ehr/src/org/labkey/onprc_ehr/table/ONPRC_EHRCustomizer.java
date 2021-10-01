@@ -1552,7 +1552,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.getMutableColumn("inves").setHidden(true);
         ti.getMutableColumn("maxAnimals").setHidden(true);
         ti.getMutableColumn("title").setScale(200);
-        Update of ONPRC_EHRCustomizer to allow 200 characters for Title of Protocol        ti.getMutableColumn("investigatorId").setHidden(false);
+        ti.getMutableColumn("investigatorId").setHidden(false);
         ti.getMutableColumn("approve").setLabel("Initial IACUC Approval Date");
         ti.getMutableColumn("enddate").setLabel("Date Disabled");
         ti.getMutableColumn("enddate").setDescription("This shows the date this protocol was disabled.  This is most commonly when the IACUC expires; however, it is possible for a protocol to be disabled prior to a full 3-year period for other reasons");
