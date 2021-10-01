@@ -16,7 +16,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeListRecords', {
                 anyMatch: true,
                 allowBlank: false,
                 columnConfig: {
-                    width: 350,
+                    width: 360,
                     header: 'Employee ID'
                 },
 
