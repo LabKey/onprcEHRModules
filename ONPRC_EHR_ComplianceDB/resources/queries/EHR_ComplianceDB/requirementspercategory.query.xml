@@ -1,0 +1,46 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="requirementspercategory" tableDbType="NOT_IN_DB">
+                <tableTitle>Requirements Per Category</tableTitle>
+
+                <columns>
+                    <column columnName="requirementname">
+                        <columnTitle>Requirement Name</columnTitle>
+                        <fk>
+                            <fkFolderPath>/ONPRC/Admin/Compliance</fkFolderPath>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                            <fkTable>Requirements</fkTable>
+                            <fkColumnName>requirementname</fkColumnName>
+                        </fk>
+                    </column>
+
+
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
+                        <fk>
+                            <fkFolderPath>/ONPRC/Admin/Compliance</fkFolderPath>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                            <fkTable>employeecategory</fkTable>
+                            <fkColumnName>categoryname</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="unit">
+                        <columnTitle>Unit</columnTitle>
+                        <fk>
+                            <fkFolderPath>/ONPRC/Admin/Compliance</fkFolderPath>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                            <fkTable>unit_names</fkTable>
+                            <fkColumnName>unit</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName ="rowid">
+                        <isHidden>true</isHidden>
+                    </column>
+                 </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+

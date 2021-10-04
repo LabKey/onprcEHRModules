@@ -29,7 +29,11 @@
                             query.requirementName~eq=${requirementName}&amp;
                         </url>
                     </column>
+                    <column columnName="ExpiredPeriod">
+                    <displayWidth>70</displayWidth>
+                    </column>
                     <column columnName="MonthsUntilRenewal">
+                        <displayWidth>60</displayWidth>
                         <conditionalFormats>
                             <conditionalFormat>
                                 <filters>
@@ -40,9 +44,11 @@
                         </conditionalFormats>
                     </column>
                     <column columnName="isRequired">
-                        <columnTitle>Is Required?</columnTitle>
+                        <columnTitle>Recommended</columnTitle>
+                        <displayWidth>90</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
+
                 </columns>
             </table>
         </tables>
