@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="EmployeePerEssential" tableDbType="NOT_IN_DB">
-                <tableTitle>Employee Per Units</tableTitle>
+                <tableTitle>Employee Per Essential</tableTitle>
 
                 <columns>
                     <column columnName="employeeId">

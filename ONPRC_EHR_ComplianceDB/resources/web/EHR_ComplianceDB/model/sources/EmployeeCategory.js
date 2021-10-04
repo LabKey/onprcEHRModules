@@ -39,12 +39,35 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                     }
                 }
             },
+            category: {
+                hidden: false,
+                anyMatch: true,
+                allowBlank: true,
+                hasOwnTpl: true,
+                columnConfig: {
+                    width: 300,
+                    header: 'Unit'
+                },
+                lookup: {
+                    xtype: 'labkey-combo',
+                    containerPath: '/ONPRC/Admin/Compliance',
+                    schema: 'ehr_compliancedb',
+                    queryName: 'employeecategory',
+                    keyColumn: 'categoryname',
+                    displayColumn: 'categoryname',
+                    columns: 'categoryname',
+                    sort: 'categoryname'
+
+                }
+
+
+            },
 
             unit: {
                 hidden: false,
-                allowBlank: false,
+                anyMatch: true,
+                allowBlank: true,
                 hasOwnTpl: true,
-                includeNullRecord: false,
                 columnConfig: {
                     width: 300,
                     header: 'Unit'
