@@ -158,9 +158,9 @@ Ext4.onReady(function (){
     }).render('allowableAnimals_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
-        title: 'Allowable Rodents',
+        title: 'Allowable SLAs',
         schemaName: 'sla',
-        queryName: 'allowableAnimals_BreedingGroups',
+        queryName: 'allowableSLA',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         sort: '-startdate',
         failure: LDK.Utils.getErrorCallback()
