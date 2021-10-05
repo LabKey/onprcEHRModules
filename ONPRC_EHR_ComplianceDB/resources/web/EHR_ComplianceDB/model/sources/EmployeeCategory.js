@@ -13,7 +13,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeCategoryRecords', {
             requirementname: {
                 hidden: false,
                 anyMatch: true,
-                allowBlank: false,
+                allowBlank: true,
                 columnConfig: {
                     width: 350,
                     header: 'Requirement Name'
