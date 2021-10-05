@@ -42,14 +42,13 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
     @Override
     public Double getSchemaVersion()
     {
-        return 20.11;
-
+        return null;
     }
 
     @Override
     public boolean hasScripts()
     {
-        return true;
+        return false;
     }
 
     protected void init()
