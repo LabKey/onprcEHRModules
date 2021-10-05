@@ -37,7 +37,6 @@
                     </column>
 
                     <column columnName="trackingflag">
-                        <isKeyField>true</isKeyField>
                         <columnTitle>Unit Essential</columnTitle>
                         <fk>
                              <fkDbSchema>ehr_compliancedb</fkDbSchema>
