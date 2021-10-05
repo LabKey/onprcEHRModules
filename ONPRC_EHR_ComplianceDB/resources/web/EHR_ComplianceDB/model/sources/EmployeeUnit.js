@@ -13,7 +13,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
             employeeid: {
                 hidden: false,
                 anyMatch: true,
-                allowBlank: false,
+                allowBlank: true,
                 columnConfig: {
                     width: 350,
                     header: 'Employee ID'
