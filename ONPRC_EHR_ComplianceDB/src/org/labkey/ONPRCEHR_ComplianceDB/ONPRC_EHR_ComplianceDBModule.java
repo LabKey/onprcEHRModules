@@ -20,7 +20,7 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
 //import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRecordsFormType;
 import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRequirementCategoryFormType;
-import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeListFormType;
+import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRequirementUnitFormType;
 import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBRole;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.security.roles.RoleManager;
@@ -67,7 +67,7 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EmployeeRequirementCategoryFormType.class, this));
 
         // Added: 7-6-2021 R. Blasa
-        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EmployeeListFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EmployeeRequirementUnitFormType.class, this));
     }
 
 

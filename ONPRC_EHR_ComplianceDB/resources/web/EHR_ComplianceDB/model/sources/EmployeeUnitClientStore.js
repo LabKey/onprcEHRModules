@@ -6,7 +6,7 @@
 /**
  * @param fieldConfigs
  */
-Ext4.define('ONPRC_EHR.data.EmployeeClientStore', {
+Ext4.define('ONPRC_EHR.data.EmployeeUnitClientStore', {
     extend: 'EHR.data.DataEntryClientStore',
 
     getKeyField: function() {

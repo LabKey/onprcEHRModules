@@ -16,29 +16,29 @@
 package org.labkey.ONPRCEHR_ComplianceDB.dataentry;
 
 import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ehr.dataentry.SimpleGridPanel;
+import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
-//import org.labkey.api.ehr.dataentry.SimpleFormSection;
+//Created: 7-6-2021  R.Blasa converting category to unit
 
-//Created: 7-6-2021  R.Blasa
-
-public class EmployeeListFormSection extends SimpleGridPanel
+public class EmployeeRequirementUnitFormSection extends SimpleFormSection
 {
-    public EmployeeListFormSection()
+    public EmployeeRequirementUnitFormSection()
     {
         this(EHRService.FORM_SECTION_LOCATION.Body);
     }
 
 
-    public EmployeeListFormSection(EHRService.FORM_SECTION_LOCATION location)
+    public EmployeeRequirementUnitFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super("ehr_compliancedb", "EmployeePerEssential", "Employee Per Essential");
-
+        super("ehr_compliancedb", "employeeperUnit", "Employee per Unit", "ehr-gridpanel", location);
         _allowRowEditing = false;
         addExtraProperty(BY_PASS_ANIMAL_ID, "true");
-        addClientDependency(ClientDependency.supplierFromPath("EHR_ComplianceDB/model/sources/EmployeeClientStore.js"));
-        setClientStoreClass("ONPRC_EHR.data.EmployeeClientStore");
+        addClientDependency(ClientDependency.supplierFromPath("EHR_ComplianceDB/model/sources/EmployeeUnitClientStore.js"));
+        setClientStoreClass("ONPRC_EHR.data.EmployeeUnitClientStore");
+
     }
+
+
 }
 

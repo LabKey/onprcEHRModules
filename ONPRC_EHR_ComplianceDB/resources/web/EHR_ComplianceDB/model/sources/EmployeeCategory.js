@@ -4,49 +4,43 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
+EHR.model.DataModelManager.registerMetadata('EmployeeCategoryRecords', {
     allQueries: {
 
     },
     byQuery: {
-        'ehr_compliancedb.employeeperUnit': {
-            employeeid: {
+        'ehr_compliancedb.requirementspercategory': {
+            requirementname: {
                 hidden: false,
                 anyMatch: true,
                 allowBlank: false,
                 columnConfig: {
                     width: 350,
-                    header: 'Employee ID'
+                    header: 'Requirement Name'
                 },
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
                     schema: 'ehr_compliancedb',
-                    queryName: 'Employeelist',
-                    keyColumn: 'employeeid',
-                    // displayColumn: 'employeeid',
-                    sort: 'employeeid',
-                    columns: 'employeeid,lastName,FirstName'
+                    queryName: 'Requirements',
+                    keyColumn: 'requirementname',
+                    displayColumn: 'requirementname',
+                    filterArray: [
+                        LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)
+                    ],
+                    columns: 'requirementname',
+                    sort: 'requirementname'
 
-                },
-                editorConfig: {
-                    anyMatch: true,
-                    listConfig: {
-                        innerTpl: '{[LABKEY.Utils.encodeHtml(values.employeeid + (values.LastName ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : ""))]}',
-                        getInnerTpl: function(){
-                            return this.innerTpl;
-                        }
-                    }
                 }
+
             },
             category: {
                 hidden: false,
                 anyMatch: true,
-                allowBlank: true,
-                hasOwnTpl: true,
+                allowBlank: false,
                 columnConfig: {
-                    width: 300,
-                    header: 'Unit'
+                    width: 150,
+                    header: 'Category'
                 },
                 lookup: {
                     xtype: 'labkey-combo',
@@ -60,9 +54,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
 
                 }
 
-
             },
-
             unit: {
                 hidden: false,
                 anyMatch: true,
@@ -85,7 +77,32 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredCategory', {
                 }
 
 
-            }
+            },
+             rowid:{hidden: true},
+            trackingflag: {
+                hidden: false,
+                allowBlank: false,
+                columnConfig: {
+                    width: 100,
+                    header: 'Unit Essential'
+                },
+                lookup: {
+                    xtype: 'labkey-combo',
+                    containerPath: '/ONPRC/EHR',
+                    schema: 'sla',
+                    queryName: 'Reference_Data',
+                    keyColumn: 'value',
+                    displayColumn: 'value',
+                    columns: 'value',
+                    sort: 'value',
+                    filterArray: [
+                        LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                        LABKEY.Filter.create('ColumnName', 'NecropsyDist', LABKEY.Filter.Types.EQUAL)],
+                    autoLoad: true
+
+                }
+            },
+
 
         }}
-})
+});

@@ -16,12 +16,14 @@
 package org.labkey.ONPRCEHR_ComplianceDB.dataentry;
 
 import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ehr.dataentry.SimpleFormSection;
+import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.view.template.ClientDependency;
 
-//Created: 7-6-2021  R.Blasa converting category to unit
+//import org.labkey.api.ehr.dataentry.SimpleFormSection;
 
-public class EmployeeRequirementCategoryFormSection extends SimpleFormSection
+//Created: 10-4-2021  R.Blasa
+
+public class EmployeeRequirementCategoryFormSection extends SimpleGridPanel
 {
     public EmployeeRequirementCategoryFormSection()
     {
@@ -31,14 +33,12 @@ public class EmployeeRequirementCategoryFormSection extends SimpleFormSection
 
     public EmployeeRequirementCategoryFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super("ehr_compliancedb", "employeeperUnit", "Employee per Unit", "ehr-gridpanel", location);
+        super("ehr_compliancedb", "RequirementsPerCategory", "Employee Per Category");
+
         _allowRowEditing = false;
         addExtraProperty(BY_PASS_ANIMAL_ID, "true");
         addClientDependency(ClientDependency.supplierFromPath("EHR_ComplianceDB/model/sources/EmployeeCategoryClientStore.js"));
         setClientStoreClass("ONPRC_EHR.data.EmployeeCategoryClientStore");
-
     }
-
-
 }
 
