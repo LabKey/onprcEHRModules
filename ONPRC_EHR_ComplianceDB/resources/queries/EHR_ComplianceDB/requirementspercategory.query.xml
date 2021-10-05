@@ -35,6 +35,15 @@
                             <fkColumnName>unit</fkColumnName>
                         </fk>
                     </column>
+
+                    <column columnName="trackingflag">
+                        <columnTitle>Unit Essential</columnTitle>
+                        <fk>
+                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                            <fkTable>essentialflag</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName ="rowid">
                         <isHidden>true</isHidden>
                     </column>
