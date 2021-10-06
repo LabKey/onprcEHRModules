@@ -1545,12 +1545,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 //        updateCol.setHidden(true);
 //        updateCol.setDisplayWidth("150");
     }
-
+//Update by jonesga 2021-10-01
+//update to item below to change the setScale to 200 for protocol tritle
     private void customizeProtocol(AbstractTableInfo ti)
     {
         ti.getMutableColumn("inves").setHidden(true);
         ti.getMutableColumn("maxAnimals").setHidden(true);
-        ti.getMutableColumn("title").setScale(80);
+        ti.getMutableColumn("title").setScale(200);
         ti.getMutableColumn("investigatorId").setHidden(false);
         ti.getMutableColumn("approve").setLabel("Initial IACUC Approval Date");
         ti.getMutableColumn("enddate").setLabel("Date Disabled");
