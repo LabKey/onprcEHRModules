@@ -17,7 +17,7 @@ public class EmployeeRequirementCategoryFormType extends  TaskForm
 
     public EmployeeRequirementCategoryFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Employee Requirements Per Category", "Employee Training Records", Arrays.asList(
+        super(ctx, owner, NAME, "Requirements Per Essential", "Employee Training Records", Arrays.asList(
                 new TaskFormSection(),
                 new EmployeeRequirementCategoryFormSection()
         ));

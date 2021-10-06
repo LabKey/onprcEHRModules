@@ -39,7 +39,7 @@
                     <column columnName="trackingflag">
                         <columnTitle>Unit Essential</columnTitle>
                         <fk>
-                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                             <fkDbSchema>ONPRC_EHR_ComplianceDB</fkDbSchema>
                             <fkTable>essentialflag</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>

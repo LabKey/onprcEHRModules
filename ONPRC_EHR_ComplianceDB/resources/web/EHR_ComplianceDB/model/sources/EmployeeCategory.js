@@ -89,16 +89,13 @@ EHR.model.DataModelManager.registerMetadata('EmployeeCategoryRecords', {
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/EHR',
-                    schema: 'sla',
-                    queryName: 'Reference_Data',
+                    schema: 'ehr_compliancedb',
+                    queryName: 'essentialflag',
                     keyColumn: 'value',
                     displayColumn: 'value',
                     columns: 'value',
-                    sort: 'value',
-                    filterArray: [
-                        LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
-                        LABKEY.Filter.create('ColumnName', 'NecropsyDist', LABKEY.Filter.Types.EQUAL)],
-                    autoLoad: true
+                    sort: 'value'
+
 
                 }
             },

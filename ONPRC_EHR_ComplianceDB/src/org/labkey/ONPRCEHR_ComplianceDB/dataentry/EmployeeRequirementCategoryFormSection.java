@@ -33,7 +33,7 @@ public class EmployeeRequirementCategoryFormSection extends SimpleGridPanel
 
     public EmployeeRequirementCategoryFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super("ehr_compliancedb", "RequirementsPerCategory", "Employee Per Category");
+        super("ehr_compliancedb", "RequirementsPerCategory", "Requirements Per Essential");
 
         _allowRowEditing = false;
         addExtraProperty(BY_PASS_ANIMAL_ID, "true");
