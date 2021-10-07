@@ -30,10 +30,15 @@
                         </url>
                     </column>
                     <column columnName="ExpiredPeriod">
+                       <columnTitle>Expire Period (Months)</columnTitle>
                     <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="unit">
                         <columnTitle>Unit</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
+                    <column columnName="mostrecentdate">
+                        <columnTitle>Most Recent Date</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="category">

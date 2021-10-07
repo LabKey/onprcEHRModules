@@ -6,11 +6,11 @@
         <column name="employeeId/firstName"/>
         <column name="employeeId/isActive"/>
         <column name="requirementName"/>
-        <column name="trackingflag"/>
         <column name="unit"/>
         <column name="category"/>
+        <column name="trackingflag"/>
         <column name="timesCompleted"/>
-        <column name="ExpirePeriod"/>
+        <column name="ExpiredPeriod"/>
         <column name="MostRecentDate"/>
         <column name="MonthsUntilRenewal"/>
     </columns>

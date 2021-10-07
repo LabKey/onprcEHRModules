@@ -15,9 +15,9 @@ select b.requirementname,
 
        (select count(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
 
-       (select k.expireperiod from Requirements k where k.requirementname = b.requirementname) as expiredperiod,
+       (select k.expireperiod from Requirements k where k.requirementname = b.requirementname) as ExpiredPeriod,
 
-       (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as completiondate,
+       (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
     CAST(
      (select
