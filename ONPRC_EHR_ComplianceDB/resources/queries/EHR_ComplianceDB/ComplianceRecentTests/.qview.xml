@@ -6,7 +6,9 @@
         <column name="employeeId/firstName"/>
         <column name="employeeId/isActive"/>
         <column name="requirementName"/>
-        <column name="isRequired"/>
+        <column name="trackingflag"/>
+        <column name="unit"/>
+        <column name="category"/>
         <column name="timesCompleted"/>
         <column name="ExpirePeriod"/>
         <column name="MostRecentDate"/>

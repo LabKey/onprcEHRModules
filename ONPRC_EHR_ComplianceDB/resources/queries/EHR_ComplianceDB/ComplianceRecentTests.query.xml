@@ -32,7 +32,16 @@
                     <column columnName="ExpiredPeriod">
                     <displayWidth>70</displayWidth>
                     </column>
+                    <column columnName="unit">
+                        <columnTitle>Unit</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
                     <column columnName="MonthsUntilRenewal">
+                        <columnTitle>Months Until Renewal</columnTitle>
                         <displayWidth>60</displayWidth>
                         <conditionalFormats>
                             <conditionalFormat>
@@ -43,8 +52,9 @@
                             </conditionalFormat>
                         </conditionalFormats>
                     </column>
-                    <column columnName="isRequired">
-                        <columnTitle>Recommended</columnTitle>
+
+                    <column columnName="trackingflag">
+                        <columnTitle>Unit Essential</columnTitle>
                         <displayWidth>90</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
