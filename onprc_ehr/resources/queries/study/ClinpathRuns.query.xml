@@ -129,6 +129,15 @@
                     <column columnName="condition">
                         <columnTitle>Condition</columnTitle>
                     </column>
+                    <column columnName="vet">
+                        <columnTitle>Vetrinarian</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>Labwork_Requestor_Vets</fkTable>
+                            <fkColumnName>userid</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
+                    </column>
                 </columns>
             </table>
         </tables>
