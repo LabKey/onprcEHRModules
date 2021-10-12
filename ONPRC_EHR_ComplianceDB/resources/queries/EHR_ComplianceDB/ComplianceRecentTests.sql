@@ -9,7 +9,7 @@
 select b.requirementname,
        a.employeeid,
        group_concat(b.unit) as unit,
-       group_concat(a.category) as category,
+    ---   group_concat(a.category) as category,
        group_concat(b.trackingflag) as trackingflag,
 
 
