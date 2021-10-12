@@ -37,7 +37,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeCategoryRecords', {
             category: {
                 hidden: false,
                 anyMatch: true,
-                allowBlank: false,
+                allowBlank: true,
                 columnConfig: {
                     width: 150,
                     header: 'Category'
@@ -81,7 +81,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeCategoryRecords', {
              rowid:{hidden: true},
             trackingflag: {
                 hidden: false,
-                allowBlank: false,
+                allowBlank: true,
                 columnConfig: {
                     width: 100,
                     header: 'Unit Essential'
