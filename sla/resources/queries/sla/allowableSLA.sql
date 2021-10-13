@@ -8,7 +8,6 @@ SELECT a.protocol,
        a.allowed,
        a.startdate,
        a.enddate
-
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals a,
     Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS c
 Where c.Protocol_State = 'Approved'
