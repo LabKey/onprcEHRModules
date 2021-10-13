@@ -90,9 +90,14 @@ Ext4.define('ONPRC_EHR.window.BulkSerologyScanWindow', {
         var Technician = parsed[1][1]  ;
         var chargeunit = parsed[2][1]  ;
         var TissueMain =   Ext4.String.trim(parsed[3][1].substr(parsed[3][1].length - 7, 7));
-        var method =   Ext4.String.trim(parsed[4][1] )  ;
+        var method =   Ext4.String.trim(parsed[4][1] )
 
-        var offset = 6;
+        if ( Ext4.String.trim( parsed[5][1]) != "")
+        {
+            var vetname = Ext4.String.trim( parsed[5][1]);
+        };
+
+        var offset = 7;
         var rowIdx = offset;
         for (var i = offset; i < parsed.length; i++)
         {
@@ -113,7 +118,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerologyScanWindow', {
 
             var cnt = i;
 
-            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt,category,Technician,chargeunit,TissueMain,method);
+            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt,category,Technician,chargeunit,TissueMain,method,vetname);
         }
 
         Ext4.Msg.hide();
@@ -159,7 +164,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerologyScanWindow', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,id, parsed, cnt,category,Technician,chargeunit,TissueMain,method)
+    processRow: function(row, recordMap, errors, rowIdx,id, parsed, cnt,category,Technician,chargeunit,TissueMain,method,vetname)
     {
 
         // Generate labwork Header information
@@ -207,11 +212,12 @@ Ext4.define('ONPRC_EHR.window.BulkSerologyScanWindow', {
                             tissue: TissueMain,       // Tissue for main header    -- Optional
                             type: category,
                             objectid: HeaderObjectID,
-                            performedby: Technician
+                            performedby: Technician,
+                            vet:vetname
 
                         };
 
-                        if (!this.checkRequired(['Id', 'date', 'project', 'chargeunit', 'servicerequested', 'type'], obj, errors, rowIdx))
+                        if (!this.checkRequired(['Id', 'date', 'project', 'chargeunit', 'servicerequested', 'type','vet'], obj, errors, rowIdx))
                         {
                             recordMap.primaryheader.push(obj);
                         }
@@ -225,7 +231,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerologyScanWindow', {
                     date: date,
                     tissue: Ext4.String.trim(row[17].substr(row[17].length - 7, 7)),       // Tissue Results
 
-                    agent: Ext4.String.trim(parsed[5][k].substr(parsed[5][k].length - 7, 7)),
+                    agent: Ext4.String.trim(parsed[6][k].substr(parsed[6][k].length - 7, 7)),
                     method: method,
                     result: Ext4.String.trim(row[k]),
 

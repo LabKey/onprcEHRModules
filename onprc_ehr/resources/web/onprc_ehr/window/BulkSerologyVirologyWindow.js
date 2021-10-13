@@ -90,7 +90,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-        var offset = 1;
+        var offset = 2;
         var rowIdx = offset;
         for (var i = offset; i < parsed.length; i++)
         {
@@ -116,7 +116,12 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
             }
 
 
-            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt, MasterHeaderObject);
+            if ( Ext4.String.trim( parsed[0][1]) != "")
+            {
+                var vetname = Ext4.String.trim( parsed[0][1]);
+            }
+
+            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt, MasterHeaderObject,vetname);
         }
 
         Ext4.Msg.hide();
@@ -162,7 +167,7 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,id, parsed, cnt,MasterHeaderObject)
+    processRow: function(row, recordMap, errors, rowIdx,id, parsed, cnt,MasterHeaderObject,vetname)
     {
 
         // Generate labwork Header information
@@ -200,11 +205,12 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
                 tissue: tissueheader,       // Tissue for main header    -- Optional
                 type: category,
                 objectid: MasterHeaderObject,
-                performedby: performedBy
+                performedby: performedBy,
+                vet:vetname
 
             };
 
-        if (!this.checkRequired(['Id', 'date', 'project', 'chargeunit', 'servicerequested', 'type'], obj, errors, rowIdx))
+        if (!this.checkRequired(['Id', 'date', 'project', 'chargeunit', 'servicerequested', 'type', 'vet'], obj, errors, rowIdx))
              {
             recordMap.primaryheader.push(obj);
             }
@@ -228,12 +234,13 @@ Ext4.define('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
                 remark: Ext4.String.trim(row[12]),
                 objectid: Resultsobjectid,
                 runid: MasterHeaderObject,
-                performedby: performedBy
+                performedby: performedBy,
+                vet: vetname
 
             };
 
             // labwork Panel-Details information
-            if (!this.checkRequired(['Id', 'date' ,'tissue','agent','method', 'result'],obj,errors, rowIdx))
+            if (!this.checkRequired(['Id', 'date' ,'tissue','agent','method', 'result','vet'],obj,errors, rowIdx))
             {
                 recordMap.labresults.push(obj);
             }
