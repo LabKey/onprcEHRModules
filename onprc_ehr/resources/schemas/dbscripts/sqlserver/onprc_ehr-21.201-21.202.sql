@@ -32,6 +32,6 @@ CREATE TABLE [onprc_ehr].[StudyDetails_RandalData](
 
 
 
-    CONSTRAINT pk_StudyDetails_RandalData PRIMARY KEY (Id)
+    
     )
     GO
