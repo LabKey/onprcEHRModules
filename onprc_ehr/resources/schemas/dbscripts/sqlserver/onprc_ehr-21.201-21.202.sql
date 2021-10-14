@@ -30,8 +30,4 @@ CREATE TABLE [onprc_ehr].[StudyDetails_RandalData](
     [stims] [nvarchar](100) NULl,
     [active] [nvarchar](100) NULl)
 
-
-
-    CONSTRAINT pk_StudyDetails_RandalData PRIMARY KEY (Id)
-    )
     GO
