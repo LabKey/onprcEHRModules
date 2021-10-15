@@ -270,9 +270,9 @@ exports.init = function(EHR){
         helper.decodeExtraContextProperty('ASBRequestForm', false);
         var inASBRequestForm = helper.getProperty('ASBRequestForm');
 
-        console.log(" inASBRequestForm: " + inASBRequestForm);
-        if (inASBRequestForm == null) {
-            console.log("In");
+        //console.log(" inASBRequestForm: " + inASBRequestForm);
+        if (inASBRequestForm == true) {
+            //console.log("In");
             if (row.procedureid != null && row.remark != null) {
                 if (row.instructions == null) {
                     EHR.Server.Utils.addError(scriptErrors, 'instructions', 'If entering Remarks, you must select “Other...” in ASB Special Instructions field!', 'WARN');
