@@ -28,6 +28,8 @@ CREATE TABLE [onprc_ehr].[StudyDetails_RandalData](
     [Birth] date null,
     [Nx_date] date null,
     [stims] [nvarchar](100) NULl,
-    [active] [nvarchar](100) NULl)
+    [active] [nvarchar](100) NULl
+    CONSTRAINT pk_StudyDetails_Randal PRIMARY KEY (Id)
+    )
 
     GO
