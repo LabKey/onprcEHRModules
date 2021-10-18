@@ -1,4 +1,5 @@
---This query dispalys the allowable SLAs on protocol details page with eIACUCNUm
+--Created ny kollil on 10/18/21 to dispaly the allowable SLAs with eIACUCNum but no breeding info.
+--This query dispalys the allowable SLAs on protocol details page with eIACUCNum
 SELECT a.protocol,
        c.protocol_id as eIACUC_protocol_name,
        a.species,
