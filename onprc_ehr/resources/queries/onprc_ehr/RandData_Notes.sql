@@ -1,0 +1,20 @@
+SELECT d.Id,
+       d.date,
+       d.actiondate,
+       d.enddate,
+       d.category,
+       d.value,
+       d.performedby,
+       d.description,
+       d.taskid,
+       d.remark,
+       d.requestid,
+       d.Container,
+       d.isActive,
+       d.history,
+       d.isAssignedAtTime,
+       d.isAssignedToProtocolAtTime,
+       d.enteredSinceVetReview,
+       d.QCState
+ FROM  StudyDetails_RandalData s, "/ONPRC/EHR".study.notes d
+    where (active = 'y' and s.rh = d.id)
