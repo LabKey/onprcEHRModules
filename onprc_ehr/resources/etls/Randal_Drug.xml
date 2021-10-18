@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>Randal_Drug</name>
+    <description>Export of Departure Details for Study Animals</description>
+    <transforms>
+        <transform id="step1">
+            <description>mfsh Update</description>
+            <source queryName="studyAnimals" schemaName="Randal_data"/>
+            <destination schemaName="Onprc_ehr" queryName="StudyDetails_RandalData" targetOption="truncate"/>
+        </transform>
+        <transform>
+            transform id="step2">
+            <description>Export QUery to File Share</description>
+            <source queryName="RandData_drug" schemaName="onprc_ehr"/>
+            <destination dir="etlOut" fileBaseName="RandData_drug-${TransformRunId}-${Timestamp}" fileExtension="tsv" type="file"/>
+    </transform>
+
+    </transforms>
+
+</etl>
