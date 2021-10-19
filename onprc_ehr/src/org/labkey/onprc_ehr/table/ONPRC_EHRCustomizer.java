@@ -1545,7 +1545,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 //        updateCol.setHidden(true);
 //        updateCol.setDisplayWidth("150");
     }
-
+//Update by jonesga 2021-10-01
+//update to item below to change the setScale to 200 for protocol tritle
     private void customizeProtocol(AbstractTableInfo ti)
     {
         ti.getMutableColumn("inves").setHidden(true);
