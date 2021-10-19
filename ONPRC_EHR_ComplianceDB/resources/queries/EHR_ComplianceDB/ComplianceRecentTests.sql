@@ -8,9 +8,9 @@
 
 select b.requirementname,
        a.employeeid,
-       group_concat(b.unit) as unit,
-    ---   group_concat(a.category) as category,
-       group_concat(b.trackingflag) as trackingflag,
+       group_concat(distinct b.unit,chr(10)) as unit,
+       group_concat(distinct a.category,chr(10)) as category,
+       group_concat(distinct b.trackingflag) as trackingflag,
 
 
        (select count(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
@@ -30,6 +30,6 @@ select b.requirementname,
 
 
 from employeeperunit a ,requirementspercategory b
-where ( a.unit = b.unit )
+where ( a.unit = b.unit or a.category = b.category )
 
 group by b.requirementname,a.employeeid
