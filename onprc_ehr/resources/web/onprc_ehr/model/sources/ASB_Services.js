@@ -4,6 +4,20 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
+Ext4.onReady(function() {
+    // this is to skip Id not found warning during weights entry in Arrival data entry form
+    if (EHR.data.DataEntryClientStore) {
+        Ext4.override(EHR.data.DataEntryClientStore, {
+            getExtraContext: function(){
+                return {
+                    ASBRequestForm: true
+                }
+            }
+        });
+    }
+});
+
+
 EHR.model.DataModelManager.registerMetadata('ASB_Services', {
     allQueries: {
 
@@ -24,34 +38,34 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                 hidden: true
             },
 
-            // instructions: {
-            //     facetingBehaviorType: 'AUTOMATIC',
-            //     editorConfig: {
-            //         xtype: 'combobox',
-            //         triggerAction: 'all',
-            //         height: 20
-            //     },
-            //     header: 'ASB Special Instructions',
-            //     hidden: false,
-            //     lookup: {
-            //         schemaName: 'onprc_ehr',
-            //         queryName: 'ASB_SpecialInstructions',
-            //         displayColumn: 'value',
-            //         columns: 'value'
-            //     },
-            //     columnConfig: {
-            //         width: 300
-            //     }
-            // },
-            //
-            // remark: {
-            //     header: 'Remarks',
-            //     hidden: false,
-            //     columnConfig: {
-            //         width: 300
-            //     }
-            // },
-            //
+            instructions: {
+                facetingBehaviorType: 'AUTOMATIC',
+                editorConfig: {
+                    xtype: 'combobox',
+                    triggerAction: 'all',
+                    height: 20
+                },
+                header: 'ASB Special Instructions',
+                hidden: false,
+                lookup: {
+                    schemaName: 'onprc_ehr',
+                    queryName: 'ASB_SpecialInstructions',
+                    displayColumn: 'value',
+                    columns: 'value'
+                },
+                columnConfig: {
+                    width: 300
+                }
+            },
+
+            remark: {
+                header: 'Remarks',
+                hidden: false,
+                columnConfig: {
+                    width: 300
+                }
+            },
+
 
             billingproject: {
                 hidden:true
