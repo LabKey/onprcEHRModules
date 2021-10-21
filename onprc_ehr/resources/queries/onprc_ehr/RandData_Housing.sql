@@ -1,0 +1,25 @@
+SELECT
+d.Id,
+d.date,
+d.enddate,
+d.room,
+d.cage,
+d.divider,
+d.reason,
+d.QCState,
+d.remark,
+d.description,
+d.taskid,
+d.performedby,
+d.requestid,
+d.Container,
+d.isActive,
+d.isExpired,
+d.history,
+d.isAssignedAtTime,
+d.isAssignedToProtocolAtTime,
+d.daysInRoom,
+d.daysInArea,
+d.enteredSinceVetReview
+ FROM  StudyDetails_RandalData s, "/ONPRC/EHR".study.housing d
+    where (active = 'y' and s.rh = d.id)
