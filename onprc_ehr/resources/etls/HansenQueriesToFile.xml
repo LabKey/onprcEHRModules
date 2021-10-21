@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>mfshToRandalData</name>
+    <description>imports the data from mfsh animal details on ONPRC</description>
+    <transforms>
+        <transform id="step1">
+            <description>Transfer to Drug Table</description>
+            <source queryName="studyAnimals" schemaName="Randal_data"/>
+            <destination schemaName="Onprc_ehr" queryName="StudyDetails_RandalData"/>
+        </transform>
+        <transform id="step2">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_AnimalGroups" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="AnimalGroups-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_blood" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="BloodDetails-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3a">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_birth" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="BirthDetails-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3b">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_assignment" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="assignment-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3c">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_arrival" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="arrival-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3d">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_animalgroups" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="animal_groups-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3e">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_weights" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="weights-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3f">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_Cases" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="Cases-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3g">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_clinremarks" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="clinremarks-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3h">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_demographics" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="demographics-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3i">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_deaths" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="deaths-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3j">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_departure" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="departure-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3k">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_drug" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="drug-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3l">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_flags" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="flags-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3m">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_Hematology" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="Hematology-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3n">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_Housing" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="Housing-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3o">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_MHCData" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="MHCData-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+        <transform id="step3p">
+            <description>Export Query to File Share</description>
+            <source queryName="RandData_Notes" schemaName="onprc_ehr"/>
+            <destination type="file" dir="hansonFiles" fileBaseName="Notes-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+    </transforms>
+
+</etl>
