@@ -1306,4 +1306,33 @@
         </columns>
     </table>
 
+    <table tableName="StudyDetails_RandalData" tableDbType="TABLE">
+        <columns>
+            <column columnName="id" />
+            <column columnName="rh" />
+            <column columnName="cohort" />
+            <column columnName="PI" />
+            <column columnName="Cohort_id" />
+            <column columnName="subcohort" />
+            <column columnName="grp" />
+            <column columnName="grp_order" />
+            <column columnName="grp_id" />
+            <column columnName="rhCode" />
+            <column columnName="grpnm" />
+            <column columnName="sex" />
+            <column columnName="cohortStart" />
+            <column columnName="cohortend" />
+            <column columnName="Do" />
+            <column columnName="DPCO" />
+            <column columnName="contprog" />
+            <column columnName="PIDO" />
+            <column columnName="DPTO" />
+            <column columnName="Birth" />
+            <column columnName="Nx_Date" />
+            <column columnName="stims" />
+            <column columnName="active" />
+
+        </columns>
+    </table>
+
 </tables>
