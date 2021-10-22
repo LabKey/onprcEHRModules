@@ -1,33 +1,35 @@
 --SLA usage numbers including Breeding groups data extracted from eIACUC data
 SELECT
-    a.project as ProjectID,
-    a.name AS Project,
-    p.external_id as IACUCProtocol,
+    a.project As ProjectID,
+    a.name As Project,
+    p.external_id As IACUCProtocol,
 --     aa.eIACUC_protocol_name as eIACUCNum,
-    a.title as Title,
-    i.LastName || ', ' || i.FirstName AS PIName,
-    x.account as Alias,
-    y.projectNumber as OGAProjectNumber,
-    y.grantNumber as OGAGrantNumber,
-    f.lastname || ', ' || f.firstName as FiscalAuthorityName,
+    a.title As Title,
+    i.LastName || ', ' || i.FirstName As PIName,
+    x.account As Alias,
+    y.projectNumber As OGAProjectNumber,
+    y.grantNumber As OGAGrantNumber,
+    f.lastname || ', ' || f.firstName As FiscalAuthorityName,
     aa.Species,
     aa.Gender,
     aa.Strain,
-    aa.Allowed AS NumAllowed,
-    calc.NumUsed,
+    aa.Allowed As NumAllowed,
+    calc.NumUsed As NumUsed,
     aa.StartDate,
     aa.EndDate,
-    CASE
-        WHEN aa.BreedingAllowed = '1' THEN 'Yes'
-        ELSE 'No'
-        END AS BreedingAllowed,
-    aa.Group_Id,
-    aa.Group_Name
+    (Select Breeding_Info from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_Final br
+    Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed ) as Breeding_Info,
+--     CASE
+--         WHEN aa.BreedingAllowed = '1' THEN 'Yes'
+--         ELSE 'No'
+--         END AS BreedingAllowed,
+--     aa.Group_Id,
+--     aa.Group_Name
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project a
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.protocol p ON p.protocol = a.protocol
     LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
     LEFT JOIN onprc_billing.fiscalAuthorities f ON f.rowid = i.financialanalyst
-    LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_BreedingGroups aa ON a.protocol = aa.protocol
+    LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals aa ON a.protocol = aa.protocol
     LEFT JOIN (select * from onprc_billing.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
     LEFT JOIN Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases y ON y.alias = x.account
     LEFT JOIN (
@@ -90,18 +92,20 @@ SELECT
     calc.NumUsed,
     aa.StartDate,
     aa.EndDate,
-    CASE
-        WHEN aa.BreedingAllowed = '1' THEN 'Yes'
-        ELSE 'No'
-        END AS BreedingAllowed,
-    aa.Group_Id,
-    aa.Group_Name
+    (Select Breeding_Info from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_Final br
+    Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed ) as Breeding_Info,
+    --     CASE
+    --         WHEN aa.BreedingAllowed = '1' THEN 'Yes'
+    --         ELSE 'No'
+    --         END AS BreedingAllowed,
+    --     aa.Group_Id,
+    --     aa.Group_Name
 
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project a
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.protocol p ON p.protocol = a.protocol
     LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
     LEFT JOIN onprc_billing.fiscalAuthorities f ON f.rowid = i.financialanalyst
-    LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_BreedingGroups aa ON a.protocol = aa.protocol
+    LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals aa ON a.protocol = aa.protocol
     LEFT JOIN (select * from onprc_billing.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
     LEFT JOIN Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases y ON y.alias = x.account
     LEFT JOIN (
@@ -144,7 +148,7 @@ WHERE
     ) IS NOT NULL
     )
 
-/*
+-- /*
 -- SELECT
 -- a.project as ProjectID,
 -- a.name AS Project,

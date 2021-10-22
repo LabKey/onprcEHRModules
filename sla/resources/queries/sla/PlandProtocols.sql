@@ -11,7 +11,8 @@ SELECT a.project as ProjectID,
        i.LastName,
        i.Division,
        p.external_id,
-       i.LastName + ': ' + a.name + '('+ p.external_id +')' +  ' Group Id & Name - ' + aa. Group_Id + ', '+ aa.Group_Name + ' - ' + a.title + ' (Species: ' + aa.species + ')' as PIIacuc
+       --i.LastName + ': ' + a.name + '('+ p.external_id +')' +  ' Group Id & Name - ' + aa. Group_Id + ', '+ aa.Group_Name + ' - ' + a.title + ' (Species: ' + aa.species + ')' as PIIacuc
+       i.LastName + ': ' + a.name + '('+ p.external_id +')' +  ' ' + aa.Breeding_Info + ' - ' + a.title + ' (Species: ' + aa.species + ')' as PIIacuc
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project a
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.protocol p ON p.protocol = a.protocol
     LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId

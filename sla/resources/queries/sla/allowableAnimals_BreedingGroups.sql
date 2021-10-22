@@ -6,13 +6,11 @@ SELECT a.protocol,
        a.gender,
        a.strain,
        a.age,
-       --a.allowed,
-       b.Number_Of_Animals_Max as Allowed,
+       a.allowed,
+       --b.Number_Of_Animals_Max as Allowed,
        a.startdate,
        a.enddate,
-       b.group_id,
-       b.group_name,
-       b.breeding_colony as BreedingAllowed
+       'Group Id & Name - ' + b.group_id + ', ' + b.group_name + ', Breeding Allowed - ' + (Case When cast (b.breeding_colony AS varchar)  = '0' Then 'Yes'  Else 'No' END)  as Breeding_Info
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals a,
 		Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS c,
     	Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.eIACUC_PRIME_VIEW_ANIMAL_GROUPS b
@@ -27,5 +25,6 @@ Where c.Protocol_State = 'Approved'
     WHEN a.species = 'Guinea Pigs' THEN 'Guinea Pig'
     ELSE 'unknown'
 END
+
 
 
