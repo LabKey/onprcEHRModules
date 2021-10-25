@@ -25,7 +25,7 @@ select b.requirementname,
             WHEN max(pq.date) is null then 0
             WHEN Tr.expireperiod = 0 then null
             ELSE ( Tr.expireperiod - ( age_in_months(max(pq.date), curdate()))  )
-        END  from completiondates pq, requirements Tr where pq.requirementname = b.requirementname And Tr.requirementname = pq.requirementname group by tr.expireperiod) AS double)
+        END  from completiondates pq, requirements Tr where pq.requirementname = b.requirementname And Tr.requirementname = pq.requirementname and pq.employeeid = a.employeeid group by tr.expireperiod) AS double)
          AS MonthsUntilRenewal
 
 
