@@ -54,7 +54,8 @@
                     </column>
                     <column columnName="Breeding_Info">
                         <columnTitle>Breeding Info</columnTitle>
-                        <displayWidth>600</displayWidth>
+                        <displayWidth>700</displayWidth>
+                        <textAlign>left</textAlign>
                     </column>
                 </columns>
             </table>

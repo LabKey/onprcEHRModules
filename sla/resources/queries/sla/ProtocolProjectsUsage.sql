@@ -17,8 +17,13 @@ SELECT
     calc.NumUsed As NumUsed,
     aa.StartDate,
     aa.EndDate,
-    (Select Breeding_Info from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_Final br
-    Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed ) as Breeding_Info,
+    (Select Breeding from (Select protocol, species, gender, allowed, GROUP_CONCAT(Breeding_Info + ';', chr(10)) as Breeding
+                            From allowableAnimals_BreedingGroups
+                            Group by protocol, species, gender, allowed) br
+    Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed)  as Breeding_Info,
+--     (Select Breeding_Info from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_Final br
+--     Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed)  as Breeding_Info,
+
 --     CASE
 --         WHEN aa.BreedingAllowed = '1' THEN 'Yes'
 --         ELSE 'No'
@@ -92,15 +97,19 @@ SELECT
     calc.NumUsed,
     aa.StartDate,
     aa.EndDate,
-    (Select Breeding_Info from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_Final br
-    Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed ) as Breeding_Info,
-    --     CASE
-    --         WHEN aa.BreedingAllowed = '1' THEN 'Yes'
-    --         ELSE 'No'
-    --         END AS BreedingAllowed,
-    --     aa.Group_Id,
-    --     aa.Group_Name
+    (Select Breeding from (Select protocol, species, gender, allowed, GROUP_CONCAT(Breeding_Info + ';', chr(10)) as Breeding
+                           From allowableAnimals_BreedingGroups
+                           Group by protocol, species, gender, allowed) br
+     Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed)  as Breeding_Info,
+--     (Select Breeding_Info from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_Final br
+--     Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed)  as Breeding_Info,
 
+--     CASE
+--         WHEN aa.BreedingAllowed = '1' THEN 'Yes'
+--         ELSE 'No'
+--         END AS BreedingAllowed,
+--     aa.Group_Id,
+--     aa.Group_Name
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project a
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.protocol p ON p.protocol = a.protocol
     LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
