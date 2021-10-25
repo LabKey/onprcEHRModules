@@ -34,5 +34,5 @@ SELECT d.Id,
        d.daysSinceLastRounds,
        d.enteredSinceVetReview,
        d.QCState
- FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}".study.cases d
+ FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.cases d
     where (active = 'y' and s.rh = d.id)

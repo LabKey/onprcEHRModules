@@ -21,5 +21,5 @@ d.isAssignedToProtocolAtTime,
 d.daysInRoom,
 d.daysInArea,
 d.enteredSinceVetReview
- FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}".study.housing d
+ FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.housing d
     where (active = 'y' and s.rh = d.id)
