@@ -15,5 +15,5 @@ SELECT d.Id,
        d.isAssignedAtTime,
        d.isAssignedToProtocolAtTime,
        d.enteredSinceVetReview
- FROM  StudyDetails_RandalData s, "/ONPRC/EHR".study.animal_group_members d
+ FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}".study.animal_group_members d
     where (active = 'y' and s.rh = d.id)

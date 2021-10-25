@@ -17,5 +17,5 @@ SELECT d.Id,
         d.history,
         d.enteredSinceVetReview,
         d.QCState
- FROM  StudyDetails_RandalData s, "/ONPRC/EHR".study.assignment d
+ FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}".study.assignment d
     where (active = 'y' and s.rh = d.id)

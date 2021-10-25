@@ -31,5 +31,5 @@ SELECT d.Id,
        d.isAssignedToProtocolAtTime,
        d.enteredSinceVetReview,
        d.QCState
- FROM  StudyDetails_RandalData s, "/ONPRC/EHR".study.drug d
+ FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}".study.drug d
     where (active = 'y' and s.rh = d.id)
