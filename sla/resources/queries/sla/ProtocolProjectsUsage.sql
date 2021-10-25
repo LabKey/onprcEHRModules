@@ -17,10 +17,9 @@ SELECT
     calc.NumUsed As NumUsed,
     aa.StartDate,
     aa.EndDate,
-    (Select Breeding from (Select protocol, species, gender, allowed, GROUP_CONCAT(Breeding_Info + ';', chr(10)) as Breeding
-                            From allowableAnimals_BreedingGroups
-                            Group by protocol, species, gender, allowed) br
-    Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed)  as Breeding_Info,
+    (Select Breeding from (Select protocol, species, gender, allowed, GROUP_CONCAT(Breeding_Info + ';' + chr(13), chr(10)) as Breeding
+                           From allowableAnimals_BreedingGroups Group by protocol, species, gender, allowed) br
+    Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed) as Breeding_Info,
 --     (Select Breeding_Info from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_Final br
 --     Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed)  as Breeding_Info,
 
@@ -97,10 +96,9 @@ SELECT
     calc.NumUsed,
     aa.StartDate,
     aa.EndDate,
-    (Select Breeding from (Select protocol, species, gender, allowed, GROUP_CONCAT(Breeding_Info + ';', chr(10)) as Breeding
-                           From allowableAnimals_BreedingGroups
-                           Group by protocol, species, gender, allowed) br
-     Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed)  as Breeding_Info,
+    (Select Breeding from (Select protocol, species, gender, allowed, GROUP_CONCAT(Breeding_Info + ';' + chr(13), chr(10)) as Breeding
+                           From allowableAnimals_BreedingGroups Group by protocol, species, gender, allowed) br
+     Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed) as Breeding_Info,
 --     (Select Breeding_Info from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals_Final br
 --     Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed)  as Breeding_Info,
 

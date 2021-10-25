@@ -54,9 +54,13 @@
                     </column>
                     <column columnName="Breeding_Info">
                         <columnTitle>Breeding Info</columnTitle>
+                        <displayColumnFactory>
+                            <className>org.labkey.api.data.HtmlDisplayColumnFactory</className>
+                        </displayColumnFactory>
                         <displayWidth>700</displayWidth>
                         <textAlign>left</textAlign>
                     </column>
+
                 </columns>
             </table>
         </tables>
