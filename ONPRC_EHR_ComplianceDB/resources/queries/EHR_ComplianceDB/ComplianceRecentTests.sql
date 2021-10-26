@@ -19,14 +19,15 @@ select b.requirementname,
 
        (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
-    CAST(
-     (select
-         CASE
-            WHEN max(pq.date) is null then 0
-            WHEN Tr.expireperiod = 0 then null
-            ELSE ( Tr.expireperiod - ( age_in_months(max(pq.date), curdate()))  )
-        END  from completiondates pq, requirements Tr where pq.requirementname = b.requirementname And Tr.requirementname = pq.requirementname and pq.employeeid = a.employeeid group by tr.expireperiod) AS double)
-         AS MonthsUntilRenewal
+       CAST(
+               CASE
+
+                   WHEN (select max(st.date) from completiondates st where st.requirementname = b.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
+                   WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  ) = 0 then Null
+
+                   ELSE ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  )
+                   END  AS double)  AS MonthsUntilRenewal
+
 
 
 from employeeperunit a ,requirementspercategory b
