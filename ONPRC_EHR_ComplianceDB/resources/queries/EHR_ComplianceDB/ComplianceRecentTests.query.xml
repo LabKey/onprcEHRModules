@@ -32,8 +32,8 @@
                         </url>
                     </column>
                     <column columnName="ExpiredPeriod">
-                       <columnTitle>Expire Period (Months)</columnTitle>
-                    <displayWidth>70</displayWidth>
+                        <columnTitle>Expire Period (Months)</columnTitle>
+                        <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="unit">
                         <columnTitle>Unit</columnTitle>
