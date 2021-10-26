@@ -7,5 +7,5 @@ SELECT d.rowid,
        d.assaytype,
        d.container,
        d.totalTests
- FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.mhcdata d
+ FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.geneticscore.mhcdata d
     where (active = 'y' and s.rh = d.id)

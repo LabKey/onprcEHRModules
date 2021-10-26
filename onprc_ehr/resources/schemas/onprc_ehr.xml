@@ -1325,7 +1325,7 @@
             <column columnName="cohortStart" />
             <column columnName="cohortend" />
             <column columnName="Do" />
-            <column columnName="DPCO" />
+            <column columnName="DPC0" />
             <column columnName="contprog" />
             <column columnName="PIDO" />
             <column columnName="DPTO" />
