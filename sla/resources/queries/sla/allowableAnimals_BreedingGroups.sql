@@ -10,7 +10,7 @@ SELECT a.protocol,
        --b.Number_Of_Animals_Max as Allowed,
        a.startdate,
        a.enddate,
-       'Group Id & Name: ' + b.group_id + ', ' + b.group_name + ', Breeding Allowed: ' + (Case When cast (b.breeding_colony AS varchar) = '0' Then 'YES' Else 'NO' END) as Breeding_Info -- + ', eIACUC Protocol: ' + c.protocol_id as Breeding_and_protocol_Info
+       'Group Id & Name: ' + b.group_id + ', ' + b.group_name + ', Breeding Allowed: ' + (Case When cast (b.breeding_colony AS varchar) = '0' Then 'NO' Else 'YES' END) as Breeding_Info -- + ', eIACUC Protocol: ' + c.protocol_id as Breeding_and_protocol_Info
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals a,
 		Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS c,
     	Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.eIACUC_PRIME_VIEW_ANIMAL_GROUPS b
