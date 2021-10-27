@@ -13,7 +13,8 @@ i.LastName || ', ' || i.FirstName AS PIName,
 x.account as Alias,
 y.projectNumber as OGAProjectNumber,
 y.grantNumber as OGAGrantNumber,
-f.lastname || ', ' || f.firstName as FiscalAuthorityName,
+--     f.lastname || ', ' || f.firstName As FiscalAuthorityName,
+y.fiscalAuthorityName As FiscalAuthorityName,
 aa.Species,
 aa.Gender,
 aa.Strain,
@@ -24,9 +25,9 @@ aa.EndDate
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project a
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.protocol p ON p.protocol = a.protocol
 LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
-LEFT JOIN onprc_billing.fiscalAuthorities f ON f.rowid = i.financialanalyst
+-- LEFT JOIN onprc_billing.fiscalAuthorities f ON f.rowid = i.financialanalyst
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals aa ON a.protocol = aa.protocol
-LEFT JOIN (select * from onprc_billing.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
+LEFT JOIN (select * from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
 LEFT JOIN Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases y ON y.alias = x.account
 LEFT JOIN (
 --   SELECT i.protocol,species,gender,sum(animalsreceived) AS NumUsed
@@ -85,7 +86,8 @@ i.LastName || ', ' || i.FirstName AS PIName,
 x.account as Alias,
 y.projectNumber as OGAProjectNumber,
 y.grantNumber as OGAGrantNumber,
-f.lastname || ', ' || f.firstName as FiscalAuthorityName,
+--     f.lastname || ', ' || f.firstName As FiscalAuthorityName,
+y.fiscalAuthorityName As FiscalAuthorityName,
 aa.Species,
 aa.Gender,
 aa.Strain,
@@ -96,9 +98,9 @@ aa.EndDate
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project a
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.protocol p ON p.protocol = a.protocol
 LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
-LEFT JOIN onprc_billing.fiscalAuthorities f ON f.rowid = i.financialanalyst
+-- LEFT JOIN onprc_billing.fiscalAuthorities f ON f.rowid = i.financialanalyst
 LEFT JOIN Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.allowableAnimals aa ON a.protocol = aa.protocol
-LEFT JOIN (select * from onprc_billing.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
+LEFT JOIN (select * from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
 LEFT JOIN Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases y ON y.alias = x.account
 LEFT JOIN (
 --   SELECT i.protocol,species,gender,sum(animalsreceived) AS NumUsed
