@@ -5,7 +5,7 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  *
  * Author: Kolli
- * Date: 1/13/2021
+ * Date: 10/27/2021
  * Time: 10:36 AM
  * ART Core Billing
   */
@@ -28,7 +28,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCore_Services', {
                         defaultValue: 'Procedure',
                         hidden: true
                     },
-                    procedureid: {
+                    procedureid: { //Show ART core procedures
                         lookup: {
                             filterArray: [
                                 LABKEY.Filter.create('category', 'ART', LABKEY.Filter.Types.EQUAL),

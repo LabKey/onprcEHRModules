@@ -32,7 +32,6 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
                 },
                 editorConfig: {
                     listConfig: {
-                        //innerTpl: '{[(values.category ? "<b>" + values.category + ":</b> " : "") + values.chargeName]}',
                         innerTpl: '{[("<b>" + values.chargeName + "</b>" )]}',
                         getInnerTpl: function(){
                             return this.innerTpl;

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+//Kollil: 10/27/2021. ART Core Misc charges screen
 
 public class ChargesARTCoreFormType extends TaskForm
 {

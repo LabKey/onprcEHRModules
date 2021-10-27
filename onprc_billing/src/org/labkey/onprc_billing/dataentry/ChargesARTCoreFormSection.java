@@ -24,7 +24,7 @@ import org.labkey.api.view.template.ClientDependency;
 import java.util.Collections;
 import java.util.List;
 
-
+//Kollil: 10/27/2021. ART Core Misc charges screen
 public class ChargesARTCoreFormSection extends SimpleFormSection
 {
     public ChargesARTCoreFormSection()

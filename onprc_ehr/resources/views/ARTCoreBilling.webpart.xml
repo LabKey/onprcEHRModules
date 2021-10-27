@@ -1,4 +1,4 @@
-<!--ART core billing webpart-->
+<!--Kollil: ART core billing webpart-->
 <webpart xmlns="http://labkey.org/data/xml/webpart" title="ART Core Billing">
     <view name="ARTCoreBilling"/>
     <locations>
