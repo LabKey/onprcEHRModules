@@ -212,7 +212,7 @@
             </column>
             <column columnName="shipZip">
                 <columnTitle>Ship ZIP</columnTitle>
-            </column>Nonprc_billing.xml
+            </column>
             <column columnName="dateCreated">
                 <columnTitle>Date Created</columnTitle>
             </column>
@@ -847,7 +847,6 @@
             <column columnName="modifiedby"/>
             <column columnName="modified"/>
             <column columnName="PROTOCOL_State"/>
-            <column columnName="Annual_Update_Last_Approved"/>
             <column columnName="PPQ_Numbers"/>
             <column columnName="Description"/>
         </columns>
@@ -895,7 +894,6 @@
             <column columnName="modifiedby"/>
             <column columnName="modified"/>
             <column columnName="PROTOCOL_State"/>
-            <column columnName="Annual_Update_Last_Approved" />
             <column columnName="PPQ_Numbers"/>
             <column columnName="Description"/>
         </columns>
