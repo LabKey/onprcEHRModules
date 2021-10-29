@@ -1,7 +1,8 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="ProtocolProjectsUsage" tableDbType="NOT_IN_DB">
+            <table tableName="ProtocolProjectsAndBreedingInfo" tableDbType="NOT_IN_DB">
+                <tableTitle>SLA Groups and Breeding Information</tableTitle>
                 <columns>
                     <column columnName="ProjectID">
                         <isKeyField>true</isKeyField>
@@ -15,22 +16,23 @@
                     </column>
                     <column columnName="Title">
                         <columnTitle>Title</columnTitle>
+                        <displayWidth>150</displayWidth>
                     </column>
                     <column columnName="PIName">
                         <columnTitle>PI Name</columnTitle>
                     </column>
-                    <column columnName="Alias">
-                        <columnTitle>Alias</columnTitle>
-                    </column>
-                    <column columnName="OGAProjectNumber">
-                        <columnTitle>OGA Project Number</columnTitle>
-                    </column>
-                    <column columnName="OGAGrantNumber">
-                        <columnTitle>OGA Grant Number</columnTitle>
-                    </column>
-                     <column columnName="FiscalAuthorityName">
-                        <columnTitle>Fiscal Authority Name</columnTitle>
-                    </column>
+<!--                    <column columnName="Alias">-->
+<!--                        <columnTitle>Alias</columnTitle>-->
+<!--                    </column>-->
+<!--                    <column columnName="OGAProjectNumber">-->
+<!--                        <columnTitle>OGA Project Number</columnTitle>-->
+<!--                    </column>-->
+<!--                    <column columnName="OGAGrantNumber">-->
+<!--                        <columnTitle>OGA Grant Number</columnTitle>-->
+<!--                    </column>-->
+<!--                    <column columnName="FiscalAuthorityName">-->
+<!--                        <columnTitle>Fiscal Authority Name</columnTitle>-->
+<!--                    </column>-->
                     <column columnName="Species">
                         <columnTitle>Species</columnTitle>
                     </column>
@@ -43,15 +45,19 @@
                     <column columnName="NumAllowed">
                         <columnTitle>Num Allowed</columnTitle>
                     </column>
-                    <column columnName="NumUsed">
-                        <columnTitle>Num Used</columnTitle>
-                    </column>
                     <column columnName="StartDate">
                         <columnTitle>Start Date</columnTitle>
                     </column>
                     <column columnName="EndDate">
                         <columnTitle>End Date</columnTitle>
                     </column>
+                    <column columnName="Breeding_Info">
+                        <columnTitle>Groups and Breeding Info</columnTitle>
+                        <inputRows>2</inputRows>
+                        <displayWidth>700</displayWidth>
+                        <textAlign>left</textAlign>
+                    </column>
+
                 </columns>
             </table>
         </tables>

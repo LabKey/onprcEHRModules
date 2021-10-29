@@ -1,0 +1,21 @@
+SELECT d.Id,
+       d.date,
+       d.enddate,
+       d.flag,
+       d.performedby,
+       d.remark,
+       d.taskid,
+       d.requestid,
+       d.description,
+       d.RequestedBy,
+       d.ScheduleNecropsy,
+       d.TargetEndDate,
+       d.Container,
+       d.isActive,
+       d.history,
+       d.isAssignedAtTime,
+       d.isAssignedToProtocolAtTime,
+       d.enteredSinceVetReview,
+       d.QCState
+ FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.flags d
+    where (active = 'y' and s.rh = d.id)
