@@ -1,5 +1,5 @@
---Update to use corredct method to cross container
---jonesga 10/28/2021
+--Update to use corrected method to cross container to MHC Data
+--jonesga 10/29/2021
 SELECT d.rowid,
        d.subjectId,
        d.datatype,
