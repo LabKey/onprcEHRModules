@@ -140,6 +140,16 @@
                 <propertyURI>urn:ehr.labkey.org/#ObjectId</propertyURI>
                 <isKeyField>true</isKeyField>
             </column>
+            <column columnName="requestedBy">
+                <datatype>integer</datatype>
+                <columnTitle>Requested By</columnTitle>
+            </column>
+            <column columnName="ScheduleNecropsy">
+                <datatype>timestamp</datatype>
+            </column>
+            <column columnName="TargetEndDate">
+                <datatype>timestamp</datatype>
+            </column>
         </columns>
         <tableTitle>Animal Record Flags</tableTitle>
     </table>
@@ -1770,6 +1780,10 @@
             </column>
             <column columnName="releaseType">
                 <datatype>varchar</datatype>
+            </column>
+            <column columnName="project">
+                <datatype>integer</datatype>
+                <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
             </column>
         </columns>
         <tableTitle>Animal Group Members</tableTitle>
