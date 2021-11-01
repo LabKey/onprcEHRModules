@@ -21,18 +21,18 @@
                     <column columnName="PIName">
                         <columnTitle>PI Name</columnTitle>
                     </column>
-                    <column columnName="Alias">
-                        <columnTitle>Alias</columnTitle>
-                    </column>
-                    <column columnName="OGAProjectNumber">
-                        <columnTitle>OGA Project Number</columnTitle>
-                    </column>
-                    <column columnName="OGAGrantNumber">
-                        <columnTitle>OGA Grant Number</columnTitle>
-                    </column>
-                    <column columnName="FiscalAuthorityName">
-                        <columnTitle>Fiscal Authority Name</columnTitle>
-                    </column>
+<!--                    <column columnName="Alias">-->
+<!--                        <columnTitle>Alias</columnTitle>-->
+<!--                    </column>-->
+<!--                    <column columnName="OGAProjectNumber">-->
+<!--                        <columnTitle>OGA Project Number</columnTitle>-->
+<!--                    </column>-->
+<!--                    <column columnName="OGAGrantNumber">-->
+<!--                        <columnTitle>OGA Grant Number</columnTitle>-->
+<!--                    </column>-->
+<!--                    <column columnName="FiscalAuthorityName">-->
+<!--                        <columnTitle>Fiscal Authority Name</columnTitle>-->
+<!--                    </column>-->
                     <column columnName="Species">
                         <columnTitle>Species</columnTitle>
                     </column>
