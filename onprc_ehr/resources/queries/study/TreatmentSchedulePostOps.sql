@@ -4,7 +4,6 @@
 
  -- Modified by Kolli on 9/10/2019
 */
-
 SELECT
 	  h.id,
 	  h.calculated_status,
@@ -40,29 +39,29 @@ SELECT
     s.amountWithUnits, s.amountAndVolume, s.dosage, s.dosage_units, s.frequency, s.route, s.reason, s.remark, s.performedby
 FROM (
 
-SELECT
-    t1.objectid,
-    t1.id as animalid,
-    (coalesce(tt.time, ft.hourofday, (hour(t1.date) * 100)) / 100) as hours,
+    SELECT
+        t1.objectid,
+        t1.id as animalid,
+        (coalesce(tt.time, ft.hourofday, (hour(t1.date) * 100)) / 100) as hours,
 
-    CASE
-      WHEN (tt.time IS NOT NULL OR ft.hourofday IS NOT NULL) THEN (((coalesce(tt.time, ft.hourofday) / 100.0) - floor(coalesce(tt.time, ft.hourofday) / 100)) * 100)
-      ELSE minute(t1.date)
-    END as minutes,
-    dr.date as origDate,
+        CASE
+          WHEN (tt.time IS NOT NULL OR ft.hourofday IS NOT NULL) THEN (((coalesce(tt.time, ft.hourofday) / 100.0) - floor(coalesce(tt.time, ft.hourofday) / 100)) * 100)
+          ELSE minute(t1.date)
+        END as minutes,
+        dr.date as origDate,
 
-     CASE
-      WHEN snomed.code IS NOT NULL THEN  'Post Op Meds'
-      ELSE t1.category
-     END as category,
+         CASE
+          WHEN snomed.code IS NOT NULL THEN  'Post Op Meds'
+          ELSE t1.category
+         END as category,
 
-    t1.date as startDate,
-    timestampdiff('SQL_TSI_DAY', cast(t1.dateOnly as timestamp), dr.dateOnly) + 1 as daysElapsed,
-    t1.enddate, t1.code, t1.volume, t1.vol_units, t1.concentration, t1.conc_units, t1.amountWithUnits,
-    t1.amountAndVolume, t1.dosage, t1.dosage_units, t1.frequency.meaning + ' (' + t1.frequency.times + ')' as frequency, t1.route,
-    t1.reason, t1.performedby, t1.remark, t1.qcstate.label as TreatmentStatus
+        t1.date as startDate,
+        timestampdiff('SQL_TSI_DAY', cast(t1.dateOnly as timestamp), dr.dateOnly) + 1 as daysElapsed,
+        t1.enddate, t1.code, t1.volume, t1.vol_units, t1.concentration, t1.conc_units, t1.amountWithUnits,
+        t1.amountAndVolume, t1.dosage, t1.dosage_units, t1.frequency.meaning + ' (' + t1.frequency.times + ')' as frequency, t1.route,
+        t1.reason, t1.performedby, t1.remark, t1.qcstate.label as TreatmentStatus
 
-FROM ehr_lookups.dateRange dr
+    FROM ehr_lookups.dateRange dr
 
 Join study."Treatment Orders" t1
     ON (dr.dateOnly >= t1.dateOnly and dr.dateOnly <= t1.enddateCoalesced AND

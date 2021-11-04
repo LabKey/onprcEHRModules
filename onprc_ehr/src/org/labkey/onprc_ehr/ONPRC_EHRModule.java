@@ -187,6 +187,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added Oct 7th, 2020 Kollil
         ns.registerNotification(new PMICSchedulerNotification(this));
 
+        //Added Nov 1st, 2021 Kollil
+        ns.registerNotification(new TreatmentAlertsFastsNotification(this));
+
         //Added Oct 7th, 2020 Kollil
         ns.registerNotification(new PMICServicesRequestNotification(this));
 
