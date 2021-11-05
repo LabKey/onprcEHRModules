@@ -16,7 +16,7 @@
         </propertyDescriptor>
         <propertyDescriptor name="MHC_Container">
             <canSetPerContainer>true</canSetPerContainer>
-            <description>Used to access datain Genetics for MHC</description>
+            <description>Used allow substitute access to  data in Genetics for MHC</description>
             <editPermissions>
                 <permission>ADMIN</permission>
             </editPermissions>
