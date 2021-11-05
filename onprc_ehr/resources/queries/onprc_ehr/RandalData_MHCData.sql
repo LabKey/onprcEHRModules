@@ -1,5 +1,5 @@
 --Update to use corredct method to cross container
---jonesga 10/28/2021
+--jonesga 11/5/2021
 SELECT d.rowid,
        d.subjectId,
        d.datatype,
