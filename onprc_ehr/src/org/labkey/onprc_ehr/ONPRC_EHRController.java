@@ -91,6 +91,9 @@ public class ONPRC_EHRController extends SpringActionController
             //Added 6-5-2016 Blasa
             resultProperties.put("sla", getSection("/ONPRC/SLA"));
 
+            //Added 11-8-2021 Blasa
+            resultProperties.put("Compliance", getSection("/ONPRC/Compliance"));
+
             //Added by kollil 5/7/2019
             resultProperties.put("reservation", getSection("/ONPRC/Room Reservations"));
 

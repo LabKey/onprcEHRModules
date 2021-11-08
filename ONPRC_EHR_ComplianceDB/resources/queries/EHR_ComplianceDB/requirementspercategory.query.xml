@@ -37,7 +37,7 @@
                     </column>
 
                     <column columnName="trackingflag">
-                        <columnTitle>Unit Essential</columnTitle>
+                        <columnTitle>Essential</columnTitle>
                         <fk>
                             <fkTable>essentialflag</fkTable>
                             <fkColumnName>value</fkColumnName>
