@@ -2,7 +2,7 @@
 
 SELECT
     s.subjectId,
-    s.allele,
+    s.allele as marker,
     --s.primerPairs,
     s.shortName,
     s.totalRecords as totalTests,
@@ -17,7 +17,7 @@ UNION ALL
 
 SELECT
     a.subjectId,
-    a.marker as allele,
+    a.marker,
     null as shortName,
     count(*) as totalTests,
     cast('POS' as varchar) as result,
@@ -32,7 +32,7 @@ UNION ALL
 
 SELECT
 DISTINCT s.subjectId,
-         p.ref_nt_name as allele,
+         p.ref_nt_name as marker,
          null as shortName,
          1 as totalTests,
          cast('NEG' as varchar) as result,
