@@ -61,7 +61,7 @@
                     </column>
 
                     <column columnName="trackingflag">
-                        <columnTitle>Unit Essential</columnTitle>
+                        <columnTitle>Essential</columnTitle>
                         <displayWidth>60</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>

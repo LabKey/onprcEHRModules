@@ -89,9 +89,6 @@
                 itemId: 'admin',
                 title: 'Admin'
             },{
-                itemId: 'compliance',
-                title: 'Compliance'
-            },{
                 itemId: 'dcm',
                 title: 'DCM'
             },{
@@ -130,7 +127,7 @@
         ONPRC.Utils.getNavItems({
             scope: this,
             success: function(results){
-                Ext4.each(['labs', 'admin', 'cores', 'ehr', 'dcm', 'sla', 'scheduler','compliance', 'reservation'], function(name){
+                Ext4.each(['labs', 'admin', 'cores', 'ehr', 'dcm', 'sla', 'scheduler', 'reservation'], function(name){
                     if (results[name] && results[name].length){
                         var section = panel.down('#' + name).items.get(0);
                         var toAdd = [];
