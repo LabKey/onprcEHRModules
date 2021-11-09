@@ -22,7 +22,7 @@ SELECT
     count(*) as totalTests,
     cast('POS' as varchar) as result,
     cast('SBT' as varchar) as assaytype,
-    sum(a.result) / (SELECT count(DISTINCT a2.analysisId) as total FROM assay.GenotypeAssay.Genotype.Data a2 WHERE a.subjectId = a.subjectId ) AS score,
+    sum(a.result) / (SELECT count(DISTINCT a2.analysisId) as total FROM assay.GenotypeAssay.Genotype.Data a2 WHERE a2.subjectId = a.subjectId AND a2.run.assayType = 'SBT' ) AS score,
 
 FROM assay.GenotypeAssay.Genotype.Data a
 WHERE a.run.assayType = 'SBT'
