@@ -10,9 +10,9 @@ import java.util.Date;
  * Created by kollil on 11/1/2021
  */
 
-public class TreatmentAlertsFastsNotification extends ColonyAlertsNotification
+public class TreatmentAlertsFastsNotificationSecondary extends ColonyAlertsNotification
 {
-    public TreatmentAlertsFastsNotification(Module owner)
+    public TreatmentAlertsFastsNotificationSecondary(Module owner)
     {
         super(owner);
     }
@@ -20,7 +20,7 @@ public class TreatmentAlertsFastsNotification extends ColonyAlertsNotification
     @Override
     public String getName()
     {
-        return "Fasts Treatment Alert";
+        return "Fasts Treatment Alert Secondary";
     }
 
     @Override
@@ -32,13 +32,13 @@ public class TreatmentAlertsFastsNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 30 7,18 ? * * *";
+        return "0 0 7 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 6:30pm and 7:30Am";
+        return "every day at 7Am";
     }
 
     @Override
