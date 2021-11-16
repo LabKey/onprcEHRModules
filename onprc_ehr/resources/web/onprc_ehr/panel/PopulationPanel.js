@@ -245,7 +245,7 @@ Ext4.define('EHR.panel.PopulationPanel', {
         }, this);
 
         toAdd.push({
-            cls: 'ehr-populationpanel-table',
+            cls: 'onprc_ehr-populationpanel-table',
             layout: {
                 type: 'table',
                 columns: this.getTotalColumns(),
