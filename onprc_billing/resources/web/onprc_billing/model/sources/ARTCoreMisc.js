@@ -104,7 +104,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
 
             chargetype: {
                 allowBlank: true,
-                defaultValue: 'ART',
+                defaultValue: 'ART Core',
                 hidden: false
             }
 
