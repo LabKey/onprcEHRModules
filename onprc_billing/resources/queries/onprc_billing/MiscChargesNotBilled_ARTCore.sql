@@ -22,7 +22,7 @@ SELECT d.Id,
        d.createdby,
        m.taskId
 FROM MiscChargeswithRates d join MiscCharges m on d.taskId = m.taskId and d.sourceRecord = m.objectID
-where d.invoiceID is null and d.category = 'ART'
+where d.invoiceID is null and d.category = 'ART Core'
 Group by
     d.Id,
     d.date,
