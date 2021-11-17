@@ -31,6 +31,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
                     columns: 'rowid, category, chargeName, unitCost'
                 },
                 editorConfig: {
+                    anyMatch: true,
                     listConfig: {
                         innerTpl: '{[("<b>" + values.chargeName + "</b>" )]}',
                         getInnerTpl: function(){
@@ -46,7 +47,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
 
             debitedaccount: {
                 xtype: 'combo',
-                header: 'Alias',
+                header: 'Alias, Project & PI',
                 hidden: false,
                 lookup: {
                     schemaName: 'onprc_billing',
@@ -56,6 +57,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
                     columns: 'alias, aliasPI'
                 },
                 editorConfig: {
+                    anyMatch: true,
                     listConfig: {
                         innerTpl: '{[("<b>" + values.aliasPI + "</b>" )]}',
                         getInnerTpl: function(){
@@ -64,15 +66,14 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
                     }
                 },
                 columnConfig: {
-                    width: 300
+                    width: 400
                 }
 
             },
 
             project: {
                 allowBlank: true,
-                hidden: false,
-                width: 200
+                hidden: true
             },
 
             comment: {

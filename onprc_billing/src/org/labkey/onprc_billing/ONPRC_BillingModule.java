@@ -128,9 +128,6 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
         //Added: 9/16/2021 Kollil
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesARTCoreFormType.class, this));
 
-        //Added: 1/6/2020 Kollil
-       // EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ChargesARTCoreFormType.class, this));
-
         //NOTE: not really being used, so have disabled
         //Resource billingTriggers = getModuleResource("/scripts/onprc_billing/billing_triggers.js");
         //assert billingTriggers != null;
