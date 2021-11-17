@@ -37,7 +37,7 @@ public class EventsQueryView extends QueryView
 
         if (urlUpdate != null)
         {
-            UpdateColumn update = new UpdateColumn(urlUpdate)
+            var update = new UpdateColumn.Impl(urlUpdate)
             {
                 @Override
                 public void addQueryFieldKeys(Set<FieldKey> keys)
