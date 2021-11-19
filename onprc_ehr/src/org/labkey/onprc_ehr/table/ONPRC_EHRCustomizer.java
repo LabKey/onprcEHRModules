@@ -244,7 +244,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getColumn(name) == null)
         {
             TableInfo obsRealTable = getRealTableForDataset(ti, "Clinical Observations");
-            if (obsRealTable != null)
+            if (null != obsRealTable && null != ti.getColumn("Id") && null != ti.getColumn("date"))
             {
                 //clinical remarks entered since last vet review is a proxy for whether it needs to be reviewed again
                 SQLFragment sql = new SQLFragment("(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".date > COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) THEN " + ti.getSqlDialect().getBooleanTRUE() + " ELSE " + ti.getSqlDialect().getBooleanFALSE() + " END)", ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
@@ -859,6 +859,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         appendSurgeryFollupDaysyCol(ti);  //Added: 11/1/2017  R.Blasa
         appendCaseHistoryCol(ti);
 
+        if (null == ti.getColumn("objectid") || null == ti.getColumn("lsid") || null == ti.getColumn("enddate") || null == ti.getColumn("reviewdate"))
+            return;
+
         String problemCategories = "problemCategories";
         if (ti.getColumn(problemCategories) == null)
         {
@@ -1040,7 +1043,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             return;
 
         String name = "treatmentTimes";
-        if (ti.getColumn(name) == null)
+        if (null == ti.getColumn(name) && null != ti.getColumn("objectid"))
         {
             String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
             SQLFragment sql = new SQLFragment("COALESCE(" +
@@ -1082,7 +1085,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         String name = "times";
         ColumnInfo existing = ti.getColumn(name);
-        if (existing == null)
+        if (null == existing && null != ti.getColumn("meaning"))
         {
             SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(t.hourofday))  + cast(t.hourofday as varchar(4))"), true, true, "','").getSqlCharSequence() +
                     "FROM ehr_lookups.treatment_frequency_times t " +
@@ -1106,7 +1109,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         }
 
         String hxName = "mostRecentHx";
-        if (ti.getColumn(hxName) == null)
+        if (null == ti.getColumn(hxName) && null != ti.getColumn("Id"))
         {
             TableInfo realTable = getRealTableForDataset(ti, "Clinical Remarks");
             if (realTable == null)
@@ -1138,11 +1141,11 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         //vet review
         String lastVetReview = "lastVetReview";
-        if (ti.getColumn(lastVetReview) == null)
+        if (null == ti.getColumn(lastVetReview))
         {
             TableInfo obsRealTable = getRealTableForDataset(ti, "Clinical Observations");
             TableInfo remarksTable = getRealTableForDataset(ti, "Clinical Remarks");
-            if (obsRealTable != null && remarksTable != null)
+            if (null != obsRealTable && null != remarksTable && null != ti.getColumn("Id") && null != ti.getColumn("date"))
             {
                 SQLFragment obsSql = new SQLFragment("(SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId)", ONPRC_EHRManager.VET_REVIEW);
                 ExprColumn obsCol = new ExprColumn(ti, lastVetReview, obsSql, JdbcType.TIMESTAMP, ti.getColumn("Id"));
@@ -1305,6 +1308,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         //uses caseId
         ColumnInfo objectId = ti.getColumn("objectid");
+        if (null == objectId || null == ti.getColumn("Id"))
+            return;
+
         String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
         SQLFragment latestHxSql = new SQLFragment("(SELECT " + prefix + " (" + "r.hx" + ") as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
@@ -1411,6 +1417,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String name = "proceduresPerformed";
         if (ti.getColumn(name) != null)
             return;
+        if (null ==  ti.getColumn("date"))
+            return;
 
         TableInfo realTable = getRealTableForDataset(ti, "Clinical Encounters");
         if (realTable == null)
@@ -1439,6 +1447,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     {
         String name = "surgeryfollowupDays";
         if (ti.getColumn(name) != null)
+            return;
+        if (null ==  ti.getColumn("date"))
             return;
 
         TableInfo realTable = getRealTableForDataset(ti, "Clinical Encounters");
@@ -1582,7 +1592,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ti.getSqlDialect().isSqlServer())
         {
             String annualReviewDate = "annualReviewDate";
-            if (ti.getColumn(annualReviewDate) == null)
+            if (null == ti.getColumn(annualReviewDate) && null != ti.getColumn("approve"))
             {
                 //NOTE: day used instead of year to be PG / LK12.3 compatible
                 String sqlString = "(CASE " +
@@ -1618,7 +1628,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
 
             String renewalDate = "renewalDate";
-            if (ti.getColumn(renewalDate) == null)
+            if (null == ti.getColumn(renewalDate) && null != ti.getColumn("approve"))
             {
                 //NOTE: while SQL_TSI_YEAR is not PG compatible, use it to deal w/ leap years.
                 String sqlString = "(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN {fn timestampadd(SQL_TSI_DAY, -1, {fn timestampadd(SQL_TSI_YEAR, 3, " + ExprColumn.STR_TABLE_ALIAS + ".approve)})} ELSE null END)";
@@ -1972,7 +1982,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     private void customizeUrinalysisTable(AbstractTableInfo ti)
     {
         String name = "results";
-        if (ti.getColumn(name) == null)
+        if (null == ti.getColumn(name) && null != ti.getColumn("result") && null !=  ti.getColumn("rangeMax") && null !=  ti.getColumn("qualResult"))
         {
             //this provides a single column that rolls together the 3 possible sources of results into a single string
             String resultSql = "CAST(" + ExprColumn.STR_TABLE_ALIAS + ".result AS VARCHAR)";
@@ -2343,7 +2353,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
         if (ti.getColumn(name) == null)
         {
             TableInfo housing = getRealTableForDataset(ti, "housing");
-            if (housing != null)
+            if (null != housing && null != ti.getColumn("room") && null != ti.getColumn("cage"))
             {
                 SQLFragment sql = new SQLFragment("(SELECT CASE WHEN count(h.participantid) > 8 THEN '>8 Animals' ELSE " + ti.getSqlDialect().getGroupConcat(new SQLFragment("h.participantid"), true, true, "', '").getSqlCharSequence() + " END as expr FROM studydataset." + housing.getName() + " h WHERE h.room = " + ExprColumn.STR_TABLE_ALIAS + ".room AND ((h.enddate IS NULL AND h.date <= {fn now()} AND h.cage IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".cage IS NULL) OR (h.cage = " + ExprColumn.STR_TABLE_ALIAS + ".cage)))");
                 ExprColumn newCol = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("room"), ti.getColumn("cage"));
