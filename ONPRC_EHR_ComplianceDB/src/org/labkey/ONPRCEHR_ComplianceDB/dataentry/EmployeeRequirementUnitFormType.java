@@ -8,7 +8,9 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class EmployeeRequirementUnitFormType extends  TaskForm
@@ -23,14 +25,33 @@ public class EmployeeRequirementUnitFormType extends  TaskForm
         ));
 
         addClientDependency(ClientDependency.supplierFromPath("EHR_ComplianceDB/model/sources/EmployeeUnit.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr_compliancedb/panel/EmployeeRecords.js"));
+
         for  (FormSection s : getFormSections())
         {
             s.addConfigSource("EmployeeRequiredUnit");
         }
 
     }
-    @Override
 
+//  Added: 11-18-2021  R.Blasa
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+
+        int idx = ret.indexOf("SUBMIT");
+        assert idx > -1;
+        ret.remove("SUBMIT");
+        if (idx > -1)
+             ret.add(idx, "EMPLOYEERUN");
+         else
+            ret.add("EMPLOYEERUN");
+
+        return ret;
+    }
+
+    @Override
     protected boolean canInsert()
     {
         if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_ComplianceDBEntryPermission.class))

@@ -24,6 +24,7 @@ import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRequirementUnitFormTyp
 import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBRole;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.security.roles.RoleManager;
+import org.labkey.api.view.template.ClientDependency;
 
 //Created: 11-24-2020   R.Blasa
 
@@ -65,8 +66,13 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
         // Added: 7-6-2021 R. Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EmployeeRequirementCategoryFormType.class, this));
 
-        // Added: 7-6-2021 R. Blasa
+
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EmployeeRequirementUnitFormType.class, this));
+        // Added: 7-6-2021 R. Blasa
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("ehr_compliancedb/panel/EnterDataPanel.js"), this);
+
+
+
     }
 
 
