@@ -48,8 +48,16 @@ public class EmployeeRequirementUnitFormType extends  TaskForm
          else
             ret.add("EMPLOYEERUN");
 
+        int idx2 = ret.indexOf("CLOSE");
+        assert idx2 > -1;
+        ret.remove("CLOSE");
+        if (idx2 > -1)
+            ret.add(idx2, "EMPLOYEECLOSE");
+        else
+            ret.add("EMPLOYEECLOSE");
+
         return ret;
-    }
+    };
 
     @Override
     protected boolean canInsert()

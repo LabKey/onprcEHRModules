@@ -37,7 +37,6 @@ public class EmployeeRequirementCategoryFormType extends  TaskForm
     }
 
 
-    //  Added: 11-18-2021  R.Blasa
     @Override
     protected List<String> getButtonConfigs()
     {
@@ -51,9 +50,16 @@ public class EmployeeRequirementCategoryFormType extends  TaskForm
         else
             ret.add("EMPLOYEERUN");
 
-        return ret;
-    }
+        int idx2 = ret.indexOf("CLOSE");
+        assert idx2 > -1;
+        ret.remove("CLOSE");
+        if (idx2 > -1)
+            ret.add(idx2, "EMPLOYEECLOSE");
+        else
+            ret.add("EMPLOYEECLOSE");
 
+        return ret;
+    };
 
     @Override
     protected boolean canInsert()

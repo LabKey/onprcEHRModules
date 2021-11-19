@@ -22,4 +22,18 @@ EHR.DataEntryUtils.registerDataEntryFormButton('EMPLOYEERUN', {
         disableOn: 'ERROR'
     });
 
-// C:\Test_21.7a\server\modules\onprcEHRModules\ONPRC_EHR_ComplianceDB\resources\views\enterData.html
+
+EHR.DataEntryUtils.registerDataEntryFormButton('EMPLOYEECLOSE', {
+    name: 'closeBtn',
+    text: 'Save & Close',
+    requiredQC: 'In Progress',
+    targetQC: 'In Progress',
+    errorThreshold: 'WARN',
+    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'enterData.view',(ctx ? ctx['EmployeeContainer'] : null), null),
+    itemId: 'closeBtn',
+        handler: function(btn){
+            var panel = btn.up('ehr-dataentrypanel');
+            panel.onSubmit(btn);
+        },
+        disableOn: 'ERROR'
+    });
