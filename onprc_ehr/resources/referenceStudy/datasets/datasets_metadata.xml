@@ -144,6 +144,12 @@
                 <datatype>integer</datatype>
                 <columnTitle>Requested By</columnTitle>
             </column>
+            <column columnName="ScheduleNecropsy">
+                <datatype>timestamp</datatype>
+            </column>
+            <column columnName="TargetEndDate">
+                <datatype>timestamp</datatype>
+            </column>
         </columns>
         <tableTitle>Animal Record Flags</tableTitle>
     </table>

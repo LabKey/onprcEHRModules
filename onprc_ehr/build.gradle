@@ -18,4 +18,8 @@ dependencies
    BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:premium", depProjectConfig: 'published', depExtension: 'module')
    BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:ehrModules:ehr", depProjectConfig: 'published', depExtension: 'module')
    BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:ldap", depProjectConfig: 'published', depExtension: 'module')
+
+   BuildUtils.getServerProject(project).dependencies {
+      modules ("org.labkey.module:sampleManagement:${labkeyVersion}@module") { transitive = true }
+   }
 }

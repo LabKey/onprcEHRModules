@@ -4,106 +4,72 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 
--- Created: 5-12-2020   R.Blasa     ComplianceRecentTests.sql
+-- Created: 10-6-2021   R.Blasa     ComplianceRecentTests.sql
 
-SELECT
-    e.employeeid,
-    coalesce(rn.RequirementName, t1.requirementname) as requirementname,
-    T1.timesCompleted,
-    CASE
-        WHEN (ee.RequirementName is not null) THEN 0       ---Modified 5-14-2020 R.Blasa  exempt should not show values
-        ELSE
-            rn.ExpirePeriod
-        END as ExpirePeriod,
-    T1.MostRecentDate,
+select b.requirementname,
+       a.employeeid,
+       group_concat(distinct b.unit,chr(10)) as unit,
+       group_concat(distinct a.category,chr(10)) as category,
+       group_concat(distinct b.trackingflag) as trackingflag,
 
-    --we calculate the time since that test in months
-    age_in_months(T1.MostRecentDate, curdate()) AS TimeSinceTest,
 
-    --we calculate the time until renewal
-    CAST(
-            CASE
-                WHEN (e.isActive = false) THEN NULL --dont bother to include if the employee is not active
-                WHEN (rn.requirementname IS NULL) THEN NULL
-                WHEN (ee.RequirementName IS NOT NULL) THEN NULL -----Added 12-17-2020
-                WHEN (T1.MostRecentDate IS NULL) THEN 0       ---Modified: 5-18-2021 restore original
-                WHEN(rn.ExpirePeriod = 0 OR rn.ExpirePeriod IS NULL) THEN NULL
-                ELSE (rn.expirePeriod - (age_in_months(T1.MostRecentDate, curdate())))
-                END AS double)
-        AS MonthsUntilRenewal,
+       (select count(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
 
-    --this is the logic to determine if the requirement is required
-    --it is cut/paste from the WHERE clause below, so any change here should be reflected there too
-    CASE
-        --if this employee/test appears in the exemptions table, it's not required
-        WHEN (ee.RequirementName IS NOT NULL) THEN 'N'
-        WHEN (rn.Required = TRUE) THEN 'Y'
-        WHEN (e.Barrier = TRUE AND rn.Access = TRUE) THEN 'Y'
-        WHEN (e.Animals = TRUE AND rn.Animals = TRUE) THEN 'Y'
-        WHEN (e.contactsSla = TRUE AND rn.contactsSla = TRUE) THEN 'Y'
-        WHEN (e.Tissue = TRUE AND rn.Tissues = TRUE) THEN 'Y'
-        --if a requirement is mandatory for a given employee category/unit and this employee is one, it's required
-        WHEN (rc.RequirementName IS NOT NULL) THEN 'Y'
-        --this allows to non-standard requirements to be tracked
-        WHEN (mt.RequirementName IS NOT NULL) THEN 'Y'
-        ELSE 'N'
-        END as isRequired
+       (select k.expireperiod from Requirements k where k.requirementname = b.requirementname) as ExpiredPeriod,
 
-FROM ehr_compliancedb.Employees e
+       (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
-         LEFT JOIN ehr_compliancedb.Requirements rn ON (1=1)
+       CAST(
+               CASE
 
---we add in category/unit specific requirements
-         LEFT JOIN (
-    SELECT e.employeeid, rc.requirementname
-    FROM ehr_compliancedb.employees e
-             JOIN ehr_compliancedb.requirementspercategory rc ON (
-            (rc.Category = e.category AND rc.unit = e.unit) OR
-            (rc.Category = e.category AND rc.unit IS NULL) OR
-            (rc.Category IS NULL AND rc.unit = e.unit)
-        )
-    GROUP BY e.employeeid, rc.requirementname
-) rc ON (rc.employeeid = e.employeeid AND rn.requirementname = rc.requirementname)
+                   WHEN (select max(st.date) from completiondates st where st.requirementname = b.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
+                   WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  ) = 0 then Null
 
---we add in misc requirements specific per employee
-         LEFT JOIN (
-    SELECT mt.employeeid, mt.requirementname
-    FROM ehr_compliancedb.requirementsperemployee mt
-    GROUP BY mt.employeeid, mt.requirementname
-) mt ON (mt.RequirementName=rn.RequirementName AND mt.EmployeeId = e.employeeid)
+                   ELSE ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  )
+                   END  AS double)  AS MonthsUntilRenewal
 
---we add employee exemptions
-         LEFT JOIN (
-    SELECT ee.employeeid, ee.requirementname
-    FROM ehr_compliancedb.EmployeeRequirementExemptions ee
-    GROUP BY ee.employeeid, ee.requirementname
-) ee ON (ee.RequirementName=rn.RequirementName AND ee.EmployeeId = e.employeeid)
 
---we add the dates employees completed each requirement
-         LEFT JOIN (
-    SELECT max(t.date) AS MostRecentDate, count(*) as timesCompleted, t.RequirementName, t.EmployeeId
-    FROM ehr_compliancedb.CompletionDates t
-    GROUP BY t.EmployeeId, t.RequirementName
-) T1 ON (T1.RequirementName = rn.RequirementName AND T1.EmployeeId = e.employeeid)
 
-WHERE
-    --we compute whether this person requires this test
-    --and only show required tests
-    --it is nearly cut/paste from the CASE statement above, so any change here should be reflected there too
-    --the only difference is that this has an additional condition to also include requirements the person happens to have completed
-    CASE
-        --if this employee/test appears in the exemptions table, it's not required
-        WHEN (ee.RequirementName IS NOT NULL) THEN TRUE  -----Modified  5-12-2020 R.Blasa
-        WHEN (rn.Required = TRUE) THEN TRUE
-        WHEN (e.Barrier = TRUE AND rn.Access = TRUE) THEN TRUE
-        WHEN (e.Animals = TRUE AND rn.Animals = TRUE) THEN TRUE
-        WHEN (e.contactsSla = TRUE AND rn.contactsSla = TRUE) THEN TRUE
-        WHEN (e.Tissue = TRUE AND rn.Tissues = TRUE) THEN TRUE
-        --if a requirement is mandatory for a given employee category/unit and this employee is one, it's required
-        WHEN (rc.RequirementName IS NOT NULL) THEN TRUE
-        --this allows to non-standard requirements to be tracked
-        WHEN (mt.RequirementName IS NOT NULL) THEN TRUE
-        --include the requirement if the person happens to have completed it
-        WHEN (T1.RequirementName IS NOT NULL) THEN TRUE
-        ELSE FALSE
-        END = TRUE
+from employeeperunit a ,requirementspercategory b
+where ( a.unit = b.unit or a.category = b.category )
+
+group by b.requirementname,a.employeeid
+
+
+union
+
+
+select a.requirementname,
+       a.employeeid,
+       null,
+       null,
+       'No' as trackingflag,
+
+
+       (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
+
+       (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = a.requirementname) as ExpiredPeriod,
+
+       (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
+
+
+       CAST(
+
+               CASE
+
+                   WHEN (select max(st.date) from completiondates st where st.requirementname = a.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
+                   WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  ) = 0 then Null
+
+
+                   ELSE ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  )
+                   END  AS double)  AS MonthsUntilRenewal
+
+
+
+
+from  ehr_compliancedb.completiondates a
+where a.requirementname not in (select distinct h.requirementname from ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h Where (k.unit = h.unit
+    or k.category = h.category) And a.employeeid = k.employeeid )
+
+
+group by a.requirementname,a.employeeid
