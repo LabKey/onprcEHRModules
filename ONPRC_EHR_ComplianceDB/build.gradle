@@ -1,3 +1,15 @@
+import org.labkey.gradle.util.BuildUtils;
+
 plugins {
-    id 'org.labkey.build.fileModule'
+    id 'org.labkey.build.module'
 }
+dependencies
+        {
+            BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:ehrModules:ehr", depProjectConfig: "apiJarFile")
+            BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:ehrModules:ehr", depProjectConfig: "published", depExtension: "module")
+            BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:ehrModules:EHR_ComplianceDB", depProjectConfig: "apiJarFile")
+            BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:ehrModules:EHR_ComplianceDB", depProjectConfig: "published", depExtension: "module")
+            BuildUtils.addLabKeyDependency(project: project, config: "implementation", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: "apiJarFile")
+            BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:LabDevKitModules:LDK", depProjectConfig: 'published', depExtension: 'module')
+            BuildUtils.addLabKeyDependency(project: project, config: "modules", depProjectPath: ":server:modules:onprcEHRModules:onprc_ehr", depProjectConfig: 'published', depExtension: 'module')
+        }

@@ -134,8 +134,7 @@
                         <fk>
                             <fkDbSchema>onprc_ehr</fkDbSchema>
                             <fkTable>Labwork_Requestor_Vets</fkTable>
-                            <fkColumnName>userid</fkColumnName>
-                            <fkDisplayColumnName useRawValue="true"/>
+                            <fkColumnName>userId</fkColumnName>
                         </fk>
                     </column>
                 </columns>
