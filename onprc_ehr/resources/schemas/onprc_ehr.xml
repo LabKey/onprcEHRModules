@@ -1335,9 +1335,9 @@
         </columns>
     </table>
 
-    <!--ASB SpeIns reference data schema. Added by Kolli, 06/8/21 -->
-    <table tableName="ASB_Spec" tableDbType="TABLE" useColumnOrder="true">
-        <tableTitle>BSUageclass</tableTitle>
+
+    <table tableName="BSUageclass" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>BSU Age Class</tableTitle>
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>
         <columns>
