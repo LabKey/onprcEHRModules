@@ -559,7 +559,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 //         Created: 11-15-2021  R.Blasa
         if (ds.getColumn("BehavioralAgeClass") == null)
         {
-            var col = getWrappedIdCol(us, ds, "BSUAgeClass", "demographicsBSUAgeClass");
+            var col = getWrappedIdCol(us, ds, "BehavioralAgeClass", "demographicsBSUAgeClass");
             col.setLabel("Behavioral Age Class");
             col.setDescription("Calculates the Behavioral age class of the animal, which is used to calculate reference ranges");
                 ds.addColumn(col);
