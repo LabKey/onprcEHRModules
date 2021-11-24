@@ -8,14 +8,14 @@
  * @cfg colFields
  * @cfg rowField
  */
-//Created: 11-5-2021  R.Blasa
+//Created: 11-23-2021  R.Blasa
 
 Ext4.define('EHR.panel.PopulationPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.onprc_ehr-populationpanel',
     statics: {
         FIELDS: {
-            ageclass: 'Id/ageClass/label',
+            ageclass: 'Id/BehavioralAgeClass/label',
             species: 'species',
             gender: 'gender'
         }
@@ -62,7 +62,7 @@ Ext4.define('EHR.panel.PopulationPanel', {
             queryName: 'demographics',
             filterArray: this.filterArray,
             columns: ['Id', EHR.panel.PopulationPanel.FIELDS.ageclass, EHR.panel.PopulationPanel.FIELDS.gender, EHR.panel.PopulationPanel.FIELDS.species].join(','),
-            sort: 'Id/ageClass/ageclass',
+            sort: 'Id/BehavioralAgeClass/label',
             failure: LDK.Utils.getErrorCallback(),
             scope: this,
             success: this.doAggregation
