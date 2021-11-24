@@ -14,6 +14,7 @@
                     </column>
                     <column columnName="requirementName">
                         <columnTitle>Requirement Name</columnTitle>
+                        <displayWidth>90</displayWidth>
                         <fk>
                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
                             <fkTable>requirements</fkTable>
@@ -23,13 +24,32 @@
                     </column>
                     <column columnName="timesCompleted">
                         <columnTitle>Times Completed</columnTitle>
+                        <displayWidth>50</displayWidth>
                         <url>/query/executeQuery.view?schemaName=ehr_compliancedb&amp;
                             query.queryName=CompletionDates&amp;
                             query.EmployeeId~eq=${employeeId}&amp;
                             query.requirementName~eq=${requirementName}&amp;
                         </url>
                     </column>
+                    <column columnName="ExpiredPeriod">
+                        <columnTitle>Expire Period (Months)</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
+                    <column columnName="unit">
+                        <columnTitle>Unit</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
+                    <column columnName="mostrecentdate">
+                        <columnTitle>Most Recent Date</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
                     <column columnName="MonthsUntilRenewal">
+                        <columnTitle>Months Until Renewal</columnTitle>
+                        <displayWidth>60</displayWidth>
                         <conditionalFormats>
                             <conditionalFormat>
                                 <filters>
@@ -39,10 +59,13 @@
                             </conditionalFormat>
                         </conditionalFormats>
                     </column>
-                    <column columnName="isRequired">
-                        <columnTitle>Is Required?</columnTitle>
+
+                    <column columnName="trackingflag">
+                        <columnTitle>Essential</columnTitle>
+                        <displayWidth>60</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
+
                 </columns>
             </table>
         </tables>
