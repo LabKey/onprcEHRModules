@@ -150,6 +150,9 @@
             <column columnName="TargetEndDate">
                 <datatype>timestamp</datatype>
             </column>
+            <column columnName="category">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Animal Record Flags</tableTitle>
     </table>
