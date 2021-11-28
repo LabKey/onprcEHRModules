@@ -127,6 +127,9 @@
             <column columnName="flag">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="value">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="enddate">
                 <datatype>timestamp</datatype>
                 <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
