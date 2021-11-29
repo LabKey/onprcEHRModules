@@ -17,12 +17,12 @@
 package org.labkey.sla;
 
 import org.json.JSONObject;
-import org.labkey.api.action.ReadOnlyApiAction;
 import org.labkey.api.action.ApiResponse;
 import org.labkey.api.action.ApiSimpleResponse;
 import org.labkey.api.action.ConfirmAction;
 import org.labkey.api.action.ExportAction;
 import org.labkey.api.action.MutatingApiAction;
+import org.labkey.api.action.ReadOnlyApiAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
@@ -63,6 +63,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.text.DateFormat;
@@ -479,7 +480,7 @@ public class SLAController extends SpringActionController
                     MailHelper.send(message, getUser(), getContainer());
                 }
             }
-            catch (javax.mail.MessagingException | ConfigurationException e)
+            catch (MessagingException | ConfigurationException e)
             {
                 errors.reject(ERROR_MSG, "Error: " + e.getMessage());
             }
