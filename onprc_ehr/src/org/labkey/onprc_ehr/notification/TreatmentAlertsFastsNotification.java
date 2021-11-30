@@ -38,23 +38,19 @@ public class TreatmentAlertsFastsNotification extends ColonyAlertsNotification
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 6:30pm and 7:30Am";
+        return "every day at 7:30Am and 6:30pm";
     }
 
     @Override
     public String getDescription()
     {
-        return "The report is designed to send Fast treatments alerts daily!";
+        return "The report is designed to send Fast treatments alerts daily at 7:30Am and 6:30pm!";
     }
 
     @Override
     public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
-
-        //Find today's date
-        //Date now = new Date();
-        //msg.append("This email contains any fast treatments not marked as completed.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
 
         processFastsTreatments(c, u, msg);
 

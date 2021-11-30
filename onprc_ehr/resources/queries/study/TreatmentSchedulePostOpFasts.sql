@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 
  Created by Kolli on Nov 1st, 2021
- Create an alert to show the following fasting procedures prescribed on the current day between 16:00 - 7:30Am
+ Create an alert to show the following fasting procedures prescribed on the current day between 16:00 - 7:30Am (4pm to 8am)
  1. Complete NPO - 2440
  2. Overnight Fast - 1807
  3. AM Fast - 1804

@@ -1108,7 +1108,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //Get num of rows
         if (count > 0) {
-            msg.append("<b>" + count + " Fast treatments(s) scheduled for today:</b>");
+            msg.append("<b>" + count + " Fast treatment(s) scheduled for today:</b>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "TreatmentSchedulePostOpFasts", null) + "&query.containerFilterName=AllFolders'>Click here to view the fast treatments in PRIME</a></p>\n");
             msg.append("<hr>");
         }

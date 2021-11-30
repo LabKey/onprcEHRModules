@@ -44,7 +44,7 @@ public class TreatmentAlertsFastsNotificationSecondary extends ColonyAlertsNotif
     @Override
     public String getDescription()
     {
-        return "The report is designed to send Fast treatments alerts daily!";
+        return "The report is designed to send Fast treatments alerts daily at 7Am!";
     }
 
     @Override
