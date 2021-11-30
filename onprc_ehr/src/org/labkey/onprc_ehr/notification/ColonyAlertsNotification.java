@@ -1018,7 +1018,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " DCM action items.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.date~dateeq="+ getDateFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.actiondate~dateeq="+ getDateFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
             msg.append("</p><br><hr>");
         }
         else
