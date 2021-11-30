@@ -1149,7 +1149,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
                     msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
 //                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
-                    msg.append("<td style= " + '"' + "background-color:#FFA500" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                    msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");

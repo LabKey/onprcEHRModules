@@ -32,19 +32,19 @@ public class TreatmentAlertsFastsNotificationSecondary extends ColonyAlertsNotif
     @Override
     public String getCronString()
     {
-        return "0 0 7 * * ?";
+        return "0 0 7,19 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 7Am";
+        return "every day at 7AM and 7PM";
     }
 
     @Override
     public String getDescription()
     {
-        return "The report is designed to send Fast treatments alerts daily at 7Am!";
+        return "The report is designed to send Fast treatments alerts daily at 7AM and 7PM!";
     }
 
     @Override
