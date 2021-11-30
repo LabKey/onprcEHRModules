@@ -62,7 +62,7 @@ Ext4.define('EHR.panel.PopulationPanel', {
             queryName: 'demographics',
             filterArray: this.filterArray,
             columns: ['Id', EHR.panel.PopulationPanel.FIELDS.ageclass, EHR.panel.PopulationPanel.FIELDS.gender, EHR.panel.PopulationPanel.FIELDS.species].join(','),
-            sort: 'Id/BehavioralAgeClass/label',
+            sort: 'Id/BehavioralAgeClass/AgeClass',
             failure: LDK.Utils.getErrorCallback(),
             scope: this,
             success: this.doAggregation
@@ -245,7 +245,7 @@ Ext4.define('EHR.panel.PopulationPanel', {
         }, this);
 
         toAdd.push({
-            cls: 'onprc_ehr-populationpanel-table',
+            cls: 'ehr-populationpanel-table',
             layout: {
                 type: 'table',
                 columns: this.getTotalColumns(),

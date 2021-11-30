@@ -118,7 +118,7 @@
                     },{
                         xtype: 'button',
                         border: true,
-                        text: 'Show Group',
+                        text: 'Show GroupT',
                         width: this.BUTTON_WIDTH,
                         handler: function(btn){
                             //  var field = btn.ownerCt.find('itemId', 'animalGroup')[0];
@@ -126,8 +126,8 @@
                             var value = field.getValue();
                             if (!value)
                                 return;
-
-                            window.location = LABKEY.ActionURL.buildURL('ehr', 'animalGroupDetails', ctx['EHRStudyContainer'], {groupId:value});
+                        //Modified: 11-26-2021  R.Blasa
+                            window.location = LABKEY.ActionURL.buildURL('onprc_ehr', 'animalGroupDetails', ctx['EHRStudyContainer'], {groupId:value});
                         },
                         scope: this
                     },{
