@@ -31,13 +31,13 @@ public class ONPRC_ReportsCustomizer implements TableCustomizer
 
     private void appendMHCColumn(AbstractTableInfo ti)
     {
-//        String name = "mhcSummary";
-//        if (ti.getColumn(name) == null)
-//        {
-//            BaseColumnInfo col = getWrappedIdCol(ti.getUserSchema(), ti, name, "demographicsMHCTests");
-//            col.setLabel("MHC Test Summary");
-//            ti.addColumn(col);
-//        }
+        String name = "mhcSummary";
+        if (ti.getColumn(name) == null)
+        {
+            BaseColumnInfo col = getWrappedIdCol(ti.getUserSchema(), ti, name, "demographicsMHCTests");
+            col.setLabel("MHC Test Summary");
+            ti.addColumn(col);
+        }
 
         String name2 = "dnaBank";
         if (ti.getColumn(name2) == null)
