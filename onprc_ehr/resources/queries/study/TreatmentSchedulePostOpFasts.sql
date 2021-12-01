@@ -10,6 +10,7 @@
 */
 Select
     Id,
+    id.curLocation.room + ' ' +  id.curLocation.cage as location,
     date,
     enddate,
     project.displayName as project,

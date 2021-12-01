@@ -1122,6 +1122,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             Set<FieldKey> columns = new HashSet<>();
             columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("location"));
             columns.add(FieldKey.fromString("date"));
             columns.add(FieldKey.fromString("enddate"));
             columns.add(FieldKey.fromString("project"));
@@ -1139,7 +1140,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<hr><b>Today's Fast Treatments:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td>Id </td><td>Start Date </td><td>End Date </td><td>Project </td><td>Charge Unit </td><td>Procedure </td><td>Instructions </td><td>Remark </td><td>Performed By </td><td>Status </td></tr>");
+            msg.append("<td>Id </td><td>Location </td><td>Start Date </td><td>End Date </td><td>Project </td><td>Charge Unit </td><td>Procedure </td><td>Instructions </td><td>Remark </td><td>Performed By </td><td>Status </td></tr>");
 
             ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
                 @Override
@@ -1150,6 +1151,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
 //                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
                     msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("location")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
