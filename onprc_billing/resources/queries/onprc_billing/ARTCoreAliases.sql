@@ -1,4 +1,5 @@
 -- Query to get active aliases, project and PI details to display in the ART Core Aliases drop down list
+-- Created by Kollil in Oct 2021
 SELECT
 a.alias,
 (Select c.name from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.ehr.project c where b.project = c.project) + ', ' + a.alias + ' - ' + COALESCE(a.investigatorName, 'N/A') as aliasPI

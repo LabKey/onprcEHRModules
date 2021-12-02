@@ -1008,6 +1008,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * Kollil, 5/12/2017 : Send DCM Notes notification on the action date
+     * Modified by Kollil in Nov, 2021: Added animal Location to the alerts
      */
     protected void dcmNotesAlert(final Container c, User u, final StringBuilder msg)
     {
