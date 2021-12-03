@@ -1341,6 +1341,9 @@
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>
         <columns>
+            <column columnName="rowid">
+                <columnTitle>Rowid</columnTitle>
+            </column>
             <column columnName="label">
                 <columnTitle>Label</columnTitle>
             </column>

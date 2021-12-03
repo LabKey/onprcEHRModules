@@ -160,12 +160,7 @@ Ext4.define('ONPRC_EHR.panel.AnimalGroupDetailsPanel', {
                         groupId: this.groupId,
                         name: this.groupRow.getDisplayValue('name')
                     })
-                }, {
-                    name: 'Find animals assigned to this group on a specific date',
-                    name: 'Find animals assigned to this group on a specific date',
-                    url: LABKEY.ActionURL.buildURL('ehr', 'groupOverlaps', null, {
-                        groupId: this.groupId, name: this.groupRow.getDisplayValue('name')
-                    })
+
                 }, {
                     name: 'View Summary of Birth Rates For This Group',
                     url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {
@@ -189,7 +184,7 @@ Ext4.define('ONPRC_EHR.panel.AnimalGroupDetailsPanel', {
                         'query.groupId/name~eq': this.groupRow.getDisplayValue('name')
                     })
                 },{
-                    name: 'Processing InformationX',
+                    name: 'Processing Information',
                     url: LABKEY.ActionURL.buildURL('onprc_ehr', 'groupProcessing', null, {groupName: this.groupRow.getDisplayValue('name')})
                 }]
             }]
