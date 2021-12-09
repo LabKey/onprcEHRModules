@@ -43,6 +43,10 @@
                         <columnTitle>Most Recent Date</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
+                    <column columnName="comment">
+                        <columnTitle>Comments</columnTitle>
+                        <displayWidth>50</displayWidth>
+                    </column>
                     <column columnName="category">
                         <columnTitle>Category</columnTitle>
                         <displayWidth>70</displayWidth>
