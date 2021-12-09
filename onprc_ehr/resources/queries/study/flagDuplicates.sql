@@ -16,7 +16,7 @@
 SELECT
   f.id,
   f.flag.category as category,
-  group_concat(f.flag.value, chr(10)) as values,
+  group_concat(f.flag.value, chr(10)) as "values",
   count(f.flag.value) as totalFlags
 
 FROM study.flags f

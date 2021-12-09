@@ -4,26 +4,16 @@
             <table tableName="employees" tableDbType="NOT_IN_DB">
                 <tableTitle>Employees</tableTitle>
                 <columns>
+                    <column columnName="lastName">
+                        <columnTitle>Last Name</columnTitle>
+                    </column>
                     <column columnName="majorudds">
                         <columnTitle>Host</columnTitle>
                     </column>
-                    <!--<column columnName="barrier">-->
-                    <!--<columnTitle>West Campus Level 1</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="animals">-->
-                    <!--<columnTitle>West Campus Level 2</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="contactsSla">-->
-                    <!--<columnTitle>West Campus Level 3</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="tissue">-->
-                    <!--<columnTitle>West Campus Level 4</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="isemployee">-->
-                    <!--<isHidden>true</isHidden>-->
-                    <!--</column>-->
-
-                </columns>
+                    <column columnName="employeeid">
+                        <columnTitle>Employee ID</columnTitle>
+                    </column>
+                 </columns>
             </table>
         </tables>
     </metadata>

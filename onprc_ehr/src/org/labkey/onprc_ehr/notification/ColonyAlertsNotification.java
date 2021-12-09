@@ -1013,12 +1013,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("actiondate"), new Date(), CompareType.DATE_EQUAL);
         filter.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("notes"), filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Notes_WithLocation"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " DCM action items.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.date~dateeq="+ getDateTimeFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.actiondate~dateeq="+ getDateFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
             msg.append("</p><br><hr>");
         }
         else
@@ -1037,12 +1037,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_EQUAL);
         filter1.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
-        TableSelector ts1 = new TableSelector(getStudySchema(c, u).getTable("notes"), filter1, null);
+        TableSelector ts1 = new TableSelector(getStudySchema(c, u).getTable("Notes_WithLocation"), filter1, null);
         long count1 = ts1.getRowCount();
         if (count1 > 0)
         {
             msg.append("<b>There are " + count1 + " DCM notes entries added yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
             msg.append("</p><br><hr>\n\n");
         }
         else
@@ -1053,12 +1053,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //Added by Kollil on 11/04/2020
         //New alert for Flags added the previous day.
         SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_EQUAL);
-        TableSelector ts2 = new TableSelector(getStudySchema(c, u).getTable("flags"), filter2, null);
+        TableSelector ts2 = new TableSelector(getStudySchema(c, u).getTable("Flags_WithLocation"), filter2, null);
         long count2 = ts2.getRowCount();
         if (count2 > 0)
         {
             msg.append("<b>There are " + count2 + " flags added yesterday. </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
             msg.append("</p><hr>");
         }
         else

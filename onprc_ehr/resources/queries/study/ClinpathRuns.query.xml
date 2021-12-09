@@ -130,12 +130,11 @@
                         <columnTitle>Condition</columnTitle>
                     </column>
                     <column columnName="vet">
-                        <columnTitle>Vetrinarian</columnTitle>
+                        <columnTitle>Veterinarian</columnTitle>
                         <fk>
                             <fkDbSchema>onprc_ehr</fkDbSchema>
                             <fkTable>Labwork_Requestor_Vets</fkTable>
-                            <fkColumnName>userid</fkColumnName>
-                            <fkDisplayColumnName useRawValue="true"/>
+                            <fkColumnName>userId</fkColumnName>
                         </fk>
                     </column>
                 </columns>
