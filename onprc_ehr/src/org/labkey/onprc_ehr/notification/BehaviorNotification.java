@@ -152,8 +152,26 @@ public class BehaviorNotification extends ColonyAlertsNotification
        3. New alert for Flags added the previous day.
        4. New alert for Flags removed the previous day.
     */
+    /**
+     * Modified: 12-9-2021  R.Blasa using Lakshmi's original code
+     */
     protected void dcmNotesAlert(final Container c, User u, final StringBuilder msg)
     {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("actiondate"), new Date(), CompareType.DATE_EQUAL);
+        filter.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Notes_WithLocation"), filter, null);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " DCM action items.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.actiondate~dateeq="+ getDateFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("</p><br><hr>");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no DCM action items!</b><br><hr>");
+        }
+
         //Added by Kollil on 11/04/2020
         //New alert for DCM notes (category = notes pertaining to DAR) added the previous day.
 
@@ -163,9 +181,9 @@ public class BehaviorNotification extends ColonyAlertsNotification
         cal.add(Calendar.DATE, -1);
         String formatted = getDateFormat(c).format(cal.getTime());
 
-        SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("created"), cal.getTime(), CompareType.DATE_EQUAL);
+        SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_EQUAL);
         filter1.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
-        TableSelector ts1 = new TableSelector(getStudySchema(c, u).getTable("notes"), filter1, null);
+        TableSelector ts1 = new TableSelector(getStudySchema(c, u).getTable("Notes_WithLocation"), filter1, null);
         long count1 = ts1.getRowCount();
         msg.append("<b>DCM Alerts:</b><br><hr>");
         if (count1 > 0) {
@@ -173,48 +191,35 @@ public class BehaviorNotification extends ColonyAlertsNotification
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.created~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
             msg.append("</p><br><hr>\n\n");
         }
-        else {
+        else
+        {
             msg.append("<b>WARNING: No DCM notes added yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
-        }
-
-        //Added by Kollil on 04/07/2021
-        //New alert for DCM notes (category = notes pertaining to DAR) removed the previous day.
-        SimpleFilter filter4 = new SimpleFilter(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_EQUAL);
-        filter4.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
-        TableSelector ts4 = new TableSelector(getStudySchema(c, u).getTable("notes"), filter4, null);
-        long count4 = ts4.getRowCount();
-
-        if (count4 > 0) {
-            msg.append("<b>" + count4 + " DCM notes entries removed yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.enddate~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
-            msg.append("</p><br><hr>\n\n");
-        }
-        else {
-            msg.append("<b>WARNING: No DCM notes removed yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
         }
 
         //Added by Kollil on 11/04/2020
         //New alert for Flags added the previous day.
-        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("created"), cal.getTime(), CompareType.DATE_EQUAL);
-        TableSelector ts2 = new TableSelector(getStudySchema(c, u).getTable("flags"), filter2, null);
+        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_EQUAL);
+        TableSelector ts2 = new TableSelector(getStudySchema(c, u).getTable("Flags_WithLocation"), filter2, null);
         long count2 = ts2.getRowCount();
-        if (count2 > 0) {
-            msg.append("<b>" + count2 + " flag(s) added yesterday. </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&query.created~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+        if (count2 > 0)
+        {
+            msg.append("<b>There are " + count2 + " flags added yesterday. </b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
             msg.append("</p><hr>");
         }
-        else {
+        else
+        {
             msg.append("<b>WARNING: There are no flags added yesterday!</b><br><hr>");
         }
 
         //Added by Kollil on 1/04/2021
         //New alert for Flags removed the previous day.
         SimpleFilter filter3 = new SimpleFilter(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_EQUAL);
-        TableSelector ts3 = new TableSelector(getStudySchema(c, u).getTable("flags"), filter3, null);
+        TableSelector ts3 = new TableSelector(getStudySchema(c, u).getTable("Flags_WithLocation"), filter3, null);
         long count3 = ts3.getRowCount();
         if (count3 > 0) {
             msg.append("<b>" + count3 + " flag(s) removed yesterday. </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&query.enddate~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation, null) + "&query.enddate~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
             msg.append("</p><hr>");
         }
         else {
