@@ -51,7 +51,8 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                     schemaName: 'onprc_ehr',
                     queryName: 'ASB_SpecialInstructions',
                     displayColumn: 'value',
-                    columns: 'value'
+                    // columns: 'value'
+                    keyColumn: 'value'
                 },
                 columnConfig: {
                     width: 300

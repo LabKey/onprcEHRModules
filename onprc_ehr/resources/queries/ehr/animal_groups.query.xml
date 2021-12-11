@@ -1,0 +1,21 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="animal_groups" tableDbType="NOT_IN_DB">
+                <tableTitle>Animal Groups</tableTitle>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <auditLogging>DETAILED</auditLogging>
+                <tableUrl>/onprc_ehr/animalGroupDetails.view?groupId=${rowid}</tableUrl>
+                <pkColumnName>rowid</pkColumnName>
+                <columns>
+                    <column columnName="rowid">
+                        <isAutoInc>true</isAutoInc>
+                        <isKeyField>true</isKeyField>
+                        <shownInInsertView>false</shownInInsertView>
+                        <shownInUpdateView>false</shownInUpdateView>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
