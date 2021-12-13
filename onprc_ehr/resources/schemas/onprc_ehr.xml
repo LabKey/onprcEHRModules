@@ -1335,4 +1335,36 @@
         </columns>
     </table>
 
+
+    <table tableName="BSUageclass" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>BSU Age Class</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Rowid</columnTitle>
+            </column>
+            <column columnName="label">
+                <columnTitle>Label</columnTitle>
+            </column>
+            <column columnName="species">
+                <columnTitle>Species</columnTitle>
+            </column>
+            <column columnName="gender">
+                <columnTitle>Gender</columnTitle>
+            </column>
+            <column columnName="ageclass">
+                <columnTitle>Age Class</columnTitle>
+            </column>
+            <column columnName="min"/>
+            <column columnName="max"/>
+            <column columnName="sort_order"/>
+            <column columnName="dateDisabled">
+                <columnTitle>Date Disabled</columnTitle>
+            </column>
+         </columns>
+    </table>
+
+
+
 </tables>
