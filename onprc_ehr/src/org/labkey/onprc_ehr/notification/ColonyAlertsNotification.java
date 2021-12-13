@@ -1088,6 +1088,88 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    /* Created by Kollil on Nov 1st, 2021
+    Create an alert to show the following fasts treatments prescribed on the current day between 16:00 - 7:30Am
+    1. Complete NPO - 2440
+    2. Overnight Fast - 1807
+    3. AM Fast - 1804
+    */
+    protected void processFastsTreatments(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+        //Fasts query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("TreatmentSchedulePostOpFasts", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0) {
+            msg.append("<b>" + count + " Fast treatment(s) scheduled for today:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "TreatmentSchedulePostOpFasts", null) + "&query.containerFilterName=AllFolders'>Click here to view the fast treatments in PRIME</a></p>\n");
+            msg.append("<hr>");
+        }
+        else {
+            msg.append("<b> There are no Fast treatments scheduled today! </b>");
+            msg.append("<hr>");
+        }
+
+        //Display the daily report in the email
+        if (count > 0)
+        {
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("location"));
+            columns.add(FieldKey.fromString("date"));
+            columns.add(FieldKey.fromString("enddate"));
+            columns.add(FieldKey.fromString("project"));
+            columns.add(FieldKey.fromString("chargetype"));
+            columns.add(FieldKey.fromString("procedurename"));
+            columns.add(FieldKey.fromString("instructions"));
+            columns.add(FieldKey.fromString("remark"));
+            columns.add(FieldKey.fromString("performedby"));
+            //columns.add(FieldKey.fromString("taskid"));
+            columns.add(FieldKey.fromString("status"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+
+            msg.append("<hr><b>Today's Fast Treatments:</b><br><br>\n");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td>Id </td><td>Location </td><td>Start Date </td><td>End Date </td><td>Project </td><td>Charge Unit </td><td>Procedure </td><td>Instructions </td><td>Remark </td><td>Performed By </td><td>Status </td></tr>");
+
+            ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
+                @Override
+                public void exec(ResultSet object) throws SQLException {
+                    Results rs = new ResultsImpl(object, colMap);
+                    String url = getParticipantURL(c, rs.getString("Id"));
+
+                    msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
+//                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
+                    msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("location")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("chargetype")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("procedurename")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("instructions")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("performedby")) + "</td>");
+                    //msg.append("<td>" + PageFlowUtil.filter(rs.getString("taskid")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("status")) + "</td>");
+                    msg.append("</tr>");
+                }
+            });
+            msg.append("</table>");
+        }
+
+    }    //End of Fasts alert
+
     /**
      * Kollil, 10/24/2019 : PMIC scheduler alert notifications Daily & Weekly
      */
