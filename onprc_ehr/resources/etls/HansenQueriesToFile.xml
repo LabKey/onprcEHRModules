@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <etl xmlns="http://labkey.org/etl/xml">
-21.7_fb_HansenQuerytoFileXML
-    <name>HanseDataToFile</name>
+    <name>HansenDataToFile</name>
 
 
     <description>imports the data from mfsh animal details on ONPRC</description>
     <transforms>
         <transform id="step1">
             <description>Transfer to Drug Table</description>
-            <source queryName="studyAnimals" schemaName="Randal_data"/>
-            <destination schemaName="Onprc_ehr" queryName="StudyDetails_RandalData"/>
+            <source queryName="studyAnimals_Active" schemaName="Randal_data"/>
+            <destination schemaName="Onprc_ehr" queryName="StudyDetails_RandalData" targetOption="truncate"/>
         </transform>
         <transform id="step2">
             <description>Export Query to File Share</description>
