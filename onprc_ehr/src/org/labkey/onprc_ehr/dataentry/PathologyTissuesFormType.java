@@ -21,6 +21,7 @@ import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
+import org.labkey.onprc_ehr.dataentry.TissueInstructionFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -49,6 +50,7 @@ public class PathologyTissuesFormType extends TaskForm
     {
         super(ctx, owner, NAME, LABEL, "Pathology", Arrays.asList(
                 new TaskFormSection(),
+                new TissueInstructionFormSection(),
                 new AnimalDetailsFormSection(),
                 //                Added:5-31-2017  R.Blasa
                 new ClinicalEncountersFormPanelSection("Pathology Tissues"),
