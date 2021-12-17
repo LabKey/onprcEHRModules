@@ -17,15 +17,18 @@ Ext4.define('ONPRC_EHR.panel.TissueDistributionExportPanel', {
             },
             items: [{
                 html: 'This form allows you to export a Tissue Distribution template into an Excel spreadsheet by clicking the link below. Please enter a monkey id into the "Animal ID" input box, and click "View Report" button ' +
-                        'located to the upper right section of the reporting screen. ' +
-                        ' <br>  After the program has completed generating the report, please select the icon ' +
+                        '<br> located on the upper right section of the reporting screen. ' +
+                        '  After the program has completed generating the report, please select the icon ' +
                         'to the left of the printer icon, and then choose Excel menu to export into an Excel file.  <p>' ,
 
                 style: 'padding: 5px;'
             },{
                 xtype: 'ldk-linkbutton',
-                text: '<li>View Tissue Distribution Export Template</li>',
+                text: '<li><b>View Tissue Distribution Export Template</li>',
                 href: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fNecropsy%20Reports%2fTissueDistributionTemplates&rs:Command=Render'
+            },{
+                style: 'padding: 10px;',
+                html: ''
             }]
         });
 
