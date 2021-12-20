@@ -2090,14 +2090,11 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         "sd." + pkCol.getFieldKey().toSQLString() + ",\n" +
                         "group_concat(DISTINCT h.weight, chr(10)) as weightAtTime\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
-                        "JOIN \"" + ehrPath + "\".study.weights h\n" +
-                        "  And sd.date in (Select max(r.date) FROM \"" + schemaName + "\".\"" + queryName + "\" r, study.Weight j\n" +
-                        "                 Where r.id = sd.id And r.id = j.id\n" +
-                        "                   And (TIMESTAMPDIFF('SQL_TSI_DAY', j.date, r.date) < 8) And r.qcstate = 18 And j.qcstate = 18)\n" +
-                        "  And (h.date in (select min(s.date) as date  from study.Weight s Where s.Id = h.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) <= 0) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) > -8) ) And s.qcstate = 18)\n" +
-                        "    or h.date in (select max(s.date) as date  from study.Weight s Where s.Id = h.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) < 8) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) > 0) ) And s.qcstate = 18)  )" +
-
-//                        "  ON (sd.id = h.id AND h.dateOnly <= CAST(sd." + dateColName + " AS DATE) AND (CAST(sd." + dateColName + " AS DATE) <= h.enddateCoalesced) AND h.qcstate.publicdata = true)\n" +
+                        "JOIN \"" + ehrPath + "\".study.weight h\n" +
+                        "                 ON ( h.id = sd.id " +
+                        "    And sd.qcstate = 18 And h.qcstate = 18)\n" +
+                        "  And (h.date in (select min(s.date) as date  from study.Weight s Where s.Id = h.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) <= 0) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) > -15) ) And s.qcstate = 18)\n" +
+                        "    or h.date in (select max(s.date) as date  from study.Weight s Where s.Id = h.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) < 15) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) > 0) ) And s.qcstate = 18)  )  " +
                         "group by sd." + pkCol.getFieldKey().toSQLString());
                 qd.setIsTemporary(true);
 
