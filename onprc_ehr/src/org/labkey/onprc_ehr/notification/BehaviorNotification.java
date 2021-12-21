@@ -219,7 +219,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long count3 = ts3.getRowCount();
         if (count3 > 0) {
             msg.append("<b>" + count3 + " flag(s) removed yesterday. </b><br>\n");
-//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation, null) + "&query.enddate~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
             msg.append("</p><hr>");
         }
         else {
