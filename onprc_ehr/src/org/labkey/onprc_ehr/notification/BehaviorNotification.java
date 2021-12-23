@@ -203,7 +203,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long count2 = ts2.getRowCount();
         if (count2 > 0)
         {
-            msg.append("<b>There are " + count2 + " flags added yesterday. </b><br>\n");
+            msg.append("<b>There are " + count2 + " flag(s) added yesterday. </b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
             msg.append("</p><hr>");
         }
