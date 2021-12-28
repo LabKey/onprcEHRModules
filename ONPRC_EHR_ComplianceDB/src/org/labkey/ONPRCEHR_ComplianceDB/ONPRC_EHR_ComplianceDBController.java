@@ -15,7 +15,8 @@
  */
 package org.labkey.ONPRCEHR_ComplianceDB;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.labkey.api.action.SpringActionController;
 
 //Created: 1-14-2021  R.Blasa
@@ -23,7 +24,7 @@ import org.labkey.api.action.SpringActionController;
 public class ONPRC_EHR_ComplianceDBController extends SpringActionController
 {
     private static final DefaultActionResolver _actionResolver = new DefaultActionResolver(ONPRC_EHR_ComplianceDBController.class);
-    private static final Logger _log = Logger.getLogger(ONPRC_EHR_ComplianceDBController.class);
+    private static final Logger _log = LogManager.getLogger(ONPRC_EHR_ComplianceDBController.class);
 
     public ONPRC_EHR_ComplianceDBController()
     {
