@@ -81,8 +81,13 @@ public class TreatmentAlertsPostOpsNotificationThird extends AbstractEHRNotifica
 
         //Find today's date
         Date now = new Date();
-        msg.append("This email contains any treatments not marked as completed.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
-
+        //        Modified: 1-4-2022 R. Blasa
+        msg.append("This email contains any treatments not marked as completed.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + "<br><br>" +
+                "<b>Please use the following contacts if a pain medication has not been completed. <br><br>" +
+                "email - cmumedicationrequests @ohsu.edu <br> " +
+                "DCM Commons tech phone -503 - 346 - 5074 <br> " +
+                "Colony tech office - 503 - 346 - 5152  <br> "  +
+                "Colony hospital -503 - 346 - 5424 </b>" +  ".<p>");
 
         processPostOpsTreatments(c, u, msg, new Date());
 
