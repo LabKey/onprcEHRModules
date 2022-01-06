@@ -272,9 +272,6 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 //            Added:7-16-2019  R.Blasa
             appendFlagsAlertActiveCol(ehrSchema, ds);
             appendIsAssignedAtTimeCol(ehrSchema, ds, dateColName);
-
-//            Added: 12-3-2021  R.Blasa
-            appendWeightAtTimeCol(ehrSchema, ds, dateColName);
         }
     }
 
@@ -819,6 +816,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             var col17 = getWrappedIdCol(us, ds, "mostRecentBCS", "demographicsMostRecentBCS");
             col17.setLabel("Body Condition Score");
             col17.setDescription("Calculates the most recent BCS for each animal");
+            ds.addColumn(col17);
+        }
+
+        if (ds.getColumn("mostRecentBCSWeight") == null)
+        {
+            var col17 = getWrappedIdCol(us, ds, "mostRecentBCSWeight", "demographicsMostRecentBCSWeight");
+            col17.setLabel("Body Condition Score And Weight at Time of BCS");
+            col17.setDescription("Calculates the weight at a time of BCS Score");
             ds.addColumn(col17);
         }
 
@@ -2060,77 +2065,6 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         newCol2.setLabel("Is Assigned To Protocol At Time?");
         newCol2.setDescription("Displays whether the animal is assigned to the provided IACUC protocol on the date of each record");
         ds.addColumn(newCol2);
-    }
-
-    //     Added: 12-2-2021  R.Blasa
-    private void appendWeightAtTimeCol(final UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
-    {
-        final String colName = "weightAtTime";
-        if (ds.getColumn(colName) != null)
-            return;
-
-        final ColumnInfo pkCol = getPkCol(ds);
-        if (pkCol == null)
-            return;
-
-        if (ds.getColumn("Id") == null)
-            return;
-
-        if (!hasTable(ds, "study", "weight", ehrSchema.getContainer()))
-            return;
-
-        final String tableName = ds.getName();
-        final String queryName = ds.getPublicName();
-        final String schemaName = ds.getPublicSchemaName();
-        final UserSchema targetSchema = ds.getUserSchema();
-        final String ehrPath = ehrSchema.getContainer().getPath();
-
-        WrappedColumn col = new WrappedColumn(pkCol, colName);
-        col.setLabel("Weight At Time");
-        col.setReadOnly(true);
-//      col.setIsUnselectable(true);
-        col.setUserEditable(false);
-        col.setFk(new LookupForeignKey(){
-            @Override
-            public TableInfo getLookupTableInfo()
-            {
-                String name = tableName + "_" + colName;
-                QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
-                qd.setSql("SELECT\n" +
-                        "sd." + pkCol.getFieldKey().toSQLString() + ",\n" +
-                        "group_concat(DISTINCT h.weight, chr(10)) as weightAtTime\n" +
-                        "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
-                        "JOIN \"" + ehrPath + "\".study.weight h\n" +
-                        "                 ON ( h.id = sd.id " +
-                        "    And sd.qcstate = 18 And h.qcstate = 18)\n" +
-                        "  And (h.date in (select min(s.date) as date  from study.Weight s Where s.Id = h.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) <= 0) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) > -15) ) And s.qcstate = 18)\n" +
-                        "    or h.date in (select max(s.date) as date  from study.Weight s Where s.Id = h.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) < 15) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, sd.date) > 0) ) And s.qcstate = 18)  )  " +
-                        "group by sd." + pkCol.getFieldKey().toSQLString());
-                qd.setIsTemporary(true);
-
-
-                List<QueryException> errors = new ArrayList<>();
-                TableInfo ti = qd.getTable(errors, true);
-                if (errors.size() > 0)
-                {
-                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
-                    for (QueryException error : errors)
-                    {
-                        _log.error(error.getMessage(), error);
-                    }
-                    return null;
-                }
-
-                ((BaseColumnInfo)ti.getColumn(pkCol.getName())).setHidden(true);
-                ((BaseColumnInfo)ti.getColumn(pkCol.getName())).setKeyField(true);
-
-                ((BaseColumnInfo)ti.getColumn("weightAtTime")).setLabel("Weight At Time");
-
-                return ti;
-            }
-        });
-
-        ds.addColumn(col);
     }
 
     private void appendAssignmentAtTimeCol(UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
