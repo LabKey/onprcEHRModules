@@ -33,5 +33,5 @@ WHERE p.qcstate.publicdata = true
                  Where r.category = 'BCS' And r.id = p.id And r.id = j.id
                    And (TIMESTAMPDIFF('SQL_TSI_DAY', j.date, r.date) < 8) And r.qcstate = 18 And j.qcstate = 18)
 
-  And (K.date in (select min(s.date) as date  from study.Weight s Where s.Id = k.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) <= 0) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) > -8) ) And s.qcstate = 18)
-    or K.date in (select max(s.date) as date  from study.Weight s Where s.Id = k.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) < 8) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) > 0) ) And s.qcstate = 18)  )
+  And (K.date in (select min(s.date) as date  from study.Weight s Where s.Id = k.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) < 0) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) > -8) ) And s.qcstate = 18)
+    or K.date in (select max(s.date) as date  from study.Weight s Where s.Id = k.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) < 8) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) >= 0) ) And s.qcstate = 18)  )
