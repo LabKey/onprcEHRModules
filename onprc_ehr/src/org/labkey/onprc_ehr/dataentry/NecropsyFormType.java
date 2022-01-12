@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.json.JSONObject;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.onprc_ehr.dataentry.NecropsyInstructionFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
@@ -50,6 +51,7 @@ public class NecropsyFormType extends EncounterForm
         super(ctx, owner, NAME, LABEL, "Pathology", Arrays.asList(
                 new NonStoreFormSection("Instructions", "Instructions", "ehr-necropsyinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/NecropsyInstructionsPanel.js"))),
                 new TaskFormSection(),
+                new NecropsyInstructionFormSection(),   //Added: 12-21-2021 R.Blasa
                 new ClinicalEncountersFormPanelSection("Necropsy"),
                 //Modified: 12-20-2018  R.Blasa
                 new AnimalDetailssFormSection(),
@@ -57,18 +59,10 @@ public class NecropsyFormType extends EncounterForm
                 new PathologyFormSection("ehr", "encounter_participants", "Staff"),
                 new PathologyNotesFormPanelSection(),
                 new PathologyNotesFormPanelSection2(),
-                //new PathologyMedicationsFormSection("study", "Drug Administration", "Medications/Treatments"),
-                //new PathologyFormSection("study", "tissue_samples", "Tissues/Weights"),
-                //new PathologyTissueDistFormSection(),
-                //new PathologyFormSection("study", "measurements", "Measurements"),
+
                 new PathologyDiagnosesFormSection("study", "histology", "Histologic Findings"),
                 new PathologyDiagnosesFormSection("study", "pathologyDiagnoses", "Diagnoses")
 
-                //Removed: 2-4-2020  R.Blassa  Commented temporarily Note: This form was excluded 17.2 version
-//                new SimpleFormSection("study", "tissue_samples", "Tissue Samples", "onprc_ehr-dragdropgridpanel")
-
-                //Removed: 1-29-2020  R.Blassa  Commented temporarily Note: This form was excluded 17.2 version
-             //   new SimpleFormSection("study", "organ_weights", "Organ Weights", "onprc_ehr-dragdropgridpanel")
         ));
 
         for (FormSection s : this.getFormSections())
