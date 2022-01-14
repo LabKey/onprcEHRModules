@@ -12,8 +12,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
         'ehr_compliancedb.employeeperUnit': {
             employeeid: {
                 hidden: false,
-                anyMatch: true,
-                allowBlank: true,
+                allowBlank: false,
                 columnConfig: {
                     width: 350,
                     header: 'Employee ID'
@@ -41,13 +40,18 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
             },
             category: {
                 hidden: false,
-                anyMatch: true,
-                allowBlank: true,
+                allowBlank: false,
                 hasOwnTpl: true,
                 columnConfig: {
                     width: 300,
                     header: 'Category'
                 },
+
+                editorConfig: {
+                    caseSensitive: false,
+                    anyMatch: true
+                },
+
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
@@ -65,13 +69,17 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
 
             unit: {
                 hidden: false,
-                anyMatch: true,
-                allowBlank: true,
+                allowBlank: false,
                 hasOwnTpl: true,
                 columnConfig: {
                     width: 300,
                     header: 'Unit'
                 },
+                editorConfig: {
+                    caseSensitive: false,
+                    anyMatch: true
+                },
+
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
