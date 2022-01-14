@@ -19,6 +19,9 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //Created: 7-6-2021  R.Blasa converting category to unit
 
 public class EmployeeRequirementUnitFormSection extends SimpleFormSection
@@ -37,6 +40,31 @@ public class EmployeeRequirementUnitFormSection extends SimpleFormSection
         addClientDependency(ClientDependency.supplierFromPath("EHR_ComplianceDB/model/sources/EmployeeUnitClientStore.js"));
         setClientStoreClass("ONPRC_EHR.data.EmployeeUnitClientStore");
 
+    }
+    @Override
+    public List<String> getTbarButtons()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getTbarButtons());
+
+        int idx = 0;
+        if (defaultButtons.contains("ADDANIMALS"))
+        {
+            idx = defaultButtons.indexOf("ADDANIMALS");
+            defaultButtons.remove("ADDANIMALS");
+        }
+
+        return defaultButtons;
+    }
+
+    @Override
+    public List<String> getTbarMoreActionButtons()
+    {
+        List<String> defaultButtons = super.getTbarMoreActionButtons();
+        defaultButtons.remove("GUESSPROJECT");
+        defaultButtons.remove("COPY_IDS");
+
+        return defaultButtons;
     }
 
 
