@@ -10,6 +10,7 @@
                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
                             <fkTable>employees</fkTable>
                             <fkColumnName>employeeId</fkColumnName>
+                            <columnTitle>Employee ID</columnTitle>
                         </fk>
                     </column>
                     <column columnName="requirementName">
