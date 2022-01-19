@@ -39,7 +39,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
             },
             category: {
                 hidden: false,
-                allowBlank: false,
+                allowBlank: true,
                 hasOwnTpl: true,
                 columnConfig: {
                     width: 300,
@@ -68,7 +68,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
 
             unit: {
                 hidden: false,
-                allowBlank: false,
+                allowBlank: true,
                 hasOwnTpl: true,
                 columnConfig: {
                     width: 300,
