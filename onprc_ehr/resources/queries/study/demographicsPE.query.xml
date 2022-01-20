@@ -23,6 +23,9 @@
                     <column columnName="isRestricted">
                         <columnTitle>Clinically Restricted?</columnTitle>
                     </column>
+                    <column columnName="p2">
+                        <columnTitle>Most Recent P2</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>
