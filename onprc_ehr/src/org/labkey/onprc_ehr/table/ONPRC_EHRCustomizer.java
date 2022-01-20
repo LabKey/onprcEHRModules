@@ -1176,6 +1176,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 totalRemarkCol.setLabel("# Remarks Entered Since Last Vet Review");
                 ti.addColumn(totalRemarkCol);
 
+                //                Added: 1-19-2022  R.Blasa  allow remarks from Observation table as another set of criteria to display vet reviews
+                SQLFragment totalObservationSql = new SQLFragment("(SELECT count(*) FROM " + obsRealTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".category AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ? or cr.category = ?))", qcStateRowId, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT);
+                ExprColumn totalObservationCol = new ExprColumn(ti, "totalObservationremarksEnteredSinceReview", totalObservationSql, JdbcType.INTEGER, ti.getColumn("Id"));
+                totalRemarkCol.setLabel("# Observation remarks Entered Since Last Vet Review");
+                ti.addColumn(totalObservationCol);
+
                 SQLFragment earliestRemarkSql = new SQLFragment("(SELECT min(cr.datefinalized) as expr FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?) AND (cr.category IS NULL or cr.category = ? or cr.category = ?))", qcStateRowId, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()), ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT);
                 ExprColumn earliestRemarkCol = new ExprColumn(ti, "earliestRemarkSinceReview", earliestRemarkSql, JdbcType.TIMESTAMP, ti.getColumn("Id"));
                 earliestRemarkCol.setLabel("Earliest Remark Entered Since Last Vet Review");
