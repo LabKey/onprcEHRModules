@@ -27,6 +27,7 @@ CASE
   WHEN count(f.Id) = 0 THEN null
   ELSE 'Clinically Restricted'
 END as isRestricted,
+       g.date as p2date,
        g.p2
 
 FROM study.demographics d
@@ -52,14 +53,15 @@ LEFT JOIN (
 LEFT JOIN (
     SELECT
         g.Id,
+        g.date,
         g.p2
     FROM study.clinremarks g
     WHERE  g.date in (Select Max(c1.date) from clinremarks c1 where g.id = c1.id And c1.p2 is not null)
-    GROUP BY g.Id, g.p2
+    GROUP BY g.Id, g.date,g.p2
 ) g ON (g.Id = d.Id)
 
 
 
 WHERE d.calculated_status = 'Alive'
 
-GROUP BY d.id, d.id.age.AgeInYears, g.p2
+GROUP BY d.id, d.id.age.AgeInYears, g.date,g.p2
