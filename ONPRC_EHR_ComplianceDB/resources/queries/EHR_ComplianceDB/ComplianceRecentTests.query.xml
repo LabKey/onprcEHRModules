@@ -10,6 +10,7 @@
                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
                             <fkTable>employees</fkTable>
                             <fkColumnName>employeeId</fkColumnName>
+                            <columnTitle>Employee ID</columnTitle>
                         </fk>
                     </column>
                     <column columnName="requirementName">
@@ -41,6 +42,10 @@
                     </column>
                     <column columnName="mostrecentdate">
                         <columnTitle>Most Recent Date</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
+                    <column columnName="comment">
+                        <columnTitle>Comments</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="category">
