@@ -2356,7 +2356,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         int maxValue = 300;
         SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("created"), cal.getTime(), CompareType.DATE_GTE);
         filter2.addCondition(FieldKey.fromString("qcstate/PublicData"), true);
-        filter.addCondition(FieldKey.fromString("code/meaning"), "ketamine;telazol", CompareType.CONTAINS_ONE_OF);
+        filter2.addCondition(FieldKey.fromString("code/meaning"), "ketamine;telazol", CompareType.CONTAINS_ONE_OF);
         filter2.addCondition(FieldKey.fromString("amount"), maxValue, CompareType.GT);
         filter2.addCondition(FieldKey.fromString("amount_units"), "mg", CompareType.CONTAINS);
 
