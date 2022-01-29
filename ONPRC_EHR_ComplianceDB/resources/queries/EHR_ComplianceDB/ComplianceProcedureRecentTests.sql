@@ -19,6 +19,9 @@ select b.requirementname,
 
        (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
+       (Select group_concat(distinct yy.comment, chr(10))  from completiondates yy where yy.date in (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid )
+                                                                                     And  yy.requirementname= b.requirementname and yy.employeeid= a.employeeid   ) as comment,
+
        CAST(
                CASE
 
@@ -52,6 +55,8 @@ select a.requirementname,
 
        (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
+       (Select group_concat(distinct yy.comment, chr(10))  from completiondates yy where yy.date in (select max(zz.date) from completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid )
+                                                                                     And  yy.requirementname= a.requirementname and yy.employeeid= a.employeeid   ) as comment,
 
        CAST(
 
