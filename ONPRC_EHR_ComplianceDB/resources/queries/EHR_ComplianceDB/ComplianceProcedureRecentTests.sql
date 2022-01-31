@@ -35,6 +35,7 @@ select b.requirementname,
 
 from employeeperunit a ,requirementspercategory b
 where ( a.unit = b.unit or a.category = b.category )
+and (not(b.requirementname like'%ehrs%') and not(b.requirementname like'%occupational Health%'))
 
 group by b.requirementname,a.employeeid
 
@@ -75,6 +76,7 @@ select a.requirementname,
 from  ehr_compliancedb.completiondates a
 where a.requirementname not in (select distinct h.requirementname from ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h Where (k.unit = h.unit
     or k.category = h.category) And a.employeeid = k.employeeid )
+And  (not(a.requirementname like'%ehrs%') and not(a.requirementname like'%Occupational Health%'))
 
 
 group by a.requirementname,a.employeeid
