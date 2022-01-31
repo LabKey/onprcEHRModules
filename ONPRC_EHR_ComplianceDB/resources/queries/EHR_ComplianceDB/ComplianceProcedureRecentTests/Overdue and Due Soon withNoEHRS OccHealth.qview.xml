@@ -1,4 +1,5 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
+
     <sorts>
         <sort column="employeeId/lastName" descending="false"/>
         <sort column="employeeId/firstName" descending="false"/>

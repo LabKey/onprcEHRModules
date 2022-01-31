@@ -4,14 +4,15 @@
         <column name="employeeId/email"/>
         <column name="employeeId/lastName"/>
         <column name="employeeId/firstName"/>
-        <column name="employeeId/isActive"/>
-        <column name="requirementName"/>
+        <column name="employeeId/majorudds"/>
         <column name="unit"/>
         <column name="category"/>
+        <column name="requirementName"/>
         <column name="trackingflag"/>
         <column name="timesCompleted"/>
         <column name="ExpiredPeriod"/>
         <column name="MostRecentDate"/>
+        <column name="comment"/>
         <column name="MonthsUntilRenewal"/>
     </columns>
     <sorts>

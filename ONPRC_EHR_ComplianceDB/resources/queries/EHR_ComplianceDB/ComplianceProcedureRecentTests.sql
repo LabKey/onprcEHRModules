@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 
--- Created: 10-6-2021   R.Blasa     ComplianceRecentTests.sql
+-- Created: 1-31-2022   R.Blasa
 
 select b.requirementname,
        a.employeeid,
@@ -36,6 +36,7 @@ select b.requirementname,
 from employeeperunit a ,requirementspercategory b
 where ( a.unit = b.unit or a.category = b.category )
 and (not(b.requirementname like'%ehrs%') and not(b.requirementname like'%occupational Health%'))
+and b.category not in ('Vendor / Contractor')
 
 group by b.requirementname,a.employeeid
 
@@ -75,7 +76,7 @@ select a.requirementname,
 
 from  ehr_compliancedb.completiondates a
 where a.requirementname not in (select distinct h.requirementname from ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h Where (k.unit = h.unit
-    or k.category = h.category) And a.employeeid = k.employeeid )
+    or (k.category = h.category and h.category in ('Vendor / Contractor')) ) And a.employeeid = k.employeeid )
 And  (not(a.requirementname like'%ehrs%') and not(a.requirementname like'%Occupational Health%'))
 
 
