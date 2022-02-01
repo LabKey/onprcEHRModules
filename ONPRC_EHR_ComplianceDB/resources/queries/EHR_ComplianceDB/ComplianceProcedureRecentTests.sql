@@ -76,7 +76,7 @@ select a.requirementname,
 
 from  ehr_compliancedb.completiondates a
 where a.requirementname not in (select distinct h.requirementname from ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h Where (k.unit = h.unit
-    or (k.category = h.category and h.category in ('Vendor / Contractor')) ) And a.employeeid = k.employeeid )
+    or (k.category = h.category or h.category in ('Vendor / Contractor')) ) And a.employeeid = k.employeeid )
 And  (not(a.requirementname like'%ehrs%') and not(a.requirementname like'%Occupational Health%'))
 
 
