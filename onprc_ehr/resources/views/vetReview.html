@@ -48,7 +48,6 @@
                                             var panel = btn.up('#outerPanel');
                                             var userName = panel.down('#userField').getDisplayValue();
                                             var filterArray = [];
-                                            filterArray.push(LABKEY.Filter.create('totalRemarksEnteredSinceReview', 0, LABKEY.Filter.Types.GT));
 
                                             if (userName){
                                                 filterArray.push(LABKEY.Filter.create('Id/assignedVet/assignedVet', userName, LABKEY.Filter.Types.CONTAINS));
@@ -60,7 +59,7 @@
                                                 xtype: 'ldk-querypanel',
                                                 queryConfig: {
                                                     schemaName: 'study',
-                                                    queryName: 'demographics',
+                                                    queryName: 'demographicsVetReviewObservation',
                                                  viewName: 'Vet Review',
                                                     filterArray: filterArray,
                                                     scope: this,
