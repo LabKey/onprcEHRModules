@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 
--- Created: 10-6-2021   R.Blasa     ComplianceRecentTests.sql
+-- Created: 1-31-2022   R.Blasa
 
 select b.requirementname,
        a.employeeid,
@@ -19,6 +19,9 @@ select b.requirementname,
 
        (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
+       (Select group_concat(distinct yy.comment, chr(10))  from completiondates yy where yy.date in (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid )
+                                                                                     And  yy.requirementname= b.requirementname and yy.employeeid= a.employeeid   ) as comment,
+
        CAST(
                CASE
 
@@ -31,7 +34,8 @@ select b.requirementname,
 
 
 from employeeperunit a ,requirementspercategory b
-where ( a.unit = b.unit or a.category = b.category )
+where ( a.unit = b.unit or (a.category = b.category and b.category not in ('Vendor / Contractor'))  )
+and (not(b.requirementname like'%ehrs%') and not(b.requirementname like'%occupational Health%'))
 
 group by b.requirementname,a.employeeid
 
@@ -52,6 +56,8 @@ select a.requirementname,
 
        (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
+       (Select group_concat(distinct yy.comment, chr(10))  from completiondates yy where yy.date in (select max(zz.date) from completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid )
+                                                                                     And  yy.requirementname= a.requirementname and yy.employeeid= a.employeeid   ) as comment,
 
        CAST(
 
@@ -69,7 +75,11 @@ select a.requirementname,
 
 from  ehr_compliancedb.completiondates a
 where a.requirementname not in (select distinct h.requirementname from ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h Where (k.unit = h.unit
-    or k.category = h.category) And a.employeeid = k.employeeid )
+    or (k.category = h.category and h.category not in ('Vendor / Contractor')) ) And a.employeeid = k.employeeid
+And  (not(h.requirementname like'%ehrs%') and not(h.requirementname like'%Occupational Health%'))  )
+  And  (not(a.requirementname like'%ehrs%') and not(a.requirementname like'%Occupational Health%'))
+  And a.requirementname not in (select j.requirementname from ehr_compliancedb.requirementspercategory j where j.category not in ('Vendor / Contractor') )
+
 
 
 group by a.requirementname,a.employeeid
