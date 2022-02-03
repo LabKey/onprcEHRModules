@@ -1,6 +1,6 @@
 select dem.*,
-       ( select  group_concat(DISTINCT j.remark, chr(10))  from "Clinical Observations" j where j.id = dem.id  and j.category = 'Observations' and j.remark is not null and j.date >= (select max(k.date)
-                                                                                                                                                      from  "Clinical Observations" k where k.category = 'Vet Review' and dem.id = k.Id) ) as observationremarks,
+       ( select cast(cast(j.date as date) as varchar(20)) + '-' + j.category + ':' + group_concat(DISTINCT j.remark, chr(10))  from "Clinical Observations" j where j.id = dem.id  and j.category = 'Observations' and j.remark is not null and j.date >= (select max(k.date)
+                                                                                                                                                      from  "Clinical Observations" k where k.category = 'Vet Review' and dem.id = k.Id) group by j.date, j.category) as observationremarks,
        ( select group_concat(DISTINCT s.remark, chr(10))  from "Clinical Remarks" s where s.id = dem.id and s.remark is not null  and s.date >= (select max(k.date)
                                                                                                                                                  from  "Clinical Observations" k where k.category = 'Vet Review' and dem.id = k.id) ) as clinicalremarks
 
