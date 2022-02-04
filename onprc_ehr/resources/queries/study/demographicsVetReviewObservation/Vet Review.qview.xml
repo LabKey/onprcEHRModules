@@ -5,10 +5,11 @@
         <column name="Id/curLocation/room"/>
         <column name="Id/curLocation/cage"/>
         <column name="mostRecentHx"/>
-        <!--<column name="latestP2"/>-->
+
         <column name="remarksEnteredSinceReview"/>
-        <column name="mostRecentClinicalObservations/observations"/>
-        <column name="mostRecentClinicalObservations/date"/>
+<!--        <column name="mostRecentClinicalObservations/observations"/>-->
+        <column name="mostRecentClinicalObservations"/>
+        <column name="mostRecentClinicalObservationsdate"/>
         <column name="observationremarks"/>
         <column name="lastVetReview"/>
         <column name="Id/utilization/use"/>

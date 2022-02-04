@@ -7,6 +7,15 @@
                     <column columnName="observationremarks">
                         <columnTitle>Observation Remarks</columnTitle>
                     </column>
+                    <column columnName="observations">
+                        <columnTitle>Latest Observations</columnTitle>
+                        <displayColumnFactory>
+                            <className>org.labkey.onprc_ehr.table.ObservationDisplayColumnFactory</className>
+                        </displayColumnFactory>
+                    </column>
+                    <column columnName="mostRecentClinicalObservationsdate">
+                        <columnTitle>Observation Date</columnTitle>
+                    </column>
                     <column columnName="clinicalremarks">
                         <columnTitle>Clinical Remarks</columnTitle>
                     </column>
