@@ -11,7 +11,7 @@ from study.demographics dem
   Where  dem.id in (Select cln.id from "Clinical Observations" cln where cln.category = 'Observations' and cln.remark is not null
                   and cln.date >= (select max(r.date) from "Clinical Observations" r where r.category = 'Vet Review' and r.qcstate = 18
                  and r.id = cln.id)  )
-   Or dem.id in (Select rem.id from "Clinical Remarks" rem where rem.category = 'Clinical'
+   Or dem.id in (Select rem.id from "Clinical Remarks" rem where rem.category = 'Clinical' and rem.remark is not null
      and rem.date >= (select max(r.date) from "Clinical Observations" r where r.category = 'Vet Review' and r.qcstate = 18
     and rem.id = r.id)  )
 
