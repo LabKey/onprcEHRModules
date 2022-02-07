@@ -580,14 +580,15 @@ exports.init = function(EHR){
                 {
                     helper.getJavaHelper().createHousingRecord(row.Id, row.date, null, row.room, (row.cage || null), (row.initialCond || null));
                 }
-                //Added: 6-26-2017 R.Blasa
-                //if a weight is provided, we insert into the weight table:
-                if (row.weight && row.wdate)
-                {
-                    helper.getJavaHelper().insertWeight(row.Id, row.wdate, row.weight);
-                }
 
             }
+            //Added: 1-4-2022 R.Blasa
+            //if a weight is provided, we insert into the weight table:
+            if ((oldRow.weight != row.weight && row.weight != null && oldRow.weight == null))
+            {
+                helper.getJavaHelper().insertWeight(row.Id, row.wdate, row.weight);
+            }
+
         }
         //Added: 6-27-2017  R,Blasa  Process only
         if (row.birth_condition != 'Fetus - Prenatal')

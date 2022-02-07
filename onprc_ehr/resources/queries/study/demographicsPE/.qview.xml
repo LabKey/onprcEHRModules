@@ -35,6 +35,8 @@
         <column name="Id/labworkHistory/lastHematologyDate"/>
         <column name="Id/labworkHistory/lastBiochemistryDate"/>
         <column name="Id/currentCondition/condition"/>
+        <column name="p2date"/>
+        <column name="p2"/>
     </columns>
     <sorts>
         <sort column="Id/curLocation/room"/>
