@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--update of procedure to production for daily run-->
 <etl xmlns="http://labkey.org/etl/xml">
 
-	<name>ONPRCProtocolToEHR</name>
+	<name>ONPRCEHRProtocoltoEHR</name>
+
 
 	<description>Truncates EHR.protocol and updates from query that combines expired Protocols and data frm eIACUC</description>
 
