@@ -1,0 +1,36 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="BCSScoreWeights" tableDbType="TABLE">
+                <tableTitle>BCS Score Weights</tableTitle>
+                <columns>
+
+                    <column columnName="Id">
+                        <displayWidth>100</displayWidth>
+                    </column>
+
+                    <column columnName="date">
+                        <displayWidth>50</displayWidth>
+                    </column>
+
+                    <column columnName="weight">
+                       <columnTitle>weight</columnTitle>
+                    </column>
+
+                    <column columnName="weightdate">
+                        <columnTitle>Weight Date</columnTitle>
+                    </column>
+
+                    <column columnName="observation">
+                        <columnTitle>Observation</columnTitle>
+                    </column>
+
+                    <column columnName="duration">
+                        <columnTitle>Duration</columnTitle>
+                    </column>
+                </columns>
+
+            </table>
+        </tables>
+    </metadata>
+</query>
