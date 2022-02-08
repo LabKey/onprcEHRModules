@@ -9,7 +9,7 @@
 	<transforms>
 	<transform id="step1">
 		<description>CustomProtocolDetails to ehr.protocol</description>
-		<source queryName="PRIME_VIEW_PROTOCOLS" schemaName="onprc_ehr"/>
+		<source queryName="disabledProtocols" schemaName="onprc_ehr"/>
 		<destination schemaName="ehr" queryName="protocol" targetOption="truncate"/>
 <!--	</transform>
 		<transform id="step2">
