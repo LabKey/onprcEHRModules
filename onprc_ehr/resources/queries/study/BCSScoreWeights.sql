@@ -31,8 +31,8 @@ WHERE p.qcstate.publicdata = true
   And p.category = 'BCS'
   And p.date in (Select max(r.date) from study.Clinical_Observations r
                  Where r.category = 'BCS' And r.id = p.id
-                    And r.qcstate = 18 )
+                    And r.QCState.Label = 'Completed' )
 
   And (K.date in
-   (coalesce((select max(s.date) as date  from study.Weight s Where s.Id = k.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) < 8) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) >= 0) ) And s.qcstate = 18),
-      (select min(s.date) as date  from study.Weight s Where s.Id = k.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) < 0) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) > -8) ) And s.qcstate = 18)) ) )
+   (coalesce((select max(s.date) as date  from study.Weight s Where s.Id = k.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) < 8) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) >= 0) ) And s.QCState.Label = 'Completed'),
+      (select min(s.date) as date  from study.Weight s Where s.Id = k.Id And ( (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) < 0) And (TIMESTAMPDIFF('SQL_TSI_DAY', s.date, p.date) > -8) ) And s.QCState.Label = 'Completed')) ) )
