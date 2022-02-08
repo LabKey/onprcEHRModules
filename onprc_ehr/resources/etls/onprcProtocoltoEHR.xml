@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--update of procedure to production for daily run-->
+<etl xmlns="http://labkey.org/etl/xml">
+
+	<name>ONPRCProtocolToEHR</name>
+
+	<description>Truncates EHR.protocol and updates from query that combines expired Protocols and data frm eIACUC</description>
+
+	<transforms>
+	<transform id="step1">
+		<description>CustomProtocolDetails to ehr.protocol</description>
+		<source queryName="PRIME_VIEW_PROTOCOLS" schemaName="onprc_ehr"/>
+		<destination schemaName="ehr" queryName="protocol" targetOption="truncate"/>
+<!--	</transform>
+		<transform id="step2">
+			<description>Insert Disabled Protocols</description>
+			<source queryName="" schemaName="onprc_ehr"/>
+			<destination schemaName="ehr" queryName="protocol" targetOption="truncate"/>
+		</transform> -->
+
+
+
+	</transforms>
+
+
+	<!--	<schedule><cron expression="0 0 0 * * ?" /></schedule> -->
+
+
+
+</etl>
+
+
