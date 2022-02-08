@@ -12,13 +12,13 @@
         subjectIds = subjectIds ? subjectIds.split(';') : [];
 
         Ext4.create('Ext.panel.Panel', {
-            width: 400,
-            border: false,
+            width: 450,
             defaults: {
-                labelWidth: 180
+                labelWidth: 180,
+                border: false
             },
             items: [{
-                html: 'This page provides a report based on a list of aninmal ids.<br><br>  Please enter one Id per row, or paste a list of monkey ids into the input box below.',
+                html: '<b>This page provides a report based on a list of aninmal ids.<br><br>  Please enter one Id per row, or paste a list of monkey ids into the input box below.</b>',
                 style: 'padding-bottom: 15px;'
             },{
 
@@ -26,7 +26,7 @@
                 xtype: 'textarea',
                 width: 400,
                 height: 200,
-                fieldLabel: 'Enter Animal Id(s)',
+                fieldLabel: 'Enter Animal ID(s)',
                 itemId: 'animalField'
 
             }],

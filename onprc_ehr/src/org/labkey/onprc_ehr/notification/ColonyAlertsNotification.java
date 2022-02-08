@@ -1499,6 +1499,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     //Added: 8-7-2018  R.Blasa
+    //Modified: 2/4/2022 Kollil
     protected void ValidateBiirthHousingHistory(final Container c, User u, final StringBuilder msg)
     {
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("BirthInitialHousingMismatch"), null, null);
@@ -1509,10 +1510,11 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BirthInitialHousingMismatch", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
-        else
-        {
-            msg.append("<b>WARNING: There are no Birth Initial Housing mismtached locations to report.</b><br>\n");
-        }
+        // Changed: 2/4/2022, by Kolli. Tkt #7928. Commented out this part of the code so it doesn't send the alert if there are no discrepancies.
+//        else
+//        {
+//            msg.append("<b>WARNING: There are no Birth Initial Housing mismtached locations to report.</b><br>\n");
+//        }
     }
 
 
@@ -2356,7 +2358,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         int maxValue = 300;
         SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("created"), cal.getTime(), CompareType.DATE_GTE);
         filter2.addCondition(FieldKey.fromString("qcstate/PublicData"), true);
-        filter.addCondition(FieldKey.fromString("code/meaning"), "ketamine;telazol", CompareType.CONTAINS_ONE_OF);
+        filter2.addCondition(FieldKey.fromString("code/meaning"), "ketamine;telazol", CompareType.CONTAINS_ONE_OF);
         filter2.addCondition(FieldKey.fromString("amount"), maxValue, CompareType.GT);
         filter2.addCondition(FieldKey.fromString("amount_units"), "mg", CompareType.CONTAINS);
 
