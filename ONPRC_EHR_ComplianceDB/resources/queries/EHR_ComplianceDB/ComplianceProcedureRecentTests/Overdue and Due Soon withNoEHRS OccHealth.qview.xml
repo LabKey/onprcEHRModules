@@ -1,4 +1,5 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
+
     <sorts>
         <sort column="employeeId/lastName" descending="false"/>
         <sort column="employeeId/firstName" descending="false"/>
@@ -7,5 +8,6 @@
     <filters>
         <filter column="MonthsUntilRenewal" operator="lte" value="2"/>
         <filter column="employeeid/isActive" operator="eq" value="true"/>
+        <filter column="requirementName/datedisabled" operator="isblank"/>
     </filters>
 </customView>
