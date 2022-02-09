@@ -1506,7 +1506,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " several Birth ids having mismatched initial locations</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " Birth Id(s) found with mismatched initial locations.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BirthInitialHousingMismatch", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
