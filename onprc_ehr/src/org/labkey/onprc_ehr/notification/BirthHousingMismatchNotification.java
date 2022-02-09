@@ -27,14 +27,11 @@ public class BirthHousingMismatchNotification extends ColonyAlertsNotification
     }
 
     @Override
-//    public String getCronString()
-//    {
-//        return "0 0 6 * * ?";
-//    }
     public String getCronString()
     {
-        return "0 13 * * * ?";
-    } //testing at 1pm
+        return "0 0 6 * * ?";
+    }
+
 
     @Override
     public String getScheduleDescription()

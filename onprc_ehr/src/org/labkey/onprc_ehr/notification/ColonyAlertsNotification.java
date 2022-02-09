@@ -1499,7 +1499,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     //Added: 8-7-2018  R.Blasa
-    //Modified: 2/4/2022 Kollil
+    //Modified: 2/4/2022 Kollil, Tkt #7928
     protected void ValidateBiirthHousingHistory(final Container c, User u, final StringBuilder msg)
     {
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("BirthInitialHousingMismatch"), null, null);
