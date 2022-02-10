@@ -19,6 +19,9 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //import org.labkey.api.ehr.dataentry.SimpleFormSection;
 
 //Created: 10-4-2021  R.Blasa
@@ -39,6 +42,32 @@ public class EmployeeRequirementCategoryFormSection extends SimpleGridPanel
         addExtraProperty(BY_PASS_ANIMAL_ID, "true");
         addClientDependency(ClientDependency.supplierFromPath("EHR_ComplianceDB/model/sources/EmployeeCategoryClientStore.js"));
         setClientStoreClass("ONPRC_EHR.data.EmployeeCategoryClientStore");
+    }
+
+    @Override
+    public List<String> getTbarButtons()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getTbarButtons());
+
+        int idx = 0;
+        if (defaultButtons.contains("ADDANIMALS"))
+        {
+            idx = defaultButtons.indexOf("ADDANIMALS");
+            defaultButtons.remove("ADDANIMALS");
+        }
+
+        return defaultButtons;
+    }
+
+    @Override
+    public List<String> getTbarMoreActionButtons()
+    {
+        List<String> defaultButtons = super.getTbarMoreActionButtons();
+        defaultButtons.remove("GUESSPROJECT");
+        defaultButtons.remove("COPY_IDS");
+
+        return defaultButtons;
     }
 }
 
