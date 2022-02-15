@@ -1,0 +1,17 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="employeeid"/>
+        <column name="requirementName"/>
+        <column name="category"/>
+
+
+    </columns>
+    <sorts>
+        <sort column="employeeid" descending="false"/>
+
+    </sorts>
+    <filters>
+        <filter column="unit" operator="isblank"/>
+        <filter column="category" operator="isnonblank"/>
+    </filters>
+</customView>
