@@ -14,30 +14,8 @@ EHR.model.DataModelManager.registerMetadata('IPC_Child', {
         date: {
             inheritDateFromParent: true
         }
-        // project: {
-        //     inheritFromParent: true
-        // }
-        // chargetype: {
-        //     inheritFromParent: true
-        // }
+
     }
 
-    // byQuery: {
-    //     'study.treatment_order': {
-    //         date: {
-    //             inheritDateFromParent: false
-    //         }
-    //     },
-    //     'study.blood': {
-    //         project: {
-    //             inheritFromParent: false
-    //         }
-    //     },
-    //     'onprc_billing.miscCharges': {
-    //         project: {
-    //             inheritFromParent: false
-    //         }
-    //     }
-    // }
 
 });
