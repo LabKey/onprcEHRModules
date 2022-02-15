@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS [onprc_ehr].[IPC_Reference_Data]
-    GO
+EXEC core.fn_dropifexists 'IPC_Reference_Data','onprc_ehr','TABLE';
+GO
 
 /****** Object:  Table [onprc_ehr].[IPC_Reference_Data]    Script Date: 4/27/2020 ******/
 CREATE TABLE [onprc_ehr].[IPC_Reference_Data](
