@@ -10,11 +10,12 @@
         <column name="majorudds"/>
         <column name="title"/>
         <column name="unit"/>
+        <column name="category"/>
         <column name="supervisor"/>
         <column name="emergencycontact" />
         <column name="emergencycontactdaytimephone" />
         <column name="emergencycontactnighttimephone" />
-        <column name="category"/>
+
         <column name="location"/>
         <column name="startdate"/>
         <column name="enddate"/>
