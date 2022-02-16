@@ -16,6 +16,7 @@
 
 package org.labkey.onprc_billing;
 
+import org.jetbrains.annotations.NotNull;
 import org.labkey.api.action.MutatingApiAction;
 import org.labkey.api.action.ApiResponse;
 import org.labkey.api.action.ApiSimpleResponse;
@@ -181,7 +182,7 @@ public class ONPRC_BillingController extends SpringActionController
         }
 
         @Override
-        public URLHelper getSuccessURL(QueryForm form)
+        public @NotNull URLHelper getSuccessURL(QueryForm form)
         {
             URLHelper url = form.getReturnURLHelper();
             return url != null ? url : QueryService.get().urlFor(getUser(), getContainer(), QueryAction.executeQuery, ONPRC_BillingSchema.NAME, ONPRC_BillingSchema.TABLE_INVOICE_RUNS);

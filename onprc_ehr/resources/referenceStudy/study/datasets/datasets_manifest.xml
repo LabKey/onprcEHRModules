@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datasets metaDataFile="datasets_metadata.xml" xmlns="http://labkey.org/study/xml">
-    <categories>
-        <category>Behavior</category>
-        <category>ClinPath</category>
-        <category>Colony Management</category>
-        <category>Clinical</category>
-        <category>Pathology</category>
-    </categories>
     <datasets>
         <dataset name="antibioticSensitivity" id="5011" category="ClinPath" type="Standard">
             <tags/>

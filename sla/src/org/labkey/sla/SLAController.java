@@ -16,6 +16,7 @@
 
 package org.labkey.sla;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.labkey.api.action.ApiResponse;
 import org.labkey.api.action.ApiSimpleResponse;
@@ -130,7 +131,7 @@ public class SLAController extends SpringActionController
         }
 
         @Override
-        public ActionURL getSuccessURL(ValidateEtlSyncForm form)
+        public @NotNull ActionURL getSuccessURL(ValidateEtlSyncForm form)
         {
             return getContainer().getStartURL(getUser());
         }
