@@ -483,7 +483,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 //        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ARTCoreRequestFormType.class, this));
 
         //Added: 8/10/2019 Kolli
-//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IPCRequestFormType.class, this));
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IPCRequestFormType.class, this));
 
 //        Added: 11-21-2017  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ProcedureRequestBulkEditFormType.class, this));
