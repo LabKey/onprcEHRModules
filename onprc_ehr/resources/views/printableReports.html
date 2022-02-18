@@ -56,7 +56,6 @@
                     itemId: 'userField',
                     width: 400,
                     fieldLabel: 'Choose Vet',
-//                    multiSelect: true,
                     listeners: {
                         change: function (field)
                         {
@@ -75,7 +74,6 @@
                     fieldLabel: 'Breeding Group',
                     store: {
                         type: 'labkey-store',
-//                        containerPath: ctx['EHRStudyContainer'],
                         schemaName: 'ehr',
                         queryName: 'animal_groups',
                         viewName: 'Active Groups',
@@ -267,6 +265,8 @@
                         style: 'padding-top: 10px;',
                         colspan: 4
                     },{
+
+
                         html: '<i>Clinical Medications:</i>'
                     },{
                         style: 'padding-left: 10px;',
@@ -453,6 +453,175 @@
                         style: 'padding-top: 10px;',
                         colspan: 4
                     },{
+
+                        //-------------------XXXXXX
+
+                        html: '<i>Clinical Catch Report:</i>'
+                    },{
+                        style: 'padding-left: 10px;',
+                        html: ''
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Print Version',
+                        border: true,
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
+                            var params = panel.getParams(true, true);
+                            if (!params)
+                                return;
+
+                            if (params.Rooms)
+                                params.Rooms = params.Rooms.join(';');
+
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveClinicalCasesP2Sort';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Online Version',
+                        border: true,
+                        handler: function(btn){
+                            var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
+                            url += btn.up('#sheetPanel').getAnimalHistoryHash('cases');
+                            window.open(url);
+                        }
+                    },{
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 4
+                    },{
+
+                        html: '<i>Clinical Medications Catch Report:</i>'
+                    },{
+                        style: 'padding-left: 10px;',
+                        items: [{
+                            xtype: 'datefield',
+                            fieldLabel: 'Date',
+                            itemId: 'medicationDateField',
+                            value: new Date(),
+                            allowBlank: false
+                        },{
+                            xtype: 'ehr-timeofdayfield',
+                            itemId: 'medicationTimeOfDayField'
+                        }]
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Print Version',
+                        border: true,
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
+                            var params = panel.getParams(true, true);
+                            if (!params)
+                                return;
+
+                            if (params.Rooms)
+                                params.Rooms = params.Rooms.join(';');
+
+                            var date = panel.down('#medicationDateField').getValue();
+                            if (!date){
+                                Ext4.Msg.alert('Error', 'Must provide a date');
+                                return;
+                            }
+
+                            params['TreatmentDate'] = Ext4.Date.format(date, LABKEY.extDefaultDateFormat);
+                            params['NumDays'] = 1;
+                            params['Category'] = 'Clinical';
+
+                            var timeOfDay = panel.down('#medicationTimeOfDayField').getURLParam();
+                            if (timeOfDay){
+                                params['TimeOfDay'] = timeOfDay;
+                            }
+
+                            Ext4.apply(params, {
+                                'rs:ClearSession': true,
+                                'rs:Command': 'render'
+                            });
+
+                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsCatch';
+
+                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
+                            return url;
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Online Version',
+                        border: true,
+                        handler: function(btn){
+                            var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
+                            url += btn.up('#sheetPanel').getAnimalHistoryHash('clinMedicationSchedule');
+                            window.open(url);
+                        }
+                    },{
+                        style: 'margin-left: 5px;',
+
+                    },{
+
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 4
+                    },{
+
+
                         html: '<i>Open Surgical Cases:</i>'
                     },{
                         style: 'padding-left: 10px;',

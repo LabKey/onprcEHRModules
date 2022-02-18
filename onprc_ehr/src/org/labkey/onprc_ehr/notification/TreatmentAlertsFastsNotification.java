@@ -6,10 +6,13 @@ import org.labkey.api.security.User;
 
 import java.util.Date;
 
-// Created: 8-7-2018   R.Blasa
-public class BirthHousingMismatchNotification extends ColonyAlertsNotification
+/**
+ * Created by kollil on 11/1/2021
+ */
+
+public class TreatmentAlertsFastsNotification extends ColonyAlertsNotification
 {
-    public  BirthHousingMismatchNotification(Module owner)
+    public TreatmentAlertsFastsNotification(Module owner)
     {
         super(owner);
     }
@@ -17,32 +20,31 @@ public class BirthHousingMismatchNotification extends ColonyAlertsNotification
     @Override
     public String getName()
     {
-        return "Birth Initial Housing Locations Discrepancies Notification";
+        return "Fasts Treatment Alert";
     }
 
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Discrepancies between Birth and Initial Housing Locations Alerts: " + getDateTimeFormat(c).format(new Date());
+        return "Fasts treatment Alerts: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
     public String getCronString()
     {
-        return "0 0 6 * * ?";
+        return "0 30 16,18 ? * * *";
     }
-
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 6:00AM";
+        return "every day at 4:30PM and 6:30PM";
     }
 
     @Override
     public String getDescription()
     {
-        return "The report is designed to provide a daily summary of discrepancies between Birth and Initial Housing Locations.";
+        return "The report is designed to send Fast treatments alerts daily at 4:30PM and 6:30PM!";
     }
 
     @Override
@@ -50,12 +52,10 @@ public class BirthHousingMismatchNotification extends ColonyAlertsNotification
     {
         StringBuilder msg = new StringBuilder();
 
-        ValidateBiirthHousingHistory(c, u, msg);
+        processFastsTreatments(c, u, msg);
 
         return msg.toString();
     }
+
+
 }
-
-
-
-

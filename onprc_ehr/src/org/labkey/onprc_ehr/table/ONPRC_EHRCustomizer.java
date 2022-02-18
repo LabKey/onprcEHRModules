@@ -500,7 +500,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     private void customizeAnimalTable(AbstractTableInfo ds)
     {
         UserSchema us = getStudyUserSchema(ds);
-        if (us == null){
+        if (us == null)
+        {
             return;
         }
 
@@ -553,6 +554,15 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             col.setLabel("Active Treatments Given");
             col.setDescription("This provides a summary of active treatments Given for this animal");
             ds.addColumn(col);
+        }
+
+//         Created: 11-15-2021  R.Blasa
+        if (ds.getColumn("BehavioralAgeClass") == null)
+        {
+            var col = getWrappedIdCol(us, ds, "BehavioralAgeClass", "demographicsBSUAgeClass");
+            col.setLabel("Behavioral Age Class");
+            col.setDescription("Calculates the BSU age class of the animal, which is used to calculate reference ranges");
+                ds.addColumn(col);
         }
 
         if (ds.getColumn("returnLocation") == null)
@@ -806,6 +816,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             var col17 = getWrappedIdCol(us, ds, "mostRecentBCS", "demographicsMostRecentBCS");
             col17.setLabel("Body Condition Score");
             col17.setDescription("Calculates the most recent BCS for each animal");
+            ds.addColumn(col17);
+        }
+
+        if (ds.getColumn("mostRecentBCSWeight") == null)
+        {
+            var col17 = getWrappedIdCol(us, ds, "mostRecentBCSWeight", "demographicsMostRecentBCSWeight");
+            col17.setLabel("Body Condition Score And Weight at Time of BCS");
+            col17.setDescription("Calculates the weight at a time of BCS Score");
             ds.addColumn(col17);
         }
 

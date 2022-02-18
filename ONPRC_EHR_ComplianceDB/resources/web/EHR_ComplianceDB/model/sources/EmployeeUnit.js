@@ -12,8 +12,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
         'ehr_compliancedb.employeeperUnit': {
             employeeid: {
                 hidden: false,
-                anyMatch: true,
-                allowBlank: true,
+                allowBlank: false,
                 columnConfig: {
                     width: 350,
                     header: 'Employee ID'
@@ -22,17 +21,16 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
                     schema: 'ehr_compliancedb',
-                    queryName: 'Employeelist',
+                    queryName: 'Employees',
                     keyColumn: 'employeeid',
-                    // displayColumn: 'employeeid',
                     sort: 'employeeid',
-                    columns: 'employeeid,lastName,FirstName'
+                    columns: 'employeeid,lastName,firstName'
 
                 },
                 editorConfig: {
                     anyMatch: true,
                     listConfig: {
-                        innerTpl: '{[LABKEY.Utils.encodeHtml(values.employeeid + (values.LastName ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : ""))]}',
+                        innerTpl: '{[LABKEY.Utils.encodeHtml(values.employeeid + (values.lastName ? " (" + values.lastName + (values.firstName ? ", " + values.firstName : "") + ")" : ""))]}',
                         getInnerTpl: function(){
                             return this.innerTpl;
                         }
@@ -41,13 +39,18 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
             },
             category: {
                 hidden: false,
-                anyMatch: true,
                 allowBlank: true,
                 hasOwnTpl: true,
                 columnConfig: {
                     width: 300,
                     header: 'Category'
                 },
+
+                editorConfig: {
+                    caseSensitive: false,
+                    anyMatch: true
+                },
+
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
@@ -65,13 +68,17 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
 
             unit: {
                 hidden: false,
-                anyMatch: true,
                 allowBlank: true,
                 hasOwnTpl: true,
                 columnConfig: {
                     width: 300,
                     header: 'Unit'
                 },
+                editorConfig: {
+                    caseSensitive: false,
+                    anyMatch: true
+                },
+
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',

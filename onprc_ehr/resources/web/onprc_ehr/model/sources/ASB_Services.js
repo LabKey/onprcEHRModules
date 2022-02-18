@@ -31,7 +31,7 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
             date: {
                 xtype: 'xdatetime',
                 extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:0')
+                defaultValue: Ext4.Date.format(new Date(), 'Y-m-d 8:0')
             },
             type: {
                 defaultValue: 'Procedure',
@@ -51,7 +51,8 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                     schemaName: 'onprc_ehr',
                     queryName: 'ASB_SpecialInstructions',
                     displayColumn: 'value',
-                    columns: 'value'
+                    // columns: 'value'
+                    keyColumn: 'value'
                 },
                 columnConfig: {
                     width: 300
@@ -94,7 +95,7 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
             date: {
                 xtype: 'xdatetime',
                 extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:0')
+                defaultValue: Ext4.Date.format(new Date(), 'Y-m-d 8:0')
             }
         },
         'study.drug': {
@@ -105,7 +106,7 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
             date: {
                 xtype: 'xdatetime',
                 extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:0')
+                defaultValue: Ext4.Date.format(new Date(), 'Y-m-d 8:0')
             },
             Billable: {
                 defaultValue: 'Yes',

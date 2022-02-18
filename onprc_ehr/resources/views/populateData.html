@@ -760,7 +760,13 @@ Ext4.onReady(function(){
             queryName: 'ageclass',
             pk: 'rowid'
         },{
-            label: 'Acquistion Types',
+            label: 'BSU Age Class',
+            populateFn: 'populateFromFile',
+            schemaName: 'onprc_ehr',
+            queryName: 'BSUageclass',
+            pk: 'rowid'
+        },{
+            label: 'Acquisition Types',
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'AcquistionType',
