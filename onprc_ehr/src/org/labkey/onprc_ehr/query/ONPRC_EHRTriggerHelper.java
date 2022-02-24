@@ -2343,7 +2343,7 @@ public class ONPRC_EHRTriggerHelper
     }
 
 
-    //Added 3-6-2019 Blasa
+    //Added 2-24-2022 Blasa
     public void sendProjectNotifications(Integer projectid)
     {
 
@@ -2380,6 +2380,7 @@ public class ONPRC_EHRTriggerHelper
         names.add(FieldKey.fromString("name"));
         names.add(FieldKey.fromString("investigatorId"));
         names.add(FieldKey.fromString("startdate"));
+        names.add(FieldKey.fromString("enddate"));
         names.add(FieldKey.fromString("project"));
 
         final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
@@ -2397,7 +2398,9 @@ public class ONPRC_EHRTriggerHelper
             //Create header information on the report
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
-            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td><td>Iacuc Protocol</td><td> Investigator</td><td>  Center Project Start Date</td></tr>\n");
+            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td>" +
+                    "<td>Iacuc Protocol</td><td> Investigator</td><td>Start Date</td>" +
+                    "<td>Ending Date</td></tr>\n");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
                        {
 
@@ -2415,7 +2418,11 @@ public class ONPRC_EHRTriggerHelper
                                {
                                    for (String Investname : ret2)
                                    {
-                                       html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("project"))  + "</td><td>   " + PageFlowUtil.filter(rs.getString(protocolColumn.getAlias()))  + "</td><td>   " + PageFlowUtil.filter(Investname) + "   </td><td>" +  PageFlowUtil.filter(rs.getString("startdate")) + "</td></tr>\n");
+                                       html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("project"))  + "</td>" +
+                                               "<td>   " + PageFlowUtil.filter(rs.getString(protocolColumn.getAlias()))  + "</td>" +
+                                               "<td>   " + PageFlowUtil.filter(Investname) + "   </td>" +
+                                               "<td>" +  PageFlowUtil.filter(rs.getString("startdate")) + "</td>" +
+                                               "<td>" +  PageFlowUtil.filter(rs.getString("enddate")) + "</td></tr>\n");
                                        break;
 
                                    }
