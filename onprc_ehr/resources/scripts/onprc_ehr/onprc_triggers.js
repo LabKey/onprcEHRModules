@@ -1106,7 +1106,7 @@ exports.init = function(EHR){
 
             var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
 
-            if (row.project || oldrow.endate != enddate){
+            if (row.project || oldRow.enddate != row.enddate){
                 console.log("project data collected  " + row.project)
                 var msg = triggerHelper.sendProjectNotifications(row.project);
                 if (msg){
