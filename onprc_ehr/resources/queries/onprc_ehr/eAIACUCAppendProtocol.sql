@@ -23,7 +23,8 @@ SELECT e.rowid,
        e.modifiedby,
        e.modified,
        e.PROTOCOL_State,
-       e.PPQ_Numbers
+       e.PPQ_Numbers,
+       NEWID() as ObjectID
 
 
 
