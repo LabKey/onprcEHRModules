@@ -3,7 +3,7 @@
 	<description>Appends new records from eIACUC Insert to ehr Protocol Dataset and matches Investigator</description>
 	<transforms>
 		<transform id="AppendNewRecords">
-			<source queryName="eAIACUCApapendProtocol" schemaName="onprc_ehr"/>
+			<source queryName="eAIACUCAppendProtocol" schemaName="onprc_ehr"/>
 			<destination queryName="protocol" schemaName="ehr" targetOption="merge">
 				<columnTransforms>
 					<column source="rowid" target="protocol"/>
@@ -26,6 +26,8 @@
 					<column source="Protocol_ID" target="displayName"/>
 					<column source="Cohort" target="annualReviewDate"/>
 					<column source="Cohort" target="daysUntilAnnualReview"/>
+					<column source="objectID" target="objectID"/>
+
 				</columnTransforms>
 				<alternateKeys>
 					<column name = "external_ID"/>
