@@ -27,6 +27,10 @@
 					<column source="Cohort" target="annualReviewDate"/>
 					<column source="Cohort" target="daysUntilAnnualReview"/>
 				</columnTransforms>
+				<alternateKeys>
+					<column name = "external_ID"/>
+
+				</alternateKeys>
 			</destination>
 		</transform>
 	</transforms>
