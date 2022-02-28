@@ -26,7 +26,7 @@
 					<column source="Protocol_ID" target="displayName"/>
 					<column source="Cohort" target="annualReviewDate"/>
 					<column source="Cohort" target="daysUntilAnnualReview"/>
-					<column source="protocol_OID" target="objectID"/>
+					<column source="template_OID" target="objectid"/>
 
 				</columnTransforms>
 				<alternateKeys>
