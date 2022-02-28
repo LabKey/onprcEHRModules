@@ -70,6 +70,11 @@
                         <displayWidth>60</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
+                    <column columnName="trackingflag">
+                        <columnTitle>Essential</columnTitle>
+                        <displayWidth>60</displayWidth>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
 
                 </columns>
             </table>
