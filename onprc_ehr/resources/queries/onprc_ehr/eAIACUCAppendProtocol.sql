@@ -29,5 +29,5 @@ SELECT e.rowid,
 
 
 FROM eIACUC_PRIME_VIEW_PROTOCOLS e left outer join onprc_ehr.investigators i on e.pi_id = i.employeeid
-where (e.protocol_state not in ('Withdrawn','terminated', 'Expired')
-    and e.protocol_id not in (Select protocol from ehr.protocol where enddate is null))
+--where (e.protocol_state not in ('Withdrawn','terminated', 'Expired')
+--    and e.protocol_id not in (Select protocol from ehr.protocol where enddate is null))
