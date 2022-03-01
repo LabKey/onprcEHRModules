@@ -17,7 +17,7 @@ Ext4.define('ONPRC_EHR.data.EmployeeUnitClientStore', {
 // Hack the server store too so that we can match the saved records with their row in the form's store
 Ext4.override(EHR.data.DataEntryServerStore, {
 
-    getKeyField: function() {
+    getProxyKeyField: function() {
         var result = this.proxy.reader.getIdProperty();
         if (result === 'rowid') {
             result = 'objectid';
