@@ -19,6 +19,12 @@
                     <column columnName="clinicalremarks">
                         <columnTitle>Clinical Remarks</columnTitle>
                     </column>
+                    <column columnName="mostRecentBCSScore">
+                        <columnTitle>BCS Score</columnTitle>
+                    </column>
+                    <column columnName="mostRecengProcedure">
+                        <columnTitle>Clinical Procedure</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>
