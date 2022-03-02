@@ -70,43 +70,9 @@ select a.requirementname,
 from  ehr_compliancedb.completiondates a
 where a.requirementname not in (select distinct h.requirementname from ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h Where (k.unit = h.unit
     or k.category = h.category) And a.employeeid = k.employeeid )
+And a.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where a.employeeid = t.employeeid
+                                         And a.requirementname = t.requirementname)
 
 
 group by a.requirementname,a.employeeid
 
-union
-
-
-select a.requirementname,
-       a.employeeid,
-       null,
-       null,
-       'No' as trackingflag,
-
-
-       (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
-
-       (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = a.requirementname) as ExpiredPeriod,
-
-       (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
-
-
-       CAST(
-
-               CASE
-
-                   WHEN (select max(st.date) from completiondates st where st.requirementname = a.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
-                   WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  ) = 0 then Null
-
-
-                   ELSE ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  )
-                   END  AS double)  AS MonthsUntilRenewal
-
-
-
-
-from  ehr_compliancedb.employeerequirementexemptions a
-
-
-
-group by a.requirementname,a.employeeid
