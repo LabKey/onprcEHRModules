@@ -22,7 +22,7 @@
                     <column columnName="mostRecentBCSScore">
                         <columnTitle>BCS Score</columnTitle>
                     </column>
-                    <column columnName="mostRecengProcedure">
+                    <column columnName="mostRecentProcedure">
                         <columnTitle>Clinical Procedure</columnTitle>
                     </column>
                 </columns>
