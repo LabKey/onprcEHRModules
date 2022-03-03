@@ -7,7 +7,7 @@ select dem.*,
                                                                                      from  "Clinical Observations" k where k.category = 'Vet Review' and dem.id = k.Id) ) as mostRecentBCSScore,
 
       ( select   group_concat(DISTINCT q.procedureid.name, chr(10))  from "Clinical Encounters" q where q.id = dem.id  and q.type.value = 'Procedure'
-              and q.procedureid.name  in ('Ultrasound','Ultrasound - Ovaries','Ultrasound - Pregnancy', 'Ultrasound - Uterus','Dental prophylaxis')and q.date >= (select max(k.date)
+              and q.procedureid.name  in ('Ultrasound','Ultrasound - Ovaries','Ultrasound - Pregnancy', 'Ultrasound - Uterus','Dental prophylaxis','Palpation, bimanual') and q.date >= (select max(k.date)
                                                                              from  "Clinical Observations" k where k.category = 'Vet Review' and dem.id = k.Id) ) as mostRecentProcedure,
 
        ( select  group_concat(DISTINCT t.remark, chr(10))  from "Clinical Observations" t where t.id = dem.id  and t.category = 'Observations' and t.remark is not null and t.date >= (select max(k.date)
@@ -27,7 +27,7 @@ from study.demographics dem
     and rem.id = r.Id)  )
 
      Or dem.id in (Select rems.id from "Clinical Encounters" rems where rems.type.value = 'Procedure' and rems.procedureid.name
-      in ('Ultrasound','Ultrasound - Ovaries','Ultrasound - Pregnancy', 'Ultrasound - Uterus','Dental prophylaxis')
+      in ('Ultrasound','Ultrasound - Ovaries','Ultrasound - Pregnancy', 'Ultrasound - Uterus','Dental prophylaxis','Palpation, bimanual')
                                                                   and rems.date >= (select max(x.date) from "Clinical Observations" x where x.category = 'Vet Review' and x.QCState.Label = 'Completed'
                                                                                                                                        and rems.Id = x.Id)  )
 
