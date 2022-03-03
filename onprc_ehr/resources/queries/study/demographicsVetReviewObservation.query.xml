@@ -21,6 +21,7 @@
                     </column>
                     <column columnName="mostRecentBCSScore">
                         <columnTitle>BCS Score</columnTitle>
+                        <displayWidth>100</displayWidth>
                     </column>
                     <column columnName="mostRecentProcedure">
                         <columnTitle>Clinical Procedure</columnTitle>
