@@ -2365,7 +2365,7 @@ public class ONPRC_EHRTriggerHelper
 
         TableInfo ti = getTableInfo("ehr", "project");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("project"), projectid);
-        filter.addCondition(FieldKey.fromString("enddateCoalesced"), roundedMax, CompareType.GTE);
+        filter.addCondition(FieldKey.fromString("modified"), roundedMax, CompareType.GTE);
 
         Sort sort = new Sort("name");
 
@@ -2402,7 +2402,7 @@ public class ONPRC_EHRTriggerHelper
                            @Override
                            public void exec(ResultSet rs) throws SQLException
                            {
-
+                               _log.info("Success Section Part 2X");
                                TableInfo ti2 = getTableInfo("onprc_ehr", "investigators");
                                SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("rowid"), rs.getString("investigatorId"));
                                filter2.addCondition(FieldKey.fromString("datedisabled"), true, CompareType.ISBLANK);
@@ -2411,6 +2411,7 @@ public class ONPRC_EHRTriggerHelper
                                List<String> ret2 = ts2.getArrayList(String.class);
                                if (ret2 != null && !ret2.isEmpty())
                                {
+                                   _log.info("Success Section Part 3X");
                                    for (String Investname : ret2)
                                    {
                                        html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("project"))  + "</td>" +
