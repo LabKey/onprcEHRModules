@@ -16,7 +16,8 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
         'onprc_billing.miscCharges': {
             Id: {
                 hidden: false,
-                header: 'Animal Id'
+                header: 'Animal Id',
+                allowBlank: true //Make AnimalId not a required field for any tech time and etc kind of charges
             },
 
             chargeId: {
