@@ -13,6 +13,24 @@
                     <column columnName="employeeid">
                         <columnTitle>Employee ID</columnTitle>
                     </column>
+                    <column columnName="unit">
+                        <columnTitle>Unit</columnTitle>
+                        <displayWidth>50</displayWidth>
+                        <url>/query/executeQuery.view?schemaName=ehr_compliancedb&amp;
+                            query.queryName=EmployeePerUnit&amp;
+                            query.EmployeeId~eq=${employeeId}&amp;
+                            query.viewName=PerUnitReport&amp;
+                        </url>
+                    </column>
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
+                        <displayWidth>50</displayWidth>
+                        <url>/query/executeQuery.view?schemaName=ehr_compliancedb&amp;
+                            query.queryName=EmployeePerUnit&amp;
+                            query.EmployeeId~eq=${employeeId}&amp;
+                            query.viewName=PerCategoryReport&amp;
+                        </url>
+                    </column>
                  </columns>
             </table>
         </tables>

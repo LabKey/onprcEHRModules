@@ -1,0 +1,26 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsMostRecentBCSWeight" tableDbType="NOT_IN_DB">
+                <tableTitle>Most Recent BCS</tableTitle>
+                <columns>
+                    <column columnName="Id">
+                        <isKeyField>true</isKeyField>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="date">
+                        <columnTitle>BCS Score Date</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="weightdate">
+                        <columnTitle>Weight date at time of BCS</columnTitle>
+                    </column>
+                    <column columnName="weight">
+                        <columnTitle>Weight at time of BCS (kg)</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+
