@@ -1,0 +1,23 @@
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>eIACUCtoProtocolCleanup</name>
+    <description>Appends new records from eIACUC Insert to ehr Protocol Dataset and matches Investigator</description>
+    <transforms>
+        <transform id="AppendNewRecords">
+            <source queryName="eIACUC_ProtocolCleanUp" schemaName="onprc_ehr"/>
+            <destination queryName="protocol" schemaName="ehr" targetOption="merge">
+                <columnTransforms>
+                    <column source = "Protocol_State" target="Protocol_State" />
+                    <column source="Last_Modified" target="last_modified"/>
+                    <column source="renewaldate" target="enddate"/>
+                    <column source= "description" Target="description" />
+                    <column source= "Protocol_State" Target="Protocol_State" />
+
+                </columnTransforms>
+                <alternateKeys>
+                    <column name = "external_ID"/>
+
+                </alternateKeys>
+            </destination>
+        </transform>
+    </transforms>
+</etl>
