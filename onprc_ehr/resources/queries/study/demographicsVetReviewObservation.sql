@@ -3,14 +3,14 @@ select dem.*,
 
        (select s.date from study.mostRecentClinicalObservationsForAnimal s  where s.id = dem.id) as mostRecentClinicalObservationsdate,
 
-       ( select group_concat(DISTINCT j.observation, chr(10))  from "Clinical Observations" j where j.id = dem.id  and j.category = 'BCS'  and j.date >= (select max(k.date)
+       ( select group_concat(DISTINCT 'BCS: ' + j.observation, chr(10))  from "Clinical Observations" j where j.id = dem.id  and j.category = 'BCS'  and j.date >= (select max(k.date)
                                                                                      from  "Clinical Observations" k where k.category = 'Vet Review' and dem.id = k.Id) ) as mostRecentBCSScore,
 
-      ( select   group_concat(DISTINCT q.procedureid.name, chr(10))  from "Clinical Encounters" q where q.id = dem.id  and q.type.value = 'Procedure'
+      ( select group_concat(DISTINCT q.procedureid.name  + ' : ' + q.remark , chr(10)) from "Clinical Encounters" q where q.id = dem.id  and q.type.value = 'Procedure'
               and q.procedureid.name  in ('Ultrasound','Ultrasound - Ovaries','Ultrasound - Pregnancy', 'Ultrasound - Uterus','Dental prophylaxis','Palpation, bimanual') and q.date >= (select max(k.date)
                                                                              from  "Clinical Observations" k where k.category = 'Vet Review' and dem.id = k.Id) ) as mostRecentProcedure,
 
-       ( select  group_concat(DISTINCT t.remark, chr(10))  from "Clinical Observations" t where t.id = dem.id  and t.category = 'Observations' and t.remark is not null and t.date >= (select max(k.date)
+       ( select  group_concat(DISTINCT 'Observations: ' + t.remark, chr(10))  from "Clinical Observations" t where t.id = dem.id  and t.category = 'Observations' and t.remark is not null and t.date >= (select max(k.date)
                                                       from  "Clinical Observations" k where k.category = 'Vet Review' and dem.id = k.Id) ) as observationremarks,
 
        ( select group_concat(DISTINCT s.remark, chr(10))  from "Clinical Remarks" s where s.id = dem.id and s.description is not null  and s.date >= (select max(k.date)

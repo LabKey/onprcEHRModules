@@ -6,6 +6,7 @@
                 <columns>
                     <column columnName="observationremarks">
                         <columnTitle>Observation Remarks</columnTitle>
+                        <displayWidth>140</displayWidth>
                     </column>
                     <column columnName="observations">
                         <columnTitle>Latest Observations</columnTitle>
@@ -21,10 +22,11 @@
                     </column>
                     <column columnName="mostRecentBCSScore">
                         <columnTitle>BCS Score</columnTitle>
-                        <displayWidth>100</displayWidth>
+                        <displayWidth>80</displayWidth>
                     </column>
                     <column columnName="mostRecentProcedure">
                         <columnTitle>Clinical Procedure</columnTitle>
+                        <displayWidth>150</displayWidth>
                     </column>
                 </columns>
             </table>
