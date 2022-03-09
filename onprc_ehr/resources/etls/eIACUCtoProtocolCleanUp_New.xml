@@ -1,5 +1,5 @@
 <etl xmlns="http://labkey.org/etl/xml">
-    <name>eIACUCtoProtocolCleanUp</name>
+    <name>eIACUCtoProtocolCleanUp_Update</name>
     <description>Clean up existing protocols that shoul,d be enddated</description>
     <transforms>
         <transform id="EdnDateExpiredRecords">
