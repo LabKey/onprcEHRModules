@@ -1093,6 +1093,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     1. Complete NPO - 2440
     2. Overnight Fast - 1807
     3. AM Fast - 1804
+
+    Changes made by Kolli on Mar 8th, 2022
+    Carly requested the following changes
+    1. I can remove the "Performed by" for all the alerts.
+    2. Is there an option to show who requested it and their contact information? - Yes, I can add that
+    3. Can we remove the column of charge unit in the alert as well? - Yes, I will remove the chargeunit field.
     */
     protected void processFastsTreatments(final Container c, User u, final StringBuilder msg)
     {
@@ -1130,7 +1136,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             columns.add(FieldKey.fromString("procedurename"));
             columns.add(FieldKey.fromString("instructions"));
             columns.add(FieldKey.fromString("remark"));
-            columns.add(FieldKey.fromString("performedby"));
+            columns.add(FieldKey.fromString("createdby"));
+            columns.add(FieldKey.fromString("created"));
             //columns.add(FieldKey.fromString("taskid"));
             columns.add(FieldKey.fromString("status"));
 
@@ -1140,7 +1147,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<hr><b>Today's Fast Treatments:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td>Id </td><td>Location </td><td>Start Date </td><td>End Date </td><td>Project </td><td>Charge Unit </td><td>Procedure </td><td>Instructions </td><td>Remark </td><td>Performed By </td><td>Status </td></tr>");
+            msg.append("<td>Id </td><td>Location </td><td>Start Date </td><td>End Date </td><td>Project </td><td>Charge Unit </td><td>Procedure </td><td>Instructions </td><td>Remark </td><td>Created By </td><td>Created </td><td>Status </td></tr>");
 
             ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
                 @Override
@@ -1159,7 +1166,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("procedurename")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("instructions")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("performedby")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("createdby")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("created")) + "</td>");
                     //msg.append("<td>" + PageFlowUtil.filter(rs.getString("taskid")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("status")) + "</td>");
                     msg.append("</tr>");
@@ -1169,6 +1177,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
 
     }    //End of Fasts alert
+
+
 
     /**
      * Kollil, 10/24/2019 : PMIC scheduler alert notifications Daily & Weekly

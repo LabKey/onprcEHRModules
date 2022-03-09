@@ -15,11 +15,13 @@ Select
     date,
     enddate,
     project.displayName as project,
-    chargetype,
+--     chargetype,
     procedureid.name as procedurename,
     instructions,
     remark,
-    performedby,
+    createdby,
+    created,
+--     performedby,
     taskid,
     QCState.label as status
 
