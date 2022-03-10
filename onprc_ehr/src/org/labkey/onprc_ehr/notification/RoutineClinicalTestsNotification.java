@@ -18,6 +18,8 @@ package org.labkey.onprc_ehr.notification;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.ContainerFilter;
+import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
@@ -34,6 +36,7 @@ import org.labkey.api.ehr.notification.AbstractEHRNotification;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -92,10 +95,76 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         getTbAlerts(sb, c, u);
         getPEAlerts(sb, c, u);
         getAnimalsNotWeightedInPast60Days(sb, c, u);
-
+        //Added by Kolli, March 2022
+        getTattooAlerts(sb, c, u);
         //getVirologyAlerts(sb, c, u);
 
         return sb.toString();
+    }
+
+    /* Added by Kolli, March 2022
+      Create an alert that is added to Prod-Onprcitsupport@ohsu.edu Routine or Preventative care alerts
+      to list all the animals that do not have a tattoo procedure in their EHR.
+    */
+    protected void getTattooAlerts(StringBuilder msg, Container c, User u)
+    {
+        msg.append("<b>Animal Tattoos:</b><br><br>\n");
+
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+        //Tattoos query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("demographicsTattoos", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0) {
+            msg.append("WARNING:" + count + " animal(s) found with missing tattoos: ");
+            msg.append("<b><a href='" + getExecuteQueryUrl(c, "study", "demographicsTattoos", null) + "&query.containerFilterName=AllFolders'><b>Click here to view them.</a></b><br>\n");
+            msg.append("<hr>");
+        }
+        else {
+            msg.append("<b> No Animals found with missing tattoos </b>");
+            msg.append("<hr>");
+        }
+
+        //Display the report in the email
+        if (count > 0)
+        {
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("birth"));
+            columns.add(FieldKey.fromString("gender"));
+            columns.add(FieldKey.fromString("location"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + ">");
+            msg.append("<td>Id   </td><td>Birth Date            </td><td>Gender </td><td>Location   </td></tr>");
+
+            ts2.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, colMap);
+                    String url = getParticipantURL(c, rs.getString("Id"));
+
+                    msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("birth")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("gender")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("location")) + "</td>");
+                    msg.append("</tr>");
+                }
+            });
+            msg.append("</table>");
+            msg.append("<br><hr>\n");
+        }
     }
 
     protected void getTbAlerts(StringBuilder msg, Container c, User u)
