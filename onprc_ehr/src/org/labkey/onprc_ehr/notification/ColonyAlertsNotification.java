@@ -1132,7 +1132,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             columns.add(FieldKey.fromString("date"));
             columns.add(FieldKey.fromString("enddate"));
             columns.add(FieldKey.fromString("project"));
-            columns.add(FieldKey.fromString("chargetype"));
+//            columns.add(FieldKey.fromString("chargetype"));
             columns.add(FieldKey.fromString("procedurename"));
             columns.add(FieldKey.fromString("instructions"));
             columns.add(FieldKey.fromString("remark"));
@@ -1147,7 +1147,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<hr><b>Today's Fast Treatments:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td>Id </td><td>Location </td><td>Start Date </td><td>End Date </td><td>Project </td><td>Charge Unit </td><td>Procedure </td><td>Instructions </td><td>Remark </td><td>Created By </td><td>Created </td><td>Status </td></tr>");
+            msg.append("<td>Id </td><td>Location </td><td>Start Date </td><td>End Date </td><td>Project </td><td>Procedure </td><td>Instructions </td><td>Remark </td><td>Created By </td><td>Created </td><td>Status </td></tr>");
 
             ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
                 @Override
@@ -1162,7 +1162,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("chargetype")) + "</td>");
+//                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("chargetype")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("procedurename")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("instructions")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
