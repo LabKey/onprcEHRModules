@@ -48,7 +48,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
 
             debitedaccount: {
                 xtype: 'combo',
-                header: 'Alias, Project & PI',
+                header: 'Alias & PI',
                 hidden: false,
                 lookup: {
                     schemaName: 'onprc_billing',
