@@ -1,4 +1,5 @@
 --New query as source of Misc Charges Not yet billing will replace needed items in Test and Production
+--Modified by Kollil, 3/15/2022 - With Sally's help changed the query to get the NIH rate data correctly.
 SELECT d.Id,
        d.date,
        d.billingDate,
@@ -12,7 +13,7 @@ SELECT d.Id,
        d.category,
        d.item,
        d.unitCost,
-       m.unitCost as nihRate,
+       d.nihrate,
        d.quantity,
        Sum(d.unitCost * d.quantity) as TotalCharges,
        d.chargeCategory,
@@ -37,7 +38,7 @@ Group by
     d.category,
     d.item,
     d.unitCost,
-    m.unitCost,
+    d.nihrate,
     d.quantity,
     d.chargeCategory,
     d.comment,
@@ -45,3 +46,28 @@ Group by
     d.created,
     d.createdby,
     m.taskId
+
+
+-- SELECT d.Id,
+--        d.date,
+--        d.billingDate,
+--        d.project,
+--        d.account as ChargeTo,
+--        d.chargetype as CreditTo,
+--        d.creditAccount,
+--        d.creditAccountType,
+--        d.investigatorId,
+--        d.chargeId,
+--        d.category,
+--        d.item,
+--        d.unitCost,
+--        d.nihRate,
+--        d.quantity,
+--        d.chargeCategory,
+--        d.comment,
+--        d.invoiceId,
+--        d.created,
+--        d.createdby,
+--        m.taskId
+-- FROM MiscChargeswithRates d join MiscCharges m on d.taskId = m.taskId and d.sourceRecord = m.objectID
+-- where d.invoiceID is null
