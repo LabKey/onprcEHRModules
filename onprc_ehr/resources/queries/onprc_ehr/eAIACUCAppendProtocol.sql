@@ -9,7 +9,7 @@ SELECT e.rowid,
             --else (e.Protocol_ID +' added as New Protocol '+ cast(e.createdasvarchar(20)))
             End as Description,
         Case
-            Whene.protocol_statein('expired','terminated','withdrawn')thene.Last_Modified
+            When e.protocol_state in('expired','terminated','withdrawn')then e.Last_Modified
             End as enddate,
         e.protocol_id as external_id,
        e.PI_ID,
