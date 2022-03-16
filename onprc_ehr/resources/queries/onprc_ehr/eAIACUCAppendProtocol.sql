@@ -4,9 +4,9 @@ SELECT e.rowid,
        e.Protocol_OID,
        e.Protocol_Title,
        Case
-            When e.protocol_state<>'approved' then(('Protocolisnotactive,currentstatusis')+e.protocol_state)
-            When len(e.Protocol_ID) > 10 then ('RenewalforOriginalProtocol'+Substring(e.protocol_ID,6,15)+'added'+cast(e.createdasvarchar(20)))
-            else (e.Protocol_ID+'addedasNewProtocol'+cast(e.createdasvarchar(20)))
+            When e.protocol_state <> 'approved' then(('Protocolisnotactive,currentstatusis')+e.protocol_state)
+            --When len(e.Protocol_ID) > 10 then ('RenewalforOriginalProtocol'+ Substring(e.protocol_ID,6,15) + 'added' + cast(e.createdasvarchar(20)))
+            --else (e.Protocol_ID +' added as New Protocol '+ cast(e.createdasvarchar(20)))
             End as Description,
         Case
             Whene.protocol_statein('expired','terminated','withdrawn')thene.Last_Modified
