@@ -4,12 +4,16 @@ SELECT e.rowid,
        e.Protocol_OID,
        e.Protocol_Title,
        Case
-           When len(e.Protocol_ID) > 10 then ('Renewal for Original Protocol ' + Substring(e.protocol_ID,6,15) + ' added ' + cast(e.created  as varchar(20)))
-           else (e.Protocol_ID + ' added  as New Protocol ' + cast(e.created  as varchar(20)))
-           End  as Description,
-
+            When e.protocol_state<>'approved' then(('Protocolisnotactive,currentstatusis')+e.protocol_state)
+            When len(e.Protocol_ID) > 10 then ('RenewalforOriginalProtocol'+Substring(e.protocol_ID,6,15)+'added'+cast(e.createdasvarchar(20)))
+            else (e.Protocol_ID+'addedasNewProtocol'+cast(e.createdasvarchar(20)))
+            End as Description,
+        Case
+            Whene.protocol_statein('expired','terminated','withdrawn')thene.Last_Modified
+            End as enddate,
+        e.protocol_id as external_id,
        e.PI_ID,
-       i.userID as InvestigatorID,
+      -- i.userID as InvestigatorID,
        e.PI_Last_Name,
        e.PI_Email,
        e.PI_Phone,
@@ -27,7 +31,4 @@ SELECT e.rowid,
 
 
 
-
-FROM eIACUC_PRIME_VIEW_PROTOCOLS e left outer join onprc_ehr.investigators i on e.pi_id = i.employeeid
---where (e.protocol_state not in ('Withdrawn','terminated', 'Expired')
---    and e.protocol_id not in (Select protocol from ehr.protocol where enddate is null))
+FROM eIACUC_PRIME_VIEW_PROTOCOLS e
