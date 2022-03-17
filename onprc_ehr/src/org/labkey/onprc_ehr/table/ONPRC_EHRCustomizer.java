@@ -819,6 +819,14 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ds.addColumn(col17);
         }
 
+        if (ds.getColumn("mostRecentBCSWeight") == null)
+        {
+            var col17 = getWrappedIdCol(us, ds, "mostRecentBCSWeight", "demographicsMostRecentBCSWeight");
+            col17.setLabel("Body Condition Score And Weight at Time of BCS");
+            col17.setDescription("Calculates the weight at a time of BCS Score");
+            ds.addColumn(col17);
+        }
+
         if (ds.getColumn("mostRecentAlopeciaScore") == null)
         {
             var col17 = getWrappedIdCol(us, ds, "mostRecentAlopeciaScore", "demographicsMostRecentAlopecia");

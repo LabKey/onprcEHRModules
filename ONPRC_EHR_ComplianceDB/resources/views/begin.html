@@ -25,6 +25,8 @@ Ext4.onReady(function(){
             },{
                 name: 'Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.viewName=Overdue and Due Soon'
             },{
+                name: 'Procedure - Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Overdue and Due Soon withNoEHRS OccHealth'
+            },{
                 name: 'Occupational Health - Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.viewName=Occupational%20Health%20Compliance'
             },{
                 name: 'Occupational Health - Measles Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Measles45DayAlert&query.DaysOverDue~neqornull=-1'
@@ -66,17 +68,15 @@ Ext4.onReady(function(){
                 name: 'View/Edit Allowable Locations', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeLocations'
             },{
                 name: 'View/Edit Allowable Unit Names', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Unit_Names'
-            }]
-        },{
-            header: 'Data Entry Forms',
-            items: [{
+            },{
                 name: 'Employee Per Unit/Category Form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ONPRC/Admin/Compliance',{formType: 'employeeunitrecords'})
             },{
                 name: 'Requirements Per Essential Form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ONPRC/Admin/Compliance',{formType: 'employeecategoryrecords'})
             },{
                 name: 'Edit form with Task ID', url: LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'enterData.view',(ctx ? ctx['EmployeeContainer'] : null), null)
             }]
-            },{
+        },{
+
         header: 'Printable Reports',
         items: [{
             name: 'Employees Summary Report', url: LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'printableComplianceReports', LABKEY.ActionURL.getContainer())

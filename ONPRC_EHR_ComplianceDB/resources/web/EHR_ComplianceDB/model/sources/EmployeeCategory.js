@@ -12,12 +12,16 @@ EHR.model.DataModelManager.registerMetadata('EmployeeCategoryRecords', {
         'ehr_compliancedb.requirementspercategory': {
             requirementname: {
                 hidden: false,
-                anyMatch: true,
-                allowBlank: true,
+                allowBlank: false,
                 columnConfig: {
                     width: 350,
                     header: 'Requirement Name'
                 },
+                editorConfig: {
+                    caseSensitive: false,
+                    anyMatch: true
+                },
+
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
@@ -36,12 +40,16 @@ EHR.model.DataModelManager.registerMetadata('EmployeeCategoryRecords', {
             },
             category: {
                 hidden: false,
-                anyMatch: true,
                 allowBlank: true,
                 columnConfig: {
                     width: 150,
                     header: 'Category'
                 },
+                editorConfig: {
+                    caseSensitive: false,
+                    anyMatch: true
+                },
+
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
@@ -57,13 +65,17 @@ EHR.model.DataModelManager.registerMetadata('EmployeeCategoryRecords', {
             },
             unit: {
                 hidden: false,
-                anyMatch: true,
                 allowBlank: true,
                 hasOwnTpl: true,
                 columnConfig: {
                     width: 300,
                     header: 'Unit'
                 },
+                editorConfig: {
+                    caseSensitive: false,
+                    anyMatch: true
+                },
+
                 lookup: {
                     xtype: 'labkey-combo',
                     containerPath: '/ONPRC/Admin/Compliance',
@@ -78,7 +90,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeCategoryRecords', {
 
 
             },
-             rowid:{hidden: true},
+             rowId:{hidden: true},
             trackingflag: {
                 hidden: false,
                 allowBlank: false,

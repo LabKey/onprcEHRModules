@@ -1,8 +1,8 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="complianceRecentTests" tableDbType="NOT_IN_DB">
-                <tableTitle>Employee Requirement Summary</tableTitle>
+            <table tableName="complianceProcedureRecentTests" tableDbType="NOT_IN_DB">
+                <tableTitle>Employee Procedure Requirement Summary</tableTitle>
                 <columns>
                     <column columnName="employeeId">
                         <isKeyField>true</isKeyField>
@@ -65,6 +65,11 @@
                         </conditionalFormats>
                     </column>
 
+                    <column columnName="trackingflag">
+                        <columnTitle>Essential</columnTitle>
+                        <displayWidth>60</displayWidth>
+                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
+                    </column>
                     <column columnName="trackingflag">
                         <columnTitle>Essential</columnTitle>
                         <displayWidth>60</displayWidth>
