@@ -8,7 +8,7 @@
  2. Overnight Fast - 1807
  3. AM Fast - 1804
 
-Changes made by Kolli on Mar 8th, 2022
+Changes made by Kollil on Mar 8th, 2022
     Carly requested the following changes
     1. Remove the "Performed by" for all the alerts.
     2. Is there an option to show who requested it and their contact information? - Yes, I can add that
@@ -25,11 +25,11 @@ Select
     e.procedureid.name as procedurename,
     e.instructions,
     e.remark,
-    r.notify1 as FirstContact,
-    r.notify2 as SecondContact,
-    r.notify3 as ThirdContact,
+    r.notify1.displayname as FirstContact,
+    r.notify2.displayname as SecondContact,
+    r.notify3.displayname as ThirdContact,
     r.created,
-    r.createdby,
+    r.createdby.Displayname as createdby,
     r.remark as LabPhoneNum,
     e.QCState.label as status
 From encounters e, ehr.requests r
