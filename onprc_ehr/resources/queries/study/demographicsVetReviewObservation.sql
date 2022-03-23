@@ -19,7 +19,11 @@ select dem.*,
 
 
 from study.demographics dem
-  Where  dem.id in (Select cln.id from "Clinical Observations" cln where cln.category in ('Observations', 'BCS') and (cln.remark is not null or cln.observation is not null)
+  Where  dem.id in (Select cln.id from "Clinical Observations" cln where cln.category = 'Observations' and cln.remark is not null
+                  and cln.date >= (select max(r.date) from "Clinical Observations" r where r.category = 'Vet Review' and r.QCState.Label = 'Completed'
+                                                                                       and r.Id = cln.Id)  )
+
+    Or dem.id in (Select cln.id from "Clinical Observations" cln where cln.category = 'BCS' and cln.observation is not null
                   and cln.date >= (select max(r.date) from "Clinical Observations" r where r.category = 'Vet Review' and r.QCState.Label = 'Completed'
                                                                                        and r.Id = cln.Id)  )
    Or dem.id in (Select rem.id from "Clinical Remarks" rem where rem.category = 'Clinical'
