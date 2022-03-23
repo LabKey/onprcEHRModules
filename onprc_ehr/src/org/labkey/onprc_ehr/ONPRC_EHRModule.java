@@ -602,7 +602,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 //        Added: 3-22-2022  R.Blasa
         EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "demographicsVetReviewObservation");
         EHRService.get().registerMoreActionsButton(new ManageFlagsButton(this), "study", "demographicsVetReviewObservation");
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "study", "demographicsVetReviewObservation", EHRVeterinarianPermission.class), "study", "emographicsVetReviewObservation");
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "study", "demographicsVetReviewObservation", EHRVeterinarianPermission.class), "study", "demographicsVetReviewObservation");
 
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, BloodRequestBulkEditFormType.NAME), "study", "blood");
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, DrugRequestBulkEditFormType.NAME), "study", "drug");
