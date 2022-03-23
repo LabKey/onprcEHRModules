@@ -19,18 +19,19 @@ select dem.*,
 
 
 from study.demographics dem
-  Where  dem.id in (Select cln.id from "Clinical Observations" cln where cln.category = 'Observations' and cln.remark is not null
+  Where  dem.id in (Select cln.id from "Clinical Observations" cln where cln.category = 'Observations' and cln.remark is not null and cln.QCState.Label = 'Completed'
                   and cln.date >= (select max(r.date) from "Clinical Observations" r where r.category = 'Vet Review' and r.QCState.Label = 'Completed'
                                                                                        and r.Id = cln.Id)  )
 
-    Or dem.id in (Select cln.id from "Clinical Observations" cln where cln.category = 'BCS' and cln.observation is not null
+    Or dem.id in (Select cln.id from "Clinical Observations" cln where cln.category = 'BCS' and cln.observation is not null and cln.QCState.Label = 'Completed'
                   and cln.date >= (select max(r.date) from "Clinical Observations" r where r.category = 'Vet Review' and r.QCState.Label = 'Completed'
                                                                                        and r.Id = cln.Id)  )
-   Or dem.id in (Select rem.id from "Clinical Remarks" rem where rem.category = 'Clinical'
+
+   Or dem.id in (Select rem.id from "Clinical Remarks" rem where rem.category = 'Clinical' and rem.QCState.Label = 'Completed'
      and rem.date >= (select max(r.date) from "Clinical Observations" r where r.category = 'Vet Review' and r.QCState.Label = 'Completed'
     and rem.id = r.Id)  )
 
-     Or dem.id in (Select rems.id from "Clinical Encounters" rems where rems.type.value = 'Procedure' and rems.procedureid.name
+     Or dem.id in (Select rems.id from "Clinical Encounters" rems where rems.type.value = 'Procedure' and rems.QCState.Label = 'Completed' and rems.procedureid.name
       in ('Ultrasound','Ultrasound - Ovaries','Ultrasound - Pregnancy', 'Ultrasound - Uterus','Dental prophylaxis','Palpation, bimanual')
                                                                   and rems.date >= (select max(x.date) from "Clinical Observations" x where x.category = 'Vet Review' and x.QCState.Label = 'Completed'
                                                                                                                                        and rems.Id = x.Id)  )
