@@ -1,0 +1,16 @@
+<etl xmlns="http://labkey.org/etl/xml">
+	<name>eIACUCtoProtocolInsert</name>
+	<description>Appends new records from eIACUC Insert to ehr Protocol Dataset and matches Investigator</description>
+	<transforms>
+		<transform id="AppendNewRecords">
+			<source queryName="eAIACUCAppendProtocol" schemaName="onprc_ehr"/>
+			<destination queryName="protocol" schemaName="ehr" targetOption="merge">
+
+				<alternateKeys>
+					<column name = "external_ID"/>
+
+				</alternateKeys>
+			</destination>
+		</transform>
+	</transforms>
+</etl>
