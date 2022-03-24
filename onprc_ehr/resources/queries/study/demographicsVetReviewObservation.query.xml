@@ -2,11 +2,12 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="demographicsVetReviewObservation" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>Vet Review Observation</tableTitle>
                 <columns>
                     <column columnName="observationremarks">
                         <columnTitle>Observation Remarks</columnTitle>
-                        <displayWidth>100</displayWidth>
+<!--                        <displayWidth>100</displayWidth>-->
                     </column>
                     <column columnName="observations">
                         <columnTitle>Latest Observations</columnTitle>
@@ -22,11 +23,11 @@
                     </column>
                     <column columnName="mostRecentBCSScore">
                         <columnTitle>BCS Score</columnTitle>
-                        <displayWidth>80</displayWidth>
+<!--                        <displayWidth>80</displayWidth>-->
                     </column>
                     <column columnName="mostRecentProcedure">
                         <columnTitle>Clinical Procedure</columnTitle>
-                        <displayWidth>100</displayWidth>
+<!--                        <displayWidth>100</displayWidth>-->
                     </column>
                 </columns>
             </table>
