@@ -7,7 +7,7 @@
         <column name="mostRecentHx"/>
 
         <column name="remarksEnteredSinceReview"/>
-<!--        <column name="mostRecentClinicalObservations/observations"/>-->
+
         <column name="mostRecentClinicalObservations"/>
         <column name="mostRecentClinicalObservationsdate"/>
         <column name="observationremarks"/>
@@ -20,7 +20,7 @@
                 <property name="columnTitle" value="Active Cases"/>
             </properties>
         </column>
-        <!--<column name="Id/assignedVet/assignedVet"/>-->
+
         <column name="calculated_status">
             <properties>
                 <property name="columnTitle" value="Status"/>

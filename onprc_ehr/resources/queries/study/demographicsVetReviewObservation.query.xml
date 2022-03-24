@@ -23,12 +23,19 @@
                     </column>
                     <column columnName="mostRecentBCSScore">
                         <columnTitle>BCS Score</columnTitle>
-<!--                        <displayWidth>80</displayWidth>-->
+                        <displayWidth>60</displayWidth>
                     </column>
                     <column columnName="mostRecentProcedure">
                         <columnTitle>Clinical Procedure</columnTitle>
 <!--                        <displayWidth>100</displayWidth>-->
                     </column>
+                    <column columnName="remarksEnteredSinceReview">
+                        <displayWidth>180</displayWidth>
+                    </column>
+                    <column columnName="mostRecentHx">
+                        <displayWidth>180</displayWidth>
+                    </column>
+
                 </columns>
             </table>
         </tables>

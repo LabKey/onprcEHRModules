@@ -31,6 +31,7 @@ import org.labkey.api.ehr.dataentry.SingleQueryFormProvider;
 import org.labkey.api.ehr.demographics.ActiveFlagsDemographicsProvider;
 import org.labkey.api.ehr.security.EHRDataAdminPermission;
 import org.labkey.api.ehr.security.EHRProjectEditPermission;
+import org.labkey.api.ehr.security.EHRVeterinarianPermission;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.buttons.ShowEditUIButton;
 import org.labkey.api.ldk.notification.NotificationService;
@@ -609,6 +610,13 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
 //       Added: 10-9-2017  R.Blasa
        EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, ProcedureRequestBulkEditFormType.NAME), "study", "encounters");
+
+        //        Added: 3-22-2022  R.Blasa
+        EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "demographicsVetReviewObservation");
+        EHRService.get().registerMoreActionsButton(new ManageFlagsButton(this), "study", "demographicsVetReviewObservation");
+        EHRService.get().registerMoreActionsButton(new ManageFlagsButton(this), "study", "demographicsVetReviewObservation");
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "study", "demographicsVetReviewObservation", EHRVeterinarianPermission.class), "study", "demographicsVetReviewObservation");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromIdsButton(this, "Schedule Blood Draw For Selected", "Blood Draws", ONPRCBloodDrawFormType.NAME, new String[]{"Blood Draws"}), "study", "demographicsVetReviewObservation");
 
         EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource(this));
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource(this));
