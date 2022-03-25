@@ -1,33 +1,34 @@
 <etl xmlns="http://labkey.org/etl/xml">
-	<name>eIACUCtoProtocolInsert</name>
+	<name>eIACUCtoProtocolUpsert</name>
 	<description>Appends new records from eIACUC Insert to ehr Protocol Dataset and matches Investigator</description>
 	<transforms>
 		<transform id="AppendNewRecords">
-			<source queryName="eAIACUCAppendProtocol" schemaName="onprc_ehr"/>
+			<source queryName="eIACUCUpsertProtocol" schemaName="onprc_ehr"/>
 			<destination queryName="protocol" schemaName="ehr" targetOption="merge">
-				<columnTransforms>
-					<column source="rowid" target="protocol"/>
-					<column source="Protocol_Title" target="title"/>
-					<column source="PI_Last_Name" target="inves"/>
-					<column source="InvestigatorID" target="investigatorId"/>
-					<column source="Approval_Date" target="approve"/>
-					<column source="Approval_Date" target="first_approval"/>
-					<column source="USDA_Level" target="usda_level"/>
-					<column source="Last_Modified" target="last_modification"/>
-					<column source="Description" target="description"/>
-					<column source="PPQ_Numbers" target="PPQ_Numbers"/>
-					<column source="PROTOCOL_State" target="PROTOCOL_State"/>
-					<column source="Template_OID" target="Template_OID"/>
-					<column source="Approval_Date" target="Approval_Date"/>
-					<column source="Annual_Update_Due" target="Annual_Update_Due"/>
-					<column source="Three_year_Expiration" target="Three_year_Expiration"/>
-					<column source="Last_Modified" target="last_modified"/>
-					<column source="Protocol_ID" target="displayName"/>
-					<column source="Cohort" target="annualReviewDate"/>
-					<column source="Cohort" target="daysUntilAnnualReview"/>
+                <columnTransforms>
+                    <column source="rowid" target="protocol"/>
+                    <column source="Protocol_Title" target="title"/>
+                    <column source="PI_Last_Name" target="inves"/>
+                    <column source="InvestigatorID" target="investigatorId"/>
+                    <column source="Approval_Date" target="approve"/>
+                    <column source="Approval_Date" target="first_approval"/>
+                    <column source="USDA_Level" target="usda_level"/>
+                    <column source="Last_Modified" target="last_modification"/>
+                    <column source="Description" target="description"/>
+                    <column source="PPQ_Numbers" target="PPQ_Numbers"/>
+                    <column source="PROTOCOL_State" target="PROTOCOL_State"/>
+                    <column source="Template_OID" target="Template_OID"/>
+                    <column source="Approval_Date" target="Approval_Date"/>
+                    <column source="Annual_Update_Due" target="Annual_Update_Due"/>
+                    <column source="Three_year_Expiration" target="Three_year_Expiration"/>
+                    <column source="Last_Modified" target="last_modified"/>
+                    <column source="Protocol_ID" target="displayName"/>
+                    <column source="Cohort" target="annualReviewDate"/>
+                    <column source="Cohort" target="daysUntilAnnualReview"/>
 
 
-				</columnTransforms>
+
+                </columnTransforms>
 				<alternateKeys>
 					<column name = "external_ID"/>
 
