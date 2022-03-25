@@ -1,11 +1,6 @@
 select dem.*,
-       (select s.observations from study.mostRecentClinicalObservationsForAnimal s  where s.id = dem.id
-            and s.date >= (select max(k.date)
-        from  "Clinical Observations" k where k.category = 'Vet Review' and k.QCState.Label = 'Completed' and dem.id = k.id) ) as mostRecentClinicalObservations,
-
-       (select s.date from study.mostRecentClinicalObservationsForAnimal s  where s.id = dem.id
-                                               and s.date >= (select max(k.date)
- from  "Clinical Observations" k where k.category = 'Vet Review' and k.QCState.Label = 'Completed' and dem.id = k.id)) as mostRecentClinicalObservationsdate,
+       dem.mostRecentClinicalObservations.observations as mostRecentClinicalObservations,
+       dem.mostRecentClinicalObservations.date as mostRecentClinicalObservationsdate,
 
        ( select group_concat(DISTINCT 'BCS: ' + j.observation, chr(10))  from "Clinical Observations" j where j.id = dem.id  and j.category = 'BCS' and j.QCState.Label = 'Completed'   and j.date >= (select max(k.date)
                                                                              from  "Clinical Observations" k where k.category = 'Vet Review' and k.QCState.Label = 'Completed' and dem.id = k.id) ) as mostRecentBCSScore,

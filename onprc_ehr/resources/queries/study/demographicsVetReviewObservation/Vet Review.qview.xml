@@ -5,9 +5,7 @@
         <column name="Id/curLocation/room"/>
         <column name="Id/curLocation/cage"/>
         <column name="mostRecentHx"/>
-
         <column name="remarksEnteredSinceReview"/>
-
         <column name="mostRecentClinicalObservations"/>
         <column name="mostRecentClinicalObservationsdate"/>
         <column name="observationremarks"/>
