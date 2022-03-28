@@ -15,30 +15,35 @@
 
         var employeeDefaultView = LABKEY.getModuleProperty('ehr_compliancedb', 'EmployeeDefaultView');
 
-        // if (EHR.Security.hasPermission(EHR.QCStates.COMPLETED, 'update', [{schemaName: 'ehr_compliancedb', queryName: 'employees'}])) {
-
         Ext4.create('LDK.panel.NavPanel', {
             renderTo: webpart.wrapperDivId,
             width: 450,
             sections: [{
-                    header: 'Employee Reports',
+                header: 'Reports',
+                items: [{
+                    name: 'Summary of Requirements By Employee', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.employeeid/isActive~eq=true'
+                },{
+                    name: 'Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.viewName=Overdue and Due Soon'
+                },{
+                    name: 'Procedure - Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Overdue and Due Soon withNoEHRS OccHealth'
+                },{
+                    name: 'Occupational Health - Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.viewName=Occupational%20Health%20Compliance'
+                },{
+                    name: 'Occupational Health - Measles Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Measles45DayAlert&query.DaysOverDue~neqornull=-1'
+                }
+                ]
+            },{
+                header: 'Employee Information',
                 items: [{
                     name: 'Employee List', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
                 },{
-                    name: 'Employees Completed Requirements', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
+                    name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
                 },{
-                    name: 'Employees Per Unit/Category', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=employeeperUnit'
+                    name: 'View/Edit Dates Employees Per Unit/Category', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=employeeperUnit'
 
                 }]
             },{
 
-                header: 'Employee Input Forms',
-                items: [{
-
-                    name: 'Employee Per Unit/Category Form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ONPRC/Admin/Compliance',{formType: 'employeeunitrecords'})
-
-                }]
-            },{
 
                 header: 'Printable Reports',
                 items: [{

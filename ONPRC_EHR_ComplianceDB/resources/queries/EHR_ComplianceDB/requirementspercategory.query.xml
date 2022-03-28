@@ -2,7 +2,6 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="requirementspercategory" tableDbType="NOT_IN_DB">
-                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>Requirements Per Category</tableTitle>
 
                 <columns>

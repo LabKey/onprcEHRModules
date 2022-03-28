@@ -79,12 +79,7 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
         // Added: 7-6-2021 R. Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("ehr_compliancedb/panel/EnterDataPanel.js"), this);
 
-//        Added: 2-28-2022 R. Blasa implementation of an Audit log History button
-//        SimpleButtonConfigFactory btn4 = new SimpleButtonConfigFactory(this, "Append Comment", "Laboratory.buttonHandlers.appendCommentToSamples(dataRegionName, arguments[0])");
 
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "completiondates", ONPRC_ComplianceDBAdminPermission.class), "ehr_compliancedb", "completiondates");
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "employees", ONPRC_ComplianceDBAdminPermission.class), "ehr_compliancedb", "employees");
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "employeeperUnit", ONPRC_ComplianceDBAdminPermission.class), "ehr_compliancedb", "employeeperUnit");
     }
 
 
