@@ -16,17 +16,21 @@
 package org.labkey.ONPRCEHR_ComplianceDB;
 
 import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBEntryPermission;
+import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBAdminPermission;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ldk.LDKService;
+import org.labkey.api.ldk.buttons.ShowEditUIButton;
+import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
-//import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRecordsFormType;
 import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRequirementCategoryFormType;
 import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRequirementUnitFormType;
 import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBRole;
-import org.labkey.api.ldk.buttons.ShowEditUIButton;
+import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBAdminRole;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.view.template.ClientDependency;
+//import org.labkey.ehr.query.buttons.ShowAuditHistoryButton;
 
 //Created: 11-24-2020   R.Blasa
 
@@ -59,6 +63,8 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
         addController(CONTROLLER_NAME,ONPRC_EHR_ComplianceDBController.class);
 
         RoleManager.registerRole(new ONPRC_ComplianceDBRole(ONPRC_EHR_ComplianceDBModule.class));
+
+        RoleManager.registerRole(new ONPRC_ComplianceDBAdminRole(ONPRC_EHR_ComplianceDBModule.class));
     }
 
     @Override
@@ -73,8 +79,12 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
         // Added: 7-6-2021 R. Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("ehr_compliancedb/panel/EnterDataPanel.js"), this);
 
+//        Added: 2-28-2022 R. Blasa implementation of an Audit log History button
+//        SimpleButtonConfigFactory btn4 = new SimpleButtonConfigFactory(this, "Append Comment", "Laboratory.buttonHandlers.appendCommentToSamples(dataRegionName, arguments[0])");
 
-
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "completiondates", ONPRC_ComplianceDBAdminPermission.class), "ehr_compliancedb", "completiondates");
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "employees", ONPRC_ComplianceDBAdminPermission.class), "ehr_compliancedb", "employees");
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "employeeperUnit", ONPRC_ComplianceDBAdminPermission.class), "ehr_compliancedb", "employeeperUnit");
     }
 
 
