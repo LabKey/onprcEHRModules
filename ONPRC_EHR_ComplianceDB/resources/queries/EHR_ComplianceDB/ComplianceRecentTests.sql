@@ -70,6 +70,9 @@ select a.requirementname,
 from  ehr_compliancedb.completiondates a
 where a.requirementname not in (select distinct h.requirementname from ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h Where (k.unit = h.unit
     or k.category = h.category) And a.employeeid = k.employeeid )
+And a.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where a.employeeid = t.employeeid
+                                         And a.requirementname = t.requirementname)
 
 
 group by a.requirementname,a.employeeid
+

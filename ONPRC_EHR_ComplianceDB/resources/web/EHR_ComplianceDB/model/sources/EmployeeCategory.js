@@ -90,7 +90,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeCategoryRecords', {
 
 
             },
-             rowid:{hidden: true},
+             rowId:{hidden: true},
             trackingflag: {
                 hidden: false,
                 allowBlank: false,
