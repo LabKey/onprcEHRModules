@@ -65,7 +65,7 @@ EHR.model.DataModelManager.registerMetadata('EmployeeRequiredUnit', {
 
 
             },
-
+            rowId:{hidden: true},
             unit: {
                 hidden: false,
                 allowBlank: true,
