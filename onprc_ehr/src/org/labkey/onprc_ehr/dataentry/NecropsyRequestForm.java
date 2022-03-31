@@ -17,7 +17,7 @@ import java.util.List;
 
 public class NecropsyRequestForm extends RequestForm
 {
-    public static final String NAME = "Necropsy Request";
+    public static final String NAME = "Pathology Service Request";
 
     public NecropsyRequestForm(DataEntryFormContext ctx, Module owner)
     {

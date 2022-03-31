@@ -445,8 +445,8 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                         }]
                     },{
 
-                        //Created: 9-21-2021
-                        header: 'Necropsy Request',
+                        //Created: 3-31-2022
+                        header: 'Pathlology Request',
                         renderer: function(item){
                             return {
                                 layout: 'hbox',
@@ -471,7 +471,7 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                             }
                         },
                         items: [{
-                            name: 'Necropsy Procedure Request'
+                            name: 'Pathology Service Request'
                         }]
 
 

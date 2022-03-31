@@ -16,7 +16,7 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
 
             Ext4.create('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                 dataRegionName: dataRegionName,
-                title: 'Schedule Necropsy For Selected Rows',
+                title: 'Schedule Pathology For Selected Rows',
                 formType: formType,
                 taskLabel: 'Necropsy'
             }).show();
