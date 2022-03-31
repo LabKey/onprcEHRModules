@@ -474,36 +474,6 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                             name: 'Necropsy Procedure Request'
                         }]
 
-                    },{
-
-                        //Created: 9-21-2021
-                        header: 'Tissue Distribution Request',
-                        renderer: function(item){
-                            return {
-                                layout: 'hbox',
-                                bodyStyle: 'padding: 2px;background-color: transparent;',
-                                defaults: {
-                                    border: false
-                                },
-                                items: [{
-                                    html: item.name + ':',
-                                    width: 200
-                                },{
-                                    xtype: 'ldk-linkbutton',
-                                    text: 'Unapproved Requests',
-                                    linkCls: 'labkey-text-link',
-                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, Ext4.apply({schemaName: 'study', 'query.queryName': 'tissueDistributions','query.QCState/Label~eq': 'Request: Pending'}))
-                                },{
-                                    xtype: 'ldk-linkbutton',
-                                    text: 'Approved Requests',
-                                    linkCls: 'labkey-text-link',
-                                    href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, Ext4.apply({schemaName: 'study', 'query.queryName': 'tissueDistributions','query.QCState/Label~eq': 'Request: Approved'}))
-                                }]
-                            }
-                        },
-                        items: [{
-                            name: 'Tissue Distribution Request'
-                        }]
 
                     },{
                         header: 'Transfer Requests',

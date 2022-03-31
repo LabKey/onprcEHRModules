@@ -608,7 +608,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, DrugRequestBulkEditFormType.NAME), "study", "drug");
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, LabworkRequestBulkEditFormType.NAME), "study", "clinpathRuns");
 
-        EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "encounters");
+        EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "NecropsyRequestdata");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "encounters");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "tissue_samples");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "organ_weights");
