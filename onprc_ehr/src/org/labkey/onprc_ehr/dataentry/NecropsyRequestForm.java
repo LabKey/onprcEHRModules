@@ -29,10 +29,10 @@ public class NecropsyRequestForm extends RequestForm
                 new TissueDistRequestFormSection()
                 ));
 
-        if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
-        {
-            addSection(new MiscChargesByAccountFormSection(EHRService.FORM_SECTION_LOCATION.Tabs));
-        }
+//        if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
+//        {
+//            addSection(new MiscChargesByAccountFormSection(EHRService.FORM_SECTION_LOCATION.Tabs));
+//        }
 
 
         for (FormSection s : getFormSections())
