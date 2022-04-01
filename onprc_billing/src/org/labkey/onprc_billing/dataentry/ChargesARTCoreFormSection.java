@@ -15,8 +15,10 @@
  */
 package org.labkey.onprc_billing.dataentry;
 
+import org.json.JSONObject;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.view.template.ClientDependency;
@@ -39,18 +41,41 @@ public class ChargesARTCoreFormSection extends SimpleFormSection
         setClientStoreClass("EHR.data.MiscChargesClientStore");
         addClientDependency(ClientDependency.supplierFromPath("ehr/data/MiscChargesClientStore.js"));
 
+        //            Added: 1-19-2018 R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddAnimalsWindow.js"));
+
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/model/sources/ARTCoreMisc.js"));
         addConfigSource("ARTCoreMisc");
     }
 
     @Override
-    protected List<FieldKey> getFieldKeys(TableInfo ti)
+    public JSONObject toJSON(DataEntryFormContext ctx, boolean includeFormElements)
     {
-        List<FieldKey> result = super.getFieldKeys(ti);
-
-        result.add(10,FieldKey.fromParts("lineItemTotal"));
-        return result;
+        JSONObject jsonObject = super.toJSON(ctx, includeFormElements);
+        jsonObject.put("topAndBottomButtons", true);
+        return jsonObject;
     }
+
+    @Override
+    public List<String> getTbarButtons()
+    {
+        List<String> defaultButtons = super.getTbarButtons();
+        defaultButtons.remove("ADDANIMALS");
+        defaultButtons.add(0, "ADDANIMALST");
+
+        return defaultButtons;
+    }
+
+//    @Override
+//    protected List<FieldKey> getFieldKeys(TableInfo ti)
+//    {
+//        List<FieldKey> result = super.getFieldKeys(ti);
+//
+//        result.add(10,FieldKey.fromParts("lineItemTotal"));
+//        return result;
+//    }
+
+
 }
 
 

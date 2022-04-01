@@ -1,5 +1,6 @@
 package org.labkey.onprc_billing.dataentry;
 
+import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
@@ -21,12 +22,15 @@ public class ChargesARTCoreFormType extends TaskForm
     {
         super(ctx, owner, NAME, "ART Core Charges", "Billing - ART Core", Arrays.<FormSection>asList(
                 new TaskFormSection(),
+                new AnimalDetailsFormSection(),
                 new ChargesInstructionFormSection(),
                 new ChargesARTCoreFormSection()
         ));
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/panel/ChargesInstructionPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_billing/buttons/financeButtons.js"));
     }
+
 
     @Override
     protected List<String> getMoreActionButtonConfigs()
@@ -37,20 +41,21 @@ public class ChargesARTCoreFormType extends TaskForm
         return defaultButtons;
     }
 
-    @Override
-    //Added a new button to the list that submits and reloads the data entry form
-    protected List<String> getButtonConfigs()
-    {
-        List<String> defaultButtons = new ArrayList<String>();
-        defaultButtons.addAll(super.getButtonConfigs());
-        defaultButtons.add("BILLINGSAVECLOSE");
-        defaultButtons.add("BILLINGRELOAD");
-        defaultButtons.add("BILLINGFINAL");
-        defaultButtons.remove("SUBMIT");
-        defaultButtons.remove("CLOSE");
 
-        return defaultButtons;
-    }
+//    @Override
+//    //Added a new button to the list that submits and reloads the data entry form
+//    protected List<String> getButtonConfigs()
+//    {
+//        List<String> defaultButtons = new ArrayList<String>();
+//        defaultButtons.addAll(super.getButtonConfigs());
+//        defaultButtons.add("BILLINGSAVECLOSE");
+//        defaultButtons.add("BILLINGRELOAD");
+//        defaultButtons.add("BILLINGFINAL");
+//        defaultButtons.remove("SUBMIT");
+//        defaultButtons.remove("CLOSE");
+//
+//        return defaultButtons;
+//    }
 
 
 //    //    Added: 12-3-2019  R.Blasa
