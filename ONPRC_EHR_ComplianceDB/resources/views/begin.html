@@ -38,8 +38,7 @@ Ext4.onReady(function(){
                 name: 'Employee List', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
             },{
                 name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
-             },{
-                name: 'View/Edit Dates Employees Per Unit/Category', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=employeeperUnit'
+
 
             }]
         },{
@@ -52,6 +51,8 @@ Ext4.onReady(function(){
                 name: 'View/Edit Additional Requirements For Specific Employees', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=RequirementsPerEmployee'
             },{
                 name: 'View/Edit Exemptions To Requirements', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeRequirementExemptions'
+            },{
+                name: 'View/Edit Dates Employees Per Unit/Category', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=employeeperUnit'
             }]
         },{
             header: 'Administration / System Maintenance',
