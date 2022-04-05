@@ -8,8 +8,6 @@ Ext4.define('ONPRC_EHR.panel.LabworkRequestDataEntryPanel', {
     alias: 'widget.onprc-labworkrequestdataentrypanel',
 
     initComponent: function(){
-        var mergeURL = LABKEY.getModuleProperty('MergeSync', 'MergeURL');
-
         this.callParent(arguments);
     },
 
@@ -18,23 +16,19 @@ Ext4.define('ONPRC_EHR.panel.LabworkRequestDataEntryPanel', {
             Ext4.Msg.hide();
 
         if (extraContext && extraContext.successURL){
-            var mergeURL = LABKEY.getModuleProperty('MergeSync', 'MergeURL');
-            if (mergeURL){
-                Ext4.Msg.confirm('Success', 'The requests have been synced to merge.  Do you want to open merge now?' +
-                        (!Ext4.isIE ? '  Note: merge does not work well in any browser besides IE, and you may want to switch to that browser.' : ''), function(val){
+                Ext4.Msg.alert('Message', 'The Lab Requests have been synced into Orchard.  ' +
+                        '<b>Clin Path orders in Prime can only be done ahead of time and no later than 4pm on the business day prior to when the samples are submitted to Clin Path. Labels will ' +
+                        'not be available to print from Orchard until the next business day after the orders are placed. If same day orders are needed, please place these orders in Orchard. </b>' +
+                        'If you have questions, please contact the Clin Path Lab at 503-346-5297. Please print your labels by accessing the Orchard app located' +
+                        ' on your Windows desktop. ' +
+                        'If you need an Orchard Login, please email the ONPRC Clin Path Lab at ONPRCClinPathLab@ohsu.edu.  Thank you.'
+                        , function(val){
                     window.onbeforeunload = Ext4.emptyFn;
-                    if (val == 'yes'){
-                        window.location = mergeURL;
-                    }
-                    else {
-                        window.location = extraContext.successURL;
-                    }
-                }, this);
+                    window.location = extraContext.successURL;
 
+                }, this);
                 return;
             }
         }
 
-        this.callParent(arguments);
-    }
 });

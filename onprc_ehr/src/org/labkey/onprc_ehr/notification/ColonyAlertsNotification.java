@@ -1014,12 +1014,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("actiondate"), new Date(), CompareType.DATE_EQUAL);
         filter.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("notes"), filter, null);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Notes_WithLocation"), filter, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " DCM action items.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.date~dateeq="+ getDateTimeFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.actiondate~dateeq="+ getDateFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
             msg.append("</p><br><hr>");
         }
         else
@@ -1038,12 +1038,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         SimpleFilter filter1 = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_EQUAL);
         filter1.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
-        TableSelector ts1 = new TableSelector(getStudySchema(c, u).getTable("notes"), filter1, null);
+        TableSelector ts1 = new TableSelector(getStudySchema(c, u).getTable("Notes_WithLocation"), filter1, null);
         long count1 = ts1.getRowCount();
         if (count1 > 0)
         {
             msg.append("<b>There are " + count1 + " DCM notes entries added yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "notes", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
             msg.append("</p><br><hr>\n\n");
         }
         else
@@ -1054,12 +1054,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //Added by Kollil on 11/04/2020
         //New alert for Flags added the previous day.
         SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_EQUAL);
-        TableSelector ts2 = new TableSelector(getStudySchema(c, u).getTable("flags"), filter2, null);
+        TableSelector ts2 = new TableSelector(getStudySchema(c, u).getTable("Flags_WithLocation"), filter2, null);
         long count2 = ts2.getRowCount();
         if (count2 > 0)
         {
             msg.append("<b>There are " + count2 + " flags added yesterday. </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
             msg.append("</p><hr>");
         }
         else
@@ -1088,6 +1088,102 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are no BSU action items!</b><br>\n");
         }
     }
+
+    /* Created by Kollil on Nov 1st, 2021
+    Create an alert to show the following fasts treatments prescribed on the current day between 16:00 - 7:30Am
+    1. Complete NPO - 2440
+    2. Overnight Fast - 1807
+    3. AM Fast - 1804
+
+    Changes made by Kolli on Mar 8th, 2022
+    Carly requested the following changes
+    1. I can remove the "Performed by" for all the alerts.
+    2. Is there an option to show who requested it and their contact information? - Yes, I can add that
+    3. Can we remove the column of charge unit in the alert as well? - Yes, I will remove the chargeunit field.
+    4. Added First contact, Second contact, Third Contact and Created, Created By annd Lab Phone num from ehr.requests table
+    */
+    protected void processFastsTreatments(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+        //Fasts query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("TreatmentSchedulePostOpFasts", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0) {
+            msg.append("<b>" + count + " Fast treatment(s) scheduled for today:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "TreatmentSchedulePostOpFasts", null) + "&query.containerFilterName=AllFolders'>Click here to view the fast treatments in PRIME</a></p>\n");
+            msg.append("<hr>");
+        }
+        else {
+            msg.append("<b> There are no Fast treatments scheduled today! </b>");
+            msg.append("<hr>");
+        }
+
+        //Display the daily report in the email
+        if (count > 0)
+        {
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("location"));
+            columns.add(FieldKey.fromString("date"));
+            columns.add(FieldKey.fromString("enddate"));
+            columns.add(FieldKey.fromString("project"));
+            columns.add(FieldKey.fromString("procedurename"));
+            columns.add(FieldKey.fromString("instructions"));
+            columns.add(FieldKey.fromString("remark"));
+            columns.add(FieldKey.fromString("FirstContact"));
+            columns.add(FieldKey.fromString("SecondContact"));
+            columns.add(FieldKey.fromString("ThirdContact"));
+            columns.add(FieldKey.fromString("createdby"));
+            columns.add(FieldKey.fromString("created"));
+            columns.add(FieldKey.fromString("LabPhoneNum"));
+            columns.add(FieldKey.fromString("status"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+
+            msg.append("<hr><b>Today's Fast Treatments:</b><br><br>\n");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td>Id </td><td>Location </td><td>Start Date </td><td>End Date </td><td>Project </td><td>Procedure </td><td>Instructions </td><td>Remark </td><td>First Contact </td><td>Second Contact </td><td>Third Contact </td><td>Created By </td><td>Created </td><td>Lab Phone Num </td><td>Status </td></tr>");
+
+            ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
+                @Override
+                public void exec(ResultSet object) throws SQLException {
+                    Results rs = new ResultsImpl(object, colMap);
+                    String url = getParticipantURL(c, rs.getString("Id"));
+
+                    msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
+                    msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("location")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("procedurename")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("instructions")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("FirstContact")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("SecondContact")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("ThirdContact")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("createdby")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("created")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("LabPhoneNum")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("status")) + "</td>");
+                    msg.append("</tr>");
+                }
+            });
+            msg.append("</table>");
+        }
+
+    }    //End of Fasts alert
+
+
 
     /**
      * Kollil, 10/24/2019 : PMIC scheduler alert notifications Daily & Weekly
@@ -1418,20 +1514,22 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     //Added: 8-7-2018  R.Blasa
+    //Modified: 2/4/2022 Kollil, Tkt #7928
     protected void ValidateBiirthHousingHistory(final Container c, User u, final StringBuilder msg)
     {
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("BirthInitialHousingMismatch"), null, null);
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " several Birth ids having mismatched initial locations</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " Birth Id(s) found with mismatched initial locations.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BirthInitialHousingMismatch", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
-        else
-        {
-            msg.append("<b>WARNING: There are no Birth Initial Housing mismtached locations to report.</b><br>\n");
-        }
+        // Changed: 2/4/2022, by Kolli. Tkt #7928. Commented out this part of the code so it doesn't send the alert if there are no discrepancies.
+//        else
+//        {
+//            msg.append("<b>WARNING: There are no Birth Initial Housing mismtached locations to report.</b><br>\n");
+//        }
     }
 
 
@@ -2275,7 +2373,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         int maxValue = 300;
         SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("created"), cal.getTime(), CompareType.DATE_GTE);
         filter2.addCondition(FieldKey.fromString("qcstate/PublicData"), true);
-        filter.addCondition(FieldKey.fromString("code/meaning"), "ketamine;telazol", CompareType.CONTAINS_ONE_OF);
+        filter2.addCondition(FieldKey.fromString("code/meaning"), "ketamine;telazol", CompareType.CONTAINS_ONE_OF);
         filter2.addCondition(FieldKey.fromString("amount"), maxValue, CompareType.GT);
         filter2.addCondition(FieldKey.fromString("amount_units"), "mg", CompareType.CONTAINS);
 

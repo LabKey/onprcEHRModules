@@ -8,6 +8,10 @@ Ext4.onReady(function(){
         Ext4.get(webpart.wrapperDivId).update('Error: the containerPath to the folder holding compliance data has not been set.  Please contact your administrator.')
         return;
     }
+       var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+     if(!ctx) {
+        return;
+     }
 
     var employeeDefaultView = LABKEY.getModuleProperty('ehr_compliancedb', 'EmployeeDefaultView');
 
@@ -21,6 +25,8 @@ Ext4.onReady(function(){
             },{
                 name: 'Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.viewName=Overdue and Due Soon'
             },{
+                name: 'Procedure - Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Overdue and Due Soon withNoEHRS OccHealth'
+            },{
                 name: 'Occupational Health - Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.viewName=Occupational%20Health%20Compliance'
             },{
                 name: 'Occupational Health - Measles Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Measles45DayAlert&query.DaysOverDue~neqornull=-1'
@@ -32,6 +38,8 @@ Ext4.onReady(function(){
                 name: 'Employee List', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
             },{
                 name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
+             },{
+                name: 'View/Edit Dates Employees Per Unit/Category', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=employeeperUnit'
             },{
                 name: 'View LabKey Logins and Emails', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=core&query.queryName=Users'
             }]
@@ -60,12 +68,22 @@ Ext4.onReady(function(){
                 name: 'View/Edit Allowable Locations', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeLocations'
             },{
                 name: 'View/Edit Allowable Unit Names', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Unit_Names'
+            },{
+                name: 'Employee Per Unit/Category Form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ONPRC/Admin/Compliance',{formType: 'employeeunitrecords'})
+            },{
+                name: 'Requirements Per Essential Form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ONPRC/Admin/Compliance',{formType: 'employeecategoryrecords'})
+            },{
+                name: 'Edit form with Task ID', url: LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'enterData.view',(ctx ? ctx['EmployeeContainer'] : null), null)
             }]
         },{
+
         header: 'Printable Reports',
         items: [{
             name: 'Employees Summary Report', url: LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'printableComplianceReports', LABKEY.ActionURL.getContainer())
-
+        },{
+            name: 'Respirator Protection Report - All', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fRespiratorProtectionFull&rs:Command=Render'
+        },{
+            name: 'Respirator Protection Report - Quarantine', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fRespiratorProtectionQuarantine&rs:Command=Render'
 
         }]
      }]

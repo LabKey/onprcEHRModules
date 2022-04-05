@@ -32,6 +32,7 @@ public class BirthHousingMismatchNotification extends ColonyAlertsNotification
         return "0 0 6 * * ?";
     }
 
+
     @Override
     public String getScheduleDescription()
     {

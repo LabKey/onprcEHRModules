@@ -129,6 +129,14 @@
                     <column columnName="condition">
                         <columnTitle>Condition</columnTitle>
                     </column>
+                    <column columnName="vet">
+                        <columnTitle>Veterinarian</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>Labwork_Requestor_Vets</fkTable>
+                            <fkColumnName>userId</fkColumnName>
+                        </fk>
+                    </column>
                 </columns>
             </table>
         </tables>

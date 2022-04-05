@@ -7,23 +7,50 @@
                         <isKeyField>true</isKeyField>
                         <isHidden>true</isHidden>
                     </column>
-                    <column columnName="Species">
-                        <isKeyField>true</isKeyField>
-                    </column>
-                    <column columnName="Gender">
-                        <isKeyField>true</isKeyField>
+                    <column columnName="Project">
+                        <columnTitle>Project</columnTitle>
                     </column>
                     <column columnName="IACUCProtocol">
                         <columnTitle>IACUC Protocol</columnTitle>
                     </column>
+                    <column columnName="Title">
+                        <columnTitle>Title</columnTitle>
+                    </column>
                     <column columnName="PIName">
                         <columnTitle>PI Name</columnTitle>
+                    </column>
+                    <column columnName="Alias">
+                        <columnTitle>Alias</columnTitle>
                     </column>
                     <column columnName="OGAProjectNumber">
                         <columnTitle>OGA Project Number</columnTitle>
                     </column>
                     <column columnName="OGAGrantNumber">
                         <columnTitle>OGA Grant Number</columnTitle>
+                    </column>
+                     <column columnName="FiscalAuthorityName">
+                        <columnTitle>Fiscal Authority Name</columnTitle>
+                    </column>
+                    <column columnName="Species">
+                        <columnTitle>Species</columnTitle>
+                    </column>
+                    <column columnName="Gender">
+                        <columnTitle>Gender</columnTitle>
+                    </column>
+                    <column columnName="Strain">
+                        <columnTitle>Strain</columnTitle>
+                    </column>
+                    <column columnName="NumAllowed">
+                        <columnTitle>Num Allowed</columnTitle>
+                    </column>
+                    <column columnName="NumUsed">
+                        <columnTitle>Num Used</columnTitle>
+                    </column>
+                    <column columnName="StartDate">
+                        <columnTitle>Start Date</columnTitle>
+                    </column>
+                    <column columnName="EndDate">
+                        <columnTitle>End Date</columnTitle>
                     </column>
                 </columns>
             </table>

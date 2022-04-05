@@ -5,8 +5,11 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 Ext4.onReady(function() {
+
     // This is to make the procedures form validation specific to the ASB service request form
     //The validation code is in onprc_triggers.js
+
+    // this is to skip Id not found warning during weights entry in Arrival data entry form
     if (EHR.data.DataEntryClientStore) {
         Ext4.override(EHR.data.DataEntryClientStore, {
             getExtraContext: function(){
@@ -31,7 +34,7 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
             date: {
                 xtype: 'xdatetime',
                 extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:0')
+                defaultValue: Ext4.Date.format(new Date(), 'Y-m-d 8:0')
             },
             type: {
                 defaultValue: 'Procedure',
@@ -51,7 +54,8 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                     schemaName: 'onprc_ehr',
                     queryName: 'ASB_SpecialInstructions',
                     displayColumn: 'value',
-                    columns: 'value'
+                    // columns: 'value'
+                    keyColumn: 'value'
                 },
                 columnConfig: {
                     width: 300
@@ -94,7 +98,7 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
             date: {
                 xtype: 'xdatetime',
                 extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:0')
+                defaultValue: Ext4.Date.format(new Date(), 'Y-m-d 8:0')
             }
         },
         'study.drug': {
@@ -105,7 +109,7 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
             date: {
                 xtype: 'xdatetime',
                 extFormat: 'Y-m-d H:i',
-                defaultValue: (new Date()).format('Y-m-d 8:0')
+                defaultValue: Ext4.Date.format(new Date(), 'Y-m-d 8:0')
             },
             Billable: {
                 defaultValue: 'Yes',

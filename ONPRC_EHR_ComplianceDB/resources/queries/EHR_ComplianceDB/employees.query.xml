@@ -4,26 +4,34 @@
             <table tableName="employees" tableDbType="NOT_IN_DB">
                 <tableTitle>Employees</tableTitle>
                 <columns>
+                    <column columnName="lastName">
+                        <columnTitle>Last Name</columnTitle>
+                    </column>
                     <column columnName="majorudds">
                         <columnTitle>Host</columnTitle>
                     </column>
-                    <!--<column columnName="barrier">-->
-                    <!--<columnTitle>West Campus Level 1</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="animals">-->
-                    <!--<columnTitle>West Campus Level 2</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="contactsSla">-->
-                    <!--<columnTitle>West Campus Level 3</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="tissue">-->
-                    <!--<columnTitle>West Campus Level 4</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="isemployee">-->
-                    <!--<isHidden>true</isHidden>-->
-                    <!--</column>-->
-
-                </columns>
+                    <column columnName="employeeid">
+                        <columnTitle>Employee ID</columnTitle>
+                    </column>
+                    <column columnName="unit">
+                        <columnTitle>Unit</columnTitle>
+                        <displayWidth>50</displayWidth>
+                        <url>/query/executeQuery.view?schemaName=ehr_compliancedb&amp;
+                            query.queryName=EmployeePerUnit&amp;
+                            query.EmployeeId~eq=${employeeId}&amp;
+                            query.viewName=PerUnitReport&amp;
+                        </url>
+                    </column>
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
+                        <displayWidth>50</displayWidth>
+                        <url>/query/executeQuery.view?schemaName=ehr_compliancedb&amp;
+                            query.queryName=EmployeePerUnit&amp;
+                            query.EmployeeId~eq=${employeeId}&amp;
+                            query.viewName=PerCategoryReport&amp;
+                        </url>
+                    </column>
+                 </columns>
             </table>
         </tables>
     </metadata>
