@@ -17,7 +17,7 @@ INSERT INTO [onprc_billing].[aliases]
 ,[createdBy]
 ,[created]
 ,[category]
-,[faRate]
+,[faRate]bu
 ,[faSchedule]
 ,[budgetStartDate]
 ,[budgetEndDate]
@@ -80,7 +80,7 @@ SELECT
              ,[ADFM EMP NUM]
              ,[ADFM FULL NAME]
              ,[ORG]
-             ,[ORIGINATING_AGENCY_AWARD_NUM]
+             ,[OriginatingAgencyAwardNum]
         From [onprc_billing].[ogasynch] o
 		left outer join [onprc_ehr].investigators i on o.[PI EMP NUM] = i.employeeid and i.datedisabled is Null
 		left outer join onprc_billing.fiscalAuthorities f on f.employeeId = o.[PDFM EMP NUM] and f.active = 'true';
