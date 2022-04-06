@@ -1,3 +1,4 @@
+--20220406 update of SP for insert
 EXEC core.fn_dropifexists 'oga_InsertRecords', 'onprc_billing', 'PROCEDURE'
 GO
 
