@@ -1609,7 +1609,7 @@
             <column columnName="BURDEN RATE"/>
             <column columnName="faRate"/>
             <column columnName="Key"/>
-            <column columnName="OriginatingAgencyAwardNum"/>
+            <column columnName="ORIGINATING_AGENCY_AWARD_NUM"/>
         </columns>
     </table>
     <table tableName="MergeChargtypeUpdates" tableDbType="TABLE">
