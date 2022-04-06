@@ -17,7 +17,7 @@ INSERT INTO [onprc_billing].[aliases]
 ,[createdBy]
 ,[created]
 ,[category]
-,[faRate]bu
+,[faRate]
 ,[faSchedule]
 ,[budgetStartDate]
 ,[budgetEndDate]
