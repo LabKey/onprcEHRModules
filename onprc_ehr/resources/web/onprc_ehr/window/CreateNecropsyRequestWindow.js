@@ -18,7 +18,7 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                 dataRegionName: dataRegionName,
                 title: 'Schedule Pathology For Selected Rows',
                 formType: formType,
-                taskLabel: 'Necropsy'
+                taskLabel: 'Pathology Request'
             }).show();
         }
     },
@@ -131,6 +131,17 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
             LABKEY.Query.selectRows({
                 schemaName: 'study',
                 queryName: 'StudyData',
+                sort: 'Id,date',
+                columns: 'lsid,Id,date,requestid,taskid,qcstate,qcstate/label,qcstate/metadata/isRequest,DataSet/Label',
+                filterArray: [LABKEY.Filter.create('requestid', requestid.value, LABKEY.Filter.Types.EQUAL)],
+                scope: this,
+                success: this.onDataSuccess,
+                failure: LDK.Utils.getErrorCallback()
+            });
+
+            LABKEY.Query.selectRows({
+                schemaName: 'onprc_billing',
+                queryName: 'misCharges',
                 sort: 'Id,date',
                 columns: 'lsid,Id,date,requestid,taskid,qcstate,qcstate/label,qcstate/metadata/isRequest,DataSet/Label',
                 filterArray: [LABKEY.Filter.create('requestid', requestid.value, LABKEY.Filter.Types.EQUAL)],
