@@ -34,8 +34,6 @@ public class ChargesVirologyCoreFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/panel/ChargesInstructionPanel.js"));
     }
 
-
-
     @Override
     protected List<String> getMoreActionButtonConfigs()
     {
@@ -45,15 +43,15 @@ public class ChargesVirologyCoreFormType extends TaskForm
         return defaultButtons;
     }
 
-//    Added: 12-3-2019  R.Blasa
-@Override
-public boolean canInsert()
-{
-    if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRCVirologyCoreEntryPermission.class))
-        return false;
+    //    Added: 12-3-2019  R.Blasa
+    @Override
+    public boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRCVirologyCoreEntryPermission.class))
+            return false;
 
-    return super.canInsert();
-}
+        return super.canInsert();
+    }
 
     @Override
     public boolean canRead()

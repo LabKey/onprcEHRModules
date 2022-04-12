@@ -477,6 +477,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 5/23/2019 Kolli
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICRequestFormType.class, this));
 
+        //Added: 1/13/2021 Kolli
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ARTCoreRequestFormType.class, this));
+
         //Added: 7/10/2019 by Kolli
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICDataEntryFormType.class, this));
 
