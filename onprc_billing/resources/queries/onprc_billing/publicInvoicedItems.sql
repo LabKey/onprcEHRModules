@@ -57,7 +57,7 @@ WHERE ((SELECT max(rowid) as expr FROM "/ONPRC/ADMIN/Finance".onprc_billing.data
   --include if the user is either the project's PI, the account PI, or the financial analyst
   isMemberOf(i.project.investigatorId.userid) OR isMemberOf(i.debitedaccount.investigatorId.userid) OR isMemberOf(i.project.investigatorId.financialAnalyst)
 
-) --AND TIMESTAMPDIFF('SQL_TSI_DAY', curdate(), i.date) < 730
+)
 
 --arbitrary cutoff to avoid problems in legacy data
 AND i.date >= '2013-01-01'
