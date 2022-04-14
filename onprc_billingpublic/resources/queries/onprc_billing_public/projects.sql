@@ -4,6 +4,6 @@ SELECT
   ' [By Invoice]' as summaryByInvoice,
   ' [All Items]' as allItems
 
-FROM onprc_billing_public.publicInvoicedItems t
+FROM "/ONPRC/ADMIN/FINANCE/PUBLIC/".onprc_billing_public.publicInvoicedItems t
 WHERE t.project is not null
 GROUP BY t.project, t.project.title
