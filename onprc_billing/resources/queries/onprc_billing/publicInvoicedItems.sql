@@ -41,8 +41,8 @@ SELECT
   i.totalcost,
   i.chargeCategory
 
-FROM onprc_billing.invoicedItems i
-WHERE ((SELECT max(rowid) as expr FROM onprc_billing.dataAccess da WHERE isMemberOf(da.userid) AND (
+FROM "/ONPRC/ADMIN/FINANCE/".onprc_billing.invoicedItems i
+WHERE ((SELECT max(rowid) as expr FROM "/ONPRC/ADMIN/FINANCE/".onprc_billing.dataAccess da WHERE isMemberOf(da.userid) AND (
     da.allData = true OR
     (da.project = i.project) OR
     --TODO: this needs to get cleaned up
