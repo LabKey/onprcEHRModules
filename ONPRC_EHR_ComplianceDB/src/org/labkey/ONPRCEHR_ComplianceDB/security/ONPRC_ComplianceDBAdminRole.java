@@ -28,11 +28,12 @@ public class ONPRC_ComplianceDBAdminRole extends AbstractModuleScopedRole
 {
     public ONPRC_ComplianceDBAdminRole(Class<? extends Module> moduleClass)
     {
-        super("Compliance Employee Admin Records", "This role is required in order to enter data as Admin into Employee Records.", moduleClass,
+        super("Compliance Employee Records Admin", "This role is required to have Admin rights to  Employee Records.", moduleClass,
                 ReadPermission.class,
                 InsertPermission.class,
-                DeletePermission.class,
                 UpdatePermission.class,
+                DeletePermission.class,
+                ONPRC_ComplianceDBEntryPermission.class,
                 ONPRC_ComplianceDBAdminPermission.class
         );
 
