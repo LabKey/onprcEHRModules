@@ -1,0 +1,6 @@
+<!--ART core billing webpart-->
+<view xmlns="http://labkey.org/data/xml/view" title="ART Core Services">
+    <dependencies>
+        <dependency path="ehr.context" />
+    </dependencies>
+</view>
