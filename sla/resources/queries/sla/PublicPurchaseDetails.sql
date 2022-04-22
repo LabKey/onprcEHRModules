@@ -1,8 +1,11 @@
+--Changed by Kolli - 4/20/22
+--Added Linked schema template references
+
 SELECT pd.*
 FROM sla.purchase p, sla.purchasedetails pd, publicehr.project pr, publicehr.protocol prc
 WHERE p.objectid = pd.purchaseid and p.project = pr.project
   AND (
-    (SELECT max(rowid) as expr FROM financePublic.dataAccess da
+    (SELECT max(rowid) as expr FROM financepublic.dataAccess da
                                     -- current logged in user is the dataAccess user
      WHERE isMemberOf(da.userid)
        -- has access to all data

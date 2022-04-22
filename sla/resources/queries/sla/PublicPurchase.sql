@@ -1,15 +1,18 @@
+--Changed by Kolli - 4/20/22
+--Added Linked schema template references
+
 SELECT p.rowid,
        p.objectid,
        p.project,
        pr.name as projectname,
        pr.protocol as protocol,
---pr.external_id as eIACUCNum,
+        -- p.project.protocol.external_id as eIACUCNum,
        pr.investigatorid,
        p.account,
        p.requestorid,
---ehrsla.requestorid,
+       --p.requestorid.lastname || ', ' || p.requestorid.firstname as requestor,
        p.vendorid,
---p.vendorid.name as vendor,
+        --p.vendorid.name as vendor,
        p.hazardslist,
        p.dobrequired,
        p.darcomments,
@@ -23,7 +26,7 @@ SELECT p.rowid,
        p.orderedby
 FROM sla.purchase p, publicehr.project pr, publicehr.protocol prc
 WHERE (
-          (SELECT max(rowid) as expr FROM financePublic.onprc_billing.dataAccess da
+          (SELECT max(rowid) as expr FROM financepublic.dataAccess da
                                           -- current logged in user is the dataAccess user
            WHERE isMemberOf(da.userid)
              -- has access to all data
