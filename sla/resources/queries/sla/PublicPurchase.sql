@@ -7,7 +7,7 @@ SELECT p.rowid,
        pr.name as projectname,
        prc.title as protocol,
        prc.external_id as eIACUCNum,
-       pr.investigatorid,
+       inv.lastname || ', ' || inv.firstname as Investigator,
        p.account,
        p.requestorid,
        r.lastname || ', ' || r.firstname as requestor,
@@ -29,6 +29,7 @@ Left join publicehr.project pr on p.project = pr.project
 Left join publicehr.protocol prc on pr.protocol = prc.protocol
 Left join sla.requestors r on r.objectid = p.requestorid
 Left join sla.vendors v on v.objectid = p.vendorid
+Left join onprc_ehr.investigators inv on inv.rowid = pr.investigatorid
 WHERE (
           (SELECT max(rowid) as expr FROM financepublic.dataAccess da
                                           -- current logged in user is the dataAccess user
