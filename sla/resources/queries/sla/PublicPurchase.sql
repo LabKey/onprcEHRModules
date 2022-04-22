@@ -5,14 +5,14 @@ SELECT p.rowid,
        p.objectid,
        p.project,
        pr.name as projectname,
-       pr.protocol as protocol,
-        -- p.project.protocol.external_id as eIACUCNum,
+       prc.title as protocol,
+       prc.external_id as eIACUCNum,
        pr.investigatorid,
        p.account,
        p.requestorid,
-       --p.requestorid.lastname || ', ' || p.requestorid.firstname as requestor,
+       r.lastname || ', ' || r.firstname as requestor,
        p.vendorid,
-        --p.vendorid.name as vendor,
+       v.name as vendor,
        p.hazardslist,
        p.dobrequired,
        p.darcomments,
@@ -24,7 +24,11 @@ SELECT p.rowid,
        p.created as requestdate,
        p.orderdate,
        p.orderedby
-FROM sla.purchase p, publicehr.project pr, publicehr.protocol prc
+FROM sla.purchase p
+Left join publicehr.project pr on p.project = pr.project
+Left join publicehr.protocol prc on pr.protocol = prc.protocol
+Left join sla.requestors r on r.objectid = p.requestorid
+Left join sla.vendors v on v.objectid = p.vendorid
 WHERE (
           (SELECT max(rowid) as expr FROM financepublic.dataAccess da
                                           -- current logged in user is the dataAccess user

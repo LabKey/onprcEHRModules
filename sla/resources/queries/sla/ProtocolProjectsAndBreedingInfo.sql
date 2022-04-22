@@ -14,13 +14,13 @@ SELECT
     aa.StartDate,
     aa.EndDate,
     (Select Breeding from (Select protocol, species, gender, allowed, GROUP_CONCAT(Breeding_Info, chr(10)) as Breeding
-                           From ehrSLA.allowableAnimals_BreedingGroups Group by protocol, species, gender, allowed) br
+                           From sla.allowableAnimals_BreedingGroups Group by protocol, species, gender, allowed) br
      Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed) as Breeding_Info
 
-FROM publicehr.project a
-    LEFT JOIN publicehr.protocol p ON p.protocol = a.protocol
+FROM ehr.project a
+    LEFT JOIN ehr.protocol p ON p.protocol = a.protocol
     LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
-    LEFT JOIN ehrSLA.allowableAnimals aa ON a.protocol = aa.protocol
+    LEFT JOIN sla.allowableAnimals aa ON a.protocol = aa.protocol
 WHERE ( -- filter based on the current date compared with the start and end dates
     (aa.StartDate IS NOT NULL AND aa.EndDate IS NULL AND now() > aa.StartDate)
    OR (aa.StartDate IS NULL AND aa.EndDate IS NOT NULL AND now() < aa.EndDate)
@@ -44,12 +44,12 @@ SELECT
     aa.StartDate,
     aa.EndDate,
     (Select Breeding from (Select protocol, species, gender, allowed, GROUP_CONCAT(Breeding_Info, chr(10)) as Breeding
-                           From ehrSLA.allowableAnimals_BreedingGroups Group by protocol, species, gender, allowed) br
+                           From sla.allowableAnimals_BreedingGroups Group by protocol, species, gender, allowed) br
      Where aa.protocol = br.protocol And aa.Species = br.species And aa.Gender = br.Gender And aa.Allowed = br.allowed) as Breeding_Info
-FROM publicehr.project a
-LEFT JOIN publicehr.protocol p ON p.protocol = a.protocol
+FROM ehr.project a
+LEFT JOIN ehr.protocol p ON p.protocol = a.protocol
     LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
-    LEFT JOIN ehrSLA.allowableAnimals aa ON a.protocol = aa.protocol
+    LEFT JOIN sla.allowableAnimals aa ON a.protocol = aa.protocol
 
 WHERE (-- filter based on the current date compared with the start and end dates
     (aa.StartDate IS NOT NULL AND aa.EndDate IS NULL AND now() > aa.StartDate)

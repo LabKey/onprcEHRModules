@@ -19,7 +19,7 @@ SELECT a.project as ProjectID,
 FROM publicehr.project a
 LEFT JOIN publicehr.protocol p ON p.protocol = a.protocol
     LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
-    LEFT JOIN ehrSLA.allowableAnimals_BreedingGroups aa ON a.protocol = aa.protocol
+    LEFT JOIN ehrsla.allowableAnimals_BreedingGroups aa ON a.protocol = aa.protocol
     LEFT JOIN financepublic.aliases y ON y.alias = a.account
 WHERE
 -- filter based on the current date compared with the start and end dates

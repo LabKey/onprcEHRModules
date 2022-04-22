@@ -22,15 +22,15 @@ SELECT
 FROM publicehr.project a
          LEFT JOIN publicehr.protocol p ON p.protocol = a.protocol
          LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
-         LEFT JOIN ehrSLA.allowableAnimals aa ON a.protocol = aa.protocol
-         LEFT JOIN (select * from financePublic.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
+         LEFT JOIN ehrsla.allowableAnimals aa ON a.protocol = aa.protocol
+         LEFT JOIN (select * from financepublic.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
          LEFT JOIN financepublic.aliases y ON y.alias = x.account
          LEFT JOIN (
 --Changed by LK on 5/30 to get the accurate numused.
 --Ignore the gender when counting the usage if the approval data gender is: "Male or Female". Count both Male and Female usage.
     (SELECT i.protocol,pd.species,sum(animalsreceived) AS NumUsed
      FROM sla.purchasedetails pd, sla.purchase p, publicehr.project i,
-          ehrSLA.allowableAnimals aa1
+          ehrsla.allowableAnimals aa1
      Where p.project = i.project AND p.objectid = pd.purchaseid
        AND aa1.protocol = i.protocol AND aa1.species = pd.species AND aa1.gender = 'Male or Female'
        AND animalsreceived IS NOT NULL
@@ -84,15 +84,15 @@ SELECT
 FROM publicehr.project a
          LEFT JOIN publicehr.protocol p ON p.protocol = a.protocol
          LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId
-         LEFT JOIN ehrSLA.allowableAnimals aa ON a.protocol = aa.protocol
-         LEFT JOIN (select * from financePublic.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
+         LEFT JOIN ehrsla.allowableAnimals aa ON a.protocol = aa.protocol
+         LEFT JOIN (select * from financepublic.projectAccountHistory z where (z.StartDate IS NOT NULL AND z.EndDate IS NOT NULL AND now() between z.StartDate AND z.EndDate)) x ON a.project = x.project
          LEFT JOIN financepublic.aliases y ON y.alias = x.account
          LEFT JOIN (
 --Changed by LK on 5/30 to get the accurate numused.
 -- Count only the usage for the "Male" or "Female" gender
     (SELECT i.protocol,pd.species,pd.gender,sum(animalsreceived) AS NumUsed
     FROM sla.purchasedetails pd, sla.purchase p, publicehr.project i,
-    ehrSLA.allowableAnimals aa1
+    ehrsla.allowableAnimals aa1
     Where p.project = i.project AND p.objectid = pd.purchaseid
     AND aa1.protocol = i.protocol AND aa1.species = pd.species AND aa1.gender = pd.gender AND aa1.gender <> 'Male or Female'
     AND animalsreceived IS NOT NULL
