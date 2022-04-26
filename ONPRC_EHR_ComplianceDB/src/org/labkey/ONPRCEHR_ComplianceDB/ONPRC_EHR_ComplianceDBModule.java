@@ -79,11 +79,6 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
         // Added: 7-6-2021 R. Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("ehr_compliancedb/panel/EnterDataPanel.js"), this);
 
-//        Added: 4-4-2022  R.Blasa
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "employees", ONPRC_ComplianceDBAdminPermission.class), "ehr_compliancedb", "employees");
-
-//        //        Added: 4-12-2022  R.Blasa
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "CompletionDates", ONPRC_ComplianceDBEntryPermission.class), "ehr_compliancedb", "CompletionDates");
 
 
 
