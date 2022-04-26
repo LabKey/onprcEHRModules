@@ -24,6 +24,6 @@ public class ONPRC_ComplianceDBEntryPermission extends AbstractPermission
 {
     public ONPRC_ComplianceDBEntryPermission()
     {
-        super("ONPRC_ComplianceDBEntryPermission", "This is the base permission used to control editing of Employee Records");
+        super("ONPRC_ComplianceDBEntryPermission", "This is the base permission used to control entering of Employee Records");
     }
 }
