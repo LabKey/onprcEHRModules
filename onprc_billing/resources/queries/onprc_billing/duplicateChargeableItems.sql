@@ -24,18 +24,3 @@ where ci.active = true
 group by ci.name
 having count(*) > 1
 
-UNION ALL
-
-SELECT
-group_concat(distinct ci.name, chr(10)) as name,
-ci.itemCode,
-group_concat(distinct ci.category, chr(10)) as categories,
-count(*) as total
-
-from onprc_billing.chargeableItems ci
-where ci.active = true and ci.itemCode is not null
-
---TODO: this is a hack until data is cleaned up
-and (ci.category != 'Small Animal Per Diem' and ci.category != 'Surgery' and NOT(ci.itemCode = '3' AND ci.category = 'Lease Fees') )
-group by ci.itemCode, ci.category
-having count(*) > 1
