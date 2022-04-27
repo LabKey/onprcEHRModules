@@ -1,0 +1,7 @@
+<view xmlns="http://labkey.org/data/xml/view" title="Compliance Employee Editor Section">
+    <dependencies>
+        <dependency path="LDK/LDKApi"/>
+        <dependency path="ehr.context" />
+        <dependency path="ehr/ehr_api"/>
+    </dependencies>
+</view>

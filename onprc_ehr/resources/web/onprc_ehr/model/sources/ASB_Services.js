@@ -5,6 +5,10 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 Ext4.onReady(function() {
+
+    // This is to make the procedures form validation specific to the ASB service request form
+    //The validation code is in onprc_triggers.js
+
     // this is to skip Id not found warning during weights entry in Arrival data entry form
     if (EHR.data.DataEntryClientStore) {
         Ext4.override(EHR.data.DataEntryClientStore, {
@@ -16,7 +20,6 @@ Ext4.onReady(function() {
         });
     }
 });
-
 
 EHR.model.DataModelManager.registerMetadata('ASB_Services', {
     allQueries: {
@@ -67,7 +70,6 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                 }
             },
 
-
             billingproject: {
                 hidden:true
             },
@@ -82,6 +84,7 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                 }
             }
         },
+
         'study.blood': {
             chargetype: {
                 defaultValue: 'DCM: ASB Services',

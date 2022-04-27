@@ -1,0 +1,26 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="billingDate"/>
+        <column name="project"/>
+        <column name="ChargeTo"/>
+        <column name="CreditTo"/>
+        <column name="creditAccount"/>
+        <column name="creditAccountType"/>
+        <column name="investigatorId"/>
+        <column name="chargeId"/>
+        <column name="category"/>
+        <column name="item"/>
+        <column name="unitCost"/>
+        <column name="nihrate"/>
+        <column name="quantity"/>
+        <column name="TotalCharges"/>
+        <column name="comment"/>
+        <column name="created"/>
+        <column name="createdby"/>
+        <column name="taskId"/>
+
+    </columns>
+</customView>
+

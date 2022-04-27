@@ -1,0 +1,114 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="MiscChargesNotBilled_ARTCore" tableDbType="TABLE">
+                <tableTitle>ART Core Charges (Pending billing)</tableTitle>
+                <javaCustomizer>org.labkey.ehr.table.DefaultEHRCustomizer</javaCustomizer>
+                <columns>
+                    <column columnName="Id">
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>Id</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="date">
+                        <columnTitle>Date of Charge</columnTitle>
+                        <description>This column typically refers to the date the charge took place (ie. date blood was drawn).  This differs from the column labeled Date Charge Created, which refers to the date the charge was actually entered into the system.  This column is used in the IBS sheet; however, it is not used to determine which billing period the item falls into.</description>
+                        <formatString>Date</formatString>
+                    </column>
+                    <column columnName="billingDate">
+                        <columnTitle>Date Charge Entered</columnTitle>
+                        <description>This column refers to the date the record was created in the system.  It is used to determine which billing period the item falls into.  Because items can be created with dates in the past, quite often this date will be after the value listed as the transaction date</description>
+                    </column>
+                    <column columnName="project">
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>project</fkTable>
+                            <fkColumnName>project</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="account">
+                        <columnTitle>ChargeTo</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_billing_public</fkDbSchema>
+                            <fkTable>aliases</fkTable>
+                            <fkColumnName>alias</fkColumnName>
+                        </fk>
+                        <url>/query/executeQuery.view?schemaName=onprc_billing_public&amp;query.queryName=aliases&amp;query.alias~eq=${account}</url>
+                    </column>
+                    <column columnName="chargetype">
+                        <columnTitle>Credit To</columnTitle>
+                    </column>
+                    <column columnName="creditAccount">
+                        <columnTitle>Credit Account</columnTitle>
+                    </column>
+                    <column columnName="creditAccountType">
+                        <columnTitle>Credit Account Type</columnTitle>
+                    </column>
+                    <column columnName="investigatorId">
+                        <columnTitle>Investigator</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>investigators</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                            <fkDisplayColumnName>lastName</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="chargeId">
+                        <columnTitle>Charge Name</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_billing_public</fkDbSchema>
+                            <fkTable>chargeableItems</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
+                    </column>
+                    <column columnName="item">
+                        <columnTitle>Item</columnTitle>
+                    </column>
+                    <column columnName="unitCost">
+                        <columnTitle>Unit Cost</columnTitle>
+                        <formatString>$###,##0.00</formatString>
+                    </column>
+                    <column columnName="nihRate">
+                        <columnTitle>NIH Rate</columnTitle>
+                        <formatString>$###,##0.00</formatString>
+                    </column>
+                    <column columnName="quantity">
+                        <columnTitle>Quantity</columnTitle>
+                    </column>
+                    <column columnName="totalCharges">
+                        <columnTitle>Total Cost</columnTitle>
+                        <formatString>$###,##0.00</formatString>
+                    </column>
+                    <column columnName="comment">
+                        <columnTitle>Comment</columnTitle>
+                    </column>
+                    <column columnName="invoiceId">
+                        <columnTitle>Invoice</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>invoiceRuns</fkTable>
+                            <fkColumnName>objectid</fkColumnName>
+                            <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="createdBy"/>
+                    <column columnName="created"/>
+                    <column columnName="taskid">
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>tasks</fkTable>
+                            <fkColumnName>taskid</fkColumnName>
+                            <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                        </fk>
+                    </column>
+
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
