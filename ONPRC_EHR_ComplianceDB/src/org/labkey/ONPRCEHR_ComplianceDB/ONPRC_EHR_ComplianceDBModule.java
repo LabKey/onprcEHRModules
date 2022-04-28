@@ -15,13 +15,11 @@
  */
 package org.labkey.ONPRCEHR_ComplianceDB;
 
-import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBEntryPermission;
-import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBAdminPermission;
+//import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBEntryPermission;
+//import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBAdminPermission;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ldk.LDKService;
-import org.labkey.api.ldk.buttons.ShowEditUIButton;
-import org.labkey.api.ldk.table.SimpleButtonConfigFactory;
 import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
 import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRequirementCategoryFormType;
 import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRequirementUnitFormType;
@@ -30,7 +28,7 @@ import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBAdminRole;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.view.template.ClientDependency;
-//import org.labkey.ehr.query.buttons.ShowAuditHistoryButton;
+
 
 //Created: 11-24-2020   R.Blasa
 
