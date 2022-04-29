@@ -5,27 +5,15 @@
         <column name="Id/curLocation/room"/>
         <column name="Id/curLocation/cage"/>
         <column name="mostRecentHx"/>
-
         <column name="remarksEnteredSinceReview"/>
-<!--        <column name="mostRecentClinicalObservations/observations"/>-->
         <column name="mostRecentClinicalObservations"/>
         <column name="mostRecentClinicalObservationsdate"/>
-        <column name="observationremarks"/>
+<!--        <column name="observationremarks"/>-->
         <column name="mostRecentBCSScore"/>
         <column name="mostRecentProcedure"/>
         <column name="lastVetReview"/>
         <column name="Id/utilization/use"/>
-        <column name="Id/activeCases/categories">
-            <properties>
-                <property name="columnTitle" value="Active Cases"/>
-            </properties>
-        </column>
-        <!--<column name="Id/assignedVet/assignedVet"/>-->
-        <column name="calculated_status">
-            <properties>
-                <property name="columnTitle" value="Status"/>
-            </properties>
-        </column>
+
     </columns>
     <sorts>
         <sort column="Id/curLocation/room"/>
