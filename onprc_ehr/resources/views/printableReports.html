@@ -445,7 +445,7 @@
                         border: true,
                         handler: function(btn){
                             var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
-                            url += btn.up('#sheetPanel').getAnimalHistoryHash('diet');
+                            url += btn.up('#sheetPanel').getAnimalHistoryHash('dietSchedule');
                             window.open(url);
                         }
                     },{
@@ -509,16 +509,16 @@
                                 window.open(url);
                             }
                         }]
-                    },{
-                        xtype: 'button',
-                        style: 'margin-left: 5px;',
-                        text: 'Online Version',
-                        border: true,
-                        handler: function(btn){
-                            var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
-                            url += btn.up('#sheetPanel').getAnimalHistoryHash('cases');
-                            window.open(url);
-                        }
+                    // },{
+                    //     xtype: 'button',
+                    //     style: 'margin-left: 5px;',
+                    //     text: 'Online Version',
+                    //     border: true,
+                    //     handler: function(btn){
+                    //         var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
+                    //         url += btn.up('#sheetPanel').getAnimalHistoryHash('cases');
+                    //         window.open(url);
+                    //     }
                     },{
                         html: '<hr>',
                         style: 'padding-top: 10px;',
@@ -602,16 +602,16 @@
                             }
                         }]
                     },{
-                        xtype: 'button',
-                        style: 'margin-left: 5px;',
-                        text: 'Online Version',
-                        border: true,
-                        handler: function(btn){
-                            var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
-                            url += btn.up('#sheetPanel').getAnimalHistoryHash('clinMedicationSchedule');
-                            window.open(url);
-                        }
-                    },{
+                    //     xtype: 'button',
+                    //     style: 'margin-left: 5px;',
+                    //     text: 'Online Version',
+                    //     border: true,
+                    //     handler: function(btn){
+                    //         var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
+                    //         url += btn.up('#sheetPanel').getAnimalHistoryHash('clinMedicationSchedule');
+                    //         window.open(url);
+                    //     }
+                    // },{
                         style: 'margin-left: 5px;',
 
                     },{
