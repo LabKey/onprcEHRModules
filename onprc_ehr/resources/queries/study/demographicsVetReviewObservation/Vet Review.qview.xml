@@ -8,8 +8,6 @@
         <column name="remarksEnteredSinceReview"/>
         <column name="mostRecentClinicalObservations"/>
         <column name="mostRecentClinicalObservationsdate"/>
-<!--        <column name="observationremarks"/>-->
-        <column name="mostRecentBCSScore"/>
         <column name="mostRecentProcedure"/>
         <column name="lastVetReview"/>
         <column name="Id/utilization/use"/>
