@@ -115,6 +115,11 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         importFolderFromPath(1);
     }
 
+    protected boolean skipStudyImportQueryValidation()
+    {
+        return true;
+    }
+
     @Override
     protected void doExtraPreStudyImportSetup()
     {
