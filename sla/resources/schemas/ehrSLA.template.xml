@@ -1,0 +1,98 @@
+<templateSchema sourceSchemaName="sla" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>allowableAnimals</tableName>
+        <tableName>allowableAnimals_BreedingGroups</tableName>
+        <tableName>PIandProtocols</tableName>
+        <tableName>allowableSLA</tableName>
+        <tableName>ProtocolProjectsUsage</tableName>
+        <tableName>ProtocolProjectsAndBreedingInfo</tableName>
+        <tableName>census</tableName>
+        <tableName>eIACUC_Protocols_Groups</tableName>
+        <tableName>gender</tableName>
+        <tableName>PublicPurchase</tableName>
+        <tableName>PublicPurchaseDetails</tableName>
+        <tableName>purchase</tableName>
+        <tableName>purchaseDetails</tableName>
+        <tableName>purchaseDrafts</tableName>
+        <tableName>Reference_Data</tableName>
+        <tableName>requestors</tableName>
+        <tableName>RodentLocations</tableName>
+        <tableName>vendors</tableName>
+        <tableName>species</tableName>
+
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="allowableAnimals" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Allowable Animals</tableTitle>
+            </table>
+            <table tableName="allowableAnimals_BreedingGroups" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Allowable Animals with Breeding Groups</tableTitle>
+            </table>
+            <table tableName="PIandProtocols" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>PI and Protocols</tableTitle>
+            </table>
+            <table tableName="allowableSLA" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Allowable SLA</tableTitle>
+            </table>
+            <table tableName="ProtocolProjectsUsage" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Protocol Projects Usage</tableTitle>
+            </table>
+            <table tableName="ProtocolProjectsAndBreedingInfo" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Protocol Projects and Breeding Info</tableTitle>
+            </table>
+
+            <table tableName="census" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Census</tableTitle>
+            </table>
+            <table tableName="eIACUC_Protocols_Groups" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>eIACUC Protocols and Groups</tableTitle>
+            </table>
+            <table tableName="gender" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Gender</tableTitle>
+            </table>
+            <table tableName="PublicPurchase" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Public Purchase</tableTitle>
+            </table>
+            <table tableName="PublicPurchaseDetails" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Public Purchase Details</tableTitle>
+            </table>
+            <table tableName="PurchaseDrafts" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Purchase Drafts</tableTitle>
+            </table>
+            <table tableName="Reference_Data" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Reference Data</tableTitle>
+            </table>
+            <table tableName="requestors" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Requestors</tableTitle>
+            </table>
+            <table tableName="RodentLocations" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Rodent Locationss</tableTitle>
+            </table>
+            <table tableName="vendors" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Vendors</tableTitle>
+            </table>
+            <table tableName="species" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Species</tableTitle>
+            </table>
+
+        </tables>
+    </metadata>
+</templateSchema>
