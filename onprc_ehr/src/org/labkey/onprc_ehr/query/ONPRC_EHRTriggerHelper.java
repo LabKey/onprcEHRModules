@@ -2338,7 +2338,7 @@ public class ONPRC_EHRTriggerHelper
     }
 
 
-    //Added 3-6-2019 Blasa
+    //Added 2-24-2022 Blasa
     public void sendProjectNotifications(Integer projectid)
     {
 
@@ -2365,7 +2365,7 @@ public class ONPRC_EHRTriggerHelper
 
         TableInfo ti = getTableInfo("ehr", "project");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("project"), projectid);
-        filter.addCondition(FieldKey.fromString("enddateCoalesced"), roundedMax, CompareType.GTE);
+        filter.addCondition(FieldKey.fromString("modified"), roundedMax, CompareType.GTE);
 
         Sort sort = new Sort("name");
 
@@ -2375,6 +2375,7 @@ public class ONPRC_EHRTriggerHelper
         names.add(FieldKey.fromString("name"));
         names.add(FieldKey.fromString("investigatorId"));
         names.add(FieldKey.fromString("startdate"));
+        names.add(FieldKey.fromString("enddate"));
         names.add(FieldKey.fromString("project"));
 
         final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
@@ -2392,14 +2393,16 @@ public class ONPRC_EHRTriggerHelper
             //Create header information on the report
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
-            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td><td>Iacuc Protocol</td><td> Investigator</td><td>  Center Project Start Date</td></tr>\n");
+            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td>" +
+                    "<td>Iacuc Protocol</td><td> Investigator</td><td>Start Date</td>" +
+                    "<td>Ending Date</td></tr>\n");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
                        {
 
                            @Override
                            public void exec(ResultSet rs) throws SQLException
                            {
-
+                               _log.info("Success Section Part 2X");
                                TableInfo ti2 = getTableInfo("onprc_ehr", "investigators");
                                SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("rowid"), rs.getString("investigatorId"));
                                filter2.addCondition(FieldKey.fromString("datedisabled"), true, CompareType.ISBLANK);
@@ -2408,9 +2411,14 @@ public class ONPRC_EHRTriggerHelper
                                List<String> ret2 = ts2.getArrayList(String.class);
                                if (ret2 != null && !ret2.isEmpty())
                                {
+                                   _log.info("Success Section Part 3X");
                                    for (String Investname : ret2)
                                    {
-                                       html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("project"))  + "</td><td>   " + PageFlowUtil.filter(rs.getString(protocolColumn.getAlias()))  + "</td><td>   " + PageFlowUtil.filter(Investname) + "   </td><td>" +  PageFlowUtil.filter(rs.getString("startdate")) + "</td></tr>\n");
+                                       html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("project"))  + "</td>" +
+                                               "<td>   " + PageFlowUtil.filter(rs.getString(protocolColumn.getAlias()))  + "</td>" +
+                                               "<td>   " + PageFlowUtil.filter(Investname) + "   </td>" +
+                                               "<td>" +  PageFlowUtil.filter(rs.getString("startdate")) + "</td>" +
+                                               "<td>" +  PageFlowUtil.filter(rs.getString("enddate")) + "</td></tr>\n");
                                        break;
 
                                    }
