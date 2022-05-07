@@ -2370,7 +2370,7 @@ public class ONPRC_EHRTriggerHelper
 
         TableInfo ti = getTableInfo("ehr", "project");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("project"), projectid);
-        filter.addCondition(FieldKey.fromString("modified"), roundedMax, CompareType.GTE);
+        filter.addCondition(FieldKey.fromString("modified"), roundedMax, CompareType.DATE_GTE);
 
         Sort sort = new Sort("name");
 
