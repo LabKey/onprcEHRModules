@@ -2382,6 +2382,7 @@ public class ONPRC_EHRTriggerHelper
         names.add(FieldKey.fromString("startdate"));
         names.add(FieldKey.fromString("enddate"));
         names.add(FieldKey.fromString("project"));
+        names.add(FieldKey.fromString("modified"));
 
         final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
         final ColumnInfo protocolColumn = colKeys.get(protocolFieldKey);
@@ -2399,8 +2400,11 @@ public class ONPRC_EHRTriggerHelper
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
             html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td>" +
-                    "<td>Iacuc Protocol</td><td> Investigator</td><td>Start Date</td>" +
-                    "<td>Ending Date</td></tr>\n");
+                    "<td>Iacuc Protocol</td>" +
+                    "<td> Investigator</td>" +
+                    "<td>Start Date</td>" +
+                    "<td>Ending Date</td>" +
+                    "<td>Modified Date</td></tr>\n");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
                        {
 
@@ -2423,7 +2427,8 @@ public class ONPRC_EHRTriggerHelper
                                                "<td>   " + PageFlowUtil.filter(rs.getString(protocolColumn.getAlias()))  + "</td>" +
                                                "<td>   " + PageFlowUtil.filter(Investname) + "   </td>" +
                                                "<td>" +  PageFlowUtil.filter(rs.getString("startdate")) + "</td>" +
-                                               "<td>" +  PageFlowUtil.filter(rs.getString("enddate")) + "</td></tr>\n");
+                                               "<td>" +  PageFlowUtil.filter(rs.getString("enddate")) + "</td>" +
+                                               "<td>" +  PageFlowUtil.filter(rs.getString("modified")) + "</td></tr>\n");
                                        break;
 
                                    }
