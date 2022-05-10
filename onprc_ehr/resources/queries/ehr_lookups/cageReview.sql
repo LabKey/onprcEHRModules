@@ -40,7 +40,7 @@ SELECT
    t.heightStatus,
   t.weightExempt,
   t.totalWeightExempt,
-  t.totalHeightExempt,
+  t.totalHeightExempt
 
 FROM (
 
