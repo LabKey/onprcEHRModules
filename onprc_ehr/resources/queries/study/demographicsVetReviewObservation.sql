@@ -32,11 +32,9 @@ union
 select dem.id,
        dem.Id.curLocation.cage,
 
-       ( select group_concat(DISTINCT 'BCS: ' + j.observation, chr(10))  from "Clinical Observations" j where j.id = dem.id  and j.category = 'BCS' and j.QCState.Label = 'Completed'   and j.date >= (select max(k.date)
-                                                                                                                                                                                                       from  "Clinical Observations" k where k.category = 'Vet Review' and k.QCState.Label = 'Completed' and dem.id = k.id) ) as mostRecentClinicalObservations,
+       null as  mostRecentClinicalObservations,
 
-       ( select max(j.date)    from "Clinical Observations" j where j.id = dem.id  and j.category = 'BCS' and j.QCState.Label = 'Completed'   and j.date >= (select max(k.date)
-                                                                                                                                                             from  "Clinical Observations" k where k.category = 'Vet Review' and k.QCState.Label = 'Completed' and dem.id = k.id) ) as mostRecentClinicalObservationsdate,
+       null as  mostRecentClinicalObservationsdate,
        dem.remarksEnteredSinceReview,
        dem.mostRecentHx,
        dem.Id.curLocation.room,
@@ -44,7 +42,8 @@ select dem.id,
        dem.Id.utilization.use,
        dem.lastVetReview,
 
-       null as mostRecentBCSScore,
+       ( select group_concat(DISTINCT cast(month(j.date) as varchar(2)) + '/' + cast(dayofmonth(j.date) as varchar(2)) + ' ''BCS: ' + j.observation, chr(10))  from "Clinical Observations" j where j.id = dem.id  and j.category = 'BCS' and j.QCState.Label = 'Completed'   and j.date >= (select max(k.date)
+                                                                                                                                                                                                                                                                                             from  "Clinical Observations" k where k.category = 'Vet Review' and k.QCState.Label = 'Completed' and dem.id = k.id) ) as mostRecentBCSScore,
        null as mostRecentProcedure,
 
        null as observationremarks
@@ -81,5 +80,6 @@ where dem.id in (Select rems.id from "Clinical Encounters" rems where rems.type 
     in ('Ultrasound','Ultrasound - Ovaries','Ultrasound - Pregnancy', 'Ultrasound - Uterus')
                                                                   and rems.date >= (select max(x.date) from "Clinical Observations" x where x.category = 'Vet Review' and x.QCState.Label = 'Completed'
                                                                                                                                         and rems.Id = x.Id)  )
+
 
 
