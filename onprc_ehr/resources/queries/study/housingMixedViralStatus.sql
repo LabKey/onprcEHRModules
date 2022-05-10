@@ -24,7 +24,7 @@ SELECT
   h.room,
   h.Id.viral_status.viralStatus as viralStatus,
   count(distinct h.id) as totalAnimals,
-  h.Id.viral_status.viralStatus || ' (' || cast(count(distinct h.id) as varchar) || ')' as status,
+  h.Id.viral_status.viralStatus || ' (' || cast(count(distinct h.id) as varchar) || ')' as status
 
 FROM study.housing h
 WHERE h.enddateTimeCoalesced >= now()

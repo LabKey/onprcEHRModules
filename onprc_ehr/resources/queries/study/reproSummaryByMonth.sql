@@ -26,7 +26,7 @@ FROM
     m.monthnum,
     t2.day,
     --group_concat(DISTINCT t2.isPregnant) as isPregnant,
-    group_concat(DISTINCT t2.value, chr(10)) as value,
+    group_concat(DISTINCT t2.value, chr(10)) as value
 
     FROM ldk.monthRange m
     LEFT JOIN study.reproSummaryRawData t2 ON (m.year = t2.year AND m.monthNum = t2.monthNum AND t2.Id = ID)

@@ -19,7 +19,7 @@ SELECT
   GROUP_CONCAT(DISTINCT t.roomAtOpen) as roomAtOpen,
   GROUP_CONCAT(DISTINCT t.cageAtOpen) as cageAtOpen,
   GROUP_CONCAT(DISTINCT t.cagemate, chr(10)) as cagematesAtOpen,
-  GROUP_CONCAT(DISTINCT t.location, chr(10)) as cagemateCurrentLocations,
+  GROUP_CONCAT(DISTINCT t.location, chr(10)) as cagemateCurrentLocations
 
 FROM (
 SELECT

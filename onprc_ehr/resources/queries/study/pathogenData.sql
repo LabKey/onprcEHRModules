@@ -59,7 +59,7 @@ SELECT
   CASE
     WHEN f1.viralStatus IS NULL THEN r.Id
     ELSE null
-  END as neverSPFId,
+  END as neverSPFId
 FROM (
 
 SELECT
@@ -91,7 +91,7 @@ SELECT
   END as IdNegative,
   t2.totalTests,
   t2.totalIds,
-  t.history,
+  t.history
 
 FROM study.serology t
 LEFT JOIN (
@@ -136,7 +136,7 @@ SELECT
   END as IdNegative,
   (select count(t2.lsid) as total FROM study.parasitologyResults t2 WHERE t2.date >= StartDate AND t2.date <= EndDate) as totalTests,
   (select count(distinct t2.Id) as total FROM study.parasitologyResults t2 WHERE t2.date >= StartDate AND t2.date <= EndDate) as totalIds,
-  t.history,
+  t.history
 
 FROM study.parasitologyResults t
 WHERE t.date >= StartDate AND t.date <= EndDate
@@ -172,7 +172,7 @@ SELECT
   END as IdNegative,
   (select count(t2.lsid) as total FROM study.microbiology t2 WHERE t2.date >= StartDate AND t2.date <= EndDate) as totalTests,
   (select count(distinct t2.Id) as total FROM study.microbiology t2 WHERE t2.date >= StartDate AND t2.date <= EndDate) as totalIds,
-  t.history,
+  t.history
 
 FROM study.microbiology t
 WHERE t.date >= StartDate AND t.date <= EndDate
@@ -194,7 +194,7 @@ LEFT JOIN (
 LEFT JOIN (
   SELECT
     f2.id,
-    group_concat(DISTINCT f2.flag.value) as viralStatus,
+    group_concat(DISTINCT f2.flag.value) as viralStatus
   FROM study.flags f2 WHERE
     f2.flag.value like 'SPF%' AND
     f2.date <= EndDate AND

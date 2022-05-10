@@ -70,12 +70,12 @@ CASE
   WHen a4.id is not Null and (TIMESTAMPDIFF('SQL_TSI_Day',a.date,a.projectedRelease))  >14 Then (TIMESTAMPDIFF('SQL_TSI_Day',a.date,a.projectedRelease))
 --this looks for TMB INfant and sets count to 0.  Based on Mom being TMB
 
-  WHEN (Select Count(*) from study.birth b
+  WHEN (Select Count(*) AS c from study.birth b
        left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a1 on b.id = a.id and a.date = b.dateOnly
        left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a2 on b.dam = a2.id and a2.project = 559 and (a2.date <= b.dateOnly and a2.endDate >=b.dateOnly or a2.enddate is Null)
         where b.id = a.id and a1.project.protocol != a2.project.protocol) > 0 THEN 0
 --infdants born to resource dams
-  WHEN (Select Count(*) from study.birth b
+  WHEN (Select Count(*) AS c from study.birth b
        left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a1 on b.id = a.id and a.date = b.dateOnly and a.project.use_category in ('Center Resource','U42','U24')
        left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment a2 on b.dam = a2.id and a2.project.use_category in ('Center Resource','U42','U24') and (a2.date <= b.dateOnly and a2.endDate >=b.dateOnly or a2.enddate is Null)
         where b.id = a.id and a1.project.protocol = a2.project.protocol) > 0 THEN 0

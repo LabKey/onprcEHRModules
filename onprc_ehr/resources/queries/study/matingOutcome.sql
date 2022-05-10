@@ -23,7 +23,7 @@ SELECT
   max(b.date) as maxBirthDate,
   max(m.male) as male,
   group_concat(distinct b.id) as offspring,
-  group_concat(distinct b.birth_condition) as birthCondition,
+  group_concat(distinct b.birth_condition) as birthCondition
 
 FROM study.matings m
 LEFT JOIN study.pregnancyConfirmation pc ON (pc.id = m.id AND m.date < pc.date AND TIMESTAMPDIFF('SQL_TSI_DAY', m.date, pc.date) < 180)

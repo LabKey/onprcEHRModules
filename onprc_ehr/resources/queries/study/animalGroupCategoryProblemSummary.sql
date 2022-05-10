@@ -21,7 +21,7 @@ SELECT
   t.totalProblems,
   round((cast(t.totalIdWithProblems as float) / t.totalIdsInCategory * 100.0), 2) as pctWithProblem,
   t.startDate,
-  t.endDate,
+  t.endDate
 
 FROM (
 
@@ -33,7 +33,7 @@ SELECT
 
   max(t1.StartDate) as StartDate,
   max(t1.EndDate) as EndDate,
-  (select count(distinct m.id) FROM study.animal_group_members m WHERE (m.date <= max(t1.EndDate) AND m.enddateCoalesced >= max(t1.StartDate) AND m.groupId.category = g.category)) as totalIdsInCategory
+  (select count(distinct m.id) AS Ids FROM study.animal_group_members m WHERE (m.date <= max(t1.EndDate) AND m.enddateCoalesced >= max(t1.StartDate) AND m.groupId.category = g.category)) as totalIdsInCategory
 
 FROM study.animalGroupProblemData t1
 JOIN ehr.animal_groups g ON (t1.groupId = g.rowid)

@@ -23,7 +23,7 @@ SELECT
   b2.quantity,
   DATE_INTERVAL as blood_draw_interval,
   TIMESTAMPADD('SQL_TSI_DAY', (-1 * DATE_INTERVAL), b2.dateOnly) as minDate,
-  TIMESTAMPADD('SQL_TSI_DAY', DATE_INTERVAL, b2.dateOnly) as maxDate,
+  TIMESTAMPADD('SQL_TSI_DAY', DATE_INTERVAL, b2.dateOnly) as maxDate
 
 FROM (
   SELECT
@@ -36,7 +36,7 @@ FROM (
     SELECT
       b.id,
       b.dateOnly,
-      b.quantity,
+      b.quantity
     FROM study.blood b
     WHERE b.dateOnly > timestampadd('SQL_TSI_DAY', -1 * DATE_INTERVAL, curdate())
 
@@ -46,7 +46,7 @@ FROM (
     SELECT
       d1.id,
       curdate() as dateOnly,
-      0 as quantity,
+      0 as quantity
     FROM study.demographics d1
     WHERE d1.calculated_status = 'Alive'
 
@@ -55,8 +55,8 @@ FROM (
     --add one row for each date when the draw drops off the record
     SELECT
       b.id,
-      timestampadd('SQL_TSI_DAY', DATE_INTERVAL, b.dateOnly),
-      0 as quantity,
+      timestampadd('SQL_TSI_DAY', DATE_INTERVAL, b.dateOnly) AS dateOnly,
+      0 as quantity
     FROM study.blood b
     WHERE b.dateOnly >= timestampadd('SQL_TSI_DAY', -1 * DATE_INTERVAL, curdate())
 
