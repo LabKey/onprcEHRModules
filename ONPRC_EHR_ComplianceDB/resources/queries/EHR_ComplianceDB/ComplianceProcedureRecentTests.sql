@@ -78,3 +78,23 @@ where a.requirementname not in (select distinct h.requirementname from ehr_compl
 
 group by a.requirementname,a.employeeid
 
+
+union
+
+select j.requirementname,
+       j.employeeid,
+       null,
+       null,
+       'No' as trackingflag,
+       (select count(zz.date) from completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid  ) as timesCompleted,
+       (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = j.requirementname) as ExpiredPeriod,
+       (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid  ) as MostRecentDate,
+       (Select group_concat(distinct yy.comment, chr(10))  from completiondates yy where yy.date in (select max(zz.date) from completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid )
+                                                                                     And  yy.requirementname= j.requirementname and yy.employeeid= j.employeeid   ) as comment,
+       null AS MonthsUntilRenewal
+
+
+from  ehr_compliancedb.employeerequirementexemptions j
+
+
+group by j.requirementname,j.employeeid
