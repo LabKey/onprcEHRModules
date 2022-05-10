@@ -1,0 +1,24 @@
+<templateSchema sourceSchemaName="ehr" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>project</tableName>
+        <tableName>protocol</tableName>
+        <tableName>investigator</tableName>
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="project" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Center Project</tableTitle>
+            </table>
+            <table tableName="protocol" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>protocol</tableTitle>
+            </table>
+            <table tableName="investigator" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Principle Investigator</tableTitle>
+            </table>
+
+        </tables>
+    </metadata>
+</templateSchema>
