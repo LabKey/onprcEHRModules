@@ -25,6 +25,26 @@ EHR.model.DataModelManager.registerMetadata('Epoc', {
                 allowBlank: true,
                 hidden: true
             }
-        }
+        },
+        'study.Epoc': {
+            resultOORIndicator: {
+                hidden: true
+            },
+            result: {
+                allowBlank: false,
+                compositeField: 'Result'
+            },
+            units: {
+                compositeField: 'Result'
+            },
+            testid: {
+                lookup: {
+                    columns: '*'
+                }
+            },
+            qualresult: {
+                hidden: true
+            }
+        },
     }
 });
