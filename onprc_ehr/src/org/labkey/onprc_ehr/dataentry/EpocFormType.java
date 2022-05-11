@@ -31,7 +31,7 @@ import java.util.Arrays;
  */
 public class EpocFormType extends TaskForm
 {
-    public static final String NAME = "iStat";
+    public static final String NAME = "Epoc";
 
     public EpocFormType(DataEntryFormContext ctx, Module owner)
     {
@@ -44,7 +44,7 @@ public class EpocFormType extends TaskForm
         for (FormSection s : getFormSections())
         {
             s.addConfigSource("Labwork");
-            s.addConfigSource("iStat");
+            s.addConfigSource("Epoc");
         }
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Epoc.js"));
