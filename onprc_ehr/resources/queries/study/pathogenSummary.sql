@@ -31,7 +31,7 @@ SELECT
   count(distinct t1.droppedFromSPFId) as numDroppedFromSPF,
 
   max(t1.StartDate) as StartDate,
-  max(t1.EndDate) as EndDate,
+  max(t1.EndDate) as EndDate
 
 FROM study.pathogenData t1
 WHERE t1.pathogen != 'ETIOLOGIC AGENT NOT IDENTIFIED,(NEGATIVE)'

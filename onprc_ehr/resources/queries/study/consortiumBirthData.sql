@@ -21,7 +21,7 @@ SELECT
   count(a.lsid) as totalAssignments,
   sum(CASE WHEN a.project.use_category = 'Research' THEN 1 ELSE 0 END) as totalResearchAssignments,
   sum(CASE WHEN a.project.use_category = 'U42' THEN 1 ELSE 0 END) as isU42,
-  sum(CASE WHEN a.project.use_category = 'U24' THEN 1 ELSE 0 END) as isU24,
+  sum(CASE WHEN a.project.use_category = 'U24' THEN 1 ELSE 0 END) as isU24
 
 FROM study.birthRateData b
 

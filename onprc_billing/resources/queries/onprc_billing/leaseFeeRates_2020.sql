@@ -101,7 +101,7 @@ Union
 
 Select
     r.id,
-    'Misc Charge',
+    'Misc Charge' AS AssignmentType,
     null as researchOwned,
     r.project,
     r.project.name as CenterProject,
