@@ -12,8 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *Update 2022.05.03 change of source
+ *Update 2022.05.03 change of source 3rd try
  */
+
+
 SELECT
     i.rowId,
     i.invoiceId,
@@ -40,24 +42,28 @@ SELECT
     i.quantity,
     i.unitCost,
     i.totalcost,
-    i.chargeCategory
+    i.chargeCategory,
+    pr.investigatorid as Inv1,
+    pr.project as pr1
 
-FROM publicFinance.invoicedItems i
-WHERE ((SELECT max(rowid) as expr FROM publicFinance.dataAccess da WHERE isMemberOf(da.userid) AND (
-            da.allData = true OR
-            (da.project = i.project) OR
-        --TODO: this needs to get cleaned up
-            (
-                        da.investigatorId = i.investigatorId
-                    OR da.investigatorId = i.debitedaccount.investigatorId
-                    OR da.investigatorId = i.project.investigatorId
-                )
-    )) IS NOT NULL OR
+FROM onprc_billing.invoicedItems i
+    left join  publicehr.project pr on i.project = pr.project
+    left join onprcehrPublic.investigators inv on inv.rowid = pr.investigatorid
+    left join publicfinance.aliases a on a.alias = i.debitedaccount
+    left join onprcehrPublic.investigators inv2 on inv2.rowid = a.investigatorid
 
-    --include if the user is either the project's PI, the account PI, or the financial analyst
-       isMemberOf(i.project.investigatorId.userid) OR isMemberOf(i.debitedaccount.investigatorId.userid) OR isMemberOf(i.project.investigatorId.financialAnalyst)
-
+where
+i.date >= '2020-01-01'
+and ((SELECT max(rowid) as expr
+      FROM publicFinance.dataAccess da
+      WHERE isMemberOf(da.userid)
+        AND (
+                  da.allData = true OR
+                  (da.project = i.project) OR
+              --TODO: this needs to get cleaned up
+                  (
+                              da.investigatorId = i.investigatorId
+                          OR da.investigatorId = a.investigatorId
+                      )
+          )) IS NOT NULL
     )
-
---arbitrary cutoff to avoid problems in legacy data
-  AND i.date >= '2013-01-01'
