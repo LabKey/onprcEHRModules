@@ -11,14 +11,14 @@ Ext4.define('ONPRC_EHR.window.EpocImportWindow', {
         Ext4.apply(this, {
             modal: true,
             closeAction: 'destroy',
-            title: 'Import iStat Results From Excel',
+            title: 'Import Epoc Results From Excel',
             bodyStyle: 'padding: 5px;',
             width: 630,
             defaults: {
                 border: false
             },
             items: [{
-                html: 'This helper allows you to bulk import EPOC data, exported as an excel file from the iSTAT software.',
+                html: 'This helper allows you to bulk import EPOC data, exported as an excel file from the Epoc software.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'textarea',
@@ -103,7 +103,7 @@ Ext4.define('ONPRC_EHR.window.EpocImportWindow', {
                 }
 
                 if (Ext4.isDefined(resultRow.result)){
-                    resultsToCreate.push(this.iStatStore.createModel(resultRow));
+                    resultsToCreate.push(this.EpocStore.createModel(resultRow));
                 }
                 else {
                     console.log('skipping result row: [' + result + ']');
@@ -117,7 +117,7 @@ Ext4.define('ONPRC_EHR.window.EpocImportWindow', {
         }
 
         if (resultsToCreate.length){
-            this.iStatStore.add(resultsToCreate);
+            this.EpocStore.add(resultsToCreate);
         }
     }
 });
@@ -138,11 +138,11 @@ EHR.DataEntryUtils.registerGridButton('EPOC_IMPORT', function(config){
             LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in Epoc_IMPORT button', runStore);
 
             var EpocStore = panel.storeCollection.getClientStoreByName('Epoc');
-            LDK.Assert.assertNotEmpty('Unable to find iStat store in ISTAT_IMPORT button', iStatStore);
+            LDK.Assert.assertNotEmpty('Unable to find Epoc store in EPOC_IMPORT button', EpocStore);
 
             Ext4.create('ONPRC_EHR.window.EpocImportWindow', {
                 runStore: runStore,
-                iStatStore: EpocStore
+                EpocStore: EpocStore
             }).show();
         }
     });
