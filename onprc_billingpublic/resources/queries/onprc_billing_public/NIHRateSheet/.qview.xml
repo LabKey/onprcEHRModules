@@ -1,3 +1,4 @@
+<!--update for fix created for Public Finance 2nd try-->
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Rate Sheet">
     <columns>
         <column name="category"/>
