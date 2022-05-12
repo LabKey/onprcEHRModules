@@ -171,7 +171,7 @@ Ext4.onReady(function(){
                                                     {name: 'Download IBS Spreadsheet (PVIRO)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~eq': 'PVIRO'})},
                                                     {name: 'Download IBS Spreadsheet (PART)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~eq': 'PART'})},
                                                     {name: 'Download IBS Spreadsheet (SLAU)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~eq': 'SLAU'})},
-                                                    {name: 'Download IBS Spreadsheet (Other)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~notin': 'PDAR;PSURG;SLAU;PVIRO;PMIC'})},
+                                                    {name: 'Download IBS Spreadsheet (Other)', url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_billing', 'query.queryName': 'chargesIBS', 'query.invoiceId~eq': this.invoiceRunId, 'query.servicecenter~notin': 'PDAR;PSURG;SLAU;PVIRO;PMIC;PART'})},
                                                 ]
                                             },{
                                                 header: 'Charge Calculations For This Billing Period',
