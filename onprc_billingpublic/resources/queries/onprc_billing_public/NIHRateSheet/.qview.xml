@@ -1,4 +1,4 @@
-<!--update for fix created for Public Finance 2nd try-->
+<!--LabKey22.3Beta-56-onprc.tar.gz-->
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Rate Sheet">
     <columns>
         <column name="category"/>
