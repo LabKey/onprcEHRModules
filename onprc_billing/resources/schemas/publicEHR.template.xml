@@ -1,3 +1,5 @@
+<!--Update 2202-05-12 For finance public fix-->
+
 <templateSchema sourceSchemaName="ehr" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
     <tables>
         <tableName>project</tableName>
