@@ -22,7 +22,7 @@ SELECT
     pdf.chargeid,
 
     dates.startDate as startDate @hidden,
-    dates.endDate as endDate @hidden,
+    dates.endDate as endDate @hidden
 FROM (
   SELECT
     i.dateOnly,

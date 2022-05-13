@@ -89,7 +89,7 @@ LEFT JOIN (
 
 	from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.departure d1 join study.clinremarks r on d1.id = r.id
 		where d1.date > TimeStampAdd('SQL_TSI_month', -12,Now())
-        and r.date = (Select Max(r1.date) from study.clinremarks r1 where r1.id = d1.id))
+        and r.date = (Select Max(r1.date) AS MaxDate from study.clinremarks r1 where r1.id = d1.id))
 
 
 
@@ -104,7 +104,7 @@ LEFT JOIN (
     from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.demographics d1 join
     Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.clinremarks r on d1.id = r.id
     where (d1.date > TimeStampAdd('SQL_TSI_month', -12,Now()) and d1.calculated_status = 'dead'
-    and r.date = (Select Max(r1.date) from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.clinremarks r1 where r1.id = d1.id)))
+    and r.date = (Select Max(r1.date) AS MaxDate from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.clinremarks r1 where r1.id = d1.id)))
 
 
 
