@@ -70,7 +70,7 @@ Ext4.define('ONPRC_EHR.window.EpocImportWindow', {
             runRow.Id = idRow[i];
             runRow.date = LDK.ConvertUtils.parseDate(dateRow[i]);
             runRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
-            runRow.servicerequested = 'EPOC';
+            runRow.servicerequested = 'Epoc';
             runsToCreate.push(this.runStore.createModel(runRow));
 
             //then results
