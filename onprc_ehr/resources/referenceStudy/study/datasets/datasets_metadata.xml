@@ -3221,7 +3221,7 @@
                     <propertyURI>urn:ehr.labkey.org/#EndDate</propertyURI>
                 </column>
             </columns>
-            <tableTitle>iStat</tableTitle>
+            <tableTitle>Epoc</tableTitle>
         </table>
     </table>
 </tables>

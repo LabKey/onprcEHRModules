@@ -24,11 +24,8 @@ import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
 
-/**
- * User: bimber
- * Date: 7/29/13
- * Time: 5:03 PM
- */
+//Created: 5-13-2022  R.Blasa
+
 public class EpocFormType extends TaskForm
 {
     public static final String NAME = "Epoc";
@@ -43,7 +40,7 @@ public class EpocFormType extends TaskForm
 
         for (FormSection s : getFormSections())
         {
-            s.addConfigSource("Labwork");
+//            s.addConfigSource("Labwork");
             s.addConfigSource("Epoc");
         }
 
