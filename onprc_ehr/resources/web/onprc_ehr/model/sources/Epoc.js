@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-EHR.model.DataModelManager.registerMetadata('Epoc', {
+EHR.model.DataModelManager.registerMetadata('Epoca', {
     allQueries: {
 
     },
@@ -26,7 +26,7 @@ EHR.model.DataModelManager.registerMetadata('Epoc', {
                 hidden: true
             }
         },
-        'study.Epoc': {
+        'study.EPOC': {
             resultOORIndicator: {
                 hidden: true
             },

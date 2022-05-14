@@ -40,11 +40,11 @@ public class EpocFormType extends TaskForm
 
         for (FormSection s : getFormSections())
         {
-//            s.addConfigSource("Labwork");
-            s.addConfigSource("Epoc");
+            s.addConfigSource("Epoca");
         }
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Epoc.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EpocImportWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/CopyFromRunsTemplateWindow.js"));
     }
 }
