@@ -3,7 +3,6 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-//Created: 5-11-2022  R.Blasa
 Ext4.define('ONPRC_EHR.window.EpocImportWindow', {
     extend: 'Ext.window.Window',
 
@@ -11,7 +10,7 @@ Ext4.define('ONPRC_EHR.window.EpocImportWindow', {
         Ext4.apply(this, {
             modal: true,
             closeAction: 'destroy',
-            title: 'Import Epoc Results From Excel',
+            title: 'Import iStat Results From Excel',
             bodyStyle: 'padding: 5px;',
             width: 630,
             defaults: {
@@ -135,7 +134,7 @@ EHR.DataEntryUtils.registerGridButton('EPOC_IMPORT', function(config){
             LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in EPOC_IMPORT button', panel);
 
             var runStore = panel.storeCollection.getClientStoreByName('Clinpath Runs');
-            LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in Epoc_IMPORT button', runStore);
+            LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in ISTAT_IMPORT button', runStore);
 
             var EpocStore = panel.storeCollection.getClientStoreByName('Epoc');
             LDK.Assert.assertNotEmpty('Unable to find Epoc store in EPOC_IMPORT button', EpocStore);
