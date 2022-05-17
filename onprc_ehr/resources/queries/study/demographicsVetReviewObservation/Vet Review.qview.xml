@@ -10,8 +10,13 @@
         <column name="mostRecentClinicalObservationsdate"/>
         <column name="mostRecentBCSScore"/>
         <column name="mostRecentProcedure"/>
-        <column name="lastVetReview"/>
+<!--        <column name="lastVetReview"/>-->
         <column name="Id/utilization/use"/>
+        <column name="Id/activeCases/categories">
+            <properties>
+                <property name="columnTitle" value="Active Cases"/>
+            </properties>
+        </column>
 
     </columns>
     <sorts>
