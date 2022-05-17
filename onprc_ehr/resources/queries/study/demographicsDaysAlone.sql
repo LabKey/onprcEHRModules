@@ -28,7 +28,7 @@ CASE
   --has an active roommate
   WHEN (max(coalesce(h2.enddate, now())) = now()) OR (max(h2.date) >= max(coalesce(h2.enddate, now()))) THEN 0
   ELSE TIMESTAMPDIFF('SQL_TSI_DAY', max(h2.enddate), now())
-END as integer) as daysAlone,
+END as integer) as daysAlone
 
 FROM study.demographics d
 JOIN study.Housing h1 ON (

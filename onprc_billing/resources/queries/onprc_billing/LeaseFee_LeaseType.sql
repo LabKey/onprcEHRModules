@@ -85,7 +85,7 @@ Case
 --Infant Research Assignment P51 Animal-------------------------------------------------------------------------------------------------------
 	When l.ageatAssignment < 1 then 'Research Assignment P51 Infant'
 Else 'UnDeteremined'
-End As LeaseType,
+End As LeaseType
 
 /*Case
 --Dual Assigned 0492-02
