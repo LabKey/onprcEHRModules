@@ -49,7 +49,7 @@ SELECT
   CASE
     WHEN (d.id.age.ageInDays < 180 AND d.death IS NULL) THEN 1
     ELSE 0
-  END as under180DaysOld,
+  END as under180DaysOld
 
 FROM study.demographics d
 

@@ -67,7 +67,7 @@ SELECT
   CASE
     WHEN (d.Id.age.ageInDays > 180 AND ((spf.Id IS NULL AND (d.species = 'CYNOMOLGUS MACAQUE' OR d.species = 'RHESUS MACAQUE')) OR d.species = 'JAPANESE MACAQUE')) THEN true
     ELSE false
-  END as isSRVRequired,
+  END as isSRVRequired
 
 FROM study.demographics d
 
@@ -96,7 +96,7 @@ LEFT JOIN (
 LEFT JOIN (
   SELECT
     f.Id,
-    group_concat(f.flag.value) as spfStatus,
+    group_concat(f.flag.value) as spfStatus
   FROM study.flags f
   WHERE f.isActive = true AND f.flag.category = 'SPF'
   GROUP BY f.Id
