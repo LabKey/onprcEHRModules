@@ -400,12 +400,21 @@ public class SLAController extends SpringActionController
             String projectDisplay = "";
             String investigatorDisplay = "";
             String projectNum ="";
+//            if (project != null)
+//            {
+//                projectDisplay = project.getTitle() + " (" + project.getName() + ")";
+//                projectNum = project.getName();
+//
+//                Investigator investigator = SLAManager.get().getInvestigator(project.getInvestigatorid());
+//                if (investigator != null)
+//                    investigatorDisplay = investigator.getFirstname() + " " + investigator.getLastname();
+//            }
             if (project != null)
             {
                 projectDisplay = project.getTitle() + " (" + project.getName() + ")";
                 projectNum = project.getName();
 
-                Investigator investigator = SLAManager.get().getInvestigator(project.getInvestigatorid());
+                Investigator investigator = SLAManager.get().getInvestigator(order.getRowid());
                 if (investigator != null)
                     investigatorDisplay = investigator.getFirstname() + " " + investigator.getLastname();
             }
