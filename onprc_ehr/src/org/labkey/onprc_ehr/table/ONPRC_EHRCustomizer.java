@@ -1216,6 +1216,28 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             col17.setDisplayColumnFactory(new ObservationDisplayColumnFactory());        //Added:9-8-2016 R.Blasa
             ti.addColumn(col17);
         }
+//       Added: 5-21-2022  R.Blasa
+        if (ti.getColumn("mostRecentClinicalProcedures") == null)
+        {
+            UserSchema us = getStudyUserSchema(ti);
+            var col18 = getWrappedCol(us, ti, "mostRecentClinicalProcedures", "mostRecentClinicalProcedures", "Id", "Id");
+            col18.setLabel("Most Recent Clinical Procedures");
+            col18.setDescription("Displays the most recent set of clinical procedures for this animal");
+            col18.setDisplayWidth("80");
+            ti.addColumn(col18);
+        }
+
+        //       Added: 5-21-2022  R.Blasa
+        if (ti.getColumn("mostRecentClinicalBCSScore") == null)
+        {
+            UserSchema us = getStudyUserSchema(ti);
+            var col19 = getWrappedCol(us, ti, "mostRecentClinicalBCSScore", "mostRecentClinicalProceduresForAnimal", "Id", "Id");
+            col19.setLabel("Most Recent Clinical Procedures");
+            col19.setDescription("Displays the most recent set of BCS Score for this animal");
+            col19.setDisplayWidth("80");
+            col19.setDisplayColumnFactory(new ObservationDisplayColumnFactory());        //Added:9-8-2016 R.Blasa
+            ti.addColumn(col19);
+        }
 
         var birthCol = ti.getMutableColumn("birth");
         if (birthCol != null)

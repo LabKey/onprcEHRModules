@@ -1,0 +1,19 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="mostRecentClinicalBCSScore" tableDbType="TABLE">
+                <tableTitle>Most Recent BCS Score For Animal</tableTitle>
+                <titleColumn>observations</titleColumn>
+                <columns>
+                    <column columnName="Id">
+                        <isKeyField>true</isKeyField>
+                    </column>
+                                 <column columnName="date">
+                        <columnTitle>BCS Score Date</columnTitle>
+                        <formatString>Date</formatString>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
