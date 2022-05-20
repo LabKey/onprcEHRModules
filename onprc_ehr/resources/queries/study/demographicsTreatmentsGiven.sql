@@ -24,7 +24,7 @@ SELECT
    COUNT(CASE WHEN t.category = 'Surgical' THEN 1 ELSE null END) as totalSurgicalTreatmentsGiven,
 
 
-  GROUP_CONCAT(t.code.meaning, chr(10)) as activeTreatments,
+  GROUP_CONCAT(t.code.meaning, chr(10)) as activeTreatments
 
 
 

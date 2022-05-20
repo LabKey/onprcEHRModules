@@ -42,6 +42,7 @@ SELECT
     i.totalcost,
     i.chargeCategory
 
+
 FROM onprc_billing.invoicedItems i
  left join  pf_publicEhr.project pr on i.project = pr.project
 left join pf_onprcehrPublic.investigators inv on inv.rowid = pr.investigatorid
@@ -65,4 +66,4 @@ and ((SELECT max(rowid) as expr
  )
 
 --arbitrary cutoff to avoid problems in legacy data
-AND i.date >= '2013-01-01'
+  AND i.date >= '2013-01-01'
