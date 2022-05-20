@@ -7,11 +7,12 @@
                 <columns>
                     <column columnName="mostRecentClinicalObservations">
                         <columnTitle>Latest Observations</columnTitle>
+                        <textAlign>left</textAlign>
                         <displayWidth>100</displayWidth>
                     </column>
                     <column columnName="mostRecentClinicalObservationsdate">
                         <columnTitle>Observation Date</columnTitle>
-                        <displayWidth>80</displayWidth>
+<!--                        <displayWidth>100</displayWidth>-->
                     </column>
                     <column columnName="observationremarks">
                         <columnTitle>Observation Remarks</columnTitle>
