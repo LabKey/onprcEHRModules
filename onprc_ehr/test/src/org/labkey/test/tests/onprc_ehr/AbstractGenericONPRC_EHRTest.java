@@ -217,6 +217,9 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         schemaHelper.createLinkedSchema(this.getProjectName(), "financepublic", "/" + this.getContainerPath(), "financepublic", "onprc_billing", null, null);
         schemaHelper.createLinkedSchema(this.getProjectName(), "publicehr", "/" + this.getContainerPath(), null, "ehr", null, null);
         schemaHelper.createLinkedSchema(this.getProjectName(), "onprc_ehrSLA", "/" + this.getContainerPath(), null, "onprc_ehr", null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_onprcehrPublic", "/" + this.getContainerPath(), "pf_onprcehrPublic", null, null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_publicEHR", "/" + this.getContainerPath(), "pf_publicEHR", null, null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_publicFinance", "/" + this.getContainerPath(), "pf_publicFinance", null, null, null);
     }
 
     @Override
