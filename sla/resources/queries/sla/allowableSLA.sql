@@ -9,10 +9,11 @@ SELECT a.protocol,
        a.allowed,
        a.startdate,
        a.enddate
-FROM ehrSLA.allowableAnimals a,
-    onprc_ehrSLA.eIACUC_PRIME_VIEW_PROTOCOLS c
+FROM sla.allowableAnimals a,
+    onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS c
 Where c.Protocol_State = 'Approved'
-  And (c.protocol_Id = a.protocol.displayname OR c.protocol_Id like '%' + a.protocol.displayname)
+--   And (c.protocol_Id = a.protocol.displayname OR c.protocol_Id like '%' + a.protocol.displayname)
+  And (c.protocol_Id = a.protocol OR c.protocol_Id like '%' + a.protocol)
   And curdate() between a.startdate And a.endDate
 
 -- --Created ny kollil on 10/18/21 to dispaly the allowable SLAs with eIACUCNum but no breeding info.
