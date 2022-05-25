@@ -121,20 +121,6 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         importFolderFromPath(1);
     }
 
-    // Validate queries at end of tests instead of during import
-    // TODO: Add linked schemas to tests
-    @Override
-    protected boolean shouldValidateQueries()
-    {
-        return true;
-    }
-
-    @Override
-    protected boolean skipStudyImportQueryValidation()
-    {
-        return true;
-    }
-
     @Override
     protected void doExtraPreStudyImportSetup() throws IOException, CommandException
     {
