@@ -65,5 +65,3 @@ and ((SELECT max(rowid) as expr
        )) IS NOT NULL
  )
 
---arbitrary cutoff to avoid problems in legacy data
-  AND i.date >= '2013-01-01'
