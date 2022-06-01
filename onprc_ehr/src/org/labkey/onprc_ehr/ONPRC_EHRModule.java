@@ -502,9 +502,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 11-4-2019  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(TBTestObservationFormType.class, this));
 
-        //Added: 5-11-2022  R.Blasa
-        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EpocFormType.class, this));
-
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "drug", new MedicationsQueryFormSection("study", "Drug Administration", "Medication/Treatments Given")));
