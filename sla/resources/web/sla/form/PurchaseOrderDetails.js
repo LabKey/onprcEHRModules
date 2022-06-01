@@ -85,7 +85,7 @@ Ext4.define('SLA.panel.PurchaseOrderDetails', {
                         '<div class="order-header">PURCHASE ORDER INFORMATION</div>',
                         '<span class="order-label">PROJECT: </span><span class="order-value">{projectname:htmlEncode}</span><br/>',
                         '<span class="order-label">PROTOCOL: </span><span class="order-value">{eIACUCNum:htmlEncode}</span><br/>',
-                        '<span class="order-label">PRIMARY INVESTIGATOR: </span><span class="order-value">{investigator:htmlEncode}</span><br/>',
+                        '<span class="order-label">PRIMARY INVESTIGATOR: </span><span class="order-value">{Investigator:htmlEncode}</span><br/>',
                         '<span class="order-label">REQUESTOR: </span><span class="order-value">{requestor:htmlEncode}</span><br/>',
                         //'<span class="order-label">Vendor:</span><span class="order-value">{vendor:htmlEncode}</span><br/>',
                         '<span class="order-label">ALIAS #: </span><span class="order-value">{account:htmlEncode}</span><br/>',
