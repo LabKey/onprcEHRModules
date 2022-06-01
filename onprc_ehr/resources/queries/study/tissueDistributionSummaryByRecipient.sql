@@ -20,7 +20,7 @@ SELECT
   t.requestCategory,
   count(t.Id) as totalSamples,
   count(distinct t.Id) as distinctAnimals,
-  count(distinct t.recipient) as distinctRecipients,
+  count(distinct t.recipient) as distinctRecipients
 
 FROM study.tissueDistributions t
 

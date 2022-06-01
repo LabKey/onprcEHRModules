@@ -20,7 +20,7 @@ SELECT
   p.enddate,
   p.enddateCoalesced,
   p.category,
-  p.history,
+  p.history
 FROM study.problem p
 
 UNION ALL
@@ -32,5 +32,5 @@ SELECT
   d.date as enddate,
   d.dateOnly as enddateCoalesced,
   cast(('Death: ' || d.cause) as varchar) as category,
-  d.history,
+  d.history
 FROM study.deaths d

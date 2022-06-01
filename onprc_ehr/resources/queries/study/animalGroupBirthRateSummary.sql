@@ -26,7 +26,7 @@ SELECT
   count(b.Id) - sum(b.diedBeforeOneYear) as totalSurvivedOneYear,
 
   max(StartDate) as startDate,
-  max(EndDate) as endDate,
+  max(EndDate) as endDate
 
 FROM study.animalGroupBirthRateData b
 

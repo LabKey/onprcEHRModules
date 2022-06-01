@@ -45,8 +45,8 @@ group by r.room,v.room
 union
 
 Select
-'NHP No Vet',
+'NHP No Vet' AS MissingItem,
 v.id,
 v.assignedVet,
-0
+0 AS totalNHPs
 from study.demographicsAssignedVet v where v.assignedvet is null

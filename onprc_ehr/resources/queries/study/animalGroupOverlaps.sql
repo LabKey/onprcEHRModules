@@ -14,7 +14,7 @@ SELECT
   m.groupId,
 
   max(StartDate) as StartDate,
-  max(EndDate) as EndDate,
+  max(EndDate) as EndDate
 FROM study.animal_group_members m
 
 WHERE (

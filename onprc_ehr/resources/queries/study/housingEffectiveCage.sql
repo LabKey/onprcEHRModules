@@ -15,7 +15,7 @@
  */
 SELECT
   h.lsid,
-  pc.effectiveCage,
+  pc.effectiveCage
 
 FROM study.housing h
 LEFT JOIN ehr_lookups.pairedCages pc ON (h.room = pc.room and h.cage = pc.cage)
