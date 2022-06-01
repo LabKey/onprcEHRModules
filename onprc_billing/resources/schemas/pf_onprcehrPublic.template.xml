@@ -1,0 +1,16 @@
+<!--update for fix created for Public Finance 3rd try-->
+<templateSchema sourceSchemaName="onprc_ehr" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>investigators</tableName>
+
+
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="investigators" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Investigators</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</templateSchema>

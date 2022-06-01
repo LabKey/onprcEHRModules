@@ -42,22 +42,26 @@ SELECT
     i.totalcost,
     i.chargeCategory
 
-FROM publicFinance.invoicedItems i
-WHERE ((SELECT max(rowid) as expr FROM publicFinance.dataAccess da WHERE isMemberOf(da.userid) AND (
-            da.allData = true OR
-            (da.project = i.project) OR
-        --TODO: this needs to get cleaned up
-            (
-                        da.investigatorId = i.investigatorId
-                    OR da.investigatorId = i.debitedaccount.investigatorId
-                    OR da.investigatorId = i.project.investigatorId
-                )
-    )) IS NOT NULL OR
 
-    --include if the user is either the project's PI, the account PI, or the financial analyst
-       isMemberOf(i.project.investigatorId.userid) OR isMemberOf(i.debitedaccount.investigatorId.userid) OR isMemberOf(i.project.investigatorId.financialAnalyst)
+FROM onprc_billing.invoicedItems i
+ left join  pf_publicEhr.project pr on i.project = pr.project
+left join pf_onprcehrPublic.investigators inv on inv.rowid = pr.investigatorid
+left join pf_publicfinance.aliases a on a.alias = i.debitedaccount
+left join pf_onprcehrPublic.investigators inv2 on inv2.rowid = a.investigatorid
 
-    )
+where
+i.date >= '2012-01-01'
+and ((SELECT max(rowid) as expr
+   FROM pf_publicFinance.dataAccess da
+   WHERE isMemberOf(da.userid)
+     AND (
+               da.allData = true OR
+               (da.project = i.project) OR
+           --TODO: this needs to get cleaned up
+               (
+                           da.investigatorId = i.investigatorId
+                       OR da.investigatorId = a.investigatorId
+                   )
+       )) IS NOT NULL
+ )
 
---arbitrary cutoff to avoid problems in legacy data
-  AND i.date >= '2013-01-01'
