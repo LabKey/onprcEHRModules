@@ -15,7 +15,7 @@
 
                     </column>
                     <column columnName="enddate">
-                        <isHidden>false</isHidden>
+                        <isHidden>true</isHidden>
                         <shownInDetailsView>true</shownInDetailsView>
                     </column>
                     <column columnName="testid">
@@ -23,7 +23,7 @@
                         <displayWidth>120</displayWidth>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>istat_tests</fkTable>
+                            <fkTable>Epoc_tests</fkTable>
                             <fkColumnName>testid</fkColumnName>
                             <fkDisplayColumnName useRawValue="true"/>
                         </fk>
