@@ -502,7 +502,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 11-4-2019  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(TBTestObservationFormType.class, this));
 
-        //Added: 5-11-2022  R.Blasa
+        //Added: 6-6-2022  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EpocFormType.class, this));
 
         //single section forms
