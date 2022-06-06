@@ -26,7 +26,7 @@ EHR.model.DataModelManager.registerMetadata('Epoca', {
                 hidden: true
             }
         },
-        'study.Epoc': {
+        'study.EPOC': {
             resultOORIndicator: {
                 hidden: true
             },
