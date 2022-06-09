@@ -1,0 +1,7 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart">
+
+    <view name="new_protocolDetails"/>
+    <locations>
+        <location name="body"/>
+    </locations>
+</webpart>

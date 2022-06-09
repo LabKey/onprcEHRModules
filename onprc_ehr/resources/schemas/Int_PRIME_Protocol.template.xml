@@ -1,0 +1,20 @@
+<templateSchema sourceSchemaName="onprc_billing" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>project</tableName>
+        <tableName>protocol</tableName>
+
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="project" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Center Projects</tableTitle>
+            </table>
+            <table tableName="protocol" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>protocol</tableTitle>
+            </table>
+
+        </tables>
+    </metadata>
+</templateSchema>

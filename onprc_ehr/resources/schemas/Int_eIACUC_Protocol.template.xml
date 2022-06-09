@@ -1,0 +1,30 @@
+<templateSchema sourceSchemaName="onprc_billing" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName></tableName>
+        <tableName>eIACUC_PRIME_VIEW_ANIMAL_GROUPS</tableName>
+        <tableName>eIACUC_PRIME_VIEW_PROTOCOLS</tableName>
+        <tableName>eIACUC_PRIME_VIEW_NON_SURGICAL_PROCS</tableName>
+        <tableName>eIACUC_PRIME_VIEW_SURGICAL_PROCS</tableName>
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="eIACUC_PRIME_VIEW_ANIMAL_GROUPS" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>eIACUC Animal Groups/tableTitle>
+            </table>
+            <table tableName="eIACUC_PRIME_VIEW_PROTOCOLS" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>eIACUC protocol</tableTitle>
+            </table>
+            <table tableName="eIACUC_PRIME_NON_SURGICAL_PROCS" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Non Surgical Procs</tableTitle>
+            </table>
+            <table tableName="eIACUC_PRIME_VIEW_SURGICAL_PROCS" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Surgical Procs/tableTitle>
+            </table>
+
+        </tables>
+    </metadata>
+</templateSchema>
