@@ -185,7 +185,8 @@ public class ONPRC_EHRTriggerHelper
         return map;
     }
 
-    //Added by Kolli 3/3/20
+
+     //Added by Kolli 3/3/20
     //This function automatically sets the study details endDate if previous study details endDate is empty when a new study is created.
     public void closeStudyDetailsRecords(List<Map<String, Object>> records) throws Exception
     {
@@ -1093,6 +1094,7 @@ public class ONPRC_EHRTriggerHelper
         return (d1.after(d2)) ? d1 : d2;
     }
 
+
     public void closeActiveAssignmentRecords(String id, Date deathDate, String causeOfDeath) throws Exception
     {
         try
@@ -1144,6 +1146,44 @@ public class ONPRC_EHRTriggerHelper
         {
             _log.error(e.getMessage(), e);
             throw e;
+        }
+    }
+
+    /*Added by Kolli 3/3/20
+    When a tattoo procedure is entered into study.encounters table enter a snomed code into ehr.snomed_tags
+    Id - Animalid
+    Date - now()
+    code - TATTOOING
+    code/code - P-12090
+    */
+    public void addTattooSnomedCode(String id, @NotNull Map<String, Object> row) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
+    {
+        if (id != null)
+        {
+            _log.info("Animal Id thats tattooed: " + id);
+            Map<String, Object> snomedProps = new HashMap<String, Object>();
+
+            snomedProps.put("Id", row.get("Id"));
+            snomedProps.put("date", row.get("date"));
+            snomedProps.put("code", "TATTOOING");
+            //snomedProps.put("code/code", "P-12090");
+
+            _log.info("props: " + snomedProps);
+
+            TableInfo ti = getTableInfo("ehr", "snomed_tags");
+            Map<String, Object> new_row = new CaseInsensitiveHashMap<>();
+            new_row.putAll(snomedProps);
+
+            List<Map<String, Object>> rows = new ArrayList<>();
+            rows.add(new_row);
+
+            BatchValidationException errors = new BatchValidationException();
+            //Insert row into the db table
+            ti.getUpdateService().insertRows(getUser(), getContainer(), rows, errors, null, getExtraContext());
+
+            if (errors.hasErrors())
+                throw errors;
+
         }
     }
 
@@ -1228,6 +1268,7 @@ public class ONPRC_EHRTriggerHelper
         }
 
     }
+
     //    Added: 6-27-2017  F.Blasa  Process when transitioning from Prenatal - Fetus to Live
     public void doBirthConditionAfterPrenatal(String id, Date date, String dam, Date Arrival_Date, String birthCondition, boolean isBecomingPublic) throws Exception
     {
@@ -2119,6 +2160,7 @@ public class ONPRC_EHRTriggerHelper
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("caseno"), caseNo);
         filter.addCondition(FieldKey.fromString("type"), type);
+
         if (objectid != null)
         {
             filter.addCondition(FieldKey.fromString("objectid"), objectid, CompareType.NEQ_OR_NULL);
@@ -2128,8 +2170,6 @@ public class ONPRC_EHRTriggerHelper
         {
             return "There is already an existing case with the number: " + caseNo;
         }
-
-
         return null;
     }
 
@@ -2336,7 +2376,6 @@ public class ONPRC_EHRTriggerHelper
         sendMessage(subject, html.toString(), recipients);
 
     }
-
 
     //Added 3-6-2019 Blasa
     public void sendProjectNotifications(Integer projectid)
