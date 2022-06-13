@@ -11,7 +11,6 @@ CREATE TABLE [ehr_lookups].[Epoc_tests]
     sort_order [int] NULL,
     container ENTITYID
 
-    CONSTRAINT PK_testidclass PRIMARY KEY (testid)
 
     )
     GO
