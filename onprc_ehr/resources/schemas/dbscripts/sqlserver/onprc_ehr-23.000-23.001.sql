@@ -1,4 +1,4 @@
-CREATE TABLE [ehr_lookups].[Epoc_tests]
+CREATE TABLE [onprc_ehr].[Epoc_tests]
 (
     rowid  INT IDENTITY(1,1)NOT NULL,
     testid nvarchar(500) NOT NULL,

@@ -9,20 +9,18 @@
                         <isHidden>true</isHidden>
                     </column>
                     <column columnName="Id">
-
                     </column>
                     <column columnName="date">
-
                     </column>
                     <column columnName="enddate">
-                        <isHidden>true</isHidden>
+                        <isHidden>false</isHidden>
                         <shownInDetailsView>true</shownInDetailsView>
                     </column>
                     <column columnName="testid">
                         <columnTitle>Test Id</columnTitle>
                         <displayWidth>120</displayWidth>
                         <fk>
-                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
                             <fkTable>Epoc_tests</fkTable>
                             <fkColumnName>testid</fkColumnName>
                             <fkDisplayColumnName useRawValue="true"/>
