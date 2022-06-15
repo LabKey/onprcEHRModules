@@ -12,7 +12,7 @@ a.score
 From
 (Select b.id, b.date, b.score
   From study.BCS_Recent_Score b
-  Where  b.score = (Select  Min(b1.score) from study.BCS_Recent_Score b1 where b1.id =b.id)
+  Where  b.score = (Select  Min(b1.score) AS S from study.BCS_Recent_Score b1 where b1.id =b.id)
 ) AS a
 
 

@@ -23,7 +23,7 @@ FROM
     t2.monthname,
     t2.monthnum,
     t2.day,
-    group_concat(DISTINCT t2.value, chr(10)) as value,
+    group_concat(DISTINCT t2.value, chr(10)) as value
 
   FROM study.reproSummaryRawData t2
 

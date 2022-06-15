@@ -46,7 +46,7 @@ CASE
     ELSE null
   END as isExpiredAccount,
 -->45 Days Olde
-CASE WHEN (TIMESTAMPDIFF('SQL_TSI_DAY', r.assignmentDate, curdate()) > 45) THEN 'Y' ELSE null END as isOldCharge,
+CASE WHEN (TIMESTAMPDIFF('SQL_TSI_DAY', r.assignmentDate, curdate()) > 45) THEN 'Y' ELSE null END as isOldCharge
 --Is Assigned at Time
 --IS Assigned to Protocol at Time
 

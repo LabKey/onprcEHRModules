@@ -22,7 +22,7 @@ SELECT
   CASE
     WHEN max(s.date) IS NULL THEN 0
     ELSE (max(st.interval) - min(age_in_months(s.date, now())))
-  END as monthsUntilDue,
+  END as monthsUntilDue
 FROM study.demographics d
 JOIN onprc_ehr.serology_test_schedule st ON (
   (st.species IS NULL OR d.species = st.species)

@@ -24,7 +24,7 @@ SELECT
   CASE
     WHEN (d.id.curLocation.room = dl.room AND coalesce(d.id.curLocation.cage, '') = coalesce(dl.cage, '')) THEN 1
     ELSE 0
-  END as status,
+  END as status
 
 FROM study.demographics d
 

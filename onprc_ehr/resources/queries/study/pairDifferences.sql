@@ -37,7 +37,7 @@ SELECT
 
   t.animalsInCage1,
   t.animalsInCage2,
-  (SELECT count(*) FROM study.pairings p WHERE p.Id = t.Id AND p.dateOnly = CAST(Date2 AS DATE)) as pairObservations,
+  (SELECT count(*) AS c FROM study.pairings p WHERE p.Id = t.Id AND p.dateOnly = CAST(Date2 AS DATE)) as pairObservations,
   Date1 as date1,
   Date2 as date2
 

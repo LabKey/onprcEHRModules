@@ -25,7 +25,7 @@ SELECT
   GROUP_CONCAT(CASE WHEN t.category = 'Surgical' THEN t.code.meaning ELSE null END, chr(10)) as surgicalTreatments,
   GROUP_CONCAT(CASE WHEN t.category = 'Research' THEN t.code.meaning ELSE null END, chr(10)) as researchTreatments,
 
-  max(t.modified) as lastModification,
+  max(t.modified) as lastModification
 
 FROM study.treatment_order t
 WHERE t.isActive = true
