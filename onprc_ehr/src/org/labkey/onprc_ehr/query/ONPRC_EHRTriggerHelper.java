@@ -1149,7 +1149,7 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    /*Added by Kolli 3/3/20
+    /*Added by Kolli 6/3/22
     When a tattoo procedure is entered into study.encounters table enter a snomed code into ehr.snomed_tags
     Id - Animalid
     Date - now()
@@ -1166,6 +1166,8 @@ public class ONPRC_EHRTriggerHelper
             snomedProps.put("Id", row.get("Id"));
             snomedProps.put("date", row.get("date"));
             snomedProps.put("code", "TATTOOING");
+            snomedProps.put("objectId", new GUID());
+            snomedProps.put("container", "CD17027B-C55F-102F-9907-5107380A54BE");
             //snomedProps.put("code/code", "P-12090");
 
             _log.info("props: " + snomedProps);
