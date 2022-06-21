@@ -1,0 +1,27 @@
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>eiACUCtoProtocol</name>
+    <description>Removes all eIACUC data from Protocol and then inserts update from exernal daa</description>
+    <transforms>
+        <transform id="step1a">
+            <description>Remove records that are sourced from eIACUC</description>
+            <procedure schemaName="ONPRC_EHR" procedureName="eIACUC_RemovefromProtocol">
+            </procedure>
+        </transform>
+            <description>Insert eIACUC Protocols to Protocol Dataset</description>
+            <source queryName="eIACUCtoProtocol" schemaName="onprc_ehr"/>
+            <destination schemaName="ehr" queryName="Protocol"/>
+        <!--<transform id="step3a">
+            <description>Upated Link to Center Project Data</description>
+            <procedure schemaName="ONPRC_EHR" procedureName="UpdateCenterProjects">
+            </procedure>
+        </transform>-->
+
+
+    </transforms>
+    <schedule>
+
+        <!--3AM-->
+        <cron expression="0 50 04 * * ?"/>
+
+    </schedule>
+</etl>
