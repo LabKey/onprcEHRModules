@@ -4,7 +4,9 @@ Author:     Gary Jones
 Created:
 Modified:   5/24/2022 Updated for Year 63
 Description:    THis is the control for display of public rate sheets for inductrial rates
-in the Public Finance Section-->
+in the Public Finance Section
+Update of default Format for NIH Industrial Rates
+-->
 
 
 <query xmlns="http://labkey.org/data/xml/query">
