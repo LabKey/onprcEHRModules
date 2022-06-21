@@ -18,7 +18,7 @@ in the Public Finance Section-->
                     <column columnName="category"></column>
                     <column columnName="name"></column>
                     <column columnName="unitCost">
-                        <columnTitle>Current Year</columnTitle>
+                        <columnTitle>Current Year Rates</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
 
