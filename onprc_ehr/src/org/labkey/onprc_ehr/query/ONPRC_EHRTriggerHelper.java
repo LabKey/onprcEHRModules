@@ -1160,17 +1160,16 @@ public class ONPRC_EHRTriggerHelper
     {
         if (id != null)
         {
-            _log.info("Animal Id thats tattooed: " + id);
+            //_log.info("Animal Id thats tattooed: " + id);
             Map<String, Object> snomedProps = new HashMap<String, Object>();
 
             snomedProps.put("Id", row.get("Id"));
             snomedProps.put("date", row.get("date"));
-            snomedProps.put("code", "TATTOOING");
+            snomedProps.put("code", "P-12090");
             snomedProps.put("objectId", new GUID());
-            snomedProps.put("container", "CD17027B-C55F-102F-9907-5107380A54BE");
-            //snomedProps.put("code/code", "P-12090");
+            snomedProps.put("container", _container.getId());
 
-            _log.info("props: " + snomedProps);
+            //_log.info("props: " + snomedProps);
 
             TableInfo ti = getTableInfo("ehr", "snomed_tags");
             Map<String, Object> new_row = new CaseInsensitiveHashMap<>();
