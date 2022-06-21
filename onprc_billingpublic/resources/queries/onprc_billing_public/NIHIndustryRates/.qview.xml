@@ -6,6 +6,7 @@
         <column name = "unitCost">
             <properties>
                 <property name="columnTitle" value="Current Year"/>
+
             </properties>
         </column>
         <column name = "year1">

@@ -104,11 +104,15 @@
 
             </column>
             <column columnName="modified">
+            </column>
+
+            <column columnName="department>
 
             </column>
-            <column columnName="objectid">
 
-            </column>
+        <column columnName="objectid">
+
+        </column>
         </columns>
     </table>
     <table tableDbType="TABLE" tableName="serology_test_schedule">
