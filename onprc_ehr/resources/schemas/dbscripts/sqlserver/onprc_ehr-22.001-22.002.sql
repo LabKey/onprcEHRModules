@@ -1,4 +1,4 @@
 --added to allow department descignation for R & L
-ALTER TABLE onprc_ehr.investigator ADD COLUMN department nvarchar(100)  NULL;
+EXEC core.fn_dropifexists 'Investigators', 'onprc_ehr', 'COLUMN', 'Department';
 GO
-
+ALTER TABLE onprc_ehr.investigators ADD [Department] varchar(250) Null;
