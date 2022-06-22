@@ -4,7 +4,8 @@ Author:     Gary Jones
 Created:
 Modified:   5/24/2022 Updated for Year 63
 Description:    THis is the control for display of public rate sheets for inductrial rates
-in the Public Finance Section-->
+in the Public Finance Section
+2022-06-22 Update of unitCost to CurrentYear Name-->
 
 
 <query xmlns="http://labkey.org/data/xml/query">
