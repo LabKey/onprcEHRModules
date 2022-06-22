@@ -2,7 +2,7 @@ SELECT e.rowid,
 e.Protocol_ID,
 e.Protocol_Title as Title,
 --Need to read the value from investigator table and provide id
-(Select rowID from investigators where e.PI_ID = employeeID) as Inves,
+(Select rowID from investigators where e.PI_ID = employeeID and datedisabled is null) as Inves,
 e.Approval_Date as approve,
 
 Case
