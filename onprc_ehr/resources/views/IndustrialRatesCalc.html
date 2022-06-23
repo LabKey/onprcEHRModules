@@ -12,7 +12,7 @@
         Ext4.create('Ext.form.FormPanel', {
             renderTo: 'theFormDiv',
             bodyStyle: 'padding: 10px;',
-            queryName: 'NIHIndustryRates',
+            queryName: 'NIHIndustrialRates_yr63',
             title: 'Industry Rates: Select Calculation Method to Use',
             defaults: {
                 border: false
@@ -46,7 +46,7 @@
                         if ((cushionValue != null) &&(cushionValue >= .0) && (cushionValue <= .50)) {
                             var qwp = new LABKEY.QueryWebPart({
                                 schemaName: 'onprc_billing_public',
-                                queryName: 'NIHIndustryRates',
+                                queryName: 'NIHIndustrialRates_yr63',
                                 renderTo: 'IndustryDiv',
                                 title: 'Industry Rates',
                                 parameters: {Margin: cushionValue, FARate: 1, CalcMethod: 'Margin Only'}
@@ -70,7 +70,7 @@
 
                         var qwp = new LABKEY.QueryWebPart({
                             schemaName: 'onprc_billing_public',
-                            queryName: 'NIHIndustryRates',
+                            queryName: 'NIHIndustrialRates_yr63',
 
                             renderTo: 'IndustryDiv',
                             title: 'Industry Rates',
@@ -91,7 +91,7 @@
                         if ((cushionValue != null) &&(cushionValue >= .0) && (cushionValue <= .50)) {
                             var qwp = new LABKEY.QueryWebPart({
                                 schemaName: 'onprc_billing_public',
-                                queryName: 'NIHIndustryRates',
+                                queryName: 'NIHIndustrialRates_yr63',
                                 renderTo: 'IndustryDiv',
                                 title: 'Industry Rates',
                                 parameters: {Margin: cushionValue, FARate: 1, CalcMethod: 'Margin  and F & A'}
@@ -116,7 +116,7 @@
 
                         var qwp = new LABKEY.QueryWebPart({
                             schemaName: 'onprc_billing_public',
-                            queryName: 'NIHIndustryRates',
+                            queryName: 'NIHIndustrialRates_yr63',
                             renderTo: 'IndustryDiv',
                             title: 'Industry Rates',
                             parameters: {Margin: 0, FARate: 1, CalcMethod: 'No Margin or F&A Calc '}
