@@ -8,9 +8,11 @@ CREATE TABLE [onprc_ehr].[Epoc_tests]
     alertOnAbnormal  [bit] NULL,
     alertOnAny [bit] NULL,
     includeInPanel [bit]NULL,
+    objectid  ENTITYID NOT NULL,
     sort_order [int] NULL,
     container ENTITYID
 
+    CONSTRAINT PK_EpocTestsObject PRIMARY KEY (objectid)
 
     )
     GO
