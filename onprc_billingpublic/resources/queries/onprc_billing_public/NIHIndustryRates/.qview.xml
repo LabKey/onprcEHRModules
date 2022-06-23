@@ -3,7 +3,7 @@
     <columns>
         <column name="category"/>
         <column name="Name"/>
-        <column name = "unitCost">
+        <column name = "CurrentYear">
             <properties>
                 <property name="columnTitle" value="Current Year"/>
 
