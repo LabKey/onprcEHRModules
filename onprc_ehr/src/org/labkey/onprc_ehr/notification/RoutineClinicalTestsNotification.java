@@ -317,7 +317,6 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         if (count > 0)
         {
             msg.append("ALERT: " + count + " animals found with no Tattoo procedure recorded in Prime:");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "TattooAlert", null) + "&query.containerFilterName=AllFolders'>Click here to view them</a></p>\n");
             //String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/MostRecentWeight/DaysSinceWeight~gt=75&query.calculated_status~eq=Alive&query.Id/curLocation/Room/housingType/value~eq=Cage Location";
             String url = getExecuteQueryUrl(c, "study", "TattooAlert", null) + "&query.containerFilterName=AllFolders";
             msg.append("<b><a href='" + url + "'>Click here to view them.</a></b><br><br>\n");
