@@ -1,0 +1,18 @@
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>removeeiACUCFromProtocols</name>
+    <description>Removes all eIACUC data from Protocol /description>
+    <transforms>
+        <transform id="step1a">
+            <description>Remove records that are sourced from eIACUC</description>
+            <procedure schemaName="ONPRC_EHR" procedureName="eIACUC_RemovefromProtocol">
+            </procedure>
+
+
+    </transforms>
+    <schedule>
+
+        <!--3AM-->
+        <cron expression="0 50 04 * * ?"/>
+
+    </schedule>
+</etl>
