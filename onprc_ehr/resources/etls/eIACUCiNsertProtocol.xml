@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>inserteiACUCtoProtocol</name>
+    <description>Removes all eIACUC data from Protocol and then inserts update from external data</description>
+
+    <transforms>
+        <transform id="Stored_Proc" type="StoredProcedure">
+            <description>Runs a stored procedure to update the drug table.</description>
+            <procedure schemaName="onprc_ehr" procedureName="eIACUC_removeRecords">
+            </procedure>
+        </transform>
+        <transform>
+            <description>Insert eIACUC Protocols to Protocol Dataset</description>
+            <source queryName="eIACUCtoProtocol" schemaName="onprc_ehr"/>
+            <destination schemaName="ehr" queryName="Protocol"/>
+        </transform>
+    </transforms>
+
+
+</etl>
+
+
+
+
