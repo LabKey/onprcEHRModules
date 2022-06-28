@@ -15,6 +15,10 @@ in the Public Finance Section-->
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>NIH Project Rate Config</tableTitle>
                 <columns>
+                    <column columnName="unitCost">
+                    <columnTitle>Current Year</columnTitle>
+                    <formatString>$#,##0.00</formatString>
+                </column>
                 <column columnName="year1">
                     <columnTitle>YR64: 5/1/23 to 4/30/24</columnTitle>
                     <formatString>$#,##0.00</formatString>
