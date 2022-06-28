@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>UpdateACUCtoProtocol</name>
+    <description>Upates the Template IO and PPS and Protocol State</description>
+
+    <transforms>
+        <<!--will add merge step-->
+        <transform id="mergeStep">
+            <description>Copy to target</description>
+            <source schemaName="onprc_ehr" queryName="INSERTEiacucdATA "/>
+            <destination schemaName="ehr" queryName="protocol" targetOption="merge" />
+        </transform>
+
+
+    </transforms>
+
+</etl>
+
+
+
+

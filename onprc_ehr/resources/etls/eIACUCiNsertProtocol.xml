@@ -10,13 +10,13 @@
             <procedure schemaName="onprc_ehr" procedureName="eIACUC_removeRecords">
             </procedure>
         </transform>
-        <transform>
-            <description>Insert eIACUC Protocols to Protocol Dataset</description>
-            <source queryName="eIACUCtoProtocol" schemaName="onprc_ehr"/>
-            <destination schemaName="ehr" queryName="Protocol"/>
+        <transform id="Step2" type="StoredProcedure">
+            <description>Insert records to  Dataset</description>
+            <procedure schemaName="onprc_ehr" procedureName="etl3_insertToEhr_Protocol">
+            </procedure>
         </transform>
-    </transforms>
 
+    </transforms>
 
 </etl>
 
