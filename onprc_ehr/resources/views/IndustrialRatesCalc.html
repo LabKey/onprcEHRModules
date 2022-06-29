@@ -102,27 +102,9 @@
                             Ext4.Msg.alert('Error', 'You must enter a rate between 0  and .50 (Inclusive)');
                         }
                     }
-                },
-
-                {
-                    xtype: 'button',
-                    text: 'Retrieve Industry Rates No Margin Or  F&A ',
-                    border: true,
-                    padding: '10 5 3 10', // (top, right, bottom, left).
-                    handler: function (btn) {
-                        var panel = btn.up('panel');
-                        // var cushionValue = 0;
-                        //if ((cushionValue  Null))
-
-                        var qwp = new LABKEY.QueryWebPart({
-                            schemaName: 'onprc_billing_public',
-                            queryName: 'NIHIndustrialRates_yr63',
-                            renderTo: 'IndustryDiv',
-                            title: 'Industry Rates',
-                            parameters: {Margin: 0, FARate: 1, CalcMethod: 'No Margin or F&A Calc '}
-                        })
-                    }
                 }
+
+
             ]
         })});
 
