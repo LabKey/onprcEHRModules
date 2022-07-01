@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>insertProtocolfromEIACUC</name>
+
+    <description>Inserts Protocol Details from eIACUC External Schema</description>
+
+    <transforms>
+
+        <transform id="Stored_ProcRemove" type="StoredProcedure">
+            <description>Removes protocol details from eIACUC.</description>
+            <procedure schemaName="onprc_ehr" procedureName="eIACUC_removeRecords">
+            </procedure>
+        </transform>
+
+        <transform id="Stored_ProcInsert" type="StoredProcedure">
+            <description>Inserts ProtocolData to ehr.protocol</description>
+            <procedure schemaName="onprc_ehr" procedureName="insertToEhr_Protocol">
+            </procedure>
+        </transform>
+
+
+
+    </transforms>
+
+    <schedule>
+        <!-- runs at noon every saturday -->
+        <cron expression="0 0 12 ? * SAT *"/>
+
+    </schedule>
+
+
+</etl>
