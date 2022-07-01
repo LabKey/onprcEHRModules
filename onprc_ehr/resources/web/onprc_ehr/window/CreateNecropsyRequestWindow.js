@@ -143,7 +143,7 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
 
             LABKEY.Query.selectRows({
                 schemaName: 'onprc_billing',
-                queryName: 'misCharges',
+                queryName: 'miscCharges',
                 containerPath: '/ONPRC/Admin/Finance',
                 sort: 'Id,date',
                 columns: 'lsid,Id,date,requestid,taskid,qcstate,qcstate/label,qcstate/metadata/isRequest,DataSet/Label',
