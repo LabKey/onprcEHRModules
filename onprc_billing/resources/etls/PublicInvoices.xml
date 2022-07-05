@@ -1,0 +1,14 @@
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>publicInvoicedItems</name>
+    <description>Copies Invoiced Items to Public Folder, access controlled by dataAccess</description>
+    <transforms>
+        <transform id="step1">
+            <description>Truncate and Populate InvoicedItems</description>
+            <source schemaName="onprc_billing" queryName="invoicedItems"/>
+            <destination schemaName="onprc_billing_public" queryName="publicInvoicedItems" targetOption="truncate" />
+        </transform>
+    </transforms>
+    <schedule>
+        <cron expression="0 0 0 * * ?"/>
+    </schedule>
+</etl>
