@@ -3166,6 +3166,7 @@
             </column>
         </columns>
         <tableTitle>StudyDetails</tableTitle>
+    </table>
         <table tableName="Epoc" tableDbType="TABLE">
             <columns>
                 <column columnName="Id">
@@ -3222,6 +3223,5 @@
                 </column>
             </columns>
             <tableTitle>Epoc</tableTitle>
-        </table>
     </table>
 </tables>
