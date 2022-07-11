@@ -404,7 +404,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
             if (results){
                 var score1 = LDK.ConvertUtils.parseDate(results[0].date);
 
-                var score2 = results[0].weight;
+                var score2 = Ext4.util.Format.number(results[0].weight,'##.000');
 
                 var score3 = results[0].observation;
 
@@ -510,7 +510,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
             }, this);
                 //Modified: 8-29-2016 R.Blasa Include time within the date field
             Ext4.each(rows, function(r){
-                text.push('<tr><td nowrap>' + r.weight + ' kg' + '</td><td style="padding-left: 5px;" nowrap>' + Ext4.Date.format(r.date, 'Y-m-d H:i') + '</td><td style="padding-left: 5px;" nowrap>' + (Ext4.isDefined(r.interval) ? ' (' + r.interval + ')' : '') + "</td></tr>");
+                text.push('<tr><td nowrap>' + Ext4.util.Format.number(r.weight,'##.000')  + ' kg' + '</td><td style="padding-left: 5px;" nowrap>' + Ext4.Date.format(r.date, 'Y-m-d H:i') + '</td><td style="padding-left: 5px;" nowrap>' + (Ext4.isDefined(r.interval) ? ' (' + r.interval + ')' : '') + "</td></tr>");
             }, this);
         }
 
