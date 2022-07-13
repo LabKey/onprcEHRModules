@@ -36,7 +36,7 @@ select b.requirementname,
 from employeeperunit a ,requirementspercategory b
 where ( a.unit = b.unit or a.category = b.category )
 And b.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where a.employeeid = t.employeeid
-                                                                                                                          And a.requirementname = t.requirementname)
+                                                                                                                          And b.requirementname = t.requirementname)
 
 
 group by b.requirementname,a.employeeid
