@@ -29,4 +29,4 @@ FROM (
      ) b
 
 GROUP BY b.id, b.date, b.runId, b.testId, b.method
-    PIVOT results BY testId IN (select testid from ehr_lookups.istat_tests t WHERE t.includeInPanel = true order by sort_order)
+    PIVOT results BY testId IN (select testid from onprc_ehr.Epoc_tests t WHERE t.includeInPanel = true order by sort_order)
