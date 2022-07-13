@@ -4,7 +4,8 @@ Author:     Gary Jones
 Created:
 Modified:   5/24/2022 Updated for Year 63
 Description:    THis is the control for display of public rate sheets for inductrial rates
-in the Public Finance Section-->
+in the Public Finance Section
+2022-06-23 Update of unitCost to CurrentYear Name Not Being used by Test 4-->
 
 
 <query xmlns="http://labkey.org/data/xml/query">
@@ -14,11 +15,15 @@ in the Public Finance Section-->
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>NIH Industrial Rates </tableTitle>
                 <columns>
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
+                    </column>
 
-                    <column columnName="category"></column>
-                    <column columnName="name"></column>
-                    <column columnName="unitCost">
-                        <columnTitle>Current Year</columnTitle>
+                    <column columnName="name">
+                        <columnTitle>ItemName</columnTitle>
+                    </column>
+                    <column columnName="CurrentYear">
+                        <columnTitle>Current Year Rates</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
 
