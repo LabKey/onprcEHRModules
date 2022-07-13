@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="EpocMisc" tableDbType="TABLE">
-                <tableTitle>iStat Misc Results</tableTitle>
+                <tableTitle>Epoc Misc Results</tableTitle>
                 <columns>
                     <column columnName="resultOORIndicator">
                         <isHidden>true</isHidden>

@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="EpocRefRange" tableDbType="NOT_IN_DB">
-                <tableTitle>iStat Results With Reference Range</tableTitle>
+                <tableTitle>Epoc Results With Reference Range</tableTitle>
                 <columns>
                     <column columnName="Lsid">
                         <isKeyField>true</isKeyField>
