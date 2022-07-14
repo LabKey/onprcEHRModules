@@ -151,7 +151,7 @@ EHR.reports.iStat = function(panel, tab){
         queryConfig: resultsConfig
     });
 }
-//Added 5-17-2022 R.Blasa
+//Added 7-14-2022 R.Blasa
 EHR.reports.Epoc = function(panel, tab){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();

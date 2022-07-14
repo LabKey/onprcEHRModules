@@ -50,7 +50,7 @@ FROM (
              c.date,
              c.runId,
              ROUND(CONVERT(age_in_months(c.id.dataset.demographics.birth, c.date), DOUBLE) / 12.0, 1) as ageAtTime
-         FROM Epoc c
+         FROM study.Epoc c
          WHERE c.qcstate.publicdata = true
      ) c
 
