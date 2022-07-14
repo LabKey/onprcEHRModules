@@ -121,7 +121,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 22.001;
+        return 23.001;
     }
 
     @Override
@@ -503,6 +503,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 11-4-2019  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(TBTestObservationFormType.class, this));
+
+        //Added: 6-6-2022  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EpocFormType.class, this));
 
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));

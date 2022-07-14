@@ -32,7 +32,7 @@ SELECT
   max(CASE WHEN (hr1.testid = 'HCT') THEN hr1.result ELSE NULL END) as HCT,
 
   max(CASE WHEN (hr1.testid = 'PLT') THEN hr1.runId ELSE NULL END) as runIdPLT,
-  max(CASE WHEN (hr1.testid = 'HCT') THEN hr1.runId ELSE NULL END) as runIdHCT,
+  max(CASE WHEN (hr1.testid = 'HCT') THEN hr1.runId ELSE NULL END) as runIdHCT
 
 FROM study.demographics d
 LEFT JOIN (

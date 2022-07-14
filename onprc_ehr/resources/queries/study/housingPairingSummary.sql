@@ -17,7 +17,7 @@ SELECT
 
 d.category,
 
-count(distinct d.id) as totalAnimals,
+count(distinct d.id) as totalAnimals
 
 FROM study.demographicsPaired d
 

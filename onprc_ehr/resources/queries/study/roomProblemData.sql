@@ -23,9 +23,9 @@ SELECT
   max(t1.problemOpen) as problemOpen,
   max(t1.problemEnd) as problemEnd,
   t1.category,
-  (select count(distinct m.id) FROM study.housing m WHERE (m.dateOnly <= EndDate AND m.enddateCoalesced >= StartDate AND m.room = t1.room)) as totalIdsInRoom,
+  (select count(distinct m.id) AS Ids FROM study.housing m WHERE (m.dateOnly <= EndDate AND m.enddateCoalesced >= StartDate AND m.room = t1.room)) as totalIdsInRoom,
   StartDate,
-  EndDate,
+  EndDate
 FROM (
   SELECT
     gm.Id,
@@ -38,7 +38,7 @@ FROM (
     mp.Id as problemId,
     mp.date as problemOpen,
     mp.enddate as problemEnd,
-    mp.category,
+    mp.category
   FROM study.housing gm
 
   JOIN study.morbidityAndMortalityData mp ON (

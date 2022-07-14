@@ -24,7 +24,7 @@ SELECT
     WHEN (t1.gender = 'f' AND t1.ageAtTime >= 1.0 AND t1.ageAtTime < 3.0 ) THEN 1
     WHEN (t1.gender = 'm' AND t1.ageAtTime >= 1.0 AND t1.ageAtTime < 4.0 ) THEN 1
     ELSE null
-  END as isJuvenille,
+  END as isJuvenille
 
 FROM (
 SELECT
@@ -64,7 +64,7 @@ SELECT
   sum(CASE WHEN a.project.use_category = 'Research' THEN 1 ELSE 0 END) as totalResearchAssignments,
   sum(CASE WHEN a.project.use_category = 'U42' THEN 1 ELSE 0 END) as isU42,
   sum(CASE WHEN a.project.use_category = 'U24' THEN 1 ELSE 0 END) as isU24,
-  group_concat(DISTINCT f.flag.value, chr(10)) as spfStatus,
+  group_concat(DISTINCT f.flag.value, chr(10)) as spfStatus
 
 FROM study.housingOverlaps h
 
