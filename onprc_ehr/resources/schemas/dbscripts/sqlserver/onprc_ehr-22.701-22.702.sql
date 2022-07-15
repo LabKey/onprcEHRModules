@@ -13,11 +13,13 @@ GO
   -- Description:	Process to remove records created in eIACUC from protocol dataset
   -- =============================================
 CREATE PROCEDURE [onprc_ehr].[insertToEhr_Protocol]
+USE [Labkey_test4]
+GO
 
   AS
 INSERT INTO [ehr].[protocol]
            ([protocol]
-           ,[inves]
+           ,[investigatorId]
            ,[approve]
            ,[description]
 		   ,createdBy
@@ -35,7 +37,7 @@ INSERT INTO [ehr].[protocol]
      SELECT
 	   [Protocol_ID]
 	    ,Case when [PI_ID] like 'spa%' then 0
-	  else [PI_ID]
+	  else (Select rowid from onprc_ehr.investigators where employeeID = PI_ID and datedisabled is null)
 	  End as PIID
 	  ,[Approval_Date]
       ,[Template_OID]

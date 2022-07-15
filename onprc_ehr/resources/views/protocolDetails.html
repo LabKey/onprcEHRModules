@@ -50,7 +50,7 @@ Ext4.onReady(function (){
         requiredVersion: 9.1,
         schemaName: 'ehr',
         queryName: 'protocol',
-        columns: 'protocol,displayName',
+        columns: 'protocol,displayName,description',
         filterArray: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback(),
         scope: this,
@@ -105,7 +105,22 @@ Ext4.onReady(function (){
                 text: 'Edit Protocol Details',
                 href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()
             }]
-        }]
+        },{
+            text: 'Review in eIACUCApp',
+            menu: [{
+                text: 'Open eIACUC2 App with user permissions',
+                href: `https://iacucapp.ohsu.edu/iacuc/sd/Rooms/DisplayPages/LayoutInitial?Container=com.webridge.entity.Entity[OID{$sr.getValue('description')}]`
+
+
+            },
+            ]
+
+
+
+        }
+
+
+        ]
     }
 
     Ext4.create('LDK.panel.DetailsPanel', {
