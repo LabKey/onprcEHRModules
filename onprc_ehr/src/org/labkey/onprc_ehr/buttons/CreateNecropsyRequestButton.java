@@ -9,7 +9,7 @@ public class CreateNecropsyRequestButton extends CreateTaskFromRecordsButton
 {
     public CreateNecropsyRequestButton(Module owner)
     {
-        super(owner, "Create Pathology Request From Selected", "ONPRC_EHR.window.CreateNecropsyRequestWindow.createTaskFromRecordHandler(dataRegionName, '" + PathologyTissuesFormType.NAME + "')");
+        super(owner, "Create Pathology TASK From Selected", "ONPRC_EHR.window.CreateNecropsyRequestWindow.createTaskFromRecordHandler(dataRegionName, '" + PathologyTissuesFormType.NAME + "')");
         setClientDependencies(ClientDependency.supplierFromPath("onprc_ehr/window/CreateNecropsyRequestWindow.js"));
     }
 }
