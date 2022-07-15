@@ -2,7 +2,7 @@ EXEC core.fn_dropifexists 'Protocol_logs','onprc_ehr','TABLE';
 GO
 
 
-CCREATE TABLE [onprc_ehr].[Protocol_logs](
+CREATE TABLE [onprc_ehr].[Protocol_logs](
  	[protocol] [varchar](200) NOT NULL,
  	[inves] [varchar](200) NULL,
  	[approve] [datetime] NULL,
