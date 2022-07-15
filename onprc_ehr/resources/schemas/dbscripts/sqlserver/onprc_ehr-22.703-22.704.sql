@@ -30,12 +30,8 @@ CREATE TABLE [onprc_ehr].[Protocol_logs](
  	[diCreatedBy] [dbo].[USERID] NULL,
  	[diModifiedBy] [dbo].[USERID] NULL,
  	[Lsid] [dbo].[LSIDtype] NULL,
- 	[contacts] [varchar](200) NULL,
-  CONSTRAINT [PK_protocol] PRIMARY KEY CLUSTERED
- (
- 	[objectid] ASC
- )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
- ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+ 	[contacts] [varchar](200) NULL)
+
  GO
 
  ALTER TABLE [onprc_ehr].[protocol_logs] ADD  DEFAULT (newid()) FOR [objectid]
