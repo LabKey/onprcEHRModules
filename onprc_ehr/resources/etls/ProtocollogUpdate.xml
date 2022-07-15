@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>Protocol_Log_Update</name>
+    <description>AppendProtocolRecordsfor Reivw</description>
+    <transforms>
+        <transform id="merge">
+            <description>Protocol appended each day for Chronologic Reivew</description>
+            <source schemaName="ehr" queryName="protocol" />
+            <destination schemaName="ohnprc_ehr" queryName="Protocol_Logs" targetOption="merge">
+
+            </destination>
+        </transform>
+    </transforms>
+    <incrementalFilter className="ModifiedSinceFilterStrategy" timestampColumnName="modified"/>
+</etl>
