@@ -23,9 +23,11 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         }
     },
 
+
+
     initComponent: function(){
         LDK.Assert.assertNotEmpty('Missing formtype in CreateTaskFromRecordsWindow', this.formType);
-
+        var requestid = [];
         Ext4.apply(this, {
             modal: true,
             border: false,
@@ -139,20 +141,6 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                 failure: LDK.Utils.getErrorCallback()
             });
 
-
-            LABKEY.Query.selectRows({
-                schemaName: 'onprc_billing',
-                queryName: 'miscCharges',
-                containerPath: '/ONPRC/Admin/Finance',
-                sort: 'Id,date',
-                columns: 'lsid,Id,date,requestid,taskid,qcstate,qcstate/label,qcstate/metadata/isRequest,DataSet/Label',
-                filterArray: [LABKEY.Filter.create('requestid', requestid.value, LABKEY.Filter.Types.EQUAL)],
-                scope: this,
-                success: this.onDataSuccess2,
-                failure: LDK.Utils.getErrorCallback()
-            });
-
-
         }, this);
     },
 
@@ -164,38 +152,6 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         }
 
         this.records = [];
-        // var errors = [];
-
-        Ext4.Array.forEach(data.rows, function(row){
-            this.records.push(row);
-
-        }, this);
-
-        // if (errors.length){
-        //     errors = Ext4.Array.unique(errors);
-        //     Ext4.Msg.alert('Error', errors.join('<br>'));
-        // }
-        //
-        // if (this.showTotalSelectedCount) {
-        //     var form = this.down('#theForm');
-        //     form.remove(0);
-        //     form.insert(0, {
-        //         html: 'Total Selected: ' + this.records.length + '<br><br>',
-        //         border: false
-        //     });
-        // }
-        //
-        // this.afterDataLoad();
-    },
-
-    onDataSuccess2: function (data) {
-        if (!data || !data.rows){
-            Ext4.Msg.hide();
-            Ext4.Msg.alert('Error', 'No records found');
-            return;
-        }
-        //
-        // this.records = [];
         var errors = [];
 
         Ext4.Array.forEach(data.rows, function(row){
@@ -219,7 +175,6 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
 
         this.afterDataLoad();
     },
-
 
     afterDataLoad: function() {
         this.down('#submitBtn').setDisabled(false);
