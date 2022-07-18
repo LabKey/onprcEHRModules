@@ -7,6 +7,13 @@
     <description>Inserts Protocol Details from eIACUC External Schema</description>
 
     <transforms>
+        <transform id="ArchiveProtocol">
+            <description>Truncate and copy protocols to protocolLog</description>
+        <source schemaName="ehr" queryName="Protocol" />
+        <destination schemaName="onprc_ehr" queryName="protocol_logs" targetOption="truncate"/>
+        </transform>
+
+
 
         <transform id="Stored_ProcRemove" type="StoredProcedure">
             <description>Removes protocol details from eIACUC.</description>

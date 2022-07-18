@@ -1,0 +1,18 @@
+SELECT
+a.Parent_Protocol,
+a.Group_ID,
+a.Group_Name,
+a.Species,
+
+a.Gender,
+sum(a.Number_of_Animals_Max)
+
+FROM eIACUC_PRIME_VIEW_ANIMAL_GROUPS a
+Group by
+
+a.Parent_Protocol,
+a.Group_ID,
+a.Group_Name,
+a.Species,
+
+a.Gender
