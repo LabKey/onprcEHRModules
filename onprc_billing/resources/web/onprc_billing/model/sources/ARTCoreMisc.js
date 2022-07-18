@@ -85,8 +85,8 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
             },
 
             unitcost: {
-                hidden: true,
-                header: 'NIH Rate',
+                hidden: false,
+                header: 'Unit Cost', //'NIH Rate',
                 editorConfig: {
                     decimalPrecision: 2
                 }
