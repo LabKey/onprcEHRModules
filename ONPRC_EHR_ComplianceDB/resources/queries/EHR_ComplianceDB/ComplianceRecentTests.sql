@@ -98,6 +98,8 @@ select j.requirementname,
 
 
 from  ehr_compliancedb.employeerequirementexemptions j
+    Where j.requirementname in (select z.requirementname from ehr_compliancedb.completiondates z where z.requirementname = j.requirementname
+                                            and z.employeeid = j.employeeid and z.date is not null)
 
 
 group by j.requirementname,j.employeeid
