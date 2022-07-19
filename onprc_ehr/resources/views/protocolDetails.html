@@ -28,6 +28,10 @@ Ext4.onReady(function (){
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
+        id: 'exemptions_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
         id: 'housingSummary_' + webpart.wrapperDivId
     },{
         tag: 'div',
@@ -55,6 +59,36 @@ Ext4.onReady(function (){
                 return;
             }
             var sr = new LDK.SelectRowsRow(results.rows[0]);
+            var buttons = null;
+            if (EHR.Security.hasProtocolEditorPermission()){
+                buttons = [{
+                    text: 'More Actions',
+                    menu: [{
+                        text: 'Edit Protocol Details',
+                        href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()
+                    },
+                        {
+                            text: 'See eIACUC2 Record',
+                            href: `https://iacucapp.ohsu.edu/iacuc/sd/Rooms/DisplayPages/LayoutInitial?Container=com.webridge.entity.Entity[OID[${sr.getValue('description')}]]`
+                        }
+                    ]
+                }]
+            }
+
+            Ext4.create('LDK.panel.DetailsPanel', {
+                store: {
+                    schemaName: 'ehr',
+                    queryName: 'protocol',
+                    filterArray: [
+                        LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)
+                    ]
+                },
+                title: 'Protocol Details:',
+                renderTo: 'protocolDetails_' + webpart.wrapperDivId,
+                detailsConfig: {
+                    buttons: buttons
+                }
+            });
 
             var otherReports = [{
                 name: 'View Active Animal Assignments',
@@ -93,46 +127,6 @@ Ext4.onReady(function (){
         }
     });
 
-    var buttons = null;
-    if (EHR.Security.hasProtocolEditorPermission()){
-        buttons = [{
-            text: 'More Actions',
-            menu: [{
-                text: 'Edit Protocol Details',
-                href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()
-            }]
-        },{
-            text: 'Review in eIACUCApp',
-            menu: [{
-                text: 'Open eIACUC2 App with your permissions',
-                href: `https://iacucapp.ohsu.edu/iacuc/sd/Rooms/DisplayPages/LayoutInitial?Container=com.webridge.entity.Entity[OID${sr.getValue('description')}]`
-
-
-            },
-            ]
-
-
-
-        }
-
-
-        ]
-    }
-
-    Ext4.create('LDK.panel.DetailsPanel', {
-        store: {
-            schemaName: 'ehr',
-            queryName: 'protocol_details',
-            filterArray: [
-                LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)
-            ]
-        },
-        title: 'Protocol Details:',
-        renderTo: 'protocolDetails_' + webpart.wrapperDivId,
-        detailsConfig: {
-            buttons: buttons
-        }
-    });
 
     LDK.Utils.getReadOnlyQWP({
         title: 'Housing Summary',
@@ -161,9 +155,9 @@ Ext4.onReady(function (){
     }).render('protocolProjects_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
-        title: 'eIACUC Allowable NHP by Species',
+        title: 'Allowable NHPs',
         schemaName: 'ehr',
-        queryName: 'eIACUC_AllowableNHPSpecies',
+        queryName: 'animalUsage',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback()
     }).render('allowableAnimals_' + webpart.wrapperDivId);
