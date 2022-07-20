@@ -23,12 +23,13 @@
             getItems: function(){
                 var items = [{
                     html: 'This page provides reports to be printed by room or area.  After picking the location(s) using the drop downs below, ' +
-                    'hit the \'Print\' buttons below to print any of the reports<br><br><b>NOTE:' +
-                    ' For most reports, leave rooms/areas blank to print all. <br> Vet control only applies to "Active by Clinical Cases by Vets". ' +
-                    '<br>Breeding Group control only applies to "Weights Sheets by Breeding Groups".' +
-                    '<br>Enter Animal ID only applies to "Weights Sheets by Monkey ID".</b>',
+                            'hit the \'Print\' buttons below to print any of the reports<br><br><b>NOTE:' +
+                            ' For most reports, leave rooms/areas blank to print all. <br> Vet and room(s) selections applies to "Active by Clinical Cases by Vets". ' +
+                            '<br>Breeding Group selections only applies to "Weights Sheets by Breeding Groups".' +
+                            '<br>Enter Animal ID only applies to "Weights Sheets by Monkey ID".</b>',
                     style: 'padding-bottom: 20px;'
                 },{
+
                     xtype: 'ehr-areafield',
                     itemId: 'areaField',
                     addAllSelector: true,
@@ -137,14 +138,13 @@
                               params['assignedvet'] = userName;
 
 
-                            //Don't process other parameters
-                            if (params.area){
-                                delete params.area;
+                            if (params.Rooms) {
+                                params.Rooms = params.Rooms.join(';');
                             }
-                            if (params.rooms){
+                            else
+                            {
                                 delete params.rooms;
                             }
-
 
                             Ext4.apply(params, {
                                 'rs:ClearSession': true,
@@ -445,7 +445,7 @@
                         border: true,
                         handler: function(btn){
                             var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
-                            url += btn.up('#sheetPanel').getAnimalHistoryHash('diet');
+                            url += btn.up('#sheetPanel').getAnimalHistoryHash('dietSchedule');
                             window.open(url);
                         }
                     },{
