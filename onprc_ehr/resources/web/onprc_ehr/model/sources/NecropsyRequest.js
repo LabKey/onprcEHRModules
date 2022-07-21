@@ -59,6 +59,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
             fastingtype: {
                 hidden: false,
+                header: 'What type of fast would you like to request?',
                 xtype: 'path_Fasting',
                 columnConfig: {
                     width: 150
@@ -66,6 +67,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
             availdistribution: {
                 xtype: 'path_approval',
+                header: 'Are remaining tissues available for distribution?',
                 columnConfig: {
                     width: 100
 
