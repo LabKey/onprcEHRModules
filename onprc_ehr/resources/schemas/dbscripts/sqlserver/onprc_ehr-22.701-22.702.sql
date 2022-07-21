@@ -13,8 +13,7 @@ GO
   -- Description:	Process to remove records created in eIACUC from protocol dataset
   -- =============================================
 CREATE PROCEDURE [onprc_ehr].[insertToEhr_Protocol]
-USE [Labkey_test4]
-GO
+
 
   AS
 INSERT INTO [ehr].[protocol]
