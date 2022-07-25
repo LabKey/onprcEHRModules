@@ -4,7 +4,7 @@
     <description>Merge rows from eIACUC to ehr.protocol</description>
     <transforms>
         <transform id="merge">
-            <description>Update extensible fields</description>
+            <description>Update extensible fields in Protocols</description>
             <source schemaName="ehr" queryName="mergetoProtocol" />
             <destination schemaName="ehr" queryName="protocol" targetOption="merge">
                 <columnTransforms>
