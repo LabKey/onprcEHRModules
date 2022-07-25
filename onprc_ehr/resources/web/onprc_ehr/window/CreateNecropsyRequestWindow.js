@@ -144,6 +144,25 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         }, this);
     },
 
+    getNecropsyRequestData2: function (data) {
+
+        Ext4.Array.forEach(data.rows, function(row){
+            var requestid = row.requestid;
+
+            LABKEY.Query.selectRows({
+                schemaName: 'onprc_billing',
+                queryName: 'miscCharges',
+                sort: 'Id,date',
+                columns: 'objectid,Id,date,requestid,qcstate,qcstate/label,qcstate/metadata/isRequest',
+                filterArray: [LABKEY.Filter.create('requestid', requestid.value, LABKEY.Filter.Types.EQUAL)],
+                scope: this,
+                success: this.onDataSuccess2,
+                failure: LDK.Utils.getErrorCallback()
+            });
+
+        }, this);
+    },
+
     onDataSuccess: function (data) {
         if (!data || !data.rows){
             Ext4.Msg.hide();
@@ -164,6 +183,7 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
             Ext4.Msg.alert('Error', errors.join('<br>'));
         }
 
+
         if (this.showTotalSelectedCount) {
             var form = this.down('#theForm');
             form.remove(0);
@@ -174,6 +194,31 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         }
 
         this.afterDataLoad();
+
+        this.getNecropsyRequestData2(data.rows[0]["requestid"] );
+    },
+
+    onDataSuccess2: function (data) {
+        if (!data || !data.rows){
+            Ext4.Msg.hide();
+            Ext4.Msg.alert('Error', 'No records found');
+            return;
+        }
+
+        this.miscChargesrecords = [];
+        var errors = [];
+
+        Ext4.Array.forEach(data.rows, function(row){
+            this.mischChargesrecords.push(row);
+
+        }, this);
+
+
+        if (errors.length){
+            errorst = Ext4.Array.unique(errors);
+            Ext4.Msg.alert('Error', errors.join('<br>'));
+        }
+
     },
 
     afterDataLoad: function() {
@@ -231,8 +276,38 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         });
     },
 
+
     createTaskSuccess: function(response, options, config){
         Ext4.Msg.hide();
+        var records = this.miscChargesrecords;
+        if (!records || !records.length)
+            return;
+        Ext4.Array.forEach(records, function(row){
+            if (!row[this.targetField] || !this.skipNonNull){
+                var obj = {
+                    requestid: row['requestid'],
+                    objectid:row['objectid'],
+                    taskid: config.taskid
+                };
+
+                toUpdate.push(obj);
+            }
+            else {
+                skipped.push(row[this.objectid]);
+            }
+        }, this);
+        LABKEY.Query.updateRows({
+            method: 'POST',
+            schemaName: 'onprc_billing',
+            queryName: 'miscCharges',
+            rows: toUpdate,
+            scope: this,
+            success: function(){
+                // this.close();
+                Ext4.Msg.hide();
+            },
+            failure: LDK.Utils.getErrorCallback()
+        });
 
         var viewAfterCreate = this.down('#viewAfterCreate').getValue();
         this.close();
