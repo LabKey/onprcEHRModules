@@ -8,7 +8,7 @@
 
     <transforms>
         <transform id="ArchiveProtocol">
-            <description>Truncate and copy protocols to protocolLog dataset</description>
+            <description>Truncate and copy protocols to protocolLog dataset update</description>
         <source schemaName="ehr" queryName="Protocol" />
         <destination schemaName="onprc_ehr" queryName="protocol_logs" targetOption="truncate"/>
         </transform>
