@@ -23,8 +23,6 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         }
     },
 
-
-
     initComponent: function(){
         LDK.Assert.assertNotEmpty('Missing formtype in CreateTaskFromRecordsWindow', this.formType);
         var requestid = [];
@@ -183,7 +181,6 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
             Ext4.Msg.alert('Error', errors.join('<br>'));
         }
 
-
         if (this.showTotalSelectedCount) {
             var form = this.down('#theForm');
             form.remove(0);
@@ -209,7 +206,7 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         var errors = [];
 
         Ext4.Array.forEach(data.rows, function(row){
-            this.mischChargesrecords.push(row);
+            this.miscChargesrecords.push(row);
 
         }, this);
 
@@ -275,7 +272,6 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
             failure: LDK.Utils.getErrorCallback()
         });
     },
-
 
     createTaskSuccess: function(response, options, config){
         Ext4.Msg.hide();
