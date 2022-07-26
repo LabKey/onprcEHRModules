@@ -1,3 +1,6 @@
+
+/* Update 2022-07-26 adding Protocol Logs for eIACCU Procerssing */
+
 EXEC core.fn_dropifexists 'Protocol_logs','onprc_ehr','TABLE';
 GO
 
