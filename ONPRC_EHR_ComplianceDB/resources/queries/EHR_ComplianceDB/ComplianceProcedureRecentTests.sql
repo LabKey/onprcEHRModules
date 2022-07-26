@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 
--- Created: 10-6-2021   R.Blasa     ComplianceRecentTests.sql
+-- Modified: 6-14-2022   R.Blasa     ComplianceRecentTests.sql
 
 select b.requirementname,
        a.employeeid,
@@ -35,8 +35,11 @@ select b.requirementname,
 
 from employeeperunit a ,requirementspercategory b
 where ( a.unit = b.unit or a.category = b.category )
+  And b.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where a.employeeid = t.employeeid
+                                                                                                                          And b.requirementname = t.requirementname)
 
-group by b.requirementname,a.employeeid
+
+                                group by b.requirementname,a.employeeid
 
 
 union
@@ -77,4 +80,6 @@ where a.requirementname not in (select distinct h.requirementname from ehr_compl
                                                                                                                           And a.requirementname = t.requirementname)
 
 group by a.requirementname,a.employeeid
+
+
 
