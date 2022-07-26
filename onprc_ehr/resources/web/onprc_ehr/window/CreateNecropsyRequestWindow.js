@@ -125,6 +125,7 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
 
     getNecropsyRequestData: function (data) {
 
+        // Fetch the dataset rows that should belong to the task
         Ext4.Array.forEach(data.rows, function(row){
             var requestid = row.requestid;
 
@@ -135,15 +136,13 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                 columns: 'lsid,Id,date,requestid,taskid,qcstate,qcstate/label,qcstate/metadata/isRequest,DataSet/Label',
                 filterArray: [LABKEY.Filter.create('requestid', requestid.value, LABKEY.Filter.Types.EQUAL)],
                 scope: this,
-                success: this.onDataSuccess,
+                success: this.onStudyDataLoad,
                 failure: LDK.Utils.getErrorCallback()
             });
 
         }, this);
-    },
 
-    getNecropsyRequestData2: function (data) {
-
+        // Fetch the MiscCharges rows that should belong to the task
         Ext4.Array.forEach(data.rows, function(row){
             var requestid = row.requestid;
 
@@ -154,14 +153,14 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                 columns: 'objectid,Id,date,requestid,qcstate,qcstate/label,qcstate/metadata/isRequest',
                 filterArray: [LABKEY.Filter.create('requestid', requestid.value, LABKEY.Filter.Types.EQUAL)],
                 scope: this,
-                success: this.onDataSuccess2,
+                success: this.onMiscChargesLoad,
                 failure: LDK.Utils.getErrorCallback()
             });
 
         }, this);
     },
 
-    onDataSuccess: function (data) {
+    onStudyDataLoad: function (data) {
         if (!data || !data.rows){
             Ext4.Msg.hide();
             Ext4.Msg.alert('Error', 'No records found');
@@ -191,11 +190,9 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         }
 
         this.afterDataLoad();
-
-        this.getNecropsyRequestData2(data.rows[0]["requestid"] );
     },
 
-    onDataSuccess2: function (data) {
+    onMiscChargesLoad: function (data) {
         if (!data || !data.rows){
             Ext4.Msg.hide();
             Ext4.Msg.alert('Error', 'No records found');
@@ -216,11 +213,15 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
             Ext4.Msg.alert('Error', errors.join('<br>'));
         }
 
+        this.afterDataLoad();
     },
 
     afterDataLoad: function() {
-        this.down('#submitBtn').setDisabled(false);
-        this.setLoading(false);
+        // Check if both load attempts have finished
+        if (this.records && this.miscChargesrecords) {
+            this.down('#submitBtn').setDisabled(false);
+            this.setLoading(false);
+        }
     },
 
     onSubmit: function(){
@@ -273,17 +274,36 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         });
     },
 
+    finishCreation: function(taskId) {
+        var viewAfterCreate = this.down('#viewAfterCreate').getValue();
+        this.close();
+        Ext4.Msg.hide();
+
+        if (viewAfterCreate){
+            window.location = LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {taskid: taskId, formType: this.formType});
+        }
+        else {
+            LABKEY.DataRegions[this.dataRegionName].refresh();
+        }
+    },
+
     createTaskSuccess: function(response, options, config){
         Ext4.Msg.hide();
         var records = this.miscChargesrecords;
-        if (!records || !records.length)
+        if (!records || !records.length)  {
+            // No MiscCharges to process so we're done
+            this.finishCreation(config.taskId);
             return;
+        }
+
+        // Update the MiscCharges rows to belong to the new task
+        var toUpdate = [];
         Ext4.Array.forEach(records, function(row){
             if (!row[this.targetField] || !this.skipNonNull){
                 var obj = {
                     requestid: row['requestid'],
                     objectid:row['objectid'],
-                    taskid: config.taskid
+                    taskid: config.taskId
                 };
 
                 toUpdate.push(obj);
@@ -299,20 +319,9 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
             rows: toUpdate,
             scope: this,
             success: function(){
-                // this.close();
-                Ext4.Msg.hide();
+                this.finishCreation(config.taskId);
             },
             failure: LDK.Utils.getErrorCallback()
         });
-
-        var viewAfterCreate = this.down('#viewAfterCreate').getValue();
-        this.close();
-
-        if (viewAfterCreate){
-            window.location = LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {taskid: config.taskId, formType: this.formType});
-        }
-        else {
-            LABKEY.DataRegions[this.dataRegionName].refresh();
-        }
     }
 });
