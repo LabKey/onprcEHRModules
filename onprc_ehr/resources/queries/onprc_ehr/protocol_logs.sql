@@ -1,4 +1,3 @@
-/*' updated 2022-07-28 2nd tgry*/
 SELECT protocol.protocol,
 protocol.title,
 protocol.investigatorId,
@@ -11,8 +10,10 @@ protocol.usda_level,
 protocol.last_modification,
 protocol.description,
 protocol.container,
-protocol.contacts as Template_OID,
-protocol.project_type as Protocol_State,
+protocol.contacts,
+protocol.PPQ_Numbers,
+protocol.PROTOCOL_State,
+protocol.Template_OID,
 protocol.Approval_Date,
 protocol.Annual_Update_Due,
 protocol.Three_year_Expiration,
@@ -22,4 +23,4 @@ protocol.annualReviewDate,
 protocol.daysUntilAnnualReview,
 protocol.renewalDate,
 protocol.daysUntilRenewal
-FROM protocol
+FROM ehr.protocol
