@@ -20,6 +20,14 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
                 allowBlank: true //Make AnimalId not a required field for any tech time and etc kind of charges
             },
 
+            project: {
+                allowBlank: true,
+                hidden: false,
+                columnConfig: {
+                    width: 150
+                }
+            },
+
             chargeId: {
                 xtype: 'combo',
                 header: 'Charge Name',
@@ -72,11 +80,6 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
 
             },
 
-            project: {
-                allowBlank: true,
-                hidden: true
-            },
-
             comment: {
                 allowBlank: true,
                 columnConfig: {
@@ -84,7 +87,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
                 }
             },
 
-            unitcost: {
+            unitCost: {
                 hidden: false,
                 header: 'Unit Cost', //'NIH Rate',
                 editorConfig: {
@@ -112,6 +115,8 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
         }
     }
 });
+
+
 
 //Kolli 7/2020. Submit and Reload button submits the form data and reloads the billing page
 EHR.DataEntryUtils.registerDataEntryFormButton('BILLINGRELOAD', {
