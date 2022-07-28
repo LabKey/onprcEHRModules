@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * Update 2022-07-26 for Protocol_Log file
  */
 package org.labkey.onprc_ehr;
 
@@ -122,7 +121,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 22.711;
+        return 23.001;
     }
 
     @Override
@@ -502,6 +501,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 11-4-2019  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(TBTestObservationFormType.class, this));
+
 
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
