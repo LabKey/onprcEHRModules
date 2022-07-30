@@ -7,6 +7,7 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
+import org.labkey.api.ehr.security.EHRRequestPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
@@ -57,15 +58,15 @@ public class NecropsyRequestForm extends RequestForm
 
 
 
-
-    }
+   }
 
     @Override
     protected List<String> getButtonConfigs()
     {
         List<String> defaultButtons = new ArrayList<>();
         defaultButtons.add("DISCARD");
-        defaultButtons.add("PATH_REQUEST");
+//        defaultButtons.add("PATH_REQUEST");
+        defaultButtons.add("REQUEST");
         return defaultButtons;
     }
 
@@ -78,15 +79,5 @@ public class NecropsyRequestForm extends RequestForm
         return super.canInsert();
     }
 
-    /**
-     * The intent is to prevent read access to the majority of users
-     */
-    @Override
-    public boolean canRead()
-    {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRPathologyEntryPermission.class))
-            return false;
 
-        return super.canRead();
-    }
 }

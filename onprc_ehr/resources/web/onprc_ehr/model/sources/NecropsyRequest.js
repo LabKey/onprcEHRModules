@@ -121,6 +121,8 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 defaultValue: 'DCM: Pathology Services'
             },
             chargeId: {
+                allowBlank: false,
+                nullable: false,
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('active', true, LABKEY.Filter.Types.EQUAL),
