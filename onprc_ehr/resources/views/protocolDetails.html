@@ -64,8 +64,8 @@ Ext4.onReady(function (){
                 buttons = [{
                     text: 'More Actions',
                     menu: [{
-                        text: 'Edit Protocol Details',
-                        href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()
+                        text: 'Edit Protocol Details is completed thru eIACUC2 Application',
+                        /*href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()*/
                     },
                         {
                             text: 'See eIACUC2 Record',
@@ -155,7 +155,7 @@ Ext4.onReady(function (){
     }).render('protocolProjects_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
-        title: 'Allowable NHPs',
+        title: 'Allowable NHPs By Species',
         schemaName: 'ehr',
         queryName: 'animalUsage',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
