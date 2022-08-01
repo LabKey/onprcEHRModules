@@ -70,14 +70,6 @@ public class NecropsyRequestForm extends RequestForm
         return defaultButtons;
     }
 
-    @Override
-    protected boolean canInsert()
-    {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRPathologyEntryPermission.class))
-            return false;
-
-        return super.canInsert();
-    }
 
 
 }
