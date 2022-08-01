@@ -1,5 +1,5 @@
 SELECT
-    a.Parent_Protocol,
+    a.Parent_Protocol as Protocol,
     a.Species,
 
     Sum(a.Number_of_Animals_Max) as MaxAllowed
