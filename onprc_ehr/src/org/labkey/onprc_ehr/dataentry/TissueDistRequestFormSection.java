@@ -38,7 +38,7 @@ public class TissueDistRequestFormSection extends SimpleGridPanel
 
 
         //    Added: 8-1-2022  R.Blasa
-        setClientStoreClass("onprc_ehr.data.PathTissueslientStore");
+        setClientStoreClass("onprc_ehr.data.PathTissuesClientStore");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathTissuesClientStore.js"));
     }
     //    Added: 6-26-2017  R.Blasa  Include tool bar at bottom grid
