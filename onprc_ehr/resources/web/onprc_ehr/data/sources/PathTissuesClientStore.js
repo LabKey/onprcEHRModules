@@ -27,7 +27,7 @@ Ext4.define('onprc_ehr.data.PathTissueslientStore', {
         var clientStores = this.storeCollection.clientStores.items;
         for (var idx = 0; idx < clientStores.length; idx++) {
             var item = clientStores[idx];
-            if (item.storeId.index(miscCharges) > 0) {
+            if (item.storeId.indexOf(miscCharges) > 0) {
                 var data = item.data;
 
                 TissueCodes['TissueCodesEntered'] = data.items.length !== 0;
