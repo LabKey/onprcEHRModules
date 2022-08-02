@@ -1799,8 +1799,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                         "Pregnancy Confirmations",
                         "Urinalysis",
                         "iStat",
-                        "Biopsy",
-                        "Epoc"
+                        "Biopsy"
                 ));
         checkClinicalHistoryType(expectedLabels);
     }
