@@ -1100,6 +1100,16 @@ exports.init = function(EHR){
                 }
             }
         });
+        //Added 8-2-2022  R.Blasa
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'tisssueDistributions', function (helper, scriptErrors, row, oldRow) {
+            helper.decodeExtraContextProperty('TissueCodeInTransaction');
+            var TissueCodeInTransaction = helper.getProperty('TissueCodeInTransaction');
+
+            if (TissueCodeInTransaction && !TissueCodeInTransaction['TissueCodesEntered']) {
+                EHR.Server.Utils.addError(scriptErrors, 'Id', 'billing charges grid requires at least one row', 'WARN');
+            }
+        });
+
 
         //Added 3-5-2019  R.Blasa
         EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
