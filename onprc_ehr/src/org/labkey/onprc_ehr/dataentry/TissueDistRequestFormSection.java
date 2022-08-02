@@ -35,11 +35,6 @@ public class TissueDistRequestFormSection extends SimpleGridPanel
         setXtype("onprc_ehr-dragdropgridpanel");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/CopyTissuesRequestWindow.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/DragDropGridPanel.js"));
-
-
-        //    Added: 8-1-2022  R.Blasa
-        setClientStoreClass("onprc_ehr.data.PathTissuesClientStore");
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathTissuesClientStore.js"));
     }
     //    Added: 6-26-2017  R.Blasa  Include tool bar at bottom grid
     @Override

@@ -32,7 +32,12 @@ public class NecropsyRequestForm extends RequestForm
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
         {
-            addSection(new MiscChargesByAccountFormSection(EHRService.FORM_SECTION_LOCATION.Tabs));
+            MiscChargesByAccountFormSection miscChargesSection = new MiscChargesByAccountFormSection(EHRService.FORM_SECTION_LOCATION.Tabs);
+                    //    Added: 8-1-2022  R.Blasa
+            miscChargesSection.setClientStoreClass("onprc_ehr.data.PathTissuesClientStore");
+            miscChargesSection.addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathTissuesClientStore.js"));
+
+            addSection(miscChargesSection);
         }
 
 
@@ -53,8 +58,8 @@ public class NecropsyRequestForm extends RequestForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/Path_TissueRequest.js"));
 
 //        //    Added: 7-20-2022  R.Blasa
-//        setStoreCollectionClass("onprc_ehr.data.sources.PathTissueRequestStoreCollection");
-//        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathTissueRequestStoreCollection.js"));
+        setStoreCollectionClass("onprc_ehr.data.sources.PathTissueRequestStoreCollection");
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathTissueRequestStoreCollection.js"));
 
 
 
