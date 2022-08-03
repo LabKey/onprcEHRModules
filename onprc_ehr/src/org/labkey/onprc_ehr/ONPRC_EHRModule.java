@@ -88,6 +88,7 @@ import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
 import org.labkey.onprc_ehr.history.ONPRCClinicalRemarksDataSource;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
 import org.labkey.onprc_ehr.history.ONPRCiStatLabworkType;
+import org.labkey.onprc_ehr.history.ONPRCEpocLabworkType;
 import org.labkey.onprc_ehr.notification.*;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
@@ -644,6 +645,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
         EHRService.get().registerLabworkType(new ONPRCiStatLabworkType(this));
+           //     7-26-2022  R. Blasa
+        EHRService.get().registerLabworkType(new ONPRCEpocLabworkType(this));
         //R.Blasa   11-28-2016
         EHRService.get().registerHistoryDataSource(new DefaultNHPTrainingDataSource(this));
 
