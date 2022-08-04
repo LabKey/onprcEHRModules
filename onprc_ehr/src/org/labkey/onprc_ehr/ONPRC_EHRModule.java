@@ -283,10 +283,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 10-7-2019   R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"), this);
 
-
         //Added: 3-22-2021   R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/ProjectEntryField.js"), this);
-
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Commonly Used Queries");
@@ -585,10 +583,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 8-22-2020  R.Blasa
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Procedures", AuxProcedureFormType.NAME), "study", "encounters");
-
-        //Added: 9-23-2021   R.Blasa
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Tissue Distribution", PathologyTissuesFormType.NAME), "study", "tissueDistributions");
-
         //Added: 5/10/21  By Kollil
         //Modified by Kolli 9/28/21: Put back the PMIC task selection
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create PMIC Task From Selected", "PMIC Procedures", PMICDataEntryFormType.NAME), "study", "encounters");
@@ -615,7 +609,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, DrugRequestBulkEditFormType.NAME), "study", "drug");
         EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, LabworkRequestBulkEditFormType.NAME), "study", "clinpathRuns");
 
-        EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "NecropsyRequestdata");
+        EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "encounters");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "encounters");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "tissue_samples");
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordsButton(this, "Create Task From Selected", "Necropsy", NecropsyFormType.NAME), "study", "organ_weights");
