@@ -8,7 +8,7 @@ SELECT
   count(distinct o.id) as totalAnimals,
 
   max(o.StartDate) as StartDate,
-  max(o.EndDate) as EndDate,
+  max(o.EndDate) as EndDate
 
 FROM study.animalGroupOverlaps o
 

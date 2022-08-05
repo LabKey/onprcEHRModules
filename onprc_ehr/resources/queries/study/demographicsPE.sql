@@ -56,7 +56,7 @@ LEFT JOIN (
         g.date,
         g.p2
     FROM study.clinremarks g
-    WHERE  g.date in (Select Max(c1.date) from clinremarks c1 where g.id = c1.id And c1.p2 is not null)
+    WHERE  g.date in (Select Max(c1.date) AS MaxDate from clinremarks c1 where g.id = c1.id And c1.p2 is not null)
     GROUP BY g.Id, g.date,g.p2
 ) g ON (g.Id = d.Id)
 

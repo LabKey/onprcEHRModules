@@ -21,7 +21,7 @@ CASE
     ELSE false
 END as status,
 group_concat(DISTINCT a.project.displayName, chr(10)) as projects,
-group_concat(DISTINCT f.flag.value) as flags,
+group_concat(DISTINCT f.flag.value) as flags
 
 FROM study.demographics d
 LEFT JOIN study.assignment a ON (a.id = d.id AND (a.releaseCondition.meaning = 'Terminal' OR a.projectedReleaseCondition.meaning = 'Terminal'))

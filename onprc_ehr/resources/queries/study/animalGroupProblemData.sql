@@ -26,7 +26,7 @@ SELECT
   t1.problemId,
 
   max(StartDate) as StartDate,
-  max(EndDate) as Enddate,
+  max(EndDate) as Enddate
 
 FROM (
   SELECT
@@ -37,7 +37,7 @@ FROM (
     mp.date,
     mp.enddate,
     mp.category,
-    mp.Id as problemId,
+    mp.Id as problemId
   FROM study.animal_group_members gm
   JOIN study.morbidityAndMortalityData mp ON (
       mp.date <= gm.endDateCoalesced AND

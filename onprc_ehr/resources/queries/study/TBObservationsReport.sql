@@ -22,7 +22,7 @@ SELECT
   t.remark,
   t.performedby,
   t.taskid,
-  t.qcstate,
+  t.qcstate
 
 FROM study.clinical_observations t
 where t.category like 'TB TST Score%'
