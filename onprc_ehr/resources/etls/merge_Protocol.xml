@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <etl xmlns="http://labkey.org/etl/xml">
-    <name>Merge Test</name>
+    <name>MergeUpdate</name>
     <description>Merge rows from eIACUC to ehr.protocol</description>
     <transforms>
         <transform id="merge">
             <description>Update extensible fields in Protocols dataset</description>
-            <source schemaName="onprc_ehr" queryName="eIACUC_PRIME_VIEW_PROTOCOLS" />
+            <source schemaName="onprc_ehr" queryName="eIACUCtoProtocolExport" />
             <destination schemaName="ehr" queryName="protocol" targetOption="merge">
             </destination>
         </transform>

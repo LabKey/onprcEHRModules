@@ -550,7 +550,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new EHRShowEditUIButton(this, "onprc_ehr", "investigators", EHRProjectEditPermission.class), "onprc_ehr", "investigators");
         EHRService.get().registerMoreActionsButton(new EHRShowEditUIButton(this, "onprc_ehr", "investigators", "Edit Investigators", EHRProjectEditPermission.class), "ehr", "project");
         EHRService.get().registerMoreActionsButton(new CreateProjectButton(this), "ehr", "project");
-        EHRService.get().registerMoreActionsButton(new EHRShowEditUIButton(this, "onprc_ehr", "investigators", "Edit Investigators", EHRProjectEditPermission.class), "ehr", "protocol");
+  /*rEMOVED AS WE NO LONGER WILL BE UPDATING THESE RECORD IN PROTOCOL 2022-08-03 JONESGA*/
+   /*     EHRService.get().registerMoreActionsButton(new EHRShowEditUIButton(this, "onprc_ehr", "investigators", "Edit Investigators", EHRProjectEditPermission.class), "ehr", "protocol");*/
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "onprc_ehr", "vet_assignment", ONPRC_EHRCMUAdministrationPermission.class), "onprc_ehr", "vet_assignment");
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "study", "demographicsAssignedVet", ONPRC_EHRCMUAdministrationPermission.class), "study", "demographicsAssignedVet");
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "onprc_ehr", "vet_assignment",ONPRC_EHRCMUAdministrationPermission.class), "onprc_ehr", "vet_assignment_summary");
