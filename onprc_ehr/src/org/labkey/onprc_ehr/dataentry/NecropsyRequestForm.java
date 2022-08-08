@@ -1,5 +1,6 @@
 package org.labkey.onprc_ehr.dataentry;
 
+import org.json.JSONObject;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
@@ -14,7 +15,9 @@ import org.labkey.api.view.template.ClientDependency;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NecropsyRequestForm extends RequestForm
 {
@@ -66,6 +69,15 @@ public class NecropsyRequestForm extends RequestForm
 
 
    }
+    public JSONObject toJSON()
+    {
+        JSONObject ret = super.toJSON();
+        Map<String, Object> map = new HashMap<>();
+        map.put("allowRequestsInDistantFuture", true);
+        ret.put("extraContext", map);
+        return ret;
+    }
+
 
     @Override
     protected List<String> getButtonConfigs()

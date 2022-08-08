@@ -1111,25 +1111,6 @@ exports.init = function(EHR){
             }
         });
 
-        //Added: 8-8-2022  R.Blasa
-         EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study','tissueDistributions', function (helper, scriptErrors, row, oldRow) {
-            //NOTE: allow future dates to process
-            helper.setScriptOptions({
-                allowFutureDates: true
-            });
-        });
-
-
-        //Added: 8-8-2022  R.Blasa
-        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study','encounters', function (helper, scriptErrors, row, oldRow) {
-            //NOTE: allow future dates to process
-            if (row.Id && (row.type == 'Tissues' || row.type == 'Necropsy')) {
-                helper.setScriptOptions({
-                    allowFutureDates: true
-                });
-            }
-        });
-
 
         //Added 3-5-2019  R.Blasa
         EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
