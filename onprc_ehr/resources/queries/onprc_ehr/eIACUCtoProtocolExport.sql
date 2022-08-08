@@ -1,3 +1,4 @@
+/* Added change to make it work */
 SELECT p.rowid,
 p.Protocol_ID as protocol,
 p.Template_OID,
