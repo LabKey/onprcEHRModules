@@ -1824,8 +1824,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         log("Begin the test with entry data page");
         EnterDataPage enterData = EnterDataPage.beginAt(this, getContainerPath());
-        enterData.waitAndClickAndWait(Locator.linkWithText("Necropsy Request"));
-        waitForElement(Locator.pageHeader("Necropsy Request"));
+        enterData.waitAndClickAndWait(Locator.linkWithText("Pathology Service Request"));
+        waitForElement(Locator.pageHeader("Pathology Service Request"));
 
         log("Setting the Necropsy details");
         setNecropsyFormElement("Id", animalId);
