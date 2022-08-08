@@ -1814,7 +1814,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         String type = "Necropsy";
         String chargeType = "1";
         String procedureid = "Necropsy Grade 2: Standard";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String tissue = "AMNION (T-88300)";
 
         // Insert a row so we can select a charge unit in the form
