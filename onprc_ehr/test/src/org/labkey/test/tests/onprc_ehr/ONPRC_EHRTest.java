@@ -1829,7 +1829,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         log("Setting the Necropsy details");
         setNecropsyFormElement("Id", animalId);
-        setNecropsyFormElement("date", tomorrow.format(formatter));
+        setNecropsyFormElementbyID("datefield", tomorrow.format(formatter));
         click(Locator.tagWithClassContaining("div","x4-trigger-index-1"));
         _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
@@ -1839,21 +1839,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _ext4Helper.selectComboBoxItem("Charge Unit:", Ext4Helper.TextMatchTechnique.CONTAINS, "ChargeUnit1");
         _ext4Helper.selectComboBoxItem("Procedure:", Ext4Helper.TextMatchTechnique.CONTAINS, procedureid);
 
-        log("Entering values for Tissue Samples");
-        Ext4GridRef grid = _helper.getExt4GridForFormSection("Tissue Samples");
-        _helper.addRecordToGrid(grid);
-        int index = grid.getRowCount();
-        grid.setGridCell(index, "Id", animalId);
-        grid.setGridCell(index, "date", tomorrow.format(formatter));
-        grid.setGridCell(index, "tissue", tissue);
 
-        log("Entering values for Organ Weights");
-        grid = _helper.getExt4GridForFormSection("Organ Weights");
-        _helper.addRecordToGrid(grid);
-        index = grid.getRowCount();
-        grid.setGridCell(index, "Id", animalId);
-        grid.setGridCell(index, "date", tomorrow.format(formatter));
-        grid.setGridCell(index, "tissue", tissue);
 
         log("Submit the request and approve");
         clickButton("Request & Approve", 0);
@@ -1868,7 +1854,13 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         //code to add for the remaining flow
     }
-
+    private void setNecropsyFormElementbyID(String id, String value)
+    {
+        Locator loc = Locator.inputByIdContaining(id);
+        waitForElement(loc);
+        setFormElement(loc, value);
+        assertEquals(value, getFormElement(loc));
+    }
     private void setNecropsyFormElement(String id, String value)
     {
         Locator loc = Locator.name(id);
