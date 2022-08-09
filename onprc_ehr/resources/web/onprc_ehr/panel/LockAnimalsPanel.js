@@ -125,6 +125,7 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
             return;
 
         var ret;
+        var ctx = EHR.Utils.getEHRContext();
         up.items.each(function(item){
             if (item.getId() != this.getId())
             {
@@ -141,11 +142,26 @@ Ext4.define('ONPRC_EHR.panel.LockAnimalsPanel', {
                     item.setDisabled(locked); ///Disable all data entry fields on the screen
                     btn.setDisabled(locked); //Disable the "Unlock Entry" button for other users
 
-                    if (LABKEY.Security.currentUser.isSystemAdmin || LABKEY.Security.currentUser.isAdmin )  //Let the sys Admins and Folder Admins unlock the screen
+                    //Let the sys Admins and Folder Admins unlock the screen
+                    if (LABKEY.Security.currentUser.isSystemAdmin || LABKEY.Security.currentUser.isAdmin )
                     {
                         btn.setDisabled(!locked);
                     }
+                    else {
+                        //Allow specific permission group to unlock birth screen
+                        var groups = "Birth Lock Release Group";
+                        LABKEY.Security.getGroupsForCurrentUser({
+                            successCallback: function (results) {
+                                for (var i = 0; i < results.groups.length; i++) {
+                                    if (groups == (results.groups[i].name)) {
 
+                                        btn.setDisabled(!locked);
+                                        return true;
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
                 //If the locked person is the loggedin person, Lock the screen. ie the Birth screen is always locked when you open it first time.
                 else if (this.locked_person == LABKEY.Security.currentUser.displayName)  // || LABKEY.Security.currentUser.isAdmin )
