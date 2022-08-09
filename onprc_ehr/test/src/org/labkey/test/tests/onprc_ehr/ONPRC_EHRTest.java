@@ -1834,11 +1834,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
         clickButton("Submit",0);
-        _ext4Helper.selectComboBoxItem("Type:", Ext4Helper.TextMatchTechnique.CONTAINS,type);
-        setNecropsyFormElement("chargetype", chargeType);
-        _ext4Helper.selectComboBoxItem("Charge Unit:", Ext4Helper.TextMatchTechnique.CONTAINS, "ChargeUnit1");
-        _ext4Helper.selectComboBoxItem("Procedure:", Ext4Helper.TextMatchTechnique.CONTAINS, procedureid);
-
 
 
         log("Submit the request and approve");
