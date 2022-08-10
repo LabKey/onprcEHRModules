@@ -1836,8 +1836,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         clickButton("Submit",0);
 
 
-        log("Submit the request and approve");
-        clickButton("Request & Approve", 0);
+        log("Submit the request");
+        clickButton("Request", 0);
 
         waitForElement(Locator.linkWithText("Pending Requests"));
         assertElementPresent(Locator.linkWithText("Pending Requests"));
