@@ -1839,9 +1839,9 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         log("Submit the request");
         clickButton("Request", 0);
 
-        waitForElement(Locator.linkWithText("Pending Requests"));
-        assertElementPresent(Locator.linkWithText("Pending Requests"));
-        click(Locator.linkWithText("Approved Requests"));
+        waitForElement(Locator.linkWithText("My Pending Requests"));
+        assertElementPresent(Locator.linkWithText("My Pending Requests"));
+
 
         log("Verifying the submitted Necropsy Request");
         DataRegionTable regionTable = new DataRegionTable("query", getDriver());
