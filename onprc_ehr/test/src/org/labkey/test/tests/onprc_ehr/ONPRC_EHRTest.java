@@ -1833,7 +1833,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         click(Locator.tagWithClassContaining("div","x4-trigger-index-1"));
         _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
-        clickButton("Submit",0);
 
 
         log("Submit the request");

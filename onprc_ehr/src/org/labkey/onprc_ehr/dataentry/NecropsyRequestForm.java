@@ -57,8 +57,6 @@ public class NecropsyRequestForm extends RequestForm
         //Added 2-17-2021  R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/PathologyTissuesField.js"));
 
-        //Added 7-18-2022  R.Blasa Added Save Draft Button
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/Path_TissueRequest.js"));
 
 //        //    Added: 7-20-2022  R.Blasa
         setStoreCollectionClass("onprc_ehr.data.sources.PathTissueRequestStoreCollection");
@@ -86,7 +84,7 @@ public class NecropsyRequestForm extends RequestForm
         List<String> defaultButtons = new ArrayList<>();
         defaultButtons.add("DISCARD");
         defaultButtons.add("REQUEST");
-        defaultButtons.add("PATH_SAVEDRAFT");
+        defaultButtons.add("SAVEDRAFT");
         return defaultButtons;
     }
 
