@@ -20,13 +20,13 @@ INSERT INTO [ehr].[protocol]
            ([protocol]
            ,[investigatorId]
            ,[approve]
-           ,[description]
+           .[template_oid]
 		   ,createdBy
 		   ,modifiedby
            ,[title]
            ,[usda_level]
            ,[external_id]
-           ,[project_type]
+           ,[protocol_state]
 		   ,[last_modification]
 		   ,enddate
 		   ,container)
