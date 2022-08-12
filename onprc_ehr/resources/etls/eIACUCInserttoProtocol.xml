@@ -1,4 +1,3 @@
-<!--&#45;&#45;Added back into process-->
 <?xml version="1.0" encoding="UTF-8"?>
 
 <etl xmlns="http://labkey.org/etl/xml">
@@ -31,7 +30,7 @@
             <destination schemaName="EHR" queryName="protocol" targetOption="append" />
 
         </transform>
--->
+
 
 
     </transforms>
