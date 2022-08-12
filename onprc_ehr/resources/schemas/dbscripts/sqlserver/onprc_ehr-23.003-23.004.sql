@@ -35,9 +35,7 @@ INSERT INTO [ehr].[protocol]
 
      SELECT
 	   [Protocol_ID]
-	    ,Case when [PI_ID] like 'spa%' then 0
-	  else (Select rowid from onprc_ehr.investigators where employeeID = PI_ID and datedisabled is null)
-	  End as PIID
+	   (Select rowid from onprc_ehr.investigators where employeeID = PI_ID and datedisabled is null)PI_ID
 	  ,[Approval_Date]
       ,[Template_OID]
 	  ,'1011'
@@ -55,4 +53,4 @@ INSERT INTO [ehr].[protocol]
 
 
   FROM [onprc_ehr].[eIACUC_PRIME_VIEW_PROTOCOLS]
-  where Protocol_state <> 'Withdrawn'
+  where (Protocol_state <> 'Withdrawn' and Len(PI_ID) > 3)

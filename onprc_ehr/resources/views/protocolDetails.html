@@ -50,7 +50,7 @@ Ext4.onReady(function (){
         requiredVersion: 9.1,
         schemaName: 'ehr',
         queryName: 'protocol',
-        columns: 'protocol,displayName,description',
+        columns: 'protocol,displayName,Template_OID',
         filterArray: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback(),
         scope: this,
@@ -157,8 +157,8 @@ Ext4.onReady(function (){
     LDK.Utils.getReadOnlyQWP({
         title: 'Allowable NHPs By Species',
         schemaName: 'onprc_ehr',
-        queryName: 'eIACUCAnimalsAllowed',
-        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        queryName: 'eIACUC_AllowableNhps_Species',
+        filters: [LABKEY.Filter.create('parent_protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback()
     }).render('allowableAnimals_' + webpart.wrapperDivId);
 

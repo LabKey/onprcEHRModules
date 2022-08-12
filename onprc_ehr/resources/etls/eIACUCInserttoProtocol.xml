@@ -21,12 +21,16 @@
             </procedure>
         </transform>
 
-        <transform id="Stored_ProcInsert" type="StoredProcedure">
-            <description>Inserts ProtocolData to ehr.protocol</description>
-            <procedure schemaName="onprc_ehr" procedureName="insertToEhr_Protocol">
-            </procedure>
-        </transform>
+        <transform id="step3">
 
+            <description>Append eIACUC Data to Protocol</description>
+
+            <source schemaName="onprc_ehr" queryName="eIACUCtoProtocolExport"/>
+
+            <destination schemaName="EHR" queryName="protocol" targetOption="append" />
+
+        </transform>
+-->
 
 
     </transforms>
