@@ -40,7 +40,9 @@ Ext4.define('onprc_ehr.data.PathTissuesClientStore', {
             miscCharges = Ext4.encode(miscCharges);
 
             return {
-                MiscChargesInTransaction: miscCharges
+                MiscChargesInTransaction: miscCharges,
+                // Tell the trigger scripts it's OK to use a placeholder ID
+                AllowAnyId: true
             }
         }
         return null;
