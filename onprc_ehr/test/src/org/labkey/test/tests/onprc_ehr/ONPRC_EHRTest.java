@@ -1835,8 +1835,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
 
 
-        log("Submit the request");
-        clickButton("Request", 0);
+//        log("Submit the request");
+//        clickButton("Request", 0);
 
         waitForElement(Locator.linkWithText("My Pending Requests"));
         assertElementPresent(Locator.linkWithText("My Pending Requests"));
