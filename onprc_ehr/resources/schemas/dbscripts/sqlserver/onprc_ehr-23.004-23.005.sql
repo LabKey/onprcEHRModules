@@ -22,5 +22,5 @@ CREATE PROCEDURE [onprc_ehr].[eIACUC_removeRecords]
 
       -- Insert statements for procedure here
   	Delete from ehr.protocol
-  	where external_id is not null
+  	where created >= TimeStampAdd('SQL_TSI_DAY', -3. Now)
   END
