@@ -37,7 +37,7 @@
 
     <schedule>
         <!-- runs at noon every saturday -->
-        <cron expression="0 0 12 ? * SAT *"/>
+        <cron expression="0 0 2 * * ?"/>
 
     </schedule>
 
