@@ -274,13 +274,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following cages have animals, but do not have known dimensions:</b><br>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString("room") + "/" + rs.getString("cage") + "<br>\n");
-                }
-            });
+            ts.forEach(rs -> msg.append(rs.getString("room") + "/" + rs.getString("cage") + "<br>\n"));
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "missingCages", null) + "'>Click here to view the problem cages</a></p>\n");
             msg.append("<hr>\n");
@@ -290,13 +284,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (ts2.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following cages do have have their row/column specified:</b><br>\n");
-            ts2.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString("cage") + "<br>\n");
-                }
-            });
+            ts2.forEach(rs -> msg.append(rs.getString("cage") + "<br>\n"));
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "cagesMissingColumn", null) + "'>Click here to view the problem cages</a></p>\n");
             msg.append("<hr>\n");
@@ -313,28 +301,11 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following rooms report a negative number for available cages.  This probably means there is a problem in the cage divider configuration, or an animal is listed as being housed in the higher-numbered cage of a joined pair:</b><br>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString("room") + "<br>\n");
-                }
-            });
+            ts.forEach(rs -> msg.append(rs.getString("room") + "<br>\n"));
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr_lookups", "roomUtilization", null) + "&query.CagesEmpty~lt=0'>Click here to view the problem rooms</a></p>\n");
             msg.append("<hr>\n");
         }
-
-    }
-
-
-    protected void eventsInLast5Days(Container c, User u, StringBuilder msg)
-    {
-        msg.append("<b>Colony events in the past 5 days:</b><p>");
-        birthsInLast5Days(c, u, msg);
-        msg.append("<br><br>\n");
-        deathsInLast5Days(c, u, msg);
-        msg.append("<hr>\n");
     }
 
     /**
@@ -353,23 +324,18 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p/>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
-            {
-                @Override
-                public void exec(ResultSet rs) throws SQLException
+            ts.forEach(rs -> {
+                String status = rs.getString("viralStatuses");
+                if (status != null)
                 {
-                    String status = rs.getString("viralStatuses");
-                    if (status != null)
-                    {
-                        status = status.replaceAll("\\)\n", ")<br>");
-                        status = status.replaceAll("\n", " / ");
-                    }
-
-                    String area = rs.getString("area");
-                    String room = rs.getString("room");
-                    String url = getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&query.Id/curLocation/room~eq=" + room;
-                    msg.append("<tr><td style='vertical-align:top;'>" + area + "</td><td style='vertical-align:top;'><a href='" + url + "'>" + room + ":</a></td><td><a href='" + url + "'>" + status + "</a></td></tr>\n");
+                    status = status.replaceAll("\\)\n", ")<br>");
+                    status = status.replaceAll("\n", " / ");
                 }
+
+                String area = rs.getString("area");
+                String room = rs.getString("room");
+                String url = getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&query.Id/curLocation/room~eq=" + room;
+                msg.append("<tr><td style='vertical-align:top;'>" + area + "</td><td style='vertical-align:top;'><a href='" + url + "'>" + room + ":</a></td><td><a href='" + url + "'>" + status + "</a></td></tr>\n");
             });
             msg.append("</table>\n");
             msg.append("<hr>\n");
@@ -385,13 +351,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following rooms have animals, but do not have a record in the rooms table:</b><br>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString("room") + "<br>\n");
-                }
-            });
+            ts.forEach(rs -> msg.append(rs.getString("room") + "<br>\n"));
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "missingRooms", null) + "'>Click here to view the problem rooms</a></p>\n");
             msg.append("<hr>\n");
@@ -418,18 +378,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following animals do not have a weight:</b><br>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    Results results = new ResultsImpl(rs, columns);
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()));
-                    String age = results.getString(FieldKey.fromString("Id/age/AgeFriendly"));
-                    if (age != null)
-                        msg.append(" (Age: " + age + ")");
+            ts.forEach(rs -> {
+                Results results = new ResultsImpl(rs, columns);
+                msg.append(rs.getString(getStudy(c).getSubjectColumnName()));
+                String age = results.getString(FieldKey.fromString("Id/age/AgeFriendly"));
+                if (age != null)
+                    msg.append(" (Age: " + age + ")");
 
-                    msg.append("<br>\n");
-                }
+                msg.append("<br>\n");
             });
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&query.calculated_status~eq=Alive&query.Id/MostRecentWeight/MostRecentWeightDate~isblank'>Click here to view these animals</a></p>\n");
@@ -466,13 +422,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
 	        msg.append("<b>WARNING: There are " + count + " active housing records where the animal is not alive:</b><br>\n");
 
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
-                }
-            });
+            ts.forEach(rs -> msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n"));
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Housing", null) + "&query.enddate~isblank&query.Id/Dataset/Demographics/calculated_status~neqornull=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
@@ -495,13 +445,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
 	        msg.append("<b>WARNING: There are " + count + " living animals without an active housing record:</b><br>\n");
 
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
-                }
-            });
+            ts.forEach(rs -> msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n"));
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&query.Id/curLocation/room/room~isblank&query.Id/Dataset/Demographics/calculated_status~eq=Alive'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
@@ -519,13 +463,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + count + " animals listed as living, but have a birth type indicating they were born dead:</b><br>\n");
 
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
-                }
-            });
+            ts.forEach(rs -> msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n"));
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null, filter) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
@@ -713,60 +651,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
-    /**
-     * find records created within the past 7 days, which have a date more than 7 days before then
-     */
-    protected void recordsEnteredMoreThan7DaysAfter(final Container c, User u, final StringBuilder msg)
-    {
-        int offset = 7;
-
-    }
-
-
-    /**
-     * find the total finalized records with future dates
-     */
-    protected void finalizedRecordsWithFutureDates(final Container c, User u, final StringBuilder msg)
-    {
-        String datasets = "Treatment Orders;Assignment";
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("qcstate/PublicData"), true);
-        Date date = new Date();
-        filter.addCondition(FieldKey.fromString("date"), date, CompareType.GTE);
-        filter.addCondition(FieldKey.fromString("dataset/label"), datasets, CompareType.NOT_IN);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("StudyData"), filter, null);
-        long count = ts.getRowCount();
-        if (count > 0)
-        {
-            msg.append("<b>WARNING: There are " + count + " finalized records with future dates.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "StudyData", null) + "&query.date~dategt=" + getDateFormat(c).format(date) + "&query.qcstate/PublicData~eq=true&query.dataset/label~notin=" + datasets + "'>Click here to view them</a><br>\n\n");
-            msg.append("<hr>\n\n");
-        }
-    }
-
-    /**
-     * deaths in the last 5 days
-     */
-    protected void deathsInLast5Days(final Container c, User u, final StringBuilder msg)
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.DATE, -5);
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_GTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Deaths"), filter, new Sort(getStudy(c).getSubjectColumnName()));
-        if (ts.getRowCount() > 0)
-        {
-            msg.append("Deaths since " + getDateFormat(c).format(cal.getTime()) + ":<br><br>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
-                }
-            });
-
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Deaths", null) + "&query.date~dategte=" + getDateFormat(c).format(cal.getTime()) + "'>Click here to view them</a><p>\n");
-        }
-    }
 
     protected void protocolsWithFutureApproveDates(final Container c, User u, final StringBuilder msg)
     {
@@ -781,31 +665,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are " + count + " IACUC protocols with approve dates listed more than 7 days in the future.</b><br>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "protocol", null) + "&query.approve~dategte=%2B7d'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
-        }
-    }
-
-    /**
-     * births in the last 5 days
-     */
-    protected void birthsInLast5Days(final Container c, User u, final StringBuilder msg)
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.DATE, -5);
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_GTE);
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("Birth"), filter, new Sort(getStudy(c).getSubjectColumnName()));
-        if (ts.getRowCount() > 0)
-        {
-            msg.append("Births since " + getDateFormat(c).format(cal.getTime()) + ":<br><br>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + "<br>\n");
-                }
-            });
-
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Birth", null) + "&query.date~dategte=" + getDateFormat(c).format(cal.getTime()) + "'>Click here to view them</a><p>\n");
         }
     }
 
@@ -941,29 +800,24 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are " + count + " finalized birth records within the past 30 days lacking information:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr><td>Id</td><td>Status</td><td>Birth Date</td><td>Remarks</td><td>Gender</td><td>Species</td><td>Geographic Origin</td></tr>");
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
-            {
-                @Override
-                public void exec(ResultSet object) throws SQLException
-                {
-                    Results rs = new ResultsImpl(object, cols);
-                    String url = getExecuteQueryUrl(c, "study", "demographics", null);
-                    url = url.replaceAll("executeQuery.view", "updateQuery.view");
-                    url = url.replaceAll("/query/", "/ehr/");
+            ts.forEach(object -> {
+                Results rs = new ResultsImpl(object, cols);
+                String url = getExecuteQueryUrl(c, "study", "demographics", null);
+                url = url.replaceAll("executeQuery.view", "updateQuery.view");
+                url = url.replaceAll("/query/", "/ehr/");
 
-                    msg.append("<tr>");
-                    msg.append("<td><a href=\"" + url + "&query.Id~eq=" + rs.getString("Id") + "\">" + rs.getString("Id") + "</a></td>");
-                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/calculated_status")) == null ? "Unknown" : rs.getString(FieldKey.fromString("Id/demographics/calculated_status"))) + "</td>");
+                msg.append("<tr>");
+                msg.append("<td><a href=\"" + url + "&query.Id~eq=" + rs.getString("Id") + "\">" + rs.getString("Id") + "</a></td>");
+                msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/calculated_status")) == null ? "Unknown" : rs.getString(FieldKey.fromString("Id/demographics/calculated_status"))) + "</td>");
 
-                 //Added: 2-20-2020  R.Blasa
-                    msg.append("<td>" + (rs.getString("date") == null ? "Unknown" : rs.getDate("date")) + "</td>");
-                    msg.append("<td>" + (rs.getString("remark") == null ? " " : rs.getString("remark")) + "</td>");
+             //Added: 2-20-2020  R.Blasa
+                msg.append("<td>" + (rs.getString("date") == null ? "Unknown" : rs.getDate("date")) + "</td>");
+                msg.append("<td>" + (rs.getString("remark") == null ? " " : rs.getString("remark")) + "</td>");
 
-                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
-                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/species")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/species"))) + "</td>");
-                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/geographic_origin")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/geographic_origin"))) + "</td>");
-                    msg.append("</tr>");
-                }
+                msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
+                msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/species")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/species"))) + "</td>");
+                msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/geographic_origin")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/geographic_origin"))) + "</td>");
+                msg.append("</tr>");
             });
             msg.append("</table>");
             msg.append("<hr>\n\n");
@@ -1153,30 +1007,27 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
             msg.append("<td>Id </td><td>Location </td><td>Start Date </td><td>End Date </td><td>Project </td><td>Procedure </td><td>Instructions </td><td>Remark </td><td>First Contact </td><td>Second Contact </td><td>Third Contact </td><td>Created By </td><td>Created </td><td>Lab Phone Num </td><td>Status </td></tr>");
 
-            ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
-                @Override
-                public void exec(ResultSet object) throws SQLException {
-                    Results rs = new ResultsImpl(object, colMap);
-                    String url = getParticipantURL(c, rs.getString("Id"));
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                String url = getParticipantURL(c, rs.getString("Id"));
 
-                    msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
-                    msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("location")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("procedurename")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("instructions")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("FirstContact")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("SecondContact")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("ThirdContact")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("createdby")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("created")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("LabPhoneNum")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("status")) + "</td>");
-                    msg.append("</tr>");
-                }
+                msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
+                msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("location")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("procedurename")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("instructions")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("FirstContact")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("SecondContact")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ThirdContact")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("createdby")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("created")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("LabPhoneNum")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("status")) + "</td>");
+                msg.append("</tr>");
             });
             msg.append("</table>");
         }
@@ -1252,23 +1103,20 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
             msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
 
-            ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
-                @Override
-                public void exec(ResultSet object) throws SQLException {
-                    Results rs = new ResultsImpl(object, colMap);
-                    msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("resourceid")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("startdate")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("name")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("alias")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("quantity")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("comments")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("color")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("room")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("bldg")) + "</td>");
-                    msg.append("</tr>");
-                }
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("resourceid")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("startdate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("name")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("alias")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("quantity")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("comments")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("color")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("room")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("bldg")) + "</td>");
+                msg.append("</tr>");
             });
             msg.append("</table>");
         }
@@ -1295,23 +1143,20 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
             msg.append("<td>Resource Id </td><td>Start Date </td><td>End Date </td><td>Name </td><td>Alias </td><td>Quantity </td><td>Comments </td><td>Color </td><td>Room </td><td>Bldg </td></tr>");
 
-            ts3.forEach(new Selector.ForEachBlock<ResultSet>() {
-                @Override
-                public void exec(ResultSet object) throws SQLException {
-                    Results rs1 = new ResultsImpl(object, colMap1);
-                    msg.append("<tr bgcolor = " + '"' + "#CEF6CE" + '"' + ">");
-                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("resourceid")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("startdate")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("enddate")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("name")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("alias")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("quantity")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("comments")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("color")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("room")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs1.getString("bldg")) + "</td>");
-                    msg.append("</tr>");
-                }
+            ts3.forEach(object -> {
+                Results rs1 = new ResultsImpl(object, colMap1);
+                msg.append("<tr bgcolor = " + '"' + "#CEF6CE" + '"' + ">");
+                msg.append("<td>" + PageFlowUtil.filter(rs1.getString("resourceid")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs1.getString("startdate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs1.getString("enddate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs1.getString("name")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs1.getString("alias")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs1.getString("quantity")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs1.getString("comments")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs1.getString("color")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs1.getString("room")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs1.getString("bldg")) + "</td>");
+                msg.append("</tr>");
             });
             msg.append("</table>");
         }
@@ -1403,64 +1248,65 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
             msg.append("<td> Id </td><td> In Date </td><td> Building </td><td> Area </td><td> Room </td><td> Cage </td><td> Housing Type </td><td> Housing Condition </td><td> Reason For Move </td><td> Remark </td><td> Num animals before the transfer </td></tr>");
 
-            ts2.forEach(new Selector.ForEachBlock<ResultSet>() {
-                @Override
-                public void exec(ResultSet object) throws SQLException {
-                    Results rs = new ResultsImpl(object, colMap);
-                    String url = getParticipantURL(c, rs.getString("Id"));
-                    int animal_count = rs.getInt("TotalAnimals");
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                String url = getParticipantURL(c, rs.getString("Id"));
+                int animal_count = rs.getInt("TotalAnimals");
 
-                    if ( animal_count == 0) { //high light the row in yellow if the room was empty before the move
-                        msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
-                        if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") == null)
-                        {  //High light with blue color if there are any active treatments
-                            msg.append("<td style= " + '"' + "background-color:#00FFFF" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
-                        }
-                        else if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") != null)
-                        { //High light with orange color if there are any diets within treatments
-                            msg.append("<td style= " + '"' + "background-color:#FFA500" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
-                        }
-                        else {
-                            msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
-                        }
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("InDate")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Building")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Area")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingType")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingCondition")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReasonForMove")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Remark")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getInt("TotalAnimals")) + "</td>");
-                        msg.append("</tr>");
+                if (animal_count == 0)
+                { //high light the row in yellow if the room was empty before the move
+                    msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
+                    if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") == null)
+                    {  //High light with blue color if there are any active treatments
+                        msg.append("<td style= " + '"' + "background-color:#00FFFF" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
                     }
-                    else { //animal moving into non-empty room
-                        if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") == null)
-                        {  //High light with blue color if there are any active treatments
-                            msg.append("<td style= " + '"' + "background-color:#00FFFF" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
-                        }
-                        else if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") != null)
-                        { //High light with orange color if there are any diets within treatments
-                            msg.append("<td style= " + '"' + "background-color:#FFA500" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
-                        }
-                        else {
-                            msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
-                        }
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("InDate")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Building")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Area")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingType")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingCondition")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReasonForMove")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("Remark")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getInt("TotalAnimals")) + "</td>");
-                        msg.append("</tr>");
+                    else if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") != null)
+                    { //High light with orange color if there are any diets within treatments
+                        msg.append("<td style= " + '"' + "background-color:#FFA500" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
                     }
-
+                    else
+                    {
+                        msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                    }
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("InDate")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Building")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Area")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingType")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingCondition")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReasonForMove")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Remark")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getInt("TotalAnimals")) + "</td>");
+                    msg.append("</tr>");
                 }
+                else
+                { //animal moving into non-empty room
+                    if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") == null)
+                    {  //High light with blue color if there are any active treatments
+                        msg.append("<td style= " + '"' + "background-color:#00FFFF" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                    }
+                    else if (rs.getString("ActiveClinicalTreatment") != null && rs.getString("ActiveDiets") != null)
+                    { //High light with orange color if there are any diets within treatments
+                        msg.append("<td style= " + '"' + "background-color:#FFA500" + '"' + "> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                    }
+                    else
+                    {
+                        msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                    }
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("InDate")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Building")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Area")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingType")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("housingCondition")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReasonForMove")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Remark")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getInt("TotalAnimals")) + "</td>");
+                    msg.append("</tr>");
+                }
+
             });
                 msg.append("</table>");
         }
@@ -1482,17 +1328,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animalUsage", null) + "&query.totalRemaining~lt=0&query.isActive~eq=true'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
-
-//        filter = new SimpleFilter(FieldKey.fromString("pctUsed"), 95, CompareType.GTE);
-//        filter.addCondition(FieldKey.fromString("isActive"), true);
-//        ts = new TableSelector(getEHRSchema(c, u).getTable("animalUsage"), filter, new Sort(getStudy(c).getSubjectColumnName()));
-//        long count2 = ts.getRowCount();
-//        if (count2 > 0)
-//        {
-//            msg.append("<b>WARNING: There are " + count2 + " protocols with fewer than 5% of their animals remaining.</b><br>\n");
-//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "animalUsage", null) + "&query.pctUsed~gte=95&query.isActive~eq=true'>Click here to view them</a><br>\n\n");
-//            msg.append("<hr>\n\n");
-//        }
     }
 
     /**
@@ -1595,17 +1430,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following animals are listed as Alive and are over 30 days old, but do not have a known gender:</b><br>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
-            {
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()));
-                    if (rs.getDate("birth") == null)
-                        msg.append(" (" + getDateFormat(c).format(rs.getDate("birth")) + ")");
+            ts.forEach(rs -> {
+                msg.append(rs.getString(getStudy(c).getSubjectColumnName()));
+                if (rs.getDate("birth") == null)
+                    msg.append(" (" + getDateFormat(c).format(rs.getDate("birth")) + ")");
 
-                    msg.append("<br>\n");
-                }
+                msg.append("<br>\n");
             });
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", null) + "&query.gender/meaning~in=;Unknown&query.calculated_status~eq=Alive&query.Id/age/ageInDays~gte=30'>Click here to view these animals</a></p>\n");
             msg.append("<hr>\n");
@@ -1623,13 +1453,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (ts.getRowCount() > 0)
         {
             msg.append("<b>WARNING: The following birth records were entered in the last 90 days, but are missing a gender:</b><br>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + " (" + getDateFormat(c).format(rs.getDate("date"))+ ")" + "<br>\n");
-                }
-            });
+            ts.forEach(rs -> msg.append(rs.getString(getStudy(c).getSubjectColumnName()) + " (" + getDateFormat(c).format(rs.getDate("date"))+ ")" + "<br>\n"));
 
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Birth", null) + "&query.gender~isblank=&query.date~dategte=-90d'>Click here to view these animals</a></p>\n");
             msg.append("<hr>\n");
@@ -1794,14 +1618,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<br>");
 
             final Set<String> locations = new TreeSet<>();
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
-            {
-                @Override
-                public void exec(ResultSet object) throws SQLException
-                {
-                    String url = AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/cageDetails.view?room=" + object.getString("room");
-                    locations.add("<a href='" + url + "'>" + object.getString("room") + " / " + object.getString("cage") + (object.getString("expectedCage") == null ? ".  No record of this cage" : ".  Expected cage: " + object.getString("expectedCage")) + "</a>");
-                }
+            ts.forEach(object -> {
+                String url = AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath() + "/cageDetails.view?room=" + object.getString("room");
+                locations.add("<a href='" + url + "'>" + object.getString("room") + " / " + object.getString("cage") + (object.getString("expectedCage") == null ? ".  No record of this cage" : ".  Expected cage: " + object.getString("expectedCage")) + "</a>");
             });
 
             msg.append(StringUtils.join(locations, "<br>"));
@@ -1882,34 +1701,29 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("The following surgery cases were closed in the past 48H:<br>");
             msg.append("<table border=1 style='border-collapse: collapse;'><tr><td>Id</td><td>Current Location</td><td>Location At Case Open</td><td>Cagemates At Open</td><td>Cagemate Current Location(s)</td><td>Active Groups</td></tr>");
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
-            {
-                @Override
-                public void exec(ResultSet object) throws SQLException
+            ts.forEach(object -> {
+                Results rs = new ResultsImpl(object, columns);
+
+                String currentLocation = rs.getString(FieldKey.fromString("Id/curLocation/room"));
+                if (rs.getString(FieldKey.fromString("Id/curLocation/cage")) != null)
                 {
-                    Results rs = new ResultsImpl(object, columns);
-
-                    String currentLocation = rs.getString(FieldKey.fromString("Id/curLocation/room"));
-                    if (rs.getString(FieldKey.fromString("Id/curLocation/cage")) != null)
-                    {
-                        currentLocation += " " + rs.getString(FieldKey.fromString("Id/curLocation/cage"));
-                    }
-
-                    String previousLocation = rs.getString(FieldKey.fromString("cagematesAtOpen/roomAtOpen"));
-                    if (rs.getString(FieldKey.fromString("cagematesAtOpen/cageAtOpen")) != null)
-                    {
-                        previousLocation += " " + rs.getString(FieldKey.fromString("cagematesAtOpen/cageAtOpen"));
-                    }
-
-                    msg.append("<tr><td>").append(rs.getString(FieldKey.fromString("Id"))).append("</td>");
-                    msg.append("<td>").append(prepareStringForCell(currentLocation)).append("</td>");
-                    msg.append("<td>").append(prepareStringForCell(previousLocation)).append("</td>");
-
-                    msg.append("<td>").append(prepareStringForCell(rs.getString(FieldKey.fromString("cagematesAtOpen/cagematesAtOpen")))).append("</td>");
-                    msg.append("<td>").append(prepareStringForCell(rs.getString(FieldKey.fromString("cagematesAtOpen/cagemateCurrentLocations")))).append("</td>");
-                    msg.append("<td>").append(prepareStringForCell(rs.getString(FieldKey.fromString("Id/activeAnimalGroups/groups")))).append("</td>");
-                    msg.append("</tr>");
+                    currentLocation += " " + rs.getString(FieldKey.fromString("Id/curLocation/cage"));
                 }
+
+                String previousLocation = rs.getString(FieldKey.fromString("cagematesAtOpen/roomAtOpen"));
+                if (rs.getString(FieldKey.fromString("cagematesAtOpen/cageAtOpen")) != null)
+                {
+                    previousLocation += " " + rs.getString(FieldKey.fromString("cagematesAtOpen/cageAtOpen"));
+                }
+
+                msg.append("<tr><td>").append(rs.getString(FieldKey.fromString("Id"))).append("</td>");
+                msg.append("<td>").append(prepareStringForCell(currentLocation)).append("</td>");
+                msg.append("<td>").append(prepareStringForCell(previousLocation)).append("</td>");
+
+                msg.append("<td>").append(prepareStringForCell(rs.getString(FieldKey.fromString("cagematesAtOpen/cagematesAtOpen")))).append("</td>");
+                msg.append("<td>").append(prepareStringForCell(rs.getString(FieldKey.fromString("cagematesAtOpen/cagemateCurrentLocations")))).append("</td>");
+                msg.append("<td>").append(prepareStringForCell(rs.getString(FieldKey.fromString("Id/activeAnimalGroups/groups")))).append("</td>");
+                msg.append("</tr>");
             });
 
             msg.append("</table><br>");
@@ -2001,22 +1815,17 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " blood draws within the past " + daysInPast + " day(s) exceeding the allowable volume.  Note: this warning may include draws scheduled in the future, but have not actually been performed.  Click the IDs below to see more information:</b><br><br>");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
-            {
-                @Override
-                public void exec(ResultSet object) throws SQLException
-                {
-                    Results rs = new ResultsImpl(object, columns);
+            ts.forEach(object -> {
+                Results rs = new ResultsImpl(object, columns);
 
-                    StringBuilder text = new StringBuilder();
-                    text.append(rs.getString(getStudy(c).getSubjectColumnName()));
-                    Double amount = -1.0 * rs.getDouble(FieldKey.fromString("BloodRemaining/availableBlood"));
-                    text.append(": ").append(DecimalFormat.getNumberInstance().format(amount)).append(" mL overdrawn on ").append(getDateFormat(c).format(rs.getDate(FieldKey.fromString("date"))));
+                StringBuilder text = new StringBuilder();
+                text.append(rs.getString(getStudy(c).getSubjectColumnName()));
+                Double amount = -1.0 * rs.getDouble(FieldKey.fromString("BloodRemaining/availableBlood"));
+                text.append(": ").append(DecimalFormat.getNumberInstance().format(amount)).append(" mL overdrawn on ").append(getDateFormat(c).format(rs.getDate(FieldKey.fromString("date"))));
 
-                    //String url = getParticipantURL(c, rs.getString(getStudy(c).getSubjectColumnName()));
-                    String url = getExecuteQueryUrl(c, "study", "Blood Draws", "With Blood Volume") + "&query.Id~eq=" + rs.getString(getStudy(c).getSubjectColumnName());
-                    lines.add("<a href='" + url + "'>" + text.toString() + "</a><br>\n");
-                }
+                //String url = getParticipantURL(c, rs.getString(getStudy(c).getSubjectColumnName()));
+                String url = getExecuteQueryUrl(c, "study", "Blood Draws", "With Blood Volume") + "&query.Id~eq=" + rs.getString(getStudy(c).getSubjectColumnName());
+                lines.add("<a href='" + url + "'>" + text.toString() + "</a><br>\n");
             });
 
             //simple way to enforce uniqueness
@@ -2066,19 +1875,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("WARNING: The following " + count + " " + label + " requests that have not been approved or denied yet:<br><br>");
             final Map<String, Integer> counts = new TreeMap<>();
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
-            {
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    String chargeType = rs.getString("chargeType") == null ? "Not Assigned" : rs.getString("chargeType");
-                    Integer count = counts.get(chargeType);
-                    if (count == null)
-                        count = 0;
+            ts.forEach(rs -> {
+                String chargeType = rs.getString("chargeType") == null ? "Not Assigned" : rs.getString("chargeType");
+                Integer count1 = counts.get(chargeType);
+                if (count1 == null)
+                    count1 = 0;
 
-                    count++;
-                    counts.put(chargeType, count);
-                }
+                count1++;
+                counts.put(chargeType, count1);
             });
 
             for (String chargeType : counts.keySet())
@@ -2117,21 +1921,16 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             final String NOT_ASSIGNED = "Not Assigned";
             final Map<String, Integer> summary = new HashMap<>();
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
-            {
-                @Override
-                public void exec(ResultSet object) throws SQLException
-                {
-                    Results rs = new ResultsImpl(object, cols);
-                    String chargeType = rs.getString("chargetype") == null ? NOT_ASSIGNED : rs.getString("chargetype");
-                    Integer count = summary.get(chargeType);
-                    if (count == null)
-                        count = 0;
+            ts.forEach(object -> {
+                Results rs = new ResultsImpl(object, cols);
+                String chargeType = rs.getString("chargetype") == null ? NOT_ASSIGNED : rs.getString("chargetype");
+                Integer count1 = summary.get(chargeType);
+                if (count1 == null)
+                    count1 = 0;
 
-                    count++;
+                count1++;
 
-                    summary.put(chargeType, count);
-                }
+                summary.put(chargeType, count1);
             });
 
             msg.append("The following " + label + " requests are scheduled for " + getDateFormat(c).format(new Date()) + ", but have not been marked complete:<p>\n");
@@ -2187,27 +1986,22 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<p><a href='" + url + "'>Click here to view them</a><br><br>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
-            {
-                @Override
-                public void exec(ResultSet object) throws SQLException
+            ts.forEach(object -> {
+                ResultsImpl rs = new ResultsImpl(object, columns);
+                String summary = rs.getString(FieldKey.fromString("roomSummary"));
+                if (summary != null)
                 {
-                    ResultsImpl rs = new ResultsImpl(object, columns);
-                    String summary = rs.getString(FieldKey.fromString("roomSummary"));
-                    if (summary != null)
-                    {
-                        summary = summary.replaceAll("\\)\n", ")<br>");
-                        summary = summary.replaceAll("\n", " / ");
-                    }
-
-                    DetailsURL groupUrl = DetailsURL.fromString("/ehr/animalGroupDetails.view", c);
-                    String groupUrlString = AppProps.getInstance().getBaseServerUrl() + groupUrl.getActionURL().toString();
-                    groupUrlString += "groupId=" + rs.getInt("groupId");
-
-                    String group = rs.getString(FieldKey.fromString("groupId/name"));
-                    String url2 = url + "&query.groupId/name~eq=" + group;
-                    msg.append("<tr><td style='vertical-align:top;'><a href='" + groupUrlString + "'>" + group + ":</a></td><td><a href='" + url2 + "'>" + summary + "</a></td></tr>\n");
+                    summary = summary.replaceAll("\\)\n", ")<br>");
+                    summary = summary.replaceAll("\n", " / ");
                 }
+
+                DetailsURL groupUrl = DetailsURL.fromString("/ehr/animalGroupDetails.view", c);
+                String groupUrlString = AppProps.getInstance().getBaseServerUrl() + groupUrl.getActionURL().toString();
+                groupUrlString += "groupId=" + rs.getInt("groupId");
+
+                String group = rs.getString(FieldKey.fromString("groupId/name"));
+                String url2 = url + "&query.groupId/name~eq=" + group;
+                msg.append("<tr><td style='vertical-align:top;'><a href='" + groupUrlString + "'>" + group + ":</a></td><td><a href='" + url2 + "'>" + summary + "</a></td></tr>\n");
             });
             msg.append("</table>\n");
             msg.append("<hr>\n");
@@ -2322,21 +2116,16 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>NOTE: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in ASB RM 213, ASB RM 236, ASB RM 240, ASB RM 185, ASB RM 239 & COL RM 4</b><br><br>");
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
-            {
-                @Override
-                public void exec(ResultSet object) throws SQLException
-                {
-                    ResultsImpl rs = new ResultsImpl(object, cols);
-                    String subjectId = rs.getString(getStudy(c).getSubjectColumnName());
-                    String location = rs.getString(FieldKey.fromString("Id/curLocation/room"));
-                    String cage = rs.getString(FieldKey.fromString("Id/curLocation/cage"));
-                    if (cage != null)
-                        location += " " + cage;
+            ts.forEach(object -> {
+                ResultsImpl rs = new ResultsImpl(object, cols);
+                String subjectId = rs.getString(getStudy(c).getSubjectColumnName());
+                String location = rs.getString(FieldKey.fromString("Id/curLocation/room"));
+                String cage = rs.getString(FieldKey.fromString("Id/curLocation/cage"));
+                if (cage != null)
+                    location += " " + cage;
 
-                    String url = getParticipantURL(c, subjectId);
-                    msg.append("<a href='" + url + "'>" + subjectId + " (" + location + ")</a><br>\n");
-                }
+                String url = getParticipantURL(c, subjectId);
+                msg.append("<a href='" + url + "'>" + subjectId + " (" + location + ")</a><br>\n");
             });
             msg.append("<hr>\n");
         }
