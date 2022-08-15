@@ -32,7 +32,7 @@
 	<schedule>
 
              <!--3AM-->
-                    <cron expression="0 50 04 * * ?"/>
+                    <cron expression="0 50 01 * * ?"/>
 
         </schedule>
 </etl>
