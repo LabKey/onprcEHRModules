@@ -1808,7 +1808,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testNecropsyRequestFlow() throws IOException, CommandException
     {
-        String animalId = "12345";
+        String animalId = "00000";
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
         String projectId = "640991";
         String type = "Necropsy";
