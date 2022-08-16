@@ -1,4 +1,4 @@
-/* Added change to make it work */
+/* Added change to make it work 2022-08-16 */
 SELECT
 p.Protocol_ID as protocol,
 p.Template_OID,
