@@ -198,6 +198,17 @@ exports.init = function(EHR){
             });
         }
     });
+    //Added 8-15-2022  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'tissueDistributions', function(event, helper){
+        // Special handling for Pathology Request Form to use a placeholder ID
+        helper.decodeExtraContextProperty('AllowAnyId', false);
+        var allowAnyId = helper.getProperty('AllowAnyId');
+        if (allowAnyId) {
+            helper.setScriptOptions({
+                allowAnyId: true
+            });
+        }
+    });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'assignment', function(event, helper){
         helper.setScriptOptions({
