@@ -1808,19 +1808,16 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testNecropsyRequestFlow() throws IOException, CommandException
     {
-        String animalId = "00000";
+        String animalId = "12345";
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
         String projectId = "640991";
         String type = "Necropsy";
         String chargeType = "1";
         String procedureid = "Necropsy Grade 2: Standard";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String tissue = "AMNION (T-88300)";
 
-        // Insert a row so we can select a charge unit in the form
-        InsertRowsCommand chargeUnitCommand = new InsertRowsCommand("onprc_billing", "chargeUnits");
-        chargeUnitCommand.addRow(Maps.of("chargetype", "ChargeUnit1", "servicecenter", "ServiceCenter1", "shownInProcedures", true, "active", true));
-        chargeUnitCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
         log("Begin the test with entry data page");
         EnterDataPage enterData = EnterDataPage.beginAt(this, getContainerPath());
@@ -1833,6 +1830,39 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         click(Locator.tagWithClassContaining("div","x4-trigger-index-1"));
         _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
+        _ext4Helper.selectComboBoxItem("Center Project Billing:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
+        _ext4Helper.selectComboBoxItem("billingproject:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
+        setNecropsyFormElement("fastingtype", "N/A");
+        setNecropsyFormElement("animaldelivery", "Deliver from Surgery");
+        setNecropsyFormElement("remainingTissues", "Yes");
+        setNecropsyFormElement("necropsylocation", "ASA South");
+
+        log("Entering values for Tissue Distributions");
+        Ext4GridRef grid = _helper.getExt4GridForFormSection("Tissue Distributions");
+        _helper.addRecordToGrid(grid);
+        int index = grid.getRowCount();
+        grid.setGridCell(index, "Id", animalId);
+        grid.setGridCell(index, "datefield", tomorrow.format(formatter2));
+        grid.setGridCell(index, "tissue", "T-Y5000");
+        grid.setGridCell(index, "recipient", "AXTHELM");
+        grid.setGridCell(index, "sampletype", "Biopsy");
+        _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
+        _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
+
+
+        log("Setting the MiscCharges details");
+        Ext4GridRef grid2 = _helper.getExt4GridForFormSection("Misc Charges");
+        _helper.addRecordToGrid(grid);
+        int index2 = grid.getRowCount();
+        setBillingFormElement("Id", animalId);
+        setBillingFormElement("date", tomorrow.format(formatter2));
+        click(Locator.tagWithClassContaining("div","x4-trigger-index-1"));
+        _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
+        _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
+        setBillingFormElement("chargetype", "DCM: Pathology Services");
+        setBillingFormElement("chargeId", "Pathology- Necropsy Grade 2 Standard");
+        setBillingFormElement("quantity", "1.0");
+
 
 
         log("Submit the request");
@@ -1857,6 +1887,14 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         assertEquals(value, getFormElement(loc));
     }
     private void setNecropsyFormElement(String id, String value)
+    {
+        Locator loc = Locator.name(id);
+        waitForElement(loc);
+        setFormElement(loc, value);
+        assertEquals(value, getFormElement(loc));
+    }
+
+    private void setBillingFormElement(String id, String value)
     {
         Locator loc = Locator.name(id);
         waitForElement(loc);
