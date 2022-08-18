@@ -16,11 +16,6 @@ ALTER PROCEDURE [onprc_ehr].[eIACUC_removeRecords]
 
   AS
   BEGIN
-
-
-
-
-
   	Delete from ehr.protocol
   	where project_type like '%Source'
   END
