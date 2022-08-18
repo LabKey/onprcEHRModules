@@ -20,10 +20,11 @@ p.created,
 p.modifiedby,
 p.modified,
 p.PROTOCOL_State,
+p.protocol_id as External_id,
 -- Trims to the base of the Protocol ID for Base to determ,ine when changes are made
 Case when len(p.protocol_id) > 11 then (Select substring(p.protocol_id,6,15))
 	 else p.protocol_id
-	End as external_ID,
+	End as contacts,
 --Use the Protocol_State to determine end date of a protocol
 Case
     When p.protocol_State Not Like 'Approved' then p.last_MOdified
