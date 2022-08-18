@@ -1831,7 +1831,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
         _ext4Helper.selectComboBoxItem("Center Project Billing:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
-        _ext4Helper.selectComboBoxItem("billingproject:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
+        _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
         setNecropsyFormElement("fastingtype", "N/A");
         setNecropsyFormElement("animaldelivery", "Deliver from Surgery");
         setNecropsyFormElement("remainingTissues", "Yes");
