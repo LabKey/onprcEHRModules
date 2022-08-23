@@ -6,7 +6,7 @@
                 <columns>
                     <column columnName="rowid">
                         <columnTitle>Row ID</columnTitle>
-                        <isHidden>true</isHidden>
+                        <isHidden>false</isHidden>
                       </column>
                     <column columnName="testid">
                         <columnTitle>Test ID</columnTitle>
