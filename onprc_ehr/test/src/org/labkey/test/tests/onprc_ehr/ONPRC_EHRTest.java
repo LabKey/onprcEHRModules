@@ -1830,11 +1830,11 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         click(Locator.tagWithClassContaining("div","x4-trigger-index-1").index(0)); // first drop down
         _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
-        clickButton("Submit",0);
-        click(Locator.tagWithClassContaining("div","x4-trigger-index-1").index(1)); // second drop down
+        waitAndClick(Ext4Helper.Locators.ext4Button("Submit"));
+        click(Locator.tagWithClassContaining("div","x4-trigger-index-1"));
         _ext4Helper.selectComboBoxItem("Center Project Billing:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
-        clickButton("Submit",0);
+        waitAndClick(Ext4Helper.Locators.ext4Button("Submit"));
         setNecropsyFormElement("fastingtype", "N/A");
         setNecropsyFormElement("animaldelivery", "Deliver from Surgery");
         setNecropsyFormElement("remainingTissues", "Yes");
