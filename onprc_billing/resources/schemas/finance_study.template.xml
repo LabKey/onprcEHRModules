@@ -1,0 +1,19 @@
+<templateSchema sourceSchemaName="study" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>assignment</tableName>
+        <tableName>housing</tableName>
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="assignment" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Assignment</tableTitle>
+            </table>
+            <table tableName="housing" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>housing</tableTitle>
+            </table>
+
+        </tables>
+    </metadata>
+</templateSchema>

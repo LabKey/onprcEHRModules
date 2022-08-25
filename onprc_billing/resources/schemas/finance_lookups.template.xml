@@ -1,0 +1,29 @@
+<templateSchema sourceSchemaName="ehr_lookups" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>buildings</tableName>
+        <tableName>cages</tableName>
+        <tableName>rooms</tableName>
+        <tableName>roomUtilization</tableName>
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="buildings" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>buildings</tableTitle>
+            </table>
+            <table tableName="cages" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>cages</tableTitle>
+            </table>
+            <table tableName="rooms" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>rooms</tableTitle>
+            </table>
+            <table tableName="roomUtilization" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>roomUtilization</tableTitle>
+            </table>
+
+        </tables>
+    </metadata>
+</templateSchema>
