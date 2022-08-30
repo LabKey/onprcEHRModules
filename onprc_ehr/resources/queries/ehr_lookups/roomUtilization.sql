@@ -2,6 +2,7 @@
  * Copyright (c) 2010-2016 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ * File has needed linked to ehr_lookups and changing broke the links, reversed and adding to test 1
  */
 SELECT
   r.room,
