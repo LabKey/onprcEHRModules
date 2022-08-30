@@ -14,7 +14,7 @@ SELECT
   count(DISTINCT h.id) as TotalAnimals
 
 
-FROM finance_lookups.rooms r
+FROM ehr_lookups.rooms r
 LEFT JOIN (
 	SELECT c.room, c.cage
 	FROM ehr_lookups.cage c
@@ -23,10 +23,10 @@ LEFT JOIN (
     --allow for rooms w/o cages
 	UNION ALL
 	SELECT r.room, null as cage
-	FROM finance_lookups.rooms r
+	FROM ehr_lookups.rooms r
 ) c on (r.room = c.room)
-LEFT JOIN finance_study.housing h ON (r.room=h.room AND (c.cage=h.cage OR (c.cage is null and h.cage is null)) AND h.isActive = true)
-LEFT JOIN finance_lookups.availableCagesByRoom cbr ON (cbr.room = r.room)
+LEFT JOIN study.housing h ON (r.room=h.room AND (c.cage=h.cage OR (c.cage is null and h.cage is null)) AND h.isActive = true)
+LEFT JOIN ehr_lookups.availableCagesByRoom cbr ON (cbr.room = r.room)
 WHERE r.datedisabled is null
 GROUP BY r.room
 
