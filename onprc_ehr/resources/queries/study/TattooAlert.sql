@@ -1,4 +1,4 @@
--- Displays animals with no tattoo proc recorded
+-- Displays all animals with no tattoo procedure recorded excluding the purchased animals
 Select Id, birth, gender from study.demographics a
 Where a.calculated_status = 'Alive'
   And a.id not in (Select id from study.arrival where acquisitiontype = 6) --6= Purchase
