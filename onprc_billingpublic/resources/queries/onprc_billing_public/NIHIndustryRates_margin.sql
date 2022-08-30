@@ -1,7 +1,3 @@
-/*
-Modifided to remove 1.91 from Industrial Rate, returned when application of F&A is requested
-2022-08-29
-*/
 PARAMETERS (MARGIN FLOAT DEFAULT .25)
 Select
 n.category,

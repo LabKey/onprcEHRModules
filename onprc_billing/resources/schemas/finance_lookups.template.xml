@@ -4,6 +4,7 @@
         <tableName>cages</tableName>
         <tableName>rooms</tableName>
         <tableName>roomUtilization</tableName>
+        <tableName>availablecagesbyRoom</tableName>
     </tables>
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
@@ -22,6 +23,10 @@
             <table tableName="roomUtilization" tableDbType="NOT_IN_DB">
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>roomUtilization</tableTitle>
+            </table>
+            <table tableName="availablecagesbyRoom" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>availablecagesbyRoom</tableTitle>
             </table>
 
         </tables>
