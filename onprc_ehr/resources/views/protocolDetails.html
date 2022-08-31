@@ -90,7 +90,7 @@ Ext4.onReady(function (){
                 }
             });
 
-            var otherReports = [{
+/*            var otherReports = [{
                 name: 'View Active Animal Assignments',
                 url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Assignment', 'query.viewName': 'Active Assignments', 'query.project/protocol/displayName~eq': sr.getValue('displayName')})
             },{
@@ -111,7 +111,7 @@ Ext4.onReady(function (){
             },{
                 name: 'View The Number of Small Lab Animals Allowed Under This Protocol',
                 url : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'sla', 'query.queryName': 'allowableAnimals', 'query.protocol/displayName~eq': sr.getValue('displayName')})
-            }];
+            }];*/
 
             Ext4.create('LDK.panel.WebpartPanel', {
                 title: 'Other Reports',
