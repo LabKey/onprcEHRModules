@@ -1,3 +1,5 @@
+<!--Cleanup of data that awas blocking deletion of folders.-->
+
 <tables xmlns="http://labkey.org/data/xml">
     <table tableDbType="TABLE" tableName="etl_runs">
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
