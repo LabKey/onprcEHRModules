@@ -26,7 +26,7 @@ LEFT JOIN (
 	SELECT r.room, null as cage
 	FROM ehr_lookups.rooms r
 ) c on (r.room = c.room)
-LEFT JOIN study.housing h ON (r.room=h.room AND (c.cage=h.cage OR (c.cage is null and h.cage is null)) AND h.isActive = true)
+LEFT JOIN finance_study.housing h ON (r.room=h.room AND (c.cage=h.cage OR (c.cage is null and h.cage is null)) AND h.isActive = true)
 LEFT JOIN ehr_lookups.availableCagesByRoom cbr ON (cbr.room = r.room)
 WHERE r.datedisabled is null
 GROUP BY r.room
