@@ -35,7 +35,7 @@ select
   cast(a.project.name || ' (' || a.project.investigatorId.lastname || '): ' || cast(count(distinct a.id.curLocation.cage) as varchar) as varchar) as projectCageTotal,
   count(distinct a.id) as totalAnimals
 
-from finance_Study.assignment a
+from study.assignment a
 where a.isActive = true and a.id.curLocation.room IS NOT NULL
 group by a.id.curLocation.room, a.project.name, a.project.investigatorId.lastname
 
