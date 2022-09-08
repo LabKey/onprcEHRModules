@@ -1832,7 +1832,9 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
         waitAndClick(Ext4Helper.Locators.ext4Button("Submit"));
         click(Locator.tagWithClassContaining("div","x4-trigger-index-1").index(1));
-        _ext4Helper.selectComboBoxItem("Center Project Billing:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
+        Ext4ComboRef combo = Ext4ComboRef.getForLabel(this, "Center Project Billing");
+        combo.waitForStoreLoad();
+        _ext4Helper.selectComboBoxItem(Locator.id(combo.getId()),Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
         waitAndClick(Ext4Helper.Locators.ext4Button("Submit"));
         setNecropsyFormElement("fastingtype", "N/A");
