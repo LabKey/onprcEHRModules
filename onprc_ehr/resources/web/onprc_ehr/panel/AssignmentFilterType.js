@@ -65,7 +65,7 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 store: {
                     type: 'labkey-store',
                     schemaName: 'onprc_ehr',
-                    sql: 'SELECT distinct lastname FROM onprc_ehr.investigators WHERE lastname is not null',
+                    sql: 'SELECT distinct lastname FROM onprc_ehr.investigators WHERE enddate is null',
                     sort: 'lastname',
                     autoLoad: true
                 },
