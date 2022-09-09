@@ -3,6 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
+/Modified: 9-8-2022  R.Blasa
 Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
     extend: 'LDK.panel.AbstractFilterType',
     alias: 'widget.onprc_ehr-assignmentfiltertype',
@@ -41,21 +42,7 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 scope: this.tabbedReportPanel
             }],
             items: [{
-                xtype: 'labkey-combo',
-                multiSelect: true,
-                itemId: 'divisionField',
-                fieldLabel: 'Division(s)',
-                valueField: 'division',
-                displayField: 'division',
-                store: {
-                    type: 'labkey-store',
-                    schemaName: 'onprc_ehr',
-                    sql: 'SELECT distinct division FROM onprc_ehr.investigators WHERE division is not null',
-                    sort: 'division',
-                    autoLoad: true
-                },
-                value: ctx.division ? ctx.division.split(',') :  null
-            },{
+
                 xtype: 'labkey-combo',
                 multiSelect: true,
                 itemId: 'investigatorField',
@@ -65,7 +52,7 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 store: {
                     type: 'labkey-store',
                     schemaName: 'onprc_ehr',
-                    sql: 'SELECT distinct lastname FROM onprc_ehr.investigators WHERE lastname is not null',
+                    sql: 'SELECT distinct investigatorId.lastname FROM ehr.protocol WHERE activeAnimals.TotalActiveAnimals > 0',
                     sort: 'lastname',
                     autoLoad: true
                 },
