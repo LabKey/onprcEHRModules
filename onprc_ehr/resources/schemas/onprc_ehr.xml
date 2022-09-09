@@ -1,5 +1,3 @@
-<!--Cleanup of data that awas blocking deletion of folders.-->
-
 <tables xmlns="http://labkey.org/data/xml">
     <table tableDbType="TABLE" tableName="etl_runs">
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
@@ -595,11 +593,6 @@
         </columns>
     </table>
 
-
-
-
-
-
     <table tableName="eIACUC_PRIME_VIEW_NON_SURGICAL_PROCS" tableDbType="TABLE">
         <columns>
             <column columnName="rowid"/>
@@ -616,7 +609,6 @@
             <column columnName="modified"/>
         </columns>
     </table>
-
 
 
     <table tableName="eIACUC_PRIME_VIEW_IBC_NUMBERS" tableDbType="TABLE">
@@ -652,7 +644,56 @@
             <column columnName="container"/>
         </columns>
     </table>
-
+    <table tableName="eIACUC_PRIME_VIEW_ANIMAL_GROUPS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Parent_Protocol"/>
+            <column columnName="Group_ID"/>
+            <column columnName="Group_Name"/>
+            <column columnName="Species"/>
+            <column columnName="SPF_Status"/>
+            <column columnName="Weight_Start"/>
+            <column columnName="Weight_End"/>
+            <column columnName="Age_Start"/>
+            <column columnName="Age_End"/>
+            <column columnName="Gender"/>
+            <column columnName="Number_of_Animals_Max"/>
+            <column columnName="Breeding_Colony"/>
+            <column columnName="Non_Standard_Housing_Types"/>
+            <column columnName="Non_Standard_Housing_Description"/>
+            <column columnName="Non_Standard_Housing_Frequency_and_Duration"/>
+            <column columnName="Non_Standard_Housing_Monitoring"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+            <column columnName="Restraint"/>
+            <column columnName="Nutritional_Manipulation_Description"/>
+            <column columnName="Nutritional_Manipulation_Adverse_Consequences"/>
+            <column columnName="Nutritional_Manipulation_Health_Assessment"/>
+            <column columnName="Non_Pharmaceutical_Grade_Drug_Use"/>
+            <column columnName="Food_Withheld"/>
+            <column columnName="Water_Withheld"/>
+            <column columnName="Food_Water_Withheld_Description"/>
+            <column columnName="Food_Water_Withheld_Justification"/>
+            <column columnName="Food_Water_Withheld_Adverse_Consequences"/>
+            <column columnName="Death_As_Endpoint_Number_of_Animals"/>
+            <column columnName="Death_As_Endpoint_Justification"/>
+        </columns>
+    </table>
+    <table tableName="eIACUC_PRIME_VIEW_SURGICAL_PROCS" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="OID"/>
+            <column columnName="Animal_Group"/>
+            <column columnName="Standard_Procedure"/>
+            <column columnName="Iterations"/>
+            <column columnName="Deviation"/>
+            <column columnName="Deviation_Description"/>
+            <column columnName="Recovery_Days"/>
+            <column columnName="Surgery_Name"/>
+        </columns>
+    </table>
 
     <table tableName="eIACUC_PRIME_VIEW_PROTOCOLS" tableDbType="TABLE">
         <columns>
@@ -701,45 +742,8 @@
             <column columnName="container"/>
         </columns>
     </table>
-    <table tableName="PRIME_VIEW_PROTOCOLS" tableDbType="TABLE">
-        <columns>
-            <column columnName="rowid"/>
-            <column columnName="Protocol_ID"/>
-            <column columnName="Template_OID"/>
-            <column columnName="Protocol_OID"/>
-            <column columnName="Protocol_Title"/>
-            <column columnName="PI_ID"/>
-            <column columnName="PI_First_Name"/>
-            <column columnName="PI_Last_Name"/>
-            <column columnName="PI_Email"/>
-            <column columnName="PI_Phone"/>
-            <column columnName="USDA_Level"/>
-            <column columnName="Approval_Date"/>
-            <column columnName="Annual_Update_Due"/>
-            <column columnName="Three_year_Expiration"/>
-            <column columnName="Last_Modified"/>
-            <column columnName="createdby"/>
-            <column columnName="created"/>
-            <column columnName="modifiedby"/>
-            <column columnName="modified"/>
-            <column columnName="PROTOCOL_State"/>
-            <column columnName="PPQ_Numbers"/>
-            <column columnName="Description"/>
-        </columns>
-    </table>
-    <table tableName="PRIME_VIEW_SURGICAL_PROCS" tableDbType="TABLE">
-        <columns>
-            <column columnName="rowid"/>
-            <column columnName="OID"/>
-            <column columnName="Animal_Group"/>
-            <column columnName="Standard_Procedure"/>
-            <column columnName="Iterations"/>
-            <column columnName="Deviation"/>
-            <column columnName="Deviation_Description"/>
-            <column columnName="Recovery_Days"/>
-            <column columnName="Surgery_Name"/>
-        </columns>
-    </table>
+
+
     <table tableName="Reference_StaffNames" tableDbType="TABLE">
         <columns>
             <column columnName="RowId"/>
@@ -814,37 +818,37 @@
 
     <!--PMIC reference data schema. Added by Kolli, 03/24/2020 -->
     <table tableName="PMIC_Reference_Data" tableDbType="TABLE" useColumnOrder="true">
-    <tableTitle>PMIC_Reference_Data</tableTitle>
-    <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
-    <auditLogging>DETAILED</auditLogging>
-    <columns>
-        <column columnName="rowId">
-            <isHidden>true</isHidden>
-        </column>
+        <tableTitle>PMIC_Reference_Data</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowId">
+                <isHidden>true</isHidden>
+            </column>
 
-        <column columnName="value">
-            <columnTitle>Value</columnTitle>
-        </column>
+            <column columnName="value">
+                <columnTitle>Value</columnTitle>
+            </column>
 
-        <column columnName="name">
-            <columnTitle>Name</columnTitle>
-        </column>
+            <column columnName="name">
+                <columnTitle>Name</columnTitle>
+            </column>
 
-        <column columnName="remark"/>
-        <column columnName="dateDisabled">
-            <columnTitle>End Date</columnTitle>
-        </column>
+            <column columnName="remark"/>
+            <column columnName="dateDisabled">
+                <columnTitle>End Date</columnTitle>
+            </column>
 
-        <column columnName="created">
-            <isHidden>true</isHidden>
-        </column>
-        <column columnName="createdby"/>
-        <column columnName="modified">
-            <isHidden>true</isHidden>
-        </column>
-        <column columnName="modifiedby"/>
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="createdby"/>
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby"/>
 
-    </columns>
+        </columns>
     </table>
 
     <table tableName="availableCages_temp" tableDbType="TABLE">
@@ -862,7 +866,7 @@
             <column columnName="isMarkedUnavailable" />
         </columns>
     </table>
-    
+
     <table tableName="availableCagesByRoom_temp" tableDbType="TABLE">
         <columns>
             <column columnName="room" />
@@ -1181,7 +1185,7 @@
             <column columnName="dateDisabled">
                 <columnTitle>Date Disabled</columnTitle>
             </column>
-         </columns>
+        </columns>
     </table>
 
     <table tableName="Epoc_tests" tableDbType="TABLE" useColumnOrder="true">
