@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-/Modified: 9-8-2022  R.Blasa
+//Modified: 9-8-2022  R.Blasa
 Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
     extend: 'LDK.panel.AbstractFilterType',
     alias: 'widget.onprc_ehr-assignmentfiltertype',
@@ -42,7 +42,6 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 scope: this.tabbedReportPanel
             }],
             items: [{
-
                 xtype: 'labkey-combo',
                 multiSelect: true,
                 itemId: 'investigatorField',
@@ -51,7 +50,7 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 displayField: 'lastname',
                 store: {
                     type: 'labkey-store',
-                    schemaName: 'onprc_ehr',
+                    schemaName: 'ehr',
                     sql: 'SELECT distinct investigatorId.lastname FROM ehr.protocol WHERE activeAnimals.TotalActiveAnimals > 0',
                     sort: 'lastname',
                     autoLoad: true
@@ -65,7 +64,6 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
 
     getFilters: function(){
         var obj = {
-            division: this.down('#divisionField').getValue(),
             investigator: this.down('#investigatorField').getValue()
         };
 
@@ -83,19 +81,12 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
             nonRemovable: []
         };
 
-        var division = this.down('#divisionField').getValue();
-        if(Ext4.isArray(division)){
-            division = division.join(';');
-        }
 
         var investigator = this.down('#investigatorField').getValue();
         if(Ext4.isArray(investigator)){
             investigator = investigator.join(';');
         }
 
-        if (division){
-            filterArray.nonRemovable.push(LABKEY.Filter.create('Id/activeAssignments/divisions', division, LABKEY.Filter.Types.CONTAINS_ONE_OF));
-        }
 
         if (investigator){
             filterArray.nonRemovable.push(LABKEY.Filter.create('Id/activeAssignments/investigators', investigator, LABKEY.Filter.Types.CONTAINS_ONE_OF));
@@ -109,11 +100,7 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
     },
 
     isValid: function(){
-        if (!this.down('#divisionField').getValue() && !this.down('#investigatorField').getValue()){
-            return false;
-        }
-
-        return true;
+           return true;
     },
 
     getFilterInvalidMessage: function(){
@@ -122,17 +109,6 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
 
     getTitle: function(){
         var title = [];
-
-        var divisionText = this.down('#divisionField').getValue();
-        if (Ext4.isArray(divisionText)){
-            if (divisionText.length < 8)
-                divisionText = 'Division: ' + divisionText.join(', ');
-            else
-                divisionText = 'Multiple divisions selected';
-        }
-
-        if (divisionText)
-            title.push(divisionText);
 
         var investigatorText = this.down('#investigatorField').getValue();
         if (Ext4.isArray(investigatorText)){
