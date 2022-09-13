@@ -12,7 +12,7 @@ GO
   -- Create date: 2022/06/20
   -- Description:	Process to remove records created in eIACUC from protocol dataset
   -- =============================================
-ALTER PROCEDURE [onprc_ehr].[eIACUC_removeRecords]
+CREATE PROCEDURE [onprc_ehr].[eIACUC_removeRecords]
 
   AS
   BEGIN
