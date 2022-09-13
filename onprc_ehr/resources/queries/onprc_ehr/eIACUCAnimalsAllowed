@@ -1,0 +1,9 @@
+SELECT
+    a.Parent_Protocol as Protocol,
+    a.Species,
+
+    Sum(a.Number_of_Animals_Max) as MaxAllowed
+FROM eIACUC_PRIME_VIEW_ANIMAL_GROUPS a
+group by
+    a.Parent_Protocol,
+    a.Species
