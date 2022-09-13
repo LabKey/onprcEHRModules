@@ -1847,7 +1847,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _helper.addRecordToGrid(grid);
         int index = grid.getRowCount();
         grid.setGridCell(index, "Id", animalId);
-        grid.setGridCell(index, "datefield", tomorrow.format(formatter2));
+        grid.setGridCell(index, "datefield", tomorrow.format(formatter));
         grid.setGridCell(index, "tissue", "T-Y5000");
         grid.setGridCell(index, "recipient", "AXTHELM");
         grid.setGridCell(index, "sampletype", "Biopsy");
