@@ -1211,10 +1211,9 @@
             <column columnName="test_results">
                 <columnTitle>Test Results</columnTitle>
             </column>
-            <column columnName="pass_fail"/>
 
-            <column columnName="test_results">
-                <columnTitle>Test Results</columnTitle>
+            <column columnName="pass_fail">
+                <columnTitle>Pass/Fail</columnTitle>
             </column>
             <column columnName="testing_equipment">
                 <columnTitle>Testing Equipment</columnTitle>
