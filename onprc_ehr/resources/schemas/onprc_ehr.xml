@@ -1194,7 +1194,6 @@
             <column columnName="RowId">
                 <isHidden>true</isHidden>
             </column>
-
             <column columnName="date">
                 <columnTitle>Start Date</columnTitle>
             </column>
@@ -1238,19 +1237,7 @@
             <column columnName="surface_tested">
                 <columnTitle>Surface Tested</columnTitle>
             </column>
-            <column columnName="objectid">
-            </column>
-            <column columnName="createdby">
-            </column>
-            <column columnName="created">
-            </column>
-            <column columnName="modifiedby">
-            </column>
-            <column columnName="modified">
-            </column>
-            <column columnName="formsort">
-            </column>
-            <column columnName="remarks">
+              <column columnName="remarks">
                 <columnTitle>Remarks</columnTitle>
             </column>
             <column columnName="taskid">
@@ -1280,12 +1267,18 @@
             <column columnName="objectid">
                 <isHidden>true</isHidden>
             </column>
-            <column columnName="container"/>
-            <column columnName="createdby"/>
+            <column columnName="container">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="createdby">
+                <isHidden>true</isHidden>
+            </column>
             <column columnName="created">
                 <isHidden>true</isHidden>
             </column>
-            <column columnName="modifiedby"/>
+            <column columnName="modifiedby">
+                <isHidden>true</isHidden>
+            </column>
 
             <column columnName="modified">
                 <isHidden>true</isHidden>
