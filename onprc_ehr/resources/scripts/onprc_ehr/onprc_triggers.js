@@ -711,13 +711,22 @@ exports.init = function(EHR){
             EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering ketamine or telazol, amount must be in mg', 'WARN');
         }
 
-        if (!row.amount && !row.volume){
-            EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
-            EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+        if (row.code != 'E-YY164') { //Added by kollil, 9/14/2022. Added this line to apply this validation to all meds except Omnipaque
+            if (!row.amount && !row.volume) {
+                EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
+                EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+            }
         }
+
         //Added: 10-14-2016 R.Blasa
         if ((row.code == 'E-00070' || row.code == 'E-YY490'|| row.code == 'E-YYY45') && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required when entering this medication', 'WARN');
+        }
+
+        //Added by Kollil, 9/14/2022
+        //User must enter amount and amount units when Omnipaque medication is selected, E-YY164
+        if ((row.code == 'E-YY164' ) && (!row.amount || !row.amount_units || row.amount_units.toLowerCase() != 'mg')){
+            EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering Omnipaque, must enter amount in mg', 'WARN');
         }
 
     });
@@ -945,9 +954,11 @@ exports.init = function(EHR){
             EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering ketamine or telazol, amount must be in mg', 'WARN');
         }
 
-        if (!row.amount && !row.volume){
-            EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
-            EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+        if (row.code != 'E-YY164') { //Added by kollil, 9/14/2022. Added this line to apply this validation to all meds except Omnipaque
+            if (!row.amount && !row.volume) {
+                EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
+                EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+            }
         }
 
         if (row.frequency){
@@ -959,6 +970,13 @@ exports.init = function(EHR){
         if ((row.code == 'E-00070' || row.code == 'E-YY490'|| row.code == 'E-YYY45') && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required when entering this medication', 'WARN');
         }
+
+        //Added by Kollil, 9/14/2022
+        //User must enter amount and amount units when Omnipaque medication is selected, E-YY164
+        if ((row.code == 'E-YY164' ) && (!row.amount || !row.amount_units || row.amount_units.toLowerCase() != 'mg')){
+            EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering Omnipaque, must enter amount in mg', 'WARN');
+        }
+
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'treatment_order', function(helper, errors, row, oldRow){
