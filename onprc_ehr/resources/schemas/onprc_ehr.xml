@@ -547,31 +547,31 @@
                 <isHidden>true</isHidden>
             </column>
 
-            <column columnName="value">
-                <columnTitle>Value</columnTitle>
-            </column>
+        <column columnName="value">
+            <columnTitle>Value</columnTitle>
+        </column>
 
-            <column columnName="name">
-                <columnTitle>Name</columnTitle>
-            </column>
+        <column columnName="name">
+            <columnTitle>Name</columnTitle>
+        </column>
 
-            <column columnName="remark"/>
-            <column columnName="dateDisabled">
-                <columnTitle>End Date</columnTitle>
-            </column>
+        <column columnName="remark"/>
+        <column columnName="dateDisabled">
+            <columnTitle>End Date</columnTitle>
+        </column>
 
             <column columnName="sort_order">
                 <columnTitle>Sort Order</columnTitle>
             </column>
 
-            <column columnName="created">
-                <isHidden>true</isHidden>
-            </column>
-            <column columnName="createdby"/>
-            <column columnName="modified">
-                <isHidden>true</isHidden>
-            </column>
-            <column columnName="modifiedby"/>
+        <column columnName="created">
+            <isHidden>true</isHidden>
+        </column>
+        <column columnName="createdby"/>
+        <column columnName="modified">
+            <isHidden>true</isHidden>
+        </column>
+        <column columnName="modifiedby"/>
 
         </columns>
     </table>
@@ -1367,6 +1367,111 @@
                 <columnTitle>Date Disabled</columnTitle>
             </column>
          </columns>
+    </table>
+    <table tableName="Environmental_Assessment" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>NHP Training</tableTitle>
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="RowId">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="date">
+                <columnTitle>Start Date</columnTitle>
+            </column>
+
+            <column columnName="service_requested">
+                <columnTitle>Service Requested</columnTitle>
+            </column>
+            <column columnName="testing_location">
+                <columnTitle>Testing Location</columnTitle>
+            </column>
+
+            <column columnName="test_type">
+                <columnTitle>Test Type</columnTitle>
+            </column>
+            <column columnName="test_results">
+                <columnTitle>Test Results</columnTitle>
+            </column>
+            <column columnName="pass_fail"/>
+
+            <column columnName="test_results">
+                <columnTitle>Test Results</columnTitle>
+            </column>
+            <column columnName="testing_equipment">
+                <columnTitle>Testing Equipment</columnTitle>
+            </column>
+            <column columnName="biological_Cycle">
+                <columnTitle>Biological Cycle</columnTitle>
+            </column>
+            <column columnName="colony_count">
+                <columnTitle>Colony Count</columnTitle>
+            </column>
+            <column columnName="action">
+                <columnTitle>Action</columnTitle>
+            </column>
+            <column columnName="collectedby">
+                <columnTitle>Performed By</columnTitle>
+            </column>
+            <column columnName="water_source">
+                <columnTitle>Water Source</columnTitle>
+            </column>
+            <column columnName="surface_tested">
+                <columnTitle>Surface Tested</columnTitle>
+            </column>
+            <column columnName="objectid">
+            </column>
+            <column columnName="createdby">
+            </column>
+            <column columnName="created">
+            </column>
+            <column columnName="modifiedby">
+            </column>
+            <column columnName="modified">
+            </column>
+            <column columnName="formsort">
+            </column>
+            <column columnName="remarks">
+                <columnTitle>Remarks</columnTitle>
+            </column>
+            <column columnName="taskid">
+                <columnTitle>Task Id</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>tasks</fkTable>
+                    <fkColumnName>taskid</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="qcstate">
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>qcstate</fkTable>
+                    <fkColumnName>RowId</fkColumnName>
+                </fk>
+            </column>
+
+            <column columnName="formSort">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="performedby">
+                <columnTitle>Performed by</columnTitle>
+            </column>
+
+            <column columnName="objectid">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby"/>
+
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+            </column>
+        </columns>
     </table>
 
 

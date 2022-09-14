@@ -88,6 +88,7 @@ import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
 import org.labkey.onprc_ehr.history.ONPRCClinicalRemarksDataSource;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
 import org.labkey.onprc_ehr.history.ONPRCiStatLabworkType;
+import org.labkey.onprc_ehr.history.ONPRCEpocLabworkType;
 import org.labkey.onprc_ehr.notification.*;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
@@ -121,7 +122,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 22.002;
+        return 23.002;
     }
 
     @Override
@@ -502,8 +503,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 11-4-2019  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(TBTestObservationFormType.class, this));
 
-        //Added: 7-11-2022  R.Blasa
-        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EnvironmentalFormType.class, this));
+        //Added: 6-6-2022  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EpocFormType.class, this));
+
+        //Added: 6-6-2022  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EnvironmentalLabFormType.class, this));
 
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
@@ -638,6 +642,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
         EHRService.get().registerLabworkType(new ONPRCiStatLabworkType(this));
+           //     7-26-2022  R. Blasa
+        EHRService.get().registerLabworkType(new ONPRCEpocLabworkType(this));
         //R.Blasa   11-28-2016
         EHRService.get().registerHistoryDataSource(new DefaultNHPTrainingDataSource(this));
 
