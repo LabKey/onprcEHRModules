@@ -46,6 +46,7 @@ public class ChargesARTCoreFormSection extends SimpleFormSection
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/model/sources/ARTCoreMisc.js"));
         addConfigSource("ARTCoreMisc");
+
     }
 
     @Override
