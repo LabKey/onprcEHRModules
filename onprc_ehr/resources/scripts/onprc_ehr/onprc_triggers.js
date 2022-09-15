@@ -726,7 +726,7 @@ exports.init = function(EHR){
         //Added by Kollil, 9/14/2022
         //User must enter amount and amount units when Omnipaque medication is selected, E-YY164
         if ((row.code == 'E-YY164' ) && (!row.amount || !row.amount_units || row.amount_units.toLowerCase() != 'mg')){
-            EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering Omnipaque, must enter amount in mg', 'WARN');
+            EHR.Server.Utils.addError(scriptErrors, 'amount', 'When entering Omnipaque, must enter amount and amount_units must be in mg', 'WARN');
         }
 
     });
@@ -974,7 +974,7 @@ exports.init = function(EHR){
         //Added by Kollil, 9/14/2022
         //User must enter amount and amount units when Omnipaque medication is selected, E-YY164
         if ((row.code == 'E-YY164' ) && (!row.amount || !row.amount_units || row.amount_units.toLowerCase() != 'mg')){
-            EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering Omnipaque, must enter amount in mg', 'WARN');
+            EHR.Server.Utils.addError(scriptErrors, 'amount', 'When entering Omnipaque, must enter amount and amount_units must be in mg', 'WARN');
         }
 
     });
