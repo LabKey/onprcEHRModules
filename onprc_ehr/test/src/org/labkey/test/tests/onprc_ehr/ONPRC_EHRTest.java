@@ -1810,14 +1810,13 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         String animalId = "12345";
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        LocalDateTime dayAfterTomorrow = LocalDateTime.now().plusDays(2);
         String projectId = "640991";
-        String type = "Necropsy";
-        String chargeType = "1";
-        String procedureid = "Necropsy Grade 2: Standard";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String tissue = "AMNION (T-88300)";
 
+        InsertRowsCommand protocolCommand = new InsertRowsCommand("onprc_billing", "chargeableItems");
+        protocolCommand.addRow(Maps.of("name", "Pathology- Necropsy Grade 2 Standard", "category", "Pathology", "canRaiseFA", "true", "endDate", dayAfterTomorrow.format(formatter2), "active", "true"));
+        protocolCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
         log("Begin the test with entry data page");
         EnterDataPage enterData = EnterDataPage.beginAt(this, getContainerPath());
@@ -1826,7 +1825,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         log("Setting the Necropsy details");
         setNecropsyFormElement("Id", animalId);
-        setNecropsyFormElementbyID("datefield", tomorrow.format(formatter));
+        setNecropsyFormElementbyID("datefield", tomorrow.format(formatter2));
         click(Locator.tagWithClassContaining("div","x4-trigger-index-1").index(0)); // first drop down
         _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
@@ -1847,28 +1846,20 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _helper.addRecordToGrid(grid);
         int index = grid.getRowCount();
         grid.setGridCell(index, "Id", animalId);
-        grid.setGridCell(index, "datefield", tomorrow.format(formatter));
-        grid.setGridCell(index, "tissue", "T-Y5000");
-        grid.setGridCell(index, "recipient", "AXTHELM");
+        grid.setGridCell(index, "date", tomorrow.format(formatter2));
+        grid.setGridCell(index, "tissue", "ABDOMINAL VISCERA, NOS (T-Y5000)");
         grid.setGridCell(index, "sampletype", "Biopsy");
-        _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
-        _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
-
 
         log("Setting the MiscCharges details");
-        Ext4GridRef grid2 = _helper.getExt4GridForFormSection("Misc Charges");
-        _helper.addRecordToGrid(grid);
-        int index2 = grid.getRowCount();
-        setBillingFormElement("Id", animalId);
-        setBillingFormElement("date", tomorrow.format(formatter2));
+        waitAndClick(Locator.linkWithText("Misc. Charges"));
+        Ext4GridRef grid2 = _helper.getExt4GridForFormSection("Misc. Charges");
+        _helper.addRecordToGrid(grid2);
+        int index2 = grid2.getRowCount();
+        grid2.setGridCell(index2, "Id", animalId);
+        grid2.setGridCell(index2, "date", tomorrow.format(formatter2));
         click(Locator.tagWithClassContaining("div","x4-trigger-index-1"));
-        _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
-        _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
-        setBillingFormElement("chargetype", "DCM: Pathology Services");
-        setBillingFormElement("chargeId", "Pathology- Necropsy Grade 2 Standard");
-        setBillingFormElement("quantity", "1.0");
-
-
+        grid2.setGridCell(index2, "chargeId", "Pathology- Necropsy Grade 2 Standard");
+        grid2.setGridCell(index2, "quantity", "1.0");
 
         log("Submit the request");
         clickButton("Request", 0);
@@ -1876,10 +1867,10 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElement(Locator.linkWithText("My Pending Requests"));
         assertElementPresent(Locator.linkWithText("My Pending Requests"));
         click(Locator.linkWithText("My Pending Requests"));
-
+        click(Locator.linkWithText("Procedure"));
 
         log("Verifying the submitted Necropsy Request");
-        DataRegionTable regionTable = new DataRegionTable("query", getDriver());
+        DataRegionTable regionTable = new DataRegionTable("study|encounters", getDriver());
         assertEquals("There should be single approved necropsy request", 1, regionTable.getDataRowCount());
 
         //code to add for the remaining flow
@@ -1892,14 +1883,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         assertEquals(value, getFormElement(loc));
     }
     private void setNecropsyFormElement(String id, String value)
-    {
-        Locator loc = Locator.name(id);
-        waitForElement(loc);
-        setFormElement(loc, value);
-        assertEquals(value, getFormElement(loc));
-    }
-
-    private void setBillingFormElement(String id, String value)
     {
         Locator loc = Locator.name(id);
         waitForElement(loc);
