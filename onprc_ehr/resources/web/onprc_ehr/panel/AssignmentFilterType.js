@@ -51,7 +51,8 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 store: {
                     type: 'labkey-store',
                     schemaName: 'onprc_ehr',
-                    sql: 'SELECT distinct division FROM onprc_ehr.investigators WHERE division is not null',
+                    sql: 'SELECT distinct inv.division as division FROM onprc_ehr.investigators inv WHERE inv.division is not null and inv.datedisabled is null and inv.rowid in' +
+                            ' (select  pro.investigatorid from ehr.project pro where pro.enddate is null or pro.enddate >= now() ) ',
                     sort: 'division',
                     autoLoad: true
                 },
@@ -66,7 +67,8 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 store: {
                     type: 'labkey-store',
                     schemaName: 'ehr',
-                    sql: 'SELECT distinct investigatorId.lastname FROM ehr.protocol WHERE activeAnimals.TotalActiveAnimals > 0',
+                    sql: 'SELECT distinct inv.lastname as lastname FROM onprc_ehr.investigators inv WHERE inv.lastname is not null and inv.datedisabled is null and inv.rowid in' +
+                            ' (select  pro.investigatorid from ehr.project pro where pro.enddate is null or pro.enddate >= now() ) ',
                     sort: 'lastname',
                     autoLoad: true
                 },
