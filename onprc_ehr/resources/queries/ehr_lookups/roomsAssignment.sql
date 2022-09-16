@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 2022-08-23 Changed source of assignment data to linked schema
  */
 select
 
@@ -34,7 +35,7 @@ select
   cast(a.project.name || ' (' || a.project.investigatorId.lastname || '): ' || cast(count(distinct a.id.curLocation.cage) as varchar) as varchar) as projectCageTotal,
   count(distinct a.id) as totalAnimals
 
-from study.assignment a
+from finance_Study.assignment a
 where a.isActive = true and a.id.curLocation.room IS NOT NULL
 group by a.id.curLocation.room, a.project.name, a.project.investigatorId.lastname
 
