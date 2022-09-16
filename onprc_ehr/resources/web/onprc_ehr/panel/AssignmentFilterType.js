@@ -51,8 +51,9 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 store: {
                     type: 'labkey-store',
                     schemaName: 'onprc_ehr',
-                    sql: 'SELECT distinct inv.division as division FROM onprc_ehr.investigators inv WHERE inv.division is not null and inv.datedisabled is null and inv.rowid in' +
-                            ' (select  pro.investigatorid from ehr.project pro where pro.enddate is null or pro.enddate >= now() ) ',
+                    sql: 'SELECT distinct inv.division as division FROM onprc_ehr.investigators inv WHERE inv.lastname is not null and inv.datedisabled is null and inv.rowid in ' +
+                            '(select  pro.investigatorid from ehr.project pro, study.assignment ste where (pro.enddate is null or pro.enddate >= now() ) ' +
+                            'and (pro.project = ste.project) and (ste.enddate is null or ste.enddate >= now())  )  ',
                     sort: 'division',
                     autoLoad: true
                 },
@@ -67,8 +68,9 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 store: {
                     type: 'labkey-store',
                     schemaName: 'ehr',
-                    sql: 'SELECT distinct inv.lastname as lastname FROM onprc_ehr.investigators inv WHERE inv.lastname is not null and inv.datedisabled is null and inv.rowid in' +
-                            ' (select  pro.investigatorid from ehr.project pro where pro.enddate is null or pro.enddate >= now() ) ',
+                    sql: 'SELECT distinct inv.lastname as lastname FROM onprc_ehr.investigators inv WHERE inv.lastname is not null and inv.datedisabled is null and inv.rowid in ' +
+                    '(select  pro.investigatorid from ehr.project pro, study.assignment ste where (pro.enddate is null or pro.enddate >= now() ) ' +
+                                'and (pro.project = ste.project) and (ste.enddate is null or ste.enddate >= now())  )  ',
                     sort: 'lastname',
                     autoLoad: true
                 },
