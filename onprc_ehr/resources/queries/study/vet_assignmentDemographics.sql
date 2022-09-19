@@ -146,7 +146,6 @@ LEFT JOIN (
 
 --report only on animals that are alive or deceased in last year
 where
-    dm.calculated_status = 'Alive' and
     (d2.date is Null or Cast(d2.date as varchar(20)) > d.MostRecentArrival or (d2.date >  TimeStampAdd('SQL_TSI_MONTH', -12,Now())))
   and (d.demographics.calculated_status is not null) --and
 -- d.id not Like '[A-Z]%'
