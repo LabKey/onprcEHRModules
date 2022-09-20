@@ -246,17 +246,18 @@ Ext4.define('onprc_ehr.form.field.Path_BillingGrade', {
 
     initComponent: function(){
         Ext4.apply(this, {
-            displayField:'value',
-            valueField: 'value',
+            displayField:'name',
+            valueField: 'rowid',
             queryMode: 'local',
             store: Ext4.create('LABKEY.ext4.data.Store', {
-                schemaName: 'sla',
-                queryName: 'Reference_Data',
-                columns: 'value',
-                sort: 'value',
+                schemaName: 'onprc_billing_public',
+                queryName: 'chargeableItems',
+                columns: 'rowid,name',
+                sort: 'name',
                 filterArray: [
-                    LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
-                    LABKEY.Filter.create('ColumnName', 'NecropsyGrade', LABKEY.Filter.Types.EQUAL)],
+                    LABKEY.Filter.create('category', 'Pathology', LABKEY.Filter.EQUAL),
+                    LABKEY.Filter.create('active', true, LABKEY.Filter.Types.EQUAL),
+                    LABKEY.Filter.create('rowid', '4484;4485;4486;4487;4488;4489;5296;5297;5298;4491;4492', LABKEY.Filter.Types.EQUALS_ONE_OF)],
                 autoLoad: true
             })
         });

@@ -121,16 +121,13 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 defaultValue: 'DCM: Pathology Services'
             },
             chargeId: {
-                allowBlank: false,
-                nullable: false,
-                lookup: {
-                    filterArray: [
-                        LABKEY.Filter.create('active', true, LABKEY.Filter.Types.EQUAL),
-                        LABKEY.Filter.create('category', 'Pathology', LABKEY.Filter.Types.EQUAL),
-                        LABKEY.Filter.create('rowid', '4484;4485;4486;4487;4488;4489;5296;5297;5298;4491;4492', LABKEY.Filter.Types.EQUALS_ONE_OF)
-                    ]
-                }
-            },
+                    hidden: false,
+                    xtype: 'path_billinggrade',
+                    label: 'Charge Name',
+                    columnConfig: {
+                        width: 250
+                    }
+                },
         },
         'study.tissueDistributions': {
 
