@@ -18,7 +18,7 @@ package org.labkey.onprc_billing.dataentry;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
-import org.json.JSONObject;
+import org.json.old.JSONObject;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 
 import java.util.Collections;

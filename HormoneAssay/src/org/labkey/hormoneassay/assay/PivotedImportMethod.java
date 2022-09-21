@@ -1,10 +1,9 @@
 package org.labkey.hormoneassay.assay;
 
 import org.apache.logging.log4j.Level;
-import org.json.JSONObject;
+import org.json.old.JSONObject;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.Container;
-import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.exp.api.ExpProtocol;
@@ -19,7 +18,6 @@ import org.labkey.api.security.User;
 import org.labkey.api.view.ViewContext;
 import org.labkey.hormoneassay.HormoneAssaySchema;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;

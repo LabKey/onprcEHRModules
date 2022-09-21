@@ -52,6 +52,7 @@ import org.labkey.test.util.ext4cmp.Ext4CmpRef;
 import org.labkey.test.util.ext4cmp.Ext4ComboRef;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
 import org.labkey.test.util.ext4cmp.Ext4GridRef;
+import org.json.old.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -999,7 +1000,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         int i = 1;
         for (Map<String, Object> row : srr.getRows())
         {
-            org.json.JSONObject json = new org.json.JSONObject((String)row.get("json"));
+            JSONObject json = new JSONObject((String)row.get("json"));
             Assert.assertEquals(json.getString("category"), observationsGrid.getFieldValue(i, "category"));
             i++;
         }
