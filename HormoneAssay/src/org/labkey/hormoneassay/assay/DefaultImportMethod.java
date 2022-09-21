@@ -1,6 +1,6 @@
 package org.labkey.hormoneassay.assay;
 
-import org.json.JSONObject;
+import org.json.old.JSONObject;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.Container;
 import org.labkey.api.exp.api.ExpProtocol;

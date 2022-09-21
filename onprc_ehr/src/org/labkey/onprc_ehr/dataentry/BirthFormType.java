@@ -15,13 +15,12 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.json.JSONObject;
+import org.json.old.JSONObject;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 

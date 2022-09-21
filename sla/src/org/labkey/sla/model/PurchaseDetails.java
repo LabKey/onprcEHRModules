@@ -1,7 +1,6 @@
 package org.labkey.sla.model;
 
-import org.json.JSONObject;
-import org.labkey.api.data.Container;
+import org.json.old.JSONObject;
 import org.labkey.api.util.GUID;
 
 import java.text.DateFormat;

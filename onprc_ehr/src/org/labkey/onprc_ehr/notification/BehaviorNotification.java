@@ -16,11 +16,10 @@
 package org.labkey.onprc_ehr.notification;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.json.JSONObject;
+import org.json.old.JSONObject;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
-import org.labkey.api.data.ContainerFilterable;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
@@ -36,7 +35,6 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.writer.ContainerUser;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

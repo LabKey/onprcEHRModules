@@ -15,18 +15,8 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.json.JSONObject;
-import org.labkey.api.data.Container;
-import org.labkey.api.ehr.dataentry.AbstractFormSection;
-import org.labkey.api.ehr.dataentry.FormElement;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
-import org.labkey.api.security.User;
 import org.labkey.api.view.template.ClientDependency;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 //Added: R.Blasa 5-9-2016
 public class AnimalDetailsRoundsFormSection extends NonStoreFormSection

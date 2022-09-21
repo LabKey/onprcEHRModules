@@ -15,14 +15,11 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.json.JSONObject;
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
-import org.labkey.onprc_ehr.dataentry.NecropsyInstructionFormSection;
+import org.json.old.JSONObject;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
-import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;

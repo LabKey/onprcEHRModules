@@ -19,7 +19,7 @@ package org.labkey.sla;
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
+import org.json.old.JSONObject;
 import org.labkey.api.action.ApiResponse;
 import org.labkey.api.action.ApiSimpleResponse;
 import org.labkey.api.action.ConfirmAction;
