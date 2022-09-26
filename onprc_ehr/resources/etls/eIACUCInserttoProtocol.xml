@@ -2,7 +2,7 @@
 
 <etl xmlns="http://labkey.org/etl/xml">
 
-    <name>insertProtocolfromEIACUC</name>
+    <name>insertProtocolfromEIACUC2022</name>
 
     <description>Inserts Protocol Details from eIACUC External Schema</description>
 
