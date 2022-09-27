@@ -18,7 +18,7 @@ package org.labkey.test.tests.onprc_ehr;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.json.simple.JSONArray;
+import org.json.JSONArray;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -305,7 +305,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         // add assignmentsInTransaction, should fail
         Map<String, Object> additionalExtraContext = new HashMap<>();
         JSONArray assignmentsInTransaction = new JSONArray();
-        assignmentsInTransaction.add(Maps.of(
+        assignmentsInTransaction.put(Maps.of(
                 "Id", SUBJECTS[4],
                 "objectid", generateGUID(),
                 "date", _df.format(new Date()),
