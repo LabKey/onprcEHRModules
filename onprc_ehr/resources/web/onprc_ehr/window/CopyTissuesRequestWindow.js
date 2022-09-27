@@ -48,19 +48,6 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
             hidden: true,
             width: 400
         },{
-            //     xtype: 'ehr-simplecombo',
-            //     fieldLabel: 'Recipient',
-            //     itemId: 'recipientField',
-            //     valueField: 'rowId',
-            //     displayField: 'lastName',
-            //     schemaName: 'onprc_ehr',
-            //     queryName: 'customers',
-            //     matchFieldWidth: false,
-            //     forceSelection: true,
-            //     sortFields: 'lastName',
-            //     filterArray: [LABKEY.Filter.create('dateDisabled', null, LABKEY.Filter.Types.ISBLANK)],
-            //     width: 400
-            // },{
             xtype: 'datefield',
             fieldLabel: 'Date Limit',
             itemId: 'dateField',
@@ -99,9 +86,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
             filterArray.push(LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL));
         }
 
-        // if (recipient){
-        //     filterArray.push(LABKEY.Filter.create('recipient', recipient, LABKEY.Filter.Types.EQUAL));
-        // }
+
 
         if (date){
             filterArray.push(LABKEY.Filter.create('date', date, LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL));
