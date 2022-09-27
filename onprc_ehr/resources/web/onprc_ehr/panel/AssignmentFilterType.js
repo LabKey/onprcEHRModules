@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-//Modified: 9-8-2022  R.Blasa
+//Modified: 9-27-2022  R.Blasa
 Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
     extend: 'LDK.panel.AbstractFilterType',
     alias: 'widget.onprc_ehr-assignmentfiltertype',
