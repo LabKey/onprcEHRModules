@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013 LabKey Corporation
- *
+ * 2022-09-11 removed inadvertent change to file
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 //Modified: 9-27-2022  R.Blasa
