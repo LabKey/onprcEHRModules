@@ -188,6 +188,28 @@ exports.init = function(EHR){
         });
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'encounters', function(event, helper){
+        // Special handling for Pathology Request Form to use a placeholder ID
+        helper.decodeExtraContextProperty('AllowAnyId', false);
+        var allowAnyId = helper.getProperty('AllowAnyId');
+        if (allowAnyId) {
+            helper.setScriptOptions({
+                allowAnyId: true
+            });
+        }
+    });
+    //Added 8-15-2022  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'tissueDistributions', function(event, helper){
+        // Special handling for Pathology Request Form to use a placeholder ID
+        helper.decodeExtraContextProperty('AllowAnyId', false);
+        var allowAnyId = helper.getProperty('AllowAnyId');
+        if (allowAnyId) {
+            helper.setScriptOptions({
+                allowAnyId: true
+            });
+        }
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'assignment', function(event, helper){
         helper.setScriptOptions({
             doStandardProtocolCountValidation: false
@@ -1118,6 +1140,17 @@ exports.init = function(EHR){
                 }
             }
         });
+        //Added 8-2-2022  R.Blasa
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function (helper, scriptErrors, row, oldRow) {
+
+            helper.decodeExtraContextProperty('MiscChargesInTransaction');
+            var miscChargesInTransaction = helper.getProperty('MiscChargesInTransaction');
+
+            if (miscChargesInTransaction && miscChargesInTransaction['miscChargesEntered'] === 0) {
+                EHR.Server.Utils.addError(scriptErrors, 'Id', 'billing charges grid requires at least one row', 'WARN');
+            }
+        });
+
 
         //Added 3-5-2019  R.Blasa
         EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
