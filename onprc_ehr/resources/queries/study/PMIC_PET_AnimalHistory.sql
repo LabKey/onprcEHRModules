@@ -17,7 +17,7 @@ SELECT
     a.wetLabUse,
     a.ligandAndComments,
     --imageUploadLink,
-    e.taskid,
+    e.taskid, -- get the qc state from encounters table
     e.qcstate,
     a.performedby,
     a.created,
