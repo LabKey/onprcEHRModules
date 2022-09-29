@@ -330,7 +330,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         if (objectid == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr_lookups", "flag_values");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("category", category);
                     put("value", name);
@@ -381,14 +382,15 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         if (groupId == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr", "animal_groups");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("name", name);
                 }
             });
 
             SaveRowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
-            groupId = ((Long)saveRowsResponse.getRows().get(0).get("rowid")).intValue();
+            groupId = (Integer)saveRowsResponse.getRows().get(0).get("rowid");
         }
 
         return groupId;
