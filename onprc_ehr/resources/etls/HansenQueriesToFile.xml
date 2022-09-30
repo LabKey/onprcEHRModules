@@ -10,7 +10,7 @@
             <source queryName="studyAnimals" schemaName="Randal_data"/>
             <destination schemaName="Onprc_ehr" queryName="StudyDetails_RandalData"/>
         </transform>
-        <transform id="step2">
+      <!--  <transform id="step2">
             <description>Export Query to File Share</description>
             <source queryName="RandData_AnimalGroups" schemaName="onprc_ehr"/>
             <destination type="file" dir="hansonFiles" fileBaseName="AnimalGroups-${TransformRunId}-${Timestamp}" fileExtension="csv" />
@@ -99,7 +99,7 @@
             <description>Export Query to File Share</description>
             <source queryName="RandData_Notes" schemaName="onprc_ehr"/>
             <destination type="file" dir="hansonFiles" fileBaseName="Notes-${TransformRunId}-${Timestamp}" fileExtension="csv" />
-        </transform>
+        </transform>-->
     </transforms>
 
 </etl>
