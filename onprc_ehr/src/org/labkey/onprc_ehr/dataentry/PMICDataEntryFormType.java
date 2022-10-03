@@ -26,6 +26,7 @@ public class PMICDataEntryFormType extends TaskForm
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new ClinicalEncountersFormSection(),
+                new DrugAdministrationFormSection(),
                 new PMIC_PETFormSection(),
                 new PMIC_CTFormSection(),
                 new PMIC_SPECTFormSection(),
