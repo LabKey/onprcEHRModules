@@ -11,6 +11,15 @@
                             <fkDisplayColumnName>DisplayName</fkDisplayColumnName>
                         </fk>
                     </column>
+
+                    <column columnName="project">
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>project_active</fkTable>
+                            <fkColumnName>project</fkColumnName>
+                            <fkDisplayColumnName>name</fkDisplayColumnName>
+                        </fk>
+                    </column>
                     <column columnName="protocol">
                         <columnTitle>IACUC Protocols</columnTitle>
                         <fk>

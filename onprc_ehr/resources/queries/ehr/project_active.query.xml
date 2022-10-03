@@ -1,14 +1,14 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="protocol_active" tableDbType="NOT_IN_DB">
-                <tableTitle>Protocol Active</tableTitle>
+            <table tableName="project_active" tableDbType="NOT_IN_DB">
+                <tableTitle>Project Active</tableTitle>
                 <columns>
-                    <column columnName="protocol">
+                    <column columnName="project">
                         <isKeyField>true</isKeyField>
                         <isHidden>true</isHidden>
                     </column>
-                 </columns>
+                </columns>
             </table>
         </tables>
     </metadata>
