@@ -11,8 +11,14 @@
                             <fkDisplayColumnName>DisplayName</fkDisplayColumnName>
                         </fk>
                     </column>
-                    <column columnName="protocols">
-                        <columnTitle>Active IACUC Protocols</columnTitle>
+                    <column columnName="protocol">
+                        <columnTitle>IACUC Protocols</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>protocol_active</fkTable>
+                            <fkColumnName>protocol</fkColumnName>
+                            <fkDisplayColumnName>external_id</fkDisplayColumnName>
+                        </fk>
                     </column>
                 </columns>
             </table>
