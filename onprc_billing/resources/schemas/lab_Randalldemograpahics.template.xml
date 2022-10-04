@@ -1,0 +1,98 @@
+<templateSchema sourceSchemaName="onprc_ehr" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+
+        <tableName>RandData_birth</tableName>
+        <tableName>RandData_AnimalGroup</tableName>
+        <tableName>RandData_assignment</tableName>
+        <tableName>RandData_arrival</tableName>
+        <tableName>RandData_animalgroups</tableName>
+        <tableName>RandData_weights</tableName>
+        <tableName>RandData_Cases</tableName>
+        <tableName>RandData_clinremarks</tableName>
+        <tableName>RandData_demographics</tableName>
+        <tableName>RandData_deaths</tableName>
+        <tableName>RandData_departure</tableName>
+        <tableName>RandData_drug</tableName>
+        <tableName>RandData_flags</tableName>
+        <tableName>RandData_Hematology</tableName>
+        <tableName>RandData_Housing</tableName>
+        <tableName>RandData_MHCData</tableName>
+        <tableName>RandData_Notes</tableName>
+
+
+
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="RandData_AnimalGroup" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>RandData_AnimalGroup</tableTitle>
+            </table>
+            <table tableName="RandData_blood" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Blood</tableTitle>
+            </table>
+            <table tableName="RandData_birth" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Birth</tableTitle>
+            </table>
+            <table tableName="RandData_assignment" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Birth</tableTitle>
+            </table>
+            <table tableName="RandData_arrival" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Arrivals</tableTitle>
+            </table>
+            <table tableName="RandData_animalgroups" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>AnimalGroups</tableTitle>
+            </table>
+            <table tableName="RandData_weights" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Weights</tableTitle>
+            </table>
+            <table tableName="RandData_Cases" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Cases</tableTitle>
+            </table>
+            <table tableName="RandData_clinremarks" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>ClinRemarks</tableTitle>
+            </table>
+            <table tableName="RandData_demographics" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Demographics</tableTitle>
+            </table>
+            <table tableName="RandData_deaths" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Deaths</tableTitle>
+            </table>
+            <table tableName="RandData_departure" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Departure</tableTitle>
+            </table>
+            <table tableName="RandData_flags" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Flags</tableTitle>
+            </table>
+            <table tableName="RandData_Hematology" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Hematology</tableTitle>
+            </table>
+            <table tableName="RandData_Housing" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Housing</tableTitle>
+            </table>
+            <table tableName="RandData_MHCData" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>MHC Data</tableTitle>
+            </table>
+            <table tableName="RandData_Notes" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Notes</tableTitle>
+            </table>
+
+        </tables>
+    </metadata>
+</templateSchema>
