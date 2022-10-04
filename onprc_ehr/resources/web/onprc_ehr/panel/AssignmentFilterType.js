@@ -3,6 +3,7 @@
  * 2022-09-11 removed inadvertent change to file
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
+//Modified: 9-27-2022  R.Blasa
 Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
     extend: 'LDK.panel.AbstractFilterType',
     alias: 'widget.onprc_ehr-assignmentfiltertype',
@@ -50,7 +51,9 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 store: {
                     type: 'labkey-store',
                     schemaName: 'onprc_ehr',
-                    sql: 'SELECT distinct division FROM onprc_ehr.investigators WHERE division is not null',
+                    sql: 'SELECT distinct inv.division as division FROM onprc_ehr.investigators inv WHERE inv.lastname is not null and inv.datedisabled is null and inv.rowid in ' +
+                            '(select  pro.investigatorid from ehr.project pro, study.assignment ste where (pro.enddate is null or pro.enddate >= now() ) ' +
+                            'and (pro.project = ste.project) and (ste.enddate is null or ste.enddate >= now())  )  ',
                     sort: 'division',
                     autoLoad: true
                 },
@@ -64,8 +67,10 @@ Ext4.define('ONPRC_EHR.panel.AssignmentFilterType', {
                 displayField: 'lastname',
                 store: {
                     type: 'labkey-store',
-                    schemaName: 'onprc_ehr',
-                    sql: 'SELECT distinct lastname FROM onprc_ehr.investigators WHERE lastname  is not null',
+                    schemaName: 'ehr',
+                    sql: 'SELECT distinct inv.lastname as lastname FROM onprc_ehr.investigators inv WHERE inv.lastname is not null and inv.datedisabled is null and inv.rowid in ' +
+                    '(select  pro.investigatorid from ehr.project pro, study.assignment ste where (pro.enddate is null or pro.enddate >= now() ) ' +
+                                'and (pro.project = ste.project) and (ste.enddate is null or ste.enddate >= now())  )  ',
                     sort: 'lastname',
                     autoLoad: true
                 },
