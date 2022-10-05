@@ -1167,5 +1167,39 @@ exports.init = function(EHR){
         });
     });
 
+    // //Added: 10-4-2022  R.Blasa
+    // EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr', 'requests', function (helper, scriptErrors, row, oldRow) {
+    //     if (row.requestid && row.qcstate.label ==  'Request: Approved'){
+    //         getRequestCompletedArray: function(){
+    //             var requestid = [];
+    //             for (var i in row.requestid.length){
+    //                 var rows = row.requestid[i];
+    //                 requestid.push(i);
+    //             }
+    //
+    //             return requests;
+    //         }
+    //
+    //
+    //
+    //     }
+    // });
+
+    //Added: 10-4-2022  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'ehr', 'requests', function(helper, errors, row, oldRow){
+        if (row.requestid && row.qcstate.label ==  'Request: Approved'){
+
+            var msgs =   helper.getJavaHelper().sendRequestStateEmail("Request: Approved", row.requestid );
+            if (msgs && msgs.length){
+                LABKEY.ExtAdapter.each(msgs, function(msg){
+                    EHR.Server.Utils.addError(scriptErrors, 'qcstate', msg, 'INFO');
+                }, this);
+            }
+
+        }
+    });
+
+
+
 
 };
