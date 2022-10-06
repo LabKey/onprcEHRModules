@@ -1186,6 +1186,24 @@ exports.init = function(EHR){
                 });
 
             }
+            // Ensure users are entering male ids
+            if (row.male )
+            {
+                EHR.Server.Utils.findDemographics({
+                    participant: row.male ,
+                    helper: helper,
+                    scope: this,
+                    callback: function (data)
+                    {
+                        if (data)
+                        {
+                            if (data['gender/origGender'] && data['gender/origGender'] != 'm')
+                                EHR.Server.Utils.addError(scriptErrors, 'male', 'The Male ID has to be male', 'ERROR');
+                        }
+                    }
+                });
+
+            }
         });
     });
 
