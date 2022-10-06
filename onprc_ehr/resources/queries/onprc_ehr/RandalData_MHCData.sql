@@ -10,4 +10,4 @@ SELECT d.rowid,
        d.totalTests
 
 FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.MHC_Data.MHC_Data_Unified d
-where (active = 'y' and Cast(s.rh as varchar(25)) = Cast(d.id as varchar(25)))
+where (Cast(s.rh as varchar(25)) = Cast(d.id as varchar(25)))

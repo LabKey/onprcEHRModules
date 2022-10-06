@@ -32,4 +32,4 @@ SELECT d.Id,
        d.enteredSinceVetReview,
        d.QCState
  FROM  StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.drug d
-    where (active = 'y' and s.rh = d.id)
+    where ( and s.rh = d.id)

@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<etl xmlns="http://labkey.org/etl/xml">
 
-<etl xmlns="http://labkey.org/etl/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:schemaLocation="http://labkey.org/etl/xml ">
     <name>mfshToRandalData</name>    <description>imports the data from mfsh animal details on ONPRC</description>
-    <description>imports the data from mfsh animal details on ONPRC</description>
+
     <transforms>
         <transform id="step1">
             <description>Define Study Animals</description>
@@ -90,15 +88,21 @@
             <source queryName="RandData_Housing" schemaName="onprc_ehr"/>
             <destination type="file" dir="hansenFiles" fileBaseName="Housing-${TransformRunId}-${Timestamp}" fileExtension="csv" />
         </transform>
-  <!--      <transform id="step3o">
+       <transform id="step3o">
             <description>Export Query to File Share</description>
-            <source queryName="RandData_MHCData" schemaName="onprc_ehr"/>
+            <source queryName="mhc_data" schemaName="MHCData"/>
             <destination type="file" dir="hansenFiles" fileBaseName="MHCData-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        </transform>
+
+        <transform id="step3q">
+            <description>Export Query to File Share Project</description>
+            <source queryName="project" schemaName="ehr"/>
+            <destination type="file" dir="hansenFiles" fileBaseName="Projects-${TransformRunId}-${Timestamp}" fileExtension="csv" />
         </transform>-->
-        <transform id="step3p">
-            <description>Export Query to File Share</description>
-            <source queryName="RandData_Notes" schemaName="onprc_ehr"/>
-            <destination type="file" dir="hansenFiles" fileBaseName="Notes-${TransformRunId}-${Timestamp}" fileExtension="csv" />
+        <transform id="step3r">
+            <description>Export Query to File Share Protocols</description>
+            <source queryName="protocol" schemaName="ehr"/>
+            <destination type="file" dir="hansenFiles" fileBaseName="Protocol-${TransformRunId}-${Timestamp}" fileExtension="csv" />
         </transform>-->
     </transforms>
 

@@ -22,4 +22,4 @@ s.subcohort,
 s.grp
 
 FROM StudyDetails_RandalData s, Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.demographics d
-where (active = 'y' and s.rh = d.id)
+where (s.rh = d.id)
