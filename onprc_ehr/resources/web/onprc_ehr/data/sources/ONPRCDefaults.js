@@ -45,16 +45,18 @@ EHR.model.DataModelManager.registerMetadata('Default', {
         //Added: 10-6-2022  R.Blasa
         'ehr.tasks': {
             assignedto: {
+                useNull: true,
+                facetingBehaviorType: "AUTO",
+                getInitialValue: function(val, rec){
+                    LDK.Assert.assertNotEmpty('No dataEntryPanel for model', rec.dataEntryPanel);
+                    return val || rec.dataEntryPanel.formConfig.defaultAssignedTo || LABKEY.Security.currentUser.id
+                },
+                xtype: 'onprc_ehr-usersandgroupscombo',
                 lookup: {
-                    schemaName: 'onprc_ehr',
-                    queryName: 'PrincipalsWithoutAdminUpdate',
-                    keyColumn: 'UserId',
-                    displayColumn: 'DisplayName',
-                    columns: 'UserId,DisplayName,FirstName,LastName',
                     sort: 'Type,DisplayName'
-                }
-
-            }
+                },
+                editorConfig: {listWidth: 200}
+            },
         },
 
         //Added: 12-27-2017  R.Blasa
