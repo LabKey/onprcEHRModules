@@ -138,13 +138,8 @@
                               params['assignedvet'] = userName;
 
 
-                            if (params.Rooms) {
+                            if (params.Rooms)
                                 params.Rooms = params.Rooms.join(';');
-                            }
-                            else
-                            {
-                                delete params.rooms;
-                            }
 
                             Ext4.apply(params, {
                                 'rs:ClearSession': true,
