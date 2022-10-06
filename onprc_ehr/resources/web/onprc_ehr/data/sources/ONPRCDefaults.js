@@ -42,16 +42,20 @@ EHR.model.DataModelManager.registerMetadata('Default', {
 
         },
 
-        // //Added: 1-23-2019  R.Blasa   allow drug sedation alert notification
-        // 'study.drug': {
-        //     description: {
-        //         hidden: false,
-        //         width: 200
-        //     },
-        //     reason: {
-        //         hidden: true,
-        //     }
-        // },
+        //Added: 10-6-2022  R.Blasa
+        'ehr.tasks': {
+            assignedto: {
+                lookup: {
+                    schemaName: 'onprc_ehr',
+                    queryName: 'PrincipalsWithoutAdminUpdate',
+                    keyColumn: 'UserId',
+                    displayColumn: 'DisplayName',
+                    columns: 'UserId,DisplayName,FirstName,LastName',
+                    sort: 'Type,DisplayName'
+                }
+
+            }
+        },
 
         //Added: 12-27-2017  R.Blasa
         'study.Arrival': {
