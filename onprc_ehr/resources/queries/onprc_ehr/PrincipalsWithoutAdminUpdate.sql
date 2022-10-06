@@ -4,7 +4,8 @@ SELECT
     u.DisplayName,
     'u' as Type,
     u.FirstName,
-    u.LastName
+    u.LastName,
+       u.Active
 
 FROM core.Users u
 WHERE u.userid > 0
@@ -17,6 +18,7 @@ SELECT
     g.Name as DisplayName,
     'g' as Type,
     null as FirstName,
-    null as LastName
+    null as LastName,
+    null as Active
 FROM core.groups g
 WHERE g.userid > 0

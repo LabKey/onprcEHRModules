@@ -18,7 +18,7 @@ Ext4.define('EHR.form.field.UsersAndGroupsCombo', {
                 type: 'labkey-store',
                 schemaName: 'onprc_ehr',
                 queryName: 'PrincipalsWithoutAdminUpdate',
-                columns: 'UserId,DisplayName,FirstName,LastName,Type',
+                columns: 'UserId,DisplayName,FirstName,LastName,Type,Active',
                 sort: 'Type,DisplayName',
                 autoLoad: true
             },
