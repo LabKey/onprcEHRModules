@@ -23,7 +23,7 @@ EHR.model.DataModelManager.registerMetadata('Biopsy_Notes', {
                 hidden: false
               }
         },
-        //Added: 10-12-2017 R.Blasa
+        //Added: 10-7-2022 R.Blasa
         'ehr.encounter_participants': {
             Id: {
                 hidden: false,
