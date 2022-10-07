@@ -1,3 +1,5 @@
+--2022-10-07 Update to clear filter on active animals
+
 SELECT d.Id,
        d.date,
        d.enddate,

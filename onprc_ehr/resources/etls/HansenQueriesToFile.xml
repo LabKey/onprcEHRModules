@@ -1,6 +1,7 @@
 <etl xmlns="http://labkey.org/etl/xml">
 
-    <name>mfshToRandalData</name>    <description>imports the data from mfsh animal details on ONPRC</description>
+    <name>mfshToRandalData</name>
+    <description>imports the data from mfsh animal details on ONPRC</description>
 
     <transforms>
         <transform id="step1">
