@@ -6,7 +6,7 @@
         <transform id="step1">
             <description>Define Study Animals</description>
             <source queryName="studyAnimals" schemaName="Randal_data"/>
-            <destination schemaName="Onprc_ehr" queryName="StudyDetails_RandalData"/>
+            <destination schemaName="Onprc_ehr" queryName="StudyDetails_RandalData" targetOption="truncate"/>
         </transform>
       <transform id="step2">
             <description>Export Query to File Share</description>
