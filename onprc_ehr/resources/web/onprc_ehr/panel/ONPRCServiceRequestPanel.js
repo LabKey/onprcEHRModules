@@ -56,7 +56,7 @@ Ext4.define('ONPRC_EHR.panel.ServiceRequestsPanel', {
                 }
             },
             items: [{
-                name: 'Necropsy',
+                name: 'Pathology Service Request',
                 schemaName: 'ehr',
                 queryName: 'requests'
             }]

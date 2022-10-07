@@ -510,6 +510,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 6-6-2022  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EpocFormType.class, this));
 
+        //Added: 6-6-2022  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyRequestForm.class, this));
+
+
+
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "drug", new MedicationsQueryFormSection("study", "Drug Administration", "Medication/Treatments Given")));
@@ -620,6 +625,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
 //       Added: 10-9-2017  R.Blasa
        EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, ProcedureRequestBulkEditFormType.NAME), "study", "encounters");
+
+        //Added: 9-16-2022  R.Blasa
+      EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "NecropsyRequestdata");
 
         EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource(this));
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource(this));
