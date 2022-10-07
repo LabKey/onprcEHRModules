@@ -57,12 +57,12 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                     xtype: 'combo',
                     fieldLabel: 'Assigned To',
                     forceSelection: true,
-                    value: LABKEY.Security.currentUser.id,
+                    value: 'DCM Pathology',
                     queryMode: 'local',
                     store: {
                         type: 'labkey-store',
-                        schemaName: 'core',
-                        queryName: 'PrincipalsWithoutAdmin',
+                        schemaName: 'onprc_ehr',
+                        queryName: 'PrincipalsWithoutAdminUpdate',
                         columns: 'UserId,DisplayName',
                         sort: 'Type,DisplayName',
                         autoLoad: true
