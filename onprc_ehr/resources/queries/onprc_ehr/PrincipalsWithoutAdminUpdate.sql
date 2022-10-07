@@ -12,11 +12,12 @@ FROM onprc_ehr.usersActiveNames u
 UNION ALL
 
 SELECT
-    g.UserId,
+    g.UserId as UserId,
     g.Name as DisplayName,
     'g' as Type,
     null as FirstName,
     null as LastName
 
-FROM core.groups g
-WHERE g.userid > 0
+FROM core.Principals g
+WHERE g.UserId > 0
+and g.Type = 'g'
