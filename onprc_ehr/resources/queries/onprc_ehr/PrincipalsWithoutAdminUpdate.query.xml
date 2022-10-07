@@ -11,9 +11,6 @@
                     column columnName="FirstName"/>
                     column columnName="LastName"/>
                     <column columnName="DisplayName"/>
-                    <column columnName="Active">
-                    <isUserEditable>true</isUserEditable>
-                   </column>
                 </columns>
             </table>
         </tables>

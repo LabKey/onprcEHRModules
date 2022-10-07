@@ -42,7 +42,7 @@ EHR.model.DataModelManager.registerMetadata('Default', {
 
         },
 
-        //Added: 10-6-2022  R.Blasa
+        // Added: 10-6-2022  R.Blasa
         'ehr.tasks': {
             assignedto: {
                 useNull: true,

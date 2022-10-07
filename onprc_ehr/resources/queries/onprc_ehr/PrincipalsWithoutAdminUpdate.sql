@@ -4,12 +4,10 @@ SELECT
     u.DisplayName,
     'u' as Type,
     u.FirstName,
-    u.LastName,
-       u.Active
+    u.LastName
 
-FROM core.Users u
-WHERE u.userid > 0
-And u.Active = true
+FROM onprc_ehr.usersActiveNames u
+
 
 UNION ALL
 
@@ -18,7 +16,7 @@ SELECT
     g.Name as DisplayName,
     'g' as Type,
     null as FirstName,
-    null as LastName,
-    null as Active
+    null as LastName
+
 FROM core.groups g
 WHERE g.userid > 0
