@@ -7,9 +7,9 @@
                         <columnTitle>User ID</columnTitle>
                         <isKeyField>true</isKeyField>
                     </column>
-                    column columnName="Type"/>
-                    column columnName="FirstName"/>
-                    column columnName="LastName"/>
+                    <column columnName="Type"/>
+                    <column columnName="FirstName"/>
+                    <column columnName="LastName"/>
                     <column columnName="DisplayName"/>
                 </columns>
             </table>
