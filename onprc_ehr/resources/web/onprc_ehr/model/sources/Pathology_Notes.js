@@ -30,7 +30,7 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
                 }
             }
         },
-        //Added: 10-12-2017 R.Blasa
+        // Added: 10-12-2017 R.Blasa
         'ehr.encounter_participants': {
             Id: {
                 hidden: false,
@@ -103,14 +103,7 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
                 defaultValue: 'Pathology Notes',
                 hidden: true
             },
-            createdBy: {
 
-                hidden: true
-            },
-            modifiedBy: {
-
-                hidden: true
-            },
             remark: {
                 height: 300,
                 editorConfig: {
