@@ -57,7 +57,7 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                     xtype: 'combo',
                     fieldLabel: 'Assigned To',
                     forceSelection: true,
-                    value: 'DCM Pathology',
+                    value: 1693,
                     queryMode: 'local',
                     store: {
                         type: 'labkey-store',
