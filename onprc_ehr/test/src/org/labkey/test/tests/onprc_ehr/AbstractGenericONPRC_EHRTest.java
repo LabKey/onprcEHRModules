@@ -35,7 +35,6 @@ import org.labkey.test.params.list.ListDefinition;
 import org.labkey.test.params.list.VarListDefinition;
 import org.labkey.test.tests.ehr.AbstractGenericEHRTest;
 import org.labkey.test.util.Ext4Helper;
-import org.labkey.test.util.ListHelper;
 import org.labkey.test.util.LogMethod;
 import org.labkey.test.util.PasswordUtil;
 import org.labkey.test.util.SchemaHelper;
@@ -217,7 +216,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         //this applies the standard property descriptors, creates indexes, etc.
         // NOTE: this currently will log an error from DatasetDefinition whenever we create a new column.  This really isnt a bug, so ignore
         checkErrors();
-        Connection connection = createDefaultConnection(true);
+        Connection connection = createDefaultConnection();
         PostCommand command = new PostCommand("ehr", "ensureDatasetProperties");
         command.setTimeout(120000);
         CommandResponse response = command.execute(connection, getContainerPath());
@@ -238,7 +237,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected void setupNotificationService()
     {
         //set general settings
-        beginAt(getBaseURL() + "/ldk/" + getContainerPath() + "/notificationAdmin.view");
+        beginAt(WebTestHelper.buildURL("ldk", getContainerPath(),"notificationAdmin"));
         _helper.waitForCmp("field[fieldLabel='Notification User']");
         Ext4FieldRef.getForLabel(this, "Notification User").setValue(PasswordUtil.getUsername());
         Ext4FieldRef.getForLabel(this, "Reply Email").setValue("fakeEmail@fakeDomain.test");
@@ -252,7 +251,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     @Override
     protected void populateInitialData()
     {
-        beginAt(getBaseURL() + "/" + getModuleDirectory() + "/" + getContainerPath() + "/populateData.view");
+        beginAt(WebTestHelper.buildURL(getModuleDirectory(), getContainerPath(), "populateData"));
 
         repopulate("Lookup Sets");
         repopulate("Procedures");
@@ -261,7 +260,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         repopulate("SNOMED Codes");
 
         //also populate templates
-        beginAt(getBaseURL() + "/" + getModuleDirectory() + "/" + getContainerPath() + "/populateTemplates.view");
+        beginAt(WebTestHelper.buildURL(getModuleDirectory(), getContainerPath(), "populateTemplates"));
 
         repopulate("Form Templates");
         repopulate("Formulary");
