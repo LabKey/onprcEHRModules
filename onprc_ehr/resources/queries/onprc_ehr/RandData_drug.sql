@@ -1,4 +1,4 @@
---2022-10-07 Update to clear filter on active animals
+--2022-10-07 Update to clear filter on active animals fix cleanup
 
 SELECT d.Id,
        d.date,
