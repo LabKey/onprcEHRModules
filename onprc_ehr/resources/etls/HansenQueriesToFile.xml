@@ -89,7 +89,7 @@
             <source queryName="RandData_Housing" schemaName="onprc_ehr"/>
             <destination type="file" dir="hansenFiles" fileBaseName="Housing-${TransformRunId}-${Timestamp}" fileExtension="csv" />
         </transform>
-
+<!--Removed MHC Pull till it is resovled to run as needed-->
 
         <transform id="step3q">
             <description>Export Query to File Share Project</description>
