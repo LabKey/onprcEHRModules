@@ -3,8 +3,8 @@
         <column name="userId/UserId/DisplayName" />
         <column name = "project" />
         <column name="protocol" />
-        <column name="area" />
         <column name="room" />
+        <column name="area" />
         <column name="priority" />
     </columns>
     <sorts>
