@@ -12,12 +12,12 @@ FROM onprc_ehr.usersActiveNames u
 UNION ALL
 
 SELECT
-    g.UserId as UserId,
-    g.Name as DisplayName,
-    'g' as Type,
+    g.idkey as UserId,
+    g.displayName as DisplayName,
+    g.type as Type,
     null as FirstName,
     null as LastName
-
-FROM core.Principals g
-WHERE g.UserId > 0
-and g.Type = 'g'
+FROM onprc_ehr.Reference_Data_IDkey g
+Where g.type = 'g'
+and g.status = 1
+and g.endDate is null
