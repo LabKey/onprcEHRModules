@@ -25,16 +25,7 @@ EHR.model.DataModelManager.registerMetadata('Biopsy_Notes', {
         },
         //Added: 10-7-2022 R.Blasa
         'ehr.encounter_participants': {
-            Id: {
-                hidden: false,
-                allowBlank: false
-            },
-            userid: {
-                hidden: true,
-                columnConfig: {
-                    width: 200
-                }
-            },
+
             username: {
                 hidden: false,
                 allowBlank: false,
@@ -63,16 +54,8 @@ EHR.model.DataModelManager.registerMetadata('Biopsy_Notes', {
                         }
                     }
                 }
-            },
-            role: {
-                allowBlank: false,
-                columnConfig: {
-                    width: 200
-                }
-            },
-            comment: {
-                hidden: true
             }
+
         },
 
 
