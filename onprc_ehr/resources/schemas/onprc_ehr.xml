@@ -1250,7 +1250,7 @@
                 <columnTitle>Display Name</columnTitle>
             </column>
             <column columnName="idkey">
-                <columnTitle>Sdkey</columnTitle>
+                <columnTitle>Idkey</columnTitle>
             </column>
             <column columnName="columnName">
                 <columnTitle>column Name</columnTitle>
