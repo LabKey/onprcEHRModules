@@ -246,17 +246,17 @@ Ext4.define('onprc_ehr.form.field.Path_BillingGrade', {
 
     initComponent: function(){
         Ext4.apply(this, {
-            displayField:'name',
-            valueField: 'rowid',
+            displayField:'displayName',
+            valueField: 'idkey',
             queryMode: 'local',
             store: Ext4.create('LABKEY.ext4.data.Store', {
-                schemaName: 'onprc_billing_public',
-                queryName: 'chargeableItems',
-                columns: 'rowid,name',
+                schemaName: 'onprc_ehr',
+                queryName: 'Reference_Data_IDkey',
+                columns: 'idkey,columnName, displayName',
                 sort: 'name',
                 filterArray: [
-                    LABKEY.Filter.create('category', 'Pathology', LABKEY.Filter.EQUAL),
-                    LABKEY.Filter.create('active', true, LABKEY.Filter.Types.EQUAL)],
+                    LABKEY.Filter.create('columnName', 'Pathology_billing', LABKEY.Filter.EQUAL),
+                    LABKEY.Filter.create('endDate', null, LABKEY.Filter.Types.ISBLANK)],
 
                 autoLoad: true
             })
