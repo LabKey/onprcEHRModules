@@ -96,6 +96,12 @@ public class PathologyTissuesFormType extends TaskForm
 //        //Added: 5-24-2017  R.Blasa
         setStoreCollectionClass("onprc_ehr.data.sources.PathologyTissuesStoreCollection");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathologyTissuesStoreCollection.js"));
+
+        //        Added: 7-14-2022  R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/NecropsyRequest.js"));
+
+        //Added 7-14-2022  R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/PathologyTissuesField.js"));
     }
 
     @Override
