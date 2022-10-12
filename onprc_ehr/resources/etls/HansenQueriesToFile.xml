@@ -93,7 +93,15 @@
 
         <transform id="step3q">
             <description>Export Query to File Share Project</description>
-            <source queryName="project" schemaName="ehr"/>
+            <source queryName="project" schemaName="ehr"/>SELECT d.Id,
+            d.allele,
+            d.shortName,
+            d.totalTests,
+            d.result,
+            d.type
+
+            FROM  StudyDetails_RandalData s, MHCData.MHC_Data_Unified d
+            where (Cast(s.rh as varchar(25)) = Cast(d.id as varchar(25)))
             <destination type="file" dir="hansenFiles" fileBaseName="Projects-${TransformRunId}-${Timestamp}" fileExtension="csv" />
         </transform>
         <transform id="step3r">
