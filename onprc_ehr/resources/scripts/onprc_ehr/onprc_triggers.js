@@ -1211,7 +1211,6 @@ exports.init = function(EHR){
 
     //Added: 10-4-2022  R.Blasa
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'ehr', 'requests', function(helper, errors, row, oldRow){
-
         console.log("Request status change  " + row.requestid)
         if (row.requestid && row.qcstate.label ==  'Request: Approved'){
                  var msgs =   helper.getJavaHelper().sendRequestStateEmail("Request: Approved", [row.requestid] );
