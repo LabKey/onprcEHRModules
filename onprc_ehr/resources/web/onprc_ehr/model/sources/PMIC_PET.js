@@ -34,8 +34,8 @@ EHR.model.DataModelManager.registerMetadata('PET', {
             chargeType: {
                 allowBlank: true,
                 hidden: false,
-                defaultValue: 'PMIC'
-
+                defaultValue: 'PMIC',
+                editable: false
             },
 
             examNum: {
