@@ -218,7 +218,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         checkErrors();
         Connection connection = createDefaultConnection();
         PostCommand command = new PostCommand("ehr", "ensureDatasetProperties");
-        command.setTimeout(120000);
+        command.setTimeout(1200000);
         CommandResponse response = command.execute(connection, getContainerPath());
         assertTrue("Problem with ehr-ensureDatasetProperties: [" +response.getStatusCode() + "] " + response.getText(), response.getStatusCode() < 400);
         resetErrors();
