@@ -18,11 +18,7 @@ package org.labkey.onprc_ehr.history;
 import org.labkey.api.ehr.history.SortingLabworkType;
 import org.labkey.api.module.Module;
 
-/**
- * User: bimber
- * Date: 3/6/13
- * Time: 12:27 PM
- */
+//Modified: 10-14-2022 R.Blasa
 public class ONPRCUrinalysisLabworkType extends SortingLabworkType
 {
     public ONPRCUrinalysisLabworkType(Module module)
@@ -30,5 +26,6 @@ public class ONPRCUrinalysisLabworkType extends SortingLabworkType
         super("Urinalysis", "study", "Urinalysis Results", "Urinalysis", module);
         _resultField = null;
         _qualResultField = "results";
+        _testIDfieldremark = "remark";
     }
 }
