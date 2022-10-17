@@ -89,7 +89,7 @@
         </transform>
         <transform id="step3o">
             <description>Export Query to File Share</description>
-            <source queryName="mhc_data" schemaName="MHCData"/>
+            <source queryName="RandalData_mhcdata" schemaName="onprc_ehr"/>
             <destination dir="hansenFiles" fileBaseName="MHCData-${TransformRunId}-${Timestamp}" fileExtension="csv" type="file"/>
         </transform>
         <transform id="step3q">

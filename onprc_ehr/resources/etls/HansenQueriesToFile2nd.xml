@@ -1,0 +1,27 @@
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>mfshToRandalData2</name>
+    <description>imports the data for MHC and Project and Protocol</description>
+    <transforms>
+        <transform id="step1">
+            <description>Define Study Animals</description>
+            <source queryName="studyAnimals" schemaName="Randal_data"/>
+            <destination queryName="StudyDetails_RandalData" schemaName="Onprc_ehr" targetOption="truncate"/>
+        </transform>
+
+        <transform id="step1">
+            <description>Export Query to File Share</description>
+            <source queryName="RandalData_mhcdata" schemaName="onprc_ehr"/>
+            <destination dir="hansenFiles" fileBaseName="MHCData-${TransformRunId}-${Timestamp}" fileExtension="csv" type="file"/>
+        </transform>
+        <transform id="step2">
+            <description>Export Query to File Share Project</description>
+            <source queryName="project" schemaName="ehr"/>
+            <destination dir="hansenFiles" fileBaseName="Projects-${TransformRunId}-${Timestamp}" fileExtension="csv" type="file"/>
+        </transform>
+        <transform id="step3">
+            <description>Export Query to File Share Protocols</description>
+            <source queryName="protocol" schemaName="ehr"/>
+            <destination dir="hansenFiles" fileBaseName="Protocol-${TransformRunId}-${Timestamp}" fileExtension="csv" type="file"/>
+        </transform>
+    </transforms>
+</etl>
