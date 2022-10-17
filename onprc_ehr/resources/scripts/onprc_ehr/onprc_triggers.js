@@ -1165,6 +1165,46 @@ exports.init = function(EHR){
                 }
             }
         });
+
+        //Added 10-5-2022  R.Blasa
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'matings', function (helper, scriptErrors, row, oldRow) {
+            //Ensure that the ID entered into Matings record is always female
+            if (row.Id )
+            {
+                EHR.Server.Utils.findDemographics({
+                    participant: row.Id ,
+                    helper: helper,
+                    scope: this,
+                    callback: function (data)
+                    {
+                        if (data)
+                        {
+                            if (data['gender/origGender'] && data['gender/origGender'] != 'f')
+                                EHR.Server.Utils.addError(scriptErrors, 'Id', 'The ID has to be female', 'ERROR');
+                        }
+                    }
+                });
+
+            }
+            // Ensure users are entering male ids
+            if (row.male )
+            {
+                EHR.Server.Utils.findDemographics({
+                    participant: row.male ,
+                    helper: helper,
+                    scope: this,
+                    callback: function (data)
+                    {
+                        if (data)
+                        {
+                            if (data['gender/origGender'] && data['gender/origGender'] != 'm')
+                                EHR.Server.Utils.addError(scriptErrors, 'male', 'The Male ID has to be male', 'ERROR');
+                        }
+                    }
+                });
+
+            }
+        });
     });
 
 
