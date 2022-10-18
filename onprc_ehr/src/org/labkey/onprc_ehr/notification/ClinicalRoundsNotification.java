@@ -90,9 +90,9 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
     {
         StringBuilder msg = new StringBuilder();
 
-        //duplicateCases(c, u, msg);
+        duplicateCases(c, u, msg);
         animalsWithoutRounds(c, u, msg);
-       animalsWithoutVetReview(c, u, msg);
+        animalsWithoutVetReview(c, u, msg);
 
         //Clinical process alerts : Kollil, 10/13/22
         animalsWithRounds(c, u, msg);         //Added: 8-22-2016 R.Blasa
@@ -123,7 +123,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
         if (count > 0)
         {
             msg.append("<b>Clinical Rounds Alerts: Active cases that do not have observations.</b><br>");
-            msg.append("<b>WARNING: There are " + count + " active cases that do not have obs entered today.</b><br>");
+            msg.append("<b>WARNING:  " + count + " active case(s) found that do not have obs entered today.</b><br>");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Cage</td><td>Id</td><td>Assigned Vet</td><td>Problem(s)</td><td>Days Since Last Rounds</td></tr>");
 
@@ -175,7 +175,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
         if (count > 0)
         {
             msg.append("<b>Clinical Rounds Alerts: Active cases with no Vet review.</b><br>");
-            msg.append("<b>WARNING: There are " + count + " active cases that have not been vet reviewed in the past 7 days.</b><br>");
+            msg.append("<b>WARNING: " + count + " active case(s) found that have not been vet reviewed in the past 7 days.</b><br>");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Cage</td><td>Id</td><td>Assigned Vet</td><td>Problem(s)</td><td>Days Since last Vet Review</td></tr>");
 
@@ -228,7 +228,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
         if (count > 0)
         {
             msg.append("<b>Clinical Rounds Process Alerts: Active cases that have observations.</b><br>");
-            msg.append("<b>CONFIRMATION: There are " + count + " active cases that have their obs entered today.</b><br>");
+            msg.append("<b>CONFIRMATION: " + count + " active case(s) found that have their obs entered today.</b><br>");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Cage</td><td>Id</td><td>Assigned Vet</td><td>Problem(s)</td></tr>");
 
