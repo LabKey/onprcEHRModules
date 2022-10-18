@@ -87,6 +87,20 @@
             <source queryName="RandData_Housing" schemaName="onprc_ehr"/>
             <destination dir="hansenFiles" fileBaseName="Housing-${TransformRunId}-${Timestamp}" fileExtension="csv" type="file"/>
         </transform>
-
+        <transform id="step3o">
+            <description>Export Query to File Share</description>
+            <source queryName="RandalData_mhcdata" schemaName="onprc_ehr"/>
+            <destination dir="hansenFiles" fileBaseName="MHCData-${TransformRunId}-${Timestamp}" fileExtension="csv" type="file"/>
+        </transform>
+        <transform id="step3q">
+            <description>Export Query to File Share Project</description>
+            <source queryName="project" schemaName="pf_ehrData"/>
+            <destination dir="hansenFiles" fileBaseName="Projects-${TransformRunId}-${Timestamp}" fileExtension="csv" type="file"/>
+        </transform>
+        <transform id="step3r">
+            <description>Export Query to File Share Protocols</description>
+            <source queryName="protocol" schemaName="pf_ehrData"/>
+            <destination dir="hansenFiles" fileBaseName="Protocol-${TransformRunId}-${Timestamp}" fileExtension="csv" type="file"/>
+        </transform>
     </transforms>
 </etl>
