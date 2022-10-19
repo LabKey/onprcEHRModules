@@ -1,10 +1,10 @@
 
-SELECT d.Id,
-d.allele,
-d.shortName,
+SELECT d.subjectId,
+d.marker,
+d.assaytype,
 d.totalTests,
-d.result,
-d.type
+d.score
+
 
 FROM  StudyDetails_RandalData s, MHCData.MHC_Data d
-where (Cast(s.rh as varchar(25)) = Cast(d.id as varchar(25)))
+where (Cast(s.rh as varchar(25)) = Cast(d.subjectid as varchar(25)))
