@@ -6,5 +6,5 @@ d.totalTests,
 d.result,
 d.type
 
-FROM  StudyDetails_RandalData s, MHCData.MHC_Data_Unified d
+FROM  StudyDetails_RandalData s, MHCData.MHC_Data d
 where (Cast(s.rh as varchar(25)) = Cast(d.id as varchar(25)))
