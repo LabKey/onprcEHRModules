@@ -457,13 +457,28 @@
                 <isHidden>true</isHidden>
             </column>
             <column columnName="remark"/>
-            <column columnName="objectid"/>
-            <column columnName="formsort"/>
-            <column columnName="container"/>
-            <column columnName="createdby"/>
-            <column columnName="created"/>
-            <column columnName="modifiedby"/>
-            <column columnName="modified"/>
+
+            <column columnName="objectid">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="formsort">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="container">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="createdby">
+                <isHidden>true</isHidden>
+            </column>
+        <column columnName="modifiedby">
+             <isHidden>true</isHidden>
+        </column>
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+          </column>
         </columns>
     </table>
 
@@ -1220,6 +1235,40 @@
             <column columnName="objectid"/>
             <column columnName="sort_order"/>
             <column columnName="container"/>
+        </columns>
+    </table>
+
+    <table tableName="Reference_Data_IDkey" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Reference_Data IDkey</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Rowid</columnTitle>
+            </column>
+            <column columnName="displayName">
+                <columnTitle>Display Name</columnTitle>
+            </column>
+            <column columnName="idkey">
+                <columnTitle>Idkey</columnTitle>
+            </column>
+            <column columnName="columnName">
+                <columnTitle>column Name</columnTitle>
+            </column>
+            <column columnName="status">
+                <columnTitle>Status</columnTitle>
+            </column>
+            <column columnName="type">
+                <columnTitle>Type</columnTitle>
+            </column>
+            <column columnName="sort_order">
+                <columnTitle>Sort Order</columnTitle>
+            </column>
+            <column columnName="created">
+                <columnTitle>Created</columnTitle>
+            </column>
+            <column columnName="enddate"/>
+
         </columns>
     </table>
 </tables>
