@@ -15,6 +15,7 @@ c.alertOnAny,
 c.result,
 c.resultOORIndicator,
 c.AgeAtTime,
+c.remark,
 ac.ageClass,
 
 c.taskid,
@@ -34,6 +35,7 @@ FROM (
     c.qcstate,
     c.id,
     c.date,
+    c.remark,
     ROUND(CONVERT(age_in_months(c.id.dataset.demographics.birth, c.date), DOUBLE) / 12.0, 1) as ageAtTime
     FROM "Urinalysis Results" c
     WHERE c.qcstate.publicdata = true AND result is not null

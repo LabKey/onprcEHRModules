@@ -85,6 +85,9 @@
                     <column columnName="runid">
                         <isHidden>false</isHidden>
                     </column>
+                    <column columnName="remark">
+                        <isHidden>false</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>
