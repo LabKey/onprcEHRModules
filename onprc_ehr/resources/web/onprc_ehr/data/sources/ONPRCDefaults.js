@@ -42,16 +42,22 @@ EHR.model.DataModelManager.registerMetadata('Default', {
 
         },
 
-        // //Added: 1-23-2019  R.Blasa   allow drug sedation alert notification
-        // 'study.drug': {
-        //     description: {
-        //         hidden: false,
-        //         width: 200
-        //     },
-        //     reason: {
-        //         hidden: true,
-        //     }
-        // },
+        // Added: 10-6-2022  R.Blasa
+        'ehr.tasks': {
+            assignedto: {
+                useNull: true,
+                facetingBehaviorType: "AUTO",
+                getInitialValue: function(val, rec){
+                    LDK.Assert.assertNotEmpty('No dataEntryPanel for model', rec.dataEntryPanel);
+                    return val || rec.dataEntryPanel.formConfig.defaultAssignedTo || LABKEY.Security.currentUser.id
+                },
+                xtype: 'onprc_ehr-usersandgroupscombo',
+                lookup: {
+                    sort: 'Type,DisplayName'
+                },
+                editorConfig: {listWidth: 200}
+            },
+        },
 
         //Added: 12-27-2017  R.Blasa
         'study.Arrival': {
