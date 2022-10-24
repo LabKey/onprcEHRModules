@@ -28,10 +28,11 @@ select b.requirementname,
                    WHEN (select max(st.date) from completiondates st where st.requirementname = b.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
                    WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  ) = 0 then Null
 
-                   ELSE (( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = b.employeeid group by tt.expireperiod
-                           having max(pq.date) > max(pq.reviewdate)  ) OR
-                         ( select  (tt.expireperiod) - ( age_in_months(max(pq.reviewdate), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = b.employeeid group by tt.expireperiod
-                           having max(pq.date) < max(pq.reviewdate)  )  )
+                   ELSE ( ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod
+                            having (max(pq.date) > max(pq.reviewdate) and max(pq.reviewdate) is not null) or (max(pq.date) and max(pq.reviewdate) is null )  )
+                       OR
+                          ( select  (tt.expireperiod) - ( age_in_months(max(pq.reviewdate), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod
+                            having (max(pq.date) < max(pq.reviewdate) and (max(pq.reviewdate) is not null)  )  )   )
                    END  AS double)  AS MonthsUntilRenewal
 
 
@@ -42,7 +43,7 @@ where ( a.unit = b.unit or a.category = b.category )
                                                                                                                           And b.requirementname = t.requirementname)
 
 
-group by b.requirementname,a.employeeid
+                                group by b.requirementname,a.employeeid
 
 
 union
@@ -72,10 +73,7 @@ select a.requirementname,
                    WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  ) = 0 then Null
 
 
-                   ELSE ( ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod
-                            having max(pq.date) > max(pq.reviewdate)  ) OR
-                          ( select  (tt.expireperiod) - ( age_in_months(max(pq.reviewdate), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod
-                            having max(pq.date) < max(pq.reviewdate)  )  )
+                   ELSE ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  )
                    END  AS double)  AS MonthsUntilRenewal
 
 
