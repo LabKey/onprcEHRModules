@@ -12,7 +12,7 @@ d.species,
 d.gender,
 Case
   when b.date is not null then  TIMESTAMPDIFF('SQL_TSI_Day', b.date,Now())
-  else (Select TIMESTAMPDIFF('SQL_TSI_Day', a.date,Now()) from study.arrival a where a.id = d.id  )
+  else (Select TIMESTAMPDIFF('SQL_TSI_Day', a.date,Now()) AS t from study.arrival a where a.id = d.id  )
   End as  DaysAge,
 --d.id.age.ageinDays as DaysAge,
 w.MostRecentWeight,

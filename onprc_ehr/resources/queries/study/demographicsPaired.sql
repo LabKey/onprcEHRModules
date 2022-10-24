@@ -29,7 +29,7 @@ SELECT
   END as category,
   t.housingType,
   t.countAsSeparate,
-  t.countAsPaired,
+  t.countAsPaired
 
 FROM study.demographics d
 LEFT JOIN (
@@ -42,7 +42,7 @@ SELECT
   c.divider.countAsSeparate as countAsSeparate,
 
   count(distinct h2.id) as total,
-  group_concat(distinct h2.id, ', ') as animals,
+  group_concat(distinct h2.id, ', ') as animals
 
 FROM study.housing h
 

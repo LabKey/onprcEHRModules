@@ -13,4 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-SELECT * FROM ehr_lookups.lookups l WHERE l.set_name = 'LocationType';
+SELECT * FROM ehr_lookups.lookups l WHERE l.set_name = 'LocationType'

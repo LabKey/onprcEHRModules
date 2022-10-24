@@ -151,6 +151,59 @@ EHR.reports.iStat = function(panel, tab){
         queryConfig: resultsConfig
     });
 }
+//Added 7-14-2022 R.Blasa
+EHR.reports.Epoc = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    var config = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'EpocPivot',
+        title: "By Panel" + title,
+        titleField: 'Id',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable,
+        sort: '-date'
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: config
+    });
+
+    var miscConfig = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'EpocMisc',
+        title: "Misc Tests" + title,
+        titleField: 'Id',
+        sort: '-date',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: miscConfig
+    });
+
+    var resultsConfig = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'EpocRefRange',
+        title: "Reference Ranges:",
+        titleField: 'Id',
+        sort: '-date',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: resultsConfig
+    });
+}
 
 //Added: 6-27-2019  R.Blasa
 EHR.reports.TBTest = function(panel, tab){
