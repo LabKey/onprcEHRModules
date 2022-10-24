@@ -18,10 +18,7 @@
                         <columnTitle>End Time</columnTitle>
                         <isHidden>false</isHidden>
                     </column>
-                    <column columnName="instructions">
-                        <columnTitle>Special Instructions</columnTitle>
-                        <inputType>textarea</inputType>
-                    </column>
+
                     <column columnName="project">
 
                     </column>
@@ -62,6 +59,11 @@
                             <fkDisplayColumnName>name</fkDisplayColumnName>
                         </fk>
                     </column>
+                    <column columnName="instructions">
+                        <columnTitle>Special Instructions</columnTitle>
+                        <inputType>textarea</inputType>
+                    </column>
+
                     <column columnName="major">
                         <columnTitle>Major Surgery?</columnTitle>
                         <fk>
@@ -122,6 +124,14 @@
                         <columnTitle>Necropsy Location</columnTitle>
                         <isHidden>true</isHidden>
                     </column>
+                    <column columnName="taskid">
+                    <fk>
+                        <fkDbSchema>ehr</fkDbSchema>
+                        <fkTable>tasks</fkTable>
+                        <fkColumnName>taskid</fkColumnName>
+                        <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                    </fk>
+                </column>
                 </columns>
             </table>
         </tables>

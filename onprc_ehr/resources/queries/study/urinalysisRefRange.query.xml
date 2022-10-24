@@ -68,6 +68,9 @@
                         <displayWidth>80</displayWidth>
                         <isHidden>true</isHidden>
                     </column>
+                    <column columnName="remark">
+                        <isHidden>false</isHidden>
+                    </column>
                 </columns>
                 <titleColumn>Status</titleColumn>
             </table>
