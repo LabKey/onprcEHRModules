@@ -62,6 +62,9 @@
                             name: 'Employee List',
                             url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
                         }, {
+                            name: 'Employee Per Unit/Category Form',
+                            url: LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', '/ONPRC/Admin/Compliance', {formType: 'employeeunitrecords'})
+                        }, {
                             name: 'View/Edit Dates Employees Completed Requirements',
                             url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
 
