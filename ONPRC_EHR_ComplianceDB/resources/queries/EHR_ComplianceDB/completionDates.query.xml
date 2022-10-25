@@ -4,11 +4,6 @@
             <table tableName="completiondates" tableDbType="NOT_IN_DB">
                 <tableTitle>Employee Completion Dates</tableTitle>
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
-                <auditLogging>DETAILED</auditLogging>
-                <insertUrl/>
-                <importUrl/>
-                <updateUrl/>
-                <deleteUrl/>
 
                 <columns>
                 </columns>
