@@ -1,7 +1,7 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="completionDates" tableDbType="NOT_IN_DB">
+            <table tableName="completiondates" tableDbType="NOT_IN_DB">
                 <tableTitle>Employee Completion Dates</tableTitle>
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <auditLogging>DETAILED</auditLogging>
