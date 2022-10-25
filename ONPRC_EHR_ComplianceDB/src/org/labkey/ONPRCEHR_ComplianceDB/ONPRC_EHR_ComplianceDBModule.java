@@ -82,7 +82,7 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "employees", ONPRC_ComplianceDBAdminPermission.class), "ehr_compliancedb", "employees");
 
 //               Added: 10-24-2022  R.Blasa
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "completiondates", ONPRC_ComplianceDBEntryPermission.class), "ehr_compliancedb", "completioncates");
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "completionDates", ONPRC_ComplianceDBEntryPermission.class), "ehr_compliancedb", "completionDates");
 
 
 
