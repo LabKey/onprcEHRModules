@@ -42,6 +42,12 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 xtype: 'onprc_ehr-projectentryfield',
                 label: 'Center Project'
             },
+            billingproject: {
+                xtype: 'onprc_ehr-projectentryfield',
+                label: 'Center Project Billing',
+                hidden: false
+
+            },
 
             performedby: {
                 hidden: true
