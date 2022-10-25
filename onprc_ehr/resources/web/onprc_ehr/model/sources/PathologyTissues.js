@@ -106,7 +106,23 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             }
         },
 
-
+        'onprc_billing.miscCharges': {
+            Id: {
+                allowBlank: true,
+                nullable: true
+            },
+            chargetype: {
+                defaultValue: 'DCM: Pathology Services'
+            },
+            chargeId: {
+                hidden: false,
+                xtype: 'path_billinggrade',
+                label: 'Charge Name',
+                columnConfig: {
+                    width: 250
+                }
+            },
+        },
         'study.tissueDistributions': {
 
             date: {
