@@ -1207,5 +1207,17 @@ exports.init = function(EHR){
         });
     });
 
-
+    //Added: 10-4-2022  R.Blasa
+    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.COMPLETE, function(event, errors, helper){
+                // Send notifications when requests approved
+                 var requestsApproved = helper.getRequestApprovedArray();
+                if (requestsApproved && requestsApproved.length > 0) {
+                        var msgs = helper.getJavaHelper().sendRequestStateEmail("Request: Approved", requestsApproved);
+                        if (msgs && msgs.length) {
+                            LABKEY.ExtAdapter.each(msgs, function (msg) {
+                            EHR.Server.Utils.addError(scriptErrors, 'qcstate', msg, 'INFO');
+                           }, this);
+                        }
+               }
+    });
 };
