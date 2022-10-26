@@ -50,8 +50,8 @@ union
 
 select a.requirementname,
        a.employeeid,
-       null,
-       null,
+       null  as unit,
+       null  as category,
        'No' as trackingflag,
 
 
@@ -94,8 +94,8 @@ union
 
 select j.requirementname,
        j.employeeid,
-       null,
-       null,
+       null as unit,
+       null as category,
        'No' as trackingflag,
        (select count(zz.date) from completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid  ) as timesCompleted,
        (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = j.requirementname) as ExpiredPeriod,
