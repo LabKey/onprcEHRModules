@@ -51,8 +51,8 @@ union
 
 select a.requirementname,
        a.employeeid,
-       null,
-       null,
+       null as unit,
+       null as category,
        'No' as trackingflag,
 
 
