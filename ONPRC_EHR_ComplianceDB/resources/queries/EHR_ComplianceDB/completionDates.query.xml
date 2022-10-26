@@ -5,7 +5,7 @@
                 <tableTitle>Employee Completion Dates</tableTitle>
                 <columns>
                     <column columnName="reviewdate">
-                        <columnTitle>Review Date3</columnTitle>
+                        <columnTitle>Review Date</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
 
