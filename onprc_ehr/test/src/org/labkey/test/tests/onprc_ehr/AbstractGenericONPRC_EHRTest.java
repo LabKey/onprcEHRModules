@@ -183,7 +183,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         listDef4.getCreateCommand().execute(createDefaultConnection(), getProjectName());
 
         // Mock up a table in the MHC_Data schema instead of needing to mock up all of its dependencies too
-        ListDefinition listDef5 = new IntListDefinition("MHC_Data_Unified", "RowId");
+        ListDefinition listDef5 = new IntListDefinition("MHC_Data", "RowId");
         listDef5.addField(new FieldDefinition("Id", FieldDefinition.ColumnType.String));
         listDef5.addField(new FieldDefinition("SubjectId", FieldDefinition.ColumnType.String));
         listDef5.addField(new FieldDefinition("allele", FieldDefinition.ColumnType.String));
