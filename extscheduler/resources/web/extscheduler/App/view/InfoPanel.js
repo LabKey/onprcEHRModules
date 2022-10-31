@@ -21,7 +21,7 @@ Ext.define('App.view.InfoPanel', {
         },
         {
             xtype       : 'panel',
-            title       : 'Resources',
+            title       : 'Resources XX',
             cls         : 'resources',
             bodyPadding : '0 15',
             flex        : 1,
