@@ -24,6 +24,7 @@ EHR.model.DataModelManager.registerMetadata('SPECT', {
             },
 
             project: {
+                xtype: 'onprc_ehr-projectentryfield',
                 allowBlank: true,
                 hidden: false,
                 columnConfig: {
@@ -34,8 +35,8 @@ EHR.model.DataModelManager.registerMetadata('SPECT', {
             chargeType: {
                 allowBlank: true,
                 hidden: false,
-                defaultValue: 'PMIC'
-
+                defaultValue: 'PMIC',
+                editable: false
             },
 
             examNum: {
