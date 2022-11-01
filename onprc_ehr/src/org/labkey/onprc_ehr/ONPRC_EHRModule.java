@@ -513,6 +513,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 6-6-2022  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyRequestForm.class, this));
 
+        //Added: 11/1/2022  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BioFireFormType.class, this));
+
 
 
         //single section forms
