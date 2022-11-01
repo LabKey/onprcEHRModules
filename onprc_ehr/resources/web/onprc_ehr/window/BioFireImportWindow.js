@@ -10,14 +10,14 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         Ext4.apply(this, {
             modal: true,
             closeAction: 'destroy',
-            title: 'Import iStat Results From Excel',
+            title: 'Import BioFire Results From Excel',
             bodyStyle: 'padding: 5px;',
             width: 630,
             defaults: {
                 border: false
             },
             items: [{
-                html: 'This helper allows you to bulk import iSTAT data, exported as an excel file from the iSTAT software.',
+                html: 'This helper allows you to bulk import BioFire data, exported as an excel file from the iSTAT software.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'textarea',
@@ -102,7 +102,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                 }
 
                 if (Ext4.isDefined(resultRow.result)){
-                    resultsToCreate.push(this.iStatStore.createModel(resultRow));
+                    resultsToCreate.push(this.MiscTestStore.createModel(resultRow));
                 }
                 else {
                     console.log('skipping result row: [' + result + ']');
@@ -116,7 +116,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         }
 
         if (resultsToCreate.length){
-            this.iStatStore.add(resultsToCreate);
+            this.MiscTestStore.add(resultsToCreate);
         }
     }
 });
@@ -128,20 +128,20 @@ EHR.DataEntryUtils.registerGridButton('BioFire_IMPORT', function(config){
         tooltip: 'Click to bulk import records from an excel file',
         handler: function(btn){
             var grid = btn.up('grid');
-            LDK.Assert.assertNotEmpty('Unable to find grid in ISTAT_IMPORT button', grid);
+            LDK.Assert.assertNotEmpty('Unable to find grid in ioFire_IMPORT button', grid);
 
             var panel = grid.up('ehr-dataentrypanel');
-            LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in ISTAT_IMPORT button', panel);
+            LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in ioFire_IMPORT button', panel);
 
             var runStore = panel.storeCollection.getClientStoreByName('Clinpath Runs');
             LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in ISTAT_IMPORT button', runStore);
 
-            var iStatStore = panel.storeCollection.getClientStoreByName('iStat');
-            LDK.Assert.assertNotEmpty('Unable to find iStat store in ISTAT_IMPORT button', iStatStore);
+            var iStatStore = panel.storeCollection.getClientStoreByName('Misc_test');
+            LDK.Assert.assertNotEmpty('Unable to find Misc store in BioFire_IMPORT button', MIscTestStore);
 
             Ext4.create('ONPRC_EHR.window.BioFireImportWindow', {
                 runStore: runStore,
-                iStatStore: iStatStore
+                MiscTestStore: MiscTestStore
             }).show();
         }
     });

@@ -31,10 +31,10 @@ public class BioFireFormType extends TaskForm
 
     public BioFireFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Misc Test Results", "Misc Test Results", Arrays.asList(
+        super(ctx, owner, NAME, "Bio Fire Results", "Lab Results", Arrays.asList(
                 new TaskFormSection(),
                 new BioFirePanelForm(),
-                new LabworkFormSection("study", "imiscTests", "Misc Test", true)
+                new LabworkFormSection("study", "miscTests", "Misc Test", true)
         ));
 
         for (FormSection s : getFormSections())
