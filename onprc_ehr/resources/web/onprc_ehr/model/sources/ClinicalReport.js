@@ -27,7 +27,7 @@ EHR.model.DataModelManager.registerMetadata('ClinicalReport_ONPRC', {
                 hidden: false,
                 allowBlank: false
             },
-            hx: {
+            remark: {
                 hidden: false
             },
             p2: {
@@ -36,7 +36,7 @@ EHR.model.DataModelManager.registerMetadata('ClinicalReport_ONPRC', {
                 },
                 height: 75
             },
-            hx: {
+            remark: {
                 hidden: false,
                 header: 'Other Remark'
             },
