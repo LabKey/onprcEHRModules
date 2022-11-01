@@ -36,6 +36,10 @@ EHR.model.DataModelManager.registerMetadata('ClinicalReport_ONPRC', {
                 },
                 height: 75
             },
+            hx: {
+                hidden: false,
+                header: 'Other Remark'
+            },
             CEG_Plan: {
                 formEditorConfig: {
                     xtype: 'onprc_ehr-CEG_Plantextarea'

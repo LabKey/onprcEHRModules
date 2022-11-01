@@ -84,7 +84,6 @@ Ext4.define('onprc_ehr.buttons.ClinicalActionsButton', {
         });
 
 
-
         toAdd.push({
             text: 'Open Exam Form',
             disabled: !EHR.Security.hasClinicalEntryPermission() || !EHR.Security.hasPermission(EHR.QCStates.IN_PROGRESS, 'insert', [{schemaName: 'study', queryName: 'Clinical Remarks'}]),
