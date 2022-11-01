@@ -23,18 +23,18 @@ EHR.model.DataModelManager.registerMetadata('DEXA', {
             },
 
             project: {
+                xtype: 'onprc_ehr-projectentryfield',
                 allowBlank: true,
                 hidden: false,
                 columnConfig: {
                     width: 150
                 }
             },
-
             chargeType: {
                 allowBlank: true,
                 hidden: false,
-                defaultValue: 'PMIC'
-
+                defaultValue: 'PMIC',
+                editable: false
             },
 
             examNum: {
