@@ -35,11 +35,11 @@
             <source queryName="RandData_arrival" schemaName="onprc_ehr"/>
             <destination dir="hansenFiles" fileBaseName="arrival-${TransformRunId}-${Timestamp}" fileExtension="csv" type="file"> </destination>
         </transform>
-        <transform id="step3d">
+        <!--<transform id="step3d"> duplicaton of data for animal groups
             <description>Export Query to File Share</description>
             <source queryName="RandData_animalgroups" schemaName="onprc_ehr"/>
             <destination dir="hansenFiles" fileBaseName="animal_groups-${TransformRunId}-${Timestamp}" fileExtension="csv" type="file"> </destination>
-        </transform>
+        </transform>-->
         <transform id="step3e">
             <description>Export Query to File Share</description>
             <source queryName="RandData_weights" schemaName="onprc_ehr"/>
