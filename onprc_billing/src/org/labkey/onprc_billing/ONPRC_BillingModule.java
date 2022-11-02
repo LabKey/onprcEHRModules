@@ -18,7 +18,7 @@ package org.labkey.onprc_billing;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.old.JSONObject;
+import org.json.JSONObject;
 import org.labkey.api.audit.AuditLogService;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
@@ -183,9 +183,8 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     @Override
     public JSONObject getPageContextJson(ContainerUser ctx)
     {
-        Map<String, Object> ret = new HashMap<>();
         Map<String, String> map = getDefaultPageContextJson(ctx.getContainer());
-        ret.putAll(getDefaultPageContextJson(ctx.getContainer()));
+        Map<String, Object> ret = new HashMap<>(getDefaultPageContextJson(ctx.getContainer()));
 
         if (map.containsKey(ONPRC_BillingManager.BillingContainerPropName) && map.get(ONPRC_BillingManager.BillingContainerPropName) != null)
         {
@@ -195,7 +194,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
             ret.put(ONPRC_BillingManager.BillingContainerPropName, newPath);
 
             Container billingContainer = ContainerManager.getForPath(map.get(ONPRC_BillingManager.BillingContainerPropName));
-            if(billingContainer != null)
+            if (billingContainer != null)
             {
                 ret.put("BillingContainerInfo", billingContainer.toJSON(ctx.getUser()));
             }
