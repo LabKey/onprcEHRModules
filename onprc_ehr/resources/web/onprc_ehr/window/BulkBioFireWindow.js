@@ -17,7 +17,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                 border: false
             },
             items: [{
-                html: 'This helper allows you to bulk import BioFire data, exported as an excel file from the iSTAT software.',
+                html: 'This helper allows you to bulk import BioFire data, exported as an excel file from the BioFire software.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'textarea',
@@ -57,23 +57,43 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         var runsToCreate = [];
         var resultsToCreate = [];
 
-        var dateRow = parsed[0];
-        var idRow = parsed[1];
+
+
+        var category = Ext4.String.trim(parsed[1][1])  ;
+        var chargeunit = Ext4.String.trim(parsed[2][1])  ;
+
+        //Process Service request name
+        var name = Ext4.String.trim(parsed[3][1]);
+        var procRecIdx = this.labworkSericeStoreStore.findExact('servicename', name);
+        var procedureRec = this.labworkSericeStoreStore.getAt(procRecIdx);
+        LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + 'in BioFire Window', procedureRec);
+        var servicereq = procedureRec.get('servicename');
+        var dateRow = parsed[9];
+        var idRow = parsed[8];
+
         if (dateRow.length != idRow.length){
             Ext4.Msg.alert('Error', 'The length of the first 2 rows do not match.');
             return;
         }
 
-        for (var i=1;i<idRow.length;i++){
+        var project = this.resolveProjectByName(Ext4.String.trim(Ext4.String.trim(parsed[4][1])), errors, rowIdx);
+        var method =   Ext4.String.trim(parsed[5][1] )
+
+         for (var i=1;i<idRow.length;i++){       //Column one
             var runRow = {};
             runRow.Id = idRow[i];
             runRow.date = LDK.ConvertUtils.parseDate(dateRow[i]);
             runRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
-            runRow.servicerequested = 'iSTAT';
+            runRow.servicerequested = servicereq ;
+            runRow.project = project ;
+            runRow.category = category ;
+            runRow.method = method ;
+
+
             runsToCreate.push(this.runStore.createModel(runRow));
 
             //then results
-            for (var j=11;j<parsed.length;j++){
+            for (var j=10;j<parsed.length;j++){
                 var resultRow = {};
                 resultRow.Id = runRow.Id;
                 resultRow.date = runRow.date;
@@ -87,22 +107,12 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                 resultRow.testid = parsed[j][0];
                 var result = parsed[j][i];
                 if (!Ext4.isEmpty(result)){
-                    result = Ext4.String.trim(result);
+                    resultRow.qualresult = Ext4.String.trim(result);
                 }
 
-                if (Ext4.isEmpty(result) || '<>' == result || '***' == result){
-                    //skip
-                }
-                else if (Ext4.isNumeric(result)){
-                    resultRow.result = result;
-                }
-                else if (result.indexOf('<') == 0 || result.indexOf('>') == 0){
-                    resultRow.resultOORIndicator = result[0];
-                    resultRow.result = result.substr(1);
-                }
 
                 if (Ext4.isDefined(resultRow.result)){
-                    resultsToCreate.push(this.MiscTestStore.createModel(resultRow));
+                    resultsToCreate.push(this.iStatStore.createModel(resultRow));
                 }
                 else {
                     console.log('skipping result row: [' + result + ']');
@@ -116,32 +126,32 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         }
 
         if (resultsToCreate.length){
-            this.MiscTestStore.add(resultsToCreate);
+            this.iStatStore.add(resultsToCreate);
         }
     }
 });
 
-EHR.DataEntryUtils.registerGridButton('BioFire_IMPORT', function(config){
+EHR.DataEntryUtils.registerGridButton('BIOFIRE_IMPORT', function(config){
     return Ext4.Object.merge({
         text: 'Add From Excel',
         xtype: 'button',
         tooltip: 'Click to bulk import records from an excel file',
         handler: function(btn){
             var grid = btn.up('grid');
-            LDK.Assert.assertNotEmpty('Unable to find grid in ioFire_IMPORT button', grid);
+            LDK.Assert.assertNotEmpty('Unable to find grid in BIoFire_IMPORT button', grid);
 
             var panel = grid.up('ehr-dataentrypanel');
-            LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in ioFire_IMPORT button', panel);
+            LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in BioFire_IMPORT button', panel);
 
             var runStore = panel.storeCollection.getClientStoreByName('Clinpath Runs');
-            LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in ISTAT_IMPORT button', runStore);
+            LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in BIOFIRE_IMPORT button', runStore);
 
-            var iStatStore = panel.storeCollection.getClientStoreByName('Misc_test');
-            LDK.Assert.assertNotEmpty('Unable to find Misc store in BioFire_IMPORT button', MIscTestStore);
+            var BioFireStore = panel.storeCollection.getClientStoreByName('miscTests');
+            LDK.Assert.assertNotEmpty('Unable to find iStat store in BIOFIRE_IMPORT button', BioFireStore);
 
             Ext4.create('ONPRC_EHR.window.BioFireImportWindow', {
                 runStore: runStore,
-                MiscTestStore: MiscTestStore
+                BioFireStore: BioFireStore
             }).show();
         }
     });
