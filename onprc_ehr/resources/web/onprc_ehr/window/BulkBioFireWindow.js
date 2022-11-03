@@ -58,6 +58,8 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         var resultsToCreate = [];
 
 
+        this.projectStore = EHR.DataEntryUtils.getProjectStore();
+        this.labworkSericeStoreStore = EHR.DataEntryUtils.getLabworkServicesStore();
 
         var category = Ext4.String.trim(parsed[1][1])  ;
         var chargeunit = Ext4.String.trim(parsed[2][1])  ;
@@ -66,7 +68,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         var name = Ext4.String.trim(parsed[3][1]);
         var procRecIdx = this.labworkSericeStoreStore.findExact('servicename', name);
         var procedureRec = this.labworkSericeStoreStore.getAt(procRecIdx);
-        LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + 'in BioFire Window', procedureRec);
+        LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + ' in BioFire Window', procedureRec);
         var servicereq = procedureRec.get('servicename');
         var dateRow = parsed[9];
         var idRow = parsed[8];
@@ -121,38 +123,34 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         }
 
         this.close();
+        var runStore = panel.storeCollection.getClientStoreByName('Clinpath Runs');
+        LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in BIOFIRE_IMPORT button', runStore);
+
+        var BioFireStore = panel.storeCollection.getClientStoreByName('miscTests');
+        LDK.Assert.assertNotEmpty('Unable to find iStat store in BIOFIRE_IMPORT button', BioFireStore);
+
         if (runsToCreate.length){
             this.runStore.add(runsToCreate);
         }
 
         if (resultsToCreate.length){
-            this.iStatStore.add(resultsToCreate);
+            this.BioFireStore.add(resultsToCreate);
         }
     }
 });
 
-EHR.DataEntryUtils.registerGridButton('BIOFIRE_IMPORT', function(config){
-    return Ext4.Object.merge({
-        text: 'Add From Excel',
-        xtype: 'button',
+EHR.DataEntryUtils.registerDataEntryFormButton('BIOFIRE_IMPORT', {
+        text: 'BioFire Import Template',
+        name: 'biofirescan',
+        itemId: 'biofirescan',
         tooltip: 'Click to bulk import records from an excel file',
         handler: function(btn){
-            var grid = btn.up('grid');
-            LDK.Assert.assertNotEmpty('Unable to find grid in BIoFire_IMPORT button', grid);
-
-            var panel = grid.up('ehr-dataentrypanel');
+            var panel = btn.up('ehr-dataentrypanel');
             LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in BioFire_IMPORT button', panel);
 
-            var runStore = panel.storeCollection.getClientStoreByName('Clinpath Runs');
-            LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in BIOFIRE_IMPORT button', runStore);
-
-            var BioFireStore = panel.storeCollection.getClientStoreByName('miscTests');
-            LDK.Assert.assertNotEmpty('Unable to find iStat store in BIOFIRE_IMPORT button', BioFireStore);
 
             Ext4.create('ONPRC_EHR.window.BioFireImportWindow', {
-                runStore: runStore,
-                BioFireStore: BioFireStore
+                dataEntryPanel: panel
             }).show();
         }
-    });
 });
