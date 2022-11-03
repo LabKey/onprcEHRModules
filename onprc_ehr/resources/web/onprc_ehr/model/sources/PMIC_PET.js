@@ -24,6 +24,7 @@ EHR.model.DataModelManager.registerMetadata('PET', {
             },
 
             project: {
+                xtype: 'onprc_ehr-projectentryfield',
                 allowBlank: true,
                 hidden: false,
                 columnConfig: {
