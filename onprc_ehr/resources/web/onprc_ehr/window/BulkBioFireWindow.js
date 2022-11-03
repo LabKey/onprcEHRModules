@@ -36,6 +36,8 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                 }
             }]
         });
+        this.projectStore = EHR.DataEntryUtils.getProjectStore();
+        this.labworkSericeStoreStore = EHR.DataEntryUtils.getLabworkServicesStore();
 
         this.callParent(arguments);
     },
@@ -58,8 +60,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         var resultsToCreate = [];
 
 
-        this.projectStore = EHR.DataEntryUtils.getProjectStore();
-        this.labworkSericeStoreStore = EHR.DataEntryUtils.getLabworkServicesStore();
+
 
         var category = Ext4.String.trim(parsed[1][1])  ;
         var chargeunit = Ext4.String.trim(parsed[2][1])  ;
@@ -136,7 +137,22 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         if (resultsToCreate.length){
             this.BioFireStore.add(resultsToCreate);
         }
-    }
+    },
+    resolveProjectByName: function(projectName, errors, rowIdx){
+        if (!projectName){
+            return null;
+        }
+
+        projectName = Ext4.String.trim(projectName);
+        var ret = EHR.DataEntryUtils.resolveProjectByName(this.projectStore, projectName);
+        if (!ret){
+            errors.push('Row ' + rowIdx + ': unknown project ' + projectName);
+        }
+        else {
+            return ret;
+        }
+    },
+
 });
 
 EHR.DataEntryUtils.registerDataEntryFormButton('BIOFIRE_IMPORT', {
