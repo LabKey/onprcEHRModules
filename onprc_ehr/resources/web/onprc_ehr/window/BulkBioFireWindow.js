@@ -78,9 +78,11 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
             Ext4.Msg.alert('Error', 'The length of the first 2 rows do not match.');
             return;
         }
-
-        var project = this.resolveProjectByName(Ext4.String.trim(Ext4.String.trim(parsed[4][1])), errors, rowIdx);
-        var method =   Ext4.String.trim(parsed[5][1] )
+        var errors = [];
+        var offset = 4;
+        var rowIdx = offset;
+        var project = this.resolveProjectByName(Ext4.String.trim(parsed[4][1]), errors,rowIdx );
+        var method =   Ext4.String.trim(parsed[5][1] );
 
          for (var i=1;i<idRow.length;i++){       //Column one
             var runRow = {};
@@ -124,11 +126,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         }
 
         this.close();
-        var runStore = panel.storeCollection.getClientStoreByName('Clinpath Runs');
-        LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in BIOFIRE_IMPORT button', runStore);
 
-        var BioFireStore = panel.storeCollection.getClientStoreByName('miscTests');
-        LDK.Assert.assertNotEmpty('Unable to find iStat store in BIOFIRE_IMPORT button', BioFireStore);
 
         if (runsToCreate.length){
             this.runStore.add(runsToCreate);
@@ -164,9 +162,16 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BIOFIRE_IMPORT', {
             var panel = btn.up('ehr-dataentrypanel');
             LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in BioFire_IMPORT button', panel);
 
+            var runStore = panel.storeCollection.getClientStoreByName('Clinpath Runs');
+            LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in BIOFIRE_IMPORT button', runStore);
+
+            var BioFireStore = panel.storeCollection.getClientStoreByName('miscTests');
+            LDK.Assert.assertNotEmpty('Unable to find iStat store in BIOFIRE_IMPORT button', BioFireStore);
 
             Ext4.create('ONPRC_EHR.window.BioFireImportWindow', {
-                dataEntryPanel: panel
+                dataEntryPanel: panel,
+                runStore: runStore,
+                BioFireStore: BioFireStore
             }).show();
         }
 });
