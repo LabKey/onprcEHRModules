@@ -74,6 +74,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         var servicereq = procedureRec.get('servicename');
         var dateRow = parsed[9];
         var idRow = parsed[8];
+        var performedby = Ext4.String.trim(parsed[7][1]) ;
 
         if (dateRow.length != idRow.length){
             Ext4.Msg.alert('Error', 'The length of the first 2 rows do not match.');
@@ -95,6 +96,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
             runRow.category = category ;
             runRow.method = method ;
             runRow.vet = vet ;
+            runRow.performedby = performedby;
 
 
             runsToCreate.push(this.runStore.createModel(runRow));
@@ -111,6 +113,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                     Ext4.Msg.alert('Error', 'The length result line ' + (j + 1) + ' is less than the header line.');
                     return;
                 }
+                resultRow.performedby = performedby;
                 resultRow.testid = parsed[j][0];
                 var result = parsed[j][i];
                 if (!Ext4.isEmpty(result)){
