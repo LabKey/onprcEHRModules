@@ -64,6 +64,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
 
         var category = Ext4.String.trim(parsed[1][1])  ;
         var chargeunit = Ext4.String.trim(parsed[2][1])  ;
+        var vet = Ext4.String.trim(parsed[6][1])  ;
 
         //Process Service request name
         var name = Ext4.String.trim(parsed[3][1]);
@@ -93,6 +94,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
             runRow.project = project ;
             runRow.category = category ;
             runRow.method = method ;
+            runRow.vet = vet ;
 
 
             runsToCreate.push(this.runStore.createModel(runRow));
@@ -116,8 +118,8 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                 }
 
 
-                if (Ext4.isDefined(resultRow.result)){
-                    resultsToCreate.push(this.iStatStore.createModel(resultRow));
+                if (Ext4.isDefined(resultRow.qualresult)){
+                    resultsToCreate.push(this.BioFireStore.createModel(resultRow));
                 }
                 else {
                     console.log('skipping result row: [' + result + ']');
@@ -166,7 +168,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BIOFIRE_IMPORT', {
             LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in BIOFIRE_IMPORT button', runStore);
 
             var BioFireStore = panel.storeCollection.getClientStoreByName('miscTests');
-            LDK.Assert.assertNotEmpty('Unable to find iStat store in BIOFIRE_IMPORT button', BioFireStore);
+            LDK.Assert.assertNotEmpty('Unable to find BioFire store in BIOFIRE_IMPORT button', BioFireStore);
 
             Ext4.create('ONPRC_EHR.window.BioFireImportWindow', {
                 dataEntryPanel: panel,
