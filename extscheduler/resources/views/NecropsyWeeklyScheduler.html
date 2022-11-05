@@ -4,7 +4,7 @@
 <h3>Resources</h3>
 <div id="resources-qwp"></div>
 <br/>
-<h3>My Events </h3>
+<h3>My Events</h3>
 <div id="events-radiogroup"></div>
 <div id="events-qwp"></div>
 
@@ -37,8 +37,7 @@
         }
         else
         {
-            var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'weeklyTest', null, {
-            //     var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'NecropsyWeeklySC', null, {
+            var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'NecropsyWeeklyTest', null, {
                 returnUrl: window.location.pathname + window.location.search
             });
             Ext4.get('launch-link').update('<a class="launch-button" href="' + schedulerAppLink + '">Launch Scheduler</a>');
@@ -76,7 +75,7 @@
             items: [
                 {boxLabel: 'All', name: 'timeframe', inputValue: 'All'},
                 {boxLabel: 'Previous', name: 'timeframe', inputValue: 'Previous'},
-                {boxLabel: 'Upcoming', name: 'timeframe', inputValue: 'Upcoming XT', checked: true}
+                {boxLabel: 'Upcoming', name: 'timeframe', inputValue: 'Upcoming', checked: true}
             ],
             listeners: {
                 change: function(radiogroup, newValue)
