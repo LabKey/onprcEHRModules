@@ -4,6 +4,10 @@
             <table tableName="completiondates" tableDbType="NOT_IN_DB">
                 <tableTitle>Employee Completion Dates</tableTitle>
                 <columns>
+                    <column columnName="reviewdate">
+                        <columnTitle>Review Date</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
 
                 </columns>
             </table>
