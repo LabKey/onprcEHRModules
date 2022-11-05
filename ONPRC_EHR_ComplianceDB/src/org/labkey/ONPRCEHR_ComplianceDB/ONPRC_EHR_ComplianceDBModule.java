@@ -15,7 +15,7 @@
  */
 package org.labkey.ONPRCEHR_ComplianceDB;
 
-//import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBEntryPermission;
+import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBEntryPermission;
 import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBAdminPermission;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ehr.EHRService;
@@ -78,6 +78,10 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
         // Added: 7-6-2021 R. Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("ehr_compliancedb/panel/EnterDataPanel.js"), this);
 
+
+
+//               Added: 10-24-2022  R.Blasa
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "completiondates", ONPRC_ComplianceDBEntryPermission.class), "ehr_compliancedb", "completiondates");
 
 
 

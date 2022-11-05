@@ -3,8 +3,9 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="completiondates" tableDbType="NOT_IN_DB">
                 <tableTitle>Employee Completion Dates</tableTitle>
-                <columns>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
 
+                <columns>
                 </columns>
             </table>
         </tables>
