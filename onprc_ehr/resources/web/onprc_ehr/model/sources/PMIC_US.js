@@ -23,6 +23,7 @@ EHR.model.DataModelManager.registerMetadata('US', {
             },
 
             project: {
+                xtype: 'onprc_ehr-projectentryfield',
                 allowBlank: true,
                 hidden: false,
                 columnConfig: {
@@ -33,8 +34,8 @@ EHR.model.DataModelManager.registerMetadata('US', {
             chargeType: {
                 allowBlank: true,
                 hidden: false,
-                defaultValue: 'PMIC'
-
+                defaultValue: 'PMIC',
+                editable: false
             },
 
             examNum: {
