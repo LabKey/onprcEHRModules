@@ -51,8 +51,9 @@ public class EventsTable extends FilteredTable<ExtSchedulerQuerySchema>
         addColumn(isOwnerCol);
 
         // disable bulk import for all users
-        setImportURL(AbstractTableInfo.LINK_DISABLER);
-
+      /*  if (!schema.getUser().isSiteAdmin())
+            setImportURL(AbstractTableInfo.LINK_DISABLER);
+*/
 
 //       Added: 6-15-2020  R.Blasa    allowed delete option
 //        setDeleteURL(AbstractTableInfo.LINK_DISABLER);
