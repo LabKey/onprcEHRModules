@@ -69,6 +69,8 @@ Ext4.onReady(function(){
             },{
                 name: 'View/Edit Allowable Unit Names', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Unit_Names'
             },{
+                name: 'View/Edit Employee Host Names', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Compliance_Reference_Data'
+            },{
                 name: 'Employee Per Unit/Category Form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ONPRC/Admin/Compliance',{formType: 'employeeunitrecords'})
             },{
                 name: 'Requirements Per Essential Form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ONPRC/Admin/Compliance',{formType: 'employeecategoryrecords'})
