@@ -1207,6 +1207,14 @@ exports.init = function(EHR){
         });
     });
 
+    EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'blood', EHR.Server.TriggerManager.Events.AFTER_BECOME_PUBLIC);
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_BECOME_PUBLIC, 'study', 'blood', function(errors, helper, row, oldRow){
+        if (row && row.additionalServices){
+                helper.getJavaHelper().createRequestsForBloodAdditionalServices(row.Id, row.date, row.project, row.account, row.performedby, row.additionalServices, (row.requestid||null));
+        }
+    });
+
     //Added: 10-4-2022  R.Blasa
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.COMPLETE, function(event, errors, helper){
                 // Send notifications when requests approved
@@ -1220,4 +1228,6 @@ exports.init = function(EHR){
                         }
                }
     });
+
+
 };
