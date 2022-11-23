@@ -2565,208 +2565,208 @@ public class ONPRC_EHRTriggerHelper
     }
 
 
-    public void createRequestsForBloodAdditionalServices(String id, Date date, Integer project, String account, String performedby, String services, String requestid) throws Exception
-    {
-        try
-        {
-            if (StringUtils.isEmpty(id) || project == null || StringUtils.isEmpty(services))
-                return;
+//    public void createRequestsForBloodAdditionalServices(String id, Date date, Integer project, String account, String performedby, String services, String requestid) throws Exception
+//    {
+//        try
+//        {
+//            if (StringUtils.isEmpty(id) || project == null || StringUtils.isEmpty(services))
+//                return;
+//
+//            List<Map<String, Object>> toAutomaticallyCreate = getAdditionalServicesToCreate(services);
+//            if (toAutomaticallyCreate == null || toAutomaticallyCreate.isEmpty())
+//                return;
+//
+//            //test permission first
+//            if (!EHRService.get().hasPermission("study", "clinpathRuns", getContainer(), getUser(), InsertPermission.class, EHRService.QCSTATES.RequestPending.getQCState(getContainer())))
+//            {
+//                _log.warn("User does not have permission to insert requests into Clinpath Runs follow blood draw: " + getUser().getEmail());
+//                return;
+//            }
+//
+//            String[] notifyList = new String [3];
+//
+//            if (requestid != null)
+//            {
+//                notifyList = getNotifyList(requestid);
+//            }
+//
+//            for (Map<String, Object> rowMap : toAutomaticallyCreate)
+//            {
+//                rowMap = new CaseInsensitiveHashMap<>(rowMap);
+//                GUID requestId = new GUID();
+//                //NOTE: we want the requested labwork to match the date of the blood draw
+//                Date dateRequested = date;
+//                Map<String, Object> row = new CaseInsensitiveHashMap<>();
+//                row.put("daterequested", dateRequested);
+//                row.put("requestid", requestId.toString());
+//                row.put("priority", "Routine");
+//                row.put("formtype", rowMap.get("formtype"));
+//                row.put("title", "Labwork Request From Blood Draw: " + rowMap.get("labwork_service"));
+//                row.put("notify1", (notifyList[0]==null) ? getUser().getUserId():notifyList[0]); //waiting to hear from users if they want to get the usersid or another notifier
+//                row.put("notify2",notifyList[1]);
+//                row.put("notify3",notifyList[2]);
+//
+//                boolean alertRequest = getAlertOnComplete((String)rowMap.get("service"));
+//                row.put("sendemail",alertRequest);
+//
+//                if (row.get("formtype") == null)
+//                {
+//                    _log.error("Unable to determine formtype for automatic lab request for service: " + row.get("service"));
+//                    continue;
+//                }
+//
+//                if (rowMap.get("labwork_service") == null)
+//                {
+//                    _log.error("Unable to determine formtype for automatic lab request for service: " + row.get("service"));
+//                    continue;
+//                }
+//
+//                TableInfo requests = getTableInfo("ehr", "requests");
+//                //TODO: inherit sendEmail from parentrequest
+//                //secondarily look at the clinpath service type and look for the service-level sendEmail bit
+//                //row.put("sendEmail", shouldSendEmail(requests, parentRequestId, rowMap.get("service")));
+//
+//                List<Map<String, Object>> rows = new ArrayList<>();
+//                rows.add(row);
+//                Map<String, Object> extraContext = getExtraContext();
+//                extraContext.put("skipRequestInPastCheck", true);
+//                BatchValidationException errors = new BatchValidationException();
+//                requests.getUpdateService().insertRows(getUser(), getContainer(), rows, errors, null, extraContext);
+//                if (errors.hasErrors())
+//                    throw errors;
+//
+//                TableInfo clinpathRuns = getTableInfo("study", "Clinpath Runs");
+//                List<Map<String, Object>> clinpathRows = new ArrayList<>();
+//                Map<String, Object> clinpathRow = new CaseInsensitiveHashMap<>();
+//                clinpathRow.put("Id", id);
+//                clinpathRow.put("date", dateRequested);
+//                clinpathRow.put("project", project);
+//                clinpathRow.put("account", account);
+//                clinpathRow.put("requestId", requestId);
+//                clinpathRow.put("tissue", getTissueForService((String)rowMap.get("service")));
+//                clinpathRow.put("collectedBy", performedby);
+//                clinpathRow.put("servicerequested", rowMap.get("service"));
+//                clinpathRow.put("QCStateLabel", "Request: Pending");
+//
+//                clinpathRows.add(clinpathRow);
+//                clinpathRuns.getUpdateService().insertRows(getUser(), getContainer(), clinpathRows, errors, null, getExtraContext());
+//                if (errors.hasErrors())
+//                    throw errors;
+//            }
+//        }
+//        catch (Exception e)
+//        {
+//            //Unsure why these are getting swallowed and not logged?
+//            _log.error(e.getMessage(), e);
+//            throw e;
+//        }
+//    }
+//
+//    private String getTissueForService(String service)
+//    {
+//        Map<String, Map<String, Object>> serviceMap = getLabworkServices();
+//        if (serviceMap != null && serviceMap.containsKey(service))
+//        {
+//            Map<String, Object> row = serviceMap.get(service);
+//            return (String)row.get("tissue");
+//        }
+//
+//        return null;
+//    }
 
-            List<Map<String, Object>> toAutomaticallyCreate = getAdditionalServicesToCreate(services);
-            if (toAutomaticallyCreate == null || toAutomaticallyCreate.isEmpty())
-                return;
-
-            //test permission first
-            if (!EHRService.get().hasPermission("study", "clinpathRuns", getContainer(), getUser(), InsertPermission.class, EHRService.QCSTATES.RequestPending.getQCState(getContainer())))
-            {
-                _log.warn("User does not have permission to insert requests into Clinpath Runs follow blood draw: " + getUser().getEmail());
-                return;
-            }
-
-            String[] notifyList = new String [3];
-
-            if (requestid != null)
-            {
-                notifyList = getNotifyList(requestid);
-            }
-
-            for (Map<String, Object> rowMap : toAutomaticallyCreate)
-            {
-                rowMap = new CaseInsensitiveHashMap<>(rowMap);
-                GUID requestId = new GUID();
-                //NOTE: we want the requested labwork to match the date of the blood draw
-                Date dateRequested = date;
-                Map<String, Object> row = new CaseInsensitiveHashMap<>();
-                row.put("daterequested", dateRequested);
-                row.put("requestid", requestId.toString());
-                row.put("priority", "Routine");
-                row.put("formtype", rowMap.get("formtype"));
-                row.put("title", "Labwork Request From Blood Draw: " + rowMap.get("labwork_service"));
-                row.put("notify1", (notifyList[0]==null) ? getUser().getUserId():notifyList[0]); //waiting to hear from users if they want to get the usersid or another notifier
-                row.put("notify2",notifyList[1]);
-                row.put("notify3",notifyList[2]);
-
-                boolean alertRequest = getAlertOnComplete((String)rowMap.get("service"));
-                row.put("sendemail",alertRequest);
-
-                if (row.get("formtype") == null)
-                {
-                    _log.error("Unable to determine formtype for automatic lab request for service: " + row.get("service"));
-                    continue;
-                }
-
-                if (rowMap.get("labwork_service") == null)
-                {
-                    _log.error("Unable to determine formtype for automatic lab request for service: " + row.get("service"));
-                    continue;
-                }
-
-                TableInfo requests = getTableInfo("ehr", "requests");
-                //TODO: inherit sendEmail from parentrequest
-                //secondarily look at the clinpath service type and look for the service-level sendEmail bit
-                //row.put("sendEmail", shouldSendEmail(requests, parentRequestId, rowMap.get("service")));
-
-                List<Map<String, Object>> rows = new ArrayList<>();
-                rows.add(row);
-                Map<String, Object> extraContext = getExtraContext();
-                extraContext.put("skipRequestInPastCheck", true);
-                BatchValidationException errors = new BatchValidationException();
-                requests.getUpdateService().insertRows(getUser(), getContainer(), rows, errors, null, extraContext);
-                if (errors.hasErrors())
-                    throw errors;
-
-                TableInfo clinpathRuns = getTableInfo("study", "Clinpath Runs");
-                List<Map<String, Object>> clinpathRows = new ArrayList<>();
-                Map<String, Object> clinpathRow = new CaseInsensitiveHashMap<>();
-                clinpathRow.put("Id", id);
-                clinpathRow.put("date", dateRequested);
-                clinpathRow.put("project", project);
-                clinpathRow.put("account", account);
-                clinpathRow.put("requestId", requestId);
-                clinpathRow.put("tissue", getTissueForService((String)rowMap.get("service")));
-                clinpathRow.put("collectedBy", performedby);
-                clinpathRow.put("servicerequested", rowMap.get("service"));
-                clinpathRow.put("QCStateLabel", "Request: Pending");
-
-                clinpathRows.add(clinpathRow);
-                clinpathRuns.getUpdateService().insertRows(getUser(), getContainer(), clinpathRows, errors, null, getExtraContext());
-                if (errors.hasErrors())
-                    throw errors;
-            }
-        }
-        catch (Exception e)
-        {
-            //Unsure why these are getting swallowed and not logged?
-            _log.error(e.getMessage(), e);
-            throw e;
-        }
-    }
-
-    private String getTissueForService(String service)
-    {
-        Map<String, Map<String, Object>> serviceMap = getLabworkServices();
-        if (serviceMap != null && serviceMap.containsKey(service))
-        {
-            Map<String, Object> row = serviceMap.get(service);
-            return (String)row.get("tissue");
-        }
-
-        return null;
-    }
-
-    public Map<String, Map<String, Object>> getLabworkServices()
-    {
-        String cacheKey = this.getClass().getName() + "||" + getContainer().getId() + "||" + "labworkServices";
-        Map<String, Map<String, Object>> ret = (Map)DataEntryManager.get().getCache().get(cacheKey);
-        if (ret == null)
-        {
-            _log.info("caching labwork_services in TriggerScriptHelper");
-            TableInfo ti = getTableInfo("ehr_lookups", "labwork_services");
-            TableSelector ts = new TableSelector(ti);
-            ret = new HashMap<>();
-            for (Map<String, Object> row : ts.getMapArray())
-            {
-                ret.put((String)row.get("servicename"), row);
-            }
-
-            ret = Collections.unmodifiableMap(ret);
-            DataEntryManager.get().getCache().put(cacheKey, ret);
-        }
-
-        return ret;
-    }
+//    public Map<String, Map<String, Object>> getLabworkServices()
+//    {
+//        String cacheKey = this.getClass().getName() + "||" + getContainer().getId() + "||" + "labworkServices";
+//        Map<String, Map<String, Object>> ret = (Map)DataEntryManager.get().getCache().get(cacheKey);
+//        if (ret == null)
+//        {
+//            _log.info("caching labwork_services in TriggerScriptHelper");
+//            TableInfo ti = getTableInfo("ehr_lookups", "labwork_services");
+//            TableSelector ts = new TableSelector(ti);
+//            ret = new HashMap<>();
+//            for (Map<String, Object> row : ts.getMapArray())
+//            {
+//                ret.put((String)row.get("servicename"), row);
+//            }
+//
+//            ret = Collections.unmodifiableMap(ret);
+//            DataEntryManager.get().getCache().put(cacheKey, ret);
+//        }
+//
+//        return ret;
+//    }
 
 
-    public boolean getAlertOnComplete (String servicename){
+//    public boolean getAlertOnComplete (String servicename){
+//
+//        boolean alert = false;
+//        servicename = StringUtils.trimToNull(servicename);
+//
+//        if (servicename == null)
+//            return false;
+//
+//        Map<String, Map<String, Object>> serviceMap = getLabworkServices();
+//
+//        if (serviceMap.containsKey(servicename)){
+//            alert = (Boolean)serviceMap.get(servicename).get("alertOnComplete");
+//        }
+//
+//        return alert;
+//
+//    }
 
-        boolean alert = false;
-        servicename = StringUtils.trimToNull(servicename);
-
-        if (servicename == null)
-            return false;
-
-        Map<String, Map<String, Object>> serviceMap = getLabworkServices();
-
-        if (serviceMap.containsKey(servicename)){
-            alert = (Boolean)serviceMap.get(servicename).get("alertOnComplete");
-        }
-
-        return alert;
-
-    }
-
-    private List<Map<String, Object>> getAdditionalServicesToCreate(String services)
-    {
-        services = StringUtils.trimToNull(services);
-        if (services == null)
-            return null;
-
-        List<String> testNames = Arrays.asList(StringUtils.split(services, ",;"));
-        if (testNames.size() == 0)
-            return null;
-
-        Map<String, Map<String, Object>> serviceMap = getBloodDrawServicesMap();
-        List<Map<String, Object>> toCreate = new ArrayList<>();
-        for (String service : testNames)
-        {
-            if (serviceMap.containsKey(service))
-            {
-                Boolean shouldCreate = (Boolean)serviceMap.get(service).get("automaticrequestfromblooddraw");
-                if (shouldCreate)
-                {
-                    Map<String, Object> row = new HashMap<>();
-                    row.put("service", service);
-                    row.put("formtype", serviceMap.get(service).get("formtype"));
-                    row.put("labwork_service", serviceMap.get(service).get("labwork_service"));
-                    toCreate.add(row);
-                }
-            }
-        }
-
-        return toCreate;
-    }
-    private Map<String, Map<String, Object>> getBloodDrawServicesMap()
-    {
-        String cacheKey = this.getClass().getName() + "||" + getContainer().getId() + "||" + "bloodDrawServices";
-        Map<String, Map<String, Object>> ret = (Map)DataEntryManager.get().getCache().get(cacheKey);
-        if (ret == null)
-        {
-            TableInfo ti = getTableInfo("ehr_lookups", "blood_draw_services");
-            ret = new HashMap<>();
-
-            _log.info("caching blood_draw_services in TriggerScriptHelper");
-            TableSelector ts = new TableSelector(ti);
-            for (Map<String, Object> row : ts.getMapArray())
-            {
-                ret.put((String)row.get("service"), row);
-            }
-
-            ret = Collections.unmodifiableMap(ret);
-            DataEntryManager.get().getCache().put(cacheKey, ret);
-        }
-
-        return ret;
-    }
+//    private List<Map<String, Object>> getAdditionalServicesToCreate(String services)
+//    {
+//        services = StringUtils.trimToNull(services);
+//        if (services == null)
+//            return null;
+//
+//        List<String> testNames = Arrays.asList(StringUtils.split(services, ",;"));
+//        if (testNames.size() == 0)
+//            return null;
+//
+//        Map<String, Map<String, Object>> serviceMap = getBloodDrawServicesMap();
+//        List<Map<String, Object>> toCreate = new ArrayList<>();
+//        for (String service : testNames)
+//        {
+//            if (serviceMap.containsKey(service))
+//            {
+//                Boolean shouldCreate = (Boolean)serviceMap.get(service).get("automaticrequestfromblooddraw");
+//                if (shouldCreate)
+//                {
+//                    Map<String, Object> row = new HashMap<>();
+//                    row.put("service", service);
+//                    row.put("formtype", serviceMap.get(service).get("formtype"));
+//                    row.put("labwork_service", serviceMap.get(service).get("labwork_service"));
+//                    toCreate.add(row);
+//                }
+//            }
+//        }
+//
+//        return toCreate;
+//    }
+//    private Map<String, Map<String, Object>> getBloodDrawServicesMap()
+//    {
+//        String cacheKey = this.getClass().getName() + "||" + getContainer().getId() + "||" + "bloodDrawServices";
+//        Map<String, Map<String, Object>> ret = (Map)DataEntryManager.get().getCache().get(cacheKey);
+//        if (ret == null)
+//        {
+//            TableInfo ti = getTableInfo("ehr_lookups", "blood_draw_services");
+//            ret = new HashMap<>();
+//
+//            _log.info("caching blood_draw_services in TriggerScriptHelper");
+//            TableSelector ts = new TableSelector(ti);
+//            for (Map<String, Object> row : ts.getMapArray())
+//            {
+//                ret.put((String)row.get("service"), row);
+//            }
+//
+//            ret = Collections.unmodifiableMap(ret);
+//            DataEntryManager.get().getCache().put(cacheKey, ret);
+//        }
+//
+//        return ret;
+//    }
 
     private String [] getNotifyList(String requestId){
         String [] notifyList  = new String [3];
