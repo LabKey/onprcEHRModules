@@ -20,6 +20,8 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
+import org.labkey.api.cache.Cache;
+import org.labkey.api.cache.CacheManager;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.collections.CaseInsensitiveHashSet;
 import org.labkey.api.data.ColumnInfo;
@@ -112,6 +114,7 @@ public class ONPRC_EHRTriggerHelper
     private Map<String, Map<String, Set<String>>> _cachedHousing = new HashMap<>();
     private Map<Integer, String> _cachedProcedureCategories = new HashMap<>();
     private Map<String, Boolean> _cachedBirthConditions = null;
+    private final Cache<String, Object> _dataEntryCache;
 
     private Integer _nextProjectId = null;
     private Integer _nextProtocolId = null;
@@ -142,6 +145,7 @@ public class ONPRC_EHRTriggerHelper
         if (_container == null)
             throw new RuntimeException("Container does not exist: " + containerId);
 
+        _dataEntryCache = CacheManager.getStringKeyCache(1000, CacheManager.UNLIMITED, "ONPRC_EHRDataEntryManagerCache");
     }
 
     private User getUser()
@@ -2677,7 +2681,7 @@ public class ONPRC_EHRTriggerHelper
     public Map<String, Map<String, Object>> getLabworkServices()
     {
         String cacheKey = this.getClass().getName() + "||" + getContainer().getId() + "||" + "labworkServices";
-        Map<String, Map<String, Object>> ret = EHRService.get().getDataEntryCacheValue(cacheKey);
+        Map<String, Map<String, Object>> ret = (Map)_dataEntryCache.get(cacheKey);
         if (ret == null)
         {
             _log.info("caching labwork_services in TriggerScriptHelper");
@@ -2690,7 +2694,7 @@ public class ONPRC_EHRTriggerHelper
             }
 
             ret = Collections.unmodifiableMap(ret);
-            EHRService.get().putDataEntryCacheValue(cacheKey, ret);
+            _dataEntryCache.put(cacheKey, ret);
         }
 
         return ret;
@@ -2745,7 +2749,7 @@ public class ONPRC_EHRTriggerHelper
     private Map<String, Map<String, Object>> getBloodDrawServicesMap()
     {
         String cacheKey = this.getClass().getName() + "||" + getContainer().getId() + "||" + "bloodDrawServices";
-        Map<String, Map<String, Object>> ret = EHRService.get().getDataEntryCacheValue(cacheKey);
+        Map<String, Map<String, Object>> ret = (Map)_dataEntryCache.get(cacheKey);
         if (ret == null)
         {
             TableInfo ti = getTableInfo("ehr_lookups", "blood_draw_services");
@@ -2759,7 +2763,7 @@ public class ONPRC_EHRTriggerHelper
             }
 
             ret = Collections.unmodifiableMap(ret);
-            EHRService.get().putDataEntryCacheValue(cacheKey, ret);
+            _dataEntryCache.put(cacheKey, ret);
         }
 
         return ret;
