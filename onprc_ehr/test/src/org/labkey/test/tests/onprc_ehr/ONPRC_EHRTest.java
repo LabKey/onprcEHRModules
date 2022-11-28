@@ -25,6 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.labkey.remoteapi.CommandException;
+import org.labkey.remoteapi.CommandResponse;
 import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
 import org.labkey.remoteapi.query.SelectRowsCommand;
@@ -159,6 +160,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testAssignmentApi() throws Exception
     {
+        final String investLastName = "Tester";
+
         goToProjectHome();
 
         String[][] CONDITION_FLAGS = new String[][]{
@@ -187,14 +190,24 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         final String protocolId = (String)protocolSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("protocol");
         Assert.assertNotNull(StringUtils.trimToNull(protocolId));
 
+        InsertRowsCommand investigatorsCommand = new InsertRowsCommand("onprc_ehr", "investigators");
+        investigatorsCommand.addRow(Maps.of("firstName", "Testie", "lastName", investLastName));
+        CommandResponse response = investigatorsCommand.execute(getApiHelper().getConnection(), getContainerPath());
+        var id = ((HashMap<?, ?>) ((ArrayList<?>) response.getParsedData().get("rows")).get(0)).get("rowid");
+
         InsertRowsCommand projectCommand = new InsertRowsCommand("ehr", "project");
         String projectName = generateGUID();
-        projectCommand.addRow(Maps.of("project", null, "name", projectName, "protocol", protocolId));
+        projectCommand.addRow(Maps.of("project", null, "name", projectName, "protocol", protocolId, "investigatorId", id));
         projectCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
         SelectRowsCommand projectSelect = new SelectRowsCommand("ehr", "project");
+        projectSelect.setColumns(List.of("project", "investigatorId/lastName"));
         projectSelect.addFilter(new Filter("protocol", protocolId));
-        final Integer projectId = (Integer)projectSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("project");
+        SelectRowsResponse resp = projectSelect.execute(getApiHelper().getConnection(), getContainerPath());
+        final Integer projectId = (Integer)resp.getRows().get(0).get("project");
+        final String invest = (String) resp.getRows().get(0).get("investigatorId/lastName");
+
+        assertEquals("Investigator name not correct in project table", invest, investLastName);
 
         // Try with a row that doesn't pass validation
         Map<String, Object> protocolCountsRow = new HashMap<>();
@@ -237,10 +250,14 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         SelectRowsCommand assignmentSelect1 = new SelectRowsCommand("study", "assignment");
         assignmentSelect1.addFilter(new Filter("Id", SUBJECTS[1]));
         assignmentSelect1.addFilter(new Filter("project", projectId));
-        assignmentSelect1.setColumns(Arrays.asList("Id", "lsid", "datefinalized", "enddatefinalized"));
+        assignmentSelect1.setColumns(Arrays.asList("Id", "lsid", "datefinalized", "enddatefinalized", "project/investigatorId/lastName"));
         SelectRowsResponse assignmentResponse1 = assignmentSelect1.execute(getApiHelper().getConnection(), getContainerPath());
         Assert.assertNotNull(assignmentResponse1.getRows().get(0).get("datefinalized"));
         Assert.assertNull(assignmentResponse1.getRows().get(0).get("enddatefinalized"));
+
+        final String assignInvest = (String)assignmentResponse1.getRows().get(0).get("project/investigatorId/lastName");
+        assertEquals("Investigator name link broken from assignment dataset", assignInvest, investLastName);
+
         final String assignmentLsid1 = (String)assignmentResponse1.getRows().get(0).get("lsid");
 
         //expect animal condition to change
@@ -249,8 +266,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         conditionSelect1.addFilter(new Filter("flag/category", "Condition"));
         conditionSelect1.addFilter(new Filter("isActive", true));
         SelectRowsResponse conditionResponse1 = conditionSelect1.execute(getApiHelper().getConnection(), getContainerPath());
-        Assert.assertEquals(1, conditionResponse1.getRowCount().intValue());
-        Assert.assertEquals("Protocol Restricted", conditionResponse1.getRows().get(0).get("flag/value"));
+        assertEquals(1, conditionResponse1.getRowCount().intValue());
+        assertEquals("Protocol Restricted", conditionResponse1.getRows().get(0).get("flag/value"));
 
         //terminate, expect animal condition to change based on release condition
         UpdateRowsCommand assignmentUpdateCommand = new UpdateRowsCommand("study", "assignment");
@@ -267,8 +284,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         conditionSelect2.addFilter(new Filter("flag/category", "Condition"));
         conditionSelect2.addFilter(new Filter("isActive", true));
         SelectRowsResponse conditionResponse2 = conditionSelect2.execute(getApiHelper().getConnection(), getContainerPath());
-        Assert.assertEquals(1, conditionResponse2.getRowCount().intValue());
-        Assert.assertEquals("Surgically Restricted", conditionResponse2.getRows().get(0).get("flag/value"));
+        assertEquals(1, conditionResponse2.getRowCount().intValue());
+        assertEquals("Surgically Restricted", conditionResponse2.getRows().get(0).get("flag/value"));
 
         //make sure other flag terminated on correct date
         SelectRowsCommand conditionSelect3 = new SelectRowsCommand("study", "flags");
@@ -276,7 +293,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         conditionSelect3.addFilter(new Filter("flag", flagMap.get("Protocol Restricted")));
         conditionSelect3.addFilter(new Filter("enddate", prepareDate(new Date(), -5, 0), Filter.Operator.DATE_EQUAL));
         SelectRowsResponse conditionResponse3 = conditionSelect3.execute(getApiHelper().getConnection(), getContainerPath());
-        Assert.assertEquals(1, conditionResponse3.getRowCount().intValue());
+        assertEquals(1, conditionResponse3.getRowCount().intValue());
 
         //setting of enddatefinalized, datefinalized
         SelectRowsCommand assignmentSelect2 = new SelectRowsCommand("study", "assignment");
