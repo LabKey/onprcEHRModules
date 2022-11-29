@@ -67,7 +67,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
 //        return "0 0 15 * * ?";
 //    }
 
-    //Kollil 10/13: Changed the daily alert to Tuesdays and Thursdays
+    //Kollil 10/13: Changed the daily clinical rounds alert to Tuesdays and Thursdays
     public String getCronString()
     {
         return "0 0 15 ? * TUE,THU";
@@ -95,8 +95,9 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
         animalsWithoutVetReview(c, u, msg);
 
         //Clinical process alerts : Kollil, 10/13/22
-        animalsWithRounds(c, u, msg);         //Added: 8-22-2016 R.Blasa
-        //animalsWithoutRounds2(c, u, msg);       //Added 8-29-2016
+        //Merging two alerts into one.
+        animalsWithRounds(c, u, msg);        //Added: 8-22-2016 R.Blasa
+        //animalsWithoutRounds2(c, u, msg);  //Added 8-29-2016
 
         return msg.toString();
     }
