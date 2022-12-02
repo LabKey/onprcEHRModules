@@ -107,7 +107,7 @@ select j.requirementname,
        'No' as trackingflag,
        null as timesCompleted,
        null as ExpiredPeriod,
-       null) as MostRecentDate,
+       null as MostRecentDate,
        '' as comment,
        null AS MonthsUntilRenewal
 
