@@ -97,5 +97,29 @@ where a.requirementname not in (select distinct h.requirementname from ehr_compl
 
 group by a.requirementname,a.employeeid
 
+UNION
+
+
+select j.requirementname,
+       j.employeeid,
+       null as unit,
+       null as category,
+       'No' as trackingflag,
+       null as timesCompleted,
+       null as ExpiredPeriod,
+       null) as MostRecentDate,
+       '' as comment,
+       null AS MonthsUntilRenewal
+
+
+from  ehr_compliancedb.RequirementsPerEmployee j
+Where j.requirementname not in (select z.requirementname from ehr_compliancedb.completiondates z where z.requirementname = j.requirementname
+  and z.employeeid = j.employeeid and z.date is not null)
+
+
+group by j.requirementname,j.employeeid
+
+
+
 
 
