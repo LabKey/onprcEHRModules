@@ -11,8 +11,23 @@
                             <fkDisplayColumnName>DisplayName</fkDisplayColumnName>
                         </fk>
                     </column>
-                    <column columnName="protocols">
-                        <columnTitle>Active IACUC Protocols</columnTitle>
+
+                    <column columnName="project">
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>project_active</fkTable>
+                            <fkColumnName>project</fkColumnName>
+                            <fkDisplayColumnName>displayName</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="protocol">
+                        <columnTitle>IACUC Protocols</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>protocol_active</fkTable>
+                            <fkColumnName>protocol</fkColumnName>
+                            <fkDisplayColumnName>displayName</fkDisplayColumnName>
+                        </fk>
                     </column>
                 </columns>
             </table>

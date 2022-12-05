@@ -188,6 +188,28 @@ exports.init = function(EHR){
         });
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'encounters', function(event, helper){
+        // Special handling for Pathology Request Form to use a placeholder ID
+        helper.decodeExtraContextProperty('AllowAnyId', false);
+        var allowAnyId = helper.getProperty('AllowAnyId');
+        if (allowAnyId) {
+            helper.setScriptOptions({
+                allowAnyId: true
+            });
+        }
+    });
+    //Added 8-15-2022  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'tissueDistributions', function(event, helper){
+        // Special handling for Pathology Request Form to use a placeholder ID
+        helper.decodeExtraContextProperty('AllowAnyId', false);
+        var allowAnyId = helper.getProperty('AllowAnyId');
+        if (allowAnyId) {
+            helper.setScriptOptions({
+                allowAnyId: true
+            });
+        }
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'assignment', function(event, helper){
         helper.setScriptOptions({
             doStandardProtocolCountValidation: false
@@ -720,13 +742,22 @@ exports.init = function(EHR){
             EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering ketamine or telazol, amount must be in mg', 'WARN');
         }
 
-        if (!row.amount && !row.volume){
-            EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
-            EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+        if (row.code != 'E-YY164') { //Added by kollil, 9/14/2022. Added this line to apply this validation to all meds except Omnipaque
+            if (!row.amount && !row.volume) {
+                EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
+                EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+            }
         }
+
         //Added: 10-14-2016 R.Blasa
         if ((row.code == 'E-00070' || row.code == 'E-YY490'|| row.code == 'E-YYY45') && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required when entering this medication', 'WARN');
+        }
+
+        //Added by Kollil, 9/14/2022
+        //User must enter amount and amount units when Omnipaque medication is selected, E-YY164
+        if ((row.code == 'E-YY164' ) && (!row.amount || !row.amount_units || row.amount_units.toLowerCase() != 'mg')){
+            EHR.Server.Utils.addError(scriptErrors, 'amount', 'When entering Omnipaque, must enter amount and amount_units must be in mg', 'WARN');
         }
 
     });
@@ -954,9 +985,11 @@ exports.init = function(EHR){
             EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering ketamine or telazol, amount must be in mg', 'WARN');
         }
 
-        if (!row.amount && !row.volume){
-            EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
-            EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+        if (row.code != 'E-YY164') { //Added by kollil, 9/14/2022. Added this line to apply this validation to all meds except Omnipaque
+            if (!row.amount && !row.volume) {
+                EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
+                EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+            }
         }
 
         if (row.frequency){
@@ -968,6 +1001,13 @@ exports.init = function(EHR){
         if ((row.code == 'E-00070' || row.code == 'E-YY490'|| row.code == 'E-YYY45') && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required when entering this medication', 'WARN');
         }
+
+        //Added by Kollil, 9/14/2022
+        //User must enter amount and amount units when Omnipaque medication is selected, E-YY164
+        if ((row.code == 'E-YY164' ) && (!row.amount || !row.amount_units || row.amount_units.toLowerCase() != 'mg')){
+            EHR.Server.Utils.addError(scriptErrors, 'amount', 'When entering Omnipaque, must enter amount and amount_units must be in mg', 'WARN');
+        }
+
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'treatment_order', function(helper, errors, row, oldRow){
@@ -1109,6 +1149,17 @@ exports.init = function(EHR){
                 }
             }
         });
+        //Added 8-2-2022  R.Blasa
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function (helper, scriptErrors, row, oldRow) {
+
+            helper.decodeExtraContextProperty('MiscChargesInTransaction');
+            var miscChargesInTransaction = helper.getProperty('MiscChargesInTransaction');
+
+            if (miscChargesInTransaction && miscChargesInTransaction['miscChargesEntered'] === 0) {
+                EHR.Server.Utils.addError(scriptErrors, 'Id', 'billing charges grid requires at least one row', 'WARN');
+            }
+        });
+
 
         //Added 3-5-2019  R.Blasa
         EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
@@ -1123,7 +1174,59 @@ exports.init = function(EHR){
                 }
             }
         });
+
+        //Added 10-5-2022  R.Blasa
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'matings', function (helper, scriptErrors, row, oldRow) {
+            //Ensure that the ID entered into Matings record is always female
+            if (row.Id )
+            {
+                EHR.Server.Utils.findDemographics({
+                    participant: row.Id ,
+                    helper: helper,
+                    scope: this,
+                    callback: function (data)
+                    {
+                        if (data)
+                        {
+                            if (data['gender/origGender'] && data['gender/origGender'] != 'f')
+                                EHR.Server.Utils.addError(scriptErrors, 'Id', 'The ID has to be female', 'ERROR');
+                        }
+                    }
+                });
+
+            }
+            // Ensure users are entering male ids
+            if (row.male )
+            {
+                EHR.Server.Utils.findDemographics({
+                    participant: row.male ,
+                    helper: helper,
+                    scope: this,
+                    callback: function (data)
+                    {
+                        if (data)
+                        {
+                            if (data['gender/origGender'] && data['gender/origGender'] != 'm')
+                                EHR.Server.Utils.addError(scriptErrors, 'male', 'The Male ID has to be male', 'ERROR');
+                        }
+                    }
+                });
+
+            }
+        });
     });
 
-
+    //Added: 10-4-2022  R.Blasa
+    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.COMPLETE, function(event, errors, helper){
+                // Send notifications when requests approved
+                 var requestsApproved = helper.getRequestApprovedArray();
+                if (requestsApproved && requestsApproved.length > 0) {
+                        var msgs = helper.getJavaHelper().sendRequestStateEmail("Request: Approved", requestsApproved);
+                        if (msgs && msgs.length) {
+                            LABKEY.ExtAdapter.each(msgs, function (msg) {
+                            EHR.Server.Utils.addError(scriptErrors, 'qcstate', msg, 'INFO');
+                           }, this);
+                        }
+               }
+    });
 };

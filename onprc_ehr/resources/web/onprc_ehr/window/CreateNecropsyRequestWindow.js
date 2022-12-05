@@ -16,16 +16,16 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
 
             Ext4.create('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                 dataRegionName: dataRegionName,
-                title: 'Schedule Necropsy For Selected Rows',
+                title: 'Schedule Pathology For Selected Rows',
                 formType: formType,
-                taskLabel: 'Necropsy'
+                taskLabel: 'Pathology Request'
             }).show();
         }
     },
 
     initComponent: function(){
         LDK.Assert.assertNotEmpty('Missing formtype in CreateTaskFromRecordsWindow', this.formType);
-
+        var requestid = [];
         Ext4.apply(this, {
             modal: true,
             border: false,
@@ -57,12 +57,12 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                     xtype: 'combo',
                     fieldLabel: 'Assigned To',
                     forceSelection: true,
-                    value: LABKEY.Security.currentUser.id,
+                    value: 1693,
                     queryMode: 'local',
                     store: {
                         type: 'labkey-store',
-                        schemaName: 'core',
-                        queryName: 'PrincipalsWithoutAdmin',
+                        schemaName: 'onprc_ehr',
+                        queryName: 'PrincipalsWithoutAdminUpdate',
                         columns: 'UserId,DisplayName',
                         sort: 'Type,DisplayName',
                         autoLoad: true
@@ -125,6 +125,7 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
 
     getNecropsyRequestData: function (data) {
 
+        // Fetch the dataset rows that should belong to the task
         Ext4.Array.forEach(data.rows, function(row){
             var requestid = row.requestid;
 
@@ -135,14 +136,31 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                 columns: 'lsid,Id,date,requestid,taskid,qcstate,qcstate/label,qcstate/metadata/isRequest,DataSet/Label',
                 filterArray: [LABKEY.Filter.create('requestid', requestid.value, LABKEY.Filter.Types.EQUAL)],
                 scope: this,
-                success: this.onDataSuccess,
+                success: this.onStudyDataLoad,
+                failure: LDK.Utils.getErrorCallback()
+            });
+
+        }, this);
+
+        // Fetch the MiscCharges rows that should belong to the task
+        Ext4.Array.forEach(data.rows, function(row){
+            var requestid = row.requestid;
+
+            LABKEY.Query.selectRows({
+                schemaName: 'onprc_billing',
+                queryName: 'miscCharges',
+                sort: 'Id,date',
+                columns: 'objectid,Id,date,requestid,qcstate,qcstate/label,qcstate/metadata/isRequest',
+                filterArray: [LABKEY.Filter.create('requestid', requestid.value, LABKEY.Filter.Types.EQUAL)],
+                scope: this,
+                success: this.onMiscChargesLoad,
                 failure: LDK.Utils.getErrorCallback()
             });
 
         }, this);
     },
 
-    onDataSuccess: function (data) {
+    onStudyDataLoad: function (data) {
         if (!data || !data.rows){
             Ext4.Msg.hide();
             Ext4.Msg.alert('Error', 'No records found');
@@ -174,9 +192,36 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         this.afterDataLoad();
     },
 
+    onMiscChargesLoad: function (data) {
+        if (!data || !data.rows){
+            Ext4.Msg.hide();
+            Ext4.Msg.alert('Error', 'No records found');
+            return;
+        }
+
+        this.miscChargesrecords = [];
+        var errors = [];
+
+        Ext4.Array.forEach(data.rows, function(row){
+            this.miscChargesrecords.push(row);
+
+        }, this);
+
+
+        if (errors.length){
+            errorst = Ext4.Array.unique(errors);
+            Ext4.Msg.alert('Error', errors.join('<br>'));
+        }
+
+        this.afterDataLoad();
+    },
+
     afterDataLoad: function() {
-        this.down('#submitBtn').setDisabled(false);
-        this.setLoading(false);
+        // Check if both load attempts have finished
+        if (this.records && this.miscChargesrecords) {
+            this.down('#submitBtn').setDisabled(false);
+            this.setLoading(false);
+        }
     },
 
     onSubmit: function(){
@@ -229,17 +274,54 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
         });
     },
 
-    createTaskSuccess: function(response, options, config){
-        Ext4.Msg.hide();
-
+    finishCreation: function(taskId) {
         var viewAfterCreate = this.down('#viewAfterCreate').getValue();
         this.close();
+        Ext4.Msg.hide();
 
         if (viewAfterCreate){
-            window.location = LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {taskid: config.taskId, formType: this.formType});
+            window.location = LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {taskid: taskId, formType: this.formType});
         }
         else {
             LABKEY.DataRegions[this.dataRegionName].refresh();
         }
+    },
+
+    createTaskSuccess: function(response, options, config){
+        Ext4.Msg.hide();
+        var records = this.miscChargesrecords;
+        if (!records || !records.length)  {
+            // No MiscCharges to process so we're done
+            this.finishCreation(config.taskId);
+            return;
+        }
+
+        // Update the MiscCharges rows to belong to the new task
+        var toUpdate = [];
+        Ext4.Array.forEach(records, function(row){
+            if (!row[this.targetField] || !this.skipNonNull){
+                var obj = {
+                    requestid: row['requestid'],
+                    objectid:row['objectid'],
+                    taskid: config.taskId
+                };
+
+                toUpdate.push(obj);
+            }
+            else {
+                skipped.push(row[this.objectid]);
+            }
+        }, this);
+        LABKEY.Query.updateRows({
+            method: 'POST',
+            schemaName: 'onprc_billing',
+            queryName: 'miscCharges',
+            rows: toUpdate,
+            scope: this,
+            success: function(){
+                this.finishCreation(config.taskId);
+            },
+            failure: LDK.Utils.getErrorCallback()
+        });
     }
 });

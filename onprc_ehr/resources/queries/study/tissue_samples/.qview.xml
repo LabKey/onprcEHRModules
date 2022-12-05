@@ -8,6 +8,7 @@
         <column name="preparation"/>
         <column name="quantity"/>
         <column name="weight"/>
+        <column name="remark"/>
         <column name="QCState"/>
         <column name="taskid"/>
     </columns>
