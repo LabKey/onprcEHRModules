@@ -33,7 +33,7 @@ select b.requirementname,
                           having (tt.expireperiod) >  (age_in_months(tt.reviewdate, max(pq.date)) and (tt.reviewdate is not null)  )) > 0 THEN
 
                        ( select  (age_in_months(max(pq.date), tt.reviewdate) - ( age_in_months(max(pq.date), curdate())) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod
-                         having (tt.expireperiod) > (age_in_months(max(pq.date),tt.reviewdate)) and (tt.reviewdate is not null)  ) )
+                         having (tt.expireperiod) > (age_in_months(max(pq.date),tt.reviewdate)) and (tt.reviewdate is not null)  )
 
 
                    ELSE ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
