@@ -17,6 +17,9 @@ select b.requirementname,
 
        (select k.expireperiod from Requirements k where k.requirementname = b.requirementname) as ExpiredPeriod,
 
+       ( select  (age_in_months(max(pq.date), tt.reviewdate) - ( age_in_months(max(pq.date), curdate())) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+         having (tt.expireperiod) > (age_in_months(max(pq.date),tt.reviewdate)) and (tt.reviewdate is not null)  ) as NewExpirePeriod,
+
        (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
        (Select group_concat(distinct yy.comment, chr(10))  from completiondates yy where yy.date in (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid )
@@ -51,6 +54,7 @@ where ( a.unit = b.unit or a.category = b.category )
   And a.employeeid in (select p.employeeid from ehr_compliancedb.employees p where p.enddate is null)
 
 
+
                                 group by b.requirementname,a.employeeid
 
 
@@ -67,6 +71,9 @@ select a.requirementname,
        (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
 
        (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = a.requirementname) as ExpiredPeriod,
+
+       ( select  (age_in_months(max(pq.date), tt.reviewdate) - ( age_in_months(max(pq.date), curdate())) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+         having (tt.expireperiod) > (age_in_months(max(pq.date),tt.reviewdate)) and (tt.reviewdate is not null)  ) as NewExpirePeriod,
 
        (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
@@ -112,6 +119,7 @@ select j.requirementname,
        'Yes' as trackingflag,
        null as timesCompleted,
        null as ExpiredPeriod,
+       null as NewExpirePeriod,
        null as MostRecentDate,
        '' as comment,
        null AS MonthsUntilRenewal
