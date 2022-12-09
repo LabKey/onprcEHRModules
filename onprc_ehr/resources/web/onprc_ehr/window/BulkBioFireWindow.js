@@ -20,6 +20,23 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                 html: 'This helper allows you to bulk import BioFire data, exported as an excel file from the BioFire software.',
                 style: 'padding-bottom: 10px;'
             },{
+                xtype: 'ldk-linkbutton',
+                text: '[Download BioFireTemplate_GI_Panel Template]',
+                scope: this,
+                style: 'margin-bottom: 10px;',
+                handler: function(){
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BioFireTemplate_GI_Panel.xlsx'
+                }
+
+            },{
+                xtype: 'ldk-linkbutton',
+                text: '[Download BioFireTemplate_Respiratory_Panel Template]',
+                scope: this,
+                style: 'margin-bottom: 10px;',
+                handler: function(){
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BioFireTemplate_Respiratory_Panel.xlsx'
+                }
+            },{
                 xtype: 'textarea',
                 itemId: 'textField',
                 height: 300,
