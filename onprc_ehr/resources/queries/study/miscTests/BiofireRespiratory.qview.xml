@@ -5,6 +5,7 @@
         <column name="Id/Demographics/species"/>
         <column name="runid/servicerequested"/>
         <column name="runid/tissue"/>
+        <column name="runid/method"/>
         <column name="testId"/>
         <column name="result"/>
         <column name="units"/>
