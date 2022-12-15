@@ -30,6 +30,14 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
 
             },{
                 xtype: 'ldk-linkbutton',
+                text: '[Download BioFireTemplate_BC_Panel Template]',
+                scope: this,
+                style: 'margin-bottom: 10px;',
+                handler: function(){
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BioFireTemplater_BC Panel.xlsx'
+                }
+            },{
+                xtype: 'ldk-linkbutton',
                 text: '[Download BioFireTemplate_Respiratory_Panel Template]',
                 scope: this,
                 style: 'margin-bottom: 10px;',
@@ -78,10 +86,11 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
 
 
 
-
+        var remark = Ext4.String.trim(parsed[0][1])  ;
         var category = Ext4.String.trim(parsed[1][1])  ;
         var chargeunit = Ext4.String.trim(parsed[2][1])  ;
         var vet = Ext4.String.trim(parsed[6][1])  ;
+        var tissue = Ext4.String.trim(parsed[7][1])  ;
 
         //Process Service request name
         var name = Ext4.String.trim(parsed[3][1]);
@@ -89,9 +98,9 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         var procedureRec = this.labworkSericeStoreStore.getAt(procRecIdx);
         LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + ' in BioFire Window', procedureRec);
         var servicereq = procedureRec.get('servicename');
-        var dateRow = parsed[9];
-        var idRow = parsed[8];
-        var performedby = Ext4.String.trim(parsed[7][1]) ;
+        var dateRow = parsed[10];
+        var idRow = parsed[9];
+        var performedby = Ext4.String.trim(parsed[8][1]) ;
 
         if (dateRow.length != idRow.length){
             Ext4.Msg.alert('Error', 'The length of the first 2 rows do not match.');
@@ -114,12 +123,14 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
             runRow.method = method ;
             runRow.vet = vet ;
             runRow.performedby = performedby;
+            runRow.remark = remark;
+             runRow.tissue = tissue;
 
 
             runsToCreate.push(this.runStore.createModel(runRow));
 
             //then results
-            for (var j=10;j<parsed.length;j++){
+            for (var j=11;j<parsed.length;j++){
                 var resultRow = {};
                 resultRow.Id = runRow.Id;
                 resultRow.date = runRow.date;
