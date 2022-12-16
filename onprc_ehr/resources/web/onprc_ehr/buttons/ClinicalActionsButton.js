@@ -82,7 +82,34 @@ Ext4.define('onprc_ehr.buttons.ClinicalActionsButton', {
                 }).show();
             }
         });
+        toAdd.push({
+            text: 'Enter SOAP',
+            disabled: !EHR.Security.hasClinicalEntryPermission() || !EHR.Security.hasPermission(EHR.QCStates.COMPLETED, 'update', [{schemaName: 'study', queryName: 'Clinical Remarks'}]),
+            tooltip: !EHR.Security.hasClinicalEntryPermission() || !EHR.Security.hasPermission(EHR.QCStates.COMPLETED, 'update', [{schemaName: 'study', queryName: 'Clinical Remarks'}]) ? 'You do not have permission for this action' : null,
+            scope: this,
+            handler: function(btn){
+                var animalId = this.getAnimalId();
+                if (!animalId){
+                    Ext4.Msg.alert('Error', 'No Animal Selected');
+                    return;
+                }
 
+                Ext4.create('ONPRC_EHR.window.ManageSoapWindow', {
+                    schemaName: 'study',
+                    queryName: 'clinRemarks',
+                    maxItemsPerCol: 11,
+                    pkCol: 'objectid',
+                    pkValue: LABKEY.Utils.generateUUID().toUpperCase(),
+                    extraMetaData: {
+                        Id: {
+                            defaultValue: animalId,
+                            editable: false
+                        },
+                        category: 'Clinical'
+                    }
+                }).show();
+            }
+        });
 
         toAdd.push({
             text: 'Open Exam Form',
