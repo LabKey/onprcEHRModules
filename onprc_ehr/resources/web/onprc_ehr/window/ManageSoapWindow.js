@@ -14,13 +14,13 @@ Ext4.define('ONPRC_EHR.window.ManageSoapWindow', {
 
     statics: {
         buttonHandler: function(Id, objectId, queryName, dataRegionName){
-            LDK.Assert.assertNotEmpty('No objectid provided to ManageRecordWindow.buttonHandler', objectId);
-            LDK.Assert.assertNotEmpty('No queryName provided to ManageRecordWindow.buttonHandler', queryName);
+            LDK.Assert.assertNotEmpty('No objectid provided to ManageSoapWindow.buttonHandler', objectId);
+            LDK.Assert.assertNotEmpty('No queryName provided to ManageSoapWindow.buttonHandler', queryName);
 
-            Ext4.create('ONPRC_EHR.window.ManageRecordWindow', {
+            Ext4.create('ONPRC_EHR.window.ManageSoapWindow', {
                 schemaName: 'study',
                 queryName: queryName,
-                maxItemsPerCol: 11,
+                maxItemsPerCol: 12,
                 pkCol: 'objectid',
                 pkValue: objectId,
                 listeners: {
