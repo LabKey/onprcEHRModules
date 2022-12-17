@@ -68,25 +68,23 @@ Ext4.define('ONPRC_EHR.window.PathTissuesImportWindow', {
         var resultsToCreate = [];
 
         //Process Encounters table
-        var dateRow = parsed[4][1];
-        var idRow = parsed[3][1];
+        var recipient = parsed[3][1];
+        var dateRow = parsed[5][1];
+        var idRow = parsed[4][1];
 
 
-        if (dateRow.length != idRow.length){
-            Ext4.Msg.alert('Error', 'The length of the first 2 rows do not match.');
-            return;
-        }
+
         var errors = [];
         var offset = 1;
         var rowIdx = offset;
         var project = this.resolveProjectByName(Ext4.String.trim(parsed[1][1]), errors,rowIdx );
-        var billingproject = this.resolveProjectByName(Ext4.String.trim(parsed[1][1]), errors,rowIdx );
+        var billingproject = this.resolveProjectByName(Ext4.String.trim(parsed[2][1]), errors,rowIdx );
 
 
-        for (var i=1;i<idRow.length;i++){       //Column one
+        // for (var i=1;i<idRow.length;i++){       //Column one
             var runRow = {};
-            runRow.Id = idRow[i];
-            runRow.date = LDK.ConvertUtils.parseDate(dateRow[i]);
+            runRow.Id = idRow;
+            runRow.date = LDK.ConvertUtils.parseDate(dateRow);
             runRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
             runRow.project = project ;
             runRow.billingproject = project ;
@@ -94,28 +92,37 @@ Ext4.define('ONPRC_EHR.window.PathTissuesImportWindow', {
 
             runsToCreate.push(this.runStore.createModel(runRow));
 
-            //then results
-            for (var j=5;j<parsed.length;j++){
-                var resultRow = {};
-                resultRow.Id = runRow.Id;
-                resultRow.date = runRow.date;
-                resultRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
+                    //then results
+                    for (var j=6;j<parsed.length;j++){
+                        var resultRow = {};
+                        resultRow.Id = runRow.Id;
+                        resultRow.date = runRow.date;
+                        resultRow.project = runRow.project;
+                        resultRow.recipient = recipient;
+                        resultRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
 
 
-                if (parsed[j].length < i){
-                    Ext4.Msg.alert('Error', 'The length result line ' + (j + 1) + ' is less than the header line.');
-                    return;
-                }
+                        // if (parsed[j].length < i){
+                        //     Ext4.Msg.alert('Error', 'The length result line ' + (j + 1) + ' is less than the header line.');
+                        //     return;
+                        // }
 
-                resultRow.sammpletype = parsed[j][2];
-                resultRow.tissue = parsed[j][4];
-                var comments = parsed[j][5];
-                if (!Ext4.isEmpty(comments)){
-                    resultRow.remark = Ext4.String.trim(comments);
-                }
+                        resultRow.sampletype = parsed[j][2];
+                        resultRow.tissue = parsed[j][4];
+                        var comments = parsed[j][5];
+                        if (!Ext4.isEmpty(comments)){
+                            resultRow.remark = Ext4.String.trim(comments);
+                        }
 
-            }
-        }
+                        if (Ext4.isDefined(resultRow.tissue)){
+                            resultsToCreate.push(this.TissuesStore.createModel(resultRow));
+                        }
+                        else {
+                            console.log('skipping result row: [' + result + ']');
+                        }
+
+                   }
+
 
         this.close();
 
