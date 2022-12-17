@@ -102,10 +102,6 @@ Ext4.define('ONPRC_EHR.window.PathTissuesImportWindow', {
                         resultRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
 
 
-                        // if (parsed[j].length < i){
-                        //     Ext4.Msg.alert('Error', 'The length result line ' + (j + 1) + ' is less than the header line.');
-                        //     return;
-                        // }
 
                         resultRow.sampletype = parsed[j][2];
                         resultRow.tissue = parsed[j][4];
