@@ -40,6 +40,8 @@ public class NecropsyRequestForm extends RequestForm
             miscChargesSection.setClientStoreClass("onprc_ehr.data.PathTissuesClientStore");
             miscChargesSection.addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathTissuesClientStore.js"));
 
+
+
             addSection(miscChargesSection);
         }
 
@@ -57,17 +59,18 @@ public class NecropsyRequestForm extends RequestForm
         //Added 2-17-2021  R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/PathologyTissuesField.js"));
 
+        //Added 12-16-2022 Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkPathTissuesWindow.js"));
 
-//        //    Added: 7-20-2022  R.Blasa
+
+       //    Added: 7-20-2022  R.Blasa
         setStoreCollectionClass("onprc_ehr.data.sources.PathTissueRequestStoreCollection");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathTissueRequestStoreCollection.js"));
 
-
-
-
-
-
    }
+
+
+    @Override
     public JSONObject toJSON()
     {
         JSONObject ret = super.toJSON();
@@ -75,6 +78,17 @@ public class NecropsyRequestForm extends RequestForm
         map.put("allowRequestsInDistantFuture", true);
         ret.put("extraContext", map);
         return ret;
+    }
+
+    //Added 12-16-2022 Blasa
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getMoreActionButtonConfigs()) ;
+        defaultButtons.add("Tissues_IMPORT");
+
+        return defaultButtons;
     }
 
 
