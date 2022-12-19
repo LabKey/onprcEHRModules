@@ -4,7 +4,7 @@
 
     <name>insertProtocolfromEIACUC22_7</name>
 
-    <description>Inserts Protocol Details from eIACUC External Schema</description>
+    <description>Inserts Protocol Details from eIACUC External Schema 22.7</description>
 
     <transforms>
         <transform id="ArchiveProtocol">
