@@ -1,5 +1,5 @@
 /* Added change to make it work 2022-08-16
-*  UPdated 12/19/2022 for Labkey 22.7
+*  UPdated 12/19/2022 for Labkey 22.7.1
 */
 SELECT
 p.Protocol_ID as protocol,
