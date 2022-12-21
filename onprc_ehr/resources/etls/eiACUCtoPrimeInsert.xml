@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>insertProtocolfromEIACUC22_7</name>
+
+    <description>Inserts Protocol Details from eIACUC External Schema</description>
+
+    <transforms>
+        <transform id="ArchiveProtocol">
+            <description>Truncate and copy protocols to protocolLog dataset update</description>
+            <source schemaName="ehr" queryName="Protocol" />
+            <destination schemaName="onprc_ehr" queryName="protocol_logs" targetOption="truncate"/>
+        </transform>
+
+
+
+        <transform id="Stored_ProcRemove" type="StoredProcedure">
+            <description>Removes protocol details from eIACUC.</description>
+            <procedure schemaName="onprc_ehr" procedureName="eIACUC_removeRecords">
+            </procedure>
+        </transform>
+
+        <transform id="step3">
+
+            <description>Append eIACUC Data to Protocol</description>
+
+            <source schemaName="onprc_ehr" queryName="eIACUCtoProtocolExport"/>
+
+            <destination schemaName="EHR" queryName="protocol" targetOption="append" />
+
+        </transform>
+
+
+
+    </transforms>
+
+    <schedule>
+        <!-- runs at noon every saturday -->
+        <cron expression="0 0 2 * * ?"/>
+
+    </schedule>
+
+
+</etl>
