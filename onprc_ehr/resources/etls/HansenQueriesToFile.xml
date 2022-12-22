@@ -6,7 +6,7 @@
     <description>imports the data from mfsh animal details on ONPRC</description>
     <transforms>
         <transform id="step1">
-            <description>Define Hansen Study Animals</description>
+            <description>Define Hansen Study Animals 2022</description>
             <source queryName="studyAnimals" schemaName="Randal_data"/>
             <destination queryName="StudyDetails_RandalData" schemaName="Onprc_ehr" targetOption="truncate"></destination>
         </transform>
