@@ -124,7 +124,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
             runRow.vet = vet ;
             runRow.performedby = performedby;
             runRow.remark = remark;
-             runRow.tissue = tissue;
+            runRow.tissue = tissue;
 
 
             runsToCreate.push(this.runStore.createModel(runRow));
@@ -136,6 +136,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                 resultRow.date = runRow.date;
                 resultRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
                 resultRow.runid = runRow.objectid;
+                resultRow.remark = remark;
 
                 if (parsed[j].length < i){
                     Ext4.Msg.alert('Error', 'The length result line ' + (j + 1) + ' is less than the header line.');
