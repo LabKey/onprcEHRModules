@@ -3,6 +3,8 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
+
+//Created:  12-27-2022  R. Basa
 Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
     extend: 'Ext.window.Window',
 
@@ -10,14 +12,14 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
         Ext4.apply(this, {
             modal: true,
             closeAction: 'destroy',
-            title: 'Import BioFire Results From Excel',
+            title: 'Import MultiPlex PCR Results From Excel',
             bodyStyle: 'padding: 5px;',
             width: 630,
             defaults: {
                 border: false
             },
             items: [{
-                html: 'This helper allows you to bulk import BioFire data, exported as an excel file from the BioFire software.',
+                html: 'This helper allows you to bulk import Multiplex PCR data, exported as an excel file from the Multiplex PCR software.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'ldk-linkbutton',
