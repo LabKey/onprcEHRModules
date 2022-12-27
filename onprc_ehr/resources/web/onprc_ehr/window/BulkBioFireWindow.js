@@ -27,7 +27,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                 scope: this,
                 style: 'margin-bottom: 10px;',
                 handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BioFireTemplate_GI_Panel.xlsx'
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BioFire_Template_GI_Panel.xlsx'
                 }
 
             },{
@@ -36,7 +36,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                 scope: this,
                 style: 'margin-bottom: 10px;',
                 handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BioFireTemplater_BC Panel.xlsx'
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BioFire_Template_BC_Panel.xlsx'
                 }
             },{
                 xtype: 'ldk-linkbutton',
@@ -44,7 +44,7 @@ Ext4.define('ONPRC_EHR.window.BioFireImportWindow', {
                 scope: this,
                 style: 'margin-bottom: 10px;',
                 handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BioFireTemplate_Respiratory_Panel.xlsx'
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BioFire_Template_Respiratory_Panel.xlsx'
                 }
             },{
                 xtype: 'textarea',
