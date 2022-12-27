@@ -36,6 +36,11 @@
                         <columnTitle>Expire Period (Months)</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
+
+                    <column columnName="NewExpirePeriod">
+                        <columnTitle>New Expire Period (Months)</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
                     <column columnName="unit">
                         <columnTitle>Unit</columnTitle>
                         <displayWidth>70</displayWidth>

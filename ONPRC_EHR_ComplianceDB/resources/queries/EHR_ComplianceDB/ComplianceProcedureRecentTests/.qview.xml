@@ -11,6 +11,7 @@
         <column name="trackingflag"/>
         <column name="timesCompleted"/>
         <column name="ExpiredPeriod"/>
+        <column name="NewExpirePeriod"/>
         <column name="MostRecentDate"/>
         <column name="comment"/>
         <column name="MonthsUntilRenewal"/>

@@ -4,18 +4,10 @@
             <table tableName="Requirements" tableDbType="NOT_IN_DB">
                 <tableTitle>Requirements</tableTitle>
                 <columns>
-                    <!--<column columnName="access">-->
-                    <!--<columnTitle>West Campus Level 1</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="animals">-->
-                    <!--<columnTitle>West Campus Level 2</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="contactsSla">-->
-                    <!--<columnTitle>West Campus Level 3</columnTitle>-->
-                    <!--</column>-->
-                    <!--<column columnName="tissues">-->
-                    <!--<columnTitle>West Campus Level 4</columnTitle>-->
-                    <!--</column>-->
+                    <column columnName="reviewdate">
+                        <columnTitle>Review Date</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
                 </columns>
             </table>
         </tables>
