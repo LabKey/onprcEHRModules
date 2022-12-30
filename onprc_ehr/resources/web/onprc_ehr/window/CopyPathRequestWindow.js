@@ -133,8 +133,6 @@ Ext4.define('ONPRC_EHR.window.CopyPathRequestWindow', {
             }
 
 
-
-
             if (tissueMap[key].orderedCodes.indexOf(row.getValue('tissue')) == -1){
                 tissueMap[key].orderedCodes.push(row.getValue('tissue'));
             }
