@@ -95,7 +95,7 @@ Ext4.define('ONPRC_EHR.window.CopyPathRequestWindow', {
         LABKEY.Query.selectRows({
             schemaName: 'study',
             queryName: 'encounters',
-            columns: 'Id,project,project/displayName,project/investigatorId/lastName,daterequested,billingproject,fastingtype,animaldelivery,remainingTissues,necropsyLocation',
+            columns: 'Id,project,daterequested,billingproject,fastingtype,animaldelivery,remainingTissues,necropsyLocation',
             sort: '-dateOnly,formSort',
             requiredVersion: 9.1,
             filterArray: filterArray,
