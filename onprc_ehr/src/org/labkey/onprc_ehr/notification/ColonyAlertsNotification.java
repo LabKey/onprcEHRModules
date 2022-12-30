@@ -722,7 +722,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     }
 
-
     /**
      * find the total finalized records with future dates
      */
@@ -1338,7 +1337,38 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are no scheduled PMIC procedures!</b><br><hr>");
         }
     }
-    //End of PMIC services alert
+    //End of PMIC alert
+
+    /**
+     * Kollil, 12/22/2022 : Find the procedure entries where the PainCategory on the procedure is not defined (IS NULL).
+     * This report is sent to Jeff once a week so he will fill in the missing pain category on the procedure.
+     */
+    protected void proceduresWithoutUSDAPainLevels(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
+            msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+
+        //procedures query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("Procedures_Missing_PainLevels", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        if (count > 0) {//procedures count
+            msg.append("<br><b>Procedure with missing USDA pain levels:</b><br><br>");
+            msg.append("<b>" + count + " procedure(s) found:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "Procedures_Missing_PainLevels", null) + "'>Click here to view the transfers in PRIME</a></p>\n");
+            msg.append("<hr>");
+        }
+
+        if (count == 0) {
+            msg.append("<b>There are no procedures with missing USDA pain levels!</b><hr>");
+        }
+    }
+    //End of USDA Pain levels alert
+
 
     /**
      * Kollil, 03/18/2021 : Housing transfer notifications Daily
