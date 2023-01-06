@@ -68,7 +68,7 @@ public class USDAPainNotification extends ColonyAlertsNotification
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Procedure(s) with missing USDA Pain categories: " + getDateTimeFormat(c).format(new Date());
+        return "Procedure(s) with missing USDA pain categories: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
