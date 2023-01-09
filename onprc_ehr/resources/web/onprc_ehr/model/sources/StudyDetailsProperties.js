@@ -10,15 +10,15 @@ EHR.model.DataModelManager.registerMetadata('StudyDetails', {
     byQuery: {
         'study.StudyDetails': {
 
-            Date: {
+            date: {
                 header:'Start Date',
                 columnConfig: {
                     width: 200
                 }
             },
 
-            endDate: {
-                header:'End Date',
+            enddate: {
+                header:'End DateX',
                 columnConfig: {
                     width: 200
                 }
@@ -38,18 +38,6 @@ EHR.model.DataModelManager.registerMetadata('StudyDetails', {
                 }
             },
 
-            // studyGroup: {
-            //     header:"Study Group",
-            //     lookup: {
-            //         schemaName: 'study',
-            //         queryName: 'StudyDetails_group_values',
-            //         sort: 'sort_order',
-            //         columns: 'value, name'
-            //     },
-            //     columnConfig: {
-            //         width: 100
-            //     }
-            // },
 
             studyGroupNum: {
                 header:"Study Group #",

@@ -2562,4 +2562,51 @@ public class ONPRC_EHRTriggerHelper
         return ts.getObject(Double.class);
     }
 
+    public void updateArrivalrecords(String id, Date date) throws Exception
+    {
+        TableInfo ti = getTableInfo("study", "birth");
+        if (ti == null)
+        {
+            return;
+        }
+
+        Set<FieldKey> keys = new HashSet<>();
+        keys.add(FieldKey.fromString("Id"));
+        keys.add(FieldKey.fromString("date"));
+        keys.add(FieldKey.fromString("lsid"));
+        final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, keys);
+
+
+        final List<Map<String, Object>> toUpdate = new ArrayList<>();
+        final List<Map<String, Object>> oldKeys = new ArrayList<>();
+        TableSelector ts = new TableSelector(ti, colMap.values(), new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.IN), null);
+        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        {
+            @Override
+            public void exec(ResultSet object) throws SQLException
+            {
+                ResultsImpl rs = new ResultsImpl(object, colMap);
+                String origin = rs.getString(FieldKey.fromString("Id"));
+                String lsid = rs.getString(FieldKey.fromString("lsid"));
+
+                    Map<String, Object> row = new CaseInsensitiveHashMap<>();
+                    row.put("lsid", lsid);
+                    row.put("date", date);
+                    Map<String, Object> keyRow = new CaseInsensitiveHashMap<>();
+                    keyRow.put("lsid", lsid);
+
+                    oldKeys.add(keyRow);
+                    toUpdate.add(row);
+
+
+            }
+        });
+
+        if (!toUpdate.isEmpty())
+        {
+            TableInfo demographics = getTableInfo("study", "birth");
+            demographics.getUpdateService().updateRows(_user, _container, toUpdate, oldKeys, null, getExtraContext());
+        }
+    }
+
 }
