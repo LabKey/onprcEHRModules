@@ -1366,6 +1366,43 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count == 0) {
             msg.append("<b>There are no procedures with missing USDA pain levels!</b><hr>");
         }
+
+        //Display the daily report in the email
+        if (count > 0)
+        {
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("project"));
+            columns.add(FieldKey.fromString("date"));
+            columns.add(FieldKey.fromString("name"));
+            columns.add(FieldKey.fromString("PainCategories"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+
+            // Table header
+            msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td> Id </td><td> Center Project </td><td> Date </td><td> Procedure </td><td> USDA Pain Categories </td></tr>");
+
+            ts2.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, colMap);
+                    String url = getParticipantURL(c, rs.getString("Id"));
+
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("name")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("PainCategories")) + "</td>");
+                    msg.append("</tr>");
+                }
+            });
+            msg.append("</table>");
+        }
     }
     //End of USDA Pain levels alert
 
