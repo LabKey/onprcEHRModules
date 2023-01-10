@@ -103,6 +103,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         initTest.initProject();
         initTest.createTestSubjects();
+        initTest.createBirthRecords();
         new RReportHelper(initTest).ensureRConfig();
 
     }
@@ -685,7 +686,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testPedigreeReport() throws Exception
     {
-        createBirthRecords();
         goToProjectHome();
         beginAtAnimalHistoryTab();
 
@@ -893,12 +893,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     protected void createBirthRecords() throws Exception
     {
         log("creating birth records");
-
-        if (_hasCreatedBirthRecords)
-        {
-            log("birth records already created, skipping");
-            return;
-        }
 
         //note: these should cascade insert into demographics
         EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getProjectName());
@@ -1250,7 +1244,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testGeneticsPipeline() throws Exception
     {
-        createBirthRecords();
         goToProjectHome();
 
         //retain pipeline log for debugging
@@ -1285,7 +1278,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         assertTrue(isElementPresent(Locator.linkWithText("CLICK HERE TO LIMIT TO ANIMALS IN SELECTION")));
 
         DataRegionTable kinshipTable = animalHistoryPage.getActiveReportDataRegion();
-        assertEquals("Incorrect number of kinship rows before limiting animal selection", 48, kinshipTable.getDataRowCount()); // TODO: should be more
+        assertEquals("Incorrect number of kinship rows before limiting animal selection", 48, kinshipTable.getDataRowCount());
 
         // Spot check kinship
         assertEquals("Incorrect kinship coefficient for 999910 and 99998", "0.359375", kinshipTable.getDataAsText(0, "Coefficient"));
