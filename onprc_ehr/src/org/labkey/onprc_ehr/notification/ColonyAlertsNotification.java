@@ -1359,7 +1359,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0) {//procedures count
             msg.append("<br><b>Procedure with missing USDA pain levels:</b><br><br>");
             msg.append("<b>" + count + " procedure(s) found:</b>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "Procedures_Missing_PainLevels", null) + "'>Click here to view the transfers in PRIME</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "Procedures_Missing_PainLevels", null) + "'>Click here to view the procedures in PRIME</a></p>\n");
             msg.append("<hr>");
         }
 
