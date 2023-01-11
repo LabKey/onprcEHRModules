@@ -350,6 +350,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
+            //commenting out this line,
             //msg.append("<b>WARNING: The following " + count + " room(s) have animals with mixed viral statuses, excluding ABSL2+,Sequester/Containment, and ABSL3 rooms:</b><p></p>\n");
             msg.append("<b>WARNING: The following " + count + " room(s) have animals with mixed viral statuses.</b><p></p>\n");
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p/>\n");
