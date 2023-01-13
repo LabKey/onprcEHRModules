@@ -1,4 +1,5 @@
 -- This query extracts the procedures that were used currently with missing USDA pain categories.
+-- Set the date range to 1 year back from curr date
 Select
     e.id,
     e.project,
@@ -8,3 +9,4 @@ Select
 From study.encounters e, ehr_lookups.procedures p
 Where e.procedureid = p.rowid
 And p.PainCategories IS NULL
+And date > timestampadd(SQL_TSI_YEAR,-1,now())
