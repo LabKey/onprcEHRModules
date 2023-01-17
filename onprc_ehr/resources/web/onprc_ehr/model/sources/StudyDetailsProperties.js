@@ -18,7 +18,7 @@ EHR.model.DataModelManager.registerMetadata('StudyDetails', {
             },
 
             enddate: {
-                header:'End DateX',
+                header:'End Date',
                 columnConfig: {
                     width: 200
                 }
