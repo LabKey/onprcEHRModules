@@ -14,7 +14,17 @@
                     <column columnName="description" />
 
                     <column columnName="performedby"/>
-                    <column columnName="category"/>
+                    <column columnName="category">
+                        <!--<nullable>false</nullable>-->
+                        <columnTitle>Category</columnTitle>
+                        <isHidden>false</isHidden>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>clinremarks_category</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
+                    </column>
                     <column columnName="taskid" />
                     <column columnName="assignedVet">
                         <!--<isKeyField>true</isKeyField>-->
