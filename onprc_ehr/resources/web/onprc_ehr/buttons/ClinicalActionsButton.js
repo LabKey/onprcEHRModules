@@ -93,7 +93,6 @@ Ext4.define('onprc_ehr.buttons.ClinicalActionsButton', {
                     Ext4.Msg.alert('Error', 'No Animal Selected');
                     return;
                 }
-
                 Ext4.create('ONPRC_EHR.window.ManageSoapWindow', {
                     schemaName: 'study',
                     queryName: 'clinRemarks',
@@ -105,7 +104,11 @@ Ext4.define('onprc_ehr.buttons.ClinicalActionsButton', {
                             defaultValue: animalId,
                             editable: false
                         },
-                        category: 'Clinical'
+                        category: {
+                            defaultValue: 'Clinical',
+                            editable: false
+                        }
+
                     }
                 }).show();
             }
