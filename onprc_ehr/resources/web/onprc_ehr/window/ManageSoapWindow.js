@@ -20,7 +20,7 @@ Ext4.define('ONPRC_EHR.window.ManageSoapWindow', {
             Ext4.create('ONPRC_EHR.window.ManageSoapWindow', {
                 schemaName: 'study',
                 queryName: queryName,
-                maxItemsPerCol: 12,
+                maxItemsPerCol: 11,
                 pkCol: 'objectid',
                 pkValue: objectId,
                 listeners: {
