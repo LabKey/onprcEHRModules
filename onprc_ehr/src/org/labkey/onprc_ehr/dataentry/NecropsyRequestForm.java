@@ -1,14 +1,12 @@
 package org.labkey.onprc_ehr.dataentry;
 
-import org.json.old.JSONObject;
+import org.json.JSONObject;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
-import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
-import org.labkey.api.ehr.security.EHRRequestPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
@@ -61,13 +59,8 @@ public class NecropsyRequestForm extends RequestForm
 //        //    Added: 7-20-2022  R.Blasa
         setStoreCollectionClass("onprc_ehr.data.sources.PathTissueRequestStoreCollection");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathTissueRequestStoreCollection.js"));
-
-
-
-
-
-
    }
+    @Override
     public JSONObject toJSON()
     {
         JSONObject ret = super.toJSON();
@@ -76,7 +69,6 @@ public class NecropsyRequestForm extends RequestForm
         ret.put("extraContext", map);
         return ret;
     }
-
 
     @Override
     protected List<String> getButtonConfigs()
@@ -87,7 +79,4 @@ public class NecropsyRequestForm extends RequestForm
         defaultButtons.add("SAVEDRAFT");
         return defaultButtons;
     }
-
-
-
 }

@@ -15,7 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.json.old.JSONObject;
+import org.json.JSONObject;
 import org.labkey.api.ehr.*;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
@@ -42,5 +42,4 @@ public class TissueWeightsFormSection extends SimpleGridPanel
         jsonObject.put("topAndBottomButtons", true);
         return jsonObject;
     }
-
 }
