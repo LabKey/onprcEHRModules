@@ -483,6 +483,7 @@
     </table>
 
     <table tableName="NHP_Training" tableDbType="TABLE" useColumnOrder="true">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <tableTitle>NHP Training</tableTitle>
         <auditLogging>DETAILED</auditLogging>
         <columns>

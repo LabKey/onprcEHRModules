@@ -34,3 +34,15 @@ SELECT
 
 FROM study.birth b
 WHERE b.dam is not null and b.qcstate.publicdata = true
+
+UNION ALL
+
+SELECT
+    b.Id,
+    b.date,
+    b.sire,
+    'Sire' as relationship,
+    'Observed' as method
+
+FROM study.birth b
+WHERE b.sire is not null and b.qcstate.publicdata = true
