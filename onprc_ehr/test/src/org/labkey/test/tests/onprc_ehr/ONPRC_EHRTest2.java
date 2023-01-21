@@ -21,7 +21,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.labkey.remoteapi.CommandException;
-import org.labkey.remoteapi.PostCommand;
+import org.labkey.remoteapi.SimplePostCommand;
 import org.labkey.remoteapi.query.ExecuteSqlCommand;
 import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
@@ -734,7 +734,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         //create records
         log("Creating test subjects");
-        PostCommand<?> insertCommand = getApiHelper().prepareInsertCommand("study", "demographics", "lsid", new String[]{"Id", "Species", "Birth", "Gender", "date", "calculated_status"}, new Object[][]{
+        SimplePostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "demographics", "lsid", new String[]{"Id", "Species", "Birth", "Gender", "date", "calculated_status"}, new Object[][]{
                 {SUBJECTS[0], "Rhesus", (new Date()).toString(), "m", new Date(), "Alive"}
         });
         getApiHelper().doSaveRows(PasswordUtil.getUsername(), insertCommand, getExtraContext());
@@ -854,7 +854,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         //create records
         log("Creating test subjects");
-        PostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "demographics", "lsid", new String[]{"Id", "Species", "Birth", "Gender", "date", "calculated_status"}, new Object[][]{
+        SimplePostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "demographics", "lsid", new String[]{"Id", "Species", "Birth", "Gender", "date", "calculated_status"}, new Object[][]{
                 {SUBJECTS[0], "Rhesus", (new Date()).toString(), "m", new Date(), "Alive"}
         });
         getApiHelper().doSaveRows(PasswordUtil.getUsername(), insertCommand, getExtraContext());
