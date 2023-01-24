@@ -106,7 +106,7 @@ Ext4.define('onprc_ehr.buttons.ClinicalActionsButton', {
                         },
                         category: {
                             defaultValue: 'Clinical',
-                            editable: false
+                            editable: true
                         }
 
                     }
