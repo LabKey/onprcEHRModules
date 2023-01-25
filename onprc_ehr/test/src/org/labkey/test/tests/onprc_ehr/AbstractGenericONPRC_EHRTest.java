@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import org.labkey.remoteapi.CommandException;
 import org.labkey.remoteapi.CommandResponse;
 import org.labkey.remoteapi.Connection;
-import org.labkey.remoteapi.PostCommand;
+import org.labkey.remoteapi.SimplePostCommand;
 import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
 import org.labkey.remoteapi.query.SaveRowsResponse;
@@ -217,7 +217,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         // NOTE: this currently will log an error from DatasetDefinition whenever we create a new column.  This really isnt a bug, so ignore
         checkErrors();
         Connection connection = createDefaultConnection();
-        PostCommand command = new PostCommand("ehr", "ensureDatasetProperties");
+        SimplePostCommand command = new SimplePostCommand("ehr", "ensureDatasetProperties");
         command.setTimeout(1200000);
         CommandResponse response = command.execute(connection, getContainerPath());
         assertTrue("Problem with ehr-ensureDatasetProperties: [" +response.getStatusCode() + "] " + response.getText(), response.getStatusCode() < 400);
@@ -288,7 +288,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
                 {SUBJECTS[1], pastDate1, "Clinical"},
                 {SUBJECTS[1], pastDate1, "Surgery"}
         };
-        PostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "cases", "lsid", fields, data);
+        SimplePostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "cases", "lsid", fields, data);
         getApiHelper().deleteAllRecords("study", "cases", new Filter("Id", StringUtils.join(SUBJECTS, ";"), Filter.Operator.IN));
         getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), insertCommand, getExtraContext());
     }
