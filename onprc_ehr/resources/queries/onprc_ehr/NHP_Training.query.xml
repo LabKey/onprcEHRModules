@@ -13,6 +13,12 @@
                     <column columnName="Id">
                         <columnTitle>Id</columnTitle>
                         <url>/ehr/participantView.view?participantId=${Id}</url>
+                        <fk>
+                            <containerPath>ehr</containerPath>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>Animal</fkTable>
+                            <fkColumnName>Id</fkColumnName>
+                        </fk>
                     </column>
 
                     <column columnName="date">
