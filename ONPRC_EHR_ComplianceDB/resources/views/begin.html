@@ -35,10 +35,11 @@ Ext4.onReady(function(){
         },{
             header: 'Employee Information',
             items: [{
-                name: 'Employee List', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
+                name: 'Employee List', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
             },{
-                name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
-
+                name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
+            // },{
+            //     name: 'Enter Employees Completed Requirements(Special Access)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fEmployeeCompletionDatesInput&rs:Command=Render'
 
             }]
         },{
@@ -68,6 +69,8 @@ Ext4.onReady(function(){
                 name: 'View/Edit Allowable Locations', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeLocations'
             },{
                 name: 'View/Edit Allowable Unit Names', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Unit_Names'
+            },{
+                name: 'View/Edit Employee Host Names', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Compliance_Reference_Data'
             },{
                 name: 'Employee Per Unit/Category Form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ONPRC/Admin/Compliance',{formType: 'employeeunitrecords'})
             },{

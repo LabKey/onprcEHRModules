@@ -881,6 +881,10 @@ exports.init = function(EHR){
 
             }
 
+            if (row.birth != oldRow.birth){
+                triggerHelper.updateArrivalrecords(row.Id, row.birth)
+            }
+
         }
 
         if(row.id)
