@@ -83,7 +83,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
     protected String PROJECT_NAME = "ONPRC_EHR_TestProject";
     private boolean _hasCreatedBirthRecords = false;
-    private String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
+    private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
 
     @Override
     protected String getProjectName()
@@ -869,7 +869,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         }
     }
 
-    private Map<String, Map<String, String>> _unitsMap = new HashMap<>();
+    private final Map<String, Map<String, String>> _unitsMap = new HashMap<>();
 
     private String getUnits(String queryName, String testId) throws Exception
     {
@@ -1742,7 +1742,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         row.put("caseid", caseId);
         row.put("observation", "5");
         row.put("objectid", generateGUID());
-        row.put("taskid", generateGUID());  //required for lastestObservationsForCase.sql to work
+        row.put("taskid", generateGUID());  //required for latestObservationsForCase.sql to work
         insertRowsCommand.addRow(row);
         insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
@@ -1757,7 +1757,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(caseWindow);
         obsGrid.waitForRowCount(1);
         Assert.assertEquals("Alopecia Score", obsGrid.getFieldValue(1, "category"));
-        Assert.assertEquals(null, obsGrid.getFieldValue(1, "observation"));
+        String observation = (String)obsGrid.getFieldValue(1, "observation");
+        Assert.assertTrue("Expected \"Observation/Score\" to be empty (blank or null) but was \"" + observation + "\"", StringUtils.isEmpty(observation));
         Assert.assertEquals(SUBJECTS[0], obsGrid.getFieldValue(1, "Id"));
 
         _ext4Helper.clickExt4Tab("Treatments Given");
