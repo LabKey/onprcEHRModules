@@ -3,6 +3,8 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="pairingSummaryComments" tableDbType="TABLE" useColumnOrder="true">
                 <tableTitle>Pairing Summary Comments</tableTitle>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableUrl />
                 <columns>
                     <column columnName="Id">
                     </column>
