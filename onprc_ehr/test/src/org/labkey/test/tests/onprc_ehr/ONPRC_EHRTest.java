@@ -998,7 +998,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         //
         for (int i = 0; i < 4; i++)
         {
-            sleep(50);
+            sleep(100);
             Assert.assertEquals("Id field not set on try: " + i, MORE_ANIMAL_IDS[0], idField.getValue());
         }
 
