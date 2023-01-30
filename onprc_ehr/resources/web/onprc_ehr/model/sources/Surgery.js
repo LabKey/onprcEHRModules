@@ -110,6 +110,15 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                 hidden: true
             }
         },
+        'ehr.encounter_participants': {
+            comment: {
+                hidden: false,
+                header: 'Remarks',
+                columnConfig: {
+                    width: 300
+                }
+            }
+        },
         'ehr.encounter_summaries': {
             category: {
                 defaultValue: 'Narrative'

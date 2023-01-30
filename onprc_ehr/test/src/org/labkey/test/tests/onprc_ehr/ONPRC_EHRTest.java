@@ -67,7 +67,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -104,6 +103,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         initTest.initProject();
         initTest.createTestSubjects();
+        initTest.createBirthRecords();
         new RReportHelper(initTest).ensureRConfig();
 
     }
@@ -686,11 +686,10 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testPedigreeReport() throws Exception
     {
-        createBirthRecords();
         goToProjectHome();
         beginAtAnimalHistoryTab();
 
-        String id = ID_PREFIX + 1;
+        String id = ID_PREFIX + 10;
         AnimalHistoryPage animalHistoryPage = new AnimalHistoryPage(getDriver());
 
         animalHistoryPage.searchSingleAnimal(id);
@@ -895,43 +894,50 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         log("creating birth records");
 
-        if (_hasCreatedBirthRecords)
-        {
-            log("birth records already created, skipping");
-            return;
-        }
-
         //note: these should cascade insert into demographics
         EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getProjectName());
         String schema = "study";
         String query = "birth";
         String parentageQuery = "parentage";
 
-        int i = 0;
-        Set<String> createdIds = new HashSet<>();
-        while (i < 10)
-        {
-            i++;
-            Map<String, Object> row = new HashMap<>();
-            row.put("Id", ID_PREFIX + i);
-            createdIds.add(ID_PREFIX + i);
-            row.put("date", new Date());
-            row.put("gender", ((i % 2) == 0 ? "m" : "f"));
-            row.put("dam", ID_PREFIX + (i + 100 + "0"));
+        Set<String> createdIds = Set.of(ID_PREFIX + 1, ID_PREFIX + 2, ID_PREFIX + 3, ID_PREFIX + 4, ID_PREFIX + 5, ID_PREFIX + 6, ID_PREFIX + 7, ID_PREFIX + 8, ID_PREFIX + 9, ID_PREFIX + 10);
 
-            apiHelper.deleteIfExists(schema, query, row, "Id");
-            apiHelper.insertRow(schema, query, row, false);
+        // Parents with non-defined dam/sire ids
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 1, "date", prepareDate(new Date(), -730, 0), "gender", "f", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 1, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 11, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 2, "date", prepareDate(new Date(), -730, 0), "gender", "m", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 2, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 12, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 3, "date", prepareDate(new Date(), -730, 0), "gender", "f", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 3, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 12, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -730, 0), "gender", "m", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 13, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 14, "method", "Genetic"), false);
 
-            Map<String, Object> parentageRow = new HashMap<>();
-            parentageRow.put("Id", ID_PREFIX + i);
-            parentageRow.put("date", new Date());
-            parentageRow.put("relationship", "Sire");
-            parentageRow.put("parent", ID_PREFIX + (i + 100 + "1"));
-            parentageRow.put("method", "Genetic");
+        // Children / Siblings (full and half)
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "gender", "f", "dam", ID_PREFIX + 1, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 1, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 1, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 1, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 3, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 3, "method", "Genetic"), false);
 
-            //we dont have the LSID, so dont bother deleting the record.  it wont hurt anything to have 2 copies
-            apiHelper.insertRow(schema, parentageQuery, parentageRow, false);
-        }
+
+        // Child / Inbreeding
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 5, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 5, "method", "Genetic"), false);
+
+
+        // Grandchildren / Inbreeding Descendent
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "gender", "f", "dam", ID_PREFIX + 5, "sire", ID_PREFIX + 4, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "relationship", "Sire", "parent", ID_PREFIX + 4, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "relationship", "Dam", "parent", ID_PREFIX + 5, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "gender", "f", "dam", ID_PREFIX + 3, "sire", ID_PREFIX + 8, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "relationship", "Sire", "parent", ID_PREFIX + 8, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "relationship", "Dam", "parent", ID_PREFIX + 3, "method", "Genetic"), false);
 
         //force caching of demographics on new IDs.
         cacheIds(createdIds);
@@ -1238,7 +1244,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testGeneticsPipeline() throws Exception
     {
-        createBirthRecords();
         goToProjectHome();
 
         //retain pipeline log for debugging
@@ -1247,6 +1252,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         waitAndClickAndWait(Locators.bodyPanel().append(Locator.tagContainingText("a", "EHR Admin Page")));
         waitAndClickAndWait(Locator.tagContainingText("a", "Genetics Calculations"));
+        _ext4Helper.checkCheckbox(Ext4Helper.Locators.checkbox(this, "Kinship validation?:"));
+        Locator loc = Locator.inputByIdContaining("numberfield");
+        waitForElement(loc);
+        setFormElement(loc, "23");
+        click(Ext4Helper.Locators.ext4Button("Save Settings"));
+        waitAndClick(Ext4Helper.Locators.ext4Button("OK"));
         waitAndClickAndWait(Ext4Helper.Locators.ext4Button("Run Now"));
         waitAndClickAndWait(Locator.lkButton("OK"));
         waitForPipelineJobsToComplete(2, "genetics pipeline", false);
@@ -1258,20 +1269,42 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         goToProjectHome();
         beginAtAnimalHistoryTab();
         AnimalHistoryPage animalHistoryPage = new AnimalHistoryPage(getDriver());
-        animalHistoryPage.searchSingleAnimal("99991,99991011,99991041,99991080,99998");
+        animalHistoryPage.searchSingleAnimal("99995,99996,99997,99998,99999,999910");
         animalHistoryPage.refreshReport();
         animalHistoryPage.clickCategoryTab("Genetics")
                 .clickReportTab("Kinship");
 
+        log("verify kinship");
         assertTrue(isElementPresent(Locator.linkWithText("CLICK HERE TO LIMIT TO ANIMALS IN SELECTION")));
 
         DataRegionTable kinshipTable = animalHistoryPage.getActiveReportDataRegion();
-        assertEquals("Incorrect number of rows before limiting animal selection", 3, kinshipTable.getDataRowCount());
+        assertEquals("Incorrect number of kinship rows before limiting animal selection", 48, kinshipTable.getDataRowCount());
+
+        // Spot check kinship
+        assertEquals("Incorrect kinship coefficient for 999910 and 99998", "0.359375", kinshipTable.getDataAsText(0, "Coefficient"));
+        assertEquals("Incorrect kinship coefficient for 999910 and 99992", "0.25", kinshipTable.getDataAsText(3, "Coefficient"));
+        assertEquals("Incorrect kinship coefficient for 99995 and 99992", "0.25", kinshipTable.getDataAsText(10, "Coefficient"));
+        assertEquals("Incorrect kinship coefficient for 99996 and 99997", "0.15625", kinshipTable.getDataAsText(21, "Coefficient"));
+        assertEquals("Incorrect kinship coefficient for 99998 and 99997", "0.234375", kinshipTable.getDataAsText(35, "Coefficient"));
 
         kinshipTable.doAndWaitForUpdate(() -> Locator.linkWithText("CLICK HERE TO LIMIT TO ANIMALS IN SELECTION").findElement(getDriver()).click());
 
         kinshipTable = animalHistoryPage.getActiveReportDataRegion();
-        assertEquals("Incorrect number of rows after limiting animal selection", 2, kinshipTable.getDataRowCount());
+        assertEquals("Incorrect number of kinship rows after limiting animal selection", 30, kinshipTable.getDataRowCount());
+
+        log("verify inbreeding");
+        animalHistoryPage.clickCategoryTab("Genetics")
+                .clickReportTab("Inbreeding Coefficients");
+
+        DataRegionTable inbreedingTable = animalHistoryPage.getActiveReportDataRegion();
+        assertEquals("Incorrect number of inbreeding rows", 6, inbreedingTable.getDataRowCount());
+
+        // Spot check inbreeding
+        assertEquals("Incorrect inbreeding coefficient for 999910", "0.09375", inbreedingTable.getDataAsText(0, "Coefficient"));
+        assertEquals("Incorrect inbreeding coefficient for 99995", "0.0", inbreedingTable.getDataAsText(1, "Coefficient"));
+        assertEquals("Incorrect inbreeding coefficient for 99997", "0.125", inbreedingTable.getDataAsText(3, "Coefficient"));
+        assertEquals("Incorrect inbreeding coefficient for 99998", "0.25", inbreedingTable.getDataAsText(4, "Coefficient"));
+        assertEquals("Incorrect inbreeding coefficient for 99999", "0.0", inbreedingTable.getDataAsText(5, "Coefficient"));
     }
 
     @Test
