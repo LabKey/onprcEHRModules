@@ -15,11 +15,11 @@
  */
 package org.labkey.onprc_billing.dataentry;
 
+import org.json.JSONObject;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
-import org.json.old.JSONObject;
-import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,8 +60,6 @@ public class ChargesFormSection extends SimpleFormSection
         jsonObject.put("topAndBottomButtons", true);
         return jsonObject;
     }
-
-
 
     @Override
     public List<String> getTbarButtons()
