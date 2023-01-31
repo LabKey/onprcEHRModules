@@ -1,0 +1,18 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="rooms" tableDbType="TABLE">
+                <tableTitle>Rooms</tableTitle>
+                <columns>
+                    <column columnName="building">
+                        <isHidden>false</isHidden>
+                        <isUserEditable>true</isUserEditable>
+                        <shownInInsertView>true</shownInInsertView>
+                        <shownInUpdateView>true</shownInUpdateView>
+                    </column>
+
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
