@@ -23,7 +23,6 @@ Ext4.onReady(function(){
             items: [{
                 name: 'Summary of Requirements By Employee', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.employeeid/isActive~eq=true'
             },{
-                // name: 'Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Overdue and Due Soon'
                 name: 'Requirements Overdue/Due Soon', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Report&rs:Command=Render'
             },{
                 name: 'Procedure - Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Overdue and Due Soon withNoEHRS OccHealth'
@@ -39,8 +38,8 @@ Ext4.onReady(function(){
                 name: 'Employee List', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
             },{
                 name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
-            // },{
-            //     name: 'Enter Employees Completed Requirements(Special Access)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fEmployeeCompletionDatesInput&rs:Command=Render'
+            },{
+                name: 'Enter Employees Completed Requirements(Special Access)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fEmployeeCompletionDatesInput&rs:Command=Render'
 
             }]
         },{
