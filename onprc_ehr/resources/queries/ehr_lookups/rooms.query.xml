@@ -1,3 +1,4 @@
+<!--This file is added to make the building field visible and editable on the edit screen -->
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
