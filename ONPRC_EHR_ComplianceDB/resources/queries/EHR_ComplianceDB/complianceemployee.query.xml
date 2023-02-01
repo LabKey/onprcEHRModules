@@ -1,15 +1,15 @@
-<!--<query xmlns="http://labkey.org/data/xml/query">-->
-<!--    <metadata>-->
-<!--        <tables xmlns="http://labkey.org/data/xml">-->
-<!--            <table tableName="complianceemployee" tableDbType="TABLE">-->
-<!--                <tableTitle>Employee Host</tableTitle>-->
-<!--                <columns>-->
-<!--                   <column columnName="value">-->
-<!--                       <columnTitle>Value</columnTitle>-->
-<!--                      <isKeyField>true</isKeyField>-->
-<!--                    </column>-->
-<!--                </columns>-->
-<!--            </table>-->
-<!--        </tables>-->
-<!--    </metadata>-->
-<!--</query>-->
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="complianceemployee" tableDbType="TABLE">
+                <tableTitle>Employee Host</tableTitle>
+                <columns>
+                   <column columnName="value">
+                       <columnTitle>Value</columnTitle>
+                      <isKeyField>true</isKeyField>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
