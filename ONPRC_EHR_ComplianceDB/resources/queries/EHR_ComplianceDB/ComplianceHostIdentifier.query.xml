@@ -1,0 +1,15 @@
+<query xmlns="http://labkey.org/data/xml/query">
+<metadata>
+    <tables xmlns="http://labkey.org/data/xml">
+        <table tableName="ComplianceHostIdentifier" tableDbType="TABLE">
+            <tableTitle>Employee Host</tableTitle>
+            <columns>
+                <column columnName="value">
+                    <columnTitle>Column Name</columnTitle>
+                    <isKeyField>true</isKeyField>
+                </column>
+            </columns>
+        </table>
+    </tables>
+</metadata>
+        </query>
