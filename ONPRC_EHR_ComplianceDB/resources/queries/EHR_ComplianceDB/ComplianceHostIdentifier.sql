@@ -1,3 +1,4 @@
-select value from sla.Reference_Data
+
+select value from Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.sla.Reference_Data
 where columnname = 'employeehost'
-and enddate is null
+  And enddate is null

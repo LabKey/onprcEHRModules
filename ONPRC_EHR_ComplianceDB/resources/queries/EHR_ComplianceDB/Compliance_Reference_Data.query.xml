@@ -19,9 +19,8 @@
                     </column>
                     <column columnName="columnName">
                         <fk>
-                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
-                            <fkTable>ComplianceHostIdentifier</fkTable>
-                            <fkColumnName>value</fkColumnName>
+                             <fkTable>ComplianceHostIdentifier</fkTable>
+                            <fkColumnName>value</fkColumnName>+++++++++++++++++++++++++++++++036
                             <columnTitle>Column Name</columnTitle>
                         </fk>
                     </column>
