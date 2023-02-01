@@ -1,4 +1,4 @@
-<!--This file is added to make the building field visible and editable on the edit screen -->
+<!-- Kollil: 1/31/23. This file is added to make the building field visible and editable on the edit screen -->
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
@@ -11,7 +11,6 @@
                         <shownInInsertView>true</shownInInsertView>
                         <shownInUpdateView>true</shownInUpdateView>
                     </column>
-
                 </columns>
             </table>
         </tables>
