@@ -3,7 +3,8 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="rooms" tableDbType="TABLE">
-                <tableTitle>Rooms</tableTitle>
+                <tableUrl>/EHR/cageDetails.view?room=${room}</tableUrl>
+<!--                <tableTitle>Rooms</tableTitle>-->
                 <columns>
                     <column columnName="building">
                         <isHidden>false</isHidden>
@@ -11,8 +12,14 @@
                         <shownInInsertView>true</shownInInsertView>
                         <shownInUpdateView>true</shownInUpdateView>
                     </column>
+                    <column columnName="room">
+                        <isKeyField>true</isKeyField>
+                    </column>
                 </columns>
+                <titleColumn>room</titleColumn>
+                <pkColumnName>room</pkColumnName>
             </table>
         </tables>
     </metadata>
 </query>
+
