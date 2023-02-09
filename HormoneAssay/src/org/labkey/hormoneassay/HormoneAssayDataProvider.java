@@ -3,10 +3,10 @@ package org.labkey.hormoneassay;
 import org.json.old.JSONObject;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
-import org.labkey.api.laboratory.assay.AssayImportMethod;
 import org.labkey.api.laboratory.NavItem;
 import org.labkey.api.laboratory.SimpleSettingsItem;
 import org.labkey.api.laboratory.assay.AbstractAssayDataProvider;
+import org.labkey.api.laboratory.assay.AssayImportMethod;
 import org.labkey.api.module.Module;
 import org.labkey.api.security.User;
 import org.labkey.api.view.ViewContext;
@@ -18,12 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: bimber
- * Date: 11/1/12
- * Time: 4:27 PM
- */
 public class HormoneAssayDataProvider extends AbstractAssayDataProvider
 {
     public HormoneAssayDataProvider(Module m)
