@@ -16,10 +16,8 @@
 
 package org.labkey.sla;
 
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.json.old.JSONObject;
+import org.json.JSONObject;
 import org.labkey.api.action.ApiResponse;
 import org.labkey.api.action.ApiSimpleResponse;
 import org.labkey.api.action.ConfirmAction;
@@ -206,7 +204,7 @@ public class SLAController extends SpringActionController
                     if (json.get(key) != null)
                     {
                         //this key corresponds to the rowId of the row in the etl_runs table
-                        Integer value = json.getInt(key);
+                        int value = json.getInt(key);
                         if (value == -1)
                         {
                             rowVersionMap.put(key, null);
@@ -221,8 +219,8 @@ public class SLAController extends SpringActionController
                                 continue;
 
                             rowVersionMap.put(key, (String)rows[0].get("rowversion"));
-                            Long date = ((Date)rows[0].get("date")).getTime();
-                            timestampMap.put(key, date.toString());
+                            long date = ((Date)rows[0].get("date")).getTime();
+                            timestampMap.put(key, Long.toString(date));
                         }
                     }
                 }
