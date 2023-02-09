@@ -1341,7 +1341,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * Kollil, 12/22/2022 : Find the procedure entries where the PainCategory on the procedure is not defined (IS NULL).
-     * This report is sent to Jeff once a week so he will fill in the missing pain category on the procedure.
+     * This email notification is sent to Jeff every Thursday at 7:30am.
      */
     protected void proceduresWithoutUSDAPainLevels(final Container c, User u, final StringBuilder msg)
     {
@@ -1357,14 +1357,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
 
         if (count > 0) {//procedures count
-            msg.append("<br><b>Procedure with missing USDA pain levels:</b><br><br>");
+            msg.append("<br><b>Active procedures with missing USDA categories:</b><br><br>");
             msg.append("<b>" + count + " procedure(s) found:</b>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "Procedures_Missing_PainLevels", null) + "'>Click here to view the procedures in PRIME</a></p>\n");
             msg.append("<hr>");
         }
 
         if (count == 0) {
-            msg.append("<b>There are no procedures with missing USDA pain levels!</b><hr>");
+            msg.append("<b>Currently, there are no active procedures with missing USDA categories!</b><hr>");
         }
 
         //Display the daily report in the email
@@ -1383,7 +1383,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             // Table header
             msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td> Id </td><td> Center Project </td><td> Date </td><td> Procedure </td><td> USDA Pain Categories </td></tr>");
+            msg.append("<td> Id </td><td> Center Project </td><td> Date </td><td> Procedure </td><td> USDA Categories </td></tr>");
 
             ts2.forEach(new Selector.ForEachBlock<ResultSet>()
             {
