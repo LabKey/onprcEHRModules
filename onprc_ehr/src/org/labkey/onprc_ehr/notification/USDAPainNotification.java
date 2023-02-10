@@ -62,13 +62,13 @@ public class USDAPainNotification extends ColonyAlertsNotification
     @Override
     public String getName()
     {
-        return "USDA Pain Categories";
+        return "USDA Categories";
     }
 
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Procedure(s) with missing USDA pain categories: " + getDateTimeFormat(c).format(new Date());
+        return "Procedure(s) with missing USDA categories: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class USDAPainNotification extends ColonyAlertsNotification
     @Override
     public String getDescription()
     {
-        return "The report is designed to provide a list of procedures with no USDA pain categories.";
+        return "The report is designed to provide a list of procedures with no USDA categories.";
     }
 
     @Override

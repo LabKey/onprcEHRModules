@@ -1406,7 +1406,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
     //End of USDA Pain levels alert
 
-
     /**
      * Kollil, 03/18/2021 : Housing transfer notifications Daily
      */
