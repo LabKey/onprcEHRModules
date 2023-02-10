@@ -1,16 +1,13 @@
 package org.labkey.sla.table;
 
 import org.labkey.api.data.AbstractTableInfo;
-import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.Container;
-import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.gwt.client.FacetingBehaviorType;
 import org.labkey.api.ldk.table.AbstractTableCustomizer;
 import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.UserSchema;
-import org.labkey.sla.SLAManager;
 
 /**
  * User: bimber
