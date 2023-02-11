@@ -1,6 +1,6 @@
 package org.labkey.sla.model;
 
-import org.json.old.JSONObject;
+import org.json.JSONObject;
 import org.labkey.api.util.GUID;
 
 import java.text.DateFormat;
@@ -41,38 +41,38 @@ public class PurchaseDetails
     {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
-        if (props.containsKey("rowid") && props.get("rowid") != null)
+        if (props.has("rowid"))
             _rowid = props.getInt("rowid");
-        if (props.containsKey("purchaseid") && props.get("purchaseid") != null)
+        if (props.has("purchaseid"))
             _purchaseid = props.getString("purchaseid");
-        if (props.containsKey("objectid") && props.get("objectid") != null)
+        if (props.has("objectid"))
             _objectid = props.getString("objectid");
-        if (props.containsKey("species") && props.get("species") != null)
+        if (props.has("species"))
             _species = props.getString("species");
-        if (props.containsKey("age") && props.get("age") != null)
+        if (props.has("age"))
             _age = props.getString("age");
-        if (props.containsKey("weight") && props.get("weight") != null)
+        if (props.has("weight"))
             _weight = props.getString("weight");
-        if (props.containsKey("weight_units") && props.get("weight_units") != null)
+        if (props.has("weight_units"))
             _weight_units = props.getString("weight_units");
-        if (props.containsKey("gestation") && props.get("gestation") != null)
+        if (props.has("gestation"))
             _gestation = props.getString("gestation");
-        if (props.containsKey("gender") && props.get("gender") != null)
+        if (props.has("gender"))
             _gender = props.getString("gender");
-        if (props.containsKey("strain") && props.get("strain") != null)
+        if (props.has("strain"))
             _strain = props.getString("strain");
-        if (props.containsKey("animalsordered") && props.get("animalsordered") != null)
+        if (props.has("animalsordered"))
             _animalsordered = props.getInt("animalsordered");
-        if (props.containsKey("housinginstructions") && props.get("housinginstructions") != null)
+        if (props.has("housinginstructions"))
             _housinginstructions = props.getString("housinginstructions");
-        if (props.containsKey("room") && props.get("room") != null)
+        if (props.has("room"))
             _room = props.getString("room");
 
         try
         {
-            if (props.containsKey("requestedarrivaldate") && props.get("requestedarrivaldate") != null)
+            if (props.has("requestedarrivaldate"))
                 _requestedarrivaldate = df.parse(props.get("requestedarrivaldate").toString());
-            if (props.containsKey("expectedarrivaldate") && props.get("expectedarrivaldate") != null)
+            if (props.has("expectedarrivaldate"))
                 _expectedarrivaldate = df.parse(props.get("expectedarrivaldate").toString());
         }
         catch (ParseException e)
