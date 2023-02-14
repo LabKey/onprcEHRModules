@@ -996,11 +996,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         // NOTE: we have had problems w/ the ID field value not sticking.  i think it might have to do with the timing of server-side validation,
         //
-        for (int i = 0; i < 4; i++)
-        {
-            sleep(100);
-            Assert.assertEquals("Id field not set on try: " + i, MORE_ANIMAL_IDS[0], idField.getValue());
-        }
+        waitFor(() -> MORE_ANIMAL_IDS[0].equals(idField.getValue()), "Id field not set", 1_000);
 
         //observations section
         waitAndClick(Ext4Helper.Locators.ext4Tab("Observations"));
