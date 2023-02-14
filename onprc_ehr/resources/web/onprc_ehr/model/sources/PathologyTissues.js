@@ -105,6 +105,13 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
 
             }
         },
+        'study.tissue_samples': {
+            weight: {
+                editorConfig: {
+                    decimalPrecision: 3
+                }
+            }
+        },
 
         'onprc_billing.miscCharges': {
             Id: {
