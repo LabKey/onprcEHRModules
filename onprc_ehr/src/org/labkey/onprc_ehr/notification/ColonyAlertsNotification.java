@@ -192,9 +192,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         projectsWithExpiredProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);
         protocolsWithFutureApproveDates(c, u, msg);
-        protocolsOverLimit(c, u, msg);
-        assignmentsProjectedToday(c, u, msg);
-        assignmentsProjectedTomorrow(c, u, msg);
+//        protocolsOverLimit(c, u, msg); Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
+//        assignmentsProjectedToday(c, u, msg); Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
+//        assignmentsProjectedTomorrow(c, u, msg); Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
         protocolsWithAnimalsExpiringSoon(c, u, msg);
     }
 
@@ -809,6 +809,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    /**
+     * we find assignments with projected releases tomorrow
+     * Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
+     */
     protected void assignmentsProjectedTomorrow(final Container c, User u, final StringBuilder msg)
     {
         Calendar cal = Calendar.getInstance();
@@ -829,6 +833,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * we find assignments with projected releases today
+     * Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
      */
     protected void assignmentsProjectedToday(final Container c, User u, final StringBuilder msg)
     {
@@ -1469,6 +1474,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * we find protocols over the animal limit
+     * Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
      */
     protected void protocolsOverLimit(final Container c, User u, final StringBuilder msg)
     {
@@ -1497,6 +1503,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * we find protocols nearing the animal limit, based on number and percent
+     * Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
      */
     protected void assignmentsNotAllowed(final Container c, User u, final StringBuilder msg)
     {
