@@ -397,7 +397,7 @@ exports.init = function(EHR){
         if (row.PainCategories != null) {
             if ( LABKEY.Security.currentUser.id !== 1008 || LABKEY.Security.currentUser.id !== 1007 || LABKEY.Security.currentUser.id !== 1011 || LABKEY.Security.currentUser.id !== 2217 || LABKEY.Security.currentUser.id !== 2933 )
             {
-                EHR.Server.Utils.addError(scriptErrors, 'PainCategories', 'The USDA Pain level field must be left blank if the user is not from IS team!', 'WARN');
+                EHR.Server.Utils.addError(scriptErrors, 'PainCategories', 'The USDA pain category field must be left blank if the user is not from ISE team!', 'WARN');
             }
         }
 
@@ -1169,17 +1169,6 @@ exports.init = function(EHR){
             }
         });
         //Added 8-2-2022  R.Blasa
-        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function (helper, scriptErrors, row, oldRow) {
-
-            helper.decodeExtraContextProperty('MiscChargesInTransaction');
-            var miscChargesInTransaction = helper.getProperty('MiscChargesInTransaction');
-
-            if (miscChargesInTransaction && miscChargesInTransaction['miscChargesEntered'] === 0) {
-                EHR.Server.Utils.addError(scriptErrors, 'Id', 'billing charges grid requires at least one row', 'WARN');
-            }
-        });
-
-        //Added by Kollil, 12-22-2022
         EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function (helper, scriptErrors, row, oldRow) {
 
             helper.decodeExtraContextProperty('MiscChargesInTransaction');
