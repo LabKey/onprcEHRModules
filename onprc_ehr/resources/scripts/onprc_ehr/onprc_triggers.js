@@ -188,6 +188,14 @@ exports.init = function(EHR){
         });
     });
 
+    //Added: 2-14-2023  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'urinalysisResults', function(event, helper){
+        helper.setScriptOptions({
+            removeTimeFromDate: false,
+            allowDatesInDistantPast: true
+        });
+    })
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'encounters', function(event, helper){
         // Special handling for Pathology Request Form to use a placeholder ID
         helper.decodeExtraContextProperty('AllowAnyId', false);
