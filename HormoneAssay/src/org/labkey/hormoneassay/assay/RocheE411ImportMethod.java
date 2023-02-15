@@ -2,7 +2,7 @@ package org.labkey.hormoneassay.assay;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.apache.commons.lang3.StringUtils;
-import org.json.old.JSONObject;
+import org.json.JSONObject;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.TableInfo;
@@ -392,7 +392,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
                             diluentCalcNeeded = true;
                     }
 
-                    if (org.labkey.api.gwt.client.util.StringUtils.isEmpty((String) map.get(CATEGORY_FIELD)))
+                    if (StringUtils.isEmpty((String) map.get(CATEGORY_FIELD)))
                     {
                         map.put(CATEGORY_FIELD, SAMPLE_CATEGORY.Unknown.name());
                     }
