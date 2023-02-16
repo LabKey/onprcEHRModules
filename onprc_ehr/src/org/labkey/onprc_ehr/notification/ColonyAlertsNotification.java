@@ -722,7 +722,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     }
 
-
     /**
      * find the total finalized records with future dates
      */
@@ -1343,7 +1342,74 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are no scheduled PMIC procedures!</b><br><hr>");
         }
     }
-    //End of PMIC services alert
+    //End of PMIC alert
+
+    /**
+     * Kollil, 12/22/2022 : Find the procedure entries where the PainCategory on the procedure is not defined (IS NULL).
+     * This email notification is sent to Jeff every Thursday at 7:30am.
+     */
+    protected void proceduresWithoutUSDAPainLevels(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
+            msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+
+        //procedures query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("Procedures_Missing_PainLevels", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        if (count > 0) {//procedures count
+            msg.append("<br><b>Active procedures with missing USDA categories:</b><br><br>");
+            msg.append("<b>" + count + " procedure(s) found:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "Procedures_Missing_PainLevels", null) + "'>Click here to view the procedures in PRIME</a></p>\n");
+            msg.append("<hr>");
+        }
+
+        if (count == 0) {
+            msg.append("<b>Currently, there are no active procedures with missing USDA categories!</b><hr>");
+        }
+
+        //Display the daily report in the email
+        if (count > 0)
+        {
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("project"));
+            columns.add(FieldKey.fromString("date"));
+            columns.add(FieldKey.fromString("name"));
+            columns.add(FieldKey.fromString("PainCategories"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+
+            // Table header
+            msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td> Id </td><td> Center Project </td><td> Date </td><td> Procedure </td><td> USDA Categories </td></tr>");
+
+            ts2.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, colMap);
+                    String url = getParticipantURL(c, rs.getString("Id"));
+
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("name")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("PainCategories")) + "</td>");
+                    msg.append("</tr>");
+                }
+            });
+            msg.append("</table>");
+        }
+    }
+    //End of USDA Pain levels alert
 
     /**
      * Kollil, 03/18/2021 : Housing transfer notifications Daily
