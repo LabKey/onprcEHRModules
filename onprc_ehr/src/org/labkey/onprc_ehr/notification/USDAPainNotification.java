@@ -62,7 +62,7 @@ public class USDAPainNotification extends ColonyAlertsNotification
     @Override
     public String getName()
     {
-        return "USDA Categories";
+        return "USDA Categories Notification";
     }
 
     @Override
