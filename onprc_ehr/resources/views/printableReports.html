@@ -819,8 +819,8 @@
                                 var url = btn.getUrlString();
                                 if (!url)
                                     return;
-
-                                url += '&rs:Format=PDF';
+                                //Added: 2-16-2023  R.Blasa
+                                url += '&rs:ContentDisposition=OnlyHtmlInline&rs:Format=PDF';
                                 window.open(url);
                             }
                         }]
