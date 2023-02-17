@@ -1,10 +1,10 @@
 package org.labkey.hormoneassay.assay;
 
-import org.json.old.JSONObject;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.Container;
 import org.labkey.api.exp.api.ExpProtocol;
-import org.labkey.api.gwt.client.util.StringUtils;
 import org.labkey.api.laboratory.assay.AssayImportMethod;
 import org.labkey.api.laboratory.assay.AssayParser;
 import org.labkey.api.laboratory.assay.DefaultAssayImportMethod;
@@ -57,7 +57,7 @@ public class DefaultImportMethod extends DefaultAssayImportMethod
         return new HormoneAssayParser(this, c, u, assayId);
     }
 
-    protected class HormoneAssayParser extends DefaultAssayParser
+    protected static class HormoneAssayParser extends DefaultAssayParser
     {
         public HormoneAssayParser(AssayImportMethod method, Container c, User u, int assayId)
         {
