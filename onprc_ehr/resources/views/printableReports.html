@@ -820,8 +820,9 @@
                                 if (!url)
                                     return;
                                 //Added: 2-16-2023  R.Blasa
-                                url += '&rs:ContentDisposition=OnlyHtmlInline&rs:Format=PDF';
-                                window.open(url);
+
+                              url += '&rs%3AFormat=PDF';
+                              window.open(url);
                             }
                         }]
                     },{
