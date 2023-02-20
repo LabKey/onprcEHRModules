@@ -791,8 +791,8 @@
                                 return;
 
                             Ext4.apply(params, {
-                                'rs:ClearSession': true,
-                                'rs:Command': 'render'
+                                'rs:ClearSession': true
+                                // 'rs:Command': 'render'
                             });
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
@@ -821,7 +821,7 @@
                                     return;
                                 //Added: 2-16-2023  R.Blasa
 
-                              url += '&rs%3AFormat=PDF';
+                              url += '&rs:Format=PDF';
                               window.open(url);
                             }
                         }]
