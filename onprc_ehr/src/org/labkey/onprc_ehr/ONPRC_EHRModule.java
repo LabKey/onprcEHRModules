@@ -200,6 +200,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added Mar 18th, 2021 Kollil
         ns.registerNotification(new HousingTransferNotification(this));
 
+        //Added Dec 2022, Kollil
+        ns.registerNotification(new USDAPainNotification(this));
+
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
 
@@ -288,6 +291,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 10-6-2022   R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/UsersAndGroupsCombo.js"), this);
+
+        //Added: 12-15-2022  R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageSoapWindow.js"), this);
 
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");

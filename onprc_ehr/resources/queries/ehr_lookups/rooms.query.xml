@@ -1,0 +1,25 @@
+<!-- Kollil: 1/31/23. This file is added to make the building field visible and editable on the edit screen. Refer to tkt 9049 -->
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="rooms" tableDbType="TABLE">
+                <tableUrl>/EHR/cageDetails.view?room=${room}</tableUrl>
+<!--                <tableTitle>Rooms</tableTitle>-->
+                <columns>
+                    <column columnName="building">
+                        <isHidden>false</isHidden>
+                        <isUserEditable>true</isUserEditable>
+                        <shownInInsertView>true</shownInInsertView>
+                        <shownInUpdateView>true</shownInUpdateView>
+                    </column>
+                    <column columnName="room">
+                        <isKeyField>true</isKeyField>
+                    </column>
+                </columns>
+                <titleColumn>room</titleColumn>
+                <pkColumnName>room</pkColumnName>
+            </table>
+        </tables>
+    </metadata>
+</query>
+
