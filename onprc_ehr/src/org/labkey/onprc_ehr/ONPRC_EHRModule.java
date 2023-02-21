@@ -200,6 +200,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added Mar 18th, 2021 Kollil
         ns.registerNotification(new HousingTransferNotification(this));
 
+        //Added Dec 2022, Kollil
+        ns.registerNotification(new USDAPainNotification(this));
+
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
 

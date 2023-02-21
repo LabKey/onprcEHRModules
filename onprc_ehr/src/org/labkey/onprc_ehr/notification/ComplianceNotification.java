@@ -69,9 +69,8 @@ public class ComplianceNotification extends ColonyAlertsNotification
         StringBuilder msg = new StringBuilder();
 
         doAssignmentChecks(c, u, msg);
-        assignmentsNotAllowed(c, u, msg);
-        overlappingProtocolCounts(c, u, msg);
-
+//        assignmentsNotAllowed(c, u, msg);  Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
+//        overlappingProtocolCounts(c, u, msg); Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
         bloodDrawsOverLimit(c, u, msg, 21);
 
         return msg.toString();
