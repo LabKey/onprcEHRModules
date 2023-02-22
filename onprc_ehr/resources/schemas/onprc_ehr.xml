@@ -1219,19 +1219,21 @@
                </column>
             <column columnName="testing_location">
                 <columnTitle>Testing Location</columnTitle>
-
             </column>
-
-            <column columnName="test_type">
-                <columnTitle>Test Type</columnTitle>
-            </column>
-            <column columnName="test_results">
-                <columnTitle>Test Results</columnTitle>
+            <column columnName="charge_unit">
+                <columnTitle>Charge Unit</columnTitle>
             </column>
 
             <column columnName="pass_fail">
                 <columnTitle>Pass/Fail</columnTitle>
             </column>
+            <column columnName="test_results">
+                <columnTitle>Test Results</columnTitle>
+            </column>
+            <column columnName="test_type">
+                <columnTitle>Test Type</columnTitle>
+            </column>
+
             <column columnName="testing_equipment">
                 <columnTitle>Testing Equipment</columnTitle>
             </column>

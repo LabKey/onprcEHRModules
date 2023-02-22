@@ -112,3 +112,72 @@ Ext4.define('onprc_ehr.form.field.environ_PassFail', {
 
     }
 });
+Ext4.define('onprc_ehr.form.field.environ_ChargeUnit', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.onprc-env_chargeunit',
+
+    nullCaption: '[Blank]',
+    expandToFitContent: true,
+    caseSensitive: false,
+    forceSelection: true,
+    anyMatch: true,
+    typeAhead: true,
+
+    initComponent: function(){
+        Ext4.apply(this, {
+            displayField:'value',
+            valueField: 'value',
+            queryMode: 'local',
+            store: Ext4.create('LABKEY.ext4.data.Store', {
+                schemaName: 'onprc_ehr',
+                queryName: 'Environmental_Reference_Data',
+                columns: 'value,columnName',
+                sort: 'value',
+                filterArray: [
+                    LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                    LABKEY.Filter.create('ColumnName', 'charge_unit', LABKEY.Filter.Types.EQUAL)],
+                autoLoad: true
+            })
+        });
+
+        this.callParent(arguments);
+
+
+
+    }
+});
+
+Ext4.define('onprc_ehr.form.field.environ_Test_Results', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.onprc-env_testresults',
+
+    nullCaption: '[Blank]',
+    expandToFitContent: true,
+    caseSensitive: false,
+    forceSelection: true,
+    anyMatch: true,
+    typeAhead: true,
+
+    initComponent: function(){
+        Ext4.apply(this, {
+            displayField:'value',
+            valueField: 'value',
+            queryMode: 'local',
+            store: Ext4.create('LABKEY.ext4.data.Store', {
+                schemaName: 'onprc_ehr',
+                queryName: 'Environmental_Reference_Data',
+                columns: 'value,columnName',
+                sort: 'value',
+                filterArray: [
+                    LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                    LABKEY.Filter.create('ColumnName', 'test_results', LABKEY.Filter.Types.EQUAL)],
+                autoLoad: true
+            })
+        });
+
+        this.callParent(arguments);
+
+
+
+    }
+});

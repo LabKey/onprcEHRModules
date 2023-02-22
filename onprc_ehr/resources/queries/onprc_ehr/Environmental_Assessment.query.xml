@@ -25,7 +25,7 @@
 
                     <column columnName="pass_fail">
                         <columnTitle>Pass/Fail</columnTitle>
-                        <displayWidth>150</displayWidth>
+                        <displayWidth>50</displayWidth>
                     </column>
 
                     <column columnName="test_results">
