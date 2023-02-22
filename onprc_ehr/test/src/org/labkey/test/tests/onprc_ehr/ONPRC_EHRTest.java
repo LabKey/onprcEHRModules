@@ -998,7 +998,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         //this is a proxy the 1st record validation happening
         waitForElement(Locator.tagWithText("div", "The form has the following errors and warnings:"));
         sleep(200);
-        _helper.setDataEntryFieldInTab("SOAP", "Id", MORE_ANIMAL_IDS[0]);
+        setFormElement(Locator.input("Id"), MORE_ANIMAL_IDS[0]);
 
         // NOTE: we have had problems w/ the ID field value not sticking.  i think it might have to do with the timing of server-side validation,
         //
