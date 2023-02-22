@@ -949,7 +949,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testExamEntry() throws Exception
     {
-        _helper.goToTaskForm("Exams/Cases");
+        _helper.goToTaskForm("Exams/Cases", false);
         _helper.getExt4FieldForFormSection("Task", "Title").setValue("Test Exam 1");
 
         waitAndClick(_helper.getDataEntryButton("More Actions"));
@@ -996,7 +996,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         // NOTE: we have had problems w/ the ID field value not sticking.  i think it might have to do with the timing of server-side validation,
         //
-        waitFor(() -> MORE_ANIMAL_IDS[0].equals(idField.getValue()), "Id field not set", 1_000);
+        waitFor(() -> MORE_ANIMAL_IDS[0].equals(Locator.tag("div").withLabel("Id:").findElement(getDriver()).getText()), "Id field not set", 1_000);
 
         //observations section
         waitAndClick(Ext4Helper.Locators.ext4Tab("Observations"));
