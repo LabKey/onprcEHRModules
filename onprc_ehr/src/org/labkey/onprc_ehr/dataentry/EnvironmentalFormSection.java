@@ -37,6 +37,7 @@ public class EnvironmentalFormSection extends SimpleGridPanel
 
         defaultButtons.remove("GUESSPROJECT");
         defaultButtons.remove("COPY_IDS");
+        defaultButtons.remove("ADDANIMALS");
 
         return defaultButtons;
     }

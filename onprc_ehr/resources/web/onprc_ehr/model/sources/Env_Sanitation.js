@@ -46,9 +46,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             biological_cycle: {
                 hidden: true
             },
-            collectedby: {
-                hidden: true
-            },
+
             pass_fail: {
                 xtype: 'onprc-env_passfail',
                 columnConfig: {

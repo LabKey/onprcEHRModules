@@ -1213,7 +1213,6 @@
             <column columnName="date">
                 <columnTitle>Start Date</columnTitle>
             </column>
-
             <column columnName="service_requested">
                 <columnTitle>Service Requested</columnTitle>
                </column>
@@ -1223,7 +1222,6 @@
             <column columnName="charge_unit">
                 <columnTitle>Charge Unit</columnTitle>
             </column>
-
             <column columnName="pass_fail">
                 <columnTitle>Pass/Fail</columnTitle>
             </column>
@@ -1246,9 +1244,7 @@
             <column columnName="action">
                 <columnTitle>Action</columnTitle>
             </column>
-            <column columnName="collectedby">
-                <columnTitle>Performed By</columnTitle>
-            </column>
+      /
             <column columnName="water_source">
                 <columnTitle>Water Source</columnTitle>
             </column>
