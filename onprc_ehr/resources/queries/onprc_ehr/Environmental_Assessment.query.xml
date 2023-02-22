@@ -1,0 +1,50 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Environmental_Assessment" tableDbType="TABLE">
+                <tableTitle>Environmental Assessment</tableTitle>
+                <columns>
+                    <column columnName="date">
+                        <columnTitle>Date</columnTitle>
+                        <formatString>yyyy-MM-dd HH:mm</formatString>
+                    </column>
+
+
+                    <column columnName="service_requested">
+                        <columnTitle>Service RequestedT</columnTitle>
+                        <displayWidth>300</displayWidth>
+                    </column>
+                    <column columnName="testing_location">
+                        <columnTitle>Test Location</columnTitle>
+                        <displayWidth>150</displayWidth>
+                    </column>
+                    <column columnName="charge_unit">
+                        <columnTitle>Charge Unit</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+
+                    <column columnName="pass_fail">
+                        <columnTitle>Pass/Fail</columnTitle>
+                        <displayWidth>150</displayWidth>
+                    </column>
+
+                    <column columnName="test_results">
+                        <columnTitle>Test Results</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="qcstate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="biological_BI#">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="taskid">
+                        <columnTitle>Task ID</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+
+            </table>
+        </tables>
+    </metadata>
+</query>

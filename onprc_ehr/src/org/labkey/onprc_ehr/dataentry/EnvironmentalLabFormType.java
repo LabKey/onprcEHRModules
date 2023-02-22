@@ -21,6 +21,7 @@ package org.labkey.onprc_ehr.dataentry;
         import org.labkey.api.ehr.dataentry.TaskForm;
         import org.labkey.api.ehr.dataentry.TaskFormSection;
         import org.labkey.api.ehr.security.EHRLabworkEntryPermission;
+        import org.labkey.api.view.template.ClientDependency;
         import org.labkey.api.module.Module;
 
         import java.util.Arrays;
@@ -39,9 +40,7 @@ package org.labkey.onprc_ehr.dataentry;
         ));
 
 
-//        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/NHPTrainingProperties.js"));
-//
-//        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/ONPRC_TrainingType.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation.js"));
 
 
         for (FormSection s : this.getFormSections())

@@ -563,31 +563,31 @@
                 <isHidden>true</isHidden>
             </column>
 
-        <column columnName="value">
-            <columnTitle>Value</columnTitle>
-        </column>
+            <column columnName="value">
+                <columnTitle>Value</columnTitle>
+            </column>
 
-        <column columnName="name">
-            <columnTitle>Name</columnTitle>
-        </column>
+            <column columnName="name">
+                <columnTitle>Name</columnTitle>
+            </column>
 
-        <column columnName="remark"/>
-        <column columnName="dateDisabled">
-            <columnTitle>End Date</columnTitle>
-        </column>
+            <column columnName="remark"/>
+            <column columnName="dateDisabled">
+                <columnTitle>End Date</columnTitle>
+            </column>
 
             <column columnName="sort_order">
                 <columnTitle>Sort Order</columnTitle>
             </column>
 
-        <column columnName="created">
-            <isHidden>true</isHidden>
-        </column>
-        <column columnName="createdby"/>
-        <column columnName="modified">
-            <isHidden>true</isHidden>
-        </column>
-        <column columnName="modifiedby"/>
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="createdby"/>
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby"/>
 
         </columns>
     </table>
@@ -1204,7 +1204,7 @@
         </columns>
     </table>
     <table tableName="Environmental_Assessment" tableDbType="TABLE" useColumnOrder="true">
-        <tableTitle>NHP Training</tableTitle>
+        <tableTitle>Environmental Assessment</tableTitle>
         <auditLogging>DETAILED</auditLogging>
         <columns>
             <column columnName="RowId">
@@ -1216,9 +1216,10 @@
 
             <column columnName="service_requested">
                 <columnTitle>Service Requested</columnTitle>
-            </column>
+               </column>
             <column columnName="testing_location">
                 <columnTitle>Testing Location</columnTitle>
+
             </column>
 
             <column columnName="test_type">
