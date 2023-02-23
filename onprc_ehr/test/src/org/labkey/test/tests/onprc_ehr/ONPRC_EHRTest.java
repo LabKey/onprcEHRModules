@@ -102,18 +102,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @LogMethod
     public static void doSetup() throws Exception
     {
-//        ONPRC_EHRTest initTest = (ONPRC_EHRTest)getCurrentTest();
-//
-//        initTest.initProject();
-//        initTest.createTestSubjects();
-//        initTest.createBirthRecords();
-//        new RReportHelper(initTest).ensureRConfig();
+        ONPRC_EHRTest initTest = (ONPRC_EHRTest)getCurrentTest();
 
-    }
-
-    @Override
-    public void doCleanup(boolean afterTest) throws TestTimeoutException
-    {
+        initTest.initProject();
+        initTest.createTestSubjects();
+        initTest.createBirthRecords();
+        new RReportHelper(initTest).ensureRConfig();
 
     }
 
