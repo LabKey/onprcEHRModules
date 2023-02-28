@@ -1918,10 +1918,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         log("Submit the request");
         WebElement requestButton = Ext4Helper.Locators.ext4Button("Request").withoutAttributeContaining("class", "disabled").waitForElement(getDriver(), 3_000);
         clickAndWait(requestButton);
-
+        getArtifactCollector().dumpPageSnapshot("RequestScreen");
+        log("logging after Request click");
         waitAndClick(Locator.linkWithText("My Pending Requests"));
         click(Locator.linkWithText("Procedure"));
-
+        getArtifactCollector().dumpPageSnapshot("Procedure Screen");
+        log("logging after Procedure click");
         log("Verifying the submitted Necropsy Request");
         DataRegionTable regionTable = new DataRegionTable("study|encounters", getDriver());
 //        assertEquals("There should be single approved necropsy request", 1, regionTable.getDataRowCount());
