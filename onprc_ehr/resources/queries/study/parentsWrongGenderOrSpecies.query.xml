@@ -1,0 +1,25 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="parentsWrongGenderOrSpecies" tableDbType="NOT_IN_DB">
+                <tableTitle>Parentage Records With Mismatched Gender or Species</tableTitle>
+                <pkColumnName>lsid</pkColumnName>
+                 <updateUrl>/ehr/manageRecord.view?schemaName=study&amp;queryName=Parentage&amp;keyField=lsid&amp;key=${lsid}&amp;update=1</updateUrl>
+                <columns>
+                    <column columnName="Id">
+
+                    </column>
+                    <column columnName="parentGender">
+                        <columnTitle>Parent Gender</columnTitle>
+                    </column>
+                    <column columnName="parentSpecies">
+                        <columnTitle>Parent Species</columnTitle>
+                    </column>
+                    <column columnName="lsid">
+                        <isHidden>true</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
