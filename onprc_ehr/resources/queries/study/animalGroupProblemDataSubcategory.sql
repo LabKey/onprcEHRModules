@@ -42,7 +42,7 @@ FROM (
     mp.subcategory,
     mp.Id as problemId
     FROM study.animal_group_members gm
-    JOIN study.morbidityAndMortalityData mp ON (
+    JOIN study.morbidityAndMortalityDataSubcategory mp ON (
     mp.date <= gm.endDateCoalesced AND
     mp.enddateCoalesced >= gm.date AND
     mp.date <= EndDate AND
