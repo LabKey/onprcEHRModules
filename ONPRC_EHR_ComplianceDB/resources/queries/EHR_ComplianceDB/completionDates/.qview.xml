@@ -21,9 +21,9 @@
         <column name="result"/>
         <column name="comment"/>
         <column name="trainer"/>
-        <column name="employeeid/enddate"/>
-        <column name="snooze_date"/>
+<!--        <column name="employeeid/enddate"/>-->
         <column name="FileName"/>
+        <column name="snooze_date"/>
     </columns>
     <sorts>
         <sort column="employeeid/lastName" descending="false"/>
