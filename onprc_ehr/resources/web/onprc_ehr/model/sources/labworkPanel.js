@@ -26,7 +26,7 @@ EHR.model.DataModelManager.registerMetadata('LabworkPanel', {
                 editorConfig: {
                     anyMatch: true,
                     listConfig: {
-                        innerTpl: '{[LABKEY.Utils.encodeHtml((values.chargetype ? "<b>" + values.chargetype + ":</b> " : "") + values.servicename + (values.outsidelab ? "*" : ""))]}',
+                        innerTpl: '{[(values.chargetype ? "<b>" + LABKEY.Utils.encodeHtml(values.chargetype) + ":</b> " : "") + LABKEY.Utils.encodeHtml(values.servicename + (values.outsidelab ? "*" : ""))]}',
                             getInnerTpl: function () {
                             return this.innerTpl;
                         }
