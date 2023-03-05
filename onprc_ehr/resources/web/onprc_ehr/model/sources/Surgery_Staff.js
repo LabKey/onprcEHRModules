@@ -41,7 +41,7 @@ EHR.model.DataModelManager.registerMetadata('Biopsy_Staff', {
                 editorConfig: {
                     anyMatch: true,
                     listConfig: {
-                        innerTpl: '{[values.username + (values.username ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : "")]}',
+                        innerTpl: '{[LABKEY.Utils.encodeHtml(values.username + (values.username ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : ""))]}',
                         getInnerTpl: function(){
                             return this.innerTpl;
                         }

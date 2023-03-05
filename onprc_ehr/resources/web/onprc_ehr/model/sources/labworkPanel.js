@@ -26,7 +26,7 @@ EHR.model.DataModelManager.registerMetadata('LabworkPanel', {
                 editorConfig: {
                     anyMatch: true,
                     listConfig: {
-                        innerTpl: '{[(values.chargetype ? "<b>" + values.chargetype + ":</b> " : "") + values.servicename + (values.outsidelab ? "*" : "")]}',
+                        innerTpl: '{[LABKEY.Utils.encodeHtml((values.chargetype ? "<b>" + values.chargetype + ":</b> " : "") + values.servicename + (values.outsidelab ? "*" : ""))]}',
                             getInnerTpl: function () {
                             return this.innerTpl;
                         }
@@ -54,7 +54,7 @@ EHR.model.DataModelManager.registerMetadata('LabworkPanel', {
             editorConfig: {
                 anyMatch: true,
                 listConfig: {
-                    innerTpl: '{[values.username + (values.username ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : "")]}',
+                    innerTpl: '{[LABKEY.Utils.encodeHtml(values.username + (values.username ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : ""))]}',
                     getInnerTpl: function(){
                         return this.innerTpl;
                     }

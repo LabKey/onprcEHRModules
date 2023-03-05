@@ -169,8 +169,8 @@ Ext4.define('SLA.panel.PurchaseOrderDetails', {
                         '<span class="order-label">HOUSING AVAILABILITY: </span><span class="order-value">{housingconfirmed}</span><br/>',
                         '<span class="order-label">ORDERED BY: </span><span class="order-value">{orderedby:htmlEncode}</span><br/>',
                         '<span class="order-label">ORDER DATE: </span><span class="order-value">{orderdate:date("Y-m-d")}</span><br/>',
-                        '<span class="order-label">DCM COMMENTS: </span><span class="order-value">{darcomments}</span><br/>',
-                        '<span class="order-label">ADMIN COMMENTS: </span><span class="order-value">{comments}</span><br/>',
+                        '<span class="order-label">DCM COMMENTS: </span><span class="order-value">{darcomments:htmlEncode}</span><br/>',
+                        '<span class="order-label">ADMIN COMMENTS: </span><span class="order-value">{comments:htmlEncode}</span><br/>',
                     '</tpl>'
                 )
             });

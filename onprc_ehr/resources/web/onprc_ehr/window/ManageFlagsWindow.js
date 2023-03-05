@@ -64,7 +64,7 @@ Ext4.define('ONPRC_EHR.window.ManageFlagsWindow', {
                     matchFieldWidth: false,
                     typeAhead: true,
                     listConfig: {
-                        innerTpl: '{[(values.category ? "<b>" + values.category + ":</b> " : "") + values.value + (values.code ? " (" + values.code + ")" : "")]}',
+                        innerTpl: '{[LABKEY.Utils.encodeHtml((values.category ? "<b>" + values.category + ":</b> " : "") + values.value + (values.code ? " (" + values.code + ")" : ""))]}',
                         getInnerTpl: function(){
                             return this.innerTpl;
                         }
