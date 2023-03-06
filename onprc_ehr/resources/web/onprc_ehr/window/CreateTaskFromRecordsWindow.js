@@ -115,7 +115,7 @@ Ext4.define('ONPRC_EHR.window.CreateTaskFromRecordsWindow', {
             displayField: 'title',
             valueField: 'taskid',
             listConfig: {
-                innerTpl: ['{rowid}: {title}']
+                innerTpl: ['{LABKEY.Utils.encodeHtml(rowid)}: {LABKEY.Utils.encodeHtml(title)}']
             },
             store: {
                 type: 'labkey-store',

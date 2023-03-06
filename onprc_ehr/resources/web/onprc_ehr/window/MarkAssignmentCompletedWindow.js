@@ -59,7 +59,7 @@ Ext4.define('ONPRC_EHR.window.MarkAssignmentCompletedWindow', {
                 valueField: 'code',
                 queryMode: 'local',
                 listConfig: {
-                    innerTpl: '{[values.meaning + " (" + values.code + ")"]}',
+                    innerTpl: '{[LABKEY.Utils.encodeHtml(values.meaning + " (" + values.code + ")")]}',
                     getInnerTpl: function(){
                         return this.innerTpl;
                     }
