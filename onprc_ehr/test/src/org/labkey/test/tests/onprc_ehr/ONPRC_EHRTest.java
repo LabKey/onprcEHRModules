@@ -36,7 +36,6 @@ import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.Locator;
 import org.labkey.test.Locators;
 import org.labkey.test.TestFileUtils;
-import org.labkey.test.TestTimeoutException;
 import org.labkey.test.WebTestHelper;
 import org.labkey.test.categories.CustomModules;
 import org.labkey.test.categories.EHR;
@@ -58,7 +57,6 @@ import org.labkey.test.util.ext4cmp.Ext4GridRef;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.io.File;
 import java.io.IOException;
@@ -996,7 +994,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         // NOTE: we have had problems w/ the ID field value not sticking.  i think it might have to do with the timing of server-side validation,
         //
-        waitFor(() -> MORE_ANIMAL_IDS[0].equals(Locator.tag("div").withLabel("Id:").findElement(getDriver()).getText()), "Id field not set", 1_000);
+        WebElement idDisplay = Locator.tag("div").withLabel("Id:").findElement(getDriver());
+        waitFor(() -> MORE_ANIMAL_IDS[0].equals(idDisplay.getText()), () -> "Id field not set: " + idDisplay.getText(), 5_000);
 
         //observations section
         waitAndClick(Ext4Helper.Locators.ext4Tab("Observations"));
