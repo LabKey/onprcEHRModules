@@ -4,7 +4,7 @@
             <table tableName="parentsWrongGenderOrSpecies" tableDbType="NOT_IN_DB">
                 <tableTitle>Parentage Records With Mismatched Gender or Species</tableTitle>
                 <pkColumnName>lsid</pkColumnName>
-                 <updateUrl>/ehr/manageRecord.view?schemaName=study&amp;queryName=Parentage&amp;keyField=lsid&amp;key=${lsid}&amp;update=1</updateUrl>
+                 <updateUrl>/ehr/manageRecord.view?schemaName=study&amp;queryName=${queryName}&amp;keyField=lsid&amp;key=${lsid}&amp;update=1</updateUrl>
                 <columns>
                     <column columnName="Id">
 
@@ -16,6 +16,9 @@
                         <columnTitle>Parent Species</columnTitle>
                     </column>
                     <column columnName="lsid">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="queryName">
                         <isHidden>true</isHidden>
                     </column>
                 </columns>
