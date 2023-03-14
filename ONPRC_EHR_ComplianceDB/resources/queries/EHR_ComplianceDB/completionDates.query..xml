@@ -1,0 +1,18 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="completionDates" tableDbType="NOT_IN_DB">
+                <tableTitle>Employee Completion Dates</tableTitle>
+
+                <columns>
+                    <column columnName="snooze_date">
+                        <columnTitle>Snooze Until</columnTitle>
+                        <formatString>Date</formatString>
+                        <isHidden>false</isHidden>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+
