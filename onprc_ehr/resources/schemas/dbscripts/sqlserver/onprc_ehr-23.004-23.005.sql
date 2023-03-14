@@ -1,0 +1,1 @@
+ALTER TABLE study.clinical_observations ADD  findings varchar(500) NULL;

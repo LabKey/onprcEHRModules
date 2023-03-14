@@ -837,6 +837,12 @@
             <column columnName="formSort">
                 <datatype>integer</datatype>
             </column>
+            <column columnName="findings">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="remark">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Clinical Observations</tableTitle>
     </table>
