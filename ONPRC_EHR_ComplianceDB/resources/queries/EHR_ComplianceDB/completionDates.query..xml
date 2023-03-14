@@ -8,6 +8,7 @@
                     <column columnName="snooze_date">
                         <columnTitle>Snooze Until</columnTitle>
                         <formatString>Date</formatString>
+                        <isHidden>false</isHidden>
                     </column>
                 </columns>
             </table>
