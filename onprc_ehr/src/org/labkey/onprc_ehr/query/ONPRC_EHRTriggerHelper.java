@@ -1831,10 +1831,11 @@ public class ONPRC_EHRTriggerHelper
             return "Unknown cage: " + cage;
         }
 
-        if (cr.getCageslots() != 2)
-        {
-            return "Divider changes are only supported for doubles";
-        }
+//          Modified: 3-16-2023 R. Blasa     Allow divider changes
+//        if (cr.getCageslots() != 2)
+//        {
+//            return "Divider changes are only supported for doubles";
+//        }
 
         DividerRecord targetDivider = getDividerRecord(divider);
         if (targetDivider == null)
