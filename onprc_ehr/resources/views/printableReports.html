@@ -430,7 +430,7 @@
                                 if (!url)
                                     return;
 
-                                url += '&rs:Format=PDF';
+                                url += '&rs:Format=PDF&returnUrl=' + '&' + url ;
                                 window.open(url);
                                 // window.location = url;
                                window.location.reload();
