@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //Created: 19-9-2022 R.Blasa
@@ -29,6 +30,21 @@ public class EnvironmentalFormSection extends SimpleGridPanel
         setTemplateMode(TEMPLATE_MODE.NONE);
 
     }
+    @Override
+    public List<String> getTbarButtons()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getTbarButtons());
+
+        int idx = 0;
+        if (defaultButtons.contains("ADDANIMALS"))
+        {
+            idx = defaultButtons.indexOf("ADDANIMALS");
+            defaultButtons.remove("ADDANIMALS");
+        }
+
+        return defaultButtons;
+    }
 
     @Override
     public List<String> getTbarMoreActionButtons()
@@ -37,9 +53,12 @@ public class EnvironmentalFormSection extends SimpleGridPanel
 
         defaultButtons.remove("GUESSPROJECT");
         defaultButtons.remove("COPY_IDS");
-        defaultButtons.remove("ADDANIMALS");
+        defaultButtons.remove("COPYFROMSECTION");
+
 
         return defaultButtons;
     }
+
+
 
 }
