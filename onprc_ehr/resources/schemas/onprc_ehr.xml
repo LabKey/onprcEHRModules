@@ -1231,22 +1231,25 @@
             <column columnName="test_type">
                 <columnTitle>Test Type</columnTitle>
             </column>
+            <column columnName="colony_count">
+                <columnTitle>Colony Count</columnTitle>
+            </column>
 
+            <column columnName="biological_BI">
+                <columnTitle>BI#</columnTitle>
+            </column>
             <column columnName="testing_equipment">
                 <columnTitle>Testing Equipment</columnTitle>
             </column>
             <column columnName="biological_Cycle">
                 <columnTitle>Biological Cycle</columnTitle>
             </column>
-            <column columnName="colony_count">
-                <columnTitle>Colony Count</columnTitle>
+
+            <column columnName="water_source">
+                <columnTitle>H2O Source</columnTitle>
             </column>
             <column columnName="action">
                 <columnTitle>Action</columnTitle>
-            </column>
-      /
-            <column columnName="water_source">
-                <columnTitle>Water Source</columnTitle>
             </column>
             <column columnName="surface_tested">
                 <columnTitle>Surface Tested</columnTitle>

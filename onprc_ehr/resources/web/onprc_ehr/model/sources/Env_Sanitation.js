@@ -18,7 +18,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             testing_location: {
                 xtype: 'onprc-env_testLocation',
                 columnConfig: {
-                    width: 200
+                    width: 140
                 }
             },
             charge_unit: {
@@ -30,27 +30,42 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             test_results: {
                 xtype: 'onprc-env_testresults',
                 columnConfig: {
-                    width: 150
+                    width: 100
                 }
             },
             remarks: {
                 header: 'Comments',
                   columnConfig: {
-                    width: 250
+                    width: 150
                 }
             },
             performedby: {
-                header: 'Performed by',
+                header: 'Collected by',
                 defaultValue: LABKEY.Security.currentUser.displayName
             },
             action: {
-                hidden: true
+                header: 'Action',
+                hidden: false,
+                columnConfig: {
+                    width: 80
+                }
             },
             biological_reader: {
                 hidden: true
             },
             biological_cycle: {
-                hidden: true
+                header: 'Cycle',
+                hidden: false,
+                columnConfig: {
+                    width: 70
+                }
+            },
+            biological_BI: {
+                header: 'Bl#',
+                hidden: false,
+                columnConfig: {
+                    width: 90
+                }
             },
             testing_equipment: {
                 hidden: true
@@ -59,7 +74,18 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 hidden: true
             },
             water_source: {
-                hidden: true
+                header: 'H2O Source',
+                hidden: false,
+                columnConfig: {
+                    width: 90
+                }
+            },
+            test_type: {
+                header: 'Test Type',
+                hidden: false,
+                columnConfig: {
+                    width: 80
+                }
             },
             retest: {
                 hidden: true
@@ -71,7 +97,10 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 }
             },
             colony_count: {
-                hidden: true
+                hidden: false,
+                columnConfig: {
+                    width: 90
+                }
             }
         }
     }
