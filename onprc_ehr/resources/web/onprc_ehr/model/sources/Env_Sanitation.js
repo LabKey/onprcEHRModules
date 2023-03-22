@@ -33,6 +33,12 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                     width: 150
                 }
             },
+            remarks: {
+                header: 'Comments',
+                  columnConfig: {
+                    width: 250
+                }
+            },
             performedby: {
                 header: 'Performed by',
                 defaultValue: LABKEY.Security.currentUser.displayName
@@ -46,7 +52,18 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             biological_cycle: {
                 hidden: true
             },
-
+            testing_equipment: {
+                hidden: true
+            },
+            surface_tested: {
+                hidden: true
+            },
+            water_source: {
+                hidden: true
+            },
+            retest: {
+                hidden: true
+            },
             pass_fail: {
                 xtype: 'onprc-env_passfail',
                 columnConfig: {

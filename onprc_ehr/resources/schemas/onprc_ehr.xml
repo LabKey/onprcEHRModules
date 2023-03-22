@@ -1251,6 +1251,9 @@
             <column columnName="surface_tested">
                 <columnTitle>Surface Tested</columnTitle>
             </column>
+            <column columnName="retest">
+                <columnTitle>Retest</columnTitle>
+            </column>
               <column columnName="remarks">
                 <columnTitle>Remarks</columnTitle>
             </column>
