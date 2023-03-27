@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-EHR.model.DataModelManager.registerMetadata('Environmental', {
+EHR.model.DataModelManager.registerMetadata('Environmental_ATP', {
     allQueries: {
 
     },
@@ -17,61 +17,54 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             },
             service_requested: {
                 xtype: 'onprc-env_servicetype',
+                defaultValue: 'Sanitation: ATP',
                 columnConfig: {
                     width: 200
                 }
             },
-            testing_location: {
-                xtype: 'onprc-env_testLocation',
-                columnConfig: {
-                    width: 140
-                }
-            },
+
             charge_unit: {
                 xtype: 'onprc-env_chargeunit',
                 columnConfig: {
                     width: 100
                 }
             },
+            testing_location: {
+                xtype: 'onprc-env_testLocation',
+                header: 'Area',
+                columnConfig: {
+                    width: 160
+                }
+            },
             test_results: {
-                xtype: 'onprc-env_testresults',
+                // xtype: 'onprc-env_testresults',
+                header: 'Lab/Group',
                 columnConfig: {
                     width: 100
                 }
             },
-            remarks: {
-                header: 'Comments',
-                  columnConfig: {
-                    width: 150
-                }
-            },
+
             performedby: {
-                header: 'Collected by',
-                defaultValue: LABKEY.Security.currentUser.displayName
+                hidden: true
             },
             action: {
-                header: 'Action',
+                header: 'Location Tested',
                 hidden: false,
                 columnConfig: {
-                    width: 80
+                    width: 120
                 }
             },
             biological_reader: {
-                hidden: true
+                header: 'Surface Tested',
+                columnConfig: {
+                    width: 150
+                }
             },
             biological_cycle: {
-                header: 'Cycle',
-                hidden: false,
-                columnConfig: {
-                    width: 70
-                }
+                hidden: true
             },
             biological_BI: {
-                header: 'Bl#',
-                hidden: false,
-                columnConfig: {
-                    width: 90
-                }
+                hidden: true
             },
             testing_equipment: {
                 hidden: true
@@ -80,32 +73,32 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 hidden: true
             },
             water_source: {
-                header: 'H2O Source',
+                header: 'Retest',
                 hidden: false,
                 columnConfig: {
-                    width: 90
+                    width: 100
                 }
             },
             test_type: {
-                header: 'Test Type',
-                hidden: false,
-                columnConfig: {
-                    width: 80
-                }
+                hidden: true
             },
             retest: {
                 hidden: true
             },
             pass_fail: {
-                xtype: 'onprc-env_passfail',
+                // xtype: 'onprc-env_passfail',
+                header: 'Initial',
                 columnConfig: {
                     width: 100
                 }
             },
             colony_count: {
-                hidden: false,
+                hidden: true
+            },
+            remarks: {
+                header: 'Comments',
                 columnConfig: {
-                    width: 90
+                    width: 170
                 }
             }
         }

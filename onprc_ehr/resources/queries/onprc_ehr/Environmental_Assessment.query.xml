@@ -6,7 +6,7 @@
                 <columns>
                     <column columnName="date">
                         <columnTitle>Date</columnTitle>
-                        <formatString>yyyy-MM-dd HH:mm</formatString>
+                        <formatString>Date</formatString>
                     </column>
 
                     <column columnName="service_requested">

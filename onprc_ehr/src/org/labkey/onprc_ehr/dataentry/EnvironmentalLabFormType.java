@@ -23,6 +23,7 @@ package org.labkey.onprc_ehr.dataentry;
         import org.labkey.api.ehr.security.EHRLabworkEntryPermission;
         import org.labkey.api.view.template.ClientDependency;
         import org.labkey.api.module.Module;
+        import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
 
         import java.util.Arrays;
         import java.util.List;
@@ -31,7 +32,7 @@ package org.labkey.onprc_ehr.dataentry;
 
         public class EnvironmentalLabFormType extends TaskForm
         {
-        public static final String NAME = "Environmental Assessment";
+        public static final String NAME = "Environmental_Assessment";
 
         public EnvironmentalLabFormType(DataEntryFormContext ctx, Module owner)
         {
@@ -51,11 +52,10 @@ package org.labkey.onprc_ehr.dataentry;
         }
       }
 
-
             @Override
             protected boolean canInsert()
             {
-                if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRLabworkEntryPermission.class))
+                if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_EHREnvironmentalPermission.class))
                     return false;
 
                 return super.canInsert();

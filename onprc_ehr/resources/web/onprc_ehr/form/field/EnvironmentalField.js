@@ -165,7 +165,8 @@ Ext4.define('onprc_ehr.form.field.environ_Test_Results', {
             queryMode: 'local',
             store: Ext4.create('LABKEY.ext4.data.Store', {
                 schemaName: 'onprc_ehr',
-                queryName: 'Environmental_Reference_Data',
+                queryName: '' +
+                        '',
                 columns: 'value,columnName',
                 sort: 'value',
                 filterArray: [
