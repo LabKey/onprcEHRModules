@@ -1055,6 +1055,33 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     /**
+     * Kollil : Monkeys needing pregnancy checks
+     */
+    protected void pregnancyChecks(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+        //Pregnancy checks query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("pregnancyChecks", ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0) {
+            msg.append("<b>" + count + " monkey(s) need pregnancy checks:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnancyChecks", null) + "&query.containerFilterName=AllFolders'>Click here to view the list of monkeys,</a></p>\n");
+            msg.append("<hr>");
+        }
+        else {
+            msg.append("<b>WARNING: There are no monkeys that needs pregnancy checks! </b>");
+            msg.append("<hr>");
+        }
+
+    }
+
+    /**
      * Kollil, 5/12/2017 : Send DCM Notes notification on the action date
      * Modified by Kollil in Nov, 2021: Added animal Location to the alerts
      */
@@ -1231,8 +1258,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     }    //End of Fasts alert
 
-
-
+    
     /**
      * Kollil, 10/24/2019 : PMIC scheduler alert notifications Daily & Weekly
      */
