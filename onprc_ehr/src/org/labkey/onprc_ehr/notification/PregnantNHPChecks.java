@@ -54,6 +54,8 @@ public class PregnantNHPChecks extends ColonyAlertsNotification
 
         pregnancyChecks(c, u, msg);
 
+        checkPregnantGestation(c, u, msg);
+
         return msg.toString();
     }
 }

@@ -1044,7 +1044,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " pregnant animals 30 days past the gestation period.</b><br>\n");
+            msg.append("<b>Pregnant NHPs whose gestation time is past 30 days:</b><br>\n");
+            msg.append("There are " + count + " pregnant animals 30 days past the gestation period.<br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnancyGestationOverdue", null) + "&query.thirty_days_pastGestation_date~datelte="+ getDateTimeFormat(c).format(new Date()) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -1070,7 +1071,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //Get num of rows
         if (count > 0) {
-            msg.append("<b>" + count + " monkey(s) need pregnancy checks:</b>");
+            msg.append("<b>Monkeys needing pregnancy checks:</b><br>\n");
+            msg.append("There are " + count + " monkey(s) need pregnancy checks.<br>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnancyChecks", null) + "&query.containerFilterName=AllFolders'>Click here to view the list of monkeys,</a></p>\n");
             msg.append("<hr>");
         }
