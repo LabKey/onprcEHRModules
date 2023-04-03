@@ -237,20 +237,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                                 //Modified: 8-19-2019  R. Blasa Added Divider Legends Not eeded at this time
                                 currentSection.push({
-                                //     html: '<b>List of cage slides, and the display letters they represent:</b><br><br> ' +
-                                //     '   Infant Feeding Slide --------->  IFS <br> ' +
-                                //     '   Clear Slide     -----------------------> C <br> ' +
-                                //     '   Extension Solid Slide --------> ES <br> ' +
-                                //     '   Extension Mesh Slide -------> EM <br> ' +
-                                //     '   Window Slide      -------------------> W <br> ' +
-                                //     '   Double Mesh Slides ----------> DM  <br> ' +
-                                //     '   Double Solid Slides -----------> DS <br> ' +
-                                //     '   Window Mesh Slide ----------> WM <br> ' +
-                                //     '   Backward Grooming Slide -> B  <br>  <br> <br>',
-                                //
-                                //
-                                // }, {
-                                    //Added: 10-9-2019  R.Blasa
+
+                                    //Modified: 4/3/2023  R.Blasa
                                     xtype: 'button',
                                     text: 'Slide Descriptions',
                                     scope: this,
