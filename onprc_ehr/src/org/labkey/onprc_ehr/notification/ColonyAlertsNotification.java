@@ -339,17 +339,22 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * Finds all rooms with animals of mixed viral status
+     * Modified by Kollil, 2/17/2023
      */
     protected void roomsWithMixedViralStatus(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
-        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;Sequester/Containment;ABSL3", CompareType.CONTAINS_NONE_OF);
+        //Removing the filter as per the user request, Refer tkt #8418
+        //As per ticket the techs want to see all the locations without exclusion in the email notification.
+        //filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;Sequester/Containment;ABSL3", CompareType.CONTAINS_NONE_OF);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("area,room"));
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding ABSL2+,Sequester/Containment, and ABSL3 rooms:</b><p></p>\n");
+            //commenting out this line,
+            //msg.append("<b>WARNING: The following " + count + " room(s) have animals with mixed viral statuses, excluding ABSL2+,Sequester/Containment, and ABSL3 rooms:</b><p></p>\n");
+            msg.append("<b>WARNING: The following " + count + " room(s) have animals with mixed viral statuses.</b><p></p>\n");
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p/>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
@@ -375,6 +380,45 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<hr>\n");
         }
     }
+
+//    /**
+//     * Finds all rooms with animals of mixed viral status
+//     */
+//    protected void roomsWithMixedViralStatus(final Container c, User u, final StringBuilder msg)
+//    {
+//        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
+//        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;Sequester/Containment;ABSL3", CompareType.CONTAINS_NONE_OF);
+//
+//        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("area,room"));
+//        long count = ts.getRowCount();
+//        if (count > 0)
+//        {
+//            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding ABSL2+,Sequester/Containment, and ABSL3 rooms:</b><p></p>\n");
+//            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p/>\n");
+//
+//            msg.append("<table border=1 style='border-collapse: collapse;'>\n");
+//            ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
+//            {
+//                @Override
+//                public void exec(ResultSet rs) throws SQLException
+//                {
+//                    String status = rs.getString("viralStatuses");
+//                    if (status != null)
+//                    {
+//                        status = status.replaceAll("\\)\n", ")<br>");
+//                        status = status.replaceAll("\n", " / ");
+//                    }
+//
+//                    String area = rs.getString("area");
+//                    String room = rs.getString("room");
+//                    String url = getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&query.Id/curLocation/room~eq=" + room;
+//                    msg.append("<tr><td style='vertical-align:top;'>" + area + "</td><td style='vertical-align:top;'><a href='" + url + "'>" + room + ":</a></td><td><a href='" + url + "'>" + status + "</a></td></tr>\n");
+//                }
+//            });
+//            msg.append("</table>\n");
+//            msg.append("<hr>\n");
+//        }
+//    }
 
     /**
      * Finds all occupied rooms without a record in ehr_lookups.rooms
