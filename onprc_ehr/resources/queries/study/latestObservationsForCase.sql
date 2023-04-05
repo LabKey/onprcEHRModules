@@ -19,6 +19,7 @@ SELECT
   o.category,
   o.area,
   o.observation,
+  o.findings,
   o.remark,
   o.caseid,
   c.category as caseCategory,
