@@ -40,7 +40,7 @@ public class SurgicalRoundsRemarksFormSection extends  RoundsSurgeryRemarksFormS
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddClinicalCasesWindow.js"));
 //        Modified: 4-5-2023 R. Blasa
-        addClientDependency(ClientDependency.supplierFromPath("onpc_ehr/window/AddSurgicalCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddSurgicalCasesWindow.js"));
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkChangeCasesWindow.js"));
 
