@@ -149,16 +149,17 @@ Ext4.define('EHR.grid.ObservationsRowEditorGridPanel', {
             dataIndex: 'findings',
             editor: {
                 xtype: 'labkey-combo',
-                displayField: 'value',
-                valueField: 'value',
+                displayField: 'state',
+                valueField: 'state',
                 forceSelection: true,
+                defaultValue:'Normal',
                 queryMode: 'local',
                 anyMaych: true,
                 value: 'N/A',
                 store: {
                     type: 'labkey-store',
                     schemaName: 'ehr_lookups',
-                    queryName: 'observation_areas',
+                    queryName: 'normal_abnormal',
                     autoLoad: true
                 }
             }
@@ -167,15 +168,8 @@ Ext4.define('EHR.grid.ObservationsRowEditorGridPanel', {
             width: 200,
             editable: true,
             dataIndex: 'remark',
-            renderer: function(value, cellMetaData, record){
-                if (Ext4.isEmpty(value) && ['Vet Attention'].indexOf(record.get('category')) == -1){
-                    cellMetaData.tdCls = 'labkey-grid-cell-invalid';
-                }
-
-                return value;
-            },
             editor: {
-                xtype: 'textfield'
+                xtype: 'textarea'
             }
         }]
     },
