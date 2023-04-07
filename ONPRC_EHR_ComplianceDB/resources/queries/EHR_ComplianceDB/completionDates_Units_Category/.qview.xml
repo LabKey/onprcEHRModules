@@ -1,36 +1,41 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
-        <column name="employeeid"/>
-        <column name="employeeid/lastName">
+        <column name="employeeid">
             <properties>
-                <property name="columnTitle" value="Last Name"/>
+                <property name="columnTitle" value="Employee ID"/>
             </properties>
         </column>
-        <column name="employeeid/firstName">
+
+        <column name="name">
+                <properties>
+                    <property name="columnTitle" value="Last/First Name"/>
+                </properties>
+        </column>
+        <column name="requirementname">
             <properties>
-                <property name="columnTitle" value="First Name"/>
+                <property name="columnTitle" value="Requirement Name"/>
             </properties>
         </column>
-        <column name="requirementname"/>
-        <column name="requirementname/type">
+        <column name="date">
             <properties>
-                <property name="columnTitle" value="Requirement Type"/>
+                <property name="columnTitle" value="Completed Date"/>
             </properties>
         </column>
-        <column name="date"/>
-        <column name="unit"/>
-        <column name="category"/>
-        <column name="result"/>
-        <column name="comment"/>
-        <column name="trainer"/>
-        <!--        <column name="employeeid/enddate"/>-->
-        <column name="FileName"/>
-        <column name="snooze_date"/>
+        <column name="unit">
+            <properties>
+                <property name="columnTitle" value="Unit"/>
+            </properties>
+        </column>
+        <column name="category">
+            <properties>
+                <property name="columnTitle" value="Category"/>
+            </properties>
+        </column>
+
     </columns>
     <sorts>
-        <sort column="employeeid/lastName" descending="false"/>
-        <sort column="employeeid/firstName" descending="false"/>
+        <sort column="employeeid" descending="false"/>
         <sort column="requirementname" descending="false"/>
-        <sort column="date" descending="true"/>
+
     </sorts>
 </customView>
