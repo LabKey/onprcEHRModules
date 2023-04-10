@@ -1,15 +1,16 @@
 select a.employeeid,
-       (Select j.lastname + ', ' + j.firstname from ehr_compliancedb.employees j where j.employeeid = a.employeeid) as Name,
-       b.requirementname,
-       (select max(j.date) from ehr_compliancedb.completiondates j where j.employeeid = a.employeeid and j.requirementname = b.requirementname) as date,
-       a.unit,
-       a.category
+       a.date,
+       a.requirementname,
+       (select group_Concat(distinct t.category,chr(10)) from ehr_compliancedb.employeeperUnit k, ehr_compliancedb.requirementspercategory t where  t.requirementname = a.requirementname and k.category = t.category and k.employeeid = a.employeeid) as category,
+       (select group_concat(distinct j.unit,chr(10)) from ehr_compliancedb.employeeperUnit k, ehr_compliancedb.requirementspercategory j
+        where j.requirementname = a.requirementname and k.unit = j.unit and k.employeeid = a.employeeid) as unit,
+       a.result,
+       a.comment,
+       a.filename,
+       a.trainer,
+       a.snooze_date
 
 
+from  ehr_compliancedb.completiondates a
 
-from  ehr_compliancedb.employeeperUnit a, ehr_compliancedb.requirementspercategory b
-
-Where a.employeeId in ( select distinct h.employeeId from ehr_compliancedb.employees h where h.enddate is null)
-  and (a.unit = b.unit or a.category = b.category)
-
-order by employeeid
+---Where a.employeeId in ( select distinct h.employeeId from ehr_compliancedb.employees h where h.enddate is null)
