@@ -18,8 +18,6 @@
             </properties>
         </column>
         <column name="date"/>
-        <column name="unit"/>
-        <column name="category"/>
         <column name="result"/>
         <column name="comment"/>
         <column name="trainer"/>
