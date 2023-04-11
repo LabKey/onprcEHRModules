@@ -30,12 +30,6 @@ Ext4.onReady(function(){
                 name: 'Occupational Health - Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Occupational%20Health%20Compliance'
             },{
                 name: 'Occupational Health - Measles Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Measles45DayAlert&query.DaysOverDue~neqornull=-1'
-            },{
-                name: 'Requirements Overdue/Due Soon (Full SSRS Reports)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Report&rs:Command=Render'
-            },{
-                name: 'Requirements Overdue/Due Soon (SSRS Reports by Host)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Host_Report&rs:Command=Render'
-            },{
-                name: 'Employee Completion Dates (Includes Units and Categories)', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates_Units_Category'
             }
             ]
         },{
