@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+--  Created: 3-1-2023  R. Blasa
 SELECT
-  p.Id,
- (SELECT group_concat(distinct p2.Id, chr(10)) AS Ids FROM study.pairings p2 WHERE p.Id != p2.id AND p.pairId = p2.pairId) as otherIds,
-  p.pairid,
-  p.date,
-  p.lowestCage,
-  p.room,
-  p.cage,
-  p.eventType,
-  p.goal,
-  p.observation,
-  p.outcome,
-  p.separationreason,
-  p.remark,
-  p.remark2,
+    p.lsid,
+    p.Id,
+    p.dateOnly as date,
   p.enddate,
-  p.endeventType,
-  p.performedby,
-  p.taskid,
-  TIMESTAMPDIFF('SQL_TSI_DAY', p.date, coalesce(p.enddate,curdate())) as duration,
-  p.qcstate,
-  p.lsid
+  p.enddateCoalesced,
+  p.category,
+  p.subcategory,
+  p.history
+FROM study.problem p
 
-FROM study.pairings p
+UNION ALL
 
+SELECT
+    d.lsid,
+    d.Id,
+    d.dateOnly as date,
+  d.date as enddate,
+  d.dateOnly as enddateCoalesced,
+  cast(('Death: ' || d.cause) as varchar) as category,
+  null as subcategory,
+  d.history
+FROM study.deaths d

@@ -1,15 +1,17 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="animalGroupProblemSummary" tableDbType="TABLE">
+            <table tableName="animalGroupCategoryProblemSummarySubcategory" tableDbType="TABLE">
                 <tableTitle>Morbidity and Mortality By Animal Group</tableTitle>
                 <columns>
-                    <column columnName="groupName">
+                    <column columnName="groupCategory">
 
                     </column>
                     <column columnName="category">
+                        <columnTitle>Problem Category</columnTitle>
                     </column>
                     <column columnName="subcategory">
+                        <columnTitle>Problem Subcategory</columnTitle>
                     </column>
                     <column columnName="totalIds">
                         <columnTitle>Distinct Animals In Group Over Interval</columnTitle>
@@ -20,7 +22,7 @@
                             schemaName=study&amp;
                             query.queryName=animalGroupProblemData&amp;
                             query.category~eq=${category}&amp;
-                            query.groupId/name~eq=${groupId/name}&amp;
+                            query.groupId/category~eq=${groupCategory}&amp;
                             query.param.StartDate=${StartDate}&amp;
                             query.param.EndDate=${EndDate}&amp;
                         </url>
@@ -31,7 +33,7 @@
                             schemaName=study&amp;
                             query.queryName=animalGroupProblemData&amp;
                             query.category~eq=${category}&amp;
-                            query.groupId/name~eq=${groupId/name}&amp;
+                            query.groupId/category~eq=${groupCategory}&amp;
                             query.param.StartDate=${StartDate}&amp;
                             query.param.EndDate=${EndDate}&amp;
                         </url>

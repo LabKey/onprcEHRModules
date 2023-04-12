@@ -75,6 +75,9 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 400,
 
                 },
+            room: {
+                allowBlank: false,
+              },
             remark: {
                     width: 400
                 },
