@@ -192,9 +192,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         projectsWithExpiredProtocol(c, u, msg);
         duplicateAssignments(c, u, msg);
         protocolsWithFutureApproveDates(c, u, msg);
-        protocolsOverLimit(c, u, msg);
-        assignmentsProjectedToday(c, u, msg);
-        assignmentsProjectedTomorrow(c, u, msg);
+//        protocolsOverLimit(c, u, msg); Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
+//        assignmentsProjectedToday(c, u, msg); Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
+//        assignmentsProjectedTomorrow(c, u, msg); Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
         protocolsWithAnimalsExpiringSoon(c, u, msg);
     }
 
@@ -339,17 +339,22 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * Finds all rooms with animals of mixed viral status
+     * Modified by Kollil, 2/17/2023
      */
     protected void roomsWithMixedViralStatus(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
-        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;Sequester/Containment;ABSL3", CompareType.CONTAINS_NONE_OF);
+        //Removing the filter as per the user request, Refer tkt #8418
+        //As per ticket the techs want to see all the locations without exclusion in the email notification.
+        //filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;Sequester/Containment;ABSL3", CompareType.CONTAINS_NONE_OF);
 
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("area,room"));
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding ABSL2+,Sequester/Containment, and ABSL3 rooms:</b><p></p>\n");
+            //commenting out this line,
+            //msg.append("<b>WARNING: The following " + count + " room(s) have animals with mixed viral statuses, excluding ABSL2+,Sequester/Containment, and ABSL3 rooms:</b><p></p>\n");
+            msg.append("<b>WARNING: The following " + count + " room(s) have animals with mixed viral statuses.</b><p></p>\n");
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p/>\n");
 
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
@@ -375,6 +380,45 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<hr>\n");
         }
     }
+
+//    /**
+//     * Finds all rooms with animals of mixed viral status
+//     */
+//    protected void roomsWithMixedViralStatus(final Container c, User u, final StringBuilder msg)
+//    {
+//        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("distinctStatuses"), 1 , CompareType.GT);
+//        filter.addCondition(FieldKey.fromString("room/housingCondition/value"), "ABSL2+;Sequester/Containment;ABSL3", CompareType.CONTAINS_NONE_OF);
+//
+//        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMixedViralStatus"), filter, new Sort("area,room"));
+//        long count = ts.getRowCount();
+//        if (count > 0)
+//        {
+//            msg.append("<b>WARNING: The following " + count + " rooms have animals with mixed viral statuses, excluding ABSL2+,Sequester/Containment, and ABSL3 rooms:</b><p></p>\n");
+//            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "housingMixedViralStatus", null) + "&query.distinctStatuses~gt=1'>Click here to view this list</a><p/>\n");
+//
+//            msg.append("<table border=1 style='border-collapse: collapse;'>\n");
+//            ts.forEach(new TableSelector.ForEachBlock<ResultSet>()
+//            {
+//                @Override
+//                public void exec(ResultSet rs) throws SQLException
+//                {
+//                    String status = rs.getString("viralStatuses");
+//                    if (status != null)
+//                    {
+//                        status = status.replaceAll("\\)\n", ")<br>");
+//                        status = status.replaceAll("\n", " / ");
+//                    }
+//
+//                    String area = rs.getString("area");
+//                    String room = rs.getString("room");
+//                    String url = getExecuteQueryUrl(c, "study", "demographics", "By Location") + "&query.Id/curLocation/room~eq=" + room;
+//                    msg.append("<tr><td style='vertical-align:top;'>" + area + "</td><td style='vertical-align:top;'><a href='" + url + "'>" + room + ":</a></td><td><a href='" + url + "'>" + status + "</a></td></tr>\n");
+//                }
+//            });
+//            msg.append("</table>\n");
+//            msg.append("<hr>\n");
+//        }
+//    }
 
     /**
      * Finds all occupied rooms without a record in ehr_lookups.rooms
@@ -722,7 +766,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     }
 
-
     /**
      * find the total finalized records with future dates
      */
@@ -809,6 +852,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    /**
+     * we find assignments with projected releases tomorrow
+     * Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
+     */
     protected void assignmentsProjectedTomorrow(final Container c, User u, final StringBuilder msg)
     {
         Calendar cal = Calendar.getInstance();
@@ -829,6 +876,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * we find assignments with projected releases today
+     * Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
      */
     protected void assignmentsProjectedToday(final Container c, User u, final StringBuilder msg)
     {
@@ -1338,7 +1386,74 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are no scheduled PMIC procedures!</b><br><hr>");
         }
     }
-    //End of PMIC services alert
+    //End of PMIC alert
+
+    /**
+     * Kollil, 12/22/2022 : Find the procedure entries where the PainCategory on the procedure is not defined (IS NULL).
+     * This email notification is sent to Jeff every Thursday at 7:30am.
+     */
+    protected void proceduresWithoutUSDAPainLevels(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
+            msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+
+        //procedures query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("Procedures_Missing_PainLevels", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        if (count > 0) {//procedures count
+            msg.append("<br><b>Active procedures with missing USDA categories:</b><br><br>");
+            msg.append("<b>" + count + " procedure(s) found:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "Procedures_Missing_PainLevels", null) + "'>Click here to view the procedures in PRIME</a></p>\n");
+            msg.append("<hr>");
+        }
+
+        if (count == 0) {
+            msg.append("<b>Currently, there are no active procedures with missing USDA categories!</b><hr>");
+        }
+
+        //Display the daily report in the email
+        if (count > 0)
+        {
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("project"));
+            columns.add(FieldKey.fromString("date"));
+            columns.add(FieldKey.fromString("name"));
+            columns.add(FieldKey.fromString("PainCategories"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+
+            // Table header
+            msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td> Id </td><td> Center Project </td><td> Date </td><td> Procedure </td><td> USDA Categories </td></tr>");
+
+            ts2.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, colMap);
+                    String url = getParticipantURL(c, rs.getString("Id"));
+
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("name")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("PainCategories")) + "</td>");
+                    msg.append("</tr>");
+                }
+            });
+            msg.append("</table>");
+        }
+    }
+    //End of USDA Pain levels alert
 
     /**
      * Kollil, 03/18/2021 : Housing transfer notifications Daily
@@ -1469,6 +1584,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * we find protocols over the animal limit
+     * Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
      */
     protected void protocolsOverLimit(final Container c, User u, final StringBuilder msg)
     {
@@ -1497,6 +1613,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * we find protocols nearing the animal limit, based on number and percent
+     * Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
      */
     protected void assignmentsNotAllowed(final Container c, User u, final StringBuilder msg)
     {
