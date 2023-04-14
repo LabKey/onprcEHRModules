@@ -529,6 +529,30 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     }
 
     @Test
+    public void testProceduresFormSection() throws Exception
+    {
+        _helper.goToTaskForm("Research Procedures", "Submit Final", false);
+
+        log("testing add row");
+        Ext4GridRef grid = _helper.getExt4GridForFormSection("Procedures");
+        grid.clickTbarButton("Add");
+        grid.waitForRowCount(1);
+        grid.completeEdit();
+
+        log("testing procedure remark");
+        Ext4FieldRef procedure = grid.getActiveEditor(1, "procedureid");
+        procedure.clickTrigger();
+        click(Locator.tagContainingText("li", "Achilles Tendon Repair"));
+        grid.completeEdit();
+
+        final Object remark = grid.getFieldValue(1, "remark");
+        waitFor(() -> remark != null && remark.toString().equals("Intubated with ___ ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Prepared skin with PVI, lavaged with sterile saline. Prepared skin with PVI, aseptically draped. Incised over the caudolateral surface of the tendon, 5 cm. Identified the gastronemius, superficial digital flexor, and common tendon. Freshened tendon edges and apposed with 2-0 PDS with a far-near near-far pattern. Lavaged, closed fascia with 3-0 Monocryl SI. Freshened skin edges, closed with 3-0 Monocryl SI. Placed a padded bandage and fiberglas cast. Administered analgesics. Good recovery from anesthesia."),
+                "Expected Remark not set", WAIT_FOR_JAVASCRIPT);
+
+        _helper.discardForm();
+    }
+
+    @Test
     public void testArrivalForm() throws Exception
     {
         _helper.goToTaskForm("Arrival", "Submit Final", false);
