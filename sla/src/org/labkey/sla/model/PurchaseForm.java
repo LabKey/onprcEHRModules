@@ -2,7 +2,7 @@ package org.labkey.sla.model;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.labkey.api.action.NewCustomApiForm;
+import org.labkey.api.action.ApiJsonForm;
 import org.labkey.api.util.GUID;
 import org.labkey.api.util.JsonUtil;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PurchaseForm implements NewCustomApiForm
+public class PurchaseForm implements ApiJsonForm
 {
     private Integer _rowid;
     private String _objectid;
