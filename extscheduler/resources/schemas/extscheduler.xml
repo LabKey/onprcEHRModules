@@ -127,20 +127,7 @@
             <column columnName="year"/>
         </columns>
     </table>
-    <table tableName="vw_Covid19DCMSchedule" tableDbType="VIEW">
-        <columns>
-            <column columnName="SChedulerID"/>
-            <column columnName="ResourceId"/>
-            <column columnName="ResourceName"/>
-            <column columnName="Name"/>
-            <column columnName="StartDate"/>
-            <column columnName="UserId"/>
-            <column columnName="CreatedBy"/>
-            <column columnName="Created"/>
-            <column columnName="Quantity"/>
-            <column columnName="EmployeeID"/>
-        </columns>
-    </table>
+
     <table tableName="Covid19Testing" tableDbType="TABLE">
         <columns>
             <column columnName="container"/>
@@ -164,15 +151,7 @@
             <column columnName="ComplianceUpdated"/>
         </columns>
     </table>
-    <table tableName="TempScheduler" tableDbType="TABLE">
-        <columns>
-            <column columnName="Searchkey"/>
-            <column columnName="usernames"/>
-            <column columnName="EventId"/>
-            <column columnName="StartDate"/>
-            <column columnName="created"/>
-        </columns>
-    </table>
+
     <table tableName="TempCoV19Final" tableDbType="TABLE">
         <columns>
             <column columnName="container"/>
