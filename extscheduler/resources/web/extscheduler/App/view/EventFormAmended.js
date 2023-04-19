@@ -377,10 +377,10 @@ Ext.define('App.view.EventForm', {
     ensureEndTimeAfterStart : function()
     {
         var startDate = this.getStartDateField().getValue(),
-            startTime = this.getStartTimeField().getValue(),
-            endDate = this.getEndDateField().getValue(),
-            endTime = this.getEndTimeField().getValue(),
-            allNonNull = startDate != null && startTime != null && endDate != null && endTime != null;
+                startTime = this.getStartTimeField().getValue(),
+                endDate = this.getEndDateField().getValue(),
+                endTime = this.getEndTimeField().getValue(),
+                allNonNull = startDate != null && startTime != null && endDate != null && endTime != null;
 
         if (allNonNull && startDate.getTime() == endDate.getTime())
         {

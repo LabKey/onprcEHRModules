@@ -5,21 +5,21 @@
 
     <!-- Ext and ux styles -->
     <link href="/ExtScheduler/weekview/resources/css/theme-triton/resources/theme-triton-all.css" rel="stylesheet" type="text/css"/>
-    <!--<link href="/ExtScheduler/css/theme-triton-all.css" rel="stylesheet" type="text/css"/>-->
+    <!--    <link href="/ExtScheduler/css/theme-triton-all.css" rel="stylesheet" type="text/css"/>-->
 
     <!-- Scheduler styles -->
-    <link href="/ExtScheduler/weekview/resources/css/sch-all-triton.css?ver=4.2.1" rel="stylesheet" type="text/css" />
-    <!--<link href="/ExtScheduler/css/sch-all-triton.css" rel="stylesheet" type="text/css" />-->
+<!--org   <link href="/ExtScheduler/weekview/resources/css/sch-all-triton.css?ver=4.2.1" rel="stylesheet" type="text/css" />-->
+<!--    <link href="/ExtScheduler/css/sch-all-triton.css" rel="stylesheet" type="text/css" />-->
 
     <!-- Ext JS includes -->
     <script src="/ExtScheduler/resources/extJs/ext-all.js" type="text/javascript"></script>
-    <!--<script src="/ExtScheduler/js/ext-all-debug.js" type="text/javascript"></script>-->
+    <script src="/ExtScheduler/js/ext-all-debug.js" type="text/javascript"></script>
     <script src="/ExtScheduler/weekview/resources/css/theme-triton/theme-triton.js" crossorigin="anonymous" type="text/javascript"></script>
-    <!--<script src="/ExtScheduler/js/theme-triton-debug.js" crossorigin="anonymous" type="text/javascript"></script>-->
+    <!--    <script src="/ExtScheduler/js/theme-triton-debug.js" crossorigin="anonymous" type="text/javascript"></script>-->
 
     <!-- Scheduler files -->
     <script src="/ExtScheduler/resources/extJs/sch-all.js?ver=4.2.1" type="text/javascript"></script>
-    <!--<script src="/ExtScheduler/js/sch-all-debug.js" type="text/javascript"></script>-->
+    <!--    <script src="/ExtScheduler/js/sch-all-debug.js" type="text/javascript"></script>-->
 
     <title>Necropsy Scheduler Week View</title>
 </head>
@@ -43,7 +43,7 @@
                     'ResourceCombo',
                     'Resources',
                     'Scheduler',
-                    'Viewport'
+                    'ViewportAmmended'
                 ]
             });
         };
@@ -80,7 +80,7 @@
             LABKEY.Query.selectRows({
                 schemaName: 'extscheduler',
                 queryName: 'Events',
-                columns: 'Id,ResourceId,Name,StartDate,EndDate,UserId,Alias,Owner,Comments,Quantity',
+                columns: 'Id,ResourceId,Name,StartDate,EndDate,UserId,Alias,Owner,Comments,Quantity,location,project',
                 success: function(data){
 
                     // need to convert the date fields from a string to JS Date object

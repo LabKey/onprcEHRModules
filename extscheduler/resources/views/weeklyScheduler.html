@@ -4,7 +4,7 @@
 <h3>Resources</h3>
 <div id="resources-qwp"></div>
 <br/>
-<h3>My Events </h3>
+<h3>My Events</h3>
 <div id="events-radiogroup"></div>
 <div id="events-qwp"></div>
 
@@ -38,7 +38,6 @@
         else
         {
             var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'weeklyTest', null, {
-            //     var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'NecropsyWeeklySC', null, {
                 returnUrl: window.location.pathname + window.location.search
             });
             Ext4.get('launch-link').update('<a class="launch-button" href="' + schedulerAppLink + '">Launch Scheduler</a>');
@@ -49,49 +48,27 @@
             frame: 'none',
             schemaName: 'extscheduler',
             queryName: 'Resources',
+            columns: 'Name,color',
             sort: 'Name'
         });
 
         var timeFrameFilter = null;
         var renderEventsQueryWebPart = function()
         {
-            var filters = [LABKEY.Filter.create('Owner', true, LABKEY.user.isAdmin ? LABKEY.Filter.Types.HAS_ANY_VALUE : LABKEY.Filter.Types.EQUALS)];
-            if (timeFrameFilter != null)
-                filters.push(timeFrameFilter);
+
 
             new LABKEY.QueryWebPart({
                 renderTo: 'events-qwp',
                 frame: 'none',
                 schemaName: 'extscheduler',
                 queryName: 'Events',
-                filters: filters,
+                columns: 'resouceId,Name,StartDate,EndDate,Alias,Comments,project,location',
+                filterArray: [LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL)],
                 sort: 'StartDate,ResourceId,Name'
             });
         };
 
-        Ext4.create('Ext.form.RadioGroup', {
-            renderTo: 'events-radiogroup',
-            width: 250,
-            columns: 3,
-            items: [
-                {boxLabel: 'All', name: 'timeframe', inputValue: 'All'},
-                {boxLabel: 'Previous', name: 'timeframe', inputValue: 'Previous'},
-                {boxLabel: 'Upcoming', name: 'timeframe', inputValue: 'Upcoming XT', checked: true}
-            ],
-            listeners: {
-                change: function(radiogroup, newValue)
-                {
-                    if (newValue.timeframe == 'Previous')
-                        timeFrameFilter = LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.DATE_LESS_THAN);
-                    else if (newValue.timeframe == 'Upcoming')
-                        timeFrameFilter = LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL);
-                    else
-                        timeFrameFilter = null;
 
-                    renderEventsQueryWebPart();
-                }
-            }
-        });
 
         renderEventsQueryWebPart();
     });

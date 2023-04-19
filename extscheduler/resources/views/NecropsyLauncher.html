@@ -12,7 +12,12 @@
                 border: false
             },
             items: [{
-                html: 'This is the Necropsy Scheduler Module.  Below are links to the Necropsy Scheduler Program, and related reports.',
+                html: 'Please see the User Manual for step-by-step instructions.\n' +
+                        '\n' +
+                        'To change a future event, please delete the incorrect entry and create a new one.\n' +
+                        'To change a past event, please email Wendy Price with an explanation or you will be billed.\n' +
+                        '\n' +
+                        'If you have any questions about using Scheduler, please contact onprcitsupport@ohsu.edu.  We\'re happy to help via email or meet with you to demonstrate.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'ldk-navpanel',
@@ -23,17 +28,19 @@
                         name: 'View Necropsy Scheduler Calendar',
 
                         url: LABKEY.ActionURL.buildURL('extscheduler', 'weeklyTest', null, {
+                        //     url: LABKEY.ActionURL.buildURL('extscheduler', 'NecropsyweeklyTest', null, {
                             //     var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'NecropsyWeeklySC', null, {
                             returnUrl: window.location.pathname + window.location.search
                         })
                     },{
-                        name: 'View Scheduler Resource and Events Reports',
+
+                        name: 'View Scheduler Present/Future Resource and Events Reports',
                         url: LABKEY.ActionURL.buildURL('extscheduler', 'weeklyScheduler', null, {
                             //     var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'NecropsyWeeklySC', null, {
                             // returnUrl: window.location.pathname + window.location.search
                         })
 
-                    }]
+                     }]
 
 
                  }]

@@ -1,7 +1,7 @@
-Ext.define('App.view.Scheduler', {
+Ext.define('App.view.SchedulerAmended', {
     extend        : 'Sch.panel.SchedulerGrid',
-    alias         : 'widget.scheduler',
-    reference     : 'scheduler',
+    alias         : 'widget.schedulerAmended',
+    reference     : 'schedulerAmended',
     startDate     : new Date(),
     //endDate       : new Date(),
     startTime     : 6,
@@ -83,7 +83,6 @@ Ext.define('App.view.Scheduler', {
     ],
 
     eventRenderer : function (event, resource, data) {
-
         data.style = 'background-color:' + resource.get('Color');
         event.data['ResourceName'] = resource.get('Name');
         event.data['Project'] = event.get('project');
