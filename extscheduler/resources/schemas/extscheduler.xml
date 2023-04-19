@@ -54,6 +54,8 @@
             <column columnName="Name" />
             <column columnName="Alias" />
             <column columnName="Quantity" />
+            <column columnName="project" />
+            <column columnName="location" />
             <column columnName="Comments" />
             <column columnName="UserId">
                 <columnTitle>User</columnTitle>
