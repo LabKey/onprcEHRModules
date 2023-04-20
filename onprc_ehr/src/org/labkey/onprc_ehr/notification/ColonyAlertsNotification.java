@@ -2439,7 +2439,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>NOTE: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in ASB RM 185, ASB RM 213, ASB RM 234, ASB RM 236, ASB RM 239, ASB RM 240 & COL RM 4</b><br><br>");
+            msg.append("<b>NOTE: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in locations ASB RM 185, ASB RM 213, ASB RM 234, ASB RM 236, ASB RM 239, ASB RM 240 & COL RM 4</b><br><br>");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
