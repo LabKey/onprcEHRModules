@@ -81,7 +81,7 @@ public class RestrictedIssueProviderImpl implements RestrictedIssueProvider
     public boolean hasPermission(User user, @NotNull Issue issue, List<Issue> relatedIssues, List<ValidationError> errors)
     {
         // Site admins always have access
-        if (user.isInSiteAdminGroup())
+        if (user.hasSiteAdminPermission())
             return true;
 
         Container issueContainer = ContainerManager.getForId(issue.getContainerId());
@@ -132,5 +132,15 @@ public class RestrictedIssueProviderImpl implements RestrictedIssueProvider
             return user.isInGroup(groupWithAccess.getUserId());
         }
         return false;
+    }
+
+    @Override
+    public void deleteProperties(Container c, String issueDefName)
+    {
+        PropertyManager.PropertyMap properties = PropertyManager.getProperties(c, getPropMapName(issueDefName));
+        if (!properties.isEmpty())
+        {
+            properties.delete();
+        }
     }
 }
