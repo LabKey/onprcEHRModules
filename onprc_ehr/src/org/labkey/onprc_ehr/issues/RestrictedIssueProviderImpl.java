@@ -80,6 +80,10 @@ public class RestrictedIssueProviderImpl implements RestrictedIssueProvider
     @Override
     public boolean hasPermission(User user, @NotNull Issue issue, List<Issue> relatedIssues, List<ValidationError> errors)
     {
+        // Site admins always have access
+        if (user.isInSiteAdminGroup())
+            return true;
+
         Container issueContainer = ContainerManager.getForId(issue.getContainerId());
         if (issueContainer != null && isRestrictedIssueTracker(issueContainer, issue.getIssueDefName()))
         {
@@ -110,10 +114,6 @@ public class RestrictedIssueProviderImpl implements RestrictedIssueProvider
 
     private boolean checkAccess(User user, @NotNull Issue issue, @Nullable Group groupWithAccess)
     {
-        // Site admins always have access
-        if (user.isInSiteAdminGroup())
-            return true;
-
         // Assigned to users have access
         if (Objects.equals(issue.getAssignedTo(), user.getUserId()))
             return true;
