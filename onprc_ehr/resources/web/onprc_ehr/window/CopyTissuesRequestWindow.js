@@ -34,7 +34,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
 
     getSearchItems: function(){
         return [{
-            html: 'This helper allows you to copy a set of tissues previously used in any necropsy.  You can search by project, animal or recipient.  When you search, it will return all distinct sets of tissues matching your criteria, and you can choose which to use in this form.',
+            html: 'This helper allows you to copy a set of tissues previously entered.  You can search by project, animal or recipient.  When you search, it will return all distinct sets of tissues matching your criteria, and you can choose which to use in this form.',
             style: 'padding-bottom: 10px;'
         },{
             xtype: 'textfield',
@@ -78,6 +78,10 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
         }
 
         var filterArray = [];
+
+        //Added: 4-21-2023 R. Blasa to only display tissues with taskid
+        filterArray.push(LABKEY.Filter.create('requestcategory', 'Assigned', LABKEY.Filter.Types.EQUAL));
+
         if (animal){
             filterArray.push(LABKEY.Filter.create('Id', animal, LABKEY.Filter.Types.EQUAL));
         }
