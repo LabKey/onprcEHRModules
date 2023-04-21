@@ -3,11 +3,19 @@ package org.labkey.extscheduler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.labkey.api.data.ContainerManager;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.module.Module;
+import org.labkey.api.module.ModuleContext;
 import org.labkey.api.query.DefaultSchema;
+import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.QuerySchema;
+import org.labkey.api.resource.Resource;
+import org.labkey.api.security.permissions.AdminPermission;
+import org.labkey.api.settings.AdminConsole;
+import org.labkey.api.view.template.ClientDependency;
 import org.labkey.extscheduler.query.ExtSchedulerQuerySchema;
+//import org.labkey.api.ehr.EHRService;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -60,5 +68,16 @@ public class ExtSchedulerModule extends ExtendedSimpleModule
                 return new ExtSchedulerQuerySchema(schema.getUser(), schema.getContainer());
             }
         });
+    }
+
+    @Override
+    protected void doStartupAfterSpringConfig(ModuleContext moduleContext)
+    {
+        //Added 4-19-2023 R.Blasa
+//        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("extscheduler/App/view/EventFormAmended.js"), this);
+//        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("extscheduler/App/view/ViewportAmended.js"), this);
+//        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("extscheduler/App/view/InfoPanelAmended.js"), this);
+//        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("extscheduler/App/view/SchedulerAmended.js"), this);
+//        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("extscheduler/App/view/ViewportControllerAmended.js"), this);
     }
 }
