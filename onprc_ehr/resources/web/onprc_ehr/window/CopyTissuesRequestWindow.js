@@ -34,7 +34,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
 
     getSearchItems: function(){
         return [{
-            html: 'This helper allows you to copy a set of tissues previously entered.  You can search by project, animal or recipient.  When you search, it will return all distinct sets of tissues matching your criteria, and you can choose which to use in this form.',
+            html: 'This helper allows you to copy a set of tissues previously entered.  You can search by animal, or recipient.  When you search, it will return all distinct sets of tissues matching your criteria, and you can choose which to use in this form.',
             style: 'padding-bottom: 10px;'
         },{
             xtype: 'textfield',
