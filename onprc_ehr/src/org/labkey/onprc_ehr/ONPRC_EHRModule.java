@@ -21,7 +21,6 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.buttons.ChangeQCStateButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromIdsButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromRecordsButton;
-import org.labkey.onprc_ehr.buttons.CreateTaskFromRecordButtons;
 import org.labkey.api.ehr.buttons.DiscardTaskButton;
 import org.labkey.api.ehr.buttons.EHRShowEditUIButton;
 import org.labkey.api.ehr.buttons.MarkCompletedButton;
@@ -31,6 +30,7 @@ import org.labkey.api.ehr.dataentry.SingleQueryFormProvider;
 import org.labkey.api.ehr.demographics.ActiveFlagsDemographicsProvider;
 import org.labkey.api.ehr.security.EHRDataAdminPermission;
 import org.labkey.api.ehr.security.EHRProjectEditPermission;
+import org.labkey.api.issues.IssuesListDefService;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.buttons.ShowEditUIButton;
 import org.labkey.api.ldk.notification.NotificationService;
@@ -56,6 +56,7 @@ import org.labkey.onprc_ehr.buttons.BulkEditRequestsButton;
 import org.labkey.onprc_ehr.buttons.ChangeProjectedReleaseDateButton;
 import org.labkey.onprc_ehr.buttons.CreateNecropsyRequestButton;
 import org.labkey.onprc_ehr.buttons.CreateProjectButton;
+import org.labkey.onprc_ehr.buttons.CreateTaskFromRecordButtons;
 import org.labkey.onprc_ehr.buttons.HousingTransferButton;
 import org.labkey.onprc_ehr.buttons.ManageFlagsButton;
 import org.labkey.onprc_ehr.buttons.ProtocolEditButton;
@@ -83,18 +84,18 @@ import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsEndDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalRecordFlagDataSource;
 import org.labkey.onprc_ehr.history.DefaultNHPTrainingDataSource;
-import org.labkey.onprc_ehr.history.DefaultSustainedReleaseDatasource;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
+import org.labkey.onprc_ehr.history.DefaultSustainedReleaseDatasource;
 import org.labkey.onprc_ehr.history.ONPRCClinicalRemarksDataSource;
+import org.labkey.onprc_ehr.history.ONPRCEpocLabworkType;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
 import org.labkey.onprc_ehr.history.ONPRCiStatLabworkType;
-import org.labkey.onprc_ehr.history.ONPRCEpocLabworkType;
+import org.labkey.onprc_ehr.issues.RestrictedIssueProviderImpl;
 import org.labkey.onprc_ehr.notification.*;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
-//import org.labkey.onprc_ehr.security.ONPRC_EHRPMICEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -142,6 +143,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
 //        Added: 12-5-2019
 //        RoleManager.registerRole(new ONPRC_EHRPMICEditRole());
+
+        // register the permissions provider for a restricted issue list
+        IssuesListDefService.get().registerRestrictedIssueProvider(new RestrictedIssueProviderImpl());
     }
 
     @Override
