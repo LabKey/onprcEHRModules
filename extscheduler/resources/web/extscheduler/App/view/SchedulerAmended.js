@@ -1,7 +1,7 @@
 Ext.define('App.view.SchedulerAmended', {
     extend        : 'Sch.panel.SchedulerGrid',
-    alias         : 'widget.schedulerAmended',
-    reference     : 'schedulerAmended',
+    alias         : 'widget.scheduleramended',
+    reference     : 'scheduleramended',
     startDate     : new Date(),
     //endDate       : new Date(),
     startTime     : 6,

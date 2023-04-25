@@ -1,7 +1,7 @@
-Ext.define('App.view.EventForm', {
+Ext.define('App.view.EventFormAmended', {
     extend    : 'Ext.form.Panel',
-    alias     : 'widget.eventform',
-    reference : 'eventform',
+    alias     : 'widget.eventformamended',
+    reference : 'eventformamended',
     cls       : 'eventform',
     width     : 340,
     bodyPadding : 15,
@@ -94,9 +94,9 @@ Ext.define('App.view.EventForm', {
             // },
             {
                 xtype      : 'textfield',
-                labelAlign: 'top',
-                // width: 120,
-                // height: 20,
+                labelAlign: 'left',
+                width: 120,
+                height: 20,
                 fieldLabel : 'Center Project',
                 name :  'location',
                 reference  : 'eventProjectField',
@@ -110,9 +110,9 @@ Ext.define('App.view.EventForm', {
             },
             {
                 xtype      : 'textfield',
-                labelAlign: 'top',
-                // width: 120,
-                // height: 20,
+                labelAlign: 'left',
+                width: 120,
+                height: 20,
                 fieldLabel : 'Type of Fasting Requested',
                 name :  'Fasting',
                 reference  : 'eventFastimgField',
@@ -126,10 +126,10 @@ Ext.define('App.view.EventForm', {
             },
             {
                 xtype      : 'textfield',
-                labelAlign: 'top',
-                // width: 120,
-                // height: 20,
-                fieldLabel : 'Animaal Delivery Requested',
+                labelAlign: 'left',
+                width: 120,
+                height: 20,
+                fieldLabel : 'Animal Delivery Requested',
                 name :  'deliveryrequest',
                 reference  : 'eventDeliveryRequestField',
                 style: 'margin-top: 20px;',
@@ -157,7 +157,7 @@ Ext.define('App.view.EventForm', {
                 }
             },
             {
-                xtype: 'textfield',
+                xtype: 'textarea',
                 labelAlign: 'top',
                 width: 320,
                 height: 50,

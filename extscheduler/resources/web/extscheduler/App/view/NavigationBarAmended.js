@@ -1,6 +1,6 @@
-Ext.define('App.view.NavigationBar', {
+Ext.define('App.view.NavigationBarAmended', {
     extend    : 'Ext.panel.Header',
-    alias     : 'widget.navigationbar',
+    alias     : 'widget.navigationbaramended',
     cls       : 'navigationbar',
     padding   : '0 10 0 5',
     height    : 40,

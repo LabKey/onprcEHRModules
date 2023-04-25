@@ -2,5 +2,9 @@
     <dependencies>
         <dependency path="clientapi_core"/>
 <!--        <dependency path="extscheduler/css/weeklyview.css"/>-->
+        <dependency path="extscheduler/App/view]EventFormAmended.js"/>
+        <dependency path="extscheduler/App/view/infoPanelAmended.js"/>
+        <dependency path="extscheduler/App/view/SchedulerAmended.js"/>
+        <dependency path="extscheduler/App/view/InfoPanelModelAmended.js"/>
     </dependencies>
 </view>
