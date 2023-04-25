@@ -164,15 +164,7 @@
             <column columnName="ComplianceUpdated"/>
         </columns>
     </table>
-    <table tableName="TempScheduler" tableDbType="TABLE">
-        <columns>
-            <column columnName="Searchkey"/>
-            <column columnName="usernames"/>
-            <column columnName="EventId"/>
-            <column columnName="StartDate"/>
-            <column columnName="created"/>
-        </columns>
-    </table>
+
     <table tableName="TempCoV19Final" tableDbType="TABLE">
         <columns>
             <column columnName="container"/>
