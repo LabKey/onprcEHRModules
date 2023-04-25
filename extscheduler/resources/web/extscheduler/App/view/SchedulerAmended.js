@@ -1,7 +1,7 @@
 Ext.define('App.view.SchedulerAmended', {
     extend        : 'Sch.panel.SchedulerGrid',
-    alias         : 'widget.scheduleramended',
-    reference     : 'scheduleramended',
+    alias         : 'widget.schedulerAmended',
+    reference     : 'schedulerAmended',
     startDate     : new Date(),
     //endDate       : new Date(),
     startTime     : 6,
@@ -61,24 +61,7 @@ Ext.define('App.view.SchedulerAmended', {
             })
         },        '->',
         {
-            // text   : 'Create New Event',
-            // iconCls: 'x-fa fa-plus-circle',
-            // hidden: !LABKEY.user.canInsert,
-            // scope: this,
-            // handler: function (btn) {
-            //     var scheduler = btn.up('scheduler');
-            //
-            //     Ext.create('Ext.window.Window', {
-            //         title : 'Create New Event',
-            //         autoShow : true,
-            //         modal : true,
-            //         items : [{
-            //             xtype: 'eventform',
-            //             editable : true,
-            //             scheduler : scheduler
-            //         }]
-            //     });
-            // }
+
         }
     ],
 

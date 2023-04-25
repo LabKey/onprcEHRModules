@@ -1,7 +1,7 @@
 Ext.define('App.view.EventFormAmended', {
     extend    : 'Ext.form.Panel',
-    alias     : 'widget.eventformamended',
-    reference : 'eventformamended',
+    alias     : 'widget.eventformAmended',
+    reference : 'eventformAmended',
     cls       : 'eventform',
     width     : 340,
     bodyPadding : 15,
@@ -22,18 +22,7 @@ Ext.define('App.view.EventFormAmended', {
         this.eventFormColumns = context['ExtSchedulerEventFormColumns'].split(',');
 
         this.items = [
-            //{
-            //    xtype      : 'textfield',
-            //    fieldLabel : 'Name',
-            //    name       : 'Name',
-            //    reference  : 'eventNameField',
-            //    allowBlank : !this.editable,
-            //    hidden     : this.eventFormColumns.indexOf('Name') === -1,
-            //    bind       : {
-            //        value    : '{eventRecord.Name}',
-            //        readOnly : !this.editable
-            //    }
-            //},
+
             {
                 xtype      : 'resourcecombo',
                 fieldLabel : 'Resource',
@@ -47,23 +36,7 @@ Ext.define('App.view.EventFormAmended', {
 
                 }
             },
-            // {
-            //     xtype      : 'combo',
-            //     fieldLabel : 'User',
-            //     store      : 'users',
-            //     queryMode  : 'local',
-            //     name       : 'UserId',
-            //     displayField : 'FullName',
-            //     valueField : 'UserId',
-            //     editable   : false,
-            //     typeAhead   : true,
-            //     allowBlank : !this.editable,
-            //     hidden     : this.eventFormColumns.indexOf('UserId') === -1,
-            //     bind       : {
-            //         value    : '{eventRecord.UserId}',
-            //         readOnly : !this.editable
-            //     }
-            // },
+
             {
                 xtype      : 'textfield',
                 fieldLabel : 'Animal ID',
@@ -77,21 +50,7 @@ Ext.define('App.view.EventFormAmended', {
                     readOnly : !this.editable
                 }
             },
-            // {
-            //     xtype      : 'numberfield',
-            //     fieldLabel : 'Quantity',
-            //     name       : 'Quantity',
-            //     value : 1,
-            //     minValue: 1,
-            //     allowDecimals : false,
-            //     reference  : 'eventQuantityField',
-            //     allowBlank : !this.editable,
-            //     hidden     : this.eventFormColumns.indexOf('Quantity') === -1,
-            //     bind       : {
-            //         value    : '{eventRecord.Quantity}',
-            //         readOnly : !this.editable
-            //     }
-            // },
+
             {
                 xtype      : 'textfield',
                 labelAlign: 'left',

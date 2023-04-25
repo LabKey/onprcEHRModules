@@ -1,7 +1,7 @@
 
 Ext.define('App.view.InfoPanelAmended', {
     extend    : 'Ext.Container',
-    alias     : 'widget.infopanelamended',
+    alias     : 'widget.infopanelAmended',
     requires  : [
         'App.view.InfoPanelModelAmended'
     ],
