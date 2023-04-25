@@ -1561,6 +1561,37 @@
             <column columnName="modified"/>
         </columns>
     </table>
+    <table tableName="AnnualInflationRate" tableDbType="TABLE" useColumnOrder="true">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer"/>
+        <auditLogging>DETAILED</auditLogging>
+        <tableTitle>Annual Rate Change</tableTitle>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Row Id</columnTitle>
+            </column>
+            <column columnName="billingyear">
+                <columnTitle>Billing Year</columnTitle>
+
+            </column>
+            <column columnName="inflationRate">
+                <columnTitle>Inflation Rate</columnTitle>
+                <formatString>0.0000</formatString>
+                <nullable>false</nullable>
+            </column>
+            <column columnName="startdate">
+                <nullable>false</nullable>
+                <columnTitle>Start Date</columnTitle>
+            </column>
+            <column columnName="enddate">
+                <nullable>false</nullable>
+                <columnTitle>End Date</columnTitle>
+            </column>
+            <column columnName="createdBy"/>
+            <column columnName="created"/>
+            <column columnName="modifiedBy"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
     <table tableName="ogasynch" tableDbType="TABLE">
         <columns>
             <column columnName="lastIndexed"/>

@@ -165,23 +165,7 @@
         </columns>
     </table>
 
-    <table tableName="TempCoV19Final" tableDbType="TABLE">
-        <columns>
-            <column columnName="container"/>
-            <column columnName="UserName"/>
-            <column columnName="UserID"/>
-            <column columnName="EventID"/>
-            <column columnName="StartDate"/>
-            <column columnName="EmployeeID"/>
-            <column columnName="Created"/>
-        </columns>
-    </table>
-    <table tableName="TempCoV19Interim" tableDbType="TABLE">
-        <columns>
-            <column columnName="EventId"/>
-            <column columnName="UserName"/>
-            <column columnName="container"/>
-        </columns>
-    </table>
+
+
 
 </tables>
