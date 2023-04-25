@@ -120,7 +120,7 @@ Ext.define('App.view.EventFormAmended', {
                 labelAlign: 'top',
                 width: 320,
                 height: 50,
-                fieldLabel: 'Comments',
+                fieldLabel: 'CommentsXX',
                 name: 'Comments',
                 reference: 'eventCommentsField',
                 style: 'margin-top: 20px;',

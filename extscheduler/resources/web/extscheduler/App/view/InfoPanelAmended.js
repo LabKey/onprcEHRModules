@@ -8,14 +8,14 @@ Ext.define('App.view.InfoPanelAmended', {
     viewModel : 'infopanelamended',
     reference : 'infopanelamended',
     cls       : 'infopanelamended',
-    width     : 540,
+    width     : 340,
     layout    : {
         type  : 'vbox',
         align : 'stretch'
     },
     items : [
         {
-            xtype : 'eventform',
+            xtype : 'eventformAmended',
             title : 'Necropsy Calendar Schedule',
             editable : false
         }

@@ -5,6 +5,6 @@
         <dependency path="extscheduler/App/view]EventFormAmended.js"/>
         <dependency path="extscheduler/App/view/infoPanelAmended.js"/>
         <dependency path="extscheduler/App/view/SchedulerAmended.js"/>
-        <dependency path="extscheduler/App/view/InfoPanelModelAmended.js"/>
+<!--        <dependency path="extscheduler/App/view/InfoPanelModelAmended.js"/>-->
     </dependencies>
 </view>
