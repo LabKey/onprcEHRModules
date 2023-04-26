@@ -1,16 +1,16 @@
 //This viewport takes a role of container that contains a scheduler.
 //If you need more than one scheduler on the page, you need to wrap viewport items in your own view.
-Ext.define('App.view.Viewport', {
+Ext.define('App.view.ViewportAmended', {
     extend     : 'Ext.Viewport',
     requires   : [
-        'App.view.ViewportController'
+        'App.view.ViewportControllerAmended'
     ],
-    controller : 'viewport',
+    controller : 'viewportAmended',
     viewModel  : {},
     layout     : 'border',
     items      : [
         {
-            xtype   : 'navigationbar',
+            xtype   : 'navigationbarAmended',
             region  : 'north'
         },
         {
@@ -25,11 +25,5 @@ Ext.define('App.view.Viewport', {
             xtype   : 'schedulerAmended',
             region  : 'center'
         }
-
-
-
-
-
-
     ]
 });

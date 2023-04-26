@@ -2,7 +2,7 @@ Ext.define('App.view.EventFormAmended', {
     extend    : 'Ext.form.Panel',
     alias     : 'widget.eventformAmended',
     reference : 'eventformAmended',
-    cls       : 'eventform',
+    cls       : 'eventformAmended',
     width     : 340,
     bodyPadding : 15,
     defaults    : {

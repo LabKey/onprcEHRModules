@@ -28,14 +28,14 @@ Ext.define('App.view.SchedulerAmended', {
             text : 'Previous',
             iconCls: 'x-fa fa-arrow-circle-left',
             handler: function (btn) {
-                var scheduler = btn.up('scheduler');
+                var scheduler = btn.up('schedulerAmended');
                 scheduler.timeAxis.shift(-7, Sch.util.Date.DAY);
             }
         },
         {
             text : 'Today',
             handler: function (btn) {
-                var scheduler = btn.up('scheduler');
+                var scheduler = btn.up('schedulerAmended');
                 // Clear time here so date adjustment wouldn't result in 2 days span
                 scheduler.setStart(Sch.util.Date.clearTime(new Date()));
             }
@@ -45,7 +45,7 @@ Ext.define('App.view.SchedulerAmended', {
             iconCls: 'x-fa fa-arrow-circle-right',
             iconAlign: 'right',
             handler: function (btn) {
-                var scheduler = btn.up('scheduler');
+                var scheduler = btn.up('schedulerAmended');
                 scheduler.timeAxis.shift(7, Sch.util.Date.DAY);
             }
         },
@@ -55,7 +55,7 @@ Ext.define('App.view.SchedulerAmended', {
             scope        : this,
             menu         : Ext.create('Ext.menu.DatePicker', {
                 handler : function (dp, date) {
-                    var scheduler = dp.up('scheduler');
+                    var scheduler = dp.up('schedulerAmended');
                     scheduler.setStart(Sch.util.Date.clearTime(date));
                 }
             })

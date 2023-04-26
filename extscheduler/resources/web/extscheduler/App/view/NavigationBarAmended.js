@@ -1,9 +1,9 @@
 Ext.define('App.view.NavigationBarAmended', {
     extend    : 'Ext.panel.Header',
-    alias     : 'widget.navigationbaramended',
+    alias     : 'widget.navigationbarAmended',
     cls       : 'navigationbar',
-    padding   : '0 10 0 5',
-    height    : 40,
+    // padding   : '0 10 0 5',
+    height    : 0,
     border    : false,
     title     : '<img src="' + LABKEY.contextPath + '/extscheduler/images/logo.png" style="height: 25px; margin-top: 8px;"/>',
     items     : [

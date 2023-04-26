@@ -1,7 +1,7 @@
 //This controller is watching for viewport and child views which don't have their own viewController.
-Ext.define('App.view.ViewportController', {
+Ext.define('App.view.ViewportControllerAmended', {
     extend : 'Ext.app.ViewController',
-    alias  : 'controller.viewport',
+    alias  : 'controller.viewportAmended',
 
     control : {
         'schedulergrid' : {
@@ -46,7 +46,7 @@ Ext.define('App.view.ViewportController', {
 
     onResourceFilterChange : function (combo, selectedResourceIds) {
         // Both schedulers share store, so we can use event store from any of them
-        var eventStore = this.getReferences().schedulerAmended.eventStore;
+        var eventStore = this.getReferences().scheduler.eventStore;
 
         //true to avoid double full view repaints
         eventStore.clearFilter(true);
