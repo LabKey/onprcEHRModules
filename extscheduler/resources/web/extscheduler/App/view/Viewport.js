@@ -18,18 +18,12 @@ Ext.define('App.view.Viewport', {
             region  : 'north'
         },
         {
-            xtype   : 'infopanelAmended',
+            xtype   : 'infopanel',
             region  : 'east'
         },
         {
-            xtype   : 'schedulerAmended',
+            xtype   : 'scheduler',
             region  : 'center'
         }
-
-
-
-
-
-
     ]
 });

@@ -10,11 +10,11 @@ Ext.define('App.view.ViewportAmended', {
     layout     : 'border',
     items      : [
         {
-            xtype   : 'navigationbar',
+            xtype   : 'navigationbarAmended',
             region  : 'north'
         },
         {
-            xtype   : 'appheader',
+            xtype   : 'appheaderAmended',
             region  : 'north'
         },
         {

@@ -18,16 +18,16 @@ Ext.define('App.view.InfoPanel', {
             xtype : 'eventform',
             title : 'Event details',
             editable : false
+        },
+        {
+            xtype       : 'panel',
+            title       : 'Resources',
+            cls         : 'resources',
+            bodyPadding : '0 15',
+            flex        : 1,
+            layout      : 'fit',
+            margin      : '10 0 0 0',
+            items       : [{ xtype : 'resources' }]
         }
-       //   {
-       //      xtype       : 'panel',
-       //      title       : 'Resources',
-       //      cls         : 'resources',
-       //      bodyPadding : '0 15',
-       //      flex        : 1,
-       //      layout      : 'fit',
-       //      margin      : '10 0 0 0',
-       //      items       : [{ xtype : 'resources' }]
-       // }
     ]
 });

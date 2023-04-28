@@ -15,7 +15,7 @@ Ext.define('App.view.Scheduler', {
     calendarViewPreset   : 'week',
     mode                 : 'calendar',
     eventResizeHandles   : 'none',
-    eventBodyTemplate    :'<b>{ResourceName:htmlEncode}</b><br/>{Alias:htmlEncode}<br/>{Project:htmlEncode}<br/>{Location:htmlEncode}',
+    eventBodyTemplate    :'<b>{Name:htmlEncode}</b><br/>{ResourceName:htmlEncode}<br/>{UserDisplayName:htmlEncode}',
     snapToIncrement      : true,
     allowOverlap         : true,
     highlightCurrentTime : true,
@@ -61,34 +61,30 @@ Ext.define('App.view.Scheduler', {
             })
         },        '->',
         {
-            // text   : 'Create New Event',
-            // iconCls: 'x-fa fa-plus-circle',
-            // hidden: !LABKEY.user.canInsert,
-            // scope: this,
-            // handler: function (btn) {
-            //     var scheduler = btn.up('scheduler');
-            //
-            //     Ext.create('Ext.window.Window', {
-            //         title : 'Create New Event',
-            //         autoShow : true,
-            //         modal : true,
-            //         items : [{
-            //             xtype: 'eventform',
-            //             editable : true,
-            //             scheduler : scheduler
-            //         }]
-            //     });
-            // }
+            text   : 'Create New Event',
+            iconCls: 'x-fa fa-plus-circle',
+            hidden: !LABKEY.user.canInsert,
+            scope: this,
+            handler: function (btn) {
+                var scheduler = btn.up('scheduler');
+
+                Ext.create('Ext.window.Window', {
+                    title : 'Create New Event',
+                    autoShow : true,
+                    modal : true,
+                    items : [{
+                        xtype: 'eventform',
+                        editable : true,
+                        scheduler : scheduler
+                    }]
+                });
+            }
         }
     ],
 
     eventRenderer : function (event, resource, data) {
-
-        data.style = 'background-color:' + resource.get('Color');
+        data.style = 'border-color:' + resource.get('Color');
         event.data['ResourceName'] = resource.get('Name');
-        event.data['Project'] = event.get('project');
-        event.data['Location'] = event.get('location');
-        event.data['Alias'] = event.get('Alias');
         var userRecord = Ext.getStore('users').findRecord('UserId', event.get('UserId'));
         event.data['UserDisplayName'] = userRecord != null ? userRecord.get('DisplayName') : event.get('UserId');
         return event.data;

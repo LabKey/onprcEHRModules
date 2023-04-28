@@ -13,7 +13,7 @@ Ext.define('App.view.ViewportController', {
 
     onEventSelect : function (selectionModel, eventRecord) {
         var refs = this.getReferences(),
-            infopanelVM = refs.infopanelamended.getViewModel(),
+            infopanelVM = refs.infopanel.getViewModel(),
             scheduler   = selectionModel.view.ownerGrid;
 
         infopanelVM.set({
@@ -27,7 +27,7 @@ Ext.define('App.view.ViewportController', {
 
     onEventDeselect : function () {
         var refs        = this.getReferences(),
-                infopanelVM = refs.infopanelamended.getViewModel();
+                infopanelVM = refs.infopanel.getViewModel();
 
         infopanelVM.set({
             'eventRecord'    : null,
@@ -46,7 +46,7 @@ Ext.define('App.view.ViewportController', {
 
     onResourceFilterChange : function (combo, selectedResourceIds) {
         // Both schedulers share store, so we can use event store from any of them
-        var eventStore = this.getReferences().schedulerAmended.eventStore;
+        var eventStore = this.getReferences().scheduler.eventStore;
 
         //true to avoid double full view repaints
         eventStore.clearFilter(true);

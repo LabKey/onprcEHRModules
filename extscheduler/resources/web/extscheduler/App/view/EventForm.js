@@ -47,26 +47,26 @@ Ext.define('App.view.EventForm', {
 
                 }
             },
-            // {
-            //     xtype      : 'combo',
-            //     fieldLabel : 'User',
-            //     store      : 'users',
-            //     queryMode  : 'local',
-            //     name       : 'UserId',
-            //     displayField : 'FullName',
-            //     valueField : 'UserId',
-            //     editable   : false,
-            //     typeAhead   : true,
-            //     allowBlank : !this.editable,
-            //     hidden     : this.eventFormColumns.indexOf('UserId') === -1,
-            //     bind       : {
-            //         value    : '{eventRecord.UserId}',
-            //         readOnly : !this.editable
-            //     }
-            // },
+            {
+                xtype      : 'combo',
+                fieldLabel : 'User',
+                store      : 'users',
+                queryMode  : 'local',
+                name       : 'UserId',
+                displayField : 'FullName',
+                valueField : 'UserId',
+                editable   : false,
+                typeAhead   : true,
+                allowBlank : !this.editable,
+                hidden     : this.eventFormColumns.indexOf('UserId') === -1,
+                bind       : {
+                    value    : '{eventRecord.UserId}',
+                    readOnly : !this.editable
+                }
+            },
             {
                 xtype      : 'textfield',
-                fieldLabel : 'Animal ID',
+                fieldLabel : 'Alias',
                 name       : 'Alias',
                 reference  : 'eventAliasField',
                 //allowBlank : !this.editable,
@@ -77,102 +77,45 @@ Ext.define('App.view.EventForm', {
                     readOnly : !this.editable
                 }
             },
-            // {
-            //     xtype      : 'numberfield',
-            //     fieldLabel : 'Quantity',
-            //     name       : 'Quantity',
-            //     value : 1,
-            //     minValue: 1,
-            //     allowDecimals : false,
-            //     reference  : 'eventQuantityField',
-            //     allowBlank : !this.editable,
-            //     hidden     : this.eventFormColumns.indexOf('Quantity') === -1,
-            //     bind       : {
-            //         value    : '{eventRecord.Quantity}',
-            //         readOnly : !this.editable
-            //     }
-            // },
             {
-                xtype      : 'textfield',
-                labelAlign: 'left',
-                width: 120,
-                height: 20,
-                fieldLabel : 'Center Project',
-                name :  'location',
-                reference  : 'eventProjectField',
-                style: 'margin-top: 20px;',
-                allowBlank : true,
-                hidden     : this.eventFormColumns.indexOf('project') === -1,
+                xtype      : 'numberfield',
+                fieldLabel : 'Quantity',
+                name       : 'Quantity',
+                value : 1,
+                minValue: 1,
+                allowDecimals : false,
+                reference  : 'eventQuantityField',
+                allowBlank : !this.editable,
+                hidden     : this.eventFormColumns.indexOf('Quantity') === -1,
                 bind       : {
-                    value    : '{eventRecord.project}',
+                    value    : '{eventRecord.Quantity}',
                     readOnly : !this.editable
                 }
             },
             {
-                xtype      : 'textfield',
-                labelAlign: 'left',
-                width: 120,
-                height: 20,
-                fieldLabel : 'Type of Fasting Requested',
-                name :  'Fasting',
-                reference  : 'eventFastingField',
-                style: 'margin-top: 20px;',
-                allowBlank : true,
-                hidden     : this.eventFormColumns.indexOf('fasting') === -1,
-                bind       : {
-                    value    : '{eventRecord.fasting}',
-                    readOnly : !this.editable
-                }
-            },
-            {
-                xtype      : 'textfield',
-                labelAlign: 'left',
-                width: 120,
-                height: 20,
-                fieldLabel : 'Animal Delivery Requested',
-                name :  'deliveryrequest',
-                reference  : 'eventDeliveryRequestField',
-                style: 'margin-top: 20px;',
-                allowBlank : true,
-                hidden     : this.eventFormColumns.indexOf('deliveryrequest') === -1,
-                bind       : {
-                    value    : '{eventRecord.deliveryrequestt}',
-                    readOnly : !this.editable
-                }
-            },
-            {
-                xtype      : 'textfield',
+                xtype      : 'textarea',
                 labelAlign: 'top',
                 width: 320,
-                height: 20,
-                fieldLabel : 'Necropsy Location',
-                name :  'location',
-                reference  : 'eventLocationField',
+                height: 200,
+                fieldLabel : 'Comments',
+                name :  'Comments',
+                reference  : 'eventCommentsField',
                 style: 'margin-top: 20px;',
                 allowBlank : true,
-                hidden     : this.eventFormColumns.indexOf('location') === -1,
+                hidden     : this.eventFormColumns.indexOf('Comments') === -1,
                 bind       : {
-                    value    : '{eventRecord.location}',
+                    value    : '{eventRecord.Comments}',
                     readOnly : !this.editable
                 }
-            },
-            {
-                xtype: 'textarea',
+         /*       xtype: 'textarea',
                 labelAlign: 'top',
-                width: 320,
-                height: 50,
-                fieldLabel: 'CommentsTT',
-                name: 'Comments',
-                reference: 'eventCommentsField',
+                width: 500,
+                height: 200,
+                fieldLabel: 'Question/Comment',
+                name: 'comment',
                 style: 'margin-top: 20px;',
-                allowBlank: true,
-                hidden: this.eventFormColumns.indexOf('Comments') === -1,
-                bind: {
-                    value: '{eventRecord.Comments}',
-                    readOnly: !this.editable
-                }
-            },
-
+                allowBlank: false
+          */  },
             {
                 xtype  : 'fieldcontainer',
                 layout : 'hbox',

@@ -9,6 +9,7 @@
 
     <!-- Scheduler styles -->
     <link href="/ExtScheduler/weekview/resources/css/sch-all-triton.css?ver=4.2.1" rel="stylesheet" type="text/css" />
+    <!--    <link href="/ExtScheduler/weekview/resources/css/sch-all-triton.css?ver=4.2.1" rel="stylesheet" type="text/css" />-->
     <!--    <link href="/ExtScheduler/weekview/resources/css/sch-all-crisp.css?ver=4.2.1" rel="stylesheet" type="text/css" />-->
     <!--    <link href="/ExtScheduler/css/sch-all-triton.css" rel="stylesheet" type="text/css" />-->
 
@@ -32,19 +33,19 @@
         {
             Ext.application({
                 name     : 'App',
-                mainView : 'App.view.Viewport',
+                mainView : 'App.view.ViewportAmended',
                 paths    : {
                     'App': LABKEY.contextPath + '/extscheduler/App'
                 },
                 views    : [
-                    'EventForm',
-                    'Header',
-                    'InfoPanel',
-                    'NavigationBar',
+                    'EventFormAmended',
+                    'HeaderAmended',
+                    'InfoPanelAmended',
+                    'NavigationBarAmended',
                     'ResourceCombo',
                     'Resources',
-                    'Scheduler',
-                    'Viewport'
+                    'SchedulerAmended',
+                    'ViewportAmended'
                 ]
             });
         };

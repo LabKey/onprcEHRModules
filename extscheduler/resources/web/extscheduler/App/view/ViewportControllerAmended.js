@@ -46,7 +46,7 @@ Ext.define('App.view.ViewportControllerAmended', {
 
     onResourceFilterChange : function (combo, selectedResourceIds) {
         // Both schedulers share store, so we can use event store from any of them
-        var eventStore = this.getReferences().scheduler.eventStore;
+        var eventStore = this.getReferences().schedulerAmended.eventStore;
 
         //true to avoid double full view repaints
         eventStore.clearFilter(true);
