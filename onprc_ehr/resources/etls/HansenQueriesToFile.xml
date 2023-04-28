@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
+<!--Adding BCS Score per reqyest-->
 <etl xmlns="http://labkey.org/etl/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://labkey.org/etl/xml ">
     <name>mfshToRandalData</name>    <description>imports the data from mfsh animal details on ONPRC</description>

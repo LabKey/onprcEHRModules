@@ -1,3 +1,5 @@
+/* Created by Kuirt Randall to meet a need for BCS Scores */
+
 SELECT clinical_observations.Id,
 clinical_observations.date,
 clinical_observations.category,
