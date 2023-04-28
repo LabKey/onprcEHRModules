@@ -37,6 +37,7 @@
         <column name="Id/currentCondition/condition"/>
         <column name="p2date"/>
         <column name="p2"/>
+        <column name="Id/assignedVet/assignedVet"/>
     </columns>
     <sorts>
         <sort column="Id/curLocation/room"/>
