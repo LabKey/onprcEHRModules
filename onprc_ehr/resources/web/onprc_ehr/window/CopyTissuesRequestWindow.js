@@ -80,7 +80,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
         var filterArray = [];
 
         //Added: 4-21-2023 R. Blasa to only display tissues with taskid
-        filterArray.push(LABKEY.Filter.create('requestcategory', 'Assigned', LABKEY.Filter.Types.EQUAL));
+        filterArray.push(LABKEY.Filter.create('taskid', null, LABKEY.Filter.Types.NOTEQUAL));
 
         if (animal){
             filterArray.push(LABKEY.Filter.create('Id', animal, LABKEY.Filter.Types.EQUAL));
@@ -89,7 +89,6 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
         if (project){
             filterArray.push(LABKEY.Filter.create('project', project, LABKEY.Filter.Types.EQUAL));
         }
-
 
 
         if (date){
