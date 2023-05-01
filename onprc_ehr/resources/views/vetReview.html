@@ -1,3 +1,7 @@
+<!--MOdified:       4/28/2023
+Modified by:    Gary Jones
+Description:    The Vet Review Landing page is being reverted to its original purpose
+and a new landing page for Vet Assignment Management is being created.-->
 <script type="text/javascript">
     Ext4.onReady(function (){
         EHR.Security.init({
@@ -27,7 +31,7 @@
                                         'To determine the assigned vet for each animal, the vet is preferentially selected based on IACUC assignment, then by room, and finally by area.  ' +
                                         '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'demographicsAssignedVet', 'query.calculated_status~eq': 'Alive'}) + '">Click here to view a list of vets assigned to living animals</a></li>' +
                                         '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_ehr', 'query.queryName': 'vet_assignment_summary'}) + '">Click here to view the rules governing vet assignment</a></li>' +
-                                         '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_ehr', 'query.queryName': 'Vet_assignmentMissingLink'}) + '">Click here to view issues with vet assignmenta</a></li>',
+                                         '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_ehr', 'query.queryName': 'Vet_assignmentMissingLink'}) + '">Click here to access the Vet assignment Manager processes</a></li>',
 
                                     style: 'padding-bottom: 20px;',
                                     border: false
