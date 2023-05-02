@@ -79,8 +79,6 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
 
         var filterArray = [];
 
-        //Added: 4-21-2023 R. Blasa to only display tissues with taskid
-        filterArray.push(LABKEY.Filter.create('taskid', null, LABKEY.Filter.Types.NOTEQUAL));
 
         if (animal){
             filterArray.push(LABKEY.Filter.create('Id', animal, LABKEY.Filter.Types.EQUAL));
@@ -98,7 +96,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
         Ext4.Msg.wait('Loading...');
         LABKEY.Query.selectRows({
             schemaName: 'study',
-            queryName: 'tissueDistributions',
+            queryName: 'tissueDistributionWithTaskid',
             columns: 'Id,tissue,tissue/meaning,project,project/displayName,project/investigatorId/lastName,recipient,recipient/lastname,dateOnly,parentid,sampletype,remark,requestcategory',
             sort: '-dateOnly,formSort',
             requiredVersion: 9.1,
