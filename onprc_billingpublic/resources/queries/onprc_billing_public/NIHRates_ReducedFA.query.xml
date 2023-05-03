@@ -5,6 +5,9 @@ Created:
 Modified:   5/24/2022 Updated for Year 63
 Description:    THis is the control for display of public rate sheets for inductrial rates
 in the Public Finance Section-->
+<!--Modified 5/3/2023
+Updated by jonesga
+added year rotation-->
 
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
