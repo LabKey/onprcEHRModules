@@ -963,7 +963,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " parentage records that are younger than their offspring.</b><br>\n");
+            msg.append("<b>WARNING: There are " + count + " parentage records where the parent is younger than the offspring.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "parentsYoungerThanOffspring", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
