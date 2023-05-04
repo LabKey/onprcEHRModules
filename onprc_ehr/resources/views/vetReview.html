@@ -1,3 +1,8 @@
+<!--
+jonesga 5/4/2023
+Cleanup of bad code for vet review
+-->
+
 <script type="text/javascript">
     Ext4.onReady(function (){
         EHR.Security.init({
@@ -26,8 +31,8 @@
                                         'Each animal is assigned to a vet, using a series of rules.  Vets can be assigned to either an IACUC protocol, an area, or a room.  ' +
                                         'To determine the assigned vet for each animal, the vet is preferentially selected based on IACUC assignment, then by room, and finally by area.  ' +
                                         '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'demographicsAssignedVet', 'query.calculated_status~eq': 'Alive'}) + '">Click here to view a list of vets assigned to living animals</a></li>' +
-                                        '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_ehr', 'query.queryName': 'vet_assignment_summary'}) + '">Click here to view the rules governing vet assignment</a></li>' +
-                                         '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_ehr', 'query.queryName': 'Vet_assignmentMissingLink'}) + '">Click here to view issues with vet assignmenta</a></li>',
+                                        '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_ehr', 'query.queryName': 'vet_assignment_summary'}) + '">Click here to view the rules governing vet assignment</a></li>',
+
 
                                     style: 'padding-bottom: 20px;',
                                     border: false
