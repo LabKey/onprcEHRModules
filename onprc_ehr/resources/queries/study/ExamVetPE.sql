@@ -64,4 +64,4 @@ LEFT JOIN (
 
 WHERE d.calculated_status = 'Alive'
 
-GROUP BY d.id, d.id.age.AgeInYears, g.date,g.p2
+GROUP BY d.id, d.id.age.AgeInYears, g.date,g.p2, d.id.assignedVet.assignedVet
