@@ -959,7 +959,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     protected void pedigreeIssues(final Container c, User u, final StringBuilder msg)
     {
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("parentage"), Collections.singleton(getStudy(c).getSubjectColumnName()));
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("parentsYoungerThanOffspring"), Collections.singleton(getStudy(c).getSubjectColumnName()));
         long count = ts.getRowCount();
         if (count > 0)
         {
