@@ -1,4 +1,7 @@
-/* Created by Kuirt Randall to meet a need for BCS Scores */
+/* Created by Kuirt Randall to meet a need for BCS Scores
+updated 5/4/2023 for test validation
+
+*/
 
 SELECT clinical_observations.Id,
 clinical_observations.date,
