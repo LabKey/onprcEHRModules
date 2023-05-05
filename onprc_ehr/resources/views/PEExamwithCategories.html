@@ -59,8 +59,8 @@
                 listeners: {
                     change: function (field)
                     {
-                        var VetField = field.up('panel').down('#userField');
-//                            VetField.reset();
+                        var VetField = field.up('panel').down('#vetField');
+
                     }
                 }
 
@@ -79,8 +79,12 @@
                 text: 'Submit',
                 scope: this,
                 handler: function (btn) {
-                    var vetname = btn.up('panel').down('#vetField').getValue();
+                    var vetname = btn.up('panel').down('#vetField').getDisplayValue();
                     var animalid = btn.up('panel').down('#animalField').getValue();
+                    var params = {
+                        schemaName: 'study',
+                        'query.queryName': 'demographicsPE'
+                    };
 
                     var areas = btn.up('panel').down('#areaField').getValue() || [];
                     areas = Ext4.isArray(areas) ? areas : [areas];
@@ -89,38 +93,27 @@
                     var rooms = roomField.getValue() || [];
                     rooms = Ext4.isArray(rooms) ? rooms: [rooms];
 
-                    if (!rooms.length && !supressErrors){
-                        Ext4.Msg.alert('Error', 'Must select an area or room');
-                        return;
-                    }
 
-
-                    if (animalid) {
-                        val = Ext4.String.trim(animalid);
-                        val = val.replace(/[\s,;]+/g, ';');
+                    if (!Ext.isEmpty(animalid)) {
+                        animalid = Ext4.String.trim(animalid);
+                        animalid = animalid.replace(/[\s,;]+/g, ';');
 
                     }
 
-                    var params = {
-                        schemaName: 'study',
-                        'query.queryName': 'demographicsPE'
-                    };
+                    if (!Ext.isEmpty(vetname))
+                        params['query.Id/assignedVet/assignedVet~contains'] =  vetname ;
 
 
-                    if (vetname)
-                        params +=params['id/assignedVet/asignedVet'] = vetname
+                    if (!Ext.isEmpty(rooms))
+                        params['query.Id/curLocation/room/room'] = rooms.join(';');
 
-
-                    if (params.Rooms)
-                        params +=params.Rooms = params.Rooms.join(';');
-
-                    if (animalid)
-                        params +=params['query.Id~in'] = animalid;
+                    if (!Ext.isEmpty(animalid))
+                          params['query.Id~in'] = animalid;
 
 
                     window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
 
-                },
+                }
 
             }]
         }).render(webpart.wrapperDivId);
