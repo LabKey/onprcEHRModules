@@ -24,11 +24,19 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'ldk-linkbutton',
-                text: '[Download Template]',
+                text: '[Download Tissue Template]',
                 scope: this,
                 style: 'margin-bottom: 10px;',
                 handler: function(){
                     window.location = LABKEY.contextPath + '/onprc_ehr/templates/PathTissue_Template.xlsx'
+                }
+            },{
+                xtype: 'ldk-linkbutton',
+                text: '[Download Recipient(s) Listings]',
+                scope: this,
+                style: 'margin-bottom: 10px;',
+                handler: function(){
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/Recipient_List.xlsx'
                 }
             },{
                 xtype: 'textarea',
