@@ -56,7 +56,7 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
     onSubmit: function(){
         var text = this.down('#textField').getValue();
         if (!text){
-            Ext4.Msg.alert('Error', 'Must paste the records into the textarea');
+            Ext4.Msg.alert('Error', 'PLease paste your excel entries into the textarea');
             return;
         }
 
@@ -85,12 +85,11 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-        var project = parsed[0][1]  ;
-        var billingproject = parsed[0][2]  ;
-        var recepient = parsed[0][3]  ;
-        var animalid  = parsed[0][4]  ;
-        var startdate  = parsed[0][6]  ;
-
+        var project = parsed[1][1]  ;
+        var billingproject = parsed[2][1]  ;
+        var recipient = parsed[3][1]  ;
+        var animalid  = parsed[4][1]  ;
+        var startdate  = parsed[5][1]  ;
 
 
 
@@ -109,7 +108,7 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
 
             var cnt = i;
 
-            this.processRow(row, recordMap, errors, rowIdx, animalid, parsed, cnt,project,billlingproject,recepient,startdate);
+            this.processRow(row, recordMap, errors, rowIdx, animalid, parsed, cnt,project,billingproject,recipient,startdate);
         }
 
         Ext4.Msg.hide();
@@ -120,7 +119,7 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
             Ext4.Msg.alert('Error', 'There following errors were found:<p>' + errors.join('<br>'));
             return;
         }
-        //Main Header
+
         if (recordMap.primaryheader.length)
         {
             var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('tissueDistributions');
@@ -138,54 +137,46 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,animalid, parsed, cnt,project,billingproject,recepient,startdate)
+    processRow: function(row, recordMap, errors, rowIdx,animalid, parsed, cnt,project,billingproject,recipient,startdate)
     {
 
-        // Generate labwork Header information
+        // validate the date entry
 
-        var date = LDK.ConvertUtils.parseDate(this.safeGet(startdate));
+        var date = LDK.ConvertUtils.parseDate(startdate);
 
-        if (!date)
-        {
-            errors.push('Missing Date');
-        }
 
 
         var project = this.resolveProjectByName(Ext4.String.trim(billingproject));
 
 
-        for (var k = 6; k < 13; k++)         // Process only if Agent data exists
 
-        {
-
-            //Tissue Results
-            if (row[k])
+            //Validate Tissue snomed entroies
+            if (row[5])
             {
 
                     var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
 
                     var obj = {
                         Id: animalid,
-                        date: startdate,
-                        project: billingproject,
-                        billingproject:  billingproject,
-                        recepient: recepient,
-                        remark:  Ext4.String.trim(parsed[k][5]),
-                        tissue:  Ext4.String.trim(parsed[k][4]),
-                        sampletype:  Ext4.String.trim(parsed[k][2]),
+                        date: date,
+                        project: project,
+                        recipient: recipient,
+                        remark:  Ext4.String.trim(parsed[cnt][3]),
+                        tissue:  Ext4.String.trim(parsed[cnt][5]),
+                        sampletype:  Ext4.String.trim(parsed[cnt][2]),
                         objectid: HeaderObjectID
 
 
                     };
 
-                    if (!this.checkRequired(['Id', 'date', 'project', 'recepient', 'remark', 'tissue'], obj, errors, rowIdx))
+                    if (!this.checkRequired(['Id', 'date', 'project', 'recipient', 'sampletype','tissue'], obj, errors, rowIdx))
                     {
                         recordMap.primaryheader.push(obj);
                     }
 
 
             }
-        }
+
 
     },
 
@@ -226,19 +217,16 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
         return ret;
     },
 
-    resolveProjectByName: function(projectName, errors, rowIdx){
+    resolveProjectByName: function(projectName){
         if (!projectName){
             return null;
         }
 
         projectName = Ext4.String.trim(projectName);
         var ret = EHR.DataEntryUtils.resolveProjectByName(this.projectStore, projectName);
-        if (!ret){
-            errors.push('Row ' + rowIdx + ': unknown project ' + projectName);
-        }
-        else {
+
             return ret;
-        }
+
     },
 
     safeGet: function(parsed, a, b){
