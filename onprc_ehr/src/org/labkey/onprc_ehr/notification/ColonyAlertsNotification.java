@@ -957,6 +957,27 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    protected void pedigreeIssues(final Container c, User u, final StringBuilder msg)
+    {
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("parentsYoungerThanOffspring"), Collections.singleton(getStudy(c).getSubjectColumnName()));
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " parentage records where the parent is younger than the offspring.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "parentsYoungerThanOffspring", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+
+        ts = new TableSelector(getStudySchema(c, u).getTable("parentsWrongGenderOrSpecies"), Collections.singleton(getStudy(c).getSubjectColumnName()));
+        count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " parentage records listed with the wrong gender or species.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "parentsWrongGenderOrSpecies", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
     protected void incompleteBirthRecords(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(new SimpleFilter.OrClause(
