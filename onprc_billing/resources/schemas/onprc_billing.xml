@@ -1535,9 +1535,7 @@
         <auditLogging>DETAILED</auditLogging>
         <tableTitle>Annual Rate Change</tableTitle>
         <columns>
-            <column columnName="rowid">
-                <columnTitle>Row Id</columnTitle>
-            </column>
+
             <column columnName="billingyear">
                 <columnTitle>Billing Year</columnTitle>
 
