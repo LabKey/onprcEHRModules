@@ -63,6 +63,8 @@ public class NecropsyRequestForm extends RequestForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathTissueRequestStoreCollection.js"));
 
 
+        //Added 5-8-2022 Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/PathTissueScanWindow.js"));
 
 
 
@@ -85,6 +87,18 @@ public class NecropsyRequestForm extends RequestForm
         defaultButtons.add("DISCARD");
         defaultButtons.add("REQUEST");
         defaultButtons.add("SAVEDRAFT");
+        return defaultButtons;
+    }
+
+    //Added 5-8-2022 Blasa
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getMoreActionButtonConfigs()) ;
+
+        defaultButtons.add("Tissues_SCAN_IMPORT");;
+
         return defaultButtons;
     }
 

@@ -251,7 +251,7 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
     }
 });
 
-EHR.DataEntryUtils.registerDataEntryFormButton('SEROLOGY_SCAN_IMPORT', {
+EHR.DataEntryUtils.registerDataEntryFormButton('Tissues_SCAN_IMPORT', {
     text: 'Path Tissue Panel Import',
     name: 'tissuescan',
     itemId: 'tissuescan',
