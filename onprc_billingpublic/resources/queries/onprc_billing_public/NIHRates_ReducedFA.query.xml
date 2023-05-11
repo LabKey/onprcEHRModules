@@ -29,6 +29,7 @@ in the Public Finance Section-->
 
                     <column columnName="year1">
                         <columnTitle>YR65: 5/1/24 to 4/30/25</columnTitle>
+
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year2">
@@ -55,6 +56,7 @@ in the Public Finance Section-->
                     </column>
                     <column columnName="year7">
                         <columnTitle>YR71: 5/1/30 to 4/30/31</columnTitle>
+
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year=8">
@@ -67,6 +69,7 @@ in the Public Finance Section-->
                         <columnTitle>Posted Date</columnTitle>
                         <formatString>MM/dd/yyyy</formatString>
                     </column>
+
 
                 </columns>
             </table>

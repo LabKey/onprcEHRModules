@@ -957,6 +957,27 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         }
     }
 
+    protected void pedigreeIssues(final Container c, User u, final StringBuilder msg)
+    {
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("parentsYoungerThanOffspring"), Collections.singleton(getStudy(c).getSubjectColumnName()));
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " parentage records where the parent is younger than the offspring.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "parentsYoungerThanOffspring", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+
+        ts = new TableSelector(getStudySchema(c, u).getTable("parentsWrongGenderOrSpecies"), Collections.singleton(getStudy(c).getSubjectColumnName()));
+        count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " parentage records listed with the wrong gender or species.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "parentsWrongGenderOrSpecies", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>\n\n");
+        }
+    }
+
     protected void incompleteBirthRecords(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(new SimpleFilter.OrClause(
@@ -2416,8 +2437,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         ASB RM 185
         COL RM 4
         */
-        //Added ASB 239 to this list on 5/14/2020 byt kolli
-        //filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 191", CompareType.NEQ_OR_NULL);
+        //Added ASB 239 to this list on 5/14/2020 by kollil
+        //Added ASB 234 to this list on 4/19/2023 by kollil, EHR tkt #9378
+        filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 234", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 213", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 236", CompareType.NEQ_OR_NULL);
         filter.addCondition(FieldKey.fromString("Id/curLocation/room"), "ASB RM 240", CompareType.NEQ_OR_NULL);
@@ -2438,7 +2460,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>NOTE: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in ASB RM 213, ASB RM 236, ASB RM 240, ASB RM 185, ASB RM 239 & COL RM 4</b><br><br>");
+            msg.append("<b>NOTE: There are " + count + " animals under 180 days old not housed with their dam or foster dam, excluding animals in locations ASB RM 185, ASB RM 213, ASB RM 234, ASB RM 236, ASB RM 239, ASB RM 240 & COL RM 4</b><br><br>");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
             {
                 @Override
