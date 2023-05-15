@@ -34,7 +34,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
 
     getSearchItems: function(){
         return [{
-            html: 'This helper allows you to copy a set of tissues previously used in any necropsy.  You can search by project, animal or recipient.  When you search, it will return all distinct sets of tissues matching your criteria, and you can choose which to use in this form.',
+            html: 'This helper allows you to copy a set of tissues previously entered.  You can search by animal, or recipient.  When you search, it will return all distinct sets of tissues matching your criteria, and you can choose which to use in this form.',
             style: 'padding-bottom: 10px;'
         },{
             xtype: 'textfield',
@@ -78,6 +78,8 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
         }
 
         var filterArray = [];
+
+
         if (animal){
             filterArray.push(LABKEY.Filter.create('Id', animal, LABKEY.Filter.Types.EQUAL));
         }
@@ -87,7 +89,6 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
         }
 
 
-
         if (date){
             filterArray.push(LABKEY.Filter.create('date', date, LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL));
         }
@@ -95,7 +96,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesRequestWindow', {
         Ext4.Msg.wait('Loading...');
         LABKEY.Query.selectRows({
             schemaName: 'study',
-            queryName: 'tissueDistributions',
+            queryName: 'tissueDistributionWithTaskid',
             columns: 'Id,tissue,tissue/meaning,project,project/displayName,project/investigatorId/lastName,recipient,recipient/lastname,dateOnly,parentid,sampletype,remark,requestcategory',
             sort: '-dateOnly,formSort',
             requiredVersion: 9.1,
