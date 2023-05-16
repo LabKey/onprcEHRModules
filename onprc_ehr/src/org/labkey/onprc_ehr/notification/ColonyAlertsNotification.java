@@ -1596,7 +1596,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         SQLFragment sql = ti.getFromSQL("hc");
         Map<String, Object> params = new HashMap<>();
         params.put("MINDATE", cal.getTime());
-        QueryService.get().bindNamedParameters(sql, params);
         sql = new SQLFragment("SELECT * FROM ").append(sql);
         QueryService.get().bindNamedParameters(sql, params);
 
