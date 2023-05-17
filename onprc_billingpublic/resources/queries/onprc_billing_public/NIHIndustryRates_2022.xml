@@ -19,6 +19,16 @@ in the Public Finance Section
                         <columnTitle>Category</columnTitle>
                     </column>
 
+                    <column columnName="name">
+                        <columnTitle>ItemName</columnTitle>
+                    </column>
+                    <column columnName="CurrentYear">
+                        <columnTitle>Current Year Rates</columnTitle>
+                        <formatString>$#,##0.00</formatString>
+                    </column>
+
+
+
                     <column columnName="year1">
                         <columnTitle>YR65: 5/1/24 to 4/30/25</columnTitle>
                         <formatString>$#,##0.00</formatString>
@@ -35,6 +45,7 @@ in the Public Finance Section
                         <columnTitle>YR68: 5/1/27 to 4/30/28</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
+
                     <column columnName="year5">
                         <columnTitle>YR69: 5/1/28 to 4/30/29</columnTitle>
                         <formatString>$#,##0.00</formatString>
@@ -44,13 +55,12 @@ in the Public Finance Section
                         <columnTitle>YR70: 5/1/29 to 4/30/30</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-
                     <column columnName="year7">
                         <columnTitle>YR71: 5/1/30 to 4/30/31</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-                    <column columnName="year8">
-                        <columnTitle>YR72: 5/1/31 to 4/30/32</columnTitle>
+                    <column columnName="year=8">
+                        <columnTitle>YR71: 5/1/31 to 4/30/32</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
 
