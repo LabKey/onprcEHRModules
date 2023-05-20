@@ -169,7 +169,9 @@ Ext4.define('EHR.grid.ObservationsRowEditorGridPanel', {
             editable: true,
             dataIndex: 'remark',
             editor: {
-                xtype: 'textarea'
+                xtype: 'textarea',
+                width: 200,
+                height: 100
             }
         }]
     },
