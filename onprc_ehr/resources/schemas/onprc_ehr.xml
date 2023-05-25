@@ -1272,32 +1272,5 @@
 
         </columns>
     </table>
-    <table tableName="PrimeProblemListTemp" tableDbType="TABLE" useColumnOrder="true">
-        <tableTitle>Problem List Temp</tableTitle>
-        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
-        <auditLogging>DETAILED</auditLogging>
-        <columns>
-            <column columnName="rowid">
-                <columnTitle>Rowid</columnTitle>
-            </column>
-            <column columnName="animalid">
-                <columnTitle>Animal ID</columnTitle>
-            </column>
-            <column columnName="date">
-                <columnTitle>Date</columnTitle>
-            </column>
-            <column columnName="objectid">
-                <columnTitle>Object ID</columnTitle>
-            </column>
-            <column columnName="caseid">
-                <columnTitle>Case ID</columnTitle>
-            </column>
-            <column columnName="case_enddate">
-                <columnTitle>Case End Date</columnTitle>
-            </column>
-            <column columnName="created">
-                <columnTitle>Date Created</columnTitle>
-            </column>
-        </columns>
-    </table>
+
 </tables>
