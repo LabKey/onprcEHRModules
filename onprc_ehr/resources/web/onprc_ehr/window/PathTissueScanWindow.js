@@ -95,7 +95,7 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
 
         var project = parsed[1][1]  ;
         var billingproject = parsed[2][1]  ;
-        var recipient = parsed[3][1]  ;
+        var recipient =  Ext4.String.trim(parsed[3][1].substr(parsed[3][1],3));
         var animalid  = parsed[4][1]  ;
         var startdate  = parsed[5][1]  ;
 
@@ -170,7 +170,7 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
                         project: project,
                         recipient: recipient,
                         remark:  Ext4.String.trim(parsed[cnt][3]),
-                        tissue:  Ext4.String.trim(parsed[cnt][5]),
+                        tissue:   Ext4.String.trim(parsed[cnt][5].substr(parsed[cnt][5],7)),
                         sampletype:  Ext4.String.trim(parsed[cnt][2]),
                         objectid: HeaderObjectID
 
