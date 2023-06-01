@@ -105,7 +105,7 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
         //Validate Necropsy entroies
         if (!Ext4.String.trim(parsed[1][1])) {
 
-            Ext4.Msg.alert('Error', 'There are no primary data to process.  Please enter data to continue');
+            Ext4.Msg.alert('Error', 'There are no primary data to process.  Please enter your data to continue');
                 return;
          }
             var NecropysyObjectID = LABKEY.Utils.generateUUID().toUpperCase();
