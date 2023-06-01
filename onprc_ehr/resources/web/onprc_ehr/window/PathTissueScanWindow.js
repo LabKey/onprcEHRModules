@@ -30,14 +30,7 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
                 handler: function(){
                     window.location = LABKEY.contextPath + '/onprc_ehr/templates/PathTissue_Template.xlsx'
                 }
-            },{
-                xtype: 'ldk-linkbutton',
-                text: '[Download Recipient(s) Listings]',
-                scope: this,
-                style: 'margin-bottom: 10px;',
-                handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/Recipient_List.xlsx'
-                }
+
             },{
                 xtype: 'textarea',
                 width: 770,
@@ -82,8 +75,7 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
         this.doParse(parsed);
     },
 
-    doParse: function(parsed)
-    {
+    doParse: function(parsed) {
         var errors = [];
 
         var recordMap = {
@@ -95,26 +87,27 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
 
-
         var preferreddaterange = Ext4.String.trim(parsed[1][1]);
         var fastingtype = Ext4.String.trim(parsed[2][1]);
         var animaldeliveryrequested = Ext4.String.trim(parsed[3][1]);
         var remainingtissues = Ext4.String.trim(parsed[4][1]);
         var necropsylocation = Ext4.String.trim(parsed[5][1]);
 
-        var project = parsed[6][1]  ;
-        var billingproject = parsed[7][1]  ;
-        var recipient =  Ext4.String.trim(parsed[8][1].substr(parsed[8][1],3));
-        var animalid  = parsed[9][1]  ;
-        var startdate  = parsed[10][1]  ;
+        var project = parsed[6][1];
+        var billingproject = parsed[7][1];
+        var recipient = Ext4.String.trim(parsed[8][1].substr(parsed[8][1], 3));
+        var animalid = parsed[9][1];
+        var startdate = parsed[10][1];
         var necropsydate = LDK.ConvertUtils.parseDate(startdate);
         var necropsyproject = this.resolveProjectByName(Ext4.String.trim(billingproject));
         var nproject = this.resolveProjectByName(Ext4.String.trim(project));
 
         //Validate Necropsy entroies
-        if (Ext4.String.trim(parsed[1][1]))
-        {
+        if (!Ext4.String.trim(parsed[1][1])) {
 
+            Ext4.Msg.alert('Error', 'There are no primary data to process.  Please enter data to continue');
+                return;
+         }
             var NecropysyObjectID = LABKEY.Utils.generateUUID().toUpperCase();
 
             var obj = {
@@ -140,7 +133,7 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
             }
 
 
-        }
+
 
 
 
