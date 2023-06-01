@@ -87,21 +87,64 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
         var errors = [];
 
         var recordMap = {
-            primaryheader: []
+            primaryheader: [],
+            necropsyheader: []
 
         };
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-        var project = parsed[1][1]  ;
-        var billingproject = parsed[2][1]  ;
-        var recipient =  Ext4.String.trim(parsed[3][1].substr(parsed[3][1],3));
-        var animalid  = parsed[4][1]  ;
-        var startdate  = parsed[5][1]  ;
+
+
+        var preferreddaterange = Ext4.String.trim(parsed[1][1]);
+        var fastingtype = Ext4.String.trim(parsed[2][1]);
+        var animaldeliveryrequested = Ext4.String.trim(parsed[3][1]);
+        var remainingtissues = Ext4.String.trim(parsed[4][1]);
+        var necropsylocation = Ext4.String.trim(parsed[5][1]);
+
+        var project = parsed[6][1]  ;
+        var billingproject = parsed[7][1]  ;
+        var recipient =  Ext4.String.trim(parsed[8][1].substr(parsed[8][1],3));
+        var animalid  = parsed[9][1]  ;
+        var startdate  = parsed[10][1]  ;
+        var necropsydate = LDK.ConvertUtils.parseDate(startdate);
+        var necropsyproject = this.resolveProjectByName(Ext4.String.trim(billingproject));
+        var nproject = this.resolveProjectByName(Ext4.String.trim(project));
+
+        //Validate Necropsy entroies
+        if (Ext4.String.trim(parsed[1][1]))
+        {
+
+            var NecropysyObjectID = LABKEY.Utils.generateUUID().toUpperCase();
+
+            var obj = {
+                Id: animalid,
+                date: necropsydate,
+                project: nproject,
+                billingproject: necropsyproject,
+                instructions: preferreddaterange,
+                fastingtype: fastingtype,
+                animaldelivery:  animaldeliveryrequested,
+                remainingTissues:   remainingtissues,
+                necropsylocation:  necropsylocation,
+                objectid: NecropysyObjectID,
+                type: 'Tissues',
+                chargetype: 'DCM: Pathology Services'
+
+
+            };
+
+            if (!this.checkRequired(['Id', 'date', 'project', 'billingproject', 'project','fastingtype','animaldelivery','remainingTissues','necropsylocation','instructions'], obj, errors, rowIdx))
+            {
+                recordMap.necropsyheader.push(obj);
+            }
+
+
+        }
 
 
 
-        var offset = 6;
+        var offset = 11;
         var rowIdx = offset;
         for (var i = offset; i < parsed.length; i++)
         {
@@ -131,12 +174,25 @@ Ext4.define('ONPRC_EHR.window.PathTissueScanWindow', {
         if (recordMap.primaryheader.length)
         {
             var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('tissueDistributions');
-            LDK.Assert.assertNotEmpty('Unable to find procedure store in Tissue Distribution', clientStore);
+            LDK.Assert.assertNotEmpty('Unable to find  store in Tissue Distribution', clientStore);
 
             var records = [];
             for (var i = 0; i < recordMap.primaryheader.length; i++)
             {
                 records.push(clientStore.createModel(recordMap.primaryheader[i]));
+            }
+
+            clientStore.add(records);
+        }
+        if (recordMap.necropsyheader.length)
+        {
+            var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('encounters');
+            LDK.Assert.assertNotEmpty('Unable to find  store in encounters', clientStore);
+
+            var records = [];
+            for (var i = 0; i < recordMap.necropsyheader.length; i++)
+            {
+                records.push(clientStore.createModel(recordMap.necropsyheader[i]));
             }
 
             clientStore.add(records);
