@@ -1,5 +1,6 @@
 /*This sql will remove unused tables that are not in an xml definition per Conisstency check
-    Compelted 5/25/2023 jonesga*/
+    Compelted 5/25/2023 jonesga
+  2nd Try 6-1-2023*/
 
 GO
 
