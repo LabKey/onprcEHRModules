@@ -101,6 +101,11 @@
                     </column>
                     <column columnName="billingproject">
                         <columnTitle>Billing Project</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>project</fkTable>
+                            <fkColumnName>project</fkColumnName>
+                        </fk>
                         <isHidden>true</isHidden>
                     </column>
                     <column columnName="fastingtype">
