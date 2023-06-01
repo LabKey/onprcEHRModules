@@ -26,16 +26,5 @@ WHERE <Search Conditions,,>
 
     GO
 
-DELETE FROM [sla].[vendors_new]
-WHERE <Search Conditions,,>
-    GO
-
-DELETE FROM [sla].[requestors_new]
-WHERE <Search Conditions,,>
-    GO
-DELETE FROM [onprc_billing].[AnnualInflationRate]
-WHERE <Search Conditions,,>
-    GO
-
 
 
