@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 LabKey Corporation
+ * Copyright (c) 2014-2018 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,19 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.view.template.ClientDependency;
 
 /**
 
  */
-public class MiscChargesByAccountFormSection extends NecropsyMiscChargesFormSection
+public class NecropsyMiscChargesFormSection extends SimpleGridPanel
 {
-    public MiscChargesByAccountFormSection(EHRService.FORM_SECTION_LOCATION location)
+    public NecropsyMiscChargesFormSection(EHRService.FORM_SECTION_LOCATION location)
     {
-        super(location);
-
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/BillingByAccount.js"));
-        addConfigSource("BillingByAccount");
+        super("onprc_billing", "miscCharges", "Necropsy Procedure Requested");
+        setClientStoreClass("EHR.data.MiscChargesClientStore");
+        addClientDependency(ClientDependency.supplierFromPath("ehr/data/MiscChargesClientStore.js"));
+        setLocation(location);
     }
 }
