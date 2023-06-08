@@ -133,9 +133,9 @@ Ext4.define('EHR.grid.ObservationsRowEditorGridPanel', {
             editable: true,
             dataIndex: 'observation',
             renderer: function(value, cellMetaData, record){
-                if (Ext4.isEmpty(value) && ['Vet Attention'].indexOf(record.get('category')) == -1){
-                    cellMetaData.tdCls = 'labkey-grid-cell-invalid';
-                }
+                // if (Ext4.isEmpty(value) && ['Vet Attention'].indexOf(record.get('category')) == -1){
+                //     cellMetaData.tdCls = 'labkey-grid-cell-invalid';
+                // }
 
                 return value;
             },
