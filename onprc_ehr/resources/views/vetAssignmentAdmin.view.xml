@@ -1,4 +1,3 @@
-<!--2023-0612 New Webpart for Vet assignment-->
 <view xmlns="http://labkey.org/data/xml/view" title="Vet Assignment Admin">
     <dependencies>
         <dependency path="ehr.context" />
