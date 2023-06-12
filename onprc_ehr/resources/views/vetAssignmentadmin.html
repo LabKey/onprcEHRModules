@@ -1,0 +1,192 @@
+<!--Vet Assignment  webpart-->
+<!--Copied bby G Jones 2023-06&#45;&#45;9 UNder LK guidance-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMU Vet assignment Administration</title>
+</head>
+<body>
+
+<p><strong style="font-size: 16px;">This Panel provides tools for Administering Vet assignment</strong></p><br/>
+
+<!--
+<ul>
+    &lt;!&ndash;    <li><a style="font-size: 14px;" href="http://localhost:8080/labkey/ehr/ONPRC/EHR/dataEntryForm.view?formType=ART%20CORE%20SERVICES%20REQUEST">ART core service request form</a></li>&ndash;&gt;
+&lt;!&ndash;    <li><a style="font-size: 14px;" href="/labkey/ehr/ONPRC/EHR/dataEntryForm.view?formType=ART%20CORE%20SERVICES%20REQUEST">ART core service request form (DEV)</a></li>&ndash;&gt;
+&lt;!&ndash;    <li><a style="font-size: 14px;" href="<%=contextPath%>/ehr/ONPRC/EHR/dataEntryForm.view?formType=ART%20CORE%20SERVICES%20REQUEST">ART core service request form</a></li>&ndash;&gt;
+    <p>COMING SOON!</p>
+</ul>
+-->
+
+<p><strong style="color: #212121; font-size: 14px;">Click here to Check that all NHPs have an assigned Veterinarian:</strong></p>
+<ul>
+    <!--    <li><a style="font-size: 14px;" href="http://localhost:8080/labkey/project/ONPRC/ResourceScheduler/Flow%20Cytometry%20Core/begin.view?">Resource Scheduler</a></li>-->
+<!--        <li><a style="font-size: 14px;" href="/labkey/project/ONPRC/ResourceScheduler/ART%20Core%20Scheduler/begin.view?">Resource Scheduler(DEV)</a></li>-->
+    <li><a style="font-size: 14px;" href="<%=contextPath%>/project/ONPRC/ResourceScheduler/Radiology%20Room%20ASB%201/begin.view?">NHPs without Vet Assigned</a></li>
+</ul>
+
+<p><strong style="color: #212121; font-size: 14px;">Click here to determine if any Iacuc Protocols exist that have no assigned Veterinarian:</strong></p>
+<ul>
+<!--        <li><a style="font-size: 14px;" href="http://localhost:8080/labkey/ehr/ONPRC/EHR/dataEntryForm.view?formType=ARTCoreCharges">Other services(DEV)</a></li>-->
+ <li><a style="font-size: 14px;" href="https://primetest.ohsu.edu/project/ONPRC/Core%20Facilities/ART%20Core/begin.view?pageId=overview">IACUCs with No Assigned Vet</a></li>
+
+
+</ul>
+<p><strong style="color: #212121; font-size: 14px;">Here is the Assignment Priority Matrix :</strong></p>
+<ul>
+
+    <table title="Vet Assignment Matrix"  border="1" cellspacing="1" cellpadding="1" >
+        <tbody>
+        <tr>
+            <td>
+                <p>  Priority  </p>
+            </td>
+            <td>
+                <p>  Item Used  </p>
+            </td>
+        </tr>
+        <tr>
+            <td cellAlignment = "center">
+                <p>1</p>
+            </td>
+            <td>
+                <p>Open Case</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>2</p>
+            </td>
+            <td>
+                <p>Room High Priority</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>3</p>
+            </td>
+            <td>
+                <p>Area High Priority</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>4</p>
+            </td>
+            <td>
+                <p>Project + Room Research</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>5</p>
+            </td>
+            <td>
+                <p>Project + Room Resources</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>6</p>
+            </td>
+            <td>
+                <p>Project Research High Priority</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>7</p>
+            </td>
+            <td>
+                <p>Project Resource High Priority</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>8</p>
+            </td>
+            <td>
+                <p>Project Research</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>9</p>
+            </td>
+            <td>
+                <p>Project Resource</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>10</p>
+            </td>
+            <td>
+                <p>Protocol Room High Priority</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>11</p>
+            </td>
+            <td>
+                <p>Protocol Area High Priority</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>12</p>
+            </td>
+            <td>
+                <p>Protocol Room</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>13</p>
+            </td>
+            <td>
+                <p>Protocol Area</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>14</p>
+            </td>
+            <td>
+                <p>Protocol High Priority</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>15</p>
+            </td>
+            <td>
+                <p>Protocol</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>16</p>
+            </td>
+            <td>
+                <p>Room</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>17</p>
+            </td>
+            <td>
+                <p>area</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</ul>
+
+
+</body>
+</html>

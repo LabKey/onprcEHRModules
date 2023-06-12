@@ -1,0 +1,7 @@
+<!--Kollil: ART core billing webpart-->
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="Vet Assignment admin">
+    <view name="vetassignmentAdmin"/>
+    <locations>
+        <location name="body"/>
+    </locations>
+</webpart>
