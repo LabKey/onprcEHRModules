@@ -1,4 +1,4 @@
-<!--Update2-023=0612 For Webpart-->
+<!--2023-0612 New Webpart for Vet assignment-->
 <view xmlns="http://labkey.org/data/xml/view" title="Vet Review">
     <dependencies>
         <dependency path="ehr.context" />

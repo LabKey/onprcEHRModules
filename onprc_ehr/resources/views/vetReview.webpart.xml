@@ -1,4 +1,4 @@
-<!--Kollil: ART core billing webpart-->
+<!--2023-0612 New Webpart for Vet assignment-->
 <webpart xmlns="http://labkey.org/data/xml/webpart" title="Vet Review">
     <view name="vetReview"/>
     <locations>
