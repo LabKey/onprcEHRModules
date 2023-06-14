@@ -16,7 +16,7 @@ Ext.define('App.view.InfoPanelAmended', {
     items : [
         {
             xtype : 'eventformAmended',
-            title : 'Necropsy Calendar Schedule',
+            title : 'Necropsy Calendar Scheduler',
             editable : false
         }
 
