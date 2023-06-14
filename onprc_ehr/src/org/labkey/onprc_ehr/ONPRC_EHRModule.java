@@ -123,7 +123,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.004;
+        return 23.005;
     }
 
     @Override
@@ -341,6 +341,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added 5-16-2018  R.Blasa
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam by ID(s)", this, DetailsURL.fromString("/onprc_ehr/PE_ExamHistoryReportbyID.view"), "Routine Clinical Tasks");
+
+        //Added 5-4-2023  R.Blasa
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam by Categories", this, DetailsURL.fromString("/onprc_ehr/PEExamwithCategories.view"), "Routine Clinical Tasks");
 
         //Modified: 1-17-2019  R.Blasa
         try
