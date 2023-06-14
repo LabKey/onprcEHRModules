@@ -21,9 +21,8 @@
 
 <p><strong style="color: #212121; font-size: 14px;">Click here to Check that all NHPs have an assigned Veterinarian:</strong></p>
 <ul>
-    <!--    <li><a style="font-size: 14px;" href="http://localhost:8080/labkey/project/ONPRC/ResourceScheduler/Flow%20Cytometry%20Core/begin.view?">Resource Scheduler</a></li>-->
-<!--        <li><a style="font-size: 14px;" href="/labkey/project/ONPRC/ResourceScheduler/ART%20Core%20Scheduler/begin.view?">Resource Scheduler(DEV)</a></li>-->
-    <li><a style="font-size: 14px;" href="<%=contextPath%>/project/ONPRC/ResourceScheduler/Radiology%20Room%20ASB%201/begin.view?">NHPs without Vet Assigned</a></li>
+    '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Demographics', 'query.viewName': 'All Animals', 'query.sort': 'Id', 'query.Id~isblank': 'true'}) + '">NHPs without Vet Assigned</a></li>'
+   <!-- <li><a style="font-size: 14px;" href="<%=contextPath%>/project/ONPRC/ResourceScheduler/Radiology%20Room%20ASB%201/begin.view?">NHPs without Vet Assigned</a></li>-->
 </ul>
 
 <p><strong style="color: #212121; font-size: 14px;">Click here to determine if any Iacuc Protocols exist that have no assigned Veterinarian:</strong></p>

@@ -73,8 +73,9 @@ Ext4.onReady(function(){
                 linkCls: 'none',
                 style: 'font-weight: bold;'
             },
+
             items: [
-                {name: 'Records Needing Vet Review', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/vetReview.view'},
+                {name: 'Records Needing Vet Review', url: '<%=contextPath%>/project' + ctx['EHRStudyContainer'] + '/begin.view?pageId=Test'},
                 {name: 'Active Behavior Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:behaviorCases'},
                 {name: 'Active Clinical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:cases'},
                 {name: 'Active Surgical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgicalCases'},
