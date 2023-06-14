@@ -9,7 +9,7 @@ GO
 ALTER TABLE extscheduler.Events ADD  project INT;
 GO
 
-ALTER TABLE extscheduler.Events ADD  remainingtissues VARCHAR(500);
+ALTER TABLE extscheduler.Events ADD  remainingtissues VARCHAR(50);
 GO
 
 ALTER TABLE extscheduler.Events ADD  animalid VARCHAR(50);
