@@ -62,7 +62,7 @@
                 frame: 'none',
                 schemaName: 'extscheduler',
                 queryName: 'Events',
-                columns: 'resouceId,Name,StartDate,EndDate,Alias,Comments,project,fasting,delivery,location',
+                columns: 'resouceId,Name,StartDate,EndDate,Alias,Comments,project,fasting,delivery,animalid,remainingtissues',
                 filterArray: [LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL)],
                 sort: 'StartDate,ResourceId,Name'
             });

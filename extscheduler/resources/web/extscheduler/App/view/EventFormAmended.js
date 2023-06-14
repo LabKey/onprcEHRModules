@@ -33,7 +33,6 @@ Ext.define('App.view.EventFormAmended', {
                 bind       : {
                     value    : '{eventRecord.ResourceId}',
                     readOnly : !this.editable
-
                 }
             },
 
@@ -41,12 +40,12 @@ Ext.define('App.view.EventFormAmended', {
                 xtype      : 'textfield',
                 fieldLabel : 'Animal ID',
                 name       : 'Alias',
-                reference  : 'eventAliasField',
+                reference  : 'eventAnimalIDField',
                 //allowBlank : !this.editable,
                 allowBlank: true,
-                hidden     : this.eventFormColumns.indexOf('Alias') === -1,
+                hidden     : this.eventFormColumns.indexOf('animalid') === -1,
                 bind       : {
-                    value    : '{eventRecord.Alias}',
+                    value    : '{eventRecord.animalid}',
                     readOnly : !this.editable
                 }
             },
@@ -73,8 +72,8 @@ Ext.define('App.view.EventFormAmended', {
                 width: 120,
                 height: 20,
                 fieldLabel : 'Type of Fasting Requested',
-                name :  'Fasting',
-                reference  : 'eventFastimgField',
+                name :  'fasting',
+                reference  : 'eventFastingField',
                 style: 'margin-top: 20px;',
                 allowBlank : true,
                 hidden     : this.eventFormColumns.indexOf('fasting') === -1,
@@ -89,29 +88,29 @@ Ext.define('App.view.EventFormAmended', {
                 width: 120,
                 height: 20,
                 fieldLabel : 'Animal Delivery Requested',
-                name :  'deliveryrequest',
-                reference  : 'eventDeliveryRequestField',
+                name :  'delivery',
+                reference  : 'eventDeliveryField',
                 style: 'margin-top: 20px;',
                 allowBlank : true,
-                hidden     : this.eventFormColumns.indexOf('deliveryrequest') === -1,
+                hidden     : this.eventFormColumns.indexOf('delivery') === -1,
                 bind       : {
-                    value    : '{eventRecord.deliveryrequestt}',
+                    value    : '{eventRecord.delivery}',
                     readOnly : !this.editable
                 }
             },
             {
                 xtype      : 'textfield',
                 labelAlign: 'top',
-                width: 320,
+                width: 50,
                 height: 20,
-                fieldLabel : 'Necropsy Location',
-                name :  'location',
-                reference  : 'eventLocationField',
+                fieldLabel : 'Remaining Tissues Available for Distribution',
+                name :  'remainingtissues',
+                reference  : 'eventRemainingTissuesField',
                 style: 'margin-top: 20px;',
                 allowBlank : true,
-                hidden     : this.eventFormColumns.indexOf('location') === -1,
+                hidden     : this.eventFormColumns.indexOf('remainingtissues') === -1,
                 bind       : {
-                    value    : '{eventRecord.location}',
+                    value    : '{eventRecord.remainingtissues}',
                     readOnly : !this.editable
                 }
             },
@@ -120,7 +119,7 @@ Ext.define('App.view.EventFormAmended', {
                 labelAlign: 'top',
                 width: 320,
                 height: 50,
-                fieldLabel: 'CommentsXX',
+                fieldLabel: 'Comments',
                 name: 'Comments',
                 reference: 'eventCommentsField',
                 style: 'margin-top: 20px;',

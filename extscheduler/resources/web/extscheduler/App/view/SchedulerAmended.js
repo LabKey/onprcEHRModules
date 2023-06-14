@@ -15,7 +15,7 @@ Ext.define('App.view.SchedulerAmended', {
     calendarViewPreset   : 'week',
     mode                 : 'calendar',
     eventResizeHandles   : 'none',
-    eventBodyTemplate    :'<b>{ResourceName:htmlEncode}</b><br/>{Alias:htmlEncode}<br/>{Project:htmlEncode}<br/>{Location:htmlEncode}',
+    eventBodyTemplate    :'<b>{ResourceName:htmlEncode}</b><br/>{Alias:htmlEncode}<br/>{Project:htmlEncode}<br/>{fasting:htmlEncode}<br/>{delivery:htmlEncode}',
     snapToIncrement      : true,
     allowOverlap         : true,
     highlightCurrentTime : true,
@@ -69,8 +69,9 @@ Ext.define('App.view.SchedulerAmended', {
         data.style = 'background-color:' + resource.get('Color');
         event.data['ResourceName'] = resource.get('Name');
         event.data['Project'] = event.get('project');
-        event.data['Location'] = event.get('location');
-        event.data['Alias'] = event.get('Alias');
+        event.data['fasting'] = event.get('fasting');
+        event.data['delivery'] = event.get('delivery');
+        // event.data['Alias'] = event.get('Alias');
         var userRecord = Ext.getStore('users').findRecord('UserId', event.get('UserId'));
         event.data['UserDisplayName'] = userRecord != null ? userRecord.get('DisplayName') : event.get('UserId');
         return event.data;

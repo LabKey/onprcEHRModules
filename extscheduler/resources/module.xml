@@ -23,7 +23,7 @@
             <description>A comma separated list of column names to display for the EventForm.js file. Column Names(Name,ResourceId,UserId,Alias,Quantity,Comments,StartDate,EndDate)</description>
             <showDescriptionInline>true</showDescriptionInline>
             <canSetPerContainer>true</canSetPerContainer>
-            <defaultValue>Name,ResourceId,UserId,Alias,Quantity,Comments,StartDate,EndDate,project,location,fasting,deliveryrequest</defaultValue>
+            <defaultValue>Name,ResourceId,UserId,Alias,Quantity,Comments,StartDate,EndDate,project,fasting,delivery,remainingtissues,animalid</defaultValue>
             <editPermissions>
                 <permission>ADMIN</permission>
             </editPermissions>
