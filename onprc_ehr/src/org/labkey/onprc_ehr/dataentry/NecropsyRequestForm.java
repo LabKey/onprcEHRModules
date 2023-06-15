@@ -7,6 +7,8 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
+import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
+import org.labkey.api.ehr.security.EHRRequestPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
@@ -59,6 +61,14 @@ public class NecropsyRequestForm extends RequestForm
 //        //    Added: 7-20-2022  R.Blasa
         setStoreCollectionClass("onprc_ehr.data.sources.PathTissueRequestStoreCollection");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathTissueRequestStoreCollection.js"));
+
+
+        //Added 5-8-2022 Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/PathTissueScanWindow.js"));
+
+
+
+
    }
     @Override
     public JSONObject toJSON()
@@ -79,4 +89,19 @@ public class NecropsyRequestForm extends RequestForm
         defaultButtons.add("SAVEDRAFT");
         return defaultButtons;
     }
+
+    //Added 5-8-2022 Blasa
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getMoreActionButtonConfigs()) ;
+
+        defaultButtons.add("Tissues_SCAN_IMPORT");;
+
+        return defaultButtons;
+    }
+
+
+
 }

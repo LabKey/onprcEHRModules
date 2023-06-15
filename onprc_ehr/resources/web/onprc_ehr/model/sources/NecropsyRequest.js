@@ -19,7 +19,8 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
             date: {
                 xtype: 'xdatetime',
-                header: 'Start Date',
+                label: 'Necropsy Requested Date',
+                hidden: false,
                 extFormat: LABKEY.extDefaultDateTimeFormat,
                 editorConfig: {
                     dateFormat: LABKEY.extDefaultDateFormat,
@@ -29,11 +30,21 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             instructions: {
                 hidden: false,
                 height: 50,
-                label: 'Preferred Necropsy date range',
+                label: 'Alternative Necropsy Date and Time',
                 columnConfig: {
-                    width: 70
+                    width: 60
                 }
             },
+            // daterequested: {
+            //     xtype: 'xdatetime',
+            //     header: 'Necropsy Request Date',
+            //     hidden: false,
+            //     extFormat: LABKEY.extDefaultDateTimeFormat,
+            //     editorConfig: {
+            //         dateFormat: LABKEY.extDefaultDateFormat,
+            //         timeFormat: 'H:i'
+            //     }
+            // },
             enddate: {
                 hidden: true
             },
