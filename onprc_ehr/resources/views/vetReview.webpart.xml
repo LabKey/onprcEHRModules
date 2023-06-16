@@ -1,4 +1,4 @@
-<!--2023-0612 New Webpart for Vet assignment try 2-->
+<!--20230616 changed the link to vet reviewfor new Feature Branch-->
 <webpart xmlns="http://labkey.org/data/xml/webpart" title="Vet Review">
     <view name="vetReview"/>
     <locations>
