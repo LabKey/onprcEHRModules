@@ -1,6 +1,7 @@
 --2021/03/09  Update to include Project
 -- 2023-05-30 Latest update
 --2023-06-01 Update to include Project
+--2023-06-15 Update to Project
 
 
 Select
@@ -61,7 +62,7 @@ Select
         when h2.userId  is not null then 'Area Only'
 
         End as AssignmentType
-
+c
 FROM study.vet_assignmentDemographics d
 --ROOM- High Priority
          Left join onprc_ehr.vet_assignment p1 on (p1.room = d.room and p1.protocol is null and p1.priority = true)
