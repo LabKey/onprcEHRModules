@@ -1065,7 +1065,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " pregnant animals 30 days past the gestation period.</b><br>\n");
+            msg.append("<b>Pregnant NHPs whose gestation time is past 30 days:</b><br>\n");
+            msg.append("There are " + count + " pregnant animals 30 days past the gestation period.<br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnancyGestationOverdue", null) + "&query.thirty_days_pastGestation_date~datelte="+ getDateTimeFormat(c).format(new Date()) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -1073,6 +1074,35 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are no pregnant animals 30 days past the gestation period.</b><br>\n");
         }
+    }
+
+    /**
+     * Kollil : Monkeys needing pregnancy checks
+     * June 2023
+     */
+    protected void pregnancyChecks(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+        //Pregnancy checks query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("pregnancyChecks", ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0) {
+            msg.append("<b>Monkeys needing pregnancy checks:</b><br>\n");
+            msg.append("There are " + count + " monkey(s) need pregnancy checks.<br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnancyChecks", null) + "&query.containerFilterName=AllFolders'>Click here to view the list of monkeys,</a></p>\n");
+            msg.append("<hr>");
+        }
+        else {
+            msg.append("<b>WARNING: There are no monkeys that needs pregnancy checks! </b>");
+            msg.append("<hr>");
+        }
+
     }
 
     /**
@@ -1252,8 +1282,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     }    //End of Fasts alert
 
-
-
+    
     /**
      * Kollil, 10/24/2019 : PMIC scheduler alert notifications Daily & Weekly
      */
