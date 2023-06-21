@@ -7,6 +7,8 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
+import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
+import org.labkey.api.ehr.security.EHRRequestPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
@@ -77,6 +79,7 @@ public class NecropsyRequestForm extends RequestForm
         return ret;
     }
 
+
     @Override
     protected List<String> getButtonConfigs()
     {
@@ -84,6 +87,17 @@ public class NecropsyRequestForm extends RequestForm
         defaultButtons.add("DISCARD");
         defaultButtons.add("REQUEST");
         defaultButtons.add("SAVEDRAFT");
+        return defaultButtons;
+    }
+    //Added 5-8-2022 Blasa
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getMoreActionButtonConfigs()) ;
+
+        defaultButtons.add("Tissues_SCAN_IMPORT");;
+
         return defaultButtons;
     }
 }
