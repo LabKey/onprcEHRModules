@@ -1,106 +1,88 @@
 --2021/03/09  Update to include Project
-Select
-    Distinct
-    d.Id,
-    d.room.area as Area,
-    d.room,
-    d.CaseVet,
-    d.project,
-    d.assignmentType as CodeAssignmentType,
-    d.protocol,
-    d.ProtocolPI,
-    d.Calculated_status,
-    Case
-        --  when d.DeceaseDAssignedVet is not null then d.DeceaseDAssignedVet
-        when d.caseVet is not null then d.CaseVet
-        when p1.userId is not null  then p1.userId.displayName
-        when p2.userId is not null then  p2.userId.DisplayName
-        when s3.userID is not null then  s3.userID.displayName
-        when s4.userID is not null then  s4.userID.displayName
-        when s5.userID is not null then  s5.userID.displayName
-        when s6.userID is not null then  s6.userID.displayName
-        when s1.userID is not null then  s1.userID.displayName
-        when s2.userID is not null then  s2.userID.displayName
-        when v1.userId is not null  then v1.userId.displayName
-        when v2.userId is not null then  v2.userId.DisplayName
-        when v3.userId is not null then  v3.userId.DisplayName
-        when v4.userId is not null then  v4.userId.DisplayName
-        when p3.userId is not null then  p3.userId.DisplayName
-        when p4.userId is not null then   p4.userId.DisplayName
-        when v5.userId is not null then  v5.userId.DisplayName
-        when v6.userId is not null then  v6.userId.DisplayName
-        when h1.userId is not null then  h1.userId.DisplayName
-        when h2.userId is not null then h2.userId.DisplayName
+--2023-0621 Clean up of code and review with Lakshmi
 
-        End as AssignedVet,
+select *
+from (Select Distinct d.Id,
+                      d.room.area as Area,
+                      d.room,
+                      d.CaseVet,
+                      d.project,
+                      d.assignmentType as CodeAssignmentType,
+                      d.protocol,
+                      d.ProtocolPI,
+                      d.Calculated_status,
+                      Case
+                          --  when d.DeceaseDAssignedVet is not null then d.DeceaseDAssignedVet
+                          when d.caseVet is not null then d.CaseVet
+                          when Rule_1.userId is not null then Rule_1.userId.displayName
+                          when Rule_1.userId is not null then Rule_2.userId.DisplayName
+                          when Rule_3.userID is not null then Rule_3.userID.displayName
+                          when Rule_4.userID is not null then Rule_4.userID.displayName
+                          when Rule_5.userID is not null then Rule_5.userID.displayName
+                          when Rule_6.userID is not null then Rule_6.userID.displayName
+                          when Rule_7.userID is not null then Rule_7.userID.displayName
+                          when Rule_8.userId is not null then Rule_8.userId.displayName
+                          when Rule_9.userId is not null then Rule_9.userId.DisplayName
+                          when Rule_10.userId is not null then Rule_10.userId.DisplayName
+                          when Rule_11.userId is not null then Rule_11.userId.DisplayName
+                          when Rule_12.userId is not null then Rule_12.userId.DisplayName
+                          when Rule_13.userId is not null then Rule_13.userId.DisplayName
+                          when Rule_14.userId is not null then Rule_14.userId.DisplayName
+                          when Rule_15.userId is not null then Rule_15.userId.DisplayName
+                          when Rule_16.userId is not null then Rule_16.userId.DisplayName
+                          End  as AssignedVet,
+                      Case
+                          when d.caseVet is not null then 'Open Case'
+                          when rule_1.userId is not null then 'Room Priority'
+                          when rule_2.userId is not null then 'Area Priority'
+                          When rule_3.userID is not null then 'Project Room Research'
+                          When rule_4.userID is not null then 'Project Room Resource'
+                          When rule_5.userID is not null then 'Project Area Research'
+                          When rule_6.userID is not null then 'Project Area Resource'
+                          when rule_7.userID is not null then 'Project Research'
+                          when rule_8.userID is not null then 'Project Resource'
+                          When rule_9.userId is not null then 'Protocol Room Priority'
+                          When rule_10.userId is not null then 'Protocol Area Priority'
+                          when rule_11.userId is not null then 'Protocol  Room'
+                          when rule_12.userId is not null then 'Protocol Area'
+                          when rule_13.userId is not null then 'Protocol High Only'
+                          when rule_14.userId is not null then 'Protocol'
+                          when rule_15.userId is not null then 'Room Only'
+                          when rule_16.userID is not null then 'Area only'
+                          End as AssignmentType
 
-    Case
-        -- when d.DeceaseDAssignedVet is not null then 'Deceased or Shipped NHP'
-        when d.caseVet is not null then 'Open Case'
-        when p1.userId  is not null then  'Room Priority'
-        when p2.userId is not null then  'Area Priority'
-        When s3.userID is not null then 'Project Room Research'
-        When s4.userID is not null then 'Project Room Resource'
-        When s5.userID is not null then 'Project Area Research'
-        When s6.userID is not null then 'Project Area Resource'
-        when s1.userID is not null then 'Project Research'
-        when s2.userID is not null then 'Project Resource'
-        When p3.userId is not null then 'Protocol Room Priority'
-        When p4.userId is not null then 'Protocol Area Priority'
-        when v1.userId is not null  then 'Protocol Research Room'
-        when v2.userId is not null then  'Protocol Research Area'
-        when v3.userId is not null then  'Protocol Resource Room'
-        when v4.userId is not null then  'Protocol Resource Area'
-        when v5.userId is not null then  'Protocol Research Only'
-        when v6.userId is not null then  'Protocol Resource Only'
+      FROM study.vet_assignmentDemographics d
 
-        when h1.userId is not null then 'Room Only'
-        when h2.userId  is not null then 'Area Only'
-
-        End as AssignmentType
-
-FROM study.vet_assignmentDemographics d
---this handles Project research Room
-         Left Join onprc_ehr.vet_assignment s3 on (s3.project = d.project and s3.room = d.room and d.assignmentType = 'Project Research Assigned')
-
---this handles Project resource Room
-         Left Join onprc_ehr.vet_assignment s4 on (s4.project = d.project and s4.room = d.room and d.assignmentType = 'Project Resource Assigned')
-    --this handles Project research area
-         Left Join onprc_ehr.vet_assignment s5 on (s5.project = d.project  and s5.area = d.room.area and d.assignmentType = 'Project Research Assigned')
-    --this handles Project resource area
-         Left Join onprc_ehr.vet_assignment s6 on (s6.project = d.project  and s6.area = d.room.area and d.assignmentType = 'Project Resource Assigned')
---this handles Project research Area
-         Left Join onprc_ehr.vet_assignment s1 on (s1.project = d.project and d.assignmentType = 'Project Research Assigned')
-
---this handles Project resource  area
-         Left Join onprc_ehr.vet_assignment s2 on (s2.project = d.project and d.assignmentType = 'Project Resource Assigned')
-
-    /*
-        --THis handles Project
-
-        --this handles
-        */
---this handles REsearch Protocol Room
-         Left Join onprc_ehr.vet_assignment v1 on (v1.protocol.displayName = d.protocol and v1.room = d.room and d.assignmentType = 'Research Assigned')
---this handles Research Protocol Area
-         Left Join onprc_ehr.vet_assignment v2 on (v2.protocol.displayName = d.protocol  and v2.area = d.room.area and d.assignmentType = 'Research Assigned')
---this handles Resource Protocol Room
-         Left Join onprc_ehr.vet_assignment v3 on (v3.protocol.displayName = d.protocol  and v3.room = d.room and d.assignmentType = 'Resource Assigned')
---this handles Research Protocol Area
-         Left Join onprc_ehr.vet_assignment v4 on (v4.protocol.displayName = d.protocol  and v4.area = d.room.area and d.assignmentType = 'Resource Assigned')
---this handled Research Assigned No Additional Sekections
-         Left Join onprc_ehr.vet_assignment v5 on (v5.protocol.displayName = d.protocol   and v5.room is null and v5.area is null and d.assignmentType = 'Research Assigned' )
---this handles resource Protocol Only
-         Left Join onprc_ehr.vet_assignment v6 on (v6.protocol.displayName = d.protocol  and v6.room is null and v6.area is null  and d.assignmentType = 'Resource Assigned' )
---this handles when the room is a priorty
-         Left join onprc_ehr.vet_assignment p1 on (p1.room = d.room and p1.protocol is null and p1.priority = true)
---this handles when the room is a priorty-
-         Left join onprc_ehr.vet_assignment p2 on (p2.area = d.room.area and p2.protocol is null and p2.priority = true)
---THis handles when a priority is placed on Room and Protocol --
-         Left Join onprc_ehr.vet_assignment p3 on (p3.protocol.displayName = d.protocol and p3.room = d.room and p3.priority = true)
---THis handles when a priority is placed on Areaand Protocol -
-         Left Join onprc_ehr.vet_assignment p4 on (p4.protocol.displayName = d.protocol  and p4.area = d.room.area and p4.priority = true)
---these deal with assignment based on housing only
-         Left join onprc_ehr.vet_assignment h1 on (h1.room = d.room and h1.protocol is null and h1.area is null and h1.priority = false)
-         Left join onprc_ehr.vet_assignment h2 on (h2.area = d.room.area and h2.room is null and h2.protocol is null and h2.priority = false)
+--Rule_1 Room Priority
+               Left join onprc_ehr.vet_assignment Rule_1 on (Rule_1.room = d.room and Rule_1.room.area is null and Rule_1.project is null and Rule_1.protocol is null and Rule_1.priority = true)
+--Rule 2 Area Priority
+               Left join onprc_ehr.vet_assignment Rule_2 on (Rule_2.area = d.room.area and Rule_2.room is null and Rule_2.project is null and  Rule_2.protocol is null and Rule_2.priority = true)
+--Rule 3 Project Room Research
+               Left Join onprc_ehr.vet_assignment Rule_3 on (Rule_3.project = d.project and Rule_3.room = d.room and Rule_3.room.area is null and Rule_3.protocol is null and Rule_3.priority = false and d.assignmentType = 'Project Research Assigned')
+--Rule 4 Project Room Resource
+               Left Join onprc_ehr.vet_assignment Rule_4 on (Rule_4.project = d.project and Rule_4.room = d.room and Rule_4.room.area is null and Rule_4.Protocol is null and Rule_4.priority = false and d.assignmentType = 'Project Resource Assigned')
+--Rule 5 Project Area Research
+               left Join onprc_ehr.vet_assignment Rule_5 on (Rule_5.project = d.project and Rule_5.area = d.room.area and Rule_5.room is null and Rule_5.protocol is null and Rule_5.priority = false and d.assignmentType = 'Project Research Assigned')
+--Rule 6 Project Area Resource
+               left Join onprc_ehr.vet_assignment Rule_6 on (Rule_6.project = d.project and Rule_6.area = d.room.area and Rule_6.room is null and Rule_6.Protocol is null and Rule_6.priority = false and d.assignmentType = 'Project Resource Assigned')
+--Rule 7 Project Research
+               left Join onprc_ehr.vet_assignment Rule_7 on (Rule_7.project = d.project and Rule_7.area is null and Rule_7.room is null and Rule_7.protocol is null and Rule_7.priority = false and d.assignmentType = 'Project Research Assigned')
+--Rule 8 Project Resource
+               Left Join onprc_ehr.vet_assignment Rule_8 on (Rule_8.project = d.project and Rule_8.area is null and Rule_8.room is null and Rule_8.protocol is null and Rule_8.priority = false and d.assignmentType = 'Project Resource Assigned')
+--Rule 9 Protocol Room Priority
+               Left Join onprc_ehr.vet_assignment Rule_9 on (Rule_9.protocol.displayName = d.protocol and Rule_9.room = d.room and Rule_9.area is null and Rule_9.project is null and Rule_9.priority = True)
+--Rule 10 Protocol Area Priority
+               Left Join onprc_ehr.vet_assignment Rule_10 on (Rule_10.protocol.displayName = d.protocol and Rule_10.area = d.room.area and Rule_10.priority = True)
+--Rule 11 Protocol Room
+               Left Join onprc_ehr.vet_assignment Rule_11 on (Rule_11.protocol.displayName = d.protocol and Rule_11.room = d.room and Rule_11.project is null and Rule_11.area is null and Rule_11.priority = false)
+--Rule 12 Protocol Area
+               Left Join onprc_ehr.vet_assignment Rule_12 on (Rule_12.protocol.displayName = d.protocol and Rule_12.area = d.room.area and Rule_12.project is null and Rule_12.room is null and Rule_12.priority = false)
+--Rule 13 Protocol Priority
+               Left Join onprc_ehr.vet_assignment Rule_13 on (Rule_13.protocol.displayName = d.protocol and Rule_13.area is null and Rule_13.room is null and Rule_13.project is null and Rule_13.priority = True)
+--Rule 14 Protocol
+               Left Join onprc_ehr.vet_assignment Rule_14 on (Rule_14.protocol.displayName = d.protocol and Rule_14.area is null and Rule_14.room is null and Rule_14.project is null and Rule_14.priority = false)
+--Rule 15 Room
+               Left Join onprc_ehr.vet_assignment Rule_15 on (Rule_15.room = d.room and Rule_15.area is null and Rule_15.protocol is null and  Rule_15.project is null and Rule_15.priority = false)
+--Rule 16 Area
+               Left Join onprc_ehr.vet_assignment Rule_16 on (Rule_16.area = d.room.area and Rule_16.room is null and Rule_16.protocol is null and Rule_16.project is null and Rule_16.priority = false))
 --where d.id not like '[a-z]%'
