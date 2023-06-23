@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="pregnancyGestation" tableDbType="TABLE">
+                <tableTitle>Pregnant NHPs whose gestation time is past 30 days</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
