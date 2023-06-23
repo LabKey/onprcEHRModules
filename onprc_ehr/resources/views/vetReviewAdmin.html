@@ -1,0 +1,43 @@
+<!--Vet Assignment  webpart-->
+<!--Copied bby G Jones 2023-06&#45;&#45;9 UNder LK guidance-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMU Vet assignment Administration</title>
+</head>
+<body>
+
+<h3>Vet Assignment Tools</strong></h3>
+
+<ul>
+    <li><a href="/query/ONPRC/EHR/executeQuery.view?schemaName=study&amp;query.queryName=demographics_assignedVetNotification">NHPs without an assigned vet</a></li>
+    <li><a href="/query/ONPRC/EHR/executeQuery.view?schemaName=study&amp;query.queryName=ProtocolswithNoVetAssigned">IACUCs with no vet assigned</a></li>
+</ul>
+
+<h3>Vet Assignment Priority</strong></h3>
+
+<p>Vets are assigned to NHPs according to the first rule listed below that matches.</p>
+
+<ol start="0">
+    <li>Open Case</li>
+    <li>Room <em>High Priority</em></li>
+    <li>Area <em>High Priority</em></li>
+    <li>Project (<span style="background-color: #ffff99;">Research</span>) + Room</li>
+    <li>Project (<span style="background-color: #ccffff;">Resource</span>) + Room</li>
+    <li>Project (<span style="background-color: #ffff99;">Research</span>) + Area</li>
+    <li>Project (<span style="background-color: #ccffff;">Resource</span>) + Area</li>
+    <li>Project (<span style="background-color: #ffff99;">Research</span>)</li>
+    <li>Project (<span style="background-color: #ccffff;">Resource</span>)</li>
+    <li>Protocol + Room <em>High Priority</em></li>
+    <li>Protocol + Area <em>High Priority</em></li>
+    <li>Protocol + Room</li>
+    <li>Protocol + Area</li>
+    <li>Protocol <em>High Priority</em></li>
+    <li>Protocol</li>
+    <li>Room</li>
+    <li>Area</li>
+</ol>
+
+</body>
+</html>
