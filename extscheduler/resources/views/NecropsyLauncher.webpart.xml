@@ -1,0 +1,10 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="Necropsy Scheduler Launcher">
+
+    <!--Please note: 4-24-2023 R.Blasa  Comments: This is the name of the Web part "ONRPC_EHR Compliance"-->
+
+    <view name="NecropsyLauncher"/>
+    <locations>
+        <location name="body"/>
+    </locations>
+</webpart>
+

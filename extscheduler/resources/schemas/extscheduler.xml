@@ -54,6 +54,21 @@
             <column columnName="Name" />
             <column columnName="Alias" />
             <column columnName="Quantity" />
+            <column columnName="project">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="remainingtissues">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="delivery">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="fasting">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="animalid">
+                <isHidden>true</isHidden>
+            </column>
             <column columnName="Comments" />
             <column columnName="UserId">
                 <columnTitle>User</columnTitle>

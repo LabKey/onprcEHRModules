@@ -37,10 +37,10 @@
         }
         else
         {
-            var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'weeklyTest', null, {
+            var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'WeeklyNecropsyTest', null, {
                 returnUrl: window.location.pathname + window.location.search
             });
-            Ext4.get('launch-link').update('<a class="launch-button" href="' + schedulerAppLink + '">Launch Scheduler</a>');
+            // Ext4.get('launch-link').update('<a class="launch-button" href="' + schedulerAppLink + '">Launch Scheduler</a>');
         }
 
         new LABKEY.QueryWebPart({
@@ -62,7 +62,7 @@
                 frame: 'none',
                 schemaName: 'extscheduler',
                 queryName: 'Events',
-                columns: 'resouceId,Name,StartDate,EndDate,Alias,Comments,project,location',
+                columns: 'resouceId,Name,StartDate,EndDate,Alias,Comments,project,fasting,delivery,animalid,remainingtissues',
                 filterArray: [LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL)],
                 sort: 'StartDate,ResourceId,Name'
             });
