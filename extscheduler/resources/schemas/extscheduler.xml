@@ -55,7 +55,14 @@
             <column columnName="Alias" />
             <column columnName="Quantity" />
             <column columnName="project">
+                <columnTitle>Center Project</columnTitle>
                 <isHidden>true</isHidden>
+                <fk>
+                    <fkFolderPath>/ONPRC/EHR</fkFolderPath>
+                    <fkColumnName>project</fkColumnName>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>project</fkTable>
+                </fk>
             </column>
             <column columnName="remainingtissues">
                 <isHidden>true</isHidden>
