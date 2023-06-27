@@ -183,6 +183,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added April, 2017 Kollil
         ns.registerNotification(new PregnantNHPsGestationAlert(this));
 
+        //Added March, 2023 Kollil
+        ns.registerNotification(new PregnantNHPChecks(this));
+
         //Added May 12th, 2017 Kollil
         ns.registerNotification(new DCMNotesNotification(this));
 
