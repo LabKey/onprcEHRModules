@@ -48,27 +48,49 @@
             frame: 'none',
             schemaName: 'extscheduler',
             queryName: 'Resources',
-            columns: 'Name,color',
             sort: 'Name'
         });
 
         var timeFrameFilter = null;
         var renderEventsQueryWebPart = function()
         {
-
+            var filters = [LABKEY.Filter.create('Owner', true, LABKEY.user.isAdmin ? LABKEY.Filter.Types.HAS_ANY_VALUE : LABKEY.Filter.Types.EQUALS)];
+            if (timeFrameFilter != null)
+                filters.push(timeFrameFilter);
 
             new LABKEY.QueryWebPart({
                 renderTo: 'events-qwp',
                 frame: 'none',
                 schemaName: 'extscheduler',
                 queryName: 'Events',
-                columns: 'resouceId,Name,StartDate,EndDate,Alias,Comments,project,location',
-                filterArray: [LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL)],
+                filters: filters,
                 sort: 'StartDate,ResourceId,Name'
             });
         };
 
+        Ext4.create('Ext.form.RadioGroup', {
+            renderTo: 'events-radiogroup',
+            width: 250,
+            columns: 3,
+            items: [
+                {boxLabel: 'All', name: 'timeframe', inputValue: 'All', checked: true},
+                {boxLabel: 'Previous', name: 'timeframe', inputValue: 'Previous'},
+                {boxLabel: 'Upcoming', name: 'timeframe', inputValue: 'Upcoming'}
+            ],
+            listeners: {
+                change: function(radiogroup, newValue)
+                {
+                    if (newValue.timeframe == 'Previous')
+                        timeFrameFilter = LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.DATE_LESS_THAN);
+                    else if (newValue.timeframe == 'Upcoming')
+                        timeFrameFilter = LABKEY.Filter.create('StartDate', new Date(), LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL);
+                    else
+                        timeFrameFilter = null;
 
+                    renderEventsQueryWebPart();
+                }
+            }
+        });
 
         renderEventsQueryWebPart();
     });
