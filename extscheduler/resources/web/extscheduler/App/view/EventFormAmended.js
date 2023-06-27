@@ -51,7 +51,7 @@ Ext.define('App.view.EventFormAmended', {
             },
 
             {
-                xtype      : 'textfield',
+                xtype      : 'projectcombo',
                 labelAlign: 'left',
                 width: 120,
                 height: 20,
