@@ -110,6 +110,15 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 editorConfig: {
                     decimalPrecision: 3
                 }
+            },
+            preparation: {
+                allowBlank: false,
+                lookup: {
+                    filterArray: [
+                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
+                    ],
+                    sort:'sort_order'
+                }
             }
         },
 
