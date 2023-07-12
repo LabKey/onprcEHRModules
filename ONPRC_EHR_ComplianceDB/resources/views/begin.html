@@ -34,6 +34,8 @@ Ext4.onReady(function(){
                 name: 'Requirements Overdue/Due Soon (Full SSRS Reports)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Report&rs:Command=Render'
             },{
                 name: 'Requirements Overdue/Due Soon (SSRS Reports by Host)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Host_Report&rs:Command=Render'
+            },{
+                name: 'Employee Completion Dates (Includes Units and Categories)', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates_Units_Category'
             }
             ]
         },{
