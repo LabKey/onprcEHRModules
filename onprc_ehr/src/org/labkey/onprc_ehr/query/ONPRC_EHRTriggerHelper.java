@@ -924,11 +924,12 @@ public class ONPRC_EHRTriggerHelper
             }
         }
 //        Modified: 3-13-2023  R. Blasa  Double the sq ft when divider is set as open
+//
+//        if (availableDivider.equals("No Slide"))
+//          {
+//            availableSqFt = (availableSqFt) * 2  ;
+//        }
 
-        if (availableDivider.equals("No Slide"))
-          {
-            availableSqFt = (availableSqFt) * 2  ;
-        }
         if (requiredSqFt > availableSqFt)
         {
             ret.add("These animals are too small for the cage.  Has " + Math.round(availableSqFt) + " sq ft. Requires " + Math.round(requiredSqFt) + ".");
