@@ -161,6 +161,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         setFormElement(Locator.textarea("title"), protocolTitle);
         clickButton("Submit");
 
+        assertTextPresent(protocolTitle);
         protocolTable.setFilter("title", "Equals", protocolTitle);
         String protocolId = protocolTable.getDataAsText(0, "protocol");
 
