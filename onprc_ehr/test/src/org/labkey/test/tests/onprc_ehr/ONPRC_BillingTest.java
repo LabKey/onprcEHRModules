@@ -158,7 +158,10 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         protocolTable.clickHeaderMenu("More Actions", false, "Edit Records");
         protocolTable.clickImportBulkData();
 
+        // HACK
+        Thread.sleep(2500);
         setFormElement(Locator.textarea("title"), protocolTitle);
+        Thread.sleep(2500);
         clickButton("Submit");
 
         assertTextPresent(protocolTitle);
