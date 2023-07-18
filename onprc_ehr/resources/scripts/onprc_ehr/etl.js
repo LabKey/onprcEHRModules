@@ -33,7 +33,21 @@ EHR.ETL = {
         if(EHR.ETL.byQuery[helper.getQueryName()])
             EHR.ETL.byQuery[helper.getQueryName()](row, errors);
 
-        helper.logDebugMsg('Repaired: '+row);
+        try {
+            helper.logDebugMsg('Repaired: ' + row);
+        }
+        catch(e) {
+            console.log('logDebugMsg failed');
+            console.log(e);
+            var i = 0;
+            for (var property in row) {
+                if (row.hasOwnProperty(property)) {
+                    console.log('prop: ', property, ', value: ', row[property]);
+                }
+                i++;
+            }
+            console.log('prop count:', i);
+        }
     },
 
     fixParticipantId: function (row, errors){
