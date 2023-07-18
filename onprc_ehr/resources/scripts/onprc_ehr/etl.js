@@ -47,6 +47,7 @@ EHR.ETL = {
                 i++;
             }
             console.log('prop count:', i);
+            console.log('errors:', errors);
         }
     },
 
