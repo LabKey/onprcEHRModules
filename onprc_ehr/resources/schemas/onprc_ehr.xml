@@ -1203,6 +1203,113 @@
             </column>
         </columns>
     </table>
+    <table tableName="Environmental_Assessment" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Environmental Assessment</tableTitle>
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="RowId">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="date">
+                <formatString>Date</formatString>
+                <columnTitle>Date</columnTitle>
+            </column>
+            <column columnName="service_requested">
+                <columnTitle>Service Requested</columnTitle>
+               </column>
+
+            <column columnName="charge_unit">
+                <columnTitle>Charge Unit</columnTitle>
+            </column>
+            <column columnName="testing_location">
+                <columnTitle>Testing Location</columnTitle>
+            </column>
+            <column columnName="pass_fail">
+                <columnTitle>Pass/Fail</columnTitle>
+            </column>
+            <column columnName="test_results">
+                <columnTitle>Test Results</columnTitle>
+            </column>
+            <column columnName="test_type">
+                <columnTitle>Test Type</columnTitle>
+            </column>
+            <column columnName="colony_count">
+                <columnTitle>Colony Count</columnTitle>
+            </column>
+
+            <column columnName="biological_BI">
+                <columnTitle>BI#</columnTitle>
+            </column>
+            <column columnName="testing_equipment">
+                <columnTitle>Testing Equipment</columnTitle>
+            </column>
+            <column columnName="biological_Cycle">
+                <columnTitle>Biological Cycle</columnTitle>
+            </column>
+
+            <column columnName="water_source">
+                <columnTitle>H2O Source</columnTitle>
+            </column>
+            <column columnName="action">
+                <columnTitle>Action</columnTitle>
+            </column>
+            <column columnName="surface_tested">
+                <columnTitle>Surface Tested</columnTitle>
+            </column>
+            <column columnName="retest">
+                <columnTitle>Retest</columnTitle>
+            </column>
+            <column columnName="biological_reader">
+                <columnTitle>Biological Reader</columnTitle>
+            </column>
+              <column columnName="remarks">
+                <columnTitle>Remarks</columnTitle>
+            </column>
+            <column columnName="taskid">
+                <columnTitle>Task Id</columnTitle>
+                <fk>
+                    <fkDbSchema>ehr</fkDbSchema>
+                    <fkTable>tasks</fkTable>
+                    <fkColumnName>taskid</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="qcstate">
+                <fk>
+                    <fkDbSchema>study</fkDbSchema>
+                    <fkTable>qcstate</fkTable>
+                    <fkColumnName>RowId</fkColumnName>
+                </fk>
+            </column>
+
+            <column columnName="formSort">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="performedby">
+                <columnTitle>Performed by</columnTitle>
+            </column>
+
+            <column columnName="objectid">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="container">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="createdby">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="modified">
+                <isHidden>true</isHidden>
+            </column>
+        </columns>
+    </table>
 
     <table tableName="Epoc_tests" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Epoc Tests</tableTitle>
