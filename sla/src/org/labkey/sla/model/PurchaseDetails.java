@@ -49,13 +49,13 @@ public class PurchaseDetails
             _objectid = props.getString("objectid");
         if (props.has("species"))
             _species = props.getString("species");
-        if (props.has("age"))
+        if (props.has("age")&& !props.isNull("age"))
             _age = props.getString("age");
-        if (props.has("weight"))
+        if (props.has("weight") && !props.isNull("weight"))
             _weight = props.getString("weight");
-        if (props.has("weight_units"))
+        if (props.has("weight_units") && !props.isNull("weight_units"))
             _weight_units = props.getString("weight_units");
-        if (props.has("gestation"))
+        if (props.has("gestation") && !props.isNull("gestation"))
             _gestation = props.getString("gestation");
         if (props.has("gender"))
             _gender = props.getString("gender");
@@ -63,7 +63,7 @@ public class PurchaseDetails
             _strain = props.getString("strain");
         if (props.has("animalsordered"))
             _animalsordered = props.getInt("animalsordered");
-        if (props.has("housinginstructions"))
+        if (props.has("housinginstructions") && !props.isNull("housinginstructions"))
             _housinginstructions = props.getString("housinginstructions");
         if (props.has("room"))
             _room = props.getString("room");
