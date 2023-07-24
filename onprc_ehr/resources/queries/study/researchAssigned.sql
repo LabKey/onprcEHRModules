@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *20230724 Reprohrgamed to proejct
  */
 SELECT assignment.Id,
 assignment.project,
