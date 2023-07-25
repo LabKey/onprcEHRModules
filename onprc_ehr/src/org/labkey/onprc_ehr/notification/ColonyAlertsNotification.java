@@ -1558,7 +1558,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals where the demographics table value for geographic origin conflicts with genetic ancestry.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "geographicOriginConflicts", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "geographicOriginConflicts", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }

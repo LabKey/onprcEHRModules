@@ -192,7 +192,7 @@ public class PurchaseForm implements ApiJsonForm
             _requestorid = json.getString("requestorid");
         if (json.has("vendorid"))
             _vendorid = json.getString("vendorid");
-        if (json.has("hazardslist"))
+        if (json.has("hazardslist") && !json.isNull("hazardslist"))
             _hazardslist = json.getString("hazardslist");
         if (json.has("dobrequired"))
             _dobrequired = json.getInt("dobrequired");
