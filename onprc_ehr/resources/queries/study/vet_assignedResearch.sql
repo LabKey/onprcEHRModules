@@ -2,36 +2,18 @@
 --Iss was this was not loaded at the prodctuib level
 --2021-01-27added to 20.11 process
 
-
-SELECT distinct a.Id,
-                a.project,
-                a.project.use_category,
-                a.project.protocol,
-                a.project.protocol.investigatorID.lastName as PI,
-                a.date,
-                a.projectedRelease,
-                a.enddate,
-                a.assignCondition,
-                'Research Assigned' as ProtocolType,
-                v.protocol.displayName as VetAssignedProtocol
-FROM study.assignment a left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.vet_assignment v on a.project = v.project
-where (a.project.use_category = 'Research')
-  and a.date = CurDate() and a.date = a.enddate
-  and v.protocol is not null
-
-Union
-
 SELECT a.Id,
        a.project,
        a.project.use_category,
-       a.project.protocol,
-       a.project.protocol.investigatorID.lastName as PI,
-       a.date,
-       a.projectedRelease,
+       a.DATE,
        a.enddate,
-       a.assignCondition,
-       'Research Assigned' as ProtocolType,
-       v.protocol.displayName as VetAssignedProtocol
-FROM study.assignment a left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.vet_assignment v on a.project = v.project
-where ((a.date <= Now() and a.enddate is null) and (a.project.use_category = 'Research'))
-  and v.protocol is not null
+       'Research Assigned' AS ProjectType,
+       v.userId.displayName AS vetAssignedProject
+FROM study.assignment AS a
+         JOIN Site.{substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.onprc_ehr.vet_assignment AS v ON a.project = v.project
+WHERE a.DATE <= Now()
+  AND (
+    a.enddate IS NULL
+   OR a.enddate >= Now()
+    )
+  AND a.project.use_category = 'Research'

@@ -5,8 +5,6 @@ FROM ( SELECT DISTINCT d.Id,
                        d.CaseVet,
                        d.Project,
                        d.AssignmentType AS CodeAssignmentType,
-                       d.Protocol,
-                       d.ProtocolPI,
                        d.Calculated_status,
                        CASE
                            WHEN d.CaseVet  IS NOT NULL THEN d.CaseVet
