@@ -11,7 +11,8 @@ FROM ( SELECT DISTINCT d.Id,
                        d.CaseVet,
                      --  r21.userid as ResearchVet,
                 -- the logic here says if the vetassignment returns a value then we wan tot display
-                -- issue was resolved by changing the first consitional statement to return a var char data type value
+                -- UPDATE 20230726issue was resolved by changing the first consitional statement to return a var char data type value
+                --changed line 17 then to return a var char value
                       CASE
                           WHEN d.CaseVet  IS NOT NULL THEN d.CaseVet.displayName
                           WHEN R01.UserID IS NOT NULL THEN R01.UserID.DisplayName
