@@ -8,7 +8,7 @@ SELECT a.Id,
        a.DATE,
        a.enddate,
        'Research Assigned' AS ProjectType,
-       v.userId.displayName AS vetAssignedProject
+       v.userID AS vetAssignedProject
 FROM study.assignment AS a
          JOIN Site.{substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.onprc_ehr.vet_assignment AS v ON a.project = v.project
 WHERE a.DATE <= Now()
