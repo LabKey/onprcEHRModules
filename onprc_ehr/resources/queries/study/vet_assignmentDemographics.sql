@@ -15,13 +15,11 @@ SELECT nhp.id,
            END AS AssignmentType,
        CASE
            WHEN research.project IS NOT NULL
-               THEN research.VetAssignedProject --Update Changed to R from S alias
+               THEN research.VetAssignedProject
            WHEN resource.project IS NOT NULL
-               THEN resource.VetAssignedProject --Update Changed to R from S alias
+               THEN resource.VetAssignedProject
            ELSE NULL
-           END AS project
-       --UPDATE the query needs to display  protocol when appropriate
-        ,
+           END AS project,
        CASE
            WHEN research.project IS NOT NULL
                THEN research.project.protocol.external_id

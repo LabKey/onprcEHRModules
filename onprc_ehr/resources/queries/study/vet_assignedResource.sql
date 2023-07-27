@@ -1,4 +1,3 @@
---Added to 20.11 Process 01-27-2021
 SELECT a.Id,
        a.project,
        a.project.use_category,
