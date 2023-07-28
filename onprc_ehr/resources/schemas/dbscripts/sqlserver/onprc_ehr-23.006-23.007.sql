@@ -7,7 +7,7 @@ CREATE TABLE onprc_ehr.Environmental_Reference_Data (
          sort_order integer  null,
          endDate  datetime  DEFAULT NULL,
 
-         CONSTRAINT pk_reference PRIMARY KEY (value)
+         CONSTRAINT pk_referenceenv PRIMARY KEY (value)
 )
 
 
