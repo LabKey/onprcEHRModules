@@ -29,7 +29,7 @@ FROM ( SELECT DISTINCT d.Id,
                            WHEN R18.UserID IS NOT NULL THEN R18.UserID.DisplayName
                            WHEN R19.UserID IS NOT NULL THEN R19.UserID.DisplayName
                            WHEN R20.UserID IS NOT NULL THEN R20.UserID.DisplayName
-                           WHEN R21.UserID IS NOT NULL THEN R21.UserID.DisplayName --Rule 21 is triggering a data type issue
+                           WHEN R21.UserID IS NOT NULL THEN R21.UserID.DisplayName
                            WHEN R22.UserID IS NOT NULL THEN R22.UserID.DisplayName
                            ELSE 'unassigned'
                            END AS AssignedVet,
@@ -60,4 +60,4 @@ FROM ( SELECT DISTINCT d.Id,
                            ELSE 'No Matching Rule'
                            END AS AssignmentType
 
-       FROM study.vet_assignmentDemographics d
+       FROM study.vet_assignmentDemographics AS d
