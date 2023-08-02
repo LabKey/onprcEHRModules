@@ -8,6 +8,7 @@
         <column name="unit"/>
         <column name="category"/>
         <column name="requirementName"/>
+        <column name="snooze_date"/>
         <column name="trackingflag"/>
         <column name="timesCompleted"/>
         <column name="ExpiredPeriod"/>
