@@ -26,7 +26,14 @@ SELECT nhp.id,
            WHEN resource.project IS NOT NULL
                THEN resource.project.protocol.external_id
            ELSE NULL
-           END AS Protocol
+           END AS Protocol,
+    CASE
+           WHEN research.project IS NOT NULL
+               THEN research.project.protocol.investigatorID.lastName
+           WHEN resource.project IS NOT NULL
+               THEN resource.project.protocol.investigatorID.lastName
+           ELSE NULL
+END AS ProtocolPI
 FROM Site.{substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.animal nhp
 LEFT JOIN Site.{substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.ClinicalCases_Open AS CMUcase ON CMUcase.id = nhp.id
     LEFT JOIN Site.{substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.housing housing ON housing.id = nhp.id

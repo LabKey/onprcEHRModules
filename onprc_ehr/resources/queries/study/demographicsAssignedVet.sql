@@ -4,6 +4,8 @@ FROM ( SELECT DISTINCT d.Id,
                        d.Room,
                        d.CaseVet,
                        d.Project,
+                       d.protocol,
+                       d.ProtocolPI,
                        d.AssignmentType AS CodeAssignmentType,
                        d.Calculated_status,
                        d.CaseVet,
@@ -59,6 +61,7 @@ FROM ( SELECT DISTINCT d.Id,
                            WHEN R22.UserID IS NOT NULL THEN 'Area'
                            ELSE 'No Matching Rule'
                            END AS AssignmentType
+
 
        FROM study.vet_assignmentDemographics d
 
