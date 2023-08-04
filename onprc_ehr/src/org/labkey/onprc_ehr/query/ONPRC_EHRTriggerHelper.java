@@ -912,7 +912,6 @@ public class ONPRC_EHRTriggerHelper
         List<String> ret = new ArrayList<>();
         Double availableSqFt = cageRow.getSqFt();
         Double availableHeight = cageRow.getHeight();
-        String availableDivider = cageRow.getDividerName();
 
         Double requiredSqFt = 0.0;
         for (Double w : weights)
@@ -923,12 +922,6 @@ public class ONPRC_EHRTriggerHelper
                 requiredSqFt += s;
             }
         }
-//        Modified: 3-13-2023  R. Blasa  Double the sq ft when divider is set as open
-//
-//        if (availableDivider.equals("No Slide"))
-//          {
-//            availableSqFt = (availableSqFt) * 2  ;
-//        }
 
         if (requiredSqFt > availableSqFt)
         {
@@ -1833,11 +1826,10 @@ public class ONPRC_EHRTriggerHelper
             return "Unknown cage: " + cage;
         }
 
-//          Modified: 3-16-2023 R. Blasa     Allow divider changes
-//        if (cr.getCageslots() != 2)
-//        {
-//            return "Divider changes are only supported for doubles";
-//        }
+        if (cr.getCageslots() == 0)
+        {
+            return "Divider changes are not supported for undefined cage slots";
+        }
 
         DividerRecord targetDivider = getDividerRecord(divider);
         if (targetDivider == null)
