@@ -18,5 +18,4 @@ FROM NIHRateConfig n
 Group by
 n.category,
 n.name,
-n.UnitCost,
 n.postedDate
