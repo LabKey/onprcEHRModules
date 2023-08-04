@@ -54,8 +54,8 @@ FROM ehr_lookups.cage c
 
 --for the next 2 horizontal joins, use the highest effective row, determined above
 --find the highest cage with a non-separating divider
----LEFT JOIN ehr_lookups.cage joined ON (joined.cage_type != 'No Cage' and c.room = joined.room and c.cagePosition.row = joined.cagePosition.row and joined.divider.countAsSeparate = false and c.cagePosition.columnIdx > joined.cagePosition.columnIdx)
-LEFT JOIN ehr_lookups.cage joined ON (joined.cage_type != 'No Cage' and c.room = joined.room and c.cagePosition.row = joined.cagePosition.row and joined.divider.countAsSeparate = false and c.cagePosition.columnIdx >= joined.cagePosition.columnIdx)  ----TEst item
+LEFT JOIN ehr_lookups.cage joined ON (joined.cage_type != 'No Cage' and c.status.value != 'Unavailable' and c.room = joined.room and c.cagePosition.row = joined.cagePosition.row and joined.divider.countAsSeparate = false and c.cagePosition.columnIdx > joined.cagePosition.columnIdx)
+
 --find the highest cage with a separating divider
 LEFT JOIN ehr_lookups.cage sep ON (sep.cage_type != 'No Cage' and c.room = sep.room and c.cagePosition.row = sep.cagePosition.row and sep.divider.countAsSeparate = true and c.cagePosition.columnIdx > sep.cagePosition.columnIdx)
 
