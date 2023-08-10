@@ -1,5 +1,5 @@
 <tables xmlns="http://labkey.org/data/xml">
-    <table tableName="NIHIndustryRateNew" tableDbType="NOT_IN_DB">
+    <table tableName="NIHIndustryRate_New" tableDbType="NOT_IN_DB">
         <columns>
             <column columnName="category">
                 <columnTitle>Category</columnTitle>
