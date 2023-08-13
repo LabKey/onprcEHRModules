@@ -1236,7 +1236,6 @@
             <column columnName="colony_count">
                 <columnTitle>Colony Count</columnTitle>
             </column>
-
             <column columnName="biological_BI">
                 <columnTitle>BI#</columnTitle>
             </column>

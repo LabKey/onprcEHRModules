@@ -12,7 +12,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             date: {
                 header: 'Date',
                 columnConfig: {
-                    width: 80
+                    width: 180
                 }
             },
             service_requested: {
@@ -24,11 +24,12 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             testing_location: {
                 xtype: 'onprc-env_testLocation',
                 columnConfig: {
-                    width: 140
+                    width: 200
                 }
             },
             charge_unit: {
                 xtype: 'onprc-env_chargeunit',
+                defaultValue: 'Clinpath',
                 columnConfig: {
                     width: 100
                 }
@@ -80,6 +81,8 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 hidden: true
             },
             water_source: {
+                xtype: 'onprc-env_watersource',
+                defaultValue: 'Lixit',
                 header: 'H2O Source',
                 hidden: false,
                 columnConfig: {
@@ -87,23 +90,32 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 }
             },
             test_type: {
+                xtype: 'onprc-env_passfail',
                 header: 'Test Type',
+                defaultValue: 'Initial',
                 hidden: false,
                 columnConfig: {
                     width: 80
                 }
             },
             retest: {
-                hidden: true
+                hidden: false,
+                header: 'Results Read by',
+                columnConfig: {
+                    width: 90
+                }
             },
+
             pass_fail: {
                 xtype: 'onprc-env_passfail',
+                defaultValue: 'Pass',
                 columnConfig: {
                     width: 100
                 }
             },
             colony_count: {
                 hidden: false,
+                header: 'Colony Count',
                 columnConfig: {
                     width: 90
                 }

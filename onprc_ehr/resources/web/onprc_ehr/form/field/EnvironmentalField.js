@@ -165,13 +165,82 @@ Ext4.define('onprc_ehr.form.field.environ_Test_Results', {
             queryMode: 'local',
             store: Ext4.create('LABKEY.ext4.data.Store', {
                 schemaName: 'onprc_ehr',
-                queryName: '' +
-                        '',
+                queryName: 'Environmental_Reference_Data',
                 columns: 'value,columnName',
                 sort: 'value',
                 filterArray: [
                     LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
                     LABKEY.Filter.create('ColumnName', 'test_results', LABKEY.Filter.Types.EQUAL)],
+                autoLoad: true
+            })
+        });
+
+        this.callParent(arguments);
+
+
+
+    }
+});
+
+Ext4.define('onprc_ehr.form.field.environ_Test_Type', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.onprc-env_testtype',
+
+    nullCaption: '[Blank]',
+    expandToFitContent: true,
+    caseSensitive: false,
+    forceSelection: true,
+    anyMatch: true,
+    typeAhead: true,
+
+    initComponent: function(){
+        Ext4.apply(this, {
+            displayField:'value',
+            valueField: 'value',
+            queryMode: 'local',
+            store: Ext4.create('LABKEY.ext4.data.Store', {
+                schemaName: 'onprc_ehr',
+                queryName: 'Environmental_Reference_Data',
+                columns: 'value,columnName',
+                sort: 'value',
+                filterArray: [
+                    LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                    LABKEY.Filter.create('ColumnName', 'test_type', LABKEY.Filter.Types.EQUAL)],
+                autoLoad: true
+            })
+        });
+
+        this.callParent(arguments);
+
+
+
+    }
+});
+
+Ext4.define('onprc_ehr.form.field.environ_Water_source', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.onprc-env_watersource',
+
+    nullCaption: '[Blank]',
+    expandToFitContent: true,
+    caseSensitive: false,
+    forceSelection: true,
+    anyMatch: true,
+    typeAhead: true,
+
+    initComponent: function(){
+        Ext4.apply(this, {
+            displayField:'value',
+            valueField: 'value',
+            queryMode: 'local',
+            store: Ext4.create('LABKEY.ext4.data.Store', {
+                schemaName: 'onprc_ehr',
+                queryName: 'Environmental_Reference_Data',
+                columns: 'value,columnName',
+                sort: 'value',
+                filterArray: [
+                    LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                    LABKEY.Filter.create('ColumnName', 'water_source', LABKEY.Filter.Types.EQUAL)],
                 autoLoad: true
             })
         });

@@ -1,3 +1,7 @@
+
+EXEC core.fn_dropifexists 'Environmental_Assessment', 'onprc_ehr', 'TABLE', NULL;
+GO
+
 CREATE TABLE onprc_ehr.Environmental_Assessment(
         rowid int IDENTITY(100,1) NOT NULL,
         date datetime NULL,
@@ -15,6 +19,7 @@ CREATE TABLE onprc_ehr.Environmental_Assessment(
         water_source  varchar(300) NULL,
         surface_tested  varchar(300) NULL,
         retest  varchar(300) NULL,
+        colony_count  varchar(300) NULL,
         objectid ENTITYID Not Null,
         createdby int NULL,
         created datetime NULL,

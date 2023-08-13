@@ -15,7 +15,7 @@
                     </column>
                     <column columnName="testing_location">
                         <columnTitle>Test Location</columnTitle>
-                        <displayWidth>150</displayWidth>
+                        <displayWidth>250</displayWidth>
                     </column>
                     <column columnName="charge_unit">
                         <columnTitle>Charge Unit</columnTitle>
@@ -30,11 +30,25 @@
                         <columnTitle>Test Results</columnTitle>
                         <displayWidth>100</displayWidth>
                     </column>
+                    <column columnName="test_type">
+                        <columnTitle>Test Type</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
                     <column columnName="qcstate">
                         <isHidden>true</isHidden>
                     </column>
                     <column columnName="biological_BI#">
                         <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="retest">
+                        <columnTitle>Results Read By</columnTitle>
+                        <displayWidth>60</displayWidth>
+                        <isHidden>false</isHidden>
+                    </column>
+                    <column columnName="colony_count">
+                        <columnTitle>Colony Count</columnTitle>
+                        <displayWidth>60</displayWidth>
+                        <isHidden>false</isHidden>
                     </column>
                     <column columnName="remarks">
                         <columnTitle>Comments</columnTitle>

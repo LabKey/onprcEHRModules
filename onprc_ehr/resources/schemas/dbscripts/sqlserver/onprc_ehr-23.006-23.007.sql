@@ -1,4 +1,8 @@
 
+
+EXEC core.fn_dropifexists 'Environmental_Reference_Data', 'onprc_ehr', 'TABLE', NULL;
+GO
+
 CREATE TABLE onprc_ehr.Environmental_Reference_Data (
          rowId int identity(1,1),
          label varchar(250) DEFAULT NULL,
