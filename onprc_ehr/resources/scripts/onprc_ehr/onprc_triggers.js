@@ -462,6 +462,14 @@ exports.init = function(EHR){
 
     });
 
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'flags', function(event, helper){
+        helper.setScriptOptions({
+            allowFutureDates: true
+        });
+
+        EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'flags', EHR.Server.TriggerManager.Events.AFTER_INSERT);
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'flags', function(helper, scriptErrors, row, oldRow){
         if (row.flag && row.Id && !row.enddate){
             var msg = triggerHelper.validateHousingConditionInsert(row.Id, row.flag, row.objectid || null);
