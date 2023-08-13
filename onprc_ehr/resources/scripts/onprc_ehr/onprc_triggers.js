@@ -464,7 +464,9 @@ exports.init = function(EHR){
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'flags', function(event, helper){
         helper.setScriptOptions({
-            allowFutureDates: true
+            allowFutureDates: true,
+            removeTimeFromDate: true,
+            removeTimeFromEndDate: true
         });
 
         EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'flags', EHR.Server.TriggerManager.Events.AFTER_INSERT);
