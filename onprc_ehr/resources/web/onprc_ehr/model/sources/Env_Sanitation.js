@@ -50,6 +50,14 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 header: 'Collected by',
                 defaultValue: LABKEY.Security.currentUser.displayName
             },
+            method: {
+                xtype: 'onprc-env_method',
+                header: 'Method',
+                hidden: false,
+                columnConfig: {
+                    width: 120
+                }
+            },
             action: {
                 header: 'Action',
                 hidden: false,
@@ -86,7 +94,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 header: 'H2O Source',
                 hidden: false,
                 columnConfig: {
-                    width: 90
+                    width:150
                 }
             },
             test_type: {
@@ -108,7 +116,6 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
 
             pass_fail: {
                 xtype: 'onprc-env_passfail',
-                defaultValue: 'Pass',
                 columnConfig: {
                     width: 100
                 }

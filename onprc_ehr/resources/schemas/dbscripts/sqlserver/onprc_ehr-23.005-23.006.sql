@@ -20,6 +20,7 @@ CREATE TABLE onprc_ehr.Environmental_Assessment(
         surface_tested  varchar(300) NULL,
         retest  varchar(300) NULL,
         colony_count  varchar(300) NULL,
+        method  varchar(500) NULL,
         objectid ENTITYID Not Null,
         createdby int NULL,
         created datetime NULL,

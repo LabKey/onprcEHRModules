@@ -17,6 +17,10 @@
                         <columnTitle>Test Location</columnTitle>
                         <displayWidth>250</displayWidth>
                     </column>
+                    <column columnName="method">
+                        <columnTitle>Method</columnTitle>
+                        <displayWidth>150</displayWidth>
+                    </column>
                     <column columnName="charge_unit">
                         <columnTitle>Charge Unit</columnTitle>
                         <displayWidth>100</displayWidth>

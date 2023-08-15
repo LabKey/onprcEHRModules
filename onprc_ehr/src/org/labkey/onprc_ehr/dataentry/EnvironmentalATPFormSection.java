@@ -28,6 +28,7 @@ public class EnvironmentalATPFormSection extends SimpleGridPanel
     {
         super("onprc_ehr", "Environmental_Assessment", "Environmental ATP");
         setTemplateMode(TEMPLATE_MODE.NONE);
+        addExtraProperty(BY_PASS_ANIMAL_ID, "true");
 
     }
     @Override

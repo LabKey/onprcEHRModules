@@ -1224,6 +1224,9 @@
             <column columnName="testing_location">
                 <columnTitle>Testing Location</columnTitle>
             </column>
+            <column columnName="method">
+                <columnTitle>Method</columnTitle>
+            </column>
             <column columnName="pass_fail">
                 <columnTitle>Pass/Fail</columnTitle>
             </column>
@@ -1236,6 +1239,7 @@
             <column columnName="colony_count">
                 <columnTitle>Colony Count</columnTitle>
             </column>
+
             <column columnName="biological_BI">
                 <columnTitle>BI#</columnTitle>
             </column>
