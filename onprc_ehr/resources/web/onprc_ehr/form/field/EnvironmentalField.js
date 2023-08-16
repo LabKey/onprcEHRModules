@@ -256,7 +256,6 @@ Ext4.define('onprc_ehr.form.field.environ_Test_Method', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.onprc-env_method',
 
-    // nullCaption: '[Blank]',
     expandToFitContent: true,
     caseSensitive: false,
     forceSelection: true,

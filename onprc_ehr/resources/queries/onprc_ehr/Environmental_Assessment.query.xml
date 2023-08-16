@@ -19,7 +19,7 @@
                     </column>
                     <column columnName="test_method">
                         <columnTitle>Method</columnTitle>
-                        <displayWidth>550</displayWidth>
+                        <displayWidth>150</displayWidth>
                     </column>
                     <column columnName="charge_unit">
                         <columnTitle>Charge Unit</columnTitle>
@@ -56,6 +56,9 @@
                     </column>
                     <column columnName="remarks">
                         <columnTitle>Comments</columnTitle>
+                    </column>
+                    <column columnName="performedby">
+                        <columnTitle>Collected by</columnTitle>
                     </column>
                     <column columnName="taskid">
                         <columnTitle>Task ID</columnTitle>

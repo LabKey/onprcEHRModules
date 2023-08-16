@@ -53,9 +53,8 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             test_method: {
                 xtype: 'onprc-env_method',
                 header: 'Method',
-                hidden: false,
                 columnConfig: {
-                    width: 350
+                    width: 150
                 }
             },
             action: {
