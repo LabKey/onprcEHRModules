@@ -1,7 +1,7 @@
-IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'UpdateLabEndDate')
-DROP PROCEDURE UpdateLabEndDate
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'UpdateClinPathEndDate')
+DROP PROCEDURE UpdateClinPathEndDate
     GO
-CREATE PROCEDURE onprc_billing.UpdateLabEndDate
+CREATE PROCEDURE onprc_billing.UpdateClinPathEndDate
 
     AS
 BEGIN
