@@ -1,5 +1,5 @@
 IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'UpdateLabEndDate')
-DROP PROCEDURE ALIASCleanup202004
+DROP PROCEDURE UpdateLabEndDate
     GO
 CREATE PROCEDURE onprc_billing.UpdateLabEndDate
 
