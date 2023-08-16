@@ -30,6 +30,8 @@ public class EnvironmentalFormSection extends SimpleGridPanel
         super("onprc_ehr", "Environmental_Assessment", "Environmental Assessment");
         setTemplateMode(TEMPLATE_MODE.NONE);
         addExtraProperty(BY_PASS_ANIMAL_ID, "true");
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/EnvironmentalClientStore.js"));
+        setClientStoreClass("ONPRC_EHR.data.EnvironmentalClientStore");
 
     }
     @Override

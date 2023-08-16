@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
+import org.labkey.api.view.template.ClientDependency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,8 @@ public class EnvironmentalATPFormSection extends SimpleGridPanel
         super("onprc_ehr", "Environmental_Assessment", "Environmental ATP");
         setTemplateMode(TEMPLATE_MODE.NONE);
         addExtraProperty(BY_PASS_ANIMAL_ID, "true");
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/EnvironmentalClientStore.js"));
+        setClientStoreClass("ONPRC_EHR.data.EnvironmentalClientStore");
 
     }
     @Override

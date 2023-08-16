@@ -256,7 +256,7 @@ Ext4.define('onprc_ehr.form.field.environ_Test_Method', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.onprc-env_method',
 
-    nullCaption: '[Blank]',
+    // nullCaption: '[Blank]',
     expandToFitContent: true,
     caseSensitive: false,
     forceSelection: true,
@@ -271,8 +271,8 @@ Ext4.define('onprc_ehr.form.field.environ_Test_Method', {
             store: Ext4.create('LABKEY.ext4.data.Store', {
                 schemaName: 'onprc_ehr',
                 queryName: 'Environmental_Reference_Data',
-                columns: 'value,columnName',
-                sort: 'value',
+                columns: 'value,columnName, sort_order',
+                sort: 'sort_order',
                 filterArray: [
                     LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
                     LABKEY.Filter.create('ColumnName', 'test_method', LABKEY.Filter.Types.EQUAL)],

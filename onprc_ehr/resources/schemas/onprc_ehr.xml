@@ -1224,7 +1224,7 @@
             <column columnName="testing_location">
                 <columnTitle>Testing Location</columnTitle>
             </column>
-            <column columnName="method">
+            <column columnName="test_method">
                 <columnTitle>Method</columnTitle>
             </column>
             <column columnName="pass_fail">
@@ -1243,9 +1243,6 @@
             <column columnName="biological_BI">
                 <columnTitle>BI#</columnTitle>
             </column>
-            <column columnName="testing_equipment">
-                <columnTitle>Testing Equipment</columnTitle>
-            </column>
             <column columnName="biological_Cycle">
                 <columnTitle>Biological Cycle</columnTitle>
             </column>
@@ -1262,10 +1259,7 @@
             <column columnName="retest">
                 <columnTitle>Retest</columnTitle>
             </column>
-            <column columnName="biological_reader">
-                <columnTitle>Biological Reader</columnTitle>
-            </column>
-              <column columnName="remarks">
+            <column columnName="remarks">
                 <columnTitle>Remarks</columnTitle>
             </column>
             <column columnName="taskid">

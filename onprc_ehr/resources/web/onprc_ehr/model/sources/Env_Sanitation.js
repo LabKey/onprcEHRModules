@@ -50,12 +50,12 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 header: 'Collected by',
                 defaultValue: LABKEY.Security.currentUser.displayName
             },
-            method: {
+            test_method: {
                 xtype: 'onprc-env_method',
                 header: 'Method',
                 hidden: false,
                 columnConfig: {
-                    width: 120
+                    width: 350
                 }
             },
             action: {
@@ -82,9 +82,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                     width: 90
                 }
             },
-            testing_equipment: {
-                hidden: true
-            },
+
             surface_tested: {
                 hidden: true
             },
