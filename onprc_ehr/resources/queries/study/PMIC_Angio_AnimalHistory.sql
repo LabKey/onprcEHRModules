@@ -17,3 +17,6 @@ SELECT
     a.createdBy
 from study.PMIC_AngioImagingData a, study.encounters e
 Where a.taskid = e.taskid
+  and a.id = e.id
+  and e.chargetype = 'PMIC'
+  and e.type = 'procedure'
