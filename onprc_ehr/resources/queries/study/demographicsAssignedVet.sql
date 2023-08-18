@@ -1,98 +1,106 @@
-SELECT *
-FROM ( SELECT DISTINCT d.Id,
-                       d.Area,
-                       d.Room,
-                       d.CaseVet,
-                       d.Project,
-                       d.AssignmentType AS CodeAssignmentType,
-                       d.Protocol,
-                       d.ProtocolPI,
-                       d.Calculated_status,
-                       CASE
-                           WHEN d.CaseVet  IS NOT NULL THEN d.CaseVet
-                           WHEN R01.UserID IS NOT NULL THEN R01.UserID.DisplayName
-                           WHEN R02.UserID IS NOT NULL THEN R02.UserID.DisplayName
-                           WHEN R03.UserID IS NOT NULL THEN R03.UserID.DisplayName
-                           WHEN R04.UserID IS NOT NULL THEN R04.UserID.DisplayName
-                           WHEN R05.UserID IS NOT NULL THEN R05.UserID.DisplayName
-                           WHEN R06.UserID IS NOT NULL THEN R06.UserID.DisplayName
-                           WHEN R07.UserID IS NOT NULL THEN R07.UserID.DisplayName
-                           WHEN R08.UserID IS NOT NULL THEN R08.UserID.DisplayName
-                           WHEN R09.UserID IS NOT NULL THEN R09.UserID.DisplayName
-                           WHEN R10.UserID IS NOT NULL THEN R10.UserID.DisplayName
-                           WHEN R11.UserID IS NOT NULL THEN R11.UserID.DisplayName
-                           WHEN R12.UserID IS NOT NULL THEN R12.UserID.DisplayName
-                           WHEN R13.UserID IS NOT NULL THEN R13.UserID.DisplayName
-                           WHEN R14.UserID IS NOT NULL THEN R14.UserID.DisplayName
-                           WHEN R15.UserID IS NOT NULL THEN R15.UserID.DisplayName
-                           WHEN R16.UserID IS NOT NULL THEN R16.UserID.DisplayName
-                           WHEN R17.UserID IS NOT NULL THEN R17.UserID.DisplayName
-                           WHEN R18.UserID IS NOT NULL THEN R18.UserID.DisplayName
-                           WHEN R19.UserID IS NOT NULL THEN R19.UserID.DisplayName
-                           WHEN R20.UserID IS NOT NULL THEN R20.UserID.DisplayName
-                           WHEN R21.UserID IS NOT NULL THEN R21.UserID.DisplayName
-                           WHEN R22.UserID IS NOT NULL THEN R22.UserID.DisplayName
-                           ELSE 'Unassigned'
-                           END AS AssignedVet,
-                       CASE
-                           WHEN d.CaseVet  IS NOT NULL THEN 'Open Case'
-                           WHEN R01.UserID IS NOT NULL THEN 'Room Priority'
-                           WHEN R02.UserID IS NOT NULL THEN 'Area Priority'
-                           WHEN R03.UserID IS NOT NULL THEN 'Project Room Research Priority'
-                           WHEN R04.UserID IS NOT NULL THEN 'Project Room Resource Priority'
-                           WHEN R05.UserID IS NOT NULL THEN 'Project Room Research'
-                           WHEN R06.UserID IS NOT NULL THEN 'Project Room Resource'
-                           WHEN R07.UserID IS NOT NULL THEN 'Project Area Research Priority'
-                           WHEN R08.UserID IS NOT NULL THEN 'Project Area Resource Priority'
-                           WHEN R09.UserID IS NOT NULL THEN 'Project Area Research'
-                           WHEN R10.UserID IS NOT NULL THEN 'Project Area Resource'
-                           WHEN R11.UserID IS NOT NULL THEN 'Project Research Priority'
-                           WHEN R12.UserID IS NOT NULL THEN 'Project Resource Priority'
-                           WHEN R13.UserID IS NOT NULL THEN 'Project Research'
-                           WHEN R14.UserID IS NOT NULL THEN 'Project Resource'
-                           WHEN R15.UserID IS NOT NULL THEN 'Protocol Room Priority'
-                           WHEN R16.UserID IS NOT NULL THEN 'Protocol Area Priority'
-                           WHEN R17.UserID IS NOT NULL THEN 'Protocol Room'
-                           WHEN R18.UserID IS NOT NULL THEN 'Protocol Area'
-                           WHEN R19.UserID IS NOT NULL THEN 'Protocol Priority'
-                           WHEN R20.UserID IS NOT NULL THEN 'Protocol'
-                           WHEN R21.UserID IS NOT NULL THEN 'Room'
-                           WHEN R22.UserID IS NOT NULL THEN 'Area'
-                           ELSE 'No Matching Rule'
-                           END AS AssignmentType
+-2021/03/09  Update to include Project
+Select
+    Distinct
+    d.Id,
+    d.room.area as Area,
+    d.room,
+    d.CaseVet,
+    d.project,
+    d.assignmentType as CodeAssignmentType,
+    d.protocol,
+    d.ProtocolPI,
+    d.Calculated_status,
+    Case
+        --  when d.DeceaseDAssignedVet is not null then d.DeceaseDAssignedVet
+        when d.caseVet is not null then d.CaseVet
+        when p1.userId is not null  then p1.userId.displayName
+        when p2.userId is not null then  p2.userId.DisplayName
+        when s3.userID is not null then  s3.userID.displayName
+        when s4.userID is not null then  s4.userID.displayName
+        when s5.userID is not null then  s5.userID.displayName
+        when s6.userID is not null then  s6.userID.displayName
+        when s1.userID is not null then  s1.userID.displayName
+        when s2.userID is not null then  s2.userID.displayName
+        when v1.userId is not null  then v1.userId.displayName
+        when v2.userId is not null then  v2.userId.DisplayName
+        when v3.userId is not null then  v3.userId.DisplayName
+        when v4.userId is not null then  v4.userId.DisplayName
+        when p3.userId is not null then  p3.userId.DisplayName
+        when p4.userId is not null then   p4.userId.DisplayName
+        when v5.userId is not null then  v5.userId.DisplayName
+        when v6.userId is not null then  v6.userId.DisplayName
+        when h1.userId is not null then  h1.userId.DisplayName
+        when h2.userId is not null then h2.userId.DisplayName
 
-       FROM study.vet_assignmentDemographics d
+        End as AssignedVet,
 
-/* R01 Room Priority                     */ LEFT JOIN onprc_ehr.vet_assignment R01 ON (R01.Room = d.Room AND R01.Area IS NULL AND R01.Project IS NULL AND R01.Protocol IS NULL AND R01.Priority = true)
-/* R02 Area Priority                     */ LEFT JOIN onprc_ehr.vet_assignment R02 ON (R02.Area = d.Area AND R02.Room IS NULL AND R02.Project IS NULL AND R02.Protocol IS NULL AND R02.Priority = true)
+    Case
+        -- when d.DeceaseDAssignedVet is not null then 'Deceased or Shipped NHP'
+        when d.caseVet is not null then 'Open Case'
+        when p1.userId  is not null then  'Room Priority'
+        when p2.userId is not null then  'Area Priority'
+        When s3.userID is not null then 'Project Room Research'
+        When s4.userID is not null then 'Project Room Resource'
+        When s5.userID is not null then 'Project Area Research'
+        When s6.userID is not null then 'Project Area Resource'
+        when s1.userID is not null then 'Project Research'
+        when s2.userID is not null then 'Project Resource'
+        When p3.userId is not null then 'Protocol Room Priority'
+        When p4.userId is not null then 'Protocol Area Priority'
+        when v1.userId is not null  then 'Protocol Research Room'
+        when v2.userId is not null then  'Protocol Research Area'
+        when v3.userId is not null then  'Protocol Resource Room'
+        when v4.userId is not null then  'Protocol Resource Area'
+        when v5.userId is not null then  'Protocol Research Only'
+        when v6.userId is not null then  'Protocol Resource Only'
 
-/* R03 Project Room Research Priority    */ LEFT JOIN onprc_ehr.vet_assignment R03 ON (R03.Project = d.Project AND R03.Room = d.Room AND R03.Area IS NULL AND R03.Protocol IS NULL AND R03.Priority = true  AND d.AssignmentType = 'Project Research Assigned')
-/* R04 Project Room Resource Priority    */ LEFT JOIN onprc_ehr.vet_assignment R04 ON (R04.Project = d.Project AND R04.Room = d.Room AND R04.Area IS NULL AND R04.Protocol IS NULL AND R04.Priority = true  AND d.AssignmentType = 'Project Resource Assigned')
+        when h1.userId is not null then 'Room Only'
+        when h2.userId  is not null then 'Area Only'
 
-/* R05 Project Room Research             */ LEFT JOIN onprc_ehr.vet_assignment R05 ON (R05.Project = d.Project AND R05.Room = d.Room AND R05.Area IS NULL AND R05.Protocol IS NULL AND R05.Priority = false AND d.AssignmentType = 'Project Research Assigned')
-/* R06 Project Room Resource             */ LEFT JOIN onprc_ehr.vet_assignment R06 ON (R06.Project = d.Project AND R06.Room = d.Room AND R06.Area IS NULL AND R06.Protocol IS NULL AND R06.Priority = false AND d.AssignmentType = 'Project Resource Assigned')
+        End as AssignmentType
 
-/* R07 Project Area Research Priority    */ LEFT JOIN onprc_ehr.vet_assignment R07 ON (R07.Project = d.Project AND R07.Area = d.Area AND R07.Room IS NULL AND R07.Protocol IS NULL AND R07.Priority = true  AND d.AssignmentType = 'Project Research Assigned')
-/* R08 Project Area Resource Priority    */ LEFT JOIN onprc_ehr.vet_assignment R08 ON (R08.Project = d.Project AND R08.Area = d.Area AND R08.Room IS NULL AND R08.Protocol IS NULL AND R08.Priority = true  AND d.AssignmentType = 'Project Resource Assigned')
+FROM study.vet_assignmentDemographics d
+--this handles Project research Room
+         Left Join onprc_ehr.vet_assignment s3 on (s3.project = d.project and s3.room = d.room and d.assignmentType = 'Project Research Assigned')
 
-/* R09 Project Area Research             */ LEFT JOIN onprc_ehr.vet_assignment R09 ON (R09.Project = d.Project AND R09.Area = d.Area AND R09.Room IS NULL AND R09.Protocol IS NULL AND R09.Priority = false AND d.AssignmentType = 'Project Research Assigned')
-/* R10 Project Area Resource             */ LEFT JOIN onprc_ehr.vet_assignment R10 ON (R10.Project = d.Project AND R10.Area = d.Area AND R10.Room IS NULL AND R10.Protocol IS NULL AND R10.Priority = false AND d.AssignmentType = 'Project Resource Assigned')
+--this handles Project resource Room
+         Left Join onprc_ehr.vet_assignment s4 on (s4.project = d.project and s4.room = d.room and d.assignmentType = 'Project Resource Assigned')
+    --this handles Project research area
+         Left Join onprc_ehr.vet_assignment s5 on (s5.project = d.project  and s5.area = d.room.area and d.assignmentType = 'Project Research Assigned')
+    --this handles Project resource area
+         Left Join onprc_ehr.vet_assignment s6 on (s6.project = d.project  and s6.area = d.room.area and d.assignmentType = 'Project Resource Assigned')
+--this handles Project research Area
+         Left Join onprc_ehr.vet_assignment s1 on (s1.project = d.project and d.assignmentType = 'Project Research Assigned')
 
-/* R11 Project Research Priority         */ LEFT JOIN onprc_ehr.vet_assignment R11 ON (R11.Project = d.Project AND R11.Area IS NULL  AND R11.Room IS NULL AND R11.Protocol IS NULL AND R11.Priority = true  AND d.AssignmentType = 'Project Research Assigned')
-/* R12 Project Resource Priority         */ LEFT JOIN onprc_ehr.vet_assignment R12 ON (R12.Project = d.Project AND R12.Area IS NULL  AND R12.Room IS NULL AND R12.Protocol IS NULL AND R12.Priority = true  AND d.AssignmentType = 'Project Resource Assigned')
+--this handles Project resource  area
+         Left Join onprc_ehr.vet_assignment s2 on (s2.project = d.project and d.assignmentType = 'Project Resource Assigned')
 
-/* R13 Project Research                  */ LEFT JOIN onprc_ehr.vet_assignment R13 ON (R13.Project = d.Project AND R13.Area IS NULL  AND R13.Room IS NULL AND R13.Protocol IS NULL AND R13.Priority = false AND d.AssignmentType = 'Project Research Assigned')
-/* R14 Project Resource                  */ LEFT JOIN onprc_ehr.vet_assignment R14 ON (R14.Project = d.Project AND R14.Area IS NULL  AND R14.Room IS NULL AND R14.Protocol IS NULL AND R14.Priority = false AND d.AssignmentType = 'Project Resource Assigned')
+    /*
+        --THis handles Project
 
-/* R15 Protocol Room Priority            */ LEFT JOIN onprc_ehr.vet_assignment R15 ON (R15.Protocol.DisplayName = d.Protocol AND R15.Room = d.Room AND R15.Area IS NULL AND R15.Project IS NULL AND R15.Priority = true)
-/* R16 Protocol Area Priority            */ LEFT JOIN onprc_ehr.vet_assignment R16 ON (R16.Protocol.DisplayName = d.Protocol AND R16.Area = d.Area AND R16.Room IS NULL AND R16.Project IS NULL AND R16.Priority = true)
-
-/* R17 Protocol Room                     */ LEFT JOIN onprc_ehr.vet_assignment R17 ON (R17.Protocol.DisplayName = d.Protocol AND R17.Room = d.Room AND R17.Area IS NULL AND R17.Project IS NULL AND R17.Priority = false)
-/* R18 Protocol Area                     */ LEFT JOIN onprc_ehr.vet_assignment R18 ON (R18.Protocol.DisplayName = d.Protocol AND R18.Area = d.Area AND R18.Room IS NULL AND R18.Project IS NULL AND R18.Priority = false)
-
-/* R19 Protocol Priority                 */ LEFT JOIN onprc_ehr.vet_assignment R19 ON (R19.Protocol.DisplayName = d.Protocol AND R19.Area IS NULL  AND R19.Room IS NULL AND R19.Project IS NULL AND R19.Priority = true)
-/* R20 Protocol                          */ LEFT JOIN onprc_ehr.vet_assignment R20 ON (R20.Protocol.DisplayName = d.Protocol AND R20.Area IS NULL  AND R20.Room IS NULL AND R20.Project IS NULL AND R20.Priority = false)
-
-/* R21 Room                              */ LEFT JOIN onprc_ehr.vet_assignment R21 ON (R21.Room = d.Room AND R21.Area IS NULL AND R21.Protocol IS NULL AND R21.Project IS NULL AND R21.Priority = false)
-/* R22 Area                              */ LEFT JOIN onprc_ehr.vet_assignment R22 ON (R22.Area = d.Area AND R22.Room IS NULL AND R22.Protocol IS NULL AND R22.Project IS NULL AND R22.Priority = false)
-     )
+        --this handles
+        */
+--this handles REsearch Protocol Room
+         Left Join onprc_ehr.vet_assignment v1 on (v1.protocol.displayName = d.protocol and v1.room = d.room and d.assignmentType = 'Research Assigned')
+--this handles Research Protocol Area
+         Left Join onprc_ehr.vet_assignment v2 on (v2.protocol.displayName = d.protocol  and v2.area = d.room.area and d.assignmentType = 'Research Assigned')
+--this handles Resource Protocol Room
+         Left Join onprc_ehr.vet_assignment v3 on (v3.protocol.displayName = d.protocol  and v3.room = d.room and d.assignmentType = 'Resource Assigned')
+--this handles Research Protocol Area
+         Left Join onprc_ehr.vet_assignment v4 on (v4.protocol.displayName = d.protocol  and v4.area = d.room.area and d.assignmentType = 'Resource Assigned')
+--this handled Research Assigned No Additional Sekections
+         Left Join onprc_ehr.vet_assignment v5 on (v5.protocol.displayName = d.protocol   and v5.room is null and v5.area is null and d.assignmentType = 'Research Assigned' )
+--this handles resource Protocol Only
+         Left Join onprc_ehr.vet_assignment v6 on (v6.protocol.displayName = d.protocol  and v6.room is null and v6.area is null  and d.assignmentType = 'Resource Assigned' )
+--this handles when the room is a priorty
+         Left join onprc_ehr.vet_assignment p1 on (p1.room = d.room and p1.protocol is null and p1.priority = true)
+--this handles when the room is a priorty-
+         Left join onprc_ehr.vet_assignment p2 on (p2.area = d.room.area and p2.protocol is null and p2.priority = true)
+--THis handles when a priority is placed on Room and Protocol --
+         Left Join onprc_ehr.vet_assignment p3 on (p3.protocol.displayName = d.protocol and p3.room = d.room and p3.priority = true)
+--THis handles when a priority is placed on Areaand Protocol -
+         Left Join onprc_ehr.vet_assignment p4 on (p4.protocol.displayName = d.protocol  and p4.area = d.room.area and p4.priority = true)
+--these deal with assignment based on housing only
+         Left join onprc_ehr.vet_assignment h1 on (h1.room = d.room and h1.protocol is null and h1.area is null and h1.priority = false)
+         Left join onprc_ehr.vet_assignment h2 on (h2.area = d.room.area and h2.room is null and h2.protocol is null and h2.priority = false)
+--where d.id not like '[a-z]%'
