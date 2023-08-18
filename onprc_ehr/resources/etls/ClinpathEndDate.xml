@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>ClinPathEndDates</name>
+    <description>Triggers a stored procedure to enddate completed ClinPath Items</description>
+    <transforms>
+        <transform id="EndDateRecord" type="StoredProcedure">
+            <description>Code to enddate or remove Aliases not Assocatied with ONPRC.</description>
+            <procedure procedureName="UpdateClinPathEndDate" schemaName="onprc_billing"/>
+        </transform>
+    </transforms>
+    --runs at 1:15 AM each day
+    <schedule><cron expression="15 1 0 * * ?" /></schedule>
+</etl>
