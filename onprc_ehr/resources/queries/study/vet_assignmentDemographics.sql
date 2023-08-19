@@ -1,4 +1,4 @@
-/*220716UPdate for 2303 Build*/
+--removed referennce to Project
 SELECT
     Distinct
 
@@ -141,7 +141,7 @@ LEFT JOIN (
     left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.deaths d1 on d.id  = d1.id
     left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.departure d2 on d2.id = d.id
     left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.demographics dm on dm.id = d.id
-    --left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.clinRemarks cr on cr.id = d.id
+--left join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.clinRemarks cr on cr.id = d.id
 
 
 --report only on animals that are alive or deceased in last year
