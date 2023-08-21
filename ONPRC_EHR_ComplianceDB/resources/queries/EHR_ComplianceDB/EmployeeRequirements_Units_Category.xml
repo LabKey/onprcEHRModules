@@ -1,0 +1,10 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="EmployeeRequirements_Units_Category" tableDbType="NOT_IN_DB">
+                <tableTitle>Employee Requirements Unit/Category</tableTitle>
+
+            </table>
+        </tables>
+    </metadata>
+</query>
