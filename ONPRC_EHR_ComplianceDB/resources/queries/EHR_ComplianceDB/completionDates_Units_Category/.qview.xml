@@ -22,6 +22,6 @@
     <sorts>
         <sort column="employeeid" descending="false"/>
         <sort column="requirementname" descending="false"/>
-        <sort column="completiondate" descending="true"/>
+<!--        <sort column="completiondate" descending="true"/>-->
     </sorts>
 </customView>
