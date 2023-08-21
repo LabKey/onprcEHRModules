@@ -281,7 +281,69 @@ Ext4.define('onprc_ehr.form.field.environ_Test_Method', {
 
         this.callParent(arguments);
 
+    }
+});
 
+Ext4.define('onprc_ehr.form.field.environ_Surface_Test', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.onprc-env_surfacetest',
+
+    expandToFitContent: true,
+    caseSensitive: false,
+    forceSelection: true,
+    anyMatch: true,
+    typeAhead: true,
+
+    initComponent: function(){
+        Ext4.apply(this, {
+            displayField:'value',
+            valueField: 'value',
+            queryMode: 'local',
+            store: Ext4.create('LABKEY.ext4.data.Store', {
+                schemaName: 'onprc_ehr',
+                queryName: 'Environmental_Reference_Data',
+                columns: 'value,columnName',
+                sort: 'value',
+                filterArray: [
+                    LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                    LABKEY.Filter.create('ColumnName', 'ATP_surfacetest', LABKEY.Filter.Types.EQUAL)],
+                autoLoad: true
+            })
+        });
+
+        this.callParent(arguments);
+
+    }
+});
+
+Ext4.define('onprc_ehr.form.field.environ_Lab_group', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.onprc-env_labgroup',
+
+    expandToFitContent: true,
+    caseSensitive: false,
+    forceSelection: true,
+    anyMatch: true,
+    typeAhead: true,
+
+    initComponent: function(){
+        Ext4.apply(this, {
+            displayField:'value',
+            valueField: 'value',
+            queryMode: 'local',
+            store: Ext4.create('LABKEY.ext4.data.Store', {
+                schemaName: 'onprc_ehr',
+                queryName: 'Environmental_Reference_Data',
+                columns: 'value,columnName',
+                sort: 'value',
+                filterArray: [
+                    LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                    LABKEY.Filter.create('ColumnName', 'ATP_Labgroup', LABKEY.Filter.Types.EQUAL)],
+                autoLoad: true
+            })
+        });
+
+        this.callParent(arguments);
 
     }
 });

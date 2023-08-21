@@ -12,7 +12,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental_ATP', {
             date: {
                 header: 'Date',
                 columnConfig: {
-                    width: 80
+                    width: 100
                 }
             },
             service_requested: {
@@ -33,14 +33,14 @@ EHR.model.DataModelManager.registerMetadata('Environmental_ATP', {
                 xtype: 'onprc-env_testLocation',
                 header: 'Area',
                 columnConfig: {
-                    width: 160
+                    width: 140
                 }
             },
             test_results: {
-                // xtype: 'onprc-env_testresults',
+                xtype: 'onprc-env_labgroup',
                 header: 'Lab/Group',
                 columnConfig: {
-                    width: 100
+                    width: 140
                 }
             },
 
@@ -54,45 +54,39 @@ EHR.model.DataModelManager.registerMetadata('Environmental_ATP', {
                     width: 120
                 }
             },
-            biological_reader: {
-                header: 'Surface Tested',
-                columnConfig: {
-                    width: 150
-                }
-            },
             biological_cycle: {
                 hidden: true
             },
             biological_BI: {
                 hidden: true
             },
-            testing_equipment: {
-                hidden: true
-            },
             surface_tested: {
-                hidden: true
-            },
-            water_source: {
-                header: 'Retest',
+                xtype: 'onprc-env_surfacetest',
                 hidden: false,
                 columnConfig: {
-                    width: 100
+                    width: 180
                 }
             },
+            water_source: {
+                hidden: true
+             },
             test_type: {
                 hidden: true
             },
             retest: {
-                hidden: true
+                header: 'Retest',
+                hidden: false
             },
             pass_fail: {
-                // xtype: 'onprc-env_passfail',
                 header: 'Initial',
                 columnConfig: {
                     width: 100
                 }
             },
             colony_count: {
+                hidden: true
+            },
+            test_method: {
                 hidden: true
             },
             remarks: {

@@ -12,7 +12,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             date: {
                 header: 'Date',
                 columnConfig: {
-                    width: 180
+                    width: 100
                 }
             },
             service_requested: {

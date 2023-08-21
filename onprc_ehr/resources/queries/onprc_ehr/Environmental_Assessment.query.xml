@@ -54,8 +54,15 @@
                         <displayWidth>60</displayWidth>
                         <isHidden>false</isHidden>
                     </column>
+
+                    <column columnName="surface_tested">
+                        <columnTitle>Surface Tested</columnTitle>
+                        <displayWidth>180</displayWidth>
+                        <isHidden>false</isHidden>
+                    </column>
                     <column columnName="remarks">
                         <columnTitle>Comments</columnTitle>
+                        <displayWidth>200</displayWidth>
                     </column>
                     <column columnName="performedby">
                         <columnTitle>Collected by</columnTitle>
