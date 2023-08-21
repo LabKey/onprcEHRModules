@@ -12,11 +12,11 @@
                 <property name="columnTitle" value="Requirement Name"/>
             </properties>
         </column>
-        <column name="completiondate">
-            <properties>
-                <property name="columnTitle" value="Completion Date"/>
-            </properties>
-        </column>
+<!--        <column name="completiondate">-->
+<!--            <properties>-->
+<!--                <property name="columnTitle" value="Completion Date"/>-->
+<!--            </properties>-->
+<!--        </column>-->
 
     </columns>
     <sorts>
