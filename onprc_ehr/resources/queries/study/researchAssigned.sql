@@ -12,15 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *20230724 Reprohrgamed to proejct
  */
 SELECT assignment.Id,
---assignment.project,
-Max(assignment.project.protocol) as protocol,
+assignment.project,
+--Max(assignment.project.protocol) as protocol,
 --assignment.Cohort,
 --assignment.date,
 --assignment.enddate,
 --assignment.project.use_category,
 v.userId.displayName as vetAssigned
-FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.Vet_Assignment v on assignment.project.protocol = v.protocol.protocol
+FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.Vet_Assignment v on assignment.project = v.project
 where assignment.project.use_category = 'research' and enddate is null
-group by assignment.Id,v.userId.displayName
+group by assignment.Id,assignment.project,v.userId.displayName
