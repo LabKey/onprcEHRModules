@@ -23,7 +23,7 @@ SELECT  a.Id,
         a.project.use_category,
         a.project.protocol,
         a.project.protocol.investigatorID.lastName as PI,
-        a.date,
+        a.dat
         a.projectedRelease,
         a.enddate,
         a.assignCondition,

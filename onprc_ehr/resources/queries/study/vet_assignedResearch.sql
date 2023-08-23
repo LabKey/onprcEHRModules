@@ -36,3 +36,4 @@ SELECT a.Id,
 FROM study.assignment a left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.vet_assignment v on a.project = v.project
 where ((a.date <= Now() and a.enddate is null) and (a.project.use_category = 'Research'))
   and v.protocol is not null
+
