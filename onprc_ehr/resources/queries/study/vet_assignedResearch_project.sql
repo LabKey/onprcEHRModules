@@ -1,4 +1,4 @@
---update jonesga  1-28-2021
+--update jonesga  2023-08-21
 --added to 20.11 to handle project assignment for Resource Projects
 
 Select a.Id,
