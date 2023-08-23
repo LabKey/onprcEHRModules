@@ -32,7 +32,7 @@ package org.labkey.onprc_ehr.dataentry;
 
         public class EnvironmentalLabFormType extends TaskForm
         {
-        public static final String NAME = "Environmental_Assessment";
+        public static final String NAME = "Environmental_Assessment_CLS";
 
         public EnvironmentalLabFormType(DataEntryFormContext ctx, Module owner)
         {
