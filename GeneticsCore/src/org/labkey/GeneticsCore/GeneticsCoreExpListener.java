@@ -59,6 +59,10 @@ public class GeneticsCoreExpListener implements ExperimentListener
 
         TableInfo data = ap.createProtocolSchema(user, run.getContainer(), run.getProtocol(), null).createDataTable(null);
 
+        if (data.getColumn("RowId") == null || data.getColumn("SubjectId") == null || data.getColumn("Run") == null)
+        {
+            return;
+        }
         TableSelector ts = new TableSelector(data, PageFlowUtil.set("RowId", "SubjectId"), new SimpleFilter(FieldKey.fromString("Run"), run.getRowId()), null);
         List<Map<String, Object>> resultRows = new ArrayList<>();
         ts.forEachResults(rs -> {
