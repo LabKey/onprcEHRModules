@@ -1,16 +1,16 @@
 
-var ctx = LABKEY.moduleContext.onprc_ehr;
+// var ctx = LABKEY.moduleContext.onprc_ehr;
 EHR.DataEntryUtils.registerDataEntryFormButton('ENVIRONMENTALRUN', {
         name: 'submit',
         text: 'Submit',
         requiredQC: 'Completed',
         targetQC: 'Completed',
         errorThreshold: 'ERROR',
-        successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ONPRC_EHR', 'EnvironmentalenterData.view',(ctx ? ctx['EmployeeContainer'] : null), null),
+        successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ONPRC_EHR', 'EnvironmentalenterData.view',(ctx ? ctx['EHRStudyContainer'] : null), null),
         itemId: 'submitBtn',
         handler: function(btn){
             var panel = btn.up('ehr-dataentrypanel');
-            Ext4.Msg.confirm('Finalize Form', 'You are about to finalize this form.  Do you want to do this?', function(v){(ctx ? ctx['BillingContainer'] : null), null
+            Ext4.Msg.confirm('Finalize Form', 'You are about to finalize this form.  Do you want to do this?', function(v){(ctx ? ctx['onprc_ehrContainer'] : null), null
                 if(v === 'yes')
                 {
                     this.onSubmit(btn);
@@ -29,7 +29,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENVIRONMENTALCLOSE', {
     requiredQC: 'In Progress',
     targetQC: 'In Progress',
     errorThreshold: 'WARN',
-    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ONPRC_EHR', 'EnvironmentalenterData.view',(ctx ? ctx['EmployeeContainer'] : null), null),
+    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ONPRC_EHR', 'EnvironmentalenterData.view',(ctx ? ctx['EHRStudyContainer'] : null), null),
     itemId: 'closeBtn',
         handler: function(btn){
             var panel = btn.up('ehr-dataentrypanel');

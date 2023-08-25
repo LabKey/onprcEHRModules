@@ -2,7 +2,7 @@
 //Created: 11-10-2021
 
 
-Ext4.define('ehr_compliancedb.panel.EnvironmetalEnterDataPanel', {
+Ext4.define('ehr_compliancedb.panel.EnvironmentalEnterDataPanel', {
     extend: 'LABKEY.ext4.BootstrapTabPanel',
     autoHeight: true,
     layout: 'anchor',
