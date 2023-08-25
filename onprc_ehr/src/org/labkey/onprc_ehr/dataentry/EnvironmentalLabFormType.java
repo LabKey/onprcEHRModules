@@ -36,28 +36,23 @@ package org.labkey.onprc_ehr.dataentry;
 
         public EnvironmentalLabFormType(DataEntryFormContext ctx, Module owner)
         {
-        super(ctx, owner, NAME, "Environmental Assessment", "Lab Results", Arrays.<FormSection>asList(
-        new TaskFormSection(),
-        new EnvironmentalFormSection()
-        ));
+            super(ctx, owner, NAME, "Environmental Assessment", "Lab Results", Arrays.<FormSection>asList(
+            new TaskFormSection(),
+            new EnvironmentalFormSection()
+            ));
 
 
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation.js"));
+                addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation.js"));
 
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"));
-
-
-            for  (FormSection s : getFormSections())
-            {
-                s.addConfigSource("EmployeeRequiredUnit");
-            }
+                addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"));
 
 
-        for (FormSection s : this.getFormSections())
-        {
-        s.addConfigSource("Environmental");
+                for  (FormSection s : getFormSections())
+                {
+                    s.addConfigSource("Environmental");
+                }
 
-        }
+
       }
 
             @Override
@@ -69,17 +64,17 @@ package org.labkey.onprc_ehr.dataentry;
                 assert idx > -1;
                 ret.remove("SUBMIT");
                 if (idx > -1)
-                    ret.add(idx, "ENVIRONMENTALRUN");
+                    ret.add(idx, "ENV_RUN");
                 else
-                    ret.add("ENVIRONMENTALRUN");
+                    ret.add("ENV_RUN");
 
                 int idx2 = ret.indexOf("CLOSE");
                 assert idx2 > -1;
                 ret.remove("CLOSE");
                 if (idx2 > -1)
-                    ret.add(idx2, "ENVIRONMENTALCLOSE");
+                    ret.add(idx2, "ENV_CLOSE");
                 else
-                    ret.add("ENVIRONMENTALCLOSE");
+                    ret.add("ENV_CLOSE");
 
                 return ret;
             };

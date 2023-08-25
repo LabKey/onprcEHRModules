@@ -1,6 +1,6 @@
 
-// var ctx = LABKEY.moduleContext.onprc_ehr;
-EHR.DataEntryUtils.registerDataEntryFormButton('ENVIRONMENTALRUN', {
+var ctx = LABKEY.moduleContext.onprc_ehr;
+EHR.DataEntryUtils.registerDataEntryFormButton('ENV_RUN', {
         name: 'submit',
         text: 'Submit',
         requiredQC: 'Completed',
@@ -23,7 +23,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENVIRONMENTALRUN', {
     });
 
 
-EHR.DataEntryUtils.registerDataEntryFormButton('ENVIRONMENTALCLOSE', {
+EHR.DataEntryUtils.registerDataEntryFormButton('ENV_CLOSE', {
     name: 'closeBtn',
     text: 'Save & Close',
     requiredQC: 'In Progress',

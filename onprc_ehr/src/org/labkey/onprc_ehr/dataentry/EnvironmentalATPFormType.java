@@ -27,31 +27,31 @@ import org.labkey.api.view.template.ClientDependency;
 import java.util.Arrays;
 import java.util.List;
 
-//Created: 9-9-2022  R.Blasa
+//Created: 98-25-2023  R.Blasa
 
-public class EnvironmentalATPFormType extends TaskForm
-{
-public static final String NAME = "Environmental_ATP";
+        public class EnvironmentalATPFormType extends TaskForm
+        {
+        public static final String NAME = "Environmental_ATP";
 
-public EnvironmentalATPFormType(DataEntryFormContext ctx, Module owner)
-{
-super(ctx, owner, NAME, "Environmental ATP", "Lab Results", Arrays.<FormSection>asList(
-new TaskFormSection(),
-new EnvironmentalATPFormSection()
-));
-
-
-addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation_ATP.js"));
-
-addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"));
+        public EnvironmentalATPFormType(DataEntryFormContext ctx, Module owner)
+        {
+            super(ctx, owner, NAME, "Environmental ATP", "Lab Results", Arrays.<FormSection>asList(
+            new TaskFormSection(),
+            new EnvironmentalATPFormSection()
+            ));
 
 
-for (FormSection s : this.getFormSections())
-{
-s.addConfigSource("Environmental_ATP");
+            addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation_ATP.js"));
 
-}
-}
+            addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"));
+
+
+        for (FormSection s : this.getFormSections())
+        {
+              s.addConfigSource("Environmental_ATP");
+
+        }
+      }
 
     @Override
     protected List<String> getButtonConfigs()
@@ -62,17 +62,17 @@ s.addConfigSource("Environmental_ATP");
         assert idx > -1;
         ret.remove("SUBMIT");
         if (idx > -1)
-            ret.add(idx, "ENVIRONMENTALRUN");
+            ret.add(idx, "ENV_RUN");
         else
-            ret.add("ENVIRONMENTALRUN");
+            ret.add("ENV_RUN");
 
         int idx2 = ret.indexOf("CLOSE");
         assert idx2 > -1;
         ret.remove("CLOSE");
         if (idx2 > -1)
-            ret.add(idx2, "ENVIRONMENTALCLOSE");
+            ret.add(idx2, "ENV_CLOSE");
         else
-            ret.add("ENVIRONMENTALCLOSE");
+            ret.add("ENV_CLOSE");
 
         return ret;
     };
