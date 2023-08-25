@@ -1,4 +1,4 @@
-<view xmlns="http://labkey.org/data/xml/view" title="Enivornment Assessment Main Page">
+<view xmlns="http://labkey.org/data/xml/view" title="Environmental Assessment Main Page">
     <dependencies>
         <dependency path="ehr.context" />
     </dependencies>
