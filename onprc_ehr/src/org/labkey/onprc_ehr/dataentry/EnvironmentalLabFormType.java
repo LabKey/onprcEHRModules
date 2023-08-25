@@ -44,7 +44,8 @@ package org.labkey.onprc_ehr.dataentry;
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation.js"));
 
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/EnvironmentalRecords.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"));
+
 
             for  (FormSection s : getFormSections())
             {

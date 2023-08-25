@@ -25,6 +25,7 @@ import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.List;
 
 //Created: 9-9-2022  R.Blasa
 
@@ -42,7 +43,7 @@ new EnvironmentalATPFormSection()
 
 addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation_ATP.js"));
 
-addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/EnvironmentalRecords.js"));
+addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"));
 
 
 for (FormSection s : this.getFormSections())
@@ -51,6 +52,30 @@ s.addConfigSource("Environmental_ATP");
 
 }
 }
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+
+        int idx = ret.indexOf("SUBMIT");
+        assert idx > -1;
+        ret.remove("SUBMIT");
+        if (idx > -1)
+            ret.add(idx, "ENVIRONMENTALRUN");
+        else
+            ret.add("ENVIRONMENTALRUN");
+
+        int idx2 = ret.indexOf("CLOSE");
+        assert idx2 > -1;
+        ret.remove("CLOSE");
+        if (idx2 > -1)
+            ret.add(idx2, "ENVIRONMENTALCLOSE");
+        else
+            ret.add("ENVIRONMENTALCLOSE");
+
+        return ret;
+    };
 
 
     @Override
