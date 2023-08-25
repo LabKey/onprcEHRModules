@@ -90,6 +90,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental_ATP', {
                 hidden: true
             },
             remarks: {
+                xtype: 'textfield',
                 header: 'Comments',
                 columnConfig: {
                     width: 150

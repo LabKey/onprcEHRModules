@@ -42,6 +42,8 @@ new EnvironmentalATPFormSection()
 
 addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation_ATP.js"));
 
+addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/EnvironmentalRecords.js"));
+
 
 for (FormSection s : this.getFormSections())
 {

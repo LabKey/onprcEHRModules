@@ -41,6 +41,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 }
             },
             remarks: {
+                xtype: 'textfield',
                 header: 'Comments',
                   columnConfig: {
                     width: 150

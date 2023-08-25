@@ -44,6 +44,13 @@ package org.labkey.onprc_ehr.dataentry;
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation.js"));
 
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/EnvironmentalRecords.js"));
+
+            for  (FormSection s : getFormSections())
+            {
+                s.addConfigSource("EmployeeRequiredUnit");
+            }
+
 
         for (FormSection s : this.getFormSections())
         {
@@ -51,6 +58,30 @@ package org.labkey.onprc_ehr.dataentry;
 
         }
       }
+
+            @Override
+            protected List<String> getButtonConfigs()
+            {
+                List<String> ret = super.getButtonConfigs();
+
+                int idx = ret.indexOf("SUBMIT");
+                assert idx > -1;
+                ret.remove("SUBMIT");
+                if (idx > -1)
+                    ret.add(idx, "ENVIRONMENTALRUN");
+                else
+                    ret.add("ENVIRONMENTALRUN");
+
+                int idx2 = ret.indexOf("CLOSE");
+                assert idx2 > -1;
+                ret.remove("CLOSE");
+                if (idx2 > -1)
+                    ret.add(idx2, "ENVIRONMENTALCLOSE");
+                else
+                    ret.add("ENVIRONMENTALCLOSE");
+
+                return ret;
+            };
 
             @Override
             protected boolean canInsert()
