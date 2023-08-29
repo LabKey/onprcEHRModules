@@ -13,19 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+--  Modified: 8-30-2023  R. Blasa
 SELECT
   t.Id,
   t.ageInDays,
-  t.spfStatus,
-  t.lastHBV,
-  t.daysSinceHBV,
-  t.isHBVRequired,
-  t.isHBVCurrent,
-  CASE
-    WHEN (t.isHBVRequired = true AND t.isHBVCurrent = false) THEN 4
-    ELSE 0
-  END as hbvBloodVol,
-
   t.lastSRV,
   t.daysSinceSRV,
   t.isSRVRequired,
@@ -35,37 +26,20 @@ SELECT
     ELSE 0
   END as srvBloodVol,
 
-  CASE
-    WHEN ((t.isSRVRequired = true AND t.isSRVCurrent = false) OR (t.isHBVRequired = true AND t.isHBVCurrent = false)) THEN 4
-    ELSE 0
-  END as bloodVol
 FROM (
 
 SELECT
   d.Id,
   d.Id.age.ageInDays,
-  spf.spfStatus,
-  s.lastDate as lastHBV,
-  timestampdiff('SQL_TSI_DAY', s.lastDate, now()) as daysSinceHBV,
-  --all SPF animals over 180 days
-  CASE
-    WHEN (spf.Id IS NOT NULL AND d.Id.age.ageInDays > 180) THEN true
-    ELSE false
-  END as isHBVRequired,
+  s.lastDate as lastSRV,
+  timestampdiff('SQL_TSI_DAY', s.lastDate, now()) as daysSinceSRV,
   CASE
     WHEN (year(now()) = year(s.lastDate)) THEN true
-    ELSE false
-  END as isHBVCurrent,
-
-  srv.lastDate as lastSRV,
-  timestampdiff('SQL_TSI_DAY', srv.lastDate, now()) as daysSinceSRV,
-  CASE
-    WHEN (year(now()) = year(srv.lastDate)) THEN true
     ELSE false
   END as isSRVCurrent,
   --all Jmacs and all non-SPF cynos
   CASE
-    WHEN (d.Id.age.ageInDays > 180 AND ((spf.Id IS NULL AND (d.species = 'CYNOMOLGUS MACAQUE' OR d.species = 'RHESUS MACAQUE')) OR d.species = 'JAPANESE MACAQUE')) THEN true
+    WHEN (d.Id.age.ageInDays > 180 AND (d.species in ( 'CYNOMOLGUS MACAQUE','RHESUS MACAQUE','JAPANESE MACAQUE'))) THEN true
     ELSE false
   END as isSRVRequired
 
@@ -76,31 +50,11 @@ LEFT JOIN (
     s.id,
     max(s.date) as lastDate
 
-  FROM study.serology s
-  WHERE s.agent.meaning like '% HBV%' or s.agent.meaning like '%Herpes%'
+  FROM study.blood s
+  WHERE s.additionalservices in ('SPF Surveillance – Annual')
   GROUP BY s.id
 
 ) s ON (s.id = d.id)
-
-LEFT JOIN (
-  SELECT
-    s.id,
-    max(s.date) as lastDate
-
-  FROM study.serology s
-  WHERE s.agent.meaning like '%SRV%'
-  GROUP BY s.id
-
-) srv ON (srv.id = d.id)
-
-LEFT JOIN (
-  SELECT
-    f.Id,
-    group_concat(f.flag.value) as spfStatus
-  FROM study.flags f
-  WHERE f.isActive = true AND f.flag.category = 'SPF'
-  GROUP BY f.Id
-) spf ON (spf.Id = d.Id)
 
 WHERE d.calculated_status = 'Alive'
 
