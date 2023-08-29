@@ -658,8 +658,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 //       Added: 10-9-2017  R.Blasa
        EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, ProcedureRequestBulkEditFormType.NAME), "study", "encounters");
 
-        //Added: 9-16-2022  R.Blasa
-      EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "NecropsyRequestdata");
+        //Added: 9-16-2022  R.Blasa      EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "NecropsyRequestdata");
 
         EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource(this));
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource(this));
