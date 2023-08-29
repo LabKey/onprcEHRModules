@@ -1,15 +1,21 @@
 <script type="text/javascript">
 
+
+
     Ext4.onReady(function(){
         var webpart = <%=webpartContext%>;
         var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
         if(!ctx)
             return;
 
+
+
         var issueHTML = '';
         if (ctx['EHRIssuesContainer']){
             issueHTML = '<div style="max-width:920px">Below are the sections of the Electronic Health Record.  If there are additional reports you would like, please submit a request <a href="' + LABKEY.ActionURL.buildURL('issues', 'list', ctx['EHRIssuesContainer']) + '" target="_blank">here</a>.<br><br></div>'
         }
+
+
 
         Ext4.get(webpart.wrapperDivId).update(
                 issueHTML +
@@ -27,6 +33,8 @@
                 '</tr>' +
                 '</table>'
         );
+
+
 
         Ext4.create('LDK.panel.NavPanel', {
             width: 270,
@@ -64,6 +72,8 @@
             }]
         });
 
+
+
         Ext4.create('LDK.panel.NavPanel', {
             width: 270,
             renderTo: 'ehrMenu2_'+webpart.wrapperDivId,
@@ -97,6 +107,8 @@
             }]
         });
 
+
+
         var menuCfg = {
             width: 330,
             renderTo: 'ehrMenu3_'+webpart.wrapperDivId,
@@ -127,6 +139,8 @@
 //                    Modified: 4-3-2017 R.Blasa  Allow new method of presenting Necropsy entry screens
                     {name: 'Enter Data / Task Review', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/enterData.view'},
 
+
+
                     {name: 'Post Op Med Verification', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=medsignoff'}
                 ]
             },{
@@ -139,10 +153,14 @@
                     //            Modified: 7-18-2017 R.Blasa
                     {name: 'Manage Requests', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/serviceRequests.view'},
 
+
+
                     {name: 'Request Labwork', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=Labwork Request'}
                 ]
             }]
         };
+
+
 
         if (LABKEY.Security.currentUser.isAdmin){
             menuCfg.sections.push({
@@ -157,7 +175,11 @@
             });
         }
 
+
+
         Ext4.create('LDK.panel.NavPanel', menuCfg);
     });
+
+
 
 </script>
