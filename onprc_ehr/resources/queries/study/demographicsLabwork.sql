@@ -22,7 +22,7 @@ SELECT
    TIMESTAMPDIFF('SQL_TSI_DAY',  max(CASE WHEN h.type = 'Biochemistry' THEN h.date ELSE null END), now()) as daysSinceCHEMExam
 
 FROM study.demographics d
-LEFT JOIN study.clinpathRuns h ON (d.id = h.id AND (h.type = 'Hematology' OR h.type = 'Biochemistry'))
+LEFT JOIN study.clinpathRuns h ON (d.id = h.id AND (h.type = 'Hematology' OR h.type = 'Biochemistry') And h.QCState.label = 'Completed')
 WHERE d.calculated_status = 'Alive'
 GROUP BY d.id
 
