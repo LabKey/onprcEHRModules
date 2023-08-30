@@ -1,9 +1,11 @@
+/*Update20230830*/
 SELECT a.Id,
        a.project,
-       a.project.protocol.external_id,
-       a.project.protocol.investigatorID,
+       a.project.protocol.external_id as Protocol,
+       a.project.protocol.investigatorID as PI,
        a.DATE,
        a.enddate,
+       a.project.use_category as ProtoclType,
        CASE
            WHEN a.project.use_category = 'Research'
                THEN 'Research Project'

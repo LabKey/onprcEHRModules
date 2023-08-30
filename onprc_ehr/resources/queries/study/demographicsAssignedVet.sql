@@ -1,3 +1,4 @@
+/*Revision of Code 20230830*/
 SELECT *
 FROM ( SELECT DISTINCT d.Id,
                        d.Area,

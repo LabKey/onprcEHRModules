@@ -15,14 +15,14 @@ SELECT
 
     Case
         When (c.id IS NOT NULL) then 'Active Case'
-        When r1.id is not null then r1.protocoltype
-        When r2.id is not null then r2.protocoltype
+        When r1.id is not null then r1.assignedProjectType
+        When r2.id is not null then r2.assignedProjectType
         Else 'P51'
         End as assignmentType,
 
     Case
-        When r1.protocol is not null then r1.use_Category
-        When r2.protocol is not null then r2.use_category
+        When r1.protocol is not null then r1.assignedProjectType
+        When r2.protocol is not null then r2.assignedProjectType
         Else ''
         End As use_category,
 
@@ -61,9 +61,9 @@ FROM study.demographics dm
     --Get housing data
          Left Join study.housing h on h.id  = dm.id and (h.enddateTimeCoalesced >= now())
 
-    -- Get from Vet data
-         Left Join study.vet_assignedResearch r1 on dm.id = r1.id
-         Left Join study.vet_assignedResource r2 on dm.id = r2.id
+    -- Get Data for Protocol Assignment and PI
+         Left Join study.vet_assignedProject r1 on dm.id = r1.id and r1.assignedProjectType = 'Research Project'
+         Left Join study.vet_assignedProject r2 on dm.id = r2.id and r2.assignedProjectType = 'Resource Project'
 
 -- Get only live animals
 Where dm.calculated_status = 'Alive' And dm.Id not like '[A-Z]%'
