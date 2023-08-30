@@ -1252,16 +1252,6 @@ exports.init = function(EHR){
         });
     });
 
-    //Added 8-10-2023  R, Blas
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr_lookups', 'cage', function(helper, scriptErrors, row, oldRow) {
-        //Must force user to select cage status value
-        if (row.room   && ( oldRow.status == null)) {
-
-                EHR.Server.Utils.addError(scriptErrors, 'room', 'You must select a cage status value!', 'ERROR');
-            }
-
-    });
-
     //Added: 10-4-2022  R.Blasa
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.COMPLETE, function(event, errors, helper){
                 // Send notifications when requests approved
