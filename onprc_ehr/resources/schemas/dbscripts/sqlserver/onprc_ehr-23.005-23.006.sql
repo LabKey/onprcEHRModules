@@ -5,8 +5,7 @@ GO
 
 -- Author:	R. Blasa
 -- Created: 8-30-2023
--- Description:	Stored procedure program assigns Clinical Cases ending dates to all Clinical Problem list that
---               have no ending dates, and shares the same case ids
+-- Description:	Stored procedure program to allow cage status settings to be updated by default to "Normal".
 
 
 CREATE Procedure [onprc_ehr].[p_CageStatusupdates]
