@@ -1,4 +1,4 @@
-Added Field
+/*Added Field*/
 SELECT *
 FROM ( SELECT DISTINCT d.Id,
                        d.Area,

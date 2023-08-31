@@ -1,4 +1,4 @@
-/*New Query creatred by Lakshmi 8/2023*/
+/*New Query creatred by Lakshmi 8/31/2023*/
 Select
     a.Id,
     a.project,
@@ -13,8 +13,5 @@ Select
         When (a.project.use_category = 'Research' ) Then 'Project Research Assigned'
         Else 'Project Resource Assigned'
         End as ProjectType
-
-
-
 From study.assignment a
 Where (a.date <= Now() And a.enddate is null)
