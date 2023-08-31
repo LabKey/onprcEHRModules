@@ -84,9 +84,10 @@ AS
 BEGIN
 
     --- Create historical cage data
-
-Insert into onprc_ehr.CageAuditLog
-Select  rowid,
+If exists (select * from onprc_ehr.CageAuditLog)
+BEGIN
+   Insert into onprc_ehr.CageAuditLog
+    Select  rowid,
         location,
         room,
         cage,
@@ -97,12 +98,12 @@ Select  rowid,
         container,
         getdate()
 
-from ehr_lookups.cage
-
+  from ehr_lookups.cage
 
     If @@Error <> 0
 	  GoTo Err_Proc
 
+END  --- if exists
 
  RETURN 0
 
