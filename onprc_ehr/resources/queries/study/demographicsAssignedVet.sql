@@ -1,9 +1,11 @@
+Added Field
 SELECT *
 FROM ( SELECT DISTINCT d.Id,
                        d.Area,
                        d.Room,
                        d.CaseVet,
                        d.Project,
+                       d.ProjectName,
                        d.AssignmentType AS CodeAssignmentType,
                        d.Protocol,
                        d.ProtocolPI,
