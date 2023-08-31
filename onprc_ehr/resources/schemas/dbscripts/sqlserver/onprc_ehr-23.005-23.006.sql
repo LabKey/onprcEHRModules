@@ -14,6 +14,8 @@ AS
 
 BEGIN
 
+If exists (select * from ehr_lookups.cage)
+  BEGIN
     --- Set Cage status to Normal                       )
 
      Update ehr_lookups.cage
@@ -24,6 +26,7 @@ BEGIN
     If @@Error <> 0
 	  GoTo Err_Proc
 
+END
 
  RETURN 0
 
