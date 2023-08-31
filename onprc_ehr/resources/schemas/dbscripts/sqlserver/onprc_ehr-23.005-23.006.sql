@@ -38,7 +38,7 @@ END
 GO
 
 
-- Author:	R. Blasa
+-- Author:	R. Blasa
 -- Created: 8-30-2023
 -- Description:	Temp table for cage information audit history.
 EXEC core.fn_dropifexists 'CageAuditLog', 'onprc_ehr', 'TABLE', NULL;
@@ -83,7 +83,7 @@ AS
 
 BEGIN
 
-    --- Create historical cage data                    )
+    --- Create historical cage data
 
 Insert into onprc_ehr.CageAuditLog
 Select  rowid,
