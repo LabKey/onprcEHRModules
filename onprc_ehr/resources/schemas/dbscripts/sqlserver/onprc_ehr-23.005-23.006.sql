@@ -1,7 +1,6 @@
 
 
-EXEC core.fn_dropifexists 'p_CageStatusupdates', 'onprc_ehr', 'PROCEDURE', NULL;
-GO
+
 
 -- Author:	R. Blasa
 -- Created: 8-30-2023
@@ -44,8 +43,6 @@ GO
 -- Author:	R. Blasa
 -- Created: 8-30-2023
 -- Description:	Temp table for cage information audit history.
-EXEC core.fn_dropifexists 'CageAuditLog', 'onprc_ehr', 'TABLE', NULL;
-GO
 
 CREATE TABLE [onprc_ehr].[CageAuditLog](
     [searchid] [int] IDENTITY(100,1) NOT NULL,
@@ -70,9 +67,6 @@ CREATE TABLE [onprc_ehr].[CageAuditLog](
 
 
 
-
-EXEC core.fn_dropifexists 'p_CageAuditHistoryProcess', 'onprc_ehr', 'PROCEDURE', NULL;
-GO
 
 -- Author:	R. Blasa
 -- Created: 8-30-2023
