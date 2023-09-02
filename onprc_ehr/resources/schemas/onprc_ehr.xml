@@ -1273,4 +1273,33 @@
         </columns>
     </table>
 
+    <table tableName="CageAuditLog" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Cage Audit History</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Rowid</columnTitle>
+            </column>
+            <column columnName="location">
+            </column>
+            <column columnName="room">
+            </column>
+            <column columnName="cage">
+            </column>
+            <column columnName="divider">
+            </column>
+            <column columnName="cage_type">
+            </column>
+            <column columnName="hasTunnel">
+            </column>
+            <column columnName="status">
+            </column>
+            <column columnName="container">
+            </column>
+            <column columnName="date_created"/>
+
+        </columns>
+    </table>
+
 </tables>
