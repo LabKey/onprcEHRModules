@@ -55,8 +55,12 @@ CREATE TABLE [onprc_ehr].[CageAuditLog](
     [hasTunnel] [bit] NULL,
     [status] [varchar](200) NULL,
     [Container] [dbo].[ENTITYID] NOT NULL,
+    [area] [varchar](500) NULL,
+    [housingtype] [varchar](500) NULL,
+    [housingcondition] [varchar](500) NULL,
     [date_created] [smalldatetime] NULL
     ) ON [PRIMARY]
+
     GO
 
 
