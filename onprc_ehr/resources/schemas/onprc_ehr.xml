@@ -1321,4 +1321,26 @@
         </columns>
     </table>
 
+    <table tableName="Environmental_Reference_Data" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Environmental Reference_ Data</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Row ID</columnTitle>
+            </column>
+            <column columnName="label">
+            </column>
+            <column columnName="value">
+            </column>
+            <column columnName="columnName">
+            </column>
+            <column columnName="sort_order">
+            </column>
+            <column columnName="endDate">
+            </column>
+
+        </columns>
+    </table>
+
 </tables>
