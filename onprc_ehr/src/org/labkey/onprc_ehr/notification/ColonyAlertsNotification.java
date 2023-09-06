@@ -1558,7 +1558,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals where the demographics table value for geographic origin conflicts with genetic ancestry.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "geographicOriginConflicts", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "geographicOriginConflicts", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -2163,8 +2163,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     summary = summary.replaceAll("\n", " / ");
                 }
 
-                DetailsURL groupUrl = DetailsURL.fromString("/ehr/animalGroupDetails.view", c);
-                String groupUrlString = AppProps.getInstance().getBaseServerUrl() + groupUrl.getActionURL().toString();
+                DetailsURL groupUrl = DetailsURL.fromString("/ehr/animalGroupDetails.view?", c);
+                String groupUrlString = AppProps.getInstance().getBaseServerUrl() + "/onprc_ehr/onprc" + groupUrl;
                 groupUrlString += "groupId=" + rs.getInt("groupId");
 
                 String group = rs.getString(FieldKey.fromString("groupId/name"));

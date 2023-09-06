@@ -24,6 +24,7 @@ import org.labkey.test.Locator;
 import org.labkey.test.WebTestHelper;
 import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
+import org.labkey.test.components.ext4.Window;
 import org.labkey.test.util.DataRegionTable;
 import org.labkey.test.util.Ext4Helper;
 import org.labkey.test.util.LogMethod;
@@ -154,13 +155,17 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         navigateToFolder(PROJECT_NAME, BILLING_FOLDER);
 
         clickAndWait(Locator.linkWithText("IACUC Protocols"));
-        DataRegionTable protocolTable = new DataRegionTable.DataRegionFinder(getDriver()).withName("query").waitFor();
-        protocolTable.clickHeaderMenu("More Actions", false, "Edit Records");
+        DataRegionTable protocolTable = new DataRegionTable("query", getDriver());
+        protocolTable.clickHeaderMenu("More Actions", true, "Edit Records");
         protocolTable.clickImportBulkData();
 
+        // HACK
+        Thread.sleep(2500);
         setFormElement(Locator.textarea("title"), protocolTitle);
+        Thread.sleep(2500);
         clickButton("Submit");
 
+        assertTextPresent(protocolTitle);
         protocolTable.setFilter("title", "Equals", protocolTitle);
         String protocolId = protocolTable.getDataAsText(0, "protocol");
 
@@ -179,7 +184,10 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         // the button and having it pop up a warning dialog
         Thread.sleep(2500);
 
-        clickButton("Submit");
+        clickButton("Submit", 0);
+        new Window.WindowFinder(getDriver()).withTitle("Success").timeout(WAIT_FOR_JAVASCRIPT * 2).waitFor();
+        clickAndWait(Ext4Helper.Locators.ext4Button("OK"));
+
         projectTable.setFilter("name", "Equals", projectName);
         checker().verifyEquals("Adding new project was not successful", 1, projectTable.getDataRowCount());
     }
