@@ -1281,6 +1281,8 @@
             <column columnName="rowid">
                 <columnTitle>Rowid</columnTitle>
             </column>
+            <column columnName="searchid">
+            </column>
             <column columnName="location">
             </column>
             <column columnName="room">
