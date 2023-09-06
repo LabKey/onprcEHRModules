@@ -1394,11 +1394,12 @@
             </column>
             <column columnName="testing_location">
             </column>
+            <column columnName="test_method"/>
             <column columnName="test_type">
             </column>
-            <column columnName="test_results">
-            </column>
             <column columnName="pass_fail">
+            </column>
+            <column columnName="test_results">
             </column>
             <column columnName="biological_cycle">
             </column>
@@ -1406,14 +1407,13 @@
             </column>
             <column columnName="action">
             </column>
+            <column columnName="water_source"/>
+            <column columnName="surface_tested"/>
+            <column columnName="retest"/>
+            <column columnName="colony_Count"/>
             <column columnName="performedby">
             </column>
             <column columnName="remarks"/>
-            <column columnName="water_source"/>
-            <column columnName="surface_test"/>
-            <column columnName="retest"/>
-            <column columnName="colony_Count"/>
-            <column columnName="test_method"/>
             <column columnName="objectid"/>
             <column columnName="createdby"/>
             <column columnName="created"/>

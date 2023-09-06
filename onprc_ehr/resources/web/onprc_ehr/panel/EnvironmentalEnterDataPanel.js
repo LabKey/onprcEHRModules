@@ -2,7 +2,7 @@
 //Created: 8-30-2023  R, Blasa
 
 
-Ext4.define('ehr_compliancedb.panel.EnvironmentalEnterDataPanel', {
+Ext4.define('onprc_ehr.panel.EnvironmentalEnterDataPanel', {
     extend: 'LABKEY.ext4.BootstrapTabPanel',
     autoHeight: true,
     layout: 'anchor',
