@@ -1193,7 +1193,9 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
     private void addProjectToTheRow(Ext4GridRef gridRef, int index, String project)
     {
-        gridRef.clickDownArrowOnGrid(index, "project");
+        gridRef.startEditing(index, "project");
+        Ext4FieldRef fieldRef = gridRef.getActiveEditor(index, "project");
+        fieldRef.eval("expand()");
         waitAndClick(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
         waitForElement(Ext4Helper.Locators.window("Choose Project"));
         _ext4Helper.queryOne("window[title=Choose Project] [fieldLabel='Project']", Ext4ComboRef.class).setComboByDisplayValue(project);
