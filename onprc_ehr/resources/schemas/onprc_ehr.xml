@@ -1378,4 +1378,74 @@
         </columns>
     </table>
 
+    <table tableName="Environmental_Assessment" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Environmental Assessment</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Rowid</columnTitle>
+            </column>
+            <column columnName="date">
+            </column>
+            <column columnName="service_requested">
+            </column>
+            <column columnName="charge_unit">
+            </column>
+            <column columnName="testing_location">
+            </column>
+            <column columnName="test_type">
+            </column>
+            <column columnName="test_results">
+            </column>
+            <column columnName="pass_fail">
+            </column>
+            <column columnName="biological_cycle">
+            </column>
+            <column columnName="biological_BI">
+            </column>
+            <column columnName="action">
+            </column>
+            <column columnName="performedby">
+            </column>
+            <column columnName="remarks"/>
+            <column columnName="water_source"/>
+            <column columnName="surface_test"/>
+            <column columnName="retest"/>
+            <column columnName="colony_Count"/>
+            <column columnName="test_method"/>
+            <column columnName="objectid"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modified"/>
+            <column columnName="modifiedby"/>
+            <column columnName="container"/>
+            <column columnName="taskid"/>
+            <column columnName="qcstate"/>
+            <column columnName="formsort"/>
+        </columns>
+    </table>
+
+    <table tableName="Environmental_Reference_Data" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Environmental Reference_ Data</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Row ID</columnTitle>
+            </column>
+            <column columnName="label">
+            </column>
+            <column columnName="value">
+            </column>
+            <column columnName="columnName">
+            </column>
+            <column columnName="sort_order">
+            </column>
+            <column columnName="endDate">
+            </column>
+
+        </columns>
+    </table>
+
 </tables>
