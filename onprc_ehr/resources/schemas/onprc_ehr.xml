@@ -1273,39 +1273,51 @@
         </columns>
     </table>
 
-    <table tableName="CageAuditLog" tableDbType="TABLE" useColumnOrder="true">
-        <tableTitle>Cage Audit History</tableTitle>
+    <table tableName="Environmental_Assessment" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Environmental Assessment</tableTitle>
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>
         <columns>
             <column columnName="rowid">
                 <columnTitle>Rowid</columnTitle>
             </column>
-            <column columnName="searchid">
+            <column columnName="date">
             </column>
-            <column columnName="location">
+            <column columnName="service_requested">
             </column>
-            <column columnName="room">
+            <column columnName="charge_unit">
             </column>
-            <column columnName="cage">
+            <column columnName="testing_location">
             </column>
-            <column columnName="divider">
+            <column columnName="test_type">
             </column>
-            <column columnName="cage_type">
+            <column columnName="test_results">
             </column>
-            <column columnName="hasTunnel">
+            <column columnName="pass_fail">
             </column>
-            <column columnName="area">
+            <column columnName="biological_cycle">
             </column>
-            <column columnName="housingtype">
+            <column columnName="biological_BI">
             </column>
-            <column columnName="housingcondition">
+            <column columnName="action">
             </column>
-            <column columnName="status">
+            <column columnName="performedby">
             </column>
-            <column columnName="container">
-            </column>
-            <column columnName="date_created"/>
+            <column columnName="remarks"/>
+            <column columnName="water_source"/>
+            <column columnName="surface_test"/>
+            <column columnName="retest"/>
+            <column columnName="colony_Count"/>
+            <column columnName="test_method"/>
+            <column columnName="objectid"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modified"/>
+            <column columnName="modifiedby"/>
+            <column columnName="container"/>
+            <column columnName="taskid"/>
+            <column columnName="qcstate"/>
+            <column columnName="formsort"/>
         </columns>
     </table>
 
