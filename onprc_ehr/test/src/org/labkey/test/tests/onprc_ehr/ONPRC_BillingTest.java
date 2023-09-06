@@ -154,7 +154,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         navigateToFolder(PROJECT_NAME, BILLING_FOLDER);
 
         clickAndWait(Locator.linkWithText("IACUC Protocols"));
-        DataRegionTable protocolTable = new DataRegionTable("query", getDriver());
+        DataRegionTable protocolTable = new DataRegionTable.DataRegionFinder(getDriver()).withName("query").waitFor();
         protocolTable.clickHeaderMenu("More Actions", false, "Edit Records");
         protocolTable.clickImportBulkData();
 
