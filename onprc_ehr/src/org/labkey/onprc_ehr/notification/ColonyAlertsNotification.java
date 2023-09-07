@@ -2198,7 +2198,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     /**
-     * Displays any animals with duplicate flags, where duplicates are enforced
+     *  Created by Kollil, 9/6/23
+     *  Get the new animals found with the flag, "NHPR NOTE: BCG Vaccinated".
      */
     protected void BCGVaccineFlags(Container c, User u, final StringBuilder msg)
     {
