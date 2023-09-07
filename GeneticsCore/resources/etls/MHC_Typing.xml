@@ -25,7 +25,7 @@
     </transforms>
 
     <incrementalFilter className="ModifiedSinceFilterStrategy" timestampColumnName="modified">
-        <deletedRowsSource remoteSource="PRIMESEQ_MHC" schemaName="geneticscore" queryName="mhc_delete_source" deletedSourceKeyColumnName="objectid" targetKeyColumnName="objectid" />
+        <deletedRowsSource remoteSource="PRIMESEQ_MHC" schemaName="geneticscore" queryName="mhc_delete_source" deletedSourceKeyColumnName="objectid" targetKeyColumnName="objectid" timestampColumnName="created"/>
     </incrementalFilter>
     <schedule>
         <cron expression="0 20 2 * * ?"/>
