@@ -241,7 +241,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
     private void registerEHRResources()
     {
-        String SSRS_FOLDER_EXT = "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?";
         EHRService.get().registerModule(this);
         EHRService.get().registerTableCustomizer(this, ONPRC_EHRCustomizer.class);
 
@@ -396,27 +395,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         {
             throw new UnexpectedException(e);
         }
-
-        //Modified: 9-7-2023  R.Blasa
-        try
-        {
-            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology CPL Surface Sanitation Summary Report", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory+Report&rs:Command=Render")
-            {
-                // SSRS is picky about the URI-encoding of the query parameters
-                @Override
-                public String toString()
-                {
-
-                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render";
-
-                }
-            }, "Clinical Pathology");
-        }
-        catch (URISyntaxException e)
-        {
-            throw new UnexpectedException(e);
-        }
-
 
         try
         {
@@ -681,7 +659,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 //       Added: 10-9-2017  R.Blasa
        EHRService.get().registerMoreActionsButton(new BulkEditRequestsButton(this, ProcedureRequestBulkEditFormType.NAME), "study", "encounters");
 
-        //Added: 9-16-2022  R.Blasa      EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "NecropsyRequestdata");
+        //Added: 9-16-2022  R.Blasa
+      EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "NecropsyRequestdata");
 
         EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource(this));
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource(this));
