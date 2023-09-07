@@ -75,8 +75,8 @@
                         <displayWidth>60</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
-                    <column columnName="trackingflag">
-                        <columnTitle>Essential</columnTitle>
+                    <column columnName="snooze_date">
+                        <columnTitle>Snooze Until</columnTitle>
                         <displayWidth>60</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>

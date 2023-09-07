@@ -1826,9 +1826,9 @@ public class ONPRC_EHRTriggerHelper
             return "Unknown cage: " + cage;
         }
 
-        if (cr.getCageslots() != 2)
+        if (cr.getCageslots() == 0)
         {
-            return "Divider changes are only supported for doubles";
+            return "Divider changes are not supported for undefined cage slots";
         }
 
         DividerRecord targetDivider = getDividerRecord(divider);
