@@ -12,7 +12,6 @@ Select
     Case
         When (a.project.use_category = 'Research') Then 'Project Research Assigned'
         Else 'Project Resource Assigned'
-        End as ProjectType
-
+    End as ProjectType
 From study.assignment a
-Where (a.date <= Now() And a.enddate is null)
+Where (a.date <= Now() And (a.enddate IS NULL OR a.enddate >= Now())) OR (a.date = Now() And a.date = a.enddate)
