@@ -1,0 +1,1 @@
+ALTER TABLE onprc_ehr.CageAuditLog ADD CONSTRAINT pk_searchid PRIMARY KEY (searchid);
