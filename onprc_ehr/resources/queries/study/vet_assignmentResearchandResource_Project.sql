@@ -14,4 +14,4 @@ Select
         Else 'Project Resource Assigned'
     End as ProjectType
 From study.assignment a
-Where (a.date <= Now() And (a.enddate IS NULL OR a.enddate >= Now())) OR (a.date = Now() And a.date = a.enddate)
+Where (a.date <= curdate() And (a.enddate IS NULL OR a.enddate >= curdate()))
