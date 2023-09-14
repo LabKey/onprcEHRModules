@@ -105,6 +105,21 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
 
             }
         },
+        'study.tissue_samples': {
+            weight: {
+                editorConfig: {
+                    decimalPrecision: 3
+                }
+            },
+            preparation: {
+                allowBlank: false,
+                lookup: {
+                    columns: 'objectid,value,category,code',
+                    sort: 'sort_order',
+                    filterArray: [LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)]
+                }
+            }
+        },
 
         'onprc_billing.miscCharges': {
             Id: {

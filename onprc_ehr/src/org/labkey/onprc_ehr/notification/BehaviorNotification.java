@@ -20,9 +20,7 @@ import org.json.JSONObject;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
-import org.labkey.api.data.ContainerFilterable;
 import org.labkey.api.data.SQLFragment;
-import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
 import org.labkey.api.data.SqlSelector;
@@ -36,10 +34,7 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.writer.ContainerUser;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -354,21 +349,16 @@ public class BehaviorNotification extends ColonyAlertsNotification
         msg.append("<tr style='font-weight: bold;'><td>Category</td><td># Animals</td><td>Previous Value " + (lastRunDate == null ? "" : "(" + getDateFormat(c).format(lastRunDate) + ")") + "</td></tr>");
         final String urlBase = getExecuteQueryUrl(c, "study", "demographics", "By Location");
 
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
-        {
-            @Override
-            public void exec(ResultSet rs) throws SQLException
+        ts.forEach(rs -> {
+            String category = rs.getString("category");
+            msg.append("<tr><td>").append(category).append("</td><td><a href='").append(urlBase).append("&query.Id/numPaired/category~eq=").append(category).append("'>").append(rs.getInt("totalAnimals")).append("</a></td><td>");
+            if (oldValueMap.has(category))
             {
-                String category = rs.getString("category");
-                msg.append("<tr><td>" + category + "</td><td><a href='" + urlBase + "&query.Id/numPaired/category~eq=" + category + "'>" + rs.getInt("totalAnimals") + "</a></td><td>");
-                if (oldValueMap.containsKey(category))
-                {
-                    msg.append(oldValueMap.get(category));
-                }
-                msg.append("</td></tr>");
-
-                newValueMap.put(category, rs.getInt("totalAnimals"));
+                msg.append(oldValueMap.get(category));
             }
+            msg.append("</td></tr>");
+
+            newValueMap.put(category, rs.getInt("totalAnimals"));
         });
 
         msg.append("</table>");

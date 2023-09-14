@@ -28,7 +28,8 @@ SELECT
   m1.outcome.birthDate as birthDate,
   m1.outcome.birthCondition as birthCondition,
   m1.performedby,
-  m1.remark
+  m1.remark,
+  m1.taskid
 
 FROM study.matings m1
 
@@ -49,7 +50,8 @@ SELECT
   m2.outcome.birthDate as birthDate,
   m2.outcome.birthCondition as birthCondition,
   m2.performedby,
-  m2.remark
+  m2.remark,
+  m2.taskid
 
 FROM study.matings m2
 

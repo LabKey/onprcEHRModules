@@ -456,7 +456,7 @@ Ext4.define('SLA.form.SpeciesGrid', {
             tpl: Ext4.create('Ext.XTemplate',
                 '<tpl for=".">',
                     '<div class="x4-boundlist-item">',
-                        '<tpl if="' + displayField + ' != undefined && ' + displayField + '.length &gt; 0">{' + displayField + '}',
+                        '<tpl if="' + displayField + ' != undefined && ' + displayField + '.length &gt; 0">{' + LABKEY.Utils.encodeHtml(displayField) + '}',
                         '<tpl else>&nbsp;',
                         '</tpl>',
                     '</div>',

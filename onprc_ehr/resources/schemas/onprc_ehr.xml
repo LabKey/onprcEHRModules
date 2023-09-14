@@ -483,6 +483,7 @@
     </table>
 
     <table tableName="NHP_Training" tableDbType="TABLE" useColumnOrder="true">
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <tableTitle>NHP Training</tableTitle>
         <auditLogging>DETAILED</auditLogging>
         <columns>
@@ -1271,32 +1272,41 @@
 
         </columns>
     </table>
-    <table tableName="PrimeProblemListTemp" tableDbType="TABLE" useColumnOrder="true">
-        <tableTitle>Problem List Temp</tableTitle>
+
+    <table tableName="CageAuditLog" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Cage Audit History</tableTitle>
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>
         <columns>
             <column columnName="rowid">
                 <columnTitle>Rowid</columnTitle>
             </column>
-            <column columnName="animalid">
-                <columnTitle>Animal ID</columnTitle>
+            <column columnName="searchid">
             </column>
-            <column columnName="date">
-                <columnTitle>Date</columnTitle>
+            <column columnName="location">
             </column>
-            <column columnName="objectid">
-                <columnTitle>Object ID</columnTitle>
+            <column columnName="room">
             </column>
-            <column columnName="caseid">
-                <columnTitle>Case ID</columnTitle>
+            <column columnName="cage">
             </column>
-            <column columnName="case_enddate">
-                <columnTitle>Case End Date</columnTitle>
+            <column columnName="divider">
             </column>
-            <column columnName="created">
-                <columnTitle>Date Created</columnTitle>
+            <column columnName="cage_type">
             </column>
+            <column columnName="hasTunnel">
+            </column>
+            <column columnName="area">
+            </column>
+            <column columnName="housingtype">
+            </column>
+            <column columnName="housingcondition">
+            </column>
+            <column columnName="status">
+            </column>
+            <column columnName="container">
+            </column>
+            <column columnName="date_created"/>
         </columns>
     </table>
+
 </tables>

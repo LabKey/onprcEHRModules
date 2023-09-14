@@ -21,7 +21,6 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.buttons.ChangeQCStateButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromIdsButton;
 import org.labkey.api.ehr.buttons.CreateTaskFromRecordsButton;
-import org.labkey.onprc_ehr.buttons.CreateTaskFromRecordButtons;
 import org.labkey.api.ehr.buttons.DiscardTaskButton;
 import org.labkey.api.ehr.buttons.EHRShowEditUIButton;
 import org.labkey.api.ehr.buttons.MarkCompletedButton;
@@ -31,6 +30,7 @@ import org.labkey.api.ehr.dataentry.SingleQueryFormProvider;
 import org.labkey.api.ehr.demographics.ActiveFlagsDemographicsProvider;
 import org.labkey.api.ehr.security.EHRDataAdminPermission;
 import org.labkey.api.ehr.security.EHRProjectEditPermission;
+import org.labkey.api.issues.IssuesListDefService;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.buttons.ShowEditUIButton;
 import org.labkey.api.ldk.notification.NotificationService;
@@ -56,6 +56,7 @@ import org.labkey.onprc_ehr.buttons.BulkEditRequestsButton;
 import org.labkey.onprc_ehr.buttons.ChangeProjectedReleaseDateButton;
 import org.labkey.onprc_ehr.buttons.CreateNecropsyRequestButton;
 import org.labkey.onprc_ehr.buttons.CreateProjectButton;
+import org.labkey.onprc_ehr.buttons.CreateTaskFromRecordButtons;
 import org.labkey.onprc_ehr.buttons.HousingTransferButton;
 import org.labkey.onprc_ehr.buttons.ManageFlagsButton;
 import org.labkey.onprc_ehr.buttons.ProtocolEditButton;
@@ -83,18 +84,18 @@ import org.labkey.onprc_ehr.history.DefaultAnimalGroupsDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalGroupsEndDataSource;
 import org.labkey.onprc_ehr.history.DefaultAnimalRecordFlagDataSource;
 import org.labkey.onprc_ehr.history.DefaultNHPTrainingDataSource;
-import org.labkey.onprc_ehr.history.DefaultSustainedReleaseDatasource;
 import org.labkey.onprc_ehr.history.DefaultSnomedDataSource;
+import org.labkey.onprc_ehr.history.DefaultSustainedReleaseDatasource;
 import org.labkey.onprc_ehr.history.ONPRCClinicalRemarksDataSource;
+import org.labkey.onprc_ehr.history.ONPRCEpocLabworkType;
 import org.labkey.onprc_ehr.history.ONPRCUrinalysisLabworkType;
 import org.labkey.onprc_ehr.history.ONPRCiStatLabworkType;
-import org.labkey.onprc_ehr.history.ONPRCEpocLabworkType;
+import org.labkey.onprc_ehr.issues.RestrictedIssueProviderImpl;
 import org.labkey.onprc_ehr.notification.*;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
-//import org.labkey.onprc_ehr.security.ONPRC_EHRPMICEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -122,7 +123,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.004;
+        return 23.007;
     }
 
     @Override
@@ -142,6 +143,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
 //        Added: 12-5-2019
 //        RoleManager.registerRole(new ONPRC_EHRPMICEditRole());
+
+        // register the permissions provider for a restricted issue list
+        IssuesListDefService.get().registerRestrictedIssueProvider(new RestrictedIssueProviderImpl());
     }
 
     @Override
@@ -179,6 +183,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added April, 2017 Kollil
         ns.registerNotification(new PregnantNHPsGestationAlert(this));
 
+        //Added March, 2023 Kollil
+        ns.registerNotification(new PregnantNHPChecks(this));
+
         //Added May 12th, 2017 Kollil
         ns.registerNotification(new DCMNotesNotification(this));
 
@@ -199,6 +206,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added Mar 18th, 2021 Kollil
         ns.registerNotification(new HousingTransferNotification(this));
+
+        //Added Dec 2022, Kollil
+        ns.registerNotification(new USDAPainNotification(this));
 
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
@@ -289,6 +299,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 10-6-2022   R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/UsersAndGroupsCombo.js"), this);
 
+        //Added: 12-15-2022  R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageSoapWindow.js"), this);
+
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Commonly Used Queries");
@@ -309,8 +322,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Services Needed For Processing", this, DetailsURL.fromString("/onprc_ehr/groupProcessing.view"), "Colony Services");
 
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPE"), "Routine Clinical Tasks");
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last TB Test", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsMostRecentTBDate&query.calculated_status~eq=Alive"), "Routine Clinical Tasks");
+//        Modified: 5-1-2023 R.Blasa
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=ExamVetPE"), "Routine Clinical Tasks");
+
+       EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last TB Test", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsMostRecentTBDate&query.calculated_status~eq=Alive"), "Routine Clinical Tasks");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Summary of Clinical Tasks", this, DetailsURL.fromString("/ldk/runNotification.view?key=org.labkey.onprc_ehr.notification.RoutineClinicalTestsNotification"), "Routine Clinical Tasks");
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Pairing Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=pairingSummary"), "Behavior");
@@ -318,7 +333,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Alopecia Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=alopeciaData"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Pathogen Summary", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=pathogenSummary"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Medical Cull List", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=medicalCullList"), "Clinical");
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Morbidity and Mortality By Breeding Group", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=animalGroupCategoryProblemSummary"), "Clinical");
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Morbidity and Mortality By Breeding Group", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=animalGroupCategoryProblemSummarySubcategory"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Morbidity and Mortality Raw Data", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=morbidityAndMortalityData"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Weight Loss Report", this, DetailsURL.fromString("/ldk/runNotification.view?key=org.labkey.onprc_ehr.notification.WeightAlertsNotification"), "Clinical");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Weight Change Data", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsWeightChange&query.viewName=By Location"), "Clinical");
@@ -329,6 +344,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added 5-16-2018  R.Blasa
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam by ID(s)", this, DetailsURL.fromString("/onprc_ehr/PE_ExamHistoryReportbyID.view"), "Routine Clinical Tasks");
+
+        //Added 5-4-2023  R.Blasa
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Date of Last Physical Exam by Categories", this, DetailsURL.fromString("/onprc_ehr/PEExamwithCategories.view"), "Routine Clinical Tasks");
 
         //Modified: 1-17-2019  R.Blasa
         try
@@ -368,6 +386,48 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         {
             throw new UnexpectedException(e);
         }
+
+
+        //Modified: 9-7-2023  R.Blasa
+        try
+        {
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology CPL Surface Sanitation Summary Report", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render")
+            {
+                // SSRS is picky about the URI-encoding of the query parameters
+                @Override
+                public String toString()
+                {
+
+                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render";
+
+                }
+            }, "Clinical Pathology");
+        }
+        catch (URISyntaxException e)
+        {
+            throw new UnexpectedException(e);
+        }
+
+        //Modified: 9-7-2023  R.Blasa
+        try
+        {
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Room Utilization Audit History", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Test%2fPrimeCagingAuditHistoryReport&rs:Command=Render")
+            {
+                // SSRS is picky about the URI-encoding of the query parameters
+                @Override
+                public String toString()
+                {
+
+                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Test%2fPrimeCagingAuditHistoryReport&rs:Command=Render";
+
+                }
+            }, "Colony Management");
+        }
+        catch (URISyntaxException e)
+        {
+            throw new UnexpectedException(e);
+        }
+
 
         try
         {

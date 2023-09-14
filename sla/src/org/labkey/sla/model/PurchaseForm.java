@@ -2,16 +2,15 @@ package org.labkey.sla.model;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.labkey.api.action.CustomApiForm;
-import org.labkey.api.data.Container;
+import org.labkey.api.action.NewCustomApiForm;
 import org.labkey.api.util.GUID;
+import org.labkey.api.util.JsonUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-public class PurchaseForm implements CustomApiForm
+public class PurchaseForm implements NewCustomApiForm
 {
     private Integer _rowid;
     private String _objectid;
@@ -178,31 +177,31 @@ public class PurchaseForm implements CustomApiForm
     }
 
     @Override
-    public void bindProperties(Map<String, Object> props)
+    public void bindJson(JSONObject json)
     {
         // set the purchase level properties
-        if (props.containsKey("rowid") && props.get("rowid") != null)
-            _rowid = Integer.parseInt(props.get("rowid").toString());
-        if (props.containsKey("objectid") && props.get("objectid") != null)
-            _objectid = props.get("objectid").toString();
-        if (props.containsKey("project") && props.get("project") != null)
-            _project = Integer.parseInt(props.get("project").toString());
-        if (props.containsKey("account") && props.get("account") != null)
-            _account = props.get("account").toString();
-        if (props.containsKey("requestorid") && props.get("requestorid") != null)
-            _requestorid = props.get("requestorid").toString();
-        if (props.containsKey("vendorid") && props.get("vendorid") != null)
-            _vendorid = props.get("vendorid").toString();
-        if (props.containsKey("hazardslist") && props.get("hazardslist") != null)
-            _hazardslist = props.get("hazardslist").toString();
-        if (props.containsKey("dobrequired") && props.get("dobrequired") != null)
-            _dobrequired = Integer.parseInt(props.get("dobrequired").toString());
+        if (json.has("rowid"))
+            _rowid = json.getInt("rowId");
+        if (json.has("objectid"))
+            _objectid = json.getString("objectid");
+        if (json.has("project"))
+            _project = Integer.parseInt(json.getString("project"));
+        if (json.has("account"))
+            _account = json.getString("account");
+        if (json.has("requestorid"))
+            _requestorid = json.getString("requestorid");
+        if (json.has("vendorid"))
+            _vendorid = json.getString("vendorid");
+        if (json.has("hazardslist") && !json.isNull("hazardslist"))
+            _hazardslist = json.getString("hazardslist");
+        if (json.has("dobrequired"))
+            _dobrequired = json.getInt("dobrequired");
 
         // parse the array of purchase details records
-        if (props.containsKey("details"))
+        if (json.has("details"))
         {
-            JSONArray details = (JSONArray) props.get("details");
-            for (JSONObject detail : details.toJSONObjectArray())
+            JSONArray details = json.getJSONArray("details");
+            for (JSONObject detail : JsonUtil.toJSONObjectList(details))
             {
                 addPurchaseDetail(new PurchaseDetails(detail));
             }

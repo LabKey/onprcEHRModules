@@ -160,7 +160,7 @@ public class BillingValidationNotification extends FinanceNotification
             url += "&query.param.NumDays=" + numDays.intValue();
             url += "&query.sort=-date,Id";
 
-            msg.append("<a href='" + url + "'>Click here to view them</a>");
+            msg.append("<a href='").append(url).append("'>Click here to view them</a>");
             msg.append("<hr>");
         }
     }

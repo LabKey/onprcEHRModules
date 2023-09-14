@@ -42,7 +42,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
                 editorConfig: {
                     anyMatch: true,
                     listConfig: {
-                        innerTpl: '{[("<b>" + values.chargeName + "</b>" )]}',
+                        innerTpl: '{[("<b>" + LABKEY.Utils.encodeHtml(values.chargeName) + "</b>" )]}',
                         getInnerTpl: function(){
                             return this.innerTpl;
                         }
@@ -67,7 +67,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
                 },
                 editorConfig: {
                     listConfig: {
-                        innerTpl: '{[("<b>" + values.aliasPI + "</b>" )]}',
+                        innerTpl: '{[("<b>" + LABKEY.Utils.encodeHtml(values.aliasPI) + "</b>" )]}',
                         getInnerTpl: function(){
                             return this.innerTpl;
                         }

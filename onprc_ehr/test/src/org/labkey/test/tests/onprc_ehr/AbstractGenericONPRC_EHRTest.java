@@ -16,11 +16,11 @@
 package org.labkey.test.tests.onprc_ehr;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.labkey.remoteapi.CommandException;
 import org.labkey.remoteapi.CommandResponse;
 import org.labkey.remoteapi.Connection;
-import org.labkey.remoteapi.PostCommand;
+import org.labkey.remoteapi.SimplePostCommand;
 import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
 import org.labkey.remoteapi.query.SaveRowsResponse;
@@ -35,7 +35,6 @@ import org.labkey.test.params.list.ListDefinition;
 import org.labkey.test.params.list.VarListDefinition;
 import org.labkey.test.tests.ehr.AbstractGenericEHRTest;
 import org.labkey.test.util.Ext4Helper;
-import org.labkey.test.util.ListHelper;
 import org.labkey.test.util.LogMethod;
 import org.labkey.test.util.PasswordUtil;
 import org.labkey.test.util.SchemaHelper;
@@ -217,8 +216,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         //this applies the standard property descriptors, creates indexes, etc.
         // NOTE: this currently will log an error from DatasetDefinition whenever we create a new column.  This really isnt a bug, so ignore
         checkErrors();
-        Connection connection = createDefaultConnection(true);
-        PostCommand command = new PostCommand("ehr", "ensureDatasetProperties");
+        Connection connection = createDefaultConnection();
+        SimplePostCommand command = new SimplePostCommand("ehr", "ensureDatasetProperties");
         command.setTimeout(1200000);
         CommandResponse response = command.execute(connection, getContainerPath());
         assertTrue("Problem with ehr-ensureDatasetProperties: [" +response.getStatusCode() + "] " + response.getText(), response.getStatusCode() < 400);
@@ -238,7 +237,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected void setupNotificationService()
     {
         //set general settings
-        beginAt(getBaseURL() + "/ldk/" + getContainerPath() + "/notificationAdmin.view");
+        beginAt(WebTestHelper.buildURL("ldk", getContainerPath(),"notificationAdmin"));
         _helper.waitForCmp("field[fieldLabel='Notification User']");
         Ext4FieldRef.getForLabel(this, "Notification User").setValue(PasswordUtil.getUsername());
         Ext4FieldRef.getForLabel(this, "Reply Email").setValue("fakeEmail@fakeDomain.test");
@@ -252,7 +251,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     @Override
     protected void populateInitialData()
     {
-        beginAt(getBaseURL() + "/" + getModuleDirectory() + "/" + getContainerPath() + "/populateData.view");
+        beginAt(WebTestHelper.buildURL(getModuleDirectory(), getContainerPath(), "populateData"));
 
         repopulate("Lookup Sets");
         repopulate("Procedures");
@@ -261,7 +260,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         repopulate("SNOMED Codes");
 
         //also populate templates
-        beginAt(getBaseURL() + "/" + getModuleDirectory() + "/" + getContainerPath() + "/populateTemplates.view");
+        beginAt(WebTestHelper.buildURL(getModuleDirectory(), getContainerPath(), "populateTemplates"));
 
         repopulate("Form Templates");
         repopulate("Formulary");
@@ -289,7 +288,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
                 {SUBJECTS[1], pastDate1, "Clinical"},
                 {SUBJECTS[1], pastDate1, "Surgery"}
         };
-        PostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "cases", "lsid", fields, data);
+        SimplePostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "cases", "lsid", fields, data);
         getApiHelper().deleteAllRecords("study", "cases", new Filter("Id", StringUtils.join(SUBJECTS, ";"), Filter.Operator.IN));
         getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), insertCommand, getExtraContext());
     }
@@ -330,7 +329,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         if (objectid == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr_lookups", "flag_values");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("category", category);
                     put("value", name);
@@ -381,14 +381,15 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         if (groupId == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr", "animal_groups");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("name", name);
                 }
             });
 
             SaveRowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
-            groupId = ((Long)saveRowsResponse.getRows().get(0).get("rowid")).intValue();
+            groupId = (Integer)saveRowsResponse.getRows().get(0).get("rowid");
         }
 
         return groupId;

@@ -36,6 +36,11 @@
                         <columnTitle>Expire Period (Months)</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
+
+                    <column columnName="NewExpirePeriod">
+                        <columnTitle>New Expire Period (Months)</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
                     <column columnName="unit">
                         <columnTitle>Unit</columnTitle>
                         <displayWidth>70</displayWidth>
@@ -70,8 +75,8 @@
                         <displayWidth>60</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
-                    <column columnName="trackingflag">
-                        <columnTitle>Essential</columnTitle>
+                    <column columnName="snooze_date">
+                        <columnTitle>Snooze Until</columnTitle>
                         <displayWidth>60</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>

@@ -42,5 +42,4 @@ public class TissueWeightsFormSection extends SimpleGridPanel
         jsonObject.put("topAndBottomButtons", true);
         return jsonObject;
     }
-
 }

@@ -15,24 +15,17 @@
  */
 package org.labkey.onprc_ehr.notification;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
-import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
-import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
-import org.labkey.api.query.QueryDefinition;
-import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryService;
-import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.util.DateUtil;
 import org.labkey.api.util.PageFlowUtil;
@@ -40,7 +33,6 @@ import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.ehr.notification.AbstractEHRNotification;
-import org.apache.commons.lang3.StringUtils;
 
 
 import java.sql.ResultSet;

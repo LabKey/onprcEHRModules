@@ -188,6 +188,14 @@ exports.init = function(EHR){
         });
     });
 
+    //Added: 2-14-2023  R.Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'urinalysisResults', function(event, helper){
+        helper.setScriptOptions({
+            removeTimeFromDate: false,
+            allowDatesInDistantPast: true
+        });
+    })
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'encounters', function(event, helper){
         // Special handling for Pathology Request Form to use a placeholder ID
         helper.decodeExtraContextProperty('AllowAnyId', false);
@@ -379,6 +387,30 @@ exports.init = function(EHR){
         }
     });
 
+    // Added by Kollil, 12/22/2022: USDA Pain category validation:
+    /* This is user input validation for Procedures panel
+    1. Stop the user if the user attempts to fill in USDA pain level while creating / modifying a procedure other than the IS team personnel.
+    */
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr_lookups', 'procedures', function(helper, scriptErrors, row, oldRow) {
+        //console.log(" 0. procedure: " + row.procedureid + ", ins: " + row.instructions);
+
+        // When users other than IS team entering the procedure data, stop them until they clear the USDA pain level field data
+        /*
+        Lakshmi Kolli - 1008
+        Gary Jones - 1011
+        Raymond Blasa - 1007
+        Lindsay Amor - 2217
+        Brent Logan - 2933
+         */
+        if (row.PainCategories != null) {
+            if ( LABKEY.Security.currentUser.id !== 1008 || LABKEY.Security.currentUser.id !== 1007 || LABKEY.Security.currentUser.id !== 1011 || LABKEY.Security.currentUser.id !== 2217 || LABKEY.Security.currentUser.id !== 2933 )
+            {
+                EHR.Server.Utils.addError(scriptErrors, 'PainCategories', 'The USDA pain category field must be left blank if the user is not from ISE team!', 'WARN');
+            }
+        }
+
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow)
     {
         if (row.chargetype == 'Research Staff' && !row.assistingstaff && row.procedureid && triggerHelper.requiresAssistingStaff(row.procedureid))
@@ -428,6 +460,16 @@ exports.init = function(EHR){
             }
         }
 
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'flags', function(event, helper){
+        helper.setScriptOptions({
+            allowFutureDates: true,
+            removeTimeFromDate: true,
+            removeTimeFromEndDate: true
+        });
+
+        EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'flags', EHR.Server.TriggerManager.Events.AFTER_INSERT);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'flags', function(helper, scriptErrors, row, oldRow){
@@ -881,6 +923,10 @@ exports.init = function(EHR){
 
             }
 
+            if (row.birth != oldRow.birth){
+                triggerHelper.updateArrivalrecords(row.Id, row.birth)
+            }
+
         }
 
         if(row.id)
@@ -1150,7 +1196,6 @@ exports.init = function(EHR){
                 EHR.Server.Utils.addError(scriptErrors, 'Id', 'billing charges grid requires at least one row', 'WARN');
             }
         });
-
 
         //Added 3-5-2019  R.Blasa
         EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){

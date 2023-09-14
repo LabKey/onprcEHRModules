@@ -30,7 +30,7 @@ import java.util.function.Supplier;
  */
 public class EncounterChildFormSection extends SimpleGridPanel
 {
-    private boolean _allowAddDefaults;
+    private final boolean _allowAddDefaults;
 
     public EncounterChildFormSection(String schemaName, String queryName, String label, boolean allowAddDefaults)
     {
@@ -64,7 +64,7 @@ public class EncounterChildFormSection extends SimpleGridPanel
     @Override
     public List<String> getTbarButtons()
     {
-        List<String> defaultButtons = new ArrayList<String>();
+        List<String> defaultButtons = new ArrayList<>();
 
         if (_allowAddDefaults)
             defaultButtons.add("ADDPROCEDUREDEFAULTS");
