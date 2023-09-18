@@ -2208,7 +2208,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>ALERT: " + count + " new animal(s) found with the flag, \"NHPR NOTE: BCG Vaccinated\".</b><br>");
+            msg.append("<b>ALERT: " + count + " new animal(s) found with the flag, \"NHPR NOTE: BCG Vaccinated\" added yesterday.</b><br>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BCGVaccinatedFlags", null) + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
