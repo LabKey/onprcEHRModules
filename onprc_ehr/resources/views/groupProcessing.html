@@ -117,55 +117,60 @@
 
                 window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
                 }
-            },{
-                html: '<hr><b>Blood Needed For Viral Surveillance:</b>',
-            style: 'margin-bottom: 10px;'
-            },{
-                html: 'This report will summarize blood needed for viral surveillance based on the following criteria:<br>' +
-                '- 4mL is required for HBV testing on all SPF animals over 180 days old that have not been HBV tested during this calendar year<br>' +
-                '- 4mL is required for SRV testing for all Japanese Macaques, and non-SPF Cynos that have not been testing during this calendar year',
-                style: 'margin-bottom: 10px;'
-            },{
-                xtype: 'button',
-                style: 'margin-bottom: 10px;',
-                border: true,
-                text: 'View Report',
-                scope: this,
-                handler: function(btn){
-                var groupName = btn.up('panel').down('#groupName').getValue() || [];
-                groupName = Ext4.isArray(groupName) ? groupName: [groupName];
+            },
+            //Modified by Kollil, 9/19/23
+            // As per Tkt# 9767, this section is deleted from the page.
 
-                var room = btn.up('panel').down('#room').getValue() || [];
-                room = Ext4.isArray(room) ? room: [room];
-
-                var field = btn.up('panel').down('#animalField');
-                var animalid = field.getValue() || [];
-                if (!Ext4.isEmpty(animalid)){
-                animalid = Ext4.String.trim(animalid);
-                animalid = animalid.replace(/[\s,;]+/g, ';');
-                animalid = animalid.replace(/(^;|;$)/g, '');
-                }
-                animalid = Ext4.isArray(animalid) ? animalid: [animalid];
-
-                var params = {
-                schemaName: 'study',
-                'query.queryName': 'processingSerology',
-                'query.Id/demographics/calculated_status~eq': 'Alive',
-                'query.bloodVol~gt': 0
-            };
-
-                if (!Ext4.isEmpty(groupName))
-                params['query.Id/activeAnimalGroups/groups~in'] = groupName.join(';');
-
-                if (!Ext4.isEmpty(room))
-                params['query.Id/curLocation/room~in'] = room.join(';');
-
-                if (!Ext4.isEmpty(animalid))
-                params['query.Id~in'] = animalid.join(';');
-
-                window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
-            }
-            },{
+            // {
+            //     html: '<hr><b>Blood Needed For Viral Surveillance:</b>',
+            // style: 'margin-bottom: 10px;'
+            // },{
+            //     html: 'This report will summarize blood needed for viral surveillance based on the following criteria:<br>' +
+            //     '- 4mL is required for HBV testing on all SPF animals over 180 days old that have not been HBV tested during this calendar year<br>' +
+            //     '- 4mL is required for SRV testing for all Japanese Macaques, and non-SPF Cynos that have not been testing during this calendar year',
+            //     style: 'margin-bottom: 10px;'
+            // },{
+            //     xtype: 'button',
+            //     style: 'margin-bottom: 10px;',
+            //     border: true,
+            //     text: 'View Report',
+            //     scope: this,
+            //     handler: function(btn){
+            //     var groupName = btn.up('panel').down('#groupName').getValue() || [];
+            //     groupName = Ext4.isArray(groupName) ? groupName: [groupName];
+            //
+            //     var room = btn.up('panel').down('#room').getValue() || [];
+            //     room = Ext4.isArray(room) ? room: [room];
+            //
+            //     var field = btn.up('panel').down('#animalField');
+            //     var animalid = field.getValue() || [];
+            //     if (!Ext4.isEmpty(animalid)){
+            //     animalid = Ext4.String.trim(animalid);
+            //     animalid = animalid.replace(/[\s,;]+/g, ';');
+            //     animalid = animalid.replace(/(^;|;$)/g, '');
+            //     }
+            //     animalid = Ext4.isArray(animalid) ? animalid: [animalid];
+            //
+            //     var params = {
+            //     schemaName: 'study',
+            //     'query.queryName': 'processingSerology',
+            //     'query.Id/demographics/calculated_status~eq': 'Alive',
+            //     'query.bloodVol~gt': 0
+            // };
+            //
+            //     if (!Ext4.isEmpty(groupName))
+            //     params['query.Id/activeAnimalGroups/groups~in'] = groupName.join(';');
+            //
+            //     if (!Ext4.isEmpty(room))
+            //     params['query.Id/curLocation/room~in'] = room.join(';');
+            //
+            //     if (!Ext4.isEmpty(animalid))
+            //     params['query.Id~in'] = animalid.join(';');
+            //
+            //     window.open(LABKEY.ActionURL.buildURL('query', 'executeQuery', null, params))
+            // }
+            // },
+                {
                 html: '<hr><b>Blood Needed For Genetic Testing:</b>',
                 style: 'margin-bottom: 10px;'
             },{
