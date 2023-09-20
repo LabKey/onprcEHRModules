@@ -175,7 +175,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         clickAndWait(Locator.linkWithText("ONPRC Projects"));
 
         DataRegionTable projectTable = new DataRegionTable("query", getDriver());
-        projectTable.clickHeaderMenu("More Actions", false, "Edit Records");
+        projectTable.doAndWaitForUpdate(() -> projectTable.clickHeaderMenu("More Actions", false, "Edit Records"));
         projectTable.clickImportBulkData();
 
         setFormElement(Locator.name("name"), projectName);
