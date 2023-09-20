@@ -1,0 +1,43 @@
+<!-- Vet Assignment webpart --> <!-- Copied by G Jones 2023-06-09 Under LK guidance -->
+<h2>CMU Vet assignment Administration</h2>
+<ul>
+    <li><a href="/query/ONPRC/EHR/executeQuery.view?schemaName=study&amp;query.queryName=demographicsAssignedVet_bl">List of vets assigned to living animals</a></li>
+    <li><a href="/query/ONPRC/EHR/executeQuery.view?schemaName=onprc_ehr&amp;query.queryName=vet_assignment_summary">Rules governing vet assignment</a></li>
+</ul>
+<h3>Vet Assignment Tools</h3>
+<ul>
+    <li><a href="/query/ONPRC/EHR/executeQuery.view?schemaName=study&query.queryName=demographicsAssignedVet_bl&query.AssignmentType~contains=Unassigned">NHPs without an assigned vet</a></li>
+    <li><a href="/query/ONPRC/EHR/executeQuery.view?schemaName=study&amp;query.queryName=ProtocolswithNoVetAssigned">Protocols with no vet assigned</a></li>
+    <li><a href="/query/ONPRC/EHR/executeQuery.view?schemaName=ehr&amp;query.queryName=project&amp;query.viewName=Active%20Projects&amp;query.use_category~neqornull=Research">Resource Projects</a></li>
+    <li><a href="/issues/ONPRC/Admin/IS/ISE%20Issues%20and%20Training/Issues/details.view?issueId=4305">Vet Assignment Change Log</a></li>
+</ul>
+<h3>Vet Assignment Hierarchy</h3>
+<p>Vets are assigned to NHPs according to the first rule listed below that matches.</p>
+<ol start="0">
+    <li>Open Case</li>
+    <li>Room + <em>Priority</em></li>
+    <li>Area + <em>Priority</em></li>
+    <li>Project* + Room + <em>Priority</em></li>
+    <li>Project* + Room</li>
+    <li>Project* + Area + <em>Priority</em></li>
+    <li>Project* + Area</li>
+    <li>Project* + <em>Priority</em></li>
+    <li>Project*</li>
+    <li>Protocol + Room + <em>Priority</em></li>
+    <li>Protocol + Area + <em>Priority</em></li>
+    <li>Protocol + Room</li>
+    <li>Protocol + Area</li>
+    <li>Protocol + <em>Priority</em></li>
+    <li>Protocol</li>
+    <li>Room</li>
+    <li>Area</li>
+</ol>
+<p>* Research projects are automatically prioritized above <a href="/query/ONPRC/EHR/executeQuery.view?schemaName=ehr&amp;query.queryName=project&amp;query.viewName=Active%20Projects&amp;query.use_category~neqornull=Research">non-research projects</a> for the same rule.</p>
+<h3>Developer Debug Links</h3>
+<ul>
+    <li><a href="/query/ONPRC/EHR/sourceQuery.view?schemaName=study&query.queryName=demographicsAssignedVet_bl">study.demographicsAssignedVet_BrentTest</a></li>
+    <li><a href="/query/ONPRC/EHR/sourceQuery.view?schemaName=study&query.queryName=vetAssignment_filter_bl">study.vetAssignment_filter_bl</a></li>
+    <li><a href="/query/ONPRC/EHR/sourceQuery.view?schemaName=study&query.queryName=vetAssignment_demographics_bl">study.vetAssignment_demographics_bl</a></li>
+    <li><a href="/query/ONPRC/EHR/sourceQuery.view?schemaName=study&query.queryName=vetAssignment_projects_bl">study.vetAssignment_projects_bl</a></li>
+    <li><a href="/query/ONPRC/EHR/executeQuery.view?query.queryName=Demographics&query.viewName=By%20Location&schemaName=study&query.calculated_status~eq=Alive">Live NHPs at ONPRC</a></li>
+</ul>
