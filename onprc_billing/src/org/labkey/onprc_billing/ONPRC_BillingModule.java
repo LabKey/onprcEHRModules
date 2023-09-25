@@ -78,6 +78,8 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     }
 //This was updated to match all sets
     @Override
+    /*REmoval of old qqueries no longer in use*/
+
     public @Nullable Double getSchemaVersion()
     {
         return 23.004;

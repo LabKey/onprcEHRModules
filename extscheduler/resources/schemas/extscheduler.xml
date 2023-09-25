@@ -99,20 +99,7 @@
             </column>
         </columns>
     </table>
-    <table tableName="vw_Covid19Research" tableDbType="VIEW">
-        <columns>
-            <column columnName="SChedulerID"/>
-            <column columnName="ResourceId"/>
-            <column columnName="ResourceName"/>
-            <column columnName="Name"/>
-            <column columnName="StartDate"/>
-            <column columnName="UserId"/>
-            <column columnName="CreatedBy"/>
-            <column columnName="Created"/>
-            <column columnName="Quantity"/>
-            <column columnName="EmployeeID"/>
-        </columns>
-    </table>
+
     <table tableName="dateParts" tableDbType="TABLE">
         <columns>
             <column columnName="date"/>
