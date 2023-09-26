@@ -156,13 +156,18 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         infantsNotAssignedToDamGroup(c, u, msg);
         infantsNotAssignedToDamSPF(c, u, msg);
         birthRecordsNotMatchingHousing(c, u, msg);
+        duplicateGroupMembership(c, u, msg);
+        suspiciousMedications(c, u, msg);
+
+        //Flags
+        duplicateFlags(c, u, msg);
+        // Added by Kollil 9/5/23
+        BCGVaccineFlags(c,u,msg);
 
         //notes
         notesEndingToday(c, u, msg, null, null);
 
-        duplicateGroupMembership(c, u, msg);
-        duplicateFlags(c, u, msg);
-        suspiciousMedications(c, u, msg);
+
 
         return msg.toString();
     }
@@ -2188,6 +2193,23 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + count + " animals with duplicate active flags from the same category.</b><br>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flagDuplicates", null) + "'>Click here to view them</a><br>\n");
+            msg.append("<hr>\n");
+        }
+    }
+
+    /**
+     *  Created by Kollil, 9/6/23
+     *  Get the new animals found with the flag, "NHPR NOTE: BCG Vaccinated".
+     */
+    protected void BCGVaccineFlags(Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("BCGVaccinatedFlags");
+        TableSelector ts = new TableSelector(ti);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>ALERT: " + count + " new animal(s) found with the flag, \"NHPR NOTE: BCG Vaccinated\" added yesterday.</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BCGVaccinatedFlags", null) + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }
