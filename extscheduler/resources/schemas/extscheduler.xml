@@ -39,7 +39,7 @@
             </column>
         </columns>
     </table>
-
+<!--Removed Files referencing Covid19 work-->
     <table tableName="events" tableDbType="TABLE">
         <titleColumn>Name</titleColumn>
         <columns>
