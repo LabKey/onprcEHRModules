@@ -23,6 +23,9 @@
                     <column columnName="protocols">
                         <isHidden>true</isHidden>
                     </column>
+                    <column columnName="history">
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>
