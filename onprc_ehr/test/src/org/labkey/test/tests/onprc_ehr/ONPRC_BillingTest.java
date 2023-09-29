@@ -184,10 +184,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         // the button and having it pop up a warning dialog
         Thread.sleep(2500);
 
-        clickButton("Submit", 0);
-        new Window.WindowFinder(getDriver()).withTitle("Success").timeout(WAIT_FOR_JAVASCRIPT * 2).waitFor();
-        clickAndWait(Ext4Helper.Locators.ext4Button("OK"));
-
+        clickButton("Submit");
         projectTable.setFilter("name", "Equals", projectName);
         checker().verifyEquals("Adding new project was not successful", 1, projectTable.getDataRowCount());
     }
