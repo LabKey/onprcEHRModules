@@ -29,7 +29,7 @@
                                     html:' <p>Each animal is assigned to a vet, using a series of rules.  Vets can be assigned to either an IACUC protocol, a project, an area, and/or a room. </p> ' +
 
                                             '<ul><li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'demographicsAssignedVet'}) + '">Vets assigned to living animals</a></li>' +
-                                            '<li><a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'onprc_ehr', 'query.queryName': 'vet_assignment_summary'}) + '">Rules governing vet assignments</a></li></ul>' +
+                                            '<li><a href="' + LABKEY.ActionURL.buildURL('ldk', 'updateQuery', null, {schemaName: 'onprc_ehr', 'query.queryName': 'vet_assignment'}) + '">Rules governing vet assignments</a></li></ul>' +
                                             '<p>This is designed to show any SOAPs entered for a given animal since the last date a vet review was entered.</p>  ',
 
 
