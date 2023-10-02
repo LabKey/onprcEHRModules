@@ -1,11 +1,11 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
         <column name="Id"/>
-        <column name="Calculated_Status"/>
-        <column name="area"/>
-        <column name="room"/>
         <column name="AssignedVet"/>
         <column name="AssignmentType"/>
+        <column name="area"/>
+        <column name="room"/>
+        <column name="project"/>
         <column name="protocol"/>
         <column name="protocolPI"/>
         <column name="Id/demographics/history"/>
