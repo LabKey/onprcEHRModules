@@ -5,8 +5,8 @@
                 <tableTitle>Assigned Vet</tableTitle>
                 <columns>
                     <column columnName="Id">
-                        <isHidden>true</isHidden>
-                        <isKeyField>true</isKeyField>
+                        <isHidden>false</isHidden>
+                        <isKeyField>false</isKeyField>
                     </column>
                     <column columnName="assignedVet">
                         <columnTitle>Assigned Vet(s)</columnTitle>
@@ -14,20 +14,49 @@
                     <column columnName="assignedVetId">
                         <isHidden>true</isHidden>
                     </column>
-                    <column columnName="areas">
-                        <isHidden>true</isHidden>
+                    <column columnName="area">
+                        <isHidden>false</isHidden>
                     </column>
                     <column columnName="rooms">
-                        <isHidden>true</isHidden>
+                        <isHidden>false</isHidden>
                     </column>
-                    <column columnName="protocols">
-                        <isHidden>true</isHidden>
+                    <column columnName="protocol">
+                        <isHidden>false</isHidden>
+                    </column>
+                    <column columnName="project">
+                        <isHidden>false</isHidden>
                     </column>
                     <column columnName="history">
-                        <isHidden>true</isHidden>
+                        <isHidden>false</isHidden>
                     </column>
                 </columns>
             </table>
         </tables>
     </metadata>
 </query>
+<!--
+
+        Columns - displayed in the following order from left to right
+
+
+
+        * ID
+        * AssignedVet
+        * AssignmentType
+        * Room
+        * Area
+        * Project
+        * Protocol
+        * ProtocolPI
+        * History &#45;&#45; in square brackets so it is a popover
+
+
+
+        Hidden by XML but available to be added later
+
+
+
+        * CalculatedStatus
+        * MatchedRule
+
+-->

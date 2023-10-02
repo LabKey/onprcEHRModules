@@ -2,17 +2,13 @@
     <columns>
         <column name="Id"/>
         <column name="Calculated_Status"/>
-        <column name="room.area"/>
+        <column name="area"/>
         <column name="room"/>
-
         <column name="AssignedVet"/>
         <column name="AssignmentType"/>
         <column name="protocol"/>
         <column name="protocolPI"/>
-
         <column name="Id/demographics/history"/>
     </columns>
-    <filters>
-        <filter column="Calculated_Status" operator="eq" value="Alive"/>
-    </filters>
+
 </customView>

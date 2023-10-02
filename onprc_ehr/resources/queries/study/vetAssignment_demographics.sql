@@ -15,7 +15,7 @@ Future modifications:
   * Limit open cases to those that are not inactive
  */
 
-SELECT nhp.id
+SELECT demographics.id
      , CMUcases.assignedVet.displayName AS caseVet
      , CMUcases.DATE AS caseDate
      , housing.room
