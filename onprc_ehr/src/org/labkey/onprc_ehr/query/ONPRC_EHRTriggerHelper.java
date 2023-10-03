@@ -2609,4 +2609,8 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
+    public void recalculateAllVetAssignmentRecords()
+    {
+        EHRDemographicsService.get().recalculateForAllIdsInCache(_container, "onprc_ehr", "vet_assignment", true);
+    }
 }
