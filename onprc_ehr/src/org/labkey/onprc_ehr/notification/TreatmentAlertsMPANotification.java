@@ -71,7 +71,9 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
     }
 
     @Override
-    public String getCronString() { return "00 14 0 ? * 4#2 *";}
+    public String getCronString() { return "00 14 * * 3";};
+    //{ return "00 14 0 ? * 4#2 *";}
+    //  00 14 * * 3
 
     @Override
     public String getScheduleDescription()
@@ -105,7 +107,7 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
         roundedMax.setTime(maxDate.getTime());
         roundedMax = DateUtils.truncate(roundedMax, Calendar.DATE);
 
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("treatmentSchedulePostOps_MPA");
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("treatmentScheduleMPA");
 
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), roundedMax, CompareType.DATE_EQUAL);
         filter.addCondition(FieldKey.fromString("date"), maxDate, CompareType.LTE);
@@ -130,7 +132,7 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(ti, colMap.values(), filter, new Sort("Id/curLocation/area,Id/curLocation/room"));
         ts.setNamedParameters(params);
 
-        String url = getExecuteQueryUrl(c, "study", "treatmentSchedulePostOps_MPA", null) + "&" + filter.toQueryString("query") + getParameterUrlString(c, params);
+        String url = getExecuteQueryUrl(c, "study", "treatmentScheduleMPA", null) + "&" + filter.toQueryString("query") + getParameterUrlString(c, params);
         long total = ts.getRowCount();
         if (total == 0) {
             msg.append("There are no treatments scheduled on " + getDateFormat(c).format(maxDate) + " on or before " + _timeFormat.format(maxDate) + ". Treatments could be added after this email was sent, so please <a href='" + url + "'>click here to check online</a> closer to the time.<hr>\n");
