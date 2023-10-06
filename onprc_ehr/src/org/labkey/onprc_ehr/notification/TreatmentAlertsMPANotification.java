@@ -71,9 +71,7 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
     }
 
     @Override
-    public String getCronString() { return "00 14 * * 3";}
-    //{ return "00 14 0 ? * 4#2 *";}
-    //  00 14 * * 3
+    public String getCronString() { return "00 14 0 ? * 4#2 *";}
 
     @Override
     public String getScheduleDescription()
