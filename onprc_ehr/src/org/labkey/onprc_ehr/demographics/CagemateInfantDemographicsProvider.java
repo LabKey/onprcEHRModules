@@ -31,7 +31,7 @@ public class CagemateInfantDemographicsProvider extends AbstractListDemographics
     public CagemateInfantDemographicsProvider(Module module)
     {
         super(module, "study", "CageMateInfant", "cagemateinfant");
-        _supportsQCState = false;
+        _supportsQCState = false; //Changed by kollil 10/6/23
     }
 
     @Override
