@@ -753,6 +753,15 @@ exports.init = function(EHR){
         }
     });
 
+    //Added: By Kollil on 5/31/2022
+    //When the Tattoo procedure is selected, add snomedcode: P-12090 TATTOOING
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'encounters', function(helper, errors, row, oldRow){
+        if (row.procedureid == 760){
+            //Add snomed code.
+            triggerHelper.addTattooSnomedCode(row.Id, row);
+        }
+    });
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'drug', function(helper, scriptErrors, row, oldRow){
         if (row.outcome && row.outcome != 'Normal' && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required if a non-normal outcome is reported', 'WARN');

@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.notification;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
+import org.labkey.api.data.ContainerFilter;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
@@ -92,8 +93,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
         getTbAlerts(sb, c, u);
         getPEAlerts(sb, c, u);
         getAnimalsNotWeightedInPast60Days(sb, c, u);
-
-        //getVirologyAlerts(sb, c, u);
+        getTattooAlerts(sb, c, u);
 
         return sb.toString();
     }
@@ -293,6 +293,49 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
             msg.append("There are no weight alerts");
         }
 
+        msg.append("<hr>\n");
+    }
+
+    /**
+     * Kollil, 6/01/22 : List the animalIds with missing Tattoos, i.e, Animals with no Tattoo procedure,  ProcedureId = 760
+     */
+    protected void getTattooAlerts(StringBuilder msg, Container c, User u)
+    {
+        msg.append("<b>Animals with missing Tattoo procedure:</b><br><br>\n");
+
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+        //Tattoo query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("TattooAlert", ContainerFilter.Type.AllFolders.create(c, u));
+        Set<ColumnInfo> cols = appendLocationCols(ti);
+        TableSelector ts = new TableSelector(ti, cols, null, null);
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0)
+        {
+            msg.append("ALERT: " + count + " animals found with no Tattoo procedure recorded in Prime:");
+            //String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.Id/MostRecentWeight/DaysSinceWeight~gt=75&query.calculated_status~eq=Alive&query.Id/curLocation/Room/housingType/value~eq=Cage Location";
+            String url = getExecuteQueryUrl(c, "study", "TattooAlert", null) + "&query.containerFilterName=AllFolders";
+            msg.append("<b><a href='" + url + "'>Click here to view them.</a></b><br><br>\n");
+
+            msg.append("Summary by area:<br>\n");
+            msg.append("<table>");
+            Map<String, Integer> areaMap = getAreaMap(ts, cols);
+            for (String area : areaMap.keySet())
+            {
+                String newUrl = url + "&query.Id/curLocation/area~eq=" + area;
+                msg.append("<tr><td>" + area + ": </td><td><a href='" + newUrl + "'>" + areaMap.get(area) + "</a></td></tr>\n");
+            }
+            msg.append("</table>");
+            msg.append("<br><br>");
+        }
+        else
+        {
+            msg.append("<b> All live animals at the center are tattooed! </b>");
+        }
         msg.append("<hr>\n");
     }
 }
