@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-//Added by Kollil 9/25/23  Post Op MPA injections scheduled at 2Pm twice a month on Wednesdays starting from Sep 13th, 2023
+//Added by Kollil 9/25/23  Post Op MPA injections scheduled at 2Pm on Wednesdays starting from Sep 13th, 2023
 //Tkt #9939
 public class TreatmentAlertsMPANotification extends AbstractEHRNotification
 {
@@ -61,22 +61,22 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
     @Override
     public String getDescription()
     {
-        return "This runs every second Wednesday of every month at 2PM if there are MPA injections scheduled that have not yet been marked complete";
+        return "This runs every Wednesday at 2PM if there are MPA injections scheduled that have not yet been marked complete";
     }
 
     @Override
     public String getEmailSubject(Container c)
     {
-        return "Bi-monthly MPA Injection Alerts: " + getDateTimeFormat(c).format(new Date());
+        return "MPA Injection Alert: " + getDateTimeFormat(c).format(new Date());
     }
 
     @Override
-    public String getCronString() { return "00 14 0 ? * 4#2 *";}
+    public String getCronString() { return "0 0 14 ? * WED * ";}
 
     @Override
     public String getScheduleDescription()
     {
-        return "Every second Wednesday of every month at 2PM";
+        return "Every Wednesday at 2PM";
     }
 
     @Override
@@ -94,7 +94,6 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
                 "Colony hospital -503 - 346 - 5424 </b>" +  ".<p>");
 
         processMPATreatments(c, u, msg, new Date());
-
         return msg.toString();
     }
 
@@ -133,7 +132,7 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
         String url = getExecuteQueryUrl(c, "study", "treatmentScheduleMPA", null) + "&" + filter.toQueryString("query") + getParameterUrlString(c, params);
         long total = ts.getRowCount();
         if (total == 0) {
-            msg.append("There are no treatments scheduled on " + getDateFormat(c).format(maxDate) + " on or before " + _timeFormat.format(maxDate) + ". Treatments could be added after this email was sent, so please <a href='" + url + "'>click here to check online</a> closer to the time.<hr>\n");
+            msg.append("There are no MPA injections scheduled on " + getDateFormat(c).format(maxDate) + " on or before " + _timeFormat.format(maxDate) + ". Treatments could be added after this email was sent, so please <a href='" + url + "'>click here to check online</a> closer to the time.<hr>\n");
         }
         else {
             final String completed = "completed";
@@ -203,7 +202,7 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
             total = ts1.getRowCount();
 
             if (total == 0) {
-                msg.append("There are no post op meds");
+                msg.append("There are no MPA injections.");
             }
             else {
                 msg.append("<br><br><br><b>Post Op Meds:</b><br><br>\n");
@@ -256,7 +255,7 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (totals.get(incomplete) == 0) {
-                msg.append("All treatments scheduled prior to " + _timeFormat.format(maxDate) + " have been marked complete as of " + getDateTimeFormat(c).format(curDate) + ".<p>\n");
+                msg.append("All MPA treatments scheduled prior to " + _timeFormat.format(maxDate) + " have been marked complete as of " + getDateTimeFormat(c).format(curDate) + ".<p>\n");
             }
             else {
                 msg.append("There are " + totals.get(incomplete) + " treatments that have not been marked complete:<p>\n");

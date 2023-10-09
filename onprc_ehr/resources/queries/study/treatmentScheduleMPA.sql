@@ -6,8 +6,6 @@
  Tkt# 9939
  Creating a new alert for this medication. This MPA injection is a post op med category but scheduled once a month.
 
-Select * From treatmentSchedulePostops
-Where code like 'E-85760'
   */
 SELECT
     h.id,
@@ -83,7 +81,7 @@ FROM study.demographics h JOIN (
         WHERE sc.primaryCategory = 'Post Op Meds'
         /* Added this clause by Kollil on 10/4/2023 to exclude the MPA injection from the list.
          This change is made according to the new request by Cassie Tkt# 9939. The MPA med is part of the post op meds category
-         but a separate alert is created so, excluding this med from this alert list.
+         so, excluding the other post op meds from this alert list. This list produces only the MPA injection entires.
          */
         AND sc.code IN ('E-85760')
         GROUP BY sc.code
@@ -92,7 +90,6 @@ FROM study.demographics h JOIN (
 --NOTE: if we run this report on a future interval, we want to include those treatments
         WHERE t1.date is not null
 --NOTE: they have decided to include non-public data
-
         ) s
 
 ) s ON (s.animalid = h.id)
