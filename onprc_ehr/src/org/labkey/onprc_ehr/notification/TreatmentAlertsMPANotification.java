@@ -86,12 +86,12 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
 
         //Find today's date
         Date now = new Date();
-        msg.append("This email contains any MPA injections not marked as completed.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + "<br><br>" +
-                "<b>Please use the following contacts if the injection has not been completed. <br><br>" +
-                "email - cmumedicationrequests @ohsu.edu <br> " +
-                "DCM Commons tech phone - 503 - 346 - 5074 <br> " +
-                "Colony tech office - 503 - 346 - 5152  <br> "  +
-                "Colony hospital -503 - 346 - 5424 </b>" +  ".<p>");
+        msg.append("This email contains any treatments not marked as completed. It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + "<br><br>" +
+                "<b>Please use the following contacts if the medication has not been completed. <br><br>" +
+                "Email: cmumedicationrequests@ohsu.edu <br> " +
+                "DCM Commons: 503 - 346 - 5074  <br> " +
+                "Colony tech office: 503 - 346 - 5152  <br> "  +
+                "Colony hospital: 503 - 346 - 5424 </b>" +  "<p>");
 
         processMPATreatments(c, u, msg, new Date());
         return msg.toString();
@@ -255,7 +255,7 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (totals.get(incomplete) == 0) {
-                msg.append("All MPA treatments scheduled prior to " + _timeFormat.format(maxDate) + " have been marked complete as of " + getDateTimeFormat(c).format(curDate) + ".<p>\n");
+                msg.append("All MPA medications scheduled prior to " + _timeFormat.format(maxDate) + " have been marked complete as of " + getDateTimeFormat(c).format(curDate) + ".<p>\n");
             }
             else {
                 msg.append("There are " + totals.get(incomplete) + " treatments that have not been marked complete:<p>\n");
