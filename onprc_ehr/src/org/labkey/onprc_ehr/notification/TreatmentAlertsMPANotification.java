@@ -167,7 +167,7 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Add code to display report, by Kollil
 
-            TableInfo ti1 = QueryService.get().getUserSchema(u, c, "study").getTable("treatmentSchedulePostOps_MPA");
+            TableInfo ti1 = QueryService.get().getUserSchema(u, c, "study").getTable("treatmentScheduleMPA");
 
             //All fields
             Set<FieldKey> columns1 = new HashSet<>();
