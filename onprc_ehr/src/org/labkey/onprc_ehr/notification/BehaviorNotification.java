@@ -191,6 +191,22 @@ public class BehaviorNotification extends ColonyAlertsNotification
             msg.append("<b>WARNING: No DCM notes added yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
         }
 
+        /*  Added by Kollil on 10/12/2023
+            New alert for DCM notes (category = notes pertaining to DAR) removed the previous day.
+            Refer to tkt #9977
+        */
+        SimpleFilter filter4 = new SimpleFilter(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_EQUAL);
+        TableSelector ts4 = new TableSelector(getStudySchema(c, u).getTable("Notes_WithLocation"), filter4, null);
+        long count4 = ts4.getRowCount();
+        if (count4 > 0) {
+            msg.append("<b>" + count4 + " DCM notes entries removed yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("</p><br><hr>\n\n");
+        }
+        else {
+            msg.append("<b>WARNING: No DCM notes ended yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
+        }
+
         //Added by Kollil on 11/04/2020
         //New alert for Flags added the previous day.
         SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("date"), cal.getTime(), CompareType.DATE_EQUAL);
