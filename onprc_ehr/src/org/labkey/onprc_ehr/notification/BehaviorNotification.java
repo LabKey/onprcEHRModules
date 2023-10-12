@@ -200,7 +200,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long count4 = ts4.getRowCount();
         if (count4 > 0) {
             msg.append("<b>" + count4 + " DCM notes entries removed yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
             msg.append("</p><br><hr>\n\n");
         }
         else {
