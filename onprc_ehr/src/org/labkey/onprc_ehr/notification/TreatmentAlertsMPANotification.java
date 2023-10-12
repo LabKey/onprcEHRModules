@@ -205,7 +205,7 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
                 msg.append("There are no MPA injections.");
             }
             else {
-                msg.append("<br><br><br><b>Post Op Meds:</b><br><br>\n");
+                msg.append("<br><br><br><b>MPA Injections:</b><br><br>\n");
                 msg.append("<table border=1 style='border-collapse: collapse;'>");
                 msg.append("<tr style='font-weight: bold;'><td>Id</td><td>Status</td><td>Treatment Status</td><td>Room</td><td>Cage</td><td>Treatment Date</td><td>Treatment Start Date</td><td>Treatment End Date</td><td>Days Elapsed</td><td>Category</td><td>Treatment</td><td>Volume</td><td>Volume Units</td><td>Drug Conc</td><td>Conc Units</td><td>Amount</td><td>Amount And Volume</td><td>Dosage</td><td>Dosage Units</td><td>Frequency</td><td>Route</td><td>Reason</td><td>Remark</td><td>Ordered By</td></tr>");
 
