@@ -1,7 +1,5 @@
 Select
     Id,
---     housingattime.roomattime + ' ' + housingattime.cageattime as location,
---     id.curLocation.room + ' ' +  id.curLocation.cage as location,
     CASE
         WHEN id.curLocation.cage is null then id.curLocation.room
         ELSE (id.curLocation.room || '-' || id.curLocation.cage)
