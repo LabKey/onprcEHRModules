@@ -306,8 +306,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageSoapWindow.js"), this);
 
         //Added: 10-12-2023  R.Blasa
-        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"), this);
-
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/EnvironmentalField.js"), this);
 
 
