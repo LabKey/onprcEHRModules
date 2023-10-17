@@ -126,7 +126,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.006;
+        return 23.009;
     }
 
     @Override
@@ -305,6 +305,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 12-15-2022  R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageSoapWindow.js"), this);
 
+        //Added: 10-12-2023  R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"), this);
+
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/EnvironmentalField.js"), this);
+
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Commonly Used Queries");
@@ -389,6 +394,48 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         {
             throw new UnexpectedException(e);
         }
+
+
+        //Modified: 9-7-2023  R.Blasa
+        try
+        {
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology CPL Surface Sanitation Summary Report", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render")
+            {
+                // SSRS is picky about the URI-encoding of the query parameters
+                @Override
+                public String toString()
+                {
+
+                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render";
+
+                }
+            }, "Clinical Pathology");
+        }
+        catch (URISyntaxException e)
+        {
+            throw new UnexpectedException(e);
+        }
+
+        //Modified: 9-7-2023  R.Blasa
+        try
+        {
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Room Utilization Audit History", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Test%2fPrimeCagingAuditHistoryReport&rs:Command=Render")
+            {
+                // SSRS is picky about the URI-encoding of the query parameters
+                @Override
+                public String toString()
+                {
+
+                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Test%2fPrimeCagingAuditHistoryReport&rs:Command=Render";
+
+                }
+            }, "Colony Management");
+        }
+        catch (URISyntaxException e)
+        {
+            throw new UnexpectedException(e);
+        }
+
 
         try
         {
@@ -533,6 +580,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 6-6-2022  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyRequestForm.class, this));
+
+        //Added: 2-21-2023  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EnvironmentalLabFormType.class, this));
+
+        //Added: 3-24-2023  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EnvironmentalATPFormType.class, this));
 
 
 
