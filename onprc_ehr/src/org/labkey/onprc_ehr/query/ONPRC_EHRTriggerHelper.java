@@ -925,7 +925,7 @@ public class ONPRC_EHRTriggerHelper
 
         if (requiredSqFt > availableSqFt)
         {
-            ret.add("These animals are too small for the cage.  Has " + Math.round(availableSqFt) + " sq ft. Requires " + Math.round(requiredSqFt) + ".");
+            ret.add("These animals are too LARGE for this cage.  Has " + Math.round(availableSqFt) + " sq ft. Requires " + Math.round(requiredSqFt) + ".");
         }
 
         Double maxWeight = weights.isEmpty() ? 0.0 : Collections.max(weights);
