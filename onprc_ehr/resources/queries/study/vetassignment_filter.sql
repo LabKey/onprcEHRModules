@@ -1,5 +1,5 @@
 /*
-study.vetAssignment_filter.sql
+study.vetAssignment_filter
 
 Partially replaces: study.demographicsAssignedVet, which still exists
 
@@ -13,7 +13,7 @@ Notes:
   * Comparisons rely on empty data to be NULL, not ""
   * The code prioritizes research projects over non-research projects *for
     the same rule*
-  * Unassigned animals can be easily found by filtering for "unassigned" in
+  * Unassigned animals can be found by filtering for "unassigned" in
     the AssignedVet column
  */
 
@@ -81,7 +81,6 @@ FROM (
               , d.Room
               , d.Area
               , d.Calculated_status
-              , d.history
               , CASE
                     WHEN d.CaseVet IS NOT NULL  THEN 0
                     WHEN R01.UserID IS NOT NULL THEN 1
@@ -142,3 +141,4 @@ FROM (
 /* R21 Room                           */ LEFT JOIN onprc_ehr.vet_assignment R21 ON (R21.Room = d.Room AND R21.Area IS NULL AND R21.Protocol IS NULL AND R21.Project IS NULL AND R21.Priority = false)
 /* R22 Area                           */ LEFT JOIN onprc_ehr.vet_assignment R22 ON (R22.Area = d.Area AND R22.Room IS NULL AND R22.Protocol IS NULL AND R22.Project IS NULL AND R22.Priority = false)
      ) placeholderAlias
+
