@@ -123,7 +123,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.007;
+        return 23.008;
     }
 
     @Override
@@ -550,13 +550,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 7/10/2019 by Kolli
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(PMICDataEntryFormType.class, this));
 
-        //Added: 1/13/2021 Kolli
-//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ARTCoreRequestFormType.class, this));
+        //Created: 8/10/2019 Kolli
+        //Modified: 10/20/2023 Kolli
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IPCRequestFormType.class, this));
 
-        //Added: 8/10/2019 Kolli
-//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IPCRequestFormType.class, this));
-
-//        Added: 11-21-2017  R.Blasa
+        //Added: 11-21-2017  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ProcedureRequestBulkEditFormType.class, this));
 
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(RecordAmendmentFormType.class, this));
@@ -575,8 +573,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 6-6-2022  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyRequestForm.class, this));
-
-
 
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
