@@ -4,6 +4,6 @@
     </permissions>
     <dependencies>
         <dependency path="ehr.context" />
-        <dependency path="onprc_ehr/window/EnvironmentalEnterDataPanel.js"/>
+        <dependency path="onprc_ehr/panel/EnvironmentalEnterDataPanel.js"/>
     </dependencies>
 </view>
