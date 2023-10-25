@@ -271,6 +271,8 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             appendFlagsAtTimeCol(ehrSchema, ds, dateColName);
 //            Added:7-16-2019  R.Blasa
             appendFlagsAlertActiveCol(ehrSchema, ds);
+            //            Added:10-24-2023  R.Blasa
+            appendNHPTrainingCol(ehrSchema, ds);
             appendIsAssignedAtTimeCol(ehrSchema, ds, dateColName);
         }
     }
@@ -2232,7 +2234,73 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
     ds.addColumn(col);
 }
+    //    Added:10-24-2023  R.Blasa Show NHP Training History
+    private void appendNHPTrainingCol(final UserSchema ehrSchema, AbstractTableInfo ds)
+    {
+        String name = "NHPTrainingActive";
+        if (ds.getColumn(name) != null)
+            return;
 
+        final ColumnInfo pkCol = getPkCol(ds);
+        if (pkCol == null)
+            return;
+
+        if (ds.getColumn("Id") == null)
+            return;
+
+        if (!hasTable(ds, "onprc_ehr", "NHP_Training", ehrSchema.getContainer()))
+            return;
+
+        final String tableName = ds.getName();
+        final String queryName = ds.getPublicName();
+        final String schemaName = ds.getPublicSchemaName();
+        final UserSchema targetSchema = ds.getUserSchema();
+        final String ehrPath = ehrSchema.getContainer().getPath();
+
+        WrappedColumn col = new WrappedColumn(pkCol, name);
+        col.setLabel("NHP Training History");
+        col.setReadOnly(true);
+//        col.setIsUnselectable(true);
+        col.setUserEditable(false);
+        col.setFk(new LookupForeignKey(){
+            public TableInfo getLookupTableInfo()
+            {
+                String name = tableName + "_nhpHistory";
+                QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
+                qd.setSql("SELECT\n" +
+                        "sd." + pkCol.getColumnName() + ",\n" +
+                        "group_concat(DISTINCT h.training_type, chr(10)) as nhptrainingtype\n" +
+//                        "group_concat(DISTINCT h.training_results, chr(10)) as nhptrainingresults,\n" +
+                        "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
+                        "JOIN \"" + ehrPath + "\".onprc_ehr.NHP_Training h\n" +
+                        "  ON (sd.id = h.id  AND (h.dateOnly <= CAST(NOW() AS DATE) AND ((CAST(NOW() AS DATE) <= h.training_Ending_Date) or h.training_Ending_Date is null)) AND h.qcstate.publicdata = true)\n" +
+                        "group by sd." + pkCol.getColumnName());
+
+                qd.setIsTemporary(true);
+
+                List<QueryException> errors = new ArrayList<>();
+                TableInfo ti = qd.getTable(errors, true);
+                if (errors.size() > 0)
+                {
+                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
+                    for (QueryException error : errors)
+                    {
+                        _log.error(error.getMessage(), error);
+                    }
+                    return null;
+                }
+
+                ((MutableColumnInfo)ti.getColumn(pkCol.getName())).setHidden(true);
+                ((MutableColumnInfo)ti.getColumn(pkCol.getName())).setKeyField(true);
+
+                ((MutableColumnInfo)ti.getColumn("nhptrainingtype")).setLabel("NHP Training History");
+
+                return ti;
+            }
+        });
+
+        ds.addColumn(col);
+    }
     private void appendProblemsAtTimeCol(final UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
     {
         final String colName = "problemsAtTime";
