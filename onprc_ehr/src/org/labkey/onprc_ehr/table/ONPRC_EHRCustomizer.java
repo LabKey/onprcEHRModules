@@ -2258,7 +2258,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
         final String ehrPath = ehrSchema.getContainer().getPath();
 
         WrappedColumn col = new WrappedColumn(pkCol, name);
-        col.setLabel("NHP Training History");
+        col.setLabel("NHP Training Type");
         col.setReadOnly(true);
 //        col.setIsUnselectable(true);
         col.setUserEditable(false);
@@ -2269,8 +2269,8 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                 QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
                 qd.setSql("SELECT\n" +
                         "sd." + pkCol.getColumnName() + ",\n" +
-                        "group_concat(DISTINCT h.training_type, chr(10)) as nhptrainingtype\n" +
-//                        "group_concat(DISTINCT h.training_results, chr(10)) as nhptrainingresults,\n" +
+                        "group_concat(DISTINCT h.training_type, chr(10)) as nhptrainingtype,\n" +
+                        "group_concat(DISTINCT h.training_results, chr(10)) as nhptrainingresults,\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".onprc_ehr.NHP_Training h\n" +
                         "  ON (sd.id = h.id  AND (h.dateOnly <= CAST(NOW() AS DATE) AND ((CAST(NOW() AS DATE) <= h.training_Ending_Date) or h.training_Ending_Date is null)) AND h.qcstate.publicdata = true)\n" +
@@ -2293,7 +2293,8 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                 ((MutableColumnInfo)ti.getColumn(pkCol.getName())).setHidden(true);
                 ((MutableColumnInfo)ti.getColumn(pkCol.getName())).setKeyField(true);
 
-                ((MutableColumnInfo)ti.getColumn("nhptrainingtype")).setLabel("NHP Training History");
+                ((MutableColumnInfo)ti.getColumn("nhptrainingtype")).setLabel("NHP Training Type");
+                ((MutableColumnInfo)ti.getColumn("nhptrainingresults")).setLabel("NHP Training Results");
 
                 return ti;
             }
