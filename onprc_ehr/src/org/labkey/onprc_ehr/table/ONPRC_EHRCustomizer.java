@@ -2260,7 +2260,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
         WrappedColumn col = new WrappedColumn(pkCol, name);
         col.setLabel("NHP Training Type");
         col.setReadOnly(true);
-//        col.setIsUnselectable(true);
+        col.setIsUnselectable(true);
         col.setUserEditable(false);
         col.setFk(new LookupForeignKey(){
             public TableInfo getLookupTableInfo()
@@ -2273,7 +2273,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                         "group_concat(DISTINCT h.training_results, chr(10)) as nhptrainingresults,\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".onprc_ehr.NHP_Training h\n" +
-                        "  ON (sd.id = h.id  AND (h.dateOnly <= CAST(NOW() AS DATE) AND ((CAST(NOW() AS DATE) <= h.training_Ending_Date) or h.training_Ending_Date is null)) AND h.qcstate.publicdata = true)\n" +
+                        "  ON (sd.id = h.id  AND (h.training_type in ('Procedure Cage','Tower')) AND h.qcstate.publicdata = true)\n" +
                         "group by sd." + pkCol.getColumnName());
 
                 qd.setIsTemporary(true);
