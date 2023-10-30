@@ -99,7 +99,7 @@
             </column>
         </columns>
     </table>
-    <table tableName="vw_Covid19Research" tableDbType="VIEW">
+  <!--  <table tableName="vw_Covid19Research" tableDbType="VIEW">
         <columns>
             <column columnName="SChedulerID"/>
             <column columnName="ResourceId"/>
@@ -112,7 +112,7 @@
             <column columnName="Quantity"/>
             <column columnName="EmployeeID"/>
         </columns>
-    </table>
+    </table>-->
     <table tableName="dateParts" tableDbType="TABLE">
         <columns>
             <column columnName="date"/>
@@ -127,7 +127,7 @@
             <column columnName="year"/>
         </columns>
     </table>
-    <table tableName="vw_Covid19DCMSchedule" tableDbType="VIEW">
+   <!-- <table tableName="vw_Covid19DCMSchedule" tableDbType="VIEW">
         <columns>
             <column columnName="SChedulerID"/>
             <column columnName="ResourceId"/>
@@ -140,8 +140,8 @@
             <column columnName="Quantity"/>
             <column columnName="EmployeeID"/>
         </columns>
-    </table>
-    <table tableName="Covid19Testing" tableDbType="TABLE">
+    </table>-->
+    <!--<table tableName="Covid19Testing" tableDbType="TABLE">
         <columns>
             <column columnName="container"/>
             <column columnName="entityId"/>
@@ -190,6 +190,6 @@
             <column columnName="UserName"/>
             <column columnName="container"/>
         </columns>
-    </table>
+    </table>-->
 
 </tables>
