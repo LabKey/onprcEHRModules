@@ -427,7 +427,7 @@
             </column>
         </columns>
     </table>
-    <table tableName="protocols" tableDbType="TABLE" useColumnOrder="true">
+    <!--<table tableName="protocols" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>IACUC Protocols</tableTitle>
         <auditLogging>DETAILED</auditLogging>
         <columns>
@@ -441,7 +441,7 @@
             <column columnName="grant">
                 <columnTitle>Grant</columnTitle>
             </column>
-            <!--TODO additional IACUC realted fields expected-->
+            &lt;!&ndash;TODO additional IACUC realted fields expected&ndash;&gt;
             <column columnName="createdby">
                 <isUserEditable>false</isUserEditable>
                 <nullable>true</nullable>
@@ -463,7 +463,7 @@
                 <isHidden>true</isHidden>
             </column>
         </columns>
-    </table>
+    </table>-->
     <table tableName="Reference_Data" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Reference_Data</tableTitle>
         <auditLogging>DETAILED</auditLogging>

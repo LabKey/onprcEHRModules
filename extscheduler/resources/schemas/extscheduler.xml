@@ -99,7 +99,7 @@
             </column>
         </columns>
     </table>
-    <table tableName="vw_Covid19Research" tableDbType="VIEW">
+    <!--<table tableName="vw_Covid19Research" tableDbType="VIEW">
         <columns>
             <column columnName="SChedulerID"/>
             <column columnName="ResourceId"/>
@@ -112,7 +112,7 @@
             <column columnName="Quantity"/>
             <column columnName="EmployeeID"/>
         </columns>
-    </table>
+    </table>-->
     <table tableName="dateParts" tableDbType="TABLE">
         <columns>
             <column columnName="date"/>
@@ -126,7 +126,7 @@
             <column columnName="Month"/>
             <column columnName="year"/>
         </columns>
-    </table>
+  <!--  </table>
     <table tableName="vw_Covid19DCMSchedule" tableDbType="VIEW">
         <columns>
             <column columnName="SChedulerID"/>
@@ -140,8 +140,8 @@
             <column columnName="Quantity"/>
             <column columnName="EmployeeID"/>
         </columns>
-    </table>
-    <table tableName="Covid19Testing" tableDbType="TABLE">
+    </table>-->
+   <!-- <table tableName="Covid19Testing" tableDbType="TABLE">
         <columns>
             <column columnName="container"/>
             <column columnName="entityId"/>
@@ -163,8 +163,8 @@
             <column columnName="CreatedB"/>
             <column columnName="ComplianceUpdated"/>
         </columns>
-    </table>
-    <table tableName="TempScheduler" tableDbType="TABLE">
+    </table>-->
+   <!-- <table tableName="TempScheduler" tableDbType="TABLE">
         <columns>
             <column columnName="Searchkey"/>
             <column columnName="usernames"/>
@@ -172,8 +172,8 @@
             <column columnName="StartDate"/>
             <column columnName="created"/>
         </columns>
-    </table>
-    <table tableName="TempCoV19Final" tableDbType="TABLE">
+    </table>-->
+    <!--<table tableName="TempCoV19Final" tableDbType="TABLE">
         <columns>
             <column columnName="container"/>
             <column columnName="UserName"/>
@@ -183,13 +183,13 @@
             <column columnName="EmployeeID"/>
             <column columnName="Created"/>
         </columns>
-    </table>
-    <table tableName="TempCoV19Interim" tableDbType="TABLE">
+    </table>-->
+   <!-- <table tableName="TempCoV19Interim" tableDbType="TABLE">
         <columns>
             <column columnName="EventId"/>
             <column columnName="UserName"/>
             <column columnName="container"/>
         </columns>
-    </table>
+    </table>-->
 
 </tables>
