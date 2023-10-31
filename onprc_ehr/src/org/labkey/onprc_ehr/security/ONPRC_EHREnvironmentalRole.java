@@ -33,16 +33,16 @@ public class ONPRC_EHREnvironmentalRole extends AbstractRole
 {
     public ONPRC_EHREnvironmentalRole()
     {
-        super("ONPRC_EHREnvironmental", "This role is to track which users can edit the table onprc_ehr Environmental Assessment.",
+        super("ONPRC_EHR Environmental Editor", "This role is to track which users can edit the table onprc_ehr Environmental Assessment.",
                 ReadPermission.class,
                 InsertPermission.class,
                 UpdatePermission.class,
                 ONPRC_EHREnvironmentalPermission.class
         );
     }
-    @Override
-    public boolean isApplicable(SecurityPolicy policy, SecurableResource resource)
-    {
-        return resource instanceof Container ? ((Container)resource).getActiveModules().contains(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)) : false;
-    }
+//    @Override
+//    public boolean isApplicable(SecurityPolicy policy, SecurableResource resource)
+//    {
+//        return resource instanceof Container ? ((Container)resource).getActiveModules().contains(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)) : false;
+//    }
 }

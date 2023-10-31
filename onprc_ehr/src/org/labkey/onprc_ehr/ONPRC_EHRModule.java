@@ -147,6 +147,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 //        Added: 12-5-2019
 //        RoleManager.registerRole(new ONPRC_EHRPMICEditRole());
 
+//        Added: 10-30-2023 R. Blasa
+        RoleManager.registerRole(new ONPRC_EHREnvironmentalRole());
+
         // register the permissions provider for a restricted issue list
         IssuesListDefService.get().registerRestrictedIssueProvider(new RestrictedIssueProviderImpl());
     }
