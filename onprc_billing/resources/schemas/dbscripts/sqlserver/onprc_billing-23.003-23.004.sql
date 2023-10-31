@@ -1,1 +1,1 @@
-EXEC DropifExists 'annualinflationrate','onprc_billing,'table',Null
+EXEC DropifExists 'annualinflationrate','onprc_billing','table',Null
