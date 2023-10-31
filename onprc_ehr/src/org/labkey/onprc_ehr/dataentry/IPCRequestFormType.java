@@ -19,7 +19,7 @@ public class IPCRequestFormType extends TaskForm
 
     public IPCRequestFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Histology Service Request", "Imaging", Arrays.asList(
+        super(ctx, owner, NAME, "Histology Service Request", "Requests", Arrays.asList(
                 new TaskFormSection(),
                 new IPC_ServiceRequestDetailsFormSection("Service Request Details"),
                 new AnimalDetailssFormSection(),
