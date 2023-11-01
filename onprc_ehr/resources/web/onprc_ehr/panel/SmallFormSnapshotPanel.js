@@ -27,6 +27,13 @@ Ext4.define('onprc_ehr.panel.SmallFormSnapshotPanel', {
                 headerLabel: 'Current Medications / Prescribed Diets',
                 emptyText: 'There are no active medications'
             });
+
+            items[0].items.push({
+                name:  'sdrug',
+                xtype: 'ehr-snapshotchildpanel',     //Modified 10-31-2023 R.blasa
+                headerLabel: 'Sustained Release Medication',
+                emptyText: 'There are no active medications'
+            });
         }
 
         return items;
