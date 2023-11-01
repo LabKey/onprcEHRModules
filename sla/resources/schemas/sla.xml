@@ -427,7 +427,7 @@
             </column>
         </columns>
     </table>
-   <
+
     <table tableName="Reference_Data" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Reference_Data</tableTitle>
         <auditLogging>DETAILED</auditLogging>
