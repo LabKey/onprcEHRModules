@@ -216,13 +216,16 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added Dec 2022, Kollil
         ns.registerNotification(new USDAPainNotification(this));
 
+        //Added Oct 3rd, 2023 Kollil
+        ns.registerNotification(new TreatmentAlertsMPANotification(this));
+
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
 
         //Added 3-6-2019 Blasa
         ns.registerNotification(new ProjectAlertsNotification(this));
 
-        //Added 6-4-2019 Additional Scheduled for 55pm
+        //Added 6-4-2019 Additional Scheduled for 5pm
         ns.registerNotification(new TreatmentAlertsPostOpsNotificationThird(this));
 
         ns.registerNotification(new RequestAdminNotification(this));

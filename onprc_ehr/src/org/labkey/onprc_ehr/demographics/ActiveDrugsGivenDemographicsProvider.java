@@ -38,6 +38,7 @@ public class ActiveDrugsGivenDemographicsProvider extends AbstractListDemographi
         _supportsQCState = false;
     }
 
+    @Override
     protected Set<FieldKey> getFieldKeys()
     {
         Set<FieldKey> keys = new HashSet<FieldKey>();
@@ -47,7 +48,6 @@ public class ActiveDrugsGivenDemographicsProvider extends AbstractListDemographi
         keys.add(FieldKey.fromString("enddate"));
         keys.add(FieldKey.fromString("date"));
         keys.add(FieldKey.fromString("route"));
-        keys.add(FieldKey.fromString("ElapseHours"));
         keys.add(FieldKey.fromString("amountAndVolume"));
 
         keys.add(FieldKey.fromString("remark"));
@@ -59,7 +59,16 @@ public class ActiveDrugsGivenDemographicsProvider extends AbstractListDemographi
     @Override
     public boolean requiresRecalc(String schema, String query)
     {
-        return ("study".equalsIgnoreCase(schema) && ("drug".equalsIgnoreCase(query) || "treatment_order".equalsIgnoreCase(query))) ;
+        return ("study".equalsIgnoreCase(schema) && ("drug".equalsIgnoreCase(query) || "treatment_order".equalsIgnoreCase(query)));
+    }
 
+    @Override
+    public Collection<String> getKeysToTest()
+    {
+        //for now, simply skip the whole provider.  because different records can be active from day to day, this makes validation tricky
+        Set<String> keys = new HashSet<>(super.getKeysToTest());
+        keys.remove(_propName);
+
+        return keys;
     }
 }
