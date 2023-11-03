@@ -30,7 +30,9 @@
                     items: [{
                         name: 'Environmental Assessment Laboratory CPL reports', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render'
                     },{
-                        name: 'Environmental Assessment Detailed reports', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentMain&rs:Command=Render'
+                        name: 'Environmental Assessment Detailed printable reports', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentMain&rs:Command=Render'
+                    },{
+                        name: 'Environmental Assessment Prime Grid reports', url:  '<%=contextPath%>/query' + '/ONPRC/DCM/Environmental%20Assessment' + '/executeQuery.view?schemaName=onprc_ehr&query.queryName=Environmental_Assessment'
 
                     }]
                 }]
