@@ -3,9 +3,9 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-Ext4.define('EHR.panel.BasicAggregationPanel', {
+Ext4.define('ONPRC_EHR.panel.BasicAggregationPanel', {
     extend: 'Ext.panel.Panel',
-
+// Created: 11-2-2023  R. Blasa
     aggregateResults: function(results, fieldName){
         if (!results || !results.rows || !results.rows.length)
             return;
