@@ -11,11 +11,11 @@
 
                     <column columnName="service_requested">
                         <columnTitle>Service Requested</columnTitle>
-                        <displayWidth>300</displayWidth>
+                        <displayWidth>100</displayWidth>
                     </column>
                     <column columnName="testing_location">
                         <columnTitle>Test Location</columnTitle>
-                        <displayWidth>250</displayWidth>
+                        <displayWidth>150</displayWidth>
                     </column>
                     <column columnName="test_method">
                         <columnTitle>Method</columnTitle>
@@ -57,7 +57,7 @@
 
                     <column columnName="surface_tested">
                         <columnTitle>Surface Tested</columnTitle>
-                        <displayWidth>180</displayWidth>
+                        <displayWidth>80</displayWidth>
                         <isHidden>false</isHidden>
                     </column>
                     <column columnName="remarks">
@@ -70,6 +70,12 @@
                     <column columnName="taskid">
                         <columnTitle>Task ID</columnTitle>
                         <isHidden>true</isHidden>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>tasks</fkTable>
+                            <fkColumnName>taskid</fkColumnName>
+                            <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                        </fk>
                     </column>
                 </columns>
 
