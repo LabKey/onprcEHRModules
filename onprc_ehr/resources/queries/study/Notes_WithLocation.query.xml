@@ -1,0 +1,10 @@
+<!--Adde by kollil on 10/12/23 to add the title -->
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Notes_WithLocation" tableDbType="TABLE">
+                <tableTitle>DCM Notes</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
