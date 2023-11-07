@@ -123,7 +123,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.007;
+        return 23.008;
     }
 
     @Override
@@ -553,8 +553,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 1/13/2021 Kolli
 //        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ARTCoreRequestFormType.class, this));
 
-        //Added: 8/10/2019 Kolli
-//        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IPCRequestFormType.class, this));
+        //Added: 8/10/2019 Kolli, Re-opened: 10/24/23 by Kolli
+      EHRService.get().registerFormType(new DefaultDataEntryFormFactory(IPCRequestFormType.class, this));
+
 
 //        Added: 11-21-2017  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(ProcedureRequestBulkEditFormType.class, this));

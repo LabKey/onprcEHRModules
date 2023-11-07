@@ -1,0 +1,79 @@
+<!--IPC schema. Added by Kolli, 04/2020 -->
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="IPC_Sectioning" tableDbType="TABLE" useColumnOrder="true">
+                <tableUrl />
+                <tableTitle>IPC Sectioning</tableTitle>
+                <columns>
+                    <column columnName="rowId">
+                        <isHidden>true</isHidden>
+                    </column>
+
+                    <column columnName="Id">
+                        <columnTitle>Id</columnTitle>
+                    </column>
+
+                    <column columnName="Date">
+                        <columnTitle>Date</columnTitle>
+                    </column>
+
+                    <column columnName="tissueType">
+                        <columnTitle>Tissue Types</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>IPC_TissueTypes</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="projectNotes">
+                        <columnTitle>Project Notes</columnTitle>
+                    </column>
+
+                    <column columnName="additionalText">
+                        <columnTitle>Additional text on slide</columnTitle>
+                    </column>
+
+                    <column columnName="performedBy">
+                        <columnTitle>Performed By</columnTitle>
+                    </column>
+
+                    <column columnName="qcstate">
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>qcstate</fkTable>
+                            <fkColumnName>RowId</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="taskid">
+                        <columnTitle>Task Id</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>tasks</fkTable>
+                            <fkColumnName>taskid</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="objectid">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="created">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="createdby"/>
+
+                    <column columnName="modified">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="modifiedby"/>
+
+                    <column columnName="container">
+                        <isHidden>true</isHidden>
+                    </column>
+
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
