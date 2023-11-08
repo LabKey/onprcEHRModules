@@ -11,7 +11,7 @@ CREATE TABLE onprc_ehr.Environmental_Assessment(
            biological_BI  varchar(300) NULL,
            action  varchar(300) NULL,
            performedby  varchar(300) NULL,
-           remarks  varchar(500) NULL,
+           remarks  varchar(300) NULL,
            water_source  varchar(300) NULL,
            surface_tested  varchar(300) NULL,
            retest  varchar(300) NULL,

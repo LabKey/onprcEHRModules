@@ -44,7 +44,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 xtype: 'textfield',
                 header: 'Comments',
                   columnConfig: {
-                    width: 150
+                    width: 250
                 }
             },
             performedby: {
@@ -87,7 +87,6 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             },
             water_source: {
                 xtype: 'onprc-env_watersource',
-                // defaultValue: 'Lixit',
                 header: 'H2O Source',
                 hidden: false,
                 columnConfig: {
