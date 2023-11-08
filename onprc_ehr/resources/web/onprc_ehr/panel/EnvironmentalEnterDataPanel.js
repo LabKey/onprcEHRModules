@@ -100,6 +100,7 @@ Ext4.define('onprc_ehr.panel.EnvironmentalEnterDataPanel', {
                     xtype: 'ldk-querycmp',
                     cls: 'my-tasks-marker',
                     queryConfig: {
+                        containerPath: '/ONPRC/DCM/Environmental Assessment',
                         schemaName: 'ehr',
                         queryName: 'my_tasks',
                         viewName: 'Active Tasks',
@@ -116,6 +117,7 @@ Ext4.define('onprc_ehr.panel.EnvironmentalEnterDataPanel', {
                     xtype: 'ldk-querycmp',
                     cls: 'all-tasks-marker',
                     queryConfig: {
+                        containerPath: '/ONPRC/DCM/Environmental Assessment',
                         schemaName: 'ehr',
                         queryName: 'tasks',
                         viewName: 'Active Tasks',

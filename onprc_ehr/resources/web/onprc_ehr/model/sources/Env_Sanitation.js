@@ -48,8 +48,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 }
             },
             performedby: {
-                header: 'Collected by',
-                defaultValue: LABKEY.Security.currentUser.displayName
+              header: 'Collected by'
             },
             test_method: {
                 xtype: 'onprc-env_method',
@@ -88,7 +87,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             },
             water_source: {
                 xtype: 'onprc-env_watersource',
-                defaultValue: 'Lixit',
+                // defaultValue: 'Lixit',
                 header: 'H2O Source',
                 hidden: false,
                 columnConfig: {
@@ -96,9 +95,9 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 }
             },
             test_type: {
-                xtype: 'onprc-env_passfail',
+                xtype: 'onprc-env_testtype',
                 header: 'Test Type',
-                defaultValue: 'Initial',
+                // defaultValue: 'Initial',
                 hidden: false,
                 columnConfig: {
                     width: 80
@@ -107,8 +106,9 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             retest: {
                 hidden: false,
                 header: 'Results Read by',
+                defaultValue: LABKEY.Security.currentUser.displayName,
                 columnConfig: {
-                    width: 90
+                    width: 120
                 }
             },
 

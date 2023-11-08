@@ -15,7 +15,9 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.json.JSONObject;
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -32,6 +34,7 @@ public class EnvironmentalFormSection extends SimpleGridPanel
         addExtraProperty(BY_PASS_ANIMAL_ID, "true");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/EnvironmentalClientStore.js"));
         setClientStoreClass("ONPRC_EHR.data.EnvironmentalClientStore");
+
 
     }
     @Override
@@ -65,4 +68,4 @@ public class EnvironmentalFormSection extends SimpleGridPanel
 
 
 
-}
+    }

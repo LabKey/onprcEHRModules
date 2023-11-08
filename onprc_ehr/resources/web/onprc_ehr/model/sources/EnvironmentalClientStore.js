@@ -8,7 +8,7 @@
  */
 Ext4.define('ONPRC_EHR.data.EnvironmentalClientStore', {
     extend: 'EHR.data.DataEntryClientStore',
-
+    hasFormSortField: true,
     getKeyField: function() {
         return "objectid";
     }
