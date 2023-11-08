@@ -21,7 +21,7 @@
                 sections: [{
                     header: 'Environmental Assessment Input forms',
                     items: [{
-                      name: 'Environmental Assessment CLS Input form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ehr/ONPRC/DCM/Environmental Assessment/',{formType: 'Environmental_Assessment_CLS'})
+                      name: 'Environmental Assessment CPL Input form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ehr/ONPRC/DCM/Environmental Assessment/',{formType: 'Environmental_Assessment_CLS'})
                 },{
                      name: 'Environmental Assessment ATP Input form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ehr/ONPRC/DCM/Environmental Assessment/',{formType: 'Environmental_ATP'})
                     }]
@@ -32,7 +32,7 @@
                     },{
                         name: 'Environmental Assessment Detailed printable reports', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentMain&rs:Command=Render'
                     },{
-                        name: 'Environmental Assessment Prime Grid reports', url:  '<%=contextPath%>/query' + '/ONPRC/DCM/Environmental%20Assessment' + '/executeQuery.view?schemaName=onprc_ehr&query.queryName=Environmental_Assessment'
+                        name: 'Environmental Assessment Prime Grid reports', url: LABKEY.ActionURL.buildURL('ONPRC_EHR', 'EnvironmentalDetails.view', null, null)
 
                     }]
                 }]
