@@ -14,9 +14,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *remove protocols table from xml No longer used
 
  -->
-<tables xsi:schemaLocation="http://labkey.org/data/xml ..\..\..\..\..\schemas\tableInfo.xsd"
+<tables xsi:schemaLocation="http://labkey.org/data/xml..\..\..\..\..\schemas\tableInfo.xsd"
         xmlns="http://labkey.org/data/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <table tableName="census" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>SLA Census</tableTitle>
