@@ -5,23 +5,23 @@
  */
 
 
-// Created: 9-5-2023  R. Blasa
+// Created: 11-9-2023  R. Blasa
 
-Ext4.define('ONPRC_EHR.window.Environmental_BiologicalIndicatorWindow', {
+Ext4.define('ONPRC_EHR.window.Environmental_ATP_Window', {
     extend: 'Ext.window.Window',
 
     initComponent: function(){
         Ext4.apply(this, {
             modal: true,
             closeAction: 'destroy',
-            title: 'Serology Virology Import',
+            title: 'Environmental ATP Testing Import',
             bodyStyle: 'padding: 5px;',
             width: 800,
             defaults: {
                 border: false
             },
             items: [{
-                html : 'This allows you to import record using the Biological Indicators excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
+                html : 'This allows you to import record using the ATP Testing excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'ldk-linkbutton',
@@ -29,7 +29,7 @@ Ext4.define('ONPRC_EHR.window.Environmental_BiologicalIndicatorWindow', {
                 scope: this,
                 style: 'margin-bottom: 10px;',
                 handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/SPF_Template.xlsx'
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/Env_ATP.xlsx'
                 }
             },{
                 xtype: 'textarea',
