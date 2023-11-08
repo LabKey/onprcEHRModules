@@ -15,5 +15,5 @@ GO
 EXEC core.fn_dropifexists 'vw_covid19dcmschedule', 'extScheduler', 'VIEW', NULL;
 GO
 
-EXEC core.fn_dropifexists 'vw_covid19dcmdaily', 'extScheduler', 'VIEW', NULL;
+EXEC core.fn_dropifexists 'vw_Covid19DCMDaily', 'extScheduler', 'VIEW', NULL;
 GO
