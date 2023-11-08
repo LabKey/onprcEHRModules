@@ -1,0 +1,22 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" >
+    <columns>
+        <column name="date"/>
+        <column name="charge_unit"/>
+        <column name="testing_location" />
+        <column name="biological_Cycle" />
+        <column name="biological_BI" />
+        <column name="pass_fail"/>
+        <column name="performedby"/>
+        <column name="retest"/>
+        <column name="action"/>
+        <column name="remarks"/>
+        <column name="qcstate"/>
+        <column name="taskid"/>
+
+    </columns>
+
+    <sorts>
+        <sort column="date" descending="true"/>
+        <sort column="testing_location" descending="false"/>
+    </sorts>
+</customView>
