@@ -139,7 +139,14 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                     toAdd.push({
                         border: false,
                         style: 'margin-bottom: 10px;',
-                        html: 'NOTE: Click on either the cage or divider for more information.  A yellow divider indicates the cages are paired.  A black divider indicates the cages are separate.  Cages are colored green when they are empty.  Yellow cages have been flagged as unavailable.'
+                        html: 'NOTE: Click on either the cage or divider for more information.  <br/> <br/>' +
+                                '<b> CAGE COLORED SCHEME LAYOUT DEFINITIONS: </b></b><br/>' +
+                                'A Yellow divider indicates the cages are paired. <br/>' +
+                                'A Black divider indicates the cages are separate. <br/>' +
+                                'Cages are colored Green when they are empty. <br/> ' +
+                                'Cages are colored Yellow when they are flagged as \"Unavailable\". <br/>' +
+                                'Cages are colored Orange when they are flagged as \"Transfer Pending\". <br/>' +
+                                'Cages are colored Blue when they are flagged as \"Held for Colony\".'
                     });
                 }
 
@@ -353,6 +360,14 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     {
                                         bgColor = 'yellow';
                                     }
+                                    else if (status == 'Transfer Pending')
+                                    {
+                                        bgColor = 'orange';
+                                    }
+                                    else if (status == 'Held for Colony')
+                                    {
+                                        bgColor = 'blue';
+                                    }
                                 }
                                 else {
                                     //flag cage if empty
@@ -370,6 +385,15 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     else if (status == 'Unavailable')
                                     {
                                         bgColor = 'yellow';
+                                    }
+
+                                    else if (status == 'Transfer Pending')
+                                    {
+                                        bgColor = 'orange';
+                                    }
+                                    else if (status == 'Hold for Colony')
+                                    {
+                                        bgColor = 'blue';
                                     }
                                 }
 
