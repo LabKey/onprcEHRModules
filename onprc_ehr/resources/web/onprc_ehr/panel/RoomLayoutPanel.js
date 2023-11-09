@@ -391,7 +391,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     {
                                         bgColor = 'orange';
                                     }
-                                    else if (status == 'Hold for Colony')
+                                    else if (status == 'Held for Colony')
                                     {
                                         bgColor = 'blue';
                                     }
