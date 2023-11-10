@@ -58,7 +58,7 @@ Ext4.define('ONPRC_EHR.window.Environmental_ATP_Window', {
     onSubmit: function(){
         var text = this.down('#textField').getValue();
         if (!text){
-            Ext4.Msg.alert('Error', 'Must paste the records into the textarea');
+            Ext4.Msg.alert('Error', 'Must paste the records into the text area');
             return;
         }
         var MasterHeaderObject = "";
@@ -82,14 +82,14 @@ Ext4.define('ONPRC_EHR.window.Environmental_ATP_Window', {
         var errors = [];
 
         var recordMap = {
-            primaryheader: [],
-            labresults: []
+
+            envresults: []
 
         };
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-        var offset = 2;
+        var offset = 1;
         var rowIdx = offset;
         for (var i = offset; i < parsed.length; i++)
         {
@@ -100,27 +100,16 @@ Ext4.define('ONPRC_EHR.window.Environmental_ATP_Window', {
                 errors.push('Row ' + rowIdx + ': not enough items in row');
                 continue;
             }
-            var id = parsed[i][0];
-            if (!id)
+            var date = parsed[i][0];
+            if (!date)
             {
-                errors.push('Row ' + rowIdx + ': missing Id');
+                errors.push('Row ' + rowIdx + ': missing date');
                 return;
             }
 
             var cnt = i;
 
-            if ( Ext4.String.trim(row[3])== 1)
-            {
-                MasterHeaderObject = LABKEY.Utils.generateUUID().toUpperCase();
-            }
-
-
-            if ( Ext4.String.trim( parsed[0][1]) != "")
-            {
-                var vetname = Ext4.String.trim( parsed[0][1]);
-            }
-
-            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt, MasterHeaderObject,vetname);
+            this.processRow(row, recordMap, errors, rowIdx, parsed, cnt);
         }
 
         Ext4.Msg.hide();
@@ -131,32 +120,18 @@ Ext4.define('ONPRC_EHR.window.Environmental_ATP_Window', {
             Ext4.Msg.alert('Error', 'There following errors were found:<p>' + errors.join('<br>'));
             return;
         }
-        //Main Header
-        if (recordMap.primaryheader.length)
+
+
+        //ATP Results
+        if (recordMap.envresults.length)
         {
-            var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('Clinpath Runs');
-            LDK.Assert.assertNotEmpty('Unable to find procedure store in ClinpathRuns', clientStore);
+            var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('Environmental Assessment');
+            LDK.Assert.assertNotEmpty('Unable to find Environmental Assessment', clientStore);
 
             var records = [];
-            for (var i = 0; i < recordMap.primaryheader.length; i++)
+            for (var i = 0; i < recordMap.envresults.length; i++)
             {
-                records.push(clientStore.createModel(recordMap.primaryheader[i]));
-            }
-
-            clientStore.add(records);
-        }
-
-
-        //Lab Results
-        if (recordMap.labresults.length)
-        {
-            var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('serology');
-            LDK.Assert.assertNotEmpty('Unable to find observation store in serology', clientStore);
-
-            var records = [];
-            for (var i = 0; i < recordMap.labresults.length; i++)
-            {
-                records.push(clientStore.createModel(recordMap.labresults[i]));
+                records.push(clientStore.createModel(recordMap.envresults[i]));
             }
 
             clientStore.add(records);
@@ -166,84 +141,49 @@ Ext4.define('ONPRC_EHR.window.Environmental_ATP_Window', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,id, parsed, cnt,MasterHeaderObject,vetname)
+    processRow: function(row, recordMap, errors, rowIdx,parsed, cnt)
     {
 
         // Generate labwork Header information
-        var performedBy = Ext4.String.trim(row[13]);
+        var performedBy = LABKEY.Security.currentUser.id;
         var date = LDK.ConvertUtils.parseDate(this.safeGet(parsed, cnt, 1));
         if (!date)
         {
             errors.push('Missing Date');
         }
-        //var project = this.resolveProjectByName(Ext4.String.trim(row[2]), errors, rowIdx);
-        var project = this.resolveProjectByName(row[2], errors, rowIdx);
-        var chargeunit = Ext4.String.trim(row[5]);
 
-        var name = Ext4.String.trim(row[4]);
-        var procRecIdx = this.labworkSericeStoreStore.findExact('servicename', name);
-        var procedureRec = this.labworkSericeStoreStore.getAt(procRecIdx);
-        LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + 'in Serology_VirologyWindow', procedureRec);
-        var servicereq = procedureRec.get('servicename');
+        var chargeunit = 'Kati';
 
-        var category = Ext4.String.trim(row[14]);
+        var servicereq = 'Sanitation: ATP';
 
-
-        if ( Ext4.String.trim(row[3])== 1)
-        {
-            var tissueheader = "";
-            if (row[0] && row[0].length >= 5) {
-                tissueheader = Ext4.String.trim(row[6].substr(row[6].length - 7, 7));
-             }
-            var obj = {
-                Id: id,
-                date: date,
-                project: project,
-                servicerequested: servicereq,
-                chargeunit: chargeunit,
-                tissue: tissueheader,       // Tissue for main header    -- Optional
-                type: category,
-                objectid: MasterHeaderObject,
-                performedby: performedBy,
-                vet:vetname
-
-            };
-
-        if (!this.checkRequired(['Id', 'date', 'project', 'chargeunit', 'servicerequested', 'type', 'vet'], obj, errors, rowIdx))
-             {
-            recordMap.primaryheader.push(obj);
-            }
-        };
-        // Generate Labwork Panel Details
-
-        //Tissue Results
-        if (row[7])
+        if (row[1])
         {
             var Resultsobjectid = LABKEY.Utils.generateUUID().toUpperCase();
 
-
             var obj = {
-                Id: id,
+
                 date: date,
-                tissue: Ext4.String.trim(row[7].substr(row[7].length - 7, 7)),       // Tissue Results
-                agent:  Ext4.String.trim(row[8].substr(row[8].length - 7, 7)),
-                method: Ext4.String.trim(row[9]),
-                result: Ext4.String.trim(row[10]),
-                qualifier: Ext4.String.trim(row[11]),
-                remark: Ext4.String.trim(row[12]),
+                service_requested: servicereq,
+                chargeunit:chargeunit,
+                test_location: Ext4.String.trim(row[2]),       // Area
+                test_results:  Ext4.String.trim(row[3]),  //Lab Group
+                action: Ext4.String.trim(row[4]),           //Room location
+                surface_tested: Ext4.String.trim(row[5]),  //Surface Tested
+                pass_fail: Ext4.String.trim(row[6]),      //Initial
+                retest: Ext4.String.trim(row[7]),
+                performedby: Ext4.String.trim(row[1]),     //Tech Initials
                 objectid: Resultsobjectid,
                 runid: MasterHeaderObject,
-                performedby: performedBy,
-                vet: vetname
+                performedby: performedBy
+
 
             };
 
             // labwork Panel-Details information
-            if (!this.checkRequired(['Id', 'date' ,'tissue','agent','method', 'result','vet'],obj,errors, rowIdx))
+            if (!this.checkRequired([ 'date' ,'testlocation','test_results','action', 'surface_tested','pass_fail','retest'],obj,errors, rowIdx))
             {
-                recordMap.labresults.push(obj);
+                recordMap.envresults.push(obj);
             }
-
 
         }
 
@@ -287,20 +227,6 @@ Ext4.define('ONPRC_EHR.window.Environmental_ATP_Window', {
         return ret;
     },
 
-    resolveProjectByName: function(projectName, errors, rowIdx){
-        if (!projectName){
-            return null;
-        }
-
-        projectName = Ext4.String.trim(projectName);
-        var ret = EHR.DataEntryUtils.resolveProjectByName(this.projectStore, projectName);
-        if (!ret){
-            errors.push('Row ' + rowIdx + ': unknown project ' + projectName);
-        }
-        else {
-            return ret;
-        }
-    },
 
     safeGet: function(parsed, a, b){
         if (parsed && parsed.length >= a && parsed[a].length >= b){
@@ -312,16 +238,16 @@ Ext4.define('ONPRC_EHR.window.Environmental_ATP_Window', {
     }
 });
 
-EHR.DataEntryUtils.registerDataEntryFormButton('SEROLOGY_IMPORT', {
-    text: 'SPF Template Import',
-    name: 'serologyimp',
-    itemId: 'serologyimp',
+EHR.DataEntryUtils.registerDataEntryFormButton('Env_ATP_IMPORT', {
+    text: 'Environmental ATP Import',
+    name: 'environementalimp',
+    itemId: 'environmentalimp',
     tooltip: 'Click to import using a Serology Virology excel template',
     handler: function(btn){
         var panel = btn.up('ehr-dataentrypanel');
-        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in SPF Template Import button', panel);
+        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in Environemtal Assessment ATP Import button', panel);
 
-        Ext4.create('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
+        Ext4.create('ONPRC_EHR.window.Enviromental_ATP_Window', {
             dataEntryPanel: panel
         }).show();
     }
