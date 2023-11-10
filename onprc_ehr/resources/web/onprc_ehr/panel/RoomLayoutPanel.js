@@ -147,7 +147,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 'Cages are colored Green when they are empty. <br/> ' +
                                 'Cages are colored Yellow when they are flagged as \"Unavailable\". <br/>' +
                                 'Cages are colored Orange when they are flagged as \"Transfer Pending\". <br/>' +
-                                'Cages are colored Plum when they are flagged as \"Held for Colony\".'
+                                'Cages are colored light blue when they are flagged as \"Held for Colony\".'
                     });
                 }
 
@@ -374,7 +374,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         if (!Ext4.isEmpty(cageAnimals))
                                             bgColor = '';
                                         else
-                                            bgColor = 'plum';
+                                            bgColor = '#54daff';
 
                                     }
                                 }
@@ -408,7 +408,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         if (!Ext4.isEmpty(cageAnimals))
                                             bgColor = '';
                                         else
-                                            bgColor = 'plum';
+                                            bgColor = '#54daff';
 
                                     }
                                 }
