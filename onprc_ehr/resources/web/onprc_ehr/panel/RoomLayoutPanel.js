@@ -143,6 +143,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 '<b> CAGE COLORED SCHEME LAYOUT DEFINITIONS: </b></b><br/>' +
                                 'A Yellow divider indicates the cages are paired. <br/>' +
                                 'A Black divider indicates the cages are separate. <br/>' +
+                                'Cages are colored Transparent when they are flagged as \"Normal\" <br/> ' +
                                 'Cages are colored Green when they are empty. <br/> ' +
                                 'Cages are colored Yellow when they are flagged as \"Unavailable\". <br/>' +
                                 'Cages are colored Orange when they are flagged as \"Transfer Pending\". <br/>' +
