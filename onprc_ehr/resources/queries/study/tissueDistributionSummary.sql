@@ -21,7 +21,7 @@ SELECT
   count(distinct t.recipient) as distinctRecipients
 
 FROM study.tissueDistributions t
-Where taskid is not null
+Where t.taskid is not null
 And t.QCState.Label in ('Request: Pending','Completed')
 
 GROUP BY fiscalYear, t.requestCategory

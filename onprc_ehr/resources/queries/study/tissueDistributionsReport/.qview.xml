@@ -1,0 +1,22 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="project"/>
+        <column name="recipient"/>
+        <column name="requestcategory"/>
+        <column name="sampletype"/>
+        <column name="tissue"/>
+        <column name="remark"/>
+        <column name="QCState"/>
+        <column name="taskid"/>
+        <column name="formSort"/>
+    </columns>
+    <filters>
+        <filter column="taskid" operator="neq" value=" "/>
+        <filter column="QCState/Label" operator="containsnoneof" value="Request: Pending;Completed"
+    </filters>
+    <sorts>
+        <sort column="date" descending="true"/>
+    </sorts>
+</customView>
