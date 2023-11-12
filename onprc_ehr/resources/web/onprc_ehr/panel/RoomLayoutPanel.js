@@ -59,7 +59,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                 queryName: 'cage',
                 filterArray: filters,
                 sort: 'room/sort_order,cagePosition/sort_order',
-                columns: 'location,room,cage,cage_type,divider,cagePosition/row,cagePosition/columnIdx,cagePosition/sort_order,totalAnimals/animals,status',
+                columns: 'location,room,cage,cage_type,divider,cagePosition/row,cagePosition/columnIdx,cagePosition/sort_order,totalAnimals/animals,uuid,status',
                 scope: this,
                 failure: LDK.Utils.getErrorCallback(),
                 success: function(results){
@@ -74,7 +74,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                             {name: 'cagePosition/row', type: 'string'},
                             {name: 'cagePosition/columnIdx', type: 'int'},
                             {name: 'cagePosition/sort_order', type: 'int'},
-                            {name: 'totalAnimals/animals', type: 'string'}
+                            {name: 'totalAnimals/animals', type: 'string'},
+                            {name: 'uuid', type: 'string'}     // default background cage color
                         ]
                     });
 
@@ -332,6 +333,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 var prevCage = (colIdx > 1) ? cages[colIdx - 1] : null;
                                 var cageType = row.get('cage_type');
                                 var status = row.get('status');
+                                var colorcage = row.get('uuid')  //redfined as cage color background Modified 11-12-2023 R. Blasa
                                 var cageAnimals = row.get('totalAnimals/animals');
                                 if (prevCage){
                                     var prevDividerInfo = config.dividerMap[prevCage.get('divider')] || {};
@@ -361,7 +363,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     {
                                         bgColor = 'yellow';
                                     }
-                                    else if (status == 'Transfer Pending')
+                                    else if (colorcage == 'Transfer Pending')
                                     {
                                         if (!Ext4.isEmpty(cageAnimals))
                                             bgColor = '';
@@ -369,12 +371,18 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'orange';
 
                                     }
-                                    else if (status == 'Held for Colony')
+                                    else if (colorcage == 'Held for Colony')
                                     {
                                         if (!Ext4.isEmpty(cageAnimals))
                                             bgColor = '';
                                         else
                                             bgColor = '#54daff';
+
+                                    }
+                                    else if (colorcage == 'Empty')
+                                    {
+                                        if (Ext4.isEmpty(cageAnimals))
+                                            bgColor = emptyCageColor;
 
                                     }
                                 }
@@ -395,7 +403,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     {
                                         bgColor = 'yellow';
                                     }
-                                    else if (status == 'Transfer Pending')
+                                    else if (colorcage == 'Transfer Pending')
                                     {
                                         if (!Ext4.isEmpty(cageAnimals))
                                             bgColor = '';
@@ -403,12 +411,18 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'orange';
 
                                     }
-                                    else if (status == 'Held for Colony')
+                                    else if (colorcage == 'Held for Colony')
                                     {
                                         if (!Ext4.isEmpty(cageAnimals))
                                             bgColor = '';
                                         else
                                             bgColor = '#54daff';
+
+                                    }
+                                    else if (colorcage == 'Empty')
+                                    {
+                                        if (Ext4.isEmpty(cageAnimals))
+                                            bgColor = emptyCageColor;
 
                                     }
                                 }
@@ -730,6 +744,22 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                                 sort: 'divider'
                             }
                         },{
+                            // Added: 11-12-2023  R. Blasa  Provide user option to set cage background color
+                            xtype: 'combo',
+                            fieldLabel: 'Cage Background Color',
+                            displayField: 'value',
+                            valueField: 'value',
+                            value: btn.boundRecord.get('uuid'),
+                            itemId: 'cagecolortype',
+                            store: {
+                                type: 'labkey-store',
+                                schemaName: 'onprc_ehr',
+                                queryName: 'CagesBackgroundcolor',
+                                // filterArray: [LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)],
+                                autoLoad: true,
+                                sort: 'sort_order'
+                            }
+                        },{
                             xtype: 'combo',
                             fieldLabel: 'Status',
                             displayField: 'value',
@@ -752,6 +782,7 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                                 var cageType = win.down('#cageType');
                                 var divider = win.down('#divider');
                                 var cageStatus = win.down('#cageStatus');
+                                var cagecolor = win.down('#cagecolortype');
                                 if (!EHR.Security.hasLocationEditorPermission() && !cageType.getValue()){
                                     Ext4.Msg.alert('Error', 'Must enter the cage type');
                                     return;
@@ -773,7 +804,8 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                                         location: boundRecord.get('location'),
                                         cage_type: cageType.getValue(),
                                         divider: divider.getValue(),
-                                        status: cageStatus.getValue()
+                                        status: cageStatus.getValue(),
+                                        uuid: cagecolor.getValue()
                                     }],
                                     scope: this,
                                     failure: LDK.Utils.getErrorCallback(),
@@ -782,7 +814,8 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                                         boundRecord.set({
                                             cage_type: cageType.getValue(),
                                             divider: divider.getValue(),
-                                            status: cageStatus.getValue()
+                                            status: cageStatus.getValue(),
+                                            uuid: cagecolor.getValue()
                                         });
                                         boundRecord.store.fireEvent('datachanged', boundRecord.store);
                                     }
