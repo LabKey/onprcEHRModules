@@ -73,7 +73,7 @@ Ext4.define('ONPRC_EHR.panel.ColonyOverviewPanel', {
             title: 'Clinical Case Summary',
             itemId: 'clinicalSummary',
             items: [{
-                xtype: 'ehr-clinicalsummarypanel',
+                xtype: 'onprc_ehr-clinicalsummarypanel', //Modified: 11-2-2023 R. Blasa
                 demographicsFilterArray: this.filterArray,
                 filterArray: this.childFilterArray
             }]

@@ -3,6 +3,9 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
+
+// Created: 11-10-2023  R. Blasa
+
 Ext4.define('ONPRC_EHR.panel.BasicAggregationPanel', {
     extend: 'Ext.panel.Panel',
 // Created: 11-2-2023  R. Blasa
