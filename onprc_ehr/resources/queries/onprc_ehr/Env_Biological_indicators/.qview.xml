@@ -3,6 +3,7 @@
         <column name="date"/>
         <column name="charge_unit"/>
         <column name="testing_location" />
+        <column name="test_method" />
         <column name="biological_Cycle" />
         <column name="biological_BI" />
         <column name="pass_fail"/>

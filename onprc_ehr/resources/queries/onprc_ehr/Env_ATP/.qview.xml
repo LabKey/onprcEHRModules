@@ -3,11 +3,10 @@
         <column name="date"/>
         <column name="charge_unit"/>
         <column name="testing_location" />
+        <column name="test_method"/>
         <column name="surface_tested" />
-
         <column name="action" />
         <column name="test_results"/>
-        <column name="test_method"/>
         <column name="pass_fail"/>
         <column name="performedby"/>
         <column name="qcstate"/>
@@ -15,9 +14,7 @@
         <column name="formsort"/>
 
     </columns>
-<!--    <filters>-->
-<!--        <filter column="formtype" operator="eq" value="necropsies"/>-->
-<!--    </filters>-->
+
     <sorts>
         <sort column="date" descending="true"/>
         <sort column="formsort" descending="false"/>
