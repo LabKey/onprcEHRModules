@@ -15,5 +15,7 @@
 
     <sorts>
         <sort column="date" descending="true"/>
+        <sort column="taskid/rowid" descending="false"/>
+        <sort column="formSort" descending="false"/>
     </sorts>
 </customView>
