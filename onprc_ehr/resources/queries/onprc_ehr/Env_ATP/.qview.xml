@@ -12,6 +12,7 @@
         <column name="performedby"/>
         <column name="qcstate"/>
         <column name="taskid"/>
+        <column name="formsort"/>
 
     </columns>
 <!--    <filters>-->
@@ -19,6 +20,6 @@
 <!--    </filters>-->
     <sorts>
         <sort column="date" descending="true"/>
-        <sort column="testing_location" descending="false"/>
+        <sort column="formsort" descending="false"/>
     </sorts>
 </customView>
