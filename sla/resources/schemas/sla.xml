@@ -14,9 +14,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * remove protocols table from xml No longer used
 
  -->
-<tables xsi:schemaLocation="http://labkey.org/data/xml ..\..\..\..\..\schemas\tableInfo.xsd"
+<tables xsi:schemaLocation="http://labkey.org/data/xml..\..\..\..\..\schemas\tableInfo.xsd"
         xmlns="http://labkey.org/data/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <table tableName="census" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>SLA Census</tableTitle>
@@ -427,43 +428,7 @@
             </column>
         </columns>
     </table>
-    <table tableName="protocols" tableDbType="TABLE" useColumnOrder="true">
-        <tableTitle>IACUC Protocols</tableTitle>
-        <auditLogging>DETAILED</auditLogging>
-        <columns>
-            <column columnName="protocol">
-                <columnTitle>IACUC Protocol</columnTitle>
-                <isKeyField>true</isKeyField>
-            </column>
-            <column columnName="account">
-                <columnTitle>Account</columnTitle>
-            </column>
-            <column columnName="grant">
-                <columnTitle>Grant</columnTitle>
-            </column>
-            <!--TODO additional IACUC realted fields expected-->
-            <column columnName="createdby">
-                <isUserEditable>false</isUserEditable>
-                <nullable>true</nullable>
-                <isHidden>true</isHidden>
-            </column>
-            <column columnName="created">
-                <isUserEditable>false</isUserEditable>
-                <nullable>true</nullable>
-                <isHidden>true</isHidden>
-            </column>
-            <column columnName="modifiedby">
-                <isUserEditable>false</isUserEditable>
-                <nullable>true</nullable>
-                <isHidden>true</isHidden>
-            </column>
-            <column columnName="modified">
-                <isUserEditable>false</isUserEditable>
-                <nullable>true</nullable>
-                <isHidden>true</isHidden>
-            </column>
-        </columns>
-    </table>
+
     <table tableName="Reference_Data" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>Reference_Data</tableTitle>
         <auditLogging>DETAILED</auditLogging>
