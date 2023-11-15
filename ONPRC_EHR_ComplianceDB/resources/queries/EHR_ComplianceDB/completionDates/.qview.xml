@@ -11,6 +11,8 @@
                 <property name="columnTitle" value="First Name"/>
             </properties>
         </column>
+        <column name="employeeid/majorudds"/>
+        <column name="employeeid/enddate"/>
         <column name="requirementname"/>
         <column name="requirementname/type">
             <properties>

@@ -123,7 +123,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.005;
+        return 23.007;
     }
 
     @Override
@@ -210,13 +210,16 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added Dec 2022, Kollil
         ns.registerNotification(new USDAPainNotification(this));
 
+        //Added Oct 3rd, 2023 Kollil
+        ns.registerNotification(new TreatmentAlertsMPANotification(this));
+
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
 
         //Added 3-6-2019 Blasa
         ns.registerNotification(new ProjectAlertsNotification(this));
 
-        //Added 6-4-2019 Additional Scheduled for 55pm
+        //Added 6-4-2019 Additional Scheduled for 5pm
         ns.registerNotification(new TreatmentAlertsPostOpsNotificationThird(this));
 
         ns.registerNotification(new RequestAdminNotification(this));
@@ -386,6 +389,48 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         {
             throw new UnexpectedException(e);
         }
+
+
+        //Modified: 9-7-2023  R.Blasa
+        try
+        {
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology CPL Surface Sanitation Summary Report", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render")
+            {
+                // SSRS is picky about the URI-encoding of the query parameters
+                @Override
+                public String toString()
+                {
+
+                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render";
+
+                }
+            }, "Clinical Pathology");
+        }
+        catch (URISyntaxException e)
+        {
+            throw new UnexpectedException(e);
+        }
+
+        //Modified: 9-7-2023  R.Blasa
+        try
+        {
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Room Utilization Audit History", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Test%2fPrimeCagingAuditHistoryReport&rs:Command=Render")
+            {
+                // SSRS is picky about the URI-encoding of the query parameters
+                @Override
+                public String toString()
+                {
+
+                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Test%2fPrimeCagingAuditHistoryReport&rs:Command=Render";
+
+                }
+            }, "Colony Management");
+        }
+        catch (URISyntaxException e)
+        {
+            throw new UnexpectedException(e);
+        }
+
 
         try
         {

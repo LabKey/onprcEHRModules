@@ -1,5 +1,4 @@
----Create 5-18-2023  R. Blasa  notea; No longer needed
-
+---Create 5-2023-08-15 jonesga
 
 EXEC core.fn_dropifexists 'PrimeProblemListTemp', 'onprc_ehr', 'TABLE', NULL;
 GO

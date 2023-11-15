@@ -1,0 +1,21 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="project"/>
+        <column name="recipient"/>
+        <column name="requestcategory"/>
+        <column name="sampletype"/>
+        <column name="tissue"/>
+        <column name="remark"/>
+        <column name="QCState"/>
+        <column name="taskid"/>
+        <column name="formSort"/>
+    </columns>
+
+    <sorts>
+        <sort column="date" descending="true"/>
+        <sort column="taskid/rowid" descending="false"/>
+        <sort column="formSort" descending="false"/>
+    </sorts>
+</customView>

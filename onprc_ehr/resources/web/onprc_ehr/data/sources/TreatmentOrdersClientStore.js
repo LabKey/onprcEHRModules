@@ -34,11 +34,20 @@ Ext4.define('ONPRC_EHR.data.TreatmentOrdersClientStore', {
                 return;
             }
 
-            if (record.get('code') == 'E-85760' && record.get('remark')== null){
+            /*  Changed by Kollil on 10/11/2023,
+                Requested by Cassie to remove the verbiage in the remark field for the MPA medication. Refer to tkt # 9939
+                The default setting for this medication in DB schema browser is updated too.
+            */
+            if (record.get('code') == 'E-85760'){
                 record.beginEdit();
-                record.set('remark', 'Please make a clinical prime entry at each administration once the administration is complete.');
+                record.set('remark', '');
                 record.endEdit(true);
             }
+            // if (record.get('code') == 'E-85760' && record.get('remark') == null){
+            //     record.beginEdit();
+            //     record.set('remark', 'Please make a clinical prime entry at each administration once the administration is complete.');
+            //     record.endEdit(true);
+            // }
 
             if (!this.formularyStore){
                 LDK.Utils.logToServer({

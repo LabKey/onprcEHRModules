@@ -2,25 +2,9 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="demographicsAssignedVet" tableDbType="NOT_IN_DB">
-                <tableTitle>Assigned Vet</tableTitle>
+                <tableTitle>Assigned Vets</tableTitle>
                 <columns>
-                    <column columnName="Id">
-                        <isHidden>true</isHidden>
-                        <isKeyField>true</isKeyField>
-                    </column>
-                    <column columnName="assignedVet">
-                        <columnTitle>Assigned Vet(s)</columnTitle>
-                    </column>
-                    <column columnName="assignedVetId">
-                        <isHidden>true</isHidden>
-                    </column>
-                    <column columnName="areas">
-                        <isHidden>true</isHidden>
-                    </column>
-                    <column columnName="rooms">
-                        <isHidden>true</isHidden>
-                    </column>
-                    <column columnName="protocols">
+                    <column columnName="matchedRule">
                         <isHidden>true</isHidden>
                     </column>
                 </columns>
@@ -28,3 +12,4 @@
         </tables>
     </metadata>
 </query>
+

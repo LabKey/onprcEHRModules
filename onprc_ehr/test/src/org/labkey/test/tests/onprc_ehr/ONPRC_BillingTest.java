@@ -158,9 +158,13 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         protocolTable.clickHeaderMenu("More Actions", false, "Edit Records");
         protocolTable.clickImportBulkData();
 
+        // HACK
+        Thread.sleep(2500);
         setFormElement(Locator.textarea("title"), protocolTitle);
+        Thread.sleep(2500);
         clickButton("Submit");
 
+        assertTextPresent(protocolTitle);
         protocolTable.setFilter("title", "Equals", protocolTitle);
         String protocolId = protocolTable.getDataAsText(0, "protocol");
 
@@ -170,7 +174,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         clickAndWait(Locator.linkWithText("ONPRC Projects"));
 
         DataRegionTable projectTable = new DataRegionTable("query", getDriver());
-        projectTable.clickHeaderMenu("More Actions", false, "Edit Records");
+        projectTable.doAndWaitForUpdate(() -> projectTable.clickHeaderMenu("More Actions", false, "Edit Records"));
         projectTable.clickImportBulkData();
 
         setFormElement(Locator.name("name"), projectName);
