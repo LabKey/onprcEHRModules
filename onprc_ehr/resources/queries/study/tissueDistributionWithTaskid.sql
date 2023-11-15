@@ -19,5 +19,4 @@ SELECT
 
 FROM study.tissueDistributions
 Where taskid is not null
-  And t.QCState.Label in ('Completed')
 
