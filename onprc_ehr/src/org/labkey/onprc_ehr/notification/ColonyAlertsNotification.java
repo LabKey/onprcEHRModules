@@ -156,13 +156,18 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         infantsNotAssignedToDamGroup(c, u, msg);
         infantsNotAssignedToDamSPF(c, u, msg);
         birthRecordsNotMatchingHousing(c, u, msg);
+        duplicateGroupMembership(c, u, msg);
+        suspiciousMedications(c, u, msg);
+
+        //Flags
+        duplicateFlags(c, u, msg);
+        // Added by Kollil 9/5/23
+        BCGVaccineFlags(c,u,msg);
 
         //notes
         notesEndingToday(c, u, msg, null, null);
 
-        duplicateGroupMembership(c, u, msg);
-        duplicateFlags(c, u, msg);
-        suspiciousMedications(c, u, msg);
+
 
         return msg.toString();
     }
@@ -920,7 +925,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " pregnant animals 30 days past the gestation period.</b><br>\n");
+            msg.append("<b>Pregnant NHPs whose gestation time is past 30 days:</b><br>\n");
+            msg.append("There are " + count + " pregnant animals 30 days past the gestation period.<br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnancyGestationOverdue", null) + "&query.thirty_days_pastGestation_date~datelte="+ getDateTimeFormat(c).format(new Date()) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -928,6 +934,35 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are no pregnant animals 30 days past the gestation period.</b><br>\n");
         }
+    }
+
+    /**
+     * Kollil : Monkeys needing pregnancy checks
+     * June 2023
+     */
+    protected void pregnancyChecks(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+        //Pregnancy checks query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("pregnancyChecks", ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0) {
+            msg.append("<b>Monkeys needing pregnancy checks:</b><br>\n");
+            msg.append("There are " + count + " monkey(s) need pregnancy checks.<br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "pregnancyChecks", null) + "&query.containerFilterName=AllFolders'>Click here to view the list of monkeys,</a></p>\n");
+            msg.append("<hr>");
+        }
+        else {
+            msg.append("<b>WARNING: There are no monkeys that needs pregnancy checks! </b>");
+            msg.append("<hr>");
+        }
+
     }
 
     /**
@@ -1104,8 +1139,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     }    //End of Fasts alert
 
-
-
+    
     /**
      * Kollil, 10/24/2019 : PMIC scheduler alert notifications Daily & Weekly
      */
@@ -1530,7 +1564,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals where the demographics table value for geographic origin conflicts with genetic ancestry.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "ehr", "geographicOriginConflicts", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "geographicOriginConflicts", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
@@ -2134,8 +2168,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     summary = summary.replaceAll("\n", " / ");
                 }
 
-                DetailsURL groupUrl = DetailsURL.fromString("/ehr/animalGroupDetails.view", c);
-                String groupUrlString = AppProps.getInstance().getBaseServerUrl() + groupUrl.getActionURL().toString();
+                DetailsURL groupUrl = DetailsURL.fromString("/ehr/animalGroupDetails.view?", c);
+                String groupUrlString = AppProps.getInstance().getBaseServerUrl() + "/onprc_ehr/onprc" + groupUrl;
                 groupUrlString += "groupId=" + rs.getInt("groupId");
 
                 String group = rs.getString(FieldKey.fromString("groupId/name"));
@@ -2159,6 +2193,23 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             msg.append("<b>WARNING: There are " + count + " animals with duplicate active flags from the same category.</b><br>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flagDuplicates", null) + "'>Click here to view them</a><br>\n");
+            msg.append("<hr>\n");
+        }
+    }
+
+    /**
+     *  Created by Kollil, 9/6/23
+     *  Get the new animals found with the flag, "NHPR NOTE: BCG Vaccinated".
+     */
+    protected void BCGVaccineFlags(Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("BCGVaccinatedFlags");
+        TableSelector ts = new TableSelector(ti);
+        long count = ts.getRowCount();
+        if (count > 0)
+        {
+            msg.append("<b>ALERT: " + count + " new animal(s) found with the flag, \"NHPR NOTE: BCG Vaccinated\" added yesterday.</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BCGVaccinatedFlags", null) + "'>Click here to view them</a><br>\n");
             msg.append("<hr>\n");
         }
     }

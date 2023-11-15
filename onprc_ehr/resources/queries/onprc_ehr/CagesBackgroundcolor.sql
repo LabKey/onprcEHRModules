@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 LabKey Corporation
+ * Copyright (c) 2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
---remarks
-SELECT
-    d.id,
-    d.date,
-    r.date as RemarksDate,
-    r.assignedVet
 
-From deaths d join clinremarks r on d.id = r.id and d.date = r.date
-where r.assignedVet is not null
+
+--  Create: 11-12-2023  R. Blasa
+SELECT
+  t.value,
+  t.label,
+  t.sort_order
+
+
+FROM sla.Reference_Data t
+where t.columnName = 'Cagebackground'
+And t.enddate is null
+
+

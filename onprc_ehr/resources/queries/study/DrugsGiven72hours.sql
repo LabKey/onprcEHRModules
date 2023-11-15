@@ -24,9 +24,8 @@ SELECT
   p.code.meaning as meaning,
   p.amountAndVolume,
   p.route,
-  timestampdiff('SQL_TSI_HOUR',p.date, now() ) as ElapseHours,
-    p.remark,
-    p.category
+  p.remark,
+  p.category
 
 FROM study.drug p
 WHERE p.qcstate.publicdata = true
@@ -44,9 +43,8 @@ SELECT
   s.code.meaning as meaning,
   s.amountAndVolume,
   s.route,
-  timestampdiff('SQL_TSI_HOUR',s.date, now() ) as ElapseHours,
-    s.remark,
-    s.category
+  s.remark,
+  s.category
 
 FROM study.treatment_order s
 WHERE s.qcstate.publicdata = true

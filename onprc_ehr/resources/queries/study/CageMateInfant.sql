@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
+SELECT
 
+    h1.Id,
+    group_concat(h2.Id) as InfantCageMate
 
-select
+FROM study.demographicsCurrentLocation h1
+JOIN study.demographicsCurrentLocation h2 ON (
+    h1.room = h2.room AND
+    h1.cage = h2.cage AND
+    h1.Id != h2.Id
+)
 
-a.id,
-group_concat(e.Id ) as InfantCageMate,
-a.QCState
+WHERE
+        h1.room.housingType.value = 'Cage Location' AND
+        h2.Id.age.ageInyears < 1
 
-
- from study.housing a, study.demographics e
-where  a.Id <> e.Id
-And e.calculated_status.code = 'Alive'
-and a.Enddate  is null
-and a.qcstate = 18 and e.qcstate = 18
-and a.housingType.value = 'Cage Location'
-and (a.room.room = e.Id.curLocation.room and a.cage = e.Id.curLocation.cage)
-and e.Id.age.ageInyears < 1
-
-
-Group by a.id, a.QCState
-
-
+GROUP BY h1.Id
