@@ -63,15 +63,17 @@ public class VetReviewNotification extends ColonyAlertsNotification
     }
 
     @Override
+    //Kollil 10/13: Changed the daily alert to once a week, Wednesdays
     public String getCronString()
     {
-        return "0 0 15 * * ?";
+        //return "0 0 15 * * ?";
+        return "0 0 15 ? * WED";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "daily at 3PM";
+        return "every Wednesday at 3PM";
     }
 
     @Override
