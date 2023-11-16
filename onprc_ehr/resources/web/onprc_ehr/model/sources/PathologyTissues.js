@@ -52,6 +52,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
 
             performedby: {
+                allowBlank: true,
                 hidden: true
             },
             procedureid: {
@@ -171,6 +172,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 }
             },
             performedby: {
+                allowBlank: true,
                 hidden: true
             },
             tissue: {
