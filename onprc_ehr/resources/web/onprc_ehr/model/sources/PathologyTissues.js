@@ -46,8 +46,8 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             billingproject: {
                 xtype: 'onprc_ehr-projectentryfield',
                 label: 'Center Project Billing',
-                hidden: false,
-                allowBlank: false
+                hidden: false
+
 
             },
 
@@ -66,7 +66,6 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 hidden: false,
                 label: 'What type of fast would you like to request?',
                 xtype: 'path_Fasting',
-                allowBlank: false,
                 columnConfig: {
                     width: 150
                 }
@@ -76,7 +75,6 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 hidden: false,
                 xtype: 'path_delivery',
                 label: 'Animal Delivery Requested',
-                allowBlank: false,
                 columnConfig: {
                     width: 150
                 }
@@ -84,7 +82,6 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             necropsygrade: {
                 hidden: false,
                 xtype: 'path_billinggrade',
-                allowBlank: false,
                 columnConfig: {
                     width: 150
                 }
@@ -93,7 +90,6 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 hidden: false,
                 xtype: 'path_approval',
                 label: 'Are Remaining Tissues available for distribution?',
-                allowBlank: false,
                 columnConfig: {
                     width: 150
                 }
@@ -102,7 +98,6 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 hidden: false,
                 xtype: 'path_location',
                 label: 'Necropsy Location',
-                allowBlank: false,
                 columnConfig: {
                     width: 150
                 }
