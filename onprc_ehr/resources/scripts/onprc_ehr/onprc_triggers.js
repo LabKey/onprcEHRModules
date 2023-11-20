@@ -785,15 +785,13 @@ exports.init = function(EHR){
         /* Added by kollil, 11/17/2023. Tkt #10159
         Added extra validation: 1. If volume is not null, must enter vol units
                                 2. If amount is not null, must enter amount units
-         */
-        // if (row.volume && !row.vol_units) {
-        //     console.log("In if");
-        //     EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter vol units if volume is entered', 'WARN');
-        // }
-        // if (row.amount && !row.amount_units) {
-        //     console.log("In if2");
-        //     EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter amount units if amount is entered', 'WARN');
-        // }
+        */
+        if (row.volume && !row.vol_units) {
+            EHR.Server.Utils.addError(scriptErrors, 'Volume', 'Must enter Vol Units if Volume is entered', 'WARN');
+        }
+        if (row.amount && !row.amount_units) {
+            EHR.Server.Utils.addError(scriptErrors, 'Amount', 'Must enter Amount Units if Amount is entered', 'WARN');
+        }
 
         //Added: 10-14-2016 R.Blasa
         if ((row.code == 'E-00070' || row.code == 'E-YY490'|| row.code == 'E-YYY45') && !row.remark){
@@ -1045,12 +1043,12 @@ exports.init = function(EHR){
         /* Added by kollil, 11/17/2023. Tkt #10159
         Added extra validation: 1. If volume is not null, must enter vol units
                                 2. If amount is not null, must enter amount units
-         */
+        */
         if (row.volume && !row.vol_units) {
-            EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter Vol Units if volume is entered', 'WARN');
+            EHR.Server.Utils.addError(scriptErrors, 'Volume', 'Must enter Vol Units if Volume is entered', 'WARN');
         }
         if (row.amount && !row.amount_units) {
-            EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter Amount Units if amount is entered', 'WARN');
+            EHR.Server.Utils.addError(scriptErrors, 'Amount', 'Must enter Amount Units if Amount is entered', 'WARN');
         }
 
         if (row.frequency){
