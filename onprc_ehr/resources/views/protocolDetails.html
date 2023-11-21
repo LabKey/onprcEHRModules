@@ -63,18 +63,31 @@ Ext4.onReady(function (){
             var sr = new LDK.SelectRowsRow(results.rows[0]);
             var buttons = null;
             if (EHR.Security.hasProtocolEditorPermission()){
-                buttons = [{
+                buttons = [
+
+          /*              {
                     text: 'More Actions',
                     menu: [{
                         text: 'Edit Protocol Details is completed thru eIACUC2 Application',
-                        /*href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()*/
-                    },
-                        {
-                            text: 'See eIACUC2 Record',
-                            href: `https://iacucapp.ohsu.edu/iacuc/sd/Rooms/DisplayPages/LayoutInitial?Container=com.webridge.entity.Entity[OID[${sr.getValue('Template_OID')}]]`
-                        }
+                        /!*href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()*!/
+                    }
+
                     ]
-                }]
+                },*/
+                        {
+                            text: 'edit Protocol Records in eIACUC2' ,
+                            menu: [
+                                    /*{
+                                text: 'Edit Protocol Details is completed thru eIACUC2 Application',
+                                /!*href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()*!/
+                            },*/
+                                {
+                                    text: 'open eIACUC2 Record and update Protocol Details',
+                                   /* text: 'Edit Protocol Details is completed thru eIACUC2 Application',*/
+                                    href: `https://iacucapp.ohsu.edu/iacuc/sd/Rooms/DisplayPages/LayoutInitial?Container=com.webridge.entity.Entity[OID[${sr.getValue('Template_OID')}]]`
+                                }
+                            ]
+                        }]
             }
 
             Ext4.create('LDK.panel.DetailsPanel', {
