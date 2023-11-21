@@ -1858,7 +1858,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         String animalId = "12345";
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
         LocalDateTime dayAfterTomorrow = LocalDateTime.now().plusDays(2);
-        String projectId = "640991";
+        String projectId = "625";
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         InsertRowsCommand protocolCommand = new InsertRowsCommand("onprc_billing", "chargeableItems");
