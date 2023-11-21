@@ -786,10 +786,12 @@ exports.init = function(EHR){
         Added extra validation: 1. If volume is not null, must enter vol units
                                 2. If amount is not null, must enter amount units
         */
-        if (row.volume && !row.vol_units) {
+        if (row.volume && row.vol_units == null) {
+            console.log("In");
             EHR.Server.Utils.addError(scriptErrors, 'Volume', 'Must enter Vol Units if Volume is entered', 'WARN');
         }
-        if (row.amount && !row.amount_units) {
+        if (row.amount && row.amount_units == null) {
+            console.log("In2");
             EHR.Server.Utils.addError(scriptErrors, 'Amount', 'Must enter Amount Units if Amount is entered', 'WARN');
         }
 
