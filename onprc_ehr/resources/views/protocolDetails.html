@@ -1,49 +1,47 @@
 <script type="text/javascript">
-    /*' updated 2022-07-28 2nd tryneeded to move the buttons within the success statement and add [] to the output'
-    * Update 2022-10-04 Added to latest build for deployment
-    * */
-    Ext4.onReady(function (){
-        var protocol = LABKEY.ActionURL.getParameter('protocol') || LABKEY.ActionURL.getParameter('key');
-        if (!protocol){
-            alert('Must Provide Protocol Number');
-            return false;
-        }
-        protocol = protocol.toLowerCase();
 
-        var webpart = <%=webpartContext%>;
-        var domSpec = [{
-            tag: 'div',
-            style: 'padding-bottom: 10px;',
-            id: 'protocolDetails_' + webpart.wrapperDivId
-        },{
-            tag: 'div',
-            style: 'padding-bottom: 10px;',
-            id: 'protocolProjects_' + webpart.wrapperDivId
-        },{
-            tag: 'div',
-            style: 'padding-bottom: 10px;',
-            id: 'allowableAnimals_' + webpart.wrapperDivId
-        },{
-            tag: 'div',
-            style: 'padding-bottom: 10px;',
-            id: 'allowableSLAs_' + webpart.wrapperDivId
-        },/*{
+Ext4.onReady(function (){
+    var protocol = LABKEY.ActionURL.getParameter('protocol') || LABKEY.ActionURL.getParameter('key');
+    if (!protocol){
+        alert('Must Provide Protocol Number');
+        return false;
+    }
+    protocol = protocol.toLowerCase();
+
+    var webpart = <%=webpartContext%>;
+    var domSpec = [{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'protocolDetails_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'protocolProjects_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'protocolLinks_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'allowableAnimals_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'allowableSLAs_' + webpart.wrapperDivId
+    },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
         id: 'exemptions_' + webpart.wrapperDivId
-    },*/{
-            tag: 'div',
-            style: 'padding-bottom: 10px;',
-            id: 'housingSummary_' + webpart.wrapperDivId
-        },{
-            tag: 'div',
-            style: 'padding-bottom: 10px;',
-            id: 'housingSummarySpecie_' + webpart.wrapperDivId
-        },{
-            tag: 'div',
-            style: 'padding-bottom: 10px;',
-            id: 'protocolLinks_' + webpart.wrapperDivId
-        }];
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'housingSummary_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'housingSummarySpecie_' + webpart.wrapperDivId
+    }];
 
         var el = Ext4.get(webpart.wrapperDivId);
         Ext4.DomHelper.append(el, domSpec);
