@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
+--  Create: 11-12-2023  R. Blasa
 SELECT
-  fiscalYear,
-  t.recipient,
-  t.recipient.affiliation,
-  t.requestCategory,
-  count(t.Id) as totalSamples,
-  count(distinct t.Id) as distinctAnimals,
-  count(distinct t.recipient) as distinctRecipients
+  t.value,
+  t.label,
+  t.sort_order
 
-FROM study.tissueDistributions t
-  Where t.taskid is not null
-  And t.QCState.Label in ('Request: Pending','Completed')
 
-GROUP BY fiscalYear, t.recipient, t.recipient.affiliation, t.requestCategory
+FROM sla.Reference_Data t
+where t.columnName = 'Cagebackground'
+And t.enddate is null
+
+

@@ -11,6 +11,7 @@
                             query.queryName=Tissue Distributions&amp;
                             query.calendarYear~eq=${calendarYear}&amp;
                             query.requestCategory~eq=${requestCategory}&amp;
+                            query.QCState/Label~in=Completed;Request: Pending&amp;
                         </url>
                     </column>
                 </columns>
