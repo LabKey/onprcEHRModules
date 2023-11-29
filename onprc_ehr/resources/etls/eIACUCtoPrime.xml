@@ -7,7 +7,7 @@
       <source queryName="PRIME_VIEW_ANIMAL_GROUPS" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_ANIMAL_GROUPS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
-    <transform id="step2a">
+    protocol<transform id="step2a">
       <description>Transfer to IBX Numbers</description>
       <source queryName="PRIME_VIEW_IBC_NUMBERS" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_IBC_NUMBERS" schemaName="ONPRC_EHR" targetOption="truncate"/>
