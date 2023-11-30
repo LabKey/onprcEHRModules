@@ -1,4 +1,3 @@
-
 Ext.define('App.view.InfoPanelAmended', {
     extend    : 'Ext.Container',
     alias     : 'widget.infopanelAmended',
@@ -16,7 +15,7 @@ Ext.define('App.view.InfoPanelAmended', {
     items : [
         {
             xtype : 'eventformAmended',
-            title : 'Necropsy Calendar Scheduler',
+            title : 'Necropsy Calendar Schedule',
             editable : false
         }
 

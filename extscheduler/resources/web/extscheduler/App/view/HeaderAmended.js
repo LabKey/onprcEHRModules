@@ -13,12 +13,12 @@ Ext.define('App.view.HeaderAmended', {
         //each bind should have corresponding setter
         date: '{endDate}'
     },
-    setDate : function (date) {
-        this.setData(
-                {
-                    month : Ext.Date.format(date, 'F'),
-                    year  : Ext.Date.format(date, 'Y')
-                }
-        );
-    }
+    items : [
+        {
+            xtype : 'eventformAmended',
+            title : 'Necropsy Calendar Schedule',
+            editable : false
+        }
+
+    ]
 });

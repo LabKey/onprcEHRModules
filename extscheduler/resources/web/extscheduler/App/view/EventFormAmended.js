@@ -40,18 +40,18 @@ Ext.define('App.view.EventFormAmended', {
                 xtype      : 'textfield',
                 fieldLabel : 'Animal ID',
                 name       : 'Alias',
-                reference  : 'eventAnimalIDField',
+                reference  : 'eventAliasField',
                 //allowBlank : !this.editable,
                 allowBlank: true,
-                hidden     : this.eventFormColumns.indexOf('animalid') === -1,
+                hidden     : this.eventFormColumns.indexOf('Alias') === -1,
                 bind       : {
-                    value    : '{eventRecord.animalid}',
+                    value    : '{eventRecord.Alias}',
                     readOnly : !this.editable
                 }
             },
 
             {
-                xtype      : 'projectcombo',
+                xtype      : 'textfield',
                 labelAlign: 'left',
                 width: 120,
                 height: 20,
@@ -98,22 +98,22 @@ Ext.define('App.view.EventFormAmended', {
                     readOnly : !this.editable
                 }
             },
-            {
-                xtype      : 'textfield',
-                labelAlign: 'top',
-                width: 50,
-                height: 20,
-                fieldLabel : 'Remaining Tissues Available for Distribution',
-                name :  'remainingtissues',
-                reference  : 'eventRemainingTissuesField',
-                style: 'margin-top: 20px;',
-                allowBlank : true,
-                hidden     : this.eventFormColumns.indexOf('remainingtissues') === -1,
-                bind       : {
-                    value    : '{eventRecord.remainingtissues}',
-                    readOnly : !this.editable
-                }
-            },
+            // {
+            //     xtype      : 'textfield',
+            //     labelAlign: 'top',
+            //     width: 320,
+            //     height: 20,
+            //     fieldLabel : 'Necropsy Location',
+            //     name :  'location',
+            //     reference  : 'eventLocationField',
+            //     style: 'margin-top: 20px;',
+            //     allowBlank : true,
+            //     hidden     : this.eventFormColumns.indexOf('location') === -1,
+            //     bind       : {
+            //         value    : '{eventRecord.location}',
+            //         readOnly : !this.editable
+            //     }
+            // },
             {
                 xtype: 'textarea',
                 labelAlign: 'top',

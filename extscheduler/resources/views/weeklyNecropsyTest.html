@@ -54,11 +54,7 @@
 
         var queryStoreData = function()
         {
-
-            var resourceStore = null, eventStore = null, userStore = null, projectStore = null;
-
-
-            var container = '/ONPRC/EHR';
+            var resourceStore = null, eventStore = null, userStore = null;
 
             // query to get the resource store data
             LABKEY.Query.selectRows({
@@ -80,25 +76,6 @@
                     if (eventStore != null && userStore != null) {
                         initScheduler();
                     }
-                }
-            });
-
-            LABKEY.Query.selectRows({
-                containerPath:  container,
-                schemaName: 'ehr',
-                queryName: 'project',
-                columns: 'project, displayName, enddateCoalesced',
-                filterArray: [LABKEY.Filter.create('enddateCoalesced', '-0d', LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL)],
-                success: function(data) {
-                    projectStore = Ext.create('Sch.data.ProjectStore', {
-                        model : 'Sch.model.Project',
-                        storeId : 'projectst', // referenced by this store id in Scheduler.js, etc.
-                        data : data.rows
-                    });
-                    if (resourceStore != null && eventStore != null && projectStore != null) {
-                        initScheduler();
-                    }
-
                 }
             });
 
