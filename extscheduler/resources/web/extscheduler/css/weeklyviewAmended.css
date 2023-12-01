@@ -1,7 +1,6 @@
 .app-headeramended {
     background   : transparent;
-    /*color        : #0072BB;#8c001a*/
-    color        : #8c001a;
+    color        : #0072BB;
     font-size    : 1.5em;
     line-height  : 1.4;
     padding-left : 80px !important;
@@ -20,9 +19,9 @@
 }
 
 
-/*.infopanelamended {*/
-/*    border-top : 1px solid #d0d0d0;,*/
-/*}*/
+.infopanelamended {
+    border-top : 1px solid #d0d0d0;,
+}
 
 .infopanelamended,
 .infopanelamended .x-panel-body,
@@ -45,11 +44,11 @@
 
 
 
-.navigationbarAmended {
+.navigationbaramended {
     background : #0072BB;
 }
 
-.navigationbarAmended .x-btn {
+.navigationbaramended .x-btn {
     background      : transparent !important;
     border          : 0 none !important;
 }
