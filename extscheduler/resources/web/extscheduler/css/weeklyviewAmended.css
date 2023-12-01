@@ -1,6 +1,7 @@
-.app-header {
+.app-headeramended {
     background   : transparent;
-    color        : #0072BB;
+    /*color        : #0072BB;#8c001a*/
+    color        : #8c001a;
     font-size    : 1.5em;
     line-height  : 1.4;
     padding-left : 80px !important;
@@ -19,15 +20,13 @@
 }
 
 
+/*.infopanelamended {*/
+/*    border-top : 1px solid #d0d0d0;,*/
+/*}*/
 
-
-.infopanel {
-    border-top : 1px solid #d0d0d0;,
-}
-
-.infopanel,
-.infopanel .x-panel-body,
-.infopanel .x-panel-header-default {
+.infopanelamended,
+.infopanelamended .x-panel-body,
+.infopanelamended .x-panel-header-default {
     background : transparent;
 }
 
@@ -39,79 +38,29 @@
     cursor: pointer;
 }
 
-.infopanel .x-title-text {
+.infopanelamended .x-title-text {
     color : #999;
+    /*color : #8c001a;*/
 }
 
 
 
-.navigationbar {
+.navigationbarAmended {
     background : #0072BB;
 }
 
-.navigationbar .x-btn {
+.navigationbarAmended .x-btn {
     background      : transparent !important;
     border          : 0 none !important;
 }
 
-.navigationbar .x-title-text {
+.navigationbarAmended .x-title-text {
     color        : #fff;
     font-size    : 1.4em;
     line-height  : 1.5;
     padding-left : 5px;
 }
 
-
-.resources .x-form-cb-label {
-    color       : #404040 !important;
-    line-height : 25px;
-}
-
-.resources .x-form-checkbox {
-    color       : inherit;
-    font-family : FontAwesome !important;
-    font-size   : 25px;
-    height      : 25px;
-    width       : 25px;
-    cursor      : pointer;
-}
-
-.resources .x-form-checkbox-focus {
-    color: inherit !important;
-}
-
-.resources .x-form-checkbox:before {
-    content : "\f096";
-}
-
-.resources .x-form-cb-checked .x-form-checkbox:before {
-    content : "\f0c8";
-}
-
-.resources .x-form-item-body-default.x-form-checkboxgroup-body {
-    padding-left  : 0;
-    padding-right : 0;
-}
-
-
-/*.sch-event {*/
-/*    background-color : #fff !important;*/
-/*    color            : #777 !important;*/
-/*    border-left      : 7px solid #fff;*/
-/*}*/
-
-/*.sch-event.sch-event-selected,*/
-/*.sch-event.sch-event-hover {*/
-/*    color            : #222 !important;*/
-/*    background-color : #fff !important;*/
-/*    border-left      : 7px solid #fff;*/
-/*    box-shadow       : 1px 1px 10px rgba(0, 0, 0, 0.1);*/
-/*}*/
-
-/*.sch-event-inner {*/
-/*    padding   : 2px 4px;*/
-/*    font-size : 1.1em;*/
-/*}*/
 
 
 
