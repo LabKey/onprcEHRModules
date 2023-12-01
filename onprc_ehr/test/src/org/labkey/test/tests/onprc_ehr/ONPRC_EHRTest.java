@@ -405,7 +405,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                 "remark", Arrays.asList(
                     "WARN: A remark is required if a non-normal outcome is reported"
                 ),
-                "amount_units", Arrays.asList(
+                "amount_units", Arrays.asList( //added these fields by kollil, Nov 30th
                         "WARN: Must enter amount_units if amount is entered"
                 ),
                 "vol_units", Arrays.asList(
