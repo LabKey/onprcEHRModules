@@ -408,7 +408,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                 "amount_units", Arrays.asList(
                         "WARN: Must enter amount_units if amount is entered"
                 ),
-                "volume_units", Arrays.asList(
+                "vol_units", Arrays.asList(
                         "WARN: Must enter volume_units if volume is entered"
                 )
         ));
