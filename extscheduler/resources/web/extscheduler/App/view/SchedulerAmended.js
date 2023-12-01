@@ -66,7 +66,8 @@ Ext.define('App.view.SchedulerAmended', {
     ],
 
     eventRenderer : function (event, resource, data) {
-        data.style = 'border-color:' + resource.get('Color');
+        data.style = 'background-image:linear-gradient(45deg, #fdfefe, #8c001a)';
+        // data.style = 'background-color:' + resource.get('Color');
         event.data['ResourceName'] = resource.get('Name');
         event.data['Project'] = event.get('project');
         event.data['fasting'] = event.get('fasting');
