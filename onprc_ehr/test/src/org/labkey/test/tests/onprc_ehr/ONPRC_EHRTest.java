@@ -54,9 +54,9 @@ import org.labkey.test.util.ext4cmp.Ext4CmpRef;
 import org.labkey.test.util.ext4cmp.Ext4ComboRef;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
 import org.labkey.test.util.ext4cmp.Ext4GridRef;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+//import org.openqa.selenium.By;
+//import org.openqa.selenium.Keys;
+//import org.openqa.selenium.WebElement;
 
 import java.io.File;
 import java.io.IOException;
@@ -399,11 +399,17 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         goToProjectHome();
 
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "amount_units", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
                 {MORE_ANIMAL_IDS[0], new Date(), "code", "Abnormal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Maps.of(
                 "remark", Arrays.asList(
                     "WARN: A remark is required if a non-normal outcome is reported"
+                ),
+                "amount_units", Arrays.asList(
+                        "WARN: Must enter amount_units if amount is entered"
+                ),
+                "volume_units", Arrays.asList(
+                        "WARN: Must enter volume_units if volume is entered"
                 )
         ));
 
