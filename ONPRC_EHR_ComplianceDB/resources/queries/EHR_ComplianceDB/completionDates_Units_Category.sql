@@ -4,15 +4,15 @@ select e.employeeid,
        (Select k.majorudds from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as host,
        (Select k.enddate from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as enddate,
        (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname = b.requirementname and zz.employeeid= e.employeeid group by zz.requirementname, zz.date  ) as completiondate,
-       (select k.requirementname from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as requirementname,
+       (select k.requirementname from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname and k.employeeid = e.employeeid) as requirementname,
        (Select k.type from ehr_compliancedb.requirements k where k.requirementname = b.requirementname) as type,
        (select k.category from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as category,
        (select k.unit from ehr_compliancedb.employees k where k.employeeid = e.employeeid)  as unit,
-       (select k.result from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as result,
-       (select k.comment from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as comment,
-       (select k.filename from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as filename,
-       (select k.trainer from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as trainer,
-       (select k.snooze_date from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as snooze_date
+       (select k.result from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname and k.employeeid = e.employeeid ) as result,
+       (select k.comment from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname and k.employeeid = e.employeeid) as comment,
+       (select k.filename from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname and k.employeeid = e.employeeid) as filename,
+       (select k.trainer from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname and k.employeeid = e.employeeid) as trainer,
+       (select k.snooze_date from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname and k.employeeid = e.employeeid) as snooze_date
 
 
 from  ehr_compliancedb.requirementspercategory b, ehr_compliancedb.employeeperUnit e
