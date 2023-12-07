@@ -399,17 +399,11 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         goToProjectHome();
 
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "amount_units", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
                 {MORE_ANIMAL_IDS[0], new Date(), "code", "Abnormal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Maps.of(
                 "remark", Arrays.asList(
                     "WARN: A remark is required if a non-normal outcome is reported"
-                ),
-                "amount_units", Arrays.asList( //added these fields by kollil, Nov 30th
-                        "WARN: Must enter amount_units if amount is entered"
-                ),
-                "vol_units", Arrays.asList(
-                        "WARN: Must enter volume_units if volume is entered"
                 )
         ));
 
@@ -424,6 +418,18 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         }, Maps.of(
                 "code", Arrays.asList(
                         "WARN: Must enter a treatment"
+                )
+        ));
+
+        //Added more validation code, Kollil Dec, 2023
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, null, null, null, null, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        }, Maps.of(
+                "amount_units", Arrays.asList( //added these fields by kollil, Nov 30th
+                        "WARN: Must enter amount_units if amount is entered"
+                ),
+                "vol_units", Arrays.asList(
+                        "WARN: Must enter volume_units if volume is entered"
                 )
         ));
 
