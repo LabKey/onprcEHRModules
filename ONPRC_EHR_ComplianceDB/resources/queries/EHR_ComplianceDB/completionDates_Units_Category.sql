@@ -1,25 +1,48 @@
-select b.employeeid,
-       (select Case when` max(t.date) is not null then max(t.date) else null end  from ehr_compliancedb.completiondates t where t.requirementname = a.requirementname and t.employeeid = b.employeeid) as completiondate,
-       a.requirementname,
-       b.unit as unit,
-       b.category as category
+select e.employeeid,
+       (Select k.Lastname from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as lastname,
+       (Select k.Firstname from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as firstname,
+       (Select k.majorudds from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as host,
+       (Select k.enddate from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as enddate,
+       (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname = b.requirementname and zz.employeeid= e.employeeid group by zz.requirementname, zz.date  ) as completiondate,
+       (select k.requirementname from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as requirementname,
+       (Select k.type from ehr_compliancedb.requirements k where k.requirementname = b.requirementname) as type,
+       (select k.category from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as category,
+       (select k.unit from ehr_compliancedb.employees k where k.employeeid = e.employeeid)  as unit,
+       (select k.result from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as result,
+       (select k.comment from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as comment,
+       (select k.filename from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as filename,
+       (select k.trainer from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as trainer,
+       (select k.snooze_date from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname) as snooze_date
 
-from  ehr_compliancedb.requirementspercategory a, ehr_compliancedb.employeeperUnit b
-where (a.unit = b.unit or a.category = b.category)
-group by b.employeeid,a.requirementname, b.unit, b.category
+
+from  ehr_compliancedb.requirementspercategory b, ehr_compliancedb.employeeperUnit e
+Where  (b.unit = e.unit or b.category = e.category)
+
+
+group by e.employeeid, b.requirementname
 
 
 union
 
 select j.employeeid,
-      null as completiondate,
-    j.requirementname,
-    null as unit,
-    null as category
+       null as lastname,
+       null as firstname,
+       null as host,
+       null as enddate,
+       null as completiondate,
+       j.requirementname,
+       null as type,
+       null as category,
+       null as unit,
+       null as result,
+       null as comment,
+       null as filename,
+       null as trainer,
+       null as snooze_date
 
 from  ehr_compliancedb.RequirementsPerEmployee j
 Where j.requirementname NOT in (select z.requirementname from ehr_compliancedb.completiondates z where z.requirementname = j.requirementname
-                                                                                               and z.employeeid = j.employeeid and z.date is not null)
+                                                                                                   and z.employeeid = j.employeeid and z.date is not null)
   And j.employeeid in (select p.employeeid from ehr_compliancedb.employees p where p.enddate is null)
 
 
