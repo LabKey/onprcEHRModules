@@ -33,6 +33,7 @@ select e.employeeid,
 
 from  ehr_compliancedb.requirementspercategory b, ehr_compliancedb.employeeperUnit e
 Where  (b.unit = e.unit or b.category = e.category)
+And e.employeeid  in (select distinct kk.employeeid from ehr_compliancedb.Employees kk where kk.enddate is null)
 
 
 group by e.employeeid, b.requirementname
