@@ -297,7 +297,8 @@
 
                             params['TreatmentDate'] = Ext4.Date.format(date, LABKEY.extDefaultDateFormat);
                             params['NumDays'] = 1;
-                            // params['Category'] = 'Clinical';
+                            // Modified: 12-8-2023   R. Blasa
+
                             params['Category'] = 'Clinical;Clinical on behalf of Research;Clinical on behalf of Surgical';
 
                             var timeOfDay = panel.down('#medicationTimeOfDayField').getURLParam();
@@ -407,7 +408,7 @@
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsRevised';
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsRevisedTest';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
                             return url;
@@ -734,7 +735,7 @@
 
                             var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
                             var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsRevised';
+                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsRevisedTest';
 
                             url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
                             return url;
