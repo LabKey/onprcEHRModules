@@ -399,8 +399,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         goToProjectHome();
 
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                {MORE_ANIMAL_IDS[0], new Date(), "code", "Abnormal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), "code", "Abnormal", null, 1.0, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Maps.of(
                 "remark", Arrays.asList(
                     "WARN: A remark is required if a non-normal outcome is reported"
@@ -408,13 +408,13 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         ));
 
         // successful
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, 1.0, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Collections.emptyMap());
 
 
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                {MORE_ANIMAL_IDS[0], new Date(), null, "Normal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), null, "Normal", null, 1.0, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Maps.of(
                 "code", Arrays.asList(
                         "WARN: Must enter a treatment"
@@ -423,13 +423,13 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         //Added more validation code, Kollil Dec, 2023
         getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, null, null, null, null, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, 1.0, null, 2.0, null, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Maps.of(
                 "amount_units", Arrays.asList( //added these fields by kollil, Nov 30th
-                        "WARN: Must enter amount_units if amount is entered"
+                        "WARN: Must enter Amount Units if Amount is entered"
                 ),
                 "vol_units", Arrays.asList(
-                        "WARN: Must enter volume_units if volume is entered"
+                        "WARN: Must enter Vol Units if Volume is entered"
                 )
         ));
 
@@ -447,16 +447,16 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         // ketamine / telazol
         for (String code : Arrays.asList("E-70590", "E-YY928"))
         {
-            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "amount_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, 1.0, 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, 1.0, "mL", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
             }, Maps.of(
                     "amount_units", Arrays.asList(
                             "WARN: When entering ketamine or telazol, amount must be in mg"
                     )
             ));
 
-            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "amount_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, null, 2.0, "mg", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, null, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
             }, Maps.of(
                     "amount_units", Arrays.asList(
                             "WARN: When entering ketamine or telazol, amount must be in mg"
