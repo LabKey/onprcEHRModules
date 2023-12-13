@@ -297,7 +297,9 @@
 
                             params['TreatmentDate'] = Ext4.Date.format(date, LABKEY.extDefaultDateFormat);
                             params['NumDays'] = 1;
-                            params['Category'] = 'Clinical';
+                            // Modified: 12-8-2023   R. Blasa
+
+                            params['Category'] = 'Clinical;Clinical on behalf of Research;Clinical on behalf of Surgical';
 
                             var timeOfDay = panel.down('#medicationTimeOfDayField').getURLParam();
                             if (timeOfDay){
