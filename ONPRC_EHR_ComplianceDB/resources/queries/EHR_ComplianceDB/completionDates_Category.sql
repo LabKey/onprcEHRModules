@@ -8,12 +8,9 @@ select e.employeeid,
 
        b.requirementname,
 
-
        (Select group_concat(distinct k.type, chr(10)) from ehr_compliancedb.requirements k where k.requirementname = b.requirementname) as type,
 
-       (select group_concat(distinct k.category, chr(10)) from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as category,
-
-     ---  (select group_concat(distinct k.unit, chr(10)) from ehr_compliancedb.employees k where k.employeeid = e.employeeid)  as unit,
+       group_concat(distinct e.category, chr(10)) as category,
 
        (select group_concat(distinct k.result, chr(10)) from ehr_compliancedb.completiondates k where k.requirementname = b.requirementname and k.employeeid = e.employeeid
                                                                                                   And k.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname = b.requirementname and zz.employeeid= e.employeeid ))  as result,

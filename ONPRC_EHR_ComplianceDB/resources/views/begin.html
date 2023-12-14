@@ -35,9 +35,11 @@ Ext4.onReady(function(){
             },{
                 name: 'Requirements Overdue/Due Soon (SSRS Reports by Host)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Host_Report&rs:Command=Render'
             },{
-            //     name: 'Employee Training Requirements (Unit or Category filters)', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeRequirements_Units_Category'
-            // },{
-                name: 'Employee Completion Dates (Unit or Category filters)', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates_Units_Category'
+                name: 'Employee Completion Dates (By Unit)', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates_Units'
+            },{
+                name: 'Employee Completion Dates (By Category)', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates_Category'
+            },{
+                name: 'Employee Completion Dates (By Unit And Category)', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates_Units_Category'
             }
             ]
         },{
