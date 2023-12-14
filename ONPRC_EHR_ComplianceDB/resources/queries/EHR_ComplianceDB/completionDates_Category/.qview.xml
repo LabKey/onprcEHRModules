@@ -4,7 +4,7 @@
     <columns>
         <column name="employeeid">
             <properties>
-                <property name="columnTitle" value="Last Name"/>
+                <property name="columnTitle" value="Employee ID""/>
             </properties>
         </column>
         <column name="lastName">
