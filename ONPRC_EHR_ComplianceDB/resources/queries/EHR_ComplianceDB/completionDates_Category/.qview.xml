@@ -30,6 +30,7 @@
             </properties>
         </column>
         <column name="completiondate"/>
+        <column name="category"/>
         <column name="result"/>
         <column name="comment"/>
         <column name="trainer"/>
