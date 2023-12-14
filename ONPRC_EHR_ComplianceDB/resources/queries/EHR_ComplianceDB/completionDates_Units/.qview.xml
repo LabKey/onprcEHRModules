@@ -29,7 +29,11 @@
                 <property name="columnTitle" value="Requirement Type"/>
             </properties>
         </column>
-        <column name="completiondate"/>
+        <column name="completiondate">
+            <properties>
+                <property name="columnTitle" value="Completion Date"/>
+            </properties>
+        </column>
         <column name="unit"/>
         <column name="result"/>
         <column name="comment"/>
