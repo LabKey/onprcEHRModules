@@ -43,11 +43,11 @@ END, 0) as daysUntilNextExam,
                   'COMP'
           END  as Chemistry,
                  CASE
-             WHEN d.id.age.AgeInYears < 2.0 THEN 'None'
-             WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN 'None'
-             WHEN d.id.age.AgeInYears = 6.0 THEN 'None'
-             WHEN d.id.age.AgeInYears > 6.0  AND d.id.age.AgeInYears < 12.0  THEN 'None'
-             WHEN d.id.age.AgeInYears > 11.0  AND d.id.age.AgeInYears < 18.0  THEN 'None'
+             WHEN d.id.age.AgeInYears < 2.0 THEN 'No'
+             WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN 'No'
+             WHEN d.id.age.AgeInYears = 6.0 THEN 'No'
+             WHEN d.id.age.AgeInYears > 6.0  AND d.id.age.AgeInYears < 12.0  THEN 'No'
+             WHEN d.id.age.AgeInYears > 11.0  AND d.id.age.AgeInYears < 18.0  THEN 'No'
              ELSE
                   'Yes'
           END  as FOB,
