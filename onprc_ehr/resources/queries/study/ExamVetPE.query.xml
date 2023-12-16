@@ -33,7 +33,7 @@
                         <columnTitle>CBC</columnTitle>
                     </column>
                     <column columnName="Chemistry">
-                        <columnTitle>Biochemistry</columnTitle>
+                        <columnTitle>Biochemistry Panel</columnTitle>
                     </column>
                     <column columnName="FOB">
                         <columnTitle>FOB</columnTitle>
