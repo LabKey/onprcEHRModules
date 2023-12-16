@@ -84,7 +84,10 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
     {
         StringBuilder msg = new StringBuilder();
 
-        duplicateCases(c, u, msg);
+        //Modified by: Kollil, 12/15/2023
+        //This warning is disabled as per tkt # 10276
+        //duplicateCases(c, u, msg);
+
         animalsWithoutRounds(c, u, msg);
         //animalsWithoutVetReview(c, u, msg);
 
