@@ -20,7 +20,7 @@ max(e.date) as lastdate,
 TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()) as daysSinceExam,
 COALESCE(CASE
   WHEN d.id.age.AgeInYears >= 18.0 THEN (180 - TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()))
-  WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN 'No'
+ -- WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN 'No'
   ELSE (365 - TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()))
 END, 0) as daysUntilNextExam,
 
@@ -32,7 +32,7 @@ END, 0) as daysUntilNextExam,
              WHEN d.id.age.AgeInYears > 11.0  AND d.id.age.AgeInYears < 18.0  THEN 'Yes'
              ELSE
                   'Yes'
-             END ) as CBC,
+             END  as CBC,
          CASE
              WHEN d.id.age.AgeInYears < 2.0 THEN 'None'
              WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN 'None'
@@ -41,7 +41,7 @@ END, 0) as daysUntilNextExam,
              WHEN d.id.age.AgeInYears > 11.0  AND d.id.age.AgeInYears < 18.0  THEN 'BASIC'
              ELSE
                   'COMP'
-          END ) as Chemistry,
+          END  as Chemistry,
                  CASE
              WHEN d.id.age.AgeInYears < 2.0 THEN 'None'
              WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN 'None'
@@ -50,14 +50,14 @@ END, 0) as daysUntilNextExam,
              WHEN d.id.age.AgeInYears > 11.0  AND d.id.age.AgeInYears < 18.0  THEN 'None'
              ELSE
                   'Yes'
-END ) as FOB,
+          END  as FOB,
 count(e.lsid) as totalExams,
 CASE
   WHEN count(f.Id) = 0 THEN null
   ELSE 'Clinically Restricted'
 END as isRestricted,
-       g.date as p2date,
-       g.p2,
+--        g.date as p2date,
+--        g.p2,
        d.id.assignedVet.assignedVet
 
 FROM study.demographics d
