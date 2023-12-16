@@ -20,8 +20,8 @@ max(e.date) as lastdate,
 TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()) as daysSinceExam,
 COALESCE(CASE
   WHEN d.id.age.AgeInYears >= 18.0 THEN (180 - TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()))
- -- WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN 'No'
-  ELSE (365 - TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()))
+ WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN (365 - TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()))
+  ELSE NULL
 END, 0) as daysUntilNextExam,
 
         CASE
@@ -34,8 +34,8 @@ END, 0) as daysUntilNextExam,
                   'Yes'
              END  as CBC,
          CASE
-             WHEN d.id.age.AgeInYears < 2.0 THEN 'None'
-             WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN 'None'
+             WHEN d.id.age.AgeInYears < 2.0 THEN 'No'
+             WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN 'No'
              WHEN d.id.age.AgeInYears = 6.0 THEN 'BASIC'
              WHEN d.id.age.AgeInYears > 6.0  AND d.id.age.AgeInYears < 12.0  THEN 'BASIC'
              WHEN d.id.age.AgeInYears > 11.0  AND d.id.age.AgeInYears < 18.0  THEN 'BASIC'
