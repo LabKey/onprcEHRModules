@@ -28,6 +28,16 @@
                     <column columnName="p2">
                         <columnTitle>Most Recent P2</columnTitle>
                     </column>
+
+                    <column columnName="CBC">
+                        <columnTitle>CBC</columnTitle>
+                    </column>
+                    <column columnName="Chemistry">
+                        <columnTitle>Biochemistry</columnTitle>
+                    </column>
+                    <column columnName="FOB">
+                        <columnTitle>FOB</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>
