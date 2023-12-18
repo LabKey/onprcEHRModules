@@ -1044,20 +1044,24 @@ exports.init = function(EHR){
             }
         }
 
-        /* Added by Kollil, 11/17/2023. Tkt #10159
-        Added extra validation: 1. If volume is not null, must enter vol units
-                                2. If amount is not null, must enter amount units
-         */
-        if  (!row.vol_units) {
-            if (row.volume) {
-                EHR.Server.Utils.addError(scriptErrors, 'vol_units', 'Must enter Vol Units if Volume is entered', 'WARN');
-            }
-        }
-        if (!row.amount_units ) {
-            if (row.amount) {
-                EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'Must enter Amount Units if Amount is entered', 'WARN');
-            }
-        }
+
+        // Removing this validation check from the "Meds Given" data entry panel as some forms like BSU exam entry doesn't need amount_units
+        // Please refer to the tkt # 10285
+
+        // /* Added by Kollil, 11/17/2023. Tkt #10159
+        // Added extra validation: 1. If volume is not null, must enter vol units
+        //                         2. If amount is not null, must enter amount units
+        //  */
+        // if  (!row.vol_units) {
+        //     if (row.volume) {
+        //         EHR.Server.Utils.addError(scriptErrors, 'vol_units', 'Must enter Vol Units if Volume is entered', 'WARN');
+        //     }
+        // }
+        // if (!row.amount_units ) {
+        //     if (row.amount) {
+        //         EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'Must enter Amount Units if Amount is entered', 'WARN');
+        //     }
+        // }
 
         if (row.frequency){
             if (!triggerHelper.isTreatmentFrequencyActive(row.frequency)){
