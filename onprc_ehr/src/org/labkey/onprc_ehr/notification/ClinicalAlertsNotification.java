@@ -99,7 +99,7 @@ public class ClinicalAlertsNotification extends ColonyAlertsNotification
         roomProblemSummary(c, u, msg, 30, 10);
 
         //Edited by Kollil: 12/18/23
-        //Removing this warning per request. Please check tkt # 10276 for details
+        //Removing this warning per request. Please check tkt # 10276 for details.
         //duplicateCases(c, u, msg);
 
         return msg.toString();
