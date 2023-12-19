@@ -50,7 +50,10 @@ public class BehaviorRoundsFormType extends TaskForm
             s.addConfigSource("BehaviorRounds");
         }
 
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/BehaviorDefaults.js"));
+        //addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/BehaviorDefaults.js"));
+        //Created the ONPRC version .js file to add default value for the amount units field by Kollil on 12/1923
+        //Refer to tkt # 10285
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/BehaviorDefaults.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/BehaviorRounds.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BehaviorCasesWindow.js"));
     }
