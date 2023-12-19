@@ -2,6 +2,8 @@
  * Copyright (c) 2014-2019 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Added by Kollil on 12/18/23. Please refer to tke # 10285 for details
  */
 EHR.model.DataModelManager.registerMetadata('BehaviorDefaults', {
     allQueries: {
@@ -69,8 +71,9 @@ EHR.model.DataModelManager.registerMetadata('BehaviorDefaults', {
                 //hidden: true,
                 defaultValue: 1
             },
-            amount_units: {
-                hidden: false
+            amount_units: { //Changed by Kolli: 12/18/2023.
+                hidden: true,
+                defaultValue:'units'
             },
             lot: {
                 hidden: true
