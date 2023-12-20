@@ -72,7 +72,7 @@ EHR.model.DataModelManager.registerMetadata('BehaviorDefaults', {
                 defaultValue: 1
             },
             amount_units: { //Changed by Kolli: 12/18/2023.
-                hidden: true,
+                hidden: false,
                 defaultValue:'units'
             },
             lot: {
