@@ -1,8 +1,8 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="employeeperTraining" tableDbType="NOT_IN_DB">
-                <tableTitle>Employee Per Units</tableTitle>
+            <table tableName="employeeTraining" tableDbType="NOT_IN_DB">
+                <tableTitle>Employee Requirement Details</tableTitle>
 
                 <columns>
                    <column columnName="employeeId">

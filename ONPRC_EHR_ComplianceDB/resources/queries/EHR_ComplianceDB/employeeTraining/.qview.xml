@@ -41,7 +41,7 @@
 
         <column name="next_training">
             <properties>
-                <property name="columnTitle" value="Assogmed Status"/>
+                <property name="columnTitle" value="Assigned Status"/>
             </properties>
         </column>
 
