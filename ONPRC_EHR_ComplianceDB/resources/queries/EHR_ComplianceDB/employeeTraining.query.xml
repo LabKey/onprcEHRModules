@@ -31,6 +31,38 @@
                             <fkTable>employeeAssignedStatus</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
+                        <conditionalFormats>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="eq" value="Proficient"/>
+                                </filters>
+                                <backgroundColor>9FE2BF</backgroundColor>
+                            </conditionalFormat>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="eq" value="Partial Trained"/>
+                                </filters>
+                                <backgroundColor>6495ED</backgroundColor>
+                            </conditionalFormat>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="eq" value="Next To Train"/>
+                                </filters>
+                                <backgroundColor>FFBF00</backgroundColor>
+                            </conditionalFormat>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="eq" value="Not Trained"/>
+                                </filters>
+                                <backgroundColor>CD5C5C</backgroundColor>
+                            </conditionalFormat>
+                            <conditionalFormat>
+                                <filters>
+                                    <filter operator="eq" value="Partial Trained"/>
+                                </filters>
+                                <backgroundColor>1F618D</backgroundColor>
+                            </conditionalFormat>
+                        </conditionalFormats>
                     </column>
                      <column columnName="unit">
                         <columnTitle>Unit</columnTitle>
