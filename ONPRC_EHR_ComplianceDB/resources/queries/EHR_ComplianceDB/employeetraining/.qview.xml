@@ -79,7 +79,7 @@
         <sort column="employeeid" descending="false"/>
 <!--        <sort column="employeeid/firstName" descending="false"/>-->
         <sort column="requirementname" descending="false"/>
-        <sort column="datecompleted" descending="true"/>
+
     </sorts>
 </customView>
 
