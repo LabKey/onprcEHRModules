@@ -27,7 +27,6 @@
                     <column columnName="next_training">
                         <columnTitle>Assigned_Status</columnTitle>
                         <fk>
-                            <fkFolderPath>/ONPRC/Admin/Compliance</fkFolderPath>
                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
                             <fkTable>employeeAssignedStatus</fkTable>
                             <fkColumnName>value</fkColumnName>
