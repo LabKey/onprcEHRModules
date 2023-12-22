@@ -71,7 +71,8 @@ public class BehaviorExamFormType extends TaskForm
             }
         }
 
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/BehaviorDefaults.js"));
+       // addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/BehaviorDefaults.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/BehaviorDefaults.js"));
         setStoreCollectionClass("EHR.data.ClinicalReportStoreCollection");
         addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalReportStoreCollection.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalDefaults.js"));
