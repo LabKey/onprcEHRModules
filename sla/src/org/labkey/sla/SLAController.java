@@ -16,6 +16,9 @@
 
 package org.labkey.sla;
 
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.labkey.api.action.ApiResponse;
@@ -63,9 +66,6 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
