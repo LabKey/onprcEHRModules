@@ -147,7 +147,7 @@ exports.init = function(EHR){
 
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study','birth', function(helper, scriptErrors, row, oldRow){
-    //Added: 8-1-2019  R.Blasa
+        //Added: 8-1-2019  R.Blasa
 
         if (row.Id && row.birth_condition == 'Fetus - Prenatal') {
             helper.setScriptOptions({
@@ -450,7 +450,7 @@ exports.init = function(EHR){
         }
     });
 
-      //Added 1-12-2016  Blasa  Menses TMB Records
+    //Added 1-12-2016  Blasa  Menses TMB Records
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'clinical_observations', function(helper, scriptErrors, row, oldRow){
 
         if (row.Id && row.category == 'Menses' ){
@@ -485,13 +485,13 @@ exports.init = function(EHR){
     //Added 9-2-2015  Blasa
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study',  'flags', function(helper, scriptErrors, row, oldRow){
 
-    if (row.Id ){
-        var msg = triggerHelper.sendCullListNotifications(row.Id,row.date, row.flag);
-        if (msg){
-            EHR.Server.Utils.addError(scriptErrors, 'category', msg, 'ERROR');
+        if (row.Id ){
+            var msg = triggerHelper.sendCullListNotifications(row.Id,row.date, row.flag);
+            if (msg){
+                EHR.Server.Utils.addError(scriptErrors, 'category', msg, 'ERROR');
+            }
         }
-    }
-});
+    });
 
 
     //Added 4-27-2016  R.Blasa
@@ -512,7 +512,7 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
         //check number of allowed animals at assign/approve time.  use different behavior than core EHR
         if (!helper.isETL() && !helper.isQuickValidation() &&
-            //this is designed to always perform the check on imports, but also updates where the Id was changed
+                //this is designed to always perform the check on imports, but also updates where the Id was changed
                 !(oldRow && oldRow.Id && oldRow.Id==row.Id) &&
                 row.Id && row.project && row.date
         ){
@@ -625,7 +625,7 @@ exports.init = function(EHR){
     });
 
 
-     //Modified: 10-13-2016 R.Blasa added arrival date parameter
+    //Modified: 10-13-2016 R.Blasa added arrival date parameter
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'birth', function(helper, errors, row, oldRow) {
         //Modified: 3-20-2017 R.Blasa  Fetal Prenatal updates
         if (row.id && oldRow)
@@ -782,6 +782,21 @@ exports.init = function(EHR){
             }
         }
 
+        /* Added by Kollil, 11/17/2023. Tkt #10159
+        Added extra validation: 1. If volume is not null, must enter vol units
+                                2. If amount is not null, must enter amount units
+         */
+        if  (!row.vol_units) {
+            if (row.volume) {
+                EHR.Server.Utils.addError(scriptErrors, 'vol_units', 'Must enter Vol Units if Volume is entered', 'WARN');
+            }
+        }
+        if (!row.amount_units ) {
+            if (row.amount) {
+                EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'Must enter Amount Units if Amount is entered', 'WARN');
+            }
+        }
+
         //Added: 10-14-2016 R.Blasa
         if ((row.code == 'E-00070' || row.code == 'E-YY490'|| row.code == 'E-YYY45') && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required when entering this medication', 'WARN');
@@ -903,7 +918,7 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'arrival', function(helper, errors, row, oldRow) {
-            //Don't process normally if Pending -- Created: 4-25-2017 R.Blasa
+        //Don't process normally if Pending -- Created: 4-25-2017 R.Blasa
         if (row.id && oldRow)
         {
             var acquiValueOld = triggerHelper.retrieveAcquisitionType(oldRow.acquisitionType);
@@ -1026,6 +1041,21 @@ exports.init = function(EHR){
             if (!row.amount && !row.volume) {
                 EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
                 EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
+            }
+        }
+
+        /* Added by Kollil, 11/17/2023. Tkt #10159
+        Added extra validation: 1. If volume is not null, must enter vol units
+                                2. If amount is not null, must enter amount units
+         */
+        if  (!row.vol_units) {
+            if (row.volume) {
+                EHR.Server.Utils.addError(scriptErrors, 'vol_units', 'Must enter Vol Units if Volume is entered', 'WARN');
+            }
+        }
+        if (!row.amount_units ) {
+            if (row.amount) {
+                EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'Must enter Amount Units if Amount is entered', 'WARN');
             }
         }
 
@@ -1254,15 +1284,15 @@ exports.init = function(EHR){
 
     //Added: 10-4-2022  R.Blasa
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.COMPLETE, function(event, errors, helper){
-                // Send notifications when requests approved
-                 var requestsApproved = helper.getRequestApprovedArray();
-                if (requestsApproved && requestsApproved.length > 0) {
-                        var msgs = helper.getJavaHelper().sendRequestStateEmail("Request: Approved", requestsApproved);
-                        if (msgs && msgs.length) {
-                            LABKEY.ExtAdapter.each(msgs, function (msg) {
-                            EHR.Server.Utils.addError(scriptErrors, 'qcstate', msg, 'INFO');
-                           }, this);
-                        }
-               }
+        // Send notifications when requests approved
+        var requestsApproved = helper.getRequestApprovedArray();
+        if (requestsApproved && requestsApproved.length > 0) {
+            var msgs = helper.getJavaHelper().sendRequestStateEmail("Request: Approved", requestsApproved);
+            if (msgs && msgs.length) {
+                LABKEY.ExtAdapter.each(msgs, function (msg) {
+                    EHR.Server.Utils.addError(scriptErrors, 'qcstate', msg, 'INFO');
+                }, this);
+            }
+        }
     });
 };

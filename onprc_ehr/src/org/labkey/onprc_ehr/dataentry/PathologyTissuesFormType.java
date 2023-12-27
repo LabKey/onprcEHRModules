@@ -36,11 +36,9 @@ import org.labkey.api.view.template.ClientDependency;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * User: bimber
- * Date: 7/29/13
- * Time: 5:03 PM
- */
+
+//Modified: 11-15-2023 R. Blasa
+
 public class PathologyTissuesFormType extends TaskForm
 {
     public static final String NAME = "PathologyTissues";
@@ -82,21 +80,15 @@ public class PathologyTissuesFormType extends TaskForm
 
         }
 
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Pathology.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Necropsy.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/PathologyCaseNoField.js"));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/pathologyButtons.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/CopyFromCaseWindow.js"));
+
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/DragDropGridPanel.js"));
-
         //Added: 5-5-2017   R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/PathologyTissues.js"));
 
 //        //Added: 5-24-2017  R.Blasa
         setStoreCollectionClass("onprc_ehr.data.sources.PathologyTissuesStoreCollection");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/PathologyTissuesStoreCollection.js"));
-
 
         //Added 7-14-2022  R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/PathologyTissuesField.js"));
