@@ -2,13 +2,11 @@
  * Copyright (c) 2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ * UPDATE 1/8/2023 - ADDING lINKED sCHEMA TO iNVOICE rUNS AND iNVOICES iTEMS TO GET iNVOICE nUMBER
+ *
  */
 
-/*
- * Copyright (c) 2013 LabKey Corporation
- *
- * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
- */
+
 
 SELECT
   mc.Id,
@@ -50,7 +48,9 @@ SELECT
   mc.debitedaccount,
   mc.creditedaccount,
   mc.sourceInvoicedItem,
-  mc.invoiceId,
+  ir.rowID as InvoiceNumber,
+  invoiceItem.transactionNumber,
+ --(Select invoiceNumber from study_finance.invoiceRuns where objectID = mc.invoiceID) as InvoiceNumber,
   mc.taskid,
   mc.chargeType as chargeUnit
 
@@ -89,3 +89,7 @@ LEFT JOIN onprc_billing_public.projectMultipliers pm ON (
     CAST(mc.date AS DATE) >= CASt(pm.startDate AS DATE) AND
     (CAST(mc.date AS DATE) <= pm.enddateCoalesced OR pm.enddate IS NULL) AND
     alias.alias = pm.account)
+LEFT JOIN study_billing.invoiceRuns ir on
+    ir.objectID = mc.invoiceID
+LEFT JOIN study_billing.invoicedItems InvoiceItem on
+    invoiceItem.objectID = mc.sourceInvoicedItem

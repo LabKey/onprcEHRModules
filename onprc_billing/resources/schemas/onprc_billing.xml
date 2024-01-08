@@ -409,7 +409,7 @@
                 <columnTitle>Invoice</columnTitle>
                 <isHidden>true</isHidden>
                 <fk>
-                    <fkDbSchema>onprc_billing</fkDbSchema>
+                    <fkDbSchema>Study_billing</fkDbSchema>
                     <fkTable>invoiceRuns</fkTable>
                     <fkColumnName>objectid</fkColumnName>
                     <fkDisplayColumnName>rowid</fkDisplayColumnName>
@@ -419,7 +419,7 @@
                 <columnTitle>Source Transaction</columnTitle>
                 <isHidden>true</isHidden>
                 <fk>
-                    <fkDbSchema>onprc_billing</fkDbSchema>
+                    <fkDbSchema>Study_billing</fkDbSchema>
                     <fkTable>invoicedItems</fkTable>
                     <fkColumnName>objectid</fkColumnName>
                     <fkDisplayColumnName>rowid</fkDisplayColumnName>

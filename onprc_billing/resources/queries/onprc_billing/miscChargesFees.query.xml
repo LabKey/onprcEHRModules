@@ -16,6 +16,16 @@
                     <column columnName="objectid">
                         <isHidden>true</isHidden>
                     </column>
+                    <column columnName="invoiceId">
+                        <columnTitle>Invoice</columnTitle>
+                        <isHidden>false</isHidden>
+                        <fk>
+                            <fkDbSchema>Study_billing</fkDbSchema>
+                            <fkTable>invoiceRuns</fkTable>
+                            <fkColumnName>objectid</fkColumnName>
+                            <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                        </fk>
+                    </column>
                 </columns>
             </table>
         </tables>

@@ -11,7 +11,7 @@
                     </column>
                     <column columnName="exemptionId">
                         <columnTitle>Exemption Id</columnTitle>
-                        <isHidden>true</isHidden>
+                      <!--  <isHidden>true</isHidden>-->
                         <url>/query/executeQuery.view?schemaName=onprc_billing&amp;query.queryName=chargeRateExemptions&amp;query.rowid~eq=${exemptionId}</url>
                     </column>
                     <column columnName="creditAccountId">
