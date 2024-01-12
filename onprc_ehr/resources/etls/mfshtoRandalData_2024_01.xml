@@ -1,3 +1,4 @@
+<!--TGHis was updated to change the naming of steps to be seu7ential-->
 <etl xmlns="http://labkey.org/etl/xml">
     <name>mfshToRandalData_2024</name>
     <description>imports the data from mfsh animal details on ONPRC</description>
