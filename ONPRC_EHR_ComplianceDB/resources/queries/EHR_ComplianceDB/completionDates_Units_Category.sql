@@ -3,7 +3,7 @@ select e.employeeid,
        (Select k.Firstname from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as firstname,
        (Select k.majorudds from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as host,
        (Select k.enddate from ehr_compliancedb.employees k where k.employeeid = e.employeeid) as enddate,
-       group_concat(distinct e.date, chr(10)) as completiondate ,
+        e.date as date ,
        e.requirementname,
        (Select hj.type from ehr_compliancedb.requirements  hj where hj.requirementname = e.requirementname) as type,
 

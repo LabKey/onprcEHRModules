@@ -33,7 +33,7 @@
             <property name="columnTitle" value="Requirement Type"/>
         </properties>
     </column>
-    <column name="completiondate">
+    <column name="date">
         <properties>
             <property name="columnTitle" value="Date Completed"/>
         </properties>
