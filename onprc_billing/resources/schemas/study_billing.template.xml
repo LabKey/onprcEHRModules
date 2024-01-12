@@ -1,0 +1,29 @@
+<templateSchema sourceSchemaName="onprc_billing" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>chargeUNitAccounts</tableName>
+        <tableName>creditAccount</tableName>
+        <tableName>invoicedItems</tableName>
+        <tableName>invoiceRuns</tableName>
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="chargeUnitAccounts" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Charge Unit Accounts</tableTitle>
+            </table>
+            <table tableName="creditAccounts" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Credit Accounts</tableTitle>
+            </table>
+            <table tableName="invoicedItems" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Invoiced Items</tableTitle>
+            </table>
+            <table tableName="invoiceRuns" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Invoice Runs</tableTitle>
+            </table>
+
+        </tables>
+    </metadata>
+</templateSchema>
