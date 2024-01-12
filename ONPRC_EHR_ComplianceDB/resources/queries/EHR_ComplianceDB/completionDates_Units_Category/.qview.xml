@@ -35,7 +35,7 @@
     </column>
     <column name="completiondate">
         <properties>
-            <property name="columnTitle" value="Completion Date"/>
+            <property name="columnTitle" value="Date Completed"/>
         </properties>
     </column>
 
