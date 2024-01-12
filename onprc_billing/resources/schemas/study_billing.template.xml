@@ -1,3 +1,4 @@
+<!--linked schema for Billing Items in EHR container-->
 <templateSchema sourceSchemaName="onprc_billing" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
     <tables>
         <tableName>chargeUNitAccounts</tableName>

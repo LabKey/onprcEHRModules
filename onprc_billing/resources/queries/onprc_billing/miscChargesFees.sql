@@ -3,6 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  * UPDATE 1/8/2023 - ADDING lINKED sCHEMA TO iNVOICE rUNS AND iNVOICES iTEMS TO GET iNVOICE nUMBER
+ *  Rebuild as unwanted files included
  * THis addition includes the Linked Schea to Invoice Runs and Ivoice Items
  */
 
