@@ -1,5 +1,7 @@
 <!--linked schema for Billing Items in EHR container
-Reload as the original hadded files not intended for this build-->
+Reload as the original hadded files not intended for this build
+ * Was mispelled in Name and thus feature branch did not process
+-->
 <templateSchema sourceSchemaName="onprc_billing" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
     <tables>
         <tableName>chargeUNitAccounts</tableName>
