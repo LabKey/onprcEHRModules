@@ -1,7 +1,7 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="Env_Contacplate" tableDbType="TABLE">
+            <table tableName="Env_Contactplate" tableDbType="TABLE">
                 <tableTitle>Surface Sanitation</tableTitle>
                 <columns>
                     <column columnName="date">
