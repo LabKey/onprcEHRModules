@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="Env_ATP" tableDbType="TABLE">
-                <tableTitle>Water Testing</tableTitle>
+                <tableTitle>Environmental Assessment ATP</tableTitle>
                 <columns>
                     <column columnName="date">
                         <columnTitle>Date</columnTitle>
