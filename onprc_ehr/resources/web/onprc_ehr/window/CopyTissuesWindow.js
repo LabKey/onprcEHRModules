@@ -110,7 +110,7 @@ Ext4.define('ONPRC_EHR.window.CopyTissuesWindow', {
         Ext4.Msg.wait('Loading...');
         LABKEY.Query.selectRows({
             schemaName: 'study',
-            queryName: 'tissueDistributions',
+            queryName: 'tissueDistributionWithTaskid',
             columns: 'Id,tissue,tissue/meaning,project,project/displayName,project/investigatorId/lastName,recipient,recipient/lastname,dateOnly,parentid,sampletype,remark,requestcategory',
             sort: '-dateOnly,formSort',
             requiredVersion: 9.1,

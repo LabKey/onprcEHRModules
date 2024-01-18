@@ -303,7 +303,8 @@ Ext4.define('ONPRC_EHR.window.CreateNecropsyRequestWindow', {
                 var obj = {
                     requestid: row['requestid'],
                     objectid:row['objectid'],
-                    taskid: config.taskId
+                    taskid: config.taskId,
+                    QCState: 25   //Added: 11-17-2023  R. Blasa
                 };
 
                 toUpdate.push(obj);
