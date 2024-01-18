@@ -1,0 +1,8 @@
+<script type="text/javascript">
+
+    // created: 11-2-2023  R. Blasa
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+        Ext4.create('ONPRC_EHR.panel.ColonyOverviewPanel').render(webpart.wrapperDivId);
+    });
+</script>

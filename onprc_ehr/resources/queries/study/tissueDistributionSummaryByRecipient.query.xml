@@ -11,6 +11,7 @@
                             query.queryName=Tissue Distributions&amp;
                             query.fiscalYear~eq=${fiscalYear}&amp;
                             query.recipient~eq=${recipient}&amp;
+                            query.QCState/Label~in=Completed;Request: Pending&amp;
                         </url>
                     </column>
                 </columns>
