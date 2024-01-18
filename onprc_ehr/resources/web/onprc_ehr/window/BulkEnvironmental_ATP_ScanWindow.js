@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 /**
- * @cfg dataEntryPanel      Created 1/17/2024   Blasa    Serology Scan Entries
+ * @cfg dataEntryPanel      Created 1/17/2024   Blasa    Environmental ATP Entries
  */
 Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
     extend: 'Ext.window.Window',
@@ -13,14 +13,14 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
         Ext4.apply(this, {
             modal: true,
             closeAction: 'destroy',
-            title: 'BulkEnvironmental_ATP_ScanWindow Import',
+            title: 'Bulk Environmental_ATP_ScanWindow Import',
             bodyStyle: 'padding: 5px;',
             width: 800,
             defaults: {
                 border: false
             },
             items: [{
-                html : 'This allows you to import record using the BulkEnvironmental_ATP_ScanWindow Excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
+                html : 'This allows you to import record using the Environmental_ATP_ScanWindow Excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'ldk-linkbutton',
@@ -48,8 +48,6 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
             }]
         });
 
-        this.projectStore = EHR.DataEntryUtils.getProjectStore();
-        this.labworkSericeStoreStore = EHR.DataEntryUtils.getLabworkServicesStore();
 
         this.callParent(arguments);
     },
@@ -88,10 +86,6 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
         var servicetype = 'Sanitation: ATP';
         var chargeunit = 'Kati' ;
 
-        if ( Ext4.String.trim( parsed[5][1]) != "")
-        {
-            var vetname = Ext4.String.trim( parsed[5][1]);
-        };
 
         var offset = 1;
         var rowIdx = offset;
@@ -141,7 +135,6 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
         }
 
 
-
         this.close();
     },
 
@@ -156,7 +149,6 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
             errors.push('Missing Date');
         }
 
-        var name = Ext4.String.trim(row[15]);
 
             // Generate Labwork Panel Details
         var FirstTimeFlag = 1;         //set flag
@@ -185,7 +177,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
 
                         };
 
-                        if (!this.checkRequired(['Id', 'date', 'servicerequested', 'testing_location','pass_fail','performedby','retest','surface_tested','remarks','test_results', 'objectid', errors, rowIdx))
+                        if (!this.checkRequired(['Id', 'date', 'servicerequested', 'testing_location','pass_fail','performedby','retest','surface_tested','remarks','test_results', 'objectid'], obj, errors, rowIdx))
                         {
                             recordMap.primaryheader.push(obj);
                         }
