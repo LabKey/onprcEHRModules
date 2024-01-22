@@ -22,7 +22,7 @@ select e.employeeid,
 
 from ehr_compliancedb.completiondates e
 ----
-Where e.employeeid  in (select distinct kk.employeeid from ehr_compliancedb.Employees kk where kk.enddate is null)
+---Where e.employeeid  in (select distinct kk.employeeid from ehr_compliancedb.Employees kk where kk.enddate is null)
 
 group by e.employeeid, e.requirementname,e.date
 
