@@ -149,15 +149,11 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
             errors.push('Missing Date');
         }
 
-
-            // Generate Labwork Panel Details
-        var FirstTimeFlag = 1;         //set flag
-
-        for (var k = 1; k < 13; k++)         // Process only if Agent data exists
-
-        {
-            if (row[k])
-            {
+        // for (var k = 1; k < 13; k++)         // Process only if  data exists
+        //
+        // {
+        //     if (row[k])
+        //     {
 
                         var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
 
@@ -166,14 +162,14 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
                             date: date,
                             servicerequested: servicetype,
                             charge_unit: chargeunit,
-                            testing_location:Ext4.String.trim( parsed[k][2]),  //Area
-                            test_results:Ext4.String.trim( parsed[k][3]),   //LAB/GROUP
-                            surface_tested:Ext4.String.trim( parsed[k][5]),  //Surface Tested
-                            retest:Ext4.String.trim( parsed[k][7]),  //Retest
-                            pass_fail:Ext4.String.trim( parsed[k][6]),   // Initial
+                            testing_location:Ext4.String.trim(row[2]),  //Area
+                            test_results:Ext4.String.trim(row[3]),   //LAB/GROUP
+                            surface_tested:Ext4.String.trim(row[5]),  //Surface Tested
+                            retest:Ext4.String.trim(row[7]),  //Retest
+                            pass_fail:Ext4.String.trim(row[6]),   // Initial
                             objectid: HeaderObjectID,
-                            performedby: Ext4.String.trim( parsed[k][1]),  //Tech Initials
-                            remarks:Ext4.String.trim( parsed[k][8])       //Ccmments
+                            performedby: Ext4.String.trim(row[1]),  //Tech Initials
+                            remarks:Ext4.String.trim(row[8])       //Ccmments
 
                         };
 
@@ -181,12 +177,10 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
                         {
                             recordMap.primaryheader.push(obj);
                         }
-                        FirstTimeFlag = 0;   //Reset after the first entry
 
+                // };
 
-                };
-
-        };
+        // };
 
 
     },

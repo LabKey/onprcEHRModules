@@ -24,6 +24,7 @@ import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,6 +45,9 @@ import java.util.List;
             addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation_ATP.js"));
 
             addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"));
+
+            addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkEnvironmental_ATP_ScanWindow.js"));
+
 
 
         for (FormSection s : this.getFormSections())
@@ -77,6 +81,16 @@ import java.util.List;
         return ret;
     };
 
+    //Added 1-19-2024 Blasa
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.addAll(super.getMoreActionButtonConfigs()) ;
+        defaultButtons.add("ENV_ATP_SCAN_IMPORT");
+
+        return defaultButtons;
+    }
 
     @Override
     protected boolean canInsert()
