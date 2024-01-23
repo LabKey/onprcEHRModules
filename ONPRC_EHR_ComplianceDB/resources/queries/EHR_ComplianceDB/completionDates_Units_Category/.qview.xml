@@ -22,7 +22,11 @@
             <property name="columnTitle" value="Host"/>
         </properties>
     </column>
-<!--    <column name="enddate"/>-->
+    <column name="enddate">
+        <properties>
+            <property name="columnTitle" value="End Date"/>
+        </properties>
+    </column>
     <column name="requirementname">
         <properties>
             <property name="columnTitle" value="Requirement Name"/>
