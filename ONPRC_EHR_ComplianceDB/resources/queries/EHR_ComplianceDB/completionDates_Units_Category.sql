@@ -23,6 +23,6 @@ select
 from ehr_compliancedb.completiondates e
 
 
-order by e.employeeid, e.requirementname, e.date desc
+
 
 
