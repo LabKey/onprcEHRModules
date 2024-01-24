@@ -99,10 +99,10 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
                 continue;
             }
 
-            var id = parsed[i][1];
-            if (!id)
+            var tdate = parsed[i][1];
+            if (!tdate)
             {
-                errors.push('Row ' + rowIdx + ': missing Id');
+                errors.push('Row ' + rowIdx + ': missing date');
                 return;
             }
 
@@ -138,7 +138,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,id, parsed, cnt,servicetype,chargeunit)
+    processRow: function(row, recordMap, errors, rowIdx,tdate, parsed, cnt,servicetype,chargeunit)
     {
 
         // Generate labwork Header information
@@ -158,11 +158,11 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
                         var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
 
                         var obj = {
-                            Id: id,
                             date: date,
                             servicerequested: servicetype,
                             charge_unit: chargeunit,
                             testing_location:Ext4.String.trim(row[2]),  //Area
+                            action:Ext4.String.trim(row[4]),  //Area
                             test_results:Ext4.String.trim(row[3]),   //LAB/GROUP
                             surface_tested:Ext4.String.trim(row[5]),  //Surface Tested
                             retest:Ext4.String.trim(row[7]),  //Retest
@@ -173,7 +173,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
 
                         };
 
-                        if (!this.checkRequired(['Id', 'date', 'servicerequested', 'testing_location','pass_fail','performedby','retest','surface_tested','remarks','test_results', 'objectid'], obj, errors, rowIdx))
+                        if (!this.checkRequired(['date', 'servicerequested','charge_unit','testing_location','action','test_results','surface_tested','retest','pass_fail','performedby','retest','surface_tested'], obj, errors, rowIdx))
                         {
                             recordMap.primaryheader.push(obj);
                         }
