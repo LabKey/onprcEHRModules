@@ -12,16 +12,14 @@
 
     <transforms>
         <transform id="Stored_Proc" type="StoredProcedure">
-            <description>Runs the stored procedure to update Labkey_public.onprc_ehr.Temp_ClnRemarks table</description>
+            <description>Runs the stored procedure to update onprc_ehr.Temp_ClnRemarks table</description>
             <procedure schemaName="onprc_ehr" procedureName="MPA_ClnRemarkAddition">
             </procedure>
         </transform>
 
-        <transform id="AddMPAClnRemark">
-            <description>Import the remarks data from Labkey_public.onprc_ehr.Temp_ClnRemarks table to study.ClnRemarks
-                table in Prime
-            </description>
-            <source schemaName="LabkeyPublic" queryName="Temp_ClnRemarks"/>
+        <transform id="Add_MPA_ClnRemarks">
+            <description>Import the remarks data from Labkey_public.onprc_ehr.Temp_ClnRemarks table to study.ClnRemarks table in Prime </description>
+            <source schemaName="onprc_ehr" queryName="Temp_ClnRemarks"/>
             <destination schemaName="study" queryName="clinremarks"/>
         </transform>
     </transforms>
