@@ -1,4 +1,4 @@
-/****** Add MPA Clinical remarks: By Kolli******/
+/****** Add MPA Clinical remarks: By Kollil, 1/25/2024 ******/
 /*
  Created 1 temp table to store the clinical remarks records.
  The stored proc manages the addition and deleting clinical remarks data from the temp table
@@ -66,7 +66,7 @@ GO
         Select Top 1 @taskId = rowId
         From ehr.tasks
         Where formType = 'Bulk Clinical Entry' And qcstate = 18 And createdby = 1003
-        And CONVERT(DATE, created) = CONVERT(DATE, GETDATE()) Order by rowId desc
+        And CONVERT(DATE, created) = CONVERT(DATE, GETDATE()) Order By rowId desc
 
         --Insert the clinical remark into the clinical remarks
         -- Get all the Animals who had MPA injection today in studyDataset.c6d178_drug
