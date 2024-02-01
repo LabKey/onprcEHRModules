@@ -29,12 +29,12 @@ SELECT Id
      , enddate
      , project.use_category AS projectType
 FROM study.assignment
-WHERE date <= Curdate()
+WHERE Curdate() >= date        /* The current date is on or after the assignment's start */
   AND (
     enddate IS NULL
-        OR enddate > Curdate()
+        OR Curdate() < enddate /* The current date is before the day after the assignment ends */
         OR (
-        enddate = Curdate()  /* date can equal enddate for 1-day day lease */
-            AND enddate = date
-        )
+        Curdate() = enddate    /* Exceptional case: date can equal enddate for 1-day day lease */
+            AND enddate = date /* For consistency, it's preferred to have the enddate be the   */
+        )                      /* day following date for a 1-day day lease */
     )
