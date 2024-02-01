@@ -9,10 +9,9 @@ Notes:
     result in open cases * assignments for that animal
   * Left joins are needed for CMUcases and assignedProject as those tables
     might not have records for an animal ID. Left joins are used for all
-	other joins to be resiliant against missing data.
-  * enddate.TimeCoalesced is never in the future
+	other joins to be resilient against missing data.
 
-Future modifications:
+Future potential modifications:
   * Limit open cases to those that are not inactive	after confirming w/ Heather
  */
 
