@@ -15,10 +15,12 @@
  */
 package org.labkey.onprc_ehr.query;
 
+import jakarta.mail.Address;
+import jakarta.mail.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.collections.CaseInsensitiveHashSet;
@@ -69,8 +71,6 @@ import org.labkey.onprc_ehr.notification.MensesTMBNotification;
 import org.labkey.onprc_ehr.notification.ProjectAlertsNotification;
 import org.labkey.onprc_ehr.notification.ProtocolAlertsNotification;
 
-import javax.mail.Address;
-import javax.mail.Message;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -99,36 +99,33 @@ import java.util.TreeMap;
  */
 public class ONPRC_EHRTriggerHelper
 {
-    private Container _container = null;
-    private User _user = null;
     private static final Logger _log = LogManager.getLogger(ONPRC_EHRTriggerHelper.class);
-    private Map<String, TableInfo> _cachedTables = new HashMap<>();
-
-    private List<Map<String, Object>> _cachedCageSizeRecords = null;
-    private Map<String, Map<String, Object>> _cachedRooms = new HashMap<>();
-    private Map<Integer, Pair<String, String>> _cachedProtocols = new HashMap<>();
-    private Map<String, Map<String, Set<String>>> _cachedHousing = new HashMap<>();
-    private Map<Integer, String> _cachedProcedureCategories = new HashMap<>();
-    private Map<String, Boolean> _cachedBirthConditions = null;
-
-    private Integer _nextProjectId = null;
-    private Integer _nextProtocolId = null;
-
-
-    //NOTE: we probably do not want to cache this outside this transaction, unless we can keep it accurate
-    private Map<String, List<CageRecord>> _cachedCages = new HashMap<>();
-    private Map<Integer, Boolean> _cachedFrequencies = new HashMap<>();
-    private Map<Integer, List<Integer>> _cachedFrequencyTimes = new HashMap<>();
-    private Map<String, Integer> _cachedConditionCodes = new HashMap<>();
-    private Map<String, Integer> _cachedConditionCodeMeanings = new HashMap<>();
-    private Map<Integer, DividerRecord> _cachedDividerRecords = new HashMap<>();
-
     private static final String NONRESTRICTED = "Nonrestricted";
     private static final String EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, EXPERIMENTAL";
     private static final String NON_EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, NONEXPERIMENTAL";
     private static final String SPONTANEOUS_DEATH = "Spontaneous Death";
-    private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
+    private final Map<String, TableInfo> _cachedTables = new HashMap<>();
+    private final Container _container;
+    private final User _user ;
+    private final Map<String, Map<String, Object>> _cachedRooms = new HashMap<>();
+    private final Map<Integer, Pair<String, String>> _cachedProtocols = new HashMap<>();
+    private final Map<String, Map<String, Set<String>>> _cachedHousing = new HashMap<>();
+    private final Map<Integer, String> _cachedProcedureCategories = new HashMap<>();
+
+    //NOTE: we probably do not want to cache this outside this transaction, unless we can keep it accurate
+    private final Map<String, List<CageRecord>> _cachedCages = new HashMap<>();
+    private final Map<Integer, Boolean> _cachedFrequencies = new HashMap<>();
+    private final Map<Integer, List<Integer>> _cachedFrequencyTimes = new HashMap<>();
+    private final Map<String, Integer> _cachedConditionCodes = new HashMap<>();
+    private final Map<String, Integer> _cachedConditionCodeMeanings = new HashMap<>();
+    private final Map<Integer, DividerRecord> _cachedDividerRecords = new HashMap<>();
+    private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+
+    private Map<String, Boolean> _cachedBirthConditions = null;
+    private List<Map<String, Object>> _cachedCageSizeRecords = null;
+    private Integer _nextProjectId = null;
+    private Integer _nextProtocolId = null;
 
     public ONPRC_EHRTriggerHelper(int userId, String containerId)
     {
