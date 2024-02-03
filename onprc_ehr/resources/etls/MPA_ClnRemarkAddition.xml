@@ -13,8 +13,7 @@
     <transforms>
         <transform id="Stored_Proc" type="StoredProcedure">
             <description>Runs the stored procedure to update onprc_ehr.Temp_ClnRemarks table</description>
-            <procedure schemaName="onprc_ehr" procedureName="MPA_ClnRemarkAddition">
-            </procedure>
+            <procedure schemaName="onprc_ehr" procedureName="MPA_ClnRemarkAddition"> </procedure>
         </transform>
 
         <transform id="Add_MPA_ClnRemarks">
@@ -26,7 +25,7 @@
 
     <schedule>
         <!-- Runs daily at 11pm -->
-        <cron expression="0 23 * * *"/>
+        <cron expression="0 50 23 * * ?"/>
     </schedule>
 
 </etl>
