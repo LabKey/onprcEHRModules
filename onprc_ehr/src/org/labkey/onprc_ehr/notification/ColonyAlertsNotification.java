@@ -446,12 +446,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     {
         //then we find all living animals with multiple active housing records:
         Sort sort = new Sort(getStudy(c).getSubjectColumnName());
-        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingProblems"), null, sort);
+        TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("housingMultipleRooms"), null, sort);
         long count = ts.getRowCount();
         if (count > 0)
         {
             msg.append("<b>WARNING: There are " + count + " animals with multiple active housing records:</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "housingProblems", null) + "'>Click here to view these animals</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "housingMultipleRooms", null) + "'>Click here to view these animals</a></p>\n");
         }
     }
 
