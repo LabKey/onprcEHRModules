@@ -17,7 +17,7 @@
         </transform>
 
         <transform id="Add_MPA_ClnRemarks">
-            <description>Import the remarks data from Labkey_public.onprc_ehr.Temp_ClnRemarks table to study.ClnRemarks table in Prime </description>
+            <description>Import the remarks data from onprc_ehr.Temp_ClnRemarks table to study.ClnRemarks table in Prime </description>
             <source schemaName="onprc_ehr" queryName="Temp_ClnRemarks"/>
             <destination schemaName="study" queryName="clinremarks"/>
         </transform>
