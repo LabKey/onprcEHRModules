@@ -9,26 +9,22 @@
                         <isHidden>true</isHidden>
                     </column>
                     <column columnName="value">
-                        <columnTitle>Host Name</columnTitle>
+                        <columnTitle>Value</columnTitle>
                     </column>
                     <column columnName="endDate">
                         <columnTitle>End Date</columnTitle>
                     </column>
 
                     <column columnName="columnName">
-                        <fk>
-                             <fkTable>ComplianceHostIdentifier</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                            <columnTitle>Column Name</columnTitle>
-                        </fk>
+                        <columnTitle>Column Name</columnTitle>
                     </column>
 
                     <column columnName="Label">
-                       <isHidden>true</isHidden>
+                        <columnTitle>Label</columnTitle>
                     </column>
 
                     <column columnName="sort_order">
-                        <isHidden>true</isHidden>
+                        <columnTitle>Sort Order</columnTitle>
                     </column>
                 </columns>
             </table>
