@@ -1317,10 +1317,13 @@
             <column columnName="participantid" />
             <column columnName="project" />
             <column columnName="remark" />
-            <column columnName="description" />
+            <column columnName="p" />
             <column columnName="performedby" />
             <column columnName="category" />
             <column columnName="taskId" />
+            <column columnName="createdby" />
+            <column columnName="modifiedby" />
+
         </columns>
     </table>
 
