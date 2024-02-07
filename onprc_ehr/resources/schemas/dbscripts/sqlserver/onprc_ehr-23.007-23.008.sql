@@ -50,16 +50,15 @@ DECLARE
 
 BEGIN
     --Delete all rows from the temp_Drug table
-Delete From onprc_ehr.Temp_ClnRemarks
+    Delete From onprc_ehr.Temp_ClnRemarks
 
---Check if the MPA injection, E-85760 was administered today
-Select @MPACount = COUNT(*)
-From studyDataset.c6d178_drug
-Where code = 'E-85760' And CONVERT(DATE, date) = CONVERT(DATE, GETDATE()) And qcstate = 18
+    --Check if the MPA injection E-85760 was administered today
+    Select @MPACount = COUNT(*) From studyDataset.c6d178_drug
+    Where code = 'E-85760' And CONVERT(DATE, date) = CONVERT(DATE, GETDATE()) And qcstate = 18
 
-  --Found entries, so, enter the clinical remarks now
+    --Found entries, so, enter the clinical remarks now
     If @MPACount > 0
-Begin
+    Begin
         -- Create a Task entry in ehr.tasks table
         Set @taskid = NEWID() -- creating taskid
         Insert Into ehr.tasks
@@ -75,10 +74,10 @@ Begin
         Insert Into onprc_ehr.Temp_ClnRemarks (
         date, qcstate, participantid, project, remark, p, performedby, category, taskid, createdby, modifiedby
         )
-Select GETDATE(), 18, participantid, project, 'Remark entered by the ETL process', 'P1 - MPA injection administered', 'onprcitsupport@ohsu.edu', 'Clinical', @taskId, 1003, 1003
-From studyDataset.c6d178_drug
-Where code = 'E-85760' And CONVERT(DATE, date) = CONVERT(DATE, GETDATE()) And qcstate = 18
-End
+        Select GETDATE(), 18, participantid, project, 'Remark entered by the ETL process', 'MPA injection administered', 'onprcitsupport@ohsu.edu', 'Clinical', @taskId, 1003, 1003
+        From studyDataset.c6d178_drug
+        Where code = 'E-85760' And CONVERT(DATE, date) = CONVERT(DATE, GETDATE()) And qcstate = 18
+    End
 
 END
 
