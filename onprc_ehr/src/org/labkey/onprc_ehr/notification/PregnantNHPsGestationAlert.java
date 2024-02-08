@@ -7,7 +7,7 @@ import org.labkey.api.security.User;
 import java.util.Date;
 
 /**
- * Created by kollil
+ * Created by Lakshmi Kolli
  */
 public class PregnantNHPsGestationAlert extends ColonyAlertsNotification
 {
