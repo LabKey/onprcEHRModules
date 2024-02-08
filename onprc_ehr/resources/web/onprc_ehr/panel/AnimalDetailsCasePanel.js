@@ -8,12 +8,12 @@
 
 //Created 5-9-2016 R.Blasa
 
-Ext4.define('onprc_ehr.panel.AnimalDetailsCasePanel', {
-    extend: 'EHR.panel.SnapshotPanel',
-    alias: 'widget.onprc_ehr-animaldetailspanel',
+Ext4.define('ONPRC_EHR.panel.AnimalDetailsCasePanel', {
+    extend: 'onprc_ehr.panel.SnapshotPanel',
+    alias: 'widget.onprc_ehr-animaldetailscasepanel',
 
     border: true,
-    showExtendedInformation: false,
+    showExtendedInformation: true,
     showActionsButton: false,
     doSuspendLayouts: false,
     showDisableButton: true,
