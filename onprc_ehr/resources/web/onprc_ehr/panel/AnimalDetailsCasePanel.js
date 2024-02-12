@@ -116,9 +116,16 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsCasePanel', {
                     fieldLabel: 'Projects / Groups',
                     name: 'assignmentsAndGroups'
                 },{
+
                     xtype: 'displayfield',
                     fieldLabel: 'Active Cases',
                     name: 'activeCases'
+                },{
+                    xtype: 'displayfield',
+                    fieldLabel: 'Sustained Release Medication',
+                    name: 'sdrug'
+
+
                 }]
             },{
                 xtype: 'container',
@@ -266,6 +273,61 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsCasePanel', {
 
         toSet['assignmentsAndGroups'] = values.length ? values.join('<br>') :  null;
     } ,
+
+   // Added: 2-10-2024  R.Blasa  needed for Animal Details where medication input form exists.
+    appendDrugRecords: function(toSet, record){
+        toSet['sdrug'] = null;
+
+        var values = [];
+        if (record.getActiveDrugs() && record.getActiveDrugs().length){
+            Ext4.each(record.getActiveDrugs(), function(row){
+                var val = row['code'] || '';
+                val += ' [' + row['amountAndVolume'] + ']';
+
+                if (val)
+                    values.push(val);
+            }, this);
+        }
+
+
+        toSet['sdrug'] = values.length ? values.join('<br>') :  null;
+
+    },
+
+    getDrugColumns: function(){
+        return [{
+            name: 'meaning',
+            label: 'Medication'
+
+        },{
+            name: 'amountAndVolume',
+            label: 'Amount',
+            attrs: {
+                style: 'white-space: normal !important;"'
+            }
+        },{
+            name: 'route',
+            label: 'Route'
+        },{
+            name: 'date',
+            label: 'Start Date'
+        },{
+            name: 'ElapseHours',
+            label: 'Hours Elapsed'
+
+        },{
+            name: 'enddate',
+            label: 'End Date'
+
+        },{
+            name: 'remark',
+            label: 'Remark'
+        },{
+            name: 'category',
+            label: 'Category'
+        }];
+    },
+
     //Added 4-28-2016 R.Blasa
     appendCases: function(toSet, results){
         var values = [];
