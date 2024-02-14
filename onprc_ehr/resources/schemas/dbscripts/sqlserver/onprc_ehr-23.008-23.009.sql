@@ -393,7 +393,7 @@ END  ---(While)
      ---- Create a master records of the last most recent entries
     If exists (Select * from onprc_ehr.SciShieldTemp)
     BEGiN
-       Insert into onprc_ehr..SciShieldMasterTemp
+       Insert into onprc_ehr.SciShieldMasterTemp
        select
          employeeid,
          requirementname,
