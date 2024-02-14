@@ -14,4 +14,7 @@
         <sort column="date" descending="true"/>
         <sort column="created" descending="true"/>
     </sorts>
+    <filters>
+        <filter column="processed" operator="isblank"/>
+    </filters>
 </customView>
