@@ -257,7 +257,7 @@ While @TempSearchKey < @SearchKey
                               Set @SciShieldID = Null
 
 
-         Select @employeeid =employeeid,  @requirementnanme = requirementname, @completiondate = completeddate, @SciShieldID = rowid
+         Select @employeeid =rtrim(ltrim(lower(employeeid))),  @requirementnanme = requirementname, @completiondate = completeddate, @SciShieldID = rowid
              from onprc_ehr.SciShieldTemp Where  searchID = @Searchkey
 
                               ---Validate requirementname
@@ -342,7 +342,7 @@ While @TempSearchKey < @SearchKey
 
      )
       values(
-          lower(@employeeid),
+         @employeeid,
           @requirementnameFinal,
           @completiondate,
           'ONLINE TRAINING',
