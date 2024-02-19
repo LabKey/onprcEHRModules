@@ -2235,7 +2235,7 @@ public class ONPRC_EHRTriggerHelper
                 {
                     html.append("<b>Recently Updated Underutilized Animals:</b><p>");
                     html.append(id + "<p> ");
-                    html.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + "/ehr/ONPRC/EHR/participantView.view?participantId=" + id + "&activeReport:activeFlags#subjects:" + id + "&inputType:singleSubject&showReport:1&activeReport:activeFlags" + "'>");
+                    html.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + "/ONPRC/EHR/ehr-participantView.view?participantId=" + id + "&activeReport:activeFlags#subjects:" + id + "&inputType:singleSubject&showReport:1&activeReport:activeFlags" + "'>");
 
                     html.append("Click here to view this animal's Active Flag's history</a>.  <p>");
 
@@ -2245,14 +2245,14 @@ public class ONPRC_EHRTriggerHelper
                 {
                     html.append("<b>Recently Updated Cull Animals:</b><p>");
                     html.append(id + "<p> ");
-                    html.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + "/ehr/ONPRC/EHR/participantView.view?participantId=" + id + "&activeReport:activeFlags#subjects:" + id + "&inputType:singleSubject&showReport:1&activeReport:activeFlags" + "'>");
+                    html.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + "/ONPRC/EHR/ehr-participantView.view?participantId=" + id + "&activeReport:activeFlags#subjects:" + id + "&inputType:singleSubject&showReport:1&activeReport:activeFlags" + "'>");
 
                     html.append("Click here to view this animal's Active Flag's history</a>.  <p>");
 
                 }
 
                 //Provide url link to allow users to edit Cull listings
-                html.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + "/project/ONPRC/EHR/begin.view?pageId=Frequency%20Used%20Reports" + "'>");
+                html.append("<a href='" + AppProps.getInstance().getBaseServerUrl() + "/ONPRC/EHR/project-begin.view?pageId=Frequency%20Used%20Reports" + "'>");
                 html.append("Click here to view and Edit Cull/Underutilzed Report</a>.  <p>");
                 sendMessage(subject, html.toString(), recipients);
                 break;

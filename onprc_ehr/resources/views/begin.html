@@ -46,8 +46,8 @@
                     style: 'font-weight: bold;'
                 },
                 items: [
-                    {name: 'Animal History', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view?'},
-                    {name: 'Animal Search', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalSearch.view?'}
+                    {name: 'Animal History', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-animalHistory.view'},
+                    {name: 'Animal Search', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-animalSearch.view'}
                 ]
             },{
                 header: 'By Dataset',
@@ -56,9 +56,9 @@
                     style: 'font-weight: bold;'
                 },
                 items: [
-                    {name: 'Browse All Datasets', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/datasets.view?'},
-                    {name: 'Housing Queries', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/housingQueries.view?'},
-                    {name: 'Protocol and Project Queries', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/projectQueries.view?'}
+                    {name: 'Browse All Datasets', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/onprc_ehr-datasets.view'},
+                    {name: 'Housing Queries', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-housingQueries.view'},
+                    {name: 'Protocol and Project Queries', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-projectQueries.view'}
                 ]
             },{
                 header: 'By Location',
@@ -67,7 +67,7 @@
                     style: 'font-weight: bold;'
                 },
                 items: [
-                    {name: 'Search By Area, Room, or Cage', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:roomCage'}
+                    {name: 'Search By Area, Room, or Cage', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-animalHistory.view#inputType:roomCage'}
                 ]
             }]
         });
@@ -84,12 +84,12 @@
                     style: 'font-weight: bold;'
                 },
                 items: [
-                    {name: 'Records Needing Vet Review', url: '<%=contextPath%>/project' + ctx['EHRStudyContainer'] + '/begin.view?pageId=vetAdmin'},
-                    {name: 'Active Behavior Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:behaviorCases'},
-                    {name: 'Active Clinical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:cases'},
-                    {name: 'Active Surgical Cases', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgicalCases'},
-                    {name: 'Clinical Medication Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:clinMedicationSchedule'},
-                    {name: 'Surgical Medication Schedule', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/animalHistory.view#inputType:none&showReport:1&activeReport:surgMedicationSchedule'},
+                    {name: 'Records Needing Vet Review', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/project-begin.view?pageId=vetAdmin'},
+                    {name: 'Active Behavior Cases', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-animalHistory.view#inputType:none&showReport:1&activeReport:behaviorCases'},
+                    {name: 'Active Clinical Cases', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-animalHistory.view#inputType:none&showReport:1&activeReport:cases'},
+                    {name: 'Active Surgical Cases', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-animalHistory.view#inputType:none&showReport:1&activeReport:surgicalCases'},
+                    {name: 'Clinical Medication Schedule', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-animalHistory.view#inputType:none&showReport:1&activeReport:clinMedicationSchedule'},
+                    {name: 'Surgical Medication Schedule', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-animalHistory.view#inputType:none&showReport:1&activeReport:surgMedicationSchedule'},
                     {name: 'Printable Reports', url: LABKEY.ActionURL.buildURL('onprc_ehr', 'printableReports', ctx['EHRStudyContainer'])}
                 ]
             },{
@@ -99,10 +99,10 @@
                     style: 'font-weight: bold;'
                 },
                 items: [
-                    {name: 'Animal Groups', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr&query.queryName=animal_groups&query.viewName=Active Groups'},
-                    {name: 'Colony Overview', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/colonyOverview.view?'},
-                    {name: 'Room Utilization', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=roomUtilization'},
-                    {name: 'More Reports', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/moreReports.view?'}
+                    {name: 'Animal Groups', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/query-executeQuery.view?schemaName=ehr&query.queryName=animal_groups&query.viewName=Active Groups'},
+                    {name: 'Colony Overview', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/onprc_ehr-colonyOverview.view'},
+                    {name: 'Room Utilization', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/query-executeQuery.view?schemaName=ehr_lookups&query.queryName=roomUtilization'},
+                    {name: 'More Reports', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-moreReports.view'}
                 ]
             }]
         });
@@ -119,15 +119,15 @@
                     style: 'font-weight: bold;'
                 },
                 items: [
-                    {name: 'Compare Lists of Animals', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/utilities.view?'},
-                    {name: 'Bulk History Export', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/historyExport.view?'},
+                    {name: 'Compare Lists of Animals', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-utilities.view'},
+                    {name: 'Bulk History Export', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/onprc_ehr-historyExport.view'},
                     //Modified: 9-9-2019 R.Blasa  Display Basic instead of Full Expsure report
                     {name: 'Basic Exposure Report', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fExposure+Reports%2fBasicExposureMain&rs:Command=Render'},
-                    {name: 'Drug Formulary', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=drug_defaults'},
+                    {name: 'Drug Formulary', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/query-executeQuery.view?schemaName=ehr_lookups&query.queryName=drug_defaults'},
                     //Added by Kolli on 7/30/19
                     {name: 'Common Medical Abbreviations', url: '<%=contextPath%>' + '/wiki/home/Support/page.view?name=Common%20Abbreviations'},
-                    {name: 'Procedure List', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=procedures&query.viewName=Active Procedures'},
-                    {name: 'Search Center SNOMED Codes', url: '<%=contextPath%>/query' + ctx['EHRStudyContainer'] + '/executeQuery.view?schemaName=ehr_lookups&query.queryName=snomed'}
+                    {name: 'Procedure List', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/query-executeQuery.view?schemaName=ehr_lookups&query.queryName=procedures&query.viewName=Active Procedures'},
+                    {name: 'Search Center SNOMED Codes', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/query-executeQuery.view?schemaName=ehr_lookups&query.queryName=snomed'}
                 ]
             },{
                 header: 'Data Entry',
@@ -137,11 +137,11 @@
                 },
                 items: [
 //                    Modified: 4-3-2017 R.Blasa  Allow new method of presenting Necropsy entry screens
-                    {name: 'Enter Data / Task Review', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/enterData.view'},
+                    {name: 'Enter Data / Task Review', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/onprc_ehr-enterData.view'},
 
 
 
-                    {name: 'Post-administration Med Verification', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=medsignoff'}
+                    {name: 'Post-administration Med Verification', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-dataEntryForm.view?formType=medsignoff'}
                 ]
             },{
                 header: 'Service Requests',
@@ -151,11 +151,11 @@
                 },
                 items: [
                     //            Modified: 7-18-2017 R.Blasa
-                    {name: 'Manage Requests', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/serviceRequests.view'},
+                    {name: 'Manage Requests', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/onprc_ehr-serviceRequests.view'},
 
 
 
-                    {name: 'Request Labwork', url: '<%=contextPath%>/ehr' + ctx['EHRStudyContainer'] + '/dataEntryForm.view?formType=Labwork Request'}
+                    {name: 'Request Labwork', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/ehr-dataEntryForm.view?formType=Labwork Request'}
                 ]
             }]
         };
@@ -170,7 +170,7 @@
                     style: 'font-weight: bold;'
                 },
                 items: [
-                    {name: 'EHR Admin Page', url: '<%=contextPath%>/onprc_ehr' + ctx['EHRStudyContainer'] + '/ehrAdmin.view'}
+                    {name: 'EHR Admin Page', url: '<%=contextPath%>' + ctx['EHRStudyContainer'] + '/onprc_ehr-ehrAdmin.view'}
                 ]
             });
         }

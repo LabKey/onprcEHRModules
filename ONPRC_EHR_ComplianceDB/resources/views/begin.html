@@ -21,15 +21,15 @@ Ext4.onReady(function(){
         sections: [{
             header: 'Reports',
             items: [{
-                name: 'Summary of Requirements By Employee', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.employeeid/isActive~eq=true'
+                name: 'Summary of Requirements By Employee', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.employeeid/isActive~eq=true'
             },{
-                name: 'Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Overdue and Due Soon'
+                name: 'Requirements Overdue/Due Soon', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Overdue and Due Soon'
             },{
-                name: 'Procedure - Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Overdue and Due Soon withNoEHRS OccHealth'
+                name: 'Procedure - Requirements Overdue/Due Soon', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Overdue and Due Soon withNoEHRS OccHealth'
             },{
-                name: 'Occupational Health - Requirements Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Occupational%20Health%20Compliance'
+                name: 'Occupational Health - Requirements Overdue/Due Soon', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceProcedureRecentTests&query.viewName=Occupational%20Health%20Compliance'
             },{
-                name: 'Occupational Health - Measles Overdue/Due Soon', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Measles45DayAlert&query.DaysOverDue~neqornull=-1'
+                name: 'Occupational Health - Measles Overdue/Due Soon', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Measles45DayAlert&query.DaysOverDue~neqornull=-1'
             },{
                 name: 'Requirements Overdue/Due Soon (Full SSRS Reports)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Report&rs:Command=Render'
             },{
@@ -39,9 +39,9 @@ Ext4.onReady(function(){
         },{
             header: 'Employee Information',
             items: [{
-                name: 'Employee List', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
+                name: 'Employee List', url: '<%=contextPath%>' + container + '/ldk-updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
             },{
-                name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
+                name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>' + container + '/ldk-updateQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
             // },{
             //     name: 'Enter Employees Completed Requirements(Special Access)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fEmployeeCompletionDatesInput&rs:Command=Render'
 
@@ -49,32 +49,32 @@ Ext4.onReady(function(){
         },{
             header: 'Configuration of Requirements',
             items: [{
-                name: 'View/Edit Requirements Tracked In System', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Requirements&query.viewName=Active'
+                name: 'View/Edit Requirements Tracked In System', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Requirements&query.viewName=Active'
             },{
-                name: 'View/Edit Requirements For Specific Units/Categories', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=RequirementsPerCategory'
+                name: 'View/Edit Requirements For Specific Units/Categories', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=RequirementsPerCategory'
             },{
-                name: 'View/Edit Additional Requirements For Specific Employees', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=RequirementsPerEmployee'
+                name: 'View/Edit Additional Requirements For Specific Employees', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=RequirementsPerEmployee'
             },{
-                name: 'View/Edit Exemptions To Requirements', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeRequirementExemptions'
+                name: 'View/Edit Exemptions To Requirements', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeRequirementExemptions'
             },{
-                name: 'View/Edit Dates Employees Per Unit/Category', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=employeeperUnit'
+                name: 'View/Edit Dates Employees Per Unit/Category', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=employeeperUnit'
             }]
         },{
             header: 'Administration / System Maintenance',
             items: [{
-                name: 'View/Edit Allowable Employee Categories', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeCategory'
+                name: 'View/Edit Allowable Employee Categories', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeCategory'
             },{
-                name: 'View/Edit Allowable Employee Titles', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeTitles'
+                name: 'View/Edit Allowable Employee Titles', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeTitles'
             },{
-                name: 'View/Edit Allowable Employee Types', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeTypes'
+                name: 'View/Edit Allowable Employee Types', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeTypes'
             },{
-                name: 'View/Edit Allowable Requirement Types', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=RequirementType'
+                name: 'View/Edit Allowable Requirement Types', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=RequirementType'
             },{
-                name: 'View/Edit Allowable Locations', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeLocations'
+                name: 'View/Edit Allowable Locations', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeLocations'
             },{
-                name: 'View/Edit Allowable Unit Names', url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Unit_Names'
+                name: 'View/Edit Allowable Unit Names', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Unit_Names'
             },{
-                name: 'View/Edit Employee Host Names', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Compliance_Reference_Data'
+                name: 'View/Edit Employee Host Names', url: '<%=contextPath%>' + container + '/ldk-updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Compliance_Reference_Data'
             },{
                 name: 'Employee Per Unit/Category Form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ONPRC/Admin/Compliance',{formType: 'employeeunitrecords'})
             },{

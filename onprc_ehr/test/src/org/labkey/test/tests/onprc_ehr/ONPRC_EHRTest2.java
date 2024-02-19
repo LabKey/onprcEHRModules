@@ -78,7 +78,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     public AbstractContainerHelper _containerHelper = new APIContainerHelper(this);
     private final String PROJECT_NAME = "ONPRC_EHR_TestProject2";
     public DataIntegrationHelper _etlHelper = new DataIntegrationHelper(PROJECT_NAME);
-    private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
+    private final String ANIMAL_HISTORY_URL = "/" + getProjectName() + "/ehr-animalHistory.view";
 
     @BeforeClass
     @LogMethod

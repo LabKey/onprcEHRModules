@@ -255,7 +255,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BILLINGSAVECLOSE', {
     name: 'closeBtn',
     requiredQC: 'In Progress',
     errorThreshold: 'WARN',
-    successURL: '/project/ONPRC/Core%20Facilities/ART%20Core/begin.view?pageId=ART%20Core%20Billing',
+    successURL: '/ONPRC/Core%20Facilities/ART%20Core/project-begin.view?pageId=ART%20Core%20Billing',
     disabled: true,
     itemId: 'closeBtn',
     handler: function(btn){
@@ -273,7 +273,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BILLINGFINAL', {
     requiredQC: 'Completed',
     targetQC: 'Completed',
     errorThreshold: 'INFO',
-    successURL: '/project/ONPRC/Core%20Facilities/ART%20Core/begin.view?pageId=ART%20Core%20Billing',
+    successURL: '/ONPRC/Core%20Facilities/ART%20Core/project-begin.view?pageId=ART%20Core%20Billing',
     disabled: true,
     itemId: 'finalBtn',
     handler: function(btn){
