@@ -9,32 +9,32 @@ Ext4.onReady(function (){
         sections: [{
             header: 'Admin',
             items: [
-                {name: 'Genetics Calculations', url: '<%=contextPath%>/ehr<%=containerPath%>/geneticCalculationSettings.view?'},
-                {name: 'Manage EHR Study', url: '<%=contextPath%>/study<%=containerPath%>/manageStudy.view?'},
-                {name: 'Populate Initial Data', url: '<%=contextPath%>/ONPRC_EHR<%=containerPath%>/populateData.view?'},
-                {name: 'Populate Templates', url: '<%=contextPath%>/onprc_ehr<%=containerPath%>/populateTemplates.view?'},
-                {name: 'Record Delete Settings', url: '<%=contextPath%>/ehr<%=containerPath%>/recordDeleteSettings.view?'},
-                {name: 'Run Custom SQL', url: '<%=contextPath%>/ldk<%=containerPath%>/runCustomSql.view?schemaName=study'},
-                {name: 'Set EHR Module Properties', url: '<%=contextPath%>/core<%=containerPath%>/modulePropertyAdmin.view?moduleName=EHR'},
-                {name: 'Update Dataset Properties and Indexes', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureDatasetProperties.view?'},
-                {name: 'Update Study QCStates', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureQCStates.view?'},
-                {name: 'Verify Dataset Resources', url: '<%=contextPath%>/ehr<%=containerPath%>/verifyDatasetResources.view?'},
-                {name: 'Verify Dataset Columns', url: '<%=contextPath%>/ehr<%=containerPath%>/validateDataSetCols.view?'},
-                {name: 'Verify EHR Schema Indexes Are Compressed', url: '<%=contextPath%>/ehr<%=containerPath%>/ensureEHRSchemaIndexes.view?'},
-                {name: 'Cache Demographics On All Living Animals', url: '<%=contextPath%>/ehr<%=containerPath%>/cacheLivingAnimals.view?'},
-                {name: 'Prime/Refresh Data Entry Cache', url: '<%=contextPath%>/ehr<%=containerPath%>/primeDataEntryCache.view?'}
+                {name: 'Genetics Calculations', url: '<%=contextPath%><%=containerPath%>/ehr-geneticCalculationSettings.view'},
+                {name: 'Manage EHR Study', url: '<%=contextPath%><%=containerPath%>/study-manageStudy.view'},
+                {name: 'Populate Initial Data', url: '<%=contextPath%><%=containerPath%>/onprc_ehr-populateData.view'},
+                {name: 'Populate Templates', url: '<%=contextPath%><%=containerPath%>/onprc_ehr-populateTemplates.view'},
+                {name: 'Record Delete Settings', url: '<%=contextPath%><%=containerPath%>/ehr-recordDeleteSettings.view'},
+                {name: 'Run Custom SQL', url: '<%=contextPath%><%=containerPath%>/ldk-runCustomSql.view?schemaName=study'},
+                {name: 'Set EHR Module Properties', url: '<%=contextPath%><%=containerPath%>/core-modulePropertyAdmin.view?moduleName=EHR'},
+                {name: 'Update Dataset Properties and Indexes', url: '<%=contextPath%><%=containerPath%>/ehr-ensureDatasetProperties.view'},
+                {name: 'Update Study QCStates', url: '<%=contextPath%><%=containerPath%>/ehr-ensureQCStates.view'},
+                {name: 'Verify Dataset Resources', url: '<%=contextPath%><%=containerPath%>/ehr-verifyDatasetResources.view'},
+                {name: 'Verify Dataset Columns', url: '<%=contextPath%><%=containerPath%>/ehr-validateDataSetCols.view'},
+                {name: 'Verify EHR Schema Indexes Are Compressed', url: '<%=contextPath%><%=containerPath%>/ehr-ensureEHRSchemaIndexes.view'},
+                {name: 'Cache Demographics On All Living Animals', url: '<%=contextPath%><%=containerPath%>/ehr-cacheLivingAnimals.view'},
+                {name: 'Prime/Refresh Data Entry Cache', url: '<%=contextPath%><%=containerPath%>/ehr-primeDataEntryCache.view'}
             ]
         },{
             header: 'Logs',
             items: [
-                {name: 'Labkey.log', url: '<%=contextPath%>/admin/showPrimaryLog.view'},
-                {name: 'Labkey-errors.log', url: '<%=contextPath%>/admin/showAllErrors.view'},
-                {name: 'ETL Log', url: '<%=contextPath%>/onprc_ehr/showEtlLog.view'}
+                {name: 'Labkey.log', url: '<%=contextPath%>' + '/admin-showPrimaryLog.view'},
+                {name: 'Labkey-errors.log', url: '<%=contextPath%>' + '/admin-showAllErrors.view'},
+                {name: 'ETL Log', url: '<%=contextPath%>' + '/onprc_ehr-showEtlLog.view'}
             ]
         },{
             header: 'Notifications',
             items: [
-                {name: 'Notification Admin', url: '<%=contextPath%>/ldk<%=containerPath%>/notificationAdmin.view?'}
+                {name: 'Notification Admin', url: '<%=contextPath%><%=containerPath%>/ldk-notificationAdmin.view'}
             ]
         },{
             header: 'Associated Servers',

@@ -82,7 +82,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
     protected String PROJECT_NAME = "ONPRC_EHR_TestProject";
     private boolean _hasCreatedBirthRecords = false;
-    private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
+    private final String ANIMAL_HISTORY_URL = "/" + getProjectName() + "/ehr-animalHistory.view";
 
     @Override
     protected String getProjectName()

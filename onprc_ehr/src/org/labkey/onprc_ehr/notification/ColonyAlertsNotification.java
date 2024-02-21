@@ -2168,7 +2168,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     summary = summary.replaceAll("\n", " / ");
                 }
 
-                DetailsURL groupUrl = DetailsURL.fromString("/ehr/animalGroupDetails.view?", c);
+                DetailsURL groupUrl = DetailsURL.fromString("/ehr-animalGroupDetails.view", c);
                 String groupUrlString = AppProps.getInstance().getBaseServerUrl() + "/onprc_ehr/onprc" + groupUrl;
                 groupUrlString += "groupId=" + rs.getInt("groupId");
 
