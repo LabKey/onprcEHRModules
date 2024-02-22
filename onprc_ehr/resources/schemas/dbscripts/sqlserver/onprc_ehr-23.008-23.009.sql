@@ -200,7 +200,7 @@ BEGIN
 
 
 
-If exists(Select * from  ehr_compliancedb.SciShield_Data  where processed is null)
+If exists(Select * from  onprc_ehr_compliancedb.SciShield_Data  where processed is null)
 BEGIN
 
    Insert into onprc_ehr.SciShieldTemp
@@ -222,7 +222,7 @@ BEGIN
 
 
 
-      from  ehr_compliancedb.SciShield_Data
+      from  onprc_ehr_compliancedb.SciShield_Data
           where processed is null
 
           order by employeeid, requirementname, date desc
@@ -261,10 +261,10 @@ While @TempSearchKey < @SearchKey
              from onprc_ehr.SciShieldTemp Where  searchID = @Searchkey
 
                               ---Validate requirementname
-  IF exists (Select * from ehr_compliancedb.SciShield_Reference_Data where label =  @requirementnanme And columnname = 'requirementname' )
+  IF exists (Select * from onprc_ehr_compliancedb.SciShield_Reference_Data where label =  @requirementnanme And columnname = 'requirementname' )
    BEGIN
 
-       Select @requirementnameFinal = value from ehr_compliancedb.SciShield_Reference_Data where label = @requirementnanme And columnname = 'requirementname'
+       Select @requirementnameFinal = value from onprc_ehr_compliancedb.SciShield_Reference_Data where label = @requirementnanme And columnname = 'requirementname'
    END
   ELSE IF exists (Select * from ehr_compliancedb.requirements where requirementname =  @requirementnanme)
    BEGIN
@@ -276,7 +276,7 @@ While @TempSearchKey < @SearchKey
        Update ss
            Set ss.processed = 3
 
-    From ehr_compliancedb.SciShield_Data ss  Where ss.rowid = @SciShieldID
+    From onprc_ehr_compliancedb.SciShield_Data ss  Where ss.rowid = @SciShieldID
 
         If @@Error <> 0
            GoTo Err_Proc
@@ -292,7 +292,7 @@ While @TempSearchKey < @SearchKey
       Update ss
        Set ss.processed = 4
 
-    From ehr_compliancedb.SciShield_Data ss  Where ss.rowid = @SciShieldID
+    From onprc_ehr_compliancedb.SciShield_Data ss  Where ss.rowid = @SciShieldID
 
          If @@Error <> 0
               GoTo Err_Proc
@@ -309,7 +309,7 @@ While @TempSearchKey < @SearchKey
      Update ss
         Set ss.processed = 2
 
-    From ehr_compliancedb.SciShield_Data ss  Where ss.rowid = @SciShieldID
+    From onprc_ehr_compliancedb.SciShield_Data ss  Where ss.rowid = @SciShieldID
 
 
             If @@Error <> 0
@@ -362,7 +362,7 @@ While @TempSearchKey < @SearchKey
       Update ss
           Set ss.processed = 1
 
-    From ehr_compliancedb.SciShield_Data ss  Where ss.rowid = @SciShieldID
+    From onprc_ehr_compliancedb.SciShield_Data ss  Where ss.rowid = @SciShieldID
 
 
     If @@Error <> 0

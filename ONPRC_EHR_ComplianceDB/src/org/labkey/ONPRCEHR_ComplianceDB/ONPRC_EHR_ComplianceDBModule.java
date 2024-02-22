@@ -15,21 +15,27 @@
  */
 package org.labkey.ONPRCEHR_ComplianceDB;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBEntryPermission;
-import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBAdminPermission;
-import org.labkey.api.ldk.ExtendedSimpleModule;
-import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ldk.LDKService;
-import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
 import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRequirementCategoryFormType;
 import org.labkey.ONPRCEHR_ComplianceDB.dataentry.EmployeeRequirementUnitFormType;
-import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBRole;
+import org.labkey.ONPRCEHR_ComplianceDB.query.ONPRC_EHR_ComplianceDBUserSchema;
 import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBAdminRole;
+import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBEntryPermission;
+import org.labkey.ONPRCEHR_ComplianceDB.security.ONPRC_ComplianceDBRole;
+import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
+import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.buttons.ShowEditUIButton;
+import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleContext;
+import org.labkey.api.query.DefaultSchema;
+import org.labkey.api.query.QuerySchema;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.view.template.ClientDependency;
+
+import java.util.Collection;
+import java.util.Collections;
 
 
 //Created: 11-24-2020   R.Blasa
@@ -49,13 +55,32 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
     @Override
     public Double getSchemaVersion()
     {
-        return null;
+        return 24.001;
+    }
+
+    @Override
+    public @NotNull Collection<String> getSchemaNames()
+    {
+        return Collections.singleton(ONPRC_EHR_ComplianceDBSchema.NAME);
     }
 
     @Override
     public boolean hasScripts()
     {
-        return false;
+        return true;
+    }
+
+    @Override
+    protected void registerSchemas()
+    {
+        DefaultSchema.registerProvider(ONPRC_EHR_ComplianceDBSchema.NAME, new DefaultSchema.SchemaProvider(this)
+        {
+            @Override
+            public @Nullable QuerySchema createSchema(final DefaultSchema schema, Module module)
+            {
+                return new ONPRC_EHR_ComplianceDBUserSchema(schema.getUser(), schema.getContainer());
+            }
+        });
     }
 
     protected void init()
