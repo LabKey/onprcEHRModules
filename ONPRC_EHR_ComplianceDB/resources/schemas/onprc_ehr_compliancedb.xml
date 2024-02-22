@@ -96,4 +96,51 @@
             </column>
         </columns>
     </table>
+    <table tableName="SciShieldTemp" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Scishield Temp</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="searchID">
+                <columnTitle>Search ID</columnTitle>
+            </column>
+            <column columnName="employeeid">
+            </column>
+            <column columnName="requirementname">
+            </column>
+            <column columnName="completeddate">
+            </column>
+            <column columnName="comment">
+            </column>
+            <column columnName="createddate">
+            </column>
+            <column columnName="rowid">
+            </column>
+        </columns>
+    </table>
+
+    <table tableName="SciShieldMasterTemp" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Scishield Master Temp</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="searchID">
+                <columnTitle>Search ID</columnTitle>
+            </column>
+            <column columnName="employeeid">
+            </column>
+            <column columnName="requirementname">
+            </column>
+            <column columnName="completeddate">
+            </column>
+            <column columnName="comment">
+            </column>
+            <column columnName="createddate">
+            </column>
+            <column columnName="rowid">
+            </column>
+        </columns>
+    </table>
+
+</tables>
 </tables>

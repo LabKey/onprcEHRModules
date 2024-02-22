@@ -7,7 +7,7 @@
 -- Description:	Stored procedure program process SciShield INitial Data
 
 
-CREATE Procedure [onprc_ehr].[p_SciShieldHistoricalInitial]
+CREATE Procedure [onprc_ehr_compliancedb].[p_SciShieldHistoricalInitial]
 
 AS
 
@@ -46,7 +46,7 @@ GO
 
 
 
-CREATE Procedure [onprc_ehr].[p_SciShieldHistoricalFinal]
+CREATE Procedure [onprc_ehr_compliancedb].[p_SciShieldHistoricalFinal]
 
 AS
 
@@ -124,7 +124,7 @@ GO
 
 
 
-CREATE TABLE [onprc_ehr].[SciShieldTemp] (
+CREATE TABLE [onprc_ehr_compliancedb].[SciShieldTemp] (
     [searchID] [int] IDENTITY(100,1) NOT NULL,
     [employeeid] [varchar](500) NULL,
     [requirementname] [varchar](3000) NULL,
@@ -135,7 +135,7 @@ CREATE TABLE [onprc_ehr].[SciShieldTemp] (
     ) ON [PRIMARY]
     GO
 
-CREATE TABLE [onprc_ehr].[SciShieldMasterTemp](
+CREATE TABLE [onprc_ehr_compliancedb].[SciShieldMasterTemp](
     [searchID] [int] IDENTITY(100,1) NOT NULL,
     [employeeid] [varchar](500) NULL,
     [requirementname] [varchar](3000) NULL,
@@ -166,7 +166,7 @@ CREATE TABLE [onprc_ehr].[SciShieldMasterTemp](
 **
 */
 
-CREATE Procedure onprc_ehr.[p_SciShieldToPrimeProcess]
+CREATE Procedure onprc_ehr_compliancedb.[p_SciShieldToPrimeProcess]
 
 
 AS
@@ -191,7 +191,7 @@ BEGIN
 
     ---- Reset temp table
 
-         Delete onprc_ehr.SciShieldTemp
+         Delete onprc_ehr_compliancedb.SciShieldTemp
 
 
 	       If @@Error <> 0
@@ -203,7 +203,7 @@ BEGIN
 If exists(Select * from  onprc_ehr_compliancedb.SciShield_Data  where processed is null)
 BEGIN
 
-   Insert into onprc_ehr.SciShieldTemp
+   Insert into onprc_ehr_compliancedb.SciShieldTemp
      (
     employeeid,
     requirementname,
@@ -242,7 +242,7 @@ END
                     --- Start processing input records from SciShield
 
 
-          Select top 1 @searchkey = searchID from onprc_ehr.SciShieldTemp
+          Select top 1 @searchkey = searchID from onprc_ehr_compliancedb.SciShieldTemp
                   order by searchID
 
 
@@ -258,7 +258,7 @@ While @TempSearchKey < @SearchKey
 
 
          Select @employeeid =rtrim(ltrim(lower(employeeid))),  @requirementnanme = requirementname, @completiondate = completeddate, @SciShieldID = rowid
-             from onprc_ehr.SciShieldTemp Where  searchID = @Searchkey
+             from onprc_ehr_compliancedb.SciShieldTemp Where  searchID = @Searchkey
 
                               ---Validate requirementname
   IF exists (Select * from onprc_ehr_compliancedb.SciShield_Reference_Data where label =  @requirementnanme And columnname = 'requirementname' )
@@ -380,7 +380,7 @@ Next_Record:
 	                      Set @TempSearchkey = @SearchKey
 
 
-       Select Top 1 @Searchkey = searchID  from onprc_ehr.SciShieldTemp
+       Select Top 1 @Searchkey = searchID  from onprc_ehr_compliancedb.SciShieldTemp
                           Where searchID > @TempSearchkey
              Order by searchID
 
@@ -391,9 +391,9 @@ END  ---(While)
 
 
      ---- Create a master records of the last most recent entries
-    If exists (Select * from onprc_ehr.SciShieldTemp)
+    If exists (Select * from onprc_ehr_compliancedb.SciShieldTemp)
     BEGiN
-       Insert into onprc_ehr.SciShieldMasterTemp
+       Insert into onprc_ehr_compliancedb.SciShieldMasterTemp
        select
          employeeid,
          requirementname,
@@ -403,7 +403,7 @@ END  ---(While)
          rowid
 
 
-         from onprc_ehr.SciShieldTemp
+         from onprc_ehr_compliancedb.SciShieldTemp
 
 
          If @@Error <> 0
