@@ -24,7 +24,6 @@ import org.labkey.test.Locator;
 import org.labkey.test.WebTestHelper;
 import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
-import org.labkey.test.components.ext4.Window;
 import org.labkey.test.util.DataRegionTable;
 import org.labkey.test.util.Ext4Helper;
 import org.labkey.test.util.LogMethod;
@@ -42,7 +41,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
     protected static String PROJECT_NAME = "ONPRC_Billing_TestProject";
     private static final String BILLING_FOLDER_PATH = "/" + PROJECT_NAME + "/" + BILLING_FOLDER;
     private static final String EHR_FOLDER_PATH = "/" + PROJECT_NAME + "/" + FOLDER_NAME;
-    private String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
+    private String ANIMAL_HISTORY_URL = "/" + getProjectName() + "/ehr-animalHistory.view";
 
     @BeforeClass
     @LogMethod
