@@ -142,5 +142,34 @@
         </columns>
     </table>
 
-</tables>
+    <table tableName="SciShieldToPrimeTemp" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Scishield To Prime Temp</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="searchID">
+                <columnTitle>Search ID</columnTitle>
+            </column>
+            <column columnName="EmployeeId">
+            </column>
+            <column columnName="RequirementName">
+            </column>
+            <column columnName="Date">
+            </column>
+            <column columnName="Container">
+            </column>
+            <column columnName="Created">
+            </column>
+            <column columnName="CreatedBy">
+            </column>
+            <column columnName="ModifiedBy">
+            </column>
+            <column columnName="Modified">
+            </column>
+            <column columnName="trainer">
+            </column>
+        </columns>
+    </table>
+
+
 </tables>

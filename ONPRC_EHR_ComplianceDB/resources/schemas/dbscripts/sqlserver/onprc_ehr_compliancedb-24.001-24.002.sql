@@ -146,6 +146,20 @@ CREATE TABLE [onprc_ehr_compliancedb].[SciShieldMasterTemp](
     ) ON [PRIMARY]
     GO
 
+CREATE TABLE [onprc_ehr_compliancedb].[SciShieldToPrimeTemp](
+    [searchID] [int] IDENTITY(100,1) NOT NULL,
+    [EmployeeId] [varchar](255) NOT NULL,
+    [RequirementName] [varchar](255) NOT NULL,
+    [Date] [datetime] NULL,
+    [Container] [dbo].[ENTITYID] NOT NULL,
+    [Created] [datetime] NULL,
+    [CreatedBy] [dbo].[USERID] NULL,
+    [ModifiedBy] [dbo].[USERID] NULL,
+    [Modified] [datetime] NULL,
+    [trainer] [varchar](100) NULL
+    ) ON [PRIMARY]
+    GO
+
 
 
 -- Author:	R. Blasa
@@ -197,7 +211,11 @@ BEGIN
 	       If @@Error <> 0
 	           GoTo Err_Proc
 
+          Delete onprc_ehr_compliancedb.SciShieldToPrimeTemp
 
+
+	       If @@Error <> 0
+	           GoTo Err_Proc
 
 
 If exists(Select * from  onprc_ehr_compliancedb.SciShield_Data  where processed is null)
@@ -329,16 +347,16 @@ While @TempSearchKey < @SearchKey
                                     And date = @completiondate)
 
     BEGIN
-    Insert into ehr_compliancedb.completiondates
-     (employeeid,
-       requirementname,
-       date,
-       trainer,
-       container,
-       created,
-       createdby,
-       modified,
-       modifiedby
+    Insert into onprc_ehr_compliancedb.SciShieldToPrimeTemp
+     (EmployeeId,
+      RequirementName,
+      Date,
+      trainer,
+      Container,
+      Created,
+      CreatedBy,
+      Modified,
+      ModifiedBy
 
      )
       values(
@@ -355,6 +373,8 @@ While @TempSearchKey < @SearchKey
 
                        If @@Error <> 0
 	                                   GoTo Err_Proc
+
+
 
 
 ---------- Set successful entry flag
