@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>SciShield_To_Prime_Process</name>
+
+    <description>Transfers SciShield temp tables into comploiance Completiondates data set</description>
+
+
+    <transforms>
+
+        <transform id="Stored_SciShieldToPrime" type="StoredProcedure">
+            <description>Runs a stored procedure that imports data from SciShield onto Prime</description>
+            <procedure schemaName="onprc_ehr_Compliancedb" procedureName="p_SciShieldToPrimeProcess">
+            </procedure>
+        </transform>
+
+
+        <transform id="step1a">
+
+            <description>Transfer to EHR Tasks</description>
+
+            <source schemaName="LIS" queryName="TasksTemp"/>
+
+            <destination schemaName="EHR" queryName="tasks"  />
+
+        </transform>
+
+        <transform id="step2a">
+
+            <description>Transfer to Compliance Completiondates</description>
+
+            <source schemaName="onprc_ehr_compliancdb" queryName="ScishieldToPrimeTemp"/>
+
+            <destination schemaName="ehr_compliancedb" queryName="Completiondates" />
+
+        </transform>
+
+
+    </transforms>
+
+    <schedule>
+<!--Execute daily 8:30 pm-->
+        <cron expression="0 30 20 * * ?"/>
+
+    </schedule>
+
+
+</etl>
+
+
+
+
