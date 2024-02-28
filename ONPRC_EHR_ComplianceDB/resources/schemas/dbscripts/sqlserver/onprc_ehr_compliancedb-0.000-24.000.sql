@@ -19,7 +19,7 @@ CREATE TABLE onprc_ehr_compliancedb.SciShield_Data
     CONSTRAINT PK_ScieShield_Data PRIMARY KEY (RowId),
     CONSTRAINT FK_ONPRC_EHR_COMPLIANCE_SCISHIELD_DATA_CONTAINER FOREIGN KEY (Container) REFERENCES core.Containers (EntityId)
 );
-
+CREATE INDEX IX_ONPRC_EHR_COMPLIANCEDB_SCISHIELD_DATA_CONTAINER ON onprc_ehr_compliancedb.SciShield_Data (Container);
 
 CREATE TABLE onprc_ehr_compliancedb.SciShield_Reference_Data
 (
@@ -38,4 +38,6 @@ CREATE TABLE onprc_ehr_compliancedb.SciShield_Reference_Data
     CONSTRAINT pk_SciShield_reference PRIMARY KEY (value),
     CONSTRAINT FK_ONPRC_EHR_COMPLIANCE_REFERENCE_DATA_CONTAINER FOREIGN KEY (Container) REFERENCES core.Containers (EntityId)
 );
+CREATE INDEX IX_ONPRC_EHR_COMPLIANCEDB_SCISHIELD_REFERENCE_DATA_CONTAINER ON onprc_ehr_compliancedb.SciShield_Reference_Data (Container);
+
 GO
