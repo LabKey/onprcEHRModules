@@ -4,7 +4,7 @@
 
     <name>SciShield_To_Prime_Process</name>
 
-    <description>Transfers SciShield temp tables into comploiance Completiondates data set</description>
+    <description>Transfers SciShield temp tables into compliance Completiondates data set</description>
 
 
     <transforms>
