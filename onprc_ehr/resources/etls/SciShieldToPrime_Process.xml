@@ -20,7 +20,7 @@
 
             <description>Transfer temp data to Compliance Completiondates</description>
 
-            <source schemaName="onprc_ehr_compliancdb" queryName="ScishieldToPrimeTemp"/>
+            <source schemaName="onprc_ehr_compliancedb" queryName="ScishieldToPrimeTemp"/>
 
             <destination schemaName="ehr_compliancedb" queryName="Completiondates" />
 
