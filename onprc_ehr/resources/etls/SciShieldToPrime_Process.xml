@@ -18,17 +18,7 @@
 
         <transform id="step1a">
 
-            <description>Transfer to EHR Tasks</description>
-
-            <source schemaName="LIS" queryName="TasksTemp"/>
-
-            <destination schemaName="EHR" queryName="tasks"  />
-
-        </transform>
-
-        <transform id="step2a">
-
-            <description>Transfer to Compliance Completiondates</description>
+            <description>Transfer temp data to Compliance Completiondates</description>
 
             <source schemaName="onprc_ehr_compliancdb" queryName="ScishieldToPrimeTemp"/>
 
