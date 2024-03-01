@@ -85,7 +85,7 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
             },
             items: [{
                 xtype: 'container',
-                width: 380,
+                width: 780,       //Modified width  2-15-2024  R. Blasa
                 defaults: {
                     xtype: 'displayfield',
                     labelWidth: this.defaultLabelWidth
