@@ -225,9 +225,9 @@ While @TempSearchKey < @SearchKey
           @completiondate,
           'ONLINE TRAINING',
           'CD170458-C55F-102F-9907-5107380A54BE',
-          cast(getdate() as date),
+          getdate(),
           2595,
-          cast(getdate() as date),
+          getdate(),
           2595
       )
                        If @@Error <> 0
