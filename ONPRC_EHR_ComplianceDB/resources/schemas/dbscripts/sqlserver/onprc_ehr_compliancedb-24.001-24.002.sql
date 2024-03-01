@@ -29,22 +29,6 @@ CREATE TABLE [onprc_ehr_compliancedb].[SciShieldMasterTemp](
     ) ON [PRIMARY]
     GO
 
-CREATE TABLE [onprc_ehr_compliancedb].[SciShieldToPrimeTemp](
-    [searchID] [int] IDENTITY(100,1) NOT NULL,
-    [employeeid] [varchar](255) NOT NULL,
-    [requirementname] [varchar](255) NOT NULL,
-    [date] [datetime] NULL,
-    [created] [datetime] NULL,
-    [createdBy] [dbo].[USERID] NULL,
-    [modifiedBy] [dbo].[USERID] NULL,
-    [modified] [datetime] NULL,
-    [trainer] [varchar](100) NULL
-
-    CONSTRAINT pk_SciShieldToPrime PRIMARY KEY (searchID)
-     )
-    ;
-    GO
-
 
 
 -- Author:	R. Blasa
@@ -86,17 +70,9 @@ DECLARE
 
 BEGIN
 
-
-
     ---- Reset temp table
 
          Delete onprc_ehr_compliancedb.SciShieldTemp
-
-
-	       If @@Error <> 0
-	           GoTo Err_Proc
-
-          Delete onprc_ehr_compliancedb.SciShieldToPrimeTemp
 
 
 	       If @@Error <> 0
@@ -122,7 +98,6 @@ BEGIN
     date,                     ----completed Date
     getdate(),                 --- created date
     rowid                     --- SciShield unique id
-
 
 
       from  onprc_ehr_compliancedb.SciShield_Data
@@ -225,35 +200,36 @@ While @TempSearchKey < @SearchKey
   END  ----
 
 
-                                            ---- IF all previous version were validated proceed with the record insert
+                 ---- IF all previous version were validated proceed with the record insert
 
 
    IF not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = @requirementnameFinal
                                     And date = @completiondate)
 
     BEGIN
-    Insert into onprc_ehr_compliancedb.SciShieldToPrimeTemp
-     (employeeid,
-      requirementname,
-      date,
-      trainer,
-      created,
-      createdBy,
-      modified,
-      modifiedBy
+      Insert into ehr_compliancedb.completiondates
+         (employeeid,
+          requirementname,
+           date,
+           trainer,
+           container,
+           created,
+           createdby,
+           modified,
+           modifiedby
 
-     )
-      values(
-         @employeeid,
+         )
+        values(
+          @employeeid,
           @requirementnameFinal,
           @completiondate,
           'ONLINE TRAINING',
+          'CD170458-C55F-102F-9907-5107380A54BE',
           cast(getdate() as date),
           2595,
           cast(getdate() as date),
           2595
       )
-
                        If @@Error <> 0
 	                                   GoTo Err_Proc
 
