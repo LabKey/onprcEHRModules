@@ -5,7 +5,7 @@
  *
  * @param subjectId
  */
-Ext4.define('ONPC_EHR.panel.AnimalDetailsPanel', {
+Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
     extend: 'onprc_ehr.panel.SnapshotPanel',
     alias: 'widget.onprc_ehr-animaldetailspanels',
 
