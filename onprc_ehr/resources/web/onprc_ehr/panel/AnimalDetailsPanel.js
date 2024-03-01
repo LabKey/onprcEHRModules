@@ -115,6 +115,11 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
                 },{
                     fieldLabel: 'Projects / Groups',
                     name: 'assignmentsAndGroups'
+                },{
+                    // Added: 2-29-2024  R. Blasa
+                    xtype: 'ehr-snapshotchildpanel',
+                    headerLabel: 'Sustained Release Medication',
+                    name: 'sdrug'
                 }]
             },{
                 xtype: 'container',
