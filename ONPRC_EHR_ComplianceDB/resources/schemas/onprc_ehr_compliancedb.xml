@@ -171,8 +171,6 @@
             </column>
             <column columnName="Date">
             </column>
-            <column columnName="Container">
-            </column>
             <column columnName="Created">
             </column>
             <column columnName="CreatedBy">
