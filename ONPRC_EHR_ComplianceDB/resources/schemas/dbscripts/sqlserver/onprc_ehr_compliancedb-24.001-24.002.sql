@@ -7,123 +7,6 @@
 -- Description:	Stored procedure program process SciShield INitial Data
 
 
-CREATE Procedure [onprc_ehr_compliancedb].[p_SciShieldHistoricalInitial]
-
-AS
-
-BEGIN
-
-  If exists  (Select * from ehr_compliancedb.CompletionDates hh where hh.rowid in
-                                                 (select a.rowid from ehr_compliancedb.CompletionDates a where
-    a.date in  (select min(b.date) from ehr_compliancedb.CompletionDates b where b.requirementname = 'Safety - NHP Biosafety - Initial Training/Annual Refresher' And a.employeeid = b.employeeid and a.requirementname = b.requirementname)
-    )   )
-      BEGIN
-        Update  hh
-          set hh.requirementname = 'Safety - Non-Human Primate (NHP) Initial Biosafety Training'
-
-         from ehr_compliancedb.CompletionDates hh where hh.rowid in
-                     (select a.rowid from ehr_compliancedb.CompletionDates a where
-          a.date in  (select min(b.date) from ehr_compliancedb.CompletionDates b where b.requirementname = 'Safety - NHP Biosafety - Initial Training/Annual Refresher' And a.employeeid = b.employeeid and a.requirementname = b.requirementname)
-          )
-
-
-        If @@Error <> 0
-             GoTo Err_Proc
-   END
-
-
- RETURN 0
-
-
-Err_Proc:
-                    -------Error Generated
-	RETURN 1
-
-
-END
-
-GO
-
-
-
-CREATE Procedure [onprc_ehr_compliancedb].[p_SciShieldHistoricalFinal]
-
-AS
-
-BEGIN
-             --- Process final historical set for Safety - Non-Human Primate (NHP) Annual Biosafety Training
-
-  If exists  (Select * from ehr_compliancedb.CompletionDates hh
-         where hh.requirementname =  'Safety - NHP Biosafety - Initial Training/Annual Refresher')
-     BEGIN
-
-            Update  hh
-                set hh.requirementname = 'Safety - Non-Human Primate (NHP) Annual Biosafety Training'
-          from ehr_compliancedb.CompletionDates hh where hh.requirementname =  'Safety - NHP Biosafety - Initial Training/Annual Refresher'
-
-
-                 If @@Error <> 0
-                        GoTo Err_Proc
-     END
-
-
-
-                  --- Process final historical set for Safety - Chemical Safety Training - Annual
-
-   If exists  (Select * from ehr_compliancedb.CompletionDates hh where hh.requirementname =  'Safety - Chemical Safety')
-    BEGIN
-
-            Update  hh
-                     set hh.requirementname = 'Safety - Chemical Safety Training - Annual'
-            from ehr_compliancedb.CompletionDates hh where hh.requirementname =  'Safety - Chemical Safety'
-
-                         If @@Error <> 0
-                                  GoTo Err_Proc
-   END
-
-
-            --- Process final historical set for Safety - Bioquell Z2 Vaporous Hydrogen Peroxide (VHP) Decon Unit
-
- If exists  (Select * from ehr_compliancedb.CompletionDates hh where hh.requirementname =  'Safety - Bioquell Z2 Vaporous Hydrogen Peroxide (VHP) Decon Unit')
-  BEGIN
-          Update  hh
-              set hh.requirementname = 'Safety - Facility Decontamination Operator Training – Annual'
-
-         from ehr_compliancedb.CompletionDates hh where hh.requirementname =  'Safety - Bioquell Z2 Vaporous Hydrogen Peroxide (VHP) Decon Unit'
-
-                   If @@Error <> 0
-                         GoTo Err_Proc
-  END
-
-
-             --- Process final historical set for Safety - ClorDiSys Minidox Chlorine Dioxide Decon Unit
-
- If exists  (Select * from ehr_compliancedb.CompletionDates hh where hh.requirementname =  'Safety - ClorDiSys Minidox Chlorine Dioxide Decon Unit')
-  BEGIN
-       update  hh
-            set hh.requirementname = 'Safety - Facility Decontamination Operator Training – Annual'
-       from ehr_compliancedb.CompletionDates hh where hh.requirementname =  'Safety - ClorDiSys Minidox Chlorine Dioxide Decon Unit'
-
-                  If @@Error <> 0
-                         GoTo Err_Proc
-  END
-
-
-RETURN 0
-
-
-Err_Proc:
-                    -------Error Generated
-	RETURN 1
-
-
-END
-
-GO
-
-
-
-
 CREATE TABLE [onprc_ehr_compliancedb].[SciShieldTemp] (
     [searchID] [int] IDENTITY(100,1) NOT NULL,
     [employeeid] [varchar](500) NULL,
@@ -148,16 +31,18 @@ CREATE TABLE [onprc_ehr_compliancedb].[SciShieldMasterTemp](
 
 CREATE TABLE [onprc_ehr_compliancedb].[SciShieldToPrimeTemp](
     [searchID] [int] IDENTITY(100,1) NOT NULL,
-    [EmployeeId] [varchar](255) NOT NULL,
-    [RequirementName] [varchar](255) NOT NULL,
-    [Date] [datetime] NULL,
-    [Container] [dbo].[ENTITYID] NOT NULL,
-    [Created] [datetime] NULL,
-    [CreatedBy] [dbo].[USERID] NULL,
-    [ModifiedBy] [dbo].[USERID] NULL,
-    [Modified] [datetime] NULL,
+    [employeeid] [varchar](255) NOT NULL,
+    [requirementname] [varchar](255) NOT NULL,
+    [date] [datetime] NULL,
+    [created] [datetime] NULL,
+    [createdBy] [dbo].[USERID] NULL,
+    [modifiedBy] [dbo].[USERID] NULL,
+    [modified] [datetime] NULL,
     [trainer] [varchar](100) NULL
-    ) ON [PRIMARY]
+
+    CONSTRAINT pk_SciShieldToPrime PRIMARY KEY (searchID)
+     )
+    ;
     GO
 
 
@@ -348,15 +233,14 @@ While @TempSearchKey < @SearchKey
 
     BEGIN
     Insert into onprc_ehr_compliancedb.SciShieldToPrimeTemp
-     (EmployeeId,
-      RequirementName,
-      Date,
+     (employeeid,
+      requirementname,
+      date,
       trainer,
-      Container,
-      Created,
-      CreatedBy,
-      Modified,
-      ModifiedBy
+      created,
+      createdBy,
+      modified,
+      modifiedBy
 
      )
       values(
@@ -364,7 +248,6 @@ While @TempSearchKey < @SearchKey
           @requirementnameFinal,
           @completiondate,
           'ONLINE TRAINING',
-          'CD170458-C55F-102F-9907-5107380A54BE',
           cast(getdate() as date),
           2595,
           cast(getdate() as date),
