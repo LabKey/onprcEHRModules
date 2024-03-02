@@ -37,7 +37,7 @@ public class RoundsRemarksFormSection extends SimpleFormSection
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/ClinicalRemarkPanel.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/grid/RoundsRemarksGridPanel.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/grid/ObservationsRowEditorGridPanel.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/plugin/ClinicalRemarksRowEditor.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/ClinicalRemarksRowEditor.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalObservationsClientStore.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/roundsButtons.js"));
 
