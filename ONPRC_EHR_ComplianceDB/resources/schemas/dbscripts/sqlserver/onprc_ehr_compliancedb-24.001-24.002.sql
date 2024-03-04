@@ -108,7 +108,14 @@ BEGIN
                 If @@Error <> 0
                      GoTo Err_Proc
 
-END
+ END
+
+ELSE             ------ No new entries exit
+  BEGIN
+
+    GOTO No_Records
+
+  END
 
                         --- Initialize Varaibles
 
