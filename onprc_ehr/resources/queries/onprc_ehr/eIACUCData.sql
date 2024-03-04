@@ -1,3 +1,8 @@
+/*This dataset combines eIACUCFields and eIACUCDetails
+     Includes fields from eiACUC2
+     Updated 3/4/2024 jonesga*/
+
+
 SELECT p.rowid,
        p.Protocol_ID,
        Case

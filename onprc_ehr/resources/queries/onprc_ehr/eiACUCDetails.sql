@@ -1,3 +1,8 @@
+/*This dataset provides the base Protocol and which revision is being presented
+     Includes fields from eiACUC2
+     Updated 3/4/2024 jonesga*/
+
+
 Select
     rowid,
     Case

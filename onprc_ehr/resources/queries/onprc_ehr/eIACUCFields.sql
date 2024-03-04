@@ -1,3 +1,11 @@
+/*This dataset provides the fields for the protcol details page
+     Includes fields from eiACUC2
+     Updated 3/4/2024 jonesga*/
+
+
+
+
+
 SELECT eIACUCDAta.rowid,
        eIACUCDAta.Protocol_ID,
        eIACUCDAta.BaseProtocol,
