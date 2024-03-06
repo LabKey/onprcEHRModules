@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-Ext4.define('EHR.plugin.ClinicalRemarksRowEditor', {
+Ext4.define('ONPRC_EHR.plugin.ClinicalRemarksRowEditor', {
     extend: 'EHR.plugin.RowEditor',
 
     getObservationPanelCfg: function(){
