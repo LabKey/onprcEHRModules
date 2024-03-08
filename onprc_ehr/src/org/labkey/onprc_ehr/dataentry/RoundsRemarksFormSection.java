@@ -28,6 +28,7 @@ public class RoundsRemarksFormSection extends SimpleFormSection
 {
     public RoundsRemarksFormSection(String label, EHRService.FORM_SECTION_LOCATION location)
     {
+//        super("study", "Clinical Remarks", label, "onprc_ehr-roundsremarksgridpanel", location);
         super("study", "Clinical Remarks", label, "onprc_ehr-roundsremarksgridpanel", location);
         addClientDependency(ClientDependency.supplierFromPath("ehr/plugin/ClinicalObservationsCellEditing.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/ClinicalRemarkPanel.js"));
@@ -36,6 +37,8 @@ public class RoundsRemarksFormSection extends SimpleFormSection
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/ClinicalRemarksRowEditor.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalObservationsClientStore.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/roundsButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/AnimalDetailsExtendedPanel.js"));
+
 
         setTemplateMode(TEMPLATE_MODE.NONE);
     }
