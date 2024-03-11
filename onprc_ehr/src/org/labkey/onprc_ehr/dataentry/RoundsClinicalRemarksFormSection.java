@@ -23,23 +23,22 @@ import org.labkey.api.view.template.ClientDependency;
 
 import java.util.List;
 
-/**
- * User: bimber
- * Date: 4/27/13
- * Time: 10:54 AM
- */
-public class RoundsRemarksFormSection extends SimpleFormSection
+//Modified : 3-5-2024  R. Blasa
+public class RoundsClinicalRemarksFormSection extends SimpleFormSection
 {
-    public RoundsRemarksFormSection(String label, EHRService.FORM_SECTION_LOCATION location)
+    public RoundsClinicalRemarksFormSection(String label, EHRService.FORM_SECTION_LOCATION location)
     {
-        super("study", "Clinical Remarks", label, "ehr-roundsremarksgridpanel", location);
+//        super("study", "Clinical Remarks", label, "onprc_ehr-roundsremarksgridpanel", location);
+        super("study", "Clinical Remarks", label, "onprc_ehr-roundsremarksgridpanel", location);
         addClientDependency(ClientDependency.supplierFromPath("ehr/plugin/ClinicalObservationsCellEditing.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/ClinicalRemarkPanel.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/grid/RoundsRemarksGridPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/RoundsRemarksGridPanel.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/grid/ObservationsRowEditorGridPanel.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/plugin/ClinicalRemarksRowEditor.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/ClinicalRemarksRowEditor.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalObservationsClientStore.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/roundsButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/AnimalDetailsExtendedPanel.js"));
+
 
         setTemplateMode(TEMPLATE_MODE.NONE);
     }
