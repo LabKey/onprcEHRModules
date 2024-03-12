@@ -58,6 +58,13 @@ public class TreatmentsFormType extends TaskForm
 
         }
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"));
+//Added 3-12-2024
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"));
+
+        //        Added: 3-12-2024
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/Med_ValidateDataEntryPanel.js"));
+        setJavascriptClass("ONPRC_EHR.panel.ClinicalMedicationDataEntryPanel");
+
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
         {
