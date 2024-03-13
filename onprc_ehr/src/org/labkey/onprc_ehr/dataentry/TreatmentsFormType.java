@@ -18,10 +18,10 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
+import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
@@ -55,9 +55,12 @@ public class TreatmentsFormType extends TaskForm
         for (FormSection s : this.getFormSections())
         {
             s.addConfigSource("TreatmentDrugsClinical");
-
         }
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"));
+        //Added by Kollil, 3/12/24
+        //This java script was added to show a message box when the user selects MPA medication on the Medication order form.
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentOrdersDataEntryPanel.js"));
+        setJavascriptClass("ONPRC_EHR.panel.TreatmentOrdersDataEntryPanel");
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
         {
@@ -65,8 +68,6 @@ public class TreatmentsFormType extends TaskForm
         }
 
     }
-
-
 
     @Override
     protected boolean canInsert()
@@ -76,4 +77,5 @@ public class TreatmentsFormType extends TaskForm
 
         return super.canInsert();
     }
+
 }
