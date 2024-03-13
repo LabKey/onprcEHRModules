@@ -355,14 +355,14 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Modified: 1-17-2019  R.Blasa
         try
         {
-            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology Laboratory Summary Report", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory+Report&rs:Command=Render")
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology Laboratory Summary Report", this, new URLHelper("https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory+Report&rs:Command=Render")
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
                 //Modified: 1-17-2019  R.Blasa
                 public String toString()
                 {
-                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory+Report&rs:Command=Render";
+                    return "https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory+Report&rs:Command=Render";
 
                 }
             }, "Clinical Pathology");
@@ -375,14 +375,14 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Modified 9-9-2019 R.Blasa  Show Full Exposure report instead of Basic Expsoure
         try
         {
-            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Exposure Report", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fExposure+Reports%2fBasicExposureMain&rs:Command=Render")
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Exposure Report", this, new URLHelper("https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fExposure+Reports%2fBasicExposureMain&rs:Command=Render")
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
                 //Modified: 1-17-2019  R.Blasa
                 public String toString()
                 {
-                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fExposure+Reports%2fDemographicsReportMain&rs:Command=Render";
+                    return "https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fExposure+Reports%2fDemographicsReportMain&rs:Command=Render";
                 }
             }, "Exposure Report");
         }
@@ -395,14 +395,14 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Modified: 9-7-2023  R.Blasa
         try
         {
-            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology CPL Surface Sanitation Summary Report", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render")
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology CPL Surface Sanitation Summary Report", this, new URLHelper("https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render")
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
                 public String toString()
                 {
 
-                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render";
+                    return "https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render";
 
                 }
             }, "Clinical Pathology");
@@ -415,14 +415,14 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Modified: 9-7-2023  R.Blasa
         try
         {
-            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Room Utilization Audit History", this, new URLHelper("http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Test%2fPrimeCagingAuditHistoryReport&rs:Command=Render")
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Room Utilization Audit History", this, new URLHelper("https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Test%2fPrimeCagingAuditHistoryReport&rs:Command=Render")
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
                 public String toString()
                 {
 
-                    return "http://primateapp3.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Test%2fPrimeCagingAuditHistoryReport&rs:Command=Render";
+                    return "https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Test%2fPrimeCagingAuditHistoryReport&rs:Command=Render";
 
                 }
             }, "Colony Management");
