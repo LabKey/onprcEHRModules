@@ -202,13 +202,14 @@ Ext4.define('EHR.window.ApplyTemplateWindow', {
                                 offsetDate = Ext4.Date.clearTime(offsetDate);
                                 offsetDate.setHours("08:00");
                                 date = offsetDate;
+
+
+                                var obj = {
+                                   date: date
+                                };
                             }
 
-                            var obj = {
 
-                                date: date
-
-                            };
                             //verify store exists
                             if (!store){
                                 LDK.Utils.logToServer({
