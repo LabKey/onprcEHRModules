@@ -1,3 +1,10 @@
+--this dataset provides the fields for the protcol details page
+--Includes fields from eiACUC2
+--Updated 3/4/2024 jonesga*/
+
+
+
+
 <script type="text/javascript">
 
 Ext4.onReady(function (){
@@ -48,8 +55,8 @@ Ext4.onReady(function (){
 
     LABKEY.Query.selectRows({
         requiredVersion: 9.1,
-        schemaName: 'ehr',
-        queryName: 'protocol',
+        schemaName: 'onprc_ehr',
+        queryName: 'eIACUCFields',
         columns: 'protocol,displayName',
         filterArray: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback(),
@@ -110,8 +117,8 @@ Ext4.onReady(function (){
 
     Ext4.create('LDK.panel.DetailsPanel', {
         store: {
-            schemaName: 'ehr',
-            queryName: 'protocol',
+            schemaName: 'onprc_ehr',
+            queryName: 'eIACUCfields',
             filterArray: [
                 LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)
             ]
