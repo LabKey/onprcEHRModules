@@ -1261,6 +1261,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitAndClickAndWait(Locators.bodyPanel().append(Locator.tagContainingText("a", "EHR Admin Page")));
         waitAndClickAndWait(Locator.tagContainingText("a", "Genetics Calculations"));
         _ext4Helper.checkCheckbox(Ext4Helper.Locators.checkbox(this, "Kinship validation?:"));
+        _ext4Helper.checkCheckbox(Ext4Helper.Locators.checkbox(this, "Allow Import During Business Hours?:"));
         Locator loc = Locator.inputByIdContaining("numberfield");
         waitForElement(loc);
         setFormElement(loc, "23");
