@@ -5,7 +5,7 @@
  *
  * @param subjectId
  */
-Ext4.define('ONPC_EHR.panel.AnimalDetailsPanel', {
+Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
     extend: 'onprc_ehr.panel.SnapshotPanel',
     alias: 'widget.onprc_ehr-animaldetailspanels',
 
@@ -85,7 +85,7 @@ Ext4.define('ONPC_EHR.panel.AnimalDetailsPanel', {
             },
             items: [{
                 xtype: 'container',
-                width: 380,
+                width: 780,       //Modified width  2-15-2024  R. Blasa
                 defaults: {
                     xtype: 'displayfield',
                     labelWidth: this.defaultLabelWidth
@@ -115,6 +115,11 @@ Ext4.define('ONPC_EHR.panel.AnimalDetailsPanel', {
                 },{
                     fieldLabel: 'Projects / Groups',
                     name: 'assignmentsAndGroups'
+                },{
+                    // Added: 2-29-2024  R. Blasa
+                    xtype: 'ehr-snapshotchildpanel',
+                    headerLabel: 'Sustained Release Medication',
+                    name: 'sdrug'
                 }]
             },{
                 xtype: 'container',

@@ -1380,4 +1380,22 @@
         </columns>
     </table>
 
+    <!--Created by: Kollil, 1/29/24. Created a temp table to store the clinical remarks  -->
+    <table tableName="Temp_ClnRemarks" tableDbType="TABLE">
+        <columns>
+            <column columnName="date" />
+            <column columnName="qcstate" />
+            <column columnName="participantid" />
+            <column columnName="project" />
+            <column columnName="remark" />
+            <column columnName="p" />
+            <column columnName="performedby" />
+            <column columnName="category" />
+            <column columnName="taskId" />
+            <column columnName="createdby" />
+            <column columnName="modifiedby" />
+
+        </columns>
+    </table>
+
 </tables>
