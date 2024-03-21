@@ -14,7 +14,7 @@
  * @cfg allowChooseIds
  * @cfg idSelectionMode
  */
-Ext4.define('EHR.window.ApplyTemplateWindow', {
+Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
     extend: 'Ext.window.Window',
     allowChooseIds: true,
     idSelectionMode: 'multi',
@@ -200,15 +200,14 @@ Ext4.define('EHR.window.ApplyTemplateWindow', {
                             if (data.offset){
                                 var offsetDate = Ext4.Date.add(date, Ext4.Date.DAY, data.offset);
                                 offsetDate = Ext4.Date.clearTime(offsetDate);
-                                offsetDate.setHours("08:00");
+                                offsetDate.setHours(8);
                                 date = offsetDate;
 
 
-                                var obj = {
-                                   date: date
-                                };
                             }
-
+                            var obj = {
+                                date: date
+                            };
 
                             //verify store exists
                             if (!store){
@@ -313,7 +312,7 @@ Ext4.define('EHR.window.ApplyTemplateWindow', {
         this.hide();
         Ext4.Msg.wait("Loading Template...");
 
-        EHR.window.ApplyTemplateWindow.loadTemplateRecords(this.afterLoadTemplate, this, this.targetGrid.store.storeCollection, templateId, records);
+        ONPRC_EHR.window.ApplyTemplateWindow.loadTemplateRecords(this.afterLoadTemplate, this, this.targetGrid.store.storeCollection, templateId, records);
     },
 
     afterLoadTemplate: function(recMap){
@@ -439,7 +438,7 @@ Ext4.define('EHR.window.ApplyTemplateWindow', {
 });
 
 
-EHR.DataEntryUtils.registerGridButton('TEMPLATE', function(config){
+EHR.DataEntryUtils.registerGridButton('TEMPLATEREV', function(config){
     config = config || {};
 
     return Ext4.Object.merge({
@@ -483,7 +482,7 @@ EHR.DataEntryUtils.registerGridButton('TEMPLATE', function(config){
                         templateId: row.entityid,
                         scope: this,
                         handler: function(btn){
-                            Ext4.create('EHR.window.ApplyTemplateWindow', {
+                            Ext4.create('ONPRC_EHR.window.ApplyTemplateWindow', {
                                 idSelectionMode: menuBtn.idSelectionMode || 'multi',
                                 targetGrid: this.grid,
                                 formType: this.grid.formConfig.name,
