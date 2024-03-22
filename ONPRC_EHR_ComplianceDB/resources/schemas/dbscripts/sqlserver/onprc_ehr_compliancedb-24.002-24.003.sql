@@ -77,13 +77,9 @@ CREATE TABLE onprc_ehr_compliancedb.Employee_Assigned_Location
 /*
 **
 ** 	Created by
-**      Blasa  		1-25-2024               Import process from ScieShield To Prime Compliance Module
+**      Blasa  		1-25-2024         Process to format Complance report as an excel table.
 **
-**                      Processed codes:    Null    ---Not Processed
-**                          1 ------  Successfully posted
-**                          2 ---------  invalid Employeeid
-**                          3  ---------  Undefined Requirement Name
-**                          4---------     Already exists Compliance module
+**
 **
 **
 **
