@@ -38,6 +38,8 @@
         <column name="p2date"/>
         <column name="p2"/>
         <column name="id/assignedVet/assignedVet"/>
+        <column name="Id/activeFlags/Alert::valueField"/>
+        <column name="Id/MostRecentTB/MonthsSinceLastTB"/>
     </columns>
     <sorts>
         <sort column="Id/curLocation/room"/>

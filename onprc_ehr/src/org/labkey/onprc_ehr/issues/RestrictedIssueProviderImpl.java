@@ -12,6 +12,7 @@ import org.labkey.api.query.ValidationError;
 import org.labkey.api.security.Group;
 import org.labkey.api.security.SecurityManager;
 import org.labkey.api.security.User;
+import org.labkey.api.security.UserManager;
 import org.labkey.api.security.ValidEmail;
 import org.labkey.api.util.Pair;
 
@@ -114,6 +115,11 @@ public class RestrictedIssueProviderImpl implements RestrictedIssueProvider
 
     private boolean checkAccess(User user, @NotNull Issue issue, @Nullable Group groupWithAccess)
     {
+        // Creators have access to their own issues
+        User createdBy = UserManager.getUser(issue.getCreatedBy());
+        if (createdBy != null && createdBy.equals(user))
+            return true;
+
         // Assigned to users have access
         if (Objects.equals(issue.getAssignedTo(), user.getUserId()))
             return true;
