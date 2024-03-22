@@ -4,6 +4,7 @@
         <column name="charge_unit"/>
         <column name="testing_location" />
         <column name="test_method" />
+        <column name="test_type" />
         <column name="colony_count" />
         <column name="pass_fail" />
         <column name="performedby"/>
