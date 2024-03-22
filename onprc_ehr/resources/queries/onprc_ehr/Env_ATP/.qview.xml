@@ -11,7 +11,7 @@
         <column name="performedby"/>
         <column name="qcstate"/>
         <column name="taskid"/>
-        <column name="formsort"/>
+
 
     </columns>
 

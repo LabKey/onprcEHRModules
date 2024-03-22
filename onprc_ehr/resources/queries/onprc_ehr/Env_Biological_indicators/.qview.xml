@@ -13,7 +13,7 @@
         <column name="remarks"/>
         <column name="qcstate"/>
         <column name="taskid"/>
-        <column name="formsort"/>
+
 
     </columns>
 
