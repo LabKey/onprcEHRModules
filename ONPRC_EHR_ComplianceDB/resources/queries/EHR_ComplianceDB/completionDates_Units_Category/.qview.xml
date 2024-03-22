@@ -1,0 +1,64 @@
+
+
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+<columns>
+    <column name="employeeid">
+        <properties>
+            <property name="columnTitle" value="Employee ID"/>
+        </properties>
+    </column>
+    <column name="lastName">
+        <properties>
+            <property name="columnTitle" value="Last Name"/>
+        </properties>
+    </column>
+    <column name="firstName">
+        <properties>
+            <property name="columnTitle" value="First Name"/>
+        </properties>
+    </column>
+    <column name="host">
+        <properties>
+            <property name="columnTitle" value="Host"/>
+        </properties>
+    </column>
+    <column name="enddate">
+        <properties>
+            <property name="columnTitle" value="End Date"/>
+        </properties>
+    </column>
+    <column name="requirementname">
+        <properties>
+            <property name="columnTitle" value="Requirement Name"/>
+        </properties>
+    </column>
+    <column name="type">
+        <properties>
+            <property name="columnTitle" value="Requirement Type"/>
+        </properties>
+    </column>
+    <column name="date">
+        <properties>
+            <property name="columnTitle" value="Date Completed"/>
+        </properties>
+    </column>
+
+    <column name="result"/>
+    <column name="comment"/>
+    <column name="trainer"/>
+    <column name="FileName"/>
+    <column name="snooze_date"/>
+</columns>
+<sorts>
+<sort column="employeeid/lastName" descending="false"/>
+<sort column="employeeid/firstName" descending="false"/>
+<sort column="requirementname" descending="false"/>
+<sort column="date" descending="true"/>
+</sorts>
+        </customView>
+
+
+
+
+
+
