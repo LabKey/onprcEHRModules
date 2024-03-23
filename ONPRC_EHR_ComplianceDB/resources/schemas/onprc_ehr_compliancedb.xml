@@ -176,9 +176,6 @@
                 <columnTitle>Employee Status</columnTitle>
             </column>
 
-            <column columnName="comment">
-                <columnTitle>Comments</columnTitle>
-            </column>
             <column columnName="Total Compliance">
                 <columnTitle>Total Compliance</columnTitle>
             </column>
@@ -210,7 +207,7 @@
         <column columnName="Flu">
             <columnTitle>Flu</columnTitle>
         </column>
-            <column columnName="TB Health Surveillancer">
+            <column columnName="TB Health Surveillance">
             <columnTitle>TB Health Surveillance</columnTitle>
         </column>
         <column columnName="TB Annual">

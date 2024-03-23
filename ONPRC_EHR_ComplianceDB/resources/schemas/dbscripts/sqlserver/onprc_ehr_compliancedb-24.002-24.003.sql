@@ -35,7 +35,7 @@ CREATE TABLE onprc_ehr_compliancedb.OccHealth_Data
         CONSTRAINT PK_OccHealth_Data PRIMARY KEY (RowId),
 
 );
-CREATE INDEX IX_ONPRC_EHR_COMPLIANCEDB_OccHealth_DATA_CONTAINER ON onprc_ehr_compliancedb.OccHealth_Data (Container);
+GO
 
 
 
