@@ -1,0 +1,11 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="OccHealth_Data" tableDbType="TABLE">
+                <tableTitle>OccHealth Data</tableTitle>
+                <columns>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
