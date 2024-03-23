@@ -1,0 +1,23 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" >
+    <columns>
+        <column name="date"/>
+        <column name="charge_unit"/>
+        <column name="testing_location" />
+        <column name="test_method" />
+        <column name="test_type" />
+        <column name="colony_count" />
+        <column name="pass_fail" />
+        <column name="performedby"/>
+          <column name="action"/>
+        <column name="remarks"/>
+        <column name="qcstate"/>
+        <column name="taskid"/>
+
+
+    </columns>
+
+    <sorts>
+        <sort column="date" descending="true"/>
+        <sort column="formsort" descending="false"/>
+    </sorts>
+</customView>

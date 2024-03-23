@@ -1,0 +1,7 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart"
+         title="Environmental Assessment Landing Page">
+    <view name="EnvironmentalLandingpage"/>
+    <locations>
+        <location name="body"/>
+    </locations>
+</webpart>

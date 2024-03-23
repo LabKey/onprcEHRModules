@@ -1,0 +1,85 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Environmental_Assessment" tableDbType="TABLE">
+                <tableTitle>Environmental Assessment</tableTitle>
+                <columns>
+                    <column columnName="date">
+                        <columnTitle>Date</columnTitle>
+                        <formatString>Date</formatString>
+                    </column>
+
+                    <column columnName="service_requested">
+                        <columnTitle>Service Requested</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="testing_location">
+                        <columnTitle>Test Location</columnTitle>
+                        <displayWidth>150</displayWidth>
+                    </column>
+                    <column columnName="test_method">
+                        <columnTitle>Method</columnTitle>
+                        <displayWidth>150</displayWidth>
+                    </column>
+                    <column columnName="charge_unit">
+                        <columnTitle>Charge Unit</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+
+                    <column columnName="pass_fail">
+                        <columnTitle>Pass/Fail</columnTitle>
+                        <displayWidth>50</displayWidth>
+                    </column>
+                    <column columnName="test_results">
+                        <columnTitle>Test Results</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="test_type">
+                        <columnTitle>Test Type</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="qcstate">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="biological_BI#">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="retest">
+                        <columnTitle>Results Read By</columnTitle>
+                        <displayWidth>60</displayWidth>
+                        <isHidden>false</isHidden>
+                    </column>
+                    <column columnName="colony_count">
+                        <columnTitle>Colony Count</columnTitle>
+                        <displayWidth>60</displayWidth>
+                        <isHidden>false</isHidden>
+                    </column>
+
+                    <column columnName="surface_tested">
+                        <columnTitle>Surface Tested</columnTitle>
+                        <displayWidth>80</displayWidth>
+                        <isHidden>false</isHidden>
+                    </column>
+                    <column columnName="remarks">
+                        <columnTitle>Comments</columnTitle>
+                        <displayWidth>200</displayWidth>
+                    </column>
+                    <column columnName="performedby">
+                        <columnTitle>Collected by</columnTitle>
+                    </column>
+                    <column columnName="taskid">
+                        <columnTitle>Task ID</columnTitle>
+                        <isHidden>true</isHidden>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>tasks</fkTable>
+                            <fkColumnName>taskid</fkColumnName>
+                            <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                </columns>
+
+            </table>
+        </tables>
+    </metadata>
+</query>

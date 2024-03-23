@@ -1,0 +1,9 @@
+<view xmlns="http://labkey.org/data/xml/view" frame="portal">
+    <permissions>
+        <permission name="insert"/>
+    </permissions>
+    <dependencies>
+        <dependency path="ehr.context" />
+        <dependency path="onprc_ehr/panel/EnvironmentalEnterDataPanel.js"/>
+    </dependencies>
+</view>
