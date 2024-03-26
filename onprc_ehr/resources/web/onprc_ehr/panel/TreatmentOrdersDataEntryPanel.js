@@ -23,7 +23,7 @@ Ext4.define('ONPRC_EHR.panel.TreatmentOrdersDataEntryPanel', {
             return;
 
         if (ids.length){
-            Ext4.Msg.confirm('Medication Question', 'Have you confirmed start date on CMU Calendar?', function(val){
+            Ext4.Msg.confirm('Medication Question', 'Have you confirmed MPA start date on CMU Calendar?', function(val){
                 if (val == 'yes'){
                     this.onSubmit(btn, true);
                 }
