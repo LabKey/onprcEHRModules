@@ -1,9 +1,3 @@
-/*
- * Copyright (c) 2014 LabKey Corporation
- *
- * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
- */
-
 // Created: 3-12-2024 by Kollil and Raymond
 /*
 This java script is added to create a pop-up message box when a MPA injection is selected in the medication order form.
@@ -30,7 +24,7 @@ Ext4.define('ONPRC_EHR.panel.TreatmentOrdersDataEntryPanel', {
             return;
 
         if (ids.length){
-            Ext4.Msg.confirm('Medication Question', 'Have you confirmed start date on CMU Calendar?', function(val){
+            Ext4.Msg.confirm('Medication Question', 'Have you confirmed MPA start date on CMU Calendar?', function(val){
                 if (val == 'yes'){
                     this.onSubmit(btn, true);
                 }
