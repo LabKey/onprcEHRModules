@@ -59,14 +59,17 @@ public class TreatmentsFormType extends TaskForm
         }
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"));
 
+        //Added by Kollil, 3/12/24
+        //This script was added to show a pop-up question box when the user selects MPA medication on the Medication order form.
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/TreatmentOrdersDataEntryPanel.js"));
+        setJavascriptClass("ONPRC_EHR.panel.TreatmentOrdersDataEntryPanel");
+
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
         {
             addSection(new MiscChargesFormSection(EHRService.FORM_SECTION_LOCATION.Body));
         }
 
     }
-
-
 
     @Override
     protected boolean canInsert()
