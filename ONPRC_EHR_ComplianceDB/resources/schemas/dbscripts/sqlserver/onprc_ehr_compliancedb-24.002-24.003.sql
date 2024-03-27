@@ -29,7 +29,11 @@ CREATE TABLE onprc_ehr_compliancedb.OccHealth_Data
     [Clinical MRI]           nvarchar(100) null,
     [Supervisor Email]       nvarchar(100) null,
     [Processd]               integer null
-
+    Container                ENTITYID NOT NULL,
+    CreatedBy               USERID,
+    Created                 datetime,
+    ModifiedBy              USERID,
+    Modified                datetime
 
 
 
@@ -50,6 +54,8 @@ CREATE TABLE [onprc_ehr_compliancedb].[OccHealthTemp] (
     [rowid] [int] NULL
     ) ON [PRIMARY]
     GO
+
+
 
 CREATE TABLE [onprc_ehr_compliancedb].[OccHealthMasterTemp](
     [searchID] [int] IDENTITY(100,1) NOT NULL,
