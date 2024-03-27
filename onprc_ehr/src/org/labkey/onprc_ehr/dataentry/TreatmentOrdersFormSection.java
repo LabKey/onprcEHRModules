@@ -55,10 +55,9 @@ public class TreatmentOrdersFormSection extends DrugAdministrationFormSection
     {
         List<String> defaultButtons = super.getTbarButtons();
         defaultButtons.remove("SEDATIONHELPER");
+        defaultButtons.remove("TEMPLATE");
 
-        int idx = defaultButtons.indexOf("TEMPLATE");
-        assert idx > -1;
-        defaultButtons.add(idx+1, "TEMPLATEREV");
+        defaultButtons.add("TEMPLATEREV");
 
         return defaultButtons;
     }
