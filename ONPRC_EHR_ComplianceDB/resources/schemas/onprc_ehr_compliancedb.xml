@@ -223,6 +223,9 @@
         <column columnName="Supervisor Email">
             <columnTitle>Supervisor Email</columnTitle>
         </column>
+            <column columnName="Processed">
+                <columnTitle>Processed</columnTitle>
+            </column>
     </columns>
     </table>
 

@@ -9,9 +9,9 @@
 CREATE TABLE onprc_ehr_compliancedb.OccHealth_Data
 (
     RowId INT IDENTITY(1,1) NOT NULL,
-    Email                  nvarchar(500) null,
-    [Person Type]          nvarchar(255) null,
-    [Employee Status]      nvarchar(100) null,
+    Email                   nvarchar(500) null,
+    [Person Type]           nvarchar(255) null,
+    [Employee Status]       nvarchar(100) null,
     [Total Compliance]      nvarchar(100) null,
     [West Campus]           nvarchar(100) null,
     [Hep B]                 nvarchar(100) null,
@@ -27,7 +27,8 @@ CREATE TABLE onprc_ehr_compliancedb.OccHealth_Data
     [TB Annual]              nvarchar(100) null,
     [TB West Campus]         nvarchar(100) null,
     [Clinical MRI]           nvarchar(100) null,
-    [Supervisor Email]       nvarchar(100) null
+    [Supervisor Email]       nvarchar(100) null,
+    [Processd]               integer null
 
 
 
