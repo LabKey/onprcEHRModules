@@ -912,6 +912,7 @@ public class ONPRC_EHRTriggerHelper
         List<String> ret = new ArrayList<>();
         Double availableSqFt = cageRow.getSqFt();
         Double availableHeight = cageRow.getHeight();
+        String dividername = cageRow.getDividerName();
 
         Double requiredSqFt = 0.0;
         for (Double w : weights)
@@ -922,7 +923,11 @@ public class ONPRC_EHRTriggerHelper
                 requiredSqFt += s;
             }
         }
+        if ("No Slide".equalsIgnoreCase(dividername))
+        {
+            availableSqFt = availableSqFt * 2;
 
+        }
         if (requiredSqFt > availableSqFt)
         {
             ret.add("These animals are too LARGE for this cage.  Has " + Math.round(availableSqFt) + " sq ft. Requires " + Math.round(requiredSqFt) + ".");
