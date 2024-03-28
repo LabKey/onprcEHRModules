@@ -29,7 +29,7 @@ CREATE TABLE onprc_ehr_compliancedb.OccHealth_Data
     [AIRC MRI]               nvarchar(100) null,
     [Clinical MRI]           nvarchar(100) null,
     [Supervisor Email]       nvarchar(100) null,
-    [Processd]               integer null,
+    [Processed]               int   null,
     Container                ENTITYID NOT NULL,
     CreatedBy               USERID,
     Created                 datetime,
