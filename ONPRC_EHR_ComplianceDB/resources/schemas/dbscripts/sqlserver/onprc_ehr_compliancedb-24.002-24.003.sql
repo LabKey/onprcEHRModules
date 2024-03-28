@@ -28,7 +28,7 @@ CREATE TABLE onprc_ehr_compliancedb.OccHealth_Data
     [TB West Campus]         nvarchar(100) null,
     [Clinical MRI]           nvarchar(100) null,
     [Supervisor Email]       nvarchar(100) null,
-    [Processd]               integer null
+    [Processd]               integer null,
     Container                ENTITYID NOT NULL,
     CreatedBy               USERID,
     Created                 datetime,
