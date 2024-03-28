@@ -26,6 +26,7 @@ CREATE TABLE onprc_ehr_compliancedb.OccHealth_Data
     [TB Health Surveillance] nvarchar(100) null,
     [TB Annual]              nvarchar(100) null,
     [TB West Campus]         nvarchar(100) null,
+    [AIRC MRI]               nvarchar(100) null,
     [Clinical MRI]           nvarchar(100) null,
     [Supervisor Email]       nvarchar(100) null,
     [Processd]               integer null,

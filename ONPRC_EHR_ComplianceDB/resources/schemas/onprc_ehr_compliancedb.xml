@@ -168,6 +168,9 @@
                 <isKeyField>true</isKeyField>
                 <columnTitle>Key</columnTitle>
             </column>
+            <column columnName="Email">
+                <columnTitle>Email</columnTitle>
+            </column>
             <column columnName="Person Type">
                 <columnTitle>Person Type</columnTitle>
              </column>
@@ -201,9 +204,12 @@
             <column columnName="Tdap">
             <columnTitle>Tdap</columnTitle>
         </column>
-            <column columnName="Full Face Respirator">
+       <column columnName="Full Face Respirator">
             <columnTitle>Full Face Respirator</columnTitle>
         </column>
+            <column columnName="Standard Respirator">
+                <columnTitle>Standard Respirator</columnTitle>
+            </column>
         <column columnName="Flu">
             <columnTitle>Flu</columnTitle>
         </column>
@@ -216,6 +222,9 @@
        <column columnName="TB West Campus">
         <columnTitle>TB West Campus</columnTitle>
         </column>
+         <column columnName="AIRC MRI">
+                <columnTitle>Clinical MRI</columnTitle>
+         </column>
             <column columnName="Clinical MRI">
                 <columnTitle>Clinical MRI</columnTitle>
             </column>
@@ -223,6 +232,9 @@
           <column columnName="Supervisor Email">
             <columnTitle>Supervisor Email</columnTitle>
            </column>
+            <column columnName="processed">
+                <columnTitle>Processed</columnTitle>
+            </column>
             <column columnName="container">
                 <isUserEditable>false</isUserEditable>
                 <isHidden>true</isHidden>
@@ -252,9 +264,7 @@
                 <nullable>true</nullable>
                 <isHidden>true</isHidden>
             </column>
-            <column columnName="processed">
-                <columnTitle>Processed</columnTitle>
-            </column>
+
     </columns>
     </table>
 
