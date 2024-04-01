@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Created By: Kollil, 1/29/2024.
+ The ETL adds a P1 clinical remark into the animal record if the MPA injection ('E-85760' - Medroxyprogesterone acetate)
+ is marked as completed on the current day.
+ Refer to ticket # 10208 for more details.
+-->
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>MPA_ClnRemarkAddition</name>
+
+    <description>Executes stored procedure to populate the clinical remarks into a temp table.</description>
+
+    <transforms>
+        <transform id="Stored_Proc" type="StoredProcedure">
+            <description>Runs the stored procedure to update onprc_ehr.Temp_ClnRemarks table</description>
+            <procedure schemaName="onprc_ehr" procedureName="MPA_ClnRemarkAddition"> </procedure>
+        </transform>
+
+        <transform id="Add_MPA_ClnRemarks">
+            <description>Import the remarks data from onprc_ehr.Temp_ClnRemarks table to study.ClnRemarks table in Prime </description>
+            <source schemaName="onprc_ehr" queryName="Temp_ClnRemarks"/>
+            <destination schemaName="study" queryName="clinremarks"/>
+        </transform>
+    </transforms>
+
+    <schedule>
+        <!-- Runs daily at 10pm -->
+        <cron expression="0 0 22 * * ?"/>
+    </schedule>
+
+</etl>

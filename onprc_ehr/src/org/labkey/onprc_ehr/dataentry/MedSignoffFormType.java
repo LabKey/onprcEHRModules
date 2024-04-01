@@ -41,7 +41,7 @@ import java.util.Arrays;
 public class MedSignoffFormType extends TaskForm
 {
     public static final String NAME = "medsignoff";
-    public static final String LABEL = "Post Op Meds Sign Off";
+    public static final String LABEL = "Post-administration Med Verification"; //Changed by Kollil on 10/11/23, Refer to tkt #9939
 
     public MedSignoffFormType(DataEntryFormContext ctx, Module owner)
     {
@@ -61,8 +61,6 @@ public class MedSignoffFormType extends TaskForm
         }
 
     }
-
-
 
     @Override
     protected boolean canInsert()

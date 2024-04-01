@@ -24,6 +24,7 @@ import org.labkey.test.Locator;
 import org.labkey.test.WebTestHelper;
 import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
+import org.labkey.test.components.ext4.Window;
 import org.labkey.test.util.DataRegionTable;
 import org.labkey.test.util.Ext4Helper;
 import org.labkey.test.util.LogMethod;
@@ -155,12 +156,16 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
 
         clickAndWait(Locator.linkWithText("IACUC Protocols"));
         DataRegionTable protocolTable = new DataRegionTable("query", getDriver());
-        protocolTable.clickHeaderMenu("More Actions", false, "Edit Records");
+        protocolTable.clickHeaderMenu("More Actions", true, "Edit Records");
         protocolTable.clickImportBulkData();
 
+        // HACK
+        Thread.sleep(2500);
         setFormElement(Locator.textarea("title"), protocolTitle);
+        Thread.sleep(2500);
         clickButton("Submit");
 
+        assertTextPresent(protocolTitle);
         protocolTable.setFilter("title", "Equals", protocolTitle);
         String protocolId = protocolTable.getDataAsText(0, "protocol");
 
@@ -170,7 +175,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         clickAndWait(Locator.linkWithText("ONPRC Projects"));
 
         DataRegionTable projectTable = new DataRegionTable("query", getDriver());
-        projectTable.clickHeaderMenu("More Actions", false, "Edit Records");
+        projectTable.doAndWaitForUpdate(() -> projectTable.clickHeaderMenu("More Actions", false, "Edit Records"));
         projectTable.clickImportBulkData();
 
         setFormElement(Locator.name("name"), projectName);

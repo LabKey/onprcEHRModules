@@ -123,7 +123,6 @@ public class BehaviorNotification extends ColonyAlertsNotification
         TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("NHP_Training_BehaviorAlert",ContainerFilter.Type.AllFolders.create(c, u));
 //        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(u);
         TableSelector ts = new TableSelector(ti, null, null);
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true);
 
         long total = ts.getRowCount();
         msg.append("<b>NHP_Training entries where \"Training Result = In-Progress\" for over 60 days:</b><p>");
@@ -189,6 +188,23 @@ public class BehaviorNotification extends ColonyAlertsNotification
         else
         {
             msg.append("<b>WARNING: No DCM notes added yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
+        }
+
+        /*  Added by Kollil on 10/12/2023
+            New alert for DCM notes (category = notes pertaining to DAR) removed the previous day.
+            Refer to tkt #9977
+        */
+        SimpleFilter filter4 = new SimpleFilter(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_EQUAL);
+        TableSelector ts4 = new TableSelector(getStudySchema(c, u).getTable("Notes_WithLocation"), filter4, null);
+        long count4 = ts4.getRowCount();
+
+        if (count4 > 0) {
+            msg.append("<b>" + count4 + " DCM notes entries removed yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("</p><br><hr>\n\n");
+        }
+        else {
+            msg.append("<b>WARNING: No DCM notes ended yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
         }
 
         //Added by Kollil on 11/04/2020
@@ -309,7 +325,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
         Collection<Map<String, Object>> rows = ss.getMapCollection();
 
-        if (rows.size() > 0)
+        if (!rows.isEmpty())
         {
             msg.append("<b>There are " + rows.size() + " animals with differences in pairing since the previous day.  Note, this considers full pairs vs. non-full pairs only (ie. grooming contact is treated as non-paired).  It considers housing at midnight of the days in question.</b>  ");
             String url = getExecuteQueryUrl(c, "study", "pairDifferences", null) + "&query.changeType~isnonblank&query.changeType~neq=Group Members Changed&query.param.Date1=" + getDateFormat(c).format(date1.getTime()) + "&query.param.Date2=" + getDateFormat(c).format(date2.getTime());

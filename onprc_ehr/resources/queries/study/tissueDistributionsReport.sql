@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 LabKey Corporation
+ * Copyright (c) 2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.labkey.onprc_ehr.dataentry;
+SELECT
+ *
 
-import org.labkey.api.ehr.dataentry. NonStoreFormSection;
-import org.labkey.api.view.template.ClientDependency;
+FROM study.tissueDistributions t
+Where t.taskid is not null
+And t.QCState.Label in ('Request: Pending','Completed')
 
-//Created:12-20-2018  R.Blasa
-
-public class AnimalDetailssFormSection extends NonStoreFormSection
-{
-    public AnimalDetailssFormSection()
-    {
-        super("AnimalDetails", "Animal Details", "onprc_ehr-animaldetailspanels");
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/AnimalDetailsPanel.js"));
-
-    }
-}

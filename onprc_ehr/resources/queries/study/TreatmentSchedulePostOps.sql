@@ -74,8 +74,13 @@ LEFT JOIN ehr_lookups.treatment_frequency_times ft ON (ft.frequency = t1.frequen
 INNER JOIN (
     SELECT
       sc.code
-    from ehr_lookups.snomed_subset_codes sc
+    FROM ehr_lookups.snomed_subset_codes sc
     WHERE sc.primaryCategory = 'Post Op Meds'
+    /* Added this clause by Kollil on 10/4/2023 to exclude the MPA injection from the list.
+     This change is made according to the new request by Cassie Tkt# 9939. The MPA med is part of the post op meds category
+     but a separate alert is created so, excluding this med from this alert list.
+     */
+    AND sc.code NOT IN ('E-85760')
     GROUP BY sc.code
 ) snomed ON snomed.code = t1.code
 

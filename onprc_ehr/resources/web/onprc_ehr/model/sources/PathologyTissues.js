@@ -40,6 +40,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
             project: {
                 xtype: 'onprc_ehr-projectentryfield',
+                allowBlank: false,
                 label: 'Center Project'
             },
             billingproject: {
@@ -47,9 +48,11 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 label: 'Center Project Billing',
                 hidden: false
 
+
             },
 
             performedby: {
+                allowBlank: true,
                 hidden: true
             },
             procedureid: {
@@ -110,6 +113,14 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 editorConfig: {
                     decimalPrecision: 3
                 }
+            },
+            preparation: {
+                allowBlank: false,
+                lookup: {
+                    columns: 'objectid,value,category,code',
+                    sort: 'sort_order',
+                    filterArray: [LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)]
+                }
             }
         },
 
@@ -156,6 +167,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
                 }
             },
             performedby: {
+                allowBlank: true,
                 hidden: true
             },
             tissue: {
