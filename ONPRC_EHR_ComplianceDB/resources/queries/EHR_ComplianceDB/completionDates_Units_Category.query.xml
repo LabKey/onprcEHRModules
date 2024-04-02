@@ -2,9 +2,10 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="completionDates_Units_Category" tableDbType="NOT_IN_DB">
-                <tableTitle>Employee Completion Dates with Units And Categories</tableTitle>
+                <tableTitle>Employee Completion Dates</tableTitle>
 
             </table>
         </tables>
     </metadata>
 </query>
+
