@@ -32,11 +32,32 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
         this.callParent();
 
+        let anmId;
+
         if (this.subjectId){
+            anmId = this.subjectId;
             this.isLoading = true;
             this.setLoading(true);
             this.loadData();
         }
+
+        this.on('afterrender', function() {
+
+            var displayField = this.down('#flags');
+            if (displayField && displayField.getEl()) {
+
+                var anchor = displayField.getEl('onprcFlagsLink');
+
+                if (anchor) {
+                    Ext4.get(anchor).on('click', function(e) {
+                        e.preventDefault();
+                        if (anmId) {
+                            EHR.Utils.showFlagPopup(anmId, this);
+                        }
+                    });
+                }
+            }
+        }, this);
     },
 
     getBaseItems: function(){
@@ -128,7 +149,8 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                     items: [{
                         xtype: 'displayfield',
                         fieldLabel: 'Flags',
-                        name: 'flags'
+                        name: 'flags',
+                        itemId: 'flags'
                     },{
                         xtype: 'displayfield',
                         fieldLabel: 'Last TB Date',
@@ -709,7 +731,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
             }
         }
 
-        toSet['flags'] = values.length ? '<a onclick="EHR.Utils.showFlagPopup(\'' + this.subjectId + '\', this);">' + values.join('<br>') + '</div>' : null;
+        toSet['flags'] = values.length ? '<a id="onprcFlagsLink">' + values.join('<br>') + '</div>' : null;
 
         if (behavevalues.length) {
             toSet['behaviorflag'] = behavevalues.length ? '<a onclick="EHR.Utils.showFlagPopup(\'' + this.subjectId + '\', this);">' + behavevalues.join('<br>') + '</div>' : null;

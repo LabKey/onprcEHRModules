@@ -60,6 +60,7 @@ import org.labkey.api.study.DatasetTable;
 import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.view.HttpView;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
@@ -79,6 +80,10 @@ import java.util.Set;
 public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 {
     private static final Logger _log = LogManager.getLogger(ONPRC_EHRCustomizer.class);
+
+    private boolean _surgeryChecklistClickHandlerAdded = false;
+    private boolean _caseHistoryClickHandlerAdded = false;
+    private boolean _hctRowClickHandlerAdded = false;
 
     public ONPRC_EHRCustomizer()
     {
@@ -1807,7 +1812,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         {
                             String runId = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdPLT"));
                             String id = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedHtml(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link srg-chk-lst\" data-runid=\"" + PageFlowUtil.filter(runId) + "\" data-id=\"" + PageFlowUtil.filter(id) + "\">" + getFormattedHtml(ctx) + "</a></span>");
+                            if (!_surgeryChecklistClickHandlerAdded)
+                            {
+                                HttpView.currentPageConfig().addHandlerForQuerySelector("a.srg-chk-lst", "click", "EHR.panel.LabworkSummaryPanel.showRunSummary(this.attributes.getNamedItem('data-runid').value, this.attributes.getNamedItem('data-id').value, this);");
+                                _surgeryChecklistClickHandlerAdded = true;
+                            }
                         }
 
                         @Override
@@ -1838,7 +1848,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         {
                             String runId = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdHCT"));
                             String id = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedHtml(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link hct-row\" data-runid=\"" + PageFlowUtil.filter(runId) + "\" data-id=\"" + PageFlowUtil.filter(id) + "\">" + getFormattedHtml(ctx) + "</a></span>");
+                            if (!_hctRowClickHandlerAdded)
+                            {
+                                HttpView.currentPageConfig().addHandlerForQuerySelector("a.hct-row", "click", "EHR.panel.LabworkSummaryPanel.showRunSummary(this.attributes.getNamedItem('data-runid').value, this.attributes.getNamedItem('data-id').value, this);");
+                                _hctRowClickHandlerAdded = true;
+                            }
                         }
 
                         @Override
@@ -1959,7 +1974,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         String objectid = (String)ctx.get("objectid");
                         String id = (String)ctx.get("Id");
 
-                        out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.window.CaseHistoryWindow.showCaseHistory('" + objectid + "', '" + id + "', this);\">[Show Case Hx]</a></span>");
+                        out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link cs-h-row\" data-objectid=\"" + PageFlowUtil.filter(objectid) + "\" data-id=\"" + PageFlowUtil.filter(id) + "\">[Show Case Hx]</a></span>");
+                        if (!_caseHistoryClickHandlerAdded)
+                        {
+                            HttpView.currentPageConfig().addHandlerForQuerySelector("a.cs-h-row", "click", "EHR.window.CaseHistoryWindow.showCaseHistory(this.attributes.getNamedItem('data-objectid').value, this.attributes.getNamedItem('data-id').value, this);");
+                            _caseHistoryClickHandlerAdded = true;
+                        }
                     }
 
                     @Override
