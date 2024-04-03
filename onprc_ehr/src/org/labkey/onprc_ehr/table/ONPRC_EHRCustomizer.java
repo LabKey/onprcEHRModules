@@ -1815,7 +1815,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         {
                             String runId = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdPLT"));
                             String id = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
-                            out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link srg-chk-lst\" data-runid=" + PageFlowUtil.jsString(runId) + " data-id=" + PageFlowUtil.jsString(id) + ">" + getFormattedHtml(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link srg-chk-lst\" data-runid=\"" + PageFlowUtil.filter(runId) + "\" data-id=\"" + PageFlowUtil.filter(id) + "\">" + getFormattedHtml(ctx) + "</a></span>");
                             if (!_surgeryChecklistClickHandlerAdded)
                             {
                                 HttpView.currentPageConfig().addHandlerForQuerySelector("a.srg-chk-lst", "click", "EHR.panel.LabworkSummaryPanel.showRunSummary(this.attributes.getNamedItem('data-runid').value, this.attributes.getNamedItem('data-id').value, this);");
