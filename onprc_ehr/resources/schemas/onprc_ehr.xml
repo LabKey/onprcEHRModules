@@ -1280,6 +1280,7 @@
         <columns>
             <column columnName="rowid">
                 <columnTitle>Rowid</columnTitle>
+                <isHidden>true</isHidden>
             </column>
             <column columnName="date">
             </column>
@@ -1309,15 +1310,45 @@
             <column columnName="performedby">
             </column>
             <column columnName="remarks"/>
-            <column columnName="objectid"/>
-            <column columnName="createdby"/>
-            <column columnName="created"/>
-            <column columnName="modified"/>
-            <column columnName="modifiedby"/>
-            <column columnName="container"/>
-            <column columnName="taskid"/>
-            <column columnName="qcstate"/>
-            <column columnName="formsort"/>
+
+            <column columnName="objectid">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="createdby">
+                <columnTitle>Created By</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="created">
+                <columnTitle>Created By</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="modified">
+                <columnTitle>Modified</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="modifiedby">
+                <columnTitle>Modified by</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="container">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="taskid">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="qcstate">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="formsort">
+                <isHidden>true</isHidden>
+            </column>
         </columns>
     </table>
 
