@@ -45,7 +45,7 @@ public class ClinicalActionsDisplayColumn extends DataColumn
         Object o = getValue(ctx);
         if (o != null)
         {
-            out.write("<a class=\"labkey-text-link cadc-row\" data-obj=\"" + PageFlowUtil.jsString(o.toString()) + "\">[Actions]");
+            out.write("<a class=\"labkey-text-link cadc-row\" data-obj=\"" + PageFlowUtil.filter(o.toString()) + "\">[Actions]");
             out.write("</a>");
             if (!_clickHandlerAdded)
             {
