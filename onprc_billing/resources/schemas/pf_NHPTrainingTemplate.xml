@@ -1,3 +1,9 @@
+<!--Documentation
+Created 2024-04-04
+Created by Jones ga
+Purpose:  This linked schema is being added to the Finance Container
+    to allow the Invoiced Items query to access the NHP_Training data
+-->
 <templateSchema sourceSchemaName="onprc_ehr" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
     <tables>
         <tableName>NHP_Training</tableName>
