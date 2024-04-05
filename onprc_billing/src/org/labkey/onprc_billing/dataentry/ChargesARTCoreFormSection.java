@@ -16,11 +16,9 @@
 package org.labkey.onprc_billing.dataentry;
 
 import org.json.JSONObject;
-import org.labkey.api.data.TableInfo;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
-import org.labkey.api.query.FieldKey;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Collections;
@@ -46,6 +44,7 @@ public class ChargesARTCoreFormSection extends SimpleFormSection
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/model/sources/ARTCoreMisc.js"));
         addConfigSource("ARTCoreMisc");
+
     }
 
     @Override

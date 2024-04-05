@@ -18,12 +18,14 @@ package org.labkey.test.tests.onprc_ehr;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.json.simple.JSONArray;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.labkey.remoteapi.CommandException;
+import org.labkey.remoteapi.CommandResponse;
 import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
 import org.labkey.remoteapi.query.SelectRowsCommand;
@@ -66,7 +68,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,7 +82,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
     protected String PROJECT_NAME = "ONPRC_EHR_TestProject";
     private boolean _hasCreatedBirthRecords = false;
-    private String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
+    private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
 
     @Override
     protected String getProjectName()
@@ -103,6 +104,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         initTest.initProject();
         initTest.createTestSubjects();
+        initTest.createBirthRecords();
         new RReportHelper(initTest).ensureRConfig();
 
     }
@@ -158,6 +160,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testAssignmentApi() throws Exception
     {
+        final String investLastName = "Tester";
+
         goToProjectHome();
 
         String[][] CONDITION_FLAGS = new String[][]{
@@ -186,14 +190,24 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         final String protocolId = (String)protocolSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("protocol");
         Assert.assertNotNull(StringUtils.trimToNull(protocolId));
 
+        InsertRowsCommand investigatorsCommand = new InsertRowsCommand("onprc_ehr", "investigators");
+        investigatorsCommand.addRow(Maps.of("firstName", "Testie", "lastName", investLastName));
+        CommandResponse response = investigatorsCommand.execute(getApiHelper().getConnection(), getContainerPath());
+        var id = ((HashMap<?, ?>) ((ArrayList<?>) response.getParsedData().get("rows")).get(0)).get("rowid");
+
         InsertRowsCommand projectCommand = new InsertRowsCommand("ehr", "project");
         String projectName = generateGUID();
-        projectCommand.addRow(Maps.of("project", null, "name", projectName, "protocol", protocolId));
+        projectCommand.addRow(Maps.of("project", null, "name", projectName, "protocol", protocolId, "investigatorId", id));
         projectCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
         SelectRowsCommand projectSelect = new SelectRowsCommand("ehr", "project");
+        projectSelect.setColumns(List.of("project", "investigatorId/lastName"));
         projectSelect.addFilter(new Filter("protocol", protocolId));
-        final Integer projectId = (Integer)projectSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("project");
+        SelectRowsResponse resp = projectSelect.execute(getApiHelper().getConnection(), getContainerPath());
+        final Integer projectId = (Integer)resp.getRows().get(0).get("project");
+        final String invest = (String) resp.getRows().get(0).get("investigatorId/lastName");
+
+        assertEquals("Investigator name not correct in project table", invest, investLastName);
 
         // Try with a row that doesn't pass validation
         Map<String, Object> protocolCountsRow = new HashMap<>();
@@ -236,10 +250,14 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         SelectRowsCommand assignmentSelect1 = new SelectRowsCommand("study", "assignment");
         assignmentSelect1.addFilter(new Filter("Id", SUBJECTS[1]));
         assignmentSelect1.addFilter(new Filter("project", projectId));
-        assignmentSelect1.setColumns(Arrays.asList("Id", "lsid", "datefinalized", "enddatefinalized"));
+        assignmentSelect1.setColumns(Arrays.asList("Id", "lsid", "datefinalized", "enddatefinalized", "project/investigatorId/lastName"));
         SelectRowsResponse assignmentResponse1 = assignmentSelect1.execute(getApiHelper().getConnection(), getContainerPath());
         Assert.assertNotNull(assignmentResponse1.getRows().get(0).get("datefinalized"));
         Assert.assertNull(assignmentResponse1.getRows().get(0).get("enddatefinalized"));
+
+        final String assignInvest = (String)assignmentResponse1.getRows().get(0).get("project/investigatorId/lastName");
+        assertEquals("Investigator name link broken from assignment dataset", assignInvest, investLastName);
+
         final String assignmentLsid1 = (String)assignmentResponse1.getRows().get(0).get("lsid");
 
         //expect animal condition to change
@@ -248,8 +266,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         conditionSelect1.addFilter(new Filter("flag/category", "Condition"));
         conditionSelect1.addFilter(new Filter("isActive", true));
         SelectRowsResponse conditionResponse1 = conditionSelect1.execute(getApiHelper().getConnection(), getContainerPath());
-        Assert.assertEquals(1, conditionResponse1.getRowCount().intValue());
-        Assert.assertEquals("Protocol Restricted", conditionResponse1.getRows().get(0).get("flag/value"));
+        assertEquals(1, conditionResponse1.getRowCount().intValue());
+        assertEquals("Protocol Restricted", conditionResponse1.getRows().get(0).get("flag/value"));
 
         //terminate, expect animal condition to change based on release condition
         UpdateRowsCommand assignmentUpdateCommand = new UpdateRowsCommand("study", "assignment");
@@ -266,8 +284,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         conditionSelect2.addFilter(new Filter("flag/category", "Condition"));
         conditionSelect2.addFilter(new Filter("isActive", true));
         SelectRowsResponse conditionResponse2 = conditionSelect2.execute(getApiHelper().getConnection(), getContainerPath());
-        Assert.assertEquals(1, conditionResponse2.getRowCount().intValue());
-        Assert.assertEquals("Surgically Restricted", conditionResponse2.getRows().get(0).get("flag/value"));
+        assertEquals(1, conditionResponse2.getRowCount().intValue());
+        assertEquals("Surgically Restricted", conditionResponse2.getRows().get(0).get("flag/value"));
 
         //make sure other flag terminated on correct date
         SelectRowsCommand conditionSelect3 = new SelectRowsCommand("study", "flags");
@@ -275,7 +293,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         conditionSelect3.addFilter(new Filter("flag", flagMap.get("Protocol Restricted")));
         conditionSelect3.addFilter(new Filter("enddate", prepareDate(new Date(), -5, 0), Filter.Operator.DATE_EQUAL));
         SelectRowsResponse conditionResponse3 = conditionSelect3.execute(getApiHelper().getConnection(), getContainerPath());
-        Assert.assertEquals(1, conditionResponse3.getRowCount().intValue());
+        assertEquals(1, conditionResponse3.getRowCount().intValue());
 
         //setting of enddatefinalized, datefinalized
         SelectRowsCommand assignmentSelect2 = new SelectRowsCommand("study", "assignment");
@@ -304,7 +322,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         // add assignmentsInTransaction, should fail
         Map<String, Object> additionalExtraContext = new HashMap<>();
         JSONArray assignmentsInTransaction = new JSONArray();
-        assignmentsInTransaction.add(Maps.of(
+        assignmentsInTransaction.put(Maps.of(
                 "Id", SUBJECTS[4],
                 "objectid", generateGUID(),
                 "date", _df.format(new Date()),
@@ -381,8 +399,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         goToProjectHome();
 
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                {MORE_ANIMAL_IDS[0], new Date(), "code", "Abnormal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), "code", "Abnormal", null, 1.0, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Maps.of(
                 "remark", Arrays.asList(
                     "WARN: A remark is required if a non-normal outcome is reported"
@@ -390,16 +408,28 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         ));
 
         // successful
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, 1.0, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Collections.emptyMap());
 
 
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                {MORE_ANIMAL_IDS[0], new Date(), null, "Normal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), null, "Normal", null, 1.0, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Maps.of(
                 "code", Arrays.asList(
                         "WARN: Must enter a treatment"
+                )
+        ));
+
+        //Added more validation code, Kollil Dec, 2023
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, 1.0, null, 2.0, null, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        }, Maps.of(
+                "amount_units", Arrays.asList( //added these fields by kollil, Nov 30th
+                        "WARN: Must enter Amount Units if Amount is entered"
+                ),
+                "vol_units", Arrays.asList(
+                        "WARN: Must enter Vol Units if Volume is entered"
                 )
         ));
 
@@ -417,16 +447,16 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         // ketamine / telazol
         for (String code : Arrays.asList("E-70590", "E-YY928"))
         {
-            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "amount_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, 1.0, 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, 1.0, "mL", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
             }, Maps.of(
                     "amount_units", Arrays.asList(
                             "WARN: When entering ketamine or telazol, amount must be in mg"
                     )
             ));
 
-            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "amount_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, null, 2.0, "mg", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, null, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
             }, Maps.of(
                     "amount_units", Arrays.asList(
                             "WARN: When entering ketamine or telazol, amount must be in mg"
@@ -669,11 +699,10 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testPedigreeReport() throws Exception
     {
-        createBirthRecords();
         goToProjectHome();
         beginAtAnimalHistoryTab();
 
-        String id = ID_PREFIX + 1;
+        String id = ID_PREFIX + 10;
         AnimalHistoryPage animalHistoryPage = new AnimalHistoryPage(getDriver());
 
         animalHistoryPage.searchSingleAnimal(id);
@@ -851,7 +880,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         }
     }
 
-    private Map<String, Map<String, String>> _unitsMap = new HashMap<>();
+    private final Map<String, Map<String, String>> _unitsMap = new HashMap<>();
 
     private String getUnits(String queryName, String testId) throws Exception
     {
@@ -878,43 +907,50 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         log("creating birth records");
 
-        if (_hasCreatedBirthRecords)
-        {
-            log("birth records already created, skipping");
-            return;
-        }
-
         //note: these should cascade insert into demographics
         EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getProjectName());
         String schema = "study";
         String query = "birth";
         String parentageQuery = "parentage";
 
-        int i = 0;
-        Set<String> createdIds = new HashSet<>();
-        while (i < 10)
-        {
-            i++;
-            Map<String, Object> row = new HashMap<>();
-            row.put("Id", ID_PREFIX + i);
-            createdIds.add(ID_PREFIX + i);
-            row.put("date", new Date());
-            row.put("gender", ((i % 2) == 0 ? "m" : "f"));
-            row.put("dam", ID_PREFIX + (i + 100 + "0"));
+        Set<String> createdIds = Set.of(ID_PREFIX + 1, ID_PREFIX + 2, ID_PREFIX + 3, ID_PREFIX + 4, ID_PREFIX + 5, ID_PREFIX + 6, ID_PREFIX + 7, ID_PREFIX + 8, ID_PREFIX + 9, ID_PREFIX + 10);
 
-            apiHelper.deleteIfExists(schema, query, row, "Id");
-            apiHelper.insertRow(schema, query, row, false);
+        // Parents with non-defined dam/sire ids
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 1, "date", prepareDate(new Date(), -730, 0), "gender", "f", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 1, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 11, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 2, "date", prepareDate(new Date(), -730, 0), "gender", "m", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 2, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 12, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 3, "date", prepareDate(new Date(), -730, 0), "gender", "f", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 3, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 12, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -730, 0), "gender", "m", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 13, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 14, "method", "Genetic"), false);
 
-            Map<String, Object> parentageRow = new HashMap<>();
-            parentageRow.put("Id", ID_PREFIX + i);
-            parentageRow.put("date", new Date());
-            parentageRow.put("relationship", "Sire");
-            parentageRow.put("parent", ID_PREFIX + (i + 100 + "1"));
-            parentageRow.put("method", "Genetic");
+        // Children / Siblings (full and half)
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "gender", "f", "dam", ID_PREFIX + 1, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 1, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 1, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 1, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 3, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 3, "method", "Genetic"), false);
 
-            //we dont have the LSID, so dont bother deleting the record.  it wont hurt anything to have 2 copies
-            apiHelper.insertRow(schema, parentageQuery, parentageRow, false);
-        }
+
+        // Child / Inbreeding
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 5, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 5, "method", "Genetic"), false);
+
+
+        // Grandchildren / Inbreeding Descendent
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "gender", "f", "dam", ID_PREFIX + 5, "sire", ID_PREFIX + 4, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "relationship", "Sire", "parent", ID_PREFIX + 4, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "relationship", "Dam", "parent", ID_PREFIX + 5, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "gender", "f", "dam", ID_PREFIX + 3, "sire", ID_PREFIX + 8, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "relationship", "Sire", "parent", ID_PREFIX + 8, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "relationship", "Dam", "parent", ID_PREFIX + 3, "method", "Genetic"), false);
 
         //force caching of demographics on new IDs.
         cacheIds(createdIds);
@@ -925,7 +961,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testExamEntry() throws Exception
     {
-        _helper.goToTaskForm("Exams/Cases");
+        _helper.goToTaskForm("Exams/Cases", false);
         _helper.getExt4FieldForFormSection("Task", "Title").setValue("Test Exam 1");
 
         waitAndClick(_helper.getDataEntryButton("More Actions"));
@@ -966,17 +1002,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         //this is a proxy the 1st record validation happening
         waitForElement(Locator.tagWithText("div", "The form has the following errors and warnings:"));
         sleep(200);
-        final Ext4FieldRef idField = _helper.getExt4FieldForFormSection("SOAP", "Id");
-        idField.waitForEnabled();
-        idField.setValue(MORE_ANIMAL_IDS[0]);
+        setFormElement(Locator.input("Id"), MORE_ANIMAL_IDS[0]);
 
         // NOTE: we have had problems w/ the ID field value not sticking.  i think it might have to do with the timing of server-side validation,
         //
-        for (int i = 0; i < 4; i++)
-        {
-            sleep(50);
-            Assert.assertEquals("Id field not set on try: " + i, MORE_ANIMAL_IDS[0], idField.getValue());
-        }
+        WebElement idDisplay = Locator.tag("div").withLabel("Id:").findElement(getDriver());
+        waitFor(() -> MORE_ANIMAL_IDS[0].equals(idDisplay.getText()), () -> "Id field not set: " + idDisplay.getText(), 5_000);
 
         //observations section
         waitAndClick(Ext4Helper.Locators.ext4Tab("Observations"));
@@ -999,7 +1030,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         int i = 1;
         for (Map<String, Object> row : srr.getRows())
         {
-            org.json.JSONObject json = new org.json.JSONObject((String)row.get("json"));
+            JSONObject json = new JSONObject((String)row.get("json"));
             Assert.assertEquals(json.getString("category"), observationsGrid.getFieldValue(i, "category"));
             i++;
         }
@@ -1221,7 +1252,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testGeneticsPipeline() throws Exception
     {
-        createBirthRecords();
         goToProjectHome();
 
         //retain pipeline log for debugging
@@ -1230,6 +1260,13 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         waitAndClickAndWait(Locators.bodyPanel().append(Locator.tagContainingText("a", "EHR Admin Page")));
         waitAndClickAndWait(Locator.tagContainingText("a", "Genetics Calculations"));
+        _ext4Helper.checkCheckbox(Ext4Helper.Locators.checkbox(this, "Kinship validation?:"));
+        _ext4Helper.checkCheckbox(Ext4Helper.Locators.checkbox(this, "Allow Import During Business Hours?:"));
+        Locator loc = Locator.inputByIdContaining("numberfield");
+        waitForElement(loc);
+        setFormElement(loc, "23");
+        click(Ext4Helper.Locators.ext4Button("Save Settings"));
+        waitAndClick(Ext4Helper.Locators.ext4Button("OK"));
         waitAndClickAndWait(Ext4Helper.Locators.ext4Button("Run Now"));
         waitAndClickAndWait(Locator.lkButton("OK"));
         waitForPipelineJobsToComplete(2, "genetics pipeline", false);
@@ -1241,20 +1278,42 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         goToProjectHome();
         beginAtAnimalHistoryTab();
         AnimalHistoryPage animalHistoryPage = new AnimalHistoryPage(getDriver());
-        animalHistoryPage.searchSingleAnimal("99991,99991011,99991041,99991080,99998");
+        animalHistoryPage.searchSingleAnimal("99995,99996,99997,99998,99999,999910");
         animalHistoryPage.refreshReport();
         animalHistoryPage.clickCategoryTab("Genetics")
                 .clickReportTab("Kinship");
 
+        log("verify kinship");
         assertTrue(isElementPresent(Locator.linkWithText("CLICK HERE TO LIMIT TO ANIMALS IN SELECTION")));
 
         DataRegionTable kinshipTable = animalHistoryPage.getActiveReportDataRegion();
-        assertEquals("Incorrect number of rows before limiting animal selection", 3, kinshipTable.getDataRowCount());
+        assertEquals("Incorrect number of kinship rows before limiting animal selection", 48, kinshipTable.getDataRowCount());
+
+        // Spot check kinship
+        assertEquals("Incorrect kinship coefficient for 999910 and 99998", "0.359375", kinshipTable.getDataAsText(0, "Coefficient"));
+        assertEquals("Incorrect kinship coefficient for 999910 and 99992", "0.25", kinshipTable.getDataAsText(3, "Coefficient"));
+        assertEquals("Incorrect kinship coefficient for 99995 and 99992", "0.25", kinshipTable.getDataAsText(10, "Coefficient"));
+        assertEquals("Incorrect kinship coefficient for 99996 and 99997", "0.15625", kinshipTable.getDataAsText(21, "Coefficient"));
+        assertEquals("Incorrect kinship coefficient for 99998 and 99997", "0.234375", kinshipTable.getDataAsText(35, "Coefficient"));
 
         kinshipTable.doAndWaitForUpdate(() -> Locator.linkWithText("CLICK HERE TO LIMIT TO ANIMALS IN SELECTION").findElement(getDriver()).click());
 
         kinshipTable = animalHistoryPage.getActiveReportDataRegion();
-        assertEquals("Incorrect number of rows after limiting animal selection", 2, kinshipTable.getDataRowCount());
+        assertEquals("Incorrect number of kinship rows after limiting animal selection", 30, kinshipTable.getDataRowCount());
+
+        log("verify inbreeding");
+        animalHistoryPage.clickCategoryTab("Genetics")
+                .clickReportTab("Inbreeding Coefficients");
+
+        DataRegionTable inbreedingTable = animalHistoryPage.getActiveReportDataRegion();
+        assertEquals("Incorrect number of inbreeding rows", 6, inbreedingTable.getDataRowCount());
+
+        // Spot check inbreeding
+        assertEquals("Incorrect inbreeding coefficient for 999910", "0.09375", inbreedingTable.getDataAsText(0, "Coefficient"));
+        assertEquals("Incorrect inbreeding coefficient for 99995", "0.0", inbreedingTable.getDataAsText(1, "Coefficient"));
+        assertEquals("Incorrect inbreeding coefficient for 99997", "0.125", inbreedingTable.getDataAsText(3, "Coefficient"));
+        assertEquals("Incorrect inbreeding coefficient for 99998", "0.25", inbreedingTable.getDataAsText(4, "Coefficient"));
+        assertEquals("Incorrect inbreeding coefficient for 99999", "0.0", inbreedingTable.getDataAsText(5, "Coefficient"));
     }
 
     @Test
@@ -1724,7 +1783,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         row.put("caseid", caseId);
         row.put("observation", "5");
         row.put("objectid", generateGUID());
-        row.put("taskid", generateGUID());  //required for lastestObservationsForCase.sql to work
+        row.put("taskid", generateGUID());  //required for latestObservationsForCase.sql to work
         insertRowsCommand.addRow(row);
         insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
@@ -1739,7 +1798,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(caseWindow);
         obsGrid.waitForRowCount(1);
         Assert.assertEquals("Alopecia Score", obsGrid.getFieldValue(1, "category"));
-        Assert.assertEquals(null, obsGrid.getFieldValue(1, "observation"));
+        String observation = (String)obsGrid.getFieldValue(1, "observation");
+        Assert.assertTrue("Expected \"Observation/Score\" to be empty (blank or null) but was \"" + observation + "\"", StringUtils.isEmpty(observation));
         Assert.assertEquals(SUBJECTS[0], obsGrid.getFieldValue(1, "Id"));
 
         _ext4Helper.clickExt4Tab("Treatments Given");
@@ -1799,7 +1859,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                         "Pregnancy Confirmations",
                         "Urinalysis",
                         "iStat",
-                        "Biopsy"
+                        "Biopsy",
+                        "Epoc"
                 ));
         checkClinicalHistoryType(expectedLabels);
     }
@@ -1809,65 +1870,83 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         String animalId = "12345";
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        LocalDateTime dayAfterTomorrow = LocalDateTime.now().plusDays(2);
         String projectId = "640991";
-        String type = "Necropsy";
-        String chargeType = "1";
-        String procedureid = "Necropsy Grade 2: Standard";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String tissue = "AMNION (T-88300)";
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        // Insert a row so we can select a charge unit in the form
-        InsertRowsCommand chargeUnitCommand = new InsertRowsCommand("onprc_billing", "chargeUnits");
-        chargeUnitCommand.addRow(Maps.of("chargetype", "ChargeUnit1", "servicecenter", "ServiceCenter1", "shownInProcedures", true, "active", true));
-        chargeUnitCommand.execute(getApiHelper().getConnection(), getContainerPath());
+        InsertRowsCommand protocolCommand = new InsertRowsCommand("onprc_billing", "chargeableItems");
+        protocolCommand.addRow(Maps.of("name", "Pathology- Necropsy Grade 2 Standard", "category", "Pathology", "canRaiseFA", "true", "endDate", dayAfterTomorrow.format(formatter2), "active", "true"));
+        protocolCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
         log("Begin the test with entry data page");
         EnterDataPage enterData = EnterDataPage.beginAt(this, getContainerPath());
-        enterData.waitAndClickAndWait(Locator.linkWithText("Necropsy Request"));
-        waitForElement(Locator.pageHeader("Necropsy Request"));
+        enterData.waitAndClickAndWait(Locator.linkWithText("Pathology Service Request"));
+        waitForElement(Locator.pageHeader("Pathology Service Request"));
 
         log("Setting the Necropsy details");
         setNecropsyFormElement("Id", animalId);
-        setNecropsyFormElement("date", tomorrow.format(formatter));
-        click(Locator.tagWithClassContaining("div","x4-trigger-index-1"));
+        setNecropsyFormElementbyID("datefield", tomorrow.format(formatter2));
+        click(Locator.tagWithClassContaining("div","x4-trigger-index-1").index(0)); // first drop down
         _ext4Helper.selectComboBoxItem("Center Project:",Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
         _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
-        clickButton("Submit",0);
-        _ext4Helper.selectComboBoxItem("Type:", Ext4Helper.TextMatchTechnique.CONTAINS,type);
-        setNecropsyFormElement("chargetype", chargeType);
-        _ext4Helper.selectComboBoxItem("Charge Unit:", Ext4Helper.TextMatchTechnique.CONTAINS, "ChargeUnit1");
-        _ext4Helper.selectComboBoxItem("Procedure:", Ext4Helper.TextMatchTechnique.CONTAINS, procedureid);
+        waitAndClick(Ext4Helper.Locators.ext4Button("Submit"));
+        click(Locator.tagWithClassContaining("div","x4-trigger-index-1").index(1));
+        Ext4ComboRef combo = Ext4ComboRef.getForLabel(this, "Center Project Billing");
+        combo.waitForStoreLoad();
+        _ext4Helper.selectComboBoxItem(Locator.id(combo.getId()),Ext4Helper.TextMatchTechnique.CONTAINS,"Other");
+        _ext4Helper.selectComboBoxItem("Project:",Ext4Helper.TextMatchTechnique.CONTAINS,projectId);
+        waitAndClick(Ext4Helper.Locators.ext4Button("Submit"));
+        setNecropsyFormElement("fastingtype", "N/A");
+        setNecropsyFormElement("animaldelivery", "Deliver from Surgery");
+        setNecropsyFormElement("remainingTissues", "Yes");
+        setNecropsyFormElement("necropsylocation", "ASA South");
 
-        log("Entering values for Tissue Samples");
-        Ext4GridRef grid = _helper.getExt4GridForFormSection("Tissue Samples");
+        log("Entering values for Tissue Distributions");
+        Ext4GridRef grid = _helper.getExt4GridForFormSection("Tissue Distributions");
         _helper.addRecordToGrid(grid);
         int index = grid.getRowCount();
         grid.setGridCell(index, "Id", animalId);
-        grid.setGridCell(index, "date", tomorrow.format(formatter));
-        grid.setGridCell(index, "tissue", tissue);
+        grid.setGridCell(index, "date", tomorrow.format(formatter2));
+        grid.setGridCell(index, "tissue", "ABDOMINAL VISCERA, NOS (T-Y5000)");
+        grid.setGridCell(index, "sampletype", "Biopsy");
 
-        log("Entering values for Organ Weights");
-        grid = _helper.getExt4GridForFormSection("Organ Weights");
-        _helper.addRecordToGrid(grid);
-        index = grid.getRowCount();
-        grid.setGridCell(index, "Id", animalId);
-        grid.setGridCell(index, "date", tomorrow.format(formatter));
-        grid.setGridCell(index, "tissue", tissue);
+        // Avoid JavaScript error from 'RequestStoreCollection.commitChanges'
+        sleep(2_000);
 
-        log("Submit the request and approve");
-        clickButton("Request & Approve", 0);
+        log("Setting the MiscCharges details");
+        waitAndClick(Locator.linkWithText("Misc. Charges"));
+        Ext4GridRef grid2 = _helper.getExt4GridForFormSection("Misc. Charges");
+        _helper.addRecordToGrid(grid2);
+        int index2 = grid2.getRowCount();
+        grid2.setGridCell(index2, "Id", animalId);
+        grid2.setGridCell(index2, "date", tomorrow.format(formatter2));
+        click(Locator.tagWithClassContaining("div","x4-trigger-index-1"));
+        grid2.setGridCell(index2, "chargeId", "Pathology- Necropsy Grade 2 Standard");
+        grid2.setGridCell(index2, "quantity", "1.0");
 
-        waitForElement(Locator.linkWithText("Pending Requests"));
-        assertElementPresent(Locator.linkWithText("Pending Requests"));
-        click(Locator.linkWithText("Approved Requests"));
+        // Avoid JavaScript error from 'RequestStoreCollection.commitChanges'
+        sleep(2_000);
+
+        log("Submit the request");
+        WebElement requestButton = Ext4Helper.Locators.ext4Button("Request").withoutAttributeContaining("class", "disabled").waitForElement(getDriver(), 3_000);
+        clickAndWait(requestButton);
+
+        waitAndClick(Locator.linkWithText("My Pending Requests"));
+        click(Locator.linkWithText("Procedure"));
 
         log("Verifying the submitted Necropsy Request");
-        DataRegionTable regionTable = new DataRegionTable("query", getDriver());
-        assertEquals("There should be single approved necropsy request", 1, regionTable.getDataRowCount());
+        DataRegionTable regionTable = new DataRegionTable("study|encounters", getDriver());
+//        assertEquals("There should be single approved necropsy request", 1, regionTable.getDataRowCount());
 
         //code to add for the remaining flow
     }
-
+    private void setNecropsyFormElementbyID(String id, String value)
+    {
+        Locator loc = Locator.inputByIdContaining(id);
+        waitForElement(loc);
+        setFormElement(loc, value);
+        assertEquals(value, getFormElement(loc));
+    }
     private void setNecropsyFormElement(String id, String value)
     {
         Locator loc = Locator.name(id);

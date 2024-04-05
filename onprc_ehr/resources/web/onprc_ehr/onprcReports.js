@@ -151,6 +151,59 @@ EHR.reports.iStat = function(panel, tab){
         queryConfig: resultsConfig
     });
 }
+//Added 7-14-2022 R.Blasa
+EHR.reports.Epoc = function(panel, tab){
+    var filterArray = panel.getFilterArray(tab);
+    var title = panel.getTitleSuffix();
+
+    var config = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'EpocPivot',
+        title: "By Panel" + title,
+        titleField: 'Id',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable,
+        sort: '-date'
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: config
+    });
+
+    var miscConfig = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'EpocMisc',
+        title: "Misc Tests" + title,
+        titleField: 'Id',
+        sort: '-date',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: miscConfig
+    });
+
+    var resultsConfig = panel.getQWPConfig({
+        schemaName: 'study',
+        queryName: 'EpocRefRange',
+        title: "Reference Ranges:",
+        titleField: 'Id',
+        sort: '-date',
+        filters: filterArray.nonRemovable,
+        removeableFilters: filterArray.removable
+    });
+
+    tab.add({
+        xtype: 'ldk-querypanel',
+        style: 'margin-bottom:20px;',
+        queryConfig: resultsConfig
+    });
+}
 
 //Added: 6-27-2019  R.Blasa
 EHR.reports.TBTest = function(panel, tab){
@@ -229,7 +282,7 @@ EHR.reports.incompleteTreatments = function(panel, tab){
 EHR.reports.currentBlood = function(panel, tab){
     var  showActionsBtn = true;
     tab.add({
-        html: 'This report summarizes the blood available for the animals below. The method field in the display shows which method was used for calculation.  BC represents calculation based on Body Condition Score and RF represent the use of the standard Fixed Ratio. For more detail on this calculation,  <a href="https://prime.ohsu.edu/_webdav/ONPRC/Admin/Compliance/Public/%40files/Research%20Support/RS-001-02%20NHP%20Blood%20Collection.pdf" target="_blank" rel="noopener noreferrer">Please see the PDF Here</a>.' +
+        html: 'This report summarizes the blood available for the animals below. The method field in the display shows which method was used for calculation.  BC represents calculation based on Body Condition Score and RF represent the use of the standard Fixed Ratio. For more detail on this calculation,  <a href="https://bridge.ohsu.edu/research/onprc/dcm/DCM%20Standard%20Operatiing%20Procedures/RS-001-NHP-Blood-Collection.pdf" target="_blank" rel="noopener noreferrer">Please see the PDF Here</a>.' +
         '<br><br>There are 2 fields relating to blood value. One is Allowable Blood which is the calcuated max allowable value for the animal and Available Blood which represents current available minus any approved pending requests.' +
         '<br><br>If there have been recent blood draws for the animal, a graph will show the available blood over time.  On the graph, dots indicate dates when either blood was drawn or a previous blood draw fell off.  The horizontal lines indicate the maximum allowable blood that can be drawn on that date.',
         border: false,

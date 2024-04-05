@@ -30,7 +30,7 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
                 }
             }
         },
-        //Added: 10-12-2017 R.Blasa
+        // Added: 10-12-2017 R.Blasa
         'ehr.encounter_participants': {
             Id: {
                 hidden: false,
@@ -64,7 +64,7 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
                 editorConfig: {
                     anyMatch: true,
                     listConfig: {
-                        innerTpl: '{[values.username + (values.username ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : "")]}',
+                        innerTpl: '{[LABKEY.Utils.encodeHtml(values.username + (values.username ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : ""))]}',
                         getInnerTpl: function(){
                             return this.innerTpl;
                         }
@@ -103,14 +103,7 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
                 defaultValue: 'Pathology Notes',
                 hidden: true
             },
-            createdBy: {
 
-                hidden: true
-            },
-            modifiedBy: {
-
-                hidden: true
-            },
             remark: {
                 height: 300,
                 editorConfig: {

@@ -1,7 +1,7 @@
 SELECT
 t.Id,
 t.geneticAncestry,
-d.geographic_origin,
+d.geographic_origin
 
 FROM study.demographicsGeneticAncestry t
 JOIN study.demographics d on (t.Id = d.Id)

@@ -2,14 +2,15 @@
     <columns>
         <column name="Id"/>
         <column name="date"/>
+        <column name="Id/Demographics/species"/>
+        <column name="runid/servicerequested"/>
         <column name="runid/tissue"/>
+        <column name="runid/method"/>
         <column name="testId"/>
         <column name="result"/>
         <column name="units"/>
         <column name="qualresult"/>
-
         <column name="remark"/>
-
         <column name="performedby"/>
         <column name="requestid"/>
         <column name="taskid"/>

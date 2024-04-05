@@ -1,15 +1,22 @@
+--Created by Kollil
+--Modified by Kollil in Aug 2023. Added more filters to the where clause to display the history accurately.
+
 SELECT
-    Id,
-    Date,
-    examNum,
-    accessionNum,
-    PMICType,
-    DEXAProcedure,
-    animalPosition,
-    remark,
-    taskid,
-    qcstate,
-    performedby,
-    created,
-    createdBy
-from study.PMIC_DEXAImagingData
+    a.Id,
+    a.Date,
+    a.examNum,
+    a.accessionNum,
+    a.PMICType,
+    a.DEXAProcedure,
+    a.animalPosition,
+    a.remark,
+    e.taskid,
+    e.qcstate,
+    a.performedby,
+    a.created,
+    a.createdBy
+from study.PMIC_DEXAImagingData a, study.encounters e
+Where a.taskid = e.taskid
+  and a.id = e.id
+  and e.chargetype = 'PMIC'
+  and e.type = 'procedure'

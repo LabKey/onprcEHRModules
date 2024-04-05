@@ -9,6 +9,11 @@
                     </column>
                     <column columnName="majorudds">
                         <columnTitle>Host</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                             <fkTable>complianceemployee</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="employeeid">
                         <columnTitle>Employee ID</columnTitle>

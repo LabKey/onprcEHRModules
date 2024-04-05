@@ -1,3 +1,13 @@
+<!--
+Title:      Public Finance NIH Rates
+Author:     Gary Jones
+Created:
+Modified:   5/24/2022 Updated for Year 63
+Description:    THis is the control for display of public rate sheets for inductrial rates
+in the Public Finance Section-->
+
+
+
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
@@ -5,47 +15,42 @@
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>NIH Project Rate Config</tableTitle>
                 <columns>
-
-                    <column columnName="category"></column>
-                    <column columnName="name"></column>
                     <column columnName="unitCost">
-                        <columnTitle>Current Year</columnTitle>
-                        <formatString>$#,##0.00</formatString>
-                    </column>
-
-
+                    <columnTitle>Current Year</columnTitle>
+                    <formatString>$#,##0.00</formatString>
+                </column>
                     <column columnName="year1">
-                        <columnTitle>YR63: 5/1/22 to 4/30/23</columnTitle>
-                        <formatString>$#,##0.00</formatString>
-                    </column>
-                    <column columnName="year2">
-                        <columnTitle>YR64: 5/1/23 to 4/30/24</columnTitle>
-                        <formatString>$#,##0.00</formatString>
-                    </column>
-                    <column columnName="year3">
                         <columnTitle>YR65: 5/1/24 to 4/30/25</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-                    <column columnName="year4">
+                    <column columnName="year2">
                         <columnTitle>YR66: 5/1/25 to 4/30/26</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-                    <column columnName="year5">
+                    <column columnName="year3">
                         <columnTitle>YR67: 5/1/26 to 4/30/27</columnTitle>
+                        <formatString>$#,##0.00</formatString>
+                    </column>
+                    <column columnName="year4">
+                        <columnTitle>YR68: 5/1/27 to 4/30/28</columnTitle>
+                        <formatString>$#,##0.00</formatString>
+                    </column>
+                    <column columnName="year5">
+                        <columnTitle>YR69: 5/1/28 to 4/30/29</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
 
                     <column columnName="year6">
-                        <columnTitle>YR68: 5/1/27 to 4/30/28</columnTitle>
+                        <columnTitle>YR70: 5/1/29 to 4/30/30</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
 
                     <column columnName="year7">
-                        <columnTitle>YR69: 5/1/28 to 4/30/29</columnTitle>
+                        <columnTitle>YR71: 5/1/30 to 4/30/31</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year8">
-                        <columnTitle>YR70: 5/1/29 to 4/30/30</columnTitle>
+                        <columnTitle>YR72: 5/1/31 to 4/30/32</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
 
@@ -54,6 +59,7 @@
                         <columnTitle>Posted Date</columnTitle>
                         <formatString>MM/dd/yyyy</formatString>
                     </column>
+
 
                 </columns>
             </table>

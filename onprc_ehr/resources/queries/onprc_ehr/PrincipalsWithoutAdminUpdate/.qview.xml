@@ -1,0 +1,16 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" >
+    <columns>
+        <column name="UserId"/>
+        <column name="DisplayName"/>
+        <column name="Type" />
+        <column name="FirstName"/>
+        <column name="LastName"/>
+
+    </columns>
+
+    <sorts>
+        <sort column="Type" descending="false"/>
+        <sort column="DisplayName" descending="false"/>
+
+    </sorts>
+</customView>

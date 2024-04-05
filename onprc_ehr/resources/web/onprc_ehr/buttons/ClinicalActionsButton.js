@@ -82,7 +82,6 @@ Ext4.define('onprc_ehr.buttons.ClinicalActionsButton', {
                 }).show();
             }
         });
-
         toAdd.push({
             text: 'Enter SOAP',
             disabled: !EHR.Security.hasClinicalEntryPermission() || !EHR.Security.hasPermission(EHR.QCStates.COMPLETED, 'update', [{schemaName: 'study', queryName: 'Clinical Remarks'}]),
@@ -94,8 +93,7 @@ Ext4.define('onprc_ehr.buttons.ClinicalActionsButton', {
                     Ext4.Msg.alert('Error', 'No Animal Selected');
                     return;
                 }
-
-                Ext4.create('EHR.window.ManageRecordWindow', {
+                Ext4.create('ONPRC_EHR.window.ManageSoapWindow', {
                     schemaName: 'study',
                     queryName: 'clinRemarks',
                     maxItemsPerCol: 11,
@@ -105,7 +103,12 @@ Ext4.define('onprc_ehr.buttons.ClinicalActionsButton', {
                         Id: {
                             defaultValue: animalId,
                             editable: false
+                        },
+                        category: {
+                            defaultValue: 'Clinical',
+                            editable: true
                         }
+
                     }
                 }).show();
             }

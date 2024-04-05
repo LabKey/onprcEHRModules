@@ -23,7 +23,7 @@ SELECT
  CASE
     WHEN (count(DISTINCT h.id) > 1) THEN 1
     ELSE 0
- END as isPaired,
+ END as isPaired
 
 FROM ehr_lookups.pairedCages pc
 left join study.housing h ON (pc.room = h.room AND pc.cage = h.cage AND h.qcstate.publicdata = true and h.enddate is null and h.room.housingType.value = 'Cage Location')

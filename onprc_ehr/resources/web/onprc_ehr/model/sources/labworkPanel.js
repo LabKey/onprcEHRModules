@@ -26,7 +26,7 @@ EHR.model.DataModelManager.registerMetadata('LabworkPanel', {
                 editorConfig: {
                     anyMatch: true,
                     listConfig: {
-                        innerTpl: '{[(values.chargetype ? "<b>" + values.chargetype + ":</b> " : "") + values.servicename + (values.outsidelab ? "*" : "")]}',
+                        innerTpl: '{[(values.chargetype ? "<b>" + LABKEY.Utils.encodeHtml(values.chargetype) + ":</b> " : "") + LABKEY.Utils.encodeHtml(values.servicename + (values.outsidelab ? "*" : ""))]}',
                             getInnerTpl: function () {
                             return this.innerTpl;
                         }
@@ -54,13 +54,33 @@ EHR.model.DataModelManager.registerMetadata('LabworkPanel', {
             editorConfig: {
                 anyMatch: true,
                 listConfig: {
-                    innerTpl: '{[values.username + (values.username ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : "")]}',
+                    innerTpl: '{[LABKEY.Utils.encodeHtml(values.username + (values.username ? " (" + values.LastName + (values.FirstName ? ", " + values.FirstName : "") + ")" : ""))]}',
                     getInnerTpl: function(){
                         return this.innerTpl;
                     }
                 }
             }
         },
+         date: {
+                xtype: 'xdatetime',
+                extFormat: LABKEY.extDefaultDateTimeFormat,
+                allowBlank: false,
+                editorConfig: {
+                    defaultHour: 8,
+                    defaultMinutes: 0
+                },
+                getInitialValue: function (v, rec) {
+                    if (v)
+                        return v;
+
+                    var ret = Ext4.Date.clearTime(new Date());
+                    ret = Ext4.Date.add(ret, Ext4.Date.DAY, 1);
+                    ret.setHours(8);
+                    return ret;
+                }
+            },
+
+
 
             performedby: {
                 defaultValue: LABKEY.Security.currentUser.displayName ,

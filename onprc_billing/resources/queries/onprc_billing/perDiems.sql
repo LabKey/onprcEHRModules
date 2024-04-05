@@ -20,7 +20,7 @@ SELECT
     count(pd.Id) as totalDaysAssigned,
     min(pd.startDate) as startDate @hidden,
     group_concat(distinct pd.housingRecords) as housingRecords,
-    group_concat(distinct pd.assignmentRecords) as assignmentRecords,
+    group_concat(distinct pd.assignmentRecords) as assignmentRecords
 FROM onprc_billing.perDiemsByDay pd
 
 GROUP BY pd.Id, pd.project, pd.chargeId

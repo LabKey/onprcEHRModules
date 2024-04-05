@@ -12,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *  New Build with Module Number Change 8/16/2023 new FB
+ * */
 
 package org.labkey.onprc_billing;
 
@@ -79,7 +80,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 22.005;
+        return 23.004;
     }
 
     @Override
@@ -183,9 +184,8 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     @Override
     public JSONObject getPageContextJson(ContainerUser ctx)
     {
-        Map<String, Object> ret = new HashMap<>();
         Map<String, String> map = getDefaultPageContextJson(ctx.getContainer());
-        ret.putAll(getDefaultPageContextJson(ctx.getContainer()));
+        Map<String, Object> ret = new HashMap<>(getDefaultPageContextJson(ctx.getContainer()));
 
         if (map.containsKey(ONPRC_BillingManager.BillingContainerPropName) && map.get(ONPRC_BillingManager.BillingContainerPropName) != null)
         {
@@ -195,7 +195,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
             ret.put(ONPRC_BillingManager.BillingContainerPropName, newPath);
 
             Container billingContainer = ContainerManager.getForPath(map.get(ONPRC_BillingManager.BillingContainerPropName));
-            if(billingContainer != null)
+            if (billingContainer != null)
             {
                 ret.put("BillingContainerInfo", billingContainer.toJSON(ctx.getUser()));
             }

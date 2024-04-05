@@ -16,13 +16,10 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.json.JSONObject;
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
-import org.labkey.onprc_ehr.dataentry.NecropsyInstructionFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
-import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
@@ -54,7 +51,7 @@ public class NecropsyFormType extends EncounterForm
                 new NecropsyInstructionFormSection(),   //Added: 12-21-2021 R.Blasa
                 new ClinicalEncountersFormPanelSection("Necropsy"),
                 //Modified: 12-20-2018  R.Blasa
-                new AnimalDetailssFormSection(),
+                new AnimalDetailsFormSection(),
                 new GrossFindingsFormPanelSection(),
                 new PathologyFormSection("ehr", "encounter_participants", "Staff"),
                 new PathologyNotesFormPanelSection(),

@@ -172,7 +172,7 @@ Ext4.define('ONPRC_EHR.panel.AnimalGroupDetailsPanel', {
                     name: 'View Summary of Morbidity and Mortality For This Group Over A Date Range',
                     url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {
                         schemaName: 'study',
-                        'query.queryName': 'animalGroupProblemSummary',
+                        'query.queryName': 'animalGroupProblemSummarySubcategory',
                         'query.groupId/name~eq': this.groupRow.getDisplayValue('name')
                     })
 

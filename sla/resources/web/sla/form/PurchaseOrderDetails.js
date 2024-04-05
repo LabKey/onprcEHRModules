@@ -85,7 +85,7 @@ Ext4.define('SLA.panel.PurchaseOrderDetails', {
                         '<div class="order-header">PURCHASE ORDER INFORMATION</div>',
                         '<span class="order-label">PROJECT: </span><span class="order-value">{projectname:htmlEncode}</span><br/>',
                         '<span class="order-label">PROTOCOL: </span><span class="order-value">{eIACUCNum:htmlEncode}</span><br/>',
-                        '<span class="order-label">PRIMARY INVESTIGATOR: </span><span class="order-value">{investigator:htmlEncode}</span><br/>',
+                        '<span class="order-label">PRIMARY INVESTIGATOR: </span><span class="order-value">{Investigator:htmlEncode}</span><br/>',
                         '<span class="order-label">REQUESTOR: </span><span class="order-value">{requestor:htmlEncode}</span><br/>',
                         //'<span class="order-label">Vendor:</span><span class="order-value">{vendor:htmlEncode}</span><br/>',
                         '<span class="order-label">ALIAS #: </span><span class="order-value">{account:htmlEncode}</span><br/>',
@@ -169,8 +169,8 @@ Ext4.define('SLA.panel.PurchaseOrderDetails', {
                         '<span class="order-label">HOUSING AVAILABILITY: </span><span class="order-value">{housingconfirmed}</span><br/>',
                         '<span class="order-label">ORDERED BY: </span><span class="order-value">{orderedby:htmlEncode}</span><br/>',
                         '<span class="order-label">ORDER DATE: </span><span class="order-value">{orderdate:date("Y-m-d")}</span><br/>',
-                        '<span class="order-label">DCM COMMENTS: </span><span class="order-value">{darcomments}</span><br/>',
-                        '<span class="order-label">ADMIN COMMENTS: </span><span class="order-value">{comments}</span><br/>',
+                        '<span class="order-label">DCM COMMENTS: </span><span class="order-value">{darcomments:htmlEncode}</span><br/>',
+                        '<span class="order-label">ADMIN COMMENTS: </span><span class="order-value">{comments:htmlEncode}</span><br/>',
                     '</tpl>'
                 )
             });

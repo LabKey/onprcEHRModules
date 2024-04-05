@@ -71,6 +71,9 @@ public class LabworkFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkSerologyVirologyWindow.js"));
         //Added 4-6-2015 Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkSerologyScanWindow.js"));
+
+        //Added 11-2-2022 Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkBioFireWindow.js"));
     }
 
     @Override
@@ -90,6 +93,7 @@ public class LabworkFormType extends TaskForm
         defaultButtons.addAll(super.getMoreActionButtonConfigs()) ;
         defaultButtons.add("SEROLOGY_IMPORT");
         defaultButtons.add("SEROLOGY_SCAN_IMPORT");
+        defaultButtons.add("BIOFIRE_IMPORT");
 
         return defaultButtons;
     }

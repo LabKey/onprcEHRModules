@@ -15,19 +15,17 @@
  */
 package org.labkey.onprc_ehr.history;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DurationUtils;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
-import org.labkey.api.util.DateUtil;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
-import java.sql.Date;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 //Created: 11-20-2019 R.Blasa
 public class DefaultSustainedReleaseDatasource extends AbstractEHRDataSource
@@ -61,11 +59,12 @@ public class DefaultSustainedReleaseDatasource extends AbstractEHRDataSource
 //        sb.append(safeAppend(rs, "Starting Date: ", "start"));
 //        sb.append(safeAppend(rs, "Ending Date:", "end"));
         sb.append(safeAppend(rs, "Category", "category"));
-        sb.append(safeAppend(rs, "Medicaion", "meaning"));
+        sb.append(safeAppend(rs, "Medication", "meaning"));
         sb.append(safeAppend(rs, "Medication Code", "code"));
         sb.append(safeAppend(rs, "Amount/Volume", "amountAndVolume"));
         sb.append(safeAppend(rs, "Route", "route"));
-        sb.append(safeAppend(rs, "Elapased Hours", "ElapseHours"));
+        long hours = DurationUtils.toDuration(rs.getDate("date").getTime() - new Date().getTime(), TimeUnit.HOURS).toHours();
+        sb.append(PageFlowUtil.filter("Hours Elapsed: " + hours) + "\n");
         sb.append(safeAppend(rs, "Remarks", "remark"));
 
 
@@ -75,7 +74,6 @@ public class DefaultSustainedReleaseDatasource extends AbstractEHRDataSource
     @Override
     protected Set<String> getColumnNames()
     {
-
-        return PageFlowUtil.set("Id", "date", "enddate", "catgory", "meaning","route", "code","amountAndVolume","ElapseHours", "remark");
+        return PageFlowUtil.set("Id", "date", "enddate", "catgory", "meaning","route", "code","amountAndVolume","remark");
     }
 }

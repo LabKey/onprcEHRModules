@@ -8,7 +8,8 @@
 
                     </column>
                     <column columnName="category">
-
+                    </column>
+                    <column columnName="subcategory">
                     </column>
                     <column columnName="totalIds">
                         <columnTitle>Distinct Animals In Group Over Interval</columnTitle>

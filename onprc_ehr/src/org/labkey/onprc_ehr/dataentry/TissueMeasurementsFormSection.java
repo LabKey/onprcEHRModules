@@ -41,5 +41,4 @@ public class TissueMeasurementsFormSection extends SimpleGridPanel
         jsonObject.put("topAndBottomButtons", true);
         return jsonObject;
     }
-
 }

@@ -15,13 +15,17 @@
  */
 package org.labkey.test.tests.onprc_ehr;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.labkey.remoteapi.CommandException;
-import org.labkey.remoteapi.PostCommand;
+import org.labkey.remoteapi.CommandResponse;
+import org.labkey.remoteapi.GetCommand;
+import org.labkey.remoteapi.SimplePostCommand;
 import org.labkey.remoteapi.query.ExecuteSqlCommand;
 import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
@@ -50,6 +54,7 @@ import org.labkey.test.util.ext4cmp.Ext4GridRef;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -62,6 +67,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertTrue;
 import static org.labkey.test.util.Ext4Helper.Locators.ext4Button;
 import static org.labkey.test.util.Ext4Helper.elementIfEnabled;
 
@@ -154,7 +160,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             put("lsid", damLsid);
             put("QCStateLabel", "Completed");
         }}, false);
-        org.junit.Assert.assertTrue("demographics row was not created for dam1", getApiHelper().doesRowExist("study", "demographics", new Filter("Id", damId1, Filter.Operator.EQUAL)));
+        assertTrue("demographics row was not created for dam1", getApiHelper().doesRowExist("study", "demographics", new Filter("Id", damId1, Filter.Operator.EQUAL)));
 
         //update record to get a geographic_origin, which we expect to get entered into demographics
         getApiHelper().updateRow("study", "birth", new HashMap<>()
@@ -529,6 +535,30 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     }
 
     @Test
+    public void testProceduresFormSection() throws Exception
+    {
+        _helper.goToTaskForm("Research Procedures", "Submit Final", false);
+
+        log("testing add row");
+        Ext4GridRef grid = _helper.getExt4GridForFormSection("Procedures");
+        grid.clickTbarButton("Add");
+        grid.waitForRowCount(1);
+        grid.completeEdit();
+
+        log("testing procedure remark");
+        Ext4FieldRef procedure = grid.getActiveEditor(1, "procedureid");
+        procedure.clickTrigger();
+        click(Locator.tagContainingText("li", "Achilles Tendon Repair"));
+        grid.completeEdit();
+
+        final Object remark = grid.getFieldValue(1, "remark");
+        waitFor(() -> remark != null && remark.toString().equals("Intubated with ___ ID cuffed ET tube, maintained on 1.5% isoflurane and 1 L/min oxygen. Prepared skin with PVI, lavaged with sterile saline. Prepared skin with PVI, aseptically draped. Incised over the caudolateral surface of the tendon, 5 cm. Identified the gastronemius, superficial digital flexor, and common tendon. Freshened tendon edges and apposed with 2-0 PDS with a far-near near-far pattern. Lavaged, closed fascia with 3-0 Monocryl SI. Freshened skin edges, closed with 3-0 Monocryl SI. Placed a padded bandage and fiberglas cast. Administered analgesics. Good recovery from anesthesia."),
+                "Expected Remark not set", WAIT_FOR_JAVASCRIPT);
+
+        _helper.discardForm();
+    }
+
+    @Test
     public void testArrivalForm() throws Exception
     {
         _helper.goToTaskForm("Arrival", "Submit Final", false);
@@ -734,7 +764,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         //create records
         log("Creating test subjects");
-        PostCommand<?> insertCommand = getApiHelper().prepareInsertCommand("study", "demographics", "lsid", new String[]{"Id", "Species", "Birth", "Gender", "date", "calculated_status"}, new Object[][]{
+        SimplePostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "demographics", "lsid", new String[]{"Id", "Species", "Birth", "Gender", "date", "calculated_status"}, new Object[][]{
                 {SUBJECTS[0], "Rhesus", (new Date()).toString(), "m", new Date(), "Alive"}
         });
         getApiHelper().doSaveRows(PasswordUtil.getUsername(), insertCommand, getExtraContext());
@@ -854,7 +884,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         //create records
         log("Creating test subjects");
-        PostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "demographics", "lsid", new String[]{"Id", "Species", "Birth", "Gender", "date", "calculated_status"}, new Object[][]{
+        SimplePostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "demographics", "lsid", new String[]{"Id", "Species", "Birth", "Gender", "date", "calculated_status"}, new Object[][]{
                 {SUBJECTS[0], "Rhesus", (new Date()).toString(), "m", new Date(), "Alive"}
         });
         getApiHelper().doSaveRows(PasswordUtil.getUsername(), insertCommand, getExtraContext());
@@ -919,7 +949,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         Ext4FieldRef problemField = Ext4FieldRef.getForLabel(this, "Problem");
         Ext4FieldRef subProblemField = Ext4FieldRef.getForLabel(this, "Subcategory");
-        Assert.assertTrue(subProblemField.isDisabled());
+        assertTrue(subProblemField.isDisabled());
         problemField.setValue("Behavioral");
         sleep(200);
         Assert.assertFalse(subProblemField.isDisabled());
@@ -1081,6 +1111,41 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         DataRegionTable table = new DataRegionTable("study|blood", getDriver());
         checker().verifyEquals("New blood draw request is not created", 1, table.getDataRowCount());
+
+    }
+
+    @Test
+    public void clinicalHistoryXML() throws IOException, CommandException
+    {
+        GetCommand getCommand = new GetCommand("ehr", "getClinicalHistory") {
+            @Override
+            protected HttpGet createRequest(URI uri)
+            {
+                return new HttpGet(uri);
+            }
+
+            @Override
+            protected Map<String, Object> createParameterMap()
+            {
+                Map<String, Object> params = super.createParameterMap();
+
+                params.put("subjectIds", "12345");
+                params.put("minDate", "2000-01-01");
+                params.put("maxDate", new Date());
+                params.put("respFormat", "XML");
+
+                return params;
+            }
+        };
+
+        CommandResponse response = getCommand.execute(getApiHelper().getConnection(), getContainerPath());
+        String xml = response.getText();
+
+        assertTrue("Expected XML to contain <response>", StringUtils.countMatches(xml, "<response>") == 1);
+        assertTrue("Expected XML to contain <html> for 8 rows", StringUtils.countMatches(xml, "<html>") == 8);
+        assertTrue("Expected XML to contain <publicData> for 8 rows", StringUtils.countMatches(xml, "<publicData>") == 8);
+        assertTrue("Expected XML to contain <type>Clinical</type> for 3 clinical entries", StringUtils.countMatches(xml, "<type>Clinical</type>") == 3);
+        assertTrue("Expected XML to contain <source>Housing Transfer</source> for 2 housing moves", StringUtils.countMatches(xml, "<source>Housing Transfer</source>") == 2);
 
     }
 

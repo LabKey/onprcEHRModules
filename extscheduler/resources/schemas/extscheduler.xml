@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tables xsi:schemaLocation="http://labkey.org/data/xml ..\..\..\..\..\schemas\tableInfo.xsd"
+<tables xsi:schemaLocation="http://labkey.org/data/xml..\..\..\..\..\schemas\tableInfo.xsd"
         xmlns="http://labkey.org/data/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <table tableName="resources" tableDbType="TABLE">
@@ -99,20 +99,7 @@
             </column>
         </columns>
     </table>
-    <table tableName="vw_Covid19Research" tableDbType="VIEW">
-        <columns>
-            <column columnName="SChedulerID"/>
-            <column columnName="ResourceId"/>
-            <column columnName="ResourceName"/>
-            <column columnName="Name"/>
-            <column columnName="StartDate"/>
-            <column columnName="UserId"/>
-            <column columnName="CreatedBy"/>
-            <column columnName="Created"/>
-            <column columnName="Quantity"/>
-            <column columnName="EmployeeID"/>
-        </columns>
-    </table>
+
     <table tableName="dateParts" tableDbType="TABLE">
         <columns>
             <column columnName="date"/>
@@ -127,69 +114,6 @@
             <column columnName="year"/>
         </columns>
     </table>
-    <table tableName="vw_Covid19DCMSchedule" tableDbType="VIEW">
-        <columns>
-            <column columnName="SChedulerID"/>
-            <column columnName="ResourceId"/>
-            <column columnName="ResourceName"/>
-            <column columnName="Name"/>
-            <column columnName="StartDate"/>
-            <column columnName="UserId"/>
-            <column columnName="CreatedBy"/>
-            <column columnName="Created"/>
-            <column columnName="Quantity"/>
-            <column columnName="EmployeeID"/>
-        </columns>
-    </table>
-    <table tableName="Covid19Testing" tableDbType="TABLE">
-        <columns>
-            <column columnName="container"/>
-            <column columnName="entityId"/>
-            <column columnName="lastIndexed"/>
-            <column columnName="createdBy"/>
-            <column columnName="modified"/>
-            <column columnName="modifiedBy"/>
-            <column columnName="created"/>
-            <column columnName="Key"/>
-            <column columnName="SchedulerID"/>
-            <column columnName="ResourceID"/>
-            <column columnName="UserName"/>
-            <column columnName="UserID"/>
-            <column columnName="EmployeeID"/>
-            <column columnName="ScheduledDate"/>
-            <column columnName="ScheduledTime"/>
-            <column columnName="Create"/>
-            <column columnName="SampleDate"/>
-            <column columnName="CreatedB"/>
-            <column columnName="ComplianceUpdated"/>
-        </columns>
-    </table>
-    <table tableName="TempScheduler" tableDbType="TABLE">
-        <columns>
-            <column columnName="Searchkey"/>
-            <column columnName="usernames"/>
-            <column columnName="EventId"/>
-            <column columnName="StartDate"/>
-            <column columnName="created"/>
-        </columns>
-    </table>
-    <table tableName="TempCoV19Final" tableDbType="TABLE">
-        <columns>
-            <column columnName="container"/>
-            <column columnName="UserName"/>
-            <column columnName="UserID"/>
-            <column columnName="EventID"/>
-            <column columnName="StartDate"/>
-            <column columnName="EmployeeID"/>
-            <column columnName="Created"/>
-        </columns>
-    </table>
-    <table tableName="TempCoV19Interim" tableDbType="TABLE">
-        <columns>
-            <column columnName="EventId"/>
-            <column columnName="UserName"/>
-            <column columnName="container"/>
-        </columns>
-    </table>
+
 
 </tables>

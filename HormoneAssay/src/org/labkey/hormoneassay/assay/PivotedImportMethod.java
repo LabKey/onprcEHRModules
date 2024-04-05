@@ -1,14 +1,13 @@
 package org.labkey.hormoneassay.assay;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.json.JSONObject;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.Container;
-import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.exp.api.ExpProtocol;
-import org.labkey.api.gwt.client.util.StringUtils;
 import org.labkey.api.laboratory.assay.AssayImportMethod;
 import org.labkey.api.laboratory.assay.AssayParser;
 import org.labkey.api.laboratory.assay.ImportContext;
@@ -19,7 +18,6 @@ import org.labkey.api.security.User;
 import org.labkey.api.view.ViewContext;
 import org.labkey.hormoneassay.HormoneAssaySchema;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -132,7 +130,7 @@ public class PivotedImportMethod extends PivotingImportMethod
             TableInfo ti = HormoneAssaySchema.getInstance().getSchema().getTable(HormoneAssaySchema.TABLE_ASSAYTESTS);
             TableSelector ts = new TableSelector(ti);
             Map<String, Object>[] rows = ts.getMapArray();
-            Map<String, String> ret = new CaseInsensitiveHashMap();
+            Map<String, String> ret = new CaseInsensitiveHashMap<>();
             for (Map<String, Object> row : rows)
             {
                 ret.put((String)row.get(NAME_FIELD), (String)row.get(NAME_FIELD));

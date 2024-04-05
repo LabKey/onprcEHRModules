@@ -16,10 +16,11 @@
 package org.labkey.test.tests.onprc_ehr;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
+import org.labkey.remoteapi.CommandException;
 import org.labkey.remoteapi.CommandResponse;
 import org.labkey.remoteapi.Connection;
-import org.labkey.remoteapi.PostCommand;
+import org.labkey.remoteapi.SimplePostCommand;
 import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
 import org.labkey.remoteapi.query.SaveRowsResponse;
@@ -28,9 +29,12 @@ import org.labkey.remoteapi.query.SelectRowsResponse;
 import org.labkey.test.ModulePropertyValue;
 import org.labkey.test.TestFileUtils;
 import org.labkey.test.WebTestHelper;
+import org.labkey.test.params.FieldDefinition;
+import org.labkey.test.params.list.IntListDefinition;
+import org.labkey.test.params.list.ListDefinition;
+import org.labkey.test.params.list.VarListDefinition;
 import org.labkey.test.tests.ehr.AbstractGenericEHRTest;
 import org.labkey.test.util.Ext4Helper;
-import org.labkey.test.util.ListHelper;
 import org.labkey.test.util.LogMethod;
 import org.labkey.test.util.PasswordUtil;
 import org.labkey.test.util.SchemaHelper;
@@ -40,6 +44,7 @@ import org.labkey.test.util.ext4cmp.Ext4CmpRef;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -116,76 +121,90 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     }
 
     @Override
-    protected void doExtraPreStudyImportSetup()
+    protected void doExtraPreStudyImportSetup() throws IOException, CommandException
     {
         //create onprc_billing_public linked schema
         beginAt(getProjectName());
         SchemaHelper schemaHelper = new SchemaHelper(this);
-        schemaHelper.createLinkedSchema(this.getProjectName(), null, "onprc_billing_public", "/" + this.getContainerPath(), "onprc_billing_public", null, null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "onprc_billing_public", "/" + this.getContainerPath(), "onprc_billing_public", null, null, null);
 
         //create Labfee_NoChargeProjects
         beginAt(getProjectName());
 
-        ListHelper.ListColumn projectCol= new ListHelper.ListColumn("project", ListHelper.ListColumnType.Integer);
-        ListHelper.ListColumn startDateCol= new ListHelper.ListColumn("startDate", ListHelper.ListColumnType.DateAndTime);
-        ListHelper.ListColumn dateDisabledCol= new ListHelper.ListColumn("dateDisabled", ListHelper.ListColumnType.DateAndTime);
-        ListHelper.ListColumn createdDbCol= new ListHelper.ListColumn("Createdb", ListHelper.ListColumnType.Integer);
-        ListHelper.ListColumn notesCol= new ListHelper.ListColumn("Notes", ListHelper.ListColumnType.String);
-        _listHelper.createList(getProjectName(), "Labfee_NoChargeProjects", ListHelper.ListColumnType.Integer, "key", projectCol, startDateCol, dateDisabledCol, createdDbCol, notesCol);
+        ListDefinition listDef = new IntListDefinition("Labfee_NoChargeProjects", "key");
+        listDef.addField(new FieldDefinition("project", FieldDefinition.ColumnType.Integer));
+        listDef.addField(new FieldDefinition("startDate", FieldDefinition.ColumnType.DateAndTime));
+        listDef.addField(new FieldDefinition("dateDisabled", FieldDefinition.ColumnType.DateAndTime));
+        listDef.addField(new FieldDefinition("Createdb", FieldDefinition.ColumnType.Integer));
+        listDef.addField(new FieldDefinition("Notes", FieldDefinition.ColumnType.String));
+        listDef.getCreateCommand().execute(createDefaultConnection(), getProjectName());
 
-        _listHelper.createList(getProjectName(), "GeneticValue", ListHelper.ListColumnType.String, "Id",
-                new ListHelper.ListColumn("meanKinship", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("zscore", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("genomeUniqueness", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("totalOffspring", ListHelper.ListColumnType.Integer),
-                new ListHelper.ListColumn("livingOffspring", ListHelper.ListColumnType.Integer),
-                new ListHelper.ListColumn("assignments", ListHelper.ListColumnType.Integer),
-                new ListHelper.ListColumn("condition", ListHelper.ListColumnType.String),
-                new ListHelper.ListColumn("import", ListHelper.ListColumnType.String),
-                new ListHelper.ListColumn("value", ListHelper.ListColumnType.String),
-                new ListHelper.ListColumn("rank", ListHelper.ListColumnType.Integer)
-        );
+        ListDefinition listDef2 = new VarListDefinition("GeneticValue");
+        listDef2.setKeyName("Id");
+        listDef2.addField(new FieldDefinition("meanKinship", FieldDefinition.ColumnType.Decimal));
+        listDef2.addField(new FieldDefinition("zscore", FieldDefinition.ColumnType.Decimal));
+        listDef2.addField(new FieldDefinition("genomeUniqueness", FieldDefinition.ColumnType.Decimal));
+        listDef2.addField(new FieldDefinition("totalOffspring", FieldDefinition.ColumnType.Integer));
+        listDef2.addField(new FieldDefinition("livingOffspring", FieldDefinition.ColumnType.Integer));
+        listDef2.addField(new FieldDefinition("assignments", FieldDefinition.ColumnType.Integer));
+        listDef2.addField(new FieldDefinition("condition", FieldDefinition.ColumnType.String));
+        listDef2.addField(new FieldDefinition("import", FieldDefinition.ColumnType.String));
+        listDef2.addField(new FieldDefinition("value", FieldDefinition.ColumnType.String));
+        listDef2.addField(new FieldDefinition("rank", FieldDefinition.ColumnType.Integer));
+        listDef2.getCreateCommand().execute(createDefaultConnection(), getProjectName());
 
-        _listHelper.createList(getProjectName(), "Special_Aliases", ListHelper.ListColumnType.AutoInteger, "Key",
-                new ListHelper.ListColumn("Category", ListHelper.ListColumnType.String),
-                new ListHelper.ListColumn("Alias", ListHelper.ListColumnType.String));
+        ListDefinition listDef3 = new IntListDefinition("Special_Aliases", "Key");
+        listDef3.addField(new FieldDefinition("Category", FieldDefinition.ColumnType.String));
+        listDef3.addField(new FieldDefinition("Alias", FieldDefinition.ColumnType.String));
+        listDef3.getCreateCommand().execute(createDefaultConnection(), getProjectName());
 
-        // Fake up an external schema connection for "dbo" via a list and a linked schema
-        _listHelper.createList(getProjectName(), "Rpt_ChargesProjection", ListHelper.ListColumnType.AutoInteger, "RowId",
-                new ListHelper.ListColumn("ChargeId", ListHelper.ListColumnType.Integer),
-                new ListHelper.ListColumn("UnitCost", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("year1", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("year2", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("year3", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("year4", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("year5", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("year6", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("year7", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("year8", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("Aprate1", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("Aprate2", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("Aprate3", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("Aprate4", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("Aprate5", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("Aprate6", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("Aprate7", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("Aprate8", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("Aprate9", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("PostedDate", ListHelper.ListColumnType.DateAndTime)
-        );
+        ListDefinition listDef4 = new IntListDefinition("Rpt_ChargesProjection", "RowId");
+        listDef4.addField(new FieldDefinition("ChargeId", FieldDefinition.ColumnType.Integer));
+        listDef4.addField(new FieldDefinition("UnitCost", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("year1", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("year2", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("year3", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("year4", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("year5", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("year6", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("year7", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("year8", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("Aprate1", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("Aprate2", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("Aprate3", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("Aprate4", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("Aprate5", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("Aprate6", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("Aprate7", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("Aprate8", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("Aprate9", FieldDefinition.ColumnType.Decimal));
+        listDef4.addField(new FieldDefinition("PostedDate", FieldDefinition.ColumnType.DateAndTime));
+        listDef4.getCreateCommand().execute(createDefaultConnection(), getProjectName());
 
-        // Mock up a table in the geneticscore schema instead of needing to mock up all of the geneticscore dependencies too
-        _listHelper.createList(getProjectName(), "mhc_data", ListHelper.ListColumnType.AutoInteger, "RowId",
-                new ListHelper.ListColumn("subjectId", ListHelper.ListColumnType.String),
-                new ListHelper.ListColumn("datatype", ListHelper.ListColumnType.String),
-                new ListHelper.ListColumn("marker", ListHelper.ListColumnType.String),
-                new ListHelper.ListColumn("result", ListHelper.ListColumnType.String),
-                new ListHelper.ListColumn("score", ListHelper.ListColumnType.Decimal),
-                new ListHelper.ListColumn("assaytype", ListHelper.ListColumnType.String),
-                new ListHelper.ListColumn("totalTests", ListHelper.ListColumnType.Integer));
+        // Mock up a table in the MHC_Data schema instead of needing to mock up all of its dependencies too
+        ListDefinition listDef5 = new IntListDefinition("MHC_Data_Unified", "RowId");
+        listDef5.addField(new FieldDefinition("Id", FieldDefinition.ColumnType.String));
+        listDef5.addField(new FieldDefinition("SubjectId", FieldDefinition.ColumnType.String));
+        listDef5.addField(new FieldDefinition("allele", FieldDefinition.ColumnType.String));
+        listDef5.addField(new FieldDefinition("shortName", FieldDefinition.ColumnType.String));
+        listDef5.addField(new FieldDefinition("totalTests", FieldDefinition.ColumnType.Integer));
+        listDef5.addField(new FieldDefinition("assayType", FieldDefinition.ColumnType.String));
+        listDef5.addField(new FieldDefinition("marker", FieldDefinition.ColumnType.String));
+        listDef5.addField(new FieldDefinition("score", FieldDefinition.ColumnType.Decimal));
+        listDef5.addField(new FieldDefinition("datatype", FieldDefinition.ColumnType.String));
+        listDef5.addField(new FieldDefinition("result", FieldDefinition.ColumnType.String));
+        listDef5.addField(new FieldDefinition("type", FieldDefinition.ColumnType.String));
+        listDef5.getCreateCommand().execute(createDefaultConnection(), getProjectName());
 
         schemaHelper.createLinkedSchema(this.getProjectName(), "dbo", "/" + this.getContainerPath(), null, "lists", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "geneticscore", "/" + this.getContainerPath(), null, "lists", null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "MHC_Data", "/" + this.getContainerPath(), null, "lists", null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "ehrSLA", "/" + this.getContainerPath(), "ehrSLA", "sla", null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "financepublic", "/" + this.getContainerPath(), "financepublic", "onprc_billing", null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "publicehr", "/" + this.getContainerPath(), null, "ehr", null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "onprc_ehrSLA", "/" + this.getContainerPath(), null, "onprc_ehr", null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_onprcehrPublic", "/" + this.getContainerPath(), "pf_onprcehrPublic", null, null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_publicEHR", "/" + this.getContainerPath(), "pf_publicEHR", null, null, null);
+        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_publicFinance", "/" + this.getContainerPath(), "pf_publicFinance", null, null, null);
     }
 
     @Override
@@ -197,9 +216,9 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         //this applies the standard property descriptors, creates indexes, etc.
         // NOTE: this currently will log an error from DatasetDefinition whenever we create a new column.  This really isnt a bug, so ignore
         checkErrors();
-        Connection connection = createDefaultConnection(true);
-        PostCommand command = new PostCommand("ehr", "ensureDatasetProperties");
-        command.setTimeout(120000);
+        Connection connection = createDefaultConnection();
+        SimplePostCommand command = new SimplePostCommand("ehr", "ensureDatasetProperties");
+        command.setTimeout(1200000);
         CommandResponse response = command.execute(connection, getContainerPath());
         assertTrue("Problem with ehr-ensureDatasetProperties: [" +response.getStatusCode() + "] " + response.getText(), response.getStatusCode() < 400);
         resetErrors();
@@ -218,7 +237,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected void setupNotificationService()
     {
         //set general settings
-        beginAt(getBaseURL() + "/ldk/" + getContainerPath() + "/notificationAdmin.view");
+        beginAt(WebTestHelper.buildURL("ldk", getContainerPath(),"notificationAdmin"));
         _helper.waitForCmp("field[fieldLabel='Notification User']");
         Ext4FieldRef.getForLabel(this, "Notification User").setValue(PasswordUtil.getUsername());
         Ext4FieldRef.getForLabel(this, "Reply Email").setValue("fakeEmail@fakeDomain.test");
@@ -232,7 +251,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     @Override
     protected void populateInitialData()
     {
-        beginAt(getBaseURL() + "/" + getModuleDirectory() + "/" + getContainerPath() + "/populateData.view");
+        beginAt(WebTestHelper.buildURL(getModuleDirectory(), getContainerPath(), "populateData"));
 
         repopulate("Lookup Sets");
         repopulate("Procedures");
@@ -241,7 +260,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         repopulate("SNOMED Codes");
 
         //also populate templates
-        beginAt(getBaseURL() + "/" + getModuleDirectory() + "/" + getContainerPath() + "/populateTemplates.view");
+        beginAt(WebTestHelper.buildURL(getModuleDirectory(), getContainerPath(), "populateTemplates"));
 
         repopulate("Form Templates");
         repopulate("Formulary");
@@ -269,7 +288,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
                 {SUBJECTS[1], pastDate1, "Clinical"},
                 {SUBJECTS[1], pastDate1, "Surgery"}
         };
-        PostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "cases", "lsid", fields, data);
+        SimplePostCommand insertCommand = getApiHelper().prepareInsertCommand("study", "cases", "lsid", fields, data);
         getApiHelper().deleteAllRecords("study", "cases", new Filter("Id", StringUtils.join(SUBJECTS, ";"), Filter.Operator.IN));
         getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), insertCommand, getExtraContext());
     }
@@ -310,7 +329,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         if (objectid == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr_lookups", "flag_values");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("category", category);
                     put("value", name);
@@ -361,14 +381,15 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         if (groupId == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr", "animal_groups");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("name", name);
                 }
             });
 
             SaveRowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
-            groupId = ((Long)saveRowsResponse.getRows().get(0).get("rowid")).intValue();
+            groupId = (Integer)saveRowsResponse.getRows().get(0).get("rowid");
         }
 
         return groupId;

@@ -20,9 +20,7 @@ import org.json.JSONObject;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
-import org.labkey.api.data.ContainerFilterable;
 import org.labkey.api.data.SQLFragment;
-import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
 import org.labkey.api.data.SqlSelector;
@@ -36,10 +34,7 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.writer.ContainerUser;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -128,7 +123,6 @@ public class BehaviorNotification extends ColonyAlertsNotification
         TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("NHP_Training_BehaviorAlert",ContainerFilter.Type.AllFolders.create(c, u));
 //        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(u);
         TableSelector ts = new TableSelector(ti, null, null);
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true);
 
         long total = ts.getRowCount();
         msg.append("<b>NHP_Training entries where \"Training Result = In-Progress\" for over 60 days:</b><p>");
@@ -194,6 +188,23 @@ public class BehaviorNotification extends ColonyAlertsNotification
         else
         {
             msg.append("<b>WARNING: No DCM notes added yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
+        }
+
+        /*  Added by Kollil on 10/12/2023
+            New alert for DCM notes (category = notes pertaining to DAR) removed the previous day.
+            Refer to tkt #9977
+        */
+        SimpleFilter filter4 = new SimpleFilter(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_EQUAL);
+        TableSelector ts4 = new TableSelector(getStudySchema(c, u).getTable("Notes_WithLocation"), filter4, null);
+        long count4 = ts4.getRowCount();
+
+        if (count4 > 0) {
+            msg.append("<b>" + count4 + " DCM notes entries removed yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("</p><br><hr>\n\n");
+        }
+        else {
+            msg.append("<b>WARNING: No DCM notes ended yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
         }
 
         //Added by Kollil on 11/04/2020
@@ -314,7 +325,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
         Collection<Map<String, Object>> rows = ss.getMapCollection();
 
-        if (rows.size() > 0)
+        if (!rows.isEmpty())
         {
             msg.append("<b>There are " + rows.size() + " animals with differences in pairing since the previous day.  Note, this considers full pairs vs. non-full pairs only (ie. grooming contact is treated as non-paired).  It considers housing at midnight of the days in question.</b>  ");
             String url = getExecuteQueryUrl(c, "study", "pairDifferences", null) + "&query.changeType~isnonblank&query.changeType~neq=Group Members Changed&query.param.Date1=" + getDateFormat(c).format(date1.getTime()) + "&query.param.Date2=" + getDateFormat(c).format(date2.getTime());
@@ -354,21 +365,16 @@ public class BehaviorNotification extends ColonyAlertsNotification
         msg.append("<tr style='font-weight: bold;'><td>Category</td><td># Animals</td><td>Previous Value " + (lastRunDate == null ? "" : "(" + getDateFormat(c).format(lastRunDate) + ")") + "</td></tr>");
         final String urlBase = getExecuteQueryUrl(c, "study", "demographics", "By Location");
 
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
-        {
-            @Override
-            public void exec(ResultSet rs) throws SQLException
+        ts.forEach(rs -> {
+            String category = rs.getString("category");
+            msg.append("<tr><td>").append(category).append("</td><td><a href='").append(urlBase).append("&query.Id/numPaired/category~eq=").append(category).append("'>").append(rs.getInt("totalAnimals")).append("</a></td><td>");
+            if (oldValueMap.has(category))
             {
-                String category = rs.getString("category");
-                msg.append("<tr><td>" + category + "</td><td><a href='" + urlBase + "&query.Id/numPaired/category~eq=" + category + "'>" + rs.getInt("totalAnimals") + "</a></td><td>");
-                if (oldValueMap.containsKey(category))
-                {
-                    msg.append(oldValueMap.get(category));
-                }
-                msg.append("</td></tr>");
-
-                newValueMap.put(category, rs.getInt("totalAnimals"));
+                msg.append(oldValueMap.get(category));
             }
+            msg.append("</td></tr>");
+
+            newValueMap.put(category, rs.getInt("totalAnimals"));
         });
 
         msg.append("</table>");

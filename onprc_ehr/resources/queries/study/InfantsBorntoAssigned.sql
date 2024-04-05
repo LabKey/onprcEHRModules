@@ -3,7 +3,7 @@ a.Id,
 a.date,
 a.dam,
 a.sire,
-(select group_concat( b.project.name) from  study.assignment b
+(select group_concat( b.project.name) AS N from  study.assignment b
 where  b.qcstate = 18 and b.isActive ='true' And b.participantid = a.dam)  ProjectName,
 
 a.QCState
@@ -23,7 +23,7 @@ a.Id,
 a.date,
 a.dam,
 a.sire,
-(select group_concat( b.project.name) from  study.assignment b
+(select group_concat( b.project.name) AS N from  study.assignment b
 where  b.qcstate = 18 and b.isActive ='true' And b.participantid = a.dam)  ProjectName,
 
 a.QCState
@@ -42,7 +42,7 @@ a.Id,
 a.date,
 a.dam,
 a.sire,
-(select group_concat( b.project.name) from  study.assignment b
+(select group_concat( b.project.name) AS N from  study.assignment b
 where  b.qcstate = 18 and b.isActive ='true' And b.participantid = a.dam)  ProjectName,
 
 a.QCState

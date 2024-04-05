@@ -1,25 +1,31 @@
+--Created by Kollil
+--Modified by Kollil in Aug 2023. Added more filters to the where clause to display the history accurately.
 SELECT
-    Id,
-    Date,
-    examNum,
-    accessionNum,
-    PMICType,
-    PETRadioisotope,
-    PETDoseMCI,
-    PETDoseMBQ,
-    route,
-    CTACType,
-    CTACScanRange,
-    CTDIvol,
-    phantom,
-    DLP,
+    a.Id,
+    a.Date,
+    a.examNum,
+    a.accessionNum,
+    a.PMICType,
+    a.PETRadioisotope,
+    a.PETDoseMCI,
+    a.PETDoseMBQ,
+    a.route,
+    a.CTACType,
+    a.CTACScanRange,
+    a.CTDIvol,
+    a.phantom,
+    a.DLP,
     --totalExamDLP,
-    wetLabUse,
-    ligandAndComments,
+    a.wetLabUse,
+    a.ligandAndComments,
     --imageUploadLink,
-    taskid,
-    qcstate,
-    performedby,
-    created,
-    createdBy
-from study.PMIC_PETImagingData
+    e.taskid, -- get the qc state from encounters table
+    e.qcstate,
+    a.performedby,
+    a.created,
+    a.createdBy
+from study.PMIC_PETImagingData a, study.encounters e
+Where a.taskid = e.taskid
+  and a.id = e.id
+  and e.chargetype = 'PMIC'
+  and e.type = 'procedure'

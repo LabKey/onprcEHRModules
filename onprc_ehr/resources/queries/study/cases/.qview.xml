@@ -1,6 +1,7 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Cases">
     <columns>
         <column name="Id"/>
+        <column name="Id/curLocation/area"/>
         <column name="Id/curLocation/room"/>
         <column name="Id/curLocation/cage"/>
         <column name="category"/>

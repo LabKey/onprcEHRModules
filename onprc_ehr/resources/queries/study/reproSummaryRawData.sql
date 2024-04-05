@@ -23,7 +23,7 @@ SELECT
     WHEN p.id IS NOT NULL THEN 'P'
     ELSE null
   END as isPregnant,
-  t2.value,
+  t2.value
 
 FROM (
 
@@ -35,7 +35,7 @@ SELECT
   t1.day,
   t1.value,
   CAST(cast(t1.year as varchar) || '-' || cast(t1.monthNum as varchar) || '-' || '01' as date) as mindate,
-  TIMESTAMPADD('SQL_TSI_MONTH', 1, CAST(cast(t1.year as varchar) || '-' || cast(t1.monthNum as varchar) || '-' || '01' as date)) as maxdate,
+  TIMESTAMPADD('SQL_TSI_MONTH', 1, CAST(cast(t1.year as varchar) || '-' || cast(t1.monthNum as varchar) || '-' || '01' as date)) as maxdate
 
 FROM (
 
@@ -48,7 +48,7 @@ SELECT
   convert(year(t.date), integer) as year,
   monthname(t.date) AS monthname,
   convert(month(t.date), integer) AS monthnum,
-  convert(dayofmonth(t.date), integer) as day,
+  convert(dayofmonth(t.date), integer) as day
 
 FROM study."Clinical Observations" t
 WHERE t.category = 'Menses'
@@ -64,7 +64,7 @@ SELECT
   convert(year(t.date), integer) as year,
   monthname(t.date) AS monthname,
   convert(month(t.date), integer) AS monthnum,
-  convert(dayofmonth(t.date), integer) as day,
+  convert(dayofmonth(t.date), integer) as day
 
 FROM study.delivery t
 
@@ -97,7 +97,7 @@ SELECT
   convert(year(t.date), integer) as year,
   monthname(t.date) AS monthname,
   convert(month(t.date), integer) AS monthnum,
-  convert(dayofmonth(t.date), integer) as day,
+  convert(dayofmonth(t.date), integer) as day
 
 FROM study.matings t
 LEFT JOIN ldk.integers i ON (i.value <= TIMESTAMPDIFF('SQL_TSI_DAY', t.date, COALESCE(t.enddate, t.date)))

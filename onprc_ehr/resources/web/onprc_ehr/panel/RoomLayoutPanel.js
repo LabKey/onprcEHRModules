@@ -59,7 +59,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                 queryName: 'cage',
                 filterArray: filters,
                 sort: 'room/sort_order,cagePosition/sort_order',
-                columns: 'location,room,cage,cage_type,divider,cagePosition/row,cagePosition/columnIdx,cagePosition/sort_order,totalAnimals/animals,status',
+                columns: 'location,room,cage,cage_type,divider,cagePosition/row,cagePosition/columnIdx,cagePosition/sort_order,totalAnimals/animals,uuid,status',
                 scope: this,
                 failure: LDK.Utils.getErrorCallback(),
                 success: function(results){
@@ -74,7 +74,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                             {name: 'cagePosition/row', type: 'string'},
                             {name: 'cagePosition/columnIdx', type: 'int'},
                             {name: 'cagePosition/sort_order', type: 'int'},
-                            {name: 'totalAnimals/animals', type: 'string'}
+                            {name: 'totalAnimals/animals', type: 'string'},
+                            {name: 'uuid', type: 'string'}     // default background cage color
                         ]
                     });
 
@@ -139,7 +140,15 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                     toAdd.push({
                         border: false,
                         style: 'margin-bottom: 10px;',
-                        html: 'NOTE: Click on either the cage or divider for more information.  A yellow divider indicates the cages are paired.  A black divider indicates the cages are separate.  Cages are colored green when they are empty.  Yellow cages have been flagged as unavailable.'
+                        html: 'NOTE: Click on either the cage or divider for more information.  <br/> <br/>' +
+                                '<b> CAGE COLORED SCHEME LAYOUT DEFINITIONS: </b></b><br/>' +
+                                'A Yellow divider indicates the cages are paired. <br/>' +
+                                'A Black divider indicates the cages are separate. <br/>' +
+                                'Cages are colored Transparent when they are flagged as \"Normal\" <br/> ' +
+                                'Cages are colored Green when they are empty. <br/> ' +
+                                'Cages are colored Yellow when they are flagged as \"Unavailable\". <br/>' +
+                                'Cages are colored Orange when they are flagged as \"Transfer Pending\". <br/>' +
+                                'Cages are colored light blue when they are flagged as \"Held for Colony\".'
                     });
                 }
 
@@ -237,20 +246,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                                 //Modified: 8-19-2019  R. Blasa Added Divider Legends Not eeded at this time
                                 currentSection.push({
-                                //     html: '<b>List of cage slides, and the display letters they represent:</b><br><br> ' +
-                                //     '   Infant Feeding Slide --------->  IFS <br> ' +
-                                //     '   Clear Slide     -----------------------> C <br> ' +
-                                //     '   Extension Solid Slide --------> ES <br> ' +
-                                //     '   Extension Mesh Slide -------> EM <br> ' +
-                                //     '   Window Slide      -------------------> W <br> ' +
-                                //     '   Double Mesh Slides ----------> DM  <br> ' +
-                                //     '   Double Solid Slides -----------> DS <br> ' +
-                                //     '   Window Mesh Slide ----------> WM <br> ' +
-                                //     '   Backward Grooming Slide -> B  <br>  <br> <br>',
-                                //
-                                //
-                                // }, {
-                                    //Added: 10-9-2019  R.Blasa
+
+                                    //Modified: 4/3/2023  R.Blasa
                                     xtype: 'button',
                                     text: 'Slide Descriptions',
                                     scope: this,
@@ -332,10 +329,11 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 }
 
                                 var bgColor = '';
-                                var emptyCageColor = '#00EE00';
+                                var emptyCageColor = '#00EE00';   // Green
                                 var prevCage = (colIdx > 1) ? cages[colIdx - 1] : null;
                                 var cageType = row.get('cage_type');
                                 var status = row.get('status');
+                                var colorcage = row.get('uuid')  //redfined as cage color background Modified 11-12-2023 R. Blasa
                                 var cageAnimals = row.get('totalAnimals/animals');
                                 if (prevCage){
                                     var prevDividerInfo = config.dividerMap[prevCage.get('divider')] || {};
@@ -365,6 +363,28 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     {
                                         bgColor = 'yellow';
                                     }
+                                    else if (colorcage == 'Transfer Pending')
+                                    {
+                                        if (!Ext4.isEmpty(cageAnimals))
+                                            bgColor = '';
+                                        else
+                                            bgColor = 'orange';
+
+                                    }
+                                    else if (colorcage == 'Held for Colony')
+                                    {
+                                        if (!Ext4.isEmpty(cageAnimals))
+                                            bgColor = '';
+                                        else
+                                            bgColor = '#54daff';
+
+                                    }
+                                    else if (colorcage == 'Empty')
+                                    {
+                                        if (Ext4.isEmpty(cageAnimals))
+                                            bgColor = emptyCageColor;
+
+                                    }
                                 }
                                 else {
                                     //flag cage if empty
@@ -382,6 +402,28 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     else if (status == 'Unavailable')
                                     {
                                         bgColor = 'yellow';
+                                    }
+                                    else if (colorcage == 'Transfer Pending')
+                                    {
+                                        if (!Ext4.isEmpty(cageAnimals))
+                                            bgColor = '';
+                                        else
+                                            bgColor = 'orange';
+
+                                    }
+                                    else if (colorcage == 'Held for Colony')
+                                    {
+                                        if (!Ext4.isEmpty(cageAnimals))
+                                            bgColor = '';
+                                        else
+                                            bgColor = '#54daff';
+
+                                    }
+                                    else if (colorcage == 'Empty')
+                                    {
+                                        if (Ext4.isEmpty(cageAnimals))
+                                            bgColor = emptyCageColor;
+
                                     }
                                 }
 
@@ -702,6 +744,22 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                                 sort: 'divider'
                             }
                         },{
+                            // Added: 11-12-2023  R. Blasa  Provide user option to set cage background color
+                            xtype: 'combo',
+                            fieldLabel: 'Cage Background Color',
+                            displayField: 'value',
+                            valueField: 'value',
+                            value: btn.boundRecord.get('uuid'),
+                            itemId: 'cagecolortype',
+                            store: {
+                                type: 'labkey-store',
+                                schemaName: 'onprc_ehr',
+                                queryName: 'CagesBackgroundcolor',
+                                // filterArray: [LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)],
+                                autoLoad: true,
+                                sort: 'sort_order'
+                            }
+                        },{
                             xtype: 'combo',
                             fieldLabel: 'Status',
                             displayField: 'value',
@@ -724,6 +782,7 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                                 var cageType = win.down('#cageType');
                                 var divider = win.down('#divider');
                                 var cageStatus = win.down('#cageStatus');
+                                var cagecolor = win.down('#cagecolortype');
                                 if (!EHR.Security.hasLocationEditorPermission() && !cageType.getValue()){
                                     Ext4.Msg.alert('Error', 'Must enter the cage type');
                                     return;
@@ -745,7 +804,8 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                                         location: boundRecord.get('location'),
                                         cage_type: cageType.getValue(),
                                         divider: divider.getValue(),
-                                        status: cageStatus.getValue()
+                                        status: cageStatus.getValue(),
+                                        uuid: cagecolor.getValue()
                                     }],
                                     scope: this,
                                     failure: LDK.Utils.getErrorCallback(),
@@ -754,7 +814,8 @@ Ext4.define('ONPRC.window.CageDetailsWindow', {
                                         boundRecord.set({
                                             cage_type: cageType.getValue(),
                                             divider: divider.getValue(),
-                                            status: cageStatus.getValue()
+                                            status: cageStatus.getValue(),
+                                            uuid: cagecolor.getValue()
                                         });
                                         boundRecord.store.fireEvent('datachanged', boundRecord.store);
                                     }

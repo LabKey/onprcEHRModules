@@ -12,7 +12,6 @@ import org.labkey.api.exp.api.ExpProtocol;
 import org.labkey.api.exp.api.ExpRun;
 import org.labkey.api.laboratory.assay.AssayImportMethod;
 import org.labkey.api.laboratory.assay.AssayParser;
-import org.labkey.api.laboratory.assay.DefaultAssayParser;
 import org.labkey.api.laboratory.assay.ImportContext;
 import org.labkey.api.laboratory.assay.ParserErrors;
 import org.labkey.api.query.BatchValidationException;
@@ -20,12 +19,9 @@ import org.labkey.api.security.User;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.util.Pair;
 import org.labkey.api.view.ViewContext;
-import org.labkey.hormoneassay.HormoneAssayManager;
 import org.labkey.hormoneassay.HormoneAssaySchema;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -396,7 +392,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
                             diluentCalcNeeded = true;
                     }
 
-                    if (org.labkey.api.gwt.client.util.StringUtils.isEmpty((String) map.get(CATEGORY_FIELD)))
+                    if (StringUtils.isEmpty((String) map.get(CATEGORY_FIELD)))
                     {
                         map.put(CATEGORY_FIELD, SAMPLE_CATEGORY.Unknown.name());
                     }

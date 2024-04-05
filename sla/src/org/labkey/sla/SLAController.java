@@ -76,8 +76,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+
 public class SLAController extends SpringActionController
 {
+//    Added by kolli, 5/25
+//    private static final Logger _log = LogManager.getLogger(SLAController.class);
+
     private static final DefaultActionResolver _actionResolver = new DefaultActionResolver(SLAController.class);
 
     public SLAController()
@@ -200,7 +204,7 @@ public class SLAController extends SpringActionController
                     if (json.get(key) != null)
                     {
                         //this key corresponds to the rowId of the row in the etl_runs table
-                        Integer value = json.getInt(key);
+                        int value = json.getInt(key);
                         if (value == -1)
                         {
                             rowVersionMap.put(key, null);
@@ -215,8 +219,8 @@ public class SLAController extends SpringActionController
                                 continue;
 
                             rowVersionMap.put(key, (String)rows[0].get("rowversion"));
-                            Long date = ((Date)rows[0].get("date")).getTime();
-                            timestampMap.put(key, date.toString());
+                            long date = ((Date)rows[0].get("date")).getTime();
+                            timestampMap.put(key, Long.toString(date));
                         }
                     }
                 }
@@ -405,9 +409,13 @@ public class SLAController extends SpringActionController
                 projectDisplay = project.getTitle() + " (" + project.getName() + ")";
                 projectNum = project.getName();
 
+//                _log.error("Inv Id from project: " + project.getInvestigatorid());
                 Investigator investigator = SLAManager.get().getInvestigator(project.getInvestigatorid());
+//                _log.error("Inv Id from SLAManager: " + investigator);
+
                 if (investigator != null)
                     investigatorDisplay = investigator.getFirstname() + " " + investigator.getLastname();
+//                    _log.error("Inv names: " + investigator.getFirstname() + " " + investigator.getLastname());
             }
 
             // first look for the SLA Admin group as a Project Group, and then look in the Site Groups
@@ -437,12 +445,12 @@ public class SLAController extends SpringActionController
                     + "VENDOR NAME: " + vendor.getName() + "<br/>"
                     + (order.getHousingconfirmed() != null && order.getHousingconfirmed() == 3 ? "HOUSING AVAILABILITY: Denied<br/>" : "")
                     + "<br/>";
+//                    _log.error("email msg " + msgHtml);
 
             for (PurchaseDetails orderDetail : order.getPurchaseDetails())
             {
                 String orderDetailStatus = getOrderDetailStatus(order, orderDetail);
                 msgHtml += "The following purchase order has been " + orderDetailStatus + ".<br/>";
-
                 msgHtml += "SPECIES: " + (orderDetail.getSpecies() != null ? orderDetail.getSpecies() : "")
                         + "  SEX: " + (orderDetail.getGender() != null ? orderDetail.getGender() : "")
                         + "  STRAIN or STOCK NUM: " + (orderDetail.getStrain() != null ? orderDetail.getStrain() : "") + "<br/>"
@@ -458,7 +466,6 @@ public class SLAController extends SpringActionController
                         + (orderDetail.getDatecancelled() != null ? "DATE CANCELLED: " + df.format(orderDetail.getDatecancelled()) + "<br/>" : "")
                         + "<br/>";
             }
-
             msgHtml += "Please check the <a href='" + url + "'>purchase order</a> for more details!<br/><br/>"
                     + "THANK YOU!";
 

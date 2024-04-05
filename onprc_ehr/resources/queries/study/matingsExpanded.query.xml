@@ -39,6 +39,15 @@
                             <fkColumnName>rowid</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="taskid">
+                        <columnTitle>Task ID</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>tasks</fkTable>
+                            <fkColumnName>taskid</fkColumnName>
+                        </fk>
+
+                    </column>
                 </columns>
             </table>
         </tables>

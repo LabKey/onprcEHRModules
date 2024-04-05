@@ -1,6 +1,0 @@
-<webpart xmlns="http://labkey.org/data/xml/webpart" title="Covid 19 Testing Scheduler">
-    <view name="Covid19Scheduler"/>
-    <locations>
-        <location name="body"/>
-    </locations>
-</webpart>

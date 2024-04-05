@@ -20,6 +20,121 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
                 allowBlank: true //Make AnimalId not a required field for any tech time and etc kind of charges
             },
 
+            project: {
+                allowBlank: true,
+                hidden: false,
+                columnConfig: {
+                    width: 150
+                }
+            },
+
+            chargeId: {
+                xtype: 'combo',
+                header: 'Charge Name',
+                hidden: false,
+                lookup: {
+                    schemaName: 'onprc_billing',
+                    queryName: 'ARTCoreBillingCharges',
+                    displayColumn: 'chargeName',
+                    keyColumn: 'rowid',
+                    columns: 'rowid, category, chargeName, unitCost'
+                },
+                editorConfig: {
+                    anyMatch: true,
+                    listConfig: {
+                        innerTpl: '{[("<b>" + LABKEY.Utils.encodeHtml(values.chargeName) + "</b>" )]}',
+                        getInnerTpl: function(){
+                            return this.innerTpl;
+                        }
+                    }
+                },
+                columnConfig: {
+                    width: 400
+                }
+
+            },
+
+            debitedaccount: {
+                xtype: 'combo',
+                header: 'Alias',
+                hidden: false,
+                lookup: {
+                    schemaName: 'onprc_billing',
+                    queryName: 'ARTCoreAliases',
+                    displayColumn: 'aliasPI',
+                    keyColumn: 'alias',
+                    columns: 'alias, aliasPI'
+                },
+                editorConfig: {
+                    listConfig: {
+                        innerTpl: '{[("<b>" + LABKEY.Utils.encodeHtml(values.aliasPI) + "</b>" )]}',
+                        getInnerTpl: function(){
+                            return this.innerTpl;
+                        }
+                    }
+                },
+                columnConfig: {
+                    width: 300
+                }
+
+            },
+
+            comment: {
+                allowBlank: true,
+                columnConfig: {
+                    width: 200
+                }
+            },
+
+            unitcost: {
+                hidden: false,
+                header: 'Unit Cost',
+                editorConfig: {
+                    decimalPrecision: 2
+                }
+            },
+
+            lineItemTotal: {
+                allowBlank: true,
+                header: 'Estimated Charge',
+                nullable: true,
+                hidden: false,
+                shownInGrid: true,
+                columnConfig: {
+                    width: 200
+                }
+            },
+
+            chargetype: {
+                allowBlank: true,
+                defaultValue: 'ART Core',
+                hidden: false
+            }
+
+        }
+    }
+});
+
+/*
+
+    allQueries: {
+    },
+    byQuery: {
+        'onprc_billing.miscCharges': {
+            Id: {
+                hidden: false,
+                header: 'Animal Id',
+                allowBlank: true //Make AnimalId not a required field for any tech time and etc kind of charges
+            },
+
+            project: {
+                allowBlank: true,
+                hidden: false,
+                columnConfig: {
+                    width: 150
+                }
+            },
+
             chargeId: {
                 xtype: 'combo',
                 header: 'Charge Name',
@@ -72,11 +187,6 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
 
             },
 
-            project: {
-                allowBlank: true,
-                hidden: true
-            },
-
             comment: {
                 allowBlank: true,
                 columnConfig: {
@@ -84,11 +194,15 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
                 }
             },
 
-            unitcost: {
-                hidden: true,
-                header: 'NIH Rate',
+            unitCost: {
+                hidden: false,
+                header: 'Unit Cost', //'NIH Rate',
                 editorConfig: {
-                    decimalPrecision: 2
+                    decimalPrecision: 2,
+                },
+                columnConfig: {
+                    //used to allow editing of unit cost
+                    enforceUnitCost: true
                 }
             },
 
@@ -112,6 +226,7 @@ EHR.model.DataModelManager.registerMetadata('ARTCoreMisc', {
         }
     }
 });
+*/
 
 //Kolli 7/2020. Submit and Reload button submits the form data and reloads the billing page
 EHR.DataEntryUtils.registerDataEntryFormButton('BILLINGRELOAD', {

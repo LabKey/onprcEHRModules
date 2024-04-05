@@ -29,7 +29,7 @@ EHR.model.DataModelManager.registerMetadata('VirologyMisc', {
                 editorConfig: {
                     listConfig: {
                         //innerTpl: '{[(values.category ? "<b>" + values.category + ":</b> " : "") + values.chargeName]}',
-                        innerTpl: '{[("<b>" + values.chargeName + "</b>" )]}',
+                        innerTpl: '{[("<b>" + LABKEY.Utils.encodeHtml(values.chargeName) + "</b>" )]}',
                         getInnerTpl: function(){
                             return this.innerTpl;
                         }
@@ -54,7 +54,7 @@ EHR.model.DataModelManager.registerMetadata('VirologyMisc', {
                 },
                 editorConfig: {
                     listConfig: {
-                        innerTpl: '{[("<b>" + values.aliasPI + "</b>" )]}',
+                        innerTpl: '{[("<b>" + LABKEY.Utils.encodeHtml(values.aliasPI) + "</b>" )]}',
                         getInnerTpl: function(){
                             return this.innerTpl;
                         }

@@ -18,6 +18,7 @@ package org.labkey.ONPRCEHR_ComplianceDB.security;
 import org.labkey.api.module.Module;
 import org.labkey.api.security.permissions.InsertPermission;
 import org.labkey.api.security.permissions.ReadPermission;
+import org.labkey.api.security.permissions.UpdatePermission;
 import org.labkey.api.security.roles.AbstractModuleScopedRole;
 
 
@@ -29,6 +30,7 @@ public class ONPRC_ComplianceDBRole extends AbstractModuleScopedRole
         super("Compliance Employee Records", "This role is required in order to enter data into Employee Records.", moduleClass,
                 ReadPermission.class,
                 InsertPermission.class,
+                UpdatePermission.class,
                 ONPRC_ComplianceDBEntryPermission.class
         );
 
