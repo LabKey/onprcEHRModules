@@ -292,7 +292,7 @@
         </columns>
     </table>
 
-    <table tableName="OchealthMasterTemp" tableDbType="TABLE" useColumnOrder="true">
+    <table tableName="OccHealthMasterTemp" tableDbType="TABLE" useColumnOrder="true">
         <tableTitle>OccHealth Master Temp</tableTitle>
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>
