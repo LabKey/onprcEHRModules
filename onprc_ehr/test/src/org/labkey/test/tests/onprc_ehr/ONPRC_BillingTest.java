@@ -24,6 +24,7 @@ import org.labkey.test.Locator;
 import org.labkey.test.WebTestHelper;
 import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
+import org.labkey.test.components.ext4.Window;
 import org.labkey.test.util.DataRegionTable;
 import org.labkey.test.util.Ext4Helper;
 import org.labkey.test.util.LogMethod;
@@ -155,7 +156,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
 
         clickAndWait(Locator.linkWithText("IACUC Protocols"));
         DataRegionTable protocolTable = new DataRegionTable("query", getDriver());
-        protocolTable.clickHeaderMenu("More Actions", false, "Edit Records");
+        protocolTable.clickHeaderMenu("More Actions", true, "Edit Records");
         protocolTable.clickImportBulkData();
 
         // HACK

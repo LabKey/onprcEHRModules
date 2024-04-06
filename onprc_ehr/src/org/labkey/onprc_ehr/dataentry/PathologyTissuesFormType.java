@@ -94,14 +94,6 @@ public class PathologyTissuesFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/PathologyTissuesField.js"));
     }
 
-    @Override
-    protected List<String> getMoreActionButtonConfigs()
-    {
-        List<String> ret = super.getMoreActionButtonConfigs();
-        ret.add("ENTERDEATH_FOR_TISSUES");
-
-        return ret;
-    }
 
     @Override
     protected boolean canInsert()
