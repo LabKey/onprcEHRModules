@@ -1227,13 +1227,14 @@ exports.init = function(EHR){
             }
         });
 
-        //Added 3-5-2019  R.Blasa
-        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
+        //Added 5-6-2022  R.Blasa
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'ehr', 'project', function(helper, scriptErrors, row, oldRow){
 
             var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
 
-            if (row.project){
+            if (row.project || (oldRow.enddate != row.enddate && oldRow.enddate)){
                 console.log("project data collected  " + row.project)
+                console.log("project end date " + row.enddate)
                 var msg = triggerHelper.sendProjectNotifications(row.project);
                 if (msg){
                     EHR.Server.Utils.addError(scriptErrors, 'project', msg, 'ERROR');
