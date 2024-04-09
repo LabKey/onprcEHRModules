@@ -11,7 +11,7 @@
 */
 
 
-CREATE Procedure onprc_ehr.p_Environemtal_Update_Process
+CREATE Procedure onprc_ehr.p_Environmental_Update_Process
 
 
 
