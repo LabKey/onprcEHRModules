@@ -34,6 +34,7 @@ Ext4.onReady(function(){
                 name: 'Requirements Overdue/Due Soon (Full SSRS Reports)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Report&rs:Command=Render'
             },{
                 name: 'Requirements Overdue/Due Soon (SSRS Reports by Host)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Host_Report&rs:Command=Render'
+
             }
             ]
         },{
@@ -41,9 +42,7 @@ Ext4.onReady(function(){
             items: [{
                 name: 'Employee List', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
             },{
-                name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
-            // },{
-            //     name: 'Enter Employees Completed Requirements(Special Access)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fEmployeeCompletionDatesInput&rs:Command=Render'
+                name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates_Units_Category'
 
             }]
         },{
