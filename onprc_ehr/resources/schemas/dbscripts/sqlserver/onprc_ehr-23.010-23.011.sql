@@ -237,7 +237,7 @@ END
 */
 
 
-CREATE Procedure onprc_ehr.p_EnvironemtalHistoricalUpdates
+CREATE Procedure onprc_ehr.p_EnvironmentalHistoricalUpdates
 
 
 
