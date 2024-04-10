@@ -96,6 +96,9 @@ import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
+import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
+import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalRole;
+//import org.labkey.onprc_ehr.security.ONPRC_EHRPMICEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -123,8 +126,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        // 1/29/24 by Kollil
-        return 23.008;
+        return 23.011;
     }
 
     @Override
@@ -144,6 +146,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
 //        Added: 12-5-2019
 //        RoleManager.registerRole(new ONPRC_EHRPMICEditRole());
+
+//        Added: 10-30-2023 R. Blasa
+        RoleManager.registerRole(new ONPRC_EHREnvironmentalRole());
 
         // register the permissions provider for a restricted issue list
         IssuesListDefService.get().registerRestrictedIssueProvider(new RestrictedIssueProviderImpl());
@@ -305,6 +310,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 12-15-2022  R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageSoapWindow.js"), this);
+
+        //Added: 10-12-2023  R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/EnvironmentalField.js"), this);
 
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
@@ -579,6 +587,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 6-6-2022  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(NecropsyRequestForm.class, this));
+
+        //Added: 2-21-2023  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EnvironmentalLabFormType.class, this));
+
+        //Added: 3-24-2023  R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EnvironmentalATPFormType.class, this));
 
 
 
