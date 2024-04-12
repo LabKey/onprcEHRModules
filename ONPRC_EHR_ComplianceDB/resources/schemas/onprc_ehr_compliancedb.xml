@@ -275,19 +275,73 @@
         <auditLogging>DETAILED</auditLogging>
         <columns>
             <column columnName="searchID">
-                <columnTitle>Search ID</columnTitle>
+                <isAutoInc>true</isAutoInc>
+                <isKeyField>true</isKeyField>
+                <columnTitle>SearchID</columnTitle>
             </column>
-            <column columnName="employeeid">
+            <column columnName="Email">
+                <columnTitle>Email</columnTitle>
             </column>
-            <column columnName="requirementname">
+            <column columnName="Person Type">
+                <columnTitle>Person Type</columnTitle>
             </column>
-            <column columnName="completeddate">
+            <column columnName="Employee Status">
+                <columnTitle>Employee Status</columnTitle>
             </column>
-            <column columnName="comment">
+            <column columnName="Total Compliance">
+                <columnTitle>Total Compliance</columnTitle>
             </column>
-            <column columnName="createddate">
+            <column columnName="West Campus">
+                <columnTitle>West Campus</columnTitle>
             </column>
-            <column columnName="rowid">
+            <column columnName="Hep B">
+                <columnTitle>Hep B</columnTitle>
+            </column>
+            <column columnName="Measles">
+                <columnTitle>Measles</columnTitle>
+            </column>
+            <column columnName="Mumps">
+                <columnTitle>Mumps</columnTitle>
+            </column>
+
+            <column columnName="Rubella">
+                <columnTitle>Rubella</columnTitle>
+            </column>
+            <column columnName="Varicella">
+                <columnTitle>Varicella</columnTitle>
+            </column>
+            <column columnName="Tdap">
+                <columnTitle>Tdap</columnTitle>
+            </column>
+            <column columnName="Full Face Respirator">
+                <columnTitle>Full Face Respirator</columnTitle>
+            </column>
+            <column columnName="Standard Respirator">
+                <columnTitle>Standard Respirator</columnTitle>
+            </column>
+            <column columnName="Flu">
+                <columnTitle>Flu</columnTitle>
+            </column>
+            <column columnName="TB Health Surveillance">
+                <columnTitle>TB Health Surveillance</columnTitle>
+            </column>
+            <column columnName="TB Annual">
+                <columnTitle>TB Annual</columnTitle>
+            </column>
+            <column columnName="TB West Campus">
+                <columnTitle>TB West Campus</columnTitle>
+            </column>
+            <column columnName="AIRC MRI">
+                <columnTitle>Clinical MRI</columnTitle>
+            </column>
+            <column columnName="Clinical MRI">
+                <columnTitle>Clinical MRI</columnTitle>
+            </column>
+            <column columnName="Supervisor Email">
+                <columnTitle>Supervisor Email</columnTitle>
+            </column>
+            <column columnName="processed">
+                <columnTitle>Processed</columnTitle>
             </column>
         </columns>
     </table>
@@ -299,20 +353,78 @@
         <columns>
             <column columnName="searchID">
                 <columnTitle>Search ID</columnTitle>
-            </column>
-            <column columnName="employeeid">
-            </column>
-            <column columnName="requirementname">
-            </column>
-            <column columnName="completeddate">
-            </column>
-            <column columnName="comment">
-            </column>
-            <column columnName="createddate">
+                <isAutoInc>true</isAutoInc>
+                <isKeyField>true</isKeyField>
             </column>
             <column columnName="rowid">
+                <isAutoInc>true</isAutoInc>
+                <isKeyField>true</isKeyField>
+                <columnTitle>Key</columnTitle>
             </column>
-        </columns>
+            <column columnName="Email">
+                <columnTitle>Email</columnTitle>
+            </column>
+            <column columnName="Person Type">
+                <columnTitle>Person Type</columnTitle>
+            </column>
+            <column columnName="Employee Status">
+                <columnTitle>Employee Status</columnTitle>
+            </column>
+            <column columnName="Total Compliance">
+                <columnTitle>Total Compliance</columnTitle>
+            </column>
+            <column columnName="West Campus">
+                <columnTitle>West Campus</columnTitle>
+            </column>
+            <column columnName="Hep B">
+                <columnTitle>Hep B</columnTitle>
+            </column>
+            <column columnName="Measles">
+                <columnTitle>Measles</columnTitle>
+            </column>
+            <column columnName="Mumps">
+                <columnTitle>Mumps</columnTitle>
+            </column>
+            <column columnName="Rubella">
+                <columnTitle>Rubella</columnTitle>
+            </column>
+            <column columnName="Varicella">
+                <columnTitle>Varicella</columnTitle>
+            </column>
+            <column columnName="Tdap">
+                <columnTitle>Tdap</columnTitle>
+            </column>
+            <column columnName="Full Face Respirator">
+                <columnTitle>Full Face Respirator</columnTitle>
+            </column>
+            <column columnName="Standard Respirator">
+                <columnTitle>Standard Respirator</columnTitle>
+            </column>
+            <column columnName="Flu">
+                <columnTitle>Flu</columnTitle>
+            </column>
+            <column columnName="TB Health Surveillance">
+                <columnTitle>TB Health Surveillance</columnTitle>
+            </column>
+            <column columnName="TB Annual">
+                <columnTitle>TB Annual</columnTitle>
+            </column>
+            <column columnName="TB West Campus">
+                <columnTitle>TB West Campus</columnTitle>
+            </column>
+            <column columnName="AIRC MRI">
+                <columnTitle>Clinical MRI</columnTitle>
+            </column>
+            <column columnName="Clinical MRI">
+                <columnTitle>Clinical MRI</columnTitle>
+            </column>
+            <column columnName="Supervisor Email">
+                <columnTitle>Supervisor Email</columnTitle>
+            </column>
+            <column columnName="processed">
+                <columnTitle>Processed</columnTitle>
+            </column>
+       </columns>
     </table>
 
 
