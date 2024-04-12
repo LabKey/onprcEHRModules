@@ -47,12 +47,30 @@ GO
 
 CREATE TABLE [onprc_ehr_compliancedb].[OccHealthTemp] (
     [searchID] [int] IDENTITY(100,1) NOT NULL,
-    [employeeid] [varchar](500) NULL,
-    [requirementname] [varchar](3000) NULL,
-    [completeddate] [smalldatetime] NULL,
-    [comment] [varchar](300) NULL,
-    [createddate] [smalldatetime] NULL,
-    [rowid] [int] NULL
+    [Email] [nvarchar](255) NULL,
+    [Person Type] [nvarchar](255) NULL,
+    [Employee Status] [nvarchar](255) NULL,
+    [Total Compliance] [nvarchar](255) NULL,
+    [West Campus] [nvarchar](255) NULL,
+    [Hep B] [nvarchar](255) NULL,
+    [Measles] [nvarchar](255) NULL,
+    [Mumps] [nvarchar](255) NULL,
+    [Rubella] [nvarchar](255) NULL,
+    [Varicella] [nvarchar](255) NULL,
+    [Tdap] [nvarchar](255) NULL,
+    [Full Face Respirator] [nvarchar](255) NULL,
+    [Standard Respirator] [nvarchar](255) NULL,
+    [Flu] [nvarchar](255) NULL,
+    [TB Health Surveillance] [nvarchar](255) NULL,
+    [TB Annual] [nvarchar](255) NULL,
+    [TB West Campus] [nvarchar](255) NULL,
+    [AIRC MRI] [nvarchar](255) NULL,
+    [Clinical MRI] [nvarchar](255) NULL,
+    [Supervisor Email] [nvarchar](255) NULL,
+    [trainer] [varchar](1000) NULL,
+    [processed]  [varchar](1000) NULL,
+    [rowid] [int] NULL,
+    [trainer] [varchar](1000) NULL
     ) ON [PRIMARY]
     GO
 
@@ -60,12 +78,30 @@ CREATE TABLE [onprc_ehr_compliancedb].[OccHealthTemp] (
 
 CREATE TABLE [onprc_ehr_compliancedb].[OccHealthMasterTemp](
     [searchID] [int] IDENTITY(100,1) NOT NULL,
-    [employeeid] [varchar](500) NULL,
-    [requirementname] [varchar](3000) NULL,
-    [completeddate] [smalldatetime] NULL,
-    [comment] [varchar](300) NULL,
-    [createddate] [smalldatetime] NULL,
-    [rowid] [int] NULL
+    [Email] [nvarchar](255) NULL,
+    [Person Type] [nvarchar](255) NULL,
+    [Employee Status] [nvarchar](255) NULL,
+    [Total Compliance] [nvarchar](255) NULL,
+    [West Campus] [nvarchar](255) NULL,
+    [Hep B] [nvarchar](255) NULL,
+    [Measles] [nvarchar](255) NULL,
+    [Mumps] [nvarchar](255) NULL,
+    [Rubella] [nvarchar](255) NULL,
+    [Varicella] [nvarchar](255) NULL,
+    [Tdap] [nvarchar](255) NULL,
+    [Full Face Respirator] [nvarchar](255) NULL,
+    [Standard Respirator] [nvarchar](255) NULL,
+    [Flu] [nvarchar](255) NULL,
+    [TB Health Surveillance] [nvarchar](255) NULL,
+    [TB Annual] [nvarchar](255) NULL,
+    [TB West Campus] [nvarchar](255) NULL,
+    [AIRC MRI] [nvarchar](255) NULL,
+    [Clinical MRI] [nvarchar](255) NULL,
+    [Supervisor Email] [nvarchar](255) NULL,
+    [trainer] [varchar](1000) NULL,
+    [processed]  [varchar](1000) NULL,
+    [rowid] [int] NULL,
+    [trainer] [varchar](1000) NULL
     ) ON [PRIMARY]
     GO
 
