@@ -29,7 +29,7 @@ CREATE TABLE onprc_ehr_compliancedb.OccHealth_Data
     [AIRC MRI]               nvarchar(100) null,
     [Clinical MRI]           nvarchar(100) null,
     [Supervisor Email]       nvarchar(100) null,
-    [Processed]               int   null,
+    [Processed]              nvarchar(1000) null,
     Container                ENTITYID NOT NULL,
     CreatedBy               USERID,
     Created                 datetime,
@@ -69,8 +69,8 @@ CREATE TABLE [onprc_ehr_compliancedb].[OccHealthTemp] (
     [Supervisor Email] [nvarchar](255) NULL,
     [trainer] [varchar](1000) NULL,
     [processed]  [varchar](1000) NULL,
-    [rowid] [int] NULL,
-    [trainer] [varchar](1000) NULL
+    [rowid] [int] NULL
+
     ) ON [PRIMARY]
     GO
 
@@ -100,8 +100,8 @@ CREATE TABLE [onprc_ehr_compliancedb].[OccHealthMasterTemp](
     [Supervisor Email] [nvarchar](255) NULL,
     [trainer] [varchar](1000) NULL,
     [processed]  [varchar](1000) NULL,
-    [rowid] [int] NULL,
-    [trainer] [varchar](1000) NULL
+    [rowid] [int] NULL
+
     ) ON [PRIMARY]
     GO
 
