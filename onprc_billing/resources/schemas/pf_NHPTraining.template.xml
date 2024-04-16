@@ -1,3 +1,6 @@
+<!--This link schema provides a link for finance invoiced items to look up data-->
+
+
 <templateSchema sourceSchemaName="onprc_ehr" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
     <tables>
         <tableName>NHP_Training</tableName>
