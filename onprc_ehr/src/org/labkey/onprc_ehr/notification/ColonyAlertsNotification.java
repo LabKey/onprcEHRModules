@@ -1368,7 +1368,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //Daily transfers query
         TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("housing_transfers", ContainerFilter.Type.AllFolders.create(c, u));
         //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
-        TableSelector ts = new TableSelector(ti, null, null);
+        TableSelector ts = new TableSelector(ti, null, new Sort("area,room,cage")); //Added the sort paramaters by Kollil, 4/16/2024
         long count = ts.getRowCount();
 
         if (count > 0) {//transfers count
