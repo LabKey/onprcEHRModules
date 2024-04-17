@@ -1,4 +1,6 @@
-<!--This link schema provides a link for finance invoiced items to look up data-->
+<!--This link schema provides a link for finance invoiced items to look up data
+Update 4/17/2024
+-->
 
 
 <templateSchema sourceSchemaName="onprc_ehr" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
