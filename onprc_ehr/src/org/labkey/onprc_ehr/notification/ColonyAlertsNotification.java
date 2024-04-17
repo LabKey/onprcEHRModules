@@ -1399,7 +1399,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             columns.add(FieldKey.fromString("ActiveDiets"));
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
-            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("building,area,room,cage"));
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("building,area,room,cage")); //Added the sort parameters by Kollil, 4/16/2024
 
             //Legend
             msg.append("<table border=1 style='border-collapse: collapse;'>");
