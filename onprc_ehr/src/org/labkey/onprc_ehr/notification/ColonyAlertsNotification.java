@@ -1368,7 +1368,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //Daily transfers query
         TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("housing_transfers", ContainerFilter.Type.AllFolders.create(c, u));
         //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
-        TableSelector ts = new TableSelector(ti, null, new Sort("area,room,cage")); //Added the sort paramaters by Kollil, 4/16/2024
+        TableSelector ts = new TableSelector(ti, null, new Sort("building,area,room,cage")); //Added the sort parameters by Kollil, 4/16/2024
         long count = ts.getRowCount();
 
         if (count > 0) {//transfers count
@@ -1377,7 +1377,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "housing_transfers", null) + "'>Click here to view the transfers in PRIME</a></p>\n");
             msg.append("<hr>");
         }
-
         if (count == 0) {
             msg.append("<b>There are no animal transfers today!</b><hr>");
         }
@@ -1400,7 +1399,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             columns.add(FieldKey.fromString("ActiveDiets"));
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
-            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("building,area,room,cage"));
 
             //Legend
             msg.append("<table border=1 style='border-collapse: collapse;'>");
