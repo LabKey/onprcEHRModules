@@ -3,7 +3,7 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="employeeperUnit" tableDbType="NOT_IN_DB">
                 <tableTitle>Employee Per Units</tableTitle>
-
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer"/>
                 <columns>
                    <column columnName="employeeId">
                         <fk>

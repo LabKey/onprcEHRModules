@@ -25,8 +25,13 @@ public class ONPRC_EHR_ComplianceDBSchema
 
     private static final ONPRC_EHR_ComplianceDBSchema _instance = new ONPRC_EHR_ComplianceDBSchema();
 
+
     public static final String TABLE_SCISHIELD_DATA = "SciShield_Data";
     public static final String TABLE_SCISHIELD_REFERENCE_DATA = "SciShield_Reference_Data";
+
+    public static final String TABLE_EMPLOYEEPERUNIT_DATA = "employeeperUnit";
+
+    public static final String TABLE_COMPLETIONDATES_DATA = "completiondates";
 
     public static ONPRC_EHR_ComplianceDBSchema getInstance()
     {
