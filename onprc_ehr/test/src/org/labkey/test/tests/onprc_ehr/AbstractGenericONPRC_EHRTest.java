@@ -52,6 +52,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
 
@@ -60,6 +62,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected static final String REFERENCE_STUDY_PATH = "/resources/referenceStudy";
     protected static final String GENETICS_PIPELINE_LOG_PATH = REFERENCE_STUDY_PATH + "/kinship/EHR Kinship Calculation/kinship.txt.log";
     protected static final String ID_PREFIX = "9999";
+    private boolean _hasCreatedBirthRecords = false;
 
     //NOTE: use 0-23H to be compatible w/ client-side Ext4 fields
     protected static final SimpleDateFormat _tf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -120,6 +123,61 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         importFolderFromPath(1);
     }
 
+    @LogMethod
+    protected void createBirthRecords() throws Exception
+    {
+        log("creating birth records");
+
+        //note: these should cascade insert into demographics
+        EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getProjectName());
+        String schema = "study";
+        String query = "birth";
+        String parentageQuery = "parentage";
+
+        Set<String> createdIds = Set.of(ID_PREFIX + 1, ID_PREFIX + 2, ID_PREFIX + 3, ID_PREFIX + 4, ID_PREFIX + 5, ID_PREFIX + 6, ID_PREFIX + 7, ID_PREFIX + 8, ID_PREFIX + 9, ID_PREFIX + 10);
+
+        // Parents with non-defined dam/sire ids
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 1, "date", prepareDate(new Date(), -730, 0), "gender", "f", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 1, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 11, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 2, "date", prepareDate(new Date(), -730, 0), "gender", "m", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 2, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 12, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 3, "date", prepareDate(new Date(), -730, 0), "gender", "f", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 3, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 12, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -730, 0), "gender", "m", "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 13, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 14, "method", "Genetic"), false);
+
+        // Children / Siblings (full and half)
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "gender", "f", "dam", ID_PREFIX + 1, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 1, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 1, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 1, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 3, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 3, "method", "Genetic"), false);
+
+
+        // Child / Inbreeding
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 5, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 5, "method", "Genetic"), false);
+
+
+        // Grandchildren / Inbreeding Descendent
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "gender", "f", "dam", ID_PREFIX + 5, "sire", ID_PREFIX + 4, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "relationship", "Sire", "parent", ID_PREFIX + 4, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "relationship", "Dam", "parent", ID_PREFIX + 5, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "gender", "f", "dam", ID_PREFIX + 3, "sire", ID_PREFIX + 8, "species", "Cynomolgus"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "relationship", "Sire", "parent", ID_PREFIX + 8, "method", "Genetic"), false);
+        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "relationship", "Dam", "parent", ID_PREFIX + 3, "method", "Genetic"), false);
+
+        //force caching of demographics on new IDs.
+        cacheIds(createdIds);
+
+        _hasCreatedBirthRecords = true;
+    }
     @Override
     protected void doExtraPreStudyImportSetup() throws IOException, CommandException
     {
