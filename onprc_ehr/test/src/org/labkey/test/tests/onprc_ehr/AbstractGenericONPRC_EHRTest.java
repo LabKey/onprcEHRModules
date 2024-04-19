@@ -26,6 +26,7 @@ import org.labkey.remoteapi.query.InsertRowsCommand;
 import org.labkey.remoteapi.query.SaveRowsResponse;
 import org.labkey.remoteapi.query.SelectRowsCommand;
 import org.labkey.remoteapi.query.SelectRowsResponse;
+import org.labkey.test.Locator;
 import org.labkey.test.ModulePropertyValue;
 import org.labkey.test.TestFileUtils;
 import org.labkey.test.WebTestHelper;
@@ -41,7 +42,9 @@ import org.labkey.test.util.SchemaHelper;
 import org.labkey.test.util.SqlserverOnlyTest;
 import org.labkey.test.util.ehr.EHRClientAPIHelper;
 import org.labkey.test.util.ext4cmp.Ext4CmpRef;
+import org.labkey.test.util.ext4cmp.Ext4ComboRef;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
+import org.labkey.test.util.ext4cmp.Ext4GridRef;
 
 import java.io.File;
 import java.io.IOException;
@@ -504,6 +507,15 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected <T extends Ext4CmpRef> T getFieldInWindow(String label, Class<T> clazz)
     {
         return _ext4Helper.queryOne("window field[fieldLabel='" + label + "']", clazz);
+    }
+
+    protected void addProjectToTheRow(Ext4GridRef gridRef, int index, String project)
+    {
+        gridRef.clickDownArrowOnGrid(index, "project");
+        waitAndClick(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
+        waitForElement(Ext4Helper.Locators.window("Choose Project"));
+        _ext4Helper.queryOne("window[title=Choose Project] [fieldLabel='Project']", Ext4ComboRef.class).setComboByDisplayValue(project);
+        waitAndClick(Ext4Helper.Locators.window("Choose Project").append(Ext4Helper.Locators.ext4ButtonEnabled("Submit")));
     }
 
     protected void cleanRecords(String... ids) throws Exception
