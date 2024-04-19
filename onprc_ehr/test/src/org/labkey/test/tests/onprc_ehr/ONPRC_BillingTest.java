@@ -38,6 +38,7 @@ import org.labkey.test.util.PortalHelper;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
 import org.labkey.test.util.ext4cmp.Ext4GridRef;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -297,7 +298,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         return charge;
     }
 
-    private void insertBillingAndHousingTables() throws IOException, CommandException
+    private String insertBillingAndHousingTables() throws IOException, CommandException
     {
         InsertRowsCommand fiscalAuthorities = new InsertRowsCommand("onprc_billing", "fiscalAuthorities");
         fiscalAuthorities.addRow(Map.of("firstName", "Cooper", "lastName", "Sheldon", "faid", "F1", "active", true));
