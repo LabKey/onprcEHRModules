@@ -21,7 +21,11 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.labkey.remoteapi.CommandException;
 import org.labkey.remoteapi.CommandResponse;
+import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
+import org.labkey.remoteapi.query.SelectRowsCommand;
+import org.labkey.remoteapi.query.SelectRowsResponse;
+import org.labkey.remoteapi.query.UpdateRowsCommand;
 import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.Locator;
 import org.labkey.test.WebTestHelper;
@@ -34,9 +38,11 @@ import org.labkey.test.util.PortalHelper;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -139,14 +145,54 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
     @Test
     public void testDiscrepancyReport() throws IOException, CommandException
     {
-        String animalId = "12345";
-        insertBillingTables(animalId);
-        insertBloodDraws(animalId);
-        insertDrugRecord(animalId);
+        String animalId1 = "12345";
+        String animalId2 = "23456";
+        goToProjectHome(PROJECT_NAME);
+        updateBirthDate(animalId1);
+        updateBirthDate(animalId2);
+        insertBillingAndHousingTables();
+        insertBloodDraws(animalId1);
+        insertDrugRecord(animalId1);
         setupNotificationService();
 
         navigateToFolder(getProjectName(), BILLING_FOLDER);
         waitAndClickAndWait(Locator.linkWithText("Billing Period Summary / Discrepancy Report"));
+    }
+
+    private void updateBirthDate(String animalId) throws IOException, CommandException
+    {
+        log("Updating birth date for animal " + animalId);
+
+        SelectRowsCommand demoSelect = new SelectRowsCommand("study", "demographics");
+        demoSelect.addFilter(new Filter("participantid", animalId));
+        demoSelect.setColumns(Arrays.asList("participantid", "lsid", "birth"));
+        SelectRowsResponse demoResp = demoSelect.execute(getApiHelper().getConnection(), getContainerPath());
+        final String demoLsid = (String)demoResp.getRows().get(0).get("lsid");
+
+        UpdateRowsCommand demoUpdateCmd = new UpdateRowsCommand("study", "demographics");
+        demoUpdateCmd.addRow(new HashMap<String, Object>(){
+            {
+                put("lsid", demoLsid);
+                put("birth", LocalDate.parse("2005-05-05"));
+            }});
+        demoUpdateCmd.execute(getApiHelper().getConnection(), getContainerPath());
+    }
+
+    private int insertHousingType() throws IOException, CommandException
+    {
+        log("Inserting Housing Type");
+        InsertRowsCommand housingTypeCmd = new InsertRowsCommand("ehr_lookups", "housingTypes");
+        housingTypeCmd.addRow(Map.of("value", "housingType1", "title", "Housing Type 1"));
+        CommandResponse housingTypeResp = housingTypeCmd.execute(getApiHelper().getConnection(), getContainerPath());
+        return getCommandResponseRowId(housingTypeResp, 0);
+    }
+    private int insertHousingDefinition() throws IOException, CommandException
+    {
+        log("Inserting Housing Type");
+        InsertRowsCommand housingDefCmd = new InsertRowsCommand("ehr_lookups", "housingDefinition");
+        housingDefCmd.addRow(Map.of("value", "Room with multiple cages"));
+        CommandResponse housingTypeResp = housingDefCmd.execute(getApiHelper().getConnection(), getContainerPath());
+        return getCommandResponseRowId(housingTypeResp, 0);
     }
 
     @Override
@@ -157,7 +203,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
 
     private void insertDrugRecord(String animalId) throws IOException, CommandException
     {
-        String chargeType = insertChargeUnits();
+        String chargeType = insertMedicationChargeUnit();
         log("Inserting the medicationFeeDefinition necessary for drug request");
         InsertRowsCommand cmd = new InsertRowsCommand("onprc_billing", "medicationFeeDefinition");
         cmd.addRow(Map.of("chargeId", 12, "code", "TETANUS", "route", "IT", "active", true,
@@ -173,7 +219,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
 
     private void insertBloodDraws(String animalId) throws IOException, CommandException
     {
-        String charge = insertChargeUnits();
+        String charge = insertBloodChargeUnit();
         log("Inserting rows in blood draw");
         InsertRowsCommand bloodCommand = new InsertRowsCommand("study", "blood");
         bloodCommand.addRow(Map.of("Id", animalId, "date", "2011-04-15", "project", "795644", "chargetype", charge, "tube_vol", "12"));
@@ -181,18 +227,46 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         bloodCommand.execute(getApiHelper().getConnection(), getContainerPath());
     }
 
-    private String insertChargeUnits() throws IOException, CommandException
+    private String insertMedicationChargeUnit() throws IOException, CommandException
     {
-        log("Inserting the charge unit");
-        String charge = "ChargeUnit " + counter;
+        log("Inserting medication charge unit");
+        String charge = "ChargeUnit Medication";
         InsertRowsCommand chargeUnitCommand = new InsertRowsCommand("onprc_billing", "chargeUnits");
-        chargeUnitCommand.addRow(Map.of("chargetype", charge, "servicecenter", "ServiceCenter" + counter, "shownInBlood", true, "active", true));
-        counter++;
+        chargeUnitCommand.addRow(Map.of("chargetype", charge, "servicecenter", "ServiceCenter" + counter, "shownInMedications", true, "active", true));
         chargeUnitCommand.execute(getApiHelper().getConnection(), getContainerPath());
         return charge;
     }
 
-    private void insertBillingTables(String animalId) throws IOException, CommandException
+    private String insertBloodChargeUnit() throws IOException, CommandException
+    {
+        log("Inserting blood charge unit");
+        String charge = "ChargeUnit Blood";
+        InsertRowsCommand chargeUnitCommand = new InsertRowsCommand("onprc_billing", "chargeUnits");
+        chargeUnitCommand.addRow(Map.of("chargetype", charge, "servicecenter", "ServiceCenter" + counter, "shownInBlood", true, "active", true));
+        chargeUnitCommand.execute(getApiHelper().getConnection(), getContainerPath());
+        return charge;
+    }
+
+    private void insertHousing(int housingTypeId, int housingConditionId) throws IOException, CommandException
+    {
+        log("Inserting rows in housing");
+        InsertRowsCommand housingCommand = new InsertRowsCommand("study", "housing");
+        housingCommand.addRow(Map.of("Id", "12345", "date", "2011-04-15", "enddate", "2011-04-30", "project", "795644", "room", "Room 123", "housingType", housingTypeId, "housingCondition", housingConditionId));
+        housingCommand.addRow(Map.of("Id", "23456", "date", "2011-05-01", "enddate", "2012-05-03", "project", "795644", "room", "Room 123", "housingType", housingTypeId, "housingCondition", housingConditionId));
+        housingCommand.execute(getApiHelper().getConnection(), getContainerPath());
+    }
+
+    private String insertProcedureChargeUnit() throws IOException, CommandException
+    {
+        log("Inserting procedure charge unit");
+        String charge = "ChargeUnit Procedure";
+        InsertRowsCommand chargeUnitCommand = new InsertRowsCommand("onprc_billing", "chargeUnits");
+        chargeUnitCommand.addRow(Map.of("chargetype", charge, "servicecenter", "ServiceCenter" + counter, "shownInProcedures", true, "active", true));
+        chargeUnitCommand.execute(getApiHelper().getConnection(), getContainerPath());
+        return charge;
+    }
+
+    private void insertBillingAndHousingTables() throws IOException, CommandException
     {
         InsertRowsCommand fiscalAuthorities = new InsertRowsCommand("onprc_billing", "fiscalAuthorities");
         fiscalAuthorities.addRow(Map.of("firstName", "Sheldon", "lastName", "Cooper", "faid", "F1", "active", true));
@@ -208,35 +282,53 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
 
         log("Inserting chargeable item");
         InsertRowsCommand chargeableItem = new InsertRowsCommand("onprc_billing", "chargeableItems");
-        chargeableItem.addRow(Map.of("name", "Pen", "category", "Misc. Fees", "canRaiseFA", true,"endDate", LocalDateTime.now().plusYears(5)));
-        chargeableItem.addRow(Map.of("name", "Glove", "category", "Surgical Procedure", "canRaiseFA", true, "endDate", LocalDateTime.now().plusYears(5)));
-        chargeableItem.addRow(Map.of("name", "Stethoscope", "category", "Clinical Procedure", "canRaiseFA", true,  "endDate", LocalDateTime.now().plusYears(5)));
-        chargeableItem.addRow(Map.of("name", "Microscope", "category", "Pathology", "canRaiseFA", true, "endDate", LocalDateTime.now().plusYears(5)));
+        chargeableItem.addRow(Map.of("name", "Pen", "category", "Misc. Fees", "canRaiseFA", true, "active", true, "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
+        chargeableItem.addRow(Map.of("name", "Glove", "category", "Surgery", "canRaiseFA", true, "active", true, "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
+        chargeableItem.addRow(Map.of("name", "Blood Draw", "category", "Clinical Procedure", "active", true, "canRaiseFA", true, "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
+        chargeableItem.addRow(Map.of("name", "Microscope", "category", "Pathology", "canRaiseFA", true, "active", true, "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
+        chargeableItem.addRow(Map.of("name", "Per Diem", "category", "Animal Per Diem", "canRaiseFA", true, "active", true, "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
         CommandResponse chargeableItemResponse = chargeableItem.execute(getApiHelper().getConnection(), getContainerPath());
 
+        int housingTypeId = insertHousingType();
+        int housingDefinitionId = insertHousingDefinition();
+        log("Inserting per diem fee definition");
+        InsertRowsCommand perDiemFeeDef = new InsertRowsCommand("onprc_billing", "perDiemFeeDefinition");
+        perDiemFeeDef.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 4), "tier", "Tier 2", "housingType", housingTypeId, "housingDefinition", housingDefinitionId, "active", true, "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
+        perDiemFeeDef.execute(getApiHelper().getConnection(), getContainerPath());
+
+        log("Inserting room with housing type and condition");
+        InsertRowsCommand roomCmd = new InsertRowsCommand("ehr_lookups", "rooms");
+        roomCmd.addRow(Map.of("room", "Room 123", "housingType", housingTypeId, "housingCondition", housingDefinitionId));
+        roomCmd.execute(getApiHelper().getConnection(), getContainerPath());
+
         InsertRowsCommand chargeRate = new InsertRowsCommand("onprc_billing", "chargeRates");
-        chargeRate.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 0), "unitCost", "10", "endDate", LocalDateTime.now().plusYears(5)));
-        chargeRate.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 1), "unitCost", "56.98", "endDate", LocalDateTime.now().plusYears(5)));
-        chargeRate.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 2), "unitCost", "98754634", "endDate", LocalDateTime.now().plusYears(5)));
-        chargeRate.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 3), "unitCost", "100", "endDate", LocalDateTime.now().plusYears(5)));
+        chargeRate.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 0), "unitCost", "10", "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
+        chargeRate.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 1), "unitCost", "56.98", "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
+        chargeRate.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 2), "unitCost", "15.00", "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
+        chargeRate.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 3), "unitCost", "100", "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
+        chargeRate.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 4), "unitCost", "20.5", "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(20)));
         chargeRate.execute(getApiHelper().getConnection(), getContainerPath());
+
+        insertHousing(housingTypeId, housingDefinitionId);
 
         InsertRowsCommand creditAccount = new InsertRowsCommand("onprc_billing","creditAccount");
         creditAccount.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 0), "account", getCommandResponseRowId(aliasesResponse, 0),
-                    "startDate", LocalDateTime.now().minusYears(4), "endDate", LocalDateTime.now().plusYears(10)));
+                    "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(10)));
         creditAccount.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 1), "account", getCommandResponseRowId(aliasesResponse, 1),
-                "startDate", LocalDateTime.now().minusYears(10), "endDate", LocalDateTime.now().plusYears(10)));
+                "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(10)));
         creditAccount.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 2), "account", getCommandResponseRowId(aliasesResponse, 2),
-                "startDate", LocalDateTime.now().minusYears(40), "endDate", LocalDateTime.now().plusYears(10)));
+                "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(10)));
         creditAccount.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 3), "account", getCommandResponseRowId(aliasesResponse, 3),
-                "startDate", LocalDateTime.now().minusYears(50), "endDate", LocalDateTime.now().plusYears(10)));
+                "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(10)));
+        creditAccount.addRow(Map.of("chargeId", getCommandResponseRowId(chargeableItemResponse, 4), "account", getCommandResponseRowId(aliasesResponse, 3),
+                "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(10)));
         creditAccount.execute(getApiHelper().getConnection(), getContainerPath());
 
-        String chargeUnit = insertChargeUnits();
-        InsertRowsCommand miscCharges = new InsertRowsCommand("onprc_billing", "miscCharges");
-        miscCharges.addRow(Map.of("Id", animalId, "date", LocalDateTime.now(), "project", "795644", "debitedaccount", "A1",
-                "chargetype", chargeUnit, "creditedaccount", "A2", "chargeId", "Pen", "objectid", "1"));
-        miscCharges.execute(getApiHelper().getConnection(), getContainerPath());
+//        String chargeUnit = insertChargeUnits();
+//        InsertRowsCommand miscCharges = new InsertRowsCommand("onprc_billing", "miscCharges");
+//        miscCharges.addRow(Map.of("Id", animalId, "date", LocalDateTime.now(), "project", "795644", "debitedaccount", "A1",
+//                "chargetype", chargeUnit, "creditedaccount", "A2", "chargeId", "Pen", "objectid", "1"));
+//        miscCharges.execute(getApiHelper().getConnection(), getContainerPath());
     }
 
     private Integer getCommandResponseRowId(CommandResponse response, int row)
