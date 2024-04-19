@@ -1191,15 +1191,6 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         bloodDraw.setGridCell(index, "quantity", quantity.toString());
     }
 
-    private void addProjectToTheRow(Ext4GridRef gridRef, int index, String project)
-    {
-        gridRef.clickDownArrowOnGrid(index, "project");
-        waitAndClick(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
-        waitForElement(Ext4Helper.Locators.window("Choose Project"));
-        _ext4Helper.queryOne("window[title=Choose Project] [fieldLabel='Project']", Ext4ComboRef.class).setComboByDisplayValue(project);
-        waitAndClick(Ext4Helper.Locators.window("Choose Project").append(Ext4Helper.Locators.ext4ButtonEnabled("Submit")));
-    }
-
     //TODO: @Test
     public void treatmentScheduleTest()
     {

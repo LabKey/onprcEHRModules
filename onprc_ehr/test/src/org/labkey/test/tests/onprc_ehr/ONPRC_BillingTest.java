@@ -36,16 +36,21 @@ import org.labkey.test.util.Ext4Helper;
 import org.labkey.test.util.LogMethod;
 import org.labkey.test.util.PortalHelper;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
+import org.labkey.test.util.ext4cmp.Ext4GridRef;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static org.labkey.test.util.Ext4Helper.TextMatchTechnique.CONTAINS;
 
 @Category({EHR.class, ONPRC.class})
 @BaseWebDriverTest.ClassTimeout(minutes = 20)
@@ -54,8 +59,9 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
     protected static String PROJECT_NAME = "ONPRC_Billing_TestProject";
     private static final String BILLING_FOLDER_PATH = "/" + PROJECT_NAME + "/" + BILLING_FOLDER;
     private static final String EHR_FOLDER_PATH = "/" + PROJECT_NAME + "/" + FOLDER_NAME;
-    private static int counter = 10;
-    private String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
+    private static int counter = 1;
+    protected DateTimeFormatter _dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
 
     @BeforeClass
     @LogMethod
@@ -150,11 +156,25 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         goToProjectHome(PROJECT_NAME);
         updateBirthDate(animalId1);
         updateBirthDate(animalId2);
-        insertBillingAndHousingTables();
+        String chargeUnit = insertBillingAndHousingTables();
         insertBloodDraws(animalId1);
         insertDrugRecord(animalId1);
         setupNotificationService();
 
+        navigateToFolder(getProjectName(), BILLING_FOLDER);
+        waitAndClickAndWait(Locator.linkWithText("Enter New Charges"));
+        Map<String, String> miscChargesValue = new LinkedHashMap<>();
+        miscChargesValue.put("Id", animalId1);
+        miscChargesValue.put("date", LocalDateTime.now().minusYears(2).format(_dateTimeFormatter));
+        miscChargesValue.put("project", PROJECT_ID);
+        miscChargesValue.put("debitedaccount", "A11");
+        miscChargesValue.put("chargetype", chargeUnit);
+        miscChargesValue.put("chargeId", "Vaccine supplies");
+        miscChargesValue.put("quantity", "10");
+        enterChargesInGrid(1, miscChargesValue);
+        submitForm();
+
+        performBillingRun(LocalDateTime.now().minusYears(12).format(_dateTimeFormatter), LocalDateTime.now().minusYears(11).format(_dateTimeFormatter));
         navigateToFolder(getProjectName(), BILLING_FOLDER);
         waitAndClickAndWait(Locator.linkWithText("Billing Period Summary / Discrepancy Report"));
     }
@@ -212,7 +232,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
 
         log("Inserting rows in study.drug");
         cmd = new InsertRowsCommand("study", "drug");
-        cmd.addRow(Map.of("Id", animalId, "date", "2011-04-15", "project", "795644", "chargetype", chargeType, "code", "D-01830", "Billable", "yes"));
+        cmd.addRow(Map.of("Id", animalId, "date", LocalDateTime.now().minusYears(10), "project", "795644", "chargetype", chargeType, "code", "D-01830", "Billable", "yes"));
         cmd.addRow(Map.of("Id", animalId, "date", LocalDateTime.now(), "project", "795644", "chargetype", chargeType, "code", "D-01830", "Billable", "yes"));
         cmd.execute(getApiHelper().getConnection(), getContainerPath());
     }
@@ -222,7 +242,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         String charge = insertBloodChargeUnit();
         log("Inserting rows in blood draw");
         InsertRowsCommand bloodCommand = new InsertRowsCommand("study", "blood");
-        bloodCommand.addRow(Map.of("Id", animalId, "date", "2011-04-15", "project", "795644", "chargetype", charge, "tube_vol", "12"));
+        bloodCommand.addRow(Map.of("Id", animalId, "date", LocalDateTime.now().minusYears(10), "project", "795644", "chargetype", charge, "tube_vol", "12"));
         bloodCommand.addRow(Map.of("Id", animalId, "date", LocalDateTime.now(), "project", "795644", "chargetype", charge, "tube_vol", "1"));
         bloodCommand.execute(getApiHelper().getConnection(), getContainerPath());
     }
@@ -243,6 +263,17 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         String charge = "ChargeUnit Blood";
         InsertRowsCommand chargeUnitCommand = new InsertRowsCommand("onprc_billing", "chargeUnits");
         chargeUnitCommand.addRow(Map.of("chargetype", charge, "servicecenter", "ServiceCenter" + counter, "shownInBlood", true, "active", true));
+        chargeUnitCommand.execute(getApiHelper().getConnection(), getContainerPath());
+        return charge;
+    }
+
+    private String insertChargeUnits() throws IOException, CommandException
+    {
+        log("Inserting the charge unit");
+        String charge = "ChargeUnit " + counter;
+        InsertRowsCommand chargeUnitCommand = new InsertRowsCommand("onprc_billing", "chargeUnits");
+        chargeUnitCommand.addRow(Map.of("chargetype", charge, "servicecenter", "ServiceCenter" + counter, "shownInBlood", true, "active", true));
+        counter++;
         chargeUnitCommand.execute(getApiHelper().getConnection(), getContainerPath());
         return charge;
     }
@@ -269,8 +300,8 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
     private void insertBillingAndHousingTables() throws IOException, CommandException
     {
         InsertRowsCommand fiscalAuthorities = new InsertRowsCommand("onprc_billing", "fiscalAuthorities");
-        fiscalAuthorities.addRow(Map.of("firstName", "Sheldon", "lastName", "Cooper", "faid", "F1", "active", true));
-        fiscalAuthorities.addRow(Map.of("firstName", "Mary", "lastName", "Cooper", "faid", "F2", "active", true));
+        fiscalAuthorities.addRow(Map.of("firstName", "Cooper", "lastName", "Sheldon", "faid", "F1", "active", true));
+        fiscalAuthorities.addRow(Map.of("firstName", "Cooper", "lastName", "Mary", "faid", "F2", "active", true));
         CommandResponse fiscalAuthoritiesResponse = fiscalAuthorities.execute(getApiHelper().getConnection(), getContainerPath());
 
         InsertRowsCommand aliases = new InsertRowsCommand("onprc_billing", "aliases");
@@ -324,16 +355,80 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
                 "startDate", LocalDateTime.now().minusYears(20), "endDate", LocalDateTime.now().plusYears(10)));
         creditAccount.execute(getApiHelper().getConnection(), getContainerPath());
 
-//        String chargeUnit = insertChargeUnits();
-//        InsertRowsCommand miscCharges = new InsertRowsCommand("onprc_billing", "miscCharges");
-//        miscCharges.addRow(Map.of("Id", animalId, "date", LocalDateTime.now(), "project", "795644", "debitedaccount", "A1",
-//                "chargetype", chargeUnit, "creditedaccount", "A2", "chargeId", "Pen", "objectid", "1"));
-//        miscCharges.execute(getApiHelper().getConnection(), getContainerPath());
+        String chargeUnit = insertChargeUnits();
+        InsertRowsCommand chargeUnitAccounts = new InsertRowsCommand("onprc_billing", "chargeUnitAccounts");
+        chargeUnitAccounts.addRow(Map.of("chargetype", chargeUnit, "account", getCommandResponseRowId(aliasesResponse, 0),
+                "startDate", LocalDateTime.now().minusYears(40), "endDate", LocalDateTime.now().plusYears(10)));
+        chargeUnitAccounts.addRow(Map.of("chargetype", chargeUnit, "account", getCommandResponseRowId(aliasesResponse, 1),
+                "startDate", LocalDateTime.now().minusYears(40), "endDate", LocalDateTime.now().plusYears(10)));
+        chargeUnitAccounts.addRow(Map.of("chargetype", chargeUnit, "account", getCommandResponseRowId(aliasesResponse, 2),
+                "startDate", LocalDateTime.now().minusYears(40), "endDate", LocalDateTime.now().plusYears(10)));
+        chargeUnitAccounts.addRow(Map.of("chargetype", chargeUnit, "account", getCommandResponseRowId(aliasesResponse, 3),
+                "startDate", LocalDateTime.now().minusYears(40), "endDate", LocalDateTime.now().plusYears(10)));
+        chargeUnitAccounts.execute(getApiHelper().getConnection(), getContainerPath());
+
+        return chargeUnit;
+    }
+
+    private void enterChargesInGrid(int rowIndex, Map<String, String> items)
+    {
+        Ext4GridRef miscChargesGrid = _helper.getExt4GridForFormSection("Misc. Charges");
+        _helper.addRecordToGrid(miscChargesGrid);
+
+        for (Map.Entry<String, String> pair : items.entrySet())
+        {
+            String colName = pair.getKey();
+            String colValue = pair.getValue();
+            if (colName.equals("Id") || colName.equals("date") || colName.equals("quantity"))
+                miscChargesGrid.setGridCell(rowIndex, colName, colValue);
+            else if (colName.equals("chargetype") || colName.equals("chargeId"))
+                addComboBoxRecord(rowIndex, colName, colValue, miscChargesGrid, CONTAINS);
+            else if (colName.equals("project"))
+                addProjectToTheRow(miscChargesGrid, rowIndex, colValue);
+        }
+    }
+
+    private void addComboBoxRecord(int rowIndex, String colName, String comboBoxSelectionValue, Ext4GridRef miscChargesGrid,
+                                   @Nullable Ext4Helper.TextMatchTechnique matchTechnique)
+    {
+        Locator comboCol = miscChargesGrid.getCell(rowIndex, colName);
+        click(comboCol);
+        sleep(2000);
+        Locator.XPathLocator comboColLocator = Ext4Helper.Locators.formItemWithInputNamed(colName);
+
+        if (matchTechnique != null)
+            _ext4Helper.selectComboBoxItem(comboColLocator, matchTechnique, comboBoxSelectionValue);
+        else
+            _ext4Helper.selectComboBoxItem(comboColLocator, comboBoxSelectionValue);
+
+    }
+
+    private void submitForm()
+    {
+        sleep(2000);
+        clickButton("Submit", 0);
+        _extHelper.waitForExtDialog("Finalize Form");
+        click(Ext4Helper.Locators.ext4Button("Yes"));
+        waitForTextToDisappear("Saving Changes", 5000);
     }
 
     private Integer getCommandResponseRowId(CommandResponse response, int row)
     {
         return (Integer) ((Map<?, ?>) ((ArrayList<?>) response.getParsedData().get("rows")).get(row)).get("rowid");
+    }
+
+    private void performBillingRun(String startDate, String endDate)
+    {
+        navigateToFolder(getProjectName(), BILLING_FOLDER_PATH);
+        waitAndClickAndWait(Locator.linkContainingText("Perform Billing Run"));
+        Ext4FieldRef.waitForField(this, "Start Date");
+        Ext4FieldRef.getForLabel(this, "Start Date").setValue(startDate);
+        Ext4FieldRef.getForLabel(this, "End Date").setValue(endDate);
+        waitAndClick(Ext4Helper.Locators.ext4Button("Submit"));
+        waitForElement(Ext4Helper.Locators.window("Success"));
+        waitAndClickAndWait(Ext4Helper.Locators.ext4Button("OK"));
+        waitAndClickAndWait(Locator.linkWithText("All"));
+        waitForPipelineJobsToComplete(1, "Billing Run", false);
     }
 
     //TODO: @Test
