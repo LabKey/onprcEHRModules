@@ -61,6 +61,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
     private static final String BILLING_FOLDER_PATH = "/" + PROJECT_NAME + "/" + BILLING_FOLDER;
     private static final String EHR_FOLDER_PATH = "/" + PROJECT_NAME + "/" + FOLDER_NAME;
     private static int counter = 1;
+    private static int jobCounter = 1;
     private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
     protected DateTimeFormatter _dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -144,7 +145,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         waitForElement(Ext4Helper.Locators.window("Success"));
         waitAndClickAndWait(Ext4Helper.Locators.ext4Button("OK"));
         waitAndClickAndWait(Locator.linkWithText("All"));
-        waitForPipelineJobsToComplete(2, "Billing Run", false);
+        waitForPipelineJobsToComplete(++jobCounter, "Billing Run", false);
 
         //TODO: test results
     }
@@ -178,6 +179,13 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         performBillingRun(LocalDateTime.now().minusYears(12).format(_dateTimeFormatter), LocalDateTime.now().minusYears(11).format(_dateTimeFormatter));
         navigateToFolder(getProjectName(), BILLING_FOLDER);
         waitAndClickAndWait(Locator.linkWithText("Billing Period Summary / Discrepancy Report"));
+        String expectedContent = "Category # Items Amount\n" +
+                "Lease Fees 6.0 $0.00\n" +
+                "Other Charges 40.0 $0.00\n" +
+                "Per Diems 2002.0 $0.00\n" +
+                "Procedure Charges 4.0 $0.00\n" +
+                "SLA Per Diems 0.0 $0.00";
+        Assert.assertEquals("Incorrect information in the charge summary table", expectedContent, Locator.tag("table").findElements(getDriver()).get(0).getText());
     }
 
     private void updateBirthDate(String animalId) throws IOException, CommandException
@@ -257,7 +265,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         String charge = "ChargeUnit " + counter;
         InsertRowsCommand chargeUnitCommand = new InsertRowsCommand("onprc_billing", "chargeUnits");
         chargeUnitCommand.addRow(Map.of("chargetype", charge, "servicecenter", "ServiceCenter" + counter, "shownInBlood", true,
-                "shownInMedications", true, "shownInProcedures", "true", "active", true));
+                "shownInMedications", true, "shownInProcedures", true, "shownInLabwork", true, "active", true));
         counter++;
         chargeUnitCommand.execute(getApiHelper().getConnection(), getContainerPath());
         return charge;
@@ -275,8 +283,8 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
     private String insertBillingAndHousingTables() throws IOException, CommandException
     {
         InsertRowsCommand fiscalAuthorities = new InsertRowsCommand("onprc_billing", "fiscalAuthorities");
-        fiscalAuthorities.addRow(Map.of("firstName", "Cooper", "lastName", "Sheldon", "faid", "F1", "active", true));
-        fiscalAuthorities.addRow(Map.of("firstName", "Cooper", "lastName", "Mary", "faid", "F2", "active", true));
+        fiscalAuthorities.addRow(Map.of("firstName", "Sheldon", "lastName", "Cooper", "faid", "F1", "active", true));
+        fiscalAuthorities.addRow(Map.of("firstName", "Mary", "lastName", "Cooper", "faid", "F2", "active", true));
         CommandResponse fiscalAuthoritiesResponse = fiscalAuthorities.execute(getApiHelper().getConnection(), getContainerPath());
 
         InsertRowsCommand aliases = new InsertRowsCommand("onprc_billing", "aliases");
@@ -402,7 +410,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         waitForElement(Ext4Helper.Locators.window("Success"));
         waitAndClickAndWait(Ext4Helper.Locators.ext4Button("OK"));
         waitAndClickAndWait(Locator.linkWithText("All"));
-        waitForPipelineJobsToComplete(1, "Billing Run", false);
+        waitForPipelineJobsToComplete(++jobCounter, "Billing Run", false);
     }
 
     //TODO: @Test
