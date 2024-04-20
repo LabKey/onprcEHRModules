@@ -79,6 +79,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     private final String PROJECT_NAME = "ONPRC_EHR_TestProject2";
     public DataIntegrationHelper _etlHelper = new DataIntegrationHelper(PROJECT_NAME);
     private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
+    protected DateTimeFormatter _dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @BeforeClass
     @LogMethod
@@ -967,6 +968,67 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         waitForElementToDisappear(Ext4Helper.Locators.window("Manage Cases: " + SUBJECTS[0]));
     }
 
+    @Test
+    public void testFormTriggers()
+    {
+        String aliveAnimal = "99998";
+        String deadAnimal = "99999"; //Mark an animal dead.
+
+        Map<String, Map<String, String>> formsToTest = Map.of(
+                "Birth", Map.of("allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Death", Map.of("allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Arrival", Map.of("allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Departure", Map.of("allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Housing Transfers", Map.of("allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"));
+
+        goToEHRFolder();
+        clickAndWait(Locator.linkWithText("Enter Data / Task Review"));
+        for (Map.Entry<String, Map<String, String>> form : formsToTest.entrySet())
+        {
+            clickAndWait(Locator.linkWithText(form.getKey()));
+            enableForm();
+            Ext4GridRef grid;
+            if(form.getKey().equals("Housing Transfers"))
+                grid = _helper.getExt4GridForFormSection(form.getKey());
+            else
+                grid = _helper.getExt4GridForFormSection(form.getKey() + "s");
+            _helper.addRecordToGrid(grid);
+            if (form.getValue().get("allowDeadIds").equals("true"))
+            {
+                grid.setGridCell(1, "Id", deadAnimal);
+                Assert.assertFalse("Dead animal should be present", isTextPresent(""));
+            }
+            if (form.getValue().get("allowAnyId").equals("true"))
+            {
+                grid.setGridCell(1, "Id", aliveAnimal);
+                //verify error message
+            }
+            if (form.getValue().get("allowDatesInDistantPast").equals("true"))
+            {
+                grid.setGridCell(1, "date", LocalDateTime.now().minusDays(90).format(_dateTimeFormatter));
+                Assert.assertTrue("Missing error message", isTextPresent(""));
+                grid.setGridCell(1, "date", LocalDateTime.now().minusDays(50).format(_dateTimeFormatter));
+                Assert.assertFalse("Missing error message", isTextPresent(""));
+            }
+            if (form.getValue().get("allowFutureDates").equals("true"))
+            {
+                grid.setGridCell(1, "date", LocalDateTime.now().plusDays(2).format(_dateTimeFormatter));
+                Assert.assertTrue("Missing error message", isTextPresent(""));
+                grid.setGridCell(1, "date", LocalDateTime.now().format(_dateTimeFormatter));
+                Assert.assertFalse("Missing error message", isTextPresent(""));
+            }
+            _helper.discardForm();
+        }
+    }
+
+    private void enableForm()
+    {
+        if (Locator.linkWithText("Enable the form for data entry").isDisplayed(getDriver()))
+        {
+            Ext4Helper.Locators.ext4Button("Enable the form for data entry").findElement(getDriver()).click();
+            waitForElement(Locator.linkWithText("Exit data entry"));
+        }
+    }
     //TODO: @Test
     public void vetReviewTest()
     {
