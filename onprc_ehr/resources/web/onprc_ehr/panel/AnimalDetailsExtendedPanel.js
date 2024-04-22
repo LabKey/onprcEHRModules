@@ -7,6 +7,7 @@
  */
 Ext4.define('ONPRC_EHR.panel.AnimalDetailsExtendedPanel', {
     extend: 'ONPRC_EHR.panel.AnimalDetailsCasePanel',
+    // extend: 'ONPRC_EHR.panel.AnimalDetailsPanel',
     alias: 'widget.onprc_ehr-animaldetailsextendedpanel',
 
     getItems: function(){
