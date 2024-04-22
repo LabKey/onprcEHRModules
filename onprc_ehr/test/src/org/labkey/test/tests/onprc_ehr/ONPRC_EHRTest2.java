@@ -67,6 +67,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.labkey.test.util.Ext4Helper.Locators.ext4Button;
 import static org.labkey.test.util.Ext4Helper.elementIfEnabled;
@@ -75,10 +76,10 @@ import static org.labkey.test.util.Ext4Helper.elementIfEnabled;
 @BaseWebDriverTest.ClassTimeout(minutes = 18)
 public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 {
-    public AbstractContainerHelper _containerHelper = new APIContainerHelper(this);
     private final String PROJECT_NAME = "ONPRC_EHR_TestProject2";
-    public DataIntegrationHelper _etlHelper = new DataIntegrationHelper(PROJECT_NAME);
     private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
+    public AbstractContainerHelper _containerHelper = new APIContainerHelper(this);
+    public DataIntegrationHelper _etlHelper = new DataIntegrationHelper(PROJECT_NAME);
     protected DateTimeFormatter _dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @BeforeClass
@@ -359,7 +360,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         boolean isPublic = (Boolean) resp.getRows().get(0).get("QCState/PublicData");
         String damId = (String) resp.getRows().get(0).get("dam");
-        boolean isAlive = resp.getRows().get(0).get("birth_condition/alive") == null ? true : (Boolean) resp.getRows().get(0).get("birth_condition/alive");
+        boolean isAlive = resp.getRows().get(0).get("birth_condition/alive") == null || (Boolean) resp.getRows().get(0).get("birth_condition/alive");
         String room = (String) resp.getRows().get(0).get("room");
         String cage = (String) resp.getRows().get(0).get("cage");
         Double weight = (Double) resp.getRows().get(0).get("weight");
@@ -975,11 +976,11 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         String deadAnimal = "99999"; //Mark an animal dead.
 
         Map<String, Map<String, String>> formsToTest = Map.of(
-                "Birth", Map.of("allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Death", Map.of("allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Arrival", Map.of("allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Departure", Map.of("allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Housing Transfers", Map.of("allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"));
+                "Birth", Map.of("gridToTest", "Births", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Death", Map.of("gridToTest", "Deaths", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Arrival", Map.of("gridToTest", "Arrivals", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Departure", Map.of("gridToTest", "Departures", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Housing Transfers", Map.of("gridToTest", "Housing Transfers", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"));
 
         goToEHRFolder();
         clickAndWait(Locator.linkWithText("Enter Data / Task Review"));
@@ -987,16 +988,12 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         {
             clickAndWait(Locator.linkWithText(form.getKey()));
             enableForm();
-            Ext4GridRef grid;
-            if(form.getKey().equals("Housing Transfers"))
-                grid = _helper.getExt4GridForFormSection(form.getKey());
-            else
-                grid = _helper.getExt4GridForFormSection(form.getKey() + "s");
+            Ext4GridRef grid = _helper.getExt4GridForFormSection(form.getValue().get("gridToTest"));
             _helper.addRecordToGrid(grid);
             if (form.getValue().get("allowDeadIds").equals("true"))
             {
                 grid.setGridCell(1, "Id", deadAnimal);
-                Assert.assertFalse("Dead animal should be present", isTextPresent(""));
+                Assert.assertFalse("Dead animal should be allowed", isTextPresent(""));
             }
             if (form.getValue().get("allowAnyId").equals("true"))
             {
@@ -1029,6 +1026,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             waitForElement(Locator.linkWithText("Exit data entry"));
         }
     }
+
     //TODO: @Test
     public void vetReviewTest()
     {
@@ -1179,7 +1177,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     @Test
     public void clinicalHistoryXML() throws IOException, CommandException
     {
-        GetCommand getCommand = new GetCommand("ehr", "getClinicalHistory") {
+        GetCommand getCommand = new GetCommand("ehr", "getClinicalHistory")
+        {
             @Override
             protected HttpGet createRequest(URI uri)
             {
@@ -1203,11 +1202,11 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         CommandResponse response = getCommand.execute(getApiHelper().getConnection(), getContainerPath());
         String xml = response.getText();
 
-        assertTrue("Expected XML to contain <response>", StringUtils.countMatches(xml, "<response>") == 1);
-        assertTrue("Expected XML to contain <html> for 8 rows", StringUtils.countMatches(xml, "<html>") == 8);
-        assertTrue("Expected XML to contain <publicData> for 8 rows", StringUtils.countMatches(xml, "<publicData>") == 8);
-        assertTrue("Expected XML to contain <type>Clinical</type> for 3 clinical entries", StringUtils.countMatches(xml, "<type>Clinical</type>") == 3);
-        assertTrue("Expected XML to contain <source>Housing Transfer</source> for 2 housing moves", StringUtils.countMatches(xml, "<source>Housing Transfer</source>") == 2);
+        assertEquals("Expected XML to contain <response>", 1, StringUtils.countMatches(xml, "<response>"));
+        assertEquals("Expected XML to contain <html> for 8 rows", 8, StringUtils.countMatches(xml, "<html>"));
+        assertEquals("Expected XML to contain <publicData> for 8 rows", 8, StringUtils.countMatches(xml, "<publicData>"));
+        assertEquals("Expected XML to contain <type>Clinical</type> for 3 clinical entries", 3, StringUtils.countMatches(xml, "<type>Clinical</type>"));
+        assertEquals("Expected XML to contain <source>Housing Transfer</source> for 2 housing moves", 2, StringUtils.countMatches(xml, "<source>Housing Transfer</source>"));
 
     }
 
