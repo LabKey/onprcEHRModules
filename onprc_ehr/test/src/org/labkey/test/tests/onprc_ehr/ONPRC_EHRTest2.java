@@ -972,21 +972,23 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     @Test
     public void testFormTriggers()
     {
-        String aliveAnimal = "99998";
-        String deadAnimal = "99999"; //Mark an animal dead.
+        String aliveAnimal = "45678";
+        String deadAnimal = "34567";
+        String invalidAnimalId = "00000";
+        markDead(deadAnimal);
 
         Map<String, Map<String, String>> formsToTest = Map.of(
                 "Birth", Map.of("gridToTest", "Births", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Death", Map.of("gridToTest", "Deaths", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Death", Map.of("gridToTest", "Deaths", "allowDatesInDistantPast", "true", "allowFutureDates", "false", "allowDeadIds", "false", "allowAnyId", "false"),
                 "Arrival", Map.of("gridToTest", "Arrivals", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Departure", Map.of("gridToTest", "Departures", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Housing Transfers", Map.of("gridToTest", "Housing Transfers", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"));
+                "Departure", Map.of("gridToTest", "Departures", "allowDatesInDistantPast", "false", "allowFutureDates", "true", "allowDeadIds", "false", "allowAnyId", "false"),
+                "Housing Transfers", Map.of("gridToTest", "Housing Transfers", "allowDatesInDistantPast", "false", "allowFutureDates", "true", "allowDeadIds", "false", "allowAnyId", "false"));
 
         goToEHRFolder();
         clickAndWait(Locator.linkWithText("Enter Data / Task Review"));
         for (Map.Entry<String, Map<String, String>> form : formsToTest.entrySet())
         {
-            clickAndWait(Locator.linkWithText(form.getKey()));
+            waitAndClickAndWait(Locator.linkWithText(form.getKey()));
             enableForm();
             Ext4GridRef grid = _helper.getExt4GridForFormSection(form.getValue().get("gridToTest"));
             _helper.addRecordToGrid(grid);
@@ -994,6 +996,11 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             {
                 grid.setGridCell(1, "Id", deadAnimal);
                 Assert.assertFalse("Dead animal should be allowed", isTextPresent(""));
+            }
+            else
+            {
+                grid.setGridCell(1, "Id", deadAnimal);
+                Assert.assertTrue("Dead animal should be allowed", isTextPresent(""));
             }
             if (form.getValue().get("allowAnyId").equals("true"))
             {
@@ -1010,9 +1017,12 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             if (form.getValue().get("allowFutureDates").equals("true"))
             {
                 grid.setGridCell(1, "date", LocalDateTime.now().plusDays(2).format(_dateTimeFormatter));
-                Assert.assertTrue("Missing error message", isTextPresent(""));
-                grid.setGridCell(1, "date", LocalDateTime.now().format(_dateTimeFormatter));
                 Assert.assertFalse("Missing error message", isTextPresent(""));
+            }
+            else
+            {
+                grid.setGridCell(1, "date", LocalDateTime.now().plusDays(2).format(_dateTimeFormatter));
+                Assert.assertTrue("Missing error message", isTextPresent(""));
             }
             _helper.discardForm();
         }
@@ -1024,6 +1034,33 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         {
             Ext4Helper.Locators.ext4Button("Enable the form for data entry").findElement(getDriver()).click();
             waitForElement(Locator.linkWithText("Exit data entry"));
+        }
+    }
+
+    private void markDead(String animalId)
+    {
+        InsertRowsCommand deathCause = new InsertRowsCommand("ehr_lookups", "death_cause");
+        deathCause.addRow(Map.of("value", "Old Age", "title", "Old Age"));
+        deathCause.addRow(Map.of("value", "Heart Attack", "title", "Heart Attack"));
+        try
+        {
+            deathCause.execute(getApiHelper().getConnection(), getContainerPath());
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        log("Marking an animal dead");
+        InsertRowsCommand deathInsert = new InsertRowsCommand("study", "deaths");
+        deathInsert.addRow(Map.of("Id", animalId, "date", LocalDateTime.now().minusDays(10), "cause", "Old Age"));
+        try
+        {
+            deathInsert.execute(getApiHelper().getConnection(), getContainerPath());
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
         }
     }
 
