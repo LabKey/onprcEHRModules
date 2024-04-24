@@ -193,21 +193,6 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                             var data = Ext4.decode(row.json);
                             var store = storeCollection.getClientStoreByName(row.storeid);
 
-                            //      Added 3-15-2024 R. Blasa
-
-                            var date = Ext4.Date.clone(new Date());
-
-                            if (data.offset){
-                                var offsetDate = Ext4.Date.add(date, Ext4.Date.DAY, data.offset);
-                                offsetDate = Ext4.Date.clearTime(offsetDate);
-                                offsetDate.setHours(8);
-                                date = offsetDate;
-
-
-                            }
-                            var obj = {
-                                date: date
-                            };
 
                             //verify store exists
                             if (!store){
@@ -230,8 +215,26 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                             if (!toAdd[store.storeId])
                                 toAdd[store.storeId] = [];
 
+                            //      Added 3-15-2024 R. Blasa
+
+                            var date = Ext4.Date.clone(new Date());
+
+                            if (data.offset){
+                                var offsetDate = Ext4.Date.add(date, Ext4.Date.DAY, data.offset);
+                                offsetDate = Ext4.Date.clearTime(offsetDate);
+                                offsetDate.setHours(8);
+                                date = offsetDate;
+
+
+                            }
+                            var obj2 = {};
+                             obj2 = {
+                                date: date
+                            };
+
                             var newData = Ext4.apply({}, data);
                             newData = Ext4.apply(newData, obj);
+                            newData = Ext4.apply(newData, obj2);
 
                             toAdd[store.storeId].push(newData);
                         }, this);
