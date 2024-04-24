@@ -28,6 +28,7 @@ import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: bimber
@@ -58,12 +59,28 @@ public class TreatmentsFormType extends TaskForm
 
         }
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"));
+       //Added 4-24-2024  R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/FormTemplateWindow.js"));
+
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
         {
             addSection(new MiscChargesFormSection(EHRService.FORM_SECTION_LOCATION.Body));
         }
 
+
+
+    }
+
+    //Added 4-24-2024  R. Blasa
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> ret = super.getButtonConfigs();
+        ret.remove("APPLYFORMTEMPLATE");
+        ret.add("APPLYFORMTEMPLATEREV");
+
+        return ret;
     }
 
 
