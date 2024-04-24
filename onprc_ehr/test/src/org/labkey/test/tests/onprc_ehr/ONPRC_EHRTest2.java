@@ -972,8 +972,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     @Test
     public void testFormTriggers()
     {
-        String aliveAnimal = "45678";
-        String deadAnimal = "34567";
+        String aliveAnimal = "22222";
+        String deadAnimal = "33333";
         String invalidAnimalId = "00000";
         markDead(deadAnimal);
 
@@ -988,42 +988,35 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         clickAndWait(Locator.linkWithText("Enter Data / Task Review"));
         for (Map.Entry<String, Map<String, String>> form : formsToTest.entrySet())
         {
+            log("Form tested " + form.getKey());
             waitAndClickAndWait(Locator.linkWithText(form.getKey()));
             enableForm();
             Ext4GridRef grid = _helper.getExt4GridForFormSection(form.getValue().get("gridToTest"));
             _helper.addRecordToGrid(grid);
+            grid.setGridCell(1, "Id", deadAnimal);
             if (form.getValue().get("allowDeadIds").equals("true"))
-            {
-                grid.setGridCell(1, "Id", deadAnimal);
-                Assert.assertFalse("Dead animal should be allowed", isTextPresent(""));
-            }
+                Assert.assertFalse("Dead animal should be allowed", isTextPresent("INFO: Status of this Id is: Dead"));
             else
-            {
-                grid.setGridCell(1, "Id", deadAnimal);
-                Assert.assertTrue("Dead animal should be allowed", isTextPresent(""));
-            }
+                waitForText(WAIT_FOR_PAGE, "INFO: Status of this Id is: Dead");
+
+            grid.setGridCell(1, "Id", invalidAnimalId);
             if (form.getValue().get("allowAnyId").equals("true"))
-            {
-                grid.setGridCell(1, "Id", aliveAnimal);
-                //verify error message
-            }
-            if (form.getValue().get("allowDatesInDistantPast").equals("true"))
-            {
-                grid.setGridCell(1, "date", LocalDateTime.now().minusDays(90).format(_dateTimeFormatter));
-                Assert.assertTrue("Missing error message", isTextPresent(""));
-                grid.setGridCell(1, "date", LocalDateTime.now().minusDays(50).format(_dateTimeFormatter));
-                Assert.assertFalse("Missing error message", isTextPresent(""));
-            }
-            if (form.getValue().get("allowFutureDates").equals("true"))
-            {
-                grid.setGridCell(1, "date", LocalDateTime.now().plusDays(2).format(_dateTimeFormatter));
-                Assert.assertFalse("Missing error message", isTextPresent(""));
-            }
+                Assert.assertFalse("Invalid animal should be allowed", isTextPresent("Id: WARN: Id not found in demographics table: " + invalidAnimalId));
             else
-            {
-                grid.setGridCell(1, "date", LocalDateTime.now().plusDays(2).format(_dateTimeFormatter));
-                Assert.assertTrue("Missing error message", isTextPresent(""));
-            }
+                waitForText(WAIT_FOR_PAGE, "Row 1, Id: WARN: Id not found in demographics table: " + invalidAnimalId);
+
+
+            grid.setGridCell(1, "date", LocalDateTime.now().minusDays(90).format(_dateTimeFormatter));
+            if (form.getValue().get("allowDatesInDistantPast").equals("true"))
+                Assert.assertFalse("Future date is allowed", isTextPresent("Row 1, Date: WARN: Date is more than 60 days in past"));
+            else
+                waitForText("Row 1, Date: WARN: Date is more than 60 days in past");
+
+            grid.setGridCell(1, "date", LocalDateTime.now().plusDays(2).format(_dateTimeFormatter));
+            if (form.getValue().get("allowFutureDates").equals("true"))
+                Assert.assertFalse("Missing error message", true);
+            else
+                Assert.assertTrue("Missing error message", false);
             _helper.discardForm();
         }
     }
@@ -1035,6 +1028,29 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             Ext4Helper.Locators.ext4Button("Enable the form for data entry").findElement(getDriver()).click();
             waitForElement(Locator.linkWithText("Exit data entry"));
         }
+    }
+
+    private void createAnimal()
+    {
+        String dam = "22222";
+        Date damBirth = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), -720, 0);
+        getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "birth", "lsid",
+                new String[]{"Id", "Date", "gender", "species", "QCStateLabel"},
+                new Object[][]{
+                        {dam, damBirth, "f", "Rhesus", "Completed"},
+                }
+        ), getExtraContext());
+
+        dam = "33333";
+        damBirth = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), -720, 0);
+        getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "birth", "lsid",
+                new String[]{"Id", "Date", "gender", "species", "QCStateLabel"},
+                new Object[][]{
+                        {dam, damBirth, "f", "Rhesus", "Completed"},
+                }
+        ), getExtraContext());
+
+
     }
 
     private void markDead(String animalId)
