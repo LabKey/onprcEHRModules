@@ -21,7 +21,7 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
+import org.labkey.onprc_ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
