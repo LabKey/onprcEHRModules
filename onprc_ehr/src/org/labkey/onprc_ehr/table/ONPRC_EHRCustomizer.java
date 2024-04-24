@@ -1504,6 +1504,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (titleCol != null)
         {
             titleCol.setURL(detailsURL);
+            titleCol.setDescription("Task title or brief description");
         }
 
         var rowIdCol = ti.getMutableColumn("rowid");
@@ -1539,6 +1540,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         updateCol.setLabel("Title");
         updateCol.setHidden(true);
+        updateCol.setDisplayWidth("150");
 
         updateTaskId.setLabel("Task Id");
         updateTaskId.setHidden(true);

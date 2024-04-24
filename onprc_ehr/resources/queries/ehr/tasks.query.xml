@@ -130,16 +130,6 @@
                             </conditionalFormat>
                         </conditionalFormats>
                     </column>
-                    <column columnName="title">
-                        <description>Task title or brief description</description>
-                        <url>/ehr/dataEntryFormDetails.view?formType=${formtype}&amp;taskid=${taskid}</url>
-                    </column>
-                    <column columnName="updateTitle" wrappedColumnName="title">
-                        <columnTitle>Title</columnTitle>
-                        <url>/ehr/dataEntryForm.view?formType=${formtype}&amp;taskid=${taskid}</url>
-                        <isHidden>true</isHidden>
-                        <displayWidth>150</displayWidth>
-                    </column>
                 </columns>
                 <buttonBarOptions includeStandardButtons="false">
                     <includeScript>ehr.context</includeScript>
