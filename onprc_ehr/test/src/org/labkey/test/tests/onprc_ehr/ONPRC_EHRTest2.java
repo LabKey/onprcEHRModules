@@ -1103,7 +1103,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         checker().withScreenshot("Blood request").verifyTrue("Expected error is not present", isAnyTextPresent(
                 "Row 1, # of Tubes: ERROR: The quantity requested, 12.0ml exceeds the available blood volume, 10.0ml for AnimalId: 12345"));
 
-        //Updating the total volume below the the available blood volume.
+        //Updating the total volume below the available blood volume.
         updateTotalVolume(8);
 
         shortWait().until(wd -> elementIfEnabled(ext4Button("Request").findElement(getDriver()))).click();
@@ -1189,15 +1189,6 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         Ext4GridRef bloodDraw = _helper.getExt4GridForFormSection("Blood Draws");
         int index = bloodDraw.getRowCount();
         bloodDraw.setGridCell(index, "quantity", quantity.toString());
-    }
-
-    private void addProjectToTheRow(Ext4GridRef gridRef, int index, String project)
-    {
-        gridRef.clickDownArrowOnGrid(index, "project");
-        waitAndClick(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
-        waitForElement(Ext4Helper.Locators.window("Choose Project"));
-        _ext4Helper.queryOne("window[title=Choose Project] [fieldLabel='Project']", Ext4ComboRef.class).setComboByDisplayValue(project);
-        waitAndClick(Ext4Helper.Locators.window("Choose Project").append(Ext4Helper.Locators.ext4ButtonEnabled("Submit")));
     }
 
     //TODO: @Test
