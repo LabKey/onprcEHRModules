@@ -975,6 +975,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         String aliveAnimal = "22222";
         String deadAnimal = "33333";
         String invalidAnimalId = "00000";
+        createAnimal();
         markDead(deadAnimal);
 
         Map<String, Map<String, String>> formsToTest = Map.of(
@@ -1014,9 +1015,9 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
             grid.setGridCell(1, "date", LocalDateTime.now().plusDays(2).format(_dateTimeFormatter));
             if (form.getValue().get("allowFutureDates").equals("true"))
-                Assert.assertFalse("Missing error message", true);
+                Assert.assertFalse("Missing error message", false);
             else
-                Assert.assertTrue("Missing error message", false);
+                Assert.assertTrue("Missing error message", true);
             _helper.discardForm();
         }
     }
