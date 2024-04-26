@@ -360,7 +360,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('APPLYFORMTEMPLATEREV', {
         var panel = btn.up('ehr-dataentrypanel');
         LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel', panel);
 
-        Ext4.create('EHR.window.FormTemplateWindow', {
+        Ext4.create('ONPRC_EHR.window.FormTemplateWindow', {
             dataEntryPanel: panel,
             idSelectionMode: btn.idSelectionMode,
             defaultDate: btn.defaultDate
