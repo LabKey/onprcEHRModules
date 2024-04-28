@@ -16,95 +16,6 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.INIT, function (event, helper, EHR) {
 
         EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'birth', EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC);
-
-        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'birth', function (scriptErrors, helper, row, oldRow) {
-            // Put custom ONPRC handler here
-            // skip normal birth records process when birth condition has a value of Fetus
-            console.log("onprc_ehr/birth.js entry")
-            if (row.Id && row.birth_condition == 'Fetus - Prenatal')
-            {
-                var obj = {
-                    Id: row.Id,
-                    birth: row.date,
-                    date: row.date,
-                    calculated_status: 'Fetus'
-                };
-
-
-                helper.getJavaHelper().createDemographicsRecord(row.Id, obj);
-            }
-
-            else
-            {
-                var isLiving = EHR.Server.Utils.isLiveBirth(row.birth_condition);
-                if (isLiving)
-                {
-                    helper.registerLiveBirth(row.Id, row.date);
-                }
-
-                if (!helper.isETL())
-                {
-                    //if a weight is provided, we insert into the weight table:
-                    if (row.weight && row.wdate)
-                    {
-                        helper.getJavaHelper().insertWeight(row.Id, row.wdate, row.weight);
-                    }
-
-                    //if room provided, we insert into housing.  if this animal already has an active housing record, skip
-
-                    if (row.room && row.Id && row.date)
-                    {
-
-                        helper.getJavaHelper().createHousingRecord(row.Id, row.date, (isLiving ? null : row.date), row.room, (row.cage || null),null);
-                    }
-
-                    if (!helper.isGeneratedByServer())
-                    {
-                        var obj = {
-                            Id: row.Id,
-                            gender: row.gender,
-                            dam: row.dam,
-                            sire: row.sire,
-                            origin: row.origin,
-                            birth: row.date,
-                            date: row.date,
-                            calculated_status: isLiving ? 'Alive' : 'Dead'
-
-                        };
-
-                        //NOTE: the follow is designed to allow the table to either have physical columns for species/origin, or do display the demographics values.  in the latter case, editing the form field will act to update the demographics record
-                        if (row.species || row['Id/demographics/species'])
-                        {
-                            obj.species = row.species || row['Id/demographics/species'];
-                        }
-
-                        if (row.geographic_origin || row['Id/demographics/geographic_origin'])
-                        {
-                            obj.geographic_origin = row.geographic_origin || row['Id/demographics/geographic_origin'];
-                        }
-
-                        //find dam, if provided
-                        if (row.dam && !obj.geographic_origin)
-                        {
-                            obj.geographic_origin = helper.getJavaHelper().getGeographicOrigin(row.dam);
-                        }
-
-                        if (row.dam && !obj.species)
-                        {
-                            obj.species = helper.getJavaHelper().getSpecies(row.dam);
-                        }
-
-                        if (!isLiving)
-                        {
-                            obj.death = row.date;
-                        }
-
-                        //if not already present, we insert into demographics
-                        helper.getJavaHelper().createDemographicsRecord(row.Id, obj);
-                    }
-                }
-            }
-        });
     });
 
 
@@ -143,18 +54,6 @@ exports.init = function(EHR){
             allowDatesInDistantPast: true,
             allowFutureDates: true
         });
-    });
-
-
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study','birth', function(helper, scriptErrors, row, oldRow){
-        //Added: 8-1-2019  R.Blasa
-
-        if (row.Id && row.birth_condition == 'Fetus - Prenatal') {
-            helper.setScriptOptions({
-                allowFutureDates: true
-            });
-
-        }
     });
 
     //Added: kollil, 5/12/2020
@@ -624,6 +523,91 @@ exports.init = function(EHR){
         }
     });
 
+    function handleBirth(helper, errors, row, oldRow) {
+        if (row.Id && row.birth_condition == 'Fetus - Prenatal')
+        {
+            var obj = {
+                Id: row.Id,
+                birth: row.date,
+                date: row.date,
+                calculated_status: 'Fetus'
+            };
+
+
+            helper.getJavaHelper().createDemographicsRecord(row.Id, obj);
+        }
+
+        else
+        {
+            var isLiving = EHR.Server.Utils.isLiveBirth(row.birth_condition);
+            if (isLiving)
+            {
+                helper.registerLiveBirth(row.Id, row.date);
+            }
+
+            if (!helper.isETL())
+            {
+                //if a weight is provided, we insert into the weight table:
+                if (row.weight && row.wdate)
+                {
+                    helper.getJavaHelper().insertWeight(row.Id, row.wdate, row.weight);
+                }
+
+                //if room provided, we insert into housing.  if this animal already has an active housing record, skip
+
+                if (row.room && row.Id && row.date)
+                {
+
+                    helper.getJavaHelper().createHousingRecord(row.Id, row.date, (isLiving ? null : row.date), row.room, (row.cage || null),null);
+                }
+
+                if (!helper.isGeneratedByServer())
+                {
+                    var obj = {
+                        Id: row.Id,
+                        gender: row.gender,
+                        dam: row.dam,
+                        sire: row.sire,
+                        origin: row.origin,
+                        birth: row.date,
+                        date: row.date,
+                        calculated_status: isLiving ? 'Alive' : 'Dead'
+
+                    };
+
+                    //NOTE: the follow is designed to allow the table to either have physical columns for species/origin, or do display the demographics values.  in the latter case, editing the form field will act to update the demographics record
+                    if (row.species || row['Id/demographics/species'])
+                    {
+                        obj.species = row.species || row['Id/demographics/species'];
+                    }
+
+                    if (row.geographic_origin || row['Id/demographics/geographic_origin'])
+                    {
+                        obj.geographic_origin = row.geographic_origin || row['Id/demographics/geographic_origin'];
+                    }
+
+                    //find dam, if provided
+                    if (row.dam && !obj.geographic_origin)
+                    {
+                        obj.geographic_origin = helper.getJavaHelper().getGeographicOrigin(row.dam);
+                    }
+
+                    if (row.dam && !obj.species)
+                    {
+                        obj.species = helper.getJavaHelper().getSpecies(row.dam);
+                    }
+
+                    if (!isLiving)
+                    {
+                        obj.death = row.date;
+                    }
+
+                    //if not already present, we insert into demographics
+                    helper.getJavaHelper().createDemographicsRecord(row.Id, obj);
+                }
+            }
+        }
+    }
 
     //Modified: 10-13-2016 R.Blasa added arrival date parameter
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'birth', function(helper, errors, row, oldRow) {
@@ -663,9 +647,22 @@ exports.init = function(EHR){
                 triggerHelper.doBirthTriggers(row.Id, row.date, row.dam || null, row.Arrival_Date || null, row.birth_condition || null, row.species || null, !!row._becomingPublicData);
             }
         }
+
+        // Do this last to kick off the demographics cache refresh after all other triggers are done.
+        handleBirth(helper, errors, row, oldRow);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'birth', function(helper, scriptErrors, row, oldRow) {
+
+        if (row.Id && row.birth_condition == 'Fetus - Prenatal') {
+            helper.setScriptOptions({
+                allowFutureDates: true
+            });
+        }
+
+        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, null, null, false);
+
+
         //also allow changes here to update the demographics record
         //this should only occur if updating an already public record, not just for onBecomePublic, which is a one-time call
         if (!helper.isValidateOnly() && row.Id && !helper.isGeneratedByServer() && oldRow && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData){
@@ -911,10 +908,6 @@ exports.init = function(EHR){
                 triggerHelper.ensureQuarantineFlag(row.Id, row.date);
             }
         }
-    });
-
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'birth', function(helper, scriptErrors, row, oldRow){
-        onprc_utils.doHousingCheck(EHR, helper, scriptErrors, triggerHelper, row, oldRow, null, null, false);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'arrival', function(helper, errors, row, oldRow) {

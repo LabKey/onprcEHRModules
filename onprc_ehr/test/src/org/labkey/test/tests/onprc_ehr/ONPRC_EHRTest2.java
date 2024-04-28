@@ -712,6 +712,73 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     }
 
     @Test
+    public void testBirthInheritFromDam() throws Exception
+    {
+        String dam = "22222";
+        Date damBirth = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), -720, 0);
+
+        goToProjectHome();
+
+        //insert into birth
+        log("Creating Dam");
+        getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "birth", "lsid",
+                new String[]{"Id", "Date", "gender", "species", "QCStateLabel"},
+                new Object[][]{
+                        {dam, damBirth, "f", "Rhesus", "Completed"},
+                }
+        ), getExtraContext());
+
+        int group2 = getOrCreateGroup("Group2");
+        getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "animal_group_members", "lsid",
+                new String[]{"Id", "Date", "groupId", "QCStateLabel"},
+                new Object[][]{
+                        {dam, damBirth, group2, "Completed"},
+                }
+        ), getExtraContext());
+
+        String spfFlagId = ensureFlagExists("SPF", "SPF1", null);
+        getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "flags", "lsid",
+                new String[]{"Id", "Date", "flag", "QCStateLabel"},
+                new Object[][]{
+                        {dam, damBirth, spfFlagId, "Completed"},
+                }
+        ), getExtraContext());
+
+        String U24_PROJECT = "0492-03";
+        InsertRowsCommand projectCommand = new InsertRowsCommand("ehr", "project");
+        projectCommand.addRow(Maps.of("project", null, "name", U24_PROJECT, "protocol", DUMMY_PROTOCOL));
+        SaveRowsResponse saveRowsResponse = projectCommand.execute(getApiHelper().getConnection(), getContainerPath());
+        Integer projectId = (Integer)saveRowsResponse.getRows().get(0).get("project");
+
+        getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "assignment", "lsid",
+                new String[]{"Id", "Date", "project", "QCStateLabel"},
+                new Object[][]{
+                        {dam, damBirth, projectId, "Completed"},
+                }
+        ), getExtraContext());
+
+        log("add offspring");
+        _helper.goToTaskForm("Birth", "Enable the form for data entry", true);
+        click(Ext4Helper.Locators.ext4Button("Enable the form for data entry"));
+        waitForElement(Ext4Helper.Locators.ext4Button("Exit data entry"), WAIT_FOR_PAGE * 2);
+
+        Date today = new Date();
+        Ext4GridRef grid = _helper.getExt4GridForFormSection("Births");
+        _helper.addRecordToGrid(grid);
+        grid.setGridCell(1, "Id", SUBJECTS[0]);
+        grid.setGridCell(1, "date", today.toString());
+        grid.setGridCell(1, "birth_condition", "Live Birth");
+        grid.setGridCell(1, "room", ROOM_ID2);
+        grid.setGridCell(1, "gender", "female");
+        grid.setGridCell(1, "dam", dam);
+        grid.setGridCell(1, "type", "Vaginal");
+        grid.setGridCell(1, "species", "Rhesus");
+        grid.setGridCell(1, "geographic_origin", "USA");
+
+        _helper.submitFinalTaskForm();
+    }
+
+    @Test
     public void testPairingObservations() throws Exception
     {
         _helper.goToTaskForm("Pairing Observations");

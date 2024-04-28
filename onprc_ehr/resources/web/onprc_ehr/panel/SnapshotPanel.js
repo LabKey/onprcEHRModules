@@ -529,7 +529,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                 animals = row.animals.replace(/( )*,( )*/g, ',');
                 animals = animals.split(',');
                 animals.sort();
-                animals = animals.remove(id);
+                animals = animals.filter(animal => animal !== id);
 
             }
 
@@ -543,7 +543,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                     animals = row.animals.replace(/( )*,( )*/g, ',');
                     animals = animals.split(',')
                     animals.sort();
-                    animals = animals.remove(id);
+                    animals = animals.filter(animal => animal !== id);
                     values.push(animals);
 
                 }
