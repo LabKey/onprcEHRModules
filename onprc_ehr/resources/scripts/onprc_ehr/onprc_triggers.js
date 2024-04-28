@@ -648,8 +648,11 @@ exports.init = function(EHR){
             }
         }
 
-        // Do this last to kick off the demographics cache refresh after all other triggers are done.
-        handleBirth(helper, errors, row, oldRow);
+        // Create the demographic record after other birth trigger processing to ensure demographic caching does not start until triggers are complete.
+        // Normally this would be done in the ON_BECOME_PUBLIC event trigger, but that happens before AFTER_UPSERT and the demographic caching from that
+        // can happen before triggers are complete.
+        if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData)
+            handleBirth(helper, errors, row, oldRow);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'birth', function(helper, scriptErrors, row, oldRow) {
