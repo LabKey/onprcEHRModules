@@ -35,6 +35,7 @@ import org.labkey.remoteapi.query.SelectRowsResponse;
 import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.Locator;
 import org.labkey.test.TestProperties;
+import org.labkey.test.WebDriverWrapper;
 import org.labkey.test.categories.CustomModules;
 import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
@@ -714,6 +715,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     @Test
     public void testBirthInheritFromDam() throws Exception
     {
+        String offspring = "2000";
         String dam = "22222";
         Date damBirth = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), -720, 0);
 
@@ -765,8 +767,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         Date today = new Date();
         Ext4GridRef grid = _helper.getExt4GridForFormSection("Births");
         _helper.addRecordToGrid(grid);
-        grid.setGridCell(1, "Id", SUBJECTS[0]);
-        grid.setGridCell(1, "date", today.toString());
+        grid.setGridCell(1, "Id", offspring);
+        grid.setGridCellJS(1, "date", TIME_FORMAT.format(today));
         grid.setGridCell(1, "birth_condition", "Live Birth");
         grid.setGridCell(1, "room", ROOM_ID2);
         grid.setGridCell(1, "gender", "female");
@@ -776,6 +778,15 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(1, "geographic_origin", "USA");
 
         _helper.submitFinalTaskForm();
+
+        AnimalHistoryPage historyPage = AnimalHistoryPage.beginAt(this);
+        historyPage.searchSingleAnimal(offspring);
+        waitForText("Overview: " + offspring);
+        waitForTextToDisappear("Loading...");
+
+        WebDriverWrapper.waitFor(() -> "Group2".equals(getSnapshotValue("Groups")), 10000);
+        assertTrue("Incorrect group found for infant.", "Group2".equals(getSnapshotValue("Groups")));
+        assertTrue("Incorrect flag found for infant.", "SPF: SPF1".equals(getSnapshotValue("Flags")));
     }
 
     @Test

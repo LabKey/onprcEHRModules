@@ -542,4 +542,11 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
 
     @Override
     protected abstract String getAnimalHistoryPath();
+
+    protected String getSnapshotValue(String label)
+    {
+        Locator.XPathLocator labelLoc = Locator.tagWithClass("label", "x4-form-item-label").withText(label + ":");
+        Locator.XPathLocator valueLoc = labelLoc.parent("td").parent("tr").descendant(Locator.tagWithClass("div", "x4-form-display-field"));
+        return valueLoc.findElement(getDriver()).getText();
+    }
 }
