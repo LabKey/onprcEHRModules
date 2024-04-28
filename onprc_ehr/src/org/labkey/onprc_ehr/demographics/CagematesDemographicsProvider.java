@@ -63,11 +63,15 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
     @Override
     public Set<String> getIdsToUpdate(Container c, String id, Map<String, Object> originalProps, Map<String, Object> newProps)
     {
+        List<Map<String, Object>> oldList = originalProps == null ? null : (List)originalProps.get(_propName);
         List<Map<String, Object>> newList = newProps == null ? null : (List)newProps.get(_propName);
         Set<String> ret = new TreeSet<>();
 
+        List<String> oldAnimals = oldList == null || oldList.isEmpty() ? Collections.emptyList() : toList(oldList.get(0).get("animals"));
         List<String> newAnimals = newList == null || newList.isEmpty() ? Collections.emptyList() : toList(newList.get(0).get("animals"));
+
         ret.addAll(newAnimals);
+        ret.addAll(oldAnimals);
         ret.remove(id);
 
         if (!ret.isEmpty())
