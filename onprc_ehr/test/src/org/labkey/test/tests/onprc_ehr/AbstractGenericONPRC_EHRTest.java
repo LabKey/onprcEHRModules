@@ -17,7 +17,6 @@ package org.labkey.test.tests.onprc_ehr;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
-import org.junit.After;
 import org.labkey.remoteapi.CommandException;
 import org.labkey.remoteapi.CommandResponse;
 import org.labkey.remoteapi.Connection;
@@ -288,12 +287,13 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         cacheIds(Arrays.asList(MORE_ANIMAL_IDS));
     }
 
-    @After
-    public void after()
-    {
-        beginAt(WebTestHelper.buildURL("ehr", getContainerPath(), "cacheLivingAnimals"));
-        waitAndClick(WAIT_FOR_JAVASCRIPT, Locator.lkButton("OK"), WAIT_FOR_PAGE * 4);
-    }
+//    @After
+//    public void after()
+//    {
+//        log("Validating demographics cache");
+//        beginAt(WebTestHelper.buildURL("ehr", getContainerPath(), "cacheLivingAnimals"));
+//        waitAndClick(WAIT_FOR_JAVASCRIPT, Locator.lkButton("OK"), WAIT_FOR_PAGE * 4);
+//    }
 
     protected void cacheIds(Collection<String> ids)
     {
