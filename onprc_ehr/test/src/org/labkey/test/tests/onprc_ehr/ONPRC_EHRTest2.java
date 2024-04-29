@@ -972,18 +972,17 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     @Test
     public void testFormTriggers()
     {
-        String aliveAnimal = "22222";
         String deadAnimal = "33333";
         String invalidAnimalId = "00000";
         createAnimal();
         markDead(deadAnimal);
 
         Map<String, Map<String, String>> formsToTest = Map.of(
-                "Birth", Map.of("gridToTest", "Births", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Death", Map.of("gridToTest", "Deaths", "allowDatesInDistantPast", "true", "allowFutureDates", "false", "allowDeadIds", "false", "allowAnyId", "false"),
-                "Arrival", Map.of("gridToTest", "Arrivals", "allowDatesInDistantPast", "true", "allowFutureDates", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Departure", Map.of("gridToTest", "Departures", "allowDatesInDistantPast", "false", "allowFutureDates", "true", "allowDeadIds", "false", "allowAnyId", "false"),
-                "Housing Transfers", Map.of("gridToTest", "Housing Transfers", "allowDatesInDistantPast", "false", "allowFutureDates", "true", "allowDeadIds", "false", "allowAnyId", "false"));
+                "Birth", Map.of("gridToTest", "Births", "allowDatesInDistantPast", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Death", Map.of("gridToTest", "Deaths", "allowDatesInDistantPast", "true", "allowDeadIds", "false", "allowAnyId", "false"),
+                "Arrival", Map.of("gridToTest", "Arrivals", "allowDatesInDistantPast", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Departure", Map.of("gridToTest", "Departures", "allowDatesInDistantPast", "false", "allowDeadIds", "false", "allowAnyId", "false"),
+                "Housing Transfers", Map.of("gridToTest", "Housing Transfers", "allowDatesInDistantPast", "false", "allowDeadIds", "false", "allowAnyId", "false"));
 
         goToEHRFolder();
         clickAndWait(Locator.linkWithText("Enter Data / Task Review"));
@@ -991,43 +990,50 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         {
             log("Form tested " + form.getKey());
             waitAndClickAndWait(Locator.linkWithText(form.getKey()));
+            waitForElement(Ext4Helper.Locators.ext4Button("Submit Final"));
             enableForm();
             Ext4GridRef grid = _helper.getExt4GridForFormSection(form.getValue().get("gridToTest"));
             _helper.addRecordToGrid(grid);
             grid.setGridCell(1, "Id", deadAnimal);
             if (form.getValue().get("allowDeadIds").equals("true"))
+            {
                 Assert.assertFalse("Dead animal should be allowed", isTextPresent("INFO: Status of this Id is: Dead"));
+            }
+            else if ("Housing Transfers".equals(form.getKey()))
+            {
+                waitForText(WAIT_FOR_PAGE, "WARN: This animal is deceased or shipped out, you are not allowed to make this changes to the housing record");
+            }
             else
+            {
+                click(Locator.tag("img").withAttribute("src", "/labkey/_images/editprops.png"));
                 waitForText(WAIT_FOR_PAGE, "INFO: Status of this Id is: Dead");
+                click(Ext4Helper.Locators.ext4Button("Close"));
+                waitForElementToDisappear(Ext4Helper.Locators.ext4Button("Close"));
+            }
 
             grid.setGridCell(1, "Id", invalidAnimalId);
             if (form.getValue().get("allowAnyId").equals("true"))
                 Assert.assertFalse("Invalid animal should be allowed", isTextPresent("Id: WARN: Id not found in demographics table: " + invalidAnimalId));
             else
-                waitForText(WAIT_FOR_PAGE, "Row 1, Id: WARN: Id not found in demographics table: " + invalidAnimalId);
+                waitForText(WAIT_FOR_PAGE, "WARN: Id not found in demographics table: " + invalidAnimalId);
 
 
             grid.setGridCell(1, "date", LocalDateTime.now().minusDays(90).format(_dateTimeFormatter));
             if (form.getValue().get("allowDatesInDistantPast").equals("true"))
                 Assert.assertFalse("Future date is allowed", isTextPresent("Row 1, Date: WARN: Date is more than 60 days in past"));
             else
-                waitForText("Row 1, Date: WARN: Date is more than 60 days in past");
+                waitForText("WARN: Date is more than 60 days in past");
 
-            grid.setGridCell(1, "date", LocalDateTime.now().plusDays(2).format(_dateTimeFormatter));
-            if (form.getValue().get("allowFutureDates").equals("true"))
-                Assert.assertFalse("Missing error message", false);
-            else
-                Assert.assertTrue("Missing error message", true);
             _helper.discardForm();
         }
     }
 
     private void enableForm()
     {
-        if (Locator.linkWithText("Enable the form for data entry").isDisplayed(getDriver()))
+        if (Ext4Helper.Locators.ext4Button("Enable the form for data entry").isDisplayed(getDriver()))
         {
             Ext4Helper.Locators.ext4Button("Enable the form for data entry").findElement(getDriver()).click();
-            waitForElement(Locator.linkWithText("Exit data entry"));
+            waitForElement(Ext4Helper.Locators.ext4Button("Exit data entry"));
         }
     }
 
