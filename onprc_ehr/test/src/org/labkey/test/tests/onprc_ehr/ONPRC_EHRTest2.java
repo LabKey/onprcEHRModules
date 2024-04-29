@@ -991,7 +991,10 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             log("Form tested " + form.getKey());
             waitAndClickAndWait(Locator.linkWithText(form.getKey()));
             waitForElement(Ext4Helper.Locators.ext4Button("Submit Final"));
+
+            // Required for forms with a lock on them
             enableForm();
+            
             Ext4GridRef grid = _helper.getExt4GridForFormSection(form.getValue().get("gridToTest"));
             _helper.addRecordToGrid(grid);
             grid.setGridCell(1, "Id", deadAnimal);
@@ -1005,6 +1008,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             }
             else
             {
+                // This INFO message is most reliably available in dev mode when clicking the row editor, so that is what
+                // we're checking here.
                 click(Locator.tag("img").withAttribute("src", "/labkey/_images/editprops.png"));
                 waitForText(WAIT_FOR_PAGE, "INFO: Status of this Id is: Dead");
                 click(Ext4Helper.Locators.ext4Button("Close"));
