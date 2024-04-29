@@ -969,6 +969,9 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         waitForElementToDisappear(Ext4Helper.Locators.window("Manage Cases: " + SUBJECTS[0]));
     }
 
+    /**
+      *  Validates that Data entry forms passed in the Map "formsToTest" triggers correctly based on the value passed in the same form.
+     **/
     @Test
     public void testFormTriggers()
     {
@@ -994,8 +997,11 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
             // Required for forms with a lock on them
             enableForm();
-            
+
+            //Getting a reference to the grid which will be validated.
             Ext4GridRef grid = _helper.getExt4GridForFormSection(form.getValue().get("gridToTest"));
+
+            //Clicking the Add button on the grid.
             _helper.addRecordToGrid(grid);
             grid.setGridCell(1, "Id", deadAnimal);
             if (form.getValue().get("allowDeadIds").equals("true"))
@@ -1044,6 +1050,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
     private void createAnimal()
     {
+        //Creating a female alive animal born roughly 2 years back
         String dam = "22222";
         Date damBirth = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), -720, 0);
         getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "birth", "lsid",
@@ -1053,12 +1060,13 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
                 }
         ), getExtraContext());
 
+        //Creating a male alive animal born roughly 2 years back
         dam = "33333";
         damBirth = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), -720, 0);
         getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "birth", "lsid",
                 new String[]{"Id", "Date", "gender", "species", "QCStateLabel"},
                 new Object[][]{
-                        {dam, damBirth, "f", "Rhesus", "Completed"},
+                        {dam, damBirth, "m", "Rhesus", "Completed"},
                 }
         ), getExtraContext());
 
@@ -1067,6 +1075,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
     private void markDead(String animalId)
     {
+        //Inserting the lookup value for cause of death.
         InsertRowsCommand deathCause = new InsertRowsCommand("ehr_lookups", "death_cause");
         deathCause.addRow(Map.of("value", "Old Age", "title", "Old Age"));
         deathCause.addRow(Map.of("value", "Heart Attack", "title", "Heart Attack"));
@@ -1079,6 +1088,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             throw new RuntimeException(e);
         }
 
+        //Marking an animal dead by inserting row in study.death.
         log("Marking an animal dead");
         InsertRowsCommand deathInsert = new InsertRowsCommand("study", "deaths");
         deathInsert.addRow(Map.of("Id", animalId, "date", LocalDateTime.now().minusDays(10), "cause", "Old Age"));
