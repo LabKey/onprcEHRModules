@@ -1,42 +1,54 @@
 <!--Update to year63 and beyond-->
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Industry Rate Sheet">
     <columns>
+        <column name="RateSheetSelected"/>
+        <column name = "ParameterSelected" />
         <column name="category"/>
         <column name="Name"/>
-        <column name = "CurrentYear">
+        <column name = "unitCost">
             <properties>
                 <property name="columnTitle" value="Current Year"/>
+            </properties>
+        </column>
 
-            </properties>
-        </column>
         <column name = "year1">
-            <properties>
-                <property name="columnTitle" value="YR64: 5/1/23-4/30/24"/>
-            </properties>
-        </column>
-        <column name = "year2">
-            <properties>
-                <property name="columnTitle" value="YR65: 5/1/24-4/30/25"/>
-            </properties>
-        </column>
-        <column name = "year3">
             <properties>
                 <property name="columnTitle" value="YR66: 5/1/25-4/30/26"/>
             </properties>
         </column>
-        <column name = "year4">
+        <column name = "year2">
             <properties>
                 <property name="columnTitle" value="YR67: 5/1/26-4/30/27"/>
             </properties>
         </column>
-        <column name = "year5">
+        <column name = "year3">
             <properties>
                 <property name="columnTitle" value="YR68: 5/1/27-4/30/28"/>
             </properties>
         </column>
-        <column name = "year6">
+        <column name = "year4">
             <properties>
                 <property name="columnTitle" value="YR69: 5/1/28-4/30/29"/>
+            </properties>
+        </column>
+        <column name = "year5">
+            <properties>
+                <property name="columnTitle" value="YR70: 5/1/29-4/30/30"/>
+            </properties>
+        </column>
+        <column name = "year6">
+            <properties>
+                <property name="columnTitle" value="YR71: 5/1/30-4/30/31"/>
+            </properties>
+        </column>
+        <column name = "year7">
+            <properties>
+                <property name="columnTitle" value="YR72: 5/1/31-4/30/32"/>
+            </properties>
+        </column>
+        <column name = "year8">
+            <properties>
+                <property name="columnTitle" value="YR73: 5/1/32-4/30/33"/>
             </properties>
         </column>
 

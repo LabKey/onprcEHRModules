@@ -5,6 +5,9 @@
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>NIH Project Rate Sheet</tableTitle>
                 <columns>
+                    <column columnName = "RateSheetSelected"></column>
+                    <column columnName = "ParameterSelected"></column>
+
 
                     <column columnName="category"></column>
                     <column columnName="name"></column>
@@ -15,7 +18,7 @@
 
 
                     <column columnName="year1">
-                        <columnTitle>YR65: 5/1/24 to 4/30/25</columnTitle>
+                       <columnTitle>YR65: 5/1/24 to 4/30/25</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year2">
