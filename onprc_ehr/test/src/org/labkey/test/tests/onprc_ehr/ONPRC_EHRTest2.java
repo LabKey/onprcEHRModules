@@ -68,6 +68,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.labkey.test.util.Ext4Helper.Locators.ext4Button;
 import static org.labkey.test.util.Ext4Helper.elementIfEnabled;
@@ -76,10 +77,11 @@ import static org.labkey.test.util.Ext4Helper.elementIfEnabled;
 @BaseWebDriverTest.ClassTimeout(minutes = 18)
 public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 {
-    public AbstractContainerHelper _containerHelper = new APIContainerHelper(this);
     private final String PROJECT_NAME = "ONPRC_EHR_TestProject2";
-    public DataIntegrationHelper _etlHelper = new DataIntegrationHelper(PROJECT_NAME);
     private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
+    public AbstractContainerHelper _containerHelper = new APIContainerHelper(this);
+    public DataIntegrationHelper _etlHelper = new DataIntegrationHelper(PROJECT_NAME);
+    protected DateTimeFormatter _dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @BeforeClass
     @LogMethod
@@ -359,7 +361,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         boolean isPublic = (Boolean) resp.getRows().get(0).get("QCState/PublicData");
         String damId = (String) resp.getRows().get(0).get("dam");
-        boolean isAlive = resp.getRows().get(0).get("birth_condition/alive") == null ? true : (Boolean) resp.getRows().get(0).get("birth_condition/alive");
+        boolean isAlive = resp.getRows().get(0).get("birth_condition/alive") == null || (Boolean) resp.getRows().get(0).get("birth_condition/alive");
         String room = (String) resp.getRows().get(0).get("room");
         String cage = (String) resp.getRows().get(0).get("cage");
         Double weight = (Double) resp.getRows().get(0).get("weight");
@@ -1055,6 +1057,139 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         waitForElementToDisappear(Ext4Helper.Locators.window("Manage Cases: " + SUBJECTS[0]));
     }
 
+    /**
+      *  Validates that Data entry forms passed in the Map "formsToTest" triggers correctly based on the value passed in the same form.
+     **/
+    @Test
+    public void testFormTriggers()
+    {
+        String deadAnimal = "33333";
+        String invalidAnimalId = "00000";
+        createAnimal();
+        markDead(deadAnimal);
+
+        Map<String, Map<String, String>> formsToTest = Map.of(
+                "Birth", Map.of("gridToTest", "Births", "allowDatesInDistantPast", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Death", Map.of("gridToTest", "Deaths", "allowDatesInDistantPast", "true", "allowDeadIds", "false", "allowAnyId", "false"),
+                "Arrival", Map.of("gridToTest", "Arrivals", "allowDatesInDistantPast", "true", "allowDeadIds", "true", "allowAnyId", "true"),
+                "Departure", Map.of("gridToTest", "Departures", "allowDatesInDistantPast", "false", "allowDeadIds", "false", "allowAnyId", "false"),
+                "Housing Transfers", Map.of("gridToTest", "Housing Transfers", "allowDatesInDistantPast", "false", "allowDeadIds", "false", "allowAnyId", "false"));
+
+        goToEHRFolder();
+        clickAndWait(Locator.linkWithText("Enter Data / Task Review"));
+        for (Map.Entry<String, Map<String, String>> form : formsToTest.entrySet())
+        {
+            log("Form tested " + form.getKey());
+            waitAndClickAndWait(Locator.linkWithText(form.getKey()));
+            waitForElement(Ext4Helper.Locators.ext4Button("Submit Final"));
+
+            // Required for forms with a lock on them
+            enableForm();
+
+            //Getting a reference to the grid which will be validated.
+            Ext4GridRef grid = _helper.getExt4GridForFormSection(form.getValue().get("gridToTest"));
+
+            //Clicking the Add button on the grid.
+            _helper.addRecordToGrid(grid);
+            grid.setGridCell(1, "Id", deadAnimal);
+            if (form.getValue().get("allowDeadIds").equals("true"))
+            {
+                Assert.assertFalse("Dead animal should be allowed", isTextPresent("INFO: Status of this Id is: Dead"));
+            }
+            else if ("Housing Transfers".equals(form.getKey()))
+            {
+                waitForText(WAIT_FOR_PAGE, "WARN: This animal is deceased or shipped out, you are not allowed to make this changes to the housing record");
+            }
+            else
+            {
+                // This INFO message is most reliably available in dev mode when clicking the row editor, so that is what
+                // we're checking here.
+                click(Locator.tag("img").withAttribute("src", "/labkey/_images/editprops.png"));
+                waitForText(WAIT_FOR_PAGE, "INFO: Status of this Id is: Dead");
+                click(Ext4Helper.Locators.ext4Button("Close"));
+                waitForElementToDisappear(Ext4Helper.Locators.ext4Button("Close"));
+            }
+
+            grid.setGridCell(1, "Id", invalidAnimalId);
+            if (form.getValue().get("allowAnyId").equals("true"))
+                Assert.assertFalse("Invalid animal should be allowed", isTextPresent("Id: WARN: Id not found in demographics table: " + invalidAnimalId));
+            else
+                waitForText(WAIT_FOR_PAGE, "WARN: Id not found in demographics table: " + invalidAnimalId);
+
+
+            grid.setGridCell(1, "date", LocalDateTime.now().minusDays(90).format(_dateTimeFormatter));
+            if (form.getValue().get("allowDatesInDistantPast").equals("true"))
+                Assert.assertFalse("Future date is allowed", isTextPresent("Row 1, Date: WARN: Date is more than 60 days in past"));
+            else
+                waitForText("WARN: Date is more than 60 days in past");
+
+            _helper.discardForm();
+        }
+    }
+
+    private void enableForm()
+    {
+        if (Ext4Helper.Locators.ext4Button("Enable the form for data entry").isDisplayed(getDriver()))
+        {
+            Ext4Helper.Locators.ext4Button("Enable the form for data entry").findElement(getDriver()).click();
+            waitForElement(Ext4Helper.Locators.ext4Button("Exit data entry"));
+        }
+    }
+
+    private void createAnimal()
+    {
+        //Creating a female alive animal born roughly 2 years back
+        String dam = "22222";
+        Date damBirth = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), -720, 0);
+        getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "birth", "lsid",
+                new String[]{"Id", "Date", "gender", "species", "QCStateLabel"},
+                new Object[][]{
+                        {dam, damBirth, "f", "Rhesus", "Completed"},
+                }
+        ), getExtraContext());
+
+        //Creating a male alive animal born roughly 2 years back
+        dam = "33333";
+        damBirth = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), -720, 0);
+        getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "birth", "lsid",
+                new String[]{"Id", "Date", "gender", "species", "QCStateLabel"},
+                new Object[][]{
+                        {dam, damBirth, "m", "Rhesus", "Completed"},
+                }
+        ), getExtraContext());
+
+
+    }
+
+    private void markDead(String animalId)
+    {
+        //Inserting the lookup value for cause of death.
+        InsertRowsCommand deathCause = new InsertRowsCommand("ehr_lookups", "death_cause");
+        deathCause.addRow(Map.of("value", "Old Age", "title", "Old Age"));
+        deathCause.addRow(Map.of("value", "Heart Attack", "title", "Heart Attack"));
+        try
+        {
+            deathCause.execute(getApiHelper().getConnection(), getContainerPath());
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        //Marking an animal dead by inserting row in study.death.
+        log("Marking an animal dead");
+        InsertRowsCommand deathInsert = new InsertRowsCommand("study", "deaths");
+        deathInsert.addRow(Map.of("Id", animalId, "date", LocalDateTime.now().minusDays(10), "cause", "Old Age"));
+        try
+        {
+            deathInsert.execute(getApiHelper().getConnection(), getContainerPath());
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     //TODO: @Test
     public void vetReviewTest()
     {
@@ -1205,7 +1340,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     @Test
     public void clinicalHistoryXML() throws IOException, CommandException
     {
-        GetCommand getCommand = new GetCommand("ehr", "getClinicalHistory") {
+        GetCommand getCommand = new GetCommand("ehr", "getClinicalHistory")
+        {
             @Override
             protected HttpGet createRequest(URI uri)
             {
@@ -1229,11 +1365,11 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         CommandResponse response = getCommand.execute(getApiHelper().getConnection(), getContainerPath());
         String xml = response.getText();
 
-        assertTrue("Expected XML to contain <response>", StringUtils.countMatches(xml, "<response>") == 1);
-        assertTrue("Expected XML to contain <html> for 8 rows", StringUtils.countMatches(xml, "<html>") == 8);
-        assertTrue("Expected XML to contain <publicData> for 8 rows", StringUtils.countMatches(xml, "<publicData>") == 8);
-        assertTrue("Expected XML to contain <type>Clinical</type> for 3 clinical entries", StringUtils.countMatches(xml, "<type>Clinical</type>") == 3);
-        assertTrue("Expected XML to contain <source>Housing Transfer</source> for 2 housing moves", StringUtils.countMatches(xml, "<source>Housing Transfer</source>") == 2);
+        assertEquals("Expected XML to contain <response>", 1, StringUtils.countMatches(xml, "<response>"));
+        assertEquals("Expected XML to contain <html> for 8 rows", 8, StringUtils.countMatches(xml, "<html>"));
+        assertEquals("Expected XML to contain <publicData> for 8 rows", 8, StringUtils.countMatches(xml, "<publicData>"));
+        assertEquals("Expected XML to contain <type>Clinical</type> for 3 clinical entries", 3, StringUtils.countMatches(xml, "<type>Clinical</type>"));
+        assertEquals("Expected XML to contain <source>Housing Transfer</source> for 2 housing moves", 2, StringUtils.countMatches(xml, "<source>Housing Transfer</source>"));
 
     }
 
