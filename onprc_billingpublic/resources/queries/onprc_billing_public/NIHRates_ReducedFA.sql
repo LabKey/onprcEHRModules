@@ -1,4 +1,4 @@
---Updat fort year 66
+----2024-05-01 Update for year 66
 PARAMETERS (ProjectFA DOUBLE DEFAULT .2)
 SELECT 'Reduced F&A Sheet' as RateSheetSelected,
        ProjectFA  as ParameterSelected,
