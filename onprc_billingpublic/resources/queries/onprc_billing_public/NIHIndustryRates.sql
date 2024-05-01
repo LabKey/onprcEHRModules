@@ -1,5 +1,7 @@
 PARAMETERS (MARGIN FLOAT DEFAULT .25)
 Select
+'Industrial Rate Sheet ' as RateSheetSelected,
+Margin as ParameterSelected,
 n.category,
 n.name,
 --UnitCost as CurrentYear,
