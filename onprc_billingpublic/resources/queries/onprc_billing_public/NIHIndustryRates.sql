@@ -1,3 +1,9 @@
+/*2024-05-02  jonesga
+Update for Year 65 as Current
+    Associated xml was completed with new labels and addition of 2 fields
+    to identify the rate sheet selected and the parameters*/
+
+
 PARAMETERS (MARGIN FLOAT DEFAULT .25)
 Select
 'Industrial Rate Sheet ' as RateSheetSelected,

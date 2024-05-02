@@ -1,4 +1,8 @@
-----2024-05-01 Update for year 66
+/*2024-05-02  jonesga
+Update for Year 65 as Current
+    Associated xml was completed with new labels and addition of 2 fields
+    to identify the rate sheet selected and the parameters*/
+
 PARAMETERS (ProjectFA DOUBLE DEFAULT .2)
 SELECT 'Reduced F&A Sheet' as RateSheetSelected,
        ProjectFA  as ParameterSelected,
