@@ -1,3 +1,11 @@
+/*Updated:  5/2/2024 jonesga
+Changes Made:  We added two fiuelds to the query as requested to show
+            the rate sheet selecteed and the parameter added
+Assoicated xml os NIHRates_ReducedFA.query.xml
+*/
+
+
+
 PARAMETERS (ProjectFA DOUBLE DEFAULT .2)
 SELECT 'Reduced F&A Sheet' as RateSheetSelected,
        ProjectFA  as ParameterSelected,

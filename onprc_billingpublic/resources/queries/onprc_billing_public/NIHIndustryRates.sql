@@ -1,3 +1,8 @@
+/*Updated:  5/2/2024 jonesga
+Changes Made:  We added two fiuelds to the query as requested to show
+            the rate sheet selecteed and the parameter added
+Assoicated xml os NIHIndustryRates.query.xml
+*/
 PARAMETERS (MARGIN FLOAT DEFAULT .25, FARATE FLOAT DEFAULT 1)
 Select
     'Industrial Rate' as SheetSelected,

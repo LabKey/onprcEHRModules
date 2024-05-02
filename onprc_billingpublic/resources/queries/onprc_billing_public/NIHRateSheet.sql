@@ -1,4 +1,8 @@
-/*2024-05-01update for year 66*/
+/*Updated:  5/2/2024 jonesga
+Changes Made:  We added two fiuelds to the query as requested to show
+            the rate sheet selecteed and the parameter added
+Assoicated xml os NIHRateSheet.query.xml
+*/
 select
 'NIH Rate Sheet' as RateSheetSelected,
 'No Parameter'  as ParameterSelected,
