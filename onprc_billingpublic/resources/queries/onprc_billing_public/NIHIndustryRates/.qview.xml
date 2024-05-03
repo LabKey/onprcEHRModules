@@ -1,6 +1,10 @@
 <!--Update to year63 and beyond-->
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Industry Rate Sheet">
     <columns>
+        <column name="RateSheetSelected"/>
+        <column name="MarginSelected"/>
+        <column name="FARateSelected"/>
+
         <column name="category"/>
         <column name="Name"/>
         <column name = "CurrentYear">

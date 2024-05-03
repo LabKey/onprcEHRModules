@@ -1,6 +1,8 @@
 <!--LabKey22.3Beta-56-onprc.tar.gz-->
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Reduced Rate Sheet">
     <columns>
+        <column name="RateSheetSelected"/>
+        <column name="ParameterSelected"/>
         <column name="category"/>
         <column name="Name"/>
         <column name = "unitCost">
