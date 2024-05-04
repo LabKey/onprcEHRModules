@@ -34,7 +34,13 @@
                     },{
                         name: 'Environmental Assessment Detailed printable reports', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentMain&rs:Command=Render'
                     },{
-                        name: 'Environmental Assessment Prime Grid reports', url: LABKEY.ActionURL.buildURL('ONPRC_EHR', 'EnvironmentalDetails.view', null, null)
+                        name: 'Environmental Assessment Biological Indicators Grid reports', url: '<%=contextPath%>/query' + '/ehr/ONPRC/DCM/Environmental Assessment/' + '/executeQuery.view?schemaName=onprc_ehr&query.queryName=Env_Biological_indicators'
+                    },{
+                        name: 'Environmental Assessment Water Testing Grid reports', url: '<%=contextPath%>/query' + '/ehr/ONPRC/DCM/Environmental Assessment/' + '/executeQuery.view?schemaName=onprc_ehr&query.queryName=Env_Water'
+                    },{
+                        name: 'Environmental Assessment Contact Plate Grid reports', url: '<%=contextPath%>/query' + '/ehr/ONPRC/DCM/Environmental Assessment/' + '/executeQuery.view?schemaName=onprc_ehr&query.queryName=Env_Contactplate'
+                    },{
+                        name: 'Environmental Assessment ATP Grid reports', url: '<%=contextPath%>/ldk' + '/ehr/ONPRC/DCM/Environmental Assessment/' + '/updateQuery.view?schemaName=onprc_ehr&query.queryName=Environmental_Assessment&query.service_requested~eq=Sanitation%3A%20ATP'
 
                     }]
                 }]
