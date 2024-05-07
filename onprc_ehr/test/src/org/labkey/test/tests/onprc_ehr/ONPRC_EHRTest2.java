@@ -768,9 +768,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         // Go to birth form to enter offspring birth record
         log("Create offspring");
-        _helper.goToTaskForm("Birth", "Enable the form for data entry", true);
-        click(Ext4Helper.Locators.ext4Button("Enable the form for data entry"));
-        waitForElement(Ext4Helper.Locators.ext4Button("Exit data entry"), WAIT_FOR_PAGE * 2);
+        _helper.goToTaskForm("Birth", false);
+        enableForm();
 
         // Data entered for offspring
         Date today = new Date();
