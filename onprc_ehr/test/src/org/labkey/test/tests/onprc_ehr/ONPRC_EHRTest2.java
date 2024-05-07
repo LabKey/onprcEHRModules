@@ -1300,6 +1300,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         LocalDateTime now = LocalDateTime.now();
         String animalId = "12345";
 
+        goToProjectHome();
+
         log("Inserting the charge unit necessary for blood draw request");
         InsertRowsCommand chargeUnitCommand = new InsertRowsCommand("onprc_billing", "chargeUnits");
         chargeUnitCommand.addRow(Map.of("chargetype", "ChargeUnit2", "servicecenter", "ServiceCenter2", "shownInBlood", true, "active", true));

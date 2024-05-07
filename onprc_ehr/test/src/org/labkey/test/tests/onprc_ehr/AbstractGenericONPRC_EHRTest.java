@@ -511,6 +511,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
 
     protected void addProjectToTheRow(Ext4GridRef gridRef, int index, String project)
     {
+        click(gridRef.getCell(index, "project"));
         gridRef.clickDownArrowOnGrid(index, "project");
         waitAndClick(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
         waitForElement(Ext4Helper.Locators.window("Choose Project"));
