@@ -79,6 +79,11 @@ public class BulkClinicalEntryFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamCasesDataEntryPanel.js"));
         setDisplayReviewRequired(true);
         setJavascriptClass("ONPRC_EHR.panel.ExamCasesDataEntryPanel");
+
+        //Added by Kollil, 3/12/24
+        //This script was added to show a pop-up question box when the user selects MPA medication on the Medication order form.
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/TreatmentOrdersDataEntryPanel.js"));
+        setJavascriptClass("ONPRC_EHR.panel.TreatmentOrdersDataEntryPanel");
     }
 
     @Override
