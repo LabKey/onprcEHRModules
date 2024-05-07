@@ -718,7 +718,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     public void testBirthInheritFromDam() throws Exception
     {
         String offspring = "2000";
-        String dam = "22222";
+        String dam = "31416";
         Date damBirth = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), -720, 0);
 
         // Navigate to the start of the project
