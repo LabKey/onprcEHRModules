@@ -74,7 +74,7 @@
                     </column>
 
                     <column columnName="surface_tested">
-                        <columnTitle>Surface</columnTitle>
+                        <columnTitle>Surface Tested</columnTitle>
                         <displayWidth>80</displayWidth>
                         <isHidden>false</isHidden>
                     </column>
