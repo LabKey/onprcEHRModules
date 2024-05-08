@@ -481,8 +481,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         //NOTE: auto-closing of active flags is also covered by assignment test, which updates condition
 
         //test housing condition
-        final String flag1 = ensureFlagExists("Condition", "Cond1", "201");
-        final String flag2 = ensureFlagExists("Condition", "Cond2", "202");
+        final String flag1 = ensureFlagExists("Condition", "Cond1", "202");
+        final String flag2 = ensureFlagExists("Condition", "Cond2", "203");
 
         getApiHelper().deleteAllRecords("study", "flags", new Filter("Id", SUBJECTS[0]));
 
