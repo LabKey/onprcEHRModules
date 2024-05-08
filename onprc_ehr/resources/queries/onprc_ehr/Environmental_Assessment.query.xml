@@ -77,6 +77,12 @@
                         <columnTitle>Surface Tested</columnTitle>
                         <displayWidth>80</displayWidth>
                         <isHidden>false</isHidden>
+
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>Env_ATPSurfaceTesting</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="remarks">
                         <columnTitle>Comments</columnTitle>
