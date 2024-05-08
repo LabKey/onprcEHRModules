@@ -523,7 +523,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
                 {SUBJECTS[0], prepareDate(date, -5, 0), flag1, generateGUID(), "recordID"}
         }, Maps.of(
                 "flag", Arrays.asList(
-                        "ERROR: Cannot change condition to a lower code.  Animal is already: 202"
+                        "ERROR: Cannot change condition to a lower code.  Animal is already: 203"
                 )
         ));
 
