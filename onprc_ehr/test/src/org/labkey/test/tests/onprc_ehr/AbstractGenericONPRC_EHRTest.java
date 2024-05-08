@@ -512,7 +512,17 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected void addProjectToTheRow(Ext4GridRef gridRef, int index, String project)
     {
         click(gridRef.getCell(index, "project"));
-        gridRef.clickDownArrowOnGrid(index, "project");
+        var el = gridRef.waitForActiveGridEditor(1000);
+        Locator.xpath("../../td/div").withClass("x4-form-arrow-trigger").findElement(el).click();
+        try {
+            waitForElementToBeVisible(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
+        }
+        catch (Exception e)
+        {
+            // Second try
+            Locator.xpath("../../td/div").withClass("x4-form-arrow-trigger").findElement(el).click();
+            waitForElementToBeVisible(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
+        }
         waitAndClick(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
         waitForElement(Ext4Helper.Locators.window("Choose Project"));
         _ext4Helper.queryOne("window[title=Choose Project] [fieldLabel='Project']", Ext4ComboRef.class).setComboByDisplayValue(project);
