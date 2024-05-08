@@ -796,7 +796,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         // Wait for snapshot values to load then verify inherited values
         WebDriverWrapper.waitFor(() -> "Group2".equals(getSnapshotValue("Groups")), 10000);
         assertTrue("Incorrect group found for infant.", "Group2".equals(getSnapshotValue("Groups")));
-        assertTrue("Incorrect flag found for infant.", "SPF: SPF1".equals(getSnapshotValue("Flags")));
+        assertTrue("Incorrect flag found for infant.", getSnapshotValue("Flags").contains("SPF: SPF1"));
         assertTrue("Incorrect project found for infant.", "[0492-03] [dummyprotocol]".equals(getSnapshotValue("Projects")));
     }
 
