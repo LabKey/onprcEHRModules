@@ -8,12 +8,9 @@
                     <column columnName="RateSheetSelected" />
                     <column columnName="MarginSelected" />
                     <column columnName="FARateSelected" />
-
-
                     <column columnName="category">
                         <columnTitle>Category</columnTitle>
                     </column>
-
                     <column columnName="name">
                         <columnTitle>ItemName</columnTitle>
                     </column>
@@ -21,8 +18,6 @@
                         <columnTitle>Yr65: Current Year Rates</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-
-
                     <column columnName="year1">
                         <columnTitle>YR66: 5/1/25 to 4/30/26</columnTitle>
                         <formatString>$#,##0.00</formatString>

@@ -7,11 +7,11 @@
                 <columns>
                     <column columnName="RateSheetSelected"  />
                     <column columnName="ParameterSelected"  />
-                    <column columnName="name"  />
+
                     <column columnName="category" />
-                    <column columnName="name"  />
+                    <column columnName="name" />
                     <column columnName="unitCost">
-                        <columnTitle>Yr65 Current Year</columnTitle>
+                        <columnTitle>Yr 65: Current Year</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year1">
@@ -48,8 +48,6 @@
                         <columnTitle>YR73: 5/1/32 to 4/30/33</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-
-
 
                     <column columnName="PostedDate">
                         <columnTitle>Posted Date</columnTitle>
