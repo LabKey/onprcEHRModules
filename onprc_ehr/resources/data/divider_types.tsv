@@ -1,0 +1,6 @@
+divider	countAsSeparate	countAsPaired	countAsBoth	isMoveable	displaychar	short_description	bgcolor	border_style
+Mesh	TRUE	FALSE		TRUE	M	MESH	grey	dotted
+Solid	TRUE	FALSE		TRUE	S			solid
+Clear	TRUE	FALSE		TRUE	C	CLEAR		solid
+No Slide	TRUE	TRUE		TRUE	NO		yellow	none
+Pairing Divider	TRUE	FALSE		TRUE	P		grey	solid
