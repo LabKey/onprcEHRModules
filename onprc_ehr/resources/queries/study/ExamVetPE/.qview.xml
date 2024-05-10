@@ -38,7 +38,12 @@
         <column name="Id/labworkHistory/lastBiochemistryDate"/>
         <column name="Chemistry"/>
         <column name="FOB"/>
-
+        <column name="Id/currentCondition/condition"/>
+        <column name="p2date"/>
+        <column name="p2"/>
+        <column name="Id/activeFlags/Alert::valueField"/>
+        <column name="Id/MostRecentTB/MonthsSinceLastTB"/>
+        <column name="Id/activeNotes/Notes Pertaining to DAR::valueField"/>
     </columns>
     <sorts>
         <sort column="Id/curLocation/room"/>
