@@ -1,3 +1,4 @@
+/*Updatge to user onprc EHR*/
 SELECT a.datecreated,
     hour (Now()) AS CurrentHour,
     hour (a.dateCreated) as BVTime,

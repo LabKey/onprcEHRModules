@@ -23,6 +23,7 @@ import java.util.Set;
 
 /**
  * Created by jonesga on 05/8/2024
+ * Update to change Source query to onprc-EHR
  */
 
 public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
