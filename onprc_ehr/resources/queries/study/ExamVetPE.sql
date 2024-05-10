@@ -56,8 +56,8 @@ CASE
   WHEN count(f.Id) = 0 THEN null
   ELSE 'Clinically Restricted'
 END as isRestricted,
---        g.date as p2date,
---        g.p2,
+       g.date as p2date,
+       g.p2,
        d.id.assignedVet.assignedVet
 
 FROM study.demographics d
