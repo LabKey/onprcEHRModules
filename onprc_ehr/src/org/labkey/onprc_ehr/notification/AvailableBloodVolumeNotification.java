@@ -47,7 +47,7 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 7-18/1 * * *";
+        return "0 30/1 0/1 ? * * *";
     }
 
     @Override
@@ -76,7 +76,7 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     protected void AvailableBloodCheck(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "labkeyPublic").getTable("ValidateAvailableBloodProcess",ContainerFilter.Type.AllFolders.create(c, u));
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("ValidateAvailableBloodProcess", ContainerFilter.Type.AllFolders.create(c, u));
 //        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(u);
         TableSelector ts = new TableSelector(ti, null, null);
 
@@ -91,8 +91,4 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
         {
             msg.append("<b>WARNING: Available Blood Volume is Stale !</b><br><hr>");
         }
-    }
-//End of PMIC alert
-
-/**
- }
+    }}
