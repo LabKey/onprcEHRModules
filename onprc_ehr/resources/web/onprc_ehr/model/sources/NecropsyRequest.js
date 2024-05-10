@@ -20,6 +20,7 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             date: {
                 xtype: 'xdatetime',
                 header: 'Start Date',
+                allowBlank: false,
                 extFormat: LABKEY.extDefaultDateTimeFormat,
                 editorConfig: {
                     dateFormat: LABKEY.extDefaultDateFormat,
@@ -39,7 +40,8 @@ EHR.model.DataModelManager.registerMetadata('PathTissues', {
             },
             project: {
                 xtype: 'onprc_ehr-projectentryfield',
-                label: 'Center Project'
+                label: 'Center Project',
+                allowBlank: false
             },
             billingproject: {
                 xtype: 'onprc_ehr-projectentryfield',

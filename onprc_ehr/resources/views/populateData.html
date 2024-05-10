@@ -586,6 +586,36 @@ Ext4.onReady(function(){
             queryName: 'cage_status',
             pk: 'rowid'
         },{
+            label: 'Animal Status',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'calculated_status_codes',
+            pk: 'rowid'
+        },{
+            label: 'Divider Types',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'divider_types',
+            pk: 'rowid'
+        },{
+            label: 'Cage Type',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'cage_type',
+            pk: 'rowid'
+        },{
+            label: 'Cage Positions',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'cage_positions',
+            pk: 'rowid'
+        },{
+            label: 'Cage Class',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'cageclass',
+            pk: 'rowid'
+        },{
             label: 'Tissue Distribution Sample Type',
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',

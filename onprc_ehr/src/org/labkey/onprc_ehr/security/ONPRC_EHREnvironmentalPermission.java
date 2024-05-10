@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 LabKey Corporation
+ * Copyright (c) 2014-2017 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.labkey.onprc_ehr.dataentry;
+package org.labkey.onprc_ehr.security;
 
-import org.labkey.api.ehr.dataentry. NonStoreFormSection;
-import org.labkey.api.view.template.ClientDependency;
+import org.labkey.api.security.permissions.AbstractPermission;
 
-//Created:12-20-2018  R.Blasa
+/**
 
-public class AnimalDetailssFormSection extends NonStoreFormSection
+ */
+public class ONPRC_EHREnvironmentalPermission extends AbstractPermission
 {
-    public AnimalDetailssFormSection()
+    public ONPRC_EHREnvironmentalPermission()
     {
-        super("AnimalDetails", "Animal Details", "onprc_ehr-animaldetailspanels");
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/AnimalDetailsPanel.js"));
-
+        super("ONPRC_EHREnvironmentalPermission", "This is the base permission used to control editing of the Envioenmental Assessment");
     }
 }

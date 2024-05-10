@@ -22,7 +22,6 @@ import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
-import org.labkey.api.data.ContainerFilterable;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
@@ -1369,7 +1368,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //Daily transfers query
         TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("housing_transfers", ContainerFilter.Type.AllFolders.create(c, u));
         //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
-        TableSelector ts = new TableSelector(ti, null, null);
+        TableSelector ts = new TableSelector(ti, null, new Sort("building,area,room,cage")); //Added the sort parameters by Kollil, 4/16/2024
         long count = ts.getRowCount();
 
         if (count > 0) {//transfers count
@@ -1378,7 +1377,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "housing_transfers", null) + "'>Click here to view the transfers in PRIME</a></p>\n");
             msg.append("<hr>");
         }
-
         if (count == 0) {
             msg.append("<b>There are no animal transfers today!</b><hr>");
         }
@@ -1401,7 +1399,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             columns.add(FieldKey.fromString("ActiveDiets"));
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
-            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("building,area,room,cage")); //Added the sort parameters by Kollil, 4/16/2024
 
             //Legend
             msg.append("<table border=1 style='border-collapse: collapse;'>");
@@ -1646,12 +1644,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         QueryDefinition qd = us.getQueryDefForTable("HousingCheck");
         List<QueryException> errors = new ArrayList<>();
         TableInfo ti = qd.getTable(us, errors, true);
+        if (null == ti)
+            return;
 
         SQLFragment sql = ti.getFromSQL("hc");
         Map<String, Object> params = new HashMap<>();
         params.put("MINDATE", cal.getTime());
-        QueryService.get().bindNamedParameters(sql, params);
-        sql = new SQLFragment("SELECT * FROM " + sql.getSQL(), sql.getParams());
+        sql = new SQLFragment("SELECT * FROM ").append(sql);
         QueryService.get().bindNamedParameters(sql, params);
 
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
@@ -1659,14 +1658,14 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         if (total > 0)
         {
-            msg.append("<b>WARNING: There are " + total + " housing records since " + getDateFormat(c).format(cal.getTime()) + " that do not have a contiguous previous or next record.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "HousingCheck", null) + "&query.param.MINDATE=" + getDateFormat(c).format(cal.getTime()) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<b>WARNING: There are ").append(total).append(" housing records since ").append(getDateFormat(c).format(cal.getTime())).append(" that do not have a contiguous previous or next record.</b><br>\n");
+            msg.append("<p><a href='").append(getExecuteQueryUrl(c, "study", "HousingCheck", null)).append("&query.param.MINDATE=").append(getDateFormat(c).format(cal.getTime())).append("'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
     }
 
     /**
-     * we find open ended problems where the animal is not alive
+     * we find open-ended problems where the animal is not alive
      */
     protected void deadAnimalsWithActiveProblems(final Container c, User u, final StringBuilder msg)
     {
@@ -1719,20 +1718,21 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         QueryDefinition qd = us.getQueryDefForTable("cageReview");
         List<QueryException> errors = new ArrayList<>();
         TableInfo ti = qd.getTable(us, errors, true);
+        if (null == ti)
+            return;
+
         SQLFragment sql = ti.getFromSQL("t");
         Map<String, Object> params = new HashMap<>();
         params.put("RequirementSet", requirementSet);
         QueryService.get().bindNamedParameters(sql, params);
 
-        List<Object> newParams = new ArrayList<>(sql.getParams());
-        newParams.add(filterTerm);
-        sql = new SQLFragment("SELECT * FROM " + sql.getSQL() + " WHERE t.status = ?", newParams);
+        sql = new SQLFragment("SELECT * FROM ").append(sql).append(" WHERE t.status = ?").add(filterTerm);
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
-        Map<String, Object>[] rows = ss.getArray(Map.class);
+        Map<String, Object>[] rows = ss.getMapArray();
 
         if (rows.length > 0)
         {
-            msg.append("<b>" + message + "</b><br>");
+            msg.append("<b>").append(message).append("</b><br>");
             for (Map<String, Object> row : rows)
             {
                 String room = (String)row.get("room");
@@ -1749,8 +1749,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     if (cage != null)
                         msg.append(" ").append(cage);
 
-                        msg.append(": ").append(sqFtStatus);
-
+                    msg.append(": ").append(sqFtStatus);
                     msg.append("<br>");
                 }
 

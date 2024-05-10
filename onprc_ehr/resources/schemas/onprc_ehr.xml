@@ -1309,4 +1309,126 @@
         </columns>
     </table>
 
+    <!--Created by: Kollil, 1/29/24. Created a temp table to store the clinical remarks  -->
+    <table tableName="Temp_ClnRemarks" tableDbType="TABLE">
+        <columns>
+            <column columnName="date" />
+            <column columnName="qcstate" />
+            <column columnName="participantid" />
+            <column columnName="project" />
+            <column columnName="remark" />
+            <column columnName="p" />
+            <column columnName="performedby" />
+            <column columnName="category" />
+            <column columnName="taskId" />
+            <column columnName="createdby" />
+            <column columnName="modifiedby" />
+
+        </columns>
+    </table>
+
+    <table tableName="Environmental_Assessment" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Environmental Assessment</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Rowid</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="date">
+            </column>
+            <column columnName="service_requested">
+            </column>
+            <column columnName="charge_unit">
+            </column>
+            <column columnName="testing_location">
+            </column>
+            <column columnName="test_type">
+            </column>
+            <column columnName="test_method"/>
+            <column columnName="test_results">
+            </column>
+            <column columnName="pass_fail">
+            </column>
+            <column columnName="biological_cycle">
+            </column>
+            <column columnName="biological_BI">
+            </column>
+            <column columnName="action">
+            </column>
+            <column columnName="water_source"/>
+            <column columnName="surface_tested"/>
+            <column columnName="retest"/>
+            <column columnName="colony_Count"/>
+            <column columnName="performedby">
+            </column>
+            <column columnName="remarks"/>
+
+            <column columnName="objectid">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="createdby">
+                <columnTitle>Created By</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="created">
+                <columnTitle>Created By</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="modified">
+                <columnTitle>Modified</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="modifiedby">
+                <columnTitle>Modified by</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="container">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="taskid">
+                <isHidden>true</isHidden>
+            </column>
+
+            <column columnName="qcstate">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="formsort">
+                <isHidden>true</isHidden>
+            </column>
+        </columns>
+    </table>
+
+    <table tableName="Environmental_Reference_Data" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Environmental Reference_ Data</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Row ID</columnTitle>
+            </column>
+            <column columnName="label">
+            </column>
+            <column columnName="value">
+            </column>
+            <column columnName="columnName">
+            </column>
+            <column columnName="sort_order">
+            </column>
+            <column columnName="endDate">
+            </column>
+
+        </columns>
+    </table>
+
+
+
+
 </tables>
