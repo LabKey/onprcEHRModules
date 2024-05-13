@@ -1,4 +1,4 @@
-<!--update 20240513 jonesga-->
+<!--update 20240513 jonesga  update-->
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Industry Rate Sheet">
     <columns>
         <column name="RateSheetSelected"/>
