@@ -7,7 +7,6 @@
                 <columns>
                     <column columnName="RateSheetSelected"  />
 
-
                     <column columnName="category" />
                     <column columnName="name" />
                     <column columnName="unitCost">

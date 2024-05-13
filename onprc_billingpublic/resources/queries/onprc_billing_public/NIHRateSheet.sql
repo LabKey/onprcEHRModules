@@ -7,7 +7,6 @@ Update of related qview.xml and NIHRateSheet.query.xml
 
 select
 'NIH Rate Sheet' as RateSheetSelected,
-'No Parameter' as ParameterSelected,
 category,
 name,
 UnitCost,
