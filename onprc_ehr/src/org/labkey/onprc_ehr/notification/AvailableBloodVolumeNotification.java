@@ -90,6 +90,6 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
         }
         else
         {
-            msg.append("<b>WARNING: Available Blood Volume is Stale !</b><br><hr>");
+            msg.append("<b>Excellent: Available Blood Volume is Current !</b><br><hr>");
         }
     }}

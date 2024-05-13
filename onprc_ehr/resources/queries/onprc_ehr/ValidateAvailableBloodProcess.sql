@@ -4,7 +4,11 @@ SELECT a.datecreated,
     hour (a.dateCreated) as BVTime,
     Case When hour (a.dateCreated) != hour (Now()) then 'out of synch'
     When hour (a.dateCreated) = hour (Now()) then 'In Synch'
-End As AvailableBloodData
+End As AvailableBloodData,
+	DayofMonth(a.dateCreated) as MOnthDay,
+DayOfMonth(curDate()) as CurrentDay
 
-FROM labkeyPublic.AvailableBloodVolume a
-where  hour (a.dateCreated) != hour (Now())
+
+FROM AvailableBloodVolume a
+where  DayofMonth(a.dateCreated)= DayOfMonth(curDate())
+and hour (a.dateCreated) != hour (Now())
