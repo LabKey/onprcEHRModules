@@ -1,7 +1,7 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Rate Sheet">
     <columns>
         <column name="RateSheetSelected"/>
-        <column name="ParameterSelected"/>
+
         <column name="category"/>
         <column name="Name"/>
         <column name = "unitCost">
@@ -36,17 +36,17 @@
         </column>
         <column name = "year6">
             <properties>
-                <property name="columnTitle" value="YR70: 5/1/30-4/30/31"/>
+                <property name="columnTitle" value="YR71: 5/1/30-4/30/31"/>
             </properties>
         </column>
         <column name = "year7">
             <properties>
-                <property name="columnTitle" value="YR71: 5/1/31-4/30/32"/>
+                <property name="columnTitle" value="YR72: 5/1/31-4/30/32"/>
             </properties>
         </column>
         <column name = "year8">
             <properties>
-                <property name="columnTitle" value="YR72: 5/1/32-4/30/33"/>
+                <property name="columnTitle" value="YR73: 5/1/32-4/30/33"/>
             </properties>
         </column>
 
