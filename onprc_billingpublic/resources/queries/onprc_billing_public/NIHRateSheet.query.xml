@@ -64,10 +64,7 @@
 
 
 
-                    <column columnName="PostedDate">
-                        <columnTitle>Posted Date</columnTitle>
-                        <formatString>MM/dd/yyyy</formatString>
-                    </column>
+
 
                 </columns>
             </table>
