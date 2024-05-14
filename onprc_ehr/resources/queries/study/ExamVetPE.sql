@@ -20,8 +20,7 @@ max(e.date) as lastdate,
 TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()) as daysSinceExam,
 COALESCE(CASE
   WHEN d.id.age.AgeInYears >= 18.0 THEN (180 - TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()))
- WHEN d.id.age.AgeInYears > 0.0 AND d.id.age.AgeInYears < 6.0 THEN (365 - TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()))
-  ELSE NULL
+  ELSE (365 - TIMESTAMPDIFF('SQL_TSI_DAY', max(e.date), now()))
 END, 0) as daysUntilNextExam,
 
         CASE
