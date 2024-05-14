@@ -46,15 +46,18 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
             var displayField = this.down('#flags');
             if (displayField && displayField.getEl()) {
 
-                var anchor = displayField.getEl('onprcFlagsLink');
+                var anchors = [displayField.getEl('onprcFlagsLink'), displayField.getEl('onprcBehaviorFlagsLink')];
 
-                if (anchor) {
-                    Ext4.get(anchor).on('click', function(e) {
-                        e.preventDefault();
-                        if (anmId) {
-                            EHR.Utils.showFlagPopup(anmId, this);
-                        }
-                    });
+                for (let i = 0; i < anchors.length; i++) {
+                    let anchor = anchors[i];
+                    if (anchor) {
+                        Ext4.get(anchor).on('click', function(e) {
+                            e.preventDefault();
+                            if (anmId) {
+                                EHR.Utils.showFlagPopup(anmId, this);
+                            }
+                        });
+                    }
                 }
             }
         }, this);
@@ -733,8 +736,10 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
         toSet['flags'] = values.length ? '<a id="onprcFlagsLink">' + values.join('<br>') + '</div>' : null;
 
+        behavevalues = ['test'];
+
         if (behavevalues.length) {
-            toSet['behaviorflag'] = behavevalues.length ? '<a onclick="EHR.Utils.showFlagPopup(\'' + this.subjectId + '\', this);">' + behavevalues.join('<br>') + '</div>' : null;
+            toSet['behaviorflag'] = '<a id="onprcBehaviorFlagsLink">' + behavevalues.join('<br>') + '</div>';
         }
         else
         {
