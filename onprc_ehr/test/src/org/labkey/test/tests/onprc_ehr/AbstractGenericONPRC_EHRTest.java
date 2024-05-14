@@ -511,7 +511,18 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
 
     protected void addProjectToTheRow(Ext4GridRef gridRef, int index, String project)
     {
-        gridRef.clickDownArrowOnGrid(index, "project");
+        click(gridRef.getCell(index, "project"));
+        var el = gridRef.waitForActiveGridEditor(1000);
+        Locator.xpath("../../td/div").withClass("x4-form-arrow-trigger").findElement(el).click();
+        try {
+            waitForElementToBeVisible(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
+        }
+        catch (Exception e)
+        {
+            // Second try
+            Locator.xpath("../../td/div").withClass("x4-form-arrow-trigger").findElement(el).click();
+            waitForElementToBeVisible(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
+        }
         waitAndClick(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
         waitForElement(Ext4Helper.Locators.window("Choose Project"));
         _ext4Helper.queryOne("window[title=Choose Project] [fieldLabel='Project']", Ext4ComboRef.class).setComboByDisplayValue(project);
@@ -534,4 +545,11 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
 
     @Override
     protected abstract String getAnimalHistoryPath();
+
+    protected String getSnapshotValue(String label)
+    {
+        Locator.XPathLocator labelLoc = Locator.tagWithClass("label", "x4-form-item-label").withText(label + ":");
+        Locator.XPathLocator valueLoc = labelLoc.parent("td").parent("tr").descendant(Locator.tagWithClass("div", "x4-form-display-field"));
+        return valueLoc.findElement(getDriver()).getText();
+    }
 }
