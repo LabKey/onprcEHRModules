@@ -2,7 +2,7 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Reduced Rate Sheet">
     <columns>
         <column name="RateSheetSelected"/>
-        <column name="ProjectFA">
+        <column name="ParameterSelected">
           <properties>
                 <property name="columnTitle" value="Parameter Selected"/>
             </properties>
