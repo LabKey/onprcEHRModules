@@ -46,7 +46,7 @@ public class ChargesFormType extends TaskForm
 
         return defaultButtons;
     }
-//Modified   5-14-2024  R. Blasa
+//Modified   5-14-2024  R. Blasa  Created new permissions
 @Override
 public boolean canInsert()
 {

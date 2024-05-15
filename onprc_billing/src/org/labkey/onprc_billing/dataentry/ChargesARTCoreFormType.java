@@ -42,7 +42,7 @@ public class ChargesARTCoreFormType extends TaskForm
         return defaultButtons;
     }
 
-//Added: 5-14-2024  R.Blasa
+//Added: 5-14-2024  R.Blasa  Created new permissions
     @Override
     public boolean canInsert()
     {
