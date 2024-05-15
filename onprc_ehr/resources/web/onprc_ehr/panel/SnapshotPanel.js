@@ -309,9 +309,8 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
 
         //Modified: 2-14-2017  R.Blasa  Make animal group name as hyperlink
-        var text = values.length ? values.join('<br>') : 'None';
-        var url =  '<a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'animal_groups',
-                  'query.name~eq': values.length ? values.join(';') : 'None' }) + '" target="_blank">' + text  + '</a>';
+        var url =  values.length ? '<a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'animal_groups',
+                  'query.name~in': values.length ? values.join(';') : 'None' }) + '" target="_blank">' + values.map(v=>LABKEY.Utils.encodeHtml(v)).join('<br>') + '</a>' : 'None';
 
 
         toSet['groups'] = url;
@@ -554,7 +553,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                 animals = row.animals.replace(/( )*,( )*/g, ',');
                 animals = animals.split(',');
                 animals.sort();
-                animals = animals.remove(id);
+                animals = animals.filter(animal => animal !== id);
 
             }
 
@@ -568,7 +567,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                     animals = row.animals.replace(/( )*,( )*/g, ',');
                     animals = animals.split(',')
                     animals.sort();
-                    animals = animals.remove(id);
+                    animals = animals.filter(animal => animal !== id);
                     values.push(animals);
 
                 }

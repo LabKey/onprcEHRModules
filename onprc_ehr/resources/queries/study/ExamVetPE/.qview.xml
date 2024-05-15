@@ -40,6 +40,7 @@
         <column name="id/assignedVet/assignedVet"/>
         <column name="Id/activeFlags/Alert::valueField"/>
         <column name="Id/MostRecentTB/MonthsSinceLastTB"/>
+        <column name="Id/activeNotes/Notes Pertaining to DAR::valueField"/>
     </columns>
     <sorts>
         <sort column="Id/curLocation/room"/>
