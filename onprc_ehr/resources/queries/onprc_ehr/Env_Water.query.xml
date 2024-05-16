@@ -17,6 +17,11 @@
                     <column columnName="testing_location">
                         <columnTitle>Testing Location</columnTitle>
                         <displayWidth>150</displayWidth>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>Env_testingLocation</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
 
                     <column columnName="water_source">
