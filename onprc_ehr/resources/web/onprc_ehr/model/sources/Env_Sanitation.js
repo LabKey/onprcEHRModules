@@ -23,6 +23,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             },
             testing_location: {
                 xtype: 'onprc-env_testLocation',
+                header: 'Test Location',
                 columnConfig: {
                     width: 200
                 }
@@ -36,6 +37,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             },
             test_results: {
                 xtype: 'onprc-env_testresults',
+                header: 'Test Results-',
                 columnConfig: {
                     width: 100
                 }
@@ -113,6 +115,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
 
             pass_fail: {
                 xtype: 'onprc-env_passfail',
+                header: 'Pass/Fail',
                 columnConfig: {
                     width: 100
                 }
@@ -122,6 +125,13 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
                 header: 'Colony Count',
                 columnConfig: {
                     width: 90
+                }
+            },
+            remarks: {
+                xtype: 'textfield',
+                header: 'Comments',
+                columnConfig: {
+                    width: 150
                 }
             }
         }
