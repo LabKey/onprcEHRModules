@@ -1,4 +1,4 @@
-PARAMETERS (MARGIN FLOAT DEFAULT .25)
+PARAMETERS (MARGIN FLOAT DEFAULT .25,FARate FLOAT DEFault 1)
 Select
     'Industrial Rate' as SheetSelected,
     Margin  as MarginSelected,
