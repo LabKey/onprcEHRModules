@@ -1,3 +1,13 @@
+<!--
+Title:      Public Finance NIH Industrial Rates
+Author:     Gary Jones
+Created:
+Modified:   5/24/2022 Updated for Year 63
+Description:    THis is the control for display of public rate sheets for inductrial rates
+in the Public Finance Section
+2022-06-23 Update of unitCost to CurrentYear Name Not Being used by Test 4-->
+
+
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
@@ -11,6 +21,7 @@
                     <column columnName="category">
                         <columnTitle>Category</columnTitle>
                     </column>
+
                     <column columnName="name">
                         <columnTitle>ItemName</columnTitle>
                     </column>
@@ -18,7 +29,6 @@
                         <columnTitle>Yr65: Current Year Rates</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-
                     <column columnName="year1">
                         <columnTitle>YR66: 5/1/25 to 4/30/26</columnTitle>
                         <formatString>$#,##0.00</formatString>
@@ -31,6 +41,7 @@
                         <columnTitle>YR68: 5/1/27 to 4/30/28</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
+
                     <column columnName="year4">
                         <columnTitle>YR69: 5/1/28 to 4/30/29</columnTitle>
                         <formatString>$#,##0.00</formatString>
@@ -40,9 +51,9 @@
                         <columnTitle>YR70: 5/1/29 to 4/30/30</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-
                     <column columnName="year6">
                         <columnTitle>YR71: 5/1/30 to 4/30/31</columnTitle>
+
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year7">
@@ -55,12 +66,10 @@
                     </column>
 
 
-
                     <column columnName="PostedDate">
                         <columnTitle>Posted Date</columnTitle>
                         <formatString>MM/dd/yyyy</formatString>
                     </column>
-
 
                 </columns>
             </table>

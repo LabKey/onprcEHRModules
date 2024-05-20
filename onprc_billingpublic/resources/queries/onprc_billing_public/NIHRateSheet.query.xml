@@ -6,20 +6,14 @@
                 <tableTitle>NIH Project Rate Sheet</tableTitle>
                 <columns>
                     <column columnName="RateSheetSelected"  />
+                    <column columnName="ParameterSelected"  />
 
                     <column columnName="category" />
                     <column columnName="name" />
                     <column columnName="unitCost">
-                        <columnTitle>Current Year</columnTitle>
+                        <columnTitle>YR65: Current Year</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-
-
-                    <column columnName="unitCost">
-                        <columnTitle>Current Year</columnTitle>
-                        <formatString>$#,##0.00</formatString>
-                    </column>
-
                     <column columnName="year1">
                         <columnTitle>YR66: 5/1/25 to 4/30/26</columnTitle>
                         <formatString>$#,##0.00</formatString>
@@ -46,6 +40,7 @@
                         <columnTitle>YR71: 5/1/30 to 4/30/31</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
+
                     <column columnName="year7">
                         <columnTitle>YR72: 5/1/31 to 4/30/32</columnTitle>
                         <formatString>$#,##0.00</formatString>
@@ -60,10 +55,6 @@
                         <columnTitle>Posted Date</columnTitle>
                         <formatString>MM/dd/yyyy</formatString>
                     </column>
-
-
-
-
 
                 </columns>
             </table>

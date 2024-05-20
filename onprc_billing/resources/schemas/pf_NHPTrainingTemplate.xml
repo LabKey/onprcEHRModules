@@ -1,0 +1,22 @@
+<!--Documentation
+Created 2024-04-17
+Created by Jones ga
+2nd Try had issue with Token
+Purpose:  This linked schema is being added to the Finance Container
+    to allow the Invoiced Items query to access the NHP_Training data
+-->
+<templateSchema sourceSchemaName="onprc_ehr" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>NHP_Training</tableName>
+
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="NHP_Training" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>NHP Training</tableTitle>
+            </table>
+
+        </tables>
+    </metadata>
+</templateSchema>
