@@ -29,7 +29,7 @@ SELECT
   END as srvBloodVol,
 
   CASE
-    WHEN ((t.isSRVRequired = true AND t.isSRVCurrent = false) OR (t.isHBVRequired = true AND t.isHBVCurrent = false)) THEN 4
+    WHEN (t.isSRVRequired = true AND t.isSRVCurrent = false)  THEN 4
     ELSE 0
   END as bloodVol
 FROM (
