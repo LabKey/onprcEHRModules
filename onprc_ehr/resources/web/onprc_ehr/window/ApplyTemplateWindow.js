@@ -172,9 +172,9 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                     LABKEY.Filter.create('templateId', templateId, LABKEY.Filter.Types.EQUAL)
                 ],
                 sort: 'rowid',
-                success: function(data){
-                    if (!data || !data.rows || !data.rows.length){
-                        if (callback){
+                success: function(data) {
+                    if (!data || !data.rows || !data.rows.length) {
+                        if (callback) {
                             callback.call(scope, {});
                         }
 
@@ -184,18 +184,18 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                     initialValues = initialValues || [];
 
                     var toAdd = {};
-                    if (!initialValues.length){
+                    if (!initialValues.length) {
                         initialValues.push({});
                     }
 
-                    Ext4.Array.forEach(initialValues, function(obj){
-                        Ext4.Array.forEach(data.rows, function(row){
+                    Ext4.Array.forEach(initialValues, function (obj) {
+                        Ext4.Array.forEach(data.rows, function (row) {
                             var data = Ext4.decode(row.json);
                             var store = storeCollection.getClientStoreByName(row.storeid);
 
 
                             //verify store exists
-                            if (!store){
+                            if (!store) {
                                 LDK.Utils.logToServer({
                                     level: 'ERROR',
                                     message: 'ApplyTemplateWindow.onLoadTemplate is unable to find store: ' + row.storeid
@@ -205,7 +205,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                             }
 
                             //also verify it is loaded
-                            if (store.loading || !store.getFields() || !store.getFields().getCount()){
+                            if (store.loading || !store.getFields() || !store.getFields().getCount()) {
                                 LDK.Utils.logToServer({
                                     level: 'ERROR',
                                     message: 'ApplyTemplateWindow.onLoadTemplate called prior to store load'
@@ -219,7 +219,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
                             var date = Ext4.Date.clone(new Date());
 
-                            if (data.offset){
+                            if (data.offset) {
                                 var offsetDate = Ext4.Date.add(date, Ext4.Date.DAY, data.offset);
                                 offsetDate = Ext4.Date.clearTime(offsetDate);
                                 offsetDate.setHours(8);
@@ -248,8 +248,9 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                 }
                             }
                             var obj2 = {};
-                             obj2 = {
-                                date: date
+                            obj2 = {
+                                date: date,
+                                enddate: enddate
                             };
 
                             var newData = Ext4.apply({}, data);
