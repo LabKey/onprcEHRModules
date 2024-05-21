@@ -227,6 +227,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added 6-4-2019 Additional Scheduled for 5pm
         ns.registerNotification(new TreatmentAlertsPostOpsNotificationThird(this));
+        //Added 5-9-2024 Additional to validate Available Draw Feed Values
+        ns.registerNotification(new AvailableBloodVolumeNotification(this));
+
 
         ns.registerNotification(new RequestAdminNotification(this));
         ns.registerNotification(new ColonyAlertsLiteNotification(this));
