@@ -1,7 +1,7 @@
 <!--Update to year63 and beyond-->
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Industry Rate Sheet">
     <columns>
-        <column name="RateSheetSelected"/>
+        <column name="SheetSelected"/>
         <column name="MarginSelected"/>
         <column name="FARateSelected"/>
 

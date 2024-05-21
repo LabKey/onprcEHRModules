@@ -15,7 +15,7 @@ in the Public Finance Section
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>NIH Industrial Rates </tableTitle>
                 <columns>
-                    <column columnName="RateSheetSelected" />
+                    <column columnName="SheetSelected" />
                     <column columnName="MarginSelected" />
                     <column columnName="FARateSelected" />
                     <column columnName="category">
