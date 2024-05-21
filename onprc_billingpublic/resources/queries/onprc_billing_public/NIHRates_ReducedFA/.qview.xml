@@ -15,7 +15,7 @@
         </column>
         <column name="category"/>
         <column name="Name"/>
-        <column name = "unitCost">
+        <column name = "CurrentYear">
             <properties>
                 <property name="columnTitle" value="YR65: Current Year"/>
             </properties>

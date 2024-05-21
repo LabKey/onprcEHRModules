@@ -11,7 +11,7 @@ SELECT
        n.category,
        n.name,
        n.unitcost,
-       (1.47 / (1 + ProjectFA)) as NewRateCalc,
+       (1.475 / (1 + ProjectFA)) as NewRateCalc,
        (n.UnitCost *(1.475 / (1 + ProjectFA))) as CurrentYear,
        (n.year1 *(1.475 / (1 + ProjectFA))) as Year1,
        (n.year2 *(1.475 / (1 + ProjectFA))) as Year2,
