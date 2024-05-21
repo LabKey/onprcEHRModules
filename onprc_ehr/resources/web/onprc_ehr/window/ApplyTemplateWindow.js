@@ -227,6 +227,26 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
 
                             }
+
+                            var enddate = null;
+                            if (data.duration) {
+                                //this is specifically to handle hydro, when administered ~noon
+                                if (new String(data.duration).match(/H$/)) {
+                                    var duration = new String(data.duration);
+                                    duration = duration.replace('H', '');
+                                    duration = Number(duration);
+                                    duration += encountersRec.get('date').getHours();
+                                    duration = Math.floor(duration / 24);
+
+                                    enddate = date;
+                                    endate = Ext4.Date.clearTime(enddate);
+                                    enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, duration);
+                                }
+                                else {
+                                    enddate = date;
+                                    enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, data.duration);
+                                }
+                            }
                             var obj2 = {};
                              obj2 = {
                                 date: date
