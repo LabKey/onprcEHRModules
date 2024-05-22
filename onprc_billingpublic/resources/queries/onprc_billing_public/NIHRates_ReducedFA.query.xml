@@ -1,11 +1,3 @@
-<!--
-Title:      Public Finance Reduced FA Rates
-Author:     Gary Jones
-Created:
-Modified:   5/24/2022 Updated for Year 63
-Description:    THis is the control for display of public rate sheets for inductrial rates
-in the Public Finance Section-->
-
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
@@ -23,7 +15,7 @@ in the Public Finance Section-->
                         <columnTitle>Item Name</columnTitle>
                     </column>
                     <column columnName="CurrentYear">
-                        <columnTitle>Yr65: Current Year</columnTitle>
+
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year1">

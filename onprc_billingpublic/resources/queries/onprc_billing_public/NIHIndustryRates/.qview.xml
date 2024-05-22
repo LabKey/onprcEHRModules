@@ -1,7 +1,7 @@
 <!--Update to year63 and beyond-->
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Industry Rate Sheet">
     <columns>
-        <column name="SheetSelected"/>
+
         <column name="MarginSelected"/>
         <column name="FARateSelected"/>
 
@@ -40,25 +40,26 @@
     </column>
     <column name = "year6">
         <properties>
-            <property name="columnTitle" value="YR71: 5/1/30-4/30/31"/>
+
         </properties>
     </column>
     <column name = "year7">
         <properties>
-            <property name="columnTitle" value="YR72: 5/1/31-4/30/32"/>
+
         </properties>
     </column>
     <column name = "year8">
         <properties>
-            <property name="columnTitle" value="YR73: 5/1/32-4/30/33"/>
+
         </properties>
     </column>
 
-        <column name = "DatePosted">
-            <properties>
-                <property name="columnTitle" value="Date Calculated"/>
-            </properties>
-        </column>
+
+    <column name = "DatePosted">
+        <properties>
+            <property name="columnTitle" value="Date Calculated"/>
+        </properties>
+    </column>
 
     </columns>
     <sorts>

@@ -11,7 +11,7 @@
                     <column columnName="category" />
                     <column columnName="name" />
                     <column columnName="unitCost">
-                        <columnTitle>YR65: Current Year</columnTitle>
+
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year1">
@@ -40,7 +40,6 @@
                         <columnTitle>YR71: 5/1/30 to 4/30/31</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-
                     <column columnName="year7">
                         <columnTitle>YR72: 5/1/31 to 4/30/32</columnTitle>
                         <formatString>$#,##0.00</formatString>
@@ -49,7 +48,6 @@
                         <columnTitle>YR73: 5/1/32 to 4/30/33</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-
 
                     <column columnName="PostedDate">
                         <columnTitle>Posted Date</columnTitle>

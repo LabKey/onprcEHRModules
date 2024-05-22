@@ -126,7 +126,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.011;
+        return 23.012;
     }
 
     @Override
@@ -227,6 +227,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added 6-4-2019 Additional Scheduled for 5pm
         ns.registerNotification(new TreatmentAlertsPostOpsNotificationThird(this));
+        //Added 5-9-2024 Additional to validate Available Draw Feed Values
+        ns.registerNotification(new AvailableBloodVolumeNotification(this));
+
 
         ns.registerNotification(new RequestAdminNotification(this));
         ns.registerNotification(new ColonyAlertsLiteNotification(this));
@@ -590,7 +593,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 3-24-2023  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EnvironmentalATPFormType.class, this));
-
 
 
         //single section forms
