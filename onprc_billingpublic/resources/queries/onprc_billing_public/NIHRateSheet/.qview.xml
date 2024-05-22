@@ -1,7 +1,7 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="NIH Rate Sheet">
     <columns>
         <column name="RateSheetSelected"/>
-        <column name="ParameterSelected"/>
+
         <column name="category"/>
         <column name="Name"/>
         <column name = "unitCost">

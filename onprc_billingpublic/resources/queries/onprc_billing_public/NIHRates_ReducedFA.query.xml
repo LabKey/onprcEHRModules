@@ -20,7 +20,7 @@ in the Public Finance Section-->
                     </column>
 
                     <column columnName="name">
-                        <columnTitle>ItemName</columnTitle>
+                        <columnTitle>Item Name</columnTitle>
                     </column>
                     <column columnName="CurrentYear">
                         <columnTitle>Yr65: Current Year</columnTitle>
