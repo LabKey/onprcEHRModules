@@ -22,51 +22,72 @@ SELECT
   t.daysSinceSRV,
   t.isSRVRequired,
   t.isSRVCurrent,
-  t.additionalservices,
+  t.lastPCR,
+  t.daysSincePCR,
+  t.isPCRRequired,
+  t.isPCRCurrent,
+
   CASE
     WHEN (t.isSRVRequired = true AND t.isSRVCurrent = false) THEN 4
     ELSE 0
   END as srvBloodVol,
 
   CASE
-    WHEN (t.isSRVRequired = true AND t.isSRVCurrent = false)  THEN 4
+    WHEN  (t.isPCRRequired = true AND t.isPCRCurrent = false)  THEN 4
     ELSE 0
-  END as bloodVol
+  END as PCRbloodVol
 FROM (
 
 SELECT
   d.Id,
   d.Id.age.ageInDays,
   spf.spfStatus,
-  s.additionalservices,
   srv.lastDate as lastSRV,
   timestampdiff('SQL_TSI_DAY', srv.lastDate, now()) as daysSinceSRV,
   CASE
       WHEN (year(now()) = year(srv.lastDate)) THEN true
     ELSE false
   END as isSRVCurrent,
-  --all Jmacs and all non-SPF cynos
 
   CASE
 --     WHEN (d.Id.age.ageInDays > 180 AND (d.species in ( 'CYNOMOLGUS MACAQUE','RHESUS MACAQUE','JAPANESE MACAQUE'))) THEN true
       WHEN (d.Id.age.ageInDays > 180 ) And (spf.Id IS NULL ) THEN true
     ELSE false
-  END as isSRVRequired
+  END as isSRVRequired,
+    pcr.lastDate as lastPCR,
+    timestampdiff('SQL_TSI_DAY', pcr.lastDate, now()) as daysSincePCR,
+        CASE
+            WHEN (year(now()) = year(pcr.lastDate)) THEN true
+            ELSE false
+            END as isPCRurrent,
+
+  CASE
+--     WHEN (d.Id.age.ageInDays > 180 AND (d.species in ( 'CYNOMOLGUS MACAQUE','RHESUS MACAQUE','JAPANESE MACAQUE'))) THEN true
+      WHEN (d.Id.age.ageInDays > 180 ) And (spf.Id IS NULL ) THEN true
+      ELSE false
+      END as isPCRRequired
 
 FROM study.demographics d
 
 LEFT JOIN (
   SELECT
     s.id,
-    max(s.date) as lastDate,
-    s.additionalservices
-
+    max(s.date) as lastDate
   FROM study.blood s
-  WHERE s.additionalservices like 'SPF%' or s.additionalservices like  'PCR%'
+  WHERE s.additionalservices like 'SPF%'
   GROUP BY s.id
 
+) srv ON (s.id = d.id)
 
-) s ON (s.id = d.id)
+LEFT JOIN (
+    SELECT
+        b.id,
+        max(b.date) as lastDate
+    FROM study.blood b
+    WHERE b.additionalservices like  'PCR%'
+    GROUP BY b.id
+
+) pcr ON (b.id = d.id)
 
 LEFT JOIN (
     SELECT
