@@ -53,8 +53,6 @@
                         <columnTitle>YR73: 5/1/32 to 4/30/33</columnTitle>
                         <formatString>$#,##0.00</formatString>
                     </column>
-
-
                     <column columnName="PostedDate">
                         <columnTitle>Posted Date</columnTitle>
                         <formatString>MM/dd/yyyy</formatString>
