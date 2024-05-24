@@ -63,7 +63,8 @@ public class LabworkFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/CopyFromRunsTemplateWindow.js"));
             //Added 2-5-2016 Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/labworkTestPanel.js"));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/labworkPanel.js"));
+//        Added: 4-2-2024  R. Blasa removed future date functionality
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/labworkInputPanel.js"));
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/buttons/labworkButtons.js"));
 

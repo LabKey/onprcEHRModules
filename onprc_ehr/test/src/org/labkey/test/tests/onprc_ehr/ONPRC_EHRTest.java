@@ -81,7 +81,6 @@ import static org.junit.Assert.fail;
 public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
     protected String PROJECT_NAME = "ONPRC_EHR_TestProject";
-    private boolean _hasCreatedBirthRecords = false;
     private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
 
     @Override
@@ -399,8 +398,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         goToProjectHome();
 
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                {MORE_ANIMAL_IDS[0], new Date(), "code", "Abnormal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), "code", "Abnormal", null, 1.0, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Maps.of(
                 "remark", Arrays.asList(
                     "WARN: A remark is required if a non-normal outcome is reported"
@@ -408,16 +407,28 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         ));
 
         // successful
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, 1.0, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Collections.emptyMap());
 
 
-        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                {MORE_ANIMAL_IDS[0], new Date(), null, "Normal", null, 1.0, 2.0, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), null, "Normal", null, 1.0, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
         }, Maps.of(
                 "code", Arrays.asList(
                         "WARN: Must enter a treatment"
+                )
+        ));
+
+        //Added more validation code, Kollil Dec, 2023
+        getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                {MORE_ANIMAL_IDS[0], new Date(), "code", "Normal", null, 1.0, null, 2.0, null, EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+        }, Maps.of(
+                "amount_units", Arrays.asList( //added these fields by kollil, Nov 30th
+                        "WARN: Must enter Amount Units if Amount is entered"
+                ),
+                "vol_units", Arrays.asList(
+                        "WARN: Must enter Vol Units if Volume is entered"
                 )
         ));
 
@@ -435,16 +446,16 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         // ketamine / telazol
         for (String code : Arrays.asList("E-70590", "E-YY928"))
         {
-            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "amount_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, 1.0, 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, 1.0, "mL", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
             }, Maps.of(
                     "amount_units", Arrays.asList(
                             "WARN: When entering ketamine or telazol, amount must be in mg"
                     )
             ));
 
-            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "volume", "amount_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
-                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, null, 2.0, "mg", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
+            getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
+                    {MORE_ANIMAL_IDS[0], new Date(), code, "Normal", null, null, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
             }, Maps.of(
                     "amount_units", Arrays.asList(
                             "WARN: When entering ketamine or telazol, amount must be in mg"
@@ -891,61 +902,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         return _unitsMap.get(queryName).get(testId);
     }
 
-    protected void createBirthRecords() throws Exception
-    {
-        log("creating birth records");
-
-        //note: these should cascade insert into demographics
-        EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getProjectName());
-        String schema = "study";
-        String query = "birth";
-        String parentageQuery = "parentage";
-
-        Set<String> createdIds = Set.of(ID_PREFIX + 1, ID_PREFIX + 2, ID_PREFIX + 3, ID_PREFIX + 4, ID_PREFIX + 5, ID_PREFIX + 6, ID_PREFIX + 7, ID_PREFIX + 8, ID_PREFIX + 9, ID_PREFIX + 10);
-
-        // Parents with non-defined dam/sire ids
-        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 1, "date", prepareDate(new Date(), -730, 0), "gender", "f", "species", "Cynomolgus"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 1, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 11, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 2, "date", prepareDate(new Date(), -730, 0), "gender", "m", "species", "Cynomolgus"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 2, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 12, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 3, "date", prepareDate(new Date(), -730, 0), "gender", "f", "species", "Cynomolgus"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 3, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 12, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -730, 0), "gender", "m", "species", "Cynomolgus"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 13, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 4, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 14, "method", "Genetic"), false);
-
-        // Children / Siblings (full and half)
-        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "gender", "f", "dam", ID_PREFIX + 1, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 5, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 1, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 1, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 6, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 1, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 3, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 7, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 3, "method", "Genetic"), false);
-
-
-        // Child / Inbreeding
-        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "gender", "m", "dam", ID_PREFIX + 5, "sire", ID_PREFIX + 2, "species", "Cynomolgus"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "relationship", "Sire", "parent", ID_PREFIX + 2, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 8, "date", prepareDate(new Date(), -365, 0), "relationship", "Dam", "parent", ID_PREFIX + 5, "method", "Genetic"), false);
-
-
-        // Grandchildren / Inbreeding Descendent
-        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "gender", "f", "dam", ID_PREFIX + 5, "sire", ID_PREFIX + 4, "species", "Cynomolgus"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "relationship", "Sire", "parent", ID_PREFIX + 4, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 9, "date", prepareDate(new Date(), -100, 0), "relationship", "Dam", "parent", ID_PREFIX + 5, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, query, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "gender", "f", "dam", ID_PREFIX + 3, "sire", ID_PREFIX + 8, "species", "Cynomolgus"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "relationship", "Sire", "parent", ID_PREFIX + 8, "method", "Genetic"), false);
-        apiHelper.insertRow(schema, parentageQuery, Map.of("Id", ID_PREFIX + 10, "date", prepareDate(new Date(), -100, 0), "relationship", "Dam", "parent", ID_PREFIX + 3, "method", "Genetic"), false);
-
-        //force caching of demographics on new IDs.
-        cacheIds(createdIds);
-
-        _hasCreatedBirthRecords = true;
-    }
-
     @Test
     public void testExamEntry() throws Exception
     {
@@ -1249,6 +1205,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitAndClickAndWait(Locators.bodyPanel().append(Locator.tagContainingText("a", "EHR Admin Page")));
         waitAndClickAndWait(Locator.tagContainingText("a", "Genetics Calculations"));
         _ext4Helper.checkCheckbox(Ext4Helper.Locators.checkbox(this, "Kinship validation?:"));
+        _ext4Helper.checkCheckbox(Ext4Helper.Locators.checkbox(this, "Allow Import During Business Hours?:"));
         Locator loc = Locator.inputByIdContaining("numberfield");
         waitForElement(loc);
         setFormElement(loc, "23");

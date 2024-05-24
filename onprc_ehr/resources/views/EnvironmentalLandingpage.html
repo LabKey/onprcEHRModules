@@ -1,0 +1,55 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx) {
+            return;
+        }
+
+        Ext4.create('Ext.panel.Panel', {
+            border: false,
+            defaults: {
+                border: false
+            },
+            items: [{
+                html: 'This page was designed to provide a summary of the environmental Assessment reports, and Environmental Input form .',
+                style: 'padding-bottom: 10px;'
+            },{
+                xtype: 'ldk-navpanel',
+                sections: [{
+                    header: 'Environmental Assessment Input forms',
+                    items: [{
+                      name: 'Environmental Assessment CPL Input form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ehr/ONPRC/DCM/Environmental Assessment/',{formType: 'Environmental_Assessment_CLS'})
+                    },{
+                        name: 'Environmental Assessment ATP Input form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ehr/ONPRC/DCM/Environmental Assessment/',{formType: 'Environmental_ATP'})
+                    },{
+                     name: 'Environmental Assessment EDIT TASK RECORDS', url: LABKEY.ActionURL.buildURL('ONPRC_EHR', 'enterData.view', null, null)
+                    },{
+                        name: 'Environmental Assessment ATP Editing Interface', url: '<%=contextPath%>/ldk' + '/ehr/ONPRC/DCM/Environmental Assessment/' + '/updateQuery.view?schemaName=onprc_ehr&query.queryName=Environmental_Assessment&query.service_requested~eq=Sanitation%3A%20ATP'
+                    }]
+                },{
+                    header: 'Environmental Assessment Reports',
+                    items: [{
+                        name: 'Environmental Assessment Laboratory CPL reports', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render'
+                    },{
+                        name: 'Environmental Assessment Detailed printable reports', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentMain&rs:Command=Render'
+                    },{
+                        name: 'Environmental Assessment Biological Indicators Grid reports', url: '<%=contextPath%>/query' + '/ehr/ONPRC/DCM/Environmental Assessment/' + '/executeQuery.view?schemaName=onprc_ehr&query.queryName=Env_Biological_indicators'
+                    },{
+                        name: 'Environmental Assessment Water Testing Grid reports', url: '<%=contextPath%>/query' + '/ehr/ONPRC/DCM/Environmental Assessment/' + '/executeQuery.view?schemaName=onprc_ehr&query.queryName=Env_Water'
+                    },{
+                        name: 'Environmental Assessment Contact Plate Grid reports', url: '<%=contextPath%>/query' + '/ehr/ONPRC/DCM/Environmental Assessment/' + '/executeQuery.view?schemaName=onprc_ehr&query.queryName=Env_Contactplate'
+                    },{
+                        name: 'Environmental Assessment ATP Grid reports', url: '<%=contextPath%>/query' + '/ehr/ONPRC/DCM/Environmental Assessment/' + '/executeQuery.view?schemaName=onprc_ehr&query.queryName=Env_ATP'
+
+
+                    }]
+                }]
+            }]
+
+        }).render(webpart.wrapperDivId);
+    });
+
+</script>

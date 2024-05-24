@@ -16,18 +16,19 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.onprc_ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
+import org.labkey.onprc_ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: bimber
@@ -43,9 +44,6 @@ public class TreatmentsFormType extends TaskForm
     {
         super(ctx, owner, NAME, LABEL, "Clinical", Arrays.asList(
             new TaskFormSection(),
-                 //Added 2-19-2016  Blasa
-           // new NonStoreFormSection("Treatment Template Helper", "Treatment Template Helper", "onprc_AddScheduledTreatmentPanel", Arrays.asList(ClientDependency.supplierFromPath("/onprc_ehr/panel/AddScheduledTreatmentPanel.js"))),
-
             new AnimalDetailsFormSection(),
             new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
             new TreatmentOrdersFormSection()
@@ -58,6 +56,9 @@ public class TreatmentsFormType extends TaskForm
 
         }
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"));
+       //Added 4-24-2024  R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/FormTemplateWindow.js"));
+
 
         if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
         {
@@ -65,6 +66,19 @@ public class TreatmentsFormType extends TaskForm
         }
 
     }
+
+    //Added 4-24-2024  R. Blasa
+
+    @Override
+    protected List<String> getMoreActionButtonConfigs()
+    {
+        List<String> ret = super.getMoreActionButtonConfigs();
+        ret.remove("APPLYFORMTEMPLATE");
+        ret.add("APPLYFORMTEMPLATEREV");
+
+        return ret;
+    }
+
 
 
 
