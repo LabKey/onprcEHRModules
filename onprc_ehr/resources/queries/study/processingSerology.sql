@@ -17,7 +17,6 @@
 SELECT
   t.Id,
   t.ageInDays,
-  t.spfStatus,
   t.lastSRV,
   t.daysSinceSRV,
   t.isSRVRequired,
@@ -41,31 +40,29 @@ FROM (
 SELECT
   d.Id,
   d.Id.age.ageInDays,
-  spf.spfStatus,
   srv.lastDate as lastSRV,
   timestampdiff('SQL_TSI_DAY', srv.lastDate, now()) as daysSinceSRV,
   CASE
-      WHEN (year(now()) = year(srv.lastDate)) THEN true
+  WHEN (year(now()) = year(srv.lastDate)) THEN true
     ELSE false
   END as isSRVCurrent,
 
   CASE
---     WHEN (d.Id.age.ageInDays > 180 AND (d.species in ( 'CYNOMOLGUS MACAQUE','RHESUS MACAQUE','JAPANESE MACAQUE'))) THEN true
-      WHEN (d.Id.age.ageInDays > 180 ) And (spf.Id IS NULL ) THEN true
+   WHEN (d.Id.age.ageInDays > 180 )THEN true
     ELSE false
   END as isSRVRequired,
+
     pcr.lastDate as lastPCR,
     timestampdiff('SQL_TSI_DAY', pcr.lastDate, now()) as daysSincePCR,
-        CASE
-            WHEN (year(now()) = year(pcr.lastDate)) THEN true
-            ELSE false
-            END as isPCRurrent,
+    CASE
+     WHEN (year(now()) = year(pcr.lastDate)) THEN true
+    ELSE false
+     END as isPCRCurrent,
 
   CASE
---     WHEN (d.Id.age.ageInDays > 180 AND (d.species in ( 'CYNOMOLGUS MACAQUE','RHESUS MACAQUE','JAPANESE MACAQUE'))) THEN true
-      WHEN (d.Id.age.ageInDays > 180 ) And (spf.Id IS NULL ) THEN true
-      ELSE false
-      END as isPCRRequired
+   WHEN (d.Id.age.ageInDays > 180 )  THEN true
+    ELSE false
+    END as isPCRRequired
 
 FROM study.demographics d
 
@@ -77,7 +74,7 @@ LEFT JOIN (
   WHERE s.additionalservices like 'SPF%'
   GROUP BY s.id
 
-) srv ON (s.id = d.id)
+) srv ON (srv.id = d.id)
 
 LEFT JOIN (
     SELECT
@@ -87,16 +84,9 @@ LEFT JOIN (
     WHERE b.additionalservices like  'PCR%'
     GROUP BY b.id
 
-) pcr ON (b.id = d.id)
+) pcr ON (pcr.id = d.id)
 
-LEFT JOIN (
-    SELECT
-        f.Id,
-        group_concat(f.flag.value) as spfStatus
-    FROM study.flags f
-    WHERE f.isActive = true AND f.flag.category = 'SPF'
-    GROUP BY f.Id
-) spf ON (spf.Id = d.Id)
+
 
 WHERE d.calculated_status = 'Alive'
 
