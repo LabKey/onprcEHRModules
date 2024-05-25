@@ -14,7 +14,7 @@ SELECT
   coalesce(s.srvbloodVol, 0) +  Case when g.isU42 = 'Y' And (s.pcrbloodVol > 0 )  then 2
    ELSE
      0
-  End + 0 as totalBloodDrawVol
+   End + coalesce(g.totalBloodDrawVol, 0) as totalBloodDrawVol
 
 FROM study.demographics d
 
