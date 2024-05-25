@@ -1103,7 +1103,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             {
                 // This INFO message is most reliably available in dev mode when clicking the row editor, so that is what
                 // we're checking here.
-                click(Locator.tag("img").withAttribute("src", "/labkey/_images/editprops.png"));
+                click(Locator.tag("img").withAttributeContaining("src", "/_images/editprops.png"));
                 waitForText(WAIT_FOR_PAGE, "INFO: Status of this Id is: Dead");
                 click(Ext4Helper.Locators.ext4Button("Close"));
                 waitForElementToDisappear(Ext4Helper.Locators.ext4Button("Close"));
