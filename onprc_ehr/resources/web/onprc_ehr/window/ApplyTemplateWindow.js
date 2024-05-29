@@ -233,28 +233,52 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                 //this is specifically to handle hydro, when administered ~noon
                                 if (new String(data.duration).match(/H$/)) {
                                     var duration = new String(data.duration);
-                                    duration = duration.replace('H', '');
-                                    duration = Number(duration);
-                                    duration += encountersRec.get('date').getHours();
-                                    duration = Math.floor(duration / 24);
-
                                     enddate = date;
                                     endate = Ext4.Date.clearTime(enddate);
                                     enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, duration);
+                                    endDate.setHours(23);
+                                    enddate = enddate;
+                                    // endDate.setMinutes(57);
+                                    // enddate = enddate;
                                 }
                                 else {
                                     enddate = date;
                                     enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, data.duration);
+                                    enddate.setHours(23);
+                                    enddate = enddate;
+                                    enddate.setMinutes(57);
+                                    enddate = enddate;
+
                                 }
+                            }
+
+                            var volumet = null;
+                            if (data.amount) {
+
+                                    var volumet = data.amount;
+
                             }
                             var obj2 = {};
                              obj2 = {
                                 date: date
+                                 // volume:volumet,
+                                // enddate:enddate,
+                                //  remark:"Testing"
+
+
+                            };
+
+                            var obj = {};
+                            obj = {
+
+                               volume:volumet
                             };
 
                             var newData = Ext4.apply({}, data);
-                            newData = Ext4.apply(newData, obj);
+
                             newData = Ext4.apply(newData, obj2);
+
+                            // newData = Ext4.apply(newData, obj);
 
                             toAdd[store.storeId].push(newData);
                         }, this);
