@@ -6,7 +6,7 @@
                 <tableTitle>NIH Project Rate Sheet</tableTitle>
                 <columns>
                     <column columnName="RateSheetSelected"  />
-                    <column columnName="ParameterSelected"  />
+
 
                     <column columnName="category" />
                     <column columnName="name" />
