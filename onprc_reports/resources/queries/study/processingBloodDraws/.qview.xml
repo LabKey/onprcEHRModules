@@ -8,6 +8,7 @@
     <column name="spfStatus"/>
     <column name="PCRBloodVolume"/>
     <column name="serologyBloodVol"/>
+    <column name="compBloodVol"/>
     <column name="parentageBloodDrawVol"/>
     <column name="mhcBloodDrawVol"/>
     <column name="dnaBloodDrawVol"/>

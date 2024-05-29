@@ -6,12 +6,15 @@ SELECT
    ELSE
     0
  End as PCRBloodVolume,
-  s.SRVbloodVol as serologyBloodVol,
+
+  s.srvBloodVol as serologyBloodVol,
+  s.CompbloodVol as compBloodVol,
   g.parentageBloodDrawVol,
   g.mhcBloodDrawVol,
   g.dnaBloodDrawVol,
   g.totalBloodDrawVol as geneticsBloodVol,
-  coalesce(s.srvbloodVol, 0) +  Case when g.isU42 = 'Y' And (s.pcrbloodVol > 0 )  then 2
+
+  coalesce(s.srvBloodVol, 0) + coalesce(s.CompbloodVol, 0) +  Case when g.isU42 = 'Y' And (s.pcrbloodVol > 0 )  then 2
    ELSE
      0
    End + coalesce(g.totalBloodDrawVol, 0) as totalBloodDrawVol
