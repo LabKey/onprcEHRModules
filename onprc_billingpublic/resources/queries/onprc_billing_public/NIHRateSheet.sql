@@ -11,6 +11,7 @@ select
 category,
 name,
 UnitCost,
+(UnitCost *(1.475 / (1 ))) as CurrentYear,
 year1,
 year2,
 year3,
