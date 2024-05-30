@@ -3,7 +3,6 @@ Added 23 columns for Rate Sheet Selected and Parameter
 Update of related qview.xml and NIHRateSheet.query.xml
     Added ne columns and updated Labels for Yr66 to Yr 73
 */
-
 PARAMETERS (ProjectFA DOUBLE DEFAULT .2)
 SELECT
     'NIH Rate Reduced F&A' as RateSheetSelected,
