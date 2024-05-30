@@ -1,11 +1,10 @@
 SELECT
   d.Id,
---   g.isU42,
-  CASE when a.Id != Null then 'Y'
-  ELSE 'N'
-  END as isU42,
-
- Case when (a.Id != nULL  And (s.PCRbloodVol > 0 )) then 2
+  CASE
+      WHEN (a.Id IS NULL) THEN 'N'
+      ELSE 'Y'
+      END as isU42,
+ Case when (a.Id IS NOT NULL)  And (s.PCRbloodVol > 0 ) then 2
    ELSE
     0
  End as PCRBloodVolume,
@@ -28,7 +27,7 @@ LEFT JOIN study.processingSerology s ON (d.Id = s.Id)
 LEFT JOIN study.processingGeneticsBloodDraws g ON (g.Id = s.Id)
 LEFT JOIN (SELECT
     a.Id
-    --count(*) as total
+
 FROM study.assignment a
 WHERE a.isActive = true and a.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.U42_PROJECT')
 GROUP BY a.Id
