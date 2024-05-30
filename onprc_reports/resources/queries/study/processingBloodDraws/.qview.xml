@@ -2,7 +2,8 @@
 <columns>
     <column name="Id"/>
     <column name="Id/utilization/use"/>
-    <column name="currentlocation"/>
+    <column name="currentlocationroom"/>
+    <column name="currentlocationcage"/>
     <column name="isU42"/>
     <column name="spfStatus"/>
     <column name="PCRBloodVolume"/>
