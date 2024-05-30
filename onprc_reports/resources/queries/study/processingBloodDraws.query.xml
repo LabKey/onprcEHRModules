@@ -19,9 +19,6 @@
                     <column columnName="serologyBloodVol">
                         <columnTitle>Serology Blood Vol (mL)</columnTitle>
                     </column>
-                    <column columnName="compBloodVol">
-                        <columnTitle>Compromised SPF Blood Vol (mL)</columnTitle>
-                    </column>
                     <column columnName="geneticsBloodVol">
                         <columnTitle>Genetics Blood Vol (mL)</columnTitle>
                     </column>

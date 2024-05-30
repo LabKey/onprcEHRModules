@@ -10,16 +10,16 @@ SELECT
  End as PCRBloodVolume,
 
   s.srvBloodVol as serologyBloodVol,
-  s.CompbloodVol as compBloodVol,
   g.parentageBloodDrawVol,
   g.mhcBloodDrawVol,
   g.dnaBloodDrawVol,
   g.totalBloodDrawVol as geneticsBloodVol,
 
-  coalesce(s.srvBloodVol, 0) + coalesce(s.CompbloodVol, 0) +  Case when g.isU42 = 'Y' And (s.pcrbloodVol > 0 )  then 2
+  coalesce(s.srvBloodVol, 0) +  Case when (a.Id IS NOT NULL)   And (s.pcrbloodVol > 0 )  then 2
    ELSE
      0
    End + coalesce(g.totalBloodDrawVol, 0) as totalBloodDrawVol,
+
     (select k.room  from study.housing where k.Id =d.Id And k.enddate is null) as currentlocationroom,
     (select coalesce(k.cage, ' ') from study.housing k where k.Id =d.Id And k.enddate is null) as currentlocationcage,
 

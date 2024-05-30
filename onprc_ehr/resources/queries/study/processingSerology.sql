@@ -26,11 +26,6 @@ SELECT
   t.isPCRRequired,
   t.isPCRCurrent,
 
-  t.lastComp,
-  t.daysSinceComp,
-  t.isCompRequired,
-  t.isCompCurrent,
-
   CASE
     WHEN (t.isSRVRequired = true AND t.isSRVCurrent = false) THEN 4
     ELSE 0
@@ -41,10 +36,6 @@ SELECT
     ELSE 0
   END as PCRbloodVol,
 
-  CASE
-    WHEN  (t.isCompRequired = true AND t.isCompCurrent = false)  THEN 4
-    ELSE 0
-  END as CompbloodVol
 
 FROM (
 
@@ -73,19 +64,7 @@ SELECT
   CASE
    WHEN (d.Id.age.ageInDays > 180 )  THEN true
     ELSE false
-    END as isPCRRequired,
-
-    comp.lastDate as lastComp,
-    timestampdiff('SQL_TSI_DAY', comp.lastDate, now()) as daysSinceComp,
-  CASE
-      WHEN (year(now()) = year(comp.lastDate)) THEN true
-      ELSE false
-      END as isCompCurrent,
-
-  CASE
-      WHEN (d.Id.age.ageInDays > 180 )  THEN true
-      ELSE false
-      END as isCompRequired
+    END as isPCRRequired
 
 FROM study.demographics d
 
@@ -94,7 +73,7 @@ LEFT JOIN (
     s.id,
     max(s.date) as lastDate
   FROM study.blood s
-  WHERE s.additionalservices like 'SPF Surveillance%'
+  WHERE (s.additionalservices like 'SPF Surveillance%' or s.additionalservices like  'Compromised SPF%')
   GROUP BY s.id
 
 ) srv ON (srv.id = d.id)
@@ -108,17 +87,6 @@ LEFT JOIN (
     GROUP BY b.id
 
 ) pcr ON (pcr.id = d.id)
-
-LEFT JOIN (
-    SELECT
-        j.id,
-        max(j.date) as lastDate
-    FROM study.blood j
-    WHERE j.additionalservices like  'Compromised SPF%'
-    GROUP BY j.id
-
-) comp ON (comp.id = d.id)
-
 
 
 WHERE d.calculated_status = 'Alive'
