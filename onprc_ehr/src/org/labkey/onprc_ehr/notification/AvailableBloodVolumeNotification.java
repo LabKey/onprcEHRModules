@@ -48,13 +48,13 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 30/1 0/1 ? * * *";
+        return "0 30 0/1 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 30 Minutes after the hour from 7 AM to 6 PM";
+        return "every day at 30 Minutes after the hour";
     }
 
     @Override
