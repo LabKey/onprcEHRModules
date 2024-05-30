@@ -4,6 +4,9 @@
             <table tableName="processingBloodDraws" tableDbType="NOT_IN_DB">
                 <tableTitle>Blood Draws Needed For Processing</tableTitle>
                 <columns>
+                    <column columnName="currentlocation">
+                        <columnTitle>Current Location</columnTitle>
+                    </column>
                     <column columnName="isU42">
                         <columnTitle>Is U42?</columnTitle>
                     </column>

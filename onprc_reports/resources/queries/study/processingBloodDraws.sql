@@ -19,7 +19,8 @@ SELECT
   coalesce(s.srvBloodVol, 0) + coalesce(s.CompbloodVol, 0) +  Case when g.isU42 = 'Y' And (s.pcrbloodVol > 0 )  then 2
    ELSE
      0
-   End + coalesce(g.totalBloodDrawVol, 0) as totalBloodDrawVol
+   End + coalesce(g.totalBloodDrawVol, 0) as totalBloodDrawVol,
+    (select k.room + ' ' + k.cage from study.housing where k.Id =d.Id And k.enddate is null) as currentlocation
 
 FROM study.demographics d
 
