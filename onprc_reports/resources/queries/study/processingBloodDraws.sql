@@ -20,7 +20,7 @@ SELECT
      0
    End + coalesce(g.totalBloodDrawVol, 0) as totalBloodDrawVol,
 
-    (select k.room  from study.housing where k.Id =d.Id And k.enddate is null) as currentlocationroom,
+    (select k.room  from study.housing k where k.Id =d.Id And k.enddate is null) as currentlocationroom,
     (select coalesce(k.cage, ' ') from study.housing k where k.Id =d.Id And k.enddate is null) as currentlocationcage,
 
 FROM study.demographics d
