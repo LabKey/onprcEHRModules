@@ -45,7 +45,6 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     {
         return "Available Blood Volume Alert: " + getDateTimeFormat(c).format(new Date());
     }
-
     @Override
     public String getCronString()
     {
