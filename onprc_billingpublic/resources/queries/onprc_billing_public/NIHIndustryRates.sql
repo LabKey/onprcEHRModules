@@ -5,7 +5,7 @@ Assoicated xml os NIHIndustryRates.query.xml
 */
 PARAMETERS (MARGIN FLOAT DEFAULT .25, FARATE FLOAT DEFAULT 1)
 Select
-    'Industrial Rate' as SheetSelected,
+    'Industrial Rate' as RateSheetSelected,
     Margin  as MarginSelected,
     FARate as FARateSelected,
     n.category,
