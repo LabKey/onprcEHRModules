@@ -49,13 +49,13 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 30 0/1 * * ?";
+        return "0 30 7-18* * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 30 Minutes after the hour";
+        return "every day at 30 Minutes after the hour between 7 am and 6 PM daily";
     }
 
     @Override
@@ -78,7 +78,7 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     protected void AvailableBloodCheck(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "labkeyPublic").getTable("ValidateAvailableBloodProcess", ContainerFilter.Type.AllFolders.create(c, u));
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("ValidateAvailableBloodProcess", ContainerFilter.Type.AllFolders.create(c, u));
 //        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(u);
         TableSelector ts = new TableSelector(ti, null, null);
 
@@ -86,7 +86,7 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
         if (count > 0)
         {
             msg.append("<b>" + count + " Available Blood Data is Stale.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "labkeyPublic", "ValidateAvailableBloodProcess", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "ValidateAvailableBloodProcess", null) + "'>Click here to view them</a><br>\n\n");
             msg.append("</p><br><hr>");
         }
         else
