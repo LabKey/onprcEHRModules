@@ -21,11 +21,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by jonesga on 05/30/2024
- * Change of Cron job to run every 30 minutes
- * Update to change Source query to onprc-EHR
- */
+
 
 public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
 {
