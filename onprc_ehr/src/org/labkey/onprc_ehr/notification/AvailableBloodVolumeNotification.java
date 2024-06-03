@@ -23,7 +23,7 @@ import java.util.Set;
 
 /**
  * Created by jonesga on 05/30/2024
- * Change of Cron job to run everyt 30 minutes
+ * Change of Cron job to run every 30 minutes
  * Update to change Source query to onprc-EHR
  */
 
@@ -54,7 +54,7 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 30 Minutes after the hour between 7 am and 6 PM daily";
+        return "every day at 30 Minutes after the hour between 7:30AM and 6:30PM daily";
     }
 
     @Override
