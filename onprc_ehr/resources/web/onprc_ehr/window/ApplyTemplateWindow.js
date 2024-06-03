@@ -70,7 +70,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
             displayField: 'title',
             valueField: 'entityid',
             queryMode: 'local',
-            fieldLabel: 'Template Name',
+            fieldLabel: 'Template NameY',
             itemId: 'templateName',
             anyMatch: true,
             caseSensitive: false,
@@ -131,7 +131,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
             return {
                 xtype: 'checkcombo',
                 labelWidth: 130,
-                fieldLabel: 'Choose Procedure',
+                fieldLabel: 'Choose ProcedureY',
                 itemId: 'encounterRecords',
                 addAllSelector: true,
                 mutliSelect: true,
@@ -228,8 +228,9 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
                             }
 
-                            var enddate = null;
-                            if (data.duration) {
+
+                            if (data.duration > 0) {
+                                var enddate = null;
                                 //this is specifically to handle hydro, when administered ~noon
                                 if (new String(data.duration).match(/H$/)) {
                                     var duration = new String(data.duration);
@@ -238,7 +239,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                     enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, duration);
                                     endDate.setHours(23);
                                     enddate = enddate;
-                                    // endDate.setMinutes(57);
+                                    // endDate.setMinutes(59);
                                     // enddate = enddate;
                                 }
                                 else {
@@ -246,39 +247,25 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                     enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, data.duration);
                                     enddate.setHours(23);
                                     enddate = enddate;
-                                    enddate.setMinutes(57);
+                                    enddate.setMinutes(59);
                                     enddate = enddate;
 
                                 }
                             }
+                            //
 
-                            var volumet = null;
-                            if (data.amount) {
-
-                                    var volumet = data.amount;
-
-                            }
                             var obj2 = {};
                              obj2 = {
-                                date: date
-                                 // volume:volumet,
-                                // enddate:enddate,
-                                //  remark:"Testing"
+                                 date: date,
+                                 enddate:enddate,
 
+                             }
 
-                            };
-
-                            var obj = {};
-                            obj = {
-
-                               volume:volumet
-                            };
 
                             var newData = Ext4.apply({}, data);
 
+                            newData = Ext4.apply(newData, obj);
                             newData = Ext4.apply(newData, obj2);
-
-                            // newData = Ext4.apply(newData, obj);
 
                             toAdd[store.storeId].push(newData);
                         }, this);
