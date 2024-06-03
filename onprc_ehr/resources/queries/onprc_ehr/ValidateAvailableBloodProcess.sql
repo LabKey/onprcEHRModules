@@ -10,5 +10,6 @@ DayOfMonth(curDate()) as CurrentDay
 
 
 FROM AvailableBloodVolume a
-where  DayofMonth(a.dateCreated)= DayOfMonth(curDate())
-and hour (a.dateCreated) != hour (Now())
+where hour (a.dateCreated) != hour (Now())
+
+--    DayofMonth(a.dateCreated)= DayOfMonth(curDate()) and
