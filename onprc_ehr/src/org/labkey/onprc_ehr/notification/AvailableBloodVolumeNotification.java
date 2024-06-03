@@ -48,7 +48,7 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 30 7-18* * ?";
+        return "0 30 7-18 * * ?";
     }
 
     @Override
