@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 
 
-
 public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
 {
     public AvailableBloodVolumeNotification(Module owner)
