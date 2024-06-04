@@ -28,7 +28,9 @@ CASE
   ELSE 'Clinically Restricted'
 END as isRestricted,
        g.date as p2date,
-       g.p2
+       g.p2,
+       k.date as lastbiochem,
+       k.servicerequested as biochemtype
 
 FROM study.demographics d
 LEFT JOIN (
@@ -60,8 +62,22 @@ LEFT JOIN (
     GROUP BY g.Id, g.date,g.p2
 ) g ON (g.Id = d.Id)
 
+LEFT JOIN (
+    SELECT
+        k.Id,
+        k.date,
+        k.servicerequested
+
+    FROM study.clinpathRuns k
+    WHERE  (k.servicerequested = 'Basic Chemistry Panel' or k.servicerequested = 'Comprehensive Chemistry Panel')
+      And k.type = 'Biochemistry'
+      And k.date in (select max(jj.date) from study.clinpathRuns jj Where ((jj.Id = k.Id) And (jj.servicerequested = 'Basic Chemistry Panel' or jj.servicerequested = 'Comprehensive Chemistry Panel')) )
+    GROUP BY k.Id, k.date, k.servicerequested
+) k ON (k.Id = d.Id)
+
+
 
 
 WHERE d.calculated_status = 'Alive'
 
-GROUP BY d.id, d.id.age.AgeInYears, g.date,g.p2
+GROUP BY d.id, d.id.age.AgeInYears, g.date,g.p2,k.date, k.servicerequested
