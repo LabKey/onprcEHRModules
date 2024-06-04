@@ -126,7 +126,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.011;
+        return 23.012;
     }
 
     @Override
@@ -593,7 +593,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 3-24-2023  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EnvironmentalATPFormType.class, this));
-
 
 
         //single section forms
