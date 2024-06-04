@@ -50,7 +50,7 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 30 Minutes after the hour between 7:30AM and 6:30PM daily";
+        return "every day at 30 Minutes after the hour between 7:30AM and 6:30PM";
     }
 
     @Override

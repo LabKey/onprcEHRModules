@@ -5,7 +5,7 @@
 SELECT DISTINCT CAST(a.dateCreated AS DATE) AS mmaDate,
     hour(a.datecreated) AS mmaHour,
     curdate() AS currentDate,
-    hour(now()) AS currentHour,
+    hour(now()) AS currentHour
 FROM ONPRC_EHR.AvailableBloodVolume AS a
 WHERE hour(a.dateCreated) != hour(now())
    OR CAST(a.dateCreated AS DATE) != curdate()
